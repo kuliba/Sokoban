@@ -71,17 +71,24 @@ extension CurrencySwapView.ViewModel {
     // MARK: - Swap
 
     class CurrencyViewModel: ObservableObject {
+        
+        @Published var currencyAmount: String
 
         let icon: Image
         let title: String
-        let currency: String
         let currencyType: String
+        
+        lazy var textField: TextFieldView.ViewModel = .init(
+            text: currencyAmount,
+            doneButton: .init(title: "Готово") {
+                UIApplication.shared.endEditing()
+            })
 
-        init(icon: Image, title: String, currency: String, currencyType: String) {
+        init(icon: Image, title: String, currencyAmount: String, currencyType: String) {
 
             self.icon = icon
             self.title = title
-            self.currency  = currency
+            self.currencyAmount = currencyAmount
             self.currencyType = currencyType
         }
     }
@@ -206,6 +213,8 @@ extension CurrencySwapView {
     struct CurrencyView: View {
 
         @ObservedObject var viewModel: ViewModel.CurrencyViewModel
+        
+        @State var text: String = "1.00"
 
         var body: some View {
 
@@ -221,11 +230,12 @@ extension CurrencySwapView {
                         .font(.textBodySR12160())
                         .foregroundColor(.mainColorsGray)
 
-                    HStack(spacing: 4) {
+                    HStack(alignment: .bottom, spacing: 4) {
 
-                        Text(viewModel.currency)
+                        TextFieldView(viewModel: viewModel.textField)
                             .font(.textH4M16240())
                             .foregroundColor(.mainColorsBlack)
+                            .fixedSize()
 
                         Text(viewModel.currencyType)
                             .font(.textH4M16240())
@@ -262,6 +272,8 @@ enum CurrencySwapAction {
     enum Button {
 
         struct Tapped: Action {}
+        struct Done: Action {}
+        struct Close: Action {}
     }
 }
 
@@ -274,12 +286,12 @@ extension CurrencySwapView.ViewModel {
         haveCurrencySwap: .init(
             icon: .init("Flag RUB"),
             title: "У меня есть",
-            currency: "64.50",
+            currencyAmount: "64,50",
             currencyType: "RUB"),
         getCurrencySwap: .init(
             icon: .init("Flag USD"),
             title: "Я получу",
-            currency: "1,00",
+            currencyAmount: "1,00",
             currencyType: "USD"))
 }
 
@@ -289,10 +301,7 @@ struct CurrencySwapVIewComponent_Previews: PreviewProvider {
     static var previews: some View {
 
         VStack {
-
             CurrencySwapView(viewModel: .sample)
-        }
-        .padding()
-        .previewLayout(.sizeThatFits)
+        }.previewLayout(.sizeThatFits)
     }
 }

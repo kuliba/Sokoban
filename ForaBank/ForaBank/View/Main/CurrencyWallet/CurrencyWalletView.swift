@@ -34,6 +34,7 @@ struct CurrencyWalletView: View {
                 
             }.padding(20)
         }
+        .ignoreKeyboard()
         .navigationBarTitle(Text(viewModel.title), displayMode: .inline)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: viewModel.backButton.action) {
@@ -41,6 +42,9 @@ struct CurrencyWalletView: View {
                 .renderingMode(.template)
                 .foregroundColor(.iconBlack)
         })
+        .onTapGesture {
+            UIApplication.shared.endEditing()
+        }
     }
 }
 

@@ -326,6 +326,7 @@
 		50D3D4842865C006002D7FB4 /* CurrencySwapViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D3D4832865C006002D7FB4 /* CurrencySwapViewComponent.swift */; };
 		50D6C951287F45EE009F2193 /* ProductAccountViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D6C950287F45EE009F2193 /* ProductAccountViewComponent.swift */; };
 		50E3A05B28390935003FF316 /* GetProductListByTypeResponseMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 50E3A05A28390935003FF316 /* GetProductListByTypeResponseMin.json */; };
+		50F3FB3828806DFF0053A969 /* TextFieldViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F3FB3728806DFF0053A969 /* TextFieldViewComponent.swift */; };
 		5A5ABF8227AAF4BF00D548AA /* LatestPaymentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8127AAF4BF00D548AA /* LatestPaymentData.swift */; };
 		5A5ABF8427AAF4DE00D548AA /* PaymentGeneralData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8327AAF4DE00D548AA /* PaymentGeneralData.swift */; };
 		5A5ABF8827AAF51000D548AA /* PaymentServiceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8727AAF51000D548AA /* PaymentServiceData.swift */; };
@@ -1708,6 +1709,7 @@
 		50D3D4832865C006002D7FB4 /* CurrencySwapViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySwapViewComponent.swift; sourceTree = "<group>"; };
 		50D6C950287F45EE009F2193 /* ProductAccountViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductAccountViewComponent.swift; sourceTree = "<group>"; };
 		50E3A05A28390935003FF316 /* GetProductListByTypeResponseMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductListByTypeResponseMin.json; sourceTree = "<group>"; };
+		50F3FB3728806DFF0053A969 /* TextFieldViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldViewComponent.swift; sourceTree = "<group>"; };
 		5A5ABF8127AAF4BF00D548AA /* LatestPaymentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestPaymentData.swift; sourceTree = "<group>"; };
 		5A5ABF8327AAF4DE00D548AA /* PaymentGeneralData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentGeneralData.swift; sourceTree = "<group>"; };
 		5A5ABF8727AAF51000D548AA /* PaymentServiceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentServiceData.swift; sourceTree = "<group>"; };
@@ -3435,14 +3437,15 @@
 			path = PaymentsTransfers;
 			sourceTree = "<group>";
 		};
-		5000CFBA287CA3AD00B0D0F7 /* Products */ = {
+		5000CFBA287CA3AD00B0D0F7 /* Components */ = {
 			isa = PBXGroup;
 			children = (
 				50A9671B287C918100B18490 /* ProductCardViewComponent.swift */,
 				5000CFB8287CA33900B0D0F7 /* ProductsListViewComponent.swift */,
 				50D6C950287F45EE009F2193 /* ProductAccountViewComponent.swift */,
+				50F3FB3728806DFF0053A969 /* TextFieldViewComponent.swift */,
 			);
-			path = Products;
+			path = Components;
 			sourceTree = "<group>";
 		};
 		503069D2286A5BE700308CC1 /* BottomSheetPresented */ = {
@@ -3508,7 +3511,7 @@
 			children = (
 				5059D4492863B76E00DA446D /* CurrencyListVIewComponent.swift */,
 				50D3D4832865C006002D7FB4 /* CurrencySwapViewComponent.swift */,
-				5000CFBA287CA3AD00B0D0F7 /* Products */,
+				5000CFBA287CA3AD00B0D0F7 /* Components */,
 			);
 			path = CurrencyWallet;
 			sourceTree = "<group>";
@@ -8402,6 +8405,7 @@
 				0CC8FCA7283145E900F0E9BD /* PaymentsTransfersViewModel+Preview.swift in Sources */,
 				7772979B27C7B6AE0099EF91 /* AuthCardScannerView.swift in Sources */,
 				0B51D87626D959BB00FC7B6B /* ExtensionGKHInputNav.swift in Sources */,
+				50F3FB3828806DFF0053A969 /* TextFieldViewComponent.swift in Sources */,
 				774A82C727BAE4BF00E5A5E9 /* SettingType.swift in Sources */,
 				ED0B48AC26812F450037EA06 /* LoginViewModel.swift in Sources */,
 				0BA9FE032833D6050027FAD1 /* GetPrintFormForDepositConditionsModel.swift in Sources */,

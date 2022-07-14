@@ -123,6 +123,49 @@ struct ProductCardView: View {
         
         VStack(alignment: .leading, spacing: 12) {
             
+            ProductView(viewModel: viewModel)
+            
+            switch viewModel.state {
+            case .normal:
+                
+                if viewModel.isDividerHiddable == false {
+                    
+                    Divider()
+                        .padding(.top, 2)
+                        .padding(.horizontal, 20)
+                }
+                
+                EmptyView()
+                
+            case .expanded(let model):
+                
+                Divider()
+                    .padding(.top, 2)
+                    .padding(.horizontal, 20)
+                
+                ProductsListView(viewModel: model)
+                    .padding(.top, 8)
+            }
+            
+        }.background(Color.mainColorsGrayLightest)
+    }
+}
+
+extension ProductCardView {
+    
+    enum ProductAction {
+    
+        struct Toggle: Action {}
+    }
+    
+    // MARK: - NumberCard
+    
+    struct ProductView : View {
+        
+        @ObservedObject var viewModel: ViewModel
+        
+        var body: some View {
+            
             Group {
                 
                 Text(viewModel.title)
@@ -162,46 +205,15 @@ struct ProductCardView: View {
                         }
                         
                         HStack {
-                            NumberCardView(viewModel: viewModel.numberCard)
+                            ProductCardView.NumberCardView(viewModel: viewModel.numberCard)
                         }
                     }
                 }.onTapGesture {
                     
-                    viewModel.action.send(ProductAction.Toggle())
+                    viewModel.action.send(ProductCardView.ProductAction.Toggle())
                 }
             }.padding(.horizontal, 20)
-            
-            switch viewModel.state {
-            case .normal:
-                
-                if viewModel.isDividerHiddable == false {
-                    
-                    Divider()
-                        .padding(.top, 2)
-                        .padding(.horizontal, 20)
-                }
-                
-                EmptyView()
-                
-            case .expanded(let model):
-                
-                Divider()
-                    .padding(.top, 2)
-                    .padding(.horizontal, 20)
-                
-                ProductsListView(viewModel: model)
-                    .padding(.top, 8)
-            }
-            
-        }.background(Color.mainColorsGrayLightest)
-    }
-}
-
-extension ProductCardView {
-    
-    enum ProductAction {
-    
-        struct Toggle: Action {}
+        }
     }
     
     // MARK: - NumberCard
