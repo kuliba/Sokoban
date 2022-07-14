@@ -130,7 +130,7 @@ extension ServerCommands {
                 let isActive: Bool
             }
             
-            enum SettingsType: String, Encodable { case pin, touchid, faceid }
+            enum SettingsType: String, Encodable { case pin, touchId, faceId }
             
             struct Response: ServerResponse {
                 
@@ -152,17 +152,17 @@ extension ServerCommands {
                 let pushFcmTokenEncrypted = try credentials.csrfAgent.encrypt(pushFcmToken)
                 let serverDeviceGUIDEncrypted = try credentials.csrfAgent.encrypt(serverDeviceGUID)
                 
-                let settings = try Self.settings(credentials: credentials, loginValue: loginValue, availableSensorType: availableSensorType, isSensorEnabled: isSensorEnabled)
+                let settingsEncrypted = try Self.settingsEncrypted(credentials: credentials, loginValue: loginValue, availableSensorType: availableSensorType, isSensorEnabled: isSensorEnabled)
                 
-                self.init(token: credentials.token, payload: .init(cryptoVersion: cryptoVersion, pushDeviceId: pushDeviceIdEncrypted, pushFcmToken: pushFcmTokenEncrypted, serverDeviceGUID: serverDeviceGUIDEncrypted, settings: settings))
+                self.init(token: credentials.token, payload: .init(cryptoVersion: cryptoVersion, pushDeviceId: pushDeviceIdEncrypted, pushFcmToken: pushFcmTokenEncrypted, serverDeviceGUID: serverDeviceGUIDEncrypted, settings: settingsEncrypted))
             }
             
-            static func settings(credentials: SessionCredentials, loginValue: String, availableSensorType: BiometricSensorType?, isSensorEnabled: Bool) throws -> [Settings] {
+            static func settingsEncrypted(credentials: SessionCredentials, loginValue: String, availableSensorType: BiometricSensorType?, isSensorEnabled: Bool) throws -> [Settings] {
                 
                 let loginValueEncrypted = try credentials.csrfAgent.encrypt(loginValue)
                 let typePinEncrypted = try credentials.csrfAgent.encrypt(SettingsType.pin.rawValue)
-                let typeFaceEncrypted = try credentials.csrfAgent.encrypt(SettingsType.faceid.rawValue)
-                let typeTouchEncrypted = try credentials.csrfAgent.encrypt(SettingsType.touchid.rawValue)
+                let typeFaceEncrypted = try credentials.csrfAgent.encrypt(SettingsType.faceId.rawValue)
+                let typeTouchEncrypted = try credentials.csrfAgent.encrypt(SettingsType.touchId.rawValue)
                 
                 if let availableSensorType = availableSensorType {
                     
@@ -180,7 +180,7 @@ extension ServerCommands {
                     
                 } else {
                     
-                    return [.init(type: typePinEncrypted, value: loginValue, isActive: true),
+                    return [.init(type: typePinEncrypted, value: loginValueEncrypted, isActive: true),
                             .init(type: typeFaceEncrypted, value: nil, isActive: false),
                             .init(type: typeTouchEncrypted, value: nil, isActive: false)]
                 }
