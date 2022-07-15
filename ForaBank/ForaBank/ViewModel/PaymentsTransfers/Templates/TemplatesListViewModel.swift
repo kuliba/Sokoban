@@ -139,10 +139,12 @@ private extension TemplatesListViewModel {
                         print("Скорее всего не будет сделано в ближайшее время")
                         
                     case .betweenTheir:
-                        link = .betweenTheir(.init(type: .template(temp), closeAction: {[weak self] in self?.link = nil }))
+                        link = .betweenTheir(.init(type: .template(temp), closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        }))
                         
                     case .insideBank:
-                        link = .betweenTheir(.init(type: .template(temp), closeAction: {[weak self] in self?.link = nil }))
+                        link = .betweenTheir(.init(type: .template(temp), closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        }))
                         
                     case .byPhone:
                         link = .byPhone(.init(insideByPhone: temp))
@@ -157,22 +159,28 @@ private extension TemplatesListViewModel {
                         link = .contactAdressless(temp)
                         
                     case .housingAndCommunalService:
-                        link = .housingAndCommunalService(.init(model: model, closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
+                        link = .housingAndCommunalService(.init(model: model, closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        }, paymentTemplate: temp))
 
                     case .mobile:
-                        link = .mobile(.init(paymentTemplate: temp, closeAction: {[weak self] in self?.link = nil }))
+                        link = .mobile(.init(paymentTemplate: temp, closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        }))
                         
                     case .internet:
-                        link = .internet(.init(model: model, closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
+                        link = .internet(.init(model: model, closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        }, paymentTemplate: temp))
 
                     case .transport:
-                        link = .internet(.init(model: model, closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
+                        link = .internet(.init(model: model, closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        }, paymentTemplate: temp))
 
                     case .externalEntity:
-                        link = .externalEntity(.init(closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
+                        link = .externalEntity(.init(type: .template(temp), closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        }))
 
                     case .externalIndividual:
-                        link = .externalEntity(.init(closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
+                        link = .externalEntity(.init(type: .template(temp), closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        }))
 
                     default:
                         break
@@ -270,7 +278,9 @@ private extension TemplatesListViewModel {
                             item.state = .normal
                         }
                     }
-
+                case _ as TemplatesListViewModelAction.CloseAction:
+                    link = nil
+                    
                 default:
                     break
                 }
@@ -801,5 +811,14 @@ extension TemplatesListViewModel {
             case regular
             case add
         }
+    }
+}
+
+enum TemplateViewModelAction {
+    
+    enum CloseAction {
+     
+        struct Link: Action {}
+
     }
 }
