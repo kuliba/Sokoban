@@ -28,7 +28,7 @@ extension PaymentsAmountView {
         init(title: String, amount: Double, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil, currencySwitch: CurrencySwitchViewModel? = nil, alert: AlertViewModel? = nil, formatter: NumberFormatter = .currency(with: "₽"), actionTitle: String = "", action: @escaping () -> Void = {}) {
             
             self.title = title
-            self.textField = .init(value: amount, formatter: formatter, limit: 10)
+            self.textField = .init(type: .general, value: amount, formatter: formatter, limit: 10)
             self.transferButton = transferButton
             self.info = info
             self.currencySwitch = currencySwitch
@@ -41,7 +41,7 @@ extension PaymentsAmountView {
         init(with parameterAmount: Payments.ParameterAmount, actionTitle: String, action: @escaping () -> Void) {
             
             self.title = parameterAmount.title
-            self.textField = .init(value: parameterAmount.amount, formatter: .currency(with: "₽"), limit: 10)
+            self.textField = .init(type: .general, value: parameterAmount.amount, formatter: .currency(with: "₽"), limit: 10)
             self.transferButton = .inactive(title: "Перевести")
             self.info = nil
             self.currencySwitch = nil

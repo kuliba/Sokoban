@@ -53,7 +53,7 @@ struct TextFieldView: UIViewRepresentable {
     private let font: UIFont
 
     init(viewModel: ViewModel,
-         keyboardType: UIKeyboardType = .numberPad,
+         keyboardType: UIKeyboardType = .decimalPad,
          font: UIFont = .systemFont(ofSize: 16, weight: .medium)) {
 
         self.viewModel = viewModel

@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 //MARK: - ViewModel
 
@@ -18,7 +19,12 @@ extension TextFieldFormatableView {
         @Published var text: String?
         @Published var isEnabled: Bool
         @Published var limit: Int?
+        
+        let type: Kind
+        let toolbar: ToolbarViewModel?
         var dismissKeyboard: () -> Void
+        
+        var bindings = Set<AnyCancellable>()
         
         var value: Double {
             
@@ -29,13 +35,43 @@ extension TextFieldFormatableView {
             return value.doubleValue
         }
         
-        internal init(value: Double, formatter: NumberFormatter, isEnabled: Bool = true, limit: Int? = nil) {
+        enum Kind {
             
+            case general
+            case openAccount
+            case currencyWallet
+        }
+        
+        internal init(type: Kind, value: Double, formatter: NumberFormatter, isEnabled: Bool = true, limit: Int? = nil, toolbar: ToolbarViewModel? = nil) {
+            
+            self.type = type
             self.formatter = formatter
             self.text = formatter.string(from: NSNumber(value: value))
             self.isEnabled = isEnabled
             self.limit = limit
+            self.toolbar = toolbar
             self.dismissKeyboard = {}
+        }
+    }
+}
+
+extension TextFieldFormatableView {
+    
+    struct ToolbarViewModel {
+        
+        let doneButton: ButtonViewModel
+        let closeButton: ButtonViewModel?
+        
+        class ButtonViewModel: ObservableObject {
+
+            @Published var isEnabled: Bool
+            let action: () -> Void
+
+            init(isEnabled: Bool, action: @escaping () -> Void) {
+
+                self.isEnabled = isEnabled
+                self.action = action
+            }
         }
     }
 }
@@ -65,6 +101,10 @@ struct TextFieldFormatableView: UIViewRepresentable {
         textField.keyboardType = keyboardType
         
         viewModel.dismissKeyboard = { textField.resignFirstResponder() }
+        
+        if viewModel.toolbar != nil {
+            textField.inputAccessoryView = makeToolbar(context: context)
+        }
  
         return textField
     }
@@ -77,17 +117,20 @@ struct TextFieldFormatableView: UIViewRepresentable {
     
     func makeCoordinator() -> Coordinator {
         
-        Coordinator(text: $viewModel.text, formatter: viewModel.formatter, limit: viewModel.limit)
+        Coordinator(viewModel: viewModel, text: $viewModel.text, formatter: viewModel.formatter, limit: viewModel.limit)
     }
     
     class Coordinator: NSObject, UITextFieldDelegate {
+        
+        @ObservedObject var viewModel: ViewModel
         
         var text: Binding<String?>
         var formatter: NumberFormatter
         var limit: Int?
         
-        init(text: Binding<String?>, formatter: NumberFormatter, limit: Int?) {
+        init(viewModel: ViewModel, text: Binding<String?>, formatter: NumberFormatter, limit: Int?) {
             
+            self.viewModel = viewModel
             self.text = text
             self.formatter = formatter
             self.limit = limit
@@ -100,11 +143,25 @@ struct TextFieldFormatableView: UIViewRepresentable {
         
         public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 
+            switch viewModel.type {
+            case .general, .currencyWallet:
+                return generalType(textField, range: range, string: string)
+            case .openAccount:
+                return openAccountType(textField, range: range, string: string)
+            }
+        }
+        
+        func generalType(_ textField: UITextField, range: NSRange, string: String) -> Bool {
+            
             textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter, limit: limit)
             text.wrappedValue = textField.text
             updateCursorPosition(textField)
             
             return false
+        }
+        
+        func openAccountType(_ textField: UITextField, range: NSRange, string: String) -> Bool {
+            return true
         }
         
         func updateCursorPosition(_ textField: UITextField) {
@@ -114,6 +171,14 @@ struct TextFieldFormatableView: UIViewRepresentable {
 
                 textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
             }
+        }
+        
+        @objc func handleDoneAction() {
+            viewModel.toolbar?.doneButton.action()
+        }
+
+        @objc func handleCloseAction() {
+            viewModel.toolbar?.closeButton?.action()
         }
     }
     
@@ -212,5 +277,49 @@ struct TextFieldFormatableView: UIViewRepresentable {
             // return formatted double value, example: `1234.56` -> `1 234,56 ₽`
             return formatter.string(from: NSNumber(value: doubleValue))
         }
+    }
+    
+    private func makeToolbar(context: Context) -> UIToolbar? {
+        
+        let coordinator = context.coordinator
+        
+        guard let toolbarViewModel = coordinator.viewModel.toolbar else {
+            return nil
+        }
+
+        let toolbar = UIToolbar()
+        let color: UIColor = .init(hexString: "#1C1C1C")
+        let font: UIFont = .systemFont(ofSize: 18, weight: .bold)
+
+        let doneButton = UIBarButtonItem(title: "Готово", style: .plain, target: coordinator, action: #selector(coordinator.handleDoneAction))
+        doneButton.setTitleTextAttributes([.font: font], for: .normal)
+        doneButton.tintColor = color
+
+        toolbarViewModel.doneButton.$isEnabled
+            .receive(on: DispatchQueue.main)
+            .sink { isEnabled in
+
+                doneButton.isEnabled = isEnabled
+
+            }.store(in: &viewModel.bindings)
+
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        var items: [UIBarButtonItem] = [flexibleSpace, doneButton]
+        
+        if toolbarViewModel.closeButton != nil {
+            
+            let closeButton = UIBarButtonItem( image: .init(named: "Close Button"), style: .plain, target: coordinator, action: #selector(coordinator.handleCloseAction))
+            closeButton.tintColor = color
+            
+            items.insert(closeButton, at: 0)
+        }
+
+        toolbar.items = items
+        toolbar.barStyle = .default
+        toolbar.barTintColor = .white.withAlphaComponent(0)
+        toolbar.clipsToBounds = true
+        toolbar.sizeToFit()
+
+        return toolbar
     }
 }
