@@ -43,9 +43,14 @@ struct MyProductsSectionItemView: View {
                 HStack(spacing: 16) {
                     
                     VStack {
-                        
-                        viewModel.icon
-                            .renderingMode(.original)
+                        if let icon = viewModel.icon {
+                            icon
+                                .renderingMode(.original)
+                        } else {
+                            EmptyView()
+                                .frame(width: 32, height: 32)
+                            //TODO: Placeholder Image
+                        }
                         Spacer()
                         
                     }
@@ -79,15 +84,18 @@ struct MyProductsSectionItemView: View {
                             Text(viewModel.numberCard)
                                 .font(.textBodySR12160())
                                 .foregroundColor(.mainColorsGray)
-
-                            Text(viewModel.subtitle)
-                                .font(.textBodySR12160())
-                                .foregroundColor(.mainColorsGray)
-
-                            Text(viewModel.dateLong)
-                                .font(.textBodySR12160())
-                                .foregroundColor(.mainColorsGray)
                             
+                            if let subtitle = viewModel.subtitle {
+                                Text(subtitle)
+                                    .font(.textBodySR12160())
+                                    .foregroundColor(.mainColorsGray)
+                            }
+                            
+                            if let dateLong = viewModel.dateLong {
+                                Text(dateLong)
+                                    .font(.textBodySR12160())
+                                    .foregroundColor(.mainColorsGray)
+                            }
                             Spacer()
                         }
                         
@@ -102,7 +110,7 @@ struct MyProductsSectionItemView: View {
             .offset(x: contentOffset)
             .onTapGesture {
                 
-                viewModel.action.send(MyProductsSectionItemAction.Tap())
+                viewModel.action.send(MyProductsSectionItemAction.Tap(productId: viewModel.id))
             }
         }
         .frame(height: 60)

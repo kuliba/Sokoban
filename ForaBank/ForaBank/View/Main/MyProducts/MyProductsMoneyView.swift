@@ -48,8 +48,9 @@ struct MyProductsMoneyView: View {
                                 .font(.textH2SB20282())
                                 .foregroundColor(.mainColorsBlack)
                         }
-
-                        MyProductsMoneyViewButton(viewModel: viewModel.currencyButton)
+                        if let currencyButton = viewModel.currencyButton {
+                            MyProductsMoneyViewButton(viewModel: currencyButton)
+                        }
                     }
                     .padding([.leading, .top], 20)
                     .padding(.bottom, 4)
@@ -87,12 +88,12 @@ extension MyProductsMoneyView {
         }
 
         var body: some View {
-
-            Button {
-
-                viewModel.isSelected.toggle()
-
-            } label: {
+// TODO: Оставил закомиченым пока не начнем реализацию кнопки
+//            Button {
+//
+//                viewModel.isSelected.toggle()
+//
+//            } label: {
 
                 ZStack {
 
@@ -114,7 +115,8 @@ extension MyProductsMoneyView {
 
                     }.padding(.vertical, 4)
                 }
-            }.padding(.trailing, 19)
+//            }
+            .padding(.trailing, 19)
         }
     }
 }
