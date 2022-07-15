@@ -14,59 +14,7 @@ struct TransferByRequisitesView: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> TransferByRequisitesViewController {
         
-        var controller = TransferByRequisitesViewController()
-        controller.viewModel.closeAction = viewModel.closeAction
-
-        if let paymentTemplate = viewModel.paymentTemplate {
-        
-            switch paymentTemplate.type {
-            case .externalEntity:
-                
-                if let paymentTemplate = viewModel.paymentTemplate {
-                    
-                    controller = .init(orgPaymentTemplate: paymentTemplate)
-                    controller.viewModel.closeAction = viewModel.closeAction
-                    
-                }
-
-            default:
-             
-                if let paymentTemplate = viewModel.paymentTemplate, let parameter = paymentTemplate.parameterList.first as? TransferGeneralData {
-                            
-                        controller = .init(paymentTemplate: paymentTemplate)
-                        controller.viewModel.closeAction = viewModel.closeAction
-                    
-                        if let bik = parameter.payeeExternal?.bankBIC {
-                            controller.bikBankField.textField.text = bik
-                        }
-                        
-                        if let account = parameter.payeeExternal?.accountNumber {
-                            let mask = StringMask(mask: "00000 000 0 0000 0000000")
-                            controller.accountNumber.textField.text = mask.mask(string: account)
-                        }
-                        
-                        if let fullName = parameter.payeeExternal?.name {
-                            let full = fullName.components(separatedBy: " ")
-                            controller.fio.surname = full[0]
-                            controller.fioField.textField.text = full[0]
-                            
-                            controller.fio.name = full[1]
-                            controller.nameField.textField.text = full[1]
-                            
-                            controller.fio.patronymic = full[2]
-                            controller.surField.textField.text = full[2]
-                        }
-                        
-                        if let inn = parameter.payeeExternal?.inn {
-                            controller.innField.textField.text = inn
-                        }
-                        
-                        if let kpp = parameter.payeeExternal?.kpp {
-                            controller.kppField.textField.text = kpp
-                        }
-                }
-            }
-        }
+        let controller = setupController(viewModel.type)
         
         context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
             vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
@@ -75,6 +23,34 @@ struct TransferByRequisitesView: UIViewControllerRepresentable {
         })
         
         return controller
+    }
+    
+    func setupController(_ type: TransferByRequisitesViewModel.Kind) -> TransferByRequisitesViewController {
+        
+        switch type {
+            
+        case .general:
+            let controller = TransferByRequisitesViewController()
+            controller.viewModel.closeAction = viewModel.closeAction
+            return controller
+            
+        case .template(let templateData):
+            
+            switch templateData.type {
+            case .externalEntity:
+                
+                let controller = TransferByRequisitesViewController(orgPaymentTemplate: templateData)
+                controller.viewModel.closeAction = viewModel.closeAction
+                return controller
+
+            default:
+                
+                let controller = TransferByRequisitesViewController(paymentTemplate: templateData)
+                controller.viewModel.closeAction = viewModel.closeAction
+                return controller
+
+            }
+        }
     }
     
     func updateUIViewController(_ uiViewController: TransferByRequisitesViewController, context: Context) {}
@@ -90,12 +66,17 @@ struct TransferByRequisitesView: UIViewControllerRepresentable {
 struct TransferByRequisitesViewModel {
     
     let closeAction: () -> Void
+    let type: Kind
     
-    var paymentTemplate: PaymentTemplateData? = nil
-    
-    init(closeAction: @escaping () -> Void, paymentTemplate: PaymentTemplateData?) {
+    init(type: Kind = .general, closeAction: @escaping () -> Void) {
         
         self.closeAction = closeAction
-        self.paymentTemplate = paymentTemplate
+        self.type = type
+    }
+    
+    enum Kind {
+        
+        case general
+        case template(PaymentTemplateData)
     }
 }

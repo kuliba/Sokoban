@@ -203,7 +203,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                         case .byBankDetails:
                             link = .transferByRequisites(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, paymentTemplate: nil))
+                            }))
                             
                         case .byPhoneNumber:
                             sheet = .init(type: .transferByPhone(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Sheet())})))
