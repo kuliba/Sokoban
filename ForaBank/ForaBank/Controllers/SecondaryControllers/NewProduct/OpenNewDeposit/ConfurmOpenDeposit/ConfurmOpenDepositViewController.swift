@@ -7,6 +7,7 @@
 
     import UIKit
     import AnyFormatKit
+    import IQKeyboardManagerSwift
 
     class ConfurmOpenDepositViewController: PaymentViewController {
         
@@ -206,6 +207,18 @@
             calculateSumm(with: startAmount)
             
             bottomView.doneButtonIsEnabled(newText.isEmpty)
+            
+            IQKeyboardManager.shared.enable = true
+            IQKeyboardManager.shared.enableAutoToolbar = true
+            IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        }
+        
+        override func viewDidDisappear(_ animated: Bool) {
+            super.viewDidDisappear(animated)
+            IQKeyboardManager.shared.enable = false
+            IQKeyboardManager.shared.enableAutoToolbar = false
+            IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+    
         }
         
         //MARK: - Helper

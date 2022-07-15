@@ -15,53 +15,72 @@ class OpenDepositViewModel: ObservableObject {
     
     let navButtonBack: NavigationBarButtonViewModel
     @Published var products: [OfferProductView.ViewModel]
-    @Published var isShowSheet: Bool = false
-    
-    let style: Style
+    @Published var bottomSheet: BottomSheet?
+
+    let catalogType: CatalogType
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
 
     
-    init(_ model: Model = .emptyMock, navButtonBack: NavigationBarButtonViewModel, products: [OfferProductView.ViewModel], style: Style) {
+    init(_ model: Model = .emptyMock, navButtonBack: NavigationBarButtonViewModel, products: [OfferProductView.ViewModel], catalogType: CatalogType) {
         
         self.navButtonBack = navButtonBack
-        self.style = style
+        self.catalogType = catalogType
         self.products = products
         self.model = model
     }
     
-    init(_ model: Model, products: [CatalogProductData], style: Style, dismissAction: @escaping () -> Void) {
+    init(_ model: Model, catalogType: CatalogType, dismissAction: @escaping () -> Void) {
         
         self.navButtonBack = .init(icon: .ic24ChevronLeft, action: dismissAction)
-        self.style = .catalog
-        self.products = products.enumerated().map({ product in
-            
-            OfferProductView.ViewModel(with: product.element)
-        })
         self.model = model
+        self.products = []
+        self.catalogType = catalogType
         
         bind()
-        self.model.action.send(ModelAction.Deposits.List.Request())
-        requestImages(for: products)
-    }
-    
-    init(_ model: Model, products: [DepositProductData], style: Style, dismissAction: @escaping () -> Void) {
         
-        self.navButtonBack = .init(icon: .ic24ChevronLeft, action: dismissAction)
-        self.style = .deposit
-        self.products = products.enumerated().map({ product in
-            
-            OfferProductView.ViewModel(with: product.element)
-        })
-        self.model = model
+        switch catalogType {
+        case .deposit:
+            self.model.action.send(ModelAction.Deposits.List.Request())
+
+        case .catalog:
+            self.model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.productCatalogList]))
         
-        bind()
-        requestDepositImages(for: products)
-        self.model.action.send(ModelAction.Deposits.List.Request())
+        }
+
     }
     
     private func bind() {
+        
+        switch catalogType {
+        case .deposit:
+            
+            model.deposits
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] deposits in
+                    
+                    self.products = deposits.map { OfferProductView.ViewModel(with: $0) }
+                    
+                    requestDepositImages(for: deposits)
+                    bind(self.products)
+                    
+                }.store(in: &bindings)
+            
+        case .catalog:
+            
+            model.catalogProducts
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] products in
+                    
+                    self.products = products.map { OfferProductView.ViewModel(with: $0) }
+                    
+                    requestImages(for: products)
+                    bind(self.products)
+
+                }.store(in: &bindings)
+                
+        }
         
         action
             .receive(on: DispatchQueue.main)
@@ -119,6 +138,26 @@ class OpenDepositViewModel: ObservableObject {
             }.store(in: &bindings)
     }
     
+    private func bind(_ products: [OfferProductView.ViewModel]) {
+        
+        for product in products {
+            
+            product.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    switch action {
+                        
+                    case _ as ModelActionOpenDeposit.ButtonTapped:
+                        if let additionalCondition = product.additionalCondition {
+                            bottomSheet = .init(.init(type: .openDeposit(.init(desc: additionalCondition.desc))))
+                        }
+                        
+                    default: break
+                    }
+                }.store(in: &bindings)
+        }
+    }
+    
     func requestImages(for products: [CatalogProductData]) {
         
         for product in products {
@@ -138,9 +177,24 @@ class OpenDepositViewModel: ObservableObject {
 
 extension OpenDepositViewModel {
     
-    enum Style {
+    struct BottomSheet: Identifiable {
+
+        let id = UUID()
+        let type: BottomSheetType
+
+        enum BottomSheetType {
+
+            case openDeposit(OfferProductView.ViewModel.AdditionalCondition)
+        }
+    }
+    
+    enum CatalogType {
         case deposit
         case catalog
     }
+    
+    enum ModelActionOpenDeposit {
+        
+        struct ButtonTapped: Action {}
+    }
 }
-
