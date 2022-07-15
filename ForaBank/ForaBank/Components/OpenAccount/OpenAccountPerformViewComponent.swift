@@ -179,6 +179,8 @@ extension OpenAccountPerformView {
                         confirm.confirmCode = payload.code
                         confirm.enterCode = payload.code
                         confirm.textFieldToolbar.text = payload.code
+                        
+                        operationType = .edit
 
                     default:
                         break
