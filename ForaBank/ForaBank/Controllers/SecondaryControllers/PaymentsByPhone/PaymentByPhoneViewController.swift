@@ -127,39 +127,26 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         
         setupBankList()
         setupActions()
-        if viewModel.amount != nil {
-            setupAmount()
-        }
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if let template = viewModel.template {
+            runBlockAfterDelay(0.2) {
+                self.setupAmount(amount: template.amount)
+                self.bottomView.doneButtonIsEnabled(false)
+                self.bottomView.doneButton.isEnabled =  true
+            }
+        }
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = true
         navigationController?.navigationBar.isHidden = false
     }
     
-    @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0 {
-                self.view.frame.origin.y -= keyboardSize.height
-            }
-        }
-    }
-    
-    @objc func keyboardWillHide(notification: NSNotification) {
-        if self.view.frame.origin.y != 0 {
-            self.view.frame.origin.y = 0
-        }
-    }
-    
     //MARK: - Helpers
-    func setupAmount() {
-        let moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## ₽")
-        
+    
+    func setupAmount(amount: Double?) {
+        guard let moneyFormatter = bottomView.moneyFormatter else { return }
         let newText = moneyFormatter.format("\(viewModel.amount ?? 0)") ?? ""
         bottomView.amountTextField.text = newText
     }
@@ -320,6 +307,14 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
             button.tintColor = .black
             navigationItem.rightBarButtonItem = button
             
+            let backButton = UIBarButtonItem(image: UIImage(named: "back_button"),
+                                         landscapeImagePhone: nil,
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(onTouchBackButton))
+            backButton.tintColor = .black
+            navigationItem.leftBarButtonItem = backButton
+            
         } else {
             if viewModel.isSbp {
                 title = "Перевод через СБП"
@@ -332,21 +327,21 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                 title = "Перевод по номеру телефона"
             }
             
-            if viewModel.setBackAction {
-                let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
-                                             landscapeImagePhone: nil,
-                                             style: .done,
-                                             target: self,
-                                             action: #selector(onTouchBackButton))
-                button.tintColor = .black
-                navigationItem.leftBarButtonItem = button
-            }
+            let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
+                                         landscapeImagePhone: nil,
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(onTouchBackButton))
+            button.tintColor = .black
+            navigationItem.leftBarButtonItem = button
         }
         setupBankField(bank: viewModel.selectedBank)
     }
     
     @objc func onTouchBackButton() {
-            viewModel.closeAction()
+        viewModel.closeAction()
+        dismiss(animated: true)
+        navigationController?.popToRootViewController(animated: true)
     }
     
     private func setupBankField(bank: BanksList?) {
@@ -374,7 +369,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                         paymentTemplateId: templateId))
                     
                     // FIXME: В рефактре нужно слушатель на обновление title
-                    self.title = text
+                    self.parent?.title = text
                     
                 } else {
                     self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")

@@ -814,8 +814,8 @@
                             <constraint firstItem="Xl9-YJ-foy" firstAttribute="bottom" secondItem="t5c-wL-nzh" secondAttribute="bottom" id="bdx-Ax-oQe"/>
                             <constraint firstItem="Xl9-YJ-foy" firstAttribute="trailing" secondItem="t5c-wL-nzh" secondAttribute="trailing" id="faD-OL-c2i"/>
                             <constraint firstItem="MCd-Uj-SIC" firstAttribute="top" secondItem="eMU-7P-kOr" secondAttribute="top" constant="10" id="lfJ-5z-aCJ"/>
+                            <constraint firstItem="Nww-A5-A53" firstAttribute="top" secondItem="MCd-Uj-SIC" secondAttribute="bottom" constant="7" id="p8F-Yz-hVj"/>
                             <constraint firstItem="Nww-A5-A53" firstAttribute="trailing" secondItem="t5c-wL-nzh" secondAttribute="trailing" id="q3j-J8-Xs5"/>
-                            <constraint firstItem="Nww-A5-A53" firstAttribute="top" secondItem="t5c-wL-nzh" secondAttribute="top" constant="50" id="twy-v1-ykI"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="UD8-xf-IJI"/>

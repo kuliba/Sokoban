@@ -89,6 +89,7 @@ struct MainView: View {
                         
                     case .templates(let templatesViewModel):
                         TemplatesListView(viewModel: templatesViewModel)
+                        
                     case .qrScanner(let qrViewModel):
                         QrScannerView(viewModel: qrViewModel)
                             .navigationBarTitle("", displayMode: .inline)

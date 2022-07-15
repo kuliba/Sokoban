@@ -11,6 +11,7 @@ class AvtodorDetailsFormViewModel {
     var puref = ""
     var cardNumber = ""
     var product: GetProductListDatum?
+    let closeAction: () -> Void = {}
 
 
     func setupNextStep(_ answer: CreateTransferAnswerModel) {

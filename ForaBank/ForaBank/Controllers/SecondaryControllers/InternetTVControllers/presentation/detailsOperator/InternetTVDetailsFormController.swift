@@ -236,6 +236,14 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             button.tintColor = .black
             navigationItem.rightBarButtonItem = button
             
+            let backButton = UIBarButtonItem(image: UIImage(named: "back_button"),
+                                         landscapeImagePhone: nil,
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(onTouchBackButton))
+            backButton.tintColor = .black
+            navigationItem.leftBarButtonItem = backButton
+            
         } else {
             
             let operatorsName = operatorData?.name ?? ""
@@ -257,6 +265,11 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         }
     }
     
+    @objc func onTouchBackButton() {
+        viewModel.closeAction()
+        navigationController?.popToRootViewController(animated: true)
+    }
+    
     @objc private func updateNameTemplate() {
         self.showInputDialog(title: "Название шаблона",
                              actionTitle: "Сохранить",
@@ -276,8 +289,8 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
                         paymentTemplateId: templateId))
                     
                     // FIXME: В рефактре нужно слушатель на обновление title
-                    self.title = text
-                    
+                    self.parent?.title = text
+
                 } else {
                     self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")
                 }
@@ -332,7 +345,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             
             let clientId = Model.shared.clientInfo.value?.id
             let productsFilterredMapped = productsFilterred.map{ $0.userAllProducts() }.filter({$0.ownerID == clientId})
-
+            
             self.footerView.cardListView.cardList = productsFilterredMapped
             
             if productsFilterredMapped.count > 0 {

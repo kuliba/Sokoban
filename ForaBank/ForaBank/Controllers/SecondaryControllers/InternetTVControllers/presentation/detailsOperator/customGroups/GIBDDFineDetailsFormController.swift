@@ -275,6 +275,14 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
             button.tintColor = .black
             navigationItem.rightBarButtonItem = button
             
+            let backButton = UIBarButtonItem(image: UIImage(named: "back_button"),
+                                         landscapeImagePhone: nil,
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(onTouchBackButton))
+            backButton.tintColor = .black
+            navigationItem.leftBarButtonItem = backButton
+            
         } else {
             
             let operatorsName = operatorData?.name ?? ""
@@ -296,6 +304,11 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
         }
     }
 
+    @objc func onTouchBackButton() {
+        viewModel.closeAction()
+        navigationController?.popToRootViewController(animated: true)
+    }
+    
     func setTitle(title:String, subtitle:String) -> UIView {
         let titleLabel = UILabel(frame: CGRect(x: 0, y: -2, width: 0, height: 0))
         titleLabel.backgroundColor = .clear
@@ -352,8 +365,8 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
                     paymentTemplateId: templateId))
                     
                 // FIXME: В рефактре нужно слушатель на обновление title
-                self.title = text
-                
+                    self.parent?.title = text
+
                 } else {
                     self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")
                 }

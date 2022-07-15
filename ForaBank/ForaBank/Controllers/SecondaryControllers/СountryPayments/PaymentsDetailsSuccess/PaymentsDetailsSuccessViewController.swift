@@ -123,10 +123,10 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         self.view.window?.rootViewController?.dismiss(animated: true)
         self.navigationController?.popToRootViewController(animated: true)
         operatorsViewModel?.closeAction()
+        NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
         guard let closeAction = closeAction else {
             return
         }
-        
         closeAction()
     }
     

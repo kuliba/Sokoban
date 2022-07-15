@@ -160,7 +160,7 @@ private extension TemplatesListViewModel {
                         link = .housingAndCommunalService(.init(model: model, closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
 
                     case .mobile:
-                        link = .mobile(temp)
+                        link = .mobile(.init(paymentTemplate: temp, closeAction: {[weak self] in self?.link = nil }))
                         
                     case .internet:
                         link = .internet(.init(model: model, closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
@@ -353,7 +353,7 @@ extension TemplatesListViewModel {
         case direct(PaymentTemplateData)
         case contactAdressless(PaymentTemplateData)
         case housingAndCommunalService(InternetTVDetailsViewModel)
-        case mobile(PaymentTemplateData)
+        case mobile(MobilePayViewModel)
         case internet(InternetTVDetailsViewModel)
         case transport(OperatorsViewModel)
         case externalEntity(TransferByRequisitesViewModel)

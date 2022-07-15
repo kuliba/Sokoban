@@ -13,47 +13,59 @@ struct MobilePayView: UIViewControllerRepresentable {
     var viewModel: MobilePayViewModel
     
     func makeUIViewController(context: Context) -> MobilePayViewController {
-        
-        let controller = MobilePayViewController()
-        controller.viewModel = viewModel
-        
-        switch viewModel.paymentType {
-        case .template(let paymentTemplate):
-            if let model = paymentTemplate.parameterList.first as? TransferAnywayData {
-                    
-                    let mask = StringMask(mask: "+7 (000) 000-00-00")
-                    let phone = model.additional.first(where: { $0.fieldname == "a3_NUMBER_1_2" })
-                    let maskPhone = mask.mask(string: phone?.fieldvalue)
-                    
-                    controller.selectNumber = maskPhone
-                    controller.phoneField.textField.text = maskPhone
-            }
             
-        case .paymentServiceData(let paymentServiceData):
-            
-            let phoneNumber = paymentServiceData.additionalList.filter {
-                $0.fieldName == "a3_NUMBER_1_2"
-            }
+            switch viewModel.paymentType {
+            case .template(let paymentTemplate):
 
-            if let number = phoneNumber.first?.fieldValue {
+                let controller = MobilePayViewController(paymentTemplate: paymentTemplate)
+                controller.viewModel = viewModel
+
+            context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
+                vc.parent?.navigationItem.title = vc.navigationItem.title
+                vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
+                vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
+            })
+
+             return controller
                 
-                let phoneFormatter = PhoneNumberFormater()
-                let formattedPhone = phoneFormatter.format(number)
-                controller.phoneField.text = formattedPhone
-                controller.selectNumber = formattedPhone
+            case .paymentServiceData(let paymentServiceData):
+                
+                let controller = MobilePayViewController()
+                controller.viewModel = viewModel
+
+                let phoneNumber = paymentServiceData.additionalList.filter {
+                    $0.fieldName == "a3_NUMBER_1_2"
+                }
+
+                if let number = phoneNumber.first?.fieldValue {
+                    
+                    let phoneFormatter = PhoneNumberFormater()
+                    let formattedPhone = phoneFormatter.format(number)
+                    controller.phoneField.text = formattedPhone
+                    controller.selectNumber = formattedPhone
+                }
+
+            context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
+                vc.parent?.navigationItem.title = vc.navigationItem.title
+                vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
+                vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
+            })
+               return controller
+
+            case .none:
+               let controller = MobilePayViewController()
+                controller.viewModel = viewModel
+
+            context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
+                vc.parent?.navigationItem.title = vc.navigationItem.title
+                vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
+                vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
+            })
+            
+            return controller
             }
-        case .none:
-            break
         }
-        
-        context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
-            vc.parent?.navigationItem.title = vc.navigationItem.title
-            vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
-            vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
-        })
-        
-        return controller
-    }
+
     
     func updateUIViewController(_ uiViewController: MobilePayViewController, context: Context) {}
     
@@ -70,10 +82,10 @@ struct MobilePayViewModel {
     let closeAction: () -> Void
     let paymentType: PaymentType?
     
-    init(paymentTemplate: PaymentTemplateData) {
+    init(paymentTemplate: PaymentTemplateData, closeAction: @escaping () -> Void) {
         
         self.paymentType = .template(paymentTemplate)
-        self.closeAction = {}
+        self.closeAction = closeAction
     }
     
     init(closeAction: @escaping () -> Void) {

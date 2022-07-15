@@ -275,6 +275,14 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
             button.tintColor = .black
             navigationItem.rightBarButtonItem = button
             
+            let backButton = UIBarButtonItem(image: UIImage(named: "back_button"),
+                                         landscapeImagePhone: nil,
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(onTouchBackButton))
+            backButton.tintColor = .black
+            navigationItem.leftBarButtonItem = backButton
+            
         } else {
             
             let operatorsName = customGroup?.name ?? ""
@@ -294,6 +302,11 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
             navigationItem.hidesSearchBarWhenScrolling = false
             definesPresentationContext = true
         }
+    }
+    
+    @objc func onTouchBackButton() {
+        viewModel.closeAction()
+        navigationController?.popToRootViewController(animated: true)
     }
 
     @objc private func updateNameTemplate() {
@@ -315,8 +328,8 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
                     paymentTemplateId: templateId))
                     
                 // FIXME: В рефактре нужно слушатель на обновление title
-                self.title = text
-                
+                    self.parent?.title = text
+
                 } else {
                     self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")
                 }
@@ -388,10 +401,10 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
         DispatchQueue.main.async {
             let productTypes: [ProductType] = [.card, .account]
             let productsFilterred = self.model.products.value.values.flatMap({ $0 }).filter({ productTypes.contains($0.productType) && $0.currency == "RUB" })
-            let productsFilterredMapped = productsFilterred.map{ $0.userAllProducts() }
+            var productsFilterredMapped = productsFilterred.map{ $0.userAllProducts() }
             
             let clientId = Model.shared.clientInfo.value?.id
-            productsFilterredMapped.filter({$0.ownerID == clientId})
+            productsFilterredMapped = productsFilterredMapped.filter({$0.ownerID == clientId})
 
             self.footerView.cardListView.cardList = productsFilterredMapped
             

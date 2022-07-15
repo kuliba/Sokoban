@@ -13,18 +13,34 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     private var bindings = Set<AnyCancellable>()
     
+    let rootViewModel = RootViewModel(AppDelegate.shared.model)
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        let rootViewModel = RootViewModel(AppDelegate.shared.model)
         let rootViewController = RootViewHostingViewController(with: rootViewModel)
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
         
         bind(rootViewModel: rootViewModel)
-    } 
+
+        //FIXME: remove after refactor paymnets
+        NotificationCenter.default
+            .addObserver(self,
+                         selector:#selector(dismissAll),
+                         name: .dismissAllViewAndSwitchToMainTab,
+                         object: nil)
+    
+        legacyNavigationBarBackground()
+    }
+    
+    //FIXME: remove after refactor paymnets
+    @objc func dismissAll() {
+        self.rootViewModel.action.send(RootViewModelAction.DismissAll())
+        self.rootViewModel.action.send(RootViewModelAction.SwitchTab(tabType: .main))
+    }
 }
 
 //MARK: - Bindings
@@ -46,6 +62,15 @@ extension SceneDelegate {
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    func legacyNavigationBarBackground() {
+        // Настройка NavigationBar
+        UINavigationBar.appearance().barTintColor = .white
+        UINavigationBar.appearance().backgroundColor = .white
+        UINavigationBar.appearance().titleTextAttributes =
+            [.foregroundColor: UIColor.black]
+        UINavigationBar.appearance().isTranslucent = true
     }
 }
 
