@@ -17,15 +17,17 @@ extension NavigationBarView {
         @Published var leftButtons: [BaseButtonViewModel]
         @Published var rightButtons: [ButtonViewModel]
         
-        let background: Color
-        let foreground: Color
+        @Published var background: Color
+        @Published var foreground: Color
+        let contrast: Double
         
         internal init(title: String,
                       subtitle: String? = nil,
                       leftButtons: [BaseButtonViewModel] = [],
                       rightButtons: [ButtonViewModel] = [],
                       background: Color = Color.textWhite,
-                      foreground: Color = Color.textSecondary) {
+                      foreground: Color = Color.textSecondary,
+                      contrast: Double = 1) {
             
             self.title = title
             self.subtitle = subtitle
@@ -33,6 +35,7 @@ extension NavigationBarView {
             self.rightButtons = rightButtons
             self.background = background
             self.foreground = foreground
+            self.contrast = contrast
         }
         
         class BaseButtonViewModel: Identifiable {
@@ -164,7 +167,10 @@ struct NavigationBarView: View {
         }
         .frame(height: 48)
         .padding(.horizontal, 18)
-        .background(viewModel.background.edgesIgnoringSafeArea(.top))
+        .background(viewModel.background
+            .edgesIgnoringSafeArea(.top)
+            .contrast(viewModel.contrast)
+        )
     }
 }
 

@@ -189,15 +189,17 @@ class MainViewModel: ObservableObject, Resetable {
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
                     
                         guard let prooduct = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }),
-                              let productProfileViewModel = ProductProfileViewModel(model, product: prooduct, dismissAction: { [weak self] in self?.action.send(MainViewModelAction.CloseAction.Link()) }) else {
-                            return
-                        }
+                              let productProfileViewModel = ProductProfileViewModel(model, product: prooduct, dismissAction: { [weak self] in
+                                  self?.action.send(MainViewModelAction.CloseAction.Link())
+                              }) else { return }
                         productProfileViewModel.rootActions = rootActions
                         link = .productProfile(productProfileViewModel)
                         
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
-                        let myProductsViewModel: MyProductsViewModel = .init(model)
-                        sheet = .init(type: .myProducts(myProductsViewModel))
+                        
+                        link = .myProducts(MyProductsViewModel(model, dismissAction: { [weak self] in
+                            self?.action.send(MainViewModelAction.CloseAction.Link())
+                        }))
                         
                         // CurrencyMetall section
                         
@@ -304,7 +306,6 @@ extension MainViewModel {
             
             case productProfile(ProductProfileViewModel)
             case messages(MessagesHistoryViewModel)
-            case myProducts(MyProductsViewModel)
             case places(PlacesViewModel)
             case byPhone(TransferByPhoneViewModel)
         }
@@ -318,6 +319,7 @@ extension MainViewModel {
         case openDeposit(OpenDepositViewModel)
         case templates(TemplatesListViewModel)
         case qrScanner(QrViewModel)
+        case myProducts(MyProductsViewModel)
     }
 
     struct BottomSheet: Identifiable {

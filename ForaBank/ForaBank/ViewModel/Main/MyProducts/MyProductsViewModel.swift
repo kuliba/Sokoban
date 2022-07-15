@@ -15,15 +15,17 @@ class MyProductsViewModel: ObservableObject {
 
     @Published var currencyMenu: MyProductsСurrencyMenuViewModel?
     @Published var sections: [MyProductsSectionViewModel]
-
+    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var isLinkActive: Bool = false
+    
     private let model: Model
 
-    let navigationBar: NavigationViewModel
+    let navigationBar: NavigationBarView.ViewModel
     let totalMoney: MyProductsMoneyViewModel
     
     private var bindings = Set<AnyCancellable>()
     
-    init(navigationBar: NavigationViewModel,
+    init(navigationBar: NavigationBarView.ViewModel,
          totalMoney: MyProductsMoneyViewModel,
          sections: [MyProductsSectionViewModel]) {
 
@@ -35,13 +37,18 @@ class MyProductsViewModel: ObservableObject {
         bind()
     }
 
-    init(_ model: Model) {
+    init(_ model: Model, dismissAction: @escaping () -> Void) {
 
         self.model = model
         sections = []
-        navigationBar = .init()
+        navigationBar = NavigationBarView.ViewModel(
+            title: "Мои продукты",
+            leftButtons: [NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: dismissAction)],
+            background: .barsTabbar)
         totalMoney = .init()
-
+        navigationBar.rightButtons = [.init(icon: .ic24Plus, action: { [weak self] in
+            self?.action.send(MyProductsViewModelAction.Add())
+        })]
         bind()
     }
 
@@ -140,74 +147,16 @@ class MyProductsViewModel: ObservableObject {
 
         action
             .receive(on: DispatchQueue.main)
-            .sink { action in
+            .sink { [unowned self] action in
 
                 switch action {
-                case _ as MyProductsNavigationItemAction.Back: break
-                case _ as MyProductsNavigationItemAction.Add: break
+                    
+                case _ as MyProductsViewModelAction.CloseAction.Link:
+                    link = nil
+                    
                 default:
                     break
                 }
-            }.store(in: &bindings)
-
-        totalMoney.currencyButton.$isSelected
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] isSelected in
-
-                if isSelected {
-
-                    if currencyMenu == nil {
-
-                        let model = MyProductsСurrencyMenuViewModel(items: [
-                            .init(icon: .init("Dollar"),
-                                  moneySign: "$",
-                                  title: "Доллар США",
-                                  subtitle: "936 107"),
-                            .init(icon: .init("Swiss Franc"),
-                                  moneySign: "₣",
-                                  title: "Швейцарский франк",
-                                  subtitle: "848 207"),
-                            .init(icon: .init("Euro"),
-                                  moneySign: "$",
-                                  title: "ЕВРО",
-                                  subtitle: "787 041"),
-                            .init(icon: .init("Pound Sterling"),
-                                  moneySign: "₣",
-                                  title: "Фунт стерлингов",
-                                  subtitle: "669 891")
-                        ])
-
-                        withAnimation(.easeInOut(duration: 0.3)) {
-
-                            currencyMenu = model
-                        }
-
-                        sections
-                            .flatMap { $0.items }
-                            .forEach { model in
-                                withAnimation {
-                                    model.state = .normal
-                                }
-                            }
-
-                        currencyMenu?.action
-                            .receive(on: DispatchQueue.main)
-                            .sink { [unowned self] action in
-
-                                switch action {
-                                case let model as MyProductsСurrencyMenuAction:
-
-                                    updateTotalMoney(model: model)
-
-                                default:
-                                    break
-                                }
-                            }.store(in: &bindings)
-                    }
-                } else {
-                    currencyMenu = nil
-                }
-
             }.store(in: &bindings)
 
         model.productsHidden
@@ -249,11 +198,16 @@ class MyProductsViewModel: ObservableObject {
 
                                 model.action.send(ModelAction.Settings.UpdateProductsHidden(productID: payload.productID))
 
-                            case _ as MyProductsSectionItemAction.Tap:
-                                items
-                                    .forEach { model in
-                                        setStateNormal(model)
-                                    }
+                            case let payload as MyProductsSectionItemAction.Tap:
+                                items.forEach { model in
+                                    setStateNormal(model)
+                                }
+                                guard let prooduct = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }),
+                                      let productProfileViewModel = ProductProfileViewModel(model, product: prooduct, dismissAction: { [weak self] in
+                                          self?.action.send(MyProductsViewModelAction.CloseAction.Link())
+                                      }) else { return }
+                                link = .productProfile(productProfileViewModel)
+                                
                             default:
                                 break
                             }
@@ -291,36 +245,21 @@ class MyProductsViewModel: ObservableObject {
                 }
             }.store(in: &bindings)
     }
+    
+    enum Link {
+        
+        case productProfile(ProductProfileViewModel)
+    }
 }
 
 extension MyProductsViewModel {
 
-    private func updateTotalMoney(model: MyProductsСurrencyMenuAction) {
-
-        deselectedCurrencyButton()
-
-        totalMoney.balance = model.subtitle
-        totalMoney.currencyButton.title = model.moneySign
-
-    }
-
     private func setStateNormal(_ model: MyProductsSectionItemViewModel) {
-
-        deselectedCurrencyButton()
 
         withAnimation {
             model.state = .normal
         }
 
-    }
-
-    private func deselectedCurrencyButton() {
-
-        guard totalMoney.currencyButton.isSelected else {
-            return
-        }
-
-        totalMoney.currencyButton.isSelected.toggle()
     }
 
     private func sectionItems(value: [ProductData]) -> [MyProductsSectionItemViewModel] {
@@ -329,107 +268,49 @@ extension MyProductsViewModel {
     }
 
     private func viewModel(data: ProductData) -> MyProductsSectionItemViewModel? {
-
-        switch data.productType {
-        case .card: return productCardModel(data: data)
-        case .account: return productAccountModel(data: data)
-        case .deposit: return productDepositModel(data: data)
-        case .loan: return productLoanModel(data: data)
-        }
-    }
-
-    private func productCardModel(data: ProductData) -> MyProductsSectionItemViewModel? {
-
-        guard
-            let data = data as? ProductCardData,
-            let icon = data.smallDesign.image,
-            let balance = data.balance,
-            let balanceRub = data.balanceRub,
-            let subtitle = data.additionalField,
-            let number = data.number,
-            let numberCard = data.numberMasked else {
-                return nil
-            }
-
+        
+        let icon = ProductView.ViewModel.backgroundImage(with: data, size: .small)
+        let name = ProductView.ViewModel.name(product: data, style: .main)
+        let subtitle = createSubtitle(from: data)
+        let number = "• \(data.displayNumber ?? "")"
+        let balance = ProductView.ViewModel.balanceFormatted(product: data, style: .profile, model: model)
+        let balanceRub = data.balanceRub ?? 0
+        let dateLong = dateLong(from: data)
+        let activated = isActivatedCard(data)
+        let paymentSystemIcon = paymentSystemIcon(from: data)
+        
         return MyProductsSectionItemViewModel(
             id: data.id,
             icon: icon,
-            title: data.mainField,
+            title: name,
             subtitle: subtitle,
             number: number,
-            numberCard: numberCard.count > 0 ? "•  \(numberCard.suffix(4))  •" : numberCard,
-            balance: "\(balance)",
+            numberCard: number,
+            balance: balance,
             balanceRub: balanceRub,
-            isNeedsActivated: data.isNotActivated)
+            dateLong: dateLong,
+            isNeedsActivated: activated,
+            paymentSystemIcon: paymentSystemIcon)
     }
 
-    private func productAccountModel(data: ProductData) -> MyProductsSectionItemViewModel? {
-
-        guard
-            let icon = data.smallDesign.image,
-            let balance = data.balance,
-            let balanceRub = data.balanceRub,
-            let number = data.number,
-            let numberCard = data.numberMasked else {
-                return nil
-            }
-
-        return MyProductsSectionItemViewModel(
-            id: data.id,
-            icon: icon,
-            title: data.mainField,
-            number: number,
-            numberCard: numberCard.count > 0 ? "•  \(numberCard.suffix(4))  •" : numberCard,
-            balance: "\(balance)",
-            balanceRub: balanceRub)
+    private func createSubtitle(from data: ProductData) -> String? {
+        
+        guard let subtitle = data.additionalField else { return nil }
+        return "• \(subtitle)"
     }
-
-    private func productDepositModel(data: ProductData) -> MyProductsSectionItemViewModel? {
-
-        guard
-            let icon = data.smallDesign.image,
-            let balance = data.balance,
-            let balanceRub = data.balanceRub,
-            let number = data.number,
-            let numberCard = data.numberMasked else {
-                return nil
-            }
-
-        return MyProductsSectionItemViewModel(
-            id: data.id,
-            icon: icon,
-            title: data.mainField,
-            number: number,
-            numberCard: numberCard.count > 0 ? "•  \(numberCard.suffix(4))  •" : numberCard,
-            balance: "\(balance)",
-            balanceRub: balanceRub)
+    
+    private func paymentSystemIcon(from data: ProductData) -> Image? {
+        
+        guard let cardData = data as? ProductCardData else { return nil }
+        return cardData.paymentSystemImage?.image
     }
-
-    private func productLoanModel(data: ProductData) -> MyProductsSectionItemViewModel? {
-
-        guard
-            let icon = data.smallDesign.image,
-            let balance = data.balance,
-            let balanceRub = data.balanceRub,
-            let subtitle = data.additionalField,
-            let number = data.number,
-            let numberCard = data.numberMasked,
-            let loanData = data as? ProductLoanData else {
-                return nil
-            }
-
-        return MyProductsSectionItemViewModel(
-            id: data.id,
-            icon: icon,
-            title: data.mainField,
-            subtitle: subtitle,
-            number: number,
-            numberCard: numberCard.count > 0 ? "•  \(numberCard.suffix(4))  •" : numberCard,
-            balance: "\(balance)",
-            balanceRub: balanceRub,
-            dateLong: "•  \(DateFormatter.shortDate.string(from: loanData.dateLong))")
+    
+    private func dateLong(from data: ProductData) -> String? {
+        
+        guard let loanData = data as? ProductLoanData else { return nil }
+        return "• \(DateFormatter.shortDate.string(from: loanData.dateLong))"
     }
-
+    
     private func isActivatedCard(_ item: ProductData) -> Bool {
 
         guard let item = item as? ProductCardData, item.isActivated else {
@@ -466,50 +347,28 @@ extension MyProductsViewModel {
     }
 }
 
-extension MyProductsViewModel {
-    
-    struct NavigationViewModel {
-
-        let title: String
-        let backButton: NavigationButtonViewModel
-        let addButton: NavigationButtonViewModel
-
-        init() {
-            
-            title = "Мои продукты"
-            backButton = .init(icon: .ic24ChevronLeft)
-            addButton = .init(icon: .ic24Plus)
-        }
-
-        init(title: String,
-             backButton: NavigationButtonViewModel,
-             addButton: NavigationButtonViewModel) {
-
-            self.title = title
-            self.backButton = backButton
-            self.addButton = addButton
-        }
-    }
-    
-    struct NavigationButtonViewModel {
-        
-        let icon: Image
-    }
-}
-
-enum MyProductsNavigationItemAction {
+enum MyProductsViewModelAction {
 
     struct Back: Action {}
+    
     struct Add: Action {}
+    
+    enum CloseAction {
+     
+        struct Link: Action {}
+        
+        struct Sheet: Action {}
+    }
 }
 
 extension MyProductsViewModel {
     
     static let sample = MyProductsViewModel(
-        navigationBar: NavigationViewModel(
+        navigationBar: .init(
             title: "Мои продукты",
-            backButton: NavigationButtonViewModel(icon: .ic24ChevronLeft),
-            addButton: NavigationButtonViewModel(icon: .ic24Plus)),
+            leftButtons: [NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: {})],
+            rightButtons: [.init(icon: .ic24Plus, action: { })],
+            background: .barsTabbar),
         totalMoney: .sample1,
         sections: [.sample1, .sample2, .sample3, .sample4, .sample5, .sample6]
     )

@@ -11,6 +11,8 @@ import Combine
 
 class MyProductsSectionViewModel: ObservableObject, Identifiable {
 
+    let action: PassthroughSubject<Action, Never> = .init()
+    
     @Published var items: [MyProductsSectionItemViewModel]
     @Published var isCollapsed: Bool
 

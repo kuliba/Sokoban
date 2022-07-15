@@ -17,28 +17,28 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     @Published var isMainScreenHidden: Bool
     
     let id: Int
-    let icon: Image
+    let icon: Image?
     let title: String
-    let subtitle: String
+    let subtitle: String?
     let number: String
     let numberCard: String
     let balance: String
     let paymentSystemIcon: Image?
     let balanceRub: Double
-    let dateLong: String
+    let dateLong: String?
     let isNeedsActivated: Bool
     
     private var bindings = Set<AnyCancellable>()
     
     init(id: Int,
-         icon: Image,
+         icon: Image?,
          title: String,
-         subtitle: String = "",
+         subtitle: String? = nil,
          number: String,
          numberCard: String,
          balance: String,
          balanceRub: Double = 0,
-         dateLong: String = "",
+         dateLong: String? = nil,
          isNeedsActivated: Bool = false,
          isMainScreenHidden: Bool = false,
          paymentSystemIcon: Image? = nil,
@@ -209,7 +209,9 @@ enum MyProductsSectionItemAction {
         struct Right: Action {}
     }
     
-    struct Tap: Action {}
+    struct Tap: Action {
+        let productId: MyProductsSectionItemViewModel.ID
+    }
 }
 
 extension MyProductsSectionItemViewModel {

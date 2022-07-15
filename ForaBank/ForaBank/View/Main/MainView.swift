@@ -90,6 +90,9 @@ struct MainView: View {
                     case .templates(let templatesViewModel):
                         TemplatesListView(viewModel: templatesViewModel)
                         
+                    case .myProducts(let myProductsViewModel):
+                        MyProductsView(viewModel: myProductsViewModel)
+                        
                     case .qrScanner(let qrViewModel):
                         QrScannerView(viewModel: qrViewModel)
                             .navigationBarTitle("", displayMode: .inline)
@@ -107,10 +110,7 @@ struct MainView: View {
              
             case .messages(let messagesHistoryViewModel):
                 MessagesHistoryView(viewModel: messagesHistoryViewModel)
-                
-            case .myProducts(let myProductsViewModel):
-                MyProductsView(viewModel: myProductsViewModel)
-                
+            
             case .places(let placesViewModel):
                 PlacesView(viewModel: placesViewModel)
 
@@ -244,14 +244,14 @@ struct MainView_Previews: PreviewProvider {
 extension MainViewModel {
     
     static let sample = MainViewModel(
-                            refreshingIndicator: .init(isActive: true),
-                            navButtonsRight: [.init(icon: .ic24Search, action: {}),
-                                              .init(icon: .ic24Bell, action: {})],
-                            sections: [MainSectionProductsView.ViewModel.sample,
-                                       MainSectionFastOperationView.ViewModel.sample,
-                                       MainSectionPromoView.ViewModel.sample,
-                                       MainSectionCurrencyMetallView.ViewModel.sample,
-                                       MainSectionOpenProductView.ViewModel.sample])
+        refreshingIndicator: .init(isActive: true),
+        navButtonsRight: [.init(icon: .ic24Search, action: {}),
+                          .init(icon: .ic24Bell, action: {})],
+        sections: [MainSectionProductsView.ViewModel.sample,
+                   MainSectionFastOperationView.ViewModel.sample,
+                   MainSectionPromoView.ViewModel.sample,
+                   MainSectionCurrencyMetallView.ViewModel.sample,
+                   MainSectionOpenProductView.ViewModel.sample])
     
     static let sampleProducts = MainViewModel(refreshingIndicator: .init(isActive: false),navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample])
     
