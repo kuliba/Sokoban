@@ -68,6 +68,7 @@ struct MessagesHistoryView: View {
                 }
             }
         }
+        .background(Color.white)
         .coordinateSpace(name: "scroll")
         .navigationBar(with: viewModel.navigationBar)
         .bottomSheet(item: $viewModel.sheet) {

@@ -116,23 +116,6 @@ class MainViewModel: ObservableObject, Resetable {
                 userAccountButton.update(clientInfo: clientData.0, clientPhoto: clientData.1, clientName: clientData.2)
                 
             }.store(in: &bindings)
-        
-        model.notificationsTransition
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] transition in
-               
-                switch transition {
-                case .history:
-                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {
-                        self.action.send(MainViewModelAction.CloseAction.Link())
-                    })
-                    link = .messages(messagesHistoryViewModel)
-                    model.notificationsTransition.value = nil
-                default:
-                    break
-                }
-            }.store(in: &bindings)
-        
     }
     
     private func bind(_ sections: [MainSectionViewModel]) {
@@ -335,7 +318,6 @@ extension MainViewModel {
         case openDeposit(OpenDepositViewModel)
         case templates(TemplatesListViewModel)
         case qrScanner(QrViewModel)
-
     }
 
     struct BottomSheet: Identifiable {

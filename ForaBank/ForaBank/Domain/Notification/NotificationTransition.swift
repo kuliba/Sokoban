@@ -10,5 +10,5 @@ import Foundation
 enum NotificationTransition {
     
     case history
-    case me2me
+    case me2me(RequestMeToMeModel)
 }

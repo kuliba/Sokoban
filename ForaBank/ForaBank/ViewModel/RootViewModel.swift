@@ -20,6 +20,8 @@ class RootViewModel: ObservableObject, Resetable {
     let chatViewModel: ChatViewModel
     let informerViewModel: InformerView.ViewModel
     @Published var alert: Alert.ViewModel?
+    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var isLinkActive: Bool = false
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -99,7 +101,7 @@ class RootViewModel: ObservableObject, Resetable {
                 }
                 
             }.store(in: &bindings)
-        
+
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
@@ -128,6 +130,24 @@ class RootViewModel: ObservableObject, Resetable {
                             print("AppVersion Response error: \(error) ")
                         }
                     }
+                default:
+                    break
+                }
+            }.store(in: &bindings)
+        
+        model.notificationsTransition
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] transition in
+                
+                switch transition {
+                case .history:
+                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {[weak self] in self?.link = nil })
+                    link = .messages(messagesHistoryViewModel)
+                    model.notificationsTransition.value = nil
+                case .me2me(let requestMeToMeModel):
+                    link = .me2me(requestMeToMeModel)
+                    model.notificationsTransition.value = nil
+
                 default:
                     break
                 }
@@ -193,6 +213,12 @@ extension RootViewModel {
             let show: () -> Void
             let hide: () -> Void
         }
+    }
+    
+    enum Link {
+        
+        case messages(MessagesHistoryViewModel)
+        case me2me(RequestMeToMeModel)
     }
 }
 
