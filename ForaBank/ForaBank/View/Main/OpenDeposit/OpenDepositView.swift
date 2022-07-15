@@ -20,13 +20,8 @@ struct OpenDepositView: View {
                 
                 ForEach(viewModel.products) { productCard in
                     
-                    switch viewModel.style {
-                    case .deposit:
                         OfferProductView(viewModel: productCard)
 
-                    case .catalog:
-                        OfferProductView(viewModel: productCard)
-                    }
                 }
             }
             .navigationBarTitle(Text("Вклады"), displayMode: .inline)
@@ -38,32 +33,13 @@ struct OpenDepositView: View {
                         .foregroundColor(.iconBlack)
                 }))
             .foregroundColor(.black)
-
-            ForEach(viewModel.products) { productCard in
-                switch viewModel.style {
-                case .deposit:
-                    DepositShowBottomSheetView(viewModel: productCard)
-
-                case .catalog:
-                    DepositShowBottomSheetView(viewModel: productCard)
-                }
-            }
-        }
-    }
-    
-    struct DepositShowBottomSheetView: View {
-        
-        @ObservedObject var viewModel: OfferProductView.ViewModel
-
-        var body: some View {
-
-            BottomSheetView(isOpen: $viewModel.isShowSheet, maxHeight: CGFloat((viewModel.additionalCondition?.desc.count ?? 0) * 100)) {
-                if let additionalCondition = viewModel.additionalCondition {
-                    
+            .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
+                
+                switch bottomSheet.type {
+                case let .openDeposit(additionalCondition):
                     OfferProductView.DetailConditionView(viewModel: additionalCondition)
                 }
             }
-            .offset(y: 180)
         }
     }
 }
@@ -71,6 +47,6 @@ struct OpenDepositView: View {
 struct OpenDepositView_Previews: PreviewProvider {
     
     static var previews: some View {
-        OpenDepositView(viewModel: .init(navButtonBack: .init(icon: .ic24ChevronLeft, action: {}), products: [.depositSample, .depositSample],  style: .deposit))
+        OpenDepositView(viewModel: .init(navButtonBack: .init(icon: .ic24ChevronLeft, action: {}), products: [.depositSample, .depositSample],  catalogType: .deposit))
     }
 }

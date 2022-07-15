@@ -153,7 +153,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 bottomSheet = .init(type: .openAccount(model))
                                 
                             case .deposit:
-                                link = .openDeposit(.init(model, products: self.model.deposits.value, style: .deposit, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseAction.Link())
+                                link = .openDeposit(.init(model, catalogType: .deposit, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseAction.Link())
                                 }))
                                 
                             default:

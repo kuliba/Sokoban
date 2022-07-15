@@ -334,7 +334,9 @@ struct ProductDetailView: View {
             
             NavigationLink(destination:
                             ConfirmView(viewModel: viewModel)
-                            .navigationBarTitle("Подтвердите параметры вклада", displayMode: .inline)) {
+                            .edgesIgnoringSafeArea(.bottom)
+                            .navigationBarTitle("Подтвердите параметры вклада", displayMode: .inline))
+            {
                 
                 Text("Продолжить")
                     .fontWeight(.semibold)
