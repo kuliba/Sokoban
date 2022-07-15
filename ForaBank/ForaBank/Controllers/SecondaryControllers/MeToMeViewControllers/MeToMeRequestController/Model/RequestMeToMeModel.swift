@@ -20,8 +20,6 @@ struct RequestMeToMeModel {
     var userInfo: [AnyHashable : Any]?
     var model: GetMe2MeDebitConsentDecodableModel?
     
-    lazy var realm = try? Realm()
-    
     init(userInfo: [AnyHashable : Any]) {
         self.userInfo = userInfo
         
@@ -71,20 +69,27 @@ struct RequestMeToMeModel {
     }
     
     private func findBank(with bankId: String) -> BankFullInfoList? {
-        let bankList = Dict.shared.bankFullInfoList
+        
+        let allBanks = Model.shared.dictionaryFullBankInfoList()
         var bankForReturn: BankFullInfoList?
-        bankList?.forEach({ bank in
-            if bank.memberID == bankId {
+        
+        allBanks?.forEach({ bank in
+            
+            let bank = bank.fullBankInfoList
+            
+            if bank.memberID == bankId  {
+                    
                 bankForReturn = bank
             }
         })
+    
         return bankForReturn
     }
     
     private mutating func findProduct(with cardId: Int?, with accountId: Int?) -> UserAllCardsModel? {
-        let cardList = realm?.objects(UserAllCardsModel.self)
+        let cardList = ReturnAllCardList.cards()
         var card: UserAllCardsModel?
-        cardList?.forEach { product in
+        cardList.forEach { product in
             if cardId != nil {
                 if product.id == cardId {
                     card = product
@@ -96,7 +101,7 @@ struct RequestMeToMeModel {
             }
         }
         if card == nil {
-            card = cardList?.first
+            card = cardList.first
         }
         return card
     }
