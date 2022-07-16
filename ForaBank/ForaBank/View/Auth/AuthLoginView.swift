@@ -22,32 +22,19 @@ struct AuthLoginView: View {
             
             Spacer()
             
-            if let productsButtonViewModel = viewModel.productsButton {
-                
-                ProductsButtonView(viewModel: productsButtonViewModel)
-            }
+            ProductsButtonView(viewModel: viewModel.products)
 
-            NavigationLink("", isActive: $viewModel.isConfirmViewPresented) {
+            NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
-                if let confirmViewModel = viewModel.confirmViewModel {
+                if let link = viewModel.link  {
                     
-                    AuthConfirmView(viewModel: confirmViewModel)
-                    
-                } else {
-                    
-                    EmptyView()
-                }
-            }
-            
-            NavigationLink("", isActive: $viewModel.isProductsViewPresented) {
-                
-                if let productsViewModel = viewModel.productsViewModel {
-                    
-                    AuthProductsView(viewModel: productsViewModel)
-                    
-                } else {
-                    
-                    EmptyView()
+                    switch link {
+                    case let .confirm(confirmViewModel):
+                        AuthConfirmView(viewModel: confirmViewModel)
+                        
+                    case let .products(productsViewModel):
+                        AuthProductsView(viewModel: productsViewModel)
+                    }
                 }
             }
         }
@@ -196,39 +183,42 @@ extension AuthLoginView {
     
     struct ProductsButtonView: View {
         
-        var viewModel: AuthLoginViewModel.ProductsButtonViewModel
+        @ObservedObject var viewModel: AuthLoginViewModel.ProductsViewModel
         
         var body: some View {
             
-            Button(action: viewModel.action) {
+            if let button = viewModel.button  {
                 
-                HStack(alignment: .center) {
+                Button(action: button.action) {
                     
-                    viewModel.icon
-                        .renderingMode(.original)
-                    
-                    VStack(alignment: .leading, spacing: 6) {
+                    HStack(alignment: .center) {
                         
-                        Text(viewModel.title)
-                            .font(.textBodyMR14200())
-                            .foregroundColor(.textWhite)
+                        button.icon
+                            .renderingMode(.original)
                         
-                        Text(viewModel.subTitle)
-                            .font(.textBodyMR14200())
-                            .foregroundColor(.textWhite)
+                        VStack(alignment: .leading, spacing: 6) {
+                            
+                            Text(button.title)
+                                .font(.textBodyMR14200())
+                                .foregroundColor(.textWhite)
+                            
+                            Text(button.subTitle)
+                                .font(.textBodyMR14200())
+                                .foregroundColor(.textWhite)
+                        }
+                        
+                        Spacer()
+                        
+                        button.arrowRight
+                            .foregroundColor(.mainColorsWhite)
+                        
                     }
                     
-                    Spacer()
-                    
-                    viewModel.arrowRight
-                        .foregroundColor(.mainColorsWhite)
-  
+                    .padding(EdgeInsets(top: 16, leading: 20, bottom: 16, trailing: 20))
+                    .background(Color.mainColorsBlackMedium)
+                    .cornerRadius(12)
+                    .padding(.horizontal, 20)
                 }
-                
-                .padding(EdgeInsets(top: 16, leading: 20, bottom: 16, trailing: 20))
-                .background(Color.mainColorsBlackMedium)
-                .cornerRadius(12)
-                .padding(.horizontal, 20)
             }
         }
     }

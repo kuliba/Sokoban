@@ -223,6 +223,7 @@ class Model {
                     action.send(ModelAction.Auth.Session.Start.Request())
                     
                 case .active:
+                    loadCachedPublicData()
                     action.send(ModelAction.Dictionary.UpdateCache.All())
 
                 case .expired, .failed:
@@ -301,7 +302,6 @@ class Model {
                 case _ as ModelAction.App.Launched:
                     handleAppFirstLaunch()
                     bind(sessionAgent: sessionAgent)
-                    loadCachedPublicData()
 
                 case _ as ModelAction.App.Activated:
                     sessionAgent.action.send(SessionAgentAction.Timer.Start())
