@@ -14,7 +14,7 @@ class MyProductsMoneyViewModel: ObservableObject {
 
     let title: String = "Всего денег"
     let subtitle: String
-    let currencyButton: CurrencyButtonViewModel
+    let currencyButton: CurrencyButtonViewModel?
     
     init(subtitle: String, balance: String, currencyButton: CurrencyButtonViewModel) {
         
@@ -27,9 +27,10 @@ class MyProductsMoneyViewModel: ObservableObject {
 
         self.subtitle = "По курсу ЦБ"
         self.balance = ""
-        self.currencyButton = .init(icon: .ic16ChevronDown,
-                                    title: "₽",
-                                    isSelected: false)
+        self.currencyButton = CurrencyButtonViewModel(
+            icon: .ic16ChevronDown,
+            title: "₽",
+            isSelected: false)
     }
 }
 

@@ -84,10 +84,6 @@ struct ProductProfileView: View {
                 
             }.coordinateSpace(name: "scroll")
             
-            StatusView(viewModel: viewModel.statusBar)
-                .frame(height: 48)
-                .background(viewModel.accentColor.contrast(0.5).edgesIgnoringSafeArea(.top))
-            
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
                 if let link = viewModel.link  {
@@ -109,7 +105,7 @@ struct ProductProfileView: View {
                 }
             }
         }
-        .navigationBarHidden(true)
+        .navigationBar(with: viewModel.navigationBar)
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
@@ -144,57 +140,6 @@ struct ProductProfileView: View {
 
 extension ProductProfileView {
     
-    struct StatusView: View {
-        
-        @ObservedObject var viewModel: ProductProfileViewModel.StatusBarViewModel
-        
-        var body: some View {
-            
-            HStack {
-                
-                Button(action: viewModel.backButton.action) {
-                    
-                    viewModel.backButton.icon
-                        .foregroundColor(viewModel.textColor)
-                }
-
-                Spacer()
-                
-                VStack {
-                    
-                    Text(viewModel.title)
-                        .font(.textH3M18240())
-                        .foregroundColor(viewModel.textColor)
-                    
-                    Text(viewModel.subtitle)
-                        .font(.textBodySR12160())
-                        .foregroundColor(viewModel.textColor)
-                }
-                
-                Spacer()
-                
-                if let actionButtonViewModel = viewModel.actionButton {
-                    
-                    Button(action: actionButtonViewModel.action) {
-                        
-                        actionButtonViewModel.icon
-                            .foregroundColor(viewModel.textColor)
-                    }
-                    
-                } else {
-                    
-                    Color.clear
-                        .frame(width: 24, height: 24)
-                }
-            }
-            .padding(.horizontal, 20)
-            .background(Color.clear)
-        }
-    }
-}
-
-extension ProductProfileView {
-    
     struct ScrollOffsetKey: PreferenceKey {
         
         typealias Value = CGFloat
@@ -214,11 +159,6 @@ struct ProfileView_Previews: PreviewProvider {
         Group {
             
             ProductProfileView(viewModel: .sample)
- 
-            ProductProfileView.StatusView(viewModel: .sample)
-                .previewLayout(.fixed(width: 375, height: 48))
-            ProductProfileView.StatusView(viewModel: .sampleNoActionButton)
-                .previewLayout(.fixed(width: 375, height: 48))
         }
     }
 }
@@ -227,14 +167,18 @@ struct ProfileView_Previews: PreviewProvider {
 
 extension ProductProfileViewModel {
     
-    static let sample = ProductProfileViewModel(statusBar: .sample, product: .sample, buttons: .sample, detail: nil, history: .sampleHistory)
+    static let sample = ProductProfileViewModel(
+        navigationBar: NavigationBarView.ViewModel.sampleNoActionButton,
+        product: .sample,
+        buttons: .sample, detail: nil,
+        history: .sampleHistory)
 }
 
-extension ProductProfileViewModel.StatusBarViewModel {
-    
-    static let sample = ProductProfileViewModel.StatusBarViewModel(backButton: .init(icon: .ic24ChevronLeft, action: {}), title: "Platinum", subtitle: "· 4329", actionButton: .init(icon: .ic24Edit2, action: {}), textColor: .iconBlack)
-    
-    static let sampleNoActionButton = ProductProfileViewModel.StatusBarViewModel(backButton: .init(icon: .ic24ChevronLeft, action: {}), title: "Platinum", subtitle: "· 4329", actionButton: nil, textColor: .iconBlack)
+extension NavigationBarView.ViewModel {
+
+    static let sampleNoActionButton = NavigationBarView.ViewModel(
+        title: "Platinum", subtitle: "· 4329",
+        leftButtons: [BackButtonViewModel(icon: .ic24ChevronLeft, action: {})],
+        rightButtons: [],
+        background: .purple, foreground: .iconWhite)
 }
-
-

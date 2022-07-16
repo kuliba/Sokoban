@@ -151,6 +151,17 @@ extension String {
         
         return digest.hexStr
     }
+    
+    func sha256Base64String() throws -> String {
+        
+        guard let data = data(using: .utf8) else {
+            throw StringHelperError.unableCreateDataFromString
+        }
+        
+        let digest = SHA256.hash(data: data)
+        
+        return digest.data.base64EncodedString(options: .endLineWithCarriageReturn)
+    }
 }
 
 enum StringHelperError: Error {

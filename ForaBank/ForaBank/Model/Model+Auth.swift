@@ -732,7 +732,7 @@ internal extension Model {
                 let pushFcmToken = try await authPushFcmToken()
                 let serverDeviceGUID = try authServerDeviceGUID()
                 let pincode = try authStoredPincode()
-                let loginValue = try pincode.sha256String()
+                let loginValue = try pincode.sha256Base64String()
                 let type = payload.type.rawValue
                 let operationSystemVersion = await authOperationSystemVersion()
                 let appVersion = authAppVersion
@@ -905,7 +905,7 @@ extension Model {
         let pushFcmToken = try await authPushFcmToken()
         let serverDeviceGUID = try authServerDeviceGUID()
         let pincode = try authStoredPincode()
-        let loginValue = try pincode.sha256String()
+        let loginValue = try pincode.sha256Base64String()
         
         let command = try ServerCommands.RegistrationContoller.SetDeviceSettings(credentials: credentials, pushDeviceId: pushDeviceId, pushFcmToken: pushFcmToken, serverDeviceGUID: serverDeviceGUID, loginValue: loginValue, availableSensorType: authAvailableBiometricSensorType, isSensorEnabled: authIsBiometricSensorEnabled)
         
@@ -943,8 +943,7 @@ extension Model {
         let pushFcmToken = try await authPushFcmToken()
         let serverDeviceGUID = try authServerDeviceGUID()
         let pincode = try authStoredPincode()
-        let loginValue = try pincode.sha256String()
-        
+        let loginValue = try pincode.sha256Base64String()
         let command = try ServerCommands.RegistrationContoller.SetDeviceSettings(credentials: credentials, pushDeviceId: pushDeviceId, pushFcmToken: pushFcmToken, serverDeviceGUID: serverDeviceGUID, loginValue: loginValue, availableSensorType: sensorType, isSensorEnabled: authIsBiometricSensorEnabled)
         
         print("SessionAgent: SET DEVICE SETTINGS: COMMAND OK")

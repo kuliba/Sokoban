@@ -15,7 +15,6 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         let viewModel = CardsScrollModel(card: card)
         balanceLabel.text = viewModel.balance
         maskCardLabel.text = viewModel.maskedcardNumber
-        logoImageView.image = viewModel.logoImage
         
     }
   
@@ -25,12 +24,7 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         didSet { configure() }
     }
     
-    private let logoImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
 
-        return imageView
-    }()
     
     public let maskCardLabel: UILabel = {
         let label = UILabel()
@@ -93,7 +87,6 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         cardNameLabel.alpha = 0.5
         maskCardLabel.text = viewModel.maskedcardNumber
         maskCardLabel.textColor = viewModel.colorText
-        logoImageView.image = viewModel.logoImage
     }
     
     func setupUI() {
@@ -110,7 +103,6 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         layer.shadowPath = shadowPath.cgPath
         
         addSubview(backgroundImageView)
-        addSubview(logoImageView)
         addSubview(maskCardLabel)
         addSubview(cardNameLabel)
         addSubview(balanceLabel)
@@ -118,10 +110,6 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         backgroundImageView.fillSuperview()
         
         maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingTop: 12, paddingLeft: 37, paddingRight: 12)
-        
-        logoImageView.centerY(inView: maskCardLabel)
-        logoImageView.anchor(left: self.leftAnchor,
-                             paddingLeft: 8, width: 18, height: 18)
         
         
         cardNameLabel.anchor(left: self.leftAnchor, bottom: balanceLabel.topAnchor, right: self.rightAnchor, paddingTop: 25, paddingLeft: 8, paddingRight: 8)

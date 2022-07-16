@@ -223,6 +223,7 @@ class Model {
                     action.send(ModelAction.Auth.Session.Start.Request())
                     
                 case .active:
+                    loadCachedPublicData()
                     action.send(ModelAction.Dictionary.UpdateCache.All())
 
                 case .expired, .failed:
@@ -301,7 +302,6 @@ class Model {
                 case _ as ModelAction.App.Launched:
                     handleAppFirstLaunch()
                     bind(sessionAgent: sessionAgent)
-                    loadCachedPublicData()
 
                 case _ as ModelAction.App.Activated:
                     sessionAgent.action.send(SessionAgentAction.Timer.Start())
@@ -496,6 +496,12 @@ class Model {
                 case let payload as ModelAction.Notification.ChangeNotificationStatus.Request:
                     handleNotificationsChangeNotificationStatusRequest(payload: payload)
                     
+                case let payload as ModelAction.Notification.Transition.Set:
+                    handleNotificationTransitionSet(payload: payload)
+                    
+                case _ as ModelAction.Notification.Transition.Clear:
+                    handleNotificationTransitionClear()
+                    
                     //MARK: - LatestPayments Actions
                     
                 case _ as ModelAction.LatestPayments.List.Requested:
@@ -646,6 +652,11 @@ class Model {
                     
                 case let payload as ModelAction.PrintForm.Request:
                     handlePrintFormRequest(payload)
+                    
+                //MARK: - Consent Me2Me
+                    
+                case _ as ModelAction.Consent.Request:
+                    handleConsentMe2MePull()
                     
                 default:
                     break

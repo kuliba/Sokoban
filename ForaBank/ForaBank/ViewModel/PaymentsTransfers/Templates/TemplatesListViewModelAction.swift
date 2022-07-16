@@ -116,4 +116,7 @@ enum TemplatesListViewModelAction {
             let viewModel: PaymentTemplateData
         }
     }
+    
+    // Close view
+    struct CloseAction: Action {}
 }

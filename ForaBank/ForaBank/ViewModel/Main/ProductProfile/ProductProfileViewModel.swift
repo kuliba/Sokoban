@@ -13,7 +13,7 @@ class ProductProfileViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
-    let statusBar: StatusBarViewModel
+    let navigationBar: NavigationBarView.ViewModel
     @Published var product: ProductProfileCardView.ViewModel
     @Published var buttons: ProductProfileButtonsView.ViewModel
     @Published var detail: ProductProfileDetailView.ViewModel?
@@ -36,9 +36,9 @@ class ProductProfileViewModel: ObservableObject {
         model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
     }
     
-    init(statusBar: StatusBarViewModel, product: ProductProfileCardView.ViewModel, buttons: ProductProfileButtonsView.ViewModel, detail: ProductProfileDetailView.ViewModel?, history: ProductProfileHistoryView.ViewModel?, alert: Alert.ViewModel? = nil, operationDetail: OperationDetailViewModel? = nil, accentColor: Color = .purple, historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:] , model: Model = .emptyMock) {
+    init(navigationBar: NavigationBarView.ViewModel,product: ProductProfileCardView.ViewModel, buttons: ProductProfileButtonsView.ViewModel, detail: ProductProfileDetailView.ViewModel?, history: ProductProfileHistoryView.ViewModel?, alert: Alert.ViewModel? = nil, operationDetail: OperationDetailViewModel? = nil, accentColor: Color = .purple, historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:] , model: Model = .emptyMock) {
         
-        self.statusBar = statusBar
+        self.navigationBar = navigationBar
         self.product = product
         self.buttons = buttons
         self.detail = detail
@@ -57,7 +57,7 @@ class ProductProfileViewModel: ObservableObject {
         }
         
         // status bar
-        self.statusBar = .init(product: product, dismissAction: dismissAction)
+        self.navigationBar = .init(product: product, dismissAction: dismissAction)
         self.product = productViewModel
         self.buttons = .init(with: product)
         self.accentColor = Self.accentColor(with: product)
@@ -165,7 +165,7 @@ class ProductProfileViewModel: ObservableObject {
                 // status bar update
                 withAnimation {
                     
-                    statusBar.update(with: product)
+                    navigationBar.update(with: product)
                     accentColor = Self.accentColor(with: product)
                 }
                 
@@ -250,7 +250,7 @@ class ProductProfileViewModel: ObservableObject {
                     case .topRight:
                         switch product.productType {
                         case .card, .account:
-                            statusBar.backButton.action()
+//                            statusBar.backButton.action()
                             rootActions?.switchTab(.payments)
                             
                         case .deposit:
@@ -392,80 +392,68 @@ class ProductProfileViewModel: ObservableObject {
     }
 }
 
+fileprivate extension NavigationBarView.ViewModel {
+    
+    convenience init(product: ProductData, dismissAction: @escaping () -> Void, rightButtons: [ButtonViewModel] = []) {
+        self.init(
+            title: Self.title(with: product),
+            subtitle: Self.subtitle(with: product),
+            leftButtons: [BackButtonViewModel(icon: .ic24ChevronLeft, action: dismissAction)],
+            rightButtons: rightButtons,
+            background: Self.accentColor(with: product),
+            foreground: Self.textColor(with: product),
+            contrast: 0.5)
+    }
+    
+    static func title(with productData: ProductData) -> String {
+        
+        return productData.displayName
+    }
+    
+    static func subtitle(with productData: ProductData) -> String {
+        
+        guard let number = productData.displayNumber else {
+            return ""
+        }
+        
+        switch productData {
+        case let productLoan as ProductLoanData:
+            if let rate = NumberFormatter.persent.string(from: NSNumber(value: productLoan.currentInterestRate / 100)) {
+                
+                return "· \(number) · \(rate)"
+                
+            } else {
+                
+                return "· \(number)"
+            }
+            
+        default:
+            return "· \(number)"
+        }
+    }
+    
+    static func textColor(with product: ProductData) -> Color {
+        
+        return product.fontDesignColor.color
+    }
+    
+    static func accentColor(with product: ProductData) -> Color {
+        
+        return product.backgroundColor
+    }
+    
+    func update(with product: ProductData) {
+        
+        self.title = Self.title(with: product)
+        self.subtitle = Self.subtitle(with: product)
+        self.foreground = Self.textColor(with: product)
+        self.background = Self.accentColor(with: product)
+    }
+}
+
 //MARK: - Types
 
 extension ProductProfileViewModel {
-    
-    class StatusBarViewModel: ObservableObject {
-
-        let backButton: ButtonViewModel
-        @Published var title: String
-        @Published var subtitle: String
-        @Published var actionButton: ButtonViewModel?
-        @Published var textColor: Color
-        
-        init(backButton: ButtonViewModel, title: String, subtitle: String, actionButton: ButtonViewModel?, textColor: Color = .iconWhite) {
-            
-            self.backButton = backButton
-            self.title = title
-            self.subtitle = subtitle
-            self.actionButton = actionButton
-            self.textColor = textColor
-        }
-        
-        init(product: ProductData, dismissAction: @escaping () -> Void) {
-            
-            self.backButton = .init(icon: .ic24ChevronLeft, action: dismissAction)
-            self.title = Self.title(with: product)
-            self.subtitle = Self.subtitle(with: product)
-            self.textColor = Self.textColor(with: product)
-        }
-        
-        struct ButtonViewModel {
-            
-            let icon: Image
-            let action: () -> Void
-        }
-        
-        func update(with product: ProductData) {
-            
-            self.title = Self.title(with: product)
-            self.subtitle = Self.subtitle(with: product)
-            self.textColor = Self.textColor(with: product)
-        }
-        
-        static func title(with productData: ProductData) -> String {
-            
-            return productData.displayName
-        }
-        
-        static func subtitle(with productData: ProductData) -> String {
-            
-            guard let number = productData.displayNumber else {
-                return ""
-            }
-            
-            switch productData {
-            case let productLoan as ProductLoanData:
-                if let rate = NumberFormatter.persent.string(from: NSNumber(value: productLoan.currentInterestRate / 100)) {
-                    
-                    return "· \(number) · \(rate)"
-                    
-                } else {
-                    
-                    return "· \(number)"
-                }
-                
-            default:
-                return "· \(number)"
-            }
-        }
-        
-        static func textColor(with product: ProductData) -> Color {
-            
-            return product.fontDesignColor.color
-        }
-    }
     
     struct BottomSheet: Identifiable {
         

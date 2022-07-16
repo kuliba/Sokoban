@@ -42,11 +42,9 @@ class AuthPermissionsViewModel: ObservableObject {
                 switch action {
                 case _ as AuthPermissionsViewModelAction.Confirm:
                     model.action.send(ModelAction.Auth.Sensor.Settings.allow)
-                    dismissAction()
                     
                 case _ as AuthPermissionsViewModelAction.Skip:
                     model.action.send(ModelAction.Auth.Sensor.Settings.desideLater)
-                    dismissAction()
                 
                 default:
                     break

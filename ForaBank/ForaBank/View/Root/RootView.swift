@@ -20,6 +20,7 @@ struct RootView: View {
                 NavigationView {
                     
                     MainView(viewModel: viewModel.mainViewModel)
+                    
                 }
                 .tabItem {
                     
@@ -55,6 +56,19 @@ struct RootView: View {
             InformerView(viewModel: viewModel.informerViewModel)
                 .zIndex(1)
                 .padding(.top, 64)
+            
+            if let link = viewModel.link  {
+                
+                switch link {
+                case .messages(let messagesHistoryViewModel):
+                    MessagesHistoryView(viewModel: messagesHistoryViewModel)
+                        .zIndex(1)
+                    
+                case .me2me(let requestMeToMeModel):
+                    MeToMeRequestView(viewModel: requestMeToMeModel)
+                        .zIndex(1)
+                }
+            }
             
         }.alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)

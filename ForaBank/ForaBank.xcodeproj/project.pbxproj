@@ -577,6 +577,8 @@
 		68D099D9273B5D110017D777 /* PaymentByPhoneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D099D8273B5D110017D777 /* PaymentByPhoneCoordinator.swift */; };
 		68D3F8D527CECB00002753BD /* ProductProfileButtonsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D3F8D427CECB00002753BD /* ProductProfileButtonsViewComponent.swift */; };
 		68DBA96D28800D9300A169B4 /* NSNotification+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DBA96C28800D9300A169B4 /* NSNotification+Extension.swift */; };
+		68DBA96F288197C400A169B4 /* MeToMeRequestView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DBA96E288197C400A169B4 /* MeToMeRequestView+Legacy.swift */; };
+		68DBA9712881A11400A169B4 /* Model+Consent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DBA9702881A11400A169B4 /* Model+Consent.swift */; };
 		68DF16CA2804F58E005D8D3E /* Model+Statement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DF16C92804F58E005D8D3E /* Model+Statement.swift */; };
 		68DF16CE2804F97E005D8D3E /* StatementSample.json in Resources */ = {isa = PBXBuildFile; fileRef = 68DF16CD2804F97E005D8D3E /* StatementSample.json */; };
 		68DF16D228084B38005D8D3E /* GetProductDynamicParamsGenericTest.json in Resources */ = {isa = PBXBuildFile; fileRef = 68DF16D128084B38005D8D3E /* GetProductDynamicParamsGenericTest.json */; };
@@ -1960,6 +1962,8 @@
 		68D099D8273B5D110017D777 /* PaymentByPhoneCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByPhoneCoordinator.swift; sourceTree = "<group>"; };
 		68D3F8D427CECB00002753BD /* ProductProfileButtonsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileButtonsViewComponent.swift; sourceTree = "<group>"; };
 		68DBA96C28800D9300A169B4 /* NSNotification+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNotification+Extension.swift"; sourceTree = "<group>"; };
+		68DBA96E288197C400A169B4 /* MeToMeRequestView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MeToMeRequestView+Legacy.swift"; sourceTree = "<group>"; };
+		68DBA9702881A11400A169B4 /* Model+Consent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Consent.swift"; sourceTree = "<group>"; };
 		68DF16C92804F58E005D8D3E /* Model+Statement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Statement.swift"; sourceTree = "<group>"; };
 		68DF16CD2804F97E005D8D3E /* StatementSample.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = StatementSample.json; sourceTree = "<group>"; };
 		68DF16D128084B38005D8D3E /* GetProductDynamicParamsGenericTest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductDynamicParamsGenericTest.json; sourceTree = "<group>"; };
@@ -4838,6 +4842,7 @@
 				68FE398E286EBED80026CBD7 /* QrScannerView+Legacy.swift */,
 				77448C1228734643009EEEA8 /* ChangeReturnView+Legacy.swift */,
 				774CA5E0287C7C6000544C17 /* ProductStatementView+Legacy.swift */,
+				68DBA96E288197C400A169B4 /* MeToMeRequestView+Legacy.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -4904,6 +4909,7 @@
 				77BF27AE284651D4009624BB /* Model+Formatters.swift */,
 				68FE398A286BD9D00026CBD7 /* Model+Version.swift */,
 				77448C102872FDBF009EEEA8 /* Model+PrintForm.swift */,
+				68DBA9702881A11400A169B4 /* Model+Consent.swift */,
 				77583FFE27B13C1600251969 /* Payments */,
 			);
 			path = Model;
@@ -7942,6 +7948,7 @@
 				5000CFB9287CA33900B0D0F7 /* ProductsListViewComponent.swift in Sources */,
 				77E1802927AB02630006ACC9 /* ServerCommands+PrintForm.swift in Sources */,
 				7769F5C227D8AC4800F80607 /* Model+Products.swift in Sources */,
+				68DBA9712881A11400A169B4 /* Model+Consent.swift in Sources */,
 				687ADF1026B07721005A239B /* DataExtension.swift in Sources */,
 				77EC58F927738B5E0054D75C /* DateFormatter+Extensions.swift in Sources */,
 				EDE709042797172E0048CA94 /* TemplatesListViewModel.swift in Sources */,
@@ -8148,6 +8155,7 @@
 				774A8B392865FCDD00B81140 /* UserAccountDocumentInfoView.swift in Sources */,
 				77F1582B28183BD900CA5E4E /* CryptoKit+Extensions.swift in Sources */,
 				6820927D27AB0DD9003DCAFD /* OperatorGroupData.swift in Sources */,
+				68DBA96F288197C400A169B4 /* MeToMeRequestView+Legacy.swift in Sources */,
 				0B283FCB27038C5400B5E925 /* GetSessionTimeoutSaved.swift in Sources */,
 				6880D32726A5CC69008FBCB4 /* AES.swift in Sources */,
 				774A82CD27BAF5B600E5A5E9 /* KeychainValueType.swift in Sources */,

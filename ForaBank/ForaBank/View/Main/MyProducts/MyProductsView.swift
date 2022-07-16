@@ -32,12 +32,7 @@ struct MyProductsView: View {
                 .background(Color.mainColorsWhite)
                 .padding(.top, -5)
             }
-            .navigationBarTitle(Text(viewModel.navigationBar.title), displayMode: .inline)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarItems(
-                leading: BackButtonView(viewModel: viewModel),
-                trailing: AddButtonView(viewModel: viewModel)
-            )
+            .navigationBar(with: viewModel.navigationBar)
             
             if let viewModel = viewModel.currencyMenu {
                 
@@ -51,44 +46,16 @@ struct MyProductsView: View {
                         .padding(.trailing, 19)
                 }
             }
-        }
-    }
-}
-
-extension MyProductsView {
-
-    struct BackButtonView: View {
-
-        let viewModel: MyProductsViewModel
-
-        var body: some View {
-
-            Button {
-
-                viewModel.action.send(MyProductsNavigationItemAction.Back())
-
-            } label: {
-
-                viewModel.navigationBar.backButton.icon
-                    .foregroundColor(.mainColorsBlack)
-            }
-        }
-    }
-
-    struct AddButtonView: View {
-
-        let viewModel: MyProductsViewModel
-
-        var body: some View {
-
-            Button {
-
-                viewModel.action.send(MyProductsNavigationItemAction.Add())
-
-            } label: {
-
-                viewModel.navigationBar.addButton.icon
-                    .foregroundColor(.mainColorsGray)
+            NavigationLink("", isActive: $viewModel.isLinkActive) {
+                
+                if let link = viewModel.link  {
+                    
+                    switch link {
+                        
+                    case .productProfile(let productProfileViewModel):
+                        ProductProfileView(viewModel: productProfileViewModel)
+                    }
+                }
             }
         }
     }

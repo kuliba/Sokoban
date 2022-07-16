@@ -22,7 +22,7 @@ extension OfferProductView {
         let title: String
         let subtitle: [String]
         @Published var image: ImageData
-        var infoButton: InfoButton
+        @Published var infoButton: InfoButton?
         let orderButton: OrderButton
         var conditionViewModel: ConditionViewModel? = nil
         let design: Design
@@ -44,13 +44,13 @@ extension OfferProductView {
         
         init(with product: CatalogProductData) {
             
-            self.id = nil
+            self.id = product.id
             self.title = product.name
             self.subtitle = product.description
             self.image = .endpoint(product.imageEndpoint)
-            self.infoButton = InfoButton(url: product.infoURL, action: {})
             self.orderButton = OrderButton(url: product.orderURL)
             self.design = .init(background: .mainColorsBlack, textColor: .mainColorsWhite)
+            self.infoButton = createInfoButton(with: product.infoURL)
         }
         
         init(with deposit: DepositProductData) {
@@ -60,11 +60,11 @@ extension OfferProductView {
             self.conditionViewModel = .init(percent: "\(deposit.generalСondition.maxRate)", amount: "\(deposit.generalСondition.minSum.currencyFormatter(symbol: "RUB"))", date: "\(deposit.generalСondition.maxTermTxt)")
             self.subtitle = deposit.generalСondition.generalTxtСondition
             self.image = .endpoint(deposit.generalСondition.imageLink)
-            self.infoButton = .init(url: .init(string: "https://www.forabank.ru")!, action: {})
             self.orderButton = OrderButton(url: .init(string: "https://www.forabank.ru")!)
             self.design = .init(background: deposit.generalСondition.design.background[0].color, textColor: deposit.generalСondition.design.textColor[0].color)
             self.additionalCondition = .init(desc: descriptionReduce(with: deposit.detailedСonditions))
             bind()
+            self.infoButton = createInfoButton(with: .init(string: "https://www.forabank.ru"))
         }
         
         struct AdditionalCondition {
@@ -139,6 +139,18 @@ extension OfferProductView {
                     }
                 }.store(in: &bindings)
         }
+        
+        private func createInfoButton(with url: URL?) -> InfoButton? {
+
+           guard let url = url else {
+              return nil
+           }
+
+            return InfoButton(url: url, action: { [weak self] in
+                            self?.action.send(OpenDepositViewModel.ModelActionOpenDeposit.ButtonTapped())
+                        })
+        }
+
     }
 }
 
@@ -281,20 +293,23 @@ struct OfferProductView: View {
         
         var body: some View {
             
-            Button {
+            if let infoButton = viewModel.infoButton {
                 
-                viewModel.isShowSheet.toggle()
-                
-            } label: {
-                
-                HStack {
+                Button {
                     
-                    viewModel.infoButton.icon
-                        .foregroundColor(color)
+                    infoButton.action()
                     
-                    Text(viewModel.infoButton.title)
-                        .foregroundColor(color)
-                        .multilineTextAlignment(.leading)
+                } label: {
+                    
+                    HStack {
+                        
+                        infoButton.icon
+                            .foregroundColor(color)
+                        
+                        Text(infoButton.title)
+                            .foregroundColor(color)
+                            .multilineTextAlignment(.leading)
+                    }
                 }
             }
         }
