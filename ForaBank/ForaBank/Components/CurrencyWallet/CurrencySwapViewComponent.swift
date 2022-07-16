@@ -72,19 +72,33 @@ extension CurrencySwapView.ViewModel {
 
     class CurrencyViewModel: ObservableObject {
         
-        @Published var currencyAmount: String
+        @Published var currencyAmount: Double
 
         let icon: Image
         let title: String
         let currencyType: String
         
-        lazy var textField: TextFieldView.ViewModel = .init(
-            text: currencyAmount,
-            doneButton: .init(title: "Готово") {
-                UIApplication.shared.endEditing()
-            })
+        var font: UIFont {
+            
+            guard let font = UIFont(name: "Inter-Medium", size: 16) else {
+                return .systemFont(ofSize: 16)
+            }
+            
+            return font
+        }
+        
+        lazy var textField: TextFieldFormatableView.ViewModel = .init(
+            type: .currencyWallet,
+            value: currencyAmount,
+            formatter: .decimal(),
+            isEnabled: true,
+            limit: 10,
+            toolbar: .init(
+                doneButton: .init(isEnabled: true) {
+                    UIApplication.shared.endEditing()
+                }, closeButton: nil))
 
-        init(icon: Image, title: String, currencyAmount: String, currencyType: String) {
+        init(icon: Image, title: String, currencyAmount: Double, currencyType: String) {
 
             self.icon = icon
             self.title = title
@@ -213,8 +227,6 @@ extension CurrencySwapView {
     struct CurrencyView: View {
 
         @ObservedObject var viewModel: ViewModel.CurrencyViewModel
-        
-        @State var text: String = "1.00"
 
         var body: some View {
 
@@ -232,10 +244,13 @@ extension CurrencySwapView {
 
                     HStack(alignment: .bottom, spacing: 4) {
 
-                        TextFieldView(viewModel: viewModel.textField)
-                            .font(.textH4M16240())
-                            .foregroundColor(.mainColorsBlack)
-                            .fixedSize()
+                        TextFieldFormatableView(
+                            viewModel: viewModel.textField,
+                            font: viewModel.font,
+                            textColor: .mainColorsBlack,
+                            tintColor: .mainColorsBlack,
+                            keyboardType: .decimalPad)
+                        .fixedSize()
 
                         Text(viewModel.currencyType)
                             .font(.textH4M16240())
@@ -286,12 +301,12 @@ extension CurrencySwapView.ViewModel {
         haveCurrencySwap: .init(
             icon: .init("Flag RUB"),
             title: "У меня есть",
-            currencyAmount: "64,50",
+            currencyAmount: 64.50,
             currencyType: "RUB"),
         getCurrencySwap: .init(
             icon: .init("Flag USD"),
             title: "Я получу",
-            currencyAmount: "1,00",
+            currencyAmount: 1.00,
             currencyType: "USD"))
 }
 

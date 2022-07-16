@@ -38,7 +38,6 @@ extension TextFieldFormatableView {
         enum Kind {
             
             case general
-            case openAccount
             case currencyWallet
         }
         
@@ -138,30 +137,34 @@ struct TextFieldFormatableView: UIViewRepresentable {
         
         func textFieldDidChangeSelection(_ textField: UITextField) {
             
-            updateCursorPosition(textField)
+            switch viewModel.type {
+            case .general:
+                updateCursorPosition(textField)
+            default: break
+            }
         }
         
         public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 
             switch viewModel.type {
             case .general, .currencyWallet:
-                return generalType(textField, range: range, string: string)
-            case .openAccount:
-                return openAccountType(textField, range: range, string: string)
+                return generalTextField(textField, shouldChangeCharactersIn: range, replacementString: string)
             }
         }
         
-        func generalType(_ textField: UITextField, range: NSRange, string: String) -> Bool {
+        func generalTextField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
             
             textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter, limit: limit)
             text.wrappedValue = textField.text
-            updateCursorPosition(textField)
+            
+            switch viewModel.type {
+            case .general:
+                updateCursorPosition(textField)
+            default:
+                break
+            }
             
             return false
-        }
-        
-        func openAccountType(_ textField: UITextField, range: NSRange, string: String) -> Bool {
-            return true
         }
         
         func updateCursorPosition(_ textField: UITextField) {
@@ -199,9 +202,18 @@ struct TextFieldFormatableView: UIViewRepresentable {
             let rangeStart = value.index(value.startIndex, offsetBy: inRange.lowerBound)
             let rangeEnd = value.index(value.startIndex, offsetBy: inRange.upperBound)
             
-            // apply update to value in range
             var updatedValue = value
+            
+            // apply update to value in range
             updatedValue.replaceSubrange(rangeStart..<rangeEnd, with: update)
+            
+            let semicolon = updatedValue.filter { ".,".contains($0) }
+            
+            // number dots and commas is not more than one
+            if semicolon.count > 1 {
+                return value
+            }
+            
             // remove formatting from value, example: `1 234,56 ₽` -> `1234,56`
             updatedValue = updatedValue.filter{ expectedCharacters.contains($0) }
 

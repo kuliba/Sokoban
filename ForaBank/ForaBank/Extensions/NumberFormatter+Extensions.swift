@@ -29,6 +29,17 @@ extension NumberFormatter {
         
         return formatter
     }
+    
+    static func decimal() -> NumberFormatter {
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        formatter.locale = Locale(identifier: "ru_RU")
+        
+        return formatter
+    }
 
     //FIXME: refactor this
     static func decimal(totalBalance: String) -> String {
