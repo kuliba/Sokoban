@@ -16,13 +16,10 @@ class AuthLoginViewModel: ObservableObject {
     let header: HeaderViewModel
     lazy var card: CardViewModel = CardViewModel(scanButton: .init(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Show.Scaner()) }), textField: .init(masks: [.card, .account], regExp: "[0-9]"), nextButton: nil, state: .editing)
     
-    @Published var productsButton: ProductsButtonViewModel?
-    
-    @Published var isConfirmViewPresented: Bool
-    var confirmViewModel: AuthConfirmViewModel?
-    
-    @Published var isProductsViewPresented: Bool
-    var productsViewModel: AuthProductsViewModel?
+    let products: ProductsViewModel
+
+    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var isLinkActive: Bool = false
     
     @Published var cardScanner: CardScannerViewModel?
     @Published var alert: Alert.ViewModel?
@@ -31,12 +28,10 @@ class AuthLoginViewModel: ObservableObject {
     private let model: Model
     private var bindings = Set<AnyCancellable>()
 
-    init(header: HeaderViewModel = HeaderViewModel(), productsButton: ProductsButtonViewModel? = nil,  isConfirmViewPresented: Bool = false, isProductsViewPresented: Bool = false, rootActions: RootViewModel.RootActions, model: Model = .emptyMock) {
+    init(header: HeaderViewModel = HeaderViewModel(), products: ProductsViewModel, rootActions: RootViewModel.RootActions, model: Model = .emptyMock) {
 
         self.header = header
-        self.productsButton = productsButton
-        self.isConfirmViewPresented = isConfirmViewPresented
-        self.isProductsViewPresented = isProductsViewPresented
+        self.products = products
         self.rootActions = rootActions
         self.model = model
     }
@@ -45,8 +40,7 @@ class AuthLoginViewModel: ObservableObject {
         
         self.model = model
         self.header = HeaderViewModel()
-        self.isConfirmViewPresented = false
-        self.isProductsViewPresented = false
+        self.products = .init(button: nil)
         self.rootActions = rootActions
         
         bind()
@@ -65,8 +59,9 @@ class AuthLoginViewModel: ObservableObject {
                     self.action.send(AuthLoginViewModelAction.Spinner.Hide())
                     switch payload {
                     case .success(codeLength: let codeLength, phone: let phone, resendCodeDelay: let resendCodeDelay):
-                        confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: codeLength, phoneNumber: phone, resendCodeDelay: resendCodeDelay, backAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Confirm())}, rootActions: rootActions)
-                        isConfirmViewPresented = true
+                        let confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: codeLength, phoneNumber: phone, resendCodeDelay: resendCodeDelay, backAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Close.Link())}, rootActions: rootActions)
+                        link = .confirm(confirmViewModel)
+                        
                         print("SessionAgent: CHECK DONE")
                         
                     case .failure(message: let message):
@@ -91,8 +86,8 @@ class AuthLoginViewModel: ObservableObject {
                     print("SessionAgent: CHECK CLIENT")
                     
                 case _ as AuthLoginViewModelAction.Show.Products:
-                    productsViewModel = AuthProductsViewModel(model, products: model.catalogProducts.value, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Products())})
-                    isProductsViewPresented = true
+                    let productsViewModel = AuthProductsViewModel(model, products: model.catalogProducts.value, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Close.Link())})
+                    link = .products(productsViewModel)
                     
                 case _ as AuthLoginViewModelAction.Show.Scaner:
                     cardScanner = .init(closeAction: { number in
@@ -106,13 +101,8 @@ class AuthLoginViewModel: ObservableObject {
                         self.cardScanner = nil
                     })
                     
-                case _ as AuthLoginViewModelAction.Dismiss.Confirm:
-                    confirmViewModel = nil
-                    isConfirmViewPresented = false
-                    
-                case _ as AuthLoginViewModelAction.Dismiss.Products:
-                    productsViewModel = nil
-                    isProductsViewPresented = false
+                case _ as AuthLoginViewModelAction.Close.Link:
+                    link = nil
                     
                 case _ as AuthLoginViewModelAction.Spinner.Show:
                     rootActions.spinner.show()
@@ -147,28 +137,19 @@ class AuthLoginViewModel: ObservableObject {
                 
                 if catalogProducts.count > 0 {
                     
-                    productsButton = ProductsButtonViewModel(action: { self.action.send(AuthLoginViewModelAction.Show.Products()) })
-                    
+                    withAnimation {
+                        products.button = .init(action: { self.action.send(AuthLoginViewModelAction.Show.Products()) })
+                    }
+
                 } else {
                     
-                    productsButton = nil
+                    withAnimation {
+                        products.button = nil
+                    }
                 }
                 
             }.store(in: &bindings)
     }
-    
-//    func bind(scaner: CardScannerViewModel?) {
-//        scaner?.$cardNumder
-//            .dropFirst()
-//            .receive(on: DispatchQueue.main)
-//            .sink { [unowned self] value in
-//                guard let value = value else { return }
-//                let filterredValue = (try? value.filterred(regEx: self.card.textField.regExp)) ?? value
-//                let maskedValue = filterredValue.masked(masks: self.card.textField.masks)
-//                self.card.textField.text = maskedValue
-//
-//            }.store(in: &bindings)
-//    }
     
     deinit {
         
@@ -254,13 +235,29 @@ extension AuthLoginViewModel {
         }
     }
 
-    struct ProductsButtonViewModel {
+    class ProductsViewModel: ObservableObject {
+        
+        @Published var button: ButtonViewModel?
+        
+        init(button: ButtonViewModel?) {
+            
+            self.button = button
+        }
 
-        let icon: Image = .ic40Card
-        let title = "Нет карты?"
-        let subTitle = "Доставим в любую точку"
-        let arrowRight: Image = .ic24ArrowRight
-        let action: () -> Void
+        struct ButtonViewModel {
+            
+            let icon: Image = .ic40Card
+            let title = "Нет карты?"
+            let subTitle = "Доставим в любую точку"
+            let arrowRight: Image = .ic24ArrowRight
+            let action: () -> Void
+        }
+    }
+    
+    enum Link {
+        
+        case confirm(AuthConfirmViewModel)
+        case products(AuthProductsViewModel)
     }
 }
 
@@ -280,11 +277,9 @@ enum AuthLoginViewModelAction {
         struct Products: Action { }
     }
     
-    enum Dismiss {
+    enum Close {
         
-        struct Confirm: Action {}
-        
-        struct Products: Action { }
+        struct Link: Action {}
     }
     
     enum Spinner {
