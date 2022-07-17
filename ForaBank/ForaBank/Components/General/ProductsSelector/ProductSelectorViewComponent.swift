@@ -10,7 +10,7 @@ import Combine
 
 // MARK: - ViewModel
 
-extension ProductCardView {
+extension ProductSelectorView {
 
     class ViewModel: ObservableObject {
         
@@ -21,20 +21,13 @@ extension ProductCardView {
         @Published var name: String
         @Published var balance: String
         @Published var numberCard: NumberCardViewModel
-        @Published var state: State
+        
+        @Published var listViewModel: ProductsListView.ViewModel?
         
         var bindings = Set<AnyCancellable>()
         
         let title: String
         let isDividerHiddable: Bool
-        
-        var isExpanded: Bool {
-            
-            switch state {
-            case .normal: return false
-            case .expanded: return true
-            }
-        }
         
         init(title: String,
              cardIcon: Image,
@@ -42,7 +35,7 @@ extension ProductCardView {
              name: String,
              balance: String,
              numberCard: NumberCardViewModel,
-             state: State,
+             listViewModel: ProductsListView.ViewModel? = nil,
              isDividerHiddable: Bool = false) {
             
             self.title = title
@@ -51,7 +44,7 @@ extension ProductCardView {
             self.name = name
             self.balance = balance
             self.numberCard = numberCard
-            self.state = state
+            self.listViewModel = listViewModel
             self.isDividerHiddable = isDividerHiddable
             
             bind()
@@ -65,15 +58,13 @@ extension ProductCardView {
                     
                     switch action {
                         
-                    case _ as ProductCardView.ProductAction.Toggle:
+                    case _ as ProductSelectorView.ProductAction.Toggle:
                         
                         withAnimation(.easeOut) {
                             
-                            switch state {
-                            case .normal:
-                                state = .expanded(.sample)
-                            case .expanded:
-                                state = .normal
+                            switch listViewModel == nil {
+                            case true: listViewModel = .sample
+                            case false: listViewModel = nil
                             }
                         }
                         
@@ -83,16 +74,10 @@ extension ProductCardView {
                     
                 }.store(in: &bindings)
         }
-        
-        enum State {
-            
-            case normal
-            case expanded(ProductsListView.ViewModel)
-        }
     }
 }
 
-extension ProductCardView.ViewModel {
+extension ProductSelectorView.ViewModel {
     
     // MARK: - NumberCard
     
@@ -115,7 +100,7 @@ extension ProductCardView.ViewModel {
 
 // MARK: - View
 
-struct ProductCardView: View {
+struct ProductSelectorView: View {
     
     @ObservedObject var viewModel: ViewModel
     
@@ -125,8 +110,16 @@ struct ProductCardView: View {
             
             ProductView(viewModel: viewModel)
             
-            switch viewModel.state {
-            case .normal:
+            if let listViewModel = viewModel.listViewModel {
+                
+                Divider()
+                    .padding(.top, 2)
+                    .padding(.horizontal, 20)
+                
+                ProductsListView(viewModel: listViewModel)
+                    .padding(.top, 8)
+                
+            } else {
                 
                 if viewModel.isDividerHiddable == false {
                     
@@ -134,31 +127,19 @@ struct ProductCardView: View {
                         .padding(.top, 2)
                         .padding(.horizontal, 20)
                 }
-                
-                EmptyView()
-                
-            case .expanded(let model):
-                
-                Divider()
-                    .padding(.top, 2)
-                    .padding(.horizontal, 20)
-                
-                ProductsListView(viewModel: model)
-                    .padding(.top, 8)
             }
-            
         }.background(Color.mainColorsGrayLightest)
     }
 }
 
-extension ProductCardView {
+extension ProductSelectorView {
     
     enum ProductAction {
     
         struct Toggle: Action {}
     }
     
-    // MARK: - NumberCard
+    // MARK: - ProductView
     
     struct ProductView : View {
         
@@ -201,16 +182,16 @@ extension ProductCardView {
                                 .resizable()
                                 .frame(width: 24, height: 24)
                                 .foregroundColor(.mainColorsGray)
-                                .rotationEffect(viewModel.isExpanded ? .degrees(0) : .degrees(-90))
+                                .rotationEffect(viewModel.listViewModel == nil ? .degrees(0) : .degrees(-90))
                         }
                         
                         HStack {
-                            ProductCardView.NumberCardView(viewModel: viewModel.numberCard)
+                            ProductSelectorView.NumberCardView(viewModel: viewModel.numberCard)
                         }
                     }
                 }.onTapGesture {
                     
-                    viewModel.action.send(ProductCardView.ProductAction.Toggle())
+                    viewModel.action.send(ProductSelectorView.ProductAction.Toggle())
                 }
             }.padding(.horizontal, 20)
         }
@@ -251,9 +232,9 @@ extension ProductCardView {
 
 // MARK: - Preview Content
 
-extension ProductCardView.ViewModel {
+extension ProductSelectorView.ViewModel {
     
-    static let sample1 = ProductCardView.ViewModel(
+    static let sample1 = ProductSelectorView.ViewModel(
         title: "Откуда",
         cardIcon: Image("Platinum Card"),
         logoIcon: Image("Platinum Logo"),
@@ -262,9 +243,9 @@ extension ProductCardView.ViewModel {
         numberCard: .init(
             numberCard: "4444555566662953",
             description: "Все включено"),
-        state: .normal)
+        listViewModel: nil)
     
-    static let sample2 = ProductCardView.ViewModel(
+    static let sample2 = ProductSelectorView.ViewModel(
         title: "Откуда",
         cardIcon: Image("Platinum Card"),
         logoIcon: Image("Platinum Logo"),
@@ -273,9 +254,9 @@ extension ProductCardView.ViewModel {
         numberCard: .init(
             numberCard: "4444555566662953",
             description: "Все включено"),
-        state: .expanded(.sample))
+        listViewModel: .sample)
     
-    static let sample3 = ProductCardView.ViewModel(
+    static let sample3 = ProductSelectorView.ViewModel(
         title: "Куда",
         cardIcon: Image("Platinum Card"),
         logoIcon: nil,
@@ -284,26 +265,25 @@ extension ProductCardView.ViewModel {
         numberCard: .init(
             numberCard: "",
             description: "Валютный"),
-        state: .normal,
         isDividerHiddable: true)
 }
 
 // MARK: - Previews
 
-struct ProductCardViewComponent_Previews: PreviewProvider {
+struct ProductSelectorViewComponent_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
             
-            ProductCardView(viewModel: .sample1)
+            ProductSelectorView(viewModel: .sample1)
                 .previewLayout(.sizeThatFits)
                 .padding()
             
-            ProductCardView(viewModel: .sample2)
+            ProductSelectorView(viewModel: .sample2)
                 .previewLayout(.sizeThatFits)
                 .padding()
             
-            ProductCardView(viewModel: .sample3)
+            ProductSelectorView(viewModel: .sample3)
                 .previewLayout(.sizeThatFits)
                 .padding()
             

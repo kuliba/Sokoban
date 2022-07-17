@@ -19,20 +19,7 @@ struct CurrencyWalletView: View {
 
             CurrencyListView(viewModel: viewModel.listViewModel)
             CurrencySwapView(viewModel: viewModel.swapViewModel)
-            
-            ZStack {
-                
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundColor(.mainColorsGrayLightest)
-                
-                VStack(spacing: 20) {
-                    
-                    ProductCardView(viewModel: .sample1)
-                    ProductCardView(viewModel: .sample3)
-                    
-                }.padding(.vertical, 20)
-                
-            }.padding(20)
+            CurrencySelectorView(viewModel: .init(viewModel.model, state: .openAccount))
         }
         .ignoreKeyboard()
         .navigationBarTitle(Text(viewModel.title), displayMode: .inline)
@@ -53,6 +40,7 @@ struct CurrencyWalletView: View {
 struct CurrencyWalletView_Previews: PreviewProvider {
     static var previews: some View {
         CurrencyWalletView(viewModel: .init(
+            .productsMock,
             listViewModel: .sample,
             swapViewModel: .sample,
             action: {}))

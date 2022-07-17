@@ -1,0 +1,81 @@
+//
+//  CurrencySelectorViewComponent.swift
+//  ForaBank
+//
+//  Created by Pavel Samsonov on 17.07.2022.
+//
+
+import SwiftUI
+
+// MARK: - ViewModel
+
+extension CurrencySelectorView {
+    
+    class ViewModel: ObservableObject {
+        
+        @Published var state: State
+        
+        let model: Model
+        
+        lazy var openAccount: ProductAccountView.ViewModel = .init(
+            model: model,
+            cardIcon: Image("USD Account"),
+            currencyType: "USD",
+            currencyName: "Валютный",
+            warning: .init(description: "Для завершения операции Вам необходимо открыть счет в долларах США"))
+        
+        init(_ model: Model, state: State) {
+            
+            self.model = model
+            self.state = state
+        }
+        
+        enum State {
+            
+            case openAccount
+            case productSelector
+        }
+    }
+}
+
+// MARK: - View
+
+struct CurrencySelectorView: View {
+    
+    @ObservedObject var viewModel: ViewModel
+    
+    var body: some View {
+        
+        ZStack {
+            
+            RoundedRectangle(cornerRadius: 12)
+                .foregroundColor(.mainColorsGrayLightest)
+            
+            VStack(spacing: 20) {
+                
+                ProductSelectorView(viewModel: .sample1)
+                
+                switch viewModel.state {
+                case .openAccount:
+                    ProductAccountView(viewModel: viewModel.openAccount)
+                case .productSelector:
+                    ProductSelectorView(viewModel: .sample3)
+                }
+                
+            }.padding(.vertical, 20)
+            
+        }.padding(20)
+    }
+}
+
+// MARK: - Previews
+
+struct CurrencySelectorViewComponent_Previews: PreviewProvider {
+    static var previews: some View {
+        CurrencySelectorView(viewModel: .init(
+            .productsMock,
+            state: .openAccount))
+        .previewLayout(.sizeThatFits)
+        .frame(height: 300)
+    }
+}

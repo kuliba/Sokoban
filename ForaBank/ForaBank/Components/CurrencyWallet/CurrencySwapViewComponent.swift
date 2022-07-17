@@ -42,7 +42,7 @@ extension CurrencySwapView {
             action
                 .receive(on: DispatchQueue.main)
                 .throttle(for: .milliseconds(500), scheduler: DispatchQueue.main, latest: false)
-                .sink { action in
+                .sink { [unowned self] action in
 
                     switch action {
                     case _ as CurrencySwapAction.Button.Tapped:
@@ -50,16 +50,25 @@ extension CurrencySwapView {
                         if #available(iOS 14.0, *) {
 
                             withAnimation {
-                                self.isSwapCurrency.toggle()
+                                isSwapCurrency.toggle()
                             }
                         } else {
 
                             withAnimation(.easeInOut(duration: 0.2)) {
-                                self.isSwapCurrency.toggle()
+                                isSwapCurrency.toggle()
                             }
                         }
                     default:
                         break
+                    }
+                }.store(in: &bindings)
+            
+            $isSwapCurrency
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isSwapCurrency in
+
+                    withAnimation(.easeInOut) {
+                        swapButton.isSwap = isSwapCurrency
                     }
                 }.store(in: &bindings)
         }
@@ -109,10 +118,19 @@ extension CurrencySwapView.ViewModel {
 
     // MARK: - Button
 
-    struct SwapButtonViewModel {
+    class SwapButtonViewModel: ObservableObject {
+        
+        @Published var isSwap: Bool
 
-        let icon: Image = .init("Swap")
+        let icon: Image
         let action: () -> Void
+        
+        init(isSwap: Bool = false, icon: Image = .init("Swap"), action: @escaping () -> Void) {
+            
+            self.isSwap = isSwap
+            self.icon = icon
+            self.action = action
+        }
     }
 }
 
@@ -265,7 +283,7 @@ extension CurrencySwapView {
 
     struct SwapButtonView: View {
 
-        let viewModel: ViewModel.SwapButtonViewModel
+        @ObservedObject var viewModel: ViewModel.SwapButtonViewModel
 
         var body: some View {
 
@@ -273,9 +291,18 @@ extension CurrencySwapView {
 
                 viewModel.icon
                     .resizable()
-                    .frame(width: 32, height: 32)
                     .clipShape(Circle())
-            }
+                    .frame(width: 32, height: 32)
+                    .rotationEffect(viewModel.isSwap ? .degrees(0) : .degrees(180))
+            }.buttonStyle(SwapButtonStyle())
+        }
+    }
+    
+    struct SwapButtonStyle: ButtonStyle {
+        
+        func makeBody(configuration: Configuration) -> some View {
+            configuration.label
+                .background(Color.mainColorsGrayLightest)
         }
     }
 }

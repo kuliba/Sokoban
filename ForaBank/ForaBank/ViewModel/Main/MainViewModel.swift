@@ -215,7 +215,7 @@ class MainViewModel: ObservableObject, Resetable {
                     
                         print("mdy: Sell-\(payload.code.description)") // -> USD, GBR, EUR
                         
-                        link = .currencyWallet(.init(listViewModel: .sample, swapViewModel: .sample) { [weak self] in
+                        link = .currencyWallet(.init(model, listViewModel: .sample, swapViewModel: .sample) { [weak self] in
                             self?.action.send(MainViewModelAction.CloseAction.Link())
                         })
                         
