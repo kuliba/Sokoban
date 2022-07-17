@@ -242,6 +242,8 @@
 		0C6508CF28299C6D0058916A /* PaymentsTransfersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */; };
 		0C6508D228299DAF0058916A /* PaymentsTransfersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */; };
 		0C78331C287DC201003ADC73 /* MainSectionCurrencyMetalComponentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78331B287DC201003ADC73 /* MainSectionCurrencyMetalComponentMock.swift */; };
+		0C78331E2883354F003ADC73 /* CurrencyBigListVIewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78331D2883354F003ADC73 /* CurrencyBigListVIewComponent.swift */; };
+		0C783321288345A6003ADC73 /* CurrencyBigListViewComponentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C783320288345A6003ADC73 /* CurrencyBigListViewComponentMock.swift */; };
 		0C8CF960282179E80047DDAE /* SendMailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8CF95F282179E80047DDAE /* SendMailView.swift */; };
 		0C99077728733835000831BB /* MainSectionCurrencyMetallComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C99077628733835000831BB /* MainSectionCurrencyMetallComponent.swift */; };
 		0CA1CDE12840720200021671 /* AddressBookContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA1CDE02840720200021671 /* AddressBookContact.swift */; };
@@ -1621,6 +1623,8 @@
 		0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersView.swift; sourceTree = "<group>"; };
 		0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModel.swift; sourceTree = "<group>"; };
 		0C78331B287DC201003ADC73 /* MainSectionCurrencyMetalComponentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionCurrencyMetalComponentMock.swift; sourceTree = "<group>"; };
+		0C78331D2883354F003ADC73 /* CurrencyBigListVIewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyBigListVIewComponent.swift; sourceTree = "<group>"; };
+		0C783320288345A6003ADC73 /* CurrencyBigListViewComponentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyBigListViewComponentMock.swift; sourceTree = "<group>"; };
 		0C8CF95F282179E80047DDAE /* SendMailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMailView.swift; sourceTree = "<group>"; };
 		0C99077628733835000831BB /* MainSectionCurrencyMetallComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionCurrencyMetallComponent.swift; sourceTree = "<group>"; };
 		0CA1CDE02840720200021671 /* AddressBookContact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressBookContact.swift; sourceTree = "<group>"; };
@@ -3399,6 +3403,14 @@
 			path = Main;
 			sourceTree = "<group>";
 		};
+		0C78331F28834564003ADC73 /* CurrencyWallet */ = {
+			isa = PBXGroup;
+			children = (
+				0C783320288345A6003ADC73 /* CurrencyBigListViewComponentMock.swift */,
+			);
+			path = CurrencyWallet;
+			sourceTree = "<group>";
+		};
 		0CC8FCA52831457F00F0E9BD /* PaymentsTransfers */ = {
 			isa = PBXGroup;
 			children = (
@@ -3497,6 +3509,7 @@
 			isa = PBXGroup;
 			children = (
 				5059D4492863B76E00DA446D /* CurrencyListVIewComponent.swift */,
+				0C78331D2883354F003ADC73 /* CurrencyBigListVIewComponent.swift */,
 				50D3D4832865C006002D7FB4 /* CurrencySwapViewComponent.swift */,
 			);
 			path = CurrencyWallet;
@@ -4505,6 +4518,7 @@
 		774E318727A0506D005A067B /* PreviewContent */ = {
 			isa = PBXGroup;
 			children = (
+				0C78331F28834564003ADC73 /* CurrencyWallet */,
 				0C78331A287DC1C6003ADC73 /* Main */,
 				0CC8FCA52831457F00F0E9BD /* PaymentsTransfers */,
 				7705ABCA27E891B7000E99CA /* Payments */,
@@ -8095,8 +8109,10 @@
 				77B6B35928509A0300E3001B /* ProductStatementsUpdateState.swift in Sources */,
 				77F1581F2810909B00CA5E4E /* SessionAgent.swift in Sources */,
 				770DCE8F27BBE6AB004099C1 /* Model+Auth.swift in Sources */,
+				0C78331E2883354F003ADC73 /* CurrencyBigListVIewComponent.swift in Sources */,
 				68D099D2273A73CA0017D777 /* SettingViewCoordinator.swift in Sources */,
 				68F5E1242858F1B0003018E5 /* TransferByRequisitsView+Legacy.swift in Sources */,
+				0C783321288345A6003ADC73 /* CurrencyBigListViewComponentMock.swift in Sources */,
 				68D3F8D527CECB00002753BD /* ProductProfileButtonsViewComponent.swift in Sources */,
 				68D3F8D527CECB00002753BD /* ProductProfileButtonsViewComponent.swift in Sources */,
 				77EC58F4277381970054D75C /* OperationType.swift in Sources */,
