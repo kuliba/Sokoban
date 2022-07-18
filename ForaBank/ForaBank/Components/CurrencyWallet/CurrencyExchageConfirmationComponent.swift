@@ -15,12 +15,12 @@ extension CurrencyExchangeConfirmationView {
     
     class ViewModel: ObservableObject {
         
-        var tableVM: TableViewModel
-        private(set) var imageVM: ImageViewModel?
-        private(set) var textVM: TextViewModel?
+        let tableVM: TableViewModel
+        @Published private(set) var imageVM: ImageViewModel?
+        @Published private(set) var textVM: TextViewModel?
         
         
-        @Published var state: ConfirmationState {
+        var state: ConfirmationState {
             didSet {
                 setupSections(for: state)
             }
@@ -131,7 +131,7 @@ extension CurrencyExchangeConfirmationView {
 
     struct TableView: View {
         
-        var viewModel: ViewModel.TableViewModel
+        @State var viewModel: ViewModel.TableViewModel
         
         var body: some View {
             
