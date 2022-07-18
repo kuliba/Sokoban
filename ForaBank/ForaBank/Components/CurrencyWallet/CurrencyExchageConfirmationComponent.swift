@@ -15,7 +15,7 @@ extension CurrencyExchangeConfirmationView {
     
     class ViewModel: ObservableObject {
         
-        let tableVM: TableViewModel
+        @Published var tableVM: TableViewModel?
         @Published private(set) var imageVM: ImageViewModel?
         @Published private(set) var textVM: TextViewModel?
         
@@ -28,6 +28,7 @@ extension CurrencyExchangeConfirmationView {
         
         enum ConfirmationState {
             
+            case nothing
             case needConfirm
             case successImage
             case fullSuccess
@@ -36,7 +37,7 @@ extension CurrencyExchangeConfirmationView {
         }
         
         init(state: ConfirmationState,
-             tableVM: TableViewModel,
+             tableVM: TableViewModel?,
              imageVM: ImageViewModel?,
              textVM: TextViewModel?) {
             
@@ -46,19 +47,26 @@ extension CurrencyExchangeConfirmationView {
             self.textVM = textVM
         }
         
-        init(tableVM: TableViewModel) {
+        init(tableVM: TableViewModel?) {
             
-            self.state = .needConfirm
+            self.state = .nothing
             self.tableVM = tableVM
             
             setupSections(for: self.state)
         }
         
-        struct TableViewModel {
+        class TableViewModel: ObservableObject {
             
             let sum: String
             let commission: String
             let sumCurrency: String
+            
+            init(sum: String, commission: String, sumCurrency: String) {
+                self.sum = sum
+                self.commission = commission
+                self.sumCurrency = sumCurrency
+            }
+            
         }
         
         struct ImageViewModel {
@@ -76,6 +84,11 @@ extension CurrencyExchangeConfirmationView {
             
             switch state {
             
+            case .nothing:
+                self.tableVM = nil
+                self.imageVM = nil
+                self.textVM = nil
+                
             case .needConfirm:
                 self.imageVM = nil
                 self.textVM = nil
@@ -85,16 +98,20 @@ extension CurrencyExchangeConfirmationView {
                 self.textVM = nil
             
             case .fullSuccess:
+                
+                guard let tableVM = tableVM else { return }
                 self.imageVM = .init(image: Image("Done"))
-                self.textVM = .init(text: "Успешный перевод", value: self.tableVM.sum)
+                self.textVM = .init(text: "Успешный перевод", value: tableVM.sum)
             
             case .error:
+                guard let tableVM = tableVM else { return }
                 self.imageVM = .init(image: Image("Denied"))
-                self.textVM = .init(text: "Операция неуспешна!", value: self.tableVM.sum)
+                self.textVM = .init(text: "Операция неуспешна!", value: tableVM.sum)
             
             case .waiting:
+                guard let tableVM = tableVM else { return }
                 self.imageVM = .init(image: Image("waiting"))
-                self.textVM = .init(text: "Операция в обработке!", value: self.tableVM.sum)
+                self.textVM = .init(text: "Операция в обработке!", value: tableVM.sum)
             }
             
         }
@@ -112,7 +129,10 @@ struct CurrencyExchangeConfirmationView: View {
         
         VStack {
                 
-            TableView(viewModel: viewModel.tableVM).padding(.bottom, 32)
+            if let tableVM = viewModel.tableVM {
+                
+                TableView(viewModel: tableVM).padding(.bottom, 32)
+            }
             
             if let imageVM = viewModel.imageVM {
                 
@@ -131,7 +151,7 @@ extension CurrencyExchangeConfirmationView {
 
     struct TableView: View {
         
-        @State var viewModel: ViewModel.TableViewModel
+        @ObservedObject var viewModel: ViewModel.TableViewModel
         
         var body: some View {
             
