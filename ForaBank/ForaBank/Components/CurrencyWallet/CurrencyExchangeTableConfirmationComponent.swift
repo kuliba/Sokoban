@@ -35,33 +35,27 @@ extension CurrencyExchangeTableConfirmationView {
                   let fee = response.fee,
                   let creditAmount = response.creditAmount,
                   let currencyPayerCode = response.currencyPayer?.description,
-                  let currencyPayeeCode = response.currencyPayee?.description,
-                  let currencyPayerItemDict = model.dictionaryCurrency(for: currencyPayerCode),
-                  let currencyPayeeItemDict = model.dictionaryCurrency(for: currencyPayeeCode)
+                  let currencyPayeeCode = response.currencyPayee?.description
+                  
             else { return nil }
             
             self.sum = String(debitAmount)
             self.commission = String(fee)
             self.currencySum = String(creditAmount)
             
-            if let currencyPayerChar = unicodeToString(currencyPayerItemDict.unicode) {
+            if let currencyPayerChar = model.dictionaryCurrencySimbol(for: currencyPayerCode) {
                 
                 self.sum += " " + currencyPayerChar
                 self.commission += " " + currencyPayerChar
             }
             
-            if let currencyPayeeChar = unicodeToString(currencyPayeeItemDict.unicode) {
+            if let currencyPayeeChar = model.dictionaryCurrencySimbol(for: currencyPayeeCode) {
                 
                 self.currencySum += " " + currencyPayeeChar
             }
             
         }
         
-        private func unicodeToString(_ unicode: String?) -> String? {
-            guard let unicode = unicode else { return nil }
-            return unicode.replacingOccurrences(of: "\\", with: "")
-                          .applyingTransform(.init("Hex/Unicode-Any"), reverse: false)
-        }
     }
 }
 
