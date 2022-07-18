@@ -265,6 +265,7 @@
 		5008781D2853453A0033DDD5 /* PageIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5008781A285345390033DDD5 /* PageIndicatorView.swift */; };
 		5008781E2853453A0033DDD5 /* PagerContentViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5008781B2853453A0033DDD5 /* PagerContentViewComponent.swift */; };
 		50087821285348A90033DDD5 /* Collection+Safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50087820285348A90033DDD5 /* Collection+Safe.swift */; };
+		5009E9002885FBED00AE37EB /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5009E8FF2885FBED00AE37EB /* Double+Extensions.swift */; };
 		50164F202841009C004239A1 /* ToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50164F1F2841009C004239A1 /* ToggleView.swift */; };
 		502A98A4283A950900C6A621 /* GetProductListByTypeResponseServer.json in Resources */ = {isa = PBXBuildFile; fileRef = 502A98A3283A950900C6A621 /* GetProductListByTypeResponseServer.json */; };
 		503069D7286A5BE700308CC1 /* BottomSheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503069D3286A5BE700308CC1 /* BottomSheetPresentationController.swift */; };
@@ -1652,6 +1653,7 @@
 		5008781A285345390033DDD5 /* PageIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageIndicatorView.swift; sourceTree = "<group>"; };
 		5008781B2853453A0033DDD5 /* PagerContentViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagerContentViewComponent.swift; sourceTree = "<group>"; };
 		50087820285348A90033DDD5 /* Collection+Safe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Safe.swift"; sourceTree = "<group>"; };
+		5009E8FF2885FBED00AE37EB /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
 		50164F1F2841009C004239A1 /* ToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleView.swift; sourceTree = "<group>"; };
 		502A98A3283A950900C6A621 /* GetProductListByTypeResponseServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductListByTypeResponseServer.json; sourceTree = "<group>"; };
 		503069D3286A5BE700308CC1 /* BottomSheetPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentationController.swift; sourceTree = "<group>"; };
@@ -5390,6 +5392,7 @@
 				77EC58F827738B5E0054D75C /* DateFormatter+Extensions.swift */,
 				5066506A28577C260039A745 /* DateComponentsFormatter+Ext.swift */,
 				77499C3B27739B1A00F6C079 /* NumberFormatter+Extensions.swift */,
+				5009E8FF2885FBED00AE37EB /* Double+Extensions.swift */,
 				77499C422773A96500F6C079 /* Color+Extensions.swift */,
 				777297A227CA3AB70099EF91 /* Image+Extensions.swift */,
 				7758754E27996E610080115D /* FileManager+Extensions.swift */,
@@ -7709,6 +7712,7 @@
 				77A1466427C12B52006CC112 /* PaymentsParameterViewModel.swift in Sources */,
 				68E3462227033D9100D6FE37 /* LaunchViewController.swift in Sources */,
 				774A8B1C2865FBFF00B81140 /* UserAccountViewModel.swift in Sources */,
+				5009E9002885FBED00AE37EB /* Double+Extensions.swift in Sources */,
 				68D06F2A26C3C19800F9BE4C /* MainViewControllerSearchBarDelegate.swift in Sources */,
 				776C846B27DF1CBC00F8F7E1 /* PaymentsHoustingViewController.swift in Sources */,
 				0B22AEA526CDB48F00B11E7F /* GKHDataType.swift in Sources */,

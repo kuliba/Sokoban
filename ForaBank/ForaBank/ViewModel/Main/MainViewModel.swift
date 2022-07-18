@@ -83,8 +83,7 @@ class MainViewModel: ObservableObject, Resetable {
                     
                 case _ as MainViewModelAction.PullToRefresh:
                     model.action.send(ModelAction.Products.Update.Total.All())
-                    model.action.send(ModelAction.Dictionary.UpdateCache.Request(type: .currencyList, serial: nil))
-                    model.action.send(ModelAction.Dictionary.UpdateCache.Request(type: .currencyWalletList, serial: nil))
+                    model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
                 
                 case _ as MainViewModelAction.CloseAction.Link:
                     self.link = nil
@@ -213,7 +212,7 @@ class MainViewModel: ObservableObject, Resetable {
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Sell :
                         
-                        model.action.send(ModelAction.Dictionary.UpdateCache.Request(type: .currencyWalletList, serial: nil))
+                        model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
                         
                         let currencyWalletList = model.currencyWalletList.value
                         let currencyType = payload.code.description
@@ -223,7 +222,7 @@ class MainViewModel: ObservableObject, Resetable {
                         link = .currencyWallet(.init(
                             listViewModel: .init(model, currencyType: currencyType, items: items),
                             swapViewModel: .sample,
-                            selectorViewModel: .sample) { [weak self] in
+                            selectorViewModel: .init(model, state: .openAccount)) { [weak self] in
                                 self?.action.send(MainViewModelAction.CloseAction.Link())
                             })
                         

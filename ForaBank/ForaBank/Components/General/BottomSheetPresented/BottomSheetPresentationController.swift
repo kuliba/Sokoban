@@ -127,8 +127,6 @@ final class BottomSheetPresentationController: UIPresentationController {
             topDragView.widthAnchor.constraint(equalToConstant: topDragSize.width),
             topDragView.heightAnchor.constraint(equalToConstant: topDragSize.height)
         ])
-        
-        presentedViewBottomConstraint = presentedView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 0)
 
         tapGestureRecognizer.addTarget(self, action: #selector(handleTapGesture))
         tapDragGestureRecognizer.addTarget(self, action: #selector(handleTapGesture))
@@ -205,10 +203,22 @@ final class BottomSheetPresentationController: UIPresentationController {
         super.containerViewWillLayoutSubviews()
         
         updatePresentedView()
+    }
+    
+    override func containerViewDidLayoutSubviews() {
+        super.containerViewDidLayoutSubviews()
+        
         setupConstraint()
     }
     
     private func setupConstraint() {
+        
+        guard let presentedView = presentedView,
+              let superview = presentedView.superview else {
+            return
+        }
+        
+        presentedViewBottomConstraint = presentedView.bottomAnchor.constraint(equalTo: superview.bottomAnchor)
         
         guard let presentedViewBottomConstraint = presentedViewBottomConstraint else {
             return

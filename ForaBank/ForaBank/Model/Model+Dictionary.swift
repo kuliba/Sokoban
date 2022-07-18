@@ -453,8 +453,8 @@ extension Model {
             return .init(
                 icon: icon?.image,
                 currencyType: item.code,
-                rateBuy: item.rateBuy.currencyFormatterForMain(),
-                rateSell: item.rateSell.currencyFormatterForMain(),
+                rateBuy: item.rateBuy.decimal(),
+                rateSell: item.rateSell.decimal(),
                 isSelected: currencyType == item.code)
         }
     }

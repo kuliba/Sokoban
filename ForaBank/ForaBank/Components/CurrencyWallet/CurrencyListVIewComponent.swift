@@ -20,10 +20,11 @@ extension CurrencyListView {
         let action: PassthroughSubject<Action, Never> = .init()
 
         @Published var items: [ItemViewModel]
+        @Published var currencyType: String
+
         private var bindings = Set<AnyCancellable>()
         
         let model: Model
-        let currencyType: String
 
         lazy var button: ButtonViewModel = .init { [unowned self] in
             action.send(CurrencyListAction.Button.Tapped())
@@ -46,6 +47,23 @@ extension CurrencyListView {
                     
                     self.items = reduce(items)
                     
+                }.store(in: &bindings)
+            
+            action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                    case let payload as CurrencyListAction.Item.Tapped:
+                        
+                        currencyType = payload.currencyType
+                        model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
+                        
+                        items.forEach { $0.isSelected = currencyType == $0.currencyType }
+                        
+                    default:
+                        break
+                    }
                 }.store(in: &bindings)
         }
     }
@@ -106,8 +124,12 @@ struct CurrencyListView: View {
 
                     ButtonView(viewModel: viewModel.button)
 
-                    ForEach(viewModel.items) { viewModel in
-                        ItemView(viewModel: viewModel)
+                    ForEach(viewModel.items) { itemViewModel in
+                        ItemView(viewModel: itemViewModel)
+                            .onTapGesture {
+                                viewModel.action.send(CurrencyListAction.Item.Tapped(
+                                    currencyType: itemViewModel.currencyType))
+                            }
                     }
                 }.padding(20)
             }
@@ -221,8 +243,8 @@ extension CurrencyListView.ViewModel {
             return .init(
                 icon: icon?.image,
                 currencyType: item.code,
-                rateBuy: item.rateBuy.currencyFormatterForMain(),
-                rateSell: item.rateSell.currencyFormatterForMain(),
+                rateBuy: item.rateBuy.decimal(),
+                rateSell: item.rateSell.decimal(),
                 isSelected: currencyType == item.code)
         }
     }
@@ -235,6 +257,14 @@ enum CurrencyListAction {
     enum Button {
 
         struct Tapped: Action {}
+    }
+    
+    enum Item {
+
+        struct Tapped: Action {
+            
+            let currencyType: String
+        }
     }
 }
 
