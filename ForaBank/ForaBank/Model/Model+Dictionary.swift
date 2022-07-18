@@ -443,6 +443,21 @@ extension Model {
         
         return imagesUpdated
     }
+    
+    func reduceCurrencyWallet(_ items: [CurrencyWalletData], currencyType: String) -> [CurrencyItemViewModel] {
+        
+        return items.map { item in
+            
+            let icon = images.value[item.md5hash]
+            
+            return .init(
+                icon: icon?.image,
+                currencyType: item.code,
+                rateBuy: item.rateBuy.currencyFormatterForMain(),
+                rateSell: item.rateSell.currencyFormatterForMain(),
+                isSelected: currencyType == item.code)
+        }
+    }
 }
 
 //MARK: - Handlers

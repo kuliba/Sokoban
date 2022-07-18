@@ -68,14 +68,19 @@ struct CurrencySelectorView: View {
     }
 }
 
+// MARK: - Preview Content
+
+extension CurrencySelectorView.ViewModel {
+    
+    static let sample: CurrencySelectorView.ViewModel = .init(.productsMock, state: .openAccount)
+}
+
 // MARK: - Previews
 
 struct CurrencySelectorViewComponent_Previews: PreviewProvider {
     static var previews: some View {
-        CurrencySelectorView(viewModel: .init(
-            .productsMock,
-            state: .openAccount))
-        .previewLayout(.sizeThatFits)
-        .frame(height: 300)
+        CurrencySelectorView(viewModel: .sample)
+            .previewLayout(.sizeThatFits)
+            .frame(height: 300)
     }
 }

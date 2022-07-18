@@ -14,19 +14,19 @@ class CurrencyWalletViewModel: ObservableObject {
 
     let listViewModel: CurrencyListView.ViewModel
     let swapViewModel: CurrencySwapView.ViewModel
+    let selectorViewModel: CurrencySelectorView.ViewModel
     let backButton: NavigationButtonViewModel
     
-    let model: Model
     let title = "Обмен валют"
 
-    init(_ model: Model,
-         listViewModel: CurrencyListView.ViewModel,
+    init(listViewModel: CurrencyListView.ViewModel,
          swapViewModel: CurrencySwapView.ViewModel,
+         selectorViewModel: CurrencySelectorView.ViewModel,
          action: @escaping () -> Void) {
 
-        self.model = model
         self.listViewModel = listViewModel
         self.swapViewModel = swapViewModel
+        self.selectorViewModel = selectorViewModel
         self.backButton = .init(icon: .ic24ChevronLeft, action: action)
     }
 }

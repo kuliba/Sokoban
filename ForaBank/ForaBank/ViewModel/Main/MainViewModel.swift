@@ -212,12 +212,20 @@ class MainViewModel: ObservableObject, Resetable {
                         print("mdy: Buy-\(payload.code.description)") // -> USD, GBR, EUR
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Sell :
-                    
-                        print("mdy: Sell-\(payload.code.description)") // -> USD, GBR, EUR
                         
-                        link = .currencyWallet(.init(model, listViewModel: .sample, swapViewModel: .sample) { [weak self] in
-                            self?.action.send(MainViewModelAction.CloseAction.Link())
-                        })
+                        model.action.send(ModelAction.Dictionary.UpdateCache.Request(type: .currencyWalletList, serial: nil))
+                        
+                        let currencyWalletList = model.currencyWalletList.value
+                        let currencyType = payload.code.description
+                        
+                        let items = model.reduceCurrencyWallet(currencyWalletList, currencyType: currencyType)
+                        
+                        link = .currencyWallet(.init(
+                            listViewModel: .init(model, currencyType: currencyType, items: items),
+                            swapViewModel: .sample,
+                            selectorViewModel: .sample) { [weak self] in
+                                self?.action.send(MainViewModelAction.CloseAction.Link())
+                            })
                         
                         // atm section
                     case _ as MainSectionViewModelAction.Atm.ButtonTapped:

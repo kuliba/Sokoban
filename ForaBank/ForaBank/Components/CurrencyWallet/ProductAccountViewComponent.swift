@@ -109,7 +109,6 @@ struct ProductAccountView: View {
             
             ProductView(viewModel: viewModel)
             WarningView(viewModel: viewModel.warning)
-            
         }
         .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
             switch bottomSheet.type {

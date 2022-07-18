@@ -7,6 +7,9 @@
 
 import SwiftUI
 import Combine
+import Shimmer
+
+typealias CurrencyItemViewModel = CurrencyListView.ViewModel.ItemViewModel
 
 // MARK: - ViewModel
 
@@ -17,14 +20,33 @@ extension CurrencyListView {
         let action: PassthroughSubject<Action, Never> = .init()
 
         @Published var items: [ItemViewModel]
+        private var bindings = Set<AnyCancellable>()
+        
+        let model: Model
+        let currencyType: String
 
         lazy var button: ButtonViewModel = .init { [unowned self] in
             action.send(CurrencyListAction.Button.Tapped())
         }
 
-        init(items: [ItemViewModel]) {
+        init(_ model: Model, currencyType: String, items: [ItemViewModel]) {
 
+            self.model = model
+            self.currencyType = currencyType
             self.items = items
+            
+            bind()
+        }
+        
+        private func bind() {
+            
+            model.currencyWalletList
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] items in
+                    
+                    self.items = reduce(items)
+                    
+                }.store(in: &bindings)
         }
     }
 }
@@ -38,13 +60,13 @@ extension CurrencyListView.ViewModel {
         @Published var isSelected: Bool
 
         let id: String
-        let icon: Image
+        let icon: Image?
         let currencyType: String
         let rateBuy: String
         let rateSell: String
 
         init(id: String = UUID().uuidString,
-             icon: Image,
+             icon: Image?,
              currencyType: String,
              rateBuy: String,
              rateSell: String,
@@ -121,10 +143,20 @@ extension CurrencyListView {
                                     .foregroundColor(.systemColorActive)
                             }
 
-                            viewModel.icon
-                                .resizable()
-                                .frame(width: 20, height: 20)
-
+                            if let icon = viewModel.icon {
+                                
+                                icon
+                                    .resizable()
+                                    .frame(width: 20, height: 20)
+                                
+                            } else {
+                                
+                                Circle()
+                                    .fill(Color.mainColorsGrayMedium)
+                                    .frame(width: 20, height: 20)
+                                    .shimmering(active: true, bounce: false)
+                            }
+                            
                         }.frame(width: 25, height: 25)
 
                         Text(viewModel.currencyType)
@@ -176,6 +208,26 @@ extension CurrencyListView {
     }
 }
 
+// MARK: - Reducer
+
+extension CurrencyListView.ViewModel {
+    
+    func reduce(_ items: [CurrencyWalletData]) -> [ItemViewModel] {
+        
+        items.map { item in
+            
+            let icon = model.images.value[item.md5hash]
+            
+            return .init(
+                icon: icon?.image,
+                currencyType: item.code,
+                rateBuy: item.rateBuy.currencyFormatterForMain(),
+                rateSell: item.rateSell.currencyFormatterForMain(),
+                isSelected: currencyType == item.code)
+        }
+    }
+}
+
 // MARK: - Action
 
 enum CurrencyListAction {
@@ -189,30 +241,33 @@ enum CurrencyListAction {
 // MARK: - Preview Content
 
 extension CurrencyListView.ViewModel {
-
-    static let sample: CurrencyListView.ViewModel = .init(items: [
-        .init(icon: .init("Flag USD"),
-              currencyType: "USD",
-              rateBuy: "68.19",
-              rateSell: "69.45",
-              isSelected: true),
-        .init(icon: .init("Flag EUR"),
-              currencyType: "EUR",
-              rateBuy: "69.23",
-              rateSell: "70.01"),
-        .init(icon: .init("Flag GBP"),
-              currencyType: "GBP",
-              rateBuy: "75.65",
-              rateSell: "76.83"),
-        .init(icon: .init("Flag CHF"),
-              currencyType: "CHF",
-              rateBuy: "64.89",
-              rateSell: "65.09"),
-        .init(icon: .init("Flag CHY"),
-              currencyType: "CHY",
-              rateBuy: "18.45",
-              rateSell: "19.26")
-    ])
+    
+    static let sample: CurrencyListView.ViewModel = .init(
+        .productsMock,
+        currencyType: "USD",
+        items: [
+            .init(icon: .init("Flag USD"),
+                  currencyType: "USD",
+                  rateBuy: "68.19",
+                  rateSell: "69.45",
+                  isSelected: true),
+            .init(icon: .init("Flag EUR"),
+                  currencyType: "EUR",
+                  rateBuy: "69.23",
+                  rateSell: "70.01"),
+            .init(icon: .init("Flag GBP"),
+                  currencyType: "GBP",
+                  rateBuy: "75.65",
+                  rateSell: "76.83"),
+            .init(icon: .init("Flag CHF"),
+                  currencyType: "CHF",
+                  rateBuy: "64.89",
+                  rateSell: "65.09"),
+            .init(icon: .init("Flag CHY"),
+                  currencyType: "CHY",
+                  rateBuy: "18.45",
+                  rateSell: "19.26")
+        ])
 }
 
 // MARK: - Previews
