@@ -151,14 +151,13 @@ struct PaymentsTransfersView: View {
             case let .meToMe(viewModel):
                 MeToMeView(viewModel: viewModel)
                     .edgesIgnoringSafeArea(.bottom)
-                    .frame(height: 540)
-            case .anotherCard(let model):
-                //TODO: как то нужно открыть не молным модальным откном, UIViewControllerTransitioningDelegate не работает
+                    .frame(height: 440)
                 
+            case .anotherCard(let model):
                 AnotherCardView(viewModel: model)
                     .edgesIgnoringSafeArea(.bottom)
-                    .frame(height: 540)
                     .navigationBarTitle("", displayMode: .inline)
+                    .frame(height: 460)
             }
         }
         .sheet(item: $viewModel.sheet, content: { sheet in

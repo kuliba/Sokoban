@@ -273,10 +273,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
 
 extension PaymentsTransfersViewModel {
     
-    struct BottomSheet: Identifiable {
-        
+    struct BottomSheet: BottomSheetCustomizable {
+
         let id = UUID()
         let type: Kind
+        
+        var keyboardOfssetMultiplier: CGFloat { return 0 }
         
         enum Kind {
             
