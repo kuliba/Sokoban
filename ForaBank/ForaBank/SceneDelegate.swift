@@ -56,6 +56,7 @@ extension SceneDelegate {
                 switch action {
                 case _ as RootViewModelAction.DismissAll:
                     window?.rootViewController?.dismiss(animated: false, completion: nil)
+                    rootViewModel.link = nil
                     
                 default:
                     break
