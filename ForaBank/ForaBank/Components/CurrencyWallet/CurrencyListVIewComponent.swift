@@ -45,7 +45,33 @@ extension CurrencyListView {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] items in
                     
-                    self.items = reduce(items)
+                    withAnimation(.interactiveSpring()) {
+                        self.items = reduce(items)
+                    }
+                    
+                    let filterred = reduceIcons(self.items)
+                    
+                    if filterred.isEmpty == false {
+                        
+                        model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: filterred))
+                    }
+                    
+                }.store(in: &bindings)
+            
+            model.images
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] images in
+                    
+                    let filterred = reduceItems(items)
+                    
+                    guard filterred.isEmpty == false else {
+                        return
+                    }
+                    
+                    withAnimation(.interactiveSpring()) {
+                        
+                        filterred.forEach { $0.icon = images[$0.iconMd5hash]?.image }
+                    }
                     
                 }.store(in: &bindings)
             
@@ -77,24 +103,25 @@ extension CurrencyListView.ViewModel {
 
         @Published var isSelected: Bool
 
-        let id: String
-        let icon: Image?
+        var id: String { currencyType }
+        var icon: Image?
         let currencyType: String
         let rateBuy: String
         let rateSell: String
+        let iconMd5hash: String
 
-        init(id: String = UUID().uuidString,
-             icon: Image?,
+        init(icon: Image?,
              currencyType: String,
              rateBuy: String,
              rateSell: String,
+             iconMd5hash: String = "",
              isSelected: Bool = false) {
 
-            self.id = id
             self.icon = icon
             self.currencyType = currencyType
             self.rateBuy = rateBuy
             self.rateSell = rateSell
+            self.iconMd5hash = iconMd5hash
             self.isSelected = isSelected
         }
     }
@@ -245,8 +272,19 @@ extension CurrencyListView.ViewModel {
                 currencyType: item.code,
                 rateBuy: item.rateBuy.decimal(),
                 rateSell: item.rateSell.decimal(),
+                iconMd5hash: item.md5hash,
                 isSelected: currencyType == item.code)
         }
+    }
+    
+    func reduceIcons(_ items: [ItemViewModel]) -> [String] {
+        
+        return items.filter { $0.icon == nil }.map { $0.iconMd5hash }
+    }
+    
+    func reduceItems(_ items: [ItemViewModel]) -> [ItemViewModel] {
+        
+        return items.filter { $0.icon == nil }
     }
 }
 

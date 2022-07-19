@@ -455,6 +455,7 @@ extension Model {
                 currencyType: item.code,
                 rateBuy: item.rateBuy.decimal(),
                 rateSell: item.rateSell.decimal(),
+                iconMd5hash: item.md5hash,
                 isSelected: currencyType == item.code)
         }
     }
