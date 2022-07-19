@@ -58,62 +58,59 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             viewModel.puref = operatorData?.puref ?? ""
         }
         InternetTVApiRequests.isSingleService(puref: viewModel.puref) {
+            self.bottomInputView?.didDoneButtonTapped = { amount in
+                self.showActivity()
+                if InternetTVApiRequests.isSingleService {
+                    self.viewModel.doFirstStep(amount: amount)
+                } else {
+                    if !self.viewModel.firstStep {
+                        let id = self.footerView.cardFromField.model?.id ?? -1
+                        if self.viewModel.cardNumber != String(id) { self.viewModel.cardNumber = "-2" }
+                        if self.viewModel.cardNumber != "-2" {
+                            self.viewModel.doNextStep(amount: amount)
+                        } else {
+                            self.viewModel.retryPayment(amount: amount)
+                        }
+                    }
+                }
+            }
             
+            if let list = self.operatorData?.parameterList {
+                list.forEach { item in
+                    
+                    if self.selectedValue != "-1" && (item.type == "MaskList" || item.type == "Select") {
+                        if item.id == "a3_serviceId_2_1" {
+                            InternetTVDetailsFormViewModel.additionalDic["fieldName"] = ["fieldid": "\(item.order ?? 0)",
+                                                                                         "fieldname": item.id ?? "",
+                                                                                         "fieldvalue": self.selectedValue]
+                        }
+                    } else {
+                        let req = RequisiteDO.convertParameter(item)
+                        if let userInfoUnw = InternetTVApiRequests.userInfo {
+                            if item.id?.lowercased().contains("iregcert") == true {
+                                req.content = "\(userInfoUnw.regSeries ?? "")\(userInfoUnw.regNumber ?? "")"
+                            } else if item.id?.lowercased().contains("lastname") == true {
+                                req.content = userInfoUnw.lastName
+                            } else if item.id?.lowercased().contains("firstname") == true {
+                                req.content = userInfoUnw.firstName
+                            } else if item.id?.lowercased().contains("middlename") == true {
+                                req.content = userInfoUnw.patronymic
+                            } else if item.id?.lowercased().contains("address") == true {
+                                req.content = userInfoUnw.address
+                            }
+                        }
+                        if (self.viewModel.requisites.first { requisite in requisite.id == req.id  } == nil) {
+                            self.viewModel.requisites.append(req)
+                        }
+                    }
+                }
+                self.tableView?.reloadData()
+            }
         }
         tableView?.register(UINib(nibName: "InternetInputCell", bundle: nil), forCellReuseIdentifier: InternetTVInputCell.reuseId)
         bottomInputView?.currencySymbol = "₽"
         
-        
-        bottomInputView?.didDoneButtonTapped = { amount in
-            self.showActivity()
-            if InternetTVApiRequests.isSingleService {
-                self.viewModel.doFirstStep(amount: amount)
-            } else {
-                if !self.viewModel.firstStep {
-                    let id = self.footerView.cardFromField.model?.id ?? -1
-                    if self.viewModel.cardNumber != String(id) { self.viewModel.cardNumber = "-2" }
-                    if self.viewModel.cardNumber != "-2" {
-                        self.viewModel.doNextStep(amount: amount)
-                    } else {
-                        self.viewModel.retryPayment(amount: amount)
-                    }
-                }
-            }
-        }
-
         readAndSetupCard()
-        
-        if let list = operatorData?.parameterList {
-            list.forEach { item in
-        
-                if selectedValue != "-1" && (item.type == "MaskList" || item.type == "Select") {
-                    if item.id == "a3_serviceId_2_1" {
-                        InternetTVDetailsFormViewModel.additionalDic["fieldName"] = ["fieldid": "\(item.order ?? 0)",
-                                                                                     "fieldname": item.id ?? "",
-                                                                                     "fieldvalue": selectedValue]
-                    }
-                } else {
-                    let req = RequisiteDO.convertParameter(item)
-                    if let userInfoUnw = InternetTVApiRequests.userInfo {
-                        if item.id?.lowercased().contains("iregcert") == true {
-                            req.content = "\(userInfoUnw.regSeries ?? "")\(userInfoUnw.regNumber ?? "")"
-                        } else if item.id?.lowercased().contains("lastname") == true {
-                            req.content = userInfoUnw.lastName
-                        } else if item.id?.lowercased().contains("firstname") == true {
-                            req.content = userInfoUnw.firstName
-                        } else if item.id?.lowercased().contains("middlename") == true {
-                            req.content = userInfoUnw.patronymic
-                        } else if item.id?.lowercased().contains("address") == true {
-                            req.content = userInfoUnw.address
-                        }
-                    }
-                    if (viewModel.requisites.first { requisite in requisite.id == req.id  } == nil) {
-                        viewModel.requisites.append(req)
-                    }
-                }
-            }
-            tableView?.reloadData()
-        }
     }
     
     func showFinalStep() {
@@ -237,10 +234,10 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             navigationItem.rightBarButtonItem = button
             
             let backButton = UIBarButtonItem(image: UIImage(named: "back_button"),
-                                         landscapeImagePhone: nil,
-                                         style: .done,
-                                         target: self,
-                                         action: #selector(onTouchBackButton))
+                                             landscapeImagePhone: nil,
+                                             style: .done,
+                                             target: self,
+                                             action: #selector(onTouchBackButton))
             backButton.tintColor = .black
             navigationItem.leftBarButtonItem = backButton
             
@@ -290,7 +287,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
                     
                     // FIXME: В рефактре нужно слушатель на обновление title
                     self.parent?.title = text
-
+                    
                 } else {
                     self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")
                 }
@@ -370,51 +367,15 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     }
     
     
-    //    func setupCardList(completion: @escaping ( _ error: String?) ->() ) {
-    //
-    ////        showActivity()
-    ////        var userAllCardsModelArr = [UserAllCardsModel]()
-    ////        var productListDatum: [GetProductListDatum] = []
-    ////        let object = realm?.objects(UserAllCardsModel.self)
-    ////
-    ////        dismissActivity()
-    ////        object?.forEach { product in
-    ////            if product.productType == "CARD" || product.productType == "ACCOUNT"  {
-    ////                userAllCardsModelArr.append(product)
-    ////                let ob = GetProductListDatum.init(number: product.number, numberMasked: product.numberMasked, balance: product.balance, currency: product.currency, productType: product.productType, productName: product.productName, ownerID: product.ownerID, loanID: nil, accountNumber: product.accountNumber, allowDebit: product.allowDebit, allowCredit: product.allowCredit, customName: product.customName, cardID: product.cardID, accountID: product.accountID, name: product.name, validThru: product.validThru, status: product.status, holderName: product.holderName, product: product.product, branch: product.branch, miniStatement: nil, mainField: product.mainField, additionalField: product.additionalField, smallDesign: product.smallDesign, mediumDesign: product.mediumDesign, largeDesign: product.largeDesign, paymentSystemName: product.paymentSystemName, paymentSystemImage: product.paymentSystemImage, fontDesignColor: product.fontDesignColor, id: product.id, background: [""], XLDesign: product.XLDesign, statusPC: product.statusPC, interestRate: nil, openDate: product.openDate, branchId: product.branchId, expireDate: product.expireDate, depositProductID: product.depositProductID , depositID: product.depositID, creditMinimumAmount: product.creditMinimumAmount, minimumBalance: product.minimumBalance, balanceRUB: product.balanceRUB, amount: nil, clientID: nil, currencyCode: nil, currencyNumber: nil, bankProductID: nil, finOperBrief: nil, currentInterestRate: nil, principalDebt: nil, defaultPrincipalDebt: nil, totalAmountDebt: nil, principalDebtAccount: nil, settlementAccount: nil, settlementAccountId: nil, dateLong: nil, loanBaseParam: nil, isMain: nil)
-    ////                productListDatum.append(ob)
-    ////            }
-    ////        }
-    ////
-    ////        if (productListDatum.count > 0) {
-    ////            footerView.cardListView.cardList = productListDatum
-    ////            footerView.cardFromField.cardModel = productListDatum.first
-    ////        }
-    //    }
-    
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         return .custom
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let tvc = segue.destination as? InternetTVSelectController
-        {
+        if let tvc = segue.destination as? InternetTVSelectController {
             tvc.transitioningDelegate = self
             tvc.modalPresentationStyle = .custom
-            if let ppc = tvc.popoverPresentationController
-            {
-                //ppc.delegate = self
-                //ppc.permittedArrowDirections = UIPopoverArrowDirection(rawValue: UIPopoverArrowDirection.up.rawValue)
-                //tvc.transitioningDelegate = self
-                //tvc.modalPresentationStyle = .custom
-                //let view = InternetTVSelectDialog()
-                //ppc.sourceView = view
-                //ppc.sourceRect = view.frame
-                //                dialog.modalPresentationStyle = .popover
-                //                dialog.popoverPresentationController?.delegate = self
-                //                dialog.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
-                //                dialog.popoverPresentationController?.sourceView = view
-                //                dialog.popoverPresentationController?.sourceRect = view.frame
+            if let ppc = tvc.popoverPresentationController {
             }
         }
     }
