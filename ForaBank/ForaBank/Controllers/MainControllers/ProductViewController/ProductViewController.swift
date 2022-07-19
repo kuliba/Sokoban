@@ -909,8 +909,10 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     
     @objc func presentBottomSheet(sender: AnyObject) {
         
+        /*
         let bottomSheet = BottomSheetHostingViewController(with: ProductProfileLoanDelayInfoView.ViewModel())
         present(bottomSheet, animated: true)
+         */
     }
     
     func presentRequisitsVc(product: UserAllCardsModel,_ openControlButtons: Bool?) {

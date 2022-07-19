@@ -233,7 +233,7 @@ class MeToMeRequestController: UIViewController {
                     DispatchQueue.main.async {
                         self.dismissActivity()
                         self.showAlert(with: "Ошибка", and: error!) {
-                            self.dismiss(animated: true)
+                            NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                         }
                     }
                 } else {
@@ -243,11 +243,11 @@ class MeToMeRequestController: UIViewController {
                                 self.dismissActivity()
                                 if error != nil {
                                     self.showAlert(with: "Ошибка", and: error!) {
-                                        self.dismiss(animated: true)
+                                        NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                                     }
                                 } else {
                                     self.showAlert(with: "Удачно", and: "Ваши деньги зачислены") {
-                                        self.dismiss(animated: true)
+                                        NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                                     }
                                 }
                             }
@@ -256,7 +256,7 @@ class MeToMeRequestController: UIViewController {
                         self.dismissActivity()
                         self.showAlert(with: "Готово", and: "") {
                             DispatchQueue.main.async {
-                                self.dismiss(animated: true)
+                                NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                             }
                         }
                     }
@@ -288,7 +288,7 @@ class MeToMeRequestController: UIViewController {
                     if error != nil {
                         self.dismissActivity()
                         self.showAlert(with: "Ошибка", and: error!) {
-                            self.dismiss(animated: true)
+                            NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                         }
                     } else {
                         if self.viewModel?.amount != 0 {
@@ -297,11 +297,11 @@ class MeToMeRequestController: UIViewController {
                                     self.dismissActivity()
                                     if error != nil {
                                         self.showAlert(with: "Ошибка", and: error!){
-                                            self.dismiss(animated: true)
+                                            NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                                         }
                                     } else {
                                         self.showAlert(with: "Удачно", and: "Ваши деньги зачислены") {
-                                            self.dismiss(animated: true, completion: nil)
+                                            NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                                         }
                                     }
                                 }
@@ -310,13 +310,14 @@ class MeToMeRequestController: UIViewController {
                             self.dismissActivity()
                             self.showAlert(with: "Готово", and: "") {
                                 self.dismiss(animated: true, completion: nil)
+                                    NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                             }
                         }
                     }
                 }
             }
         } else {
-            dismiss(animated: true, completion: nil)
+            NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
         }
     }
     
@@ -402,15 +403,15 @@ class MeToMeRequestController: UIViewController {
         DispatchQueue.main.async {
             guard let viewModel = self.viewModel else { return }
             guard let bankRecipientID = viewModel.bank?.memberID else { return }
+            guard let card = viewModel.card else { return }
             
-            
-            let body = [
+            var body = [
                 "check" : false,
                 "amount" : viewModel.amount,
                 "currencyAmount" : "RUB",
-                "payer" : ["cardId" : viewModel.card?.productType == "CARD" ? viewModel.card?.id : nil,
+                "payer" : ["cardId" : nil,
                            "cardNumber" : nil,
-                           "accountId" : viewModel.card?.productType == "ACCOUNT" ? viewModel.card?.id : nil ],
+                           "accountId" : nil],
                 "puref" : "iFora||TransferC2CSTEP",
                 "additional" :
                     [["fieldid": 1, "fieldname": "RecipientID",     "fieldvalue": viewModel.RecipientID],
@@ -419,6 +420,19 @@ class MeToMeRequestController: UIViewController {
                      ["fieldid": 4, "fieldname": "RefTrnId",        "fieldvalue": viewModel.RefTrnId]
                     ] ] as [String : AnyObject]
                         
+            if card.productType == "CARD" {
+                
+                body["payer"] = ["cardId": card.cardID,
+                                 "cardNumber" : nil,
+                                 "accountId" : nil] as AnyObject
+                
+            } else if card.productType == "ACCOUNT" {
+                
+                body["payer"] = ["cardId": nil,
+                                 "cardNumber" : nil,
+                                 "accountId" :  card.id] as AnyObject
+            }
+            
             NetworkManager<CreateMe2MePullDebitTransferDecodableModel>.addRequest(.createMe2MePullDebitTransfer, [:], body) { transferModel, error in
                 if error != nil {
                     completion(error)

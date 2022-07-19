@@ -22,8 +22,7 @@ class QRErrorViewController: UIViewController , UITableViewDelegate, UITableView
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.isNavigationBarHidden = false
-        navigationItem.title = "Сканировать QR-код"
+        self.title = "Сканировать QR-код"
         navigationItem.setHidesBackButton(true, animated:true)
     }
 
@@ -68,7 +67,12 @@ extension QRErrorViewController {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         GlobalModule.qrOperator = QRErrorViewController.operators[indexPath.row]
-        //performSegue(withIdentifier: "input", sender: self)
-        dismiss(animated: true)
+        
+        if GlobalModule.qrOperator != nil && GlobalModule.qrData != nil, let controller = InternetTVMainController.storyboardInstance() {
+            
+            let nc = UINavigationController(rootViewController: controller)
+            nc.modalPresentationStyle = .fullScreen
+            present(nc, animated: false)
+        }
     }
 }

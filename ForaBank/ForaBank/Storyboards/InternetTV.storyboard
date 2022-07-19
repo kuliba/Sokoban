@@ -977,7 +977,7 @@
                             <constraint firstItem="GPu-yQ-pJy" firstAttribute="top" secondItem="M5G-cD-BjP" secondAttribute="bottom" id="dnM-Ra-vHz"/>
                             <constraint firstItem="M5G-cD-BjP" firstAttribute="trailing" secondItem="wLP-if-qNn" secondAttribute="trailing" id="orb-h5-B3Q"/>
                             <constraint firstAttribute="trailing" secondItem="Yj3-I2-Ins" secondAttribute="trailing" constant="20" id="pZ8-q1-wH5"/>
-                            <constraint firstItem="M5G-cD-BjP" firstAttribute="top" secondItem="wLP-if-qNn" secondAttribute="top" constant="50" id="pif-Tl-2q1"/>
+                            <constraint firstItem="M5G-cD-BjP" firstAttribute="top" secondItem="DuZ-sj-ye8" secondAttribute="bottom" constant="7" id="pif-Tl-2q1"/>
                             <constraint firstItem="DuZ-sj-ye8" firstAttribute="top" secondItem="G8G-Pa-Fe6" secondAttribute="top" constant="10" id="rG6-h6-i2s"/>
                             <constraint firstItem="Yj3-I2-Ins" firstAttribute="leading" secondItem="wLP-if-qNn" secondAttribute="leading" constant="20" id="xSo-07-FhF"/>
                         </constraints>

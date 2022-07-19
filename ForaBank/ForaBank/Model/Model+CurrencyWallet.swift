@@ -94,7 +94,9 @@ extension Model {
                     self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start
                         .Response(result: .success(.init(debitAmount: transferResponse.debitAmount,
                                                          fee: transferResponse.fee,
-                                                         creditAmount: transferResponse.creditAmount))))
+                                                         creditAmount: transferResponse.creditAmount,
+                                                         currencyPayer: transferResponse.currencyPayer,
+                                                         currencyPayee: transferResponse.currencyPayee))))
                     
                 default:
                     self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start

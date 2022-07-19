@@ -117,7 +117,7 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
 
         if let list = operatorData?.parameterList {
             list.forEach { item in
-                print("item5555", "\(item.id) - \(item.title)")
+                
                 if selectedValue != "-1" && (item.type == "MaskList" || item.type == "Select") {
                     if item.id == "a3_serviceId_2_1" {
                         InternetTVDetailsFormViewModel.additionalDic["fieldName"] = ["fieldid": "\(item.order ?? 0)",
@@ -165,7 +165,11 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
         if InternetTVMainViewModel.filter == GlobalModule.PAYMENT_TRANSPORT {
             ob = InternetTVConfirmViewModel(type: .transport)
         }
-
+        
+        if InternetTVMainViewModel.filter == "iFora||1051062" {
+            ob = InternetTVConfirmViewModel(type: .transport)
+        }
+        
         let sum = response?.data?.debitAmount ?? 0.0
         ob?.sumTransaction = sum.currencyFormatter(symbol: "RUB")
         let tax = response?.data?.fee ?? 0.0
