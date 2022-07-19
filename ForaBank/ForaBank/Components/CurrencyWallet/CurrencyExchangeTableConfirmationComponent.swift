@@ -43,15 +43,22 @@ extension CurrencyExchangeTableConfirmationView {
             self.commission = String(fee)
             self.currencySum = String(creditAmount)
             
-            if let currencyPayerChar = model.dictionaryCurrencySimbol(for: currencyPayerCode) {
-                
-                self.sum += " " + currencyPayerChar
-                self.commission += " " + currencyPayerChar
+            if let sum = model.amountFormatted(amount: debitAmount,
+                                               currencyCode: currencyPayerCode,
+                                               style: .normal) {
+                self.sum = sum
             }
             
-            if let currencyPayeeChar = model.dictionaryCurrencySimbol(for: currencyPayeeCode) {
-                
-                self.currencySum += " " + currencyPayeeChar
+            if let commission = model.amountFormatted(amount: fee,
+                                               currencyCode: currencyPayerCode,
+                                               style: .normal) {
+                self.commission = commission
+            }
+            
+            if let currencySum = model.amountFormatted(amount: creditAmount,
+                                               currencyCode: currencyPayeeCode,
+                                               style: .normal) {
+                self.currencySum = currencySum
             }
             
         }
