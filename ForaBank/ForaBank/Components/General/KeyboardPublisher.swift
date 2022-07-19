@@ -10,15 +10,17 @@ import Combine
 
 class KeyboardPublisher: ObservableObject  {
     
-    let keyboardHeight: CurrentValueSubject<CGFloat, Never>
-    let isKeyboardPresented: CurrentValueSubject<Bool, Never>
+    @Published var keyboardHeight: CGFloat
+    @Published var isKeyboardPresented: Bool
+    
+    static let shared = KeyboardPublisher()
 
     private var bindings = Set<AnyCancellable>()
 
     init() {
 
-        keyboardHeight = .init(0)
-        isKeyboardPresented = .init(false)
+        keyboardHeight = 0
+        isKeyboardPresented = false
 
         bind()
     }
@@ -29,7 +31,7 @@ class KeyboardPublisher: ObservableObject  {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] keyboardHeight in
                 
-                self.keyboardHeight.value = keyboardHeight
+                self.keyboardHeight = keyboardHeight
 
             }.store(in: &bindings)
 
@@ -37,7 +39,7 @@ class KeyboardPublisher: ObservableObject  {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] isKeyboardPresented in
 
-                self.isKeyboardPresented.value = isKeyboardPresented
+                self.isKeyboardPresented = isKeyboardPresented
                 
             }.store(in: &bindings)
     }
