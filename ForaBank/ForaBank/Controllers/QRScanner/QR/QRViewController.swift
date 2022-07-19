@@ -112,6 +112,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
 
         }
 
+        viewModel?.closeAction()
         let navController = UINavigationController(rootViewController: controller)
         navController.modalPresentationStyle = .custom
         navController.transitioningDelegate = self
@@ -162,7 +163,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
             
             let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
             if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
-                
+                viewModel?.closeAction()
                 self.present(vc, animated: true)
             }
         }
@@ -184,11 +185,11 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
 
     final func returnKey() {
         qrCodesession.stopRunning()
+        viewModel?.closeAction()
         if operators != nil {
             GlobalModule.qrOperator = operators
             GlobalModule.qrData = qrData
             self.definesPresentationContext = true
-            viewModel?.closeAction()
             navigationController?.popViewController(animated: true)
             self.presentingViewController?.dismiss(animated: true, completion: nil)
 
@@ -202,7 +203,6 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
             
             let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
             if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
-                
                 self.present(vc, animated: true)
             }
         }
@@ -275,7 +275,7 @@ extension QRViewController {
                 
                 let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
                 if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
-                    
+                    self?.viewModel?.closeAction()
                     self?.present(vc, animated: true)
                 }
             }
