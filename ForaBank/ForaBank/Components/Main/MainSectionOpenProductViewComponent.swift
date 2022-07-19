@@ -18,7 +18,7 @@ extension MainSectionOpenProductView {
         override var type: MainSectionType { .openProduct }
         @Published var items: [ButtonNewProduct.ViewModel]
         
-        private let displayButtonsTypes: [ProductType] = [.card, .deposit, .loan, .account]
+        private let displayButtonsTypes: [ProductType] = [.card, .deposit, .account]
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
