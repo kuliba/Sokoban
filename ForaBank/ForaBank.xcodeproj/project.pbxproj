@@ -229,6 +229,7 @@
 		0BF816FC27E122AF00AC890D /* EPContactSelfDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF816FB27E122AF00AC890D /* EPContactSelfDataView.swift */; };
 		0C03FB52286A786500C2A100 /* BanksCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C03FB51286A786500C2A100 /* BanksCollectionViewCell.xib */; };
 		0C03FB54286A89A900C2A100 /* BanksCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C03FB53286A89A900C2A100 /* BanksCollectionViewCell.swift */; };
+		0C0DEDA028858F1B00C66AED /* CurrencyExchangeTableConfirmationComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C0DED9F28858F1B00C66AED /* CurrencyExchangeTableConfirmationComponent.swift */; };
 		0C1877B328776449004F7699 /* CurrencyWalletData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1877B228776449004F7699 /* CurrencyWalletData.swift */; };
 		0C35FD57287C0A4A00EB9039 /* DictionaryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C35FD56287C0A4A00EB9039 /* DictionaryType.swift */; };
 		0C4245782846200600899EB2 /* PaymentPhoneData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4245772846200600899EB2 /* PaymentPhoneData.swift */; };
@@ -1613,6 +1614,7 @@
 		0BF816FB27E122AF00AC890D /* EPContactSelfDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPContactSelfDataView.swift; sourceTree = "<group>"; };
 		0C03FB51286A786500C2A100 /* BanksCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BanksCollectionViewCell.xib; sourceTree = "<group>"; };
 		0C03FB53286A89A900C2A100 /* BanksCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksCollectionViewCell.swift; sourceTree = "<group>"; };
+		0C0DED9F28858F1B00C66AED /* CurrencyExchangeTableConfirmationComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchangeTableConfirmationComponent.swift; sourceTree = "<group>"; };
 		0C1877B228776449004F7699 /* CurrencyWalletData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyWalletData.swift; sourceTree = "<group>"; };
 		0C35FD56287C0A4A00EB9039 /* DictionaryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryType.swift; sourceTree = "<group>"; };
 		0C4245772846200600899EB2 /* PaymentPhoneData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentPhoneData.swift; sourceTree = "<group>"; };
@@ -3516,6 +3518,7 @@
 			children = (
 				5059D4492863B76E00DA446D /* CurrencyListVIewComponent.swift */,
 				0C78331D2883354F003ADC73 /* CurrencyBigListVIewComponent.swift */,
+				0C0DED9F28858F1B00C66AED /* CurrencyExchangeTableConfirmationComponent.swift */,
 				50D3D4832865C006002D7FB4 /* CurrencySwapViewComponent.swift */,
 			);
 			path = CurrencyWallet;
@@ -8172,6 +8175,7 @@
 				0B37F984267A18AC007728FC /* MakeCard2CardDecodableModel.swift in Sources */,
 				77D2D9AF275AB90A0097234D /* Array+Extensions.swift in Sources */,
 				77E2899C2858EF440048141B /* ProductProfileDetailDateProgressViewComponent.swift in Sources */,
+				0C0DEDA028858F1B00C66AED /* CurrencyExchangeTableConfirmationComponent.swift in Sources */,
 				68673B5826F3772400F67A8C /* CardCollectionViewCell.swift in Sources */,
 				A5B55E9A27E2624200C0B695 /* GetQRDataDO.swift in Sources */,
 				687F9B0927FBF65F007A38A5 /* ProductAccountData.swift in Sources */,
