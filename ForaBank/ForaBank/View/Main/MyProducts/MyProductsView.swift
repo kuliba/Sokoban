@@ -52,6 +52,9 @@ struct MyProductsView: View {
                     
                     switch link {
                         
+                    case .openDeposit(let openDepositViewModel):
+                        OpenDepositView(viewModel: openDepositViewModel)
+                        
                     case .productProfile(let productProfileViewModel):
                         ProductProfileView(viewModel: productProfileViewModel)
                     }

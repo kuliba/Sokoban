@@ -46,9 +46,7 @@ class MyProductsViewModel: ObservableObject {
             leftButtons: [NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: dismissAction)],
             background: .barsTabbar)
         totalMoney = .init()
-        navigationBar.rightButtons = [.init(icon: .ic24Plus, action: { [weak self] in
-            self?.action.send(MyProductsViewModelAction.Add())
-        })]
+        
         bind()
     }
 
@@ -56,92 +54,97 @@ class MyProductsViewModel: ObservableObject {
 
         model.products
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] data in
+            .sink { [unowned self] products in
 
                 var sections: [MyProductsSectionViewModel] = []
-                let data = data.sorted(by: { $0.key.order < $1.key.order })
+                let productsSorted = products.sorted(by: { $0.key.order < $1.key.order })
 
-                data.forEach { key, value in
+                productsSorted.forEach { key, value in
 
                     switch key {
                     case .card:
 
                         let activatedCards = value.filter { isActivatedCard($0) }
-
-                        sections.append(MyProductsSectionViewModel(
-                            title: key.pluralName,
-                            items: sectionItems(value: activatedCards),
-                            isCollapsed: false,
-                            isEnabled: true))
+                        var items = sectionItems(value: activatedCards)
+                        items.append(MyProductsSectionButtonItemViewModel(type: .card))
+                        sections.append(MyProductsSectionViewModel(productType: key, items: items))
 
                         let notActivatedCards = value.filter { isNotActivatedCard($0) }
-
                         if notActivatedCards.isEmpty { return }
-
                         let notActivatedSection = MyProductsSectionViewModel(
-                            title: "Неактивированные продукты",
+                            id: MyProductsSectionViewModel.notAcivatedSectionId, title: "Неактивированные продукты",
                             items: sectionItems(value: notActivatedCards),
                             isCollapsed: false,
                             isEnabled: true)
-
-                        sections.insert(notActivatedSection, at: 0)
-
+                        sections.append(notActivatedSection)
+                        
+                        let blockedCards = value.filter { isBlockedCards($0) }
+                        if blockedCards.isEmpty { return }
+                        
+                        let blockedSection = MyProductsSectionViewModel(
+                            id: MyProductsSectionViewModel.blockedSectionId, title: "Заблокированные продукты",
+                            items: sectionItems(value: blockedCards),
+                            isCollapsed: false,
+                            isEnabled: true)
+                        
+                        sections.append(blockedSection)
+                        
                     case .account:
 
                         let items = sectionItems(value: value)
-
-                        sections.append(MyProductsSectionViewModel(
-                            title: key.pluralName,
-                            items: items,
-                            isCollapsed: false,
-                            isEnabled: true))
+                        sections.append(MyProductsSectionViewModel(productType: key, items: items))
 
                     case .deposit:
 
-                        let items = sectionItems(value: value)
-
-                        sections.append(MyProductsSectionViewModel(
-                            title: key.pluralName,
-                            items: items,
-                            isCollapsed: false,
-                            isEnabled: true))
-
+                        var items = sectionItems(value: value)
+                        items.append(MyProductsSectionButtonItemViewModel(type: .deposit))
+                        sections.append(MyProductsSectionViewModel(productType: key, items: items))
+                        
                     case .loan:
 
                         let items = sectionItems(value: value)
-
-                        sections.append(MyProductsSectionViewModel(
-                            title: key.pluralName,
-                            items: items,
-                            isCollapsed: false,
-                            isEnabled: true))
+                        sections.append(MyProductsSectionViewModel(productType: key, items: items))
                     }
                 }
 
-                if let blockedCards = blockedCards(data) {
-
-                    let blockedSection = MyProductsSectionViewModel(
-                        title: "Заблокированные продукты",
-                        items: sectionItems(value: blockedCards),
-                        isCollapsed: false,
-                        isEnabled: true)
-
-                    sections.append(blockedSection)
-                }
-
-                guard sections.count > 0 else {
-                    return
+                if !sections.contains(where: { $0.id == ProductType.deposit.rawValue }) {
+                    
+                    let items = [MyProductsSectionButtonItemViewModel(type: .deposit)]
+                    sections.append(MyProductsSectionViewModel(productType: .deposit, items: items))
                 }
                 
-                let balance = sections
-                    .flatMap { $0.items }
+                if !sections.contains(where: { $0.id == ProductType.card.rawValue }) {
+                    
+                    let items = [MyProductsSectionButtonItemViewModel(type: .card)]
+                    sections.append(MyProductsSectionViewModel(productType: .card, items: items))
+                }
+                
+                var sortedSections = [MyProductsSectionViewModel]()
+                
+                for type in ProductType.allCases {
+                    
+                    guard let section = sections.first(where: { $0.id == type.rawValue }) else { continue }
+                    sortedSections.append(section)
+                }
+                
+                if let notAcivatedSection = sections.first(where: { $0.id == MyProductsSectionViewModel.notAcivatedSectionId }) {
+                    sortedSections.insert(notAcivatedSection, at: 0)
+                }
+                
+                if let notAcivatedSection = sections.first(where: { $0.id == MyProductsSectionViewModel.blockedSectionId }) {
+                    sortedSections.append(notAcivatedSection)
+                }
+                
+                
+                let balance = products.values
+                    .flatMap({ $0 })
                     .reduce(into: 0.0) { result, item in
-
-                        result += item.balanceRub
+                        result += item.balanceRub ?? 0
+                        
                     }
-
-                totalMoney.balance = "\(balance)"
-                self.sections = sections
+                
+                totalMoney.updateBalance(balance: balance)
+                self.sections = sortedSections
 
             }.store(in: &bindings)
 
@@ -164,13 +167,18 @@ class MyProductsViewModel: ObservableObject {
             .sink { [unowned self] productsHidden in
 
                 let items = sections.flatMap { $0.items }
-
                 for item in items {
-
-                    if model.productsHidden.value.contains(item.id) {
-                        item.isMainScreenHidden = true
-                    } else {
-                        item.isMainScreenHidden = false
+                    switch item {
+                        
+                    case let item as MyProductsSectionProductItemViewModel:
+                        
+                        if model.productsHidden.value.contains(item.id) {
+                            item.isMainScreenHidden = true
+                        } else {
+                            item.isMainScreenHidden = false
+                        }
+                    
+                    default: break
                     }
                 }
             }.store(in: &bindings)
@@ -183,6 +191,10 @@ class MyProductsViewModel: ObservableObject {
 
                 for item in items {
 
+                    switch item {
+                        
+                    case let item as MyProductsSectionProductItemViewModel:
+                    
                     item.action
                         .receive(on: DispatchQueue.main)
                         .sink { [unowned self] action in
@@ -200,6 +212,7 @@ class MyProductsViewModel: ObservableObject {
 
                             case let payload as MyProductsSectionItemAction.Tap:
                                 items.forEach { model in
+                                    
                                     setStateNormal(model)
                                 }
                                 guard let prooduct = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }),
@@ -228,6 +241,34 @@ class MyProductsViewModel: ObservableObject {
                                 break
                             }
                         }.store(in: &bindings)
+                        
+                        
+                    case let item as MyProductsSectionButtonItemViewModel:
+                        item.action
+                            .receive(on: DispatchQueue.main)
+                            .sink { [unowned self] action in
+
+                                switch action {
+                                
+                                case let payload as MyProductsSectionItemAction.PlaceholderTap:
+                                    switch payload.type {
+                                    case .card:
+                                        let url = URL(string: "https://promo.forabank.ru/")!
+                                        UIApplication.shared.open(url)
+                                        
+                                    case .deposit:
+                                        link = .openDeposit(OpenDepositViewModel(model, catalogType: .deposit, dismissAction: {
+                                            self.action.send(MyProductsViewModelAction.CloseAction.Link())
+                                        }))
+                                    }
+                                    
+                                default:
+                                    break
+                                }
+                            }.store(in: &bindings)
+                        
+                    default: break
+                    }
                 }
 
                 for section in sections {
@@ -249,17 +290,18 @@ class MyProductsViewModel: ObservableObject {
     enum Link {
         
         case productProfile(ProductProfileViewModel)
+        case openDeposit(OpenDepositViewModel)
     }
 }
 
 extension MyProductsViewModel {
 
     private func setStateNormal(_ model: MyProductsSectionItemViewModel) {
-
-        withAnimation {
-            model.state = .normal
+        if let model = model as? MyProductsSectionProductItemViewModel {
+            withAnimation {
+                model.state = .normal
+            }
         }
-
     }
 
     private func sectionItems(value: [ProductData]) -> [MyProductsSectionItemViewModel] {
@@ -279,7 +321,7 @@ extension MyProductsViewModel {
         let activated = isActivatedCard(data)
         let paymentSystemIcon = paymentSystemIcon(from: data)
         
-        return MyProductsSectionItemViewModel(
+        return MyProductsSectionProductItemViewModel(
             id: data.id,
             icon: icon,
             title: name,
@@ -327,23 +369,12 @@ extension MyProductsViewModel {
         return true
     }
 
-    private func blockedCards(_ data: [Dictionary<ProductType, [ProductData]>.Element]) -> [ProductData]? {
+    private func isBlockedCards(_ item: ProductData) -> Bool {
 
-        let data = data.first(where: { $0.key == .card })
-
-        let filterred = data?.value.filter { item in
-
-            guard let item = item as? ProductCardData, item.isBlocked else {
-                return false
-            }
-            return true
+        guard let item = item as? ProductCardData, item.isBlocked else {
+            return false
         }
-
-        guard let blockedCards = filterred, !blockedCards.isEmpty else {
-            return nil
-        }
-
-        return blockedCards
+        return true
     }
 }
 
