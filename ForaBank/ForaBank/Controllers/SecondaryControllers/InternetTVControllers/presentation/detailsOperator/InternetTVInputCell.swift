@@ -151,7 +151,7 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
                                                                        "fieldname" : fieldName,
                                                                        "fieldvalue" : textValue]
         }
-        let t = qrData
+        
         if isPersonalAcc_1(strCheck: item.title ?? ""), let textValue = qrData["Расчетный счет Получателя"]  {
             textView.text = textValue
             InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,
