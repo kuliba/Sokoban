@@ -8,7 +8,6 @@
 import SwiftUI
 import Combine
 import Shimmer
-import Introspect
 
 //MARK: - ViewModel
 
@@ -213,16 +212,16 @@ struct CurrencyBigListView: View {
                         
             case let .items(items):
                         
-                List {
+                ScrollView {
+                    VStack {
                                 
-                    ForEach(items) { itemViewModel in
+                        ForEach(items) { itemViewModel in
                                     
-                        CurrencyItemView(viewModel: itemViewModel)
-                           
-                    }.introspectTableView { $0.separatorStyle = .none }
+                            CurrencyItemView(viewModel: itemViewModel)
+                        }
                         
-                }.listStyle(.plain)
-                        
+                    }.padding(.horizontal, 20)
+                }
             }
         }
         
