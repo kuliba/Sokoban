@@ -10,4 +10,6 @@ struct CurrencyExchangeConfirmationData: Decodable, Equatable {
     let debitAmount: Double?
     let fee: Double?
     let creditAmount: Double?
+    let currencyPayer: Currency?
+    let currencyPayee: Currency?
 }
