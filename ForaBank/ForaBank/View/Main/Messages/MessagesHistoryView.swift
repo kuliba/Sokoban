@@ -71,8 +71,7 @@ struct MessagesHistoryView: View {
         .background(Color.white)
         .coordinateSpace(name: "scroll")
         .navigationBar(with: viewModel.navigationBar)
-        .bottomSheet(item: $viewModel.sheet) {
-        } content: { sheet in
+        .bottomSheet(item: $viewModel.sheet) { sheet in
             
             switch sheet.sheetType {
             case let .item(model):

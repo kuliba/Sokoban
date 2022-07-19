@@ -142,7 +142,7 @@ struct PaymentsTransfersView: View {
                 }
             }
         }
-        .bottomSheet(item: $viewModel.bottomSheet) {} content: { sheet in
+        .bottomSheet(item: $viewModel.bottomSheet) { sheet in
             
             switch sheet.type {
             case let .exampleDetail(title):
