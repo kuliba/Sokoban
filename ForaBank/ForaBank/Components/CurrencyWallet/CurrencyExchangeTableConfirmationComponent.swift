@@ -14,9 +14,9 @@ extension CurrencyExchangeTableConfirmationView {
     
     class ViewModel: ObservableObject {
         
-        @Published var sum: String
-        @Published var commission: String
-        @Published var currencySum: String
+        let sum: String
+        let commission: String
+        let currencySum: String
         
         let sumLabel = "Сумма перевода"
         let commissionLabel = "Комиссия"
@@ -39,28 +39,15 @@ extension CurrencyExchangeTableConfirmationView {
                   
             else { return nil }
             
-            self.sum = String(debitAmount)
-            self.commission = String(fee)
-            self.currencySum = String(creditAmount)
-            
-            if let sum = model.amountFormatted(amount: debitAmount,
-                                               currencyCode: currencyPayerCode,
-                                               style: .normal) {
-                self.sum = sum
-            }
-            
-            if let commission = model.amountFormatted(amount: fee,
-                                               currencyCode: currencyPayerCode,
-                                               style: .normal) {
-                self.commission = commission
-            }
-            
-            if let currencySum = model.amountFormatted(amount: creditAmount,
-                                               currencyCode: currencyPayeeCode,
-                                               style: .normal) {
-                self.currencySum = currencySum
-            }
-            
+            self.sum = model.amountFormatted(amount: debitAmount,
+                                             currencyCode: currencyPayerCode,
+                                             style: .normal) ?? String(debitAmount)
+            self.commission = model.amountFormatted(amount: fee,
+                                                    currencyCode: currencyPayerCode,
+                                                    style: .normal) ?? String(fee)
+            self.currencySum = model.amountFormatted(amount: creditAmount,
+                                                     currencyCode: currencyPayeeCode,
+                                                     style: .normal) ?? String(creditAmount)
         }
         
     }
