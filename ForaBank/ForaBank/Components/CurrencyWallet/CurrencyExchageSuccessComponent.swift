@@ -56,10 +56,7 @@ extension CurrencyExchangeSuccessView {
                                                 style: .normal) ?? String(amount)
             self.isDelay = isDelay
         }
-            
-        //init(data: .. model:) TODO:
 
-      
     }
 }
 
@@ -69,6 +66,7 @@ struct CurrencyExchangeSuccessView: View {
     
     @ObservedObject var viewModel: ViewModel
     @State var isPresent = false
+    @State var isAnimation = false
 
     var body: some View {
         
@@ -78,15 +76,21 @@ struct CurrencyExchangeSuccessView: View {
                 .resizable()
                 .frame(width: 88, height: 88)
             
-            if isPresent  {
+            if isPresent {
                 
-                Text(viewModel.title)
-                    .font(.textH3SB18240())
-                    .foregroundColor(.textSecondary)
+                Group {
+                    
+                    Text(viewModel.title)
+                        .font(.textH3SB18240())
+                        .foregroundColor(.textSecondary)
                 
-                Text(viewModel.amount)
-                    .font(.textH1SB24322())
-                    .foregroundColor(.textSecondary)
+                    Text(viewModel.amount)
+                        .font(.textH1SB24322())
+                        .foregroundColor(.textSecondary)
+                }
+                .opacity(isAnimation ? 1 : 0)
+                .animation(.easeInOut(duration: 0.5), value: isAnimation)
+                .onAppear { isAnimation = true }
             }
             
         }.onAppear {
@@ -98,6 +102,7 @@ struct CurrencyExchangeSuccessView: View {
                 isPresent = true
             }
         }
+        
     }
 }
 
@@ -110,15 +115,13 @@ struct CurrencyExchangeSuccessView_Previews: PreviewProvider {
         Group {
             
             CurrencyExchangeSuccessView(viewModel: .success)
-                .previewLayout(.fixed(width: 375, height: 300))
+                .previewLayout(.fixed(width: 375, height: 150))
             
             CurrencyExchangeSuccessView(viewModel: .error)
                 .previewLayout(.fixed(width: 375, height: 300))
             
             CurrencyExchangeSuccessView(viewModel: .waiting)
                 .previewLayout(.fixed(width: 375, height: 300))
-
-            
         }
     }
 }
