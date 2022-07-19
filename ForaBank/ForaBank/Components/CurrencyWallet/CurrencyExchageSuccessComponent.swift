@@ -96,7 +96,7 @@ struct CurrencyExchangeSuccessView: View {
         }.onAppear {
             if case .yes(let delay) = viewModel.isDelay {
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                isPresent = true
+                    isPresent = true
                 }
             } else {
                 isPresent = true
