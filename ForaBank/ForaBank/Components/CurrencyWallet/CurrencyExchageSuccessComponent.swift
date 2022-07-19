@@ -1,5 +1,5 @@
 //
-//  CurrencyExchangeConfirmationComponent.swift
+//  CurrencyExchangeSuccessComponent.swift
 //  ForaBank
 //
 //  Created by Dmitry Martynov on 17.07.2022.
@@ -8,293 +8,142 @@
 import SwiftUI
 import Combine
 
-
 //MARK: - ViewModel
 
-extension CurrencyExchangeConfirmationView {
+extension CurrencyExchangeSuccessView {
     
     class ViewModel: ObservableObject {
         
-        @Published var tableVM: TableViewModel?
-        @Published private(set) var imageVM: ImageViewModel?
-        @Published private(set) var textVM: TextViewModel?
-        
-        
-        var state: ConfirmationState {
-            didSet {
-                setupSections(for: state)
-            }
-        }
-        
-        enum ConfirmationState {
-            
-            case nothing
-            case needConfirm
-            case successImage
-            case fullSuccess
+        let icon: Image
+        let title: String
+        let amount: String
+        let isDelay: Delayed
+
+        enum State {
+                
+            case success
             case error
-            case waiting
-        }
-        
-        init(state: ConfirmationState,
-             tableVM: TableViewModel?,
-             imageVM: ImageViewModel?,
-             textVM: TextViewModel?) {
-            
-            self.state = state
-            self.imageVM = imageVM
-            self.tableVM = tableVM
-            self.textVM = textVM
-        }
-        
-        init(tableVM: TableViewModel?) {
-            
-            self.state = .nothing
-            self.tableVM = tableVM
-            
-            setupSections(for: self.state)
-        }
-        
-        class TableViewModel: ObservableObject {
-            
-            let sum: String
-            let commission: String
-            let sumCurrency: String
-            
-            init(sum: String, commission: String, sumCurrency: String) {
-                self.sum = sum
-                self.commission = commission
-                self.sumCurrency = sumCurrency
+            case wait
+                
+            var appearance: (icon: Image, text: String) {
+                switch self {
+                case .success: return (Image("Done"), "Успешный перевод")
+                case .error: return (Image("Denied"), "Операция неуспешна!")
+                case .wait: return (Image("waiting"), "Операция в обработке!")
+                }
             }
-            
         }
         
-        struct ImageViewModel {
-            
-            let image: Image
+        enum Delayed {
+            case no
+            case yes(Double)
         }
-        
-        struct TextViewModel {
             
-            let text: String
-            let value: String
+        internal init(icon: Image, title: String, amount: String, isDelay: Delayed) {
+            self.icon = icon
+            self.title = title
+            self.amount = amount
+            self.isDelay = isDelay
         }
-        
-        private func setupSections(for state: ConfirmationState) {
             
-            switch state {
-            
-            case .nothing:
-                self.tableVM = nil
-                self.imageVM = nil
-                self.textVM = nil
+        init(state: State, amount: Double, currency: Currency,
+             isDelay: Delayed, model: Model ) {
                 
-            case .needConfirm:
-                self.imageVM = nil
-                self.textVM = nil
-                
-            case .successImage:
-                self.imageVM = .init(image: Image("Done"))
-                self.textVM = nil
-            
-            case .fullSuccess:
-                
-                guard let tableVM = tableVM else { return }
-                self.imageVM = .init(image: Image("Done"))
-                self.textVM = .init(text: "Успешный перевод", value: tableVM.sum)
-            
-            case .error:
-                guard let tableVM = tableVM else { return }
-                self.imageVM = .init(image: Image("Denied"))
-                self.textVM = .init(text: "Операция неуспешна!", value: tableVM.sum)
-            
-            case .waiting:
-                guard let tableVM = tableVM else { return }
-                self.imageVM = .init(image: Image("waiting"))
-                self.textVM = .init(text: "Операция в обработке!", value: tableVM.sum)
-            }
-            
+            self.icon = state.appearance.icon
+            self.title = state.appearance.text
+            self.amount = model.amountFormatted(amount: amount,
+                                                currencyCode: currency.description,
+                                                style: .normal) ?? String(amount)
+            self.isDelay = isDelay
         }
-        
+            
+        //init(data: .. model:) TODO:
+
+      
     }
 }
 
 //MARK: - View
 
-struct CurrencyExchangeConfirmationView: View {
+struct CurrencyExchangeSuccessView: View {
     
     @ObservedObject var viewModel: ViewModel
+    @State var isPresent = false
 
     var body: some View {
         
-        VStack {
+        VStack(spacing: 24) {
                 
-            if let tableVM = viewModel.tableVM {
-                
-                TableView(viewModel: tableVM).padding(.bottom, 32)
-            }
-            
-            if let imageVM = viewModel.imageVM {
-                
-                ImageView(viewModel: imageVM).padding(.bottom, 24)
-            }
-            
-            if let textVM = viewModel.textVM {
-                
-                TextView(viewModel: textVM)
-            }
-        }
-    }
-}
-
-extension CurrencyExchangeConfirmationView {
-
-    struct TableView: View {
-        
-        @ObservedObject var viewModel: ViewModel.TableViewModel
-        
-        var body: some View {
-            
-            ZStack {
-                
-                Color.mainColorsGrayLightest
-                    .cornerRadius(12)
-                
-                HStack {
-                    
-                    VStack(alignment: .leading, spacing: 12) {
-                        
-                        Text("Сумма перевода")
-                        Text("Комиссия")
-                        Text("Сумма зачисления в валюте")
-                    }
-                    .font(.textBodyMR14200())
-                    .foregroundColor(.textPlaceholder)
-                    
-                    Spacer()
-                    
-                    VStack(alignment: .trailing, spacing: 12) {
-                        
-                        Text(viewModel.sum)
-                        Text(viewModel.commission)
-                        Text(viewModel.sumCurrency)
-                    }
-                    .font(.textBodyMM14200())
-                    .foregroundColor(.textSecondary)
-                    
-                }.padding(.horizontal, 20)
-                
-            }
-            .frame(height: 124)
-            .padding(.horizontal, 20)
-        }
-    }
-    
-    
-    struct ImageView: View {
-        
-        @State var viewModel: ViewModel.ImageViewModel
-        var body: some View {
-            
-            viewModel.image
+            viewModel.icon
                 .resizable()
                 .frame(width: 88, height: 88)
-        }
-    }
-    
-    
-    struct TextView: View {
-        
-        @State var viewModel: ViewModel.TextViewModel
-        var body: some View {
-           
-            VStack(spacing: 24) {
+            
+            if isPresent  {
                 
-                Text(viewModel.text)
+                Text(viewModel.title)
                     .font(.textH3SB18240())
                     .foregroundColor(.textSecondary)
                 
-                Text(viewModel.value)
+                Text(viewModel.amount)
                     .font(.textH1SB24322())
                     .foregroundColor(.textSecondary)
             }
+            
+        }.onAppear {
+            if case .yes(let delay) = viewModel.isDelay {
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                isPresent = true
+                }
+            } else {
+                isPresent = true
+            }
         }
     }
-    
 }
-
 
 //MARK: - Preview
 
-struct CurrencyExchangeConfirmationView_Previews: PreviewProvider {
+struct CurrencyExchangeSuccessView_Previews: PreviewProvider {
     
     static var previews: some View {
         
         Group {
             
-            CurrencyExchangeConfirmationView(viewModel: .needConfirm)
-                .previewLayout(.fixed(width: 375, height: 160))
-            
-            CurrencyExchangeConfirmationView(viewModel: .successImage)
+            CurrencyExchangeSuccessView(viewModel: .success)
                 .previewLayout(.fixed(width: 375, height: 300))
             
-            CurrencyExchangeConfirmationView(viewModel: .fullSuccess)
-                .previewLayout(.fixed(width: 375, height: 400))
-
-            CurrencyExchangeConfirmationView(viewModel: .error)
-                .previewLayout(.fixed(width: 375, height: 400))
+            CurrencyExchangeSuccessView(viewModel: .error)
+                .previewLayout(.fixed(width: 375, height: 300))
             
-            CurrencyExchangeConfirmationView(viewModel: .waiting)
-                .previewLayout(.fixed(width: 375, height: 400))
+            CurrencyExchangeSuccessView(viewModel: .waiting)
+                .previewLayout(.fixed(width: 375, height: 300))
+
+            
         }
     }
 }
 
-extension CurrencyExchangeConfirmationView.ViewModel {
+extension CurrencyExchangeSuccessView.ViewModel {
     
-    static var needConfirm = CurrencyExchangeConfirmationView
-                                .ViewModel(state: .needConfirm,
-                                           tableVM: .init(sum: "64,50",
-                                                          commission: "0,00",
-                                                          sumCurrency: "1 $"),
-                                           imageVM: nil,
-                                           textVM: nil)
+    static var success = CurrencyExchangeSuccessView
+                            .ViewModel(icon: Image("Done"),
+                                       title: "Успешный перевод",
+                                       amount: "100.23 $",
+                                       isDelay: .yes(2.0))
     
-    static var successImage = CurrencyExchangeConfirmationView
-                                .ViewModel(state: .successImage,
-                                           tableVM: .init(sum: "64,50",
-                                                          commission: "0,00",
-                                                          sumCurrency: "1 $"),
-                                           imageVM: .init(image: Image("Done")),
-                                           textVM: nil)
+    static var error = CurrencyExchangeSuccessView
+                            .ViewModel(icon: Image("Denied"),
+                                       title: "Операция неуспешна!",
+                                       amount: "80.23 $",
+                                       isDelay: .no)
+    
+    static var waiting = CurrencyExchangeSuccessView
+                            .ViewModel(icon: Image("waiting"),
+                                       title: "Операция в обработке!",
+                                       amount: "99.23 $",
+                                       isDelay: .no)
     
     
-    static var fullSuccess = CurrencyExchangeConfirmationView
-                                .ViewModel(state: .fullSuccess,
-                                           tableVM: .init(sum: "64,50",
-                                                          commission: "0,00",
-                                                          sumCurrency: "1 $"),
-                                           imageVM: .init(image: Image("Done")),
-                                           textVM: .init(text: "Успешный перевод",
-                                                         value: "64,50"))
-    
-    static var error = CurrencyExchangeConfirmationView
-                                .ViewModel(state: .error,
-                                           tableVM: .init(sum: "64,50",
-                                                          commission: "0,00",
-                                                          sumCurrency: "1 $"),
-                                           imageVM: .init(image: Image("Denied")),
-                                           textVM: .init(text: "Операция неуспешна!",
-                                                         value: "64,50"))
-    
-    static var waiting = CurrencyExchangeConfirmationView
-                                .ViewModel(state: .waiting,
-                                           tableVM: .init(sum: "64,50",
-                                                          commission: "0,00",
-                                                          sumCurrency: "1 $"),
-                                           imageVM: .init(image: Image("waiting")),
-                                           textVM: .init(text: "Операция в обработке!",
-                                                         value: "64,50"))
 }
 
 
