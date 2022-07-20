@@ -69,7 +69,7 @@ class InfoProductViewModel: ObservableObject {
             self.title = "Реквизиты счета карты"
         case .account:
             
-            model.action.send(ModelAction.Products.ProductDetails.Request(type: .loan, id: product.id))
+            model.action.send(ModelAction.Products.ProductDetails.Request(type: .account, id: product.id))
             self.title = "Реквизиты счета"
         case .deposit:
             if info {
@@ -84,8 +84,9 @@ class InfoProductViewModel: ObservableObject {
                 self.title = "Реквизиты счета вклада"
                 self.shareButton = nil
             }
-        default:
-            break
+        case .loan:
+            model.action.send(ModelAction.Products.ProductDetails.Request(type: .loan, id: product.id))
+            self.title = "Реквизиты счета"
         }
     }
     
