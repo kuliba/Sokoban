@@ -101,6 +101,9 @@ class ProductProfileViewModel: ObservableObject {
                 case _ as ProductProfileViewModelAction.Link.Close:
                     link = nil
                     
+                case _ as ProductProfileViewModelAction.Alert.Close:
+                    alert = nil
+                    
                 case _ as ProductProfileViewModelAction.ActivateCard:
                     alert = .init(title: "Активировать карту?", message: "После активации карта будет готова к использованию", primary: .init(type: .default, title: "Отмена", action: { [weak self] in
                         self?.alert = nil
@@ -116,6 +119,11 @@ class ProductProfileViewModel: ObservableObject {
                         self?.model.action.send(ModelAction.Card.Unblock.Request(cardId: 1))
                         self?.alert = nil
                     }))
+                case _ as ProductProfileViewModelAction.Link.PlacesMap:
+                    guard let placesViewModel = PlacesViewModel(model) else {
+                        return
+                    }
+                    sheet = .init(type: .placesMap(placesViewModel))
                     
                 default:
                     break
@@ -345,9 +353,13 @@ class ProductProfileViewModel: ObservableObject {
                         case .conditions:
                             let printFormViewModel = PrintFormView.ViewModel(type: .deposit(depositId: productData.id), model: self.model)
                             self.sheet = .init(type: .printForm(printFormViewModel))
-                            
-                        default:
-                            break
+                        
+                        case .closeDeposit:
+                            let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                 message: "Срок вашего вклада еще не истек. Для досрочного закрытия обратитесь в ближайший офис",
+                                                                 primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Link.PlacesMap())}),
+                                                                 secondary: .init(type: .default, title: "Ок", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Alert.Close())}))
+                            self.alert = .init(alertViewModel)
                         }
                         
                     default:
@@ -483,6 +495,7 @@ extension ProductProfileViewModel {
         enum Kind {
             
             case printForm(PrintFormView.ViewModel)
+            case placesMap(PlacesViewModel)
         }
     }
 }
@@ -531,6 +544,13 @@ enum ProductProfileViewModelAction {
             let viewModel: InfoProductViewModel
         }
         
+        struct PlacesMap: Action {}
+        
+        struct Close: Action {}
+    }
+    
+    enum Alert {
+
         struct Close: Action {}
     }
 }
