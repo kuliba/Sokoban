@@ -211,8 +211,8 @@ class MeToMeSearchBanksViewController: UIViewController {
         var filterBank: [BankFullInfoList] = []
         data.forEach({ bank in
             let fullBankInfoItem = bank.fullBankInfoList
-            if fullBankInfoItem.senderList?.contains("ME2MEPUSH") ?? false
-                && fullBankInfoItem.receiverList?.contains("ME2MEPUSH") ?? false {
+            if fullBankInfoItem.senderList?.contains("ME2MEPULL") ?? false
+                && fullBankInfoItem.receiverList?.contains("ME2MEPULL") ?? false {
                 filterBank.append(fullBankInfoItem)
             }
         })
