@@ -19,12 +19,17 @@ extension CurrencySwapView {
 
         @Published var currencyOperation: CurrencyOperation
         @Published var currencyType: String
+        @Published var currencyRate: Double
 
         let action: PassthroughSubject<Action, Never> = .init()
 
         let model: Model
-        let haveCurrencySwap: CurrencyViewModel
-        let getCurrencySwap: CurrencyViewModel
+        
+        /// Иностранная валюта
+        let currencySwap: CurrencyViewModel
+        
+        /// Российская валюта
+        let сurrencyCurrentSwap: CurrencyViewModel
 
         private var bindings = Set<AnyCancellable>()
 
@@ -32,13 +37,14 @@ extension CurrencySwapView {
             action.send(CurrencySwapAction.Button.Tapped())
         }
 
-        init(_ model: Model, haveCurrencySwap: CurrencyViewModel, getCurrencySwap: CurrencyViewModel, currencyOperation: CurrencyOperation, currencyType: String) {
+        init(_ model: Model, currencySwap: CurrencyViewModel, сurrencyCurrentSwap: CurrencyViewModel, currencyOperation: CurrencyOperation, currencyType: String, currencyRate: Double) {
 
             self.model = model
-            self.haveCurrencySwap = haveCurrencySwap
-            self.getCurrencySwap = getCurrencySwap
+            self.currencySwap = currencySwap
+            self.сurrencyCurrentSwap = сurrencyCurrentSwap
             self.currencyOperation = currencyOperation
             self.currencyType = currencyType
+            self.currencyRate = currencyRate
 
             bind()
         }
@@ -60,33 +66,10 @@ extension CurrencySwapView {
                     let currencyList = data.1
                     let images = data.2
                     
-                    let items = model.reduceCurrencyWallet(currencyWalletList, currencyType: currencyType)
-                    let item = items.first(where: { $0.currencyType == currencyType })
+                    let currencyData = currencyList.first(where: { $0.code == currencyType })
                     
-                    let data = currencyList.first(where: { $0.code == currencyType })
-                    let unicode = data?.currencySymbol
-                    
-                    guard let item = item, let unicode = unicode else {
-                        return
-                    }
-                    
-                    let rate = currencyOperation == .buy ? item.rateBuy : item.rateSell
-                    let currencyAmount = NumberFormatter.decimal(rate)
-                                        
-                    getCurrencySwap.currencyAmount = currencyAmount
-                    haveCurrencySwap.quotesInfo = "1\(unicode) = \(currencyAmount) ₽"
-                    
-                    guard let image = images[item.iconMd5hash]?.image else {
-                        
-                        model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [item.iconMd5hash]))
-                        return
-                    }
-                    
-                    withAnimation(.interactiveSpring()) {
-                        
-                        haveCurrencySwap.icon = image
-                        haveCurrencySwap.currencyType = currencyType
-                    }
+                    update(currencyWalletList: currencyWalletList, currencyData: currencyData)
+                    updateImage(currencyWalletList: currencyWalletList, images: images)
                     
                 }.store(in: &bindings)
 
@@ -111,22 +94,9 @@ extension CurrencySwapView {
                         }
                         
                         let currencyWalletList = model.currencyWalletList.value
-                        let currencyList = model.currencyList.value.first(where: { $0.code == currencyType })
+                        let currencyData = model.currencyList.value.first(where: { $0.code == currencyType })
                         
-                        let items = model.reduceCurrencyWallet(currencyWalletList, currencyType: currencyType)
-                        let item = items.first(where: { $0.currencyType == currencyType })
-                        
-                        let unicode = currencyList?.currencySymbol
-                        
-                        guard let item = item, let unicode = unicode else {
-                            return
-                        }
-                     
-                        let rate = currencyOperation == .buy ? item.rateBuy : item.rateSell
-                        let currencyAmount = NumberFormatter.decimal(rate)
-                        
-                        getCurrencySwap.currencyAmount = currencyAmount
-                        haveCurrencySwap.quotesInfo = "1\(unicode) = \(currencyAmount) ₽"
+                        update(currencyWalletList: currencyWalletList, currencyData: currencyData)
                         
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
                         
@@ -145,6 +115,75 @@ extension CurrencySwapView {
                         swapButton.isSwap.toggle()
                     }
                 }.store(in: &bindings)
+            
+            currencySwap.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                    case let payload as CurrencySwapAction.TextField.Done:
+                        
+                        сurrencyCurrentSwap.currencyAmount = payload.currencyAmount * currencyRate
+                        
+                    default:
+                        break
+                    }
+                }.store(in: &bindings)
+            
+            сurrencyCurrentSwap.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                    case _ as CurrencySwapAction.TextField.Done:
+                        
+                        currencySwap.currencyAmount = сurrencyCurrentSwap.currencyAmount / currencyRate
+                        
+                    default:
+                        break
+                    }
+                }.store(in: &bindings)
+        }
+        
+        private func update(currencyWalletList: [CurrencyWalletData], currencyData: CurrencyData?) {
+            
+            let items = model.reduceCurrencyWallet(currencyWalletList, currencyType: currencyType)
+            let item = items.first(where: { $0.currencyType == currencyType })
+            
+            guard let currencyData = currencyData,
+                  let currencySymbol = currencyData.currencySymbol,
+                  let item = item else {
+                return
+            }
+         
+            let currencyRateOperation = currencyOperation == .buy ? item.rateBuy : item.rateSell
+            let currencyAmount = NumberFormatter.decimal(currencyRateOperation)
+            
+            currencyRate = currencyAmount
+            сurrencyCurrentSwap.currencyAmount = currencySwap.currencyAmount * currencyAmount
+            currencySwap.quotesInfo = "1\(currencySymbol) = \(currencyAmount) ₽"
+        }
+        
+        private func updateImage(currencyWalletList: [CurrencyWalletData], images: [String: ImageData]) {
+            
+            let items = model.reduceCurrencyWallet(currencyWalletList, currencyType: currencyType)
+            let item = items.first(where: { $0.currencyType == currencyType })
+            
+            guard let item = item else {
+                return
+            }
+            
+            guard let image = images[item.iconMd5hash]?.image else {
+                
+                model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [item.iconMd5hash]))
+                return
+            }
+            
+            withAnimation(.interactiveSpring()) {
+                
+                currencySwap.icon = image
+                currencySwap.currencyType = currencyType
+            }
         }
         
         private func toggleCurrencyType() {
@@ -154,8 +193,8 @@ extension CurrencySwapView {
         
         private func titleSwap(_ currencyOperation: CurrencyOperation) {
             
-            haveCurrencySwap.title = currencyOperation == .buy ? "Я получу" : "У меня есть"
-            getCurrencySwap.title = currencyOperation == .buy ? "У меня есть" : "Я получу"
+            currencySwap.title = currencyOperation == .buy ? "Я получу" : "У меня есть"
+            сurrencyCurrentSwap.title = currencyOperation == .buy ? "У меня есть" : "Я получу"
         }
     }
 }
@@ -165,6 +204,8 @@ extension CurrencySwapView.ViewModel {
     // MARK: - Swap
 
     class CurrencyViewModel: ObservableObject {
+        
+        let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var currencyAmount: Double
         @Published var title: String
@@ -190,8 +231,17 @@ extension CurrencySwapView.ViewModel {
             isEnabled: true,
             limit: 10,
             toolbar: .init(
-                doneButton: .init(isEnabled: true) {
+                doneButton: .init(isEnabled: true) { [weak self] in
+                    
+                    guard let self = self, let text = self.textField.text else {
+                        return
+                    }
+                    
+                    self.currencyAmount = NumberFormatter.decimal(text)
                     UIApplication.shared.endEditing()
+                    
+                    self.action.send(CurrencySwapAction.TextField.Done(currencyAmount: self.currencyAmount))
+                    
                 }, closeButton: nil))
 
         init(icon: Image?, currencyAmount: Double, title: String = "", currencyType: String, quotesInfo: String? = nil) {
@@ -263,12 +313,12 @@ struct CurrencySwapView: View {
 
                     if #available(iOS 14.0, *) {
 
-                        CurrencySwapView.CurrencyView(viewModel: viewModel.getCurrencySwap)
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.сurrencyCurrentSwap)
                             .matchedGeometryEffect(id: "getCurrency", in: namespace)
                         
                     } else {
 
-                        CurrencySwapView.CurrencyView(viewModel: viewModel.getCurrencySwap)
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.сurrencyCurrentSwap)
                             .transition(bottomTransition)
                     }
 
@@ -276,12 +326,12 @@ struct CurrencySwapView: View {
                     
                     if #available(iOS 14.0, *) {
 
-                        CurrencySwapView.CurrencyView(viewModel: viewModel.haveCurrencySwap)
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.currencySwap)
                             .matchedGeometryEffect(id: "haveCurrency", in: namespace)
                         
                     } else {
 
-                        CurrencySwapView.CurrencyView(viewModel: viewModel.haveCurrencySwap)
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.currencySwap)
                             .transition(bottomTransition)
                     }
                 }
@@ -300,12 +350,12 @@ struct CurrencySwapView: View {
 
                     if #available(iOS 14.0, *) {
 
-                        CurrencySwapView.CurrencyView(viewModel: viewModel.haveCurrencySwap)
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.currencySwap)
                             .matchedGeometryEffect(id: "haveCurrency", in: namespace)
                         
                     } else {
 
-                        CurrencySwapView.CurrencyView(viewModel: viewModel.haveCurrencySwap)
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.currencySwap)
                             .transition(topTransition)
                     }
                     
@@ -313,12 +363,12 @@ struct CurrencySwapView: View {
 
                     if #available(iOS 14.0, *) {
 
-                        CurrencySwapView.CurrencyView(viewModel: viewModel.getCurrencySwap)
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.сurrencyCurrentSwap)
                             .matchedGeometryEffect(id: "getCurrency", in: namespace)
                         
                     } else {
 
-                        CurrencySwapView.CurrencyView(viewModel: viewModel.getCurrencySwap)
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.сurrencyCurrentSwap)
                             .transition(topTransition)
                     }
                 }
@@ -420,12 +470,19 @@ extension CurrencySwapView {
 // MARK: - Action
 
 enum CurrencySwapAction {
-
+    
     enum Button {
-
+        
         struct Tapped: Action {}
-        struct Done: Action {}
         struct Close: Action {}
+    }
+    
+    enum TextField {
+        
+        struct Done: Action {
+            
+            let currencyAmount: Double
+        }
     }
 }
 
@@ -435,17 +492,18 @@ extension CurrencySwapView.ViewModel {
     
     static let sample: CurrencySwapView.ViewModel = .init(
         .emptyMock,
-        haveCurrencySwap: .init(
+        currencySwap: .init(
             icon: .init("Flag USD"),
             currencyAmount: 1.00,
             currencyType: "USD",
             quotesInfo: "1$ = 64.50 ₽"),
-        getCurrencySwap: .init(
+        сurrencyCurrentSwap: .init(
             icon: .init("Flag RUB"),
             currencyAmount: 64.50,
             currencyType: "RUB"),
         currencyOperation: .buy,
-        currencyType: "USD")
+        currencyType: "USD",
+        currencyRate: 64.50)
 }
 
 // MARK: - Previews

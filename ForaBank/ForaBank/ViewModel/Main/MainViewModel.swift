@@ -263,23 +263,24 @@ class MainViewModel: ObservableObject, Resetable {
             return
         }
         
-        let rate = currencyOperation == .buy ? item.rateBuy : item.rateSell
+        let currencyRate = currencyOperation == .buy ? item.rateBuy : item.rateSell
+        let currencyAmount = NumberFormatter.decimal(currencyRate)
         let image = model.images.value[item.iconMd5hash]?.image
-        let currencyAmount = NumberFormatter.decimal(rate)
         
         let swapViewModel: CurrencySwapView.ViewModel = .init(
             model,
-            haveCurrencySwap: .init(
+            currencySwap: .init(
                 icon: image,
                 currencyAmount: 1.00,
                 currencyType: currencyType,
-                quotesInfo: "1\(unicode) = \(rate) ₽"),
-            getCurrencySwap: .init(
+                quotesInfo: "1\(unicode) = \(currencyRate) ₽"),
+            сurrencyCurrentSwap: .init(
                 icon: .init("Flag RUB"),
                 currencyAmount: currencyAmount,
                 currencyType: "RUB"),
             currencyOperation: currencyOperation,
-            currencyType: currencyType)
+            currencyType: currencyType,
+            currencyRate: currencyAmount)
         
         link = .currencyWallet(.init(
             listViewModel: .init(model, currencyType: currencyType, items: items),
