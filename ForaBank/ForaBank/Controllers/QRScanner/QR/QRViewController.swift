@@ -42,7 +42,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
     var qrData = [String: String]()
     var operators: GKHOperatorsModel? = nil
     var qrIsFired = false
-
+    var segueOut = true
     var imagePicker: UIImagePickerController!
 
     @IBOutlet weak var qrView: UIView!
@@ -211,9 +211,14 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
     @IBAction func back(_ sender: UIButton) {
         
         qrCodesession.stopRunning()
-        viewModel?.closeAction()
-        self.definesPresentationContext = true
-        self.presentingViewController?.dismiss(animated: true, completion: nil)
+        if viewModel != nil {
+            viewModel?.closeAction()
+        } else if segueOut == true {
+            self.navigationController?.popViewController(animated: true)
+        } else {
+            self.dismiss(animated: true)
+        }
+
     }
 }
 
