@@ -601,7 +601,11 @@ extension Model {
         case .account:
             command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: payload.id, cardId: nil, depositId: nil))
         case .loan:
-            return
+            guard let product = self.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.id }), let product = product as? ProductLoanData else {
+                return
+            }
+            
+            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: product.settlementAccountId, cardId: nil, depositId: nil))
         }
         
         serverAgent.executeCommand(command: command) { result in
