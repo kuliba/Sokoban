@@ -176,7 +176,12 @@ class RootViewModel: ObservableObject, Resetable {
             self?.action.send(RootViewModelAction.SwitchTab(tabType: tabType))
         }
         
-        return .init(dismissCover: dismissCover, spinner: .init(show: spinnerShow, hide: spinnerHide), switchTab: switchTab)
+        let dismissAll: (() -> Void) = { [weak self] in
+            
+            self?.action.send(RootViewModelAction.DismissAll())
+        }
+        
+        return .init(dismissCover: dismissCover, spinner: .init(show: spinnerShow, hide: spinnerHide), switchTab: switchTab, dismissAll: dismissAll)
     }()
 }
 
@@ -207,6 +212,7 @@ extension RootViewModel {
         let dismissCover: () -> Void
         let spinner: Spinner
         let switchTab: (RootViewModel.TabType) -> Void
+        let dismissAll: () -> Void
         
         struct Spinner {
             
