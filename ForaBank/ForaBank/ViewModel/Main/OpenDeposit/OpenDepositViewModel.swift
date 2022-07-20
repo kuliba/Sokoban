@@ -13,7 +13,7 @@ class OpenDepositViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
-    let navButtonBack: NavigationBarButtonViewModel
+    let navigationBar: NavigationBarView.ViewModel
     @Published var products: [OfferProductView.ViewModel]
     @Published var bottomSheet: BottomSheet?
 
@@ -23,9 +23,9 @@ class OpenDepositViewModel: ObservableObject {
     private var bindings = Set<AnyCancellable>()
 
     
-    init(_ model: Model = .emptyMock, navButtonBack: NavigationBarButtonViewModel, products: [OfferProductView.ViewModel], catalogType: CatalogType) {
+    init(_ model: Model = .emptyMock, navigationBar: NavigationBarView.ViewModel, products: [OfferProductView.ViewModel], catalogType: CatalogType) {
         
-        self.navButtonBack = navButtonBack
+        self.navigationBar = navigationBar
         self.catalogType = catalogType
         self.products = products
         self.model = model
@@ -33,7 +33,7 @@ class OpenDepositViewModel: ObservableObject {
     
     init(_ model: Model, catalogType: CatalogType, dismissAction: @escaping () -> Void) {
         
-        self.navButtonBack = .init(icon: .ic24ChevronLeft, action: dismissAction)
+        self.navigationBar = .init(title: "Вклады", leftButtons: [NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: dismissAction)])
         self.model = model
         self.products = []
         self.catalogType = catalogType
