@@ -131,6 +131,10 @@ struct ProductProfileView: View {
             switch sheet.type {
             case let .printForm(printFormViewModel):
                 PrintFormView(viewModel: printFormViewModel)
+                
+            case .placesMap(let placesViewModel):
+                PlacesView(viewModel: placesViewModel)
+                
             }
         })
     }
