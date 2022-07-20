@@ -90,7 +90,7 @@ struct CurrencyExchangeSuccessView: View {
                     withAnimation { isPresent = true }
                 }
             } else {
-                withAnimation { isPresent = true }
+                isPresent = true 
             }
         }
         
