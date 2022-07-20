@@ -393,6 +393,9 @@ class Model {
                 case let payload as ModelAction.Products.UpdateCustomName.Request:
                     handleProductsUpdateCustomName(payload)
                     
+                case let payload as ModelAction.Products.UpdateCustomName.Response:
+                    handleProductsUpdateCustomNameResponse(payload)
+                    
                 case let payload as ModelAction.Products.ActivateCard.Request:
                     handleProductsActivateCard(payload)
                     

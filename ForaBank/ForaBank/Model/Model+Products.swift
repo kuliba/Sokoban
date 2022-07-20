@@ -584,6 +584,16 @@ extension Model {
         }
     }
     
+    func handleProductsUpdateCustomNameResponse(_ payload: ModelAction.Products.UpdateCustomName.Response) {
+        
+        switch payload {
+        case .complete(productId: let productId, name: _):
+            self.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productId))
+            
+        default: break
+        }
+    }
+    
     func handleProductDetails(_ payload: ModelAction.Products.ProductDetails.Request) {
         
         guard let token = token else {
