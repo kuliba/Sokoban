@@ -318,7 +318,7 @@ class ProductProfileViewModel: ObservableObject {
                     case .topRight:
                         switch product.productType {
                         case .card, .account:
-//                            statusBar.backButton.action()
+                            rootActions?.dismissAll()
                             rootActions?.switchTab(.payments)
                             
                         case .deposit:
@@ -565,10 +565,17 @@ fileprivate extension NavigationBarView.ViewModel {
 
 extension ProductProfileViewModel {
     
-    struct BottomSheet: Identifiable {
-        
+    struct BottomSheet: BottomSheetCustomizable {
+
         let id = UUID()
         let type: Kind
+        
+        var keyboardOfssetMultiplier: CGFloat {
+            switch type {
+            case .meToMe: return 0
+            default: return 0.6
+            }
+        }
         
         enum Kind {
             
