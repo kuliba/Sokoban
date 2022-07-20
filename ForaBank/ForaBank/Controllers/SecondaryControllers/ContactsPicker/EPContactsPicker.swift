@@ -82,13 +82,6 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
         IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
     }
     
-    open override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        IQKeyboardManager.shared.enable = false
-        IQKeyboardManager.shared.enableAutoToolbar = false
-    }
-    
     override open func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
