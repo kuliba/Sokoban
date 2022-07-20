@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MyProductsSectionItemView: View {
     
-    @ObservedObject var viewModel: MyProductsSectionItemViewModel
+    @ObservedObject var viewModel: MyProductsSectionProductItemViewModel
     
     var contentOffset: CGFloat {
         
@@ -138,7 +138,7 @@ extension MyProductsSectionItemView {
     
     struct ActionButtonView: View {
         
-        var viewModel: MyProductsSectionItemViewModel.ActionButtonViewModel
+        var viewModel: MyProductsSectionProductItemViewModel.ActionButtonViewModel
         
         var body: some View {
             
@@ -165,6 +165,69 @@ extension MyProductsSectionItemView {
     }
 }
 
+struct MyProductsSectionButtonItemView: View {
+    
+    @ObservedObject var viewModel: MyProductsSectionButtonItemViewModel
+    
+    var body: some View {
+        
+        ZStack {
+            
+            HStack(spacing: 16) {
+                
+                VStack {
+                    
+                    viewModel.icon
+                        .renderingMode(.original)
+                    
+                    Spacer()
+                    
+                }
+                .padding(.top, 4)
+                .padding(.leading, 20)
+                
+                VStack(spacing: 8) {
+                    
+                    HStack {
+                        
+                        Text(viewModel.title)
+                            .font(.textBodyMM14200())
+                            .foregroundColor(.mainColorsBlack)
+                        
+                        Spacer()
+                        
+                    }
+                    .padding(.top, 4)
+                    
+                    HStack {
+                        
+                        if let subtitle = viewModel.subtitle {
+                            Text(subtitle)
+                                .font(.textBodySR12160())
+                                .foregroundColor(.mainColorsGray)
+                        }
+                        
+                        Spacer()
+                    }
+                    
+                    Divider()
+                        .background(Color.mainColorsGrayLightest)
+                        .opacity(0.5)
+                }
+                .padding(.trailing, 20)
+                
+            }
+            .background(Color.mainColorsWhite)
+            .onTapGesture {
+                
+                viewModel.action.send(MyProductsSectionItemAction.PlaceholderTap(type: viewModel.type))
+            }
+        }
+        .frame(height: 60)
+        
+    }
+}
+
 struct MyProductsSectionItemView_Previews: PreviewProvider {
     static var previews: some View {
         
@@ -177,6 +240,9 @@ struct MyProductsSectionItemView_Previews: PreviewProvider {
                 .previewLayout(.sizeThatFits)
             
             MyProductsSectionItemView(viewModel: .sample9)
+                .previewLayout(.sizeThatFits)
+            
+            MyProductsSectionButtonItemView(viewModel: .sample10)
                 .previewLayout(.sizeThatFits)
         }
     }

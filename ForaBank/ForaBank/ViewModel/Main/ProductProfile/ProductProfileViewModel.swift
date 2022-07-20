@@ -25,6 +25,7 @@ class ProductProfileViewModel: ObservableObject {
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
     @Published var sheet: Sheet?
+    @Published var textFieldAlert: AlertTextFieldView.ViewModel?
 
     var rootActions: RootViewModel.RootActions?
     
@@ -101,6 +102,9 @@ class ProductProfileViewModel: ObservableObject {
                 case _ as ProductProfileViewModelAction.Link.Close:
                     link = nil
                     
+                case _ as ProductProfileViewModelAction.Alert.Close:
+                    alert = nil
+                    
                 case _ as ProductProfileViewModelAction.ActivateCard:
                     alert = .init(title: "Активировать карту?", message: "После активации карта будет готова к использованию", primary: .init(type: .default, title: "Отмена", action: { [weak self] in
                         self?.alert = nil
@@ -116,9 +120,54 @@ class ProductProfileViewModel: ObservableObject {
                         self?.model.action.send(ModelAction.Card.Unblock.Request(cardId: 1))
                         self?.alert = nil
                     }))
+                case _ as ProductProfileViewModelAction.Link.PlacesMap:
+                    guard let placesViewModel = PlacesViewModel(model) else {
+                        return
+                    }
+                    sheet = .init(type: .placesMap(placesViewModel))
+                
+                case let payload as ProductProfileViewModelAction.CustomName:
+                    
+                    textFieldAlert = customNameAlert(for: payload.productType, alertTitle: payload.alertTitle)
+                    
+                case _ as ProductProfileViewModelAction.CloseTextFieldAlert:
+                    textFieldAlert = nil
                     
                 default:
                     break
+                }
+            }.store(in: &bindings)
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+
+                switch action {
+
+                case let payload as ModelAction.Products.UpdateCustomName.Response:
+
+                    switch payload {
+
+                    case .complete(productId: let productId, name: let name):
+                        
+                        
+                        guard let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == productId }) else {
+                            return
+                        }
+                        
+                        withAnimation {
+                            
+                            navigationBar.updateName(with: name)
+                            accentColor = Self.accentColor(with: product)
+                        }
+
+                    case .failed(message: let message):
+                        alert = .init(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in
+                            self?.alert = nil
+                        }))
+                    }
+
+                    default: break
                 }
             }.store(in: &bindings)
         
@@ -200,6 +249,25 @@ class ProductProfileViewModel: ObservableObject {
                     bind(history: historyViewModel)
                 }
                 
+                if product.productType == .card || product.productType == .account {
+                    
+                    guard let alertTitle = alertTitle(for: product.productType) else { return }
+                    
+                    withAnimation {
+                        
+                        navigationBar.rightButtons = [.init(icon: .ic16Edit2, action: { [weak self] in
+                            
+                            self?.action.send(ProductProfileViewModelAction.CustomName(productId: product.id, productType: product.productType, alertTitle: alertTitle))
+                        })]
+                    }
+                } else {
+                    
+                    withAnimation {
+                        
+                        navigationBar.rightButtons = []
+                    }
+                }
+                
             }.store(in: &bindings)
     }
     
@@ -250,7 +318,7 @@ class ProductProfileViewModel: ObservableObject {
                     case .topRight:
                         switch product.productType {
                         case .card, .account:
-//                            statusBar.backButton.action()
+                            rootActions?.dismissAll()
                             rootActions?.switchTab(.payments)
                             
                         case .deposit:
@@ -345,9 +413,13 @@ class ProductProfileViewModel: ObservableObject {
                         case .conditions:
                             let printFormViewModel = PrintFormView.ViewModel(type: .deposit(depositId: productData.id), model: self.model)
                             self.sheet = .init(type: .printForm(printFormViewModel))
-                            
-                        default:
-                            break
+                        
+                        case .closeDeposit:
+                            let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                 message: "Срок вашего вклада еще не истек. Для досрочного закрытия обратитесь в ближайший офис",
+                                                                 primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Link.PlacesMap())}),
+                                                                 secondary: .init(type: .default, title: "Ок", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Alert.Close())}))
+                            self.alert = .init(alertViewModel)
                         }
                         
                     default:
@@ -358,7 +430,41 @@ class ProductProfileViewModel: ObservableObject {
                 
             }.store(in: &bindings)
     }
+
+    func customNameAlert(for productType: ProductType, alertTitle: String) ->  AlertTextFieldView.ViewModel? {
+        
+        let textFieldAlert: AlertTextFieldView.ViewModel = .init(
+            title: alertTitle,
+            message: nil,
+            maxLength: 15,
+            primary: .init(type: .default,
+                           title: "Ок",
+                           action: { [weak self] text in
+                               self?.action.send(ProductProfileViewModelAction.CloseTextFieldAlert())
+                               if let text = text, let product = self?.product {
+                                   
+                                   self?.model.action.send(ModelAction.Products.UpdateCustomName.Request(productId: product.activeProductId, productType: product.productType, name: text))
+                               }
+                           }),
+            secondary: .init(type: .cancel,
+                             title: "Отмена",
+                             action: { [weak self] _ in
+                                 
+                                 self?.action.send(ProductProfileViewModelAction.CloseTextFieldAlert())
+                             }))
+        
+        return textFieldAlert
+    }
     
+    func alertTitle(for productType: ProductType) -> String? {
+        
+        switch productType {
+        case .card: return "Название карты"
+        case .account: return "Название счета"
+        default: return nil
+        }
+    }
+
     func makeHistoryViewModel(productType: ProductType, productId: ProductData.ID, model: Model) -> ProductProfileHistoryView.ViewModel? {
     
         guard productType != .loan else {
@@ -449,16 +555,27 @@ fileprivate extension NavigationBarView.ViewModel {
         self.foreground = Self.textColor(with: product)
         self.background = Self.accentColor(with: product)
     }
+    
+    func updateName(with name: String) {
+        self.title = name
+    }
 }
 
 //MARK: - Types
 
 extension ProductProfileViewModel {
     
-    struct BottomSheet: Identifiable {
-        
+    struct BottomSheet: BottomSheetCustomizable {
+
         let id = UUID()
         let type: Kind
+        
+        var keyboardOfssetMultiplier: CGFloat {
+            switch type {
+            case .meToMe: return 0
+            default: return 0.6
+            }
+        }
         
         enum Kind {
             
@@ -483,6 +600,7 @@ extension ProductProfileViewModel {
         enum Kind {
             
             case printForm(PrintFormView.ViewModel)
+            case placesMap(PlacesViewModel)
         }
     }
 }
@@ -491,7 +609,12 @@ extension ProductProfileViewModel {
 
 enum ProductProfileViewModelAction {
     
-    struct CustomName: Action {}
+    struct CustomName: Action {
+        
+        let productId: ProductData.ID
+        let productType: ProductType
+        let alertTitle: String
+    }
     
     struct ActivateCard: Action {
         
@@ -531,6 +654,15 @@ enum ProductProfileViewModelAction {
             let viewModel: InfoProductViewModel
         }
         
+        struct PlacesMap: Action {}
+        
         struct Close: Action {}
     }
+    
+    enum Alert {
+
+        struct Close: Action {}
+    }
+    
+    struct CloseTextFieldAlert: Action {}
 }

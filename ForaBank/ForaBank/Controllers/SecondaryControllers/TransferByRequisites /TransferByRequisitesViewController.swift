@@ -126,6 +126,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                 DispatchQueue.main.async {
                     DispatchQueue.main.async {
                         let controller = QRViewController.storyboardInstance()!
+                        controller.segueOut = false
                         let nc = UINavigationController(rootViewController: controller)
                         nc.modalPresentationStyle = .fullScreen
                         self.present(nc, animated: true)

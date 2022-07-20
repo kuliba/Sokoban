@@ -13,13 +13,65 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
+    let id: ProductData.ID
+    
+    let title: String
+    let subtitle: String?
+    
+    internal init(id: Int, title: String, subtitle: String?) {
+        self.id = id
+        self.title = title
+        self.subtitle = subtitle
+    }
+}
+
+class MyProductsSectionButtonItemViewModel: MyProductsSectionItemViewModel {
+
+    let type: ButtonItemType
+    let icon: Image
+    
+    init(type: ButtonItemType) {
+        
+        self.type = type
+        self.icon = type.icon
+        
+        super.init(id: Int.random(in: -9000000000 ..< -8000000000), title: type.title, subtitle: type.subtitle)
+    }
+    
+    enum ButtonItemType {
+        
+        case card
+        case deposit
+        
+        var icon: Image {
+            switch self {
+            case .card: return .ic24NewCardColor
+            case .deposit: return .ic24DepositPlusColor
+            }
+        }
+        
+        var title: String {
+            switch self {
+            case .card:
+                return "Хочу карту"
+            case .deposit:
+                return "Хочу вклад"
+            }
+        }
+        
+        var subtitle: String {
+            return "Бесплатно"
+        }
+    }
+    
+}
+
+class MyProductsSectionProductItemViewModel: MyProductsSectionItemViewModel {
+    
     @Published var state: State
     @Published var isMainScreenHidden: Bool
     
-    let id: Int
     let icon: Image?
-    let title: String
-    let subtitle: String?
     let number: String
     let numberCard: String
     let balance: String
@@ -44,10 +96,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
          paymentSystemIcon: Image? = nil,
          state: State = .normal) {
         
-        self.id = id
         self.icon = icon
-        self.title = title
-        self.subtitle = subtitle
         self.number = number
         self.numberCard = numberCard
         self.balance = balance
@@ -57,6 +106,8 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
         self.isNeedsActivated = isNeedsActivated
         self.isMainScreenHidden = isMainScreenHidden
         self.state = state
+        
+        super.init(id: id, title: title, subtitle: subtitle)
         
         bind()
     }
@@ -125,7 +176,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     }
 }
 
-extension MyProductsSectionItemViewModel {
+extension MyProductsSectionProductItemViewModel {
 
     var currencyBalance: String {
         NumberFormatter.currency(balance: balance)
@@ -212,11 +263,16 @@ enum MyProductsSectionItemAction {
     struct Tap: Action {
         let productId: MyProductsSectionItemViewModel.ID
     }
+    
+    struct PlaceholderTap: Action {
+        let type: MyProductsSectionButtonItemViewModel.ButtonItemType
+    }
+    
 }
 
 extension MyProductsSectionItemViewModel {
 
-    static let sample1 = MyProductsSectionItemViewModel(
+    static let sample1 = MyProductsSectionProductItemViewModel(
         id: 10002585800,
         icon: .init("Multibonus Card"),
         title: "Кредит",
@@ -228,7 +284,7 @@ extension MyProductsSectionItemViewModel {
         paymentSystemIcon: .init("Logo Visa")
     )
 
-    static let sample2 = MyProductsSectionItemViewModel(
+    static let sample2 = MyProductsSectionProductItemViewModel(
         id: 10002585801,
         icon: .init("Digital Card"),
         title: "Цифровая",
@@ -238,7 +294,7 @@ extension MyProductsSectionItemViewModel {
         balance: "19 547 ₽",
         paymentSystemIcon: .init("Logo Visa"))
 
-    static let sample3 = MyProductsSectionItemViewModel(
+    static let sample3 = MyProductsSectionProductItemViewModel(
         id: 10002585802,
         icon: .init("Salary Card"),
         title: "Зарплатная",
@@ -248,7 +304,7 @@ extension MyProductsSectionItemViewModel {
         balance: "19 547 ₽",
         paymentSystemIcon: .init("Logo Visa"))
 
-    static let sample4 = MyProductsSectionItemViewModel(
+    static let sample4 = MyProductsSectionProductItemViewModel(
         id: 10002585803,
         icon: .init("Want Card"),
         title: "Хочу карту",
@@ -257,7 +313,7 @@ extension MyProductsSectionItemViewModel {
         numberCard: "•  2953  •",
         balance: "19 547 ₽")
 
-    static let sample5 = MyProductsSectionItemViewModel(
+    static let sample5 = MyProductsSectionProductItemViewModel(
         id: 10002585804,
         icon: .init("Classic Card"),
         title: "Classic",
@@ -267,7 +323,7 @@ extension MyProductsSectionItemViewModel {
         balance: "19 547 ₽",
         paymentSystemIcon: .init("Logo Visa"))
 
-    static let sample6 = MyProductsSectionItemViewModel(
+    static let sample6 = MyProductsSectionProductItemViewModel(
         id: 10002585805,
         icon: .init("Multibonus Card"),
         title: "Мультибонус",
@@ -277,7 +333,7 @@ extension MyProductsSectionItemViewModel {
         balance: "19 547 ₽",
         paymentSystemIcon: .init("Logo Visa"))
 
-    static let sample7 = MyProductsSectionItemViewModel(
+    static let sample7 = MyProductsSectionProductItemViewModel(
         id: 10002585806,
         icon: .init("Multibonus Card"),
         title: "Кредит",
@@ -288,7 +344,7 @@ extension MyProductsSectionItemViewModel {
         dateLong: "•  29.08.22",
         paymentSystemIcon: .init("Logo Visa"))
 
-    static let sample8 = MyProductsSectionItemViewModel(
+    static let sample8 = MyProductsSectionProductItemViewModel(
         id: 10002585807,
         icon: .init("Digital Card"),
         title: "Цифровая",
@@ -299,7 +355,7 @@ extension MyProductsSectionItemViewModel {
         paymentSystemIcon: .init("Logo Visa"),
         state: .leftButton(.init(type: .activate, action: {})))
 
-    static let sample9 = MyProductsSectionItemViewModel(
+    static let sample9 = MyProductsSectionProductItemViewModel(
         id: 10002585808,
         icon: .init("Salary Card"),
         title: "Зарплатная",
@@ -309,4 +365,7 @@ extension MyProductsSectionItemViewModel {
         balance: "19 547 ₽",
         paymentSystemIcon: .init("Logo Visa"),
         state: .rightButton(.init(type: .add, action: {})))
+    
+    static let sample10 = MyProductsSectionButtonItemViewModel(type: .card)
+    
 }

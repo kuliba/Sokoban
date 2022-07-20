@@ -124,15 +124,20 @@ struct ProductProfileView: View {
             case let .meToMe(meToMeViewModel):
                 MeToMeView(viewModel: meToMeViewModel)
                     .edgesIgnoringSafeArea(.bottom)
-                    .frame(height: 540)
+                    .frame(height: 440)
             }
         })
         .sheet(item: $viewModel.sheet, content: { sheet in
             switch sheet.type {
             case let .printForm(printFormViewModel):
                 PrintFormView(viewModel: printFormViewModel)
+                
+            case .placesMap(let placesViewModel):
+                PlacesView(viewModel: placesViewModel)
+                
             }
         })
+        .textfieldAlert(alert: $viewModel.textFieldAlert)
     }
 }
 

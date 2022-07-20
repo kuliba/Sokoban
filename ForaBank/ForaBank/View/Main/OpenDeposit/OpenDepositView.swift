@@ -20,18 +20,10 @@ struct OpenDepositView: View {
                 
                 ForEach(viewModel.products) { productCard in
                     
-                        OfferProductView(viewModel: productCard)
-
+                    OfferProductView(viewModel: productCard)
+                    
                 }
             }
-            .navigationBarTitle(Text("Вклады"), displayMode: .inline)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarItems(
-                leading: Button(action: viewModel.navButtonBack.action, label: {
-                    viewModel.navButtonBack.icon
-                        .renderingMode(.template)
-                        .foregroundColor(.iconBlack)
-                }))
             .foregroundColor(.black)
             .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
                 
@@ -41,12 +33,16 @@ struct OpenDepositView: View {
                 }
             }
         }
+        .navigationBar(with: viewModel.navigationBar)
     }
 }
 
 struct OpenDepositView_Previews: PreviewProvider {
     
     static var previews: some View {
-        OpenDepositView(viewModel: .init(navButtonBack: .init(icon: .ic24ChevronLeft, action: {}), products: [.depositSample, .depositSample],  catalogType: .deposit))
+        OpenDepositView(viewModel:
+                .init(navigationBar: .init(title: "Вклады"),
+                      products: [.depositSample, .depositSample],
+                      catalogType: .deposit))
     }
 }

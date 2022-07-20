@@ -14,56 +14,71 @@ struct MyProductsMoneyView: View {
     var body: some View {
 
         VStack {
-
+            
             ZStack() {
-
+                
                 VStack {
-
-                    HStack(alignment: .bottom) {
-
-                        if viewModel.balance.count > 8 {
-
-                            VStack(alignment: .leading, spacing: 8) {
-
-                                Text(viewModel.title)
-                                    .font(.textH2SB20282())
-                                    .foregroundColor(.mainColorsBlack)
-
-                                Text(viewModel.decimalBalance)
-                                    .font(.textH2SB20282())
-                                    .foregroundColor(.mainColorsBlack)
-                            }
-
-                            Spacer()
-
-                        } else {
-
+                    
+                    HStack(alignment: .top) {
+                        
+                        if viewModel.isSingleLineBalance {
                             Text(viewModel.title)
                                 .font(.textH2SB20282())
                                 .foregroundColor(.mainColorsBlack)
-
+                            
+                            VStack(alignment: .trailing) {
+                                
+                                HStack {
+                                    
+                                    Spacer()
+                                    
+                                    Text(viewModel.balance)
+                                        .font(.textH2SB20282())
+                                        .foregroundColor(.mainColorsBlack)
+                                }
+                                HStack {
+                                    
+                                    Spacer()
+                                    
+                                    Text(viewModel.subtitle)
+                                        .font(.textBodySR12160())
+                                        .foregroundColor(.mainColorsGray)
+                                }
+                            }
+                            
+                        } else {
+                            VStack(alignment: .leading, spacing: 8) {
+                                
+                                Text(viewModel.title)
+                                    .font(.textH2SB20282())
+                                    .foregroundColor(.mainColorsBlack)
+                                
+                                VStack(alignment: .leading) {
+                                    
+                                    Text(viewModel.balance)
+                                        .font(.textH2SB20282())
+                                        .foregroundColor(.mainColorsBlack)
+                                    
+                                    HStack {
+                                        
+                                        Text(viewModel.subtitle)
+                                            .font(.textBodySR12160())
+                                            .foregroundColor(.mainColorsGray)
+                                        
+                                        Spacer()
+                                    }
+                                }
+                            }
+                            
                             Spacer()
-
-                            Text(viewModel.decimalBalance)
-                                .font(.textH2SB20282())
-                                .foregroundColor(.mainColorsBlack)
                         }
                         if let currencyButton = viewModel.currencyButton {
                             MyProductsMoneyViewButton(viewModel: currencyButton)
                         }
                     }
-                    .padding([.leading, .top], 20)
+                    .padding([.horizontal, .top], 20)
                     .padding(.bottom, 4)
 
-                    HStack {
-
-                        Spacer()
-
-                        Text(viewModel.subtitle)
-                            .font(.textBodySR12160())
-                            .foregroundColor(.mainColorsGray)
-                            .padding(.trailing)
-                    }
                 }
             }
             .fixedSize(horizontal: false, vertical: true)
@@ -88,12 +103,11 @@ extension MyProductsMoneyView {
         }
 
         var body: some View {
-// TODO: Оставил закомиченым пока не начнем реализацию кнопки
-//            Button {
-//
-//                viewModel.isSelected.toggle()
-//
-//            } label: {
+            Button {
+                
+                viewModel.isSelected.toggle()
+                
+            } label: {
 
                 ZStack {
 
@@ -115,7 +129,7 @@ extension MyProductsMoneyView {
 
                     }.padding(.vertical, 4)
                 }
-//            }
+            }
             .padding(.trailing, 19)
         }
     }

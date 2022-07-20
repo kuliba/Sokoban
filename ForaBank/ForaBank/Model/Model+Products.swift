@@ -584,6 +584,16 @@ extension Model {
         }
     }
     
+    func handleProductsUpdateCustomNameResponse(_ payload: ModelAction.Products.UpdateCustomName.Response) {
+        
+        switch payload {
+        case .complete(productId: let productId, name: _):
+            self.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productId))
+            
+        default: break
+        }
+    }
+    
     func handleProductDetails(_ payload: ModelAction.Products.ProductDetails.Request) {
         
         guard let token = token else {
@@ -601,7 +611,11 @@ extension Model {
         case .account:
             command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: payload.id, cardId: nil, depositId: nil))
         case .loan:
-            return
+            guard let product = self.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.id }), let product = product as? ProductLoanData else {
+                return
+            }
+            
+            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: product.settlementAccountId, cardId: nil, depositId: nil))
         }
         
         serverAgent.executeCommand(command: command) { result in

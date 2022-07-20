@@ -21,8 +21,21 @@ struct MyProductsSectionView: View {
 
             ForEach(viewModel.items) { model in
 
-                MyProductsSectionItemView(viewModel: model)
-                    .padding(.top, (viewModel.padding(model)))
+                switch model {
+                    
+                case let productModel as MyProductsSectionProductItemViewModel:
+                    MyProductsSectionItemView(viewModel: productModel)
+                        .padding(.top, (viewModel.padding(productModel)))
+                    
+                case let buttonModel as MyProductsSectionButtonItemViewModel:
+                    MyProductsSectionButtonItemView(viewModel: buttonModel)
+                        .padding(.top, (viewModel.padding(buttonModel)))
+                    
+                default:
+                    EmptyView()
+                }
+                
+                
             }
         }
     }
