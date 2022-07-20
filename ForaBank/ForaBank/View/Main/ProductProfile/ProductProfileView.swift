@@ -137,6 +137,7 @@ struct ProductProfileView: View {
                 
             }
         })
+        .textfieldAlert(alert: $viewModel.textFieldAlert)
     }
 }
 
