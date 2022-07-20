@@ -17,7 +17,7 @@ extension CurrencyExchangeSuccessView {
         let icon: Image
         let title: String
         let amount: String
-        let isDelay: Delayed
+        let delay: TimeInterval?
 
         enum State {
                 
@@ -33,28 +33,23 @@ extension CurrencyExchangeSuccessView {
                 }
             }
         }
-        
-        enum Delayed {
-            case no
-            case yes(Double)
-        }
             
-        internal init(icon: Image, title: String, amount: String, isDelay: Delayed) {
+        internal init(icon: Image, title: String, amount: String, delay: TimeInterval?) {
             self.icon = icon
             self.title = title
             self.amount = amount
-            self.isDelay = isDelay
+            self.delay = delay
         }
             
         init(state: State, amount: Double, currency: Currency,
-             isDelay: Delayed, model: Model ) {
+             delay: TimeInterval?, model: Model ) {
                 
             self.icon = state.appearance.icon
             self.title = state.appearance.text
             self.amount = model.amountFormatted(amount: amount,
                                                 currencyCode: currency.description,
                                                 style: .normal) ?? String(amount)
-            self.isDelay = isDelay
+            self.delay = delay
         }
 
     }
@@ -66,7 +61,6 @@ struct CurrencyExchangeSuccessView: View {
     
     @ObservedObject var viewModel: ViewModel
     @State var isPresent = false
-    @State var isAnimation = false
 
     var body: some View {
         
@@ -88,18 +82,15 @@ struct CurrencyExchangeSuccessView: View {
                         .font(.textH1SB24322())
                         .foregroundColor(.textSecondary)
                 }
-                .opacity(isAnimation ? 1 : 0)
-                .animation(.easeInOut(duration: 0.5), value: isAnimation)
-                .onAppear { isAnimation = true }
             }
             
         }.onAppear {
-            if case .yes(let delay) = viewModel.isDelay {
+            if let delay = viewModel.delay {
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                    isPresent = true
+                    withAnimation { isPresent = true }
                 }
             } else {
-                isPresent = true
+                withAnimation { isPresent = true }
             }
         }
         
@@ -132,19 +123,19 @@ extension CurrencyExchangeSuccessView.ViewModel {
                             .ViewModel(icon: Image("Done"),
                                        title: "Успешный перевод",
                                        amount: "100.23 $",
-                                       isDelay: .yes(2.0))
+                                       delay: 2.0)
     
     static var error = CurrencyExchangeSuccessView
                             .ViewModel(icon: Image("Denied"),
                                        title: "Операция неуспешна!",
                                        amount: "80.23 $",
-                                       isDelay: .no)
+                                       delay: nil )
     
     static var waiting = CurrencyExchangeSuccessView
                             .ViewModel(icon: Image("waiting"),
                                        title: "Операция в обработке!",
                                        amount: "99.23 $",
-                                       isDelay: .no)
+                                       delay: nil)
     
     
 }
