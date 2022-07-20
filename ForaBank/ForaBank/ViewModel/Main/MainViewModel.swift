@@ -208,23 +208,15 @@ class MainViewModel: ObservableObject, Resetable {
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Buy :
                     
-                        print("mdy: Buy-\(payload.code.description)") // -> USD, GBR, EUR
+                        updateCurrency(
+                            currencyType: payload.code.description,
+                            currencyOperation: .buy)
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Sell :
                         
-                        model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
-                        
-                        let currencyWalletList = model.currencyWalletList.value
-                        let currencyType = payload.code.description
-                        
-                        let items = model.reduceCurrencyWallet(currencyWalletList, currencyType: currencyType)
-                        
-                        link = .currencyWallet(.init(
-                            listViewModel: .init(model, currencyType: currencyType, items: items),
-                            swapViewModel: .sample,
-                            selectorViewModel: .init(model, state: .openAccount)) { [weak self] in
-                                self?.action.send(MainViewModelAction.CloseAction.Link())
-                            })
+                        updateCurrency(
+                            currencyType: payload.code.description,
+                            currencyOperation: .sell)
                         
                         // atm section
                     case _ as MainSectionViewModelAction.Atm.ButtonTapped:
@@ -253,6 +245,48 @@ class MainViewModel: ObservableObject, Resetable {
                     }.store(in: &bindings)
             }
         }
+    }
+    
+    private func updateCurrency(currencyType: String, currencyOperation: CurrencyOperation) {
+        
+        model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
+        
+        let currencyWalletList = model.currencyWalletList.value
+        let currencyList = model.currencyList.value
+        
+        let items = model.reduceCurrencyWallet(currencyWalletList, currencyType: currencyType)
+        let item = items.first(where: { $0.currencyType == currencyType })
+        let data = currencyList.first(where: { $0.code == currencyType })
+        let unicode = data?.currencySymbol
+        
+        guard let item = item, let unicode = unicode else {
+            return
+        }
+        
+        let rate = currencyOperation == .buy ? item.rateBuy : item.rateSell
+        let image = model.images.value[item.iconMd5hash]?.image
+        let currencyAmount = NumberFormatter.decimal(rate)
+        
+        let swapViewModel: CurrencySwapView.ViewModel = .init(
+            model,
+            haveCurrencySwap: .init(
+                icon: image,
+                currencyAmount: 1.00,
+                currencyType: currencyType,
+                quotesInfo: "1\(unicode) = \(rate) ₽"),
+            getCurrencySwap: .init(
+                icon: .init("Flag RUB"),
+                currencyAmount: currencyAmount,
+                currencyType: "RUB"),
+            currencyOperation: currencyOperation,
+            currencyType: currencyType)
+        
+        link = .currencyWallet(.init(
+            listViewModel: .init(model, currencyType: currencyType, items: items),
+            swapViewModel: swapViewModel,
+            selectorViewModel: .init(model, state: .openAccount)) { [weak self] in
+                self?.action.send(MainViewModelAction.CloseAction.Link())
+            })
     }
     
     private func update(_ sections: [MainSectionViewModel], with settings: MainSectionsSettings) {

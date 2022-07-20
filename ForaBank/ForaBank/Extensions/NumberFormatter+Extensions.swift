@@ -40,6 +40,23 @@ extension NumberFormatter {
         
         return formatter
     }
+    
+    static func decimal(_ value: String) -> Double {
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        formatter.locale = Locale(identifier: "ru_RU")
+        
+        let number = formatter.number(from: value)
+        
+        guard let number = number?.doubleValue else {
+            return 0
+        }
+        
+        return number
+    }
 
     //FIXME: refactor this
     static func decimal(totalBalance: String) -> String {

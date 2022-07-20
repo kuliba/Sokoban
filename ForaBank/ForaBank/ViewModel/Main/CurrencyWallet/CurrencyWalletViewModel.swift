@@ -16,8 +16,11 @@ class CurrencyWalletViewModel: ObservableObject {
     let swapViewModel: CurrencySwapView.ViewModel
     let selectorViewModel: CurrencySelectorView.ViewModel
     let backButton: NavigationButtonViewModel
+    let continueButton: ButtonSimpleView.ViewModel
     
     let title = "Обмен валют"
+    
+    private var bindings = Set<AnyCancellable>()
 
     init(listViewModel: CurrencyListView.ViewModel,
          swapViewModel: CurrencySwapView.ViewModel,
@@ -28,6 +31,20 @@ class CurrencyWalletViewModel: ObservableObject {
         self.swapViewModel = swapViewModel
         self.selectorViewModel = selectorViewModel
         self.backButton = .init(icon: .ic24ChevronLeft, action: action)
+        continueButton = .init(title: "Продолжить", style: .red) {}
+        
+        bind()
+    }
+    
+    private func bind() {
+        
+        listViewModel.$currencyType
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] currencyType in
+                
+                swapViewModel.currencyType = currencyType
+                
+            }.store(in: &bindings)
     }
 }
 

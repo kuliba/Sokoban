@@ -15,11 +15,21 @@ struct CurrencyWalletView: View {
 
     var body: some View {
 
-        ScrollView(showsIndicators: false) {
-
-            CurrencyListView(viewModel: viewModel.listViewModel)
-            CurrencySwapView(viewModel: viewModel.swapViewModel)
-            CurrencySelectorView(viewModel: viewModel.selectorViewModel)
+        VStack {
+            
+            ScrollView(showsIndicators: false) {
+                
+                CurrencyListView(viewModel: viewModel.listViewModel)
+                CurrencySwapView(viewModel: viewModel.swapViewModel)
+                
+                /*
+                 CurrencySelectorView(viewModel: viewModel.selectorViewModel)
+                */
+            }
+            
+            ButtonSimpleView(viewModel: viewModel.continueButton)
+                .frame(height: 48)
+                .padding(20)
         }
         .ignoreKeyboard()
         .navigationBarTitle(Text(viewModel.title), displayMode: .inline)
@@ -32,6 +42,8 @@ struct CurrencyWalletView: View {
         .onTapGesture {
             UIApplication.shared.endEditing()
         }
+        .padding(.vertical, 20)
+        .edgesIgnoringSafeArea(.bottom)
     }
 }
 

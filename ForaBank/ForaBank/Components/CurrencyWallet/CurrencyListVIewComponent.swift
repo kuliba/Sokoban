@@ -21,6 +21,7 @@ extension CurrencyListView {
 
         @Published var items: [ItemViewModel]
         @Published var currencyType: String
+        @Published var bottomSheet: BottomSheet?
 
         private var bindings = Set<AnyCancellable>()
         
@@ -45,8 +46,14 @@ extension CurrencyListView {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] items in
                     
+                    let items = reduce(items)
+                    
+                    guard items.isEmpty == false else {
+                        return
+                    }
+                    
                     withAnimation(.interactiveSpring()) {
-                        self.items = reduce(items)
+                        self.items = items
                     }
                     
                     let filterred = reduceIcons(self.items)
@@ -80,10 +87,15 @@ extension CurrencyListView {
                 .sink { [unowned self] action in
                     
                     switch action {
+                    case _ as CurrencyListAction.Button.Tapped:
+                        bottomSheet = .init(sheetType: .currencyRate(model))
+                        
                     case let payload as CurrencyListAction.Item.Tapped:
                         
                         currencyType = payload.currencyType
-                        model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
+                        
+                        model.action.send(ModelAction.Dictionary.UpdateCache.Request(type: .currencyWalletList, serial: nil))
+                        model.action.send(ModelAction.Dictionary.UpdateCache.Request(type: .currencyList, serial: nil))
                         
                         items.forEach { $0.isSelected = currencyType == $0.currencyType }
                         
@@ -91,6 +103,17 @@ extension CurrencyListView {
                         break
                     }
                 }.store(in: &bindings)
+        }
+        
+        struct BottomSheet: Identifiable {
+
+            let id = UUID()
+            let sheetType: BottomSheetType
+
+            enum BottomSheetType {
+
+                case currencyRate(Model)
+            }
         }
     }
 }
@@ -158,7 +181,21 @@ struct CurrencyListView: View {
                                     currencyType: itemViewModel.currencyType))
                             }
                     }
-                }.padding(20)
+                }.padding(.horizontal, 20)
+            }
+        }.bottomSheet(item: $viewModel.bottomSheet) { sheetType in
+            
+            switch sheetType.sheetType {
+            case let .currencyRate(model):
+                
+                if model.currencyWalletList.value.isEmpty == false {
+                    
+                    CurrencyRatesListView(viewModel: .init(model))
+                    
+                } else {
+                    
+                    CurrencyRatesListView.PlaceholderItemView()
+                }
             }
         }
     }

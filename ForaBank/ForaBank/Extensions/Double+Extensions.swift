@@ -13,7 +13,7 @@ extension Double {
         
         let currencyFormatter = NumberFormatter()
         currencyFormatter.numberStyle = .decimal
-        currencyFormatter.maximumFractionDigits = 2
+        currencyFormatter.maximumFractionDigits = 0
         currencyFormatter.minimumFractionDigits = 2
         
         if let priceString = currencyFormatter.string(from: NSNumber(value: self)) {
