@@ -121,7 +121,7 @@ extension ProductView {
                 }
                 
             default:
-                return product.productName
+                return product.displayName
             }
         }
         
