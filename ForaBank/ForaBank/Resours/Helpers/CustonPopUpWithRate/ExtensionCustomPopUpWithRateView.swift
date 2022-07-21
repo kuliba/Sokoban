@@ -308,6 +308,7 @@ extension CustomPopUpWithRateView {
                             self.viewModel.cardFromRealm = card
                             self.reversCard = ""
                             self.cardFromField.model = card
+                            self.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
                             self.hideView(self.cardFromListView, needHide: true) {
                                 if !self.cardToListView.isHidden {
                                     self.hideView(self.cardToListView, needHide: true) { }
@@ -331,7 +332,7 @@ extension CustomPopUpWithRateView {
                 vc.didCardTapped = { card in
                     self.viewModel.cardFrom = card
                     self.reversCard = ""
-                    self.bottomView.models.from = card.currency ?? ""
+                    self.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
                     self.cardFromField.cardModel = card
                     if !self.cardFromListView.isHidden {
                         self.hideView(self.cardFromListView, needHide: true) {

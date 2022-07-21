@@ -19,9 +19,8 @@ class BottomInputViewWithRateView: UIView {
     /// Меняем символ валюты в  textField
     var currencySymbol = "" {
         didSet {
-            guard moneyFormatter != nil else { return }
             if isEnable, let amount = amountTextField.text {
-                
+
                 setupMoneyController(amount: amount, currency: self.currencySymbol)
             }
         }
@@ -32,7 +31,6 @@ class BottomInputViewWithRateView: UIView {
     /// Инициализируем модели карт
     var models = (to: "", from: "") {
         didSet {
-            currencySymbol = models.to.getSymbol() ?? ""
             if (models.to != models.from) && (models.to != "" && models.from != "") {
                 DispatchQueue.main.async {
                     self.exchangeRate(self.models.to, self.models.from)
@@ -119,7 +117,6 @@ class BottomInputViewWithRateView: UIView {
             self.tempTextFieldValue = unformatText
             self.doneButtonIsEnabled(unformatText.isEmpty)
             
-            self.currencySymbol = self.models.to.getSymbol() ?? ""
             UIView.animate(withDuration: 0.2) {
                 self.topLabel.alpha = text.isEmpty ? 0 : 1
                 self.buttomLabel.alpha = text.isEmpty ? 0 : 1
