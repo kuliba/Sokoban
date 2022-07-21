@@ -81,17 +81,16 @@ extension PTSectionLatestPaymentsView {
                     case .available:
                        
                         if !model.latestPayments.value.isEmpty {
-                            let updatedItems = itemsReduce(latest: model.latestPayments.value)
                             
                             withAnimation(.easeInOut(duration: 1)) {
-                                self.items = updatedItems
+                                self.items = itemsReduce(latest: model.latestPayments.value)
                             }
                         }
                         
                     default: break
                     }
                     
-                }.store(in: &bindings)
+            }.store(in: &bindings)
             
             model.latestPayments
                 .combineLatest(model.latestPaymentsUpdating)
@@ -101,11 +100,9 @@ extension PTSectionLatestPaymentsView {
                     let latestPayments = data.0
                     let isLatestPaymentsUpdating = data.1
                     
-                    let updatedItems = itemsReduce(latest: latestPayments,
-                                                  isUpdating: isLatestPaymentsUpdating)
-                    
                     withAnimation(.easeInOut(duration: 1)) {
-                        self.items = updatedItems
+                        self.items = itemsReduce(latest: latestPayments,
+                                                 isUpdating: isLatestPaymentsUpdating)
                     }
                 
             }.store(in: &bindings)
