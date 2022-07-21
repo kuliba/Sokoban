@@ -117,6 +117,9 @@ extension ContactInputViewController {
             self.surnameField.isHidden = byPhone ? true : false
             self.nameField.isHidden = byPhone ? true : false
             self.secondNameField.isHidden = byPhone ? true : false
+            self.foraSwitchView.bankByPhoneSwitch.isOn = byPhone ? true : false
+            self.foraSwitchView.bankByPhoneSwitch.layer.borderColor = byPhone ? #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            self.foraSwitchView.bankByPhoneSwitch.thumbTintColor = byPhone ? #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             self.stackView.layoutIfNeeded()
         }
         
