@@ -243,10 +243,6 @@
 		0C6508CF28299C6D0058916A /* PaymentsTransfersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */; };
 		0C6508D228299DAF0058916A /* PaymentsTransfersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */; };
 		0C78331C287DC201003ADC73 /* MainSectionCurrencyMetalComponentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78331B287DC201003ADC73 /* MainSectionCurrencyMetalComponentMock.swift */; };
-		0C78331E2883354F003ADC73 /* CurrencyRatesListVIewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78331D2883354F003ADC73 /* CurrencyRatesListVIewComponent.swift */; };
-		0C783321288345A6003ADC73 /* CurrencyRatesListViewComponentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C783320288345A6003ADC73 /* CurrencyRatesListViewComponentMock.swift */; };
-		0C78331E2883354F003ADC73 /* CurrencyBigListVIewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78331D2883354F003ADC73 /* CurrencyBigListVIewComponent.swift */; };
-		0C783321288345A6003ADC73 /* CurrencyBigListViewComponentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C783320288345A6003ADC73 /* CurrencyBigListViewComponentMock.swift */; };
 		0C78332328847DFC003ADC73 /* CurrencyExchageSuccessComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78332228847DFC003ADC73 /* CurrencyExchageSuccessComponent.swift */; };
 		0C8CF960282179E80047DDAE /* SendMailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8CF95F282179E80047DDAE /* SendMailView.swift */; };
 		0C99077728733835000831BB /* MainSectionCurrencyMetallComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C99077628733835000831BB /* MainSectionCurrencyMetallComponent.swift */; };
@@ -328,6 +324,8 @@
 		50A19943280F1AF80094CFA5 /* SwipeSidesModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A19942280F1AF80094CFA5 /* SwipeSidesModifier.swift */; };
 		50A39A96286E1E9000C13756 /* InformerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A39A95286E1E9000C13756 /* InformerData.swift */; };
 		50A9671C287C918100B18490 /* ProductSelectorViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A9671B287C918100B18490 /* ProductSelectorViewComponent.swift */; };
+		50BE3FB72889354D006BA4E1 /* CurrencyRatesListVIewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50BE3FB62889354C006BA4E1 /* CurrencyRatesListVIewComponent.swift */; };
+		50C66A4228893CA5001957D9 /* CurrencyRatesListViewComponentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C66A4128893CA5001957D9 /* CurrencyRatesListViewComponentMock.swift */; };
 		50D3D4842865C006002D7FB4 /* CurrencySwapViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D3D4832865C006002D7FB4 /* CurrencySwapViewComponent.swift */; };
 		50D6C951287F45EE009F2193 /* ProductAccountViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D6C950287F45EE009F2193 /* ProductAccountViewComponent.swift */; };
 		50E3A05B28390935003FF316 /* GetProductListByTypeResponseMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 50E3A05A28390935003FF316 /* GetProductListByTypeResponseMin.json */; };
@@ -1633,10 +1631,6 @@
 		0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersView.swift; sourceTree = "<group>"; };
 		0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModel.swift; sourceTree = "<group>"; };
 		0C78331B287DC201003ADC73 /* MainSectionCurrencyMetalComponentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionCurrencyMetalComponentMock.swift; sourceTree = "<group>"; };
-		0C78331D2883354F003ADC73 /* CurrencyRatesListVIewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyRatesListVIewComponent.swift; sourceTree = "<group>"; };
-		0C783320288345A6003ADC73 /* CurrencyRatesListViewComponentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyRatesListViewComponentMock.swift; sourceTree = "<group>"; };
-		0C78331D2883354F003ADC73 /* CurrencyBigListVIewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyBigListVIewComponent.swift; sourceTree = "<group>"; };
-		0C783320288345A6003ADC73 /* CurrencyBigListViewComponentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyBigListViewComponentMock.swift; sourceTree = "<group>"; };
 		0C78332228847DFC003ADC73 /* CurrencyExchageSuccessComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchageSuccessComponent.swift; sourceTree = "<group>"; };
 		0C8CF95F282179E80047DDAE /* SendMailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMailView.swift; sourceTree = "<group>"; };
 		0C99077628733835000831BB /* MainSectionCurrencyMetallComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionCurrencyMetallComponent.swift; sourceTree = "<group>"; };
@@ -1717,6 +1711,8 @@
 		50A19942280F1AF80094CFA5 /* SwipeSidesModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeSidesModifier.swift; sourceTree = "<group>"; };
 		50A39A95286E1E9000C13756 /* InformerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformerData.swift; sourceTree = "<group>"; };
 		50A9671B287C918100B18490 /* ProductSelectorViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSelectorViewComponent.swift; sourceTree = "<group>"; };
+		50BE3FB62889354C006BA4E1 /* CurrencyRatesListVIewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyRatesListVIewComponent.swift; sourceTree = "<group>"; };
+		50C66A4128893CA5001957D9 /* CurrencyRatesListViewComponentMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyRatesListViewComponentMock.swift; sourceTree = "<group>"; };
 		50D3D4832865C006002D7FB4 /* CurrencySwapViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySwapViewComponent.swift; sourceTree = "<group>"; };
 		50D6C950287F45EE009F2193 /* ProductAccountViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductAccountViewComponent.swift; sourceTree = "<group>"; };
 		50E3A05A28390935003FF316 /* GetProductListByTypeResponseMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductListByTypeResponseMin.json; sourceTree = "<group>"; };
@@ -3424,7 +3420,7 @@
 		0C78331F28834564003ADC73 /* CurrencyWallet */ = {
 			isa = PBXGroup;
 			children = (
-				0C783320288345A6003ADC73 /* CurrencyRatesListViewComponentMock.swift */,
+				50C66A4128893CA5001957D9 /* CurrencyRatesListViewComponentMock.swift */,
 			);
 			path = CurrencyWallet;
 			sourceTree = "<group>";
@@ -3516,9 +3512,8 @@
 			isa = PBXGroup;
 			children = (
 				5059D4492863B76E00DA446D /* CurrencyListVIewComponent.swift */,
-				0C78331D2883354F003ADC73 /* CurrencyRatesListVIewComponent.swift */,
 				0C78332228847DFC003ADC73 /* CurrencyExchageSuccessComponent.swift */,
-				0C78331D2883354F003ADC73 /* CurrencyBigListVIewComponent.swift */,
+				50BE3FB62889354C006BA4E1 /* CurrencyRatesListVIewComponent.swift */,
 				0C0DED9F28858F1B00C66AED /* CurrencyExchangeTableConfirmationComponent.swift */,
 				50D3D4832865C006002D7FB4 /* CurrencySwapViewComponent.swift */,
 				50D6C950287F45EE009F2193 /* ProductAccountViewComponent.swift */,
@@ -7857,6 +7852,7 @@
 				77E1803327AC04320006ACC9 /* NotificationData.swift in Sources */,
 				0CA1CDE9284551A000021671 /* PaymentData.swift in Sources */,
 				6862B55427B688CC006E833F /* AuthPinCodeViewModel.swift in Sources */,
+				50C66A4228893CA5001957D9 /* CurrencyRatesListViewComponentMock.swift in Sources */,
 				774A8B5E2865FDAF00B81140 /* PaymentsProductSelectorViewComponet.swift in Sources */,
 				50D3D4842865C006002D7FB4 /* CurrencySwapViewComponent.swift in Sources */,
 				77DC12652770F08300C917B0 /* SVGImageData.swift in Sources */,
@@ -8139,10 +8135,8 @@
 				77B6B35928509A0300E3001B /* ProductStatementsUpdateState.swift in Sources */,
 				77F1581F2810909B00CA5E4E /* SessionAgent.swift in Sources */,
 				770DCE8F27BBE6AB004099C1 /* Model+Auth.swift in Sources */,
-				0C78331E2883354F003ADC73 /* CurrencyRatesListVIewComponent.swift in Sources */,
 				68D099D2273A73CA0017D777 /* SettingViewCoordinator.swift in Sources */,
 				68F5E1242858F1B0003018E5 /* TransferByRequisitsView+Legacy.swift in Sources */,
-				0C783321288345A6003ADC73 /* CurrencyRatesListViewComponentMock.swift in Sources */,
 				68D3F8D527CECB00002753BD /* ProductProfileButtonsViewComponent.swift in Sources */,
 				68D3F8D527CECB00002753BD /* ProductProfileButtonsViewComponent.swift in Sources */,
 				77EC58F4277381970054D75C /* OperationType.swift in Sources */,
@@ -8413,6 +8407,7 @@
 				0B2B29212808BD79001C6380 /* DocumentCollectionViewController.swift in Sources */,
 				EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */,
 				ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */,
+				50BE3FB72889354D006BA4E1 /* CurrencyRatesListVIewComponent.swift in Sources */,
 				ED302A3126D3E56600161243 /* UIImage.swift in Sources */,
 				77A411ED27F4325100D36E46 /* Model+PaymentsTaxesFSSPMock.swift in Sources */,
 				0CC8FCA7283145E900F0E9BD /* PaymentsTransfersViewModel+Preview.swift in Sources */,
