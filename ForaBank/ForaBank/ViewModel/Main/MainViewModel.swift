@@ -45,7 +45,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.sections = [MainSectionProductsView.ViewModel(model),
                          MainSectionFastOperationView.ViewModel(),
                          MainSectionPromoView.ViewModel(model),
-                         MainSectionCurrencyMetallView.ViewModel(model),
+                         MainSectionCurrencyView.ViewModel(model),
                          MainSectionOpenProductView.ViewModel(model),
                          MainSectionAtmView.ViewModel.initial]
         
