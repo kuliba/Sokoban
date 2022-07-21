@@ -23,6 +23,7 @@ class MainViewModel: ObservableObject, Resetable {
     @Published var isLinkActive: Bool = false
     @Published var isTabBarHidden: Bool = false
     @Published var bottomSheet: BottomSheet?
+    @Published var alert: Alert.ViewModel?
     
     var rootActions: RootViewModel.RootActions?
     
@@ -166,9 +167,22 @@ class MainViewModel: ObservableObject, Resetable {
                                     self?.action.send(MainViewModelAction.CloseAction.Sheet())
                                 })))
                             case .byQr:
-                                link = .qrScanner(.init(closeAction: { [weak self] in
-                                    self?.action.send(MainViewModelAction.CloseAction.Link())
-                                }))
+                                if model.cameraAgent.isCameraAvailable {
+                                    model.cameraAgent.requestPermissions(completion: { available in
+                                        
+                                        if available {
+                                            self.link = .qrScanner(.init(closeAction: { [weak self] in
+                                                self?.action.send(MainViewModelAction.CloseAction.Link())
+                                            }))
+                                        } else {
+                                            self.alert = .init(
+                                                title: "Внимание",
+                                                message: "Для сканирования QR кода, необходим доступ к камере",
+                                                primary: .init(type: .cancel, title: "Понятно", action: {
+                                                }))
+                                        }
+                                    })
+                                }
                             }
                             
                         default:

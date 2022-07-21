@@ -53,13 +53,18 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
         pdfFile.add_CornerRadius(30)
         zap.add_CornerRadius(30)
         info.add_CornerRadius(30)
-        navigationController?.isNavigationBarHidden = true
         
         operatorsList = getOperatorsList(model: Model.shared)
         setupLayer()
         startQRCodeScanning()
         view.insertSubview(qrView, at: 1)
         backButton.setupButtonRadius()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        navigationController?.isNavigationBarHidden = true
+        self.tabBarController?.tabBar.layer.zPosition = -1
     }
     
     public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
@@ -112,7 +117,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
 
         }
 
-        viewModel?.closeAction()
+        
         let navController = UINavigationController(rootViewController: controller)
         navController.modalPresentationStyle = .custom
         navController.transitioningDelegate = self
@@ -285,6 +290,12 @@ extension QRViewController {
                 }
             }
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        self.tabBarController?.tabBar.layer.zPosition = 0
+        navigationController?.isNavigationBarHidden = false
     }
 
 }
