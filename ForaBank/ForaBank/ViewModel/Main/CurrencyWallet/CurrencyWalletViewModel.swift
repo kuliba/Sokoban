@@ -8,30 +8,51 @@
 import SwiftUI
 import Combine
 
+protocol CurrencyWalletItem: Hashable {}
+
 // MARK: - ViewModel
 
 class CurrencyWalletViewModel: ObservableObject {
+    
+    @Published var state: ButtonActionState
 
     let listViewModel: CurrencyListView.ViewModel
     let swapViewModel: CurrencySwapView.ViewModel
     let selectorViewModel: CurrencySelectorView.ViewModel
     let backButton: NavigationButtonViewModel
-    let continueButton: ButtonSimpleView.ViewModel
     
+    lazy var continueButton: ButtonSimpleView.ViewModel = .init(title: "Продолжить", style: .red) { [weak self] in
+
+        guard let self = self else { return }
+        
+        self.state = .spinner
+        self.model.action.send(ModelAction.Products.Update.Fast.All())
+    }
+    
+    let model: Model
     let title = "Обмен валют"
     
     private var bindings = Set<AnyCancellable>()
+    
+    enum ButtonActionState {
+        
+        case button
+        case spinner
+    }
 
-    init(listViewModel: CurrencyListView.ViewModel,
+    init(_ model: Model,
+         state: ButtonActionState = .button,
+         listViewModel: CurrencyListView.ViewModel,
          swapViewModel: CurrencySwapView.ViewModel,
          selectorViewModel: CurrencySelectorView.ViewModel,
          action: @escaping () -> Void) {
 
+        self.model = model
+        self.state = state
         self.listViewModel = listViewModel
         self.swapViewModel = swapViewModel
         self.selectorViewModel = selectorViewModel
         self.backButton = .init(icon: .ic24ChevronLeft, action: action)
-        continueButton = .init(title: "Продолжить", style: .red) {}
         
         bind()
     }

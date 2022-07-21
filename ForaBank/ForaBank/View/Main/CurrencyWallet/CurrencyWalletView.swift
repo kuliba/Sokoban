@@ -54,6 +54,7 @@ struct CurrencyWalletView: View {
 struct CurrencyWalletView_Previews: PreviewProvider {
     static var previews: some View {
         CurrencyWalletView(viewModel: .init(
+            .emptyMock,
             listViewModel: .sample,
             swapViewModel: .sample,
             selectorViewModel: .sample) {})

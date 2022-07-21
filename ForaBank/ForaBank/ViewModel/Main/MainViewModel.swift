@@ -269,6 +269,11 @@ class MainViewModel: ObservableObject, Resetable {
         let currencyAmount = NumberFormatter.decimal(currencyRate)
         let image = model.images.value[item.iconMd5hash]?.image
         
+        let listViewModel: CurrencyListView.ViewModel = .init(
+            model,
+            currencyType: currencyType,
+            items: items)
+        
         let swapViewModel: CurrencySwapView.ViewModel = .init(
             model,
             currencySwap: .init(
@@ -284,12 +289,15 @@ class MainViewModel: ObservableObject, Resetable {
             currencyType: currencyType,
             currencyRate: currencyAmount)
         
-        link = .currencyWallet(.init(
-            listViewModel: .init(model, currencyType: currencyType, items: items),
+        let walletViewModel: CurrencyWalletViewModel = .init(
+            model,
+            listViewModel: listViewModel,
             swapViewModel: swapViewModel,
             selectorViewModel: .init(model, state: .openAccount)) { [weak self] in
                 self?.action.send(MainViewModelAction.CloseAction.Link())
-            })
+            }
+        
+        link = .currencyWallet(walletViewModel)
     }
     
     private func update(_ sections: [MainSectionViewModel], with settings: MainSectionsSettings) {
