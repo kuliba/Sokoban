@@ -133,6 +133,9 @@ struct MainView: View {
                 }
             }
         }
+        .alert(item: $viewModel.alert, content: { alertViewModel in
+            Alert(with: alertViewModel)
+        })
         .tabBar(isHidden: $viewModel.isTabBarHidden)
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(leading:

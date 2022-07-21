@@ -12,6 +12,7 @@
       "branch": "АКБ \"ФОРА-БАНК\" (АО)",
       "ownerID": 10001639855,
       "accountNumber": "40817810000000000001",
+      "cardID": 10001639855,
       "allowDebit": true,
       "allowCredit": true,
       "customName": "Моя карта",

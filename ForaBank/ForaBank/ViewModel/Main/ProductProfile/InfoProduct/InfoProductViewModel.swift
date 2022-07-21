@@ -75,7 +75,7 @@ class InfoProductViewModel: ObservableObject {
             if info {
                 
                 self.title = "Информация по вкладу"
-                model.action.send(ModelAction.Deposits.Info.Request(id: product.id))
+                model.action.send(ModelAction.Deposits.Info.Single.Request(productId: product.id))
                 self.shareButton = nil
 
             } else {
@@ -95,7 +95,7 @@ class InfoProductViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
-                case let payload as ModelAction.Deposits.Info.Response:
+                case let payload as ModelAction.Deposits.Info.Single.Response:
                     switch payload {
                     case .success(let data):
                         
