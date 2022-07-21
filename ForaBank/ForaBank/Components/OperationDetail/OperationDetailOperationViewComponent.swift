@@ -43,7 +43,7 @@ extension OperationDetailViewModel {
         init(productStatement: ProductStatementData, model: Model) {
 
             let image = productStatement.svgImage?.image
-            let dateFormatted = DateFormatter.operation.string(from: productStatement.date)
+            let dateFormatted = DateFormatter.operation.string(from: productStatement.tranDate ?? productStatement.date)
 
             switch productStatement.paymentDetailType {
             case .insideBank:
