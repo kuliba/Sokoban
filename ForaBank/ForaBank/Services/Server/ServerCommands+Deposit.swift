@@ -23,7 +23,7 @@ extension ServerCommands {
             
             struct Payload: Encodable {
                 
-                let id: Int
+                let id: ProductData.ID
             }
             
             struct Response: ServerResponse {
@@ -33,10 +33,16 @@ extension ServerCommands {
                 let data: DepositInfoDataItem?
             }
             
-            internal init(token: String, payload: Payload) {
+            init(token: String, payload: Payload) {
                 
                 self.token = token
                 self.payload = payload
+            }
+            
+            init(token: String, productId: ProductData.ID) {
+                
+                self.token = token
+                self.payload = .init(id: productId)
             }
         }
         

@@ -96,13 +96,47 @@ class ProductDepositData: ProductData {
 //MARK: - Helpers
 
 extension ProductDepositData {
-    
-    var isTransferEnabled: Bool {
+        
+    func availableTransferType(with info: DepositInfoDataItem?) -> TransferType? {
         
         guard let endDate = endDate else {
-            return false
+            return nil
         }
+
+        if depositProductId == Self.foraHitProductId {
+            
+            // Fora Hit Deposit
+
+            if endDate > Date() {
+                
+                guard let interestAmount = info?.sumPayPrc, interestAmount > 0 else {
+                    return nil
+                }
+                
+                return .interest
+                
+            } else {
+                
+                return .remains
+            }
+
+        } else {
+            
+            // All other deposits
+            
+            guard endDate <= Date() else {
+                return nil
+            }
+            
+            return .remains
+        }
+    }
+    
+    static let foraHitProductId = 10000003792
+    
+    enum TransferType {
         
-        return endDate <= Date()
+        case remains
+        case interest
     }
 }

@@ -60,7 +60,7 @@ class ProductProfileViewModel: ObservableObject {
         // status bar
         self.navigationBar = .init(product: product, dismissAction: dismissAction)
         self.product = productViewModel
-        self.buttons = .init(with: product)
+        self.buttons = .init(with: product, depositInfo: model.depositsInfo.value[product.id])
         self.accentColor = Self.accentColor(with: product)
         self.historyPool = [:]
         self.model = model
@@ -72,6 +72,7 @@ class ProductProfileViewModel: ObservableObject {
         let historyViewModel = makeHistoryViewModel(productType: product.productType, productId: product.id, model: model)
         self.history = historyViewModel
         self.historyPool[product.id] = historyViewModel
+        bind(product: productViewModel)
         bind(history: historyViewModel)
         bind(buttons: buttons)
 
@@ -87,9 +88,14 @@ class ProductProfileViewModel: ObservableObject {
                 case _ as ProductProfileViewModelAction.PullToRefresh:
                     model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: product.activeProductId))
                     model.action.send(ModelAction.Statement.List.Request(productId: product.activeProductId, direction: .latest))
-                    if product.productType == .loan {
-                        
+                    switch product.productType {
+                    case .deposit:
+                        model.action.send(ModelAction.Deposits.Info.Single.Request(productId: product.activeProductId))
+                    case .loan:
                         model.action.send(ModelAction.Loans.Update.Single.Request(productId: product.activeProductId))
+                        
+                    default:
+                        break
                     }
                     
                 case let payload as ProductProfileViewModelAction.OptionsPannel.Show:
@@ -147,10 +153,7 @@ class ProductProfileViewModel: ObservableObject {
                 case let payload as ModelAction.Products.UpdateCustomName.Response:
 
                     switch payload {
-
                     case .complete(productId: let productId, name: let name):
-                        
-                        
                         guard let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == productId }) else {
                             return
                         }
@@ -220,7 +223,7 @@ class ProductProfileViewModel: ObservableObject {
                 
                 // buttons update
                 withAnimation {
-                    buttons.update(with: product)
+                    buttons.update(with: product, depositInfo: model.depositsInfo.value[product.id])
                 }
                 
                 bind(buttons: buttons)
@@ -269,6 +272,25 @@ class ProductProfileViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    func bind(product: ProductProfileCardView.ViewModel) {
+        
+        product.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as ProductProfileCardViewModelAction.MoreButtonTapped:
+                    let myProductsViewModel = MyProductsViewModel(model, dismissAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Link.Close())})
+                    link = .myProducts(myProductsViewModel)
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+        
     }
     
     func bind(history: ProductProfileHistoryView.ViewModel?) {
@@ -323,13 +345,27 @@ class ProductProfileViewModel: ObservableObject {
                             
                         case .deposit:
                             guard let depositProduct = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) as? ProductDepositData,
-                                    let balance = depositProduct.balance else {
+                                  let depositInfo = model.depositsInfo.value[self.product.activeProductId],
+                                  let transferType = depositProduct.availableTransferType(with: depositInfo) else {
                                 return
                             }
                             
-                            let meToMeViewModel = MeToMeViewModel(type: .transferDeposit(depositProduct, balance), closeAction: {})
-                            self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
-                            
+                            switch transferType {
+                            case .remains:
+                                guard let balance = depositProduct.balance else {
+                                    return
+                                }
+                                let meToMeViewModel = MeToMeViewModel(type: .transferDepositRemains(depositProduct, balance), closeAction: {})
+                                self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
+
+                            case .interest:
+                                guard let interest = depositInfo.sumPayPrc else {
+                                    return
+                                }
+                                let meToMeViewModel = MeToMeViewModel(type: .transferDepositInterest(depositProduct, interest), closeAction: {})
+                                self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
+                            }
+   
                         default:
                             break
                         }
@@ -590,6 +626,7 @@ extension ProductProfileViewModel {
         case productInfo(InfoProductViewModel)
         case productStatement(ProductStatementViewModel)
         case meToMeExternal(MeToMeExternalViewModel)
+        case myProducts(MyProductsViewModel)
     }
     
     struct Sheet: Identifiable {

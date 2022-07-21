@@ -501,6 +501,8 @@ extension ProductProfileHistoryView {
                 
                 Spacer()
                 
+                // temporally off
+                /*
                 Button(action: viewModel.button.action) {
                     
                     ZStack {
@@ -517,6 +519,7 @@ extension ProductProfileHistoryView {
                 }
                 .buttonStyle(PushButtonStyle())
                 .frame(width: 32, height: 32)
+                 */
             }
         }
     }

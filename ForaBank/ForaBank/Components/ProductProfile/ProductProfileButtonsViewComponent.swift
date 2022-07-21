@@ -23,25 +23,25 @@ extension ProductProfileButtonsView {
             self.buttons = buttons
         }
         
-        init(with product: ProductData) {
+        init(with product: ProductData, depositInfo: DepositInfoDataItem?) {
             
             self.buttons = []
-            self.buttons = updatedButtons(for: product)
+            self.buttons = updatedButtons(for: product, depositInfo: depositInfo)
         }
 
-        func update(with product: ProductData) {
+        func update(with product: ProductData, depositInfo: DepositInfoDataItem?) {
             
-            self.buttons = updatedButtons(for: product)
+            self.buttons = updatedButtons(for: product, depositInfo: depositInfo)
         }
         
-        private func updatedButtons(for product: ProductData) -> [ButtonIconTextRectView.ViewModel] {
+        private func updatedButtons(for product: ProductData, depositInfo: DepositInfoDataItem?) -> [ButtonIconTextRectView.ViewModel] {
             
             var result = [ButtonIconTextRectView.ViewModel]()
             for type in ButtonType.allCases {
                 
                 let icon = buttonIcon(for: type, for: product)
                 let title = buttonName(for: type, for: product)
-                let isEnabled = buttonEnabled(for: type, for: product)
+                let isEnabled = buttonEnabled(for: type, for: product, depositInfo: depositInfo)
                 
                 result.append(.init(id: type.rawValue,
                                     icon: icon,
@@ -53,7 +53,7 @@ extension ProductProfileButtonsView {
             return result
         }
               
-        func buttonEnabled(for buttonType: ButtonType, for product: ProductData) -> Bool {
+        func buttonEnabled(for buttonType: ButtonType, for product: ProductData, depositInfo: DepositInfoDataItem?) -> Bool {
             
             switch buttonType {
             case .topLeft:
@@ -72,7 +72,7 @@ extension ProductProfileButtonsView {
                     return cardProduct.isBlocked ? false : true
                     
                 case let depositProduct as ProductDepositData:
-                    return depositProduct.isTransferEnabled
+                    return depositProduct.availableTransferType(with: depositInfo) != nil
                     
                 case _ as ProductLoanData: return false
                 default: return true
