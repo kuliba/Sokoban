@@ -115,17 +115,26 @@ class ProductProfileViewModel: ObservableObject {
                     alert = .init(title: "Активировать карту?", message: "После активации карта будет готова к использованию", primary: .init(type: .default, title: "Отмена", action: { [weak self] in
                         self?.alert = nil
                     }), secondary: .init(type: .default, title: "Ok", action: { [weak self] in
-                        self?.model.action.send(ModelAction.Card.Block.Request(cardId: 1))
+                        //TODO: implemetation required 
                         self?.alert = nil
                     }))
                     
                 case _ as ProductProfileViewModelAction.BlockProduct:
-                    alert = .init(title: "Заблокировать карту?", message: "Карту можно будет разблокироать в приложении или в колл-центре", primary: .init(type: .default, title: "Отмена", action: { [weak self] in
-                        self?.alert = nil
-                    }), secondary: .init(type: .default, title: "Ok", action: { [weak self] in
-                        self?.model.action.send(ModelAction.Card.Unblock.Request(cardId: 1))
-                        self?.alert = nil
-                    }))
+                    
+                    guard let productData = productData else {
+                        return
+                    }
+                    
+                    alert = alertBlockedCard(with: productData)
+                    
+                case _ as ProductProfileViewModelAction.UnBlockProduct:
+                    
+                    guard let productData = productData else {
+                        return
+                    }
+                    
+                    alert = alertBlockedCard(with: productData)
+                    
                 case _ as ProductProfileViewModelAction.Link.PlacesMap:
                     guard let placesViewModel = PlacesViewModel(model) else {
                         return
@@ -170,10 +179,49 @@ class ProductProfileViewModel: ObservableObject {
                         }))
                     }
 
+                case let payload as ModelAction.Card.Block.Response:
+                    switch payload {
+                    case .success:
+                        
+                        self.model.action.send(ModelAction.Products.Update.ForProductType.init(productType: .card))
+                        
+                    case .failure(let errorMessage):
+                        alert = .init(title: "Ошибка", message: errorMessage, primary: .init(type: .default, title: "Ok", action: { [weak self] in
+                            self?.alert = nil
+                        }))
+                    }
+                    
+                case let payload as ModelAction.Card.Unblock.Response:
+                    switch payload {
+                    case .success:
+                        
+                        self.model.action.send(ModelAction.Products.Update.ForProductType.init(productType: .card))
+
+                    case .failure(let errorMessage):
+                        alert = .init(title: "Ошибка", message: errorMessage, primary: .init(type: .default, title: "Ok", action: { [weak self] in
+                            self?.alert = nil
+                        }))
+                    }
                     default: break
                 }
             }.store(in: &bindings)
         
+        model.products
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] product in
+
+                guard let productData = productData else {
+                    return
+                }
+                
+                withAnimation {
+                    buttons.update(with: productData)
+                }
+                
+                bind(buttons: buttons)
+
+            }.store(in: &bindings)
+
         model.loans
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] loans in
@@ -387,7 +435,19 @@ class ProductProfileViewModel: ObservableObject {
                         
                         switch product.productType {
                         case .card:
-                            print("block/unblock")
+                            
+                            guard let productCard = productData as? ProductCardData else {
+                                return
+                            }
+                            
+                            if productCard.isBlocked {
+                                
+                                self.action.send(ProductProfileViewModelAction.UnBlockProduct(productId: productCard.id))
+
+                            } else {
+                                
+                                self.action.send(ProductProfileViewModelAction.BlockProduct(productId: productCard.id))
+                            }
                             
                         case .account:
                             print("disabled")
@@ -499,6 +559,49 @@ class ProductProfileViewModel: ObservableObject {
         case .account: return "Название счета"
         default: return nil
         }
+    }
+    
+    func alertBlockedCard(with product: ProductData) -> Alert.ViewModel? {
+        
+        guard let product = product as? ProductCardData, let cardNumber = product.number else {
+            return nil
+        }
+        
+        var description: String? {
+            switch product.isBlocked {
+            case true: return nil
+            case false: return "Карту можно будет разблокировать в приложении или в колл-центре"
+            }
+        }
+        
+        let alertViewModel: Alert.ViewModel = .init(title: alertTitle(),
+                                                    message: description,
+                                                    primary: .init(type: .default,
+                                                                   title: "Отмена",
+                                                                   action: { [weak self] in
+            
+            self?.action.send(ProductProfileViewModelAction.Alert.Close())
+        }),
+                                                    secondary: .init(type: .default,
+                                                                     title: "Oк",
+                                                                     action: { [weak self] in
+            if product.isBlocked {
+                
+                self?.model.action.send(ModelAction.Card.Unblock.Request(cardId: product.cardId, cardNumber: cardNumber))
+                
+            } else {
+                
+                self?.model.action.send(ModelAction.Card.Block.Request(cardId: product.cardId, cardNumber: cardNumber))
+            }
+            
+        }))
+        
+        func alertTitle() -> String {
+
+           product.isBlocked ? "Разблокировать карту?" : "Заблокировать карту?"
+        }
+        
+        return alertViewModel
     }
 
     func makeHistoryViewModel(productType: ProductType, productId: ProductData.ID, model: Model) -> ProductProfileHistoryView.ViewModel? {
@@ -659,6 +762,11 @@ enum ProductProfileViewModelAction {
     }
     
     struct BlockProduct: Action {
+        
+        let productId: Int
+    }
+    
+    struct UnBlockProduct: Action {
         
         let productId: Int
     }

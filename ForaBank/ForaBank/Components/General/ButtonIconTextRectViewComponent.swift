@@ -12,20 +12,20 @@ import SwiftUI
 extension ButtonIconTextRectView {
     
     struct ViewModel: Identifiable, Hashable {
-        
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(id)
-        }
-        static func == (lhs: ButtonIconTextRectView.ViewModel, rhs: ButtonIconTextRectView.ViewModel) -> Bool {
-            return lhs.id == rhs.id
-        }
-        
        
         let id: String
         let icon: Image
         let title: String
         var isEnabled: Bool = true
         let action: () -> Void
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+        
+        static func == (lhs: ButtonIconTextRectView.ViewModel, rhs: ButtonIconTextRectView.ViewModel) -> Bool {
+            return lhs.id == rhs.id && lhs.title == rhs.title && lhs.isEnabled == rhs.isEnabled
+        }
     }
 }
 
