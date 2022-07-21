@@ -131,21 +131,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 }
             }.store(in: &bindings)
         
-        model.contactsAgent.status
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] status in
-                
-                switch status {
-                case .available:
-                    print("mdy: remove")
-                    self.sections.remove(at: 0)
-                    self.sections.insert(PTSectionLatestPaymentsView.ViewModel(model: self.model), at: 0)
-                default:
-                    break
-                }
-                
-            }.store(in: &bindings)
-        
         model.clientInfo
             .combineLatest(model.clientPhoto, model.clientName)
             .receive(on: DispatchQueue.main)
