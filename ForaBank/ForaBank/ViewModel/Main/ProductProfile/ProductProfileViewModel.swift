@@ -215,7 +215,7 @@ class ProductProfileViewModel: ObservableObject {
                 }
                 
                 withAnimation {
-                    buttons.update(with: productData)
+                    buttons.update(with: productData, depositInfo: model.depositsInfo.value[productData.id])
                 }
                 
                 bind(buttons: buttons)
