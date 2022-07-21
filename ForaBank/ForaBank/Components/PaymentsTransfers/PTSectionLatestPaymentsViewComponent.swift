@@ -81,7 +81,11 @@ extension PTSectionLatestPaymentsView {
                     case .available:
                        
                         if !model.latestPayments.value.isEmpty {
-                            itemsReduce(latest: model.latestPayments.value)
+                            let updatedItems = itemsReduce(latest: model.latestPayments.value)
+                            
+                            withAnimation(.easeInOut(duration: 1)) {
+                                self.items = updatedItems
+                            }
                         }
                         
                     default: break
@@ -97,13 +101,19 @@ extension PTSectionLatestPaymentsView {
                     let latestPayments = data.0
                     let isLatestPaymentsUpdating = data.1
                     
-                    itemsReduce(latest: latestPayments, isUpdating: isLatestPaymentsUpdating)
+                    let updatedItems = itemsReduce(latest: latestPayments,
+                                                  isUpdating: isLatestPaymentsUpdating)
+                    
+                    withAnimation(.easeInOut(duration: 1)) {
+                        self.items = updatedItems
+                    }
                 
             }.store(in: &bindings)
             
         }
         
-        func itemsReduce(latest: [LatestPaymentData], isUpdating: Bool = false) {
+        func itemsReduce(latest: [LatestPaymentData],
+                         isUpdating: Bool = false) -> [ItemViewModel] {
             
             var updatedItems = [ItemViewModel]()
             let baseButtons = self.baseButtons.map { ItemViewModel.templates($0) }
@@ -135,16 +145,13 @@ extension PTSectionLatestPaymentsView {
                      
                  }
              
-             } else {
+            } else {
 
                       updatedItems.append(contentsOf: baseButtons)
                       updatedItems.append(contentsOf: latestPaymentsItems)
-             }
-            
-            withAnimation(.easeInOut(duration: 1)) {
-                
-                self.items = updatedItems
             }
+            
+            return updatedItems
             
         }
         
