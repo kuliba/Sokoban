@@ -84,7 +84,7 @@ extension PTSectionLatestPaymentsView {
                     
                     let baseButtons = self.baseButtons.map { ItemViewModel.templates($0) }
                     
-                    self.model.action.send(ModelAction.Contacts.PermissionStatus.Request())
+                    //self.model.action.send(ModelAction.Contacts.PermissionStatus.Request())
                     let latestPaymentsItems = latestPayments.map { item in
                        
                         ItemViewModel

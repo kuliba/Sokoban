@@ -17,6 +17,7 @@ enum SettingType {
     enum General: String {
         
         case launchedBefore
+        case isPaymentsTransfersOpened
     }
     
     enum Transfers: String {

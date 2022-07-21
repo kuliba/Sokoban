@@ -114,9 +114,36 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     link = .qrScanner(.init(closeAction:  { [weak self] in
                         self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                     }))
+                  
+                case _ as PaymentsTransfersViewModelAction.ViewDidApear:
+                    
+                    if !model.isPaymentsTransfersOpened {
+                        model.action.send(ModelAction.Settings.UpdateIsPaymentsTransfersOpened(value: true))
+                        
+                        switch model.contactsPermissionStatus {
+                        case .available: break
+                        default: model.action.send(ModelAction.Contacts.PermissionStatus.Request())
+                        }
+                    }
+                    
                 default:
                     break
                 }
+            }.store(in: &bindings)
+        
+        model.contactsAgent.status
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] status in
+                
+                switch status {
+                case .available:
+                    print("mdy: remove")
+                    self.sections.remove(at: 0)
+                    self.sections.insert(PTSectionLatestPaymentsView.ViewModel(model: self.model), at: 0)
+                default:
+                    break
+                }
+                
             }.store(in: &bindings)
         
         model.clientInfo
@@ -373,4 +400,6 @@ enum PaymentsTransfersViewModelAction {
     }
     
     struct OpenQr: Action {}
+    
+    struct ViewDidApear: Action {}
 }

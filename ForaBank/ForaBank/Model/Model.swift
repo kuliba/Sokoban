@@ -494,7 +494,9 @@ class Model {
                     
                 case let payload as ModelAction.Settings.UpdateProductsHidden:
                     handleUpdateProductsHidden(payload.productID)
-  
+                    
+                case let payload as ModelAction.Settings.UpdateIsPaymentsTransfersOpened:
+                    handleUpdateIsPaymentsTransfersOpened(payload: payload)
                     
                     //MARK: - Notifications
                        
