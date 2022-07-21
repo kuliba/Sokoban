@@ -17,10 +17,10 @@ extension CurrencySelectorView {
         
         let model: Model
         
-        lazy var openAccount: ProductAccountView.ViewModel = .init(
+        lazy var openAccount: CurrencyWalletAccountView.ViewModel = .init(
             model: model,
             cardIcon: Image("USD Account"),
-            currencyType: "USD",
+            currency: Currency(description: "USD"),
             currencyName: "Валютный",
             warning: .init(description: "Для завершения операции Вам необходимо открыть счет в долларах США"))
         
@@ -57,7 +57,7 @@ struct CurrencySelectorView: View {
                 
                 switch viewModel.state {
                 case .openAccount:
-                    ProductAccountView(viewModel: viewModel.openAccount)
+                    CurrencyWalletAccountView(viewModel: viewModel.openAccount)
                 case .productSelector:
                     ProductSelectorView(viewModel: .sample3)
                 }

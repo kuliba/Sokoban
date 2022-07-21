@@ -10,7 +10,7 @@ import Combine
 
 // MARK: - ViewModel
 
-extension ProductAccountView {
+extension CurrencyWalletAccountView {
     
     class ViewModel: ObservableObject {
         
@@ -18,18 +18,18 @@ extension ProductAccountView {
         
         @Published var cardIcon: Image
         @Published var openAccountIcon: Image
-        @Published var currencyType: String
+        @Published var currency: Currency
         @Published var currencyName: String
         @Published var warning: WarningViewModel
         @Published var bottomSheet: BottomSheet?
         
         var bindings = Set<AnyCancellable>()
         
-        let model: Model
+        private let model: Model
         let title: String
         
         var currencyTitle: String {
-            "Открыть \(currencyType) счет"
+            "Открыть \(currency.description) счет"
         }
         
         struct BottomSheet: Identifiable {
@@ -38,7 +38,7 @@ extension ProductAccountView {
             let type: SheetType
             
             enum SheetType {
-                case openAccount(Model)
+                case openAccount(OpenAccountViewModel)
             }
         }
         
@@ -46,7 +46,7 @@ extension ProductAccountView {
              title: String = "Куда",
              cardIcon: Image,
              openAccountIcon: Image = Image("Plus Account"),
-             currencyType: String,
+             currency: Currency,
              currencyName: String,
              warning: WarningViewModel) {
             
@@ -54,7 +54,7 @@ extension ProductAccountView {
             self.title = title
             self.cardIcon = cardIcon
             self.openAccountIcon = openAccountIcon
-            self.currencyType = currencyType
+            self.currency = currency
             self.currencyName = currencyName
             self.warning = warning
             
@@ -68,8 +68,16 @@ extension ProductAccountView {
                 .sink { [unowned self] action in
                     
                     switch action {
-                    case _ as ProductAccountView.ProductAction.Toggle:
-                        bottomSheet = .init(type: .openAccount(model))
+                    case _ as CurrencyWalletAccountView.ProductAction.Toggle:
+                        
+                        let productsList = model.accountProductsList.value
+                        
+                        if productsList.isEmpty == false {
+                            
+                            let viewModel: OpenAccountViewModel = .init(model: model, items: OpenAccountViewModel.reduce(products: productsList))
+                            
+                            bottomSheet = .init(type: .openAccount(viewModel))
+                        }
                         
                     default:
                         break
@@ -80,7 +88,7 @@ extension ProductAccountView {
     }
 }
 
-extension ProductAccountView.ViewModel {
+extension CurrencyWalletAccountView.ViewModel {
     
     // MARK: - Warning
     
@@ -99,7 +107,7 @@ extension ProductAccountView.ViewModel {
 
 // MARK: - View
 
-struct ProductAccountView: View {
+struct CurrencyWalletAccountView: View {
     
     @ObservedObject var viewModel: ViewModel
     
@@ -112,16 +120,8 @@ struct ProductAccountView: View {
         }
         .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
             switch bottomSheet.type {
-            case let .openAccount(model):
-                
-                if let productsList = model.accountProductsList.value {
-
-                    let viewModel: OpenAccountViewModel = .init(
-                        model: model,
-                        items: OpenAccountViewModel.reduce(products: productsList))
-
-                    OpenAccountView(viewModel: viewModel)
-                }
+            case let .openAccount(viewModel):
+                OpenAccountView(viewModel: viewModel)
             }
         }
         .background(Color.mainColorsGrayLightest)
@@ -129,7 +129,7 @@ struct ProductAccountView: View {
     }
 }
 
-extension ProductAccountView {
+extension CurrencyWalletAccountView {
     
     // MARK: - ProductView
     
@@ -175,7 +175,7 @@ extension ProductAccountView {
                     }
                 }.onTapGesture {
                     
-                    viewModel.action.send(ProductAccountView.ProductAction.Toggle())
+                    viewModel.action.send(CurrencyWalletAccountView.ProductAction.Toggle())
                 }
             }
         }
@@ -204,7 +204,7 @@ extension ProductAccountView {
     }
 }
 
-extension ProductAccountView {
+extension CurrencyWalletAccountView {
     
     enum ProductAction {
     
@@ -214,12 +214,12 @@ extension ProductAccountView {
 
 // MARK: - Preview Content
 
-extension ProductAccountView.ViewModel {
+extension CurrencyWalletAccountView.ViewModel {
     
-    static let sample = ProductAccountView.ViewModel(
+    static let sample = CurrencyWalletAccountView.ViewModel(
         model: .productsMock,
         cardIcon: Image("USD Account"),
-        currencyType: "USD",
+        currency: Currency(description: "USD"),
         currencyName: "Валютный",
         warning: .init(description: "Для завершения операции Вам необходимо открыть счет в долларах США"))
 }
@@ -230,7 +230,7 @@ struct ProductAccountViewComponent_Previews: PreviewProvider {
     static var previews: some View {
 
         Group {
-            ProductAccountView(viewModel: .sample)
+            CurrencyWalletAccountView(viewModel: .sample)
                 .padding()
         }
         .background(Color.mainColorsGrayLightest)

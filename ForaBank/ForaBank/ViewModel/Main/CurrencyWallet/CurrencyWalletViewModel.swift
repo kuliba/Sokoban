@@ -40,7 +40,7 @@ class CurrencyWalletViewModel: ObservableObject {
         case spinner
     }
 
-    init(_ model: Model,
+    internal init(_ model: Model,
          state: ButtonActionState = .button,
          listViewModel: CurrencyListView.ViewModel,
          swapViewModel: CurrencySwapView.ViewModel,
@@ -57,13 +57,25 @@ class CurrencyWalletViewModel: ObservableObject {
         bind()
     }
     
+    init(_ model: Model, action: @escaping () -> Void) {
+
+        self.model = model
+        self.state = .button
+        self.listViewModel = .sample
+        self.swapViewModel = .sample
+        self.selectorViewModel = .sample
+        self.backButton = .init(icon: .ic24ChevronLeft, action: action)
+        
+        bind()
+    }
+    
     private func bind() {
         
         listViewModel.$currencyType
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] currencyType in
                 
-                swapViewModel.currencyType = currencyType
+                swapViewModel.currency = Currency(description: currencyType)
                 
             }.store(in: &bindings)
     }

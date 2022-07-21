@@ -20,7 +20,7 @@ extension ProductSelectorView {
         @Published var logoIcon: Image?
         @Published var name: String
         @Published var balance: String
-        @Published var numberCard: NumberCardViewModel
+        @Published var number: NumberViewModel
         
         @Published var listViewModel: ProductsListView.ViewModel?
         
@@ -34,7 +34,7 @@ extension ProductSelectorView {
              logoIcon: Image?,
              name: String,
              balance: String,
-             numberCard: NumberCardViewModel,
+             number: NumberViewModel,
              listViewModel: ProductsListView.ViewModel? = nil,
              isDividerHiddable: Bool = false) {
             
@@ -43,7 +43,7 @@ extension ProductSelectorView {
             self.logoIcon = logoIcon
             self.name = name
             self.balance = balance
-            self.numberCard = numberCard
+            self.number = number
             self.listViewModel = listViewModel
             self.isDividerHiddable = isDividerHiddable
             
@@ -81,7 +81,7 @@ extension ProductSelectorView.ViewModel {
     
     // MARK: - NumberCard
     
-    class NumberCardViewModel: ObservableObject {
+    class NumberViewModel: ObservableObject {
         
         let numberCard: String
         let description: String
@@ -186,7 +186,7 @@ extension ProductSelectorView {
                         }
                         
                         HStack {
-                            ProductSelectorView.NumberCardView(viewModel: viewModel.numberCard)
+                            ProductSelectorView.NumberCardView(viewModel: viewModel.number)
                         }
                     }
                 }.onTapGesture {
@@ -201,7 +201,7 @@ extension ProductSelectorView {
     
     struct NumberCardView: View {
         
-        @ObservedObject var viewModel: ViewModel.NumberCardViewModel
+        @ObservedObject var viewModel: ViewModel.NumberViewModel
         
         var body: some View {
             
@@ -240,7 +240,7 @@ extension ProductSelectorView.ViewModel {
         logoIcon: Image("Platinum Logo"),
         name: "Platinum",
         balance: "2,71 млн ₽",
-        numberCard: .init(
+        number: .init(
             numberCard: "4444555566662953",
             description: "Все включено"),
         listViewModel: nil)
@@ -251,7 +251,7 @@ extension ProductSelectorView.ViewModel {
         logoIcon: Image("Platinum Logo"),
         name: "Platinum",
         balance: "2,71 млн ₽",
-        numberCard: .init(
+        number: .init(
             numberCard: "4444555566662953",
             description: "Все включено"),
         listViewModel: .sample)
@@ -262,7 +262,7 @@ extension ProductSelectorView.ViewModel {
         logoIcon: nil,
         name: "Текущий счет",
         balance: "0 $",
-        numberCard: .init(
+        number: .init(
             numberCard: "",
             description: "Валютный"),
         isDividerHiddable: true)

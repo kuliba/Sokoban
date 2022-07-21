@@ -453,18 +453,18 @@ extension Model {
         return imagesUpdated
     }
     
-    func reduceCurrencyWallet(_ items: [CurrencyWalletData], currencyType: String) -> [CurrencyItemViewModel] {
+    static func reduceCurrencyWallet(_ items: [CurrencyWalletData], images: [String: ImageData], currencyType: String) -> [CurrencyItemViewModel] {
         
         return items.map { item in
             
-            let icon = images.value[item.md5hash]
+            let icon = images[item.md5hash]
             
             return .init(
                 icon: icon?.image,
-                currencyType: item.code,
-                rateBuy: item.rateBuy.decimal(),
-                rateSell: item.rateSell.decimal(),
-                iconMd5hash: item.md5hash,
+                currency: Currency(description: item.code),
+                rateBuy: NumberFormatter.decimal(item.rateBuy),
+                rateSell: NumberFormatter.decimal(item.rateSell),
+                iconId: item.md5hash,
                 isSelected: currencyType == item.code)
         }
     }

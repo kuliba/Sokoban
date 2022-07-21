@@ -255,9 +255,10 @@ class MainViewModel: ObservableObject, Resetable {
         
         let currencyWalletList = model.currencyWalletList.value
         let currencyList = model.currencyList.value
+        let images = model.images.value
         
-        let items = model.reduceCurrencyWallet(currencyWalletList, currencyType: currencyType)
-        let item = items.first(where: { $0.currencyType == currencyType })
+        let items = Model.reduceCurrencyWallet(currencyWalletList, images: images, currencyType: currencyType)
+        let item = items.first(where: { $0.currency.description == currencyType })
         let data = currencyList.first(where: { $0.code == currencyType })
         let unicode = data?.currencySymbol
         
@@ -266,8 +267,8 @@ class MainViewModel: ObservableObject, Resetable {
         }
         
         let currencyRate = currencyOperation == .buy ? item.rateBuy : item.rateSell
-        let currencyAmount = NumberFormatter.decimal(currencyRate)
-        let image = model.images.value[item.iconMd5hash]?.image
+        let currencyAmount = NumberFormatter.decimal(currencyRate) ?? 0
+        let image = model.images.value[item.iconId]?.image
         
         let listViewModel: CurrencyListView.ViewModel = .init(
             model,
@@ -286,7 +287,7 @@ class MainViewModel: ObservableObject, Resetable {
                 currencyAmount: currencyAmount,
                 currencyType: "RUB"),
             currencyOperation: currencyOperation,
-            currencyType: currencyType,
+            currency: Currency(description: currencyType),
             currencyRate: currencyAmount)
         
         let walletViewModel: CurrencyWalletViewModel = .init(

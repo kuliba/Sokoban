@@ -25,13 +25,13 @@ extension CurrencyListView {
 
         private var bindings = Set<AnyCancellable>()
         
-        let model: Model
+        private let model: Model
 
         lazy var button: ButtonViewModel = .init { [unowned self] in
             action.send(CurrencyListAction.Button.Tapped())
         }
 
-        init(_ model: Model, currencyType: String, items: [ItemViewModel]) {
+        internal init(_ model: Model, currencyType: String, items: [ItemViewModel]) {
 
             self.model = model
             self.currencyType = currencyType
@@ -40,27 +40,30 @@ extension CurrencyListView {
             bind()
         }
         
+        init(_ model: Model) {
+
+            self.model = model
+            self.currencyType = "USD"
+            self.items = Self.items
+        }
+        
         private func bind() {
             
             model.currencyWalletList
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] items in
                     
-                    let items = reduce(items)
-                    
-                    guard items.isEmpty == false else {
-                        return
-                    }
+                    let items = Self.reduce(model, items: items, currencyType: currencyType)
                     
                     withAnimation(.interactiveSpring()) {
                         self.items = items
                     }
                     
-                    let filterred = reduceIcons(self.items)
+                    let iconsHashNeedsDownload = iconsHashNeedsDownload(self.items)
                     
-                    if filterred.isEmpty == false {
+                    if iconsHashNeedsDownload.isEmpty == false {
                         
-                        model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: filterred))
+                        model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: iconsHashNeedsDownload))
                     }
                     
                 }.store(in: &bindings)
@@ -69,15 +72,15 @@ extension CurrencyListView {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] images in
                     
-                    let filterred = reduceItems(items)
+                    let itemsNeedsUpdateIcons = itemsNeedsUpdateIcons(items)
                     
-                    guard filterred.isEmpty == false else {
+                    guard itemsNeedsUpdateIcons.isEmpty == false else {
                         return
                     }
                     
                     withAnimation(.interactiveSpring()) {
                         
-                        filterred.forEach { $0.icon = images[$0.iconMd5hash]?.image }
+                        itemsNeedsUpdateIcons.forEach { $0.icon = images[$0.iconId]?.image }
                     }
                     
                 }.store(in: &bindings)
@@ -88,16 +91,19 @@ extension CurrencyListView {
                     
                     switch action {
                     case _ as CurrencyListAction.Button.Tapped:
-                        bottomSheet = .init(sheetType: .currencyRate(model))
+                        
+                        if model.currencyWalletList.value.isEmpty == false {
+                            bottomSheet = .init(sheetType: .currencyRate(model))
+                        } else {
+                            bottomSheet = .init(sheetType: .placeholder)
+                        }
                         
                     case let payload as CurrencyListAction.Item.Tapped:
                         
                         currencyType = payload.currencyType
-                        
-                        model.action.send(ModelAction.Dictionary.UpdateCache.Request(type: .currencyWalletList, serial: nil))
-                        model.action.send(ModelAction.Dictionary.UpdateCache.Request(type: .currencyList, serial: nil))
-                        
-                        items.forEach { $0.isSelected = currencyType == $0.currencyType }
+                        items.forEach { $0.isSelected = currencyType == $0.currency.description }
+
+                        model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
                         
                     default:
                         break
@@ -112,6 +118,7 @@ extension CurrencyListView {
 
             enum BottomSheetType {
 
+                case placeholder
                 case currencyRate(Model)
             }
         }
@@ -126,25 +133,25 @@ extension CurrencyListView.ViewModel {
 
         @Published var isSelected: Bool
 
-        var id: String { currencyType }
+        var id: String { currency.description }
         var icon: Image?
-        let currencyType: String
+        let currency: Currency
         let rateBuy: String
         let rateSell: String
-        let iconMd5hash: String
+        let iconId: String
 
         init(icon: Image?,
-             currencyType: String,
+             currency: Currency,
              rateBuy: String,
              rateSell: String,
-             iconMd5hash: String = "",
+             iconId: String = "",
              isSelected: Bool = false) {
 
             self.icon = icon
-            self.currencyType = currencyType
+            self.currency = currency
             self.rateBuy = rateBuy
             self.rateSell = rateSell
-            self.iconMd5hash = iconMd5hash
+            self.iconId = iconId
             self.isSelected = isSelected
         }
     }
@@ -178,7 +185,7 @@ struct CurrencyListView: View {
                         ItemView(viewModel: itemViewModel)
                             .onTapGesture {
                                 viewModel.action.send(CurrencyListAction.Item.Tapped(
-                                    currencyType: itemViewModel.currencyType))
+                                    currencyType: itemViewModel.currency.description))
                             }
                     }
                 }.padding(.horizontal, 20)
@@ -186,16 +193,13 @@ struct CurrencyListView: View {
         }.bottomSheet(item: $viewModel.bottomSheet) { sheetType in
             
             switch sheetType.sheetType {
-            case let .currencyRate(model):
+            case .placeholder:
                 
-                if model.currencyWalletList.value.isEmpty == false {
-                    
-                    CurrencyRatesListView(viewModel: .init(model))
-                    
-                } else {
-                    
-                    CurrencyRatesListView.PlaceholderItemView()
-                }
+                CurrencyRatesListView.PlaceholderItemView()
+                
+            case let .currencyRate(model):
+
+                CurrencyRatesListView(viewModel: .init(model))
             }
         }
     }
@@ -245,7 +249,7 @@ extension CurrencyListView {
                             
                         }.frame(width: 25, height: 25)
 
-                        Text(viewModel.currencyType)
+                        Text(viewModel.currency.description)
                             .font(.textBodySM12160())
                             .foregroundColor(.mainColorsGray)
                     }
@@ -294,11 +298,11 @@ extension CurrencyListView {
     }
 }
 
-// MARK: - Reducer
+// MARK: - Methods
 
 extension CurrencyListView.ViewModel {
     
-    func reduce(_ items: [CurrencyWalletData]) -> [ItemViewModel] {
+    static func reduce(_ model: Model, items: [CurrencyWalletData], currencyType: String) -> [ItemViewModel] {
         
         items.map { item in
             
@@ -306,20 +310,20 @@ extension CurrencyListView.ViewModel {
             
             return .init(
                 icon: icon?.image,
-                currencyType: item.code,
-                rateBuy: item.rateBuy.decimal(),
-                rateSell: item.rateSell.decimal(),
-                iconMd5hash: item.md5hash,
+                currency: Currency(description: item.code),
+                rateBuy: NumberFormatter.decimal(item.rateBuy),
+                rateSell: NumberFormatter.decimal(item.rateSell),
+                iconId: item.md5hash,
                 isSelected: currencyType == item.code)
         }
     }
     
-    func reduceIcons(_ items: [ItemViewModel]) -> [String] {
+    func iconsHashNeedsDownload(_ items: [ItemViewModel]) -> [String] {
         
-        return items.filter { $0.icon == nil }.map { $0.iconMd5hash }
+        return items.filter { $0.icon == nil }.map { $0.iconId }
     }
     
-    func reduceItems(_ items: [ItemViewModel]) -> [ItemViewModel] {
+    func itemsNeedsUpdateIcons(_ items: [ItemViewModel]) -> [ItemViewModel] {
         
         return items.filter { $0.icon == nil }
     }
@@ -343,38 +347,6 @@ enum CurrencyListAction {
     }
 }
 
-// MARK: - Preview Content
-
-extension CurrencyListView.ViewModel {
-    
-    static let sample: CurrencyListView.ViewModel = .init(
-        .productsMock,
-        currencyType: "USD",
-        items: [
-            .init(icon: .init("Flag USD"),
-                  currencyType: "USD",
-                  rateBuy: "68.19",
-                  rateSell: "69.45",
-                  isSelected: true),
-            .init(icon: .init("Flag EUR"),
-                  currencyType: "EUR",
-                  rateBuy: "69.23",
-                  rateSell: "70.01"),
-            .init(icon: .init("Flag GBP"),
-                  currencyType: "GBP",
-                  rateBuy: "75.65",
-                  rateSell: "76.83"),
-            .init(icon: .init("Flag CHF"),
-                  currencyType: "CHF",
-                  rateBuy: "64.89",
-                  rateSell: "65.09"),
-            .init(icon: .init("Flag CHY"),
-                  currencyType: "CHY",
-                  rateBuy: "18.45",
-                  rateSell: "19.26")
-        ])
-}
-
 // MARK: - Previews
 
 struct CurrencyListViewComponent_Previews: PreviewProvider {
@@ -382,6 +354,8 @@ struct CurrencyListViewComponent_Previews: PreviewProvider {
     static var previews: some View {
 
         CurrencyListView(viewModel: .sample)
+            .fixedSize()
             .previewLayout(.sizeThatFits)
+            .padding(.vertical)
     }
 }

@@ -41,7 +41,7 @@ extension TextFieldFormatableView {
             case currencyWallet
         }
         
-        internal init(type: Kind, value: Double, formatter: NumberFormatter, isEnabled: Bool = true, limit: Int? = nil, toolbar: ToolbarViewModel? = nil) {
+        internal init(type: Kind = .general, value: Double, formatter: NumberFormatter, isEnabled: Bool = true, limit: Int? = nil, toolbar: ToolbarViewModel? = nil) {
             
             self.type = type
             self.formatter = formatter
@@ -147,21 +147,16 @@ struct TextFieldFormatableView: UIViewRepresentable {
         public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 
             switch viewModel.type {
-            case .general, .currencyWallet:
-                return generalTextField(textField, shouldChangeCharactersIn: range, replacementString: string)
-            }
-        }
-        
-        func generalTextField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-            
-            textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter, limit: limit)
-            text.wrappedValue = textField.text
-            
-            switch viewModel.type {
             case .general:
+                
+                textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter, limit: limit)
+                text.wrappedValue = textField.text
                 updateCursorPosition(textField)
-            default:
-                break
+                
+            case .currencyWallet:
+                
+                textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter, limit: limit)
+                text.wrappedValue = textField.text
             }
             
             return false
