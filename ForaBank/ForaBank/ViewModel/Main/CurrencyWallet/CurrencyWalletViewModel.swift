@@ -46,6 +46,15 @@ class CurrencyWalletViewModel: ObservableObject {
                 
             }.store(in: &bindings)
     }
+    
+    func resetCurrencySwap() {
+        
+        let currencySwap = swapViewModel.currencySwap
+        let сurrencyCurrentSwap = swapViewModel.сurrencyCurrentSwap
+        
+        currencySwap.action.send(CurrencySwapAction.TextField.Done(currencyAmount: currencySwap.currencyAmount))
+        сurrencyCurrentSwap.action.send(CurrencySwapAction.TextField.Done(currencyAmount: сurrencyCurrentSwap.currencyAmount))
+    }
 }
 
 extension CurrencyWalletViewModel {

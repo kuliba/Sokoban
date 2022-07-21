@@ -204,7 +204,9 @@ class MainViewModel: ObservableObject, Resetable {
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Item :
                     
-                        print("mdy: Item-\(payload.code.description)") // -> USD, GBR, EUR
+                        updateCurrency(
+                            currencyType: payload.code.description,
+                            currencyOperation: .buy)
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Buy :
                     

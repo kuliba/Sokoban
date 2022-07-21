@@ -40,6 +40,8 @@ struct CurrencyWalletView: View {
                 .foregroundColor(.iconBlack)
         })
         .onTapGesture {
+            
+            viewModel.resetCurrencySwap()
             UIApplication.shared.endEditing()
         }
         .padding(.vertical, 20)
