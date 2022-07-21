@@ -309,6 +309,18 @@ extension Model {
                 guard productsAllowed.contains(productType) else {
                     continue
                 }
+                
+                // update additional products data
+                switch productType {
+                case .deposit:
+                    self.action.send(ModelAction.Deposits.Info.All())
+                    
+                case .loan:
+                    self.action.send(ModelAction.Loans.Update.All())
+                    
+                default:
+                    break
+                }
 
                 let serial = productsCacheSerial(for: productType)
                 let command = ServerCommands.ProductController.GetProductListByType(token: token, serial: serial, productType: productType)
@@ -332,12 +344,6 @@ extension Model {
 
                     // update products
                     self.products.value = reduce(products: self.products.value, with: result.products, allowed: self.productsAllowed)
-                    
-                    // update loans data
-                    if productType == .loan {
-                        
-                        self.action.send(ModelAction.Loans.Update.All())
-                    }
 
                 } catch {
                     
@@ -393,12 +399,6 @@ extension Model {
                 // update products
                 self.products.value = reduce(products: self.products.value, with: result.products, allowed: self.productsAllowed)
 
-                // update loans data
-                if product.productType == .loan {
-
-                    self.action.send(ModelAction.Loans.Update.All())
-                }
-
             } catch {
 
                 // updating status
@@ -410,6 +410,18 @@ extension Model {
                 self.handleServerCommandError(error: error, command: command)
                 //TODO: show error message in UI
             }
+        }
+        
+        // update additional products data
+        switch product.productType {
+        case .deposit:
+            self.action.send(ModelAction.Deposits.Info.All())
+            
+        case .loan:
+            self.action.send(ModelAction.Loans.Update.All())
+            
+        default:
+            break
         }
     }
 

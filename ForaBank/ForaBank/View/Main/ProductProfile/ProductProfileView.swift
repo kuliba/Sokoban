@@ -101,6 +101,9 @@ struct ProductProfileView: View {
                         MeToMeExternalView(viewModel: meToMeExternalViewModel)
                             .navigationBarTitle("", displayMode: .inline)
                             .edgesIgnoringSafeArea(.bottom)
+                        
+                    case let .myProducts(myProductsViewModel):
+                        MyProductsView(viewModel: myProductsViewModel)
                     }
                 }
             }

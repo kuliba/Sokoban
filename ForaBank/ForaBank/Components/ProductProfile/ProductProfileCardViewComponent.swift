@@ -186,6 +186,9 @@ extension ProductProfileCardView {
                             
                             activeProductId = payload.thunmbnailId
                         }
+                        
+                    case _ as ProductProfileCardView.ViewModel.SelectorViewModelAction.MoreButtonTapped:
+                        self.action.send(ProductProfileCardViewModelAction.MoreButtonTapped())
     
                     default:
                         break
@@ -196,6 +199,11 @@ extension ProductProfileCardView {
     }
 }
 
+enum ProductProfileCardViewModelAction {
+
+    struct MoreButtonTapped: Action {}
+}
+
 extension ProductProfileCardView.ViewModel {
     
     class SelectorViewModel: ObservableObject {
@@ -204,6 +212,7 @@ extension ProductProfileCardView.ViewModel {
         
         @Published var thumbnails: [ThumbnailViewModel]
         @Published var selected: ThumbnailViewModel.ID
+        lazy var moreButton: MoreButtonViewModel = .init(action: { [weak self] in self?.action.send(SelectorViewModelAction.MoreButtonTapped())})
         
         init(thumbnails: [ThumbnailViewModel], selected: ThumbnailViewModel.ID) {
             
@@ -273,6 +282,8 @@ extension ProductProfileCardView.ViewModel {
             
             let thunmbnailId: SelectorViewModel.ThumbnailViewModel.ID
         }
+        
+        struct MoreButtonTapped: Action {}
     }
 }
 
@@ -353,6 +364,8 @@ extension ProductProfileCardView {
                         ProductProfileCardView.ThumbnailView(viewModel: thumbnail, isSelected: viewModel.selected == thumbnail.id)
                             .scrollId(thumbnail.id)
                     }
+                    
+                    MoreButtonView(viewModel: viewModel.moreButton)
                 }
                 .padding(.horizontal, UIScreen.main.bounds.size.width / 2 - 48 + 48 / 2)
                 .onReceive(viewModel.$selected) { selected in
@@ -409,6 +422,36 @@ extension ProductProfileCardView {
                     }
                 }
                 .frame(width: 48, height: 48)
+            }
+        }
+    }
+    
+    struct MoreButtonView: View {
+        
+        let viewModel: ProductProfileCardView.ViewModel.SelectorViewModel.MoreButtonViewModel
+        
+        var body: some View {
+            
+            Button(action: viewModel.action) {
+                
+                ZStack {
+                    
+                    Color.white
+                        .frame(width: 32, height: 22)
+                        .cornerRadius(3)
+                    
+                    HStack(spacing: 3) {
+                        
+                        ForEach(0..<3) { _ in
+                            
+                            Circle()
+                                .foregroundColor(.iconBlack)
+                                .frame(width: 2, height: 2)
+                        }
+                    }
+                }
+                .frame(width: 48, height: 48)
+                .opacity(0.4)
             }
         }
     }
