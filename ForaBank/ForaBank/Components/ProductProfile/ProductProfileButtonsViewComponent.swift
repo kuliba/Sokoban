@@ -80,8 +80,13 @@ extension ProductProfileButtonsView {
                 
             case .bottomRight:
                 switch product {
+        
                 case let cardProduct as ProductCardData:
-                    return cardProduct.isCanBeUnblocked ? true : false
+                    if cardProduct.isBlocked {
+                        return cardProduct.isCanBeUnblocked
+                    } else {
+                        return true
+                    }
                     
                 case _ as ProductAccountData: return false
                 default: return true

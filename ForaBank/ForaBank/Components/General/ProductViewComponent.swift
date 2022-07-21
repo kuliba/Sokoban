@@ -48,13 +48,15 @@ extension ProductView {
             let productType = productData.productType
             let backgroundColor = productData.backgroundColor
             let backgroundImage = Self.backgroundImage(with: productData, size: size)
+            let statusAction = Self.statusAction(product: productData)
             
-            self.init(id: productData.id, header: .init(number: number, period: period), name: name, footer: .init(balance: balance), statusAction: nil, appearance: .init(textColor: textColor, background: .init(color: backgroundColor, image: backgroundImage), size: size, style: style), isUpdating: false, productType: productType, action: action)
+            self.init(id: productData.id, header: .init(number: number, period: period), name: name, footer: .init(balance: balance), statusAction: statusAction, appearance: .init(textColor: textColor, background: .init(color: backgroundColor, image: backgroundImage), size: size, style: style), isUpdating: false, productType: productType, action: action)
         }
 
         func update(with productData: ProductData, model: Model) {
             
             name = productData.displayName
+            statusAction = Self.statusAction(product: productData)
             footer.balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
         }
 
@@ -131,6 +133,19 @@ extension ProductView {
             case .profile: return product.displayPeriod
             default: return nil
             }
+        }
+        
+        static func statusAction(product: ProductData) -> StatusActionViewModel? {
+            
+            guard let cardProduct = product as? ProductCardData else {
+                return nil
+            }
+
+            guard cardProduct.isBlocked else {
+                return nil
+            }
+            
+            return .init(status: .unblock, action: {})
         }
         
         static func backgroundImage(with productData: ProductData, size: Appearance.Size) -> Image? {

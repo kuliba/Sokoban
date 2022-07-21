@@ -10,6 +10,7 @@ import Foundation
 class ProductCardData: ProductData {
 
     let accountId: Int?
+    let cardId: Int
     let name: String
     let validThru: Date
     var status: Status
@@ -25,9 +26,10 @@ class ProductCardData: ProductData {
     let isMain: Bool?
     let externalId: Int?
     
-    internal init(id: Int, productType: ProductType, number: String, numberMasked: String, accountNumber: String, balance: Double, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date, ownerId: Int, branchId: Int, allowCredit: Bool, allowDebit: Bool,extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], accountId: Int?, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: ProductData.StatusPC?, isMain: Bool?, externalId: Int?) {
+    internal init(id: Int, productType: ProductType, number: String, numberMasked: String, accountNumber: String, balance: Double, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date, ownerId: Int, branchId: Int, allowCredit: Bool, allowDebit: Bool,extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], accountId: Int?, cardId: Int, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: ProductData.StatusPC?, isMain: Bool?, externalId: Int?) {
 
         self.accountId = accountId
+        self.cardId = cardId
         self.name = name
         self.validThru = validThru
         self.status = status
@@ -59,6 +61,7 @@ class ProductCardData: ProductData {
 
         let container = try decoder.container(keyedBy: CodingKeys.self)
         accountId = try container.decodeIfPresent(Int.self, forKey: .accountId)
+        cardId = try container.decode(Int.self, forKey: .cardId)
         name = try container.decode(String.self, forKey: .name)
         let validThruValue = try container.decode(Int.self, forKey: .validThru)
         validThru = Date(timeIntervalSince1970: TimeInterval(validThruValue / 1000))
@@ -82,6 +85,7 @@ class ProductCardData: ProductData {
         
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(accountId, forKey: .accountId)
+        try container.encode(cardId, forKey: .cardId)
         try container.encode(name, forKey: .name)
         try container.encode(Int(validThru.timeIntervalSince1970) * 1000, forKey: .validThru)
         try container.encode(status, forKey: .status)
@@ -106,6 +110,7 @@ class ProductCardData: ProductData {
         
         return  lhs.product == rhs.product &&
         lhs.accountId == rhs.accountId &&
+        lhs.cardId == rhs.cardId &&
         lhs.name == rhs.name &&
         lhs.validThru == rhs.validThru &&
         lhs.status == rhs.status &&
@@ -235,15 +240,16 @@ extension ProductCardData {
 
     var isBlocked: Bool {
 
-        guard status == .blockedByBank || status == .blockedByClient, statusPc == .operationsBlocked || statusPc == .blockedByBank || statusPc == .lost || statusPc == .stolen || statusPc == .temporarilyBlocked || statusPc == .blockedByClient else {
+        guard status == .blockedByBank || status == .blockedByClient, statusPc == .operationsBlocked || statusPc == .blockedByBank || statusPc == .lost || statusPc == .stolen || statusPc == .temporarilyBlocked || statusPc == .blockedByClient || status == .blockedByClient else {
             return false
         }
 
         return true
     }
+  
     
     var isCanBeUnblocked: Bool {
-        
+
         return statusPc == .temporarilyBlocked || statusPc == .blockedByClient
     }
     
