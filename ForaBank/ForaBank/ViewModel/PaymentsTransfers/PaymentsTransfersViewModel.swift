@@ -30,7 +30,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     @Published var link: Link? { didSet { isLinkActive = link != nil; isTabBarHidden = link != nil } }
     @Published var isLinkActive: Bool = false
     @Published var isTabBarHidden: Bool = false
-    
+    @Published var alert: Alert.ViewModel?
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
@@ -83,12 +83,24 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                       self?.action.send(PaymentsTransfersViewModelAction
                                                         .Close.Link() )}))
                 
-                case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:
+                case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:                    
+                    if model.cameraAgent.isCameraAvailable {
+                        model.cameraAgent.requestPermissions(completion: { available in
+                            
+                            if available {
+                                self.link = .qrScanner(.init(closeAction: {[weak self] in
+                                    self?.action.send(PaymentsTransfersViewModelAction
+                                                      .Close.Link() )}))
+                            } else {
+                                self.alert = .init(
+                                    title: "Внимание",
+                                    message: "Для сканирования QR кода, необходим доступ к камере",
+                                    primary: .init(type: .cancel, title: "Понятно", action: {
+                                    }))
+                            }
+                        })
+                    }
                    
-                    link = .qrScanner(.init(closeAction: {[weak self] in
-                        self?.action.send(PaymentsTransfersViewModelAction
-                                          .Close.Link() )}))
-                    
                 case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
                     bottomSheet = nil
                     
@@ -224,8 +236,21 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }))
                             
                         case .qrPayment:
-                            link = .qrScanner(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }))
+                            if model.cameraAgent.isCameraAvailable {
+                                model.cameraAgent.requestPermissions(completion: { available in
+                                    
+                                    if available {
+                                        self.link = .qrScanner(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                        }))
+                                    } else {
+                                        self.alert = .init(
+                                            title: "Внимание",
+                                            message: "Для сканирования QR кода, необходим доступ к камере",
+                                            primary: .init(type: .cancel, title: "Понятно", action: {
+                                            }))
+                                    }
+                                })
+                            }
                             
                         case .service:
                             let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
