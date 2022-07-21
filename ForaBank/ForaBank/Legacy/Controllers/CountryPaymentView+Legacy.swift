@@ -86,7 +86,7 @@ struct CountryPaymentView: UIViewControllerRepresentable {
             vc.nameField.text = adressViewModel.firstName
             vc.surnameField.text = adressViewModel.surName
             vc.secondNameField.text = adressViewModel.middleName
-//            vc.addCloseButton()
+            vc.operatorsViewModel = viewModel.operatorsViewModel
             
         case let .withOutAddress(withOutViewModel):
             
@@ -96,7 +96,7 @@ struct CountryPaymentView: UIViewControllerRepresentable {
             let mask = StringMask(mask: "+000-0000-00-00")
             let maskPhone = mask.mask(string: withOutViewModel.phoneNumber)
             vc.phoneField.text = maskPhone ?? ""
-//            vc.addCloseButton()
+            vc.operatorsViewModel = viewModel.operatorsViewModel
             
         case let .template(templateViewModel):
            
