@@ -29,6 +29,48 @@ extension NumberFormatter {
         
         return formatter
     }
+    
+    static func decimal() -> NumberFormatter {
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        formatter.locale = Locale(identifier: "ru_RU")
+        
+        return formatter
+    }
+    
+    static func decimal(_ value: Double) -> String {
+        
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.numberStyle = .decimal
+        currencyFormatter.maximumFractionDigits = 0
+        currencyFormatter.minimumFractionDigits = 2
+        
+        if let priceString = currencyFormatter.string(from: NSNumber(value: value)) {
+            return priceString
+        }
+        
+        return String(value)
+    }
+    
+    static func decimal(_ value: String) -> Double? {
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        formatter.locale = Locale.current
+        
+        let number = formatter.number(from: value)
+        
+        guard let number = number?.doubleValue else {
+            return nil
+        }
+        
+        return number
+    }
 
     //FIXME: refactor this
     static func decimal(totalBalance: String) -> String {

@@ -41,7 +41,7 @@ extension PaymentsAmountView {
         init(with parameterAmount: Payments.ParameterAmount, actionTitle: String, action: @escaping () -> Void) {
             
             self.title = parameterAmount.title
-            self.textField = .init(value: parameterAmount.amount, formatter: .currency(with: "₽"), limit: 10)
+            self.textField = .init(type: .general, value: parameterAmount.amount, formatter: .currency(with: "₽"), limit: 10)
             self.transferButton = .inactive(title: "Перевести")
             self.info = nil
             self.currencySwitch = nil

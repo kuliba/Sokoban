@@ -11,7 +11,7 @@ import Shimmer
 
 //MARK: - ViewModel
 
-extension CurrencyBigListView {
+extension CurrencyRatesListView {
     
     class ViewModel: ObservableObject {
         
@@ -143,7 +143,7 @@ extension CurrencyBigListView {
     }
 }
 
-extension CurrencyBigListView.ViewModel {
+extension CurrencyRatesListView.ViewModel {
         
     class ItemViewModel: ObservableObject, Identifiable {
         
@@ -189,7 +189,7 @@ extension CurrencyBigListView.ViewModel {
 
 //MARK: - View
 
-struct CurrencyBigListView: View {
+struct CurrencyRatesListView: View {
     
     @ObservedObject var viewModel: ViewModel
 
@@ -223,14 +223,13 @@ struct CurrencyBigListView: View {
                     }.padding(.horizontal, 20)
                 }
             }
-        }
-        
+        }.padding(.vertical, 20)
     }
 }
 
 //MARK: - Views
 
-extension CurrencyBigListView {
+extension CurrencyRatesListView {
     
     struct CurrencyItemView: View {
         
@@ -285,7 +284,6 @@ extension CurrencyBigListView {
                     .padding(.trailing, 18)
                 }
             }
-            
         }
     }
     
@@ -299,7 +297,7 @@ extension CurrencyBigListView {
                 
                 ForEach(0..<4) { _ in
                     
-                    Color.bGIconGrayLightest
+                    Color.mainColorsGrayLightest
                         .cornerRadius(12)
                         .frame(height: 72)
                         .padding(.vertical, 3)
@@ -307,19 +305,19 @@ extension CurrencyBigListView {
                 }
                 
                 Spacer()
-            }
+                
+            }.padding(.horizontal, 20)
         }
     }
-    
 }
 
 //MARK: SectionItemView
 
-extension CurrencyBigListView.CurrencyItemView {
+extension CurrencyRatesListView.CurrencyItemView {
         
     struct SectionItemView: View {
         
-        var viewModel: CurrencyBigListView.ViewModel.ItemViewModel.SectionItemViewModel
+        var viewModel: CurrencyRatesListView.ViewModel.ItemViewModel.SectionItemViewModel
         var body: some View {
                     
             HStack(spacing: 8) {
@@ -360,16 +358,22 @@ extension CurrencyBigListView.CurrencyItemView {
 
 //MARK: - Preview
 
-struct CurrencyBigListView_Previews: PreviewProvider {
+struct CurrencyRatesListView_Previews: PreviewProvider {
     
     static var previews: some View {
         
         Group {
             
-            CurrencyBigListView(viewModel: .sample)
+            CurrencyRatesListView(viewModel: .sample)
+                .previewLayout(.sizeThatFits)
+                .fixedSize()
+                .padding(.vertical, 20)
 
-            CurrencyBigListView.PlaceholderItemView()
-                .previewLayout(.fixed(width: 375, height: 300))
+            CurrencyRatesListView.PlaceholderItemView()
+                .frame(width: 375)
+                .previewLayout(.sizeThatFits)
+                .fixedSize()
+                .padding()
         }
     }
 }
