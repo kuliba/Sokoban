@@ -247,7 +247,7 @@ extension CurrencySwapView.ViewModel {
             value: currencyAmount,
             formatter: .decimal(),
             isEnabled: true,
-            limit: 10,
+            limit: 9,
             toolbar: .init(
                 doneButton: .init(isEnabled: true) { [weak self] in
                     
@@ -446,18 +446,17 @@ extension CurrencySwapView {
                         Text(viewModel.currency.description)
                             .font(.textH4M16240())
                             .foregroundColor(.mainColorsGrayMedium)
+                        
+                        if let quotesInfo = viewModel.quotesInfo {
+                            
+                            Spacer()
+                            
+                            Text(quotesInfo)
+                                .font(.textBodySR12160())
+                                .foregroundColor(.mainColorsGray)
+                        }
                     }
                 }
-                
-                if let quotesInfo = viewModel.quotesInfo {
-                    
-                    Spacer()
-                    
-                    Text(quotesInfo)
-                        .font(.textBodySR12160())
-                        .foregroundColor(.mainColorsGray)
-                }
-                
             }.padding(.horizontal, 20)
         }
     }
