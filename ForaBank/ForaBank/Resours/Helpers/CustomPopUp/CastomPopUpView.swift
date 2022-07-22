@@ -378,8 +378,8 @@ class MemeDetailVC: UIViewController {
                 vc.onlyCard = false
             }
             vc.didCardTapped = { [weak self] card in
-                self?.viewModel.cardFrom = card
-                self?.cardFromField.cardModel = card
+                self?.viewModel.cardFromRealm = card
+                self?.cardFromField.model = card
                 self?.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
                 self?.hideAllCardList()
                 vc.dismiss(animated: true, completion: nil)
@@ -428,10 +428,8 @@ class MemeDetailVC: UIViewController {
                 vc.withTemplate = false
             }
             vc.didCardTapped = { [weak self] card in
-//                self?.viewModel.cardToRealm = card
-                self?.viewModel.cardTo = card
-                self?.cardToField.cardModel = card
-//                self?.bottomView.currency = card.currency?.getSymbol() ?? ""
+                self?.viewModel.cardToRealm = card
+                self?.cardToField.model = card
                 self?.hideAllCardList()
                 vc.dismiss(animated: true, completion: nil)
             }
