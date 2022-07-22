@@ -46,20 +46,6 @@ struct MyProductsView: View {
                         .padding(.trailing, 19)
                 }
             }
-            NavigationLink("", isActive: $viewModel.isLinkActive) {
-                
-                if let link = viewModel.link  {
-                    
-                    switch link {
-                        
-                    case .openDeposit(let openDepositViewModel):
-                        OpenDepositView(viewModel: openDepositViewModel)
-                        
-                    case .productProfile(let productProfileViewModel):
-                        ProductProfileView(viewModel: productProfileViewModel)
-                    }
-                }
-            }
         }
     }
 }
