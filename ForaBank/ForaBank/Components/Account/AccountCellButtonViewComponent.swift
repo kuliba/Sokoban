@@ -32,38 +32,49 @@ struct AccountCellButtonView: View {
     
     var body: some View {
         
-        HStack(spacing: 20) {
+        Button {
             
-            ZStack {
+            viewModel.button.action()
+            
+        } label: {
+            
+            HStack(spacing: 20) {
                 
-                RoundedRectangle(cornerRadius: 20)
-                    .foregroundColor(.mainColorsGrayLightest)
-                    .frame(width: 40, height: 40)
+                ZStack {
+                    
+                    RoundedRectangle(cornerRadius: 20)
+                        .foregroundColor(.mainColorsGrayLightest)
+                        .frame(width: 40, height: 40)
+                    
+                    viewModel.icon
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(.black)
+                }
                 
-                viewModel.icon
+                VStack(alignment: .leading, spacing: 8) {
+                    
+                    if let placeholder = viewModel.title {
+                        
+                        Text(verbatim: placeholder)
+                            .font(.textBodySR12160())
+                            .foregroundColor(.textPlaceholder)
+                    }
+                    
+                    Text(verbatim: viewModel.content)
+                        .font(.textH4M16240())
+                        .foregroundColor(.textSecondary)
+                }
+                
+                Spacer()
+                
+                viewModel.button.icon
                     .resizable()
                     .scaledToFill()
                     .frame(width: 24, height: 24)
                     .foregroundColor(.black)
             }
-            
-            VStack(alignment: .leading, spacing: 8) {
-                
-                if let placeholder = viewModel.title {
-                    
-                    Text(verbatim: placeholder)
-                        .font(.textBodySR12160())
-                        .foregroundColor(.textPlaceholder)
-                }
-                
-                Text(verbatim: viewModel.content)
-                    .font(.textH4M16240())
-                    .foregroundColor(.textSecondary)
-            }
-            
-            Spacer()
-            
-            ButtonView(viewModel: viewModel.button)
         }
         .frame(height: 56, alignment: .leading)
     }
