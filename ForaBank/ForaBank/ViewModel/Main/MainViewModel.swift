@@ -72,14 +72,33 @@ class MainViewModel: ObservableObject, Resetable {
             .sink { [unowned self] action in
                 
                 switch action {
+                case let payload as MainViewModelAction.Show.ProductProfile:
+                    guard let prooduct = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }) else {
+                        return
+                    }
+                    
+                    guard let productProfileViewModel = ProductProfileViewModel(model, product: prooduct, dismissAction: { [weak self] in
+                              self?.action.send(MainViewModelAction.Close.Link())
+                          }) else {
+                        return
+                    }
+                    productProfileViewModel.rootActions = rootActions
+                    bind(productProfileViewModel)
+                    link = .productProfile(productProfileViewModel)
+                    
+                case _ as MainViewModelAction.Show.OpenDeposit:
+                    let openDepositViewModel = OpenDepositViewModel(model, catalogType: .deposit, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())
+                    })
+                    link = .openDeposit(openDepositViewModel)
+                    
                 case _ as MainViewModelAction.ButtonTapped.UserAccount:
                     guard let clientInfo = model.clientInfo.value else {
                         return
                     }
-                    link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseAction.Link())}))
+                    link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())}))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
-                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {[weak self] in self?.action.send(MainViewModelAction.CloseAction.Link())})
+                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())})
                     link = .messages(messagesHistoryViewModel)
                     
                 case _ as MainViewModelAction.PullToRefresh:
@@ -87,11 +106,12 @@ class MainViewModel: ObservableObject, Resetable {
                     model.action.send(ModelAction.Dictionary.UpdateCache.Request(type: .currencyList, serial: nil))
                     model.action.send(ModelAction.Dictionary.UpdateCache.Request(type: .currencyWalletList, serial: nil))
                 
-                case _ as MainViewModelAction.CloseAction.Link:
+                case _ as MainViewModelAction.Close.Link:
                     self.link = nil
                     
-                case _ as MainViewModelAction.CloseAction.Sheet:
+                case _ as MainViewModelAction.Close.Sheet:
                     self.sheet = nil
+                    
                 default:
                     break
                 }
@@ -137,8 +157,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 bottomSheet = .init(type: .openAccount(model))
                                 
                             case .deposit:
-                                link = .openDeposit(.init(model, catalogType: .deposit, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseAction.Link())
-                                }))
+                                self.action.send(MainViewModelAction.Show.OpenDeposit())
                                 
                             default:
                                 break
@@ -159,12 +178,12 @@ class MainViewModel: ObservableObject, Resetable {
                         case let payload as MainSectionViewModelAction.FastPayment.ButtonTapped:
                             switch payload.operationType {
                             case .templates:
-                                link = .templates(.init(model, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseAction.Link())
+                                link = .templates(.init(model, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())
                                 }))
                                 
                             case .byPhone:
                                 sheet = .init(type: .byPhone(.init(closeAction: { [weak self] in
-                                    self?.action.send(MainViewModelAction.CloseAction.Sheet())
+                                    self?.action.send(MainViewModelAction.Close.Sheet())
                                 })))
                             case .byQr:
                                 if model.cameraAgent.isCameraAvailable {
@@ -172,7 +191,7 @@ class MainViewModel: ObservableObject, Resetable {
                                         
                                         if available {
                                             self.link = .qrScanner(.init(closeAction: { [weak self] in
-                                                self?.action.send(MainViewModelAction.CloseAction.Link())
+                                                self?.action.send(MainViewModelAction.Close.Link())
                                             }))
                                         } else {
                                             self.alert = .init(
@@ -201,22 +220,14 @@ class MainViewModel: ObservableObject, Resetable {
                     switch action {
                         // products section
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
-                    
-                        guard let prooduct = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }),
-                              let productProfileViewModel = ProductProfileViewModel(model, product: prooduct, dismissAction: { [weak self] in
-                                  self?.action.send(MainViewModelAction.CloseAction.Link())
-                              }) else { return }
-                        productProfileViewModel.rootActions = rootActions
-                        link = .productProfile(productProfileViewModel)
-                        
+                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
+    
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
-                        
-                        link = .myProducts(MyProductsViewModel(model, dismissAction: { [weak self] in
-                            self?.action.send(MainViewModelAction.CloseAction.Link())
-                        }))
+                        let myProductsViewModel = MyProductsViewModel(model)
+                        bind(myProductsViewModel)
+                        sheet = .init(type: .myProducts(myProductsViewModel))
                         
                         // CurrencyMetall section
-                        
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Item :
                     
                         print("mdy: Item-\(payload.code.description)") // -> USD, GBR, EUR
@@ -256,6 +267,62 @@ class MainViewModel: ObservableObject, Resetable {
                     }.store(in: &bindings)
             }
         }
+    }
+    
+    private func bind(_ productProfile: ProductProfileViewModel) {
+        
+        productProfile.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ProductProfileViewModelAction.MyProductsTapped.ProductProfile:
+                    self.action.send(MainViewModelAction.Close.Link())
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                        
+                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
+                    }
+                    
+                case _ as ProductProfileViewModelAction.MyProductsTapped.OpenDeposit:
+                    self.action.send(MainViewModelAction.Close.Link())
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                        
+                        self.action.send(MainViewModelAction.Show.OpenDeposit())
+                    }
+
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func bind(_ myProductsViewModel: MyProductsViewModel) {
+        
+        myProductsViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as MyProductsViewModelAction.Tapped.Product:
+                    self.action.send(MainViewModelAction.Close.Sheet())
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                        
+                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
+                    }
+                    
+                case _ as MyProductsViewModelAction.Tapped.OpenDeposit:
+                    self.action.send(MainViewModelAction.Close.Sheet())
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                        
+                        self.action.send(MainViewModelAction.Show.OpenDeposit())
+                    }
+
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
     
     private func update(_ sections: [MainSectionViewModel], with settings: MainSectionsSettings) {
@@ -322,6 +389,7 @@ extension MainViewModel {
             case messages(MessagesHistoryViewModel)
             case places(PlacesViewModel)
             case byPhone(TransferByPhoneViewModel)
+            case myProducts(MyProductsViewModel)
         }
     }
     
@@ -333,7 +401,6 @@ extension MainViewModel {
         case openDeposit(OpenDepositViewModel)
         case templates(TemplatesListViewModel)
         case qrScanner(QrViewModel)
-        case myProducts(MyProductsViewModel)
     }
 
     struct BottomSheet: Identifiable {
@@ -363,11 +430,22 @@ enum MainViewModelAction {
     
     struct PullToRefresh: Action {}
     
-    enum CloseAction {
+    enum Close {
      
         struct Link: Action {}
         
         struct Sheet: Action {}
     }
+    
+    enum Show {
+    
+        struct ProductProfile: Action {
+            
+            let productId: ProductData.ID
+        }
+        
+        struct OpenDeposit: Action {}
+    }
+
 }
 

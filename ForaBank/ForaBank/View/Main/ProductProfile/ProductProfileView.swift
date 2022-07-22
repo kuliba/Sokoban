@@ -101,17 +101,11 @@ struct ProductProfileView: View {
                         MeToMeExternalView(viewModel: meToMeExternalViewModel)
                             .navigationBarTitle("", displayMode: .inline)
                             .edgesIgnoringSafeArea(.bottom)
-                        
-                    case let .myProducts(myProductsViewModel):
-                        MyProductsView(viewModel: myProductsViewModel)
                     }
                 }
             }
         }
         .navigationBar(with: viewModel.navigationBar)
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
         .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
             
             switch sheet.type {
@@ -138,7 +132,12 @@ struct ProductProfileView: View {
             case .placesMap(let placesViewModel):
                 PlacesView(viewModel: placesViewModel)
                 
+            case let .myProducts(myProductsViewModel):
+                MyProductsView(viewModel: myProductsViewModel)
             }
+        })
+        .alert(item: $viewModel.alert, content: { alertViewModel in
+            Alert(with: alertViewModel)
         })
         .textfieldAlert(alert: $viewModel.textFieldAlert)
     }
