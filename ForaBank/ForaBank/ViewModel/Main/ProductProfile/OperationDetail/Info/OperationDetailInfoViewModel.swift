@@ -141,7 +141,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             
         case .contactAddressless:
             
-            if let image = statement.svgImage?.image {
+            if let image = model.images.value[statement.md5hash]?.image {
                 
                 logo = image
             }
@@ -252,10 +252,8 @@ final class OperationDetailInfoViewModel: Identifiable {
             }
             
             if let bankBic = operation?.payeeBankBIC,
-               let bank = Dict.shared.bankFullInfoList?.first(where: {$0.bic == bankBic}),
-               let bankLogoSVG = bank.svgImage {
-                
-                let bankLogoImage = Image(uiImage: bankLogoSVG.convertSVGStringToImage())
+               let bank = model.dictionaryFullBankInfoBank(for: bankBic),
+               let bankLogoImage = bank.svgImage.image {
                 
                 cells.append(BankCellViewModel(title: "Бик банка получателя", icon: bankLogoImage, name: bankBic))
             }
@@ -297,13 +295,10 @@ final class OperationDetailInfoViewModel: Identifiable {
                 
                 cells.append(PropertyCellViewModel(title: "КПП получателя", iconType: .nil, value: payeeKPP))
             }
-            
-            if let bankBic = operation?.payeeBankBIC,
-               let memberId = operation?.memberId,
-               let bank = Dict.shared.banks?.first(where: { $0.memberID == memberId }),
-               let bankLogoSVG = bank.svgImage {
                 
-                let bankLogoImage = Image(uiImage: bankLogoSVG.convertSVGStringToImage())
+            if let bankBic = operation?.payeeBankBIC,
+               let bank = model.dictionaryFullBankInfoBank(for: bankBic),
+               let bankLogoImage = bank.svgImage.image {
                 
                 cells.append(BankCellViewModel(title: "Банк получателя", icon: bankLogoImage, name: bankBic))
             }
@@ -326,7 +321,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             
         case .insideOther:
             
-            if let image = statement.svgImage?.image {
+            if let image = model.images.value[statement.md5hash]?.image {
                 
                 cells.append(BankCellViewModel(title: "Наименование операции", icon: image, name: statement.merchant))
             }
@@ -338,7 +333,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             
         case .mobile:
             
-            if let image = statement.svgImage?.image {
+            if let image = model.images.value[statement.md5hash]?.image {
                 
                 logo = image
             }
@@ -350,7 +345,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 
             }
             
-            if let provider = operation?.provider, let image = statement.svgImage?.image {
+            if let provider = operation?.provider, let image = model.images.value[statement.md5hash]?.image {
                 
                 cells.append(BankCellViewModel(title: "Наименование получателя", icon: image, name: provider))
             }
@@ -371,7 +366,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             
         case .internet:
             
-            if let image = statement.svgImage?.image {
+            if let image = model.images.value[statement.md5hash]?.image {
                 
                 logo = image
                 
@@ -399,7 +394,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             
         case .housingAndCommunalService:
             
-            if let image = statement.svgImage?.image {
+            if let image = model.images.value[statement.md5hash]?.image {
                 
                 logo = image
                 
@@ -457,13 +452,13 @@ final class OperationDetailInfoViewModel: Identifiable {
             
         case .outsideOther:
             
-            if let image = statement.svgImage?.image {
+            if let image = model.images.value[statement.md5hash]?.image {
                 
                 logo = image
+                
+                cells.append(BankCellViewModel(title: "Наименование получателя", icon: image, name: statement.merchant))
             }
-            
-            cells.append(PropertyCellViewModel(title: "Наименование получателя", iconType: .user, value: statement.merchant))
-            
+                    
             if let mcc = statement.mcc {
                 
                 cells.append(PropertyCellViewModel(title: "Категория операции", iconType: .nil, value: "\(statement.groupName) (\(mcc))"))
@@ -502,9 +497,9 @@ final class OperationDetailInfoViewModel: Identifiable {
             cells.append(PropertyCellViewModel(title: "Получатель", iconType: .user, value: statement.merchant))
             
             if let bankName = statement.fastPayment?.foreignBankName, statement.operationType == .debit {
-                cells.append(BankCellViewModel(title: "Банк получателя", icon:  statement.svgImage?.image ?? Image.ic12LogoForaColor, name: bankName))
+                cells.append(BankCellViewModel(title: "Банк получателя", icon:  model.images.value[statement.md5hash]?.image ?? Image.ic12LogoForaColor, name: bankName))
             } else if let bankName = statement.fastPayment?.foreignBankName {
-                cells.append(BankCellViewModel(title: "Банк отправителя", icon:  statement.svgImage?.image ?? Image.ic12LogoForaColor, name: bankName))
+                cells.append(BankCellViewModel(title: "Банк отправителя", icon:  model.images.value[statement.md5hash]?.image ?? Image.ic12LogoForaColor, name: bankName))
             }
             
             cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
@@ -533,7 +528,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             
         case .transport:
             
-            if let image = statement.svgImage?.image {
+            if let image = model.images.value[statement.md5hash]?.image {
                 
                 logo = image
                 
@@ -574,7 +569,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             }
             cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
             
-            if let image = statement.svgImage?.image {
+            if let image = model.images.value[statement.md5hash]?.image {
                 
                 cells.append(BankCellViewModel(title: "Наименование ТСП", icon: image, name: statement.merchant))
             }
@@ -588,7 +583,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 
                 cells.append(BankCellViewModel(title: "Банк получателя", icon:  imageBank ?? Image("bank_icon"), name: bankName))
                 
-            } else if let bankName = statement.fastPayment?.foreignBankName, let icon = statement.svgImage?.image {
+            } else if let bankName = statement.fastPayment?.foreignBankName, let icon = model.images.value[statement.md5hash]?.image {
                 
                 cells.append(BankCellViewModel(title: "Банк отправителя", icon: icon, name: bankName))
             }
