@@ -76,7 +76,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                         
                         if let description = card.number?.suffix(4), let balance = card.balance?.currencyFormatter(symbol: card.currency), let icon = card.smallDesign.image, let additional = card.additionalField {
                             
-                            cells.append(ProductCellViewModel(title: "Счет пополнения", icon: icon, name: card.productName, iconPaymentService: nil, balance: balance, description: "· \(description) · \(additional)"))
+                            cells.append(ProductCellViewModel(title: "Счет пополнения", icon: icon, name: card.mainField, iconPaymentService: nil, balance: balance, description: "· \(description) · \(additional)"))
                         }
                     }
                 }
@@ -97,7 +97,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                         
                         if let description = card.number?.suffix(4), let balance = card.balance?.currencyFormatter(symbol: card.currency), let icon = card.smallDesign.image, let additional = card.additionalField {
                             
-                            cells.append(ProductCellViewModel(title: "Счет списания", icon: icon, name: card.productName, iconPaymentService: nil, balance: balance, description: "· \(description) · \(additional)"))
+                            cells.append(ProductCellViewModel(title: "Счет списания", icon: icon, name: card.mainField, iconPaymentService: nil, balance: balance, description: "· \(description) · \(additional)"))
                         }
                     }
                 }
