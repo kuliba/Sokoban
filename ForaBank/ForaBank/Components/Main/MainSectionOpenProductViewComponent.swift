@@ -74,7 +74,7 @@ extension MainSectionOpenProductView {
         private func description(for type: ProductType) -> String {
             
             switch type {
-            case .card: return "62 дня без %"
+            case .card: return "Все включено"
             case .account: return "Бесплатно"
             case .deposit: return depositDescription(with: model.deposits.value)
             case .loan: return "от 7% годов."

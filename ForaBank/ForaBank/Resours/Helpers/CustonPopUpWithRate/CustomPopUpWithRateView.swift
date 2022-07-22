@@ -73,6 +73,8 @@ class CustomPopUpWithRateView: UIViewController {
     
     init(cardFrom: UserAllCardsModel, maxSum: Double?) {
         super.init(nibName: nil, bundle: nil)
+        self.sumMax = maxSum
+        
         self.cardFrom = cardFrom
         self.cardFromField.model = cardFrom
         self.cardFromField.choseButton?.isHidden = true
@@ -110,6 +112,7 @@ class CustomPopUpWithRateView: UIViewController {
     
     init(cardFrom: UserAllCardsModel, totalAmount: Double) {
         super.init(nibName: nil, bundle: nil)
+        self.sumMax = totalAmount
         self.cardFrom = cardFrom
         self.cardFromField.model = cardFrom
         self.cardFromField.choseButton?.isHidden = true
@@ -255,7 +258,7 @@ class CustomPopUpWithRateView: UIViewController {
     @objc func buttonActionTotal(sender: UIButton) {
         
         let vc = InfoViewController()
-        vc.infoTitle = "Вы можете снять полную сумму вклада и  выплаченных процентов"
+        vc.infoTitle = "Вы можете снять полную сумму вклада и выплаченных процентов"
         
         let nav = UINavigationController(rootViewController: vc)
         nav.modalPresentationStyle = .custom

@@ -114,6 +114,12 @@ class ContactInputViewController: UIViewController {
     //MARK: - Viewlifecicle
     init() {
         super.init(nibName: nil, bundle: nil)
+        let button = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                     action: #selector(onTouchBackButton))
+        navigationItem.leftBarButtonItem = button
     }
     
     init(paymentTemplate: PaymentTemplateData) {
@@ -181,6 +187,7 @@ class ContactInputViewController: UIViewController {
     }
     
     @objc func onTouchBackButton() {
+        operatorsViewModel?.closeAction()
         navigationController?.popToRootViewController(animated: true)
     }
     

@@ -261,7 +261,7 @@ enum MyProductsSectionItemAction {
     }
     
     struct Tap: Action {
-        let productId: MyProductsSectionItemViewModel.ID
+        let productId: ProductData.ID
     }
     
     struct PlaceholderTap: Action {

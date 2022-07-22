@@ -83,7 +83,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                       self?.action.send(PaymentsTransfersViewModelAction
                                                         .Close.Link() )}))
                 
-                case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:
+                case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:                    
                     if model.cameraAgent.isCameraAvailable {
                         model.cameraAgent.requestPermissions(completion: { available in
                             
@@ -159,27 +159,33 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         
                         switch (payload.latestPayment.type, payload.latestPayment) {
                         case (.phone, let paymentData as PaymentGeneralData):
-                            link = .init(.phone(PaymentByPhoneViewModel(phoneNumber: paymentData.phoneNumber, bankId: paymentData.bankId, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            link = .init(.phone(PaymentByPhoneViewModel(phoneNumber: paymentData.phoneNumber, bankId: paymentData.bankId, closeAction: { [weak self] in
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             })))
                         
                         case (.country, let paymentData as PaymentCountryData):
-                            link = .init(.country(.init(countryData: paymentData, operatorsViewModel: .init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            link = .init(.country(CountryPaymentView.ViewModel(countryData: paymentData, operatorsViewModel: .init(closeAction: { [weak self] in
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }, template: nil))))
                             
                         case (.service, let paymentData as PaymentServiceData):
-                            link = .service(.init(model: model, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            link = .service(.init(model: model, closeAction: { [weak self] in
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }, paymentServiceData: paymentData))
                                     
                         case (.transport, let paymentData as PaymentServiceData):
-                            link = .transport(.init(model: model, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            link = .transport(.init(model: model, closeAction: { [weak self] in
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }, paymentServiceData: paymentData))
                             
                         case (.internet, let paymentData as PaymentServiceData):
-                            link = .internet(.init(model: model, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            link = .internet(.init(model: model, closeAction: { [weak self] in
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }, paymentServiceData: paymentData))
                             
                         case (.mobile, let paymentData as PaymentServiceData):
-                            link = .mobile(.init(paymentServiceData: paymentData, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            link = .mobile(.init(paymentServiceData: paymentData, closeAction: { [weak self] in
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }))
                             
                         case (.taxAndStateService, let paymentData as PaymentServiceData):

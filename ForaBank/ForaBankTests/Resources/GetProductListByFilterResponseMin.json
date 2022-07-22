@@ -3,6 +3,7 @@
     {
       "XLDesign": "string",
       "accountNumber": "40817810000000000001",
+      "cardID": 10001639855,
       "allowCredit": true,
       "allowDebit": true,
       "background": ["FFBB36"],

@@ -308,6 +308,7 @@ extension CustomPopUpWithRateView {
                             self.viewModel.cardFromRealm = card
                             self.reversCard = ""
                             self.cardFromField.model = card
+                            self.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
                             self.hideView(self.cardFromListView, needHide: true) {
                                 if !self.cardToListView.isHidden {
                                     self.hideView(self.cardToListView, needHide: true) { }
@@ -329,10 +330,11 @@ extension CustomPopUpWithRateView {
                     vc.onlyCard = false
                 }
                 vc.didCardTapped = { card in
-                    self.viewModel.cardFrom = card
+                    self.viewModel.cardFromRealm = card
                     self.reversCard = ""
-                    self.bottomView.models.from = card.currency ?? ""
-                    self.cardFromField.cardModel = card
+                    self.cardFromField.model = card
+                    self.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
+
                     if !self.cardFromListView.isHidden {
                         self.hideView(self.cardFromListView, needHide: true) {
                             self.hideView(self.cardToListView, needHide: true) {
@@ -369,6 +371,7 @@ extension CustomPopUpWithRateView {
                         self.viewModel.cardToRealm = card
                         self.reversCard = ""
                         self.cardToField.model = card
+                        
                         self.hideView(self.cardToListView, needHide: true) {
                             if self.withProducts, !self.cardFromListView.isHidden {
                                 self.hideView(self.cardFromListView, needHide: true) { }
@@ -388,9 +391,10 @@ extension CustomPopUpWithRateView {
                 vc.withTemplate = false
             }
             vc.didCardTapped = { card in
-                self.viewModel.cardTo = card
+                self.viewModel.cardToRealm = card
                 self.reversCard = ""
-                self.cardToField.cardModel = card
+                self.cardToField.model = card
+                
                 self.hideView(self.cardToListView, needHide: true) {
                     if let cardFromListView = self.cardFromListView, !cardFromListView.isHidden {
                         self.hideView(self.cardFromListView, needHide: true) { }

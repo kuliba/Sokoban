@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 //MARK: - ViewModel
 
@@ -18,7 +19,12 @@ extension TextFieldFormatableView {
         @Published var text: String?
         @Published var isEnabled: Bool
         @Published var limit: Int?
+        
+        let type: Kind
+        let toolbar: ToolbarViewModel?
         var dismissKeyboard: () -> Void
+        
+        var bindings = Set<AnyCancellable>()
         
         var value: Double {
             
@@ -29,13 +35,42 @@ extension TextFieldFormatableView {
             return value.doubleValue
         }
         
-        internal init(value: Double, formatter: NumberFormatter, isEnabled: Bool = true, limit: Int? = nil) {
+        enum Kind {
             
+            case general
+            case currencyWallet
+        }
+        
+        internal init(type: Kind = .general, value: Double, formatter: NumberFormatter, isEnabled: Bool = true, limit: Int? = nil, toolbar: ToolbarViewModel? = nil) {
+            
+            self.type = type
             self.formatter = formatter
             self.text = formatter.string(from: NSNumber(value: value))
             self.isEnabled = isEnabled
             self.limit = limit
+            self.toolbar = toolbar
             self.dismissKeyboard = {}
+        }
+    }
+}
+
+extension TextFieldFormatableView {
+    
+    struct ToolbarViewModel {
+        
+        let doneButton: ButtonViewModel
+        let closeButton: ButtonViewModel?
+        
+        class ButtonViewModel: ObservableObject {
+
+            @Published var isEnabled: Bool
+            let action: () -> Void
+
+            init(isEnabled: Bool, action: @escaping () -> Void) {
+
+                self.isEnabled = isEnabled
+                self.action = action
+            }
         }
     }
 }
@@ -65,6 +100,10 @@ struct TextFieldFormatableView: UIViewRepresentable {
         textField.keyboardType = keyboardType
         
         viewModel.dismissKeyboard = { textField.resignFirstResponder() }
+        
+        if viewModel.toolbar != nil {
+            textField.inputAccessoryView = makeToolbar(context: context)
+        }
  
         return textField
     }
@@ -77,17 +116,20 @@ struct TextFieldFormatableView: UIViewRepresentable {
     
     func makeCoordinator() -> Coordinator {
         
-        Coordinator(text: $viewModel.text, formatter: viewModel.formatter, limit: viewModel.limit)
+        Coordinator(viewModel: viewModel, text: $viewModel.text, formatter: viewModel.formatter, limit: viewModel.limit)
     }
     
     class Coordinator: NSObject, UITextFieldDelegate {
+        
+        @ObservedObject var viewModel: ViewModel
         
         var text: Binding<String?>
         var formatter: NumberFormatter
         var limit: Int?
         
-        init(text: Binding<String?>, formatter: NumberFormatter, limit: Int?) {
+        init(viewModel: ViewModel, text: Binding<String?>, formatter: NumberFormatter, limit: Int?) {
             
+            self.viewModel = viewModel
             self.text = text
             self.formatter = formatter
             self.limit = limit
@@ -95,14 +137,27 @@ struct TextFieldFormatableView: UIViewRepresentable {
         
         func textFieldDidChangeSelection(_ textField: UITextField) {
             
-            updateCursorPosition(textField)
+            switch viewModel.type {
+            case .general:
+                updateCursorPosition(textField)
+            default: break
+            }
         }
         
         public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 
-            textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter, limit: limit)
-            text.wrappedValue = textField.text
-            updateCursorPosition(textField)
+            switch viewModel.type {
+            case .general:
+                
+                textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter, limit: limit)
+                text.wrappedValue = textField.text
+                updateCursorPosition(textField)
+                
+            case .currencyWallet:
+                
+                textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter, limit: limit)
+                text.wrappedValue = textField.text
+            }
             
             return false
         }
@@ -114,6 +169,14 @@ struct TextFieldFormatableView: UIViewRepresentable {
 
                 textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
             }
+        }
+        
+        @objc func handleDoneAction() {
+            viewModel.toolbar?.doneButton.action()
+        }
+
+        @objc func handleCloseAction() {
+            viewModel.toolbar?.closeButton?.action()
         }
     }
     
@@ -134,9 +197,18 @@ struct TextFieldFormatableView: UIViewRepresentable {
             let rangeStart = value.index(value.startIndex, offsetBy: inRange.lowerBound)
             let rangeEnd = value.index(value.startIndex, offsetBy: inRange.upperBound)
             
-            // apply update to value in range
             var updatedValue = value
+            
+            // apply update to value in range
             updatedValue.replaceSubrange(rangeStart..<rangeEnd, with: update)
+            
+            let semicolon = updatedValue.filter { ".,".contains($0) }
+            
+            // number dots and commas is not more than one
+            if semicolon.count > 1 {
+                return value
+            }
+            
             // remove formatting from value, example: `1 234,56 ₽` -> `1234,56`
             updatedValue = updatedValue.filter{ expectedCharacters.contains($0) }
 
@@ -212,5 +284,49 @@ struct TextFieldFormatableView: UIViewRepresentable {
             // return formatted double value, example: `1234.56` -> `1 234,56 ₽`
             return formatter.string(from: NSNumber(value: doubleValue))
         }
+    }
+    
+    private func makeToolbar(context: Context) -> UIToolbar? {
+        
+        let coordinator = context.coordinator
+        
+        guard let toolbarViewModel = coordinator.viewModel.toolbar else {
+            return nil
+        }
+
+        let toolbar = UIToolbar()
+        let color: UIColor = .init(hexString: "#1C1C1C")
+        let font: UIFont = .systemFont(ofSize: 18, weight: .bold)
+
+        let doneButton = UIBarButtonItem(title: "Готово", style: .plain, target: coordinator, action: #selector(coordinator.handleDoneAction))
+        doneButton.setTitleTextAttributes([.font: font], for: .normal)
+        doneButton.tintColor = color
+
+        toolbarViewModel.doneButton.$isEnabled
+            .receive(on: DispatchQueue.main)
+            .sink { isEnabled in
+
+                doneButton.isEnabled = isEnabled
+
+            }.store(in: &viewModel.bindings)
+
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        var items: [UIBarButtonItem] = [flexibleSpace, doneButton]
+        
+        if toolbarViewModel.closeButton != nil {
+            
+            let closeButton = UIBarButtonItem( image: .init(named: "Close Button"), style: .plain, target: coordinator, action: #selector(coordinator.handleCloseAction))
+            closeButton.tintColor = color
+            
+            items.insert(closeButton, at: 0)
+        }
+
+        toolbar.items = items
+        toolbar.barStyle = .default
+        toolbar.barTintColor = .white.withAlphaComponent(0)
+        toolbar.clipsToBounds = true
+        toolbar.sizeToFit()
+
+        return toolbar
     }
 }

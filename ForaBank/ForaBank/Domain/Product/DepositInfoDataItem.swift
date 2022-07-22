@@ -8,7 +8,7 @@
 import Foundation
 
 //FIXME: rename to DepositInfoData after refactoring
-class DepositInfoDataItem: Decodable, Equatable {
+struct DepositInfoDataItem: Equatable {
 
 	let balance: Double
 	let dateEnd: Date?
@@ -24,7 +24,7 @@ class DepositInfoDataItem: Decodable, Equatable {
 	let termDay: String?
     let sumPayPrc: Double?
     
-    internal init(balance: Double, dateEnd: Date?, dateNext: Date, dateOpen: Date, id: Int, initialAmount: Double, interestRate: Double, sumAccInt: Double, sumCredit: Double?, sumDebit: Double?, sumPayInt: Double, termDay: String?, sumPayPrc: Double?) {
+    init(balance: Double, dateEnd: Date?, dateNext: Date, dateOpen: Date, id: Int, initialAmount: Double, interestRate: Double, sumAccInt: Double, sumCredit: Double?, sumDebit: Double?, sumPayInt: Double, termDay: String?, sumPayPrc: Double?) {
         
         self.id = id
         self.balance = balance
@@ -40,13 +40,16 @@ class DepositInfoDataItem: Decodable, Equatable {
         self.termDay = termDay
         self.sumPayPrc = sumPayPrc
     }
+}
+
+extension DepositInfoDataItem: Codable {
     
     private enum CodingKeys: String, CodingKey {
         
         case balance, dateEnd, dateNext, dateOpen, id, initialAmount, interestRate, sumAccInt, sumCredit, sumDebit, sumPayInt, termDay, sumPayPrc
     }
     
-    required init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
         balance = try container.decode(Double.self, forKey: .balance)
@@ -77,7 +80,24 @@ class DepositInfoDataItem: Decodable, Equatable {
         sumPayPrc = try container.decodeIfPresent(Double.self, forKey: .sumPayPrc)
     }
     
-    static func == (lhs: DepositInfoDataItem, rhs: DepositInfoDataItem) -> Bool {
-        return rhs.id == lhs.id
+    func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(balance, forKey: .balance)
+        if let dateEnd = dateEnd {
+            
+            try container.encode(Int(dateEnd.timeIntervalSince1970) * 1000, forKey: .dateEnd)
+        }
+        try container.encode(Int(dateNext.timeIntervalSince1970) * 1000, forKey: .dateNext)
+        try container.encode(Int(dateOpen.timeIntervalSince1970) * 1000, forKey: .dateOpen)
+        try container.encode(id, forKey: .id)
+        try container.encode(initialAmount, forKey: .initialAmount)
+        try container.encode(interestRate, forKey: .interestRate)
+        try container.encode(sumAccInt, forKey: .sumAccInt)
+        try container.encodeIfPresent(sumCredit, forKey: .sumCredit)
+        try container.encodeIfPresent(sumDebit, forKey: .sumDebit)
+        try container.encode(sumPayInt, forKey: .sumPayInt)
+        try container.encodeIfPresent(termDay, forKey: .termDay)
+        try container.encodeIfPresent(sumPayPrc, forKey: .sumPayPrc)
     }
 }

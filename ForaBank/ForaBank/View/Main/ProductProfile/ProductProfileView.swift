@@ -91,6 +91,7 @@ struct ProductProfileView: View {
                     switch link {
                     case .productInfo(let productInfoViewModel):
                         InfoProductView(viewModel: productInfoViewModel)
+                            .edgesIgnoringSafeArea(.bottom)
                         
                     case let .productStatement(productStatementViewModel):
                         ProductStatementView(viewModel: productStatementViewModel)
@@ -106,9 +107,6 @@ struct ProductProfileView: View {
             }
         }
         .navigationBar(with: viewModel.navigationBar)
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
         .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
             
             switch sheet.type {
@@ -124,7 +122,7 @@ struct ProductProfileView: View {
             case let .meToMe(meToMeViewModel):
                 MeToMeView(viewModel: meToMeViewModel)
                     .edgesIgnoringSafeArea(.bottom)
-                    .frame(height: 540)
+                    .frame(height: 440)
             }
         })
         .sheet(item: $viewModel.sheet, content: { sheet in
@@ -135,7 +133,12 @@ struct ProductProfileView: View {
             case .placesMap(let placesViewModel):
                 PlacesView(viewModel: placesViewModel)
                 
+            case let .myProducts(myProductsViewModel):
+                MyProductsView(viewModel: myProductsViewModel)
             }
+        })
+        .alert(item: $viewModel.alert, content: { alertViewModel in
+            Alert(with: alertViewModel)
         })
         .textfieldAlert(alert: $viewModel.textFieldAlert)
     }

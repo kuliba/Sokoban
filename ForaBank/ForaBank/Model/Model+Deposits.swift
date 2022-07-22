@@ -9,6 +9,8 @@ import Foundation
 
 //MARK: - Action
 
+typealias DepositsInfoData = [ProductData.ID: DepositInfoDataItem]
+
 extension ModelAction {
     
     enum Deposits {
@@ -25,15 +27,20 @@ extension ModelAction {
         
         enum Info {
             
-            struct Request: Action {
-                
-                let id: Int
-            }
+            struct All: Action {}
             
-            enum Response: Action {
+            enum Single {
+            
+                struct Request: Action {
+                    
+                    let productId: ProductData.ID
+                }
                 
-                case success(data: DepositInfoDataItem)
-                case failure(message: String)
+                enum Response: Action {
+                    
+                    case success(data: DepositInfoDataItem)
+                    case failure(message: String)
+                }
             }
         }
         
@@ -133,14 +140,26 @@ extension Model {
         }
     }
     
-    func handleDepositsInfoRequest(id: Int) {
+    func handleDepositsInfoAllRequest() {
+        
+        guard let depositsProducts = products.value[.deposit], depositsProducts.isEmpty == false else {
+            return
+        }
+        
+        for deposit in depositsProducts {
+            
+            action.send(ModelAction.Deposits.Info.Single.Request(productId: deposit.id))
+        }
+    }
+    
+    func handleDepositsInfoSingleRequest(_ payload: ModelAction.Deposits.Info.Single.Request) {
         
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
             return
         }
         
-        let command = ServerCommands.DepositController.GetDepositInfo(token: token, payload: .init(id: id))
+        let command = ServerCommands.DepositController.GetDepositInfo(token: token, productId: payload.productId)
         serverAgent.executeCommand(command: command) { result in
             
             switch result {
@@ -151,15 +170,39 @@ extension Model {
                         self.handleServerCommandEmptyData(command: command)
                         return
                     }
-                    self.action.send(ModelAction.Deposits.Info.Response.success(data: info))
-
+                    self.action.send(ModelAction.Deposits.Info.Single.Response.success(data: info))
+                    self.depositsInfo.value = Self.reduce(depositsInfoData: self.depositsInfo.value, productId: payload.productId, info: info)
+                    
+                    do {
+                        
+                        try self.localAgent.store(self.depositsInfo.value, serial: nil)
+                        
+                    } catch {
+                        
+                        //TODO: log
+                        print("log: handleDepositsInfoRequest: storing to cache error: \(error)")
+                    }
+  
                 default:
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)
-                self.action.send(ModelAction.Deposits.Info.Response.failure(message: error.localizedDescription))
+                self.action.send(ModelAction.Deposits.Info.Single.Response.failure(message: error.localizedDescription))
             }
         }
+    }
+}
+
+//MARK: - Reducers
+
+extension Model {
+    
+    static func reduce(depositsInfoData: DepositsInfoData, productId: ProductData.ID, info: DepositInfoDataItem) -> DepositsInfoData {
+        
+        var updated = depositsInfoData
+        updated[productId] = info
+        
+        return updated
     }
 }

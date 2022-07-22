@@ -161,7 +161,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
             let vc = AllCardListViewController()
             vc.withTemplate = false
             vc.didCardTapped = { card in
-                self.cardField.cardModel = card
+                self.cardField.model = card
                 //                self.selectedCardNumber = card.cardID ?? 0
                 self.hideView(self.cardListView, needHide: true)
                 vc.dismiss(animated: true, completion: nil)

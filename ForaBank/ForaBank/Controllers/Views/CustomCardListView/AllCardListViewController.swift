@@ -41,7 +41,7 @@ class AllCardListViewController: UITableViewController {
     
     let model = Model.shared
     
-    var cardModel: [GetProductListDatum] = [] {
+    var cardModel: [UserAllCardsModel] = [] {
         didSet { DispatchQueue.main.async {
             self.tableView.reloadData() } } }
     
@@ -49,7 +49,7 @@ class AllCardListViewController: UITableViewController {
         didSet { DispatchQueue.main.async {
             self.tableView.reloadData() } } }
 
-    var didCardTapped: ((GetProductListDatum) -> Void)?
+    var didCardTapped: ((UserAllCardsModel) -> Void)?
     var didTemplateTapped: ((GetProductTemplateDatum) -> Void)?
     
     override func viewDidLoad() {
@@ -64,13 +64,13 @@ class AllCardListViewController: UITableViewController {
         tableView.tableFooterView = UIView()
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 60, bottom: 0, right: 20)
         
-        var products: [GetProductListDatum] = []
+        var products: [UserAllCardsModel] = []
         var types: [ProductType] = [.card]
         if !onlyCard {
             types.append(.account)
         }
         types.forEach { type in
-            products.append(contentsOf: self.model.products.value[type]?.map({ $0.getProductListDatum()}) ?? [])
+            products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
         }
         
         let clientId = Model.shared.clientInfo.value?.id
@@ -122,7 +122,7 @@ class AllCardListViewController: UITableViewController {
         switch indexPath.section {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! CardTableCell
-            cell.cardView.cardModel = cardModel[indexPath.row]
+            cell.cardView.model = cardModel[indexPath.row]
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! CardTableCell

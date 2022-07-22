@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-extension CurrencyBigListView.ViewModel {
+extension CurrencyRatesListView.ViewModel {
 
-    static var sample: CurrencyBigListView.ViewModel =
+    static var sample: CurrencyRatesListView.ViewModel =
         .init(
             titleList: "Курсы валют",
             content: .items(

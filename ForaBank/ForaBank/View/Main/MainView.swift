@@ -90,34 +90,18 @@ struct MainView: View {
                     case .templates(let templatesViewModel):
                         TemplatesListView(viewModel: templatesViewModel)
                         
-                    case .myProducts(let myProductsViewModel):
-                        MyProductsView(viewModel: myProductsViewModel)
-                        
                     case .qrScanner(let qrViewModel):
                         QrScannerView(viewModel: qrViewModel)
                             .navigationBarTitle("", displayMode: .inline)
                             .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
+                    case let .currencyWallet(viewModel):
+                        CurrencyWalletView(viewModel: viewModel)
                     }
                 }
             }
         }
         .ignoreKeyboard()
-        .sheet(item: $viewModel.sheet, content: { sheet in
-            switch sheet.type {
-            case .productProfile(let productProfileViewModel):
-                ProductProfileView(viewModel: productProfileViewModel)
-             
-            case .messages(let messagesHistoryViewModel):
-                MessagesHistoryView(viewModel: messagesHistoryViewModel)
-            
-            case .places(let placesViewModel):
-                PlacesView(viewModel: placesViewModel)
-
-            case .byPhone(let viewModel):
-                    TransferByPhoneView(viewModel: viewModel)
-            }
-        })
         .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
 
             switch bottomSheet.type {
@@ -131,6 +115,24 @@ struct MainView: View {
                 }
             }
         }
+        .sheet(item: $viewModel.sheet, content: { sheet in
+            switch sheet.type {
+            case .productProfile(let productProfileViewModel):
+                ProductProfileView(viewModel: productProfileViewModel)
+             
+            case .messages(let messagesHistoryViewModel):
+                MessagesHistoryView(viewModel: messagesHistoryViewModel)
+            
+            case .places(let placesViewModel):
+                PlacesView(viewModel: placesViewModel)
+
+            case .byPhone(let viewModel):
+                    TransferByPhoneView(viewModel: viewModel)
+                
+            case .myProducts(let myProductsViewModel):
+                MyProductsView(viewModel: myProductsViewModel)
+            }
+        })
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
@@ -146,6 +148,7 @@ struct MainView: View {
                                     }
                                 }
         )
+        
     }
 }
 

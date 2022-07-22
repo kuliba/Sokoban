@@ -24,6 +24,7 @@ class Model {
     var productsAllowed: Set<ProductType> { [.card, .account, .deposit, .loan] }
     let loans: CurrentValueSubject<LoansData, Never>
     let loansUpdating: CurrentValueSubject<Set<ProductData.ID>, Never>
+    let depositsInfo: CurrentValueSubject<DepositsInfoData, Never>
 
     //MARK: Account
     let accountProductsList: CurrentValueSubject<[OpenAccountProductData], Never>
@@ -124,6 +125,7 @@ class Model {
         self.productsHidden = .init([])
         self.loans = .init([])
         self.loansUpdating = .init([])
+        self.depositsInfo = .init(DepositsInfoData())
         self.statements = .init([:])
         self.statementsUpdating = .init([:])
         self.rates = .init([])
@@ -417,6 +419,12 @@ class Model {
                 case let payload as ModelAction.Products.DepositConditionsPrintForm.Request:
                     handleProductsDepositConditionPrintFormRequest(payload)
                     
+                case let payload as ModelAction.Card.Unblock.Request:
+                    handleUnblockCardRequest(payload)
+                    
+                case let payload as ModelAction.Card.Block.Request:
+                    handleBlockCardRequest(payload)
+                    
                     //MARK: - Statement
                     
                 case let payload as ModelAction.Statement.List.Request:
@@ -606,8 +614,11 @@ class Model {
                 case _ as ModelAction.Deposits.List.Request:
                     handleDepositsListRequest()
                     
-                case let payload as ModelAction.Deposits.Info.Request:
-                    handleDepositsInfoRequest(id: payload.id)
+                case _ as ModelAction.Deposits.Info.All:
+                    handleDepositsInfoAllRequest()
+                    
+                case let payload as ModelAction.Deposits.Info.Single.Request:
+                    handleDepositsInfoSingleRequest(payload)
                     
                 case let payload as ModelAction.Deposits.Close.Request:
                     handleCloseDepositRequest(payload)
@@ -842,6 +853,11 @@ private extension Model {
         if let loans = localAgent.load(type: LoansData.self) {
             
             self.loans.value = loans
+        }
+        
+        if let depositsInfo = localAgent.load(type: DepositsInfoData.self) {
+            
+            self.depositsInfo.value = depositsInfo
         }
     }
     
