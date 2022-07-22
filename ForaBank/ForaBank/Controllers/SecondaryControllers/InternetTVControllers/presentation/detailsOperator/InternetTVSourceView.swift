@@ -45,7 +45,7 @@ class InternetTVSourceView: UITableViewHeaderFooterView {
         cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
                 
-                let products = self.model.products.value.values.flatMap({ $0 }).map { $0.userAllProducts() }
+                let products = ReturnAllCardList.cards()
                 
                 products.forEach({ card in
                     if card.id == cardId {

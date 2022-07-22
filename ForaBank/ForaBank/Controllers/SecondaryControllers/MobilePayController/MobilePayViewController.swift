@@ -84,8 +84,14 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
     private func getUserCard() -> UserAllCardsModel?  {
         let productTypes: [ProductType] = [.card, .account]
-        let productsFilterred = self.model.products.value.values.flatMap({ $0 }).filter{ productTypes.contains($0.productType) && $0.currency == "RUB" }
-        let productsFilterredMapped = productsFilterred.map{ $0.userAllProducts() }
+        
+        let allCards = ReturnAllCardList.cards()
+        var productsFilterredMapped = [UserAllCardsModel]()
+        
+        productTypes.forEach { type in
+            
+            productsFilterredMapped += allCards.filter { $0.productType == type.rawValue && $0.currency == "RUB" }
+        }
         
         if productsFilterredMapped.count > 0 {
             if let template = self.paymentTemplate,

@@ -404,11 +404,14 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
     private func readAndSetupCard() {
         DispatchQueue.main.async {
             let productTypes: [ProductType] = [.card, .account]
-            let productsFilterred = self.model.products.value.values.flatMap({ $0 }).filter({ productTypes.contains($0.productType) && $0.currency == "RUB" })
-            var productsFilterredMapped = productsFilterred.map{ $0.userAllProducts() }
             
-            let clientId = Model.shared.clientInfo.value?.id
-            productsFilterredMapped = productsFilterredMapped.filter({$0.ownerID == clientId})
+            let allCards = ReturnAllCardList.cards()
+            var productsFilterredMapped = [UserAllCardsModel]()
+            
+            productTypes.forEach { type in
+                
+                productsFilterredMapped += allCards.filter { $0.productType == type.rawValue && $0.currency == "RUB" }
+            }
 
             self.footerView.cardListView.cardList = productsFilterredMapped
             
