@@ -73,6 +73,31 @@ extension PTSectionLatestPaymentsView {
         
         func bind() {
             
+            model.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                
+                    case let payload as ModelAction.Contacts.PermissionStatus.Update:
+                    
+                        switch payload.status {
+                        case .available:
+                       
+                            if !model.latestPayments.value.isEmpty {
+                            
+                                withAnimation(.easeInOut(duration: 1)) {
+                                    self.items = itemsReduce(latest: model.latestPayments.value)
+                                }
+                            }
+                        
+                        default: break
+                        }
+                    default: break
+                    }
+                    
+            }.store(in: &bindings)
+            
             model.latestPayments
                 .combineLatest(model.latestPaymentsUpdating)
                 .receive(on: DispatchQueue.main)
@@ -80,49 +105,57 @@ extension PTSectionLatestPaymentsView {
                     
                     let latestPayments = data.0
                     let isLatestPaymentsUpdating = data.1
-                    var updatedItems = [ItemViewModel]()
-                    
-                    let baseButtons = self.baseButtons.map { ItemViewModel.templates($0) }
-                    
-                    self.model.action.send(ModelAction.Contacts.PermissionStatus.Request())
-                    let latestPaymentsItems = latestPayments.map { item in
-                       
-                        ItemViewModel
-                           .latestPayment(.init(data: item,
-                                                model: self.model,
-                                                action: { [weak self] in
-                                                           self?.action.send(PTSectionLatestPaymentsViewAction
-                                                                            .ButtonTapped
-                                                                            .LatestPayment(latestPayment: item)) } ))
-                   }
-                    
-                    if isLatestPaymentsUpdating {
-             
-                         if latestPayments.isEmpty {
-                             
-                             updatedItems.append(contentsOf: baseButtons)
-                             updatedItems.append(contentsOf: Array(repeating: .placeholder(.init()), count: 4))
-                             
-                         } else {
-                             
-                             updatedItems.append(contentsOf: baseButtons)
-                             updatedItems.append(.placeholder(.init()))
-                             updatedItems.append(contentsOf:  latestPaymentsItems)
-                             
-                         }
-                     
-                     } else {
-
-                              updatedItems.append(contentsOf: baseButtons)
-                              updatedItems.append(contentsOf: latestPaymentsItems)
-                     }
                     
                     withAnimation(.easeInOut(duration: 1)) {
-                        
-                        self.items = updatedItems
-                        
+                        self.items = itemsReduce(latest: latestPayments,
+                                                 isUpdating: isLatestPaymentsUpdating)
                     }
-                }.store(in: &bindings)
+                
+            }.store(in: &bindings)
+            
+        }
+        
+        func itemsReduce(latest: [LatestPaymentData],
+                         isUpdating: Bool = false) -> [ItemViewModel] {
+            
+            var updatedItems = [ItemViewModel]()
+            let baseButtons = self.baseButtons.map { ItemViewModel.templates($0) }
+            
+            let latestPaymentsItems = latest.map { item in
+               
+                ItemViewModel
+                    .latestPayment(
+                        .init(data: item,
+                              model: self.model,
+                              action: { [weak self] in
+                                        self?.action.send(PTSectionLatestPaymentsViewAction
+                                                            .ButtonTapped
+                                                            .LatestPayment(latestPayment: item)) } ))
+            }
+        
+            if isUpdating {
+     
+                 if latest.isEmpty {
+                     
+                     updatedItems.append(contentsOf: baseButtons)
+                     updatedItems.append(contentsOf: Array(repeating: .placeholder(.init()), count: 4))
+                     
+                 } else {
+                     
+                     updatedItems.append(contentsOf: baseButtons)
+                     updatedItems.append(.placeholder(.init()))
+                     updatedItems.append(contentsOf:  latestPaymentsItems)
+                     
+                 }
+             
+            } else {
+
+                      updatedItems.append(contentsOf: baseButtons)
+                      updatedItems.append(contentsOf: latestPaymentsItems)
+            }
+            
+            return updatedItems
+            
         }
         
         lazy var baseButtons: [LatestPaymentButtonVM] = {

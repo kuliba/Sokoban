@@ -62,6 +62,7 @@ extension Model {
             print(error.localizedDescription)
         }
     }
+    
 }
 
 //MARK: - Handlers

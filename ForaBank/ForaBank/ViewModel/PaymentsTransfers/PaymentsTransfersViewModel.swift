@@ -114,6 +114,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     link = .qrScanner(.init(closeAction:  { [weak self] in
                         self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                     }))
+                  
+                case _ as PaymentsTransfersViewModelAction.ViewDidApear:
+                    
+                    model.action.send(ModelAction.Contacts.PermissionStatus.Request())
+                    
                 default:
                     break
                 }
@@ -373,4 +378,6 @@ enum PaymentsTransfersViewModelAction {
     }
     
     struct OpenQr: Action {}
+    
+    struct ViewDidApear: Action {}
 }

@@ -38,6 +38,9 @@ struct PaymentsTransfersView: View {
                     
                 } //mainVerticalScrollView
             } //mainVStack
+            .onAppear {
+                viewModel.action.send(PaymentsTransfersViewModelAction.ViewDidApear())
+            }
             .navigationBarTitle("", displayMode: .inline)
             .navigationBarItems(
                 leading: MainView.UserAccountButton(viewModel: viewModel.userAccountButton),
