@@ -98,20 +98,11 @@ class ProductProfileViewModel: ObservableObject {
                         break
                     }
                     
-                case let payload as ProductProfileViewModelAction.OptionsPannel.Show:
+                case let payload as ProductProfileViewModelAction.Show.OptionsPannel:
                     bind(optionsPannel: payload.viewModel)
                     bottomSheet = .init(type: .optionsPannel(payload.viewModel))
                     
-                case _ as ProductProfileViewModelAction.OptionsPannel.Close:
-                    bottomSheet = nil
-                    
-                case _ as ProductProfileViewModelAction.Link.Close:
-                    link = nil
-                    
-                case _ as ProductProfileViewModelAction.Alert.Close:
-                    alert = nil
-                    
-                case _ as ProductProfileViewModelAction.ActivateCard:
+                case _ as ProductProfileViewModelAction.Product.Activate:
                     alert = .init(title: "Активировать карту?", message: "После активации карта будет готова к использованию", primary: .init(type: .default, title: "Отмена", action: { [weak self] in
                         self?.alert = nil
                     }), secondary: .init(type: .default, title: "Ok", action: { [weak self] in
@@ -119,7 +110,7 @@ class ProductProfileViewModel: ObservableObject {
                         self?.alert = nil
                     }))
                     
-                case _ as ProductProfileViewModelAction.BlockProduct:
+                case _ as ProductProfileViewModelAction.Product.Block:
                     
                     guard let productData = productData else {
                         return
@@ -127,7 +118,7 @@ class ProductProfileViewModel: ObservableObject {
                     
                     alert = alertBlockedCard(with: productData)
                     
-                case _ as ProductProfileViewModelAction.UnBlockProduct:
+                case _ as ProductProfileViewModelAction.Product.Unblock:
                     
                     guard let productData = productData else {
                         return
@@ -135,17 +126,28 @@ class ProductProfileViewModel: ObservableObject {
                     
                     alert = alertBlockedCard(with: productData)
                     
-                case _ as ProductProfileViewModelAction.Link.PlacesMap:
+                case _ as ProductProfileViewModelAction.Show.PlacesMap:
                     guard let placesViewModel = PlacesViewModel(model) else {
                         return
                     }
                     sheet = .init(type: .placesMap(placesViewModel))
                 
-                case let payload as ProductProfileViewModelAction.CustomName:
-                    
+                case let payload as ProductProfileViewModelAction.Product.UpdateCustomName:
                     textFieldAlert = customNameAlert(for: payload.productType, alertTitle: payload.alertTitle)
                     
-                case _ as ProductProfileViewModelAction.CloseTextFieldAlert:
+                case _ as ProductProfileViewModelAction.Close.Link:
+                    link = nil
+                    
+                case _ as ProductProfileViewModelAction.Close.Sheet:
+                    sheet = nil
+                    
+                case _ as ProductProfileViewModelAction.Close.BottomSheet:
+                    bottomSheet = nil
+                
+                case _ as ProductProfileViewModelAction.Close.Alert:
+                    alert = nil
+                    
+                case _ as ProductProfileViewModelAction.Close.TextFieldAlert:
                     textFieldAlert = nil
                     
                 default:
@@ -308,7 +310,7 @@ class ProductProfileViewModel: ObservableObject {
                         
                         navigationBar.rightButtons = [.init(icon: .ic16Edit2, action: { [weak self] in
                             
-                            self?.action.send(ProductProfileViewModelAction.CustomName(productId: product.id, productType: product.productType, alertTitle: alertTitle))
+                            self?.action.send(ProductProfileViewModelAction.Product.UpdateCustomName(productId: product.id, productType: product.productType, alertTitle: alertTitle))
                         })]
                     }
                 } else {
@@ -322,7 +324,7 @@ class ProductProfileViewModel: ObservableObject {
             }.store(in: &bindings)
     }
     
-    func bind(product: ProductProfileCardView.ViewModel) {
+    private func bind(product: ProductProfileCardView.ViewModel) {
         
         product.action
             .receive(on: DispatchQueue.main)
@@ -330,8 +332,9 @@ class ProductProfileViewModel: ObservableObject {
                 
                 switch action {
                 case _ as ProductProfileCardViewModelAction.MoreButtonTapped:
-                    let myProductsViewModel = MyProductsViewModel(model, dismissAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Link.Close())})
-                    link = .myProducts(myProductsViewModel)
+                    let myProductsViewModel = MyProductsViewModel(model)
+                    bind(myProductsViewModel)
+                    sheet = .init(type: .myProducts(myProductsViewModel))
                     
                 default:
                     break
@@ -339,6 +342,42 @@ class ProductProfileViewModel: ObservableObject {
                 
             }.store(in: &bindings)
         
+    }
+    
+    private func bind(_ myProductsViewModel: MyProductsViewModel) {
+        
+        myProductsViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as MyProductsViewModelAction.Tapped.Product:
+                    if product.products.contains(where: { $0.id == payload.productId}) {
+                        
+                        self.action.send(ProductProfileViewModelAction.Close.Sheet())
+                        product.activeProductId = payload.productId
+                        
+                    } else {
+                        
+                        self.action.send(ProductProfileViewModelAction.Close.Sheet())
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                            
+                            self.action.send(ProductProfileViewModelAction.MyProductsTapped.ProductProfile(productId: payload.productId))
+                        }
+                    }
+
+                case _ as MyProductsViewModelAction.Tapped.OpenDeposit:
+                    self.action.send(ProductProfileViewModelAction.Close.Sheet())
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                        
+                        self.action.send(ProductProfileViewModelAction.MyProductsTapped.OpenDeposit())
+                    }
+
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
     
     func bind(history: ProductProfileHistoryView.ViewModel?) {
@@ -383,7 +422,7 @@ class ProductProfileViewModel: ObservableObject {
                     switch payload.buttonType {
                     case .topLeft:
                         let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttonsTypes: [.refillFromOtherBank, .refillFromOtherProduct], productType: product.productType)
-                        self.action.send(ProductProfileViewModelAction.OptionsPannel.Show(viewModel: optionsPannelViewModel))
+                        self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                         
                     case .topRight:
                         switch product.productType {
@@ -423,11 +462,11 @@ class ProductProfileViewModel: ObservableObject {
                         switch product.productType {
                         case .deposit:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .info, .conditions], productType: product.productType)
-                            self.action.send(ProductProfileViewModelAction.OptionsPannel.Show(viewModel: optionsPannelViewModel))
+                            self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                             
                         default:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement], productType: product.productType)
-                            self.action.send(ProductProfileViewModelAction.OptionsPannel.Show(viewModel: optionsPannelViewModel))
+                            self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                             
                         }
                         
@@ -442,11 +481,11 @@ class ProductProfileViewModel: ObservableObject {
                             
                             if productCard.isBlocked {
                                 
-                                self.action.send(ProductProfileViewModelAction.UnBlockProduct(productId: productCard.id))
+                                self.action.send(ProductProfileViewModelAction.Product.Unblock(productId: productCard.id))
 
                             } else {
                                 
-                                self.action.send(ProductProfileViewModelAction.BlockProduct(productId: productCard.id))
+                                self.action.send(ProductProfileViewModelAction.Product.Block(productId: productCard.id))
                             }
                             
                         case .account:
@@ -454,11 +493,11 @@ class ProductProfileViewModel: ObservableObject {
                             
                         case .deposit:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.closeDeposit], productType: product.productType)
-                            self.action.send(ProductProfileViewModelAction.OptionsPannel.Show(viewModel: optionsPannelViewModel))
+                            self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                             
                         case .loan:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.refillFromOtherBank, .refillFromOtherProduct], productType: product.productType)
-                            self.action.send(ProductProfileViewModelAction.OptionsPannel.Show(viewModel: optionsPannelViewModel))
+                            self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                         }
                     }
 
@@ -475,7 +514,7 @@ class ProductProfileViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 
-                self.action.send(ProductProfileViewModelAction.OptionsPannel.Close())
+                self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                     
@@ -495,7 +534,7 @@ class ProductProfileViewModel: ObservableObject {
                             self.link = .productInfo(productInfoViewModel)
                             
                         case .statement:
-                            let productStatementViewModel = ProductStatementViewModel(product: productData, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Link.Close())})
+                            let productStatementViewModel = ProductStatementViewModel(product: productData, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())})
                             self.link = .productStatement(productStatementViewModel)
                             
                         case .refillFromOtherProduct:
@@ -503,7 +542,7 @@ class ProductProfileViewModel: ObservableObject {
                             self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
                             
                         case .refillFromOtherBank:
-                            let meToMeExternalViewModel = MeToMeExternalViewModel(productTo: productData, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Link.Close())})
+                            let meToMeExternalViewModel = MeToMeExternalViewModel(productTo: productData, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())})
                             self.link = .meToMeExternal(meToMeExternalViewModel)
                             
                         case .conditions:
@@ -513,8 +552,8 @@ class ProductProfileViewModel: ObservableObject {
                         case .closeDeposit:
                             let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
                                                                  message: "Срок вашего вклада еще не истек. Для досрочного закрытия обратитесь в ближайший офис",
-                                                                 primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Link.PlacesMap())}),
-                                                                 secondary: .init(type: .default, title: "Ок", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Alert.Close())}))
+                                                                 primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())}),
+                                                                 secondary: .init(type: .default, title: "Ок", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}))
                             self.alert = .init(alertViewModel)
                         }
                         
@@ -536,7 +575,7 @@ class ProductProfileViewModel: ObservableObject {
             primary: .init(type: .default,
                            title: "Ок",
                            action: { [weak self] text in
-                               self?.action.send(ProductProfileViewModelAction.CloseTextFieldAlert())
+                               self?.action.send(ProductProfileViewModelAction.Close.TextFieldAlert())
                                if let text = text, let product = self?.product {
                                    
                                    self?.model.action.send(ModelAction.Products.UpdateCustomName.Request(productId: product.activeProductId, productType: product.productType, name: text))
@@ -546,7 +585,7 @@ class ProductProfileViewModel: ObservableObject {
                              title: "Отмена",
                              action: { [weak self] _ in
                                  
-                                 self?.action.send(ProductProfileViewModelAction.CloseTextFieldAlert())
+                                 self?.action.send(ProductProfileViewModelAction.Close.TextFieldAlert())
                              }))
         
         return textFieldAlert
@@ -580,7 +619,7 @@ class ProductProfileViewModel: ObservableObject {
                                                                    title: "Отмена",
                                                                    action: { [weak self] in
             
-            self?.action.send(ProductProfileViewModelAction.Alert.Close())
+            self?.action.send(ProductProfileViewModelAction.Close.Alert())
         }),
                                                     secondary: .init(type: .default,
                                                                      title: "Oк",
@@ -729,7 +768,6 @@ extension ProductProfileViewModel {
         case productInfo(InfoProductViewModel)
         case productStatement(ProductStatementViewModel)
         case meToMeExternal(MeToMeExternalViewModel)
-        case myProducts(MyProductsViewModel)
     }
     
     struct Sheet: Identifiable {
@@ -741,6 +779,7 @@ extension ProductProfileViewModel {
             
             case printForm(PrintFormView.ViewModel)
             case placesMap(PlacesViewModel)
+            case myProducts(MyProductsViewModel)
         }
     }
 }
@@ -749,65 +788,60 @@ extension ProductProfileViewModel {
 
 enum ProductProfileViewModelAction {
     
-    struct CustomName: Action {
+    
+    enum Product {
+
+        struct Activate: Action {
+            
+            let productId: Int
+        }
         
-        let productId: ProductData.ID
-        let productType: ProductType
-        let alertTitle: String
-    }
-    
-    struct ActivateCard: Action {
+        struct Block: Action {
+            
+            let productId: Int
+        }
         
-        let productId: Int
-    }
-    
-    struct BlockProduct: Action {
+        struct Unblock: Action {
+            
+            let productId: Int
+        }
         
-        let productId: Int
+        struct UpdateCustomName: Action {
+            
+            let productId: ProductData.ID
+            let productType: ProductType
+            let alertTitle: String
+        }
     }
-    
-    struct UnBlockProduct: Action {
-        
-        let productId: Int
-    }
-    
-    struct DetailOperation: Action {}
-    
-    struct Dismiss: Action {}
-    
-    struct ProductDetail: Action {
-        
-        let productId: Int
-    }
-    
+
     struct PullToRefresh: Action {}
     
-    enum OptionsPannel {
+    enum Show {
         
-        struct Show: Action {
+        struct OptionsPannel: Action {
             
             let viewModel: ProductProfileOptionsPannelView.ViewModel
         }
         
-        struct Close: Action {}
+        struct PlacesMap: Action {}
     }
     
-    enum Link {
-
-        struct ShowProductInfo: Action {
+    enum Close {
+        
+        struct Link: Action {}
+        struct Sheet: Action {}
+        struct BottomSheet: Action {}
+        struct Alert: Action {}
+        struct TextFieldAlert: Action {}
+    }
+    
+    enum MyProductsTapped {
+    
+        struct ProductProfile: Action {
             
-            let viewModel: InfoProductViewModel
+            let productId: ProductData.ID
         }
         
-        struct PlacesMap: Action {}
-        
-        struct Close: Action {}
+        struct OpenDeposit: Action {}
     }
-    
-    enum Alert {
-
-        struct Close: Action {}
-    }
-    
-    struct CloseTextFieldAlert: Action {}
 }

@@ -15,8 +15,6 @@ class MyProductsViewModel: ObservableObject {
 
     @Published var currencyMenu: MyProductsСurrencyMenuViewModel?
     @Published var sections: [MyProductsSectionViewModel]
-    @Published var link: Link? { didSet { isLinkActive = link != nil } }
-    @Published var isLinkActive: Bool = false
     
     private let model: Model
 
@@ -37,14 +35,11 @@ class MyProductsViewModel: ObservableObject {
         bind()
     }
 
-    init(_ model: Model, dismissAction: @escaping () -> Void) {
+    init(_ model: Model) {
 
         self.model = model
         sections = []
-        navigationBar = NavigationBarView.ViewModel(
-            title: "Мои продукты",
-            leftButtons: [NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: dismissAction)],
-            background: .barsTabbar)
+        navigationBar = NavigationBarView.ViewModel(title: "Мои продукты", background: .barsTabbar)
         totalMoney = .init()
         
         bind()
@@ -148,20 +143,6 @@ class MyProductsViewModel: ObservableObject {
 
             }.store(in: &bindings)
 
-        action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-
-                switch action {
-                    
-                case _ as MyProductsViewModelAction.CloseAction.Link:
-                    link = nil
-                    
-                default:
-                    break
-                }
-            }.store(in: &bindings)
-
         model.productsHidden
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] productsHidden in
@@ -215,11 +196,7 @@ class MyProductsViewModel: ObservableObject {
                                     
                                     setStateNormal(model)
                                 }
-                                guard let prooduct = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }),
-                                      let productProfileViewModel = ProductProfileViewModel(model, product: prooduct, dismissAction: { [weak self] in
-                                          self?.action.send(MyProductsViewModelAction.CloseAction.Link())
-                                      }) else { return }
-                                link = .productProfile(productProfileViewModel)
+                                self.action.send(MyProductsViewModelAction.Tapped.Product(productId: payload.productId))
                                 
                             default:
                                 break
@@ -249,7 +226,6 @@ class MyProductsViewModel: ObservableObject {
                             .sink { [unowned self] action in
 
                                 switch action {
-                                
                                 case let payload as MyProductsSectionItemAction.PlaceholderTap:
                                     switch payload.type {
                                     case .card:
@@ -257,14 +233,13 @@ class MyProductsViewModel: ObservableObject {
                                         UIApplication.shared.open(url)
                                         
                                     case .deposit:
-                                        link = .openDeposit(OpenDepositViewModel(model, catalogType: .deposit, dismissAction: {
-                                            self.action.send(MyProductsViewModelAction.CloseAction.Link())
-                                        }))
+                                        self.action.send(MyProductsViewModelAction.Tapped.OpenDeposit())
                                     }
                                     
                                 default:
                                     break
                                 }
+                                
                             }.store(in: &bindings)
                         
                     default: break
@@ -285,12 +260,6 @@ class MyProductsViewModel: ObservableObject {
                         }.store(in: &bindings)
                 }
             }.store(in: &bindings)
-    }
-    
-    enum Link {
-        
-        case productProfile(ProductProfileViewModel)
-        case openDeposit(OpenDepositViewModel)
     }
 }
 
@@ -379,16 +348,15 @@ extension MyProductsViewModel {
 }
 
 enum MyProductsViewModelAction {
-
-    struct Back: Action {}
     
-    struct Add: Action {}
+    enum Tapped {
     
-    enum CloseAction {
-     
-        struct Link: Action {}
+        struct Product: Action {
+            
+            let productId: ProductData.ID
+        }
         
-        struct Sheet: Action {}
+        struct OpenDeposit: Action {}
     }
 }
 
