@@ -83,7 +83,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                       self?.action.send(PaymentsTransfersViewModelAction
                                                         .Close.Link() )}))
                 
-                case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:                    
+                case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:
                     if model.cameraAgent.isCameraAvailable {
                         model.cameraAgent.requestPermissions(completion: { available in
                             
