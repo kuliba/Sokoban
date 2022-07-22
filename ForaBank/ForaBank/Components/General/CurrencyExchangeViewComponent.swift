@@ -154,12 +154,12 @@ struct CurrencyExchangeView: View {
                 
                 HStack(spacing: 25) {
                     
-                    Text(viewModel.buy)
+                    Text(viewModel.sell)
                         .font(.textBodyMM14200())
                         .foregroundColor(.textPlaceholder)
                         .frame(width: 70, alignment: .leading)
      
-                    Text(viewModel.sell)
+                    Text(viewModel.buy)
                         .font(.textBodyMM14200())
                         .foregroundColor(.textPlaceholder)
                         .frame(width: 70, alignment: .leading)
@@ -184,10 +184,10 @@ struct CurrencyExchangeView: View {
                 
                 HStack(spacing: 25) {
                     
-                    RateView(viewModel: viewModel.buy)
+                    RateView(viewModel: viewModel.sell)
                         .frame(width: 70, alignment: .leading)
                     
-                    RateView(viewModel: viewModel.sell)
+                    RateView(viewModel: viewModel.buy)
                         .frame(width: 70, alignment: .leading)
                         
                 }.padding(.trailing, 16)
