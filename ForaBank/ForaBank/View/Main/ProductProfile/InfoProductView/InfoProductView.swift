@@ -21,21 +21,8 @@ struct InfoProductView: View {
                     
                     ForEach(viewModel.list, id: \.self) { item in
                         
-                        HStack {
-                            
-                            VStack(alignment: .leading, spacing: 8) {
-                                
-                                Text(item.title)
-                                    .foregroundColor(.gray)
-                                    .font(.system(size: 12))
-                                
-                                Text(item.subtitle)
-                                    .font(.system(size: 16))
-                            }
-                            
-                            Spacer()
-                            
-                        }
+                        ButtonView(viewModel: item)
+                        
                     }
                 }
                 .padding(.top, 28)
@@ -50,15 +37,8 @@ struct InfoProductView: View {
                         
                         ForEach(additionalListViewModel, id: \.self) { item in
                             
-                            VStack(alignment: .leading, spacing: 8) {
-                                
-                                Text(item.title)
-                                    .foregroundColor(.gray)
-                                    .font(.system(size: 12))
-                                
-                                Text(item.subtitle)
-                                    .font(.system(size: 16))
-                            }
+                            ButtonView(viewModel: item)
+                            
                         }
                     }
                     .padding(.top, 20)
@@ -73,11 +53,12 @@ struct InfoProductView: View {
                 Button(action: { buttonViewModel.action() }) {
                     
                     Text(buttonViewModel.title)
+                        .frame(width: 336, height: 48, alignment: .center)
                 }
-                .frame(width: 336, height: 48, alignment: .center)
                 .background(Color.mainColorsGrayLightest)
                 .cornerRadius(8)
                 .foregroundColor(Color.mainColorsBlack)
+                .padding(.bottom, 44)
                 
             }
         }
@@ -95,6 +76,42 @@ struct InfoProductView: View {
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
+    }
+    
+    struct ButtonView: View {
+        
+        let viewModel: InfoProductViewModel.ItemViewModel
+        
+        var body: some View {
+            
+            HStack(alignment: .center) {
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    
+                    Text(viewModel.title)
+                        .foregroundColor(.gray)
+                        .font(.system(size: 12))
+                    
+                    Text(viewModel.subtitle)
+                        .font(.system(size: 16))
+                    
+                }
+                
+                Spacer()
+                
+                if let button = viewModel.button {
+                    
+                    Button {
+                        
+                        button.action()
+                        
+                    } label: {
+                        
+                        button.icon
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -32,7 +32,7 @@ final class OperationDetailInfoViewModel: Identifiable {
     init?(with statement: ProductStatementData, operation: OperationDetailData?, product: ProductData, dismissAction: @escaping () -> Void, model: Model) {
         
         self.model = model
-        let dateString = DateFormatter.operation.string(from: statement.date)
+        let dateString = DateFormatter.operation.string(from: statement.tranDate ?? statement.date)
         let foraBankName = "Фора Банк"
         let foraBankIcon = Image("foraContactImage", bundle: nil)
         

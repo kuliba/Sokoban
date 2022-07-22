@@ -122,7 +122,8 @@ class BottomInputViewWithRateView: UIView {
                 self.buttomLabel.alpha = text.isEmpty ? 0 : 1
             }
             
-            if self.currencySymbol != "" {
+            if (self.models.to != self.models.from) && (self.models.to != "" && self.models.from != "") {
+                
                 self.exchangeRate(self.models.to, self.models.from)
             }
         }

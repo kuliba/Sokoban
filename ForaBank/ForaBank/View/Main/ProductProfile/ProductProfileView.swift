@@ -91,6 +91,7 @@ struct ProductProfileView: View {
                     switch link {
                     case .productInfo(let productInfoViewModel):
                         InfoProductView(viewModel: productInfoViewModel)
+                            .edgesIgnoringSafeArea(.bottom)
                         
                     case let .productStatement(productStatementViewModel):
                         ProductStatementView(viewModel: productStatementViewModel)

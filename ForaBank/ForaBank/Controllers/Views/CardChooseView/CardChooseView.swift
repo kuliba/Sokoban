@@ -133,31 +133,66 @@ final class CardChooseView: UIView {
     private func setupData(with model: GetProductListDatum) {
         hideAll(false)
         
-        if model.productType == "ACCOUNT" || model.productType == "DEPOSIT" || model.product == ProductType.loan.rawValue {
-            imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "AccImage")
-            cardTypeImage.isHidden = true
-        }
-        else if model.productType == "CARD" {
-            self.imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "credit-card")
-        }
+        guard let modelBalance = model.balance else { return }
         
-        var balance = Double(model.balance ?? 0)
+        var balance = Double(modelBalance)
         
-        if model.productType == ProductType.loan.rawValue, let totalAmountDebt = model.totalAmountDebt {
-            balance = totalAmountDebt
-        }
-        
+        imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "AccImage")
+                
         self.balanceLabel.text = balance.currencyFormatter(symbol: model.currency ?? "")
-
+            
         let text = NSAttributedString(
             string: model.mainField ?? "",
             attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14),
                          NSAttributedString.Key.foregroundColor : UIColor.black])
         self.numberCardLabel.attributedText = text
-        if model.productType == "DEPOSIT" {
-            self.maskNumberLabel.text = "• \(model.accountNumber?.suffix(4) ?? "")"
-        } else {
+        
+        switch model.productType {
+        case ProductType.card.rawValue:
+            
             self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
+            self.nameLabel.text = model.customName ?? model.additionalField ?? ""
+
+        case ProductType.account.rawValue:
+            
+            self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
+            cardTypeImage.isHidden = true
+            self.nameLabel.text = model.customName ?? model.additionalField ?? ""
+
+        case ProductType.deposit.rawValue:
+            
+            self.numberCardLabel.text = model.mainField
+            self.maskNumberLabel.text = "• \(model.accountNumber?.suffix(4) ?? "")"
+           
+            if let interestRate = model.interestRate {
+                
+                self.nameLabel.text = "• \("Cтавка \(interestRate)%")"
+
+            }
+            let text = NSAttributedString(
+                string: model.mainField ?? "",
+                attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14),
+                             NSAttributedString.Key.foregroundColor : UIColor.black])
+            self.numberCardLabel.attributedText = text
+            cardTypeImage.isHidden = true
+
+        case ProductType.loan.rawValue:
+            
+            if let totalAmountDebt = model.totalAmountDebt {
+
+                balance = totalAmountDebt
+            }
+
+            if let dateLong = model.dateLong, let date = longIntToDateString(longInt: dateLong/1000) {
+                
+                self.maskNumberLabel.text = "· \(model.settlementAccount?.suffix(4) ?? "") · Ставка \(model.currentInterestRate)%  · \(date)"
+            }
+            
+            self.nameLabel.text = model.customName ?? model.additionalField ?? ""
+            cardTypeImage.isHidden = true
+
+        default:
+            break
         }
         self.nameLabel.text = model.customName ?? model.additionalField ?? ""
         self.cardTypeImage.image = model.paymentSystemImage?.convertSVGStringToImage()
