@@ -31,8 +31,17 @@ extension CountryPaymentView {
             let phoneNumber: String?
         }
         
+        struct TurkeyWithOutAddress {
+            
+            let firstName: String
+            let middleName: String
+            let surName: String
+            let phoneNumber: String
+        }
+        
         enum PaymentType {
             
+            case turkeyWithOutAddress(turkeyWithOutAddress: TurkeyWithOutAddress)
             case address(adressViewModel: AddressViewModel)
             case withOutAddress(withOutViewModel: WithOutAddress)
             case template(templateViewModel: PaymentTemplateData)
@@ -40,13 +49,21 @@ extension CountryPaymentView {
         
         init(countryData: PaymentCountryData, operatorsViewModel: OperatorsViewModel) {
             self.operatorsViewModel = operatorsViewModel
-            if let phoneNumber = countryData.phoneNumber {
-                
-                paymentType = .withOutAddress(withOutViewModel: .init(phoneNumber: phoneNumber))
             
+            if countryData.countryCode == "TR" {
+                
+                paymentType = .turkeyWithOutAddress(turkeyWithOutAddress: .init(firstName: countryData.firstName ?? "", middleName: countryData.middleName ?? "", surName: countryData.surName ?? "", phoneNumber: countryData.phoneNumber ?? ""))
+                
             } else {
                 
-                paymentType = .address(adressViewModel: .init(firstName: countryData.firstName ?? "", middleName: countryData.middleName ?? "", surName: countryData.surName ?? ""))
+                if let phoneNumber = countryData.phoneNumber {
+                    
+                    paymentType = .withOutAddress(withOutViewModel: .init(phoneNumber: phoneNumber))
+                    
+                } else {
+                    
+                    paymentType = .address(adressViewModel: .init(firstName: countryData.firstName ?? "", middleName: countryData.middleName ?? "", surName: countryData.surName ?? ""))
+                }
             }
 
             self.puref = countryData.puref
@@ -76,6 +93,19 @@ struct CountryPaymentView: UIViewControllerRepresentable {
         
         //MARK: PaymentsViewController openCountryPaymentVC(206)
         switch viewModel.paymentType {
+            
+        case let .turkeyWithOutAddress(turkeyWithOutAddress):
+            
+            vc.typeOfPay = .contact
+            vc.foraSwitchView.bankByPhoneSwitch.isOn = false
+            vc.foraSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            vc.foraSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            vc.nameField.text = turkeyWithOutAddress.firstName
+            vc.surnameField.text = turkeyWithOutAddress.surName
+            vc.secondNameField.text = turkeyWithOutAddress.middleName
+            vc.phoneField.text = turkeyWithOutAddress.phoneNumber
+            vc.operatorsViewModel = viewModel.operatorsViewModel
+        
         case let .address(adressViewModel):
             
             vc.typeOfPay = .contact
