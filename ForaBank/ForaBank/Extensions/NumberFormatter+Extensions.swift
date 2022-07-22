@@ -105,7 +105,7 @@ extension NumberFormatter {
         
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 0
+        formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 2
         formatter.locale = Locale(identifier: "ru_RU")
         
