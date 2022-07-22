@@ -8,21 +8,25 @@
 import SwiftUI
 import Combine
 
-protocol CurrencyWalletItem: Hashable {}
+protocol CurrencyWalletItem {
+    
+    var id: String { get }
+}
 
 // MARK: - ViewModel
 
 class CurrencyWalletViewModel: ObservableObject {
     
+    @Published var items: [CurrencyWalletItem]
     @Published var state: ButtonActionState
-
+    
     let listViewModel: CurrencyListView.ViewModel
     let swapViewModel: CurrencySwapView.ViewModel
     let selectorViewModel: CurrencySelectorView.ViewModel
     let backButton: NavigationButtonViewModel
     
     lazy var continueButton: ButtonSimpleView.ViewModel = .init(title: "Продолжить", style: .red) { [weak self] in
-
+        
         guard let self = self else { return }
         
         self.state = .spinner
@@ -39,15 +43,17 @@ class CurrencyWalletViewModel: ObservableObject {
         case button
         case spinner
     }
-
-    internal init(_ model: Model,
-         state: ButtonActionState = .button,
+    
+    init(_ model: Model,
+         items: [CurrencyWalletItem],
+         state: ButtonActionState,
          listViewModel: CurrencyListView.ViewModel,
          swapViewModel: CurrencySwapView.ViewModel,
          selectorViewModel: CurrencySelectorView.ViewModel,
          action: @escaping () -> Void) {
-
+        
         self.model = model
+        self.items = items
         self.state = state
         self.listViewModel = listViewModel
         self.swapViewModel = swapViewModel
@@ -57,25 +63,33 @@ class CurrencyWalletViewModel: ObservableObject {
         bind()
     }
     
-    init(_ model: Model, action: @escaping () -> Void) {
-
-        self.model = model
-        self.state = .button
-        self.listViewModel = .sample
-        self.swapViewModel = .sample
-        self.selectorViewModel = .sample
-        self.backButton = .init(icon: .ic24ChevronLeft, action: action)
+    // TODO: In process development
+    
+    convenience init(_ model: Model,
+                     state: ButtonActionState = .button,
+                     listViewModel: CurrencyListView.ViewModel,
+                     swapViewModel: CurrencySwapView.ViewModel,
+                     selectorViewModel: CurrencySelectorView.ViewModel,
+                     action: @escaping () -> Void) {
+        
+        self.init(model,
+                  items: [],
+                  state: state,
+                  listViewModel: listViewModel,
+                  swapViewModel: swapViewModel,
+                  selectorViewModel: selectorViewModel,
+                  action: action)
         
         bind()
     }
     
     private func bind() {
         
-        listViewModel.$currencyType
+        listViewModel.$currency
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] currencyType in
+            .sink { [unowned self] currency in
                 
-                swapViewModel.currency = Currency(description: currencyType)
+                swapViewModel.currency = currency
                 
             }.store(in: &bindings)
     }

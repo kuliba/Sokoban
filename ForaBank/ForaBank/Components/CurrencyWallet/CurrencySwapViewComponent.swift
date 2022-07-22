@@ -162,7 +162,7 @@ extension CurrencySwapView {
         
         private func update(currencyWalletList: [CurrencyWalletData], currencyData: CurrencyData?) {
             
-            let items = Model.reduceCurrencyWallet(currencyWalletList, images: model.images.value, currencyType: currency.description)
+            let items = CurrencyListViewModel.reduceCurrencyWallet(currencyWalletList, images: model.images.value, currency: currency)
             let item = items.first(where: { $0.currency.description == currency.description })
             
             guard let currencyData = currencyData,
@@ -184,7 +184,7 @@ extension CurrencySwapView {
         
         private func updateImage(currencyWalletList: [CurrencyWalletData], images: [String: ImageData]) {
             
-            let items = Model.reduceCurrencyWallet(currencyWalletList, images: images, currencyType: currency.description)
+            let items = CurrencyListViewModel.reduceCurrencyWallet(currencyWalletList, images: images, currency: currency)
             let item = items.first(where: { $0.currency.description == currency.description })
             
             guard let item = item else {
@@ -200,7 +200,7 @@ extension CurrencySwapView {
             withAnimation(.interactiveSpring()) {
                 
                 currencySwap.icon = image
-                currencySwap.currencyType = currency.description
+                currencySwap.currency = currency
             }
         }
         
@@ -227,7 +227,7 @@ extension CurrencySwapView.ViewModel {
         
         @Published var currencyAmount: Double
         @Published var title: String
-        @Published var currencyType: String
+        @Published var currency: Currency
         @Published var icon: Image?
         @Published var quotesInfo: String?
 
@@ -262,11 +262,11 @@ extension CurrencySwapView.ViewModel {
                     
                 }, closeButton: nil))
 
-        init(icon: Image?, currencyAmount: Double, title: String = "", currencyType: String, quotesInfo: String? = nil) {
+        init(icon: Image?, currencyAmount: Double, title: String = "", currency: Currency, quotesInfo: String? = nil) {
 
             self.icon = icon
             self.currencyAmount = currencyAmount
-            self.currencyType = currencyType
+            self.currency = currency
             self.title = title
             self.quotesInfo = quotesInfo
             
@@ -327,62 +327,67 @@ struct CurrencySwapView: View {
 
             VStack(alignment: .leading, spacing: 4) {
 
-                if viewModel.currencyOperation == .buy {
-
-                    if #available(iOS 14.0, *) {
+                if #available(iOS 14.0, *) {
+             
+                    if viewModel.currencyOperation == .buy {
 
                         CurrencySwapView.CurrencyView(viewModel: viewModel.сurrencyCurrentSwap)
                             .matchedGeometryEffect(id: "getCurrency", in: namespace)
+
+                    } else {
+                        
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.currencySwap)
+                            .matchedGeometryEffect(id: "haveCurrency", in: namespace)
+                    }
+
+                    HStack(spacing: 20) {
+
+                        Divider()
+                            .frame(width: 244, height: 1)
+                            .background(Color.mainColorsGrayMedium)
+
+                        SwapButtonView(viewModel: viewModel.swapButton)
+                        
+                    }.padding(.horizontal, 20)
+
+                    if viewModel.currencyOperation == .buy {
+
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.currencySwap)
+                            .matchedGeometryEffect(id: "haveCurrency", in: namespace)
                         
                     } else {
 
                         CurrencySwapView.CurrencyView(viewModel: viewModel.сurrencyCurrentSwap)
-                            .transition(bottomTransition)
+                            .matchedGeometryEffect(id: "getCurrency", in: namespace)
                     }
-
+                    
                 } else {
                     
-                    if #available(iOS 14.0, *) {
+                    if viewModel.currencyOperation == .buy {
 
-                        CurrencySwapView.CurrencyView(viewModel: viewModel.currencySwap)
-                            .matchedGeometryEffect(id: "haveCurrency", in: namespace)
-                        
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.сurrencyCurrentSwap)
+                            .transition(bottomTransition)
+
                     } else {
-
+                        
                         CurrencySwapView.CurrencyView(viewModel: viewModel.currencySwap)
                             .transition(bottomTransition)
                     }
-                }
 
-                HStack(spacing: 20) {
+                    HStack(spacing: 20) {
 
-                    Divider()
-                        .frame(width: 244, height: 1)
-                        .background(Color.mainColorsGrayMedium)
+                        Divider()
+                            .frame(width: 244, height: 1)
+                            .background(Color.mainColorsGrayMedium)
 
-                    SwapButtonView(viewModel: viewModel.swapButton)
-                    
-                }.padding(.horizontal, 20)
-
-                if viewModel.currencyOperation == .buy {
-
-                    if #available(iOS 14.0, *) {
-
-                        CurrencySwapView.CurrencyView(viewModel: viewModel.currencySwap)
-                            .matchedGeometryEffect(id: "haveCurrency", in: namespace)
+                        SwapButtonView(viewModel: viewModel.swapButton)
                         
-                    } else {
+                    }.padding(.horizontal, 20)
+
+                    if viewModel.currencyOperation == .buy {
 
                         CurrencySwapView.CurrencyView(viewModel: viewModel.currencySwap)
                             .transition(topTransition)
-                    }
-                    
-                } else {
-
-                    if #available(iOS 14.0, *) {
-
-                        CurrencySwapView.CurrencyView(viewModel: viewModel.сurrencyCurrentSwap)
-                            .matchedGeometryEffect(id: "getCurrency", in: namespace)
                         
                     } else {
 
@@ -438,7 +443,7 @@ extension CurrencySwapView {
                             keyboardType: .decimalPad)
                         .fixedSize()
 
-                        Text(viewModel.currencyType)
+                        Text(viewModel.currency.description)
                             .font(.textH4M16240())
                             .foregroundColor(.mainColorsGrayMedium)
                     }
@@ -513,12 +518,12 @@ extension CurrencySwapView.ViewModel {
         currencySwap: .init(
             icon: .init("Flag USD"),
             currencyAmount: 1.00,
-            currencyType: "USD",
+            currency: Currency(description: "USD"),
             quotesInfo: "1$ = 64.50 ₽"),
         сurrencyCurrentSwap: .init(
             icon: .init("Flag RUB"),
             currencyAmount: 64.50,
-            currencyType: "RUB"),
+            currency: Currency(description: "RUB")),
         currencyOperation: .buy,
         currency: Currency(description: "USD"),
         currencyRate: 64.50)

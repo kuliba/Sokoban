@@ -17,7 +17,7 @@ extension ProductSelectorView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var cardIcon: Image
-        @Published var logoIcon: Image?
+        @Published var paymentSystemIcon: Image?
         @Published var name: String
         @Published var balance: String
         @Published var number: NumberViewModel
@@ -31,7 +31,7 @@ extension ProductSelectorView {
         
         init(title: String,
              cardIcon: Image,
-             logoIcon: Image?,
+             paymentSystemIcon: Image?,
              name: String,
              balance: String,
              number: NumberViewModel,
@@ -40,7 +40,7 @@ extension ProductSelectorView {
             
             self.title = title
             self.cardIcon = cardIcon
-            self.logoIcon = logoIcon
+            self.paymentSystemIcon = paymentSystemIcon
             self.name = name
             self.balance = balance
             self.number = number
@@ -164,7 +164,7 @@ extension ProductSelectorView {
                         
                         HStack(alignment: .center, spacing: 10) {
                             
-                            viewModel.logoIcon
+                            viewModel.paymentSystemIcon
                                 .frame(width: 24, height: 24)
                             
                             Text(viewModel.name)
@@ -237,7 +237,7 @@ extension ProductSelectorView.ViewModel {
     static let sample1 = ProductSelectorView.ViewModel(
         title: "Откуда",
         cardIcon: Image("Platinum Card"),
-        logoIcon: Image("Platinum Logo"),
+        paymentSystemIcon: Image("Platinum Logo"),
         name: "Platinum",
         balance: "2,71 млн ₽",
         number: .init(
@@ -248,7 +248,7 @@ extension ProductSelectorView.ViewModel {
     static let sample2 = ProductSelectorView.ViewModel(
         title: "Откуда",
         cardIcon: Image("Platinum Card"),
-        logoIcon: Image("Platinum Logo"),
+        paymentSystemIcon: Image("Platinum Logo"),
         name: "Platinum",
         balance: "2,71 млн ₽",
         number: .init(
@@ -259,7 +259,7 @@ extension ProductSelectorView.ViewModel {
     static let sample3 = ProductSelectorView.ViewModel(
         title: "Куда",
         cardIcon: Image("Platinum Card"),
-        logoIcon: nil,
+        paymentSystemIcon: nil,
         name: "Текущий счет",
         balance: "0 $",
         number: .init(

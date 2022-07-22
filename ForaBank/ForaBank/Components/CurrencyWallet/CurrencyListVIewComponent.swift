@@ -9,6 +9,7 @@ import SwiftUI
 import Combine
 import Shimmer
 
+typealias CurrencyListViewModel = CurrencyListView.ViewModel
 typealias CurrencyItemViewModel = CurrencyListView.ViewModel.ItemViewModel
 
 // MARK: - ViewModel
@@ -20,7 +21,7 @@ extension CurrencyListView {
         let action: PassthroughSubject<Action, Never> = .init()
 
         @Published var items: [ItemViewModel]
-        @Published var currencyType: String
+        @Published var currency: Currency
         @Published var bottomSheet: BottomSheet?
 
         private var bindings = Set<AnyCancellable>()
@@ -31,20 +32,19 @@ extension CurrencyListView {
             action.send(CurrencyListAction.Button.Tapped())
         }
 
-        internal init(_ model: Model, currencyType: String, items: [ItemViewModel]) {
+        init(_ model: Model, currency: Currency, items: [ItemViewModel]) {
 
             self.model = model
-            self.currencyType = currencyType
+            self.currency = currency
             self.items = items
             
             bind()
         }
         
-        init(_ model: Model) {
+        convenience init(_ model: Model, currency: Currency) {
 
-            self.model = model
-            self.currencyType = "USD"
-            self.items = Self.items
+            self.init(model, currency: currency, items: [])
+            bind()
         }
         
         private func bind() {
@@ -53,7 +53,8 @@ extension CurrencyListView {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] items in
                     
-                    let items = Self.reduce(model, items: items, currencyType: currencyType)
+                    let images = model.images.value
+                    let items = Self.reduce(items: items, images: images, currency: currency)
                     
                     withAnimation(.interactiveSpring()) {
                         self.items = items
@@ -100,8 +101,8 @@ extension CurrencyListView {
                         
                     case let payload as CurrencyListAction.Item.Tapped:
                         
-                        currencyType = payload.currencyType
-                        items.forEach { $0.isSelected = currencyType == $0.currency.description }
+                        currency = payload.currency
+                        items.forEach { $0.isSelected = currency.description == $0.currency.description }
 
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
                         
@@ -185,12 +186,12 @@ struct CurrencyListView: View {
                         ItemView(viewModel: itemViewModel)
                             .onTapGesture {
                                 viewModel.action.send(CurrencyListAction.Item.Tapped(
-                                    currencyType: itemViewModel.currency.description))
+                                    currency: itemViewModel.currency))
                             }
                     }
                 }.padding(.horizontal, 20)
             }
-        }.bottomSheet(item: $viewModel.bottomSheet) { sheetType in
+        }.sheet(item: $viewModel.bottomSheet) { sheetType in
             
             switch sheetType.sheetType {
             case .placeholder:
@@ -198,7 +199,7 @@ struct CurrencyListView: View {
                 CurrencyRatesListView.PlaceholderItemView()
                 
             case let .currencyRate(model):
-
+                
                 CurrencyRatesListView(viewModel: .init(model))
             }
         }
@@ -298,15 +299,15 @@ extension CurrencyListView {
     }
 }
 
-// MARK: - Methods
+// MARK: - Reducers
 
 extension CurrencyListView.ViewModel {
     
-    static func reduce(_ model: Model, items: [CurrencyWalletData], currencyType: String) -> [ItemViewModel] {
+    static func reduce(items: [CurrencyWalletData], images: [String: ImageData], currency: Currency) -> [ItemViewModel] {
         
         items.map { item in
             
-            let icon = model.images.value[item.md5hash]
+            let icon = images[item.md5hash]
             
             return .init(
                 icon: icon?.image,
@@ -314,9 +315,30 @@ extension CurrencyListView.ViewModel {
                 rateBuy: NumberFormatter.decimal(item.rateBuy),
                 rateSell: NumberFormatter.decimal(item.rateSell),
                 iconId: item.md5hash,
-                isSelected: currencyType == item.code)
+                isSelected: currency.description == item.code)
         }
     }
+    
+    static func reduceCurrencyWallet(_ items: [CurrencyWalletData], images: [String: ImageData], currency: Currency) -> [CurrencyItemViewModel] {
+        
+        return items.map { item in
+            
+            let icon = images[item.md5hash]
+            
+            return .init(
+                icon: icon?.image,
+                currency: Currency(description: item.code),
+                rateBuy: NumberFormatter.decimal(item.rateBuy),
+                rateSell: NumberFormatter.decimal(item.rateSell),
+                iconId: item.md5hash,
+                isSelected: currency.description == item.code)
+        }
+    }
+}
+
+// MARK: - Methods
+
+extension CurrencyListView.ViewModel {
     
     func iconsHashNeedsDownload(_ items: [ItemViewModel]) -> [String] {
         
@@ -342,7 +364,7 @@ enum CurrencyListAction {
 
         struct Tapped: Action {
             
-            let currencyType: String
+            let currency: Currency
         }
     }
 }
