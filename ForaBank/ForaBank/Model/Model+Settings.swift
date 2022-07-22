@@ -17,11 +17,6 @@ extension ModelAction {
 
             let productID: ProductData.ID
         }
-        
-        struct UpdateIsPaymentsTransfersOpened: Action {
-            
-            let value: Bool
-        }
     }
 }
 
@@ -68,37 +63,11 @@ extension Model {
         }
     }
     
-    var isPaymentsTransfersOpened: Bool {
-        
-        do {
-    
-            let isPaymentsTransfersOpened: Bool = try settingsAgent.load(type: .general(.isPaymentsTransfersOpened))
-            return isPaymentsTransfersOpened
-        
-        } catch {
-            
-            return false
-        }
-    }
 }
 
 //MARK: - Handlers
 
 extension Model {
-    
-    func handleUpdateIsPaymentsTransfersOpened(
-        payload: ModelAction.Settings.UpdateIsPaymentsTransfersOpened) {
-        
-        do {
-            
-            try settingsAgent.store(payload.value,
-                                    type: .general(.isPaymentsTransfersOpened))
-        } catch {
-            
-            handleSettingsCachingError(error: error)
-        }
-    }
-    
     
     func handleUpdateProductsHidden(_ productID: ProductData.ID) {
 

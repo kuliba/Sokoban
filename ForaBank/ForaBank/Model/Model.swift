@@ -293,6 +293,14 @@ class Model {
                 
             }.store(in: &bindings)
         
+        contactsAgent.status
+            .receive(on: queue)
+            .sink { [unowned self] status in
+                
+                action.send(ModelAction.Contacts.PermissionStatus.Update(status: status))
+                
+        }.store(in: &bindings)
+        
         action
             .receive(on: queue)
             .sink {[unowned self] action in
@@ -494,9 +502,6 @@ class Model {
                     
                 case let payload as ModelAction.Settings.UpdateProductsHidden:
                     handleUpdateProductsHidden(payload.productID)
-                    
-                case let payload as ModelAction.Settings.UpdateIsPaymentsTransfersOpened:
-                    handleUpdateIsPaymentsTransfersOpened(payload: payload)
                     
                     //MARK: - Notifications
                        

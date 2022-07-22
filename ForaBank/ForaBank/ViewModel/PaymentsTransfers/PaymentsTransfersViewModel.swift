@@ -117,14 +117,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                   
                 case _ as PaymentsTransfersViewModelAction.ViewDidApear:
                     
-                    if !model.isPaymentsTransfersOpened {
-                        model.action.send(ModelAction.Settings.UpdateIsPaymentsTransfersOpened(value: true))
-                        
-                        switch model.contactsPermissionStatus {
-                        case .available: break
-                        default: model.action.send(ModelAction.Contacts.PermissionStatus.Request())
-                        }
-                    }
+                    model.action.send(ModelAction.Contacts.PermissionStatus.Request())
                     
                 default:
                     break

@@ -16,6 +16,11 @@ extension ModelAction {
         enum PermissionStatus {
         
             struct Request: Action {}
+            
+            struct Update: Action {
+                
+                let status: ContactsAgentStatus
+            }
         }
         
     }

@@ -73,20 +73,26 @@ extension PTSectionLatestPaymentsView {
         
         func bind() {
             
-            model.contactsAgent.status
+            model.action
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] status in
+                .sink { [unowned self] action in
                     
-                    switch status {
-                    case .available:
+                    switch action {
+                
+                    case let payload as ModelAction.Contacts.PermissionStatus.Update:
+                    
+                        switch payload.status {
+                        case .available:
                        
-                        if !model.latestPayments.value.isEmpty {
+                            if !model.latestPayments.value.isEmpty {
                             
-                            withAnimation(.easeInOut(duration: 1)) {
-                                self.items = itemsReduce(latest: model.latestPayments.value)
+                                withAnimation(.easeInOut(duration: 1)) {
+                                    self.items = itemsReduce(latest: model.latestPayments.value)
+                                }
                             }
-                        }
                         
+                        default: break
+                        }
                     default: break
                     }
                     
