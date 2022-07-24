@@ -19,17 +19,36 @@ struct CurrencyWalletView: View {
             
             ScrollView(showsIndicators: false) {
                 
-                CurrencyListView(viewModel: viewModel.listViewModel)
-                CurrencySwapView(viewModel: viewModel.swapViewModel)
-                
-                /*
-                 CurrencySelectorView(viewModel: viewModel.selectorViewModel)
-                */
+                ForEach(viewModel.items, id: \.id) { viewModel in
+                    
+                    switch viewModel {
+                    case let listViewModel as CurrencyListView.ViewModel:
+                        CurrencyListView(viewModel: listViewModel)
+
+                    case let swapViewModel as CurrencySwapView.ViewModel:
+                        CurrencySwapView(viewModel: swapViewModel)
+                        
+                    case let selectorViewModel as CurrencySelectorView.ViewModel:
+                        CurrencySelectorView(viewModel: selectorViewModel)
+
+                    default:
+                        Color.clear
+                    }
+                }
             }
             
-            ButtonSimpleView(viewModel: viewModel.continueButton)
-                .frame(height: 48)
-                .padding(20)
+            switch viewModel.state {
+            case .button:
+                
+                ButtonSimpleView(viewModel: viewModel.continueButton)
+                    .frame(height: 48)
+                    .padding(20)
+                
+            case .spinner:
+                
+                SpinnerRefreshView(icon: viewModel.icon)
+                    .padding(.bottom, 20)
+            }
         }
         .ignoreKeyboard()
         .navigationBarTitle(Text(viewModel.title), displayMode: .inline)

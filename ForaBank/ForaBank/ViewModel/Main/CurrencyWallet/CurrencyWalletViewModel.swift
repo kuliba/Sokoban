@@ -35,6 +35,7 @@ class CurrencyWalletViewModel: ObservableObject {
     
     let model: Model
     let title = "Обмен валют"
+    let icon: Image = .init("Logo Fora Bank")
     
     private var bindings = Set<AnyCancellable>()
     
@@ -46,7 +47,7 @@ class CurrencyWalletViewModel: ObservableObject {
     
     init(_ model: Model,
          items: [CurrencyWalletItem],
-         state: ButtonActionState,
+         state: ButtonActionState = .button,
          listViewModel: CurrencyListView.ViewModel,
          swapViewModel: CurrencySwapView.ViewModel,
          selectorViewModel: CurrencySelectorView.ViewModel,

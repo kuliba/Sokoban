@@ -45,6 +45,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.sections = [MainSectionProductsView.ViewModel(model),
                          MainSectionFastOperationView.ViewModel(),
                          MainSectionPromoView.ViewModel(model),
+                         MainSectionCurrencyMetallView.ViewModel(model),
                          MainSectionCurrencyView.ViewModel(model),
                          MainSectionOpenProductView.ViewModel(model),
                          MainSectionAtmView.ViewModel.initial]
@@ -297,18 +298,19 @@ class MainViewModel: ObservableObject, Resetable {
             currencySwap: .init(
                 icon: image,
                 currencyAmount: 1.00,
-                currency: currency,
-                quotesInfo: "1\(unicode) = \(currencyRate) ₽"),
+                currency: currency),
             сurrencyCurrentSwap: .init(
                 icon: .init("Flag RUB"),
                 currencyAmount: currencyAmount,
                 currency: Currency(description: "RUB")),
             currencyOperation: currencyOperation,
             currency: currency,
-            currencyRate: currencyAmount)
+            currencyRate: currencyAmount,
+            quotesInfo: "1\(unicode) = \(currencyRate) ₽")
         
         let walletViewModel: CurrencyWalletViewModel = .init(
             model,
+            items: [listViewModel, swapViewModel],
             listViewModel: listViewModel,
             swapViewModel: swapViewModel,
             selectorViewModel: .init(model, state: .openAccount)) { [weak self] in

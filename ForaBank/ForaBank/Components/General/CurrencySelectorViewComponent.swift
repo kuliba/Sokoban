@@ -11,11 +11,13 @@ import SwiftUI
 
 extension CurrencySelectorView {
     
-    class ViewModel: ObservableObject {
+    class ViewModel: ObservableObject, CurrencyWalletItem {
         
         @Published var state: State
         
         let model: Model
+        
+        var id = UUID().uuidString
         
         lazy var openAccount: CurrencyWalletAccountView.ViewModel = .init(
             model: model,
