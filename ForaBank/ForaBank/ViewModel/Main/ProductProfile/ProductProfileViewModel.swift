@@ -686,7 +686,7 @@ fileprivate extension NavigationBarView.ViewModel {
             rightButtons: rightButtons,
             background: Self.accentColor(with: product),
             foreground: Self.textColor(with: product),
-            contrast: 0.5)
+            backgroundDimm: .init(color: Color(hex: "1с1с1с"), opacity: 0.3))
     }
     
     static func title(with productData: ProductData) -> String {

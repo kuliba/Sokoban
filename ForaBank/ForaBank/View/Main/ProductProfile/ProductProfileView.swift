@@ -10,6 +10,11 @@ import SwiftUI
 struct ProductProfileView: View {
     
     @ObservedObject var viewModel: ProductProfileViewModel
+    
+    var accentColor: some View {
+        
+        return viewModel.accentColor.overlay(Color(hex: "1с1с1с").opacity(0.3))
+    }
 
     var body: some View {
         
@@ -27,14 +32,14 @@ struct ProductProfileView: View {
                                 
                                 if geometry.frame(in: .global).minY <= 0 {
                                     
-                                    viewModel.accentColor.contrast(0.5)
+                                    accentColor
                                         .frame(width: geometry.size.width, height: 204)
                                         .offset(y: geometry.frame(in: .global).minY / 9)
                                         .clipped()
                                     
                                 } else {
                                     
-                                    viewModel.accentColor.contrast(0.5)
+                                    accentColor
                                         .frame(width: geometry.size.width, height: 204 + geometry.frame(in: .global).minY)
                                         .clipped()
                                         .offset(y: -geometry.frame(in: .global).minY)
