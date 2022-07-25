@@ -284,7 +284,7 @@ extension MyProductsViewModel {
         let name = ProductView.ViewModel.name(product: data, style: .main)
         let subtitle = createSubtitle(from: data)
         let number = "• \(data.displayNumber ?? "")"
-        let balance = ProductView.ViewModel.balanceFormatted(product: data, style: .profile, model: model)
+        let balance = balanceFormatted(product: data)
         let balanceRub = data.balanceRub ?? 0
         let dateLong = dateLong(from: data)
         let activated = isActivatedCard(data)
@@ -304,10 +304,45 @@ extension MyProductsViewModel {
             paymentSystemIcon: paymentSystemIcon)
     }
 
+    private func balanceFormatted(product: ProductData) -> String {
+        
+        switch product {
+            
+        case let loanProduct as ProductLoanData:
+            
+            if let balance = loanProduct.totalAmountDebt {
+
+               return model.amountFormatted(amount: balance, currencyCode: product.currency, style: .clipped) ?? String(balance)
+
+            } else {
+
+              return "Ошибка"
+
+            }
+
+        default:
+            return model.amountFormatted(amount: product.balanceValue, currencyCode: product.currency, style: .clipped) ?? String(product.balanceValue)
+        }
+    }
+    
     private func createSubtitle(from data: ProductData) -> String? {
         
-        guard let subtitle = data.additionalField else { return nil }
-        return "• \(subtitle)"
+        switch data {
+            
+        case let cardProduct as ProductCardData:
+            guard let subtitle = cardProduct.additionalField else { return nil }
+            return "• \(subtitle)"
+            
+        case let depositProduct as ProductDepositData:
+            let subtitle = depositProduct.interestRate
+            return "• Ставка \(subtitle)%"
+            
+        case let loanProduct as ProductLoanData:
+            let subtitle = loanProduct.currentInterestRate
+            return "• Ставка \(subtitle)%"
+            
+        default: return nil
+        }
     }
     
     private func paymentSystemIcon(from data: ProductData) -> Image? {
@@ -318,8 +353,17 @@ extension MyProductsViewModel {
     
     private func dateLong(from data: ProductData) -> String? {
         
-        guard let loanData = data as? ProductLoanData else { return nil }
-        return "• \(DateFormatter.shortDate.string(from: loanData.dateLong))"
+        switch data {
+            
+        case let depositProduct as ProductDepositData:
+            guard let endDate = depositProduct.endDate else { return nil }
+            return "• \(DateFormatter.shortDate.string(from: endDate))"
+            
+        case let loanProduct as ProductLoanData:
+            return "• \(DateFormatter.shortDate.string(from: loanProduct.dateLong))"
+            
+        default: return nil
+        }
     }
     
     private func isActivatedCard(_ item: ProductData) -> Bool {
