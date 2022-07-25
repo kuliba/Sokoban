@@ -85,73 +85,6 @@ struct TemplatesListView: View {
                         }
                     }
                     
-                    NavigationLink("", isActive: $viewModel.isLinkActive) {
-                        
-                        if let link = viewModel.link  {
-                            
-                            switch link {
-                            case .byPhone(let paymentPhoneView):
-                                PaymentPhoneView(viewModel: paymentPhoneView)
-                                    .navigationBarBackButtonHidden(true)
-                                    .edgesIgnoringSafeArea(.all)
-
-                            case .sfp(let paymentPhoneView):
-                                PaymentPhoneView(viewModel: paymentPhoneView)
-                                    .edgesIgnoringSafeArea(.all)
-                                    .navigationBarBackButtonHidden(true)
-
-                            case .direct(let paymentTemplateData):
-                                CountryPaymentView(viewModel: .init(paymentTemplate: paymentTemplateData))
-                                    .edgesIgnoringSafeArea(.bottom)
-                                    .navigationBarBackButtonHidden(true)
-
-                            case .contactAdressless(let paymentTemplateData):
-                                CountryPaymentView(viewModel: .init(paymentTemplate: paymentTemplateData))
-                                    .edgesIgnoringSafeArea(.bottom)
-                                    .navigationBarBackButtonHidden(true)
-
-                            case .housingAndCommunalService(let internetTVDetailsViewModel):
-                                InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
-                                    .edgesIgnoringSafeArea(.bottom)
-                                    .navigationBarBackButtonHidden(true)
-
-                            case .mobile(let mobileViewModel):
-                                MobilePayView(viewModel: mobileViewModel)
-                                    .edgesIgnoringSafeArea(.bottom)
-                                    .navigationBarBackButtonHidden(true)
-
-                            case .internet(let internetTVDetailsViewModel):
-                                InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
-                                    .edgesIgnoringSafeArea(.bottom)
-                                    .navigationBarBackButtonHidden(true)
-
-                            case .transport(let avtodorDetailsViewModel):
-                                OperatorsView(viewModel: avtodorDetailsViewModel)
-                                    .edgesIgnoringSafeArea(.bottom)
-                                    .navigationBarBackButtonHidden(true)
-
-                            case .externalEntity(let transferByRequisitesView):
-                                TransferByRequisitesView(viewModel: transferByRequisitesView)
-                                    .navigationBarBackButtonHidden(true)
-                                    .edgesIgnoringSafeArea(.bottom)
-
-                            case .externalIndividual(let transferByRequisitesView):
-                                TransferByRequisitesView(viewModel: transferByRequisitesView)
-                                    .navigationBarBackButtonHidden(true)
-                                    .edgesIgnoringSafeArea(.bottom)
-
-                            case .openProduct(let productProfileViewModel):
-                                ProductProfileView(viewModel: productProfileViewModel)
-                                
-                            case .betweenTheir(let meToMeViewModel):
-                                MeToMeView(viewModel: meToMeViewModel)
-                                    .navigationBarBackButtonHidden(true)
-                                    .navigationBarHidden(false)
-                                    .edgesIgnoringSafeArea(.bottom)
-                            }
-                        }
-                    }
-                    
                     if let contextMenuViewModel = viewModel.contextMenu {
                         
                         ZStack(alignment: .topTrailing) {
@@ -165,6 +98,73 @@ struct TemplatesListView: View {
                             ContextMenuView(viewModel: contextMenuViewModel)
                                 .frame(width: 260)
                         }
+                    }
+                }
+            }
+            
+            NavigationLink("", isActive: $viewModel.isLinkActive) {
+                
+                if let link = viewModel.link  {
+                    
+                    switch link {
+                    case .byPhone(let paymentPhoneView):
+                        PaymentPhoneView(viewModel: paymentPhoneView)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+
+                    case .sfp(let paymentPhoneView):
+                        PaymentPhoneView(viewModel: paymentPhoneView)
+                            .edgesIgnoringSafeArea(.all)
+                            .navigationBarBackButtonHidden(true)
+
+                    case .direct(let paymentTemplateData):
+                        CountryPaymentView(viewModel: .init(paymentTemplate: paymentTemplateData))
+                            .edgesIgnoringSafeArea(.bottom)
+                            .navigationBarBackButtonHidden(true)
+
+                    case .contactAdressless(let paymentTemplateData):
+                        CountryPaymentView(viewModel: .init(paymentTemplate: paymentTemplateData))
+                            .edgesIgnoringSafeArea(.bottom)
+                            .navigationBarBackButtonHidden(true)
+
+                    case .housingAndCommunalService(let internetTVDetailsViewModel):
+                        InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
+                            .edgesIgnoringSafeArea(.bottom)
+                            .navigationBarBackButtonHidden(true)
+
+                    case .mobile(let mobileViewModel):
+                        MobilePayView(viewModel: mobileViewModel)
+                            .edgesIgnoringSafeArea(.bottom)
+                            .navigationBarBackButtonHidden(true)
+
+                    case .internet(let internetTVDetailsViewModel):
+                        InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
+                            .edgesIgnoringSafeArea(.bottom)
+                            .navigationBarBackButtonHidden(true)
+
+                    case .transport(let avtodorDetailsViewModel):
+                        OperatorsView(viewModel: avtodorDetailsViewModel)
+                            .edgesIgnoringSafeArea(.bottom)
+                            .navigationBarBackButtonHidden(true)
+
+                    case .externalEntity(let transferByRequisitesView):
+                        TransferByRequisitesView(viewModel: transferByRequisitesView)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.bottom)
+
+                    case .externalIndividual(let transferByRequisitesView):
+                        TransferByRequisitesView(viewModel: transferByRequisitesView)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.bottom)
+
+                    case .openProduct(let productProfileViewModel):
+                        ProductProfileView(viewModel: productProfileViewModel)
+                        
+                    case .betweenTheir(let meToMeViewModel):
+                        MeToMeView(viewModel: meToMeViewModel)
+                            .navigationBarBackButtonHidden(true)
+                            .navigationBarHidden(false)
+                            .edgesIgnoringSafeArea(.bottom)
                     }
                 }
             }
