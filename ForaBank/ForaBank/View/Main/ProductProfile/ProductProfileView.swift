@@ -33,14 +33,14 @@ struct ProductProfileView: View {
                                 if geometry.frame(in: .global).minY <= 0 {
                                     
                                     accentColor
-                                        .frame(width: geometry.size.width, height: 204)
+                                        .frame(width: geometry.size.width, height: 204 - 48)
                                         .offset(y: geometry.frame(in: .global).minY / 9)
                                         .clipped()
                                     
                                 } else {
                                     
                                     accentColor
-                                        .frame(width: geometry.size.width, height: 204 + geometry.frame(in: .global).minY)
+                                        .frame(width: geometry.size.width, height: 204 - 48 + geometry.frame(in: .global).minY)
                                         .clipped()
                                         .offset(y: -geometry.frame(in: .global).minY)
                                 }
@@ -70,7 +70,7 @@ struct ProductProfileView: View {
                             }
                         }
                     }
-                    .padding(.top, 56)
+                    .padding(.top, 56 - 48)
                     .zIndex(1)
                 }
                 .background(GeometryReader { geo in
