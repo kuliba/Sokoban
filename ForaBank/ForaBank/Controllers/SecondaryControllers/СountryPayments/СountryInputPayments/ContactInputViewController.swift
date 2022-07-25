@@ -187,8 +187,15 @@ class ContactInputViewController: UIViewController {
     }
     
     @objc func onTouchBackButton() {
-        operatorsViewModel?.closeAction()
-        navigationController?.popToRootViewController(animated: true)
+        
+        if operatorsViewModel != nil {
+            
+            operatorsViewModel?.closeAction()
+            
+        } else {
+            
+            navigationController?.popViewController(animated: true)
+        }
     }
     
     required init?(coder: NSCoder) {
