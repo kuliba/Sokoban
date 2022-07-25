@@ -191,11 +191,11 @@ extension ProductStatementData {
     
     var merchant: String { merchantNameRus ?? merchantName ?? Self.merchantNamePlaceholder }
     
-    var signedAmount: Double {
+    var isMinusSign: Bool {
         
         switch operationType {
-        case .debit: return -amount
-        default: return amount
+        case .debit: return true
+        default: return false
         }
     }
     
@@ -208,4 +208,6 @@ extension ProductStatementData {
         
         isReturn ? "Возврат по операции": fastPayment?.documentComment
     }
+    
+    var dateValue: Date { tranDate ?? date }
 }
