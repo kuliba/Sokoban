@@ -24,6 +24,7 @@ class MeToMeSettingViewController: UIViewController {
     var cardFromField = CardChooseView()
     var cardListView = CardListView(onlyMy: false)
     var banksView: BanksView = BanksView()
+    var defaultBank = DefaultBankView()
     var stackView = UIStackView(arrangedSubviews: [])
     var logo: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "sfpBig"))
@@ -130,16 +131,19 @@ class MeToMeSettingViewController: UIViewController {
     }
     
     func setupStackView() {
-        stackView = UIStackView(arrangedSubviews: [topSwitch, cardFromField, cardListView, banksView])
+        banksView.anchor(height: 200)
+        
+        stackView = UIStackView(arrangedSubviews: [topSwitch, cardFromField, cardListView, banksView, defaultBank])
         stackView.axis = .vertical
         stackView.alignment = .fill
-        stackView.distribution = .equalSpacing
+        stackView.distribution = .fillProportionally
         stackView.spacing = 12
         stackView.isUserInteractionEnabled = true
         view.addSubview(stackView)
         
         stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                         left: view.leftAnchor, right: view.rightAnchor)
+                         left: view.leftAnchor,
+                         right: view.rightAnchor)
     }
 
     func setupPaymentsUI() {
@@ -148,7 +152,7 @@ class MeToMeSettingViewController: UIViewController {
         // настраиваем логотип экрана
         view.addSubview(logo)
         logo.centerX(inView: view)
-        logo.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 40)
+        logo.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 10)
     }
     
     func setTitle(title: String, subtitle: String) -> UIView {
