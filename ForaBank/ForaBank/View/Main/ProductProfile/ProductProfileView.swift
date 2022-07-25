@@ -110,6 +110,10 @@ struct ProductProfileView: View {
                     }
                 }
             }
+            
+            // workaround to fix mini-cards jumps when product name editing alert presents
+            Color.clear
+                .textfieldAlert(alert: $viewModel.textFieldAlert)
         }
         .navigationBar(with: viewModel.navigationBar)
         .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
@@ -145,7 +149,6 @@ struct ProductProfileView: View {
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
-        .textfieldAlert(alert: $viewModel.textFieldAlert)
     }
 }
 

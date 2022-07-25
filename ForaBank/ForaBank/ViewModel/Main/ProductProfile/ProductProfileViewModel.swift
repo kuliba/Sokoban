@@ -184,7 +184,6 @@ class ProductProfileViewModel: ObservableObject {
                 case let payload as ModelAction.Card.Block.Response:
                     switch payload {
                     case .success:
-                        
                         self.model.action.send(ModelAction.Products.Update.ForProductType.init(productType: .card))
                         
                     case .failure(let errorMessage):
@@ -196,7 +195,6 @@ class ProductProfileViewModel: ObservableObject {
                 case let payload as ModelAction.Card.Unblock.Response:
                     switch payload {
                     case .success:
-                        
                         self.model.action.send(ModelAction.Products.Update.ForProductType.init(productType: .card))
 
                     case .failure(let errorMessage):

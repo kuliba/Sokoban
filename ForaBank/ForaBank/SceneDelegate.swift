@@ -34,6 +34,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                          object: nil)
     
         legacyNavigationBarBackground()
+        setAlertAppearance()
     }
     
     //FIXME: remove after refactor paymnets
@@ -72,6 +73,11 @@ extension SceneDelegate {
         UINavigationBar.appearance().titleTextAttributes =
             [.foregroundColor: UIColor.black]
         UINavigationBar.appearance().isTranslucent = true
+    }
+    
+    func setAlertAppearance() {
+        
+        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .black
     }
 }
 
