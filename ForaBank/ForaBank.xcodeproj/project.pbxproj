@@ -1273,6 +1273,8 @@
 		EDCF8A1526CED86100DC9F54 /* BankTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCF8A1326CED86100DC9F54 /* BankTableViewCell.swift */; };
 		EDCF8A1626CED86100DC9F54 /* BankTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDCF8A1426CED86100DC9F54 /* BankTableViewCell.xib */; };
 		EDCF8A1826CEFF2100DC9F54 /* TextFieldWithPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCF8A1726CEFF2100DC9F54 /* TextFieldWithPadding.swift */; };
+		EDDC5915288EDBC400C08D06 /* DefaultBankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDC5914288EDBC400C08D06 /* DefaultBankView.swift */; };
+		EDDC5917288EDBCF00C08D06 /* DefaultBankView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDDC5916288EDBCE00C08D06 /* DefaultBankView.xib */; };
 		EDDFE39D2756926000F57C71 /* GetDepositProductListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDFE39C2756926000F57C71 /* GetDepositProductListDecodableModel.swift */; };
 		EDDFE39F2756A99E00F57C71 /* GCDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDFE39E2756A99E00F57C71 /* GCDHelper.swift */; };
 		EDDFE3A32756BDDB00F57C71 /* DetailInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDFE3A22756BDDB00F57C71 /* DetailInformationViewController.swift */; };
@@ -2637,6 +2639,8 @@
 		EDCF8A1326CED86100DC9F54 /* BankTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankTableViewCell.swift; sourceTree = "<group>"; };
 		EDCF8A1426CED86100DC9F54 /* BankTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BankTableViewCell.xib; sourceTree = "<group>"; };
 		EDCF8A1726CEFF2100DC9F54 /* TextFieldWithPadding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldWithPadding.swift; sourceTree = "<group>"; };
+		EDDC5914288EDBC400C08D06 /* DefaultBankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultBankView.swift; sourceTree = "<group>"; };
+		EDDC5916288EDBCE00C08D06 /* DefaultBankView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DefaultBankView.xib; sourceTree = "<group>"; };
 		EDDFE39C2756926000F57C71 /* GetDepositProductListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDepositProductListDecodableModel.swift; sourceTree = "<group>"; };
 		EDDFE39E2756A99E00F57C71 /* GCDHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDHelper.swift; sourceTree = "<group>"; };
 		EDDFE3A22756BDDB00F57C71 /* DetailInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInformationViewController.swift; sourceTree = "<group>"; };
@@ -6626,10 +6630,20 @@
 		EDCF89E026CACBF200DC9F54 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				EDDC5913288EDB9900C08D06 /* DefaultBankView */,
 				EDA563AC26F8807B0093F0C8 /* BanksView */,
 				EDA563AB26F8806B0093F0C8 /* Switch */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		EDDC5913288EDB9900C08D06 /* DefaultBankView */ = {
+			isa = PBXGroup;
+			children = (
+				EDDC5914288EDBC400C08D06 /* DefaultBankView.swift */,
+				EDDC5916288EDBCE00C08D06 /* DefaultBankView.xib */,
+			);
+			path = DefaultBankView;
 			sourceTree = "<group>";
 		};
 		EDDFE3A02756BDA200F57C71 /* View */ = {
@@ -7337,6 +7351,7 @@
 				EDA563B026F881D60093F0C8 /* BanksView.xib in Resources */,
 				EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */,
 				EDE212F62742E91D005D9821 /* ChooseCurrencyTableViewCell.xib in Resources */,
+				EDDC5917288EDBCF00C08D06 /* DefaultBankView.xib in Resources */,
 				A55E653A27F6D9AD005CED37 /* C2BDetailsInput.xib in Resources */,
 				ED2BE18126A04A4300647CB1 /* CastomCardXIB.xib in Resources */,
 				ED684CF32763955E00AA7A33 /* DocDepositTableViewCell.xib in Resources */,
@@ -7767,6 +7782,7 @@
 				EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */,
 				6833E0D0273920CE004C070F /* CountryPayCoordinator.swift in Sources */,
 				77E1802B27AB032C0006ACC9 /* PrintFormType.swift in Sources */,
+				EDDC5915288EDBC400C08D06 /* DefaultBankView.swift in Sources */,
 				0BB015DC26C9BE3700E7A85B /* ExtensionGKHMainNav.swift in Sources */,
 				0BD1CAA226E6C46900CFE993 /* GetCurrencyListSaved.swift in Sources */,
 				77C3829127E0CA2200B5246E /* Model+General.swift in Sources */,

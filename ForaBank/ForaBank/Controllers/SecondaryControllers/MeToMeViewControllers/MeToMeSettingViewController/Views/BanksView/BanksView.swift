@@ -47,7 +47,7 @@ class BanksView: UIView {
     func commonInit() {
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
-        self.anchor(height: 130)
+        
         
         let layout = LeftAlignedCollectionViewFlowLayout()
                 

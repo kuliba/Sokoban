@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
-        <array key="Inter-Regular.ttf">
+        <array key="Inter-VariableFont_slnt,wght.ttf">
             <string>Inter-Regular</string>
         </array>
     </customFonts>
