@@ -141,6 +141,7 @@ class InfoProductViewModel: ObservableObject {
                         let mask = StringValueMask.card
                         let maskedNumber = number.masked(mask: mask)
                         
+                        UIPasteboard.general.string = maskedNumber
                         additionalList.append(.init(title: "Номер карты", subtitle: maskedNumber, button: .init(icon: .ic24EyeOff, action: { [weak self] in
                             
                             self?.additionalList = self?.setupAdditionalList(for: payload.productCardData)
