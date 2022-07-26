@@ -26,7 +26,7 @@ extension ContactInputViewController {
             return str as String
         }
     
-    func contaktPayment(with card: UserAllCardsModel, surname: String, name: String, secondName: String, amount: Double, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
+    func contaktPayment(with card: UserAllCardsModel, surname: String, name: String, secondName: String, phone: String?, amount: Double, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
         
         guard let countryCode = country?.contactCode else { return }
         guard let currencyAmount = card.currency else { return }
@@ -65,7 +65,7 @@ extension ContactInputViewController {
         
         if country?.code == "TR" {
             
-            var phone = self.phoneField.textField.unmaskedText ?? ""
+            var phone = phone ?? ""
         
             switch phone.prefix(4) {
             case "+90-":
@@ -98,13 +98,15 @@ extension ContactInputViewController {
             default:
                 print("Phone Error")
             }
+            
             switch phone.prefix(1) {
             case "8":
                 phone = phone.applyPatternOnNumbers(pattern: "#-###-#######", replacmentCharacter: "#")
-            
+                
             default:
                 print("Phone Error")
             }
+            
             let field = ["fieldid": 6,
                          "fieldname": "bPhone",
                          "fieldvalue": phone] as [String: AnyObject]
@@ -132,7 +134,7 @@ extension ContactInputViewController {
             if error != nil {
                 completion(nil, error!)
             }
-            let phone = self.phoneField.textField.unmaskedText ?? ""
+            let phone = self.phoneField.textField.phoneNumber?.numberString ?? ""
             guard let respModel = respModel else { return }
             if respModel.statusCode == 0 {
                 guard let country = self.country else { return }
@@ -168,8 +170,11 @@ extension ContactInputViewController {
         })
     }
     
-    func migPayment(with card: UserAllCardsModel, phone: String, amount: Double, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
-        
+    func migPayment(with card: UserAllCardsModel, phone: String?, amount: Double, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
+        guard let phone = phone?.replacingOccurrences(of: "+", with: "") else {
+            return
+        }
+
         var body = ["check" : false,
                     "amount" : amount,
                     "currencyAmount" : self.currency,

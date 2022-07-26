@@ -155,9 +155,7 @@ class ChooseCountryTableViewController: UITableViewController {
                 vc.typeOfPay = .mig
                 vc.configure(with: model.country, byPhone: true)
                 vc.selectedBank = model.bank
-                let mask = StringMask(mask: "+000-0000-00-00")
-                let maskPhone = mask.mask(string: model.phoneNumber)
-                vc.phoneField.text = maskPhone ?? ""
+                vc.phoneField.text = model.phoneNumber ?? ""
                 
             } else if model.firstName != nil, model.middleName != nil, model.surName != nil {
                 
