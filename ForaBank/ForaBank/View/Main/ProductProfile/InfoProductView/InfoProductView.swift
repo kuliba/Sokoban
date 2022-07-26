@@ -44,6 +44,7 @@ struct InfoProductView: View {
                     .padding(.top, 20)
                     .padding(.horizontal, 20)
                     .frame(alignment: .leading)
+                    .padding(.bottom, 100)
                 }
                 
             }
