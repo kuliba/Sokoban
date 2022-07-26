@@ -8,8 +8,9 @@
 import SwiftUI
 import Combine
 
-class PaymentsSuccessViewModel: ObservableObject {
+class PaymentsSuccessViewModel: ObservableObject, Identifiable {
     
+    let id = UUID()
     let header: HeaderViewModel
     @Published var optionButtons: [PaymentsSuccessOptionButtonViewModel]
     let actionButton: ButtonSimpleView.ViewModel
