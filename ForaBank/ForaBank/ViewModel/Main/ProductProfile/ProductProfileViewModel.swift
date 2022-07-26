@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import SwiftUI
+import PDFKit
 
 class ProductProfileViewModel: ObservableObject {
     
@@ -201,6 +202,31 @@ class ProductProfileViewModel: ObservableObject {
                         alert = .init(title: "Ошибка", message: errorMessage, primary: .init(type: .default, title: "Ok", action: { [weak self] in
                             self?.alert = nil
                         }))
+                    }
+                case let payload as ModelAction.Products.DepositConditionsPrintForm.Response:
+                    switch payload.result {
+                    case .success(let data):
+                        if let document = PDFDocument(data: data) {
+                            
+                            let printFormViewModel = PrintFormView.ViewModel(pdfDocument: document)
+                            self.sheet = .init(type: .printForm(printFormViewModel))
+                            
+                        } else {
+                                
+                                self.alert = errorDepositConditionAlert(data: data)
+
+                        }
+                        
+                    case .failure(let error):
+                        let alertViewModel = Alert.ViewModel(title: "Ошибка",
+                                                             message: error.localizedDescription,
+                                                             primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in
+                            self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                            self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())}),
+                                                             secondary: .init(type: .default, title: "Ок", action: { [weak self] in
+                            self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                        }))
+                        self.alert = .init(alertViewModel)
                     }
                     default: break
                 }
@@ -544,8 +570,7 @@ class ProductProfileViewModel: ObservableObject {
                             self.link = .meToMeExternal(meToMeExternalViewModel)
                             
                         case .conditions:
-                            let printFormViewModel = PrintFormView.ViewModel(type: .deposit(depositId: productData.id), model: self.model)
-                            self.sheet = .init(type: .printForm(printFormViewModel))
+                            self.model.action.send(ModelAction.Products.DepositConditionsPrintForm.Request(depositId: productData.id))
                         
                         case .closeDeposit:
                             let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
@@ -639,6 +664,41 @@ class ProductProfileViewModel: ObservableObject {
         }
         
         return alertViewModel
+    }
+    
+    func errorDepositConditionAlert(data: Data, decoder: JSONDecoder = .init()) -> Alert.ViewModel {
+        
+        do {
+            
+            let responseData = try decoder.decode(ServerCommands.DepositController.GetPrintFormForDepositConditions.Response.self, from: data)
+            
+            if let errorMessage = responseData.errorMessage {
+                    
+                    let alertViewModel = Alert.ViewModel(title: "Форма временно недоступна",
+                                                         message: errorMessage,
+                                                         primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in
+                        self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                        self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())}),
+                                                         secondary: .init(type: .default, title: "Ок", action: { [weak self] in
+                        self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                    }))
+                
+                    return alertViewModel
+            } else {
+                
+                let alertViewModel = Alert.ViewModel(title: "Ошибка", message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения.", primary: .init(type: .default, title: "Ok", action: {[weak self] in
+                    self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                }))
+                return alertViewModel
+            }
+            
+        } catch {
+            
+            let alertViewModel = Alert.ViewModel(title: "Ошибка", message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения.", primary: .init(type: .default, title: "Ok", action: {[weak self] in
+                self?.action.send(ProductProfileViewModelAction.Close.Alert())
+            }))
+            return alertViewModel
+        }
     }
 
     func makeHistoryViewModel(productType: ProductType, productId: ProductData.ID, model: Model) -> ProductProfileHistoryView.ViewModel? {

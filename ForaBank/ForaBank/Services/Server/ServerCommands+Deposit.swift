@@ -239,6 +239,14 @@ extension ServerCommands {
             let payload: BasePayload?
             let cachePolicy: URLRequest.CachePolicy = .returnCacheDataElseLoad
             
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let data: Data?
+                let errorMessage: String?
+                
+            }
+            
             init(token: String, payload: BasePayload) {
                 
                 self.token = token
