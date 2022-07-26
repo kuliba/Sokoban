@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import RealmSwift
 import SwiftUI
 import Combine
 import IQKeyboardManagerSwift
@@ -16,7 +15,6 @@ class ConfirmViewControllerModel {
     
     var operatorsViewModel: OperatorsViewModel?
     static var svgIcon = ""
-    lazy var realm = try? Realm()
     var type: PaymentType
     var paymentSystem: PaymentSystemList?
     var templateButtonViewModel: TemplateButtonViewModel?
@@ -297,6 +295,8 @@ class ContactConfurmViewController: UIViewController {
     var fromTitle = "От куда"
     var toTitle = "Куда"
     
+    var updateSuccessScreen: Bool = true
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         IQKeyboardManager.shared.enable = false
@@ -332,6 +332,7 @@ class ContactConfurmViewController: UIViewController {
         NotificationCenter.default.addObserver(forName: NSNotification.Name("dismissSwiftUI"), object: nil, queue: nil) { data in
             
             let vc = PaymentsDetailsSuccessViewController()
+            self.updateSuccessScreen = false
             vc.confurmView.statusImageView.image = UIImage(named: "waiting")
             vc.confurmView.summLabel.text = self.summTransctionField.text
             vc.confurmView.statusLabel.text = "Перевод отменен!"
@@ -844,6 +845,7 @@ class ContactConfurmViewController: UIViewController {
                     self.dismissActivity()
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
+                        self.updateSuccessScreen = false
                         switch documentStatus {
                         case "COMPLETE": self.confurmVCModel?.status = .succses
                         case "IN_PROGRESS": self.confurmVCModel?.status = .inProgress
@@ -939,6 +941,7 @@ class ContactConfurmViewController: UIViewController {
                     let documentStatus = model.data?.documentStatus ?? ""
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
+                        self.updateSuccessScreen = false
                         switch documentStatus {
                         case "COMPLETED": self.confurmVCModel?.status = .succses
                         case "IN_PROGRESS": self.confurmVCModel?.status = .inProgress
@@ -1038,6 +1041,12 @@ class ContactConfurmViewController: UIViewController {
 
         Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             runCount += 1
+            
+            guard self.updateSuccessScreen == true else {
+                timer.invalidate()
+                return
+            }
+            
             if runCount == 60 {
                 timer.invalidate()
                 let vc = PaymentsDetailsSuccessViewController()

@@ -249,6 +249,10 @@ extension CustomPopUpWithRateView {
         } else {
             bottomView.didDoneButtonTapped = { [weak self] (amount) in
                 self?.viewModel.summTransction = amount
+                if let cardTo = self?.cardTo {
+                    
+                    self?.viewModel.cardToRealm = cardTo
+                }
                 self?.doneButtonTapped(with: self!.viewModel)
             }
         }
@@ -283,6 +287,10 @@ extension CustomPopUpWithRateView {
         ? "Номер карты или счета"
         : "Номер карты получателя"
         
+        if let cardTo = self.cardTo {
+            
+            self.cardToField.model = cardTo
+        }
         cardToField.didChooseButtonTapped = { () in
             self.openOrHideView(self.cardToListView) {
                 self.seporatorView.curvedLineView.isHidden = false
