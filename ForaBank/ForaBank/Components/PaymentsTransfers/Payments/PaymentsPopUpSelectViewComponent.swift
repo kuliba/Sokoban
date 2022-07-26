@@ -12,8 +12,9 @@ import Combine
 
 extension PaymentsPopUpSelectView {
     
-    class ViewModel: ObservableObject {
+    class ViewModel: ObservableObject, Identifiable {
     
+        let id = UUID()
         let title: String
         let description: String?
         var items: [ItemViewModel]

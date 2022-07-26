@@ -17,4 +17,5 @@ enum PrintFormType: String, Codable {
     case internet
     case transport
     case taxAndStateService
+    case contactAddressless
 }
