@@ -85,9 +85,12 @@ extension PTSectionLatestPaymentsView {
                         case .available:
                        
                             if !model.latestPayments.value.isEmpty {
+                                
+                                // temporally removed taxAndStateService from list
+                                let latestPaymentsFilterred = model.latestPayments.value.filter({ $0.type != .taxAndStateService })
                             
                                 withAnimation(.easeInOut(duration: 1)) {
-                                    self.items = itemsReduce(latest: model.latestPayments.value)
+                                    self.items = itemsReduce(latest: latestPaymentsFilterred)
                                 }
                             }
                         
@@ -106,8 +109,11 @@ extension PTSectionLatestPaymentsView {
                     let latestPayments = data.0
                     let isLatestPaymentsUpdating = data.1
                     
+                    // temporally removed taxAndStateService from list
+                    let latestPaymentsFilterred = latestPayments.filter({ $0.type != .taxAndStateService })
+                    
                     withAnimation(.easeInOut(duration: 1)) {
-                        self.items = itemsReduce(latest: latestPayments,
+                        self.items = itemsReduce(latest: latestPaymentsFilterred,
                                                  isUpdating: isLatestPaymentsUpdating)
                     }
                 
@@ -163,7 +169,7 @@ extension PTSectionLatestPaymentsView {
                 .init(id: 0,
                       avatar: .icon(.ic24Star, .iconBlack),
                       topIcon: nil,
-                      description: "Шаблоны и автоплатежи",
+                      description: "Шаблоны",
                       action: { [self] in
                           self.action.send(PTSectionLatestPaymentsViewAction.ButtonTapped.Templates())
                       })
