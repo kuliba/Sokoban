@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Inter-VariableFont_slnt,wght.ttf">
+            <string>Inter-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PhoneNumberView">
+            <connections>
+                <outlet property="chooseButton" destination="uJZ-iE-q5C" id="gBV-9H-Wlg"/>
+                <outlet property="contentView" destination="iN0-l3-epB" id="53f-Tz-OE9"/>
+                <outlet property="imageView" destination="81X-Wb-PYP" id="ssP-E5-0VT"/>
+                <outlet property="lineView" destination="Mkb-Aj-fkg" id="Ums-Bu-nyq"/>
+                <outlet property="placeHolder" destination="9Ha-gR-BMt" id="ptG-dF-UDG"/>
+                <outlet property="textField" destination="2FH-x5-7w2" id="SxV-Wz-ErN"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="431" height="119"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="bWS-gJ-R1u">
+                    <rect key="frame" x="16" y="0.0" width="395" height="119"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic24Smartphone" translatesAutoresizingMaskIntoConstraints="NO" id="81X-Wb-PYP">
+                            <rect key="frame" x="0.0" y="43.5" width="32" height="32"/>
+                            <color key="tintColor" name="iconGray"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="32" id="J9q-fT-YPn"/>
+                                <constraint firstAttribute="height" constant="32" id="vfk-88-Zrt"/>
+                            </constraints>
+                        </imageView>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="neE-Pp-J93">
+                            <rect key="frame" x="48" y="39" width="347" height="41"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="Aae-I5-SlH">
+                                    <rect key="frame" x="0.0" y="0.0" width="347" height="36"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="VzA-Zu-I56">
+                                            <rect key="frame" x="0.0" y="0.0" width="311" height="36"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="sdfsdf" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Ha-gR-BMt">
+                                                    <rect key="frame" x="0.0" y="0.0" width="311" height="16"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="16" id="pOg-qm-ZJd"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
+                                                    <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="По номеру телефона" minimumFontSize="11" clearButtonMode="unlessEditing" translatesAutoresizingMaskIntoConstraints="NO" id="2FH-x5-7w2" customClass="PhoneNumberTextField" customModule="PhoneNumberKit">
+                                                    <rect key="frame" x="0.0" y="16" width="311" height="20"/>
+                                                    <color key="tintColor" red="0.10980392160000001" green="0.10980392160000001" blue="0.10980392160000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="20" id="gIR-O0-psQ"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                            </subviews>
+                                        </stackView>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uJZ-iE-q5C">
+                                            <rect key="frame" x="323" y="6" width="24" height="24"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="24" id="crY-kD-vA9"/>
+                                                <constraint firstAttribute="height" constant="24" id="vHp-34-ttA"/>
+                                            </constraints>
+                                            <color key="tintColor" name="iconBlack"/>
+                                            <state key="normal">
+                                                <color key="titleColor" red="0.82745098039999998" green="0.82745098039999998" blue="0.82745098039999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <imageReference key="image" image="ic24User" renderingMode="template"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="chooseButtonTapped:" destination="-1" eventType="touchUpInside" id="QFr-Vz-6bt"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <gestureRecognizers/>
+                                </stackView>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mkb-Aj-fkg">
+                                    <rect key="frame" x="0.0" y="40" width="347" height="1"/>
+                                    <color key="backgroundColor" systemColor="systemGray3Color"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="1" id="Fhv-0H-A32"/>
+                                    </constraints>
+                                </view>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="bWS-gJ-R1u" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="4ve-hf-cac"/>
+                <constraint firstAttribute="trailing" secondItem="bWS-gJ-R1u" secondAttribute="trailing" constant="20" id="cIU-gv-Ydc"/>
+                <constraint firstItem="bWS-gJ-R1u" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="lea-Dj-mPq"/>
+                <constraint firstItem="bWS-gJ-R1u" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="m9C-My-PFT"/>
+                <constraint firstAttribute="bottom" secondItem="bWS-gJ-R1u" secondAttribute="bottom" id="xaw-Vb-jEG"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="77.536231884057983" y="-174.44196428571428"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic24Smartphone" width="24" height="24"/>
+        <image name="ic24User" width="24" height="24"/>
+        <namedColor name="iconBlack">
+            <color red="0.10980392156862745" green="0.10980392156862745" blue="0.10980392156862745" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="iconGray">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray3Color">
+            <color red="0.7803921568627451" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

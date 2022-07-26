@@ -26,7 +26,7 @@ extension ContactInputViewController {
         cardFromField.imageView.isHidden = false
         cardFromField.leftTitleAncor.constant = 64
         cardFromField.layoutIfNeeded()
-        phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "addPerson"), for: .normal)
+//        phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "addPerson"), for: .normal)
 //        view.addSubview(foraSwitchView)
         
         
@@ -104,14 +104,16 @@ extension ContactInputViewController {
         UIView.animate(withDuration: 0.1) {
             self.needShowSwitchView = country.code == "AM" ? true : false
             self.bottomView.doneButton.isEnabled = country.code == "AM" ? true : false
-            
+            self.phoneField.textField.withExamplePlaceholder = false
+            self.phoneField.textField.withFlag = false
+            self.phoneField.textField.withPrefix = true
             if country.code == "TR" {
+                
                 self.phoneField.isHidden = false
                 
-//                self.phoneField.textField.maskString = "+90 (000) 000 00 00"
             } else {
+                
                 self.phoneField.isHidden = byPhone ? false : true
-                self.phoneField.textField.maskString = "+374-00-000000"
             }
             self.bankField.isHidden = byPhone ? false : true
             self.surnameField.isHidden = byPhone ? true : false

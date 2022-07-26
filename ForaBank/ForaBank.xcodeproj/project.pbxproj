@@ -1275,6 +1275,9 @@
 		EDCF8A1826CEFF2100DC9F54 /* TextFieldWithPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCF8A1726CEFF2100DC9F54 /* TextFieldWithPadding.swift */; };
 		EDDC5915288EDBC400C08D06 /* DefaultBankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDC5914288EDBC400C08D06 /* DefaultBankView.swift */; };
 		EDDC5917288EDBCF00C08D06 /* DefaultBankView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDDC5916288EDBCE00C08D06 /* DefaultBankView.xib */; };
+		EDDC591F288FE53C00C08D06 /* PhoneNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDC591E288FE53C00C08D06 /* PhoneNumberView.swift */; };
+		EDDC5922288FE56C00C08D06 /* PhoneNumberView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDDC5921288FE56C00C08D06 /* PhoneNumberView.xib */; };
+		EDDC5924288FE57C00C08D06 /* PhoneNumberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDC5923288FE57C00C08D06 /* PhoneNumberViewModel.swift */; };
 		EDDFE39D2756926000F57C71 /* GetDepositProductListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDFE39C2756926000F57C71 /* GetDepositProductListDecodableModel.swift */; };
 		EDDFE39F2756A99E00F57C71 /* GCDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDFE39E2756A99E00F57C71 /* GCDHelper.swift */; };
 		EDDFE3A32756BDDB00F57C71 /* DetailInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDFE3A22756BDDB00F57C71 /* DetailInformationViewController.swift */; };
@@ -2641,6 +2644,9 @@
 		EDCF8A1726CEFF2100DC9F54 /* TextFieldWithPadding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldWithPadding.swift; sourceTree = "<group>"; };
 		EDDC5914288EDBC400C08D06 /* DefaultBankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultBankView.swift; sourceTree = "<group>"; };
 		EDDC5916288EDBCE00C08D06 /* DefaultBankView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DefaultBankView.xib; sourceTree = "<group>"; };
+		EDDC591E288FE53C00C08D06 /* PhoneNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberView.swift; sourceTree = "<group>"; };
+		EDDC5921288FE56C00C08D06 /* PhoneNumberView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhoneNumberView.xib; sourceTree = "<group>"; };
+		EDDC5923288FE57C00C08D06 /* PhoneNumberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberViewModel.swift; sourceTree = "<group>"; };
 		EDDFE39C2756926000F57C71 /* GetDepositProductListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDepositProductListDecodableModel.swift; sourceTree = "<group>"; };
 		EDDFE39E2756A99E00F57C71 /* GCDHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDHelper.swift; sourceTree = "<group>"; };
 		EDDFE3A22756BDDB00F57C71 /* DetailInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInformationViewController.swift; sourceTree = "<group>"; };
@@ -6292,6 +6298,7 @@
 				ED4B5440270344DE00C87A1A /* CardsScrollView */,
 				EDFFCACB2681F950004EE095 /* CardListView */,
 				EDAA99AD2673AB7700435484 /* Switch */,
+				EDDC5920288FE54600C08D06 /* PhoneNumberView */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -6644,6 +6651,16 @@
 				EDDC5916288EDBCE00C08D06 /* DefaultBankView.xib */,
 			);
 			path = DefaultBankView;
+			sourceTree = "<group>";
+		};
+		EDDC5920288FE54600C08D06 /* PhoneNumberView */ = {
+			isa = PBXGroup;
+			children = (
+				EDDC591E288FE53C00C08D06 /* PhoneNumberView.swift */,
+				EDDC5923288FE57C00C08D06 /* PhoneNumberViewModel.swift */,
+				EDDC5921288FE56C00C08D06 /* PhoneNumberView.xib */,
+			);
+			path = PhoneNumberView;
 			sourceTree = "<group>";
 		};
 		EDDFE3A02756BDA200F57C71 /* View */ = {
@@ -7342,6 +7359,7 @@
 				EDB14518266526BD0028EF5A /* CreditCardEntryView.xib in Resources */,
 				EDB14526266624DC0028EF5A /* OrderCardView.xib in Resources */,
 				EDDFE3D6275EC34300F57C71 /* DepositSuccessViewController.xib in Resources */,
+				EDDC5922288FE56C00C08D06 /* PhoneNumberView.xib in Resources */,
 				ED51D66E2688B27E005FD655 /* SeparatorView.xib in Resources */,
 				77448C0D2872F7E0009EEEA8 /* sample_pdf.pdf in Resources */,
 				EDE212FB27432651005D9821 /* DateChooseView.xib in Resources */,
@@ -7692,6 +7710,7 @@
 				0BA409342806440E001326CE /* SettingPhotoCell.swift in Sources */,
 				5043E55228847BDE002C7465 /* CurrencySelectorViewComponent.swift in Sources */,
 				77DC126F2770F8C900C917B0 /* ServerCommands+PaymentTemplate.swift in Sources */,
+				EDDC5924288FE57C00C08D06 /* PhoneNumberViewModel.swift in Sources */,
 				0B22AEA826CE72C200B11E7F /* GKHDataFilter.swift in Sources */,
 				0B95C40326B6CA3700AA57E6 /* CustomPopUpWithRateView.swift in Sources */,
 				77EC58E7277236E90054D75C /* Model.swift in Sources */,
@@ -8064,6 +8083,7 @@
 				77A6A9D327F471EF00CE7E28 /* PlacesViewModel.swift in Sources */,
 				774A8B5F2865FDAF00B81140 /* PaymentsInputViewComponent.swift in Sources */,
 				0C35FD57287C0A4A00EB9039 /* DictionaryType.swift in Sources */,
+				EDDC591F288FE53C00C08D06 /* PhoneNumberView.swift in Sources */,
 				0B216FBE26D15BDF0023C878 /* GKHInputCell.swift in Sources */,
 				0BBDFC3A27BE48EE00A30D6D /* PaymentsOperationViewModel.swift in Sources */,
 				0B3FE8E32705C86200CBDB4E /* GetMobileListDecodableModel.swift in Sources */,
