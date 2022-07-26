@@ -91,7 +91,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     
     var bottomView = BottomInputView()
     
-    
+    var selectNumber: String?
     //MARK: - Viewlifecicle
     
     init(viewModel: PaymentByPhoneViewModel) {
@@ -119,6 +119,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         
         if let maskPhoneNumber = viewModel.maskPhoneNumber {
             phoneField.text = maskPhoneNumber
+            selectNumber = maskPhoneNumber
         }
         
         setupUI()
@@ -157,6 +158,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
             let updatedText = text.replacingCharacters(in: textRange,
                                                        with: string)
             viewModel.phoneNumber = updatedText
+            selectNumber = updatedText
         }
         return true
     }
@@ -251,6 +253,11 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     }
     
     fileprivate func setupUI() {
+        
+        if selectNumber != nil {
+            phoneField.textField.text = selectNumber ?? ""
+            phoneField.textField.maskString = selectNumber ?? ""
+        }
         view.backgroundColor = .white
         
         cardField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
@@ -595,4 +602,23 @@ extension PaymentByPhoneViewController: EPPickerDelegate {
             viewModel.phoneNumber = maskPhone ?? ""
         }
     }
+    
+    func epUserPhone(_ phone: String) {
+        var numbers = phone.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
+        if numbers.first == "7" {
+            let mask = StringMask(mask: "+0 (000) 000-00-00")
+            let maskPhone = mask.mask(string: numbers)
+            phoneField.text = maskPhone ?? ""
+            phoneField.textField.text = maskPhone ?? ""
+            selectNumber = maskPhone ?? ""
+        } else if numbers.first == "8" {
+            numbers.removeFirst()
+            let mask = StringMask(mask: "+7 (000) 000-00-00")
+            let maskPhone = mask.mask(string: numbers)
+            phoneField.text = maskPhone ?? ""
+            phoneField.textField.text = maskPhone ?? ""
+            selectNumber = maskPhone ?? ""
+        }
+    }
+    
 }
