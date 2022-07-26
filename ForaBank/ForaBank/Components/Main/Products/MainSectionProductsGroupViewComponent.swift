@@ -130,12 +130,43 @@ extension MainSectionProductsGroupView {
                         visible = reduce(products: result.products, isUpdating: isUpdating)
                         groupButton = result.groupButton
                         
-                        if productType == .card, visible.count <= settings.maxCardsAmountRequeredNewProduct {
+                        switch productType {
+                        case .card:
+                            if let cardProductsCount = model.products.value[.card]?.count,
+                               cardProductsCount <= settings.maxCardsAmountRequeredNewProduct {
+                                
+                                newProduct = ButtonNewProduct.ViewModel(icon: .ic24NewCardColor, title: "Хочу карту", subTitle: "Бесплатно", url: model.productsOpenAccountURL)
+                                
+                            } else {
+
+                                newProduct = nil
+                            }
                             
-                            newProduct = ButtonNewProduct.ViewModel(icon: .ic24NewCardColor, title: "Хочу карту", subTitle: "Бесплатно", url: model.productsOpenAccountURL)
+                        case .account:
+                            if model.products.value[.card] == nil,
+                               let accountProductsCount = model.products.value[.account]?.count,
+                               accountProductsCount <= settings.maxCardsAmountRequeredNewProduct {
+                                
+                                newProduct = ButtonNewProduct.ViewModel(icon: .ic24NewCardColor, title: "Хочу карту", subTitle: "Бесплатно", url: model.productsOpenAccountURL)
+                                
+                            } else {
+
+                                newProduct = nil
+                            }
                             
-                        } else {
+                        case .deposit:
+                            if model.products.value[.card] == nil,
+                               model.products.value[.account] == nil {
+                                
+                                newProduct = ButtonNewProduct.ViewModel(icon: .ic24NewCardColor, title: "Хочу карту", subTitle: "Бесплатно", url: model.productsOpenAccountURL)
+                                
+                            } else {
+
+                                newProduct = nil
+                            }
                             
+                            
+                        default:
                             newProduct = nil
                         }
                     }
