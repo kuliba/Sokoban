@@ -289,8 +289,11 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
             
         } else {
             
-            let operatorsName = customGroup?.name ?? ""
+            var operatorsName = customGroup?.name ?? ""
             let inn = operatorData?.synonymList.first ?? ""
+            if customGroup?.name == nil {
+                operatorsName = latestOperation?.name ?? ""
+            }
             navigationItem.titleView = setTitle(title: operatorsName, subtitle: "ИНН " +  inn )
             
             let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
@@ -364,7 +367,7 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
         titleView.setDimensions(height: 30, width: 250)
         titleView.addSubview(titleLabel)
         titleView.addSubview(subtitleLabel)
-        titleLabel.numberOfLines = 3;
+        titleLabel.numberOfLines = 1
 
         titleLabel.anchor( left: titleView.leftAnchor, right: titleView.rightAnchor)
         subtitleLabel.anchor(top: titleLabel.bottomAnchor, left: titleView.leftAnchor, right: titleView.rightAnchor)
