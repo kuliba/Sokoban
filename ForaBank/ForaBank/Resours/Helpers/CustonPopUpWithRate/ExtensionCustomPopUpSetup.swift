@@ -57,9 +57,8 @@ extension CustomPopUpWithRateView {
     func transferModey(with viewModel: ConfirmViewControllerModel) {
         
         bottomView.doneButtonIsEnabled(true)
-        if self.bottomView.requestModel.to == ""{
-            self.bottomView.requestModel.to = viewModel.cardFromRealm?.currency ?? ""
-        }
+
+        self.bottomView.requestModel.to = viewModel.cardFromRealm?.currency ?? ""
         
         let body = [ "check" : false,
                      "amount" : viewModel.summTransction,
