@@ -65,7 +65,49 @@ class UserAccountViewModel: ObservableObject {
             })
         bind()
     }
+    
+    func bind(documentInfoViewModel: UserAccountDocumentInfoView.ViewModel) {
         
+        documentInfoViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as UserAccountDocumentInfoViewAction.CopyDocument:
+                    let clientInfo = self.model.clientInfo.value
+                    
+                    switch payload.type {
+                    case .inn:
+                        guard let inn = clientInfo?.INN else {
+                            return
+                        }
+                        UIPasteboard.general.string = "ИНН: \(inn)"
+                        
+                    case .adressPass:
+                        guard let address = clientInfo?.address else {
+                            return
+                        }
+                        
+                        UIPasteboard.general.string = "Адрес: \(address)"
+                    case .adress:
+                        guard let addressResidential = clientInfo?.addressResidential else {
+                            return
+                        }
+                        
+                        UIPasteboard.general.string = "Адрес проживания: \(addressResidential)"
+                    default:
+                        break
+                    }
+                    
+                    
+                default:
+                    break
+                    
+                }
+            }.store(in: &bindings)
+        
+    }
+    
     func bind() {
         
         model.clientInfo
@@ -259,14 +301,21 @@ class UserAccountViewModel: ObservableObject {
                             
                         case .inn:
                             guard let inn = clientInfo.INN else { return }
-                            self.bottomSheet = .init(sheetType: .inn(.init(itemType: payload.type, content: inn)))
+                            let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: inn)
+                            bottomSheet = .init(sheetType: .inn(documentInfoViewModel))
+                            self.bind(documentInfoViewModel: documentInfoViewModel)
                             
                         case .adressPass:
-                            self.bottomSheet = .init(sheetType: .inn(.init(itemType: payload.type, content: clientInfo.address)))
+                            let address = clientInfo.address
+                            let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: address)
+                            bottomSheet = .init(sheetType: .inn(documentInfoViewModel))
+                            self.bind(documentInfoViewModel: documentInfoViewModel)
                             
                         case .adress:
                             guard let addressResidential = clientInfo.addressResidential else { return }
-                            self.bottomSheet = .init(sheetType: .inn(.init(itemType: payload.type, content: addressResidential)))
+                            let documentInfoViewModel = UserAccountDocumentInfoView.ViewModel(itemType: payload.type, content: addressResidential)
+                            bottomSheet = .init(sheetType: .inn(documentInfoViewModel))
+                            self.bind(documentInfoViewModel: documentInfoViewModel)
                         }
                     
                     default:
