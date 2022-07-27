@@ -39,6 +39,7 @@ struct SpinnerView: View {
             
             SpinnerRefreshView(icon: viewModel.icon)
         }
+        .navigationBarHidden(true)
     }
 }
 
