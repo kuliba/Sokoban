@@ -113,8 +113,6 @@ class ContactInputViewController: UIViewController {
     
     var stackView = UIStackView(arrangedSubviews: [])
     
-    var selectNumber: String?
-    
     //MARK: - Viewlifecicle
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -171,11 +169,6 @@ class ContactInputViewController: UIViewController {
                 }
                 if let phone = model.additional.first(where: { $0.fieldname == "bPhone" })?.fieldvalue {
                     self.phoneField.text = "+\(phone)"
-                    let mask = StringMask(mask: "+7 (000) 000-00-00")
-                    let maskPhone = mask.mask(string: phone)
-                    
-                    selectNumber = maskPhone
-                    phoneField.textField.text = maskPhone
                 }
             }
             
@@ -633,38 +626,15 @@ extension ContactInputViewController: EPPickerDelegate {
     
     func epContactPicker(_: EPContactsPicker, didSelectContact contact : EPContact) {
         let phoneFromContact = contact.phoneNumbers.first?.phoneNumber
-        var numbers = phoneFromContact?.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
-        if numbers?.first == "7" {
-            let mask = StringMask(mask: "+0 (000) 000-00-00")
-            let maskPhone = mask.mask(string: numbers)
-            phoneField.text = maskPhone ?? ""
-            phoneField.textField.text = maskPhone ?? ""
-            selectNumber = maskPhone ?? ""
-        } else if numbers?.first == "8" {
-            numbers?.removeFirst()
-            let mask = StringMask(mask: "+7 (000) 000-00-00")
-            let maskPhone = mask.mask(string: numbers)
-            phoneField.text = maskPhone ?? ""
-            phoneField.textField.text = maskPhone ?? ""
-            selectNumber = maskPhone ?? ""
-        }
+        phoneField.text = phoneFromContact ?? ""
     }
     
     func epUserPhone(_ phone: String) {
-        var numbers = phone.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
-        if numbers.first == "7" {
-            let mask = StringMask(mask: "+0 (000) 000-00-00")
-            let maskPhone = mask.mask(string: numbers)
-            phoneField.text = maskPhone ?? ""
-            phoneField.textField.text = maskPhone ?? ""
-            selectNumber = maskPhone ?? ""
-        } else if numbers.first == "8" {
-            numbers.removeFirst()
-            let mask = StringMask(mask: "+7 (000) 000-00-00")
-            let maskPhone = mask.mask(string: numbers)
-            phoneField.text = maskPhone ?? ""
-            phoneField.textField.text = maskPhone ?? ""
-            selectNumber = maskPhone ?? ""
+ 
+        if phone.first == "+" {
+            phoneField.text = phone
+        } else {
+            phoneField.text = "+\(phone)"
         }
     }
     
