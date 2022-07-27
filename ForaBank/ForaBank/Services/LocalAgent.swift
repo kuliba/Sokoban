@@ -48,6 +48,18 @@ class LocalAgent: LocalAgentProtocol {
             
         } catch  {
             
+            do {
+               
+                serials[fileName] = nil
+                let serialsData = try JSONEncoder().encode(serials)
+                try serialsData.write(to: fileURL(with: context.serialsFileName))
+                
+            } catch {
+                
+                //TODO: log
+                print("log: LocalAgent: failed save serials file with error: \(error.localizedDescription)")
+            }
+            
             return nil
         }
     }
