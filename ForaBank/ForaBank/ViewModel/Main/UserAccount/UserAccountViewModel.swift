@@ -116,17 +116,18 @@ class UserAccountViewModel: ObservableObject {
             .sink { [unowned self] info in
                 
                 guard let clientInfo = info.0 else { return }
-                sections = createSections(userData: clientInfo, customName: info.1)
+                let clientNameData = info.1
+                sections = createSections(userData: clientInfo, customName: clientNameData?.name)
                 bind(sections)
                 
             }.store(in: &bindings)
         
         model.clientPhoto
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] photo in
+            .sink { [unowned self] clientPhotoData in
                 
                 avatar = .init(
-                    image: photo?.image, action: { [weak self] in
+                    image: clientPhotoData?.photo.image, action: { [weak self] in
                         self?.action.send(UserAccountViewModelAction.AvatarAction())
                     })
                 
@@ -215,7 +216,7 @@ class UserAccountViewModel: ObservableObject {
                 case let payload as UserAccountViewModelAction.SaveAvatarImage:
                     
                     guard let image = payload.image?.resizeImageTo(size: .init(width: 100, height: 100)) else { return }
-                    guard let photoData = ClientPhotoData(with: image) else { return }
+                    guard let photoData = ImageData(with: image) else { return }
 
                     model.action.send(ModelAction.ClientPhoto.Save(image: photoData))
                     

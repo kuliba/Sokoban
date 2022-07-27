@@ -94,11 +94,12 @@ extension Model {
     
     func handleClientPhotoRequest(_ payload: ModelAction.ClientPhoto.Save) {
         
-        clientPhoto.value = payload.image
+        let clientPhotoData = ClientPhotoData(photo: payload.image)
+        clientPhoto.value = clientPhotoData
         
         do {
             
-            try localAgent.store(payload.image, serial: nil)
+            try localAgent.store(clientPhotoData, serial: nil)
             
         } catch {
             
@@ -120,19 +121,24 @@ extension Model {
     }
     
     func handleClientNameSave(_ payload: ModelAction.ClientName.Save) {
-        
-        clientName.value = payload.name
-        
+
         if let name = payload.name {
+            
+            let clientNameData = ClientNameData(name: name)
+            clientName.value = clientNameData
+            
             do {
                 
-                try localAgent.store(name, serial: nil)
+                try localAgent.store(clientNameData, serial: nil)
                 
             } catch {
                 
                 print("Model: store: ClientNameData error: \(error.localizedDescription)")
             }
+            
         } else {
+            
+            clientName.value = nil
             
             do {
                 

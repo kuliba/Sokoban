@@ -421,8 +421,8 @@ extension MainViewModel {
             
             guard let clientInfo = clientInfo else { return }
             
-            self.name = clientName ?? clientInfo.firstName
-            self.avatar = clientPhoto?.image
+            self.name = clientName?.name ?? clientInfo.firstName
+            self.avatar = clientPhoto?.photo.image
             
         }
     }

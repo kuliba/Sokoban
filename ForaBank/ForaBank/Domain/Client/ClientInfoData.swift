@@ -7,9 +7,6 @@
 
 import Foundation
 
-typealias ClientPhotoData = ImageData
-typealias ClientNameData = String
-
 struct ClientInfoData: Codable, Equatable, Identifiable {
     
     let id: Int

@@ -1235,15 +1235,15 @@ extension Model {
                     }
                     
                     // check if we have updated data
-                    guard data.BannerCatalogList.count > 0 else {
+                    guard data.bannerCatalogList.count > 0 else {
                         return
                     }
                     
-                    self.catalogBanners.value = data.BannerCatalogList
+                    self.catalogBanners.value = data.bannerCatalogList
                     
                     do {
                         
-                        try self.localAgent.store(data.BannerCatalogList, serial: data.serial)
+                        try self.localAgent.store(data.bannerCatalogList, serial: data.serial)
                         
                     } catch {
                         
