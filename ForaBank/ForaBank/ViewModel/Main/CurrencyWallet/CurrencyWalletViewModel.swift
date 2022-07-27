@@ -19,17 +19,18 @@ class CurrencyWalletViewModel: ObservableObject {
     
     @Published var items: [CurrencyWalletItem]
     @Published var state: ButtonActionState
+    @Published var buttonStyle: ButtonSimpleView.ViewModel.ButtonStyle
     
     let listViewModel: CurrencyListView.ViewModel
     let swapViewModel: CurrencySwapView.ViewModel
     let selectorViewModel: CurrencySelectorView.ViewModel
     let backButton: NavigationButtonViewModel
     
-    lazy var continueButton: ButtonSimpleView.ViewModel = .init(title: "Продолжить", style: .red) { [weak self] in
+    lazy var continueButton: ButtonSimpleView.ViewModel = .init(title: "Продолжить", style: buttonStyle) { [weak self] in
         
         guard let self = self else { return }
         
-        self.state = .spinner
+        self.appendSelectorViewIfNeeds()
         self.model.action.send(ModelAction.Products.Update.Fast.All())
     }
     
@@ -45,13 +46,7 @@ class CurrencyWalletViewModel: ObservableObject {
         case spinner
     }
     
-    init(_ model: Model,
-         items: [CurrencyWalletItem],
-         state: ButtonActionState = .button,
-         listViewModel: CurrencyListView.ViewModel,
-         swapViewModel: CurrencySwapView.ViewModel,
-         selectorViewModel: CurrencySelectorView.ViewModel,
-         action: @escaping () -> Void) {
+    init(_ model: Model, items: [CurrencyWalletItem], state: ButtonActionState = .button, listViewModel: CurrencyListView.ViewModel, swapViewModel: CurrencySwapView.ViewModel, selectorViewModel: CurrencySelectorView.ViewModel, action: @escaping () -> Void) {
         
         self.model = model
         self.items = items
@@ -59,22 +54,17 @@ class CurrencyWalletViewModel: ObservableObject {
         self.listViewModel = listViewModel
         self.swapViewModel = swapViewModel
         self.selectorViewModel = selectorViewModel
-        self.backButton = .init(icon: .ic24ChevronLeft, action: action)
+        
+        backButton = .init(icon: .ic24ChevronLeft, action: action)
+        buttonStyle = .red
         
         bind()
     }
     
-    // TODO: In process development
-    
-    convenience init(_ model: Model,
-                     state: ButtonActionState = .button,
-                     listViewModel: CurrencyListView.ViewModel,
-                     swapViewModel: CurrencySwapView.ViewModel,
-                     selectorViewModel: CurrencySelectorView.ViewModel,
-                     action: @escaping () -> Void) {
+    convenience init(_ model: Model, state: ButtonActionState = .button, listViewModel: CurrencyListView.ViewModel, swapViewModel: CurrencySwapView.ViewModel, selectorViewModel: CurrencySelectorView.ViewModel, action: @escaping () -> Void) {
         
         self.init(model,
-                  items: [],
+                  items: [listViewModel, swapViewModel],
                   state: state,
                   listViewModel: listViewModel,
                   swapViewModel: swapViewModel,
@@ -93,6 +83,14 @@ class CurrencyWalletViewModel: ObservableObject {
                 swapViewModel.currency = currency
                 
             }.store(in: &bindings)
+        
+        $buttonStyle
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] buttonStyle in
+                
+                continueButton.style = buttonStyle
+                
+            }.store(in: &bindings)
     }
     
     func resetCurrencySwap() {
@@ -100,8 +98,34 @@ class CurrencyWalletViewModel: ObservableObject {
         let currencySwap = swapViewModel.currencySwap
         let сurrencyCurrentSwap = swapViewModel.сurrencyCurrentSwap
         
-        currencySwap.action.send(CurrencySwapAction.TextField.Done(currencyAmount: currencySwap.currencyAmount))
-        сurrencyCurrentSwap.action.send(CurrencySwapAction.TextField.Done(currencyAmount: сurrencyCurrentSwap.currencyAmount))
+        if currencySwap.textField.isEditing == true {
+            currencySwap.action.send(CurrencySwapAction.TextField.Update(currencyAmount: currencySwap.currencyAmount))
+        } else {
+            сurrencyCurrentSwap.action.send(CurrencySwapAction.TextField.Update(currencyAmount: сurrencyCurrentSwap.currencyAmount))
+        }
+    }
+    
+    private func appendSelectorViewIfNeeds() {
+        
+        let selectorViewModel = items.first(where: { $0 is CurrencySelectorView.ViewModel })
+        
+        if selectorViewModel == nil {
+            
+            let productAccounts = model.products.value[.account]
+            var selectorState: CurrencySelectorView.ViewModel.State = .productSelector
+            
+            if productAccounts == nil {
+                
+                buttonStyle = .inactive
+                selectorState = .openAccount
+            }
+            
+            let selectorViewModel: CurrencySelectorView.ViewModel = .init(model, state: selectorState)
+            
+            withAnimation {
+                items.append(selectorViewModel)
+            }
+        }
     }
 }
 

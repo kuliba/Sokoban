@@ -19,20 +19,23 @@ struct CurrencyWalletView: View {
             
             ScrollView(showsIndicators: false) {
                 
-                ForEach(viewModel.items, id: \.id) { viewModel in
+                VStack(spacing: 24) {
                     
-                    switch viewModel {
-                    case let listViewModel as CurrencyListView.ViewModel:
-                        CurrencyListView(viewModel: listViewModel)
-
-                    case let swapViewModel as CurrencySwapView.ViewModel:
-                        CurrencySwapView(viewModel: swapViewModel)
+                    ForEach(viewModel.items, id: \.id) { viewModel in
                         
-                    case let selectorViewModel as CurrencySelectorView.ViewModel:
-                        CurrencySelectorView(viewModel: selectorViewModel)
-
-                    default:
-                        Color.clear
+                        switch viewModel {
+                        case let listViewModel as CurrencyListView.ViewModel:
+                            CurrencyListView(viewModel: listViewModel)
+                            
+                        case let swapViewModel as CurrencySwapView.ViewModel:
+                            CurrencySwapView(viewModel: swapViewModel)
+                            
+                        case let selectorViewModel as CurrencySelectorView.ViewModel:
+                            CurrencySelectorView(viewModel: selectorViewModel)
+                            
+                        default:
+                            Color.clear
+                        }
                     }
                 }
             }
@@ -63,7 +66,8 @@ struct CurrencyWalletView: View {
             viewModel.resetCurrencySwap()
             UIApplication.shared.endEditing()
         }
-        .padding(.vertical, 20)
+        .padding(.top, 12)
+        .padding(.bottom, 20)
         .edgesIgnoringSafeArea(.bottom)
     }
 }

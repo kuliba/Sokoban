@@ -16,8 +16,10 @@ extension CurrencySelectorView {
         @Published var state: State
         
         let model: Model
-        
         var id = UUID().uuidString
+        
+        lazy var productCardSelector: ProductSelectorViewModel? = makeProductCardSelector()
+        lazy var productAccountSelector: ProductSelectorViewModel? = makeProductAccountSelector()
         
         lazy var openAccount: CurrencyWalletAccountView.ViewModel = .init(
             model: model,
@@ -37,6 +39,53 @@ extension CurrencySelectorView {
             case openAccount
             case productSelector
         }
+        
+        private func makeProductCardSelector() -> ProductSelectorView.ViewModel? {
+            
+            guard let productCards = model.products.value[.card],
+                  let productCard = productCards.first as? ProductCardData,
+                  let numberCard = productCard.number else {
+                return nil
+            }
+            
+            let selectorViewModel: ProductSelectorView.ViewModel = .init(
+                model,
+                title: "Откуда",
+                cardIcon: productCard.smallDesign.image,
+                paymentSystemIcon: productCard.paymentSystemImage?.image,
+                name: productCard.displayName,
+                balance: NumberFormatter.decimal(productCard.balanceValue),
+                number: .init(
+                    numberCard: numberCard,
+                    description: productCard.additionalField),
+                productType: .card)
+            
+            return selectorViewModel
+        }
+        
+        private func makeProductAccountSelector() -> ProductSelectorView.ViewModel? {
+            
+            guard let productCards = model.products.value[.account],
+                  let productCard = productCards.first as? ProductAccountData,
+                  let numberCard = productCard.number else {
+                return nil
+            }
+            
+            let selectorViewModel: ProductSelectorView.ViewModel = .init(
+                model,
+                title: "Куда",
+                cardIcon: productCard.smallDesign.image,
+                paymentSystemIcon: nil,
+                name: productCard.displayName,
+                balance: NumberFormatter.decimal(productCard.balanceValue),
+                number: .init(
+                    numberCard: numberCard,
+                    description: productCard.additionalField),
+                productType: .account,
+                isDividerHiddable: true)
+            
+            return selectorViewModel
+        }
     }
 }
 
@@ -55,18 +104,25 @@ struct CurrencySelectorView: View {
             
             VStack(spacing: 20) {
                 
-                ProductSelectorView(viewModel: .sample1)
+                if let productCardSelector = viewModel.productCardSelector {
+                    ProductSelectorView(viewModel: productCardSelector)
+                }
                 
                 switch viewModel.state {
                 case .openAccount:
+                    
                     CurrencyWalletAccountView(viewModel: viewModel.openAccount)
+                    
                 case .productSelector:
-                    ProductSelectorView(viewModel: .sample3)
+                    
+                    if let productAccountSelector = viewModel.productAccountSelector {
+                        ProductSelectorView(viewModel: productAccountSelector)
+                    }
                 }
                 
             }.padding(.vertical, 20)
             
-        }.padding(20)
+        }.padding(.horizontal, 20)
     }
 }
 
@@ -83,6 +139,7 @@ struct CurrencySelectorViewComponent_Previews: PreviewProvider {
     static var previews: some View {
         CurrencySelectorView(viewModel: .sample)
             .previewLayout(.sizeThatFits)
-            .frame(height: 300)
+            .frame(height: 200)
+            .padding(.vertical)
     }
 }

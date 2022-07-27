@@ -140,8 +140,9 @@ extension CurrencySwapView {
                 .sink { [unowned self] action in
                     
                     switch action {
-                    case let payload as CurrencySwapAction.TextField.Done:
+                    case let payload as CurrencySwapAction.TextField.Update:
                         
+                        currencySwap.currencyAmount = payload.currencyAmount
                         сurrencyCurrentSwap.currencyAmount = payload.currencyAmount * currencyRate
                         
                     default:
@@ -154,13 +155,50 @@ extension CurrencySwapView {
                 .sink { [unowned self] action in
                     
                     switch action {
-                    case _ as CurrencySwapAction.TextField.Done:
+                    case let payload as CurrencySwapAction.TextField.Update:
                         
-                        currencySwap.currencyAmount = сurrencyCurrentSwap.currencyAmount / currencyRate
+                        сurrencyCurrentSwap.currencyAmount = payload.currencyAmount
+                        currencySwap.currencyAmount = payload.currencyAmount / currencyRate
                         
                     default:
                         break
                     }
+                }.store(in: &bindings)
+
+            currencySwap.textField.$text
+                .combineLatest(currencySwap.textField.$isEditing)
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] data in
+                    
+                    let text = data.0
+                    let isEditing = data.1
+                    
+                    guard let text = text,
+                          let value = NumberFormatter.decimal(text),
+                          isEditing == true else {
+                        return
+                    }
+                    
+                    сurrencyCurrentSwap.currencyAmount = value * currencyRate
+                    
+                }.store(in: &bindings)
+            
+            сurrencyCurrentSwap.textField.$text
+                .combineLatest(сurrencyCurrentSwap.textField.$isEditing)
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] data in
+                    
+                    let text = data.0
+                    let isEditing = data.1
+                    
+                    guard let text = text,
+                          let value = NumberFormatter.decimal(text),
+                          isEditing == true else {
+                        return
+                    }
+                    
+                    currencySwap.currencyAmount = value / currencyRate
+                    
                 }.store(in: &bindings)
         }
         
@@ -179,7 +217,7 @@ extension CurrencySwapView {
             let currencyAmount = NumberFormatter.decimal(currencyRateOperation) ?? 0
             
             currencyRate = currencyAmount
-            quotesInfo = "1\(currencySymbol) = \(currencyAmount) ₽"
+            quotesInfo = "1\(currencySymbol) = \(currencyRateOperation) ₽"
             сurrencyCurrentSwap.currencyAmount = currencySwap.currencyAmount * currencyAmount
         }
         
@@ -230,6 +268,7 @@ extension CurrencySwapView.ViewModel {
         @Published var title: String
         @Published var currency: Currency
         @Published var icon: Image?
+        @Published var isBlockedForInput: Bool
 
         private var bindings = Set<AnyCancellable>()
         
@@ -251,14 +290,16 @@ extension CurrencySwapView.ViewModel {
             toolbar: .init(
                 doneButton: .init(isEnabled: true) { [weak self] in
                     
-                    guard let self = self, let text = self.textField.text else {
+                    guard let self = self,
+                          let text = self.textField.text,
+                          let value = NumberFormatter.decimal(text) else {
                         return
                     }
                     
-                    self.currencyAmount = NumberFormatter.decimal(text) ?? 0
-                    UIApplication.shared.endEditing()
+                    self.currencyAmount = value
+                    self.action.send(CurrencySwapAction.TextField.Update(currencyAmount: self.currencyAmount))
                     
-                    self.action.send(CurrencySwapAction.TextField.Done(currencyAmount: self.currencyAmount))
+                    UIApplication.shared.endEditing()
                     
                 }, closeButton: nil))
 
@@ -268,6 +309,7 @@ extension CurrencySwapView.ViewModel {
             self.currencyAmount = currencyAmount
             self.currency = currency
             self.title = title
+            isBlockedForInput = false
             
             bind()
         }
@@ -435,7 +477,7 @@ struct CurrencySwapView: View {
             }.padding(20)
         }
         .frame(height: 160)
-        .padding(20)
+        .padding(.horizontal, 20)
     }
 }
 
@@ -561,7 +603,7 @@ enum CurrencySwapAction {
     
     enum TextField {
         
-        struct Done: Action {
+        struct Update: Action {
             
             let currencyAmount: Double
         }

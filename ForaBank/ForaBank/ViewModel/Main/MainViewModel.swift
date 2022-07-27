@@ -310,7 +310,6 @@ class MainViewModel: ObservableObject, Resetable {
         
         let walletViewModel: CurrencyWalletViewModel = .init(
             model,
-            items: [listViewModel, swapViewModel],
             listViewModel: listViewModel,
             swapViewModel: swapViewModel,
             selectorViewModel: .init(model, state: .openAccount)) { [weak self] in
