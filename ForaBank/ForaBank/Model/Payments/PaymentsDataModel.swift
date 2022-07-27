@@ -155,6 +155,8 @@ enum Payments {
                 case .complete: self = .complete
                 case .inProgress: self = .inProgress
                 case .rejected: self = .rejected
+                //FIXME: status for unknown document status required
+                default: self = .inProgress
                 }
             }
         }

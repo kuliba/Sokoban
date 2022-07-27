@@ -10,5 +10,6 @@ import Foundation
 enum NotificationTransition {
     
     case history
+    //FIXME: this is legacy model, change to refactored
     case me2me(RequestMeToMeModel)
 }

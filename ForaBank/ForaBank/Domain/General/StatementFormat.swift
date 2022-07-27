@@ -7,8 +7,9 @@
 
 import Foundation
 
-enum StatementFormat: String, Codable {
+enum StatementFormat: String, Codable, Unknownable {
 
     case csv = "CSV"
     case pdf = "PDF"
+    case unknown
 }

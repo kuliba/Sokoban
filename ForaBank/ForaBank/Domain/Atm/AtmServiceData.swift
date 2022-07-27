@@ -16,16 +16,20 @@ struct AtmServiceData: Identifiable, Codable, Equatable {
 
 extension AtmServiceData {
     
-    enum Kind: String, CaseIterable, Codable {
+    enum Kind: String, CaseIterable, Codable, Unknownable {
         
         case service = "SERVICE"
         case other = "OTHER"
+        case unknown
+        
+        static var allCases = [Kind.service, Kind.other]
         
         var name: String {
             
             switch self {
             case .service: return "Услуги"
             case .other: return "Другое"
+            default: return "Неизвестно"
             }
         }
     }

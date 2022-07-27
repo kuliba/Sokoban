@@ -56,7 +56,6 @@ extension ServerCommands {
                         let paymentType = paymentData.type
                         
                         switch paymentType {
-                            
                         case .phone:
                             let paymentData = try items.decode(PaymentGeneralData.self)
                             data.append(paymentData)
@@ -68,6 +67,9 @@ extension ServerCommands {
                         case .internet, .mobile, .service, .transport, .taxAndStateService:
                             let paymentData = try items.decode(PaymentServiceData.self)
                             data.append(paymentData)
+                            
+                        default:
+                            break
                         }
                     }
                     self.data = data
