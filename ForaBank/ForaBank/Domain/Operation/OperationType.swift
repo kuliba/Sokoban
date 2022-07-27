@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum OperationType: String, Codable, Hashable {
+enum OperationType: String, Codable, Hashable, Unknownable {
     
     /// receipt of money to the account
     case credit = "CREDIT"
@@ -16,4 +16,9 @@ enum OperationType: String, Codable, Hashable {
     case debit = "DEBIT"
     
     case open = "OPEN"
+    
+    // not finance operation transfer account into demand deposit
+    case demandDepositFromAccount = "DV"
+    
+    case unknown
 }

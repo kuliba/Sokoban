@@ -55,7 +55,7 @@ extension ProductStatementData {
         let guid: String
     }
     
-    enum Kind: String, Codable, Hashable {
+    enum Kind: String, Codable, Hashable, Unknownable {
         
         case betweenTheir = "BETWEEN_THEIR"
         case contactAddressless = "CONTACT_ADDRESSLESS"
@@ -76,7 +76,7 @@ extension ProductStatementData {
         case taxes = "TAX_AND_STATE_SERVICE"
         case c2b = "C2B_PAYMENT"
         case insideDeposit = "INSIDE_DEPOSIT"
-        //TODO: case unknown
+        case unknown
     }
 }
 
