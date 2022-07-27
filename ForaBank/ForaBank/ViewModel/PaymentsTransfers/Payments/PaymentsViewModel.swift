@@ -111,7 +111,8 @@ class PaymentsViewModel: ObservableObject {
                     
                 case _ as PaymentsViewModelAction.Dismiss:
                     withAnimation {
-                        closeAction?()
+                        
+                        NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                     }
                     
                 case _ as PaymentsViewModelAction.Spinner.Show:
