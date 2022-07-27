@@ -77,7 +77,7 @@ extension UIViewController {
             textField.placeholder = inputPlaceholder
             textField.keyboardType = inputKeyboardType
         }
-        alert.addAction(UIAlertAction(title: actionTitle, style: .cancel, handler: { (action:UIAlertAction) in
+        alert.addAction(UIAlertAction(title: actionTitle, style: .default, handler: { (action:UIAlertAction) in
             guard let textField =  alert.textFields?.first else {
                 actionHandler?(nil)
                 return
