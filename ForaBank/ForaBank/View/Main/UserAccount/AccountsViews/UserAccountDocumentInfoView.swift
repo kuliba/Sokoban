@@ -6,16 +6,20 @@
 //
 
 import SwiftUI
+import Combine
 
 extension UserAccountDocumentInfoView {
     
     class ViewModel: ObservableObject {
         
+        let action: PassthroughSubject<Action, Never> = .init()
         let itemType: DocumentCellType
         let content: String
         
         @Published var button: ButtonSimpleView.ViewModel?
-                
+        
+        private var bindings = Set<AnyCancellable>()
+        
         internal init(itemType: DocumentCellType, content: String) {
             
             self.itemType = itemType
@@ -26,15 +30,40 @@ extension UserAccountDocumentInfoView {
                 style: .gray,
                 action: {
                     
-                    self.button?.title = "Скопировано"
-                    self.button?.style = .inactive
-//                    self.action = action
-                    print("Скопировано")
+                    self.action.send(UserAccountDocumentInfoViewAction.CopyDocument(type: itemType))
                 }
             )
+            bind()
+        }
+        
+        func bind() {
+            
+            action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                    case _ as UserAccountDocumentInfoViewAction.CopyDocument:
+                        button?.title = "Скопировано"
+                        button?.style = .inactive
+                        
+                    default:
+                        break
+                        
+                    }
+                }
+                .store(in: &bindings)
         }
     }
 }
+
+enum UserAccountDocumentInfoViewAction {
+    
+    struct CopyDocument: Action {
+        let type: DocumentCellType
+    }
+}
+
 
 struct UserAccountDocumentInfoView: View {
     
@@ -97,7 +126,6 @@ struct UserAccountDocumentInfoView_Previews: PreviewProvider {
         UserAccountDocumentInfoView(viewModel: .init(
             itemType: .inn,
             content: "123456789"
-//            action:  { }
         ))
     }
 }
