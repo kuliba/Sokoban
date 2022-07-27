@@ -135,6 +135,7 @@ extension ServerCommands {
             let payload: Payload?
             
             struct Payload: Encodable {
+                
                 let bankId: String
             }
             

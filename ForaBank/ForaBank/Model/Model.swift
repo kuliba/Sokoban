@@ -676,8 +676,11 @@ class Model {
                     
                 //MARK: - Consent Me2Me
                     
-                case _ as ModelAction.Consent.Request:
+                case _ as ModelAction.Consent.Me2MePull.Request:
                     handleConsentMe2MePull()
+                    
+                case let payload as ModelAction.Consent.Me2MeDebit.Request:
+                    handleConsentGetMe2MeDebit(payload)
                     
                 default:
                     break

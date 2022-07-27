@@ -67,6 +67,11 @@ struct RootView: View {
                 case .me2me(let requestMeToMeModel):
                     MeToMeRequestView(viewModel: requestMeToMeModel)
                         .zIndex(1)
+                    
+                case .c2b:
+                    C2BDetailsView()
+                        .zIndex(1)
+                    
                 }
             }
             
