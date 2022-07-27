@@ -850,8 +850,7 @@ private extension Model {
             self.statements.value = statements
         }
         
-        if let fastPaymentSettings = localAgent
-            .load(type: [FastPaymentContractFullInfoType].self) {
+        if let fastPaymentSettings = localAgent.load(type: [FastPaymentContractFullInfoType].self) {
             
             self.fastPaymentContractFullInfo.value = fastPaymentSettings
         }

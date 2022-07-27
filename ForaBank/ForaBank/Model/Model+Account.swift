@@ -29,7 +29,7 @@ extension Model {
                 switch response.statusCode {
                 case .ok:
 
-                    guard let data = response.data else {
+                    guard let accountProductsList = response.data else {
 
                         self.handleServerCommandEmptyData(command: command)
                         self.action.send(ModelAction.Account.ProductList.Response.failed(error: productsListError))
@@ -37,11 +37,14 @@ extension Model {
                         return
                     }
 
-                    self.accountProductsList.value = data
+                    self.accountProductsList.value = accountProductsList
 
                     do {
-                        try self.productsListCacheData(products: data, serial: nil)
+                        
+                        try self.localAgent.store(accountProductsList, serial: nil)
+                        
                     } catch {
+                        
                         self.handleServerCommandCachingError(error: error, command: command)
                     }
 
@@ -258,11 +261,6 @@ extension Model {
 // MARK: - Cache
 
 extension Model {
-
-    func productsListCacheData(products: [OpenAccountProductData], serial: String?) throws {
-
-        try self.localAgent.store(products, serial: serial)
-    }
 
     func productsListCacheLoadData() -> [OpenAccountProductData]? {
 

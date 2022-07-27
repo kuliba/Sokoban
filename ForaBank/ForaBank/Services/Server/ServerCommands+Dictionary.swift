@@ -710,8 +710,14 @@ extension ServerCommands {
                 
                 struct BannerCatalogData: Codable, Equatable {
                     
-                    let BannerCatalogList: [BannerCatalogListData]
+                    let bannerCatalogList: [BannerCatalogListData]
                     let serial: String
+                    
+                    private enum CodingKeys: String, CodingKey {
+                        
+                        case bannerCatalogList = "BannerCatalogList"
+                        case serial
+                    }
                 }
             }
             
