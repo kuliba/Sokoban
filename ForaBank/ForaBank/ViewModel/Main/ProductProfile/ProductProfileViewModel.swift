@@ -773,7 +773,7 @@ fileprivate extension NavigationBarView.ViewModel {
     
     static func textColor(with product: ProductData) -> Color {
         
-        return product.fontDesignColor.color
+        return .mainColorsWhite
     }
     
     static func accentColor(with product: ProductData) -> Color {
