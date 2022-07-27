@@ -113,25 +113,23 @@ extension ProductDepositData {
                     
                     if endDate > Date() {
                         
-                        if let interestAmount = info?.sumPayPrc, interestAmount > 0 {
+                        if let interestAmount = info?.sumPayPrc {
                             
-                            return .interest
+                            return .interest(interestAmount)
                             
                         } else {
                             
-                            return .remains
+                            return .interest(0)
                         }
   
                     } else {
                         
                         return .remains
                     }
-                    
-                    
+
                 } else {
                     
-                    return .remains
-                    
+                    return nil
                 }
 
             } else {
@@ -170,6 +168,6 @@ extension ProductDepositData {
     enum TransferType {
         
         case remains
-        case interest
+        case interest(Double)
     }
 }
