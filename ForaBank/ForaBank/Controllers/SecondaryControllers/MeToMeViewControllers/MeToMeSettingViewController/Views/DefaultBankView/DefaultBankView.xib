@@ -58,7 +58,7 @@
                                                 </label>
                                             </subviews>
                                         </stackView>
-                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="right" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Vkj-hq-Cgk">
+                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="right" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Vkj-hq-Cgk">
                                             <rect key="frame" x="363" y="0.0" width="51" height="38"/>
                                             <color key="tintColor" name="bGIconGreenLight"/>
                                         </switch>
