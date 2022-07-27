@@ -342,6 +342,7 @@ extension LatestPaymentData.Kind {
         case .internet: return "Услуги интернет"
         case .transport: return "Услуги Транспорта"
         case .taxAndStateService: return  "Госуслуги"
+        case .unknown: return "Неизвестно"
         }
     }
     
@@ -355,6 +356,7 @@ extension LatestPaymentData.Kind {
         case .internet: return .ic24Tv
         case .transport: return .ic24Car
         case .taxAndStateService: return .ic24Emblem
+        case .unknown: return .ic24AlertTriangle
         }
     }
 }

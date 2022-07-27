@@ -25,7 +25,7 @@ struct PaymentTemplateData: Identifiable, Equatable {
 
 extension PaymentTemplateData {
     
-    enum Kind: String, Codable, Equatable, CaseIterable {
+    enum Kind: String, Codable, Equatable, Unknownable {
         
         case betweenTheir = "BETWEEN_THEIR"
         case insideBank = "INSIDE_BANK"

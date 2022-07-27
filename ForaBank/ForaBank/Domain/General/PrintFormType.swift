@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum PrintFormType: String, Codable {
+enum PrintFormType: String, Codable, Unknownable {
     
     case sbp
     case direct
@@ -18,4 +18,5 @@ enum PrintFormType: String, Codable {
     case transport
     case taxAndStateService
     case contactAddressless
+    case unknown
 }

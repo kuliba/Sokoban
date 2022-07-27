@@ -7,9 +7,10 @@
 
 import Foundation
 
-enum FastPaymentFlag: String, Codable {
+enum FastPaymentFlag: String, Codable, Unknownable {
     
     case empty = "EMPTY"
     case no = "NO"
     case yes = "YES"
+    case unknown
 }

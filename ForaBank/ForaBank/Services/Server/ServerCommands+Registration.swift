@@ -96,6 +96,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
+                //FIXME: data must be optional
                 let data: EmptyData
             }
             
@@ -136,6 +137,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
+                //FIXME: data must be optional
                 let data: EmptyData
             }
             

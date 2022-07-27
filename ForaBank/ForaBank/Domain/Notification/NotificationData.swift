@@ -17,7 +17,7 @@ struct NotificationData: Equatable, Identifiable, Hashable, Codable {
     let type: Kind
     let date: Date
 
-    enum State: String, Codable, Equatable, Hashable {
+    enum State: String, Codable, Equatable, Hashable, Unknownable {
         
         case delivered = "DELIVERED"
         case error = "ERROR"
@@ -25,13 +25,15 @@ struct NotificationData: Equatable, Identifiable, Hashable, Codable {
         case new = "NEW"
         case read = "READ"
         case sent = "SENT"
+        case unknown
     }
     
-    enum Kind: String, Codable, Equatable, Hashable {
+    enum Kind: String, Codable, Equatable, Hashable, Unknownable {
         
         case email = "EMAIL"
         case push = "PUSH"
         case sms = "SMS"
+        case unknown
     }
     
     private enum CodingKeys : String, CodingKey {

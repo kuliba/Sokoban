@@ -4545,6 +4545,7 @@
 		774CA5DF287962C400544C17 /* Notification */ = {
 			isa = PBXGroup;
 			children = (
+				77E1803227AC04320006ACC9 /* NotificationData.swift */,
 				0BA40B3D286F9AFF009C9B0D /* NotificationTransition.swift */,
 				774CA5DD287962BA00544C17 /* NotificationStatus.swift */,
 			);
@@ -4881,7 +4882,6 @@
 				77A76A7427FAF89000A271B3 /* Atm */,
 				682092A127AC04DE003DCAFD /* ClientInfoData.swift */,
 				682092BA27AC170B003DCAFD /* DaDataPhoneData.swift */,
-				77E1803227AC04320006ACC9 /* NotificationData.swift */,
 				68FE398C286C17920026CBD7 /* AppInfo.swift */,
 			);
 			path = Domain;

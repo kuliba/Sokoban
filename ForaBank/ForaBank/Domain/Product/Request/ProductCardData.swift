@@ -22,7 +22,7 @@ class ProductCardData: ProductData {
     let paymentSystemName: String?
     let paymentSystemImage: SVGImageData?
     let loanBaseParam: LoanBaseParamInfoData?
-    var statusPc: ProductData.StatusPC?
+    var statusPc: StatusPC?
     let isMain: Bool?
     let externalId: Int?
     
