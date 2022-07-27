@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct FullScreenCoverLegacy<ViewModel, CoverContent: View>: ViewModifier {
+struct FullScreenCoverLegacy<ViewModel: Identifiable, CoverContent: View>: ViewModifier {
     
     @Binding var viewModel: ViewModel?
     let coverBackgroundColor: Color
@@ -24,25 +24,33 @@ struct FullScreenCoverLegacy<ViewModel, CoverContent: View>: ViewModifier {
     
     func body(content: Content) -> some View {
         
-        GeometryReader { geo in
+        if #available(iOS 14.0, *) {
             
-            ZStack {
+            content
+                .fullScreenCover(item: $viewModel, content: coverContent)
+            
+        } else {
+            
+            GeometryReader { geo in
                 
-                Color.clear
-                
-                content
-                
-                if let viewModel = viewModel {
+                ZStack {
                     
-                    withAnimation {
+                    Color.clear
+                    
+                    content
+                    
+                    if let viewModel = viewModel {
                         
-                        ZStack {
+                        withAnimation {
                             
-                            coverBackgroundColor
-                            coverContent(viewModel)
+                            ZStack {
+                                
+                                coverBackgroundColor
+                                coverContent(viewModel)
+                            }
+                            .animation(.spring())
+                            .transition(.move(edge: .bottom))
                         }
-                        .animation(.spring())
-                        .transition(.move(edge: .bottom))
                     }
                 }
             }
@@ -52,7 +60,7 @@ struct FullScreenCoverLegacy<ViewModel, CoverContent: View>: ViewModifier {
 
 extension View {
     
-    func fullScreenCoverLegacy<ViewModel, Content: View>(viewModel: Binding<ViewModel?>, coverBackgroundColor: Color = .white, @ViewBuilder content: @escaping (ViewModel) -> Content) -> some View {
+    func fullScreenCoverLegacy<ViewModel: Identifiable, Content: View>(viewModel: Binding<ViewModel?>, coverBackgroundColor: Color = .white, @ViewBuilder content: @escaping (ViewModel) -> Content) -> some View {
         
         modifier(FullScreenCoverLegacy(viewModel: viewModel, coverBackgroundColor: coverBackgroundColor, coverContent: content))
     }

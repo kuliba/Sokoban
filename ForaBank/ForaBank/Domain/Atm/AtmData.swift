@@ -85,11 +85,12 @@ struct AtmData: Identifiable, Codable, Equatable {
 
 extension AtmData {
     
-    enum Action: String, Codable {
+    enum Action: String, Codable, Unknownable {
         
         case insert = "INSERT"
         case update = "UPDATE"
         case delete = "DELETE"
+        case unknown
     }
     
     enum Category: Int, CaseIterable {

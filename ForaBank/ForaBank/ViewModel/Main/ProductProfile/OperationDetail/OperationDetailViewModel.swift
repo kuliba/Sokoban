@@ -370,7 +370,7 @@ extension OperationDetailViewModel {
                 self.amount = "-" + (model.amountFormatted(amount: amount, currencyCodeNumeric: currencyCodeNumeric, style: .normal) ?? String(amount))
                 self.colorHex = "1C1C1C"
                 
-            case .open:
+            default:
                 self.amount = ""
                 self.colorHex = "1C1C1C"
             }

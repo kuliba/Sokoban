@@ -59,7 +59,7 @@ struct OperationDetailView: View {
         }
         .padding(.vertical, 40)
         .edgesIgnoringSafeArea(.bottom)
-        .sheet(item: $viewModel.sheet) {  item in
+        .sheet(item: $viewModel.sheet) { item in
 
             switch item.type {
             case .info(let operationDetailInfoViewModel):
@@ -68,6 +68,18 @@ struct OperationDetailView: View {
             case .printForm(let printFormViewModel):
                 PrintFormView(viewModel: printFormViewModel)
                 
+            }
+        }
+        .fullScreenCoverLegacy(viewModel: $viewModel.fullScreenSheet) { item in
+            
+            switch item.type {
+            case let .changeReturn(changeReturnViewModel):
+                NavigationView {
+                    ChangeReturnView(viewModel: changeReturnViewModel)
+                        .navigationBarTitle("", displayMode: .inline)
+                        .navigationBarBackButtonHidden(true)
+                        .edgesIgnoringSafeArea(.all)
+                }
             }
         }
     }

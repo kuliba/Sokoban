@@ -96,6 +96,12 @@ class RootViewModel: ObservableObject, Resetable {
                 case _ as RootViewModelAction.DismissAll:
                     reset()
                     
+                case _ as RootViewModelAction.C2bShow:
+                    link = .c2b
+                
+                case _ as RootViewModelAction.CloseAlert:
+                    alert = nil
+                    
                 default:
                     break
                 }
@@ -129,6 +135,22 @@ class RootViewModel: ObservableObject, Resetable {
                             
                             print("AppVersion Response error: \(error) ")
                         }
+                    }
+                case let payload as ModelAction.Consent.Me2MeDebit.Response:
+                    switch payload.result {
+                    case .success(let consentData):
+                        
+                        self.action.send(RootViewModelAction.DismissAll())
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+
+                            self.link = .me2me(.init(model: consentData.getConcentLegacy()))
+                        }
+                        
+                    case .failure(let error):
+                        
+                        print("Me2MeDebit Response error: \(error) ")
+
                     }
                 default:
                     break
@@ -225,6 +247,7 @@ extension RootViewModel {
         
         case messages(MessagesHistoryViewModel)
         case me2me(RequestMeToMeModel)
+        case c2b
     }
 }
 
@@ -269,4 +292,8 @@ enum RootViewModelAction {
     }
     
     struct DismissAll: Action {}
+    
+    struct CloseAlert: Action {}
+    
+    struct C2bShow: Action {}
 }

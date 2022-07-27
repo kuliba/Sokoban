@@ -99,44 +99,75 @@ extension ProductDepositData {
         
     func availableTransferType(with info: DepositInfoDataItem?) -> TransferType? {
         
-        guard let endDate = endDate else {
-            return nil
-        }
-
-        if depositProductId == Self.foraHitProductId {
+        if isDemandDeposit == true {
             
-            // Fora Hit Deposit
-
-            if endDate > Date() {
+            return .remains
+            
+        } else {
+            
+            if isForaHitProduct == true {
                 
-                guard let interestAmount = info?.sumPayPrc, interestAmount > 0 else {
+                // Fora Hit Deposit
+                
+                if let endDate = endDate {
+                    
+                    if endDate > Date() {
+                        
+                        if let interestAmount = info?.sumPayPrc {
+                            
+                            return .interest(interestAmount)
+                            
+                        } else {
+                            
+                            return .interest(0)
+                        }
+  
+                    } else {
+                        
+                        return .remains
+                    }
+
+                } else {
+                    
+                    return nil
+                }
+
+            } else {
+                
+                // All other deposits
+                
+                guard let endDate = endDate else {
                     return nil
                 }
                 
-                return .interest
-                
-            } else {
+                guard endDate <= Date() else {
+                    return nil
+                }
                 
                 return .remains
             }
-
-        } else {
-            
-            // All other deposits
-            
-            guard endDate <= Date() else {
-                return nil
-            }
-            
-            return .remains
         }
+    }
+    
+    var isDemandDeposit: Bool {
+        
+        guard let accountNumber = accountNumber else {
+            return false
+        }
+        
+        return accountNumber.hasPrefix("42301")
     }
     
     static let foraHitProductId = 10000003792
     
+    var isForaHitProduct: Bool {
+        
+        depositProductId == Self.foraHitProductId
+    }
+    
     enum TransferType {
         
         case remains
-        case interest
+        case interest(Double)
     }
 }

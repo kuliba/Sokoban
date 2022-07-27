@@ -13,6 +13,7 @@ class PaymentData: Codable {
     let account: String
     let amount: Double
     let currency: String
+    //FIXME: remove commented property if really not used
     //let paymentDate: String
     let purpose: String
 

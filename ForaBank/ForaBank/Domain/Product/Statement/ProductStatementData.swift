@@ -55,7 +55,7 @@ extension ProductStatementData {
         let guid: String
     }
     
-    enum Kind: String, Codable, Hashable {
+    enum Kind: String, Codable, Hashable, Unknownable {
         
         case betweenTheir = "BETWEEN_THEIR"
         case contactAddressless = "CONTACT_ADDRESSLESS"
@@ -76,7 +76,7 @@ extension ProductStatementData {
         case taxes = "TAX_AND_STATE_SERVICE"
         case c2b = "C2B_PAYMENT"
         case insideDeposit = "INSIDE_DEPOSIT"
-        //TODO: case unknown
+        case unknown
     }
 }
 
@@ -191,11 +191,11 @@ extension ProductStatementData {
     
     var merchant: String { merchantNameRus ?? merchantName ?? Self.merchantNamePlaceholder }
     
-    var signedAmount: Double {
+    var isMinusSign: Bool {
         
         switch operationType {
-        case .debit: return -amount
-        default: return amount
+        case .debit: return true
+        default: return false
         }
     }
     
@@ -208,4 +208,6 @@ extension ProductStatementData {
         
         isReturn ? "Возврат по операции": fastPayment?.documentComment
     }
+    
+    var dateValue: Date { tranDate ?? date }
 }

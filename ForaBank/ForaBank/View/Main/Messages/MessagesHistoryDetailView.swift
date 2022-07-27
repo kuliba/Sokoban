@@ -30,21 +30,10 @@ struct MessagesHistoryDetailView: View {
                 .font(.textH4M16240())
                 .foregroundColor(.mainColorsBlack)
             
-            ScrollView(showsIndicators: false) {
-                Text(model.content)
-                    .font(.textBodyMR14200())
-                    .foregroundColor(.mainColorsBlack)
-                    .multilineTextAlignment(.center)
-                    .overlay(
-                        GeometryReader { proxy in
-                            Color.clear.preference(key: ContentLengthPreference.self,
-                                                   value: proxy.size.height)
-                        }
-                    ) .padding()
-            }
-            .frame( height: self.textHeight > maxHight ? maxHight : self.textHeight + 100 )
-            .onPreferenceChange(ContentLengthPreference.self) { value in
-                self.textHeight = value }
+            MessageTextView(text: model.content)
+                .frame(height: MessageTextView.calculatedHeight(for: model.content, width: UIScreen.main.bounds.width), alignment: .center)
+                .padding(.horizontal, 10)
+                .padding(.bottom, 100)
             
         }.padding(.vertical, 25)
     }

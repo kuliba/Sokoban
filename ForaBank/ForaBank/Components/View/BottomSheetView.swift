@@ -239,18 +239,30 @@ extension BottomSheetView {
         }
     }
     
-    struct ClearBackgroundView: UIViewRepresentable {
+    struct ClearBackgroundView: UIViewControllerRepresentable {
         
-        func makeUIView(context: Context) -> UIView {
+        func makeUIViewController(context: Context) -> UIViewController {
             
-            let view = UIView()
-            DispatchQueue.main.async {
-                view.superview?.superview?.backgroundColor = .clear
-            }
-            return view
+            let controller = UIViewController(nibName: nil, bundle: nil)
+            
+            context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
+               
+                vc.parent?.view.backgroundColor = .clear
+            })
+            
+            return controller
         }
         
-        func updateUIView(_ uiView: UIView, context: Context) {}
+        func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+            
+        }
+        
+        class Coordinator {
+            
+            var parentObserver: NSKeyValueObservation?
+        }
+        
+        func makeCoordinator() -> Self.Coordinator { Coordinator() }
     }
 }
 

@@ -22,7 +22,7 @@ struct OpenAccountProductData: Codable, Equatable {
     let detailedRatesUrl: String?
     let txtConditionList: [TxtConditionList]
 
-    enum СurrencyType: String, Codable {
+    enum СurrencyType: String, Codable, Unknownable {
 
         case rub = "RUB"
         case usd = "USD"
@@ -40,7 +40,7 @@ struct OpenAccountProductData: Codable, Equatable {
         let descriptoin: String
         let type: ColorType
 
-        enum ColorType: String, Codable {
+        enum ColorType: String, Codable, Unknownable {
 
             case green = "GREEN"
             case unknown
@@ -53,6 +53,7 @@ struct OpenAccountProductData: Codable, Equatable {
             case type
         }
 
+        //TODO: remove later, createted because of unknown case
         init(from decoder: Decoder) throws {
 
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -99,6 +100,7 @@ struct OpenAccountProductData: Codable, Equatable {
         case txtConditionList
     }
 
+    //TODO: remove later, createted because of unknown case
     init(from decoder: Decoder) throws {
 
         let container = try decoder.container(keyedBy: CodingKeys.self)

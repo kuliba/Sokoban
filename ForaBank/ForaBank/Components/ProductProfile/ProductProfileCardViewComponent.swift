@@ -408,7 +408,7 @@ extension ProductProfileCardView {
                         
                         image
                             .resizable()
-                            .aspectRatio(contentMode: .fit)
+                            .aspectRatio(contentMode: .fill)
                             .frame(width: 32, height: 22)
                             .cornerRadius(3)
                             .opacity(isSelected ? 1 : 0.3)

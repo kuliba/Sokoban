@@ -55,7 +55,7 @@ extension ProductProfileOptionsPannelView {
                     return .init(icon: .init(image: .ic24FileText, background: .circle), title: .init(text: "Реквизиты счета", style: .bold), orientation: .horizontal, action: action)
                     
                 case .deposit:
-                    return .init(icon: .init(image: .ic24FileText, background: .circle), title: .init(text: "Реквизиты счета депозита", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24FileText, background: .circle), title: .init(text: "Реквизиты счета вклада", style: .bold), orientation: .horizontal, action: action)
                     
                 case .loan:
                     return .init(icon: .init(image: .ic24FileText, background: .circle), title: .init(text: "Реквизиты счета кредита", style: .bold), orientation: .horizontal, action: action)
@@ -70,7 +70,7 @@ extension ProductProfileOptionsPannelView {
                     return .init(icon: .init(image: .ic24FileHash, background: .circle), title: .init(text: "Выписка по счету", style: .bold), orientation: .horizontal, action: action)
                     
                 case .deposit:
-                    return .init(icon: .init(image: .ic24FileHash, background: .circle), title: .init(text: "Выписка по счету депозита", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24FileHash, background: .circle), title: .init(text: "Выписка по счету вклада", style: .bold), orientation: .horizontal, action: action)
                     
                 case .loan:
                     return .init(icon: .init(image: .ic24FileHash, background: .circle), title: .init(text: "Выписка по счету кредита", style: .bold), orientation: .horizontal, action: action)
@@ -85,7 +85,7 @@ extension ProductProfileOptionsPannelView {
                     return .init(icon: .init(image: .ic24Info, background: .circle), title: .init(text: "Информация по счету", style: .bold), orientation: .horizontal, action: action)
                     
                 case .deposit:
-                    return .init(icon: .init(image: .ic24Info, background: .circle), title: .init(text: "Информация по счету депозита", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24Info, background: .circle), title: .init(text: "Информация по вкладу", style: .bold), orientation: .horizontal, action: action)
                     
                 case .loan:
                     return .init(icon: .init(image: .ic24Info, background: .circle), title: .init(text: "Информация по счету кредита", style: .bold), orientation: .horizontal, action: action)
@@ -100,14 +100,14 @@ extension ProductProfileOptionsPannelView {
                     return .init(icon: .init(image: .ic24File, background: .circle), title: .init(text: "Условия по счету", style: .bold), orientation: .horizontal, action: action)
                     
                 case .deposit:
-                    return .init(icon: .init(image: .ic24File, background: .circle), title: .init(text: "Условия по счету депозита", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24File, background: .circle), title: .init(text: "Условия по вкладу", style: .bold), orientation: .horizontal, action: action)
                     
                 case .loan:
                     return .init(icon: .init(image: .ic24File, background: .circle), title: .init(text: "Условия по счету кредита", style: .bold), orientation: .horizontal, action: action)
                 }
                 
             case .closeDeposit:
-                return .init(icon: .init(image: .ic24Close, background: .circle), title: .init(text: "Закрыть депозит", style: .bold), orientation: .horizontal, action: action)
+                return .init(icon: .init(image: .ic24Close, background: .circle), title: .init(text: "Закрыть вклад", style: .bold), orientation: .horizontal, action: action)
             }
         }
         

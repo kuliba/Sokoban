@@ -231,7 +231,7 @@ extension ProductData: Equatable {
 
 extension ProductData {
     
-    enum Status: String, Codable, Equatable {
+    enum Status: String, Codable, Equatable, Unknownable {
         
         case blockedByClient = "Блокирована по решению Клиента"
         case active = "Действует"
@@ -241,9 +241,10 @@ extension ProductData {
         case blockedDebet = "BLOCKED_DEBET"
         case blockedCredit = "BLOCKED_CREDIT"
         case blocked = "BLOCKED"
+        case unknown
     }
     
-    enum StatusPC: String, Codable {
+    enum StatusPC: String, Codable, Unknownable {
         
         case active = "0"
         case operationsBlocked = "3"
@@ -253,5 +254,6 @@ extension ProductData {
         case notActivated = "17"
         case temporarilyBlocked = "20"
         case blockedByClient = "21"
+        case unknown
     }
 }

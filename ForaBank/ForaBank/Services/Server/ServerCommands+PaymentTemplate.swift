@@ -84,6 +84,7 @@ enum ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
+                //FIXME: data must be optional
                 let data: Data
                 
                 struct Data: Decodable, Equatable {
@@ -118,6 +119,7 @@ enum ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
+                //FIXME: data must be optional
                 let data: EmptyData
             }
             
@@ -149,6 +151,7 @@ enum ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
+                //FIXME: data must be optional
                 let data: EmptyData
             }
             

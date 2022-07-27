@@ -173,7 +173,7 @@ extension Model {
     //TODO: tests
     func statementsRequestParameters(for product: ProductData, direction: Period.Direction) -> ProductStatementsStorage.Request? {
         
-        let days = 60
+        let days = 30
         
         switch direction {
         case .latest:

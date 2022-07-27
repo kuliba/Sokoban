@@ -10,6 +10,11 @@ import SwiftUI
 struct ProductProfileView: View {
     
     @ObservedObject var viewModel: ProductProfileViewModel
+    
+    var accentColor: some View {
+        
+        return viewModel.accentColor.overlay(Color(hex: "1с1с1с").opacity(0.3))
+    }
 
     var body: some View {
         
@@ -27,15 +32,15 @@ struct ProductProfileView: View {
                                 
                                 if geometry.frame(in: .global).minY <= 0 {
                                     
-                                    viewModel.accentColor.contrast(0.5)
-                                        .frame(width: geometry.size.width, height: 204)
+                                    accentColor
+                                        .frame(width: geometry.size.width, height: 204 - 48)
                                         .offset(y: geometry.frame(in: .global).minY / 9)
                                         .clipped()
                                     
                                 } else {
                                     
-                                    viewModel.accentColor.contrast(0.5)
-                                        .frame(width: geometry.size.width, height: 204 + geometry.frame(in: .global).minY)
+                                    accentColor
+                                        .frame(width: geometry.size.width, height: 204 - 48 + geometry.frame(in: .global).minY)
                                         .clipped()
                                         .offset(y: -geometry.frame(in: .global).minY)
                                 }
@@ -65,7 +70,7 @@ struct ProductProfileView: View {
                             }
                         }
                     }
-                    .padding(.top, 56)
+                    .padding(.top, 56 - 48)
                     .zIndex(1)
                 }
                 .background(GeometryReader { geo in
@@ -105,6 +110,10 @@ struct ProductProfileView: View {
                     }
                 }
             }
+            
+            // workaround to fix mini-cards jumps when product name editing alert presents
+            Color.clear
+                .textfieldAlert(alert: $viewModel.textFieldAlert)
         }
         .navigationBar(with: viewModel.navigationBar)
         .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
@@ -140,7 +149,6 @@ struct ProductProfileView: View {
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
-        .textfieldAlert(alert: $viewModel.textFieldAlert)
     }
 }
 

@@ -585,6 +585,7 @@
 		68E3461F27030F4F00D6FE37 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E3461E27030F4F00D6FE37 /* ChatViewController.swift */; };
 		68E3462227033D9100D6FE37 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E3462127033D9100D6FE37 /* LaunchViewController.swift */; };
 		68E346242705C6FA00D6FE37 /* ProductStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 68E346232705C6FA00D6FE37 /* ProductStoryboard.storyboard */; };
+		68E5321D28904A47007BBD2C /* MessageTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E5321C28904A46007BBD2C /* MessageTextView.swift */; };
 		68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */ = {isa = PBXBuildFile; productRef = 68E6A28426A02C1800A1D9A1 /* AnyFormatKit */; };
 		68E6A29126A0338700A1D9A1 /* CastomCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A29026A0338700A1D9A1 /* CastomCardView.swift */; };
 		68E6A29326A033B700A1D9A1 /* CheckCardDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A29226A033B700A1D9A1 /* CheckCardDecodableModel.swift */; };
@@ -602,6 +603,9 @@
 		68E7653E279713B2005860FE /* GetCodeResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68E7653D279713B2005860FE /* GetCodeResponseGeneric.json */; };
 		68E803E327D9202600B75D41 /* ProductProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E803E227D9202600B75D41 /* ProductProfileView.swift */; };
 		68E803E627D9280B00B75D41 /* ProductProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E803E527D9280B00B75D41 /* ProductProfileViewModel.swift */; };
+		68EACA5128906D6100B27B50 /* Consent+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68EACA5028906D6100B27B50 /* Consent+Legacy.swift */; };
+		68EACA5328909AF200B27B50 /* C2BDetailsViewController+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68EACA5228909AF200B27B50 /* C2BDetailsViewController+Legacy.swift */; };
+		68EACA55289142E100B27B50 /* DeepLinkType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68EACA54289142E100B27B50 /* DeepLinkType.swift */; };
 		68EB187827CEDFC600745558 /* ProductProfileHistoryViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68EB187727CEDFC600745558 /* ProductProfileHistoryViewComponent.swift */; };
 		68EB187A27CEE85700745558 /* SegmentedBarViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68EB187927CEE85700745558 /* SegmentedBarViewComponent.swift */; };
 		68ECC2BA285C580900A95CE8 /* PhonePaymentView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68ECC2B9285C580900A95CE8 /* PhonePaymentView+Legacy.swift */; };
@@ -1273,6 +1277,11 @@
 		EDCF8A1526CED86100DC9F54 /* BankTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCF8A1326CED86100DC9F54 /* BankTableViewCell.swift */; };
 		EDCF8A1626CED86100DC9F54 /* BankTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDCF8A1426CED86100DC9F54 /* BankTableViewCell.xib */; };
 		EDCF8A1826CEFF2100DC9F54 /* TextFieldWithPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCF8A1726CEFF2100DC9F54 /* TextFieldWithPadding.swift */; };
+		EDDC5915288EDBC400C08D06 /* DefaultBankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDC5914288EDBC400C08D06 /* DefaultBankView.swift */; };
+		EDDC5917288EDBCF00C08D06 /* DefaultBankView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDDC5916288EDBCE00C08D06 /* DefaultBankView.xib */; };
+		EDDC591F288FE53C00C08D06 /* PhoneNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDC591E288FE53C00C08D06 /* PhoneNumberView.swift */; };
+		EDDC5922288FE56C00C08D06 /* PhoneNumberView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDDC5921288FE56C00C08D06 /* PhoneNumberView.xib */; };
+		EDDC5924288FE57C00C08D06 /* PhoneNumberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDC5923288FE57C00C08D06 /* PhoneNumberViewModel.swift */; };
 		EDDFE39D2756926000F57C71 /* GetDepositProductListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDFE39C2756926000F57C71 /* GetDepositProductListDecodableModel.swift */; };
 		EDDFE39F2756A99E00F57C71 /* GCDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDFE39E2756A99E00F57C71 /* GCDHelper.swift */; };
 		EDDFE3A32756BDDB00F57C71 /* DetailInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDFE3A22756BDDB00F57C71 /* DetailInformationViewController.swift */; };
@@ -1970,6 +1979,7 @@
 		68E3461E27030F4F00D6FE37 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		68E3462127033D9100D6FE37 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
 		68E346232705C6FA00D6FE37 /* ProductStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ProductStoryboard.storyboard; sourceTree = "<group>"; };
+		68E5321C28904A46007BBD2C /* MessageTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTextView.swift; sourceTree = "<group>"; };
 		68E6A29026A0338700A1D9A1 /* CastomCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CastomCardView.swift; sourceTree = "<group>"; };
 		68E6A29226A033B700A1D9A1 /* CheckCardDecodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckCardDecodableModel.swift; sourceTree = "<group>"; };
 		68E6A29426A033D900A1D9A1 /* DeleteProductTemplateDecodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeleteProductTemplateDecodableModel.swift; sourceTree = "<group>"; };
@@ -1986,6 +1996,9 @@
 		68E7653D279713B2005860FE /* GetCodeResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetCodeResponseGeneric.json; sourceTree = "<group>"; };
 		68E803E227D9202600B75D41 /* ProductProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileView.swift; sourceTree = "<group>"; };
 		68E803E527D9280B00B75D41 /* ProductProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileViewModel.swift; sourceTree = "<group>"; };
+		68EACA5028906D6100B27B50 /* Consent+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Consent+Legacy.swift"; sourceTree = "<group>"; };
+		68EACA5228909AF200B27B50 /* C2BDetailsViewController+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "C2BDetailsViewController+Legacy.swift"; sourceTree = "<group>"; };
+		68EACA54289142E100B27B50 /* DeepLinkType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkType.swift; sourceTree = "<group>"; };
 		68EB187727CEDFC600745558 /* ProductProfileHistoryViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileHistoryViewComponent.swift; sourceTree = "<group>"; };
 		68EB187927CEE85700745558 /* SegmentedBarViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedBarViewComponent.swift; sourceTree = "<group>"; };
 		68ECC2B9285C580900A95CE8 /* PhonePaymentView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhonePaymentView+Legacy.swift"; sourceTree = "<group>"; };
@@ -2637,6 +2650,11 @@
 		EDCF8A1326CED86100DC9F54 /* BankTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankTableViewCell.swift; sourceTree = "<group>"; };
 		EDCF8A1426CED86100DC9F54 /* BankTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BankTableViewCell.xib; sourceTree = "<group>"; };
 		EDCF8A1726CEFF2100DC9F54 /* TextFieldWithPadding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldWithPadding.swift; sourceTree = "<group>"; };
+		EDDC5914288EDBC400C08D06 /* DefaultBankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultBankView.swift; sourceTree = "<group>"; };
+		EDDC5916288EDBCE00C08D06 /* DefaultBankView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DefaultBankView.xib; sourceTree = "<group>"; };
+		EDDC591E288FE53C00C08D06 /* PhoneNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberView.swift; sourceTree = "<group>"; };
+		EDDC5921288FE56C00C08D06 /* PhoneNumberView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhoneNumberView.xib; sourceTree = "<group>"; };
+		EDDC5923288FE57C00C08D06 /* PhoneNumberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberViewModel.swift; sourceTree = "<group>"; };
 		EDDFE39C2756926000F57C71 /* GetDepositProductListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDepositProductListDecodableModel.swift; sourceTree = "<group>"; };
 		EDDFE39E2756A99E00F57C71 /* GCDHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDHelper.swift; sourceTree = "<group>"; };
 		EDDFE3A22756BDDB00F57C71 /* DetailInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInformationViewController.swift; sourceTree = "<group>"; };
@@ -4327,6 +4345,7 @@
 				50164F1F2841009C004239A1 /* ToggleView.swift */,
 				774A8B812865FF4A00B81140 /* TagsGridView.swift */,
 				77448C0A2872F54D009EEEA8 /* PDFDocumentView.swift */,
+				68E5321C28904A46007BBD2C /* MessageTextView.swift */,
 				7728A1752833EA0300EE4CA6 /* Shapes */,
 				77499C442773C0BB00F6C079 /* Styles */,
 				50A1993F280F1A240094CFA5 /* Modifiers */,
@@ -4526,6 +4545,7 @@
 		774CA5DF287962C400544C17 /* Notification */ = {
 			isa = PBXGroup;
 			children = (
+				77E1803227AC04320006ACC9 /* NotificationData.swift */,
 				0BA40B3D286F9AFF009C9B0D /* NotificationTransition.swift */,
 				774CA5DD287962BA00544C17 /* NotificationStatus.swift */,
 			);
@@ -4810,6 +4830,7 @@
 				0C4B0BC028635898004B7F69 /* BankFullInfoData+Legacy.swift */,
 				ED733D5D2858960C00F22D42 /* CurrencyData+Legacy.swift */,
 				0BC4ADC12860DADE00921AE2 /* OperatorGroupData+Legacy.swift */,
+				68EACA5028906D6100B27B50 /* Consent+Legacy.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4836,6 +4857,7 @@
 				77448C1228734643009EEEA8 /* ChangeReturnView+Legacy.swift */,
 				774CA5E0287C7C6000544C17 /* ProductStatementView+Legacy.swift */,
 				68DBA96E288197C400A169B4 /* MeToMeRequestView+Legacy.swift */,
+				68EACA5228909AF200B27B50 /* C2BDetailsViewController+Legacy.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -4860,7 +4882,6 @@
 				77A76A7427FAF89000A271B3 /* Atm */,
 				682092A127AC04DE003DCAFD /* ClientInfoData.swift */,
 				682092BA27AC170B003DCAFD /* DaDataPhoneData.swift */,
-				77E1803227AC04320006ACC9 /* NotificationData.swift */,
 				68FE398C286C17920026CBD7 /* AppInfo.swift */,
 			);
 			path = Domain;
@@ -5026,6 +5047,7 @@
 				77F5CE0C28056BB700611B66 /* LocationData.swift */,
 				77B6B3532850961A00E3001B /* Period.swift */,
 				50A39A95286E1E9000C13756 /* InformerData.swift */,
+				68EACA54289142E100B27B50 /* DeepLinkType.swift */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -6288,6 +6310,7 @@
 				ED4B5440270344DE00C87A1A /* CardsScrollView */,
 				EDFFCACB2681F950004EE095 /* CardListView */,
 				EDAA99AD2673AB7700435484 /* Switch */,
+				EDDC5920288FE54600C08D06 /* PhoneNumberView */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -6626,10 +6649,30 @@
 		EDCF89E026CACBF200DC9F54 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				EDDC5913288EDB9900C08D06 /* DefaultBankView */,
 				EDA563AC26F8807B0093F0C8 /* BanksView */,
 				EDA563AB26F8806B0093F0C8 /* Switch */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		EDDC5913288EDB9900C08D06 /* DefaultBankView */ = {
+			isa = PBXGroup;
+			children = (
+				EDDC5914288EDBC400C08D06 /* DefaultBankView.swift */,
+				EDDC5916288EDBCE00C08D06 /* DefaultBankView.xib */,
+			);
+			path = DefaultBankView;
+			sourceTree = "<group>";
+		};
+		EDDC5920288FE54600C08D06 /* PhoneNumberView */ = {
+			isa = PBXGroup;
+			children = (
+				EDDC591E288FE53C00C08D06 /* PhoneNumberView.swift */,
+				EDDC5923288FE57C00C08D06 /* PhoneNumberViewModel.swift */,
+				EDDC5921288FE56C00C08D06 /* PhoneNumberView.xib */,
+			);
+			path = PhoneNumberView;
 			sourceTree = "<group>";
 		};
 		EDDFE3A02756BDA200F57C71 /* View */ = {
@@ -7328,6 +7371,7 @@
 				EDB14518266526BD0028EF5A /* CreditCardEntryView.xib in Resources */,
 				EDB14526266624DC0028EF5A /* OrderCardView.xib in Resources */,
 				EDDFE3D6275EC34300F57C71 /* DepositSuccessViewController.xib in Resources */,
+				EDDC5922288FE56C00C08D06 /* PhoneNumberView.xib in Resources */,
 				ED51D66E2688B27E005FD655 /* SeparatorView.xib in Resources */,
 				77448C0D2872F7E0009EEEA8 /* sample_pdf.pdf in Resources */,
 				EDE212FB27432651005D9821 /* DateChooseView.xib in Resources */,
@@ -7337,6 +7381,7 @@
 				EDA563B026F881D60093F0C8 /* BanksView.xib in Resources */,
 				EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */,
 				EDE212F62742E91D005D9821 /* ChooseCurrencyTableViewCell.xib in Resources */,
+				EDDC5917288EDBCF00C08D06 /* DefaultBankView.xib in Resources */,
 				A55E653A27F6D9AD005CED37 /* C2BDetailsInput.xib in Resources */,
 				ED2BE18126A04A4300647CB1 /* CastomCardXIB.xib in Resources */,
 				ED684CF32763955E00AA7A33 /* DocDepositTableViewCell.xib in Resources */,
@@ -7677,6 +7722,7 @@
 				0BA409342806440E001326CE /* SettingPhotoCell.swift in Sources */,
 				5043E55228847BDE002C7465 /* CurrencySelectorViewComponent.swift in Sources */,
 				77DC126F2770F8C900C917B0 /* ServerCommands+PaymentTemplate.swift in Sources */,
+				EDDC5924288FE57C00C08D06 /* PhoneNumberViewModel.swift in Sources */,
 				0B22AEA826CE72C200B11E7F /* GKHDataFilter.swift in Sources */,
 				0B95C40326B6CA3700AA57E6 /* CustomPopUpWithRateView.swift in Sources */,
 				77EC58E7277236E90054D75C /* Model.swift in Sources */,
@@ -7712,6 +7758,7 @@
 				A5156425277CBB7C00F5ED73 /* PermissionHelper.swift in Sources */,
 				EDB165602667A569007E6030 /* ForaInput.swift in Sources */,
 				68A07C43281AAE0000797A54 /* DepositProductsHostingViewController.swift in Sources */,
+				68EACA55289142E100B27B50 /* DeepLinkType.swift in Sources */,
 				77F468B8284524B3008C9579 /* ChatViewModel.swift in Sources */,
 				0C4B0BBA28620F9F004B7F69 /* FastPaymentContractFullInfoType.swift in Sources */,
 				6845336C279843DF00104A8B /* ServerCommands+Utility.swift in Sources */,
@@ -7767,6 +7814,7 @@
 				EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */,
 				6833E0D0273920CE004C070F /* CountryPayCoordinator.swift in Sources */,
 				77E1802B27AB032C0006ACC9 /* PrintFormType.swift in Sources */,
+				EDDC5915288EDBC400C08D06 /* DefaultBankView.swift in Sources */,
 				0BB015DC26C9BE3700E7A85B /* ExtensionGKHMainNav.swift in Sources */,
 				0BD1CAA226E6C46900CFE993 /* GetCurrencyListSaved.swift in Sources */,
 				77C3829127E0CA2200B5246E /* Model+General.swift in Sources */,
@@ -7805,6 +7853,7 @@
 				68FFA54C2684C854002DADFA /* PDFViewerViewController.swift in Sources */,
 				0BF0BF4C2767E337006AE967 /* NetMonitor.swift in Sources */,
 				ED0FE46B281AE391000CF73F /* DetailCapitView.swift in Sources */,
+				68EACA5128906D6100B27B50 /* Consent+Legacy.swift in Sources */,
 				77517FCB27A97095005CFB77 /* ServerCommands+Product.swift in Sources */,
 				6841930C279AC36100B4E184 /* StatementFormat.swift in Sources */,
 				ED2D89F1286C72950000B391 /* CameraAgentProtocol.swift in Sources */,
@@ -8019,6 +8068,7 @@
 				68C8D57026F0DF120076246B /* HistoryTableViewCell.swift in Sources */,
 				687FB23626F0189C004A479F /* ProductViewControllerDataSource.swift in Sources */,
 				EDA5637A26F386AD0093F0C8 /* SettingTableViewController.swift in Sources */,
+				68EACA5328909AF200B27B50 /* C2BDetailsViewController+Legacy.swift in Sources */,
 				77F5CE1528060A9600611B66 /* AtmCityData.swift in Sources */,
 				ED0AF88B286B3C2C00F86B68 /* ImagePicker.swift in Sources */,
 				503F073E28252CBA00E84A77 /* DepositBottomSheetViewModel.swift in Sources */,
@@ -8048,6 +8098,7 @@
 				77A6A9D327F471EF00CE7E28 /* PlacesViewModel.swift in Sources */,
 				774A8B5F2865FDAF00B81140 /* PaymentsInputViewComponent.swift in Sources */,
 				0C35FD57287C0A4A00EB9039 /* DictionaryType.swift in Sources */,
+				EDDC591F288FE53C00C08D06 /* PhoneNumberView.swift in Sources */,
 				0B216FBE26D15BDF0023C878 /* GKHInputCell.swift in Sources */,
 				0BBDFC3A27BE48EE00A30D6D /* PaymentsOperationViewModel.swift in Sources */,
 				0B3FE8E32705C86200CBDB4E /* GetMobileListDecodableModel.swift in Sources */,
@@ -8423,6 +8474,7 @@
 				EDB165762668C5BE007E6030 /* PaymentsCell.swift in Sources */,
 				774A8B7E2865FF1400B81140 /* TextFieldFormatableViewComponent.swift in Sources */,
 				50474870285665930007128F /* AgreementViewComponent.swift in Sources */,
+				68E5321D28904A47007BBD2C /* MessageTextView.swift in Sources */,
 				ED2D8A03286DB6D30000B391 /* imageGalleryAgentMock.swift in Sources */,
 				EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */,
 				EDB1658F266A1942007E6030 /* PaymentsModel.swift in Sources */,
@@ -8696,7 +8748,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 56;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -8725,7 +8777,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 56;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -8882,7 +8934,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 56;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -8913,7 +8965,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 56;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;

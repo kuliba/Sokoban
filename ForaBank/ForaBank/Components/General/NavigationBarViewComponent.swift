@@ -19,7 +19,7 @@ extension NavigationBarView {
         
         @Published var background: Color
         @Published var foreground: Color
-        let contrast: Double
+        @Published var backgroundDimm: BackgroundColorDimm?
         
         internal init(title: String,
                       subtitle: String? = nil,
@@ -27,7 +27,7 @@ extension NavigationBarView {
                       rightButtons: [ButtonViewModel] = [],
                       background: Color = Color.textWhite,
                       foreground: Color = Color.textSecondary,
-                      contrast: Double = 1) {
+                      backgroundDimm: BackgroundColorDimm? = nil) {
             
             self.title = title
             self.subtitle = subtitle
@@ -35,7 +35,7 @@ extension NavigationBarView {
             self.rightButtons = rightButtons
             self.background = background
             self.foreground = foreground
-            self.contrast = contrast
+            self.backgroundDimm = backgroundDimm
         }
         
         class BaseButtonViewModel: Identifiable {
@@ -68,6 +68,12 @@ extension NavigationBarView {
                 super.init()
             }
         }
+        
+        struct BackgroundColorDimm {
+            
+            let color: Color
+            let opacity: Double
+        }
     }
 }
 
@@ -84,6 +90,15 @@ struct NavigationBarView: View {
     var rightPlaceholdersCount: Int {
         
         return max(viewModel.leftButtons.count - viewModel.rightButtons.count, 0)
+    }
+    
+    var backgroundColor: some View {
+        
+        guard let backgroundDimm = viewModel.backgroundDimm else {
+            return AnyView(viewModel.background)
+        }
+        
+        return AnyView(viewModel.background.overlay(backgroundDimm.color.opacity(backgroundDimm.opacity)))
     }
     
     var body: some View {
@@ -167,10 +182,7 @@ struct NavigationBarView: View {
         }
         .frame(height: 48)
         .padding(.horizontal, 18)
-        .background(viewModel.background
-            .edgesIgnoringSafeArea(.top)
-            .contrast(viewModel.contrast)
-        )
+        .background(backgroundColor.edgesIgnoringSafeArea(.top))
     }
 }
 
@@ -205,7 +217,6 @@ extension NavigationBarView.ViewModel {
             NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: {})
         ],
         rightButtons: [
-//            .init(icon: .ic24Share, action: { }),
             .init(icon: .ic24Settings, action: { })
         ])
 }

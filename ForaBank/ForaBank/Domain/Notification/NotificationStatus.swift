@@ -7,8 +7,9 @@
 
 import Foundation
 
-enum NotificationStatus: String, Codable {
+enum NotificationStatus: String, Codable, Unknownable {
     
     case delivered = "DELIVERED"
     case read = "READ"
+    case unknown
 }

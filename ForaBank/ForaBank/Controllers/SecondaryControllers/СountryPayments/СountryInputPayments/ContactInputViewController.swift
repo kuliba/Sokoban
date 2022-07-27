@@ -7,11 +7,13 @@
 
 import UIKit
 import RealmSwift
+import PhoneNumberKit
 import IQKeyboardManagerSwift
 
 class ContactInputViewController: UIViewController {
     
     let model = Model.shared
+    let phoneNumberKit = PhoneNumberKit()
     var operatorsViewModel: OperatorsViewModel?
     var typeOfPay: PaymentType = .contact {
         didSet {
@@ -85,8 +87,8 @@ class ContactInputViewController: UIViewController {
         viewModel: ForaInputModel(
             title: "Отчество получателя (если есть)"))
     
-    var phoneField = ForaInput(
-        viewModel: ForaInputModel(
+    var phoneField = PhoneNumberView(
+        viewModel: .init(
             title: "По номеру телефона",
             image: #imageLiteral(resourceName: "Phone"),
             type: .phone,
@@ -137,10 +139,8 @@ class ContactInputViewController: UIViewController {
                     setupBankField(bank: bank)
                 }
                 
-                let mask = StringMask(mask: "+000-0000-00-00")
-                let phone = model.additional.first(where: { $0.fieldname == "RECP" })
-                let maskPhone = mask.mask(string: phone?.fieldvalue)
-                phoneField.text = maskPhone ?? ""
+                let phone = model.additional.first(where: { $0.fieldname == "RECP" })?.fieldvalue
+                phoneField.text = "+\(phone ?? "")"
             }
             
         case .contactAdressless:
@@ -168,7 +168,7 @@ class ContactInputViewController: UIViewController {
                     self.secondNameField.text = middleName
                 }
                 if let phone = model.additional.first(where: { $0.fieldname == "bPhone" })?.fieldvalue {
-                    self.phoneField.text = phone
+                    self.phoneField.text = "+\(phone)"
                 }
             }
             
@@ -187,8 +187,15 @@ class ContactInputViewController: UIViewController {
     }
     
     @objc func onTouchBackButton() {
-        operatorsViewModel?.closeAction()
-        navigationController?.popToRootViewController(animated: true)
+        
+        if operatorsViewModel != nil {
+            
+            operatorsViewModel?.closeAction()
+            
+        } else {
+            
+            navigationController?.popViewController(animated: true)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -263,6 +270,17 @@ class ContactInputViewController: UIViewController {
         return codeString
     }
     
+    func clearAllFields() {
+        self.puref = ""
+        self.surnameField.text = ""
+        self.nameField.text = ""
+        self.secondNameField.text = ""
+        self.phoneField.text = ""
+        self.bankField.text = ""
+        self.selectedBank = nil
+        self.bankField.imageView.image = #imageLiteral(resourceName: "BankIcon")
+    }
+    
     func setupActions() {
         
         
@@ -271,6 +289,7 @@ class ContactInputViewController: UIViewController {
         
         countryListView.didCountryTapped = { [weak self] country in
             self?.country = country
+            self?.clearAllFields()
             UIView.animate(withDuration: 0.2) {
                 self?.countryListView.isHidden = true
                 self?.countryListView.alpha = 0
@@ -290,6 +309,7 @@ class ContactInputViewController: UIViewController {
             let navVc = UINavigationController(rootViewController: vc)
             self?.present(navVc, animated: true, completion: nil)
         }
+        
         phoneField.didChooseButtonTapped = {() in
             let contactPickerScene = EPContactsPicker(
                 delegate: self,
@@ -310,6 +330,7 @@ class ContactInputViewController: UIViewController {
         }
         
         foraSwitchView.switchIsChanged = { [weak self] (switchView) in
+            self?.clearAllFields()
             self?.typeOfPay = switchView.isOn ? .mig : .contact
             self?.configure(with: self?.country, byPhone: switchView.isOn)
         }
@@ -411,10 +432,10 @@ class ContactInputViewController: UIViewController {
             
         }
         
-        bottomView.didDoneButtonTapped = { (amount) in
+        bottomView.didDoneButtonTapped = { [self] (amount) in
             guard let card = self.cardFromField.model else { return }
             self.showActivity()
-            let phone = self.phoneField.textField.unmaskedText ?? ""
+            let phone = try? self.phoneNumberKit.parse(phoneField.textField.text ?? "").string
             let surname = self.surnameField.textField.text ?? ""
             let name = self.nameField.textField.text ?? ""
             let secondName = self.secondNameField.textField.text ?? ""
@@ -431,7 +452,7 @@ class ContactInputViewController: UIViewController {
                     }
                 }
             default:
-                self.contaktPayment(with: card, surname: surname, name: name, secondName: secondName, amount: Double(amount) ?? 0) { model, error in
+                self.contaktPayment(with: card, surname: surname, name: name, secondName: secondName, phone: phone, amount: Double(amount) ?? 0) { model, error in
                     self.dismissActivity()
                     if error != nil {
                         self.showAlert(with: "Ошибка", and: error!)
@@ -568,7 +589,6 @@ class ContactInputViewController: UIViewController {
                     self.selectedCardNumber = cardNumber
                     self.cardIsSelect = true
                 }
-//                }
             }
         }
     }
@@ -580,12 +600,12 @@ class ContactInputViewController: UIViewController {
         model.dictionaryBankListLegacy?.forEach { bank in
             guard let codeList = bank.paymentSystemCodeList else { return }
             guard let countrylist = self.country?.paymentSystemCodeList else { return }
-                    countrylist.forEach { code in
-                        if codeList.contains(code) {
-                            filteredbanksList.append(bank)
-                        }
-                    }
+            countrylist.forEach { code in
+                if codeList.contains(code) {
+                    filteredbanksList.append(bank)
                 }
+            }
+        }
         self.banks = filteredbanksList
     }
 }
@@ -603,37 +623,31 @@ extension ContactInputViewController: EPPickerDelegate {
             print("\(contact.displayName())")
         }
     }
-        
-        func epContactPicker(_: EPContactsPicker, didSelectContact contact : EPContact) {
-            let phoneFromContact = contact.phoneNumbers.first?.phoneNumber
-            let numbers = phoneFromContact?.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
-            
-            if country?.code == "TR" {
-                phoneField.text = numbers ?? ""
-            } else {
-                let mask = StringMask(mask: "+000-0000-00-00")
-                let maskPhone = mask.mask(string: numbers)
-                phoneField.text = maskPhone ?? ""
-            }
-        }
-        
-        func epContactPicker(_: EPContactsPicker, didCancel error : NSError) {
-            print("User canceled the selection");
-        }
+    
+    func epContactPicker(_: EPContactsPicker, didSelectContact contact : EPContact) {
+        let phoneFromContact = contact.phoneNumbers.first?.phoneNumber
+        phoneField.text = phoneFromContact ?? ""
+    }
     
     func epUserPhone(_ phone: String) {
-        var numbers = phone.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
-        if numbers.first == "7" {
-            let mask = StringMask(mask: "+0 (000) 000-00-00")
-            let maskPhone = mask.mask(string: numbers)
-            phoneField.text = maskPhone ?? ""
-            
-        } else if numbers.first == "8" {
-            numbers.removeFirst()
-            let mask = StringMask(mask: "+7 (000) 000-00-00")
-            let maskPhone = mask.mask(string: numbers)
-            phoneField.text = maskPhone ?? ""
+ 
+        if phone.first == "+" {
+            phoneField.text = phone
+        } else {
+            phoneField.text = "+\(phone)"
         }
     }
     
+    func epContactPicker(_: EPContactsPicker, didCancel error : NSError) {
+        print("User canceled the selection");
+    }
+    
+}
+
+extension PhoneNumber {
+    static let Kit = PhoneNumberKit()
+    
+    var string: String {
+        return PhoneNumber.Kit.format(self, toType: PhoneNumberFormat.e164)
+    }
 }

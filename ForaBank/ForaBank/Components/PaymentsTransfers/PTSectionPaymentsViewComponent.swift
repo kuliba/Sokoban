@@ -77,7 +77,10 @@ struct PTSectionPaymentsView: View {
     @ObservedObject
     var viewModel: ViewModel
     let pageScrollViewWidth: CGFloat = 312
-    let rowsCount: Int = UIScreen.main.bounds.height > 890 ? 4 : 3
+    let rowsCount: Int = 3
+    
+    // temporally off
+    //let rowsCount: Int = UIScreen.main.bounds.height > 890 ? 4 : 3
     
     @State private var scrollProxy: AmzdScrollViewProxy?
     @State private var scrollOffsetX: CGFloat = 0

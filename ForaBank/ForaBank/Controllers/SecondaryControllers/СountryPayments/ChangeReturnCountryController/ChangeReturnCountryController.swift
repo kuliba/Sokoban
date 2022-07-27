@@ -139,6 +139,14 @@ class ChangeReturnCountryController: UIViewController {
         nameField.text = model.name ?? ""
         secondNameField.text = model.secondName ?? ""
         
+        let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                     action: #selector(closeButtonTapped))
+        button.tintColor = .black
+        self.navigationItem.leftBarButtonItem = button
+        
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "Vector")))
         self.navigationItem.rightBarButtonItem = customViewItem
         
@@ -160,6 +168,18 @@ class ChangeReturnCountryController: UIViewController {
             title = "Изменения перевода"
             fullNameField.isHidden = true
             doneButton.setTitle("Продолжить", for: .normal)
+        }
+    }
+    
+    @objc
+    func closeButtonTapped() {
+        
+        if let closeAction = operatorsViewModel?.closeAction {
+            
+            closeAction()
+        } else {
+            
+            navigationController?.popViewController(animated: true)
         }
     }
     

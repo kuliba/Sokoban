@@ -328,14 +328,14 @@ class MainViewModel: ObservableObject, Resetable {
                 switch action {
                 case let payload as ProductProfileViewModelAction.MyProductsTapped.ProductProfile:
                     self.action.send(MainViewModelAction.Close.Link())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
                         
                         self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
                     }
                     
                 case _ as ProductProfileViewModelAction.MyProductsTapped.OpenDeposit:
                     self.action.send(MainViewModelAction.Close.Link())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
                         
                         self.action.send(MainViewModelAction.Show.OpenDeposit())
                     }

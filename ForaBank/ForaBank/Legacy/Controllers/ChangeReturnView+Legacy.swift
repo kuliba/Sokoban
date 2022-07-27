@@ -23,11 +23,24 @@ struct ChangeReturnView: UIViewControllerRepresentable {
         confurmVCModel.cardFromRealm = viewModel.product.userAllProducts()
         let controller = ChangeReturnCountryController(type: viewModel.type, operatorsViewModel: viewModel.operatorsViewModel)
         controller.confurmVCModel = confurmVCModel
+        
+        context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
+            vc.parent?.navigationItem.title = vc.navigationItem.title
+            vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
+            vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
+        })
 
         return controller
     }
     
     func updateUIViewController(_ uiViewController: ChangeReturnCountryController, context: Context) {}
+    
+    class Coordinator {
+        
+        var parentObserver: NSKeyValueObservation?
+    }
+    
+    func makeCoordinator() -> Self.Coordinator { Coordinator() }
 }
 
 

@@ -103,7 +103,7 @@ struct CountryPaymentView: UIViewControllerRepresentable {
             vc.nameField.text = turkeyWithOutAddress.firstName
             vc.surnameField.text = turkeyWithOutAddress.surName
             vc.secondNameField.text = turkeyWithOutAddress.middleName
-            vc.phoneField.text = turkeyWithOutAddress.phoneNumber
+            vc.phoneField.text = "+\(turkeyWithOutAddress.phoneNumber)"
             vc.operatorsViewModel = viewModel.operatorsViewModel
         
         case let .address(adressViewModel):
@@ -123,9 +123,7 @@ struct CountryPaymentView: UIViewControllerRepresentable {
             vc.typeOfPay = .mig
             vc.configure(with: viewModel.country, byPhone: true)
             vc.selectedBank = viewModel.bank
-            let mask = StringMask(mask: "+000-0000-00-00")
-            let maskPhone = mask.mask(string: withOutViewModel.phoneNumber)
-            vc.phoneField.text = maskPhone ?? ""
+            vc.phoneField.text = "+\(withOutViewModel.phoneNumber ?? "")"
             vc.operatorsViewModel = viewModel.operatorsViewModel
             
         case let .template(templateViewModel):
