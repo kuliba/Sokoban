@@ -105,6 +105,7 @@ class CustomPopUpWithRateView: UIViewController {
             
             self.bottomView.amountTextField.text = String(maxSum)
             self.bottomView.setupMoneyController(amount: String(maxSum), currency: currency)
+            self.bottomView.maxSum = maxSum
         }
         
         self.bottomView.currencySymbol = currency

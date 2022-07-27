@@ -469,11 +469,8 @@ class ProductProfileViewModel: ObservableObject {
                                 let meToMeViewModel = MeToMeViewModel(type: .transferDepositRemains(depositProduct, balance), closeAction: {})
                                 self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
 
-                            case .interest:
-                                guard let interest = depositInfo.sumPayPrc else {
-                                    return
-                                }
-                                let meToMeViewModel = MeToMeViewModel(type: .transferDepositInterest(depositProduct, interest), closeAction: {})
+                            case let .interest(amount):
+                                let meToMeViewModel = MeToMeViewModel(type: .transferDepositInterest(depositProduct, amount), closeAction: {})
                                 self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
                             }
    
