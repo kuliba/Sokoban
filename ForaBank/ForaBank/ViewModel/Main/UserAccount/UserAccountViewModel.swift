@@ -188,7 +188,7 @@ class UserAccountViewModel: ObservableObject {
                     
                     alert = .init(
                         title: "Удалить учетную запись?", message: "Вы действительно хотите удалить свои данные из Фора-Онлайн?\n\nДля входа в приложение потребуется новая регистрация данных",
-                        primary: .init(type: .distructive, title: "Ок", action: {
+                        primary: .init(type: .cancel, title: "ОК", action: {
                             self.model.action.send(ModelAction.Auth.Logout())
                         }),
                         secondary: .init(type: .cancel, title: "Отмена", action: { }))
@@ -219,7 +219,7 @@ class UserAccountViewModel: ObservableObject {
                         
                         textFieldAlert = .init(
                             title: "Имя", message: "Как к вам обращаться?\n* Имя не должно превышать 15 символов", maxLength: 15,
-                            primary: .init(type: .default, title: "ОК", action: { [weak self] text in
+                            primary: .init(type: .cancel, title: "ОК", action: { [weak self] text in
                                 
                                 self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
                                 self?.model.action.send(ModelAction.ClientName.Save(name: text))

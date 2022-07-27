@@ -199,7 +199,7 @@ class ProductProfileViewModel: ObservableObject {
                         self.model.action.send(ModelAction.Products.Update.ForProductType.init(productType: .card))
 
                     case .failure(let errorMessage):
-                        alert = .init(title: "Ошибка", message: errorMessage, primary: .init(type: .default, title: "Ok", action: { [weak self] in
+                        alert = .init(title: "Ошибка", message: errorMessage, primary: .init(type: .default, title: "ОК", action: { [weak self] in
                             self?.alert = nil
                         }))
                     }
@@ -223,7 +223,7 @@ class ProductProfileViewModel: ObservableObject {
                                                              primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in
                             self?.action.send(ProductProfileViewModelAction.Close.Alert())
                             self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())}),
-                                                             secondary: .init(type: .default, title: "Ок", action: { [weak self] in
+                                                             secondary: .init(type: .default, title: "ОК", action: { [weak self] in
                             self?.action.send(ProductProfileViewModelAction.Close.Alert())
                         }))
                         self.alert = .init(alertViewModel)
@@ -573,7 +573,7 @@ class ProductProfileViewModel: ObservableObject {
                             let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
                                                                  message: "Срок вашего вклада еще не истек. Для досрочного закрытия обратитесь в ближайший офис",
                                                                  primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())}),
-                                                                 secondary: .init(type: .default, title: "Ок", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}))
+                                                                 secondary: .init(type: .default, title: "ОК", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}))
                             self.alert = .init(alertViewModel)
                         }
                         
@@ -601,7 +601,7 @@ class ProductProfileViewModel: ObservableObject {
                                    self?.model.action.send(ModelAction.Products.UpdateCustomName.Request(productId: product.activeProductId, productType: product.productType, name: text))
                                }
                            }),
-            secondary: .init(type: .cancel,
+            secondary: .init(type: .default,
                              title: "Отмена",
                              action: { [weak self] _ in
                                  
@@ -673,10 +673,10 @@ class ProductProfileViewModel: ObservableObject {
                     
                     let alertViewModel = Alert.ViewModel(title: "Форма временно недоступна",
                                                          message: errorMessage,
-                                                         primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in
+                                                         primary: .init(type: .cancel, title: "Наши офисы", action: { [weak self] in
                         self?.action.send(ProductProfileViewModelAction.Close.Alert())
                         self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())}),
-                                                         secondary: .init(type: .default, title: "Ок", action: { [weak self] in
+                                                         secondary: .init(type: .cancel, title: "ОК", action: { [weak self] in
                         self?.action.send(ProductProfileViewModelAction.Close.Alert())
                     }))
                 
