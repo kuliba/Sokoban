@@ -116,63 +116,37 @@ extension SceneDelegate {
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         
-        //FIXME: looks like some C2B deeplink
-        
-        /*
+        var deepLinkType: DeepLinkType = .invalidLink
         guard let url = URLContexts.first?.url else { return }
         guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
               let params = components.queryItems else {
             return
         }
-
-        if url.description.contains("qr.nspk.ru") {
+        
+        if let bankId = params.first?.value {
+            
+            let bankId = String(bankId.dropFirst(4))
+            deepLinkType = .me2me(bankId)
+            
+        } else if url.description.contains("qr.nspk.ru") {
+            
             var strUrl = url.description.replacingOccurrences(of: "https2", with: "https")
             strUrl = strUrl.replacingOccurrences(of:"amp;", with:"")
-            GlobalModule.c2bURL = strUrl
-            let topvc = UIApplication.topViewController()
-            let controller = C2BDetailsViewController.storyboardInstance()!
-            let nc = UINavigationController(rootViewController: controller)
-            nc.modalPresentationStyle = .fullScreen
-            topvc?.present(nc, animated: false)
-            return
+            deepLinkType = .c2b(strUrl)
         }
-
-        if let bankId = params.first?.value {
-            let bankId = String(bankId.dropFirst(4))
-            let isAuth = AppDelegate.shared.isAuth
-            if isAuth == true {
-                let body = ["bankId": bankId] as [String: AnyObject]
-                NetworkManager<GetMe2MeDebitConsentDecodableModel>.addRequest(.getMe2MeDebitConsent, [:], body) { model, error in
-                    guard let model = model else { return }
-                    if model.statusCode == 0 {
-                        DispatchQueue.main.async {
-                            if model.data != nil {
-                                let topvc = UIApplication.topViewController()
-                                let vc = MeToMeRequestController()
-                                let meToMeReq = RequestMeToMeModel(model: model)
-                                vc.viewModel = meToMeReq
-                                vc.modalPresentationStyle = .fullScreen
-                                topvc?.present(vc, animated: true, completion: {
-                                    UserDefaults.standard.set(nil, forKey: "GetMe2MeDebitConsent")
-                                })
-                            } else {
-                                let topvc = UIApplication.topViewController()
-                                let vc = MeToMeRequestController()
-                                let meToMeReq = RequestMeToMeModel(bank: bankId)
-                                vc.viewModel = meToMeReq
-                                vc.doneButtonTapped()
-                                vc.modalPresentationStyle = .fullScreen
-                                topvc?.present(vc, animated: true, completion: {
-                                    UserDefaults.standard.set(nil, forKey: "GetMe2MeDebitConsent")
-                                })
-                            }
-                        }
-                    }
-                }
-            } else {
-                UserDefaults.standard.set(bankId, forKey: "GetMe2MeDebitConsent")
-            }
+                
+        switch deepLinkType {
+        case let .me2me(bankId):
+            AppDelegate.shared.model.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
+            
+        case let .c2b(urlString):
+            GlobalModule.c2bURL = urlString
+            rootViewModel.action.send(RootViewModelAction.C2bShow())
+            
+        case .invalidLink:
+            rootViewModel.alert = .init(title: "Ошибка", message: "Мы не смогли распознать ссылку", primary: .init(type: .default, title: "OK", action: { [weak self] in
+                self?.rootViewModel.action.send(RootViewModelAction.CloseAlert())
+            }))
         }
-         */
     }
 }
