@@ -117,16 +117,19 @@ class MeToMeSettingViewController: UIViewController {
                 topSwitch.configViewWithValue(true)
                 banksView.isHidden = false
                 cardFromField.isHidden = false
+                defaultBank.isHidden = false
             } else {
                 topSwitch.configViewWithValue(false)
                 banksView.isHidden = true
                 cardFromField.isHidden = true
+                defaultBank.isHidden = true
             }
         } else {
             
             banksView.isHidden = true
             topSwitch.configViewWithValue(false)
             cardFromField.isHidden = true
+            defaultBank.isHidden = true
         }
     }
     

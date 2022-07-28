@@ -197,7 +197,10 @@ extension Model {
                     
                     do {
                         
-                        try self.localAgent.store(self.products.value, serial: nil)
+                        for items in updatedProducts.values {
+                            
+                            try self.productsCaheData(products: items, serial: nil)
+                        }
                         
                     } catch {
                         
@@ -246,11 +249,15 @@ extension Model {
                         return
                     }
                     
-                    self.products.value = self.reduce(products: self.products.value, with: params, productId: payload.productId)
+                    let updatedProducts = self.reduce(products: self.products.value, with: params, productId: payload.productId)
+                    self.products.value = updatedProducts
                     
                     do {
                         
-                        try self.localAgent.store(self.products.value, serial: nil)
+                        if let items = updatedProducts[product.productType] {
+                            
+                            try self.productsCaheData(products: items, serial: nil)
+                        }
                         
                     } catch {
                         
@@ -453,11 +460,15 @@ extension Model {
                         return
                     }
 
-                    self.products.value = Model.reduce(products: self.products.value, cardID: id)
+                    let updatedProducts = Model.reduce(products: self.products.value, cardID: id)
+                    self.products.value = updatedProducts
 
                     do {
-
-                        try self.localAgent.store(self.products.value, serial: nil)
+                        
+                        if let items = updatedProducts[.card] {
+                            
+                            try self.productsCaheData(products: items, serial: nil)
+                        }
 
                     } catch {
 

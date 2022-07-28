@@ -108,15 +108,14 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         
         view.addSubview(confurmView)
         confurmView.anchor(
-            top: view.safeAreaLayoutGuide.topAnchor,
             left: view.leftAnchor,
             bottom: button.topAnchor,
             right: view.rightAnchor,
-            paddingTop: 120,
             paddingLeft: 20,
             paddingBottom: 90,
             paddingRight: 20)
         
+        confurmView.topAnchor.constraint(lessThanOrEqualToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 120).isActive = true
     }
     
     @objc func doneButtonTapped() {

@@ -676,7 +676,7 @@ class ProductProfileViewModel: ObservableObject {
                                                          primary: .init(type: .cancel, title: "Наши офисы", action: { [weak self] in
                         self?.action.send(ProductProfileViewModelAction.Close.Alert())
                         self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())}),
-                                                         secondary: .init(type: .cancel, title: "ОК", action: { [weak self] in
+                                                         secondary: .init(type: .default, title: "ОК", action: { [weak self] in
                         self?.action.send(ProductProfileViewModelAction.Close.Alert())
                     }))
                 

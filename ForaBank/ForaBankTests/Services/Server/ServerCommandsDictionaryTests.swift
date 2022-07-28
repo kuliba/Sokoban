@@ -761,7 +761,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let imageLink = "dict/getBannerCatalogImage?image=banner_1"
         let orderLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/")!
         
-        let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(BannerCatalogList: [.init(productName: "Кэшбек", conditions: ["string"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink)], serial: "bea36075a58954199a6b8980549f6b69"), errorMessage: "string")
+        let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(bannerCatalogList: [.init(productName: "Кэшбек", conditions: ["string"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink)], serial: "bea36075a58954199a6b8980549f6b69"), errorMessage: "string")
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetBannerCatalogList.Response.self, from: json)

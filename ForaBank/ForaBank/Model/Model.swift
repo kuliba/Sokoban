@@ -850,8 +850,7 @@ private extension Model {
             self.statements.value = statements
         }
         
-        if let fastPaymentSettings = localAgent
-            .load(type: [FastPaymentContractFullInfoType].self) {
+        if let fastPaymentSettings = localAgent.load(type: [FastPaymentContractFullInfoType].self) {
             
             self.fastPaymentContractFullInfo.value = fastPaymentSettings
         }
@@ -981,7 +980,41 @@ private extension Model {
             print("Model: clearCachedData: LoansData error: \(error.localizedDescription)")
         }
         
-        print("Model: cached data cleared")
+        do {
+            
+            try localAgent.clear(type: [LatestPaymentData].self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: [LatestPaymentData] error: \(error.localizedDescription)")
+        }
+        
+        do {
+            
+            try localAgent.clear(type: DepositsInfoData.self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: DepositsInfoData error: \(error.localizedDescription)")
+        }
+        
+        do {
+            
+            try localAgent.clear(type: [NotificationData].self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: [NotificationData] error: \(error.localizedDescription)")
+        }
+        
+        do {
+            
+            try localAgent.clear(type: [FastPaymentContractFullInfoType].self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: [FastPaymentContractFullInfoType] error: \(error.localizedDescription)")
+        }
     }
     
     func clearMemoryData() {
