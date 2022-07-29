@@ -68,7 +68,7 @@ extension CountryPaymentView {
 
             self.puref = countryData.puref
             self.country = Model.shared.dictionaryCountry(for: countryData.countryCode)?.getCountriesList()
-            self.bank = Model.shared.dictionaryBankList.first(where: {$0.memberNameRus == countryData.puref})?.getBanksList()
+            self.bank = Self.findBankByPuref(purefString: countryData.puref)
         }
         
         init(paymentTemplate: PaymentTemplateData) {
@@ -79,6 +79,33 @@ extension CountryPaymentView {
             self.country = nil
             self.bank = nil
         }
+        
+        private static func findBankByPuref(purefString: String) -> BanksList? {
+            let model = Model.shared
+            let paymentSystems = model.paymentSystemList.value.map { $0.getPaymentSystem() }
+            let bankList = model.bankList.value.map { $0.getBanksList() }
+            var bankForReturn: BanksList?
+            paymentSystems.forEach({ paymentSystem in
+                if paymentSystem.code == "DIRECT" {
+                    let purefList = paymentSystem.purefList
+                    purefList?.forEach({ puref in
+                        puref.forEach({ (key, value) in
+                            value.forEach { purefList in
+                                if purefList.puref == purefString {
+                                    bankList.forEach({ bank in
+                                        if bank.memberID == key {
+                                            bankForReturn = bank
+                                        }
+                                    })
+                                }
+                            }
+                        })
+                    })
+                }
+            })
+            return bankForReturn
+        }
+        
     }
 }
 
@@ -122,7 +149,10 @@ struct CountryPaymentView: UIViewControllerRepresentable {
             
             vc.typeOfPay = .mig
             vc.configure(with: viewModel.country, byPhone: true)
-            vc.selectedBank = viewModel.bank
+            if let bank = viewModel.bank {
+                vc.selectedBank = bank
+                vc.setupBankField(bank: bank)
+            }
             vc.phoneField.text = "+\(withOutViewModel.phoneNumber ?? "")"
             vc.operatorsViewModel = viewModel.operatorsViewModel
             
