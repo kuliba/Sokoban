@@ -212,18 +212,25 @@ extension OperationDetailView {
             case .template(let selected):
                 if selected == true {
                     
-                    VStack(spacing: 12) {
+                    Button {
                         
-                        Image(viewModel.icon)
-                            .resizable()
-                            .frame(width: 56, height: 56)
+                        viewModel.action()
                         
-                        HStack(spacing: 3) {
+                    } label: {
+                     
+                        VStack(spacing: 12) {
                             
-                            Image("Operation Details Template Check Icon")
-                            Text(viewModel.name)
-                                .font(.system(size: 12, weight: .medium))
-                                .foregroundColor(Color(hex: "#22C183"))
+                            Image(viewModel.icon)
+                                .resizable()
+                                .frame(width: 56, height: 56)
+                            
+                            HStack(spacing: 3) {
+                                
+                                Image("Operation Details Template Check Icon")
+                                Text(viewModel.name)
+                                    .font(.system(size: 12, weight: .medium))
+                                    .foregroundColor(Color(hex: "#22C183"))
+                            }
                         }
                     }
                     
