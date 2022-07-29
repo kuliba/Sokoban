@@ -16,7 +16,8 @@ typealias CurrencyItemViewModel = CurrencyListView.ViewModel.ItemViewModel
 
 extension CurrencyListView {
 
-    class ViewModel: ObservableObject {
+    class ViewModel: ObservableObject, CurrencyWalletItem {
+        
 
         let action: PassthroughSubject<Action, Never> = .init()
 
@@ -27,6 +28,7 @@ extension CurrencyListView {
         private var bindings = Set<AnyCancellable>()
         
         private let model: Model
+        let id = UUID().uuidString
 
         lazy var button: ButtonViewModel = .init { [unowned self] in
             action.send(CurrencyListAction.Button.Tapped())
@@ -37,8 +39,6 @@ extension CurrencyListView {
             self.model = model
             self.currency = currency
             self.items = items
-            
-            bind()
         }
         
         convenience init(_ model: Model, currency: Currency) {

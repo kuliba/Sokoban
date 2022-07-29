@@ -18,6 +18,7 @@ extension TextFieldFormatableView {
         @Published var formatter: NumberFormatter
         @Published var text: String?
         @Published var isEnabled: Bool
+        @Published var isEditing: Bool
         @Published var limit: Int?
         
         let type: Kind
@@ -41,12 +42,13 @@ extension TextFieldFormatableView {
             case currencyWallet
         }
         
-        internal init(type: Kind = .general, value: Double, formatter: NumberFormatter, isEnabled: Bool = true, limit: Int? = nil, toolbar: ToolbarViewModel? = nil) {
+        internal init(type: Kind = .general, value: Double, formatter: NumberFormatter, isEnabled: Bool = true, isEditing: Bool = false, limit: Int? = nil, toolbar: ToolbarViewModel? = nil) {
             
             self.type = type
             self.formatter = formatter
             self.text = formatter.string(from: NSNumber(value: value))
             self.isEnabled = isEnabled
+            self.isEditing = isEditing
             self.limit = limit
             self.toolbar = toolbar
             self.dismissKeyboard = {}
@@ -62,12 +64,12 @@ extension TextFieldFormatableView {
         let closeButton: ButtonViewModel?
         
         class ButtonViewModel: ObservableObject {
-
+            
             @Published var isEnabled: Bool
             let action: () -> Void
-
+            
             init(isEnabled: Bool, action: @escaping () -> Void) {
-
+                
                 self.isEnabled = isEnabled
                 self.action = action
             }
@@ -89,7 +91,7 @@ struct TextFieldFormatableView: UIViewRepresentable {
     var keyboardType: UIKeyboardType = .numberPad
     
     private let textField = UITextField()
-
+    
     func makeUIView(context: Context) -> UITextField {
         
         textField.delegate = context.coordinator
@@ -104,7 +106,7 @@ struct TextFieldFormatableView: UIViewRepresentable {
         if viewModel.toolbar != nil {
             textField.inputAccessoryView = makeToolbar(context: context)
         }
- 
+        
         return textField
     }
     
@@ -144,8 +146,16 @@ struct TextFieldFormatableView: UIViewRepresentable {
             }
         }
         
+        func textFieldDidBeginEditing(_ textField: UITextField) {
+            viewModel.isEditing = true
+        }
+        
+        func textFieldDidEndEditing(_ textField: UITextField) {
+            viewModel.isEditing = false
+        }
+        
         public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-
+            
             switch viewModel.type {
             case .general:
                 
@@ -166,7 +176,7 @@ struct TextFieldFormatableView: UIViewRepresentable {
             
             let arbitraryValue: Int = 2
             if let newPosition = textField.position(from: textField.endOfDocument, offset: -arbitraryValue) {
-
+                
                 textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
             }
         }
@@ -174,7 +184,7 @@ struct TextFieldFormatableView: UIViewRepresentable {
         @objc func handleDoneAction() {
             viewModel.toolbar?.doneButton.action()
         }
-
+        
         @objc func handleCloseAction() {
             viewModel.toolbar?.closeButton?.action()
         }
@@ -191,7 +201,7 @@ struct TextFieldFormatableView: UIViewRepresentable {
     static func updateFormatted(value: String?, inRange: NSRange, update: String, formatter: NumberFormatter, limit: Int? = nil) -> String? {
         
         let expectedCharacters = "0123456789.,"
-
+        
         if let value = value {
             
             let rangeStart = value.index(value.startIndex, offsetBy: inRange.lowerBound)
@@ -211,7 +221,7 @@ struct TextFieldFormatableView: UIViewRepresentable {
             
             // remove formatting from value, example: `1 234,56 ₽` -> `1234,56`
             updatedValue = updatedValue.filter{ expectedCharacters.contains($0) }
-
+            
             // filter only expected characters
             let filterredUpdate = updatedValue.filter{ expectedCharacters.contains($0) }.replacingOccurrences(of: formatter.decimalSeparator, with: ".")
             
@@ -264,23 +274,23 @@ struct TextFieldFormatableView: UIViewRepresentable {
                 // remove temp fraction value and return, example: `1 234,1 ₽` -> `1 234, ₽`
                 let replaceString = formatter.decimalSeparator + "1"
                 return formattedValue?.replacingOccurrences(of: replaceString, with: formatter.decimalSeparator)
-
+                
             } else {
-               
+                
                 // return formatted double value, example: `1234.56` -> `1 234,56 ₽`
                 return formatter.string(from: NSNumber(value: doubleValue))
             }
-
+            
         } else {
             
             // filter update from unexpected symbols
             let filteredUpdate = update.filter{ expectedCharacters.contains($0) }
-    
+            
             // try convert update value into double
             guard let doubleValue = Double(filteredUpdate) else {
                 return value
             }
-
+            
             // return formatted double value, example: `1234.56` -> `1 234,56 ₽`
             return formatter.string(from: NSNumber(value: doubleValue))
         }
@@ -293,23 +303,23 @@ struct TextFieldFormatableView: UIViewRepresentable {
         guard let toolbarViewModel = coordinator.viewModel.toolbar else {
             return nil
         }
-
+        
         let toolbar = UIToolbar()
         let color: UIColor = .init(hexString: "#1C1C1C")
         let font: UIFont = .systemFont(ofSize: 18, weight: .bold)
-
+        
         let doneButton = UIBarButtonItem(title: "Готово", style: .plain, target: coordinator, action: #selector(coordinator.handleDoneAction))
         doneButton.setTitleTextAttributes([.font: font], for: .normal)
         doneButton.tintColor = color
-
+        
         toolbarViewModel.doneButton.$isEnabled
             .receive(on: DispatchQueue.main)
             .sink { isEnabled in
-
+                
                 doneButton.isEnabled = isEnabled
-
+                
             }.store(in: &viewModel.bindings)
-
+        
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         var items: [UIBarButtonItem] = [flexibleSpace, doneButton]
         
@@ -320,13 +330,13 @@ struct TextFieldFormatableView: UIViewRepresentable {
             
             items.insert(closeButton, at: 0)
         }
-
+        
         toolbar.items = items
         toolbar.barStyle = .default
         toolbar.barTintColor = .white.withAlphaComponent(0)
         toolbar.clipsToBounds = true
         toolbar.sizeToFit()
-
+        
         return toolbar
     }
 }

@@ -102,7 +102,7 @@ struct MainView: View {
             }
         }
         .ignoreKeyboard()
-        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
+        .bottomSheet(item: $viewModel.bottomSheet, keyboardOfssetMultiplier: 0.7) { bottomSheet in
 
             switch bottomSheet.type {
             case let .openAccount(model):

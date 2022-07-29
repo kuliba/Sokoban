@@ -153,7 +153,7 @@ extension ProductView {
             switch size {
             case .large: return productData.extraLargeDesign.image
             case .normal: return productData.largeDesign.image
-            case .small: return productData.smallDesign.image
+            case .small: return productData.mediumDesign.image
             }
         }
     }

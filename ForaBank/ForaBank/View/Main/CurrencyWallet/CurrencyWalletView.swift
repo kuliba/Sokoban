@@ -19,17 +19,39 @@ struct CurrencyWalletView: View {
             
             ScrollView(showsIndicators: false) {
                 
-                CurrencyListView(viewModel: viewModel.listViewModel)
-                CurrencySwapView(viewModel: viewModel.swapViewModel)
-                
-                /*
-                 CurrencySelectorView(viewModel: viewModel.selectorViewModel)
-                */
+                VStack(spacing: 24) {
+                    
+                    ForEach(viewModel.items, id: \.id) { viewModel in
+                        
+                        switch viewModel {
+                        case let listViewModel as CurrencyListView.ViewModel:
+                            CurrencyListView(viewModel: listViewModel)
+                            
+                        case let swapViewModel as CurrencySwapView.ViewModel:
+                            CurrencySwapView(viewModel: swapViewModel)
+                            
+                        case let selectorViewModel as CurrencySelectorView.ViewModel:
+                            CurrencySelectorView(viewModel: selectorViewModel)
+                            
+                        default:
+                            Color.clear
+                        }
+                    }
+                }
             }
             
-            ButtonSimpleView(viewModel: viewModel.continueButton)
-                .frame(height: 48)
-                .padding(20)
+            switch viewModel.state {
+            case .button:
+                
+                ButtonSimpleView(viewModel: viewModel.continueButton)
+                    .frame(height: 48)
+                    .padding(20)
+                
+            case .spinner:
+                
+                SpinnerRefreshView(icon: viewModel.icon)
+                    .padding(.bottom, 20)
+            }
         }
         .ignoreKeyboard()
         .navigationBarTitle(Text(viewModel.title), displayMode: .inline)
@@ -44,7 +66,8 @@ struct CurrencyWalletView: View {
             viewModel.resetCurrencySwap()
             UIApplication.shared.endEditing()
         }
-        .padding(.vertical, 20)
+        .padding(.top, 12)
+        .padding(.bottom, 20)
         .edgesIgnoringSafeArea(.bottom)
     }
 }
@@ -55,8 +78,13 @@ struct CurrencyWalletView_Previews: PreviewProvider {
     static var previews: some View {
         CurrencyWalletView(viewModel: .init(
             .emptyMock,
-            listViewModel: .sample,
-            swapViewModel: .sample,
-            selectorViewModel: .sample) {})
+            currency: .rub,
+            currencyItem: .init(
+                icon: nil,
+                currency: .rub,
+                rateBuy: "1,00",
+                rateSell: "64,50"),
+            currencyOperation: .buy,
+            currencySymbol: "₽") {})
     }
 }

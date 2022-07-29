@@ -36,7 +36,7 @@ extension NumberFormatter {
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
-        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.locale = Locale.current
         
         return formatter
     }
