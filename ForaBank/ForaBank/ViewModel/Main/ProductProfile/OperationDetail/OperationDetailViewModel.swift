@@ -180,7 +180,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                 featureButtonsUpdated.append(infoButtonViewModel)
             }
             if operationDetail.transferReference != nil {
-                actionButtonsUpdated = self.actionButtons(with: operationDetail, product: product, dismissAction: {[weak self] in self?.action.send(OperationDetailViewModelAction.CloseFullScreenSheet())})
+                actionButtonsUpdated = self.actionButtons(with: operationDetail, statement: productStatement, product: product, dismissAction: {[weak self] in self?.action.send(OperationDetailViewModelAction.CloseFullScreenSheet())})
             }
             
         default:
@@ -291,11 +291,13 @@ private extension OperationDetailViewModel {
         }
     }
     
-    func actionButtons(with operationDetail: OperationDetailData, product: ProductData, dismissAction: @escaping () -> Void) -> [ActionButtonViewModel] {
+    func actionButtons(with operationDetail: OperationDetailData, statement: ProductStatementData, product: ProductData, dismissAction: @escaping () -> Void) -> [ActionButtonViewModel] {
         
         var actionButtons = [ActionButtonViewModel]()
         
         let amountFormatted = model.amountFormatted(amount: operationDetail.amount, currencyCode: operationDetail.currencyAmount, style: .normal) ?? String(operationDetail.amount)
+        
+        let paymentSystemImage = statement.md5hash
         
         let changeViewModel = ChangeReturnViewModel(
             amount: amountFormatted,
@@ -305,6 +307,7 @@ private extension OperationDetailViewModel {
             paymentOperationDetailId: operationDetail.paymentOperationDetailId,
             transferReference: operationDetail.transferReference ?? "",
             product: product,
+            paymantSystemIcon: paymentSystemImage,
             type: .changePay,
             operatorsViewModel: .init(closeAction: dismissAction, template: nil))
         
@@ -323,6 +326,7 @@ private extension OperationDetailViewModel {
             paymentOperationDetailId: operationDetail.paymentOperationDetailId,
             transferReference: operationDetail.transferReference ?? "",
             product: product,
+            paymantSystemIcon: paymentSystemImage,
             type: .returnPay,
             operatorsViewModel: .init(closeAction: dismissAction, template: nil))
         let returnButton = ActionButtonViewModel(name: "Вернуть",
