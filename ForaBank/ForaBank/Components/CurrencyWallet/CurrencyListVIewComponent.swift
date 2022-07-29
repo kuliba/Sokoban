@@ -28,7 +28,7 @@ extension CurrencyListView {
         private var bindings = Set<AnyCancellable>()
         
         private let model: Model
-        var id = UUID().uuidString
+        let id = UUID().uuidString
 
         lazy var button: ButtonViewModel = .init { [unowned self] in
             action.send(CurrencyListAction.Button.Tapped())
@@ -39,8 +39,6 @@ extension CurrencyListView {
             self.model = model
             self.currency = currency
             self.items = items
-            
-            bind()
         }
         
         convenience init(_ model: Model, currency: Currency) {

@@ -25,7 +25,7 @@ extension CurrencySwapView {
         @Published var quotesInfo: String
 
         let model: Model
-        var id = UUID().uuidString
+        let id = UUID().uuidString
         
         /// Иностранная валюта
         let currencySwap: CurrencyViewModel

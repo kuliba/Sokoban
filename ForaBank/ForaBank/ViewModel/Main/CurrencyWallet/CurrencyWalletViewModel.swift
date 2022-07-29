@@ -20,11 +20,17 @@ class CurrencyWalletViewModel: ObservableObject {
     @Published var items: [CurrencyWalletItem]
     @Published var state: ButtonActionState
     @Published var buttonStyle: ButtonSimpleView.ViewModel.ButtonStyle
+
+    private let currency: Currency
+    private let currencyItem: CurrencyItemViewModel
+    private let currencyOperation: CurrencyOperation
+    private let currencySymbol: String
     
-    let listViewModel: CurrencyListView.ViewModel
-    let swapViewModel: CurrencySwapView.ViewModel
-    let selectorViewModel: CurrencySelectorView.ViewModel
     let backButton: NavigationButtonViewModel
+    
+    private lazy var listViewModel: CurrencyListView.ViewModel = makeListViewModel()
+    private lazy var swapViewModel: CurrencySwapView.ViewModel = makeSwapViewModel()
+    private var selectorViewModel: CurrencySelectorView.ViewModel?
     
     lazy var continueButton: ButtonSimpleView.ViewModel = .init(title: "Продолжить", style: buttonStyle) { [weak self] in
         
@@ -46,35 +52,30 @@ class CurrencyWalletViewModel: ObservableObject {
         case spinner
     }
     
-    init(_ model: Model, items: [CurrencyWalletItem], state: ButtonActionState = .button, listViewModel: CurrencyListView.ViewModel, swapViewModel: CurrencySwapView.ViewModel, selectorViewModel: CurrencySelectorView.ViewModel, action: @escaping () -> Void) {
+    init(_ model: Model, currency: Currency, currencyItem: CurrencyItemViewModel, currencyOperation: CurrencyOperation, currencySymbol: String, items: [CurrencyWalletItem], state: ButtonActionState, action: @escaping () -> Void) {
         
         self.model = model
+        self.currency = currency
+        self.currencyItem = currencyItem
+        self.currencyOperation = currencyOperation
+        self.currencySymbol = currencySymbol
         self.items = items
         self.state = state
-        self.listViewModel = listViewModel
-        self.swapViewModel = swapViewModel
-        self.selectorViewModel = selectorViewModel
         
         backButton = .init(icon: .ic24ChevronLeft, action: action)
         buttonStyle = .red
-        
-        bind()
     }
     
-    convenience init(_ model: Model, state: ButtonActionState = .button, listViewModel: CurrencyListView.ViewModel, swapViewModel: CurrencySwapView.ViewModel, selectorViewModel: CurrencySelectorView.ViewModel, action: @escaping () -> Void) {
+    convenience init(_ model: Model, currency: Currency, currencyItem: CurrencyItemViewModel, currencyOperation: CurrencyOperation, currencySymbol: String, state: ButtonActionState = .button, action: @escaping () -> Void) {
         
-        self.init(model,
-                  items: [listViewModel, swapViewModel],
-                  state: state,
-                  listViewModel: listViewModel,
-                  swapViewModel: swapViewModel,
-                  selectorViewModel: selectorViewModel,
-                  action: action)
+        self.init(model, currency: currency, currencyItem: currencyItem, currencyOperation: currencyOperation, currencySymbol: currencySymbol, items: .init(), state: state, action: action)
         
         bind()
     }
     
     private func bind() {
+       
+        items = [listViewModel, swapViewModel]
         
         listViewModel.$currency
             .receive(on: DispatchQueue.main)
@@ -82,6 +83,9 @@ class CurrencyWalletViewModel: ObservableObject {
                 
                 swapViewModel.currency = currency
                 
+                if let selectorViewModel = selectorViewModel {
+                    selectorViewModel.currency = currency
+                }
             }.store(in: &bindings)
         
         $buttonStyle
@@ -90,6 +94,21 @@ class CurrencyWalletViewModel: ObservableObject {
                 
                 continueButton.style = buttonStyle
                 
+            }.store(in: &bindings)
+        
+        swapViewModel.$currencyOperation
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] currencyOperation in
+                
+                if let selectorViewModel = selectorViewModel {
+                    
+                    if #available(iOS 14.0, *) {
+
+                        withAnimation {
+                            selectorViewModel.currencyOperation = currencyOperation
+                        }
+                    }
+                }
             }.store(in: &bindings)
     }
     
@@ -105,22 +124,52 @@ class CurrencyWalletViewModel: ObservableObject {
         }
     }
     
-    private func appendSelectorViewIfNeeds() {
+    private func makeListViewModel() -> CurrencyListView.ViewModel {
+        .init(model, currency: currency)
+    }
+    
+    private func makeSwapViewModel() -> CurrencySwapView.ViewModel {
         
-        let selectorViewModel = items.first(where: { $0 is CurrencySelectorView.ViewModel })
+        let currencyRate = currencyOperation == .buy ? currencyItem.rateBuy : currencyItem.rateSell
+        let currencyAmount = NumberFormatter.decimal(currencyRate) ?? 0
+        let image = model.images.value[currencyItem.iconId]?.image
+        
+        return .init(
+            model,
+            currencySwap: .init(
+                icon: image,
+                currencyAmount: 1.00,
+                currency: currency),
+            сurrencyCurrentSwap: .init(
+                icon: .init("Flag RUB"),
+                currencyAmount: currencyAmount,
+                currency: Currency(description: "RUB")),
+            currencyOperation: currencyOperation,
+            currency: currency,
+            currencyRate: currencyAmount,
+            quotesInfo: "1\(currencySymbol) = \(currencyRate) ₽")
+    }
+    
+    private func makeSelectorViewModel() -> CurrencySelectorView.ViewModel {
+        
+        let productAccounts = model.products.value[.account]
+        var selectorState: CurrencySelectorView.ViewModel.State = .productSelector
+        
+        if productAccounts == nil {
+            
+            buttonStyle = .inactive
+            selectorState = .openAccount
+        }
+        
+        return .init(model, state: selectorState, currency: currency, currencyOperation: currencyOperation)
+    }
+    
+    private func appendSelectorViewIfNeeds() {
         
         if selectorViewModel == nil {
             
-            let productAccounts = model.products.value[.account]
-            var selectorState: CurrencySelectorView.ViewModel.State = .productSelector
-            
-            if productAccounts == nil {
-                
-                buttonStyle = .inactive
-                selectorState = .openAccount
-            }
-            
-            let selectorViewModel: CurrencySelectorView.ViewModel = .init(model, state: selectorState)
+            let selectorViewModel = makeSelectorViewModel()
+            self.selectorViewModel = selectorViewModel
             
             withAnimation {
                 items.append(selectorViewModel)

@@ -78,8 +78,13 @@ struct CurrencyWalletView_Previews: PreviewProvider {
     static var previews: some View {
         CurrencyWalletView(viewModel: .init(
             .emptyMock,
-            listViewModel: .sample,
-            swapViewModel: .sample,
-            selectorViewModel: .sample) {})
+            currency: .rub,
+            currencyItem: .init(
+                icon: nil,
+                currency: .rub,
+                rateBuy: "1,00",
+                rateSell: "64,50"),
+            currencyOperation: .buy,
+            currencySymbol: "₽") {})
     }
 }

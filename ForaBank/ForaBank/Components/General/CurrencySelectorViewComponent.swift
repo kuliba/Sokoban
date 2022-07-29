@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 // MARK: - ViewModel
 
@@ -14,9 +15,13 @@ extension CurrencySelectorView {
     class ViewModel: ObservableObject, CurrencyWalletItem {
         
         @Published var state: State
+        @Published var currency: Currency
+        @Published var currencyOperation: CurrencyOperation
         
         let model: Model
-        var id = UUID().uuidString
+        let id = UUID().uuidString
+        
+        private var bindings = Set<AnyCancellable>()
         
         lazy var productCardSelector: ProductSelectorViewModel? = makeProductCardSelector()
         lazy var productAccountSelector: ProductSelectorViewModel? = makeProductAccountSelector()
@@ -24,14 +29,18 @@ extension CurrencySelectorView {
         lazy var openAccount: CurrencyWalletAccountView.ViewModel = .init(
             model: model,
             cardIcon: Image("USD Account"),
-            currency: Currency(description: "USD"),
+            currency: currency,
             currencyName: "Валютный",
             warning: .init(description: "Для завершения операции Вам необходимо открыть счет в долларах США"))
         
-        init(_ model: Model, state: State) {
+        init(_ model: Model, state: State, currency: Currency, currencyOperation: CurrencyOperation) {
             
             self.model = model
             self.state = state
+            self.currency = currency
+            self.currencyOperation = currencyOperation
+            
+            bind()
         }
         
         enum State {
@@ -40,48 +49,56 @@ extension CurrencySelectorView {
             case productSelector
         }
         
+        private func bind() {
+            
+            $currencyOperation
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] currencyOperation in
+                    
+                    guard let productCardSelector = productCardSelector,
+                          let productAccountSelector = productAccountSelector else {
+                        return
+                    }
+                    
+                    productCardSelector.isDividerHiddable = currencyOperation == .buy ? false : true
+                    productAccountSelector.isDividerHiddable = currencyOperation == .buy ? true : false
+                    
+                    productCardSelector.currencyOperation = currencyOperation
+                    productAccountSelector.currencyOperation = currencyOperation
+                    
+                }.store(in: &bindings)
+        }
+        
         private func makeProductCardSelector() -> ProductSelectorView.ViewModel? {
             
             guard let productCards = model.products.value[.card],
-                  let productCard = productCards.first as? ProductCardData,
-                  let numberCard = productCard.number else {
+                  let productData = productCards.first(where: { $0 is ProductCardData }) else {
                 return nil
             }
             
             let selectorViewModel: ProductSelectorView.ViewModel = .init(
                 model,
                 title: "Откуда",
-                cardIcon: productCard.smallDesign.image,
-                paymentSystemIcon: productCard.paymentSystemImage?.image,
-                name: productCard.displayName,
-                balance: NumberFormatter.decimal(productCard.balanceValue),
-                number: .init(
-                    numberCard: numberCard,
-                    description: productCard.additionalField),
-                productType: .card)
+                productType: productData.productType,
+                productViewModel: .init(productData: productData, model: model),
+                currencyOperation: currencyOperation)
             
             return selectorViewModel
         }
         
         private func makeProductAccountSelector() -> ProductSelectorView.ViewModel? {
             
-            guard let productCards = model.products.value[.account],
-                  let productCard = productCards.first as? ProductAccountData,
-                  let numberCard = productCard.number else {
+            guard let productAccounts = model.products.value[.account],
+                  let productData = productAccounts.first(where: { $0 is ProductAccountData }) else {
                 return nil
             }
             
             let selectorViewModel: ProductSelectorView.ViewModel = .init(
                 model,
                 title: "Куда",
-                cardIcon: productCard.smallDesign.image,
-                paymentSystemIcon: nil,
-                name: productCard.displayName,
-                balance: NumberFormatter.decimal(productCard.balanceValue),
-                number: .init(
-                    numberCard: numberCard,
-                    description: productCard.additionalField),
-                productType: .account,
+                productType: productData.productType,
+                productViewModel: .init(productData: productData, model: model),
+                currencyOperation: currencyOperation,
                 isDividerHiddable: true)
             
             return selectorViewModel
@@ -93,6 +110,7 @@ extension CurrencySelectorView {
 
 struct CurrencySelectorView: View {
     
+    @Namespace private var namespace
     @ObservedObject var viewModel: ViewModel
     
     var body: some View {
@@ -104,19 +122,49 @@ struct CurrencySelectorView: View {
             
             VStack(spacing: 20) {
                 
-                if let productCardSelector = viewModel.productCardSelector {
-                    ProductSelectorView(viewModel: productCardSelector)
-                }
-                
-                switch viewModel.state {
-                case .openAccount:
+                if #available(iOS 14.0, *) {
                     
-                    CurrencyWalletAccountView(viewModel: viewModel.openAccount)
-                    
-                case .productSelector:
-                    
-                    if let productAccountSelector = viewModel.productAccountSelector {
-                        ProductSelectorView(viewModel: productAccountSelector)
+                    if viewModel.currencyOperation == .buy {
+                        
+                        if let productCardSelector = viewModel.productCardSelector {
+                            ProductSelectorView(viewModel: productCardSelector)
+                                .matchedGeometryEffect(id: "currencySelector", in: namespace)
+                        }
+                        
+                        switch viewModel.state {
+                        case .openAccount:
+                            
+                            CurrencyWalletAccountView(viewModel: viewModel.openAccount)
+                                .matchedGeometryEffect(id: "currencyAccount", in: namespace)
+                            
+                        case .productSelector:
+                            
+                            if let productAccountSelector = viewModel.productAccountSelector {
+                                ProductSelectorView(viewModel: productAccountSelector)
+                                    .matchedGeometryEffect(id: "currencyProduct", in: namespace)
+                            }
+                        }
+                        
+                    } else {
+                        
+                        switch viewModel.state {
+                        case .openAccount:
+                            
+                            CurrencyWalletAccountView(viewModel: viewModel.openAccount)
+                                .matchedGeometryEffect(id: "currencyAccount", in: namespace)
+                            
+                        case .productSelector:
+                            
+                            if let productAccountSelector = viewModel.productAccountSelector {
+                                ProductSelectorView(viewModel: productAccountSelector)
+                                    .matchedGeometryEffect(id: "currencyProduct", in: namespace)
+                            }
+                        }
+                        
+                        if let productCardSelector = viewModel.productCardSelector {
+                            ProductSelectorView(viewModel: productCardSelector)
+                                .matchedGeometryEffect(id: "currencySelector", in: namespace)
+                        }
                     }
                 }
                 
@@ -130,7 +178,7 @@ struct CurrencySelectorView: View {
 
 extension CurrencySelectorView.ViewModel {
     
-    static let sample: CurrencySelectorView.ViewModel = .init(.productsMock, state: .openAccount)
+    static let sample: CurrencySelectorView.ViewModel = .init(.productsMock, state: .openAccount, currency: .rub, currencyOperation: .buy)
 }
 
 // MARK: - Previews
