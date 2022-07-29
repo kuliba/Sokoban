@@ -77,18 +77,27 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                 
                 switch action {
                 case _ as ModelAction.PaymentTemplate.Save.Complete:
-                    var featureButtonsUpdated = [FeatureButtonViewModel]()
-                    for buttonViewModel in featureButtons {
-                        switch buttonViewModel.kind {
-                        case .template:
-                            let templateButtonSelected = FeatureButtonViewModel(kind: .template(true), icon: "Operation Details Template Selected", name: "Шаблон", action: {})
-                            featureButtonsUpdated.append(templateButtonSelected)
-                            
-                        default:
-                            featureButtonsUpdated.append(buttonViewModel)
-                        }
+                    guard let statement = model.statement(statementId: id) else {
+                        return
                     }
-                    featureButtons = featureButtonsUpdated
+                    
+                    if let documentId = statement.documentId {
+                        
+                        model.action.send(ModelAction.Payment.OperationDetail.Request(documentId: "\(documentId)"))
+                        
+                    }
+                    
+                case _ as ModelAction.PaymentTemplate.Delete.Complete:
+                    
+                    guard let statement = model.statement(statementId: id) else {
+                        return
+                    }
+                    
+                    if let documentId = statement.documentId {
+                        
+                        model.action.send(ModelAction.Payment.OperationDetail.Request(documentId: "\(documentId)"))
+                        
+                    }
                     
                 case let result as ModelAction.Payment.OperationDetail.Response:
                     withAnimation {
@@ -255,9 +264,10 @@ private extension OperationDetailViewModel {
             return nil
         }
         
-        if operationDetail.paymentTemplateId != nil {
-            
-            return FeatureButtonViewModel(kind: .template(true), icon: "Operation Details Template Selected", name: "Шаблон", action: {})
+        if let paymentTemplateId = operationDetail.paymentTemplateId {
+                
+                let action = ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: [paymentTemplateId])
+                return FeatureButtonViewModel(kind: .template(true), icon: "Operation Details Template Selected", name: "Шаблон", action: { [weak self] in self?.model.action.send(action)})
             
         } else {
             
