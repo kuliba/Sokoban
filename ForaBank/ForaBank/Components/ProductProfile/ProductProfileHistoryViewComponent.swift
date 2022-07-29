@@ -658,7 +658,7 @@ extension ProductProfileHistoryView {
         
         var body: some View {
             
-            VStack(alignment: .leading, spacing: 0) {
+            VStack(alignment: .leading, spacing: 8) {
                 
                 Text(viewModel.title)
                     .font(.textBodyMSB14200())
@@ -668,7 +668,6 @@ extension ProductProfileHistoryView {
                 ForEach(viewModel.operations) { operationViewModel in
                     
                     ProductProfileHistoryView.OperationView(viewModel: operationViewModel)
-                        .frame(height: 56)
                 }
             }
         }
@@ -687,6 +686,7 @@ extension ProductProfileHistoryView {
                     image
                         .resizable()
                         .frame(width: 40, height: 40)
+                        .padding(.top, 8)
                     
                 } else {
                     
@@ -694,6 +694,7 @@ extension ProductProfileHistoryView {
                         .foregroundColor(.mainColorsGrayMedium)
                         .frame(width: 40, height: 40)
                         .shimmering(active: true, bounce: false)
+                        .padding(.top, 8)
                 }
                 
                 VStack(alignment: .leading, spacing: 8) {
@@ -701,12 +702,12 @@ extension ProductProfileHistoryView {
                     Text(viewModel.title)
                         .font(.textH4M16240())
                         .foregroundColor(.textSecondary)
-                        .lineLimit(1)
                     
                     Text(viewModel.subtitle)
                         .font(.textBodySR12160())
                         .foregroundColor(.textPlaceholder)
                 }
+                .padding(.vertical, 8)
                 
                 Spacer()
                 
@@ -715,6 +716,7 @@ extension ProductProfileHistoryView {
                     Text(amount.value)
                         .font(.textH4M16240())
                         .foregroundColor(amount.color)
+                        .padding(.top, 8)
                 }
             }
             .onTapGesture {
@@ -871,7 +873,7 @@ extension ProductProfileHistoryView.ViewModel.HistoryListViewModel.LatestUpdateS
 
 extension ProductProfileHistoryView.ViewModel {
     
-    static let sample = ProductProfileHistoryView.ViewModel(productId: 1, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: 0, date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black)), .init(statement: .init(id: 1, date: Date(), imageId: ""), title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: .init(value: "- 230 Р", color: .black))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: 2, date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black))])], eldestUpdate: nil)))
+    static let sample = ProductProfileHistoryView.ViewModel(productId: 1, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: 0, date: Date(), imageId: ""), title: "Плата за обслуживание за октябрь 2021", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black)), .init(statement: .init(id: 1, date: Date(), imageId: ""), title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: .init(value: "- 230 Р", color: .black))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: 2, date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black))])], eldestUpdate: nil)))
     
     static let sampleSecond = ProductProfileHistoryView.ViewModel(productId: 2, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: 0, date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: 1, date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black))])], eldestUpdate: .more(.init(title: "Смотреть еще", style: .gray, action: {}))) ))
     
