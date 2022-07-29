@@ -64,6 +64,8 @@ class ChangeReturnCountryController: UIViewController {
     
     var operatorsViewModel: OperatorsViewModel?
     
+    private let modelData: Model = Model.shared
+    
     init(type: ChangeReturnType, operatorsViewModel: OperatorsViewModel?) {
         self.type = type
         self.operatorsViewModel = operatorsViewModel
@@ -150,11 +152,22 @@ class ChangeReturnCountryController: UIViewController {
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "Vector")))
         self.navigationItem.rightBarButtonItem = customViewItem
         
-        if model.paymentSystem != nil {
-            let navImage: UIImage = model.paymentSystem?.svgImage?.convertSVGStringToImage() ?? UIImage()
+        if let paymentSystemIcon = modelData.images.value[model.operatorImage]?.uiImage {
             
-            let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
-            self.navigationItem.rightBarButtonItem = customViewItem
+            let navImage: UIImage = paymentSystemIcon
+            
+            let button = UIButton()
+            button.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
+            
+            button.setImage(navImage, for: .normal)
+            button.imageView?.contentMode = .scaleAspectFit
+            button.isUserInteractionEnabled = false
+
+            let buttonBarButton = UIBarButtonItem(customView: UIView(frame: CGRect(x: 0, y: 0, width: 25, height: 25)))
+            buttonBarButton.customView?.addSubview(button)
+            buttonBarButton.customView?.frame = button.frame
+
+            self.navigationItem.rightBarButtonItem = buttonBarButton
         }
         
         switch type {
@@ -163,6 +176,11 @@ class ChangeReturnCountryController: UIViewController {
             surnameField.isHidden = true
             nameField.isHidden = true
             secondNameField.isHidden = true
+            if let surname = model.surname, let name = model.name, let secondName = model.secondName {
+                
+                fullNameField.text = "\(surname) \(name) \(secondName)"
+            }
+            
             doneButton.setTitle("Вернуть", for: .normal)
         case .changePay:
             title = "Изменения перевода"

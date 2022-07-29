@@ -90,6 +90,14 @@ extension AuthLoginView {
         
         @ObservedObject var viewModel: AuthLoginViewModel.CardViewModel
         
+        var textFieldFont: UIFont {
+            
+            let mainScreenWight = UIScreen.main.bounds.width > 640
+            return mainScreenWight ?
+                .monospacedSystemFont(ofSize: 20, weight: .regular) :
+                .monospacedSystemFont(ofSize: 17, weight: .regular)
+        }
+        
         var body: some View {
             
             ZStack {
@@ -134,8 +142,7 @@ extension AuthLoginView {
                         // text field
                         ZStack {
                             
-                            TextFieldMaskableView(viewModel: viewModel.textField)
-                                .font(.textH2M20282())
+                            TextFieldMaskableView(viewModel: viewModel.textField, font: textFieldFont)
                                 .textContentType(.creditCardNumber)
                             
                             HStack {

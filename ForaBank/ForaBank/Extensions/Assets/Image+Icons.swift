@@ -363,6 +363,7 @@ public extension Image {
     static var ic24Tariff: Image { Image(#function) }
     static var ic24WheelOfFortune: Image { Image(#function) }
     static var ic24ZKX: Image { Image(#function) }
+    static var ic24ActivatedCreditCard: Image { Image(#function) }
     static var ic24Activity: Image { Image(#function) }
     static var ic24Airplay: Image { Image(#function) }
     static var ic24AlertCircle: Image { Image(#function) }
@@ -409,6 +410,7 @@ public extension Image {
     static var ic24Box: Image { Image(#function) }
     static var ic24Briefcase: Image { Image(#function) }
     static var ic24Bulb: Image { Image(#function) }
+    static var ic24Businessman: Image { Image(#function) }
     static var ic24Cafe: Image { Image(#function) }
     static var ic24Calendar: Image { Image(#function) }
     static var ic24CalendarPayment: Image { Image(#function) }
@@ -474,6 +476,7 @@ public extension Image {
     static var ic24Database: Image { Image(#function) }
     static var ic24DeactivatedCreditCard: Image { Image(#function) }
     static var ic24Delete: Image { Image(#function) }
+    static var ic24Department: Image { Image(#function) }
     static var ic24DepositPlusColor: Image { Image(#function) }
     static var ic24Disc: Image { Image(#function) }
     static var ic24Divide: Image { Image(#function) }

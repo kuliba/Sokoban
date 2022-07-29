@@ -21,6 +21,7 @@ struct ChangeReturnView: UIViewControllerRepresentable {
         confurmVCModel.paymentOperationDetailId = viewModel.paymentOperationDetailId
         confurmVCModel.numberTransction = viewModel.transferReference
         confurmVCModel.cardFromRealm = viewModel.product.userAllProducts()
+        confurmVCModel.operatorImage = viewModel.paymantSystemIcon
         let controller = ChangeReturnCountryController(type: viewModel.type, operatorsViewModel: viewModel.operatorsViewModel)
         controller.confurmVCModel = confurmVCModel
         
@@ -53,6 +54,7 @@ struct ChangeReturnViewModel {
     let paymentOperationDetailId: Int
     let transferReference: String
     let product: ProductData
+    let paymantSystemIcon: String
     let type: ChangeReturnCountryController.ChangeReturnType
     let operatorsViewModel: OperatorsViewModel
 }
