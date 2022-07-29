@@ -68,14 +68,14 @@ extension Model {
             } else if lowerBound...upperBound ~= amount {
 
                 formatter.currencySymbol = "Млн. \(currencySymbol)"
-                formatter.maximumFractionDigits = 0
+                formatter.maximumFractionDigits = 2
                 
                 return formatter.string(from: NSNumber(value: amount / lowerBound))
 
             } else {
 
                 formatter.currencySymbol = "Млрд. \(currencySymbol)"
-                formatter.maximumFractionDigits = 0
+                formatter.maximumFractionDigits = 2
                 
                 return formatter.string(from: NSNumber(value: amount / upperBound))
             }
