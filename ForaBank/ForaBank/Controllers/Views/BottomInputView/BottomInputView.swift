@@ -89,7 +89,7 @@ class BottomInputView: UIView {
         
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
-        self.heightAnchor.constraint(equalToConstant: 88).isActive = true
+        self.heightAnchor.constraint(equalToConstant: 122).isActive = true
         setupTextFIeld()
         setupMoneyController()
         
