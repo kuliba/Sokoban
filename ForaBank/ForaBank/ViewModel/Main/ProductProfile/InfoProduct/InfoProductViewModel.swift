@@ -231,11 +231,11 @@ class InfoProductViewModel: ObservableObject {
                         var list: [ItemViewModel] = []
                         
                         list.append(.init(title: "Получатель", subtitle: data.payeeName))
-                        list.append(.init(title: "Номер счета", subtitle: data.accountNumber))
-                        list.append(.init(title: "БИК", subtitle: data.bic))
-                        list.append(.init(title: "Корреспондентский счет", subtitle: data.corrAccount, button: .init(icon: .ic24Copy, action: { [weak self] in
-                            self?.action.send(InfoProductModelAction.Copy(corrAccount: data.corrAccount))
+                        list.append(.init(title: "Номер счета", subtitle: data.accountNumber, button: .init(icon: .ic24Copy, action: { [weak self] in
+                            self?.action.send(InfoProductModelAction.Copy(corrAccount: data.accountNumber))
                         })))
+                        list.append(.init(title: "БИК", subtitle: data.bic))
+                        list.append(.init(title: "Корреспондентский счет", subtitle: data.corrAccount))
                         list.append(.init(title: "ИНН", subtitle: data.inn))
                         list.append(.init(title: "КПП", subtitle: data.kpp))
                         
