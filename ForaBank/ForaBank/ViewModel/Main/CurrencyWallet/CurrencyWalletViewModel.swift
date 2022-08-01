@@ -20,6 +20,8 @@ class CurrencyWalletViewModel: ObservableObject {
     @Published var items: [CurrencyWalletItem]
     @Published var state: ButtonActionState
     @Published var buttonStyle: ButtonSimpleView.ViewModel.ButtonStyle
+    @Published var selectorViewModel: CurrencySelectorView.ViewModel?
+    @Published var isShouldScrollToTop: Bool
 
     private let currency: Currency
     private let currencyItem: CurrencyItemViewModel
@@ -30,13 +32,13 @@ class CurrencyWalletViewModel: ObservableObject {
     
     private lazy var listViewModel: CurrencyListView.ViewModel = makeListViewModel()
     private lazy var swapViewModel: CurrencySwapView.ViewModel = makeSwapViewModel()
-    private var selectorViewModel: CurrencySelectorView.ViewModel?
     
     lazy var continueButton: ButtonSimpleView.ViewModel = .init(title: "Продолжить", style: buttonStyle) { [weak self] in
         
         guard let self = self else { return }
         
         self.appendSelectorViewIfNeeds()
+        self.isShouldScrollToTop = true
         self.model.action.send(ModelAction.Products.Update.Fast.All())
     }
     
@@ -64,6 +66,7 @@ class CurrencyWalletViewModel: ObservableObject {
         
         backButton = .init(icon: .ic24ChevronLeft, action: action)
         buttonStyle = .red
+        isShouldScrollToTop = false
     }
     
     convenience init(_ model: Model, currency: Currency, currencyItem: CurrencyItemViewModel, currencyOperation: CurrencyOperation, currencySymbol: String, state: ButtonActionState = .button, action: @escaping () -> Void) {
@@ -161,7 +164,22 @@ class CurrencyWalletViewModel: ObservableObject {
             selectorState = .openAccount
         }
         
-        return .init(model, state: selectorState, currency: currency, currencyOperation: currencyOperation)
+        let productSelectorViewModel = CurrencySelectorView.ViewModel(model, state: selectorState, currency: currency, currencyOperation: currencyOperation)
+        
+        if let productCardSelector = productSelectorViewModel.productCardSelector,
+           let productAccountSelector = productSelectorViewModel.productAccountSelector {
+            
+            productCardSelector.productViewModel.$isCollapsed
+                .combineLatest(productAccountSelector.productViewModel.$isCollapsed)
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isCollapsed in
+                    
+                    isShouldScrollToTop = isCollapsed.0 == false || isCollapsed.1 == false
+                    
+                }.store(in: &bindings)
+        }
+        
+        return productSelectorViewModel
     }
     
     private func appendSelectorViewIfNeeds() {

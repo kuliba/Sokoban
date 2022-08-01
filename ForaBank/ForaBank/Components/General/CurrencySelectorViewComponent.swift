@@ -113,6 +113,14 @@ struct CurrencySelectorView: View {
     @Namespace private var namespace
     @ObservedObject var viewModel: ViewModel
     
+    var topTransition: AnyTransition {
+        .asymmetric(insertion: .move(edge: .top), removal: .identity)
+    }
+
+    var bottomTransition: AnyTransition {
+        .asymmetric(insertion: .move(edge: .bottom), removal: .identity)
+    }
+    
     var body: some View {
         
         ZStack {
@@ -164,6 +172,51 @@ struct CurrencySelectorView: View {
                         if let productCardSelector = viewModel.productCardSelector {
                             ProductSelectorView(viewModel: productCardSelector)
                                 .matchedGeometryEffect(id: "currencySelector", in: namespace)
+                        }
+                    }
+                    
+                } else {
+                    
+                    if viewModel.currencyOperation == .buy {
+                        
+                        if let productCardSelector = viewModel.productCardSelector {
+                            ProductSelectorView(viewModel: productCardSelector)
+                                .transition(bottomTransition)
+                        }
+                        
+                        switch viewModel.state {
+                        case .openAccount:
+                            
+                            CurrencyWalletAccountView(viewModel: viewModel.openAccount)
+                                .transition(topTransition)
+                            
+                        case .productSelector:
+                            
+                            if let productAccountSelector = viewModel.productAccountSelector {
+                                ProductSelectorView(viewModel: productAccountSelector)
+                                    .transition(topTransition)
+                            }
+                        }
+                        
+                    } else {
+                        
+                        switch viewModel.state {
+                        case .openAccount:
+                            
+                            CurrencyWalletAccountView(viewModel: viewModel.openAccount)
+                                .transition(bottomTransition)
+                            
+                        case .productSelector:
+                            
+                            if let productAccountSelector = viewModel.productAccountSelector {
+                                ProductSelectorView(viewModel: productAccountSelector)
+                                    .transition(bottomTransition)
+                            }
+                        }
+                        
+                        if let productCardSelector = viewModel.productCardSelector {
+                            ProductSelectorView(viewModel: productCardSelector)
+                                .transition(topTransition)
                         }
                     }
                 }

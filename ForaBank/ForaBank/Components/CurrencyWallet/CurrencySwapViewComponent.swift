@@ -218,7 +218,24 @@ extension CurrencySwapView {
             
             currencyRate = currencyAmount
             quotesInfo = "1\(currencySymbol) = \(currencyRateOperation) ₽"
-            сurrencyCurrentSwap.currencyAmount = currencySwap.currencyAmount * currencyAmount
+            
+            if сurrencyCurrentSwap.lastCurrencyAmount == 0 {
+                
+                сurrencyCurrentSwap.currencyAmount = currencySwap.currencyAmount * currencyAmount
+                
+            } else {
+                
+                if currencyOperation == .buy {
+                    
+                    currencySwap.currencyAmount = сurrencyCurrentSwap.lastCurrencyAmount / currencyAmount
+                    currencySwap.lastCurrencyAmount = 0
+                    
+                } else {
+                    
+                    сurrencyCurrentSwap.currencyAmount = currencySwap.currencyAmount * currencyAmount
+                    сurrencyCurrentSwap.lastCurrencyAmount = 0
+                }
+            }
         }
         
         private func updateImage(currencyWalletList: [CurrencyWalletData], images: [String: ImageData]) {
@@ -270,6 +287,7 @@ extension CurrencySwapView.ViewModel {
         @Published var icon: Image?
         @Published var isBlockedForInput: Bool
 
+        var lastCurrencyAmount: Double = 0
         private var bindings = Set<AnyCancellable>()
         
         var font: UIFont {
@@ -297,6 +315,8 @@ extension CurrencySwapView.ViewModel {
                     }
                     
                     self.currencyAmount = value
+                    self.lastCurrencyAmount = value
+                    
                     self.action.send(CurrencySwapAction.TextField.Update(currencyAmount: self.currencyAmount))
                     
                     UIApplication.shared.endEditing()

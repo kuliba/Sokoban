@@ -20,7 +20,7 @@ extension ProductSelectorView {
         
         @Published var currencyOperation: CurrencyOperation
         @Published var isDividerHiddable: Bool
-        @Published var productViewModel: ProductViewModel
+        @Published var productViewModel: ProductContentViewModel
         @Published var listViewModel: ProductsListView.ViewModel?
         
         var bindings = Set<AnyCancellable>()
@@ -34,7 +34,7 @@ extension ProductSelectorView {
         init(_ model: Model,
              title: String,
              productType: ProductType,
-             productViewModel: ProductViewModel,
+             productViewModel: ProductContentViewModel,
              listViewModel: ProductsListView.ViewModel? = nil,
              currencyOperation: CurrencyOperation,
              isDividerHiddable: Bool = false) {
@@ -84,6 +84,16 @@ extension ProductSelectorView {
                 .sink { [unowned self] currencyOperation in
 
                     dividerViewModel.currencyOperation = currencyOperation
+                    
+                }.store(in: &bindings)
+            
+            $listViewModel
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] listViewModel in
+                    
+                    withAnimation {                    
+                        productViewModel.isCollapsed = listViewModel == nil ? true : false
+                    }
                     
                 }.store(in: &bindings)
         }
@@ -162,9 +172,9 @@ extension ProductSelectorView {
 
 extension ProductSelectorView.ViewModel {
     
-    // MARK: - Product
+    // MARK: - ProductContent
     
-    class ProductViewModel: ObservableObject {
+    class ProductContentViewModel: ObservableObject {
         
         @Published var cardIcon: Image?
         @Published var paymentSystemIcon: Image?
@@ -172,8 +182,9 @@ extension ProductSelectorView.ViewModel {
         @Published var balance: String
         @Published var numberCard: String
         @Published var description: String?
+        @Published var isCollapsed: Bool
         
-        init(cardIcon: Image? = nil, paymentSystemIcon: Image? = nil, name: String, balance: String, numberCard: String, description: String? = nil) {
+        init(cardIcon: Image? = nil, paymentSystemIcon: Image? = nil, name: String, balance: String, numberCard: String, description: String? = nil, isCollapsed: Bool = true) {
             
             self.cardIcon = cardIcon
             self.paymentSystemIcon = paymentSystemIcon
@@ -181,6 +192,7 @@ extension ProductSelectorView.ViewModel {
             self.balance = balance
             self.numberCard = numberCard
             self.description = description
+            self.isCollapsed = isCollapsed
         }
         
         convenience init(productData: ProductData, model: Model) {
@@ -298,71 +310,83 @@ extension ProductSelectorView {
                     .font(.textBodySR12160())
                     .foregroundColor(.textPlaceholder)
                 
-                HStack(alignment: .top, spacing: 16) {
-                    
-                    if let cardIcon = viewModel.productViewModel.cardIcon {
-                        
-                        cardIcon
-                            .resizable()
-                            .frame(width: 32, height: 32)
-                            .offset(y: -3)
+                ProductContentView(viewModel: viewModel.productViewModel)
+                    .onTapGesture {
+                        viewModel.action.send(ProductSelectorView.ProductAction.Toggle())
                     }
-                    
-                    VStack(alignment: .leading, spacing: 0) {
-                        
-                        HStack(alignment: .center, spacing: 10) {
-                            
-                            viewModel.productViewModel.paymentSystemIcon
-                                .frame(width: 24, height: 24)
-                            
-                            Text(viewModel.productViewModel.name)
-                                .font(.textBodyMM14200())
-                                .foregroundColor(.textSecondary)
-                            
-                            Spacer()
-                            
-                            Text(viewModel.productViewModel.balance)
-                                .font(.textBodyMM14200())
-                                .foregroundColor(.textSecondary)
-                            
-                            Image.ic24ChevronDown
-                                .renderingMode(.template)
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(.mainColorsGray)
-                                .rotationEffect(viewModel.listViewModel == nil ? .degrees(0) : .degrees(-90))
-                        }
-                        
-                        HStack {
-                            
-                            if viewModel.productViewModel.numberCard.isEmpty == false {
-                                
-                                Circle()
-                                    .frame(width: 3, height: 3)
-                                    .foregroundColor(.mainColorsGray)
-                                
-                                Text(viewModel.productViewModel.numberCard)
-                                    .font(.textBodySR12160())
-                                    .foregroundColor(.mainColorsGray)
-                                
-                                Circle()
-                                    .frame(width: 3, height: 3)
-                                    .foregroundColor(.mainColorsGray)
-                            }
-                            
-                            if let description = viewModel.productViewModel.description {
-                                
-                                Text(description)
-                                    .font(.textBodySR12160())
-                                    .foregroundColor(.mainColorsGray)
-                            }
-                        }
-                    }
-                }.onTapGesture {
-                    
-                    viewModel.action.send(ProductSelectorView.ProductAction.Toggle())
-                }
             }.padding(.horizontal, 20)
+        }
+    }
+    
+    // MARK: - ProductContent
+    
+    struct ProductContentView: View {
+        
+        @ObservedObject var viewModel: ViewModel.ProductContentViewModel
+        
+        var body: some View {
+            
+            HStack(alignment: .top, spacing: 16) {
+                
+                if let cardIcon = viewModel.cardIcon {
+                    
+                    cardIcon
+                        .resizable()
+                        .frame(width: 32, height: 32)
+                        .offset(y: -3)
+                }
+                
+                VStack(alignment: .leading, spacing: 0) {
+                    
+                    HStack(alignment: .center, spacing: 10) {
+                        
+                        viewModel.paymentSystemIcon
+                            .frame(width: 24, height: 24)
+                        
+                        Text(viewModel.name)
+                            .font(.textBodyMM14200())
+                            .foregroundColor(.textSecondary)
+                        
+                        Spacer()
+                        
+                        Text(viewModel.balance)
+                            .font(.textBodyMM14200())
+                            .foregroundColor(.textSecondary)
+                        
+                        Image.ic24ChevronDown
+                            .renderingMode(.template)
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(.mainColorsGray)
+                            .rotationEffect(viewModel.isCollapsed == false ? .degrees(0) : .degrees(-90))
+                    }
+                    
+                    HStack {
+                        
+                        if viewModel.numberCard.isEmpty == false {
+                            
+                            Circle()
+                                .frame(width: 3, height: 3)
+                                .foregroundColor(.mainColorsGray)
+                            
+                            Text(viewModel.numberCard)
+                                .font(.textBodySR12160())
+                                .foregroundColor(.mainColorsGray)
+                            
+                            Circle()
+                                .frame(width: 3, height: 3)
+                                .foregroundColor(.mainColorsGray)
+                        }
+                        
+                        if let description = viewModel.description {
+                            
+                            Text(description)
+                                .font(.textBodySR12160())
+                                .foregroundColor(.mainColorsGray)
+                        }
+                    }
+                }
+            }
         }
     }
     
