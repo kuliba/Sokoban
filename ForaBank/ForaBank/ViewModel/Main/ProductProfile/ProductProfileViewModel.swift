@@ -446,8 +446,9 @@ class ProductProfileViewModel: ObservableObject {
                     switch payload.buttonType {
                     case .topLeft:
                         let allowCreditValue = self.productData?.allowCredit == false
+                        let productType = self.productData?.productType.order == 2
 
-                        if allowCreditValue {
+                        if !(allowCreditValue && productType ) {
                             
                         let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttonsTypes: [.refillFromOtherBank, .refillFromOtherProduct], productType: product.productType)
                         self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
