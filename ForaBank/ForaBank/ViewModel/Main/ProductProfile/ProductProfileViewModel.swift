@@ -445,8 +445,18 @@ class ProductProfileViewModel: ObservableObject {
                     
                     switch payload.buttonType {
                     case .topLeft:
+                        let allowCreditValue = self.productData?.allowCredit == false
+
+                        if allowCreditValue {
+                            
                         let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttonsTypes: [.refillFromOtherBank, .refillFromOtherProduct], productType: product.productType)
                         self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
+                        } else {
+                            let alertView = Alert.ViewModel(title: "",
+                                                                 message: "Вклад не предусматривает возможности пополнения. Подробнее в информации по вкладу в деталях",
+                                                                 primary: .init(type: .default, title: "ОК", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}))
+                            self.alert = .init(alertView)
+                        }
                         
                     case .topRight:
                         switch product.productType {
