@@ -99,7 +99,7 @@ class BottomInputViewWithRateView: UIView {
     func commonInit() {
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
-        self.heightAnchor.constraint(equalToConstant: 88).isActive = true
+        self.heightAnchor.constraint(equalToConstant: 122).isActive = true
         setupTextFIeld()
         
         self.currencySwitchButton.setBackgroundColor(color: .white, forState: [.selected])
