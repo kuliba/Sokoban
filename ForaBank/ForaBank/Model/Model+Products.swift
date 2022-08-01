@@ -24,6 +24,17 @@ extension Model {
         
         products.value.values.flatMap({ $0 }).first(where: { $0.id == productId })
     }
+    
+    func product(currency: Currency) -> ProductData.ID? {
+        
+        let product = products.value.values.flatMap {$0}.first(where: { $0.currency == currency.description })
+        
+        guard let product = product else {
+            return nil
+        }
+        
+        return product.id
+    }
 }
 
 //MARK: - Action

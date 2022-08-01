@@ -33,6 +33,9 @@ struct CurrencyWalletView: View {
                         case let selectorViewModel as CurrencySelectorView.ViewModel:
                             CurrencySelectorView(viewModel: selectorViewModel)
                             
+                        case let confirmationViewModel as CurrencyExchangeConfirmationView.ViewModel:
+                            CurrencyExchangeConfirmationView(viewModel: confirmationViewModel)
+                            
                         default:
                             Color.clear
                         }

@@ -55,16 +55,7 @@ extension CurrencySelectorView {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] currencyOperation in
                     
-                    guard let productCardSelector = productCardSelector,
-                          let productAccountSelector = productAccountSelector else {
-                        return
-                    }
-                    
-                    productCardSelector.isDividerHiddable = currencyOperation == .buy ? false : true
-                    productAccountSelector.isDividerHiddable = currencyOperation == .buy ? true : false
-                    
-                    productCardSelector.currencyOperation = currencyOperation
-                    productAccountSelector.currencyOperation = currencyOperation
+                    updateProductSelectors(currencyOperation: currencyOperation)
                     
                 }.store(in: &bindings)
         }
@@ -76,12 +67,7 @@ extension CurrencySelectorView {
                 return nil
             }
             
-            let selectorViewModel: ProductSelectorView.ViewModel = .init(
-                model,
-                title: "Откуда",
-                productType: productData.productType,
-                productViewModel: .init(productData: productData, model: model),
-                currencyOperation: currencyOperation)
+            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, productViewModel: .init(productId: productData.id, productData: productData, model: model))
             
             return selectorViewModel
         }
@@ -93,15 +79,31 @@ extension CurrencySelectorView {
                 return nil
             }
             
-            let selectorViewModel: ProductSelectorView.ViewModel = .init(
-                model,
-                title: "Куда",
-                productType: productData.productType,
-                productViewModel: .init(productData: productData, model: model),
-                currencyOperation: currencyOperation,
-                isDividerHiddable: true)
+            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, productViewModel: .init(productId: productData.id, productData: productData, model: model), isDividerHiddable: true)
             
             return selectorViewModel
+        }
+        
+        private func updateProductSelectors(currencyOperation: CurrencyOperation) {
+            
+            guard let productCardSelector = productCardSelector,
+                  let productAccountSelector = productAccountSelector else {
+                return
+            }
+            
+            withAnimation {
+                
+                let equalityOperation = currencyOperation == .buy
+                
+                productCardSelector.title = equalityOperation ? "Откуда" : "Куда"
+                productAccountSelector.title = equalityOperation ? "Куда" : "Откуда"
+                
+                productCardSelector.isDividerHiddable = equalityOperation ? false : true
+                productAccountSelector.isDividerHiddable = equalityOperation ? true : false
+                
+                productCardSelector.dividerViewModel.pathInset = equalityOperation ? 5 : -5
+                productAccountSelector.dividerViewModel.pathInset = equalityOperation ? 5 : -5
+            }
         }
     }
 }

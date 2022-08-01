@@ -19,14 +19,14 @@ class CurrencyWalletViewModel: ObservableObject {
     
     @Published var items: [CurrencyWalletItem]
     @Published var state: ButtonActionState
+    @Published var currency: Currency
+    @Published var currencyItem: CurrencyItemViewModel
+    @Published var currencyOperation: CurrencyOperation
+    @Published var currencySymbol: String
     @Published var buttonStyle: ButtonSimpleView.ViewModel.ButtonStyle
     @Published var selectorViewModel: CurrencySelectorView.ViewModel?
+    @Published var confirmationViewModel: CurrencyExchangeConfirmationView.ViewModel?
     @Published var isShouldScrollToTop: Bool
-
-    private let currency: Currency
-    private let currencyItem: CurrencyItemViewModel
-    private let currencyOperation: CurrencyOperation
-    private let currencySymbol: String
     
     let backButton: NavigationButtonViewModel
     
@@ -37,16 +37,47 @@ class CurrencyWalletViewModel: ObservableObject {
         
         guard let self = self else { return }
         
-        self.appendSelectorViewIfNeeds()
-        self.isShouldScrollToTop = true
-        self.model.action.send(ModelAction.Products.Update.Fast.All())
+        if self.selectorViewModel == nil {
+            
+            self.isShouldScrollToTop = true
+            self.appendSelectorViewIfNeeds()
+            
+        } else {
+            
+            self.state = .spinner
+            self.sendExchangeStartRequest()
+        }
     }
     
-    let model: Model
+    private let model: Model
     let title = "Обмен валют"
     let icon: Image = .init("Logo Fora Bank")
     
     private var bindings = Set<AnyCancellable>()
+    
+    private var productType: ProductType? {
+        
+        var productId: ProductData.ID?
+        
+        if let selectorViewModel = selectorViewModel,
+           let productCardSelector = selectorViewModel.productCardSelector,
+           let productAccountSelector = selectorViewModel.productAccountSelector {
+            
+            switch currencyOperation {
+            case .buy:
+                productId = productAccountSelector.productViewModel.productId
+            case .sell:
+                productId = productCardSelector.productViewModel.productId
+            }
+        }
+        
+        guard let productId = productId,
+              let productData = model.product(productId: productId) else {
+            return nil
+        }
+        
+        return productData.productType
+    }
     
     enum ButtonActionState {
         
@@ -80,15 +111,33 @@ class CurrencyWalletViewModel: ObservableObject {
        
         items = [listViewModel, swapViewModel]
         
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Start.Response:
+                    handleExchangeStartResponse(payload: payload)
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+        
         listViewModel.$currency
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] currency in
                 
+                self.currency = currency
                 swapViewModel.currency = currency
                 
                 if let selectorViewModel = selectorViewModel {
                     selectorViewModel.currency = currency
                 }
+                
+                setProductSelectorData(currency: currency)
+                
             }.store(in: &bindings)
         
         $buttonStyle
@@ -103,28 +152,14 @@ class CurrencyWalletViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] currencyOperation in
                 
+                self.currencyOperation = currencyOperation
+                
                 if let selectorViewModel = selectorViewModel {
-                    
-                    if #available(iOS 14.0, *) {
-
-                        withAnimation {
-                            selectorViewModel.currencyOperation = currencyOperation
-                        }
+                    withAnimation {
+                        selectorViewModel.currencyOperation = currencyOperation
                     }
                 }
             }.store(in: &bindings)
-    }
-    
-    func resetCurrencySwap() {
-        
-        let currencySwap = swapViewModel.currencySwap
-        let сurrencyCurrentSwap = swapViewModel.сurrencyCurrentSwap
-        
-        if currencySwap.textField.isEditing == true {
-            currencySwap.action.send(CurrencySwapAction.TextField.Update(currencyAmount: currencySwap.currencyAmount))
-        } else {
-            сurrencyCurrentSwap.action.send(CurrencySwapAction.TextField.Update(currencyAmount: сurrencyCurrentSwap.currencyAmount))
-        }
     }
     
     private func makeListViewModel() -> CurrencyListView.ViewModel {
@@ -182,16 +217,97 @@ class CurrencyWalletViewModel: ObservableObject {
         return productSelectorViewModel
     }
     
+    private func makeConfirmationViewModel(data: CurrencyExchangeConfirmationData) {
+        
+        if confirmationViewModel == nil {
+            
+            confirmationViewModel = .init(response: data, model: model)
+            
+            if let confirmationViewModel = confirmationViewModel {
+                
+                withAnimation {
+                    items.append(confirmationViewModel)
+                }
+            }
+        }
+    }
+    
     private func appendSelectorViewIfNeeds() {
         
-        if selectorViewModel == nil {
+        model.action.send(ModelAction.Products.Update.Fast.All())
+        selectorViewModel = makeSelectorViewModel()
+        
+        guard let selectorViewModel = self.selectorViewModel else {
+            return
+        }
+        
+        withAnimation {
+            items.append(selectorViewModel)
+        }
+    }
+    
+    private func setProductSelectorData(currency: Currency) {
+        
+        if let selectorViewModel = selectorViewModel,
+           let productAccountSelector = selectorViewModel.productAccountSelector {
             
-            let selectorViewModel = makeSelectorViewModel()
-            self.selectorViewModel = selectorViewModel
-            
-            withAnimation {
-                items.append(selectorViewModel)
+            if let productId = model.product(currency: currency) {
+                productAccountSelector.setProductSelectorData(productId: productId)
             }
+        }
+    }
+    
+    private func sendExchangeStartRequest() {
+        
+        if let selectorViewModel = selectorViewModel,
+           let productCardSelector = selectorViewModel.productCardSelector,
+           let productAccountSelector = selectorViewModel.productAccountSelector {
+            
+            switch currencyOperation {
+            case .buy:
+                
+                model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start.Request(
+                    amount: swapViewModel.сurrencyCurrentSwap.currencyAmount,
+                    currency: swapViewModel.сurrencyCurrentSwap.currency.description,
+                    productFrom: productCardSelector.productViewModel.productId,
+                    productTo: productAccountSelector.productViewModel.productId))
+                
+            case .sell:
+                
+                model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start.Request(
+                    amount: swapViewModel.currencySwap.currencyAmount,
+                    currency: swapViewModel.currencySwap.currency.description,
+                    productFrom: productAccountSelector.productViewModel.productId,
+                    productTo: productCardSelector.productViewModel.productId))
+            }
+        }
+    }
+    
+    private func handleExchangeStartResponse(payload: ModelAction.CurrencyWallet.ExchangeOperations.Start.Response) {
+        
+        switch payload.result {
+        case let .success(response):
+            
+            state = .button
+            makeConfirmationViewModel(data: response)
+            
+            if let productType = productType {
+                model.action.send(ModelAction.Products.Update.ForProductType(productType: productType))
+            }
+            
+        case .failure: break
+        }
+    }
+    
+    func resetCurrencySwap() {
+        
+        let currencySwap = swapViewModel.currencySwap
+        let сurrencyCurrentSwap = swapViewModel.сurrencyCurrentSwap
+        
+        if currencySwap.textField.isEditing == true {
+            currencySwap.action.send(CurrencySwapAction.TextField.Update(currencyAmount: currencySwap.currencyAmount))
+        } else {
+            сurrencyCurrentSwap.action.send(CurrencySwapAction.TextField.Update(currencyAmount: сurrencyCurrentSwap.currencyAmount))
         }
     }
 }
