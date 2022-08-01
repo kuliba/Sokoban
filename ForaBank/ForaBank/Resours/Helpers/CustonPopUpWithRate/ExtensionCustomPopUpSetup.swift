@@ -107,6 +107,7 @@ extension CustomPopUpWithRateView {
                                 vc.addCloseButton()
                                 vc.title = "Подтвердите реквизиты"
                                 let navVC = UINavigationController(rootViewController: vc)
+                                navVC.modalPresentationStyle = .fullScreen
                                 self?.present(navVC, animated: true)
                                 
                             } else {
