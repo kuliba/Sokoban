@@ -50,10 +50,10 @@ extension ContactInputViewController {
         countryListView.anchor(
             top: view.safeAreaLayoutGuide.topAnchor,
             left: view.leftAnchor,
-            right: view.rightAnchor,
-            paddingTop: 30, height: 100)
+            right: view.rightAnchor, height: 100)
         
         setupConstraint()
+        self.parent?.navigationItem.searchController = nil
     }
     
     func configure(with: CountriesList?, byPhone: Bool) {
@@ -182,8 +182,7 @@ extension ContactInputViewController {
             paddingBottom: 30)
         
         stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                         left: view.leftAnchor, right: view.rightAnchor,
-                         paddingTop: 80)
+                         left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20)
         
     }
     
