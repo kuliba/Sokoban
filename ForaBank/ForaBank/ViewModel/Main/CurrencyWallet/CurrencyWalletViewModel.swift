@@ -26,30 +26,17 @@ class CurrencyWalletViewModel: ObservableObject {
     @Published var buttonStyle: ButtonSimpleView.ViewModel.ButtonStyle
     @Published var selectorViewModel: CurrencySelectorView.ViewModel?
     @Published var confirmationViewModel: CurrencyExchangeConfirmationView.ViewModel?
+    @Published var successViewModel: CurrencyExchangeSuccessView.ViewModel?
     @Published var isShouldScrollToTop: Bool
-    
-    let backButton: NavigationButtonViewModel
     
     private lazy var listViewModel: CurrencyListView.ViewModel = makeListViewModel()
     private lazy var swapViewModel: CurrencySwapView.ViewModel = makeSwapViewModel()
-    
-    lazy var continueButton: ButtonSimpleView.ViewModel = .init(title: "Продолжить", style: buttonStyle) { [weak self] in
-        
-        guard let self = self else { return }
-        
-        if self.selectorViewModel == nil {
-            
-            self.isShouldScrollToTop = true
-            self.appendSelectorViewIfNeeds()
-            
-        } else {
-            
-            self.state = .spinner
-            self.sendExchangeStartRequest()
-        }
-    }
+    lazy var continueButton: ButtonSimpleView.ViewModel = makeContinueButtonViewModel()
     
     private let model: Model
+    private let closeAction: () -> Void
+    
+    let backButton: NavigationButtonViewModel
     let title = "Обмен валют"
     let icon: Image = .init("Logo Fora Bank")
     
@@ -88,6 +75,7 @@ class CurrencyWalletViewModel: ObservableObject {
     init(_ model: Model, currency: Currency, currencyItem: CurrencyItemViewModel, currencyOperation: CurrencyOperation, currencySymbol: String, items: [CurrencyWalletItem], state: ButtonActionState, action: @escaping () -> Void) {
         
         self.model = model
+        self.closeAction = action
         self.currency = currency
         self.currencyItem = currencyItem
         self.currencyOperation = currencyOperation
@@ -117,7 +105,10 @@ class CurrencyWalletViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Start.Response:
-                    handleExchangeStartResponse(payload: payload)
+                    handleExchangeStartResponse(payload)
+                    
+                case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Approve.Response:
+                    handleExchangeApproveResponse(payload)
                     
                 default:
                     break
@@ -136,7 +127,8 @@ class CurrencyWalletViewModel: ObservableObject {
                     selectorViewModel.currency = currency
                 }
                 
-                setProductSelectorData(currency: currency)
+                setCurrencySymbol(currency)
+                setProductSelectorData(currency)
                 
             }.store(in: &bindings)
         
@@ -188,6 +180,15 @@ class CurrencyWalletViewModel: ObservableObject {
             quotesInfo: "1\(currencySymbol) = \(currencyRate) ₽")
     }
     
+    private func makeContinueButtonViewModel() -> ButtonSimpleView.ViewModel {
+        
+        .init(title: "Продолжить", style: buttonStyle) { [weak self] in
+            
+            guard let self = self else { return }
+            self.continueButtonAction()
+        }
+    }
+    
     private func makeSelectorViewModel() -> CurrencySelectorView.ViewModel {
         
         let productAccounts = model.products.value[.account]
@@ -236,6 +237,48 @@ class CurrencyWalletViewModel: ObservableObject {
         }
     }
     
+    private func continueButtonAction() {
+        
+        if selectorViewModel == nil {
+            
+            isShouldScrollToTop = true
+            appendSelectorViewIfNeeds()
+            
+        } else {
+            
+            if confirmationViewModel == nil {
+                
+                state = .spinner
+                sendExchangeStartRequest()
+
+            } else {
+                
+                if successViewModel == nil {
+                
+                    state = .spinner
+                    sendExchangeApproveRequest()
+                    
+                } else {
+                    
+                    closeAction()
+                }
+            }
+        }
+    }
+    
+    private func setCurrencySymbol(_ currency: Currency) {
+        
+        let currencyList = model.currencyList.value
+        let currencyData = currencyList.first(where: { $0.code == currency.description })
+        
+        guard let currencyData = currencyData,
+              let currencySymbol = currencyData.currencySymbol else {
+            return
+        }
+        
+        self.currencySymbol = currencySymbol
+    }
+    
     private func appendSelectorViewIfNeeds() {
         
         model.action.send(ModelAction.Products.Update.Fast.All())
@@ -250,7 +293,7 @@ class CurrencyWalletViewModel: ObservableObject {
         }
     }
     
-    private func setProductSelectorData(currency: Currency) {
+    private func setProductSelectorData(_ currency: Currency) {
         
         if let selectorViewModel = selectorViewModel,
            let productAccountSelector = selectorViewModel.productAccountSelector {
@@ -287,7 +330,11 @@ class CurrencyWalletViewModel: ObservableObject {
         }
     }
     
-    private func handleExchangeStartResponse(payload: ModelAction.CurrencyWallet.ExchangeOperations.Start.Response) {
+    private func sendExchangeApproveRequest() {
+        model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve.Request())
+    }
+    
+    private func handleExchangeStartResponse(_ payload: ModelAction.CurrencyWallet.ExchangeOperations.Start.Response) {
         
         switch payload.result {
         case let .success(response):
@@ -304,6 +351,39 @@ class CurrencyWalletViewModel: ObservableObject {
             }
             
         case .failure: break
+        }
+    }
+    
+    private func handleExchangeApproveResponse(_ payload: ModelAction.CurrencyWallet.ExchangeOperations.Approve.Response) {
+        
+        switch payload {
+        case .successed:
+            
+            let formatter: NumberFormatter = .currency(currencySymbol)
+            
+            guard let confirmationViewModel = confirmationViewModel,
+                  let number = formatter.number(from: confirmationViewModel.currencySum),
+                  let productType = productType else {
+                return
+            }
+            
+            successViewModel = .init(
+                state: .success,
+                amount: number.doubleValue,
+                currency: currency,
+                delay: 2,
+                model: model)
+            
+            if let successViewModel = successViewModel {
+                items.append(successViewModel)
+            }
+            
+            state = .button
+            continueButton.title = "На главную"
+            
+            model.action.send(ModelAction.Products.Update.ForProductType(productType: productType))
+            
+        case .failed(_): break
         }
     }
     

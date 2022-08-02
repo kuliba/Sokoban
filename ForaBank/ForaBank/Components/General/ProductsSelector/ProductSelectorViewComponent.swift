@@ -55,6 +55,14 @@ extension ProductSelectorView {
         
         private func bind() {
             
+            model.products
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] productsData in
+                    
+                    setProductSelectorData(products: productsData, productId: productViewModel.productId)
+                    
+                }.store(in: &bindings)
+            
             action
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] action in
@@ -117,6 +125,17 @@ extension ProductSelectorView {
             case .deposit: return nil
             case .loan: return nil
             }
+        }
+        
+        private func setProductSelectorData(products: ProductsData, productId: ProductData.ID) {
+            
+            let productData = products.values.flatMap { $0 }.first(where: { $0.id == productId })
+            
+            guard let productData = productData else {
+                return
+            }
+            
+            self.productViewModel = .init(productId: productId, productData: productData, model: model)
         }
         
         func setProductSelectorData(productId: ProductData.ID) {

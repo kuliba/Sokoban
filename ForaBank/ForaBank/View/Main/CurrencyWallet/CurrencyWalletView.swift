@@ -36,6 +36,9 @@ struct CurrencyWalletView: View {
                         case let confirmationViewModel as CurrencyExchangeConfirmationView.ViewModel:
                             CurrencyExchangeConfirmationView(viewModel: confirmationViewModel)
                             
+                        case let successViewModel as CurrencyExchangeSuccessView.ViewModel:
+                            CurrencyExchangeSuccessView(viewModel: successViewModel)
+                            
                         default:
                             Color.clear
                         }
