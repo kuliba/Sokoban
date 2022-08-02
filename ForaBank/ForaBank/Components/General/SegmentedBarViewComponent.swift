@@ -47,22 +47,29 @@ struct SegmentedBarView: View {
                 .font(.textH4M16240())
                 .padding(.bottom, 6)
             
-                ZStack {
+                if viewModel.totalValue != 0 {
+                    ZStack {
                 
-                    HStack(alignment: .center, spacing: 0) {
+                        HStack(alignment: .center, spacing: 0) {
                     
-                        ForEach(viewModel.value.sorted(by: {$0.value > $1.value}), id: \.key) { key, value in
+                            ForEach(viewModel
+                                .value.sorted(by: {$0.value > $1.value}), id: \.key) { key, value in
                         
-                            Rectangle()
-                                .frame(width: geometry.size.width
-                                            * CGFloat(value / viewModel.totalValue),
-                                       height: 8)
-                                .foregroundColor(key.color)
-                                .animation(.easeInOut)
+                                    Rectangle()
+                                        .frame(width: geometry.size.width
+                                            * CGFloat(value / viewModel.totalValue),height: 8)
+                                        .foregroundColor(key.color)
+                                        .animation(.easeInOut)
+                            }
                         }
-                    }
+                    }.cornerRadius(8)
+                
+                } else {
+                    
+                    RoundedRectangle(cornerRadius: 8)
+                        .frame(width: geometry.size.width, height: 8)
+                        .foregroundColor(.mainColorsGrayLightest)
                 }
-                .cornerRadius(8)
             }
         }
     }
@@ -73,8 +80,14 @@ struct SegmentedBarView: View {
 struct SegmentedBarView_Previews: PreviewProvider {
     static var previews: some View {
         
-        SegmentedBarView(viewModel: .spending)
-            .previewLayout(.fixed(width: 335, height: 100))
+        Group {
+            SegmentedBarView(viewModel: .spending)
+                .previewLayout(.fixed(width: 335, height: 100))
+            
+            SegmentedBarView(viewModel: .zero)
+                .previewLayout(.fixed(width: 335, height: 100))
+            
+        }
     }
 }
 
@@ -86,5 +99,8 @@ extension SegmentedBarView.ViewModel {
                                                              .internalOperations: 300.35,
                                                              .stateServices: 500.0,
                                                              .transport: 100.00],
+                                                     label: "Траты за август")
+    
+    static let zero = SegmentedBarView.ViewModel(value: [:],
                                                      label: "Траты за август")
 }
