@@ -121,6 +121,8 @@ class ChangeReturnCountryController: UIViewController {
         view.addSubview(doneButton)
         doneButton.anchor(left: stackView.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: stackView.rightAnchor,
                           paddingLeft: 20, paddingBottom: 20, paddingRight: 20, height: 44)
+        self.parent?.navigationItem.searchController = nil
+
     }
     
     func setupData(with model: ConfirmViewControllerModel) {
