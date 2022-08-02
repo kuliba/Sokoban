@@ -377,7 +377,3 @@ struct CurrencyRatesListView_Previews: PreviewProvider {
         }
     }
 }
-
-
-
-

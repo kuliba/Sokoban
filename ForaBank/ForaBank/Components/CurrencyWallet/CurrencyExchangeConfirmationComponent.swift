@@ -10,10 +10,11 @@ import Combine
 
 //MARK: - ViewModel
 
-extension CurrencyExchangeTableConfirmationView {
+extension CurrencyExchangeConfirmationView {
     
-    class ViewModel: ObservableObject {
+    class ViewModel: ObservableObject, CurrencyWalletItem {
         
+        let id = UUID().uuidString
         let sum: String
         let commission: String
         let currencySum: String
@@ -35,27 +36,26 @@ extension CurrencyExchangeTableConfirmationView {
                   let fee = response.fee,
                   let creditAmount = response.creditAmount,
                   let currencyPayerCode = response.currencyPayer?.description,
-                  let currencyPayeeCode = response.currencyPayee?.description
-                  
-            else { return nil }
+                  let currencyPayeeCode = response.currencyPayee?.description else {
+                return nil
+            }
             
-            self.sum = model.amountFormatted(amount: debitAmount,
+            sum = model.amountFormatted(amount: debitAmount,
                                              currencyCode: currencyPayerCode,
                                              style: .normal) ?? String(debitAmount)
-            self.commission = model.amountFormatted(amount: fee,
+            commission = model.amountFormatted(amount: fee,
                                                     currencyCode: currencyPayerCode,
                                                     style: .normal) ?? String(fee)
-            self.currencySum = model.amountFormatted(amount: creditAmount,
+            currencySum = model.amountFormatted(amount: creditAmount,
                                                      currencyCode: currencyPayeeCode,
                                                      style: .normal) ?? String(creditAmount)
         }
-        
     }
 }
 
 //MARK: - View
 
-struct CurrencyExchangeTableConfirmationView: View {
+struct CurrencyExchangeConfirmationView: View {
     
     @ObservedObject var viewModel: ViewModel
     
@@ -96,26 +96,23 @@ struct CurrencyExchangeTableConfirmationView: View {
     }
 }
 
+// MARK: - Preview Content
+
+extension CurrencyExchangeConfirmationView.ViewModel {
+    
+    static var sample = CurrencyExchangeConfirmationView.ViewModel(
+        sum: "64,50 ₽",
+        commission: "0,00 ₽",
+        currencySum: "1 $")
+}
+
 //MARK: - Preview
 
-struct CurrencyExchangeTableConfirmationView_Previews: PreviewProvider {
+struct CurrencyExchangeConfirmationView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        Group {
-            
-            CurrencyExchangeTableConfirmationView(viewModel: .sample)
-                .previewLayout(.fixed(width: 375, height: 160))
-        }
+        CurrencyExchangeConfirmationView(viewModel: .sample)
+            .previewLayout(.fixed(width: 375, height: 160))
     }
 }
-
-extension CurrencyExchangeTableConfirmationView.ViewModel {
-    
-    static var sample = CurrencyExchangeTableConfirmationView
-                            .ViewModel(sum: "64,50 \u{20BD}",
-                                       commission: "0,00 \u{20BD}",
-                                       currencySum: "1 $")
-}
-
-
