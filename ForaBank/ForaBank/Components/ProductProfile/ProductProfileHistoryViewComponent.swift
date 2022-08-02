@@ -21,17 +21,26 @@ extension ProductProfileHistoryView {
         let productId: ProductData.ID
         //TODO: button action
         lazy var header: HeaderViewModel = HeaderViewModel(button: .init(action: {}))
+        private var currentMonth: String {
+            let now = Date()
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "LLLL"
+            return dateFormatter.string(from: now)
+        }
         
+        @Published var segmentBarViewModel: SegmentedBarView.ViewModel?
         @Published var content: Content
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        internal init(productId: ProductData.ID, state: Content, model: Model = .emptyMock) {
+        internal init(productId: ProductData.ID, state: Content, model: Model = .emptyMock,
+                      segmentBarVM: SegmentedBarView.ViewModel? = .spending) {
             
             self.productId = productId
             self.content = state
             self.model = model
+            self.segmentBarViewModel = segmentBarVM
         }
         
         init(_ model: Model, productId: ProductData.ID) {
@@ -70,7 +79,10 @@ extension ProductProfileHistoryView {
                     guard let storage = storages[id] else {
                         return
                     }
-
+                    
+                    updateSegmentedBar(productId: id, statements: storage.statements)
+                    
+                    
                     Task.detached(priority: .high) { [self] in
                         
                         let update = await reduce(content: content, statements: storage.statements, images: model.images.value, model: model) { [weak self] statementId in
@@ -129,6 +141,36 @@ extension ProductProfileHistoryView {
                     }
      
                 }.store(in: &bindings)
+        }
+        
+        func updateSegmentedBar(productId: ProductData.ID,
+                                statements: [ProductStatementData]) {
+            
+            guard let product = model.product(productId: productId),
+                  product.productType != .loan else { return }
+            
+                let dict = statements
+                    .filter( { (product.productType != .deposit
+                        ? $0.operationType == OperationType.debit
+                        : $0.operationType == OperationType.credit)
+                        && Calendar.current.component(.month, from: $0.date) ==
+                           Calendar.current.component(.month, from: Date())
+                    })
+                    .reduce(into: [ ProductStatementGroup: Double]()) {
+                        $0[.init($1.groupName), default: 0] += $1.amount
+                    }
+                let preLabel = product.productType != .deposit
+                    ? "Траты за"
+                    : "Поступило за"
+                segmentBarViewModel = .init(value: dict, label: "\(preLabel) \(currentMonth)")
+            
+                //Debug
+                dict.forEach { print("mdy: \($0.key) - \($0.value) )")
+                }
+                Dictionary(grouping: statements, by: {$0.groupName}).forEach { print("mdy: \($0.key) )")
+                }
+                //endDebug
+            
         }
         
         func updateContent(with groups: [HistoryListViewModel.DayGroupViewModel]) {
@@ -485,14 +527,20 @@ struct ProductProfileHistoryView: View {
             
             HeaderView(viewModel: viewModel.header)
                 .padding(.bottom, 15)
-
+            
             switch viewModel.content {
             case .empty(let emptyListViewModel):
                 EmptyListView(viewModel: emptyListViewModel)
                     .padding(.top, 20)
                 
             case let .list(listViewModel):
-                ListView(viewModel: listViewModel)
+                VStack(spacing: 64) {
+                    
+                    if let segmentedVM = viewModel.segmentBarViewModel {
+                        SegmentedBarView(viewModel: segmentedVM)
+                    }
+                    ListView(viewModel: listViewModel)
+                }
                 
             case .loading:
                 LoadingView()

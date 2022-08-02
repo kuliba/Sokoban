@@ -10,15 +10,15 @@ import SwiftUI
 
 enum ProductStatementGroup: String, Identifiable {
  
-    case internalOperations = "Внутренние операции"
+    case internalOperations = "Перевод внутри банка"
     case services = "Услуги"
-    case others = "Прочее"
+    case others = "Прочие операции"
     case beauty = "Красота"
     case education = "Образование"
     case hobby = "Хобби и развлечения"
-    case stateServices = "Госуслуги"
+    case stateServices = "Оплата услуг/Налоги и госуслуги"
     case transport = "Транспорт"
-    case communicationInternetTV = "Связь, интернет, ТВ"
+    case communicationInternetTV = "Оплата услуг/Связь, интернет, ТВ"
     case aviaTickets = "Авиа билеты"
     case health = "Здоровье"
     case houseRenovation = "Дом, ремонт"
@@ -55,6 +55,14 @@ enum ProductStatementGroup: String, Identifiable {
         case .restAndTravel: return .bGIconAmberLight
         case .clothesAnAccessories: return .bGIconYellowLight
         }
+    }
+    
+    init(_ rawString: String) {
         
+        if let group = Self.init(rawValue: rawString) {
+            self = group
+        } else {
+            self = .others
+        }
     }
 }
