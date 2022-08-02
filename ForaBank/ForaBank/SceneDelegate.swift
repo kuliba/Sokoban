@@ -35,6 +35,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
         legacyNavigationBarBackground()
         setAlertAppearance()
+        setIconBangeNumber()
     }
     
     //FIXME: remove after refactor paymnets
@@ -78,6 +79,11 @@ extension SceneDelegate {
     func setAlertAppearance() {
         
         UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .black
+    }
+    
+    func setIconBangeNumber() {
+        
+        UIApplication.shared.applicationIconBadgeNumber = 0
     }
 }
 
