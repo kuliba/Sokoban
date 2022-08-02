@@ -62,16 +62,16 @@ struct RootView: View {
                 switch link {
                 case .messages(let messagesHistoryViewModel):
                     MessagesHistoryView(viewModel: messagesHistoryViewModel)
-                        .zIndex(1)
-                    
+                        .zIndex(.greatestFiniteMagnitude)
+
                 case .me2me(let requestMeToMeModel):
                     MeToMeRequestView(viewModel: requestMeToMeModel)
-                        .zIndex(1)
-                    
+                        .zIndex(.greatestFiniteMagnitude)
+
                 case .c2b:
                     C2BDetailsView()
-                        .zIndex(1)
-                    
+                        .zIndex(.greatestFiniteMagnitude)
+
                 }
             }
             
