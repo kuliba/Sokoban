@@ -13,14 +13,15 @@ extension SegmentedBarView {
     
     class ViewModel: ObservableObject {
         
-        @Published var value: [Double]
-        @Published var colors = [Color.bGIconRedLight, Color.bGIconPurpleLight, Color.bGIconPinkLight, Color.bGIconPinkLightest, Color.bGIconDeepPurpleMedium, Color.bGIconDeepPurpleLight, Color.bGIconDeepPurpleLightest, Color.bGIconIndigoLight, Color.bGIconIndigoLightest, Color.bGIconBlueLight, Color.bGIconBlueLightest, Color.bGIconTealLight, Color.bGIconGreenLight, Color.bGIconGreenLightest, Color.bGIconLimeLight, Color.bGIconDeepOrangeLight, Color.bGIconOrangeLight, Color.bGIconOrangeLightest, Color.bGIconAmberLight, Color.bGIconYellowLight, Color.bGIconDeepIndigoLight, Color.bGIconDeepBlueLight, Color.bGIconCyanLight, Color.bGIconDeepLimeLight]
+        @Published var value: [ProductStatementGroup: Double]
+        @Published var label: String
         @Published var totalValue: Double
         
-        internal init(value: [Double]) {
+        init(value: [ProductStatementGroup: Double], label: String) {
             
-            self.totalValue = value.reduce(0, +)
+            self.totalValue = value.values.reduce(0, +)
             self.value = value
+            self.label = label
         }
     }
 }
@@ -33,33 +34,36 @@ struct SegmentedBarView: View {
     
     var body: some View {
         
-        
         GeometryReader { geometry in
             
-            ZStack {
+            VStack {
+                HStack {
                 
-                HStack(alignment: .center, spacing: 0) {
-                    
-                    ForEach(viewModel.value.indices) { i in
-                        
-                        Rectangle()
-                            .frame(width: geometry.size.width * CGFloat(viewModel.value[i] / viewModel.totalValue), height: 44)
-                            .foregroundColor(viewModel.colors[i])
-                            .animation(.easeInOut)
-                    }
-                }
-                
-                HStack(alignment: .center) {
-                    
-                    Text("Траты за август")
-                    
+                    Text(viewModel.label)
                     Spacer()
-                    
                     Text(viewModel.totalValue.currencyFormatter())
                 }
-                .padding(.horizontal, 16)
+                .foregroundColor(.textSecondary)
+                .font(.textH4M16240())
+                .padding(.bottom, 6)
+            
+                ZStack {
+                
+                    HStack(alignment: .center, spacing: 0) {
+                    
+                        ForEach(viewModel.value.sorted(by: {$0.value > $1.value}), id: \.key) { key, value in
+                        
+                            Rectangle()
+                                .frame(width: geometry.size.width
+                                            * CGFloat(value / viewModel.totalValue),
+                                       height: 8)
+                                .foregroundColor(key.color)
+                                .animation(.easeInOut)
+                        }
+                    }
+                }
+                .cornerRadius(8)
             }
-            .cornerRadius(8)
         }
     }
 }
@@ -78,5 +82,9 @@ struct SegmentedBarView_Previews: PreviewProvider {
 
 extension SegmentedBarView.ViewModel {
     
-    static let spending = SegmentedBarView.ViewModel(value: [100, 400, 50, 200, 500, 100, 300, 10, 100, 300])
+    static let spending = SegmentedBarView.ViewModel(value: [.services: 1000.24,
+                                                             .internalOperations: 300.35,
+                                                             .stateServices: 500.0,
+                                                             .transport: 100.00],
+                                                     label: "Траты за август")
 }
