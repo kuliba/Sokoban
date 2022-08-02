@@ -28,6 +28,7 @@ struct MessageTextView: UIViewRepresentable {
         textView.isEditable = false
         textView.isUserInteractionEnabled = true
         textView.dataDetectorTypes = [.address, .link, .phoneNumber]
+        textView.textContainerInset = .zero
 
         return textView
     }
