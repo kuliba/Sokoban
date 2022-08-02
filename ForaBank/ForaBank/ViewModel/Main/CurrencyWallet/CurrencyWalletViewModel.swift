@@ -204,6 +204,10 @@ class CurrencyWalletViewModel: ObservableObject {
         if let productCardSelector = productSelectorViewModel.productCardSelector,
            let productAccountSelector = productSelectorViewModel.productAccountSelector {
             
+            if let productId = model.product(currency: currency) {
+                productAccountSelector.setProductSelectorData(productId: productId)
+            }
+            
             productCardSelector.productViewModel.$isCollapsed
                 .combineLatest(productAccountSelector.productViewModel.$isCollapsed)
                 .receive(on: DispatchQueue.main)
@@ -291,7 +295,11 @@ class CurrencyWalletViewModel: ObservableObject {
             state = .button
             makeConfirmationViewModel(data: response)
             
-            if let productType = productType {
+            if let productType = productType, let creditAmount = response.creditAmount, let currencyPayee = response.currencyPayee {
+                
+                let title = NumberFormatter.decimal(creditAmount)
+                continueButton.title = "Купить \(title) \(currencyPayee.description)"
+                
                 model.action.send(ModelAction.Products.Update.ForProductType(productType: productType))
             }
             
