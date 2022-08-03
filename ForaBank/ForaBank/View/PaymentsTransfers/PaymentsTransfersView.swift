@@ -155,13 +155,13 @@ struct PaymentsTransfersView: View {
             case let .meToMe(viewModel):
                 MeToMeView(viewModel: viewModel)
                     .edgesIgnoringSafeArea(.bottom)
-                    .frame(height: 440)
+                    .frame(height: 474)
                 
             case .anotherCard(let model):
                 AnotherCardView(viewModel: model)
                     .edgesIgnoringSafeArea(.bottom)
                     .navigationBarTitle("", displayMode: .inline)
-                    .frame(height: 460)
+                    .frame(height: 494)
             }
         }
         .sheet(item: $viewModel.sheet, content: { sheet in
