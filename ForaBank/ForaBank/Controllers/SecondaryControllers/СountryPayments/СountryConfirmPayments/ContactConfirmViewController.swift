@@ -924,8 +924,11 @@ class ContactConfurmViewController: UIViewController {
 
                     self.dismissActivity()
                     self.doneButtonIsEnabled(false)
-                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
-                             
+                    
+                    if let error = model.errorMessage {
+                        
+                        self.showAlert(with: "Ошибка", and: error)
+                    }
                 }
             }
             
@@ -1004,7 +1007,10 @@ class ContactConfurmViewController: UIViewController {
                     }
                 } else {
                     self.doneButtonIsEnabled(false)
-                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
+                    if let error = model.errorMessage {
+                        
+                        self.showAlert(with: "Ошибка", and: error)
+                    }
                 }
             }
         }
