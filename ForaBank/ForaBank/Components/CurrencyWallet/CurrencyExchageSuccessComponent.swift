@@ -14,7 +14,7 @@ extension CurrencyExchangeSuccessView {
     
     class ViewModel: ObservableObject, CurrencyWalletItem {
         
-        let id: String
+        var id: String { title }
         let icon: Image
         let title: String
         let amount: String
@@ -35,9 +35,8 @@ extension CurrencyExchangeSuccessView {
             }
         }
             
-        internal init(id: String = UUID().uuidString, icon: Image, title: String, amount: String, delay: TimeInterval?) {
+        internal init(icon: Image, title: String, amount: String, delay: TimeInterval?) {
             
-            self.id = id
             self.icon = icon
             self.title = title
             self.amount = amount
@@ -47,7 +46,6 @@ extension CurrencyExchangeSuccessView {
         init(state: State, amount: Double, currency: Currency,
              delay: TimeInterval?, model: Model ) {
                 
-            self.id = UUID().uuidString
             self.icon = state.appearance.icon
             self.title = state.appearance.text
             self.amount = model.amountFormatted(amount: amount,

@@ -223,7 +223,9 @@ struct CurrencyRatesListView: View {
                     }.padding(.horizontal, 20)
                 }
             }
-        }.padding(.vertical, 20)
+        }
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(.bottom, 48)
     }
 }
 
@@ -306,7 +308,10 @@ extension CurrencyRatesListView {
                 
                 Spacer()
                 
-            }.padding(.horizontal, 20)
+            }
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(.horizontal, 20)
+            .padding(.bottom, 20)
         }
     }
 }
