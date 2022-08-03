@@ -41,14 +41,16 @@ extension CurrencyExchangeConfirmationView {
             }
             
             sum = model.amountFormatted(amount: debitAmount,
-                                             currencyCode: currencyPayerCode,
-                                             style: .normal) ?? String(debitAmount)
+                                        currencyCode: currencyPayerCode,
+                                        style: .fraction) ?? String(debitAmount)
+            
             commission = model.amountFormatted(amount: fee,
-                                                    currencyCode: currencyPayerCode,
-                                                    style: .normal) ?? String(fee)
+                                               currencyCode: currencyPayerCode,
+                                               style: .fraction) ?? String(fee)
+            
             currencySum = model.amountFormatted(amount: creditAmount,
-                                                     currencyCode: currencyPayeeCode,
-                                                     style: .normal) ?? String(creditAmount)
+                                                currencyCode: currencyPayeeCode,
+                                                style: .fraction) ?? String(creditAmount)
         }
     }
 }

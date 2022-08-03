@@ -191,7 +191,7 @@ struct CurrencyListView: View {
                     }
                 }.padding(.horizontal, 20)
             }
-        }.sheet(item: $viewModel.bottomSheet) { sheetType in
+        }.bottomSheet(item: $viewModel.bottomSheet) { sheetType in
             
             switch sheetType.sheetType {
             case .placeholder:

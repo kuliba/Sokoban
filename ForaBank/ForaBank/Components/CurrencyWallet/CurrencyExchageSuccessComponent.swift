@@ -12,8 +12,9 @@ import Combine
 
 extension CurrencyExchangeSuccessView {
     
-    class ViewModel: ObservableObject {
+    class ViewModel: ObservableObject, CurrencyWalletItem {
         
+        var id: String { title }
         let icon: Image
         let title: String
         let amount: String
@@ -35,6 +36,7 @@ extension CurrencyExchangeSuccessView {
         }
             
         internal init(icon: Image, title: String, amount: String, delay: TimeInterval?) {
+            
             self.icon = icon
             self.title = title
             self.amount = amount
