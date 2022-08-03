@@ -59,19 +59,22 @@ class MyProductsViewModel: ObservableObject {
                     switch key {
                     case .card:
 
-                        let activatedCards = value.filter { isActivatedCard($0) }
+                        let activatedCards = value.filter { isActivatedCard($0) && !isBlockedCards($0) }
                         var items = sectionItems(value: activatedCards)
                         items.append(MyProductsSectionButtonItemViewModel(type: .card))
                         sections.append(MyProductsSectionViewModel(productType: key, items: items))
 
                         let notActivatedCards = value.filter { isNotActivatedCard($0) }
-                        if notActivatedCards.isEmpty { return }
-                        let notActivatedSection = MyProductsSectionViewModel(
-                            id: MyProductsSectionViewModel.notAcivatedSectionId, title: "Неактивированные продукты",
-                            items: sectionItems(value: notActivatedCards),
-                            isCollapsed: false,
-                            isEnabled: true)
-                        sections.append(notActivatedSection)
+                        if !notActivatedCards.isEmpty {
+                            
+                            let notActivatedSection = MyProductsSectionViewModel(
+                                id: MyProductsSectionViewModel.notAcivatedSectionId, title: "Неактивированные продукты",
+                                items: sectionItems(value: notActivatedCards),
+                                isCollapsed: false,
+                                isEnabled: true)
+                            sections.append(notActivatedSection)
+                            
+                        }
                         
                         let blockedCards = value.filter { isBlockedCards($0) }
                         if blockedCards.isEmpty { return }
