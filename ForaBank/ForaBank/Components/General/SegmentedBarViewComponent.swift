@@ -22,7 +22,7 @@ extension SegmentedBarView {
         private let model: Model
         
         init(values: [ProductStatementMerchantGroup: Double],
-             label: String,
+             titleLabel: String,
              currencyCode: String,
              prefixTotalValue: String = "",
              model: Model = .emptyMock) {
@@ -30,7 +30,7 @@ extension SegmentedBarView {
             self.values = values
             self.model = model
             self.currencyCode = currencyCode
-            self.titleLabel = label
+            self.titleLabel = titleLabel
             
             self.totalValue = values.values.reduce(0, +)
            
@@ -46,11 +46,10 @@ extension SegmentedBarView {
                          model: Model) {
             
             self.init(values: mappedValues,
-                      label: Self.getTitleLabel(productType: productType),
+                      titleLabel: Self.getTitleLabel(productType: productType),
                       currencyCode: currencyCode,
-                      prefixTotalValue: productType == .deposit ? "+ " : "- ",
+                      prefixTotalValue: Self.getPrefixTotalValue(productType: productType),
                       model: model)
-                
         }
         
         // это согласованный костыль
@@ -58,7 +57,6 @@ extension SegmentedBarView {
                          productType: ProductType,
                          currencyCode: String,
                          model: Model) {
-            
             
             var mockValues = [ProductStatementMerchantGroup: Double]()
             let merchantGroup = ProductStatementMerchantGroup.allCases
@@ -79,9 +77,9 @@ extension SegmentedBarView {
             }
             
             self.init(values: mockValues,
-                      label: Self.getTitleLabel(productType: productType),
+                      titleLabel: Self.getTitleLabel(productType: productType),
                       currencyCode: currencyCode,
-                      prefixTotalValue: productType == .deposit ? "+ " : "- ",
+                      prefixTotalValue: Self.getPrefixTotalValue(productType: productType),
                       model: model)
                 
         }
@@ -93,8 +91,13 @@ extension SegmentedBarView {
             let currentMonth = dateFormatter.string(from: Date())
             
             return productType == .deposit ? "Мой доход за \(currentMonth)" : "Tраты за \(currentMonth)"
-            
         }
+        
+        private static func getPrefixTotalValue(productType: ProductType) -> String {
+            
+            return productType == .deposit ? "+ " : "- "
+        }
+        
     }
 }
 
@@ -171,10 +174,11 @@ extension SegmentedBarView.ViewModel {
                                                              .internalOperations: 300.35,
                                                              .stateServices: 500.0,
                                                              .transport: 100.00],
-                                                     label: "Траты за август",
-                                                     currencyCode: "RUB")
+                                                     titleLabel: "Траты за август",
+                                                     currencyCode: "RUB",
+                                                     prefixTotalValue: "- ")
     
     static let zero = SegmentedBarView.ViewModel(values: [:],
-                                                 label: "Траты за август",
+                                                 titleLabel: "Траты за август",
                                                  currencyCode: "USD")
 }
