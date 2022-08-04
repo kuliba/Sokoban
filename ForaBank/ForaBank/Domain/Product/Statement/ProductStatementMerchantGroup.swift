@@ -1,5 +1,5 @@
 //
-//  ProductStatementGroup.swift
+//  ProductStatementMerchantGroup.swift
 //  ForaBank
 //
 //  Created by Dmitry Martynov on 02.08.2022.
@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-enum ProductStatementGroup: String, Identifiable {
+enum ProductStatementMerchantGroup: String, Identifiable {
  
     case internalOperations = "Перевод внутри банка"
     case services = "Услуги"

@@ -13,15 +13,49 @@ extension SegmentedBarView {
     
     class ViewModel: ObservableObject {
         
-        @Published var value: [ProductStatementGroup: Double]
+        @Published var values: [ProductStatementMerchantGroup: Double]
         @Published var label: String
-        @Published var totalValue: Double
+        let totalValue: Double
+        let totalValueFormatted: String
+        let currencyCode: String
         
-        init(value: [ProductStatementGroup: Double], label: String) {
+        private let model: Model
+        
+        private static var currentMonth: String {
+            let now = Date()
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "LLLL"
+            return dateFormatter.string(from: now)
+        }
+        
+        init(values: [ProductStatementMerchantGroup: Double],
+             label: String,
+             currencyCode: String,
+             model: Model = .emptyMock) {
             
-            self.totalValue = value.values.reduce(0, +)
-            self.value = value
+            self.model = model
+            self.currencyCode = currencyCode
+            
+            self.totalValue = values.values.reduce(0, +)
+            self.totalValueFormatted = model.amountFormatted(amount: totalValue,
+                                            currencyCode: currencyCode,
+                                            style: totalValue != 0 ? .normal : .clipped) ?? String(totalValue)
+            self.values = values
             self.label = label
+        }
+        
+        convenience init(mappedValues: [ProductStatementMerchantGroup: Double],
+                         productType: ProductType,
+                         currencyCode: String,
+                         model: Model) {
+            
+            self.init(values: mappedValues,
+                      label: productType == .deposit
+                        ? "Мой доход за \(Self.currentMonth)"
+                        : "Tраты за \(Self.currentMonth)",
+                      currencyCode: currencyCode,
+                      model: model)
+                
         }
     }
 }
@@ -41,7 +75,7 @@ struct SegmentedBarView: View {
                 
                     Text(viewModel.label)
                     Spacer()
-                    Text(viewModel.totalValue.currencyFormatter())
+                    Text(viewModel.totalValueFormatted)
                 }
                 .foregroundColor(.textSecondary)
                 .font(.textH4M16240())
@@ -53,7 +87,7 @@ struct SegmentedBarView: View {
                         HStack(alignment: .center, spacing: 0) {
                     
                             ForEach(viewModel
-                                .value.sorted(by: {$0.value > $1.value}), id: \.key) { key, value in
+                                .values.sorted(by: {$0.value > $1.value}), id: \.key) { key, value in
                         
                                     Rectangle()
                                         .frame(width: geometry.size.width
@@ -95,12 +129,14 @@ struct SegmentedBarView_Previews: PreviewProvider {
 
 extension SegmentedBarView.ViewModel {
     
-    static let spending = SegmentedBarView.ViewModel(value: [.services: 1000.24,
+    static let spending = SegmentedBarView.ViewModel(values: [.services: 1000.24,
                                                              .internalOperations: 300.35,
                                                              .stateServices: 500.0,
                                                              .transport: 100.00],
-                                                     label: "Траты за август")
+                                                     label: "Траты за август",
+                                                     currencyCode: "RUB")
     
-    static let zero = SegmentedBarView.ViewModel(value: [:],
-                                                     label: "Траты за август")
+    static let zero = SegmentedBarView.ViewModel(values: [:],
+                                                 label: "Траты за август",
+                                                 currencyCode: "USD")
 }

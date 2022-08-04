@@ -19,14 +19,10 @@ extension ProductProfileHistoryView {
         
         var id: ProductData.ID { productId }
         let productId: ProductData.ID
+        
         //TODO: button action
+        
         lazy var header: HeaderViewModel = HeaderViewModel(button: .init(action: {}))
-        private var currentMonth: String {
-            let now = Date()
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "LLLL"
-            return dateFormatter.string(from: now)
-        }
         
         @Published var segmentBarViewModel: SegmentedBarView.ViewModel?
         @Published var content: Content
@@ -34,7 +30,7 @@ extension ProductProfileHistoryView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        internal init(productId: ProductData.ID, state: Content, model: Model = .emptyMock,
+        init(productId: ProductData.ID, state: Content, model: Model = .emptyMock,
                       segmentBarVM: SegmentedBarView.ViewModel? = .spending) {
             
             self.productId = productId
@@ -149,27 +145,26 @@ extension ProductProfileHistoryView {
             guard let product = model.product(productId: productId),
                   product.productType != .loan else { return }
             
-                let dict = statements
-                    .filter( { (product.productType != .deposit
-                        ? $0.operationType == OperationType.debit
-                        : $0.operationType == OperationType.credit)
-                        && Calendar.current.component(.month, from: $0.date) ==
-                           Calendar.current.component(.month, from: Date())
-                    })
-                    .reduce(into: [ ProductStatementGroup: Double]()) {
-                        $0[.init($1.groupName), default: 0] += $1.amount
-                    }
-                let preLabel = product.productType != .deposit
-                    ? "Траты за"
-                    : "Поступило за"
-                segmentBarViewModel = .init(value: dict, label: "\(preLabel) \(currentMonth)")
-            
-                //Debug
-                dict.forEach { print("mdy: \($0.key) - \($0.value) )")
-                }
-                Dictionary(grouping: statements, by: {$0.groupName}).forEach { print("mdy: \($0.key) )")
-                }
-                //endDebug
+            let dict = statements
+                        .filter( { (product.productType != .deposit
+                                    ? $0.operationType == OperationType.debit
+                                    : $0.operationType == OperationType.credit)
+                            && Calendar.current.component(.month, from: $0.date) ==
+                               Calendar.current.component(.month, from: Date())
+                        })
+                        .reduce(into: [ ProductStatementMerchantGroup: Double]()) {
+                            $0[.init($1.groupName), default: 0] += $1.amount
+                        }
+                
+            segmentBarViewModel = .init(mappedValues: dict,
+                                        productType: product.productType,
+                                        currencyCode: product.currency,
+                                        model: model)
+                
+            //Debug
+            dict.forEach { print("mdy: \($0.key) - \($0.value) )") }
+            Dictionary(grouping: statements, by: {$0.groupName}).forEach { print("mdy: \($0.key) )") }
+            //endDebug
             
         }
         
