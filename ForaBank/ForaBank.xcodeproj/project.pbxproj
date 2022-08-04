@@ -246,6 +246,7 @@
 		0C78332328847DFC003ADC73 /* CurrencyExchageSuccessComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78332228847DFC003ADC73 /* CurrencyExchageSuccessComponent.swift */; };
 		0C8CF960282179E80047DDAE /* SendMailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8CF95F282179E80047DDAE /* SendMailView.swift */; };
 		0C99077728733835000831BB /* MainSectionCurrencyMetallComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C99077628733835000831BB /* MainSectionCurrencyMetallComponent.swift */; };
+		0C9CC08728992517000DB396 /* ProductStatementMerchantGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9CC08628992517000DB396 /* ProductStatementMerchantGroup.swift */; };
 		0CA1CDE12840720200021671 /* AddressBookContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA1CDE02840720200021671 /* AddressBookContact.swift */; };
 		0CA1CDE32840725600021671 /* ContactsAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA1CDE22840725600021671 /* ContactsAgent.swift */; };
 		0CA1CDE52840726F00021671 /* ContactsAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA1CDE42840726F00021671 /* ContactsAgentProtocol.swift */; };
@@ -1645,6 +1646,7 @@
 		0C78332228847DFC003ADC73 /* CurrencyExchageSuccessComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchageSuccessComponent.swift; sourceTree = "<group>"; };
 		0C8CF95F282179E80047DDAE /* SendMailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMailView.swift; sourceTree = "<group>"; };
 		0C99077628733835000831BB /* MainSectionCurrencyMetallComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionCurrencyMetallComponent.swift; sourceTree = "<group>"; };
+		0C9CC08628992517000DB396 /* ProductStatementMerchantGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductStatementMerchantGroup.swift; sourceTree = "<group>"; };
 		0CA1CDE02840720200021671 /* AddressBookContact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressBookContact.swift; sourceTree = "<group>"; };
 		0CA1CDE22840725600021671 /* ContactsAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsAgent.swift; sourceTree = "<group>"; };
 		0CA1CDE42840726F00021671 /* ContactsAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsAgentProtocol.swift; sourceTree = "<group>"; };
@@ -4790,6 +4792,7 @@
 			isa = PBXGroup;
 			children = (
 				774A8B152865FBAC00B81140 /* ProductStatementData.swift */,
+				0C9CC08628992517000DB396 /* ProductStatementMerchantGroup.swift */,
 				77B6B3552850976B00E3001B /* ProductStatementsStorage.swift */,
 				77B6B35828509A0300E3001B /* ProductStatementsUpdateState.swift */,
 			);
@@ -7776,6 +7779,7 @@
 				77F468B8284524B3008C9579 /* ChatViewModel.swift in Sources */,
 				0C4B0BBA28620F9F004B7F69 /* FastPaymentContractFullInfoType.swift in Sources */,
 				6845336C279843DF00104A8B /* ServerCommands+Utility.swift in Sources */,
+				0C9CC08728992517000DB396 /* ProductStatementMerchantGroup.swift in Sources */,
 				68E6A29126A0338700A1D9A1 /* CastomCardView.swift in Sources */,
 				774E318D27A05112005A067B /* LocalAgentEmptyMock.swift in Sources */,
 				6833E0CF273920CE004C070F /* MobilePayCoordinator.swift in Sources */,
