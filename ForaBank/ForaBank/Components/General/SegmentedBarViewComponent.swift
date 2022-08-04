@@ -11,10 +11,10 @@ import SwiftUI
 
 extension SegmentedBarView {
     
-    class ViewModel: ObservableObject {
+    class ViewModel {
         
-        @Published var values: [ProductStatementMerchantGroup: Double]
-        @Published var label: String
+        let values: [ProductStatementMerchantGroup: Double]
+        let label: String
         let totalValue: Double
         let totalValueFormatted: String
         let currencyCode: String
@@ -64,7 +64,7 @@ extension SegmentedBarView {
 
 struct SegmentedBarView: View {
     
-    var viewModel: SegmentedBarView.ViewModel
+    let viewModel: SegmentedBarView.ViewModel
     
     var body: some View {
         
