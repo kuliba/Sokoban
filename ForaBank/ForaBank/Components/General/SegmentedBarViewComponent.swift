@@ -14,19 +14,12 @@ extension SegmentedBarView {
     class ViewModel {
         
         let values: [ProductStatementMerchantGroup: Double]
-        let label: String
+        let titleLabel: String
         let totalValue: Double
         let totalValueFormatted: String
         let currencyCode: String
         
         private let model: Model
-        
-        private static var currentMonth: String {
-            let now = Date()
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "LLLL"
-            return dateFormatter.string(from: now)
-        }
         
         init(values: [ProductStatementMerchantGroup: Double],
              label: String,
@@ -37,7 +30,7 @@ extension SegmentedBarView {
             self.values = values
             self.model = model
             self.currencyCode = currencyCode
-            self.label = label
+            self.titleLabel = label
             
             self.totalValue = values.values.reduce(0, +)
            
@@ -53,13 +46,9 @@ extension SegmentedBarView {
                          model: Model) {
             
             self.init(values: mappedValues,
-                      label: productType == .deposit
-                        ? "Мой доход за \(Self.currentMonth)"
-                        : "Tраты за \(Self.currentMonth)",
+                      label: Self.getTitleLabel(productType: productType),
                       currencyCode: currencyCode,
-                      prefixTotalValue: productType == .deposit
-                        ? "+ "
-                        : "- ",
+                      prefixTotalValue: productType == .deposit ? "+ " : "- ",
                       model: model)
                 
         }
@@ -90,15 +79,21 @@ extension SegmentedBarView {
             }
             
             self.init(values: mockValues,
-                      label: productType == .deposit
-                        ? "Мой доход за \(Self.currentMonth)"
-                        : "Tраты за \(Self.currentMonth)",
+                      label: Self.getTitleLabel(productType: productType),
                       currencyCode: currencyCode,
-                      prefixTotalValue: productType == .deposit
-                        ? "+ "
-                        : "- ",
+                      prefixTotalValue: productType == .deposit ? "+ " : "- ",
                       model: model)
                 
+        }
+        
+        private static func getTitleLabel(productType: ProductType) -> String {
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "LLLL"
+            let currentMonth = dateFormatter.string(from: Date())
+            
+            return productType == .deposit ? "Мой доход за \(currentMonth)" : "Tраты за \(currentMonth)"
+            
         }
     }
 }
@@ -116,7 +111,7 @@ struct SegmentedBarView: View {
             VStack {
                 HStack {
                 
-                    Text(viewModel.label)
+                    Text(viewModel.titleLabel)
                     Spacer()
                     Text(viewModel.totalValueFormatted)
                 }
