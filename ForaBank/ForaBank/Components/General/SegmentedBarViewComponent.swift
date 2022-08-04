@@ -31,17 +31,20 @@ extension SegmentedBarView {
         init(values: [ProductStatementMerchantGroup: Double],
              label: String,
              currencyCode: String,
+             prefixTotalValue: String = "",
              model: Model = .emptyMock) {
             
+            self.values = values
             self.model = model
             self.currencyCode = currencyCode
+            self.label = label
             
             self.totalValue = values.values.reduce(0, +)
-            self.totalValueFormatted = model.amountFormatted(amount: totalValue,
+           
+            self.totalValueFormatted = (totalValue != 0 ? prefixTotalValue : "")
+                                     + (model.amountFormatted(amount: totalValue,
                                             currencyCode: currencyCode,
-                                            style: totalValue != 0 ? .normal : .clipped) ?? String(totalValue)
-            self.values = values
-            self.label = label
+                                            style: totalValue != 0 ? .normal : .clipped) ?? String(totalValue))
         }
         
         convenience init(mappedValues: [ProductStatementMerchantGroup: Double],
@@ -54,6 +57,9 @@ extension SegmentedBarView {
                         ? "Мой доход за \(Self.currentMonth)"
                         : "Tраты за \(Self.currentMonth)",
                       currencyCode: currencyCode,
+                      prefixTotalValue: productType == .deposit
+                        ? "+ "
+                        : "- ",
                       model: model)
                 
         }
@@ -88,6 +94,9 @@ extension SegmentedBarView {
                         ? "Мой доход за \(Self.currentMonth)"
                         : "Tраты за \(Self.currentMonth)",
                       currencyCode: currencyCode,
+                      prefixTotalValue: productType == .deposit
+                        ? "+ "
+                        : "- ",
                       model: model)
                 
         }

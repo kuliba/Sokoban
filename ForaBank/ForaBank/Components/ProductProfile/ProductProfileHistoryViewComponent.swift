@@ -161,7 +161,7 @@ extension ProductProfileHistoryView {
                                 $0[.init($1.groupName), default: 0] += $1.amount
                             }
                 // Debug
-                dict.forEach { print("mdy: \($0.key) - \($0.value) )") }
+                dict.forEach { print("mdy: \($0.key) - \($0.value)") }
                 //endDEbug
                 
                 segmentBarViewModel = .init(mappedValues: dict,
@@ -175,7 +175,7 @@ extension ProductProfileHistoryView {
                                 $0[$1.groupName, default: 0] += $1.amount
                             }
                 // Debug
-                dict.forEach { print("mdy: \($0.key) - \($0.value) )") }
+                dict.forEach { print("mdy: \($0.key) - \($0.value)") }
                 //endDEbug
                 
                 segmentBarViewModel = .init(stringValues: dict,
