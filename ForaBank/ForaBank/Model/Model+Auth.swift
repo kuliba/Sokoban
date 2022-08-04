@@ -666,8 +666,12 @@ internal extension Model {
                     }
                     
                 case .failedEvaluatePolicyWithError(let error):
+  
+                    //MARK: remove error from cancel biometric auth
                     
-                    self.action.send(ModelAction.Auth.Sensor.Evaluate.Response.failure(message: "При попытке авторизации через сенсор возникла ошибка: \(error.localizedDescription)"))
+                    //self.action.send(ModelAction.Auth.Sensor.Evaluate.Response.failure(message: "При попытке авторизации через сенсор возникла ошибка: \(error.localizedDescription)"))
+                    print("Model: failedEvaluatePolicyWithError: error \(error.localizedDescription)")
+
                 }
             }
         }

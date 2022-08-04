@@ -15,6 +15,9 @@ class MeToMeRequestController: UIViewController {
             fillData(model: model)
         }
     }
+    
+    private let model: Model = .shared
+    
     var nextStep = false
     lazy var contentViewSize = CGSize(width: self.view.frame.width, height: self.view.frame.height + 30)
     
@@ -64,7 +67,7 @@ class MeToMeRequestController: UIViewController {
     
     lazy var cardFromField: CardChooseView = {
        let cardField = CardChooseView()
-        cardField.titleLabel.text = "Счет зачисления"
+        cardField.titleLabel.text = "Счет списания"
         cardField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         cardField.imageView.isHidden = false
         cardField.choseButton?.isHidden = true
@@ -157,7 +160,44 @@ class MeToMeRequestController: UIViewController {
         bankField.imageView.image = model.bank?.svgImage?.convertSVGStringToImage()
         labelSubTitle.text = "Денежные средства будут списываться по вашим запросам из \(model.bank?.rusName ?? "bank") без подтверждения?"
         labelSubTitle.isHidden = true
-        cardFromField.model = model.card
+        let cardId = model.userInfo?["cardId"] as? String ?? ""
+        let accountId = model.userInfo?["accountId"] as? String ?? ""
+        if let cardValue = findProduct(with: Int(cardId), with: Int(accountId)) {
+
+            cardFromField.model = cardValue
+        }
+    }
+    
+    func cards() ->  [UserAllCardsModel] {
+
+        var products: [UserAllCardsModel] = []
+        let types: [ProductType] = [.card, .account]
+        types.forEach { type in
+
+            products.append(contentsOf: AppDelegate.shared.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+        }
+
+        return products
+    }
+    
+    private func findProduct(with cardId: Int?, with accountId: Int?) -> UserAllCardsModel? {
+        let cardList = cards()
+        var card: UserAllCardsModel?
+        cardList.forEach { product in
+            if cardId != nil {
+                if product.id == cardId {
+                    card = product
+                }
+            } else {
+                if product.id == accountId {
+                    card = product
+                }
+            }
+        }
+        if card == nil {
+            card = cardList.first
+        }
+        return card
     }
     
     private func setupUI() {
