@@ -76,7 +76,8 @@ extension ProductProfileHistoryView {
                         return
                     }
                     
-                    updateSegmentedBar(productId: id, statements: storage.statements)
+                    // isMapped = false  это согласованный костыль
+                    updateSegmentedBar(productId: id, statements: storage.statements, isMapped: false)
                     
                     
                     Task.detached(priority: .high) { [self] in
@@ -140,29 +141,51 @@ extension ProductProfileHistoryView {
         }
         
         func updateSegmentedBar(productId: ProductData.ID,
-                                statements: [ProductStatementData]) {
+                                statements: [ProductStatementData], isMapped: Bool = true ) {
             
             guard let product = model.product(productId: productId),
                   product.productType != .loan else { return }
             
-            let dict = statements
+            let statementFiltered = statements
                         .filter( { (product.productType != .deposit
                                     ? $0.operationType == OperationType.debit
                                     : $0.operationType == OperationType.credit)
-                            && Calendar.current.component(.month, from: $0.date) ==
-                               Calendar.current.component(.month, from: Date())
+                            && Calendar.current.component(.month, from: $0.date)
+                            == Calendar.current.component(.month, from: Date())
                         })
-                        .reduce(into: [ ProductStatementMerchantGroup: Double]()) {
-                            $0[.init($1.groupName), default: 0] += $1.amount
-                        }
+            
+            if isMapped {
                 
-            segmentBarViewModel = .init(mappedValues: dict,
+                let dict = statementFiltered
+                            .reduce(into: [ ProductStatementMerchantGroup: Double]()) {
+                                $0[.init($1.groupName), default: 0] += $1.amount
+                            }
+                // Debug
+                dict.forEach { print("mdy: \($0.key) - \($0.value) )") }
+                //endDEbug
+                
+                segmentBarViewModel = .init(mappedValues: dict,
+                                        productType: product.productType,
+                                        currencyCode: product.currency,
+                                        model: model)
+            } else {
+                
+                let dict = statementFiltered
+                            .reduce(into: [ String: Double]()) {
+                                $0[$1.groupName, default: 0] += $1.amount
+                            }
+                // Debug
+                dict.forEach { print("mdy: \($0.key) - \($0.value) )") }
+                //endDEbug
+                
+                segmentBarViewModel = .init(stringValues: dict,
                                         productType: product.productType,
                                         currencyCode: product.currency,
                                         model: model)
                 
+            }
+                
             //Debug
-            dict.forEach { print("mdy: \($0.key) - \($0.value) )") }
             Dictionary(grouping: statements, by: {$0.groupName}).forEach { print("mdy: \($0.key) )") }
             //endDebug
             

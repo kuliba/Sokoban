@@ -57,6 +57,40 @@ extension SegmentedBarView {
                       model: model)
                 
         }
+        
+        // это согласованный костыль
+        convenience init(stringValues: [String: Double],
+                         productType: ProductType,
+                         currencyCode: String,
+                         model: Model) {
+            
+            
+            var mockValues = [ProductStatementMerchantGroup: Double]()
+            let merchantGroup = ProductStatementMerchantGroup.allCases
+            var i = 0
+            var sumEndGroup = 0.0
+            
+            stringValues.sorted(by: {$0.value > $1.value})
+                        .forEach { key, value in
+                
+                            if i < merchantGroup.count - 1 {
+                                mockValues[merchantGroup[i]] = value
+                            } else {
+                                sumEndGroup += value
+                                mockValues[merchantGroup[merchantGroup.count - 1]] = sumEndGroup
+                            }
+                            
+                            i += 1
+            }
+            
+            self.init(values: mockValues,
+                      label: productType == .deposit
+                        ? "Мой доход за \(Self.currentMonth)"
+                        : "Tраты за \(Self.currentMonth)",
+                      currencyCode: currencyCode,
+                      model: model)
+                
+        }
     }
 }
 
