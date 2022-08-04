@@ -70,6 +70,20 @@ class RootViewModel: ObservableObject, Resetable {
                     
                 case .authorized:
                     action.send(RootViewModelAction.Cover.Hide())
+                    
+                    switch model.notificationsTransition.value {
+                    case .history:
+                        let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {[weak self] in self?.link = nil })
+                        link = .messages(messagesHistoryViewModel)
+                        model.notificationsTransition.value = nil
+                        
+                    case .me2me(let requestMeToMeModel):
+                        link = .me2me(requestMeToMeModel)
+                        model.notificationsTransition.value = nil
+
+                    default:
+                        break
+                    } 
                 }
                 
             }.store(in: &bindings)
@@ -161,18 +175,30 @@ class RootViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] transition in
                 
-                switch transition {
-                case .history:
-                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {[weak self] in self?.link = nil })
-                    link = .messages(messagesHistoryViewModel)
-                    model.notificationsTransition.value = nil
-                case .me2me(let requestMeToMeModel):
-                    link = .me2me(requestMeToMeModel)
-                    model.notificationsTransition.value = nil
+                if model.auth.value == .authorized {
+                 
+                    switch transition {
+                    case .history:
+                        
+                        self.rootActions.dismissAll()
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
 
-                default:
-                    break
+                            let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: self.model, closeAction: {[weak self] in self?.link = nil })
+                            self.link = .messages(messagesHistoryViewModel)
+                            self.model.notificationsTransition.value = nil
+                            
+                        }
+
+                    case .me2me(let requestMeToMeModel):
+                        link = .me2me(requestMeToMeModel)
+                        model.notificationsTransition.value = nil
+
+                    default:
+                        break
+                    }
                 }
+                
             }.store(in: &bindings)
     }
     

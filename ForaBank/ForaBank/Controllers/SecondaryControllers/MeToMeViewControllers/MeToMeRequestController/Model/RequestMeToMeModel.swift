@@ -86,8 +86,20 @@ struct RequestMeToMeModel {
         return bankForReturn
     }
     
+    func cards() ->  [UserAllCardsModel] {
+
+        var products: [UserAllCardsModel] = []
+        let types: [ProductType] = [.card, .account]
+        types.forEach { type in
+
+            products.append(contentsOf: AppDelegate.shared.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+        }
+
+        return products
+    }
+    
     private mutating func findProduct(with cardId: Int?, with accountId: Int?) -> UserAllCardsModel? {
-        let cardList = ReturnAllCardList.cards()
+        let cardList = cards()
         var card: UserAllCardsModel?
         cardList.forEach { product in
             if cardId != nil {
