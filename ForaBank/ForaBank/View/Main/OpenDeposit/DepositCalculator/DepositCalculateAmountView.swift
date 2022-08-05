@@ -68,9 +68,16 @@ struct DepositCalculateAmountView: View {
                         .foregroundColor(.mainColorsGray)
 
                     HStack {
-
+                        
                         DepositCalculateTextField(viewModel: viewModel)
                             .fixedSize()
+                            .onAppear {
+                                
+                                IQKeyboardManager.shared.enable = true
+                                IQKeyboardManager.shared.enableAutoToolbar = true
+                                IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+                                IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
+                            }
 
                         Button {
 

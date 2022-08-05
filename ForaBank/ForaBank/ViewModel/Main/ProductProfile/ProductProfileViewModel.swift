@@ -228,7 +228,19 @@ class ProductProfileViewModel: ObservableObject {
                         }))
                         self.alert = .init(alertViewModel)
                     }
+                    
+                case let payload as ModelAction.Deposits.Info.Single.Response:
+                    switch payload {
+                    case .success(data: _):
+                        
+                        guard let productData = productData else {
+                            return
+                        }
+                        buttons.update(with: productData, depositInfo: model.depositsInfo.value[productData.id])
+                        
                     default: break
+                    }
+                default: break
                 }
             }.store(in: &bindings)
         
@@ -288,6 +300,10 @@ class ProductProfileViewModel: ObservableObject {
                     return
                 }
                 
+                if let deposit = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) as? ProductDepositData, model.depositsInfo.value[self.product.activeProductId] == nil {
+                    
+                    self.model.action.send(ModelAction.Deposits.Info.Single.Request(productId: deposit.id))
+                }
                 // status bar update
                 withAnimation {
                     

@@ -154,7 +154,7 @@ class ChangeReturnCountryController: UIViewController {
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "Vector")))
         self.navigationItem.rightBarButtonItem = customViewItem
         
-        if let paymentSystemIcon = modelData.images.value[model.operatorImage]?.uiImage {
+        if let paymentSystemIcon = model.paymentSystem?.svgImage?.convertSVGStringToImage() {
             
             let navImage: UIImage = paymentSystemIcon
             

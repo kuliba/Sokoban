@@ -495,39 +495,35 @@ extension ProductView {
             case .activation:
                 switch style {
                 case .main:
-                    ProductView.StatusButtonView(icon: viewModel.icon(with: style), color: color, size: viewModel.iconSize(with: style), action: viewModel.action)
+                    ProductView.StatusView(icon: viewModel.icon(with: style), color: color, size: viewModel.iconSize(with: style))
                     
                 case .profile:
                     SliderButtonView(viewModel: .init(alertPresented: false, sliderState: .normal, foregroundColor: color))
                 }
                 
             case .unblock:
-                ProductView.StatusButtonView(icon: viewModel.icon(with: style), color: color, size: viewModel.iconSize(with: style), action: viewModel.action)
+                ProductView.StatusView(icon: viewModel.icon(with: style), color: color, size: viewModel.iconSize(with: style))
             }
         }
     }
     
-    struct StatusButtonView: View {
+    struct StatusView: View {
         
         let icon: Image
         let color: Color
         let size: CGSize
-        let action: () -> Void
         
         var body: some View {
             
-            Button(action: action){
+            ZStack {
                 
-                ZStack {
-                    
-                    Circle()
-                        .frame(width: size.width, height: size.height)
-                        .foregroundColor(.iconWhite)
-                    
-                    icon
-                        .renderingMode(.template)
-                        .foregroundColor(color)
-                }
+                Circle()
+                    .frame(width: size.width, height: size.height)
+                    .foregroundColor(.iconWhite)
+                
+                icon
+                    .renderingMode(.template)
+                    .foregroundColor(color)
             }
         }
     }
