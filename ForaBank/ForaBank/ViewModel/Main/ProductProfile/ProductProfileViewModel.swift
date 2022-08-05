@@ -228,7 +228,19 @@ class ProductProfileViewModel: ObservableObject {
                         }))
                         self.alert = .init(alertViewModel)
                     }
+                    
+                case let payload as ModelAction.Deposits.Info.Single.Response:
+                    switch payload {
+                    case .success(data: _):
+                        
+                        guard let productData = productData else {
+                            return
+                        }
+                        buttons.update(with: productData, depositInfo: model.depositsInfo.value[productData.id])
+                        
                     default: break
+                    }
+                default: break
                 }
             }.store(in: &bindings)
         
