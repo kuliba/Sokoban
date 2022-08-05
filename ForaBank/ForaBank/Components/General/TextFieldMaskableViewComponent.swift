@@ -51,9 +51,18 @@ struct TextFieldMaskableView: UIViewRepresentable {
         textField.delegate = context.coordinator
         textField.font = font
         textField.backgroundColor = backgroundColor.uiColor()
-        textField.textColor = textColor.uiColor()
-        textField.tintColor = tintColor.uiColor()
         textField.keyboardType = keyboardType
+        
+        if #available(iOS 14.0, *) {
+            
+            textField.textColor = textColor.uiColor()
+            textField.tintColor = tintColor.uiColor()
+            
+        } else {
+            
+            textField.textColor = UIColor.white
+            textField.tintColor = UIColor.white
+        }
         
         viewModel.dismissKeyboard = { textField.resignFirstResponder() }
  

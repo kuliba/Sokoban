@@ -833,6 +833,7 @@ class ContactConfurmViewController: UIViewController {
         
         case .card2card, .requisites, .phoneNumber, .gkh, .mobilePayment:
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { response, error in
+                self.updateSuccessScreen = false
                 if error != nil {
                     self.dismissActivity()
                     self.doneButtonIsEnabled(false)
@@ -846,7 +847,6 @@ class ContactConfurmViewController: UIViewController {
                     self.dismissActivity()
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
-                        self.updateSuccessScreen = false
                         switch documentStatus {
                         case "COMPLETE": self.confurmVCModel?.status = .succses
                         case "IN_PROGRESS": self.confurmVCModel?.status = .inProgress
@@ -924,14 +924,17 @@ class ContactConfurmViewController: UIViewController {
 
                     self.dismissActivity()
                     self.doneButtonIsEnabled(false)
-                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
-                             
+                    if let errorMessage = model.errorMessage {
+                        
+                        self.showAlert(with: "Ошибка", and: errorMessage)
+                    }
                 }
             }
             
         default:
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
                 self.dismissActivity()
+                self.updateSuccessScreen = false
                 if error != nil {
                     self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                     self.doneButtonIsEnabled(false)
@@ -999,12 +1002,18 @@ class ContactConfurmViewController: UIViewController {
                     }
                 } else if model.statusCode == 102 {
                     self.doneButtonIsEnabled(false)
-                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз") {
-                        self.navigationController?.popViewController(animated: true)
+
+                    if let errorMessage = model.errorMessage {
+                        
+                        self.showAlert(with: "Ошибка", and: errorMessage)
                     }
+                    
                 } else {
                     self.doneButtonIsEnabled(false)
-                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
+                    if let errorMessage = model.errorMessage {
+                        
+                        self.showAlert(with: "Ошибка", and: errorMessage)
+                    }
                 }
             }
         }

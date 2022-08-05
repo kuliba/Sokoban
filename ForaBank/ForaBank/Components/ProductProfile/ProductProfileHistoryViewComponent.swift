@@ -19,19 +19,24 @@ extension ProductProfileHistoryView {
         
         var id: ProductData.ID { productId }
         let productId: ProductData.ID
+        
         //TODO: button action
+        
         lazy var header: HeaderViewModel = HeaderViewModel(button: .init(action: {}))
         
+        @Published var segmentBarViewModel: SegmentedBarView.ViewModel?
         @Published var content: Content
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        internal init(productId: ProductData.ID, state: Content, model: Model = .emptyMock) {
+        init(productId: ProductData.ID, state: Content, model: Model = .emptyMock,
+                      segmentBarVM: SegmentedBarView.ViewModel? = .spending) {
             
             self.productId = productId
             self.content = state
             self.model = model
+            self.segmentBarViewModel = segmentBarVM
         }
         
         init(_ model: Model, productId: ProductData.ID) {
@@ -70,7 +75,11 @@ extension ProductProfileHistoryView {
                     guard let storage = storages[id] else {
                         return
                     }
-
+                    
+                    // isMapped = false  это согласованный костыль
+                    updateSegmentedBar(productId: id, statements: storage.statements, isMapped: false)
+                    
+                    
                     Task.detached(priority: .high) { [self] in
                         
                         let update = await reduce(content: content, statements: storage.statements, images: model.images.value, model: model) { [weak self] statementId in
@@ -129,6 +138,69 @@ extension ProductProfileHistoryView {
                     }
      
                 }.store(in: &bindings)
+        }
+        
+        func updateSegmentedBar(productId: ProductData.ID,
+                                statements: [ProductStatementData], isMapped: Bool = true ) {
+            
+            guard let product = model.product(productId: productId) else { return }
+                
+            let statementFilteredOperation: [ProductStatementData]
+            
+            switch product.productType {
+            case .deposit:
+                
+                statementFilteredOperation = statements
+                    .filter { $0.operationType == OperationType.credit
+                           && $0.groupName == "Выплата процентов" }
+                    
+            case .account, .card:
+                
+                statementFilteredOperation = statements
+                    .filter { $0.operationType == OperationType.debit }
+            
+            case .loan: return
+            }
+            
+            let statementFilteredPeriod = statementFilteredOperation
+                .filter { Calendar.current.component(.month, from: $0.date)
+                       == Calendar.current.component(.month, from: Date()) }
+            
+            if isMapped {
+                
+                let dict = statementFilteredPeriod
+                            .reduce(into: [ ProductStatementMerchantGroup: Double]()) {
+                                $0[.init($1.groupName), default: 0] += $1.amount
+                            }
+                // Debug
+                dict.forEach { print("mdy: \($0.key) - \($0.value)") }
+                //endDEbug
+                
+                segmentBarViewModel = .init(mappedValues: dict,
+                                        productType: product.productType,
+                                        currencyCode: product.currency,
+                                        model: model)
+            } else {
+                
+                let dict = statementFilteredPeriod
+                            .reduce(into: [ String: Double]()) {
+                                $0[$1.groupName, default: 0] += $1.amount
+                            }
+                // Debug
+                dict.forEach { print("mdy: \($0.key) - \($0.value)") }
+                //endDEbug
+                
+                segmentBarViewModel = .init(stringValues: dict,
+                                        productType: product.productType,
+                                        currencyCode: product.currency,
+                                        model: model)
+                
+            }
+                
+            //Debug
+            Dictionary(grouping: statements, by: {$0.groupName}).forEach { print("mdy: \($0.key) )") }
+            //endDebug
+            
         }
         
         func updateContent(with groups: [HistoryListViewModel.DayGroupViewModel]) {
@@ -485,14 +557,20 @@ struct ProductProfileHistoryView: View {
             
             HeaderView(viewModel: viewModel.header)
                 .padding(.bottom, 15)
-
+            
             switch viewModel.content {
             case .empty(let emptyListViewModel):
                 EmptyListView(viewModel: emptyListViewModel)
                     .padding(.top, 20)
                 
             case let .list(listViewModel):
-                ListView(viewModel: listViewModel)
+                VStack(spacing: 64) {
+                    
+                    if let segmentedVM = viewModel.segmentBarViewModel {
+                        SegmentedBarView(viewModel: segmentedVM)
+                    }
+                    ListView(viewModel: listViewModel)
+                }
                 
             case .loading:
                 LoadingView()

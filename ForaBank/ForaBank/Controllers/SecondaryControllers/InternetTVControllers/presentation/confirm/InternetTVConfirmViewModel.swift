@@ -3,6 +3,9 @@ import UIKit
 
 class InternetTVConfirmViewModel {
     var type: PaymentType
+    var template: PaymentTemplateData?
+    var fullName: String? = ""
+    var templateButtonViewModel: TemplateButtonViewModel?
     var cardFromRealm: UserAllCardsModel? {
         didSet {
             guard let cardFrom = cardFromRealm else { return }
@@ -92,5 +95,15 @@ class InternetTVConfirmViewModel {
         case internetTV
         case gkh
         case transport
+    }
+    
+}
+
+extension InternetTVConfirmViewModel {
+    
+    enum TemplateButtonViewModel {
+        
+        case template(PaymentTemplateData.ID)
+        case sfp(name: String, paymentOperationDetailId: Int)
     }
 }

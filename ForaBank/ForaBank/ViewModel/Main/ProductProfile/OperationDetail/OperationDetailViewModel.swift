@@ -296,6 +296,9 @@ private extension OperationDetailViewModel {
         case .otherBank:
             return operationDetail.payeeCardNumber
             
+        case .transport:
+            return productStatement.merchantNameRus
+            
         default:
             return nil
         }
