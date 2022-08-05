@@ -35,6 +35,25 @@ extension Model {
         
         return product.id
     }
+    
+    func products(currency: Currency, productType: ProductType) -> [ProductData] {
+        
+        var products: [ProductData] = []
+        
+        guard let productTypes = self.products.value[productType] else {
+            return products
+        }
+        
+        products = productTypes.filter { $0.currency == currency.description }
+
+        return products
+    }
+    
+    func products(currency: Currency) -> [ProductData] {
+        
+        let products = products.value.values.flatMap {$0}.filter { $0.currency == currency.description }
+        return products
+    }
 }
 
 //MARK: - Action

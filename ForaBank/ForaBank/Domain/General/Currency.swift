@@ -32,6 +32,23 @@ extension Currency {
     static let rub = Currency(description: "RUB")
     static let usd = Currency(description: "USD")
     static let eur = Currency(description: "EUR")
+    static let gbp = Currency(description: "GBP")
+    static let chf = Currency(description: "CHF")
+    static let chy = Currency(description: "CHY")
+    
+    var currencyTitle: String {
+        
+        switch self {
+        case .rub: return "в рублях"
+        case .usd: return "в долларах США"
+        case .eur: return "в евро"
+        case .gbp: return "в фунтах стерлингов"
+        case .chf: return "в швейцарских франках"
+        case .chy: return "в китайских юанях"
+        default:
+            return ""
+        }
+    }
 }
 
 //MARK: - Type
