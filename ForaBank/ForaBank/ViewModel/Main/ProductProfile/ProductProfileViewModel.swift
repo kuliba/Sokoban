@@ -288,6 +288,10 @@ class ProductProfileViewModel: ObservableObject {
                     return
                 }
                 
+                if let deposit = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) as? ProductDepositData, model.depositsInfo.value[self.product.activeProductId] == nil {
+                    
+                    self.model.action.send(ModelAction.Deposits.Info.Single.Request(productId: deposit.id))
+                }
                 // status bar update
                 withAnimation {
                     
