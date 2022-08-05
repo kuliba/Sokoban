@@ -195,6 +195,7 @@ class ContactInputViewController: UIViewController {
         } else {
             
             navigationController?.popViewController(animated: true)
+            dismiss(animated: true)
         }
     }
     

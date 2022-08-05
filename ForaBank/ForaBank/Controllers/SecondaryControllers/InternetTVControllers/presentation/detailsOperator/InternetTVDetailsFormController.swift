@@ -142,6 +142,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             let vc = InternetTVConfirmViewController()
             vc.title = "Подтвердите реквизиты"
             vc.viewModel = ob
+            vc.viewModel?.fullName = response?.data?.payeeName
             vc.countryField.isHidden = true
             vc.phoneField.isHidden = true
             vc.nameField.isHidden = true

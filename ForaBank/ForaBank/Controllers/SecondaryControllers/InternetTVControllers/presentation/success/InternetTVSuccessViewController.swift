@@ -1,4 +1,5 @@
 import UIKit
+import Combine
 
 class InternetTVSuccessViewController: UIViewController {
     
@@ -13,6 +14,9 @@ class InternetTVSuccessViewController: UIViewController {
             mainView.confirmModel = model
         }
     }
+    
+    private let model: Model = Model.shared
+    private var bindings = Set<AnyCancellable>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +35,42 @@ class InternetTVSuccessViewController: UIViewController {
             navVC.modalPresentationStyle = .fullScreen
             self?.present(navVC, animated: true, completion: nil)
         }
+        
+        mainView.templateTapped = { [weak self] in
+            
+            guard let self = self else {
+                return
+            }
+            let templateButtonViewModel = self.confirmModel?.templateButtonViewModel
+            
+            guard let templateButtonViewModel = self.confirmModel?.templateButtonViewModel,
+                  case .sfp(let name, let paymentOperationDetailId) = templateButtonViewModel else {
+                return
+            }
+            
+            self.model.action.send(ModelAction.PaymentTemplate.Save.Requested(name: name, paymentOperationDetailId: paymentOperationDetailId))
+        }
+        
+        bind()
+    }
+    
+    func bind() {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ModelAction.PaymentTemplate.Save.Complete:
+                    let templateButtonViewModel: InternetTVConfirmViewModel.TemplateButtonViewModel = .template(payload.paymentTemplateId)
+                    confirmModel?.templateButtonViewModel = templateButtonViewModel
+                    mainView.updateTemplateButton(with: templateButtonViewModel)
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
     
     fileprivate func setupUI() {

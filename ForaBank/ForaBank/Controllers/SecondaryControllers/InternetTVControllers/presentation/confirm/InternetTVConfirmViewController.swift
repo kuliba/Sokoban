@@ -4,6 +4,7 @@ import IQKeyboardManagerSwift
 class InternetTVConfirmViewController: UIViewController {
     
     var operatorsViewModel: OperatorsViewModel?
+    
     var viewModel: InternetTVConfirmViewModel? {
         didSet {
             guard let model = viewModel else { return }
@@ -180,11 +181,41 @@ class InternetTVConfirmViewController: UIViewController {
                     vc.operatorsViewModel = self.operatorsViewModel
                     if self.viewModel?.type == .gkh {
                         vc.printFormType = "housingAndCommunalService"
+                        vc.confirmModel?.type = .gkh
+                        if let name = self.viewModel?.fullName, let paymentOperationDetailId = model.data?.paymentOperationDetailId {
+                            
+                            if self.viewModel?.template == nil {
+                                self.viewModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+                                
+                            } else {
+                                self.viewModel?.templateButtonViewModel = .template(paymentOperationDetailId)
+                            }
+                        }
                     } else if self.viewModel?.type == .internetTV {
                         vc.printFormType = "internet"
+                        vc.confirmModel?.type = .internetTV
+                        if let name = self.viewModel?.fullName, let paymentOperationDetailId = model.data?.paymentOperationDetailId {
+                            
+                            if self.viewModel?.template == nil {
+                                self.viewModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+                                
+                            } else {
+                                self.viewModel?.templateButtonViewModel = .template(paymentOperationDetailId)
+                            }
+                        }
                     }
                     else if self.viewModel?.type == .transport {
                         vc.printFormType = "transport"
+                        vc.confirmModel?.type = .transport
+                        if let name = self.viewModel?.fullName, let paymentOperationDetailId = model.data?.paymentOperationDetailId {
+                            
+                            if self.viewModel?.template == nil {
+                                self.viewModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+                                
+                            } else {
+                                self.viewModel?.templateButtonViewModel = .template(paymentOperationDetailId)
+                            }
+                        }
                     }
                     vc.modalPresentationStyle = .fullScreen
                     self.present(vc, animated: true, completion: nil)
