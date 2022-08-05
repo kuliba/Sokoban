@@ -215,8 +215,8 @@ class ContactInputViewController: UIViewController {
         IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
         IQKeyboardManager.shared.enableAutoToolbar = true
-        navigationController?.view.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82)
-        navigationController?.navigationBar.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82)
+        navigationController?.view.backgroundColor = .white
+        navigationController?.navigationBar.backgroundColor = .white
         if let template = paymentTemplate {
             runBlockAfterDelay(0.2) {
                 self.setupAmount(amount: template.amount)
