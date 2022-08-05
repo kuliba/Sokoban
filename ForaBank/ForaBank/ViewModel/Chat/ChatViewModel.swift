@@ -41,8 +41,9 @@ extension ChatViewModel {
                              .email(mail: "fora-digital@forabank.ru")
                             ],
                             [.whatsapp(url: "https://api.whatsapp.com/send/?phone=%2B79257756555&text&app_absent=0"),
-                             .telegram(url: "https://telegram.me/forabank_bot"),
-                             .viber(url: "i don't know")
+                             .telegram(url: "https://telegram.me/forabank_bot")
+//                             ,
+//                             .viber(url: "i don't know")
                            ]]
         }
             

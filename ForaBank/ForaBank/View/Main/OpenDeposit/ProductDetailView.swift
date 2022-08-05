@@ -345,12 +345,14 @@ struct ProductDetailView: View {
                     .background(Color.buttonPrimary)
                     .foregroundColor(.white)
                     .cornerRadius(8)
+                    .padding(.bottom, 39)
             }
             
             DepositShowBottomSheetView(viewModel: viewModel.calculator.bottomSheet)
         }
         .navigationBarTitle(Text("Подробнее"), displayMode: .inline)
         .foregroundColor(.black)
+        .edgesIgnoringSafeArea(.bottom)
     }
 }
 

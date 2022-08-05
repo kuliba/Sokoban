@@ -18,7 +18,7 @@ struct ChooseCountryView: UIViewControllerRepresentable {
         controller.viewModel = viewModel
         
         context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
-            vc.parent?.navigationItem.searchController = vc.navigationItem.searchController
+            vc.parent?.navigationItem.searchController = nil
             vc.parent?.navigationItem.hidesSearchBarWhenScrolling = vc.navigationItem.hidesSearchBarWhenScrolling
             vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
             vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
