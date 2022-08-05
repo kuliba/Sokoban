@@ -143,20 +143,32 @@ extension ProductProfileHistoryView {
         func updateSegmentedBar(productId: ProductData.ID,
                                 statements: [ProductStatementData], isMapped: Bool = true ) {
             
-            guard let product = model.product(productId: productId),
-                  product.productType != .loan else { return }
+            guard let product = model.product(productId: productId) else { return }
+                
+            let statementFilteredOperation: [ProductStatementData]
             
-            let statementFiltered = statements
-                        .filter( { (product.productType != .deposit
-                                    ? $0.operationType == OperationType.debit
-                                    : $0.operationType == OperationType.credit)
-                            && Calendar.current.component(.month, from: $0.date)
-                            == Calendar.current.component(.month, from: Date())
-                        })
+            switch product.productType {
+            case .deposit:
+                
+                statementFilteredOperation = statements
+                    .filter { $0.operationType == OperationType.credit
+                           && $0.groupName == "Выплата процентов" }
+                    
+            case .account, .card:
+                
+                statementFilteredOperation = statements
+                    .filter { $0.operationType == OperationType.debit }
+            
+            case .loan: return
+            }
+            
+            let statementFilteredPeriod = statementFilteredOperation
+                .filter { Calendar.current.component(.month, from: $0.date)
+                       == Calendar.current.component(.month, from: Date()) }
             
             if isMapped {
                 
-                let dict = statementFiltered
+                let dict = statementFilteredPeriod
                             .reduce(into: [ ProductStatementMerchantGroup: Double]()) {
                                 $0[.init($1.groupName), default: 0] += $1.amount
                             }
@@ -170,7 +182,7 @@ extension ProductProfileHistoryView {
                                         model: model)
             } else {
                 
-                let dict = statementFiltered
+                let dict = statementFilteredPeriod
                             .reduce(into: [ String: Double]()) {
                                 $0[$1.groupName, default: 0] += $1.amount
                             }
