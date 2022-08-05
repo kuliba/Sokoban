@@ -73,6 +73,7 @@ struct PaymentsTransfersView: View {
                         ChooseCountryView(viewModel: model)
                             .navigationBarTitle("", displayMode: .inline)
                             .navigationBarBackButtonHidden(true)
+                            .navigationBarHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
                     case let .country(countryData):
