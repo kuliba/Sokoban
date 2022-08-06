@@ -372,9 +372,9 @@ class ProductProfileViewModel: ObservableObject {
                 
                 switch action {
                 case _ as ProductProfileCardViewModelAction.MoreButtonTapped:
-                    let myProductsViewModel = MyProductsViewModel(model)
+                    let myProductsViewModel = MyProductsViewModel(model, dismissAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link()) })
                     bind(myProductsViewModel)
-                    sheet = .init(type: .myProducts(myProductsViewModel))
+                    link = .myProducts(myProductsViewModel)
                     
                 default:
                     break
@@ -850,6 +850,7 @@ extension ProductProfileViewModel {
         case productInfo(InfoProductViewModel)
         case productStatement(ProductStatementViewModel)
         case meToMeExternal(MeToMeExternalViewModel)
+        case myProducts(MyProductsViewModel)
     }
     
     struct Sheet: Identifiable {
@@ -861,7 +862,6 @@ extension ProductProfileViewModel {
             
             case printForm(PrintFormView.ViewModel)
             case placesMap(PlacesViewModel)
-            case myProducts(MyProductsViewModel)
         }
     }
 }

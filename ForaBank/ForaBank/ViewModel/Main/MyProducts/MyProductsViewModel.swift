@@ -35,11 +35,15 @@ class MyProductsViewModel: ObservableObject {
         bind()
     }
 
-    init(_ model: Model) {
+    init(_ model: Model, dismissAction: @escaping () -> Void) {
 
         self.model = model
         sections = []
-        navigationBar = NavigationBarView.ViewModel(title: "Мои продукты", background: .barsTabbar)
+        
+        navigationBar = .init(title: "Мои продукты",
+                              leftButtons: [ NavigationBarView.ViewModel.BackButtonViewModel
+                                .init(icon: .ic24ChevronLeft, action: dismissAction) ],
+                              background: .barsTabbar)
         totalMoney = .init()
         
         bind()
