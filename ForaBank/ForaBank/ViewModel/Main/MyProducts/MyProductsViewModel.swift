@@ -146,7 +146,11 @@ class MyProductsViewModel: ObservableObject {
                     }
                 
                 totalMoney.updateBalance(balance: balance)
+                
+                update(sortedSections, with: model.settingsProductsSections)
+                
                 self.sections = sortedSections
+                bind(sections)
 
             }.store(in: &bindings)
 
@@ -268,6 +272,40 @@ class MyProductsViewModel: ObservableObject {
                 }
             }.store(in: &bindings)
     }
+    
+    private func bind(_ sections: [MyProductsSectionViewModel]) {
+        
+        for section in sections {
+            
+            section.$isCollapsed
+                .dropFirst()
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isCollapsed in
+            
+                    var settings = model.settingsProductsSections
+                    settings.update(sectionType: section.id, isCollapsed: isCollapsed)
+                    model.settingsProductsSectionsUpdate(settings)
+            
+                }.store(in: &bindings)
+        }
+    }
+    
+    private func update(_ sections: [MyProductsSectionViewModel],
+                        with settings: ProductsSectionsSettings) {
+        
+        for section in sections {
+            
+            if let isCollapsed = settings.collapsed[section.id] {
+                
+                section.isCollapsed = isCollapsed
+                
+            } else {
+                
+                section.isCollapsed = false
+            }
+        }
+    }
+    
 }
 
 extension MyProductsViewModel {

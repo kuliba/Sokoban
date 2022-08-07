@@ -50,11 +50,38 @@ extension Model {
         }
     }
     
+    var settingsProductsSections: ProductsSectionsSettings {
+        
+        do {
+    
+            let settings: ProductsSectionsSettings = try settingsAgent.load(type: .interface(.productsSections))
+            return settings
+        
+        } catch {
+            
+            return ProductsSectionsSettings(collapsed: [:])
+        }
+    }
+    
+    
     func settingsMainSectionsUpdate(_ settings: MainSectionsSettings) {
         
         do {
             
             try settingsAgent.store(settings, type: .interface(.mainSections))
+            
+        } catch {
+            
+            //TODO: log
+            print(error.localizedDescription)
+        }
+    }
+    
+    func settingsProductsSectionsUpdate(_ settings: ProductsSectionsSettings) {
+        
+        do {
+            
+            try settingsAgent.store(settings, type: .interface(.productsSections))
             
         } catch {
             
