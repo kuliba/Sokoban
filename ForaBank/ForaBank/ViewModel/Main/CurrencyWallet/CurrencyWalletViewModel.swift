@@ -41,6 +41,17 @@ class CurrencyWalletViewModel: ObservableObject {
     let title = "Обмен валют"
     let icon: Image = .init("Logo Fora Bank")
     
+    var verticalPadding: CGFloat {
+        
+        let safeAreaBottom = UIApplication.safeAreaInsets.bottom
+        
+        if safeAreaBottom == 34 {
+            return 20
+        }
+        
+        return safeAreaBottom
+    }
+    
     private var bindings = Set<AnyCancellable>()
     
     private var productType: ProductType? {

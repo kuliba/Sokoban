@@ -193,7 +193,9 @@ extension CurrencySwapView {
                         return
                     }
                     
-                    if сurrencyCurrentSwap.lastCurrencyAmount == 0 {
+                    let isCurrencyEquality = currencyCheckEquality(lhs: currencySwap.currencyAmount, rhs: value)
+                    
+                    if isCurrencyEquality == false {
                         сurrencyCurrentSwap.currencyAmount = value * currencyRate
                     }
                     
@@ -213,11 +215,17 @@ extension CurrencySwapView {
                         return
                     }
                     
-                    if currencySwap.lastCurrencyAmount == 0 {
-                        currencySwap.currencyAmount = value / currencyRate
-                    }
+                    currencySwap.currencyAmount = value / currencyRate
                     
                 }.store(in: &bindings)
+        }
+        
+        private func currencyCheckEquality (lhs: Double, rhs: Double) -> Bool {
+            
+            let value = NumberFormatter.decimal(lhs)
+            let lhs = NumberFormatter.decimal(value)
+            
+            return lhs == rhs
         }
         
         private func toggleCurrencyType() {
@@ -547,10 +555,12 @@ struct CurrencySwapView: View {
                     Text(viewModel.quotesInfo)
                         .font(.textBodySR12160())
                         .foregroundColor(.mainColorsGray)
-                        .fixedSize()
+                        .fixedSize(horizontal: true, vertical: false)
                         .frame(width: 72, alignment: .leading)
                 }
-            }.padding(20)
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 22)
         }
         .frame(height: 160)
         .padding(.horizontal, 20)

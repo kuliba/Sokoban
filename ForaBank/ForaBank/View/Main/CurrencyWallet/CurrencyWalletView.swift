@@ -51,7 +51,8 @@ struct CurrencyWalletView: View {
                 
                 ButtonSimpleView(viewModel: viewModel.continueButton)
                     .frame(height: 48)
-                    .padding(20)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, viewModel.verticalPadding)
                 
             case .spinner:
                 

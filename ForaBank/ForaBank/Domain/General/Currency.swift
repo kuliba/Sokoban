@@ -49,6 +49,19 @@ extension Currency {
             return ""
         }
     }
+    
+    var order: Int {
+        
+        switch self {
+        case .usd: return 1
+        case .eur: return 2
+        case .gbp: return 3
+        case .chf: return 4
+        case .chy: return 5
+        default:
+            return 0
+        }
+    }
 }
 
 //MARK: - Type

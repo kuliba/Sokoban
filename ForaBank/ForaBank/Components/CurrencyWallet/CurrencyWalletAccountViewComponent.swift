@@ -72,7 +72,7 @@ extension CurrencyWalletAccountView {
                         
                         if productsList.isEmpty == false {
                             
-                            let viewModel: OpenAccountViewModel = .init(model: model, items: OpenAccountViewModel.reduce(products: productsList))
+                            let viewModel: OpenAccountViewModel = .init(model: model, items: OpenAccountViewModel.reduce(products: productsList), currency: currency)
                             
                             bottomSheet = .init(type: .openAccount(viewModel))
                         }

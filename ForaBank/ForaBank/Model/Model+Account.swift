@@ -124,7 +124,7 @@ extension Model {
                 currencyCode: payload.currencyCode))
         let productsListError = ProductsListError.emptyData(message: ProductsListError.errorMessage)
 
-        action.send(ModelAction.Account.Informer.Show(message: "\(payload.currencyName) счет открывается"))
+        action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет открывается"))
 
         serverAgent.executeCommand(command: command) { result in
 
@@ -141,7 +141,7 @@ extension Model {
                         return
                     }
 
-                    self.action.send(ModelAction.Account.Informer.Show(message: "\(payload.currencyName) счет открыт"))
+                    self.action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет открыт"))
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.complete(data))
 
                 default:
@@ -326,7 +326,7 @@ extension ModelAction {
             struct Request: Action {
 
                 let verificationCode: String
-                let currencyName: String
+                let currency: Currency
                 let currencyCode: Int
             }
 

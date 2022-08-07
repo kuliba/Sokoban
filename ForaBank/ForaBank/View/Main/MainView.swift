@@ -109,7 +109,7 @@ struct MainView: View {
 
                 if let productsList = model.accountProductsList.value {
 
-                    let viewModel: OpenAccountViewModel = .init(model: model, items: OpenAccountViewModel.reduce(products: productsList))
+                    let viewModel: OpenAccountViewModel = .init(model: model, items: OpenAccountViewModel.reduce(products: productsList), currency: .rub)
 
                     OpenAccountView(viewModel: viewModel)
                 }
