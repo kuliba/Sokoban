@@ -29,7 +29,7 @@ struct OpenAccountView: View {
                 viewModel: .init(
                     model: viewModel.model,
                     item: viewModel.item,
-                    currencyName: viewModel.currencyName))
+                    currency: viewModel.currency))
         }
     }
 }

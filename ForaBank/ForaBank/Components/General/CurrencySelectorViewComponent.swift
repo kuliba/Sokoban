@@ -25,13 +25,7 @@ extension CurrencySelectorView {
         
         lazy var productCardSelector: ProductSelectorViewModel? = makeProductCardSelector()
         lazy var productAccountSelector: ProductSelectorViewModel? = makeProductAccountSelector()
-        
-        lazy var openAccount: CurrencyWalletAccountView.ViewModel = .init(
-            model: model,
-            cardIcon: Image("USD Account"),
-            currency: currency,
-            currencyName: "Валютный",
-            warning: .init(description: "Для завершения операции Вам необходимо открыть счет в долларах США"))
+        lazy var openAccount: CurrencyWalletAccountView.ViewModel = makeOpenAccount()
         
         init(_ model: Model, state: State, currency: Currency, currencyOperation: CurrencyOperation) {
             
@@ -51,6 +45,22 @@ extension CurrencySelectorView {
         
         private func bind() {
             
+            $currency
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] currency in
+                    
+                    if state == .openAccount {
+                        openAccount.currency = currency
+                    }
+                    
+                    guard let productAccountSelector = productAccountSelector else {
+                        return
+                    }
+                    
+                    productAccountSelector.currency = currency
+                    
+                }.store(in: &bindings)
+            
             $currencyOperation
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] currencyOperation in
@@ -62,48 +72,59 @@ extension CurrencySelectorView {
         
         private func makeProductCardSelector() -> ProductSelectorView.ViewModel? {
             
-            guard let productCards = model.products.value[.card],
-                  let productData = productCards.first(where: { $0 is ProductCardData }) else {
+            let products = model.products(currency: .rub).sorted { $0.productType.order < $1.productType.order }
+            
+            guard let productData = products.first else {
                 return nil
             }
             
-            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, productViewModel: .init(productId: productData.id, productData: productData, model: model))
+            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, currency: .rub, productViewModel: .init(productId: productData.id, productData: productData, model: model))
             
             return selectorViewModel
         }
         
         private func makeProductAccountSelector() -> ProductSelectorView.ViewModel? {
             
-            guard let productAccounts = model.products.value[.account],
-                  let productData = productAccounts.first(where: { $0 is ProductAccountData }) else {
+            let products = model.products(currency: currency).sorted { $0.productType.order < $1.productType.order }
+            
+            guard let productData = products.first else {
                 return nil
             }
             
-            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, productViewModel: .init(productId: productData.id, productData: productData, model: model), isDividerHiddable: true)
+            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, currency: currency, productViewModel: .init(productId: productData.id, productData: productData, model: model), isDividerHiddable: true)
             
             return selectorViewModel
         }
         
         private func updateProductSelectors(currencyOperation: CurrencyOperation) {
             
-            guard let productCardSelector = productCardSelector,
-                  let productAccountSelector = productAccountSelector else {
-                return
+            if let productCardSelector = productCardSelector {
+                
+                withAnimation {
+                    
+                    let equalityOperation = currencyOperation == .buy
+                    
+                    productCardSelector.title = equalityOperation ? "Откуда" : "Куда"
+                    productCardSelector.isDividerHiddable = equalityOperation ? false : true
+                    productCardSelector.dividerViewModel.pathInset = equalityOperation ? 5 : -5
+                }
             }
             
-            withAnimation {
+            if let productAccountSelector = productAccountSelector {
                 
-                let equalityOperation = currencyOperation == .buy
-                
-                productCardSelector.title = equalityOperation ? "Откуда" : "Куда"
-                productAccountSelector.title = equalityOperation ? "Куда" : "Откуда"
-                
-                productCardSelector.isDividerHiddable = equalityOperation ? false : true
-                productAccountSelector.isDividerHiddable = equalityOperation ? true : false
-                
-                productCardSelector.dividerViewModel.pathInset = equalityOperation ? 5 : -5
-                productAccountSelector.dividerViewModel.pathInset = equalityOperation ? 5 : -5
+                withAnimation {
+                    
+                    let equalityOperation = currencyOperation == .buy
+
+                    productAccountSelector.title = equalityOperation ? "Куда" : "Откуда"
+                    productAccountSelector.isDividerHiddable = equalityOperation ? true : false
+                    productAccountSelector.dividerViewModel.pathInset = equalityOperation ? 5 : -5
+                }
             }
+        }
+        
+        private func makeOpenAccount() -> CurrencyWalletAccountView.ViewModel {
+            return .init(model: model, currency: currency)
         }
     }
 }

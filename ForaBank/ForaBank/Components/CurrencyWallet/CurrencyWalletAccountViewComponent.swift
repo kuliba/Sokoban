@@ -20,15 +20,15 @@ extension CurrencyWalletAccountView {
         @Published var openAccountIcon: Image
         @Published var currency: Currency
         @Published var currencyName: String
-        @Published var warning: WarningViewModel
         @Published var bottomSheet: BottomSheet?
         
+        lazy var warning: WarningViewModel = makeWarning()
         var bindings = Set<AnyCancellable>()
         
         private let model: Model
         let title: String
         
-        var currencyTitle: String {
+        var openTitle: String {
             "Открыть \(currency.description) счет"
         }
         
@@ -44,11 +44,10 @@ extension CurrencyWalletAccountView {
         
         init(model: Model,
              title: String = "Куда",
-             cardIcon: Image,
+             cardIcon: Image = Image("USD Account"),
              openAccountIcon: Image = Image("Plus Account"),
-             currency: Currency,
-             currencyName: String,
-             warning: WarningViewModel) {
+             currencyName: String = "Валютный",
+             currency: Currency) {
             
             self.model = model
             self.title = title
@@ -56,7 +55,6 @@ extension CurrencyWalletAccountView {
             self.openAccountIcon = openAccountIcon
             self.currency = currency
             self.currencyName = currencyName
-            self.warning = warning
             
             bind()
         }
@@ -74,7 +72,7 @@ extension CurrencyWalletAccountView {
                         
                         if productsList.isEmpty == false {
                             
-                            let viewModel: OpenAccountViewModel = .init(model: model, items: OpenAccountViewModel.reduce(products: productsList))
+                            let viewModel: OpenAccountViewModel = .init(model: model, items: OpenAccountViewModel.reduce(products: productsList), currency: currency)
                             
                             bottomSheet = .init(type: .openAccount(viewModel))
                         }
@@ -84,6 +82,22 @@ extension CurrencyWalletAccountView {
                     }
                     
                 }.store(in: &bindings)
+            
+            $currency
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] currency in
+                    
+                    warning.description = warningTitle(currency)
+                    
+                }.store(in: &bindings)
+        }
+        
+        private func warningTitle(_ currency: Currency) -> String {
+            "Для завершения операции Вам необходимо открыть счет \(currency.currencyTitle)"
+        }
+        
+        private func makeWarning() -> WarningViewModel {
+            .init(icon: Image("Warning Account"), description: warningTitle(currency))
         }
     }
 }
@@ -94,10 +108,10 @@ extension CurrencyWalletAccountView.ViewModel {
     
     class WarningViewModel: ObservableObject {
         
+        @Published var description: String
         let icon: Image
-        let description: String
         
-        init(icon: Image = Image("Warning Account"), description: String) {
+        init(icon: Image, description: String) {
             
             self.icon = icon
             self.description = description
@@ -156,7 +170,7 @@ extension CurrencyWalletAccountView {
                         
                         HStack(alignment: .center, spacing: 10) {
                             
-                            Text(viewModel.currencyTitle)
+                            Text(viewModel.openTitle)
                                 .font(.textBodyMM14200())
                                 .foregroundColor(.mainColorsBlack)
                             
@@ -199,6 +213,8 @@ extension CurrencyWalletAccountView {
                 Text(viewModel.description)
                     .font(.textBodySR12160())
                     .foregroundColor(.mainColorsGray)
+                    .frame(height: 48, alignment: .top)
+                    .padding(.trailing)
             }
         }
     }
@@ -216,12 +232,7 @@ extension CurrencyWalletAccountView {
 
 extension CurrencyWalletAccountView.ViewModel {
     
-    static let sample = CurrencyWalletAccountView.ViewModel(
-        model: .productsMock,
-        cardIcon: Image("USD Account"),
-        currency: Currency(description: "USD"),
-        currencyName: "Валютный",
-        warning: .init(description: "Для завершения операции Вам необходимо открыть счет в долларах США"))
+    static let sample: CurrencyWalletAccountView.ViewModel = .init(model: .productsMock, currency: .usd)
 }
 
 // MARK: - Previews

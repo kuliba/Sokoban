@@ -17,7 +17,7 @@ extension OpenAccountPerformView {
         let action: PassthroughSubject<Action, Never> = .init()
 
         @Published var confirmCode: String
-        @Published var currencyName: String
+        @Published var currency: Currency
         @Published var prepareData: OpenAccountPrepareViewModel
         @Published var item: OpenAccountItemViewModel
         @Published var operationType: OpenAccountPerformType
@@ -78,7 +78,7 @@ extension OpenAccountPerformView {
 
         lazy var confirm: ConfirmView.ViewModel = .init(prepareData: prepareData, confirmCode: confirmCode)
 
-        lazy var button: OpenAccountButtonView.ViewModel = .init(currencyName: currencyName, confirmCode: confirmCode, operationType: operationType) { [weak self] in
+        lazy var button: OpenAccountButtonView.ViewModel = .init(currency: currency, confirmCode: confirmCode, operationType: operationType) { [weak self] in
 
             guard let self = self else {
                 return
@@ -97,12 +97,12 @@ extension OpenAccountPerformView {
         init(model: Model,
              item: OpenAccountItemViewModel,
              spinnerIcon: Image = .init("Logo Fora Bank"),
-             currencyName: String) {
+             currency: Currency) {
 
             self.model = model
             self.item = item
             self.spinnerIcon = spinnerIcon
-            self.currencyName = currencyName
+            self.currency = currency
             self.operationType = item.isAccountOpen ? .opened : .open
 
             prepareData = .init()
@@ -211,7 +211,7 @@ extension OpenAccountPerformView {
                         
                         model.action.send(ModelAction.Account.MakeOpenAccount.Request(
                             verificationCode: verificationCode,
-                            currencyName: currencyName,
+                            currency: currency,
                             currencyCode: item.currencyCode)
                         )
 
@@ -269,13 +269,13 @@ extension OpenAccountPerformView {
                 }.store(in: &bindings)
 
             $operationType
-                .combineLatest($currencyName, $confirmCode)
+                .combineLatest($currency, $confirmCode)
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] data in
 
                     button.update(
                         operationType: data.0,
-                        currencyName: data.1,
+                        currency: data.1,
                         confirmCode: data.2)
 
                 }.store(in: &bindings)
@@ -526,13 +526,13 @@ struct OpenAccountPerformViewComponent_Previews: PreviewProvider {
                 viewModel: .init(
                     model: .productsMock,
                     item: .empty,
-                    currencyName: "USD"))
+                    currency: .init(description: "USD")))
 
             OpenAccountPerformView(
                 viewModel: .init(
                     model: .productsMock,
                     item: .empty,
-                    currencyName: "USD"))
+                    currency: .init(description: "USD")))
         }
         .frame(height: 220)
         .padding(.top)

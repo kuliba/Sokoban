@@ -14,7 +14,7 @@ class OpenAccountViewModel: ObservableObject {
 
     @Published var item: OpenAccountItemViewModel
     @Published var items: [OpenAccountItemViewModel]
-    @Published var currencyName: String
+    @Published var currency: Currency
 
     let model: Model
 
@@ -28,14 +28,14 @@ class OpenAccountViewModel: ObservableObject {
 
     init(model: Model,
          items: [OpenAccountItemViewModel],
-         currencyName: String = "") {
+         currency: Currency) {
 
         self.model = model
         self.item = .empty
         self.items = items
-        self.currencyName = currencyName
+        self.currency = currency
 
-        pagerViewModel = .init(pagesCount: items.count)
+        pagerViewModel = .init(pagesCount: items.count, currentIndex: currency.order)
 
         if let currentItem = currentItem {
             self.item = currentItem
@@ -104,12 +104,12 @@ class OpenAccountViewModel: ObservableObject {
 
                 let currencyType = currentItem.currencyType
 
-                guard currencyName != currencyType.rawValue else {
+                guard currency.description != currencyType.rawValue else {
                     return
                 }
 
                 item = currentItem
-                currencyName = currencyType.rawValue
+                currency = .init(description: currencyType.rawValue)
 
             }.store(in: &bindings)
     }
@@ -302,5 +302,5 @@ extension OpenAccountViewModel {
                 ],
                 currencyType: .CHF,
                 isAccountOpen: false)
-        ])
+        ], currency: .usd)
 }

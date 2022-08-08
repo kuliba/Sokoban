@@ -95,6 +95,7 @@ extension Model {
                         .Response(result: .success(.init(debitAmount: transferResponse.debitAmount,
                                                          fee: transferResponse.fee,
                                                          creditAmount: transferResponse.creditAmount,
+                                                         currencyRate: transferResponse.currencyRate,
                                                          currencyPayer: transferResponse.currencyPayer,
                                                          currencyPayee: transferResponse.currencyPayee))))
                     

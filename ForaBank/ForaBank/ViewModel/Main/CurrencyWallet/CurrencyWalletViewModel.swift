@@ -27,6 +27,7 @@ class CurrencyWalletViewModel: ObservableObject {
     @Published var selectorViewModel: CurrencySelectorView.ViewModel?
     @Published var confirmationViewModel: CurrencyExchangeConfirmationView.ViewModel?
     @Published var successViewModel: CurrencyExchangeSuccessView.ViewModel?
+    @Published var selectorState: CurrencySelectorView.ViewModel.State
     @Published var isShouldScrollToTop: Bool
     
     private lazy var listViewModel: CurrencyListView.ViewModel = makeListViewModel()
@@ -39,6 +40,17 @@ class CurrencyWalletViewModel: ObservableObject {
     let backButton: NavigationButtonViewModel
     let title = "Обмен валют"
     let icon: Image = .init("Logo Fora Bank")
+    
+    var verticalPadding: CGFloat {
+        
+        let safeAreaBottom = UIApplication.safeAreaInsets.bottom
+        
+        if safeAreaBottom == 34 {
+            return 20
+        }
+        
+        return safeAreaBottom
+    }
     
     private var bindings = Set<AnyCancellable>()
     
@@ -85,6 +97,7 @@ class CurrencyWalletViewModel: ObservableObject {
         
         backButton = .init(icon: .ic24ChevronLeft, action: action)
         buttonStyle = .red
+        selectorState = .productSelector
         isShouldScrollToTop = false
     }
     
@@ -112,6 +125,21 @@ class CurrencyWalletViewModel: ObservableObject {
                     
                 default:
                     break
+                }
+                
+            }.store(in: &bindings)
+        
+        model.products
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] products in
+                
+                if selectorState == .openAccount {
+                    
+                    let products = products.values.flatMap {$0}.filter { $0.currency == currency.description }
+                    
+                    if products.isEmpty == false {
+                        selectorViewModel = makeSelectorViewModel()
+                    }
                 }
                 
             }.store(in: &bindings)
@@ -191,30 +219,35 @@ class CurrencyWalletViewModel: ObservableObject {
     
     private func makeSelectorViewModel() -> CurrencySelectorView.ViewModel {
         
-        let productAccounts = model.products.value[.account]
-        var selectorState: CurrencySelectorView.ViewModel.State = .productSelector
+        let products = model.products(currency: currency).sorted { $0.productType.order < $1.productType.order }
         
-        if productAccounts == nil {
-            
-            buttonStyle = .inactive
-            selectorState = .openAccount
-        }
+        buttonStyle = products.isEmpty == false ? .red : .inactive
+        selectorState = products.isEmpty == false ? .productSelector : .openAccount
         
         let productSelectorViewModel = CurrencySelectorView.ViewModel(model, state: selectorState, currency: currency, currencyOperation: currencyOperation)
         
-        if let productCardSelector = productSelectorViewModel.productCardSelector,
-           let productAccountSelector = productSelectorViewModel.productAccountSelector {
+        if let productCardSelector = productSelectorViewModel.productCardSelector {
+            
+            productCardSelector.productViewModel.$isCollapsed
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isCollapsed in
+                    
+                    isShouldScrollToTop = isCollapsed == false
+                    
+                }.store(in: &bindings)
+        }
+        
+        if let productAccountSelector = productSelectorViewModel.productAccountSelector {
             
             if let productId = model.product(currency: currency) {
                 productAccountSelector.setProductSelectorData(productId: productId)
             }
             
-            productCardSelector.productViewModel.$isCollapsed
-                .combineLatest(productAccountSelector.productViewModel.$isCollapsed)
+            productAccountSelector.productViewModel.$isCollapsed
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] isCollapsed in
                     
-                    isShouldScrollToTop = isCollapsed.0 == false || isCollapsed.1 == false
+                    isShouldScrollToTop = isCollapsed == false
                     
                 }.store(in: &bindings)
         }
