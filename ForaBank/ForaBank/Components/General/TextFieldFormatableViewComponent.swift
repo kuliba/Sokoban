@@ -74,6 +74,12 @@ extension TextFieldFormatableView {
                 self.action = action
             }
         }
+        
+        init(doneButton: ButtonViewModel, closeButton: ButtonViewModel? = nil) {
+            
+            self.doneButton = doneButton
+            self.closeButton = closeButton
+        }
     }
 }
 
