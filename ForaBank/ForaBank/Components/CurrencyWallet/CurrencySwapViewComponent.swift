@@ -148,9 +148,16 @@ extension CurrencySwapView {
                     case let payload as CurrencySwapAction.TextField.Done:
                         
                         let currencyAmount = payload.currencyAmount
-                        updateCurrencyAction(currencyAmount)
+                                                
+                        if currencyOperation == .sell {
+                            сurrencyCurrentSwap.lastCurrencyAmount = 0
+                        }
                         
-                        сurrencyCurrentSwap.lastCurrencyAmount = 0
+                        let isEquality = currencyEquality(lhs: сurrencyCurrentSwap.currencyAmount / currencyRate, rhs: currencyAmount)
+                        
+                        if isEquality == false {
+                            updateCurrencyAction(currencyAmount)
+                        }
                         
                     default:
                         break
@@ -170,9 +177,14 @@ extension CurrencySwapView {
                     case let payload as CurrencySwapAction.TextField.Done:
                         
                         let currencyAmount = payload.currencyAmount
-                        updateCurrencyCurrentAction(currencyAmount)
                         
-                        currencySwap.lastCurrencyAmount = 0
+                        let isEquality = currencyEquality(lhs: currencySwap.currencyAmount * currencyRate, rhs: currencyAmount)
+                        
+                        if isEquality == false {
+                            currencySwap.lastCurrencyAmount = 0
+                        }
+                        
+                        updateCurrencyCurrentAction(currencyAmount)
                         
                     default:
                         break
@@ -193,10 +205,19 @@ extension CurrencySwapView {
                         return
                     }
                     
-                    let isCurrencyEquality = currencyCheckEquality(lhs: currencySwap.currencyAmount, rhs: value)
+                    let isEquality = currencyEquality(lhs: currencySwap.currencyAmount, rhs: value)
                     
-                    if isCurrencyEquality == false {
+                    if isEquality == false {
+                        
                         сurrencyCurrentSwap.currencyAmount = value * currencyRate
+                        
+                    } else {
+                        
+                        if сurrencyCurrentSwap.lastCurrencyAmount == 0 {
+                            сurrencyCurrentSwap.currencyAmount = value * currencyRate
+                        } else {
+                            сurrencyCurrentSwap.currencyAmount = сurrencyCurrentSwap.lastCurrencyAmount
+                        }
                     }
                     
                 }.store(in: &bindings)
@@ -215,12 +236,17 @@ extension CurrencySwapView {
                         return
                     }
                     
-                    currencySwap.currencyAmount = value / currencyRate
+                    switch currencyOperation {
+                    case .buy:
+                        currencySwap.currencyAmount = roundDown(value: value / currencyRate)
+                    case .sell:
+                        currencySwap.currencyAmount = roundUp(value: value / currencyRate)
+                    }
                     
                 }.store(in: &bindings)
         }
         
-        private func currencyCheckEquality (lhs: Double, rhs: Double) -> Bool {
+        private func currencyEquality (lhs: Double, rhs: Double) -> Bool {
             
             let value = NumberFormatter.decimal(lhs)
             let lhs = NumberFormatter.decimal(value)
@@ -241,6 +267,27 @@ extension CurrencySwapView {
                 сurrencyCurrentSwap.title = currencyOperation == .buy ? "У меня есть" : "Я получу"
             }
         }
+        
+        private func roundUp(degree: Int = 2, value: Double) -> Double {
+            
+            let divider = pow(10, Double(degree))
+            let rounded = round(value * divider) / divider
+            
+            return rounded
+        }
+        
+        private func roundDown(degree: Int = 2, value: Double) -> Double {
+            
+            let divider = pow(10, Double(degree))
+            let rounded = floor(value * divider) / divider
+            
+            let decimalNumber: NSDecimalNumber = .init(value: rounded)
+            let decimalNumberHandler: NSDecimalNumberHandler = .init(roundingMode: .down, scale: 2, raiseOnExactness: false, raiseOnOverflow: false, raiseOnUnderflow: false, raiseOnDivideByZero: true)
+            
+            decimalNumber.rounding(accordingToBehavior: decimalNumberHandler)
+            
+            return decimalNumber.doubleValue
+        }
     }
 }
 
@@ -251,21 +298,70 @@ extension CurrencySwapView.ViewModel {
     private func updateCurrencyAction(_ currencyAmount: Double) {
         
         currencySwap.currencyAmount = currencyAmount
-        сurrencyCurrentSwap.currencyAmount = currencyAmount * currencyRate
+        
+        switch currencyOperation {
+        case .buy:
+            
+            if сurrencyCurrentSwap.lastCurrencyAmount == 0 {
+                сurrencyCurrentSwap.currencyAmount = currencyAmount * currencyRate
+            } else {
+                
+                if сurrencyCurrentSwap.lastCurrencyAmount > 0 && currencySwap.lastCurrencyAmount > 0 {
+                    сurrencyCurrentSwap.currencyAmount = сurrencyCurrentSwap.lastCurrencyAmount
+                } else {
+                    сurrencyCurrentSwap.currencyAmount = currencyAmount * currencyRate
+                }
+            }
+            
+        case .sell:
+            
+            if сurrencyCurrentSwap.lastCurrencyAmount == 0 {
+                сurrencyCurrentSwap.currencyAmount = currencyAmount * currencyRate
+            } else {
+                сurrencyCurrentSwap.currencyAmount = сurrencyCurrentSwap.lastCurrencyAmount
+            }
+        }
     }
     
     private func updateCurrencyCurrentAction(_ currencyAmount: Double) {
         
         сurrencyCurrentSwap.currencyAmount = currencyAmount
-        currencySwap.currencyAmount = currencyAmount / currencyRate
+     
+        switch currencyOperation {
+        case .buy:
+            currencySwap.currencyAmount = roundDown(value: currencyAmount / currencyRate)
+        case .sell:
+            currencySwap.currencyAmount = roundUp(value: currencyAmount / currencyRate)
+        }
     }
     
     private func updateCurrencyAmoun(_ currencyAmount: Double) {
-        currencySwap.currencyAmount = сurrencyCurrentSwap.lastCurrencyAmount / currencyAmount
+        
+        switch currencyOperation {
+        case .buy:
+            currencySwap.currencyAmount = roundDown(value: сurrencyCurrentSwap.currencyAmount / currencyAmount)
+        case .sell:
+            currencySwap.currencyAmount = roundUp(value: сurrencyCurrentSwap.currencyAmount / currencyAmount)
+        }
+        
+        guard currencyOperation == .buy else {
+            return
+        }
+        
+        if сurrencyCurrentSwap.lastCurrencyAmount > 0 {
+            сurrencyCurrentSwap.currencyAmount = сurrencyCurrentSwap.lastCurrencyAmount
+        }
     }
     
     private func updateCurrencyCurrentAmoun(_ currencyAmount: Double) {
-        сurrencyCurrentSwap.currencyAmount = currencySwap.currencyAmount * currencyAmount
+        
+        if сurrencyCurrentSwap.lastCurrencyAmount == 0 {
+            сurrencyCurrentSwap.currencyAmount = currencySwap.currencyAmount * currencyAmount
+        } else {
+            
+            сurrencyCurrentSwap.currencyAmount = сurrencyCurrentSwap.lastCurrencyAmount
+            currencySwap.currencyAmount = сurrencyCurrentSwap.currencyAmount / currencyRate
+        }
     }
     
     private func update(currencyWalletList: [CurrencyWalletData], currencyData: CurrencyData?) {

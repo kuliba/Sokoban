@@ -312,8 +312,8 @@ extension CurrencyListView.ViewModel {
             return .init(
                 icon: icon?.image,
                 currency: Currency(description: item.code),
-                rateBuy: NumberFormatter.decimal(item.rateBuy),
-                rateSell: NumberFormatter.decimal(item.rateSell),
+                rateBuy: NumberFormatter.decimal(item.rateSell),
+                rateSell: NumberFormatter.decimal(item.rateBuy),
                 iconId: item.md5hash,
                 isSelected: currency.description == item.code)
         }
@@ -328,8 +328,8 @@ extension CurrencyListView.ViewModel {
             return .init(
                 icon: icon?.image,
                 currency: Currency(description: item.code),
-                rateBuy: NumberFormatter.decimal(item.rateBuy),
-                rateSell: NumberFormatter.decimal(item.rateSell),
+                rateBuy: NumberFormatter.decimal(item.rateSell),
+                rateSell: NumberFormatter.decimal(item.rateBuy),
                 iconId: item.md5hash,
                 isSelected: currency.description == item.code)
         }
