@@ -39,7 +39,6 @@ extension CurrencyExchangeConfirmationView {
                   let creditAmount = response.creditAmount,
                   let currencyPayerCode = response.currencyPayer?.description,
                   let currencyPayeeCode = response.currencyPayee?.description,
-                  let currencyPayee = response.currencyPayee,
                   let currencyRate = response.currencyRate else {
                 return nil
             }
@@ -56,20 +55,25 @@ extension CurrencyExchangeConfirmationView {
                                                 currencyCode: currencyPayeeCode,
                                                 style: .fraction) ?? String(creditAmount)
             
-            courseChangeViewModel = makeCourseChange(currency: currencyPayee, currencyRate: currencyRate)
+            courseChangeViewModel = makeCourseChange(model: model,
+                                                     currencyCode: currencyPayeeCode,
+                                                     currencyRate: currencyRate)
         }
     }
 }
 
 extension CurrencyExchangeConfirmationView.ViewModel {
     
-    private func makeCourseChange(currency: Currency, currencyRate: Double) -> CurrencyExchangeConfirmationView.CourseChangeViewModel? {
+    private func makeCourseChange(model: Model, currencyCode: String, currencyRate: Double) -> CurrencyExchangeConfirmationView.CourseChangeViewModel? {
         
-        guard currencyRate > 0 else {
+        let currencyData = model.dictionaryCurrency(for: currencyCode)
+        let currencyRateString = NumberFormatter.decimal(currencyRate)
+        
+        guard let currencyData = currencyData, let currencySymbol = currencyData.currencySymbol, currencyRate > 0 else {
             return nil
         }
         
-        return .init(currency: currency, currencyRate: currencyRate)
+        return .init(currencySymbol: currencySymbol, currencyRate: currencyRateString)
     }
 }
 
@@ -79,17 +83,17 @@ extension CurrencyExchangeConfirmationView {
     
     class CourseChangeViewModel: ObservableObject {
         
-        let currency: Currency
-        let currencyRate: Double
+        let currencySymbol: String
+        let currencyRate: String
         let icon: Image
         
         var title: String {
-            "Курс изменился 1\(currency.description) = \(currencyRate), мы пересчитали сумму операции"
+            "Курс изменился 1\(currencySymbol) = \(currencyRate), мы пересчитали сумму операции"
         }
         
-        init(currency: Currency, currencyRate: Double, icon: Image = .init("Warning Course")) {
+        init(currencySymbol: String, currencyRate: String, icon: Image = .init("Warning Course")) {
             
-            self.currency = currency
+            self.currencySymbol = currencySymbol
             self.currencyRate = currencyRate
             self.icon = icon
         }
@@ -109,7 +113,7 @@ struct CurrencyExchangeConfirmationView: View {
             Color.mainColorsGrayLightest
                 .cornerRadius(12)
             
-            VStack(spacing: 16) {
+            VStack(alignment: .leading, spacing: 0) {
                 
                 HStack {
                     
@@ -133,10 +137,18 @@ struct CurrencyExchangeConfirmationView: View {
                     .font(.textBodyMM14200())
                     .foregroundColor(.textSecondary)
                     
-                }.padding(.horizontal, 20)
+                }.padding(20)
+                
+                if let courseChangeViewModel = viewModel.courseChangeViewModel {
+                    
+                    CourseChangeView(viewModel: courseChangeViewModel)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 20)
+                }
             }
         }
-        .frame(height: 124)
+        .fixedSize(horizontal: false, vertical: true)
         .padding(.horizontal, 20)
     }
 }
@@ -151,11 +163,12 @@ extension CurrencyExchangeConfirmationView {
         
         var body: some View {
             
-            HStack {
+            HStack(alignment: .top) {
                 
                 viewModel.icon
                     .resizable()
                     .frame(width: 16, height: 16)
+                    .padding(.top, 2)
                 
                 Text(viewModel.title)
                     .font(.textBodyMR14200())
@@ -182,6 +195,6 @@ struct CurrencyExchangeConfirmationView_Previews: PreviewProvider {
     static var previews: some View {
         
         CurrencyExchangeConfirmationView(viewModel: .sample)
-            .previewLayout(.fixed(width: 375, height: 160))
+            .previewLayout(.fixed(width: 375, height: 200))
     }
 }

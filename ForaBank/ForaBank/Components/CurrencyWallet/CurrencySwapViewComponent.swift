@@ -74,8 +74,8 @@ extension CurrencySwapView {
                     
                     let currencyData = currencyList.first(where: { $0.code == currency.description })
                     
-                    update(currencyWalletList: currencyWalletList, currencyData: currencyData)
-                    updateIcon(currencyWalletList: currencyWalletList, images: images)
+                    update(currencyWalletList, currencyData: currencyData)
+                    updateIcon(currencyWalletList, images: images)
                     
                 }.store(in: &bindings)
 
@@ -102,7 +102,7 @@ extension CurrencySwapView {
                         let currencyWalletList = model.currencyWalletList.value
                         let currencyData = model.currencyList.value.first(where: { $0.code == currency.description })
                         
-                        update(currencyWalletList: currencyWalletList, currencyData: currencyData)
+                        update(currencyWalletList, currencyData: currencyData)
                         
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
                         
@@ -130,8 +130,8 @@ extension CurrencySwapView {
                     
                     let currencyData = currencyList.first(where: { $0.code == currency.description })
                     
-                    update(currencyWalletList: currencyWalletList, currencyData: currencyData)
-                    updateIcon(currencyWalletList: currencyWalletList, images: images)
+                    update(currencyWalletList, currencyData: currencyData)
+                    updateIcon(currencyWalletList, images: images)
                     
                 }.store(in: &bindings)
             
@@ -208,9 +208,7 @@ extension CurrencySwapView {
                     let isEquality = currencyEquality(lhs: currencySwap.currencyAmount, rhs: value)
                     
                     if isEquality == false {
-                        
                         сurrencyCurrentSwap.currencyAmount = value * currencyRate
-                        
                     } else {
                         
                         if сurrencyCurrentSwap.lastCurrencyAmount == 0 {
@@ -306,10 +304,10 @@ extension CurrencySwapView.ViewModel {
                 сurrencyCurrentSwap.currencyAmount = currencyAmount * currencyRate
             } else {
                 
-                if сurrencyCurrentSwap.lastCurrencyAmount > 0 && currencySwap.lastCurrencyAmount > 0 {
-                    сurrencyCurrentSwap.currencyAmount = сurrencyCurrentSwap.lastCurrencyAmount
-                } else {
+                if сurrencyCurrentSwap.lastCurrencyAmount == 0 && currencySwap.lastCurrencyAmount == 0 {
                     сurrencyCurrentSwap.currencyAmount = currencyAmount * currencyRate
+                } else {
+                    сurrencyCurrentSwap.currencyAmount = сurrencyCurrentSwap.lastCurrencyAmount
                 }
             }
             
@@ -339,17 +337,15 @@ extension CurrencySwapView.ViewModel {
         
         switch currencyOperation {
         case .buy:
+            
             currencySwap.currencyAmount = roundDown(value: сurrencyCurrentSwap.currencyAmount / currencyAmount)
+            
+            if сurrencyCurrentSwap.lastCurrencyAmount > 0 {
+                сurrencyCurrentSwap.currencyAmount = сurrencyCurrentSwap.lastCurrencyAmount
+            }
+            
         case .sell:
             currencySwap.currencyAmount = roundUp(value: сurrencyCurrentSwap.currencyAmount / currencyAmount)
-        }
-        
-        guard currencyOperation == .buy else {
-            return
-        }
-        
-        if сurrencyCurrentSwap.lastCurrencyAmount > 0 {
-            сurrencyCurrentSwap.currencyAmount = сurrencyCurrentSwap.lastCurrencyAmount
         }
     }
     
@@ -364,7 +360,7 @@ extension CurrencySwapView.ViewModel {
         }
     }
     
-    private func update(currencyWalletList: [CurrencyWalletData], currencyData: CurrencyData?) {
+    private func update(_ currencyWalletList: [CurrencyWalletData], currencyData: CurrencyData?) {
         
         let items = CurrencyListViewModel.reduceCurrencyWallet(currencyWalletList, images: model.images.value, currency: currency)
         let item = items.first(where: { $0.currency.description == currency.description })
@@ -389,30 +385,30 @@ extension CurrencySwapView.ViewModel {
             
             if currencyOperation == .buy {
                 
-                if сurrencyCurrentSwap.lastCurrencyAmount > 0 {
+                if сurrencyCurrentSwap.lastCurrencyAmount == 0 {
                     
-                    updateCurrencyAmoun(currencyAmount)
+                    updateCurrencyCurrentAmoun(currencyAmount)
 
                 } else {
                     
-                    updateCurrencyCurrentAmoun(currencyAmount)
+                    updateCurrencyAmoun(currencyAmount)
                 }
                 
             } else {
                 
-                if currencySwap.lastCurrencyAmount > 0 {
+                if currencySwap.lastCurrencyAmount == 0 {
                     
-                    updateCurrencyCurrentAmoun(currencyAmount)
+                    updateCurrencyAmoun(currencyAmount)
                     
                 } else {
                     
-                    updateCurrencyAmoun(currencyAmount)
+                    updateCurrencyCurrentAmoun(currencyAmount)
                 }
             }
         }
     }
     
-    private func updateIcon(currencyWalletList: [CurrencyWalletData], images: [String: ImageData]) {
+    private func updateIcon(_ currencyWalletList: [CurrencyWalletData], images: [String: ImageData]) {
         
         let items = CurrencyListViewModel.reduceCurrencyWallet(currencyWalletList, images: images, currency: currency)
         let item = items.first(where: { $0.currency.description == currency.description })
@@ -464,22 +460,21 @@ extension CurrencySwapView.ViewModel {
             formatter: .decimal(),
             isEnabled: true,
             limit: 9,
-            toolbar: .init(
-                doneButton: .init(isEnabled: true) { [weak self] in
-                    
-                    guard let self = self,
-                          let text = self.textField.text,
-                          let value = NumberFormatter.decimal(text) else {
-                        return
-                    }
-                    
-                    self.currencyAmount = value
-                    self.lastCurrencyAmount = value
-                    
-                    self.action.send(CurrencySwapAction.TextField.Done(currencyAmount: self.currencyAmount))
-                    UIApplication.shared.endEditing()
-                    
-                }, closeButton: nil))
+            toolbar: .init(doneButton: .init(isEnabled: true) { [weak self] in
+                
+                guard let self = self,
+                      let text = self.textField.text,
+                      let value = NumberFormatter.decimal(text) else {
+                    return
+                }
+                
+                self.currencyAmount = value
+                self.lastCurrencyAmount = value
+                
+                self.action.send(CurrencySwapAction.TextField.Done(currencyAmount: self.currencyAmount))
+                UIApplication.shared.endEditing()
+                
+            }))
 
         init(icon: Image?, currencyAmount: Double, title: String = "", currency: Currency) {
 
@@ -702,7 +697,7 @@ extension CurrencySwapView {
                             textColor: .mainColorsBlack,
                             tintColor: .mainColorsBlack,
                             keyboardType: .decimalPad)
-                        .fixedSize()
+                        .fixedSize(horizontal: true, vertical: false)
 
                         Text(viewModel.currency.description)
                             .font(.textH4M16240())
