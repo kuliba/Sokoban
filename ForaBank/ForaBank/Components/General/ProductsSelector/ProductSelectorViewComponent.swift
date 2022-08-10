@@ -23,6 +23,7 @@ extension ProductSelectorView {
         @Published var isDividerHiddable: Bool
         @Published var productViewModel: ProductContentViewModel
         @Published var listViewModel: ProductsListView.ViewModel?
+        @Published var isUserInteractionDisabled: Bool
         
         var bindings = Set<AnyCancellable>()
         
@@ -35,6 +36,7 @@ extension ProductSelectorView {
              currency: Currency,
              productViewModel: ProductContentViewModel,
              listViewModel: ProductsListView.ViewModel? = nil,
+             isUserInteractionDisabled: Bool = false,
              isDividerHiddable: Bool = false) {
             
             self.model = model
@@ -42,6 +44,7 @@ extension ProductSelectorView {
             self.currency = currency
             self.productViewModel = productViewModel
             self.listViewModel = listViewModel
+            self.isUserInteractionDisabled = isUserInteractionDisabled
             self.isDividerHiddable = isDividerHiddable
             
             bind()
@@ -309,7 +312,9 @@ struct ProductSelectorView: View {
                     DividerView(viewModel: viewModel.dividerViewModel)
                 }
             }
-        }.background(Color.mainColorsGrayLightest)
+        }
+        .disabled(viewModel.isUserInteractionDisabled)
+        .background(Color.mainColorsGrayLightest)
     }
 }
 

@@ -21,6 +21,7 @@ extension CurrencyWalletAccountView {
         @Published var currency: Currency
         @Published var currencyName: String
         @Published var bottomSheet: BottomSheet?
+        @Published var isUserInteractionDisabled: Bool
         
         lazy var warning: WarningViewModel = makeWarning()
         var bindings = Set<AnyCancellable>()
@@ -47,6 +48,7 @@ extension CurrencyWalletAccountView {
              cardIcon: Image = Image("USD Account"),
              openAccountIcon: Image = Image("Plus Account"),
              currencyName: String = "Валютный",
+             isUserInteractionDisabled: Bool = false,
              currency: Currency) {
             
             self.model = model
@@ -55,6 +57,7 @@ extension CurrencyWalletAccountView {
             self.openAccountIcon = openAccountIcon
             self.currency = currency
             self.currencyName = currencyName
+            self.isUserInteractionDisabled = isUserInteractionDisabled
             
             bind()
         }
@@ -139,6 +142,7 @@ struct CurrencyWalletAccountView: View {
             }
         }
         .background(Color.mainColorsGrayLightest)
+        .disabled(viewModel.isUserInteractionDisabled)
         .padding(.horizontal, 20)
     }
 }

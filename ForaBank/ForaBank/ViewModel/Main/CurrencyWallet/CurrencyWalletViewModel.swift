@@ -28,11 +28,12 @@ class CurrencyWalletViewModel: ObservableObject {
     @Published var confirmationViewModel: CurrencyExchangeConfirmationView.ViewModel?
     @Published var successViewModel: CurrencyExchangeSuccessView.ViewModel?
     @Published var selectorState: CurrencySelectorView.ViewModel.State
+    @Published var isUserInteractionDisabled: Bool
     @Published var isShouldScrollToTop: Bool
     
-    private lazy var listViewModel: CurrencyListView.ViewModel = makeListViewModel()
-    private lazy var swapViewModel: CurrencySwapView.ViewModel = makeSwapViewModel()
-    lazy var continueButton: ButtonSimpleView.ViewModel = makeContinueButtonViewModel()
+    private lazy var listViewModel: CurrencyListView.ViewModel = makeCurrencyList()
+    private lazy var swapViewModel: CurrencySwapView.ViewModel = makeCurrencySwap()
+    lazy var continueButton: ButtonSimpleView.ViewModel = makeContinueButton()
     
     private let model: Model
     private let closeAction: () -> Void
@@ -98,6 +99,7 @@ class CurrencyWalletViewModel: ObservableObject {
         backButton = .init(icon: .ic24ChevronLeft, action: action)
         buttonStyle = .red
         selectorState = .productSelector
+        isUserInteractionDisabled = false
         isShouldScrollToTop = false
     }
     
@@ -118,7 +120,9 @@ class CurrencyWalletViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Start.Response:
+                    
                     handleExchangeStartResponse(payload)
+                    swapViewModel.swapButton.isUserInteractionDisabled = false
                     
                 case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Approve.Response:
                     handleExchangeApproveResponse(payload)
@@ -180,13 +184,37 @@ class CurrencyWalletViewModel: ObservableObject {
                     }
                 }
             }.store(in: &bindings)
+        
+        swapViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as CurrencySwapAction.Button.Reset:
+                    resetToInitial()
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+        
+        $isUserInteractionDisabled
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] isDisabled in
+                
+                listViewModel.isUserInteractionDisabled = isDisabled
+                swapViewModel.isUserInteractionDisabled = isDisabled
+                selectorViewModel?.isUserInteractionDisabled = isDisabled
+                
+            }.store(in: &bindings)
     }
     
-    private func makeListViewModel() -> CurrencyListView.ViewModel {
+    private func makeCurrencyList() -> CurrencyListView.ViewModel {
         .init(model, currency: currency)
     }
     
-    private func makeSwapViewModel() -> CurrencySwapView.ViewModel {
+    private func makeCurrencySwap() -> CurrencySwapView.ViewModel {
         
         let currencyRate = currencyOperation == .buy ? currencyItem.rateBuy : currencyItem.rateSell
         let currencyAmount = NumberFormatter.decimal(currencyRate) ?? 0
@@ -208,13 +236,38 @@ class CurrencyWalletViewModel: ObservableObject {
             quotesInfo: "1\(currencySymbol) = \(currencyRate) ₽")
     }
     
-    private func makeContinueButtonViewModel() -> ButtonSimpleView.ViewModel {
+    private func makeContinueButton() -> ButtonSimpleView.ViewModel {
         
         .init(title: "Продолжить", style: buttonStyle) { [weak self] in
             
             guard let self = self else { return }
             self.continueButtonAction()
         }
+    }
+    
+    private func resetToInitial() {
+        
+        withAnimation {
+        
+            items = items.compactMap { currencyItem in
+                
+                if currencyItem is CurrencyListView.ViewModel ||
+                    currencyItem is CurrencySwapView.ViewModel {
+                    
+                    return currencyItem
+                }
+                
+                return nil
+            }
+        }
+
+        selectorViewModel = nil
+        confirmationViewModel = nil
+        
+        buttonStyle = .red
+        continueButton = makeContinueButton()
+        
+        isUserInteractionDisabled = false
     }
     
     private func makeSelectorViewModel() -> CurrencySelectorView.ViewModel {
@@ -282,6 +335,7 @@ class CurrencyWalletViewModel: ObservableObject {
             if confirmationViewModel == nil {
                 
                 state = .spinner
+                isUserInteractionDisabled = true
                 sendExchangeStartRequest()
 
             } else {
@@ -408,7 +462,10 @@ class CurrencyWalletViewModel: ObservableObject {
                 model: model)
             
             if let successViewModel = successViewModel {
-                items.append(successViewModel)
+                
+                withAnimation {
+                    items.append(successViewModel)
+                }
             }
             
             state = .button

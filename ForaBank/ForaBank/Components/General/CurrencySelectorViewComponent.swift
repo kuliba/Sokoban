@@ -17,6 +17,7 @@ extension CurrencySelectorView {
         @Published var state: State
         @Published var currency: Currency
         @Published var currencyOperation: CurrencyOperation
+        @Published var isUserInteractionDisabled: Bool
         
         let model: Model
         let id = UUID().uuidString
@@ -27,12 +28,13 @@ extension CurrencySelectorView {
         lazy var productAccountSelector: ProductSelectorViewModel? = makeProductAccountSelector()
         lazy var openAccount: CurrencyWalletAccountView.ViewModel = makeOpenAccount()
         
-        init(_ model: Model, state: State, currency: Currency, currencyOperation: CurrencyOperation) {
+        init(_ model: Model, state: State, currency: Currency, currencyOperation: CurrencyOperation, isUserInteractionDisabled: Bool = false) {
             
             self.model = model
             self.state = state
             self.currency = currency
             self.currencyOperation = currencyOperation
+            self.isUserInteractionDisabled = isUserInteractionDisabled
             
             bind()
         }
@@ -66,6 +68,16 @@ extension CurrencySelectorView {
                 .sink { [unowned self] currencyOperation in
                     
                     updateProductSelectors(currencyOperation: currencyOperation)
+                    
+                }.store(in: &bindings)
+            
+            $isUserInteractionDisabled
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isDisabled in
+                    
+                    productCardSelector?.isUserInteractionDisabled = isDisabled
+                    productAccountSelector?.isUserInteractionDisabled = isDisabled
+                    openAccount.isUserInteractionDisabled = isDisabled
                     
                 }.store(in: &bindings)
         }
