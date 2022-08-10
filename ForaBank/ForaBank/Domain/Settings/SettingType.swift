@@ -37,6 +37,7 @@ enum SettingType {
         case inactiveProducts
         case tempates
         case productsHidden
+        case productsSections
     }
 }
 

@@ -107,6 +107,10 @@ struct ProductProfileView: View {
                         MeToMeExternalView(viewModel: meToMeExternalViewModel)
                             .navigationBarTitle("", displayMode: .inline)
                             .edgesIgnoringSafeArea(.bottom)
+                        
+                    case let .myProducts(myProductsViewModel):
+                        MyProductsView(viewModel: myProductsViewModel)
+                        
                     }
                 }
             }
@@ -141,9 +145,6 @@ struct ProductProfileView: View {
                 
             case .placesMap(let placesViewModel):
                 PlacesView(viewModel: placesViewModel)
-                
-            case let .myProducts(myProductsViewModel):
-                MyProductsView(viewModel: myProductsViewModel)
             }
         })
         .alert(item: $viewModel.alert, content: { alertViewModel in
