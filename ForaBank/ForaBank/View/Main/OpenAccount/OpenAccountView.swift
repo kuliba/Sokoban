@@ -22,14 +22,15 @@ struct OpenAccountView: View {
                     OpenAccountItemView(viewModel: item)
                 }
             }
+            .frame(height: viewModel.heightContent)
             .padding(.top, 4)
-            .frame(height: 235)
 
             OpenAccountPerformView(
                 viewModel: .init(
                     model: viewModel.model,
                     item: viewModel.item,
                     currency: viewModel.currency))
+            .padding(.bottom, 4)
         }
     }
 }

@@ -17,7 +17,7 @@ extension CurrencySelectorView {
         @Published var state: State
         @Published var currency: Currency
         @Published var currencyOperation: CurrencyOperation
-        @Published var isUserInteractionDisabled: Bool
+        @Published var isUserInteractionEnabled: Bool
         
         let model: Model
         let id = UUID().uuidString
@@ -28,13 +28,13 @@ extension CurrencySelectorView {
         lazy var productAccountSelector: ProductSelectorViewModel? = makeProductAccountSelector()
         lazy var openAccount: CurrencyWalletAccountView.ViewModel = makeOpenAccount()
         
-        init(_ model: Model, state: State, currency: Currency, currencyOperation: CurrencyOperation, isUserInteractionDisabled: Bool = false) {
+        init(_ model: Model, state: State, currency: Currency, currencyOperation: CurrencyOperation, isUserInteractionEnabled: Bool = true) {
             
             self.model = model
             self.state = state
             self.currency = currency
             self.currencyOperation = currencyOperation
-            self.isUserInteractionDisabled = isUserInteractionDisabled
+            self.isUserInteractionEnabled = isUserInteractionEnabled
             
             bind()
         }
@@ -67,43 +67,50 @@ extension CurrencySelectorView {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] currencyOperation in
                     
+                    if let productCardSelector = productCardSelector,
+                       let productAccountSelector = productAccountSelector  {
+                        
+                        productCardSelector.currencyOperation = currencyOperation
+                        productAccountSelector.currencyOperation = currencyOperation
+                    }
+                    
                     updateProductSelectors(currencyOperation: currencyOperation)
                     
                 }.store(in: &bindings)
             
-            $isUserInteractionDisabled
+            $isUserInteractionEnabled
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] isDisabled in
+                .sink { [unowned self] isEnabled in
                     
-                    productCardSelector?.isUserInteractionDisabled = isDisabled
-                    productAccountSelector?.isUserInteractionDisabled = isDisabled
-                    openAccount.isUserInteractionDisabled = isDisabled
+                    productCardSelector?.isUserInteractionEnabled = isEnabled
+                    productAccountSelector?.isUserInteractionEnabled = isEnabled
+                    openAccount.isUserInteractionEnabled = isEnabled
                     
                 }.store(in: &bindings)
         }
         
         private func makeProductCardSelector() -> ProductSelectorView.ViewModel? {
             
-            let products = model.products(currency: .rub).sorted { $0.productType.order < $1.productType.order }
+            let products = model.products(currency: .rub, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
             
             guard let productData = products.first else {
                 return nil
             }
             
-            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, currency: .rub, productViewModel: .init(productId: productData.id, productData: productData, model: model))
+            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, currency: .rub, currencyOperation: currencyOperation, productViewModel: .init(productId: productData.id, productData: productData, model: model))
             
             return selectorViewModel
         }
         
         private func makeProductAccountSelector() -> ProductSelectorView.ViewModel? {
             
-            let products = model.products(currency: currency).sorted { $0.productType.order < $1.productType.order }
+            let products = model.products(currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
             
             guard let productData = products.first else {
                 return nil
             }
             
-            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, currency: currency, productViewModel: .init(productId: productData.id, productData: productData, model: model), isDividerHiddable: true)
+            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, currency: currency, currencyOperation: currencyOperation, productViewModel: .init(productId: productData.id, productData: productData, model: model), isDividerHiddable: true)
             
             return selectorViewModel
         }
@@ -136,6 +143,12 @@ extension CurrencySelectorView {
         }
         
         private func makeOpenAccount() -> CurrencyWalletAccountView.ViewModel {
+            
+            if let currencyData = model.dictionaryCurrency(for: currency.description),
+               let currencySymbol = currencyData.currencySymbol {
+                return .init(model: model, currencySymbol: currencySymbol, currency: currency)
+            }
+            
             return .init(model: model, currency: currency)
         }
     }
@@ -257,7 +270,6 @@ struct CurrencySelectorView: View {
                 }
                 
             }.padding(.vertical, 20)
-            
         }
         .fixedSize(horizontal: false, vertical: true)
         .padding(.horizontal, 20)
