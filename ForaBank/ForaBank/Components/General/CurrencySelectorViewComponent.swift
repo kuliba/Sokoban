@@ -258,7 +258,9 @@ struct CurrencySelectorView: View {
                 
             }.padding(.vertical, 20)
             
-        }.padding(.horizontal, 20)
+        }
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(.horizontal, 20)
     }
 }
 
