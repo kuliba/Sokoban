@@ -35,7 +35,21 @@ extension MyProductsMoneyViewModel {
     
     var isSingleLineBalance: Bool {
         
-        balance.count < 8 // < 10_000_000
+        let count = balance.count
+        
+        switch UIScreen.main.bounds.width {
+        case ..<280,
+            280...320 where count > 14,
+            320...360 where count > 16,
+            360...375 where count > 18,
+            375...390 where count > 20,
+            390...414 where count > 22,
+            414...428 where count > 23:
+            return false
+        default:
+            return true
+        }
+        
     }
     
     func updateBalance(balance: Double) {

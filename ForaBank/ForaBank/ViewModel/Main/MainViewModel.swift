@@ -223,9 +223,9 @@ class MainViewModel: ObservableObject, Resetable {
                         self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
     
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
-                        let myProductsViewModel = MyProductsViewModel(model)
+                        let myProductsViewModel = MyProductsViewModel(model, dismissAction: { [weak self] in self?.action.send(MainViewModelAction.Close.Link()) })
                         bind(myProductsViewModel)
-                        sheet = .init(type: .myProducts(myProductsViewModel))
+                        link = .myProducts(myProductsViewModel)
                         
                         // CurrencyMetall section
                         
@@ -428,7 +428,6 @@ extension MainViewModel {
             case messages(MessagesHistoryViewModel)
             case places(PlacesViewModel)
             case byPhone(TransferByPhoneViewModel)
-            case myProducts(MyProductsViewModel)
         }
     }
     
@@ -441,6 +440,7 @@ extension MainViewModel {
         case templates(TemplatesListViewModel)
         case qrScanner(QrViewModel)
         case currencyWallet(CurrencyWalletViewModel)
+        case myProducts(MyProductsViewModel)
     }
 
     struct BottomSheet: Identifiable {

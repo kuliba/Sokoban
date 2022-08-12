@@ -95,8 +95,12 @@ struct MainView: View {
                             .navigationBarTitle("", displayMode: .inline)
                             .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
+                    
                     case let .currencyWallet(viewModel):
                         CurrencyWalletView(viewModel: viewModel)
+                        
+                    case let .myProducts(myProductsViewModel):
+                        MyProductsView(viewModel: myProductsViewModel)
                     }
                 }
             }
@@ -128,9 +132,6 @@ struct MainView: View {
 
             case .byPhone(let viewModel):
                     TransferByPhoneView(viewModel: viewModel)
-                
-            case .myProducts(let myProductsViewModel):
-                MyProductsView(viewModel: myProductsViewModel)
             }
         })
         .alert(item: $viewModel.alert, content: { alertViewModel in
