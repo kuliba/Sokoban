@@ -22,6 +22,7 @@ struct MyProductsMoneyView: View {
                     HStack(alignment: .top) {
                         
                         if viewModel.isSingleLineBalance {
+                            
                             Text(viewModel.title)
                                 .font(.textH2SB20282())
                                 .foregroundColor(.mainColorsBlack)
