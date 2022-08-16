@@ -14,6 +14,8 @@ extension CurrencyExchangeSuccessView {
     
     class ViewModel: ObservableObject, CurrencyWalletItem {
         
+        @Published var isPresent = false
+        
         var id: String { title }
         let icon: Image
         let title: String
@@ -62,7 +64,6 @@ extension CurrencyExchangeSuccessView {
 struct CurrencyExchangeSuccessView: View {
     
     @ObservedObject var viewModel: ViewModel
-    @State var isPresent = false
 
     var body: some View {
         
@@ -72,7 +73,7 @@ struct CurrencyExchangeSuccessView: View {
                 .resizable()
                 .frame(width: 88, height: 88)
             
-            if isPresent {
+            if viewModel.isPresent {
                 
                 Group {
                     
@@ -89,10 +90,10 @@ struct CurrencyExchangeSuccessView: View {
         }.onAppear {
             if let delay = viewModel.delay {
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                    withAnimation { isPresent = true }
+                    withAnimation { viewModel.isPresent = true }
                 }
             } else {
-                isPresent = true 
+                viewModel.isPresent = true
             }
         }
         

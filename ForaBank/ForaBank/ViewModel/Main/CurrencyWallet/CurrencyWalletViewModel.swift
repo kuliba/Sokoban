@@ -325,8 +325,8 @@ class CurrencyWalletViewModel: ObservableObject {
             
             if let confirmationViewModel = confirmationViewModel {
                 
-                withAnimation {
-                    items.append(confirmationViewModel)
+                DispatchQueue.main.async {
+                    self.items.append(confirmationViewModel)
                 }
             }
         }
@@ -384,8 +384,8 @@ class CurrencyWalletViewModel: ObservableObject {
             return
         }
         
-        withAnimation {
-            items.append(selectorViewModel)
+        DispatchQueue.main.async {
+            self.items.append(selectorViewModel)
         }
     }
     
@@ -519,8 +519,18 @@ class CurrencyWalletViewModel: ObservableObject {
         
         if let successViewModel = successViewModel {
             
-            withAnimation {
-                items.append(successViewModel)
+            successViewModel.$isPresent
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isPresent in
+                    
+                    if let item = items.last, isPresent == true {
+                        scrollToItem = item.id
+                    }
+                    
+                }.store(in: &bindings)
+            
+            DispatchQueue.main.async {
+                self.items.append(successViewModel)
             }
         }
     }
