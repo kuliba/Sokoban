@@ -206,7 +206,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 })))
                             } else {
                                 sheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
-                                    self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Sheet())
                                 })))
                             }
                             
@@ -215,7 +215,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 bottomSheet = .init(type: .meToMe(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
                                 })))
                             } else {
-                                sheet = .init(type: .meToMe(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                                sheet = .init(type: .meToMe(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Sheet())
                                 })))
                             }
                         

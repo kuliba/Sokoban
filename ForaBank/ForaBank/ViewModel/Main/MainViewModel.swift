@@ -154,9 +154,12 @@ class MainViewModel: ObservableObject, Resetable {
                             switch payload.productType {
                             case .account:
                                 if #available(iOS 14, *) {
-                                    bottomSheet = .init(type: .openAccount(model))
+                                    let openAccountItemViewModel = model.accountProductsList.value
+                                    bottomSheet = .init(type: .openAccount(.init(model: model, items: OpenAccountViewModel.reduce(products: openAccountItemViewModel))))
+                                    
                                 } else {
-                                    sheet = .init(type: .openAccount(model))
+                                    let openAccountItemViewModel = model.accountProductsList.value
+                                    sheet = .init(type: .openAccount(.init(model: model, items: OpenAccountViewModel.reduce(products: openAccountItemViewModel))))
                                 }
                                 
                             case .deposit:
@@ -442,7 +445,7 @@ extension MainViewModel {
             case messages(MessagesHistoryViewModel)
             case places(PlacesViewModel)
             case byPhone(TransferByPhoneViewModel)
-            case openAccount(Model)
+            case openAccount(OpenAccountViewModel)
         }
     }
     
@@ -465,7 +468,7 @@ extension MainViewModel {
 
         enum BottomSheetType {
 
-            case openAccount(Model)
+            case openAccount(OpenAccountViewModel)
         }
     }
 }

@@ -110,13 +110,8 @@ struct MainView: View {
 
             switch bottomSheet.type {
             case let .openAccount(model):
+                OpenAccountView(viewModel: model)
 
-                if let productsList = model.accountProductsList.value {
-
-                    let viewModel: OpenAccountViewModel = .init(model: model, items: OpenAccountViewModel.reduce(products: productsList))
-
-                    OpenAccountView(viewModel: viewModel)
-                }
             }
         }
         .sheet(item: $viewModel.sheet, content: { sheet in
@@ -133,14 +128,9 @@ struct MainView: View {
             case .byPhone(let viewModel):
                     TransferByPhoneView(viewModel: viewModel)
                 
-            case let .openAccount(model):
-
-                if let productsList = model.accountProductsList.value {
-
-                    let viewModel: OpenAccountViewModel = .init(model: model, items: OpenAccountViewModel.reduce(products: productsList))
-
-                    OpenAccountView(viewModel: viewModel)
-                }
+            case let .openAccount(openAccountViewModel):
+                OpenAccountView(viewModel: openAccountViewModel)
+                
             }
         })
         .alert(item: $viewModel.alert, content: { alertViewModel in
