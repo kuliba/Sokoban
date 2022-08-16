@@ -256,4 +256,25 @@ extension ProductData {
         case blockedByClient = "21"
         case unknown
     }
+    
+    var isAccountNumber: Bool {
+        
+        guard let accountNumber = accountNumber else {
+            return false
+        }
+        
+        return accountNumber.hasPrefix("40817") || accountNumber.hasPrefix("40820")
+    }
+    
+    func allowProduct(_ currencyOperation: CurrencyOperation) -> Bool {
+        allowDebit(currencyOperation) || allowCredit(currencyOperation)
+    }
+    
+    private func allowDebit(_ currencyOperation: CurrencyOperation) -> Bool {
+        allowDebit == (currencyOperation == .buy) ? true : false
+    }
+    
+    private func allowCredit(_ currencyOperation: CurrencyOperation) -> Bool {
+        allowCredit == (currencyOperation == .sell) ? true : false
+    }
 }

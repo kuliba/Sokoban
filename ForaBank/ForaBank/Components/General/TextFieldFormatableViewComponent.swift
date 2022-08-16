@@ -171,7 +171,7 @@ struct TextFieldFormatableView: UIViewRepresentable {
                 
             case .currencyWallet:
                 
-                textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter, limit: limit)
+                textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter, limit: limit, type: .currencyWallet)
                 text.wrappedValue = textField.text
             }
             
@@ -204,7 +204,7 @@ struct TextFieldFormatableView: UIViewRepresentable {
     ///   - formatter: number formatter must be applyed
     ///   - regExp: regular expression string required to filter update string
     /// - Returns: formatted string result, example: `1 234.56 ₽`
-    static func updateFormatted(value: String?, inRange: NSRange, update: String, formatter: NumberFormatter, limit: Int? = nil) -> String? {
+    static func updateFormatted(value: String?, inRange: NSRange, update: String, formatter: NumberFormatter, limit: Int? = nil, type: ViewModel.Kind = .general) -> String? {
         
         let expectedCharacters = "0123456789.,"
         
@@ -283,8 +283,13 @@ struct TextFieldFormatableView: UIViewRepresentable {
                 
             } else {
                 
-                // return formatted double value, example: `1234.56` -> `1 234,56 ₽`
-                return formatter.string(from: NSNumber(value: doubleValue))
+                switch type {
+                case .general:
+                    // return formatted double value, example: `1234.56` -> `1 234,56 ₽`
+                    return formatter.string(from: NSNumber(value: doubleValue))
+                case .currencyWallet:
+                    return updatedValue
+                }
             }
             
         } else {

@@ -18,6 +18,8 @@ extension CurrencyExchangeConfirmationView {
         let sum: String
         let commission: String
         let currencySum: String
+        let debitAmount: Double
+        let currencyPayer: Currency
         
         let sumLabel = "Сумма перевода"
         let commissionLabel = "Комиссия"
@@ -25,11 +27,13 @@ extension CurrencyExchangeConfirmationView {
         
         var courseChangeViewModel: CourseChangeViewModel?
         
-        init(sum: String, commission: String, currencySum: String) {
+        init(sum: String, commission: String, currencySum: String, debitAmount: Double, currencyPayer: Currency) {
             
             self.sum = sum
             self.commission = commission
             self.currencySum = currencySum
+            self.debitAmount = debitAmount
+            self.currencyPayer = currencyPayer
         }
         
         init?(response: CurrencyExchangeConfirmationData, model: Model) {
@@ -37,26 +41,29 @@ extension CurrencyExchangeConfirmationView {
             guard let debitAmount = response.debitAmount,
                   let fee = response.fee,
                   let creditAmount = response.creditAmount,
-                  let currencyPayerCode = response.currencyPayer?.description,
-                  let currencyPayeeCode = response.currencyPayee?.description,
+                  let currencyPayer = response.currencyPayer,
+                  let currencyPayee = response.currencyPayee,
                   let currencyRate = response.currencyRate else {
                 return nil
             }
             
+            self.debitAmount = debitAmount
+            self.currencyPayer = currencyPayer
+            
             sum = model.amountFormatted(amount: debitAmount,
-                                        currencyCode: currencyPayerCode,
+                                        currencyCode: currencyPayer.description,
                                         style: .fraction) ?? String(debitAmount)
             
             commission = model.amountFormatted(amount: fee,
-                                               currencyCode: currencyPayerCode,
+                                               currencyCode: currencyPayer.description,
                                                style: .fraction) ?? String(fee)
             
             currencySum = model.amountFormatted(amount: creditAmount,
-                                                currencyCode: currencyPayeeCode,
+                                                currencyCode: currencyPayee.description,
                                                 style: .fraction) ?? String(creditAmount)
             
             courseChangeViewModel = makeCourseChange(model: model,
-                                                     currencyCode: currencyPayeeCode,
+                                                     currencyCode: currencyPayee.description,
                                                      currencyRate: currencyRate)
         }
     }
@@ -185,7 +192,9 @@ extension CurrencyExchangeConfirmationView.ViewModel {
     static var sample = CurrencyExchangeConfirmationView.ViewModel(
         sum: "64,50 ₽",
         commission: "0,00 ₽",
-        currencySum: "1 $")
+        currencySum: "1 $",
+        debitAmount: 1,
+        currencyPayer: .rub)
 }
 
 //MARK: - Preview

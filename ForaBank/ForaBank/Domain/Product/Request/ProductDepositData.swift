@@ -158,6 +158,11 @@ extension ProductDepositData {
         return accountNumber.hasPrefix("42301")
     }
     
+    var isProductDeposit: Bool {
+        
+        return isDemandDeposit && depositProductId == 3194
+    }
+    
     static let foraHitProductId = 10000003792
     
     var isForaHitProduct: Bool {

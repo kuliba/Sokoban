@@ -18,12 +18,12 @@ extension CurrencyListView {
 
     class ViewModel: ObservableObject, CurrencyWalletItem {
         
-
         let action: PassthroughSubject<Action, Never> = .init()
 
         @Published var items: [ItemViewModel]
         @Published var currency: Currency
         @Published var bottomSheet: BottomSheet?
+        @Published var isUserInteractionEnabled: Bool
 
         private var bindings = Set<AnyCancellable>()
         
@@ -34,11 +34,12 @@ extension CurrencyListView {
             action.send(CurrencyListAction.Button.Tapped())
         }
 
-        init(_ model: Model, currency: Currency, items: [ItemViewModel]) {
+        init(_ model: Model, currency: Currency, items: [ItemViewModel], isUserInteractionEnabled: Bool = true) {
 
             self.model = model
             self.currency = currency
             self.items = items
+            self.isUserInteractionEnabled = isUserInteractionEnabled
         }
         
         convenience init(_ model: Model, currency: Currency) {
@@ -202,7 +203,8 @@ struct CurrencyListView: View {
                 
                 CurrencyRatesListView(viewModel: .init(model))
             }
-        }
+            
+        }.disabled(viewModel.isUserInteractionEnabled == false)
     }
 }
 

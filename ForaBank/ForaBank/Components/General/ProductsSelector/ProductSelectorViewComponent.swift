@@ -20,9 +20,11 @@ extension ProductSelectorView {
         
         @Published var title: String
         @Published var currency: Currency
+        @Published var currencyOperation: CurrencyOperation
         @Published var isDividerHiddable: Bool
         @Published var productViewModel: ProductContentViewModel
         @Published var listViewModel: ProductsListView.ViewModel?
+        @Published var isUserInteractionEnabled: Bool
         
         var bindings = Set<AnyCancellable>()
         
@@ -33,15 +35,19 @@ extension ProductSelectorView {
         init(_ model: Model,
              title: String,
              currency: Currency,
+             currencyOperation: CurrencyOperation,
              productViewModel: ProductContentViewModel,
              listViewModel: ProductsListView.ViewModel? = nil,
+             isUserInteractionEnabled: Bool = true,
              isDividerHiddable: Bool = false) {
             
             self.model = model
             self.title = title
             self.currency = currency
+            self.currencyOperation = currencyOperation
             self.productViewModel = productViewModel
             self.listViewModel = listViewModel
+            self.isUserInteractionEnabled = isUserInteractionEnabled
             self.isDividerHiddable = isDividerHiddable
             
             bind()
@@ -50,20 +56,22 @@ extension ProductSelectorView {
         convenience init(
             _ model: Model,
             currency: Currency,
+            currencyOperation: CurrencyOperation,
             productViewModel: ProductContentViewModel,
             listViewModel: ProductsListView.ViewModel? = nil,
             isDividerHiddable: Bool = false) {
             
-                self.init(model, title: "", currency: currency, productViewModel: productViewModel, listViewModel: listViewModel, isDividerHiddable: isDividerHiddable)
+                self.init(model, title: "", currency: currency, currencyOperation: currencyOperation, productViewModel: productViewModel, listViewModel: listViewModel, isDividerHiddable: isDividerHiddable)
         }
         
         private func bind() {
             
             model.products
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] productsData in
+                .sink { [unowned self] products in
                     
-                    setProductSelectorData(products: productsData, productId: productViewModel.productId)
+                    let products = model.products(currency: currency, currencyOperation: currencyOperation, products: products)
+                    setProductSelectorData(products: products, productId: productViewModel.productId)
                     
                 }.store(in: &bindings)
             
@@ -82,6 +90,16 @@ extension ProductSelectorView {
                                 
                                 self.listViewModel = makeProductsList()
                                 bindList()
+                                
+                                listViewModel?.$products
+                                    .receive(on: DispatchQueue.main)
+                                    .sink { [unowned self] products in
+                                        
+                                        if products.isEmpty == true {
+                                            setProductSelectorData()
+                                        }
+                                        
+                                    }.store(in: &bindings)
                                 
                             case false: listViewModel = nil
                             }
@@ -136,6 +154,18 @@ extension ProductSelectorView {
                     listViewModel.currency = currency
                     
                 }.store(in: &bindings)
+            
+            $currencyOperation
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] currencyOperation in
+                    
+                    if let listViewModel = listViewModel {
+                        listViewModel.currencyOperation = currencyOperation
+                    } else {
+                        updateProductViewModel()
+                    }
+                    
+                }.store(in: &bindings)
         }
         
         private func bindList() {
@@ -169,18 +199,18 @@ extension ProductSelectorView {
                 return nil
             }
             
-            let products = Self.reduce(model, currency: currency, productType: productData.productType) {
+            let products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productData.productType) {
                 self.action.send(ProductSelectorView.ProductAction.Selected(productId: $0))
             }
             
-            let listViewModel: ProductsListView.ViewModel = .init(model, currency: currency, productType: productData.productType, products: products)
+            let listViewModel: ProductsListView.ViewModel = .init(model, currencyOperation: currencyOperation, currency: currency, productType: productData.productType, products: products)
             
             return listViewModel
         }
         
-        static func reduce(_ model: Model, currency: Currency, productType: ProductType, action: @escaping (ProductData.ID) -> Void) -> [ProductView.ViewModel] {
+        static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType, action: @escaping (ProductData.ID) -> Void) -> [ProductView.ViewModel] {
             
-            let filterredProducts = model.products(currency: currency, productType: productType)
+            let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType)
             
             let products = filterredProducts.map { productData in
                 ProductView.ViewModel(with: productData, size: .small, style: .main, model: model) {
@@ -191,9 +221,9 @@ extension ProductSelectorView {
             return products
         }
         
-        private func setProductSelectorData(products: ProductsData, productId: ProductData.ID) {
+        private func setProductSelectorData(products: [ProductData], productId: ProductData.ID) {
             
-            let productData = products.values.flatMap { $0 }.first(where: { $0.id == productId })
+            let productData = products.first(where: { $0.id == productId })
             
             guard let productData = productData else {
                 return
@@ -211,6 +241,39 @@ extension ProductSelectorView {
             }
             
             self.productViewModel = .init(productId: productId, productData: productData, model: model)
+        }
+        
+        private func setProductSelectorData() {
+            
+            if let listViewModel = listViewModel,
+               let optionSelector = listViewModel.optionSelector,
+               let option = optionSelector.options.first {
+                
+                let productsData = model.products.value.values.flatMap { $0 }.filter { $0.productType.rawValue == option.id }.sorted { $0.productType.order < $1.productType.order }
+                
+                if let productData = productsData.first {
+                    self.productViewModel = .init(productId: productData.id, productData: productData, model: model)
+                }
+                
+            } else {
+                
+                let products = model.products(currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
+                
+                guard let productData = products.first else {
+                    return
+                }
+                
+                self.productViewModel = .init(productId: productData.id, productData: productData, model: model)
+            }
+        }
+        
+        private func updateProductViewModel() {
+            
+            let productData = model.products(currency: currency, currencyOperation: currencyOperation).filter { $0.id == productViewModel.productId }
+            
+            if productData.isEmpty == true {
+                setProductSelectorData()
+            }
         }
     }
 }
@@ -309,7 +372,9 @@ struct ProductSelectorView: View {
                     DividerView(viewModel: viewModel.dividerViewModel)
                 }
             }
-        }.background(Color.mainColorsGrayLightest)
+        }
+        .disabled(viewModel.isUserInteractionEnabled == false)
+        .background(Color.mainColorsGrayLightest)
     }
 }
 
@@ -457,6 +522,7 @@ extension ProductSelectorView.ViewModel {
         .emptyMock,
         title: "Откуда",
         currency: .rub,
+        currencyOperation: .buy,
         productViewModel: .init(
             productId: 1,
             cardIcon: Image("Platinum Card"),
@@ -470,6 +536,7 @@ extension ProductSelectorView.ViewModel {
         .emptyMock,
         title: "Откуда",
         currency: .rub,
+        currencyOperation: .buy,
         productViewModel: .init(
             productId: 2,
             cardIcon: Image("Platinum Card"),
@@ -484,6 +551,7 @@ extension ProductSelectorView.ViewModel {
         .emptyMock,
         title: "Куда",
         currency: .usd,
+        currencyOperation: .sell,
         productViewModel: .init(
             productId: 3,
             cardIcon: Image("Platinum Card"),

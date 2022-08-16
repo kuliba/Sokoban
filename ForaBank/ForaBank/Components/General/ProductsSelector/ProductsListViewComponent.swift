@@ -11,7 +11,7 @@ import Combine
 extension ProductsListView {
     
     // MARK: - ViewModel
-
+    
     class ViewModel: ObservableObject {
         
         let action: PassthroughSubject<Action, Never> = .init()
@@ -19,71 +19,137 @@ extension ProductsListView {
         @Published var optionSelector: OptionSelectorView.ViewModel?
         @Published var products: [ProductView.ViewModel]
         @Published var productType: ProductType
+        @Published var currencyOperation: CurrencyOperation
         @Published var currency: Currency
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(_ model: Model, currency: Currency, productType: ProductType, products: [ProductView.ViewModel]) {
+        init(_ model: Model, currencyOperation: CurrencyOperation, currency: Currency, productType: ProductType, products: [ProductView.ViewModel]) {
             
             self.model = model
+            self.currencyOperation = currencyOperation
             self.currency = currency
             self.productType = productType
             self.products = products
             
-            let products = model.products(currency: currency)
+            let products = model.products(currency: currency, currencyOperation: currencyOperation)
             optionSelector = Self.makeOptionSelector(products: products, selected: productType.rawValue)
             
             bind()
+            bindOption(productsData: model.products.value, currencyOperation: currencyOperation)
         }
-
+        
         private func bind() {
             
             model.products
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] products in
-                    
-                    if optionSelector == nil {
-                        
-                        let products = model.products(currency: currency)
-                        optionSelector = Self.makeOptionSelector(products: products, selected: productType.rawValue)
-                        
-                    } else {
-                        
-                        guard let optionSelector = optionSelector else {
-                            return
-                        }
-                        
-                        let products = products.values.flatMap {$0}.filter { $0.currency == currency.description }
-                        let options = Self.makeOptions(products: products)
-                        
-                        optionSelector.update(options: options, selected: optionSelector.selected)
-                    }
-                    
-                }.store(in: &bindings)
-            
-            optionSelector?.$selected
-                .combineLatest($currency)
+                .combineLatest($currencyOperation)
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] data in
                     
-                    let selected = data.0
-                    let currency = data.1
+                    let productsData = data.0
+                    let currencyOperation = data.1
                     
-                    if let productType = ProductType(rawValue: selected) {
-                        
-                        products = Self.reduce(model, currency: currency, productType: productType) {
-                            self.action.send(ProductSelectorView.ProductAction.Selected(productId: $0))
-                        }
-                        
-                    } else {
-                        
-                        products = Self.reduce(model, currency: currency) {
-                            self.action.send(ProductSelectorView.ProductAction.Selected(productId: $0))
-                        }
-                    }
+                    bindOption(productsData: productsData, currencyOperation: currencyOperation)
                     
                 }.store(in: &bindings)
+            
+            if let optionSelector = optionSelector {
+                
+                optionSelector.$selected
+                    .combineLatest($currency)
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] data in
+                        
+                        let selected = data.0
+                        let currency = data.1
+                        
+                        if let productType = ProductType(rawValue: selected) {
+                            
+                            products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType) {
+                                self.action.send(ProductSelectorView.ProductAction.Selected(productId: $0))
+                            }
+                            
+                            if products.isEmpty == true {
+                                
+                                if let option = optionSelector.options.first {
+                                    optionSelector.selected = option.id
+                                }
+                            }
+                            
+                        } else {
+                            
+                            products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation) {
+                                self.action.send(ProductSelectorView.ProductAction.Selected(productId: $0))
+                            }
+                        }
+                        
+                    }.store(in: &bindings)
+                
+            } else {
+                
+                $currency
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] currency in
+                        
+                        products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation) {
+                            self.action.send(ProductSelectorView.ProductAction.Selected(productId: $0))
+                        }
+                        
+                    }.store(in: &bindings)
+            }
+        }
+        
+        private func bindOption(productsData: ProductsData, currencyOperation: CurrencyOperation) {
+            
+            let products = model.products(currency: currency, currencyOperation: currencyOperation, products: productsData)
+            
+            if optionSelector == nil {
+                
+                optionSelector = Self.makeOptionSelector(products: products, selected: productType.rawValue)
+                
+                if let optionSelector = optionSelector {
+                    
+                    optionSelector.$selected
+                        .combineLatest($currency)
+                        .receive(on: DispatchQueue.main)
+                        .sink { [unowned self] data in
+                            
+                            let selected = data.0
+                            let currency = data.1
+                            
+                            if let productType = ProductType(rawValue: selected) {
+                                
+                                self.products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType) {
+                                    self.action.send(ProductSelectorView.ProductAction.Selected(productId: $0))
+                                }
+                                
+                                if products.isEmpty == true {
+                                    
+                                    if let option = optionSelector.options.first {
+                                        optionSelector.selected = option.id
+                                    }
+                                }
+                                
+                            } else {
+                                
+                                self.products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation) {
+                                    self.action.send(ProductSelectorView.ProductAction.Selected(productId: $0))
+                                }
+                            }
+                            
+                        }.store(in: &bindings)
+                }
+                
+            } else {
+                
+                guard let optionSelector = optionSelector else {
+                    return
+                }
+                
+                let options = Self.makeOptions(products: products)
+                optionSelector.update(options: options, selected: optionSelector.selected)
+            }
         }
     }
 }
@@ -118,9 +184,9 @@ extension ProductsListView.ViewModel {
         return options
     }
     
-    static func reduce(_ model: Model, currency: Currency, productType: ProductType, action: @escaping (ProductData.ID) -> Void) -> [ProductView.ViewModel] {
+    static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType, action: @escaping (ProductData.ID) -> Void) -> [ProductView.ViewModel] {
         
-        let filterredProducts = model.products(currency: currency, productType: productType)
+        let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
         
         let products = filterredProducts.map { productData in
             ProductView.ViewModel(with: productData, size: .small, style: .main, model: model) {
@@ -131,9 +197,9 @@ extension ProductsListView.ViewModel {
         return products
     }
     
-    static func reduce(_ model: Model, currency: Currency, action: @escaping (ProductData.ID) -> Void) -> [ProductView.ViewModel] {
+    static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, action: @escaping (ProductData.ID) -> Void) -> [ProductView.ViewModel] {
         
-        let filterredProducts = model.products(currency: currency).sorted { $0.productType.order < $1.productType.order }
+        let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
         
         let products = filterredProducts.map { productData in
             ProductView.ViewModel(with: productData, size: .small, style: .main, model: model) {
@@ -193,7 +259,7 @@ enum ProductsListAction {
 
 extension ProductsListView.ViewModel {
     
-    static let sample = ProductsListView.ViewModel(.emptyMock, currency: .rub, productType: .card, products: [.classicSmall, .accountSmall, .accountSmall])
+    static let sample = ProductsListView.ViewModel(.emptyMock, currencyOperation: .buy, currency: .rub, productType: .card, products: [.classicSmall, .accountSmall, .accountSmall])
 }
 
 // MARK: - Previews

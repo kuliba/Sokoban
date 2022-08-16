@@ -23,6 +23,7 @@ extension CurrencySwapView {
         @Published var currency: Currency
         @Published var currencyRate: Double
         @Published var quotesInfo: String
+        @Published var isUserInteractionEnabled: Bool
 
         let model: Model
         let id = UUID().uuidString
@@ -36,13 +37,19 @@ extension CurrencySwapView {
         /// Переключатель валют
         lazy var switchViewModel: CurrencySwitchViewModel = .init(currencyOperation: currencyOperation, swapButton: swapButton)
 
-        lazy var swapButton: SwapButtonViewModel = .init { [unowned self] in
-            action.send(CurrencySwapAction.Button.Tapped())
+        lazy var swapButton: SwapButtonViewModel = .init(icon: .init("Swap")) { [unowned self] in
+            
+            switch swapButton.state {
+            case .normal:
+                action.send(CurrencySwapAction.Button.Tapped())
+            case .reset:
+                action.send(CurrencySwapAction.Button.Reset())
+            }
         }
         
         private var bindings = Set<AnyCancellable>()
 
-        init(_ model: Model, currencySwap: CurrencyViewModel, сurrencyCurrentSwap: CurrencyViewModel, currencyOperation: CurrencyOperation, currency: Currency, currencyRate: Double, quotesInfo: String) {
+        init(_ model: Model, currencySwap: CurrencyViewModel, сurrencyCurrentSwap: CurrencyViewModel, currencyOperation: CurrencyOperation, currency: Currency, currencyRate: Double, quotesInfo: String, isUserInteractionEnabled: Bool = true) {
 
             self.model = model
             self.currencySwap = currencySwap
@@ -51,6 +58,7 @@ extension CurrencySwapView {
             self.currency = currency
             self.currencyRate = currencyRate
             self.quotesInfo = quotesInfo
+            self.isUserInteractionEnabled = isUserInteractionEnabled
 
             bind()
         }
@@ -105,6 +113,9 @@ extension CurrencySwapView {
                         update(currencyWalletList, currencyData: currencyData)
                         
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
+                        
+                    case _ as CurrencySwapAction.Button.Reset:
+                        swapButton.state = .normal
                         
                     default:
                         break
@@ -241,6 +252,16 @@ extension CurrencySwapView {
                         currencySwap.currencyAmount = roundUp(value: value / currencyRate)
                     }
                     
+                }.store(in: &bindings)
+            
+            $isUserInteractionEnabled
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isEnabled in
+                
+                    currencySwap.isUserInteractionEnabled = isEnabled
+                    сurrencyCurrentSwap.isUserInteractionEnabled = isEnabled
+                    swapButton.isUserInteractionEnabled = isEnabled
+                
                 }.store(in: &bindings)
         }
         
@@ -441,7 +462,7 @@ extension CurrencySwapView.ViewModel {
         @Published var title: String
         @Published var currency: Currency
         @Published var icon: Image?
-        @Published var isBlockedForInput: Bool
+        @Published var isUserInteractionEnabled: Bool
 
         private var bindings = Set<AnyCancellable>()
         
@@ -476,15 +497,15 @@ extension CurrencySwapView.ViewModel {
                 
             }))
 
-        init(icon: Image?, currencyAmount: Double, title: String = "", currency: Currency) {
+        init(icon: Image?, currencyAmount: Double, title: String = "", currency: Currency, isUserInteractionEnabled: Bool = true) {
 
             self.icon = icon
             self.currencyAmount = currencyAmount
             self.currency = currency
             self.title = title
+            self.isUserInteractionEnabled = isUserInteractionEnabled
             
             lastCurrencyAmount = 0
-            isBlockedForInput = false
             
             bind()
         }
@@ -530,7 +551,7 @@ extension CurrencySwapView.ViewModel {
                     withAnimation(.easeInOut) {
                         
                         pathInset = currencyOperation == .buy ? 5 : -5
-                        swapButton.isSwap.toggle()
+                        swapButton.isCurrencySwap.toggle()
                     }
                 }.store(in: &bindings)
         }
@@ -540,16 +561,60 @@ extension CurrencySwapView.ViewModel {
 
     class SwapButtonViewModel: ObservableObject {
         
-        @Published var isSwap: Bool
+        @Published var isCurrencySwap: Bool
+        @Published var isUserInteractionEnabled: Bool
+        @Published var icon: Image
+        @Published var state: State
 
-        let icon: Image
         let action: () -> Void
         
-        init(isSwap: Bool = false, icon: Image = .init("Swap"), action: @escaping () -> Void) {
+        private var bindings = Set<AnyCancellable>()
+        
+        var rotationAngle: Angle {
+            isCurrencySwap ? .degrees(0) : .degrees(180)
+        }
+        
+        enum State {
             
-            self.isSwap = isSwap
+            case normal
+            case reset
+        }
+        
+        init(isCurrencySwap: Bool = false, isUserInteractionEnabled: Bool = true, icon: Image, action: @escaping () -> Void) {
+            
+            self.isCurrencySwap = isCurrencySwap
+            self.isUserInteractionEnabled = isUserInteractionEnabled
             self.icon = icon
             self.action = action
+            
+            state = .normal
+            
+            bind()
+        }
+        
+        private func bind() {
+            
+            $isUserInteractionEnabled
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isEnabled in
+                    
+                    if isEnabled == false {
+                        
+                        icon = .init("Swap Reset")
+                        state = .reset
+                    }
+                    
+                }.store(in: &bindings)
+            
+            $state
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] state in
+                    
+                    if state == .normal {
+                        icon = .init("Swap")
+                    }
+                    
+                }.store(in: &bindings)
         }
     }
 }
@@ -704,7 +769,9 @@ extension CurrencySwapView {
                             .foregroundColor(.mainColorsGrayMedium)
                     }
                 }
-            }.padding(.horizontal, 20)
+            }
+            .disabled(viewModel.isUserInteractionEnabled == false)
+            .padding(.horizontal, 20)
         }
     }
 
@@ -754,8 +821,10 @@ extension CurrencySwapView {
                     .resizable()
                     .clipShape(Circle())
                     .frame(width: 32, height: 32)
-                    .rotationEffect(viewModel.isSwap ? .degrees(0) : .degrees(180))
-            }.buttonStyle(CurrencySwapView.SwapButtonStyle())
+                    .rotationEffect(viewModel.rotationAngle)
+            }
+            .buttonStyle(CurrencySwapView.SwapButtonStyle())
+            .disabled(viewModel.isUserInteractionEnabled == false)
         }
     }
     
@@ -775,6 +844,7 @@ enum CurrencySwapAction {
     enum Button {
         
         struct Tapped: Action {}
+        struct Reset: Action {}
         struct Close: Action {}
     }
     

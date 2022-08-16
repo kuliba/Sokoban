@@ -157,12 +157,12 @@ extension MainSectionCurrencyMetallView {
                               action: itemAction(Currency(description: item.code)),
                               topDashboard: .init(kindImage: item.rateSellDelta > 0 ? .up
                                                            : item.rateSellDelta == 0 ? .no : .down,
-                                                  valueText: String(item.rateSell),
+                                                  valueText: NumberFormatter.decimal(item.rateSell),
                                                   type: .buy,
                                                   action: buyAction(Currency(description: item.code)) ),
                               bottomDashboard: .init(kindImage: item.rateBuyDelta > 0 ? .up
                                                               : item.rateBuyDelta == 0 ? .no : .down,
-                                                     valueText: String(item.rateBuy),
+                                                     valueText: NumberFormatter.decimal(item.rateBuy),
                                                      type: .sell,
                                                      action: sellAction(Currency(description: item.code)) ))
             }

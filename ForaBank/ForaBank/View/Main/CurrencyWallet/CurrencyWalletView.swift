@@ -57,7 +57,7 @@ struct CurrencyWalletView: View {
             case .spinner:
                 
                 SpinnerRefreshView(icon: viewModel.icon)
-                    .padding(.bottom, 20)
+                    .padding(.vertical, viewModel.verticalPadding)
             }
         }
         .ignoreKeyboard()
@@ -68,6 +68,9 @@ struct CurrencyWalletView: View {
                 .renderingMode(.template)
                 .foregroundColor(.iconBlack)
         })
+        .alert(item: $viewModel.alert) { alert in
+            Alert(with: alert)
+        }
         .onTapGesture {
             
             viewModel.resetCurrencySwap()

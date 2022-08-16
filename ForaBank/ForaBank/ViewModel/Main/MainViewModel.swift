@@ -46,7 +46,6 @@ class MainViewModel: ObservableObject, Resetable {
                          MainSectionFastOperationView.ViewModel(),
                          MainSectionPromoView.ViewModel(model),
                          MainSectionCurrencyMetallView.ViewModel(model),
-                         MainSectionCurrencyView.ViewModel(model),
                          MainSectionOpenProductView.ViewModel(model),
                          MainSectionAtmView.ViewModel.initial]
         

@@ -106,9 +106,13 @@ struct PagerScrollView<Content: View>: View {
                 )
             }.onPreferenceChange(PagerPreferenceKey.self) { self.contentSize = $0 }
             
-            PageIndicatorView(
-                pageCount: viewModel.pagesCount,
-                currentIndex: $viewModel.currentIndex)
+            if viewModel.pagesCount > 1 {
+                
+                PageIndicatorView(
+                    pageCount: viewModel.pagesCount,
+                    currentIndex: $viewModel.currentIndex)
+                .padding(.bottom, 12)
+            }
         }
     }
 }

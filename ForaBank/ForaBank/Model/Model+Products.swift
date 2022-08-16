@@ -36,7 +36,7 @@ extension Model {
         return product.id
     }
     
-    func products(currency: Currency, productType: ProductType) -> [ProductData] {
+    func products(currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType) -> [ProductData] {
         
         var products: [ProductData] = []
         
@@ -44,14 +44,64 @@ extension Model {
             return products
         }
         
-        products = productTypes.filter { $0.currency == currency.description }
+        products = filterredProducts(currency: currency, currencyOperation: currencyOperation, products: productTypes)
 
         return products
     }
     
-    func products(currency: Currency) -> [ProductData] {
+    func products(currency: Currency, currencyOperation: CurrencyOperation) -> [ProductData] {
         
-        let products = products.value.values.flatMap {$0}.filter { $0.currency == currency.description }
+        let products = products.value.values.flatMap {$0}
+        return filterredProducts(currency: currency, currencyOperation: currencyOperation, products: products)
+    }
+    
+    func products(currency: Currency, currencyOperation: CurrencyOperation, products: ProductsData) -> [ProductData] {
+        
+        let products = products.values.flatMap {$0}
+        return filterredProducts(currency: currency, currencyOperation: currencyOperation, products: products)
+    }
+    
+    private func filterredProducts(currency: Currency, currencyOperation: CurrencyOperation, products: [ProductData]) -> [ProductData] {
+        
+        let products = products.filter { product in
+            
+            switch product.productType {
+            case .card:
+                
+                guard let product = product as? ProductCardData else {
+                    return false
+                }
+                
+                if let loanBaseParam = product.loanBaseParam, product.isMain == false {
+                    
+                    return product.currency == currency.description && product.status == .active && product.statusPc == .active && loanBaseParam.clientId == product.ownerId && product.isAccountNumber && product.allowProduct(currencyOperation)
+                    
+                } else {
+                    
+                    return product.currency == currency.description && product.status == .active && product.statusPc == .active && product.isAccountNumber && product.allowProduct(currencyOperation)
+                }
+                
+            case .account:
+                
+                guard let product = product as? ProductAccountData else {
+                    return false
+                }
+                
+                return product.currency == currency.description && product.status == .notBlocked && product.isAccountNumber && product.allowProduct(currencyOperation)
+                
+            case .deposit:
+                
+                guard let product = product as? ProductDepositData else {
+                    return false
+                }
+                
+                return product.currency == currency.description && product.isProductDeposit && product.allowProduct(currencyOperation)
+                
+            case .loan:
+                return false
+            }
+        }
+        
         return products
     }
 }

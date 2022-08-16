@@ -25,6 +25,15 @@ class OpenAccountViewModel: ObservableObject {
     }
 
     let pagerViewModel: PagerScrollViewModel
+    
+    var heightContent: CGFloat {
+
+        if items.count > 1 {
+            return 235
+        } else {
+            return 225
+        }
+    }
 
     init(model: Model,
          items: [OpenAccountItemViewModel],
@@ -35,7 +44,7 @@ class OpenAccountViewModel: ObservableObject {
         self.items = items
         self.currency = currency
 
-        pagerViewModel = .init(pagesCount: items.count, currentIndex: currency.order)
+        pagerViewModel = .init(pagesCount: items.count)
 
         if let currentItem = currentItem {
             self.item = currentItem
