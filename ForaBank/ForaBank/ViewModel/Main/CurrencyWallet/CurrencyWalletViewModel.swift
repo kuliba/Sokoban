@@ -31,6 +31,7 @@ class CurrencyWalletViewModel: ObservableObject {
     @Published var isUserInteractionEnabled: Bool
     @Published var isShouldScrollToTop: Bool
     @Published var alert: Alert.ViewModel?
+    @Published var scrollToItem: String?
     
     private lazy var listViewModel: CurrencyListView.ViewModel = makeCurrencyList()
     private lazy var swapViewModel: CurrencySwapView.ViewModel = makeCurrencySwap()
@@ -66,9 +67,13 @@ class CurrencyWalletViewModel: ObservableObject {
             
             switch currencyOperation {
             case .buy:
-                productId = productAccountSelector.productViewModel.productId
+                if let productViewModel = productAccountSelector.productViewModel {
+                    productId = productViewModel.productId
+                }
             case .sell:
-                productId = productCardSelector.productViewModel.productId
+                if let productViewModel = productCardSelector.productViewModel {
+                    productId = productViewModel.productId
+                }
             }
         }
         
@@ -161,7 +166,7 @@ class CurrencyWalletViewModel: ObservableObject {
                 }
                 
                 setCurrencySymbol(currency)
-                setProductSelectorData(currency)
+                resetToInitial(animation: nil)
                 
             }.store(in: &bindings)
         
@@ -192,7 +197,7 @@ class CurrencyWalletViewModel: ObservableObject {
                 
                 switch action {
                 case _ as CurrencySwapAction.Button.Reset:
-                    resetToInitial()
+                    resetToInitial(animation: .default)
                     
                 default:
                     break
@@ -246,9 +251,9 @@ class CurrencyWalletViewModel: ObservableObject {
         }
     }
     
-    private func resetToInitial() {
+    private func resetToInitial(animation: Animation?) {
         
-        withAnimation {
+        withAnimation(animation) {
         
             items = items.compactMap { currencyItem in
                 
@@ -281,9 +286,10 @@ class CurrencyWalletViewModel: ObservableObject {
         
         let productSelectorViewModel = CurrencySelectorView.ViewModel(model, state: selectorState, currency: currency, currencyOperation: currencyOperation)
         
-        if let productCardSelector = productSelectorViewModel.productCardSelector {
+        if let productCardSelector = productSelectorViewModel.productCardSelector,
+           let productViewModel = productCardSelector.productViewModel {
             
-            productCardSelector.productViewModel.$isCollapsed
+            productViewModel.$isCollapsed
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] isCollapsed in
                     
@@ -292,13 +298,14 @@ class CurrencyWalletViewModel: ObservableObject {
                 }.store(in: &bindings)
         }
         
-        if let productAccountSelector = productSelectorViewModel.productAccountSelector {
+        if let productAccountSelector = productSelectorViewModel.productAccountSelector,
+           let productViewModel = productAccountSelector.productViewModel {
             
             if let productId = model.product(currency: currency) {
                 productAccountSelector.setProductSelectorData(productId: productId)
             }
             
-            productAccountSelector.productViewModel.$isCollapsed
+            productViewModel.$isCollapsed
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] isCollapsed in
                     
@@ -397,7 +404,9 @@ class CurrencyWalletViewModel: ObservableObject {
         
         if let selectorViewModel = selectorViewModel,
            let productCardSelector = selectorViewModel.productCardSelector,
-           let productAccountSelector = selectorViewModel.productAccountSelector {
+           let productAccountSelector = selectorViewModel.productAccountSelector,
+           let productCardViewModel = productCardSelector.productViewModel,
+           let productAccountViewModel = productAccountSelector.productViewModel {
             
             switch currencyOperation {
             case .buy:
@@ -405,16 +414,16 @@ class CurrencyWalletViewModel: ObservableObject {
                 model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start.Request(
                     amount: swapViewModel.сurrencyCurrentSwap.currencyAmount,
                     currency: swapViewModel.сurrencyCurrentSwap.currency.description,
-                    productFrom: productCardSelector.productViewModel.productId,
-                    productTo: productAccountSelector.productViewModel.productId))
+                    productFrom: productCardViewModel.productId,
+                    productTo: productAccountViewModel.productId))
                 
             case .sell:
                 
                 model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start.Request(
                     amount: swapViewModel.currencySwap.currencyAmount,
                     currency: swapViewModel.currencySwap.currency.description,
-                    productFrom: productAccountSelector.productViewModel.productId,
-                    productTo: productCardSelector.productViewModel.productId))
+                    productFrom: productAccountViewModel.productId,
+                    productTo: productCardViewModel.productId))
             }
         }
     }
@@ -431,10 +440,12 @@ class CurrencyWalletViewModel: ObservableObject {
             state = .button
             makeConfirmationViewModel(data: response)
             
-            if let productType = productType, let creditAmount = response.creditAmount, let currencyPayee = response.currencyPayee {
+            if let productType = productType, let creditAmount = response.creditAmount, let currencyPayee = response.currencyPayee, let item = items.last {
                 
                 let title = NumberFormatter.decimal(creditAmount)
                 continueButton.title = "Купить \(title) \(currencyPayee.description)"
+                
+                scrollToItem = item.id
                 
                 model.action.send(ModelAction.Products.Update.ForProductType(productType: productType))
             }
@@ -449,13 +460,16 @@ class CurrencyWalletViewModel: ObservableObject {
         switch payload {
         case .successed:
             
-            guard let confirmationViewModel = confirmationViewModel else {
+            guard let confirmationViewModel = confirmationViewModel,
+                  let item = items.last else {
                 return
             }
             
             state = .button
             continueButton.title = "На главную"
             makeSuccessViewModel(confirmationViewModel.debitAmount, currency: confirmationViewModel.currencyPayer)
+            
+            scrollToItem = item.id
             
             model.action.send(ModelAction.Products.Update.Total.All())
             

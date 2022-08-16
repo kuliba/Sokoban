@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import Shimmer
 
 typealias ProductSelectorViewModel = ProductSelectorView.ViewModel
 
@@ -22,7 +23,7 @@ extension ProductSelectorView {
         @Published var currency: Currency
         @Published var currencyOperation: CurrencyOperation
         @Published var isDividerHiddable: Bool
-        @Published var productViewModel: ProductContentViewModel
+        @Published var productViewModel: ProductContentViewModel?
         @Published var listViewModel: ProductsListView.ViewModel?
         @Published var isUserInteractionEnabled: Bool
         
@@ -36,7 +37,7 @@ extension ProductSelectorView {
              title: String,
              currency: Currency,
              currencyOperation: CurrencyOperation,
-             productViewModel: ProductContentViewModel,
+             productViewModel: ProductContentViewModel? = nil,
              listViewModel: ProductsListView.ViewModel? = nil,
              isUserInteractionEnabled: Bool = true,
              isDividerHiddable: Bool = false) {
@@ -57,7 +58,7 @@ extension ProductSelectorView {
             _ model: Model,
             currency: Currency,
             currencyOperation: CurrencyOperation,
-            productViewModel: ProductContentViewModel,
+            productViewModel: ProductContentViewModel? = nil,
             listViewModel: ProductsListView.ViewModel? = nil,
             isDividerHiddable: Bool = false) {
             
@@ -71,7 +72,10 @@ extension ProductSelectorView {
                 .sink { [unowned self] products in
                     
                     let products = model.products(currency: currency, currencyOperation: currencyOperation, products: products)
-                    setProductSelectorData(products: products, productId: productViewModel.productId)
+                    
+                    if let productViewModel = productViewModel {
+                        setProductSelectorData(products: products, productId: productViewModel.productId)
+                    }
                     
                 }.store(in: &bindings)
             
@@ -137,8 +141,10 @@ extension ProductSelectorView {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] listViewModel in
                     
-                    withAnimation {                    
-                        productViewModel.isCollapsed = listViewModel == nil ? true : false
+                    withAnimation {
+                        if let productViewModel = productViewModel {
+                            productViewModel.isCollapsed = listViewModel == nil ? true : false
+                        }
                     }
                     
                 }.store(in: &bindings)
@@ -193,9 +199,7 @@ extension ProductSelectorView {
         
         private func makeProductsList() -> ProductsListView.ViewModel? {
             
-            let productData = model.product(productId: productViewModel.productId)
-            
-            guard let productData = productData else {
+            guard let productViewModel = productViewModel, let productData = model.product(productId: productViewModel.productId) else {
                 return nil
             }
             
@@ -268,6 +272,10 @@ extension ProductSelectorView {
         }
         
         private func updateProductViewModel() {
+            
+            guard let productViewModel = productViewModel else {
+                return
+            }
             
             let productData = model.products(currency: currency, currencyOperation: currencyOperation).filter { $0.id == productViewModel.productId }
             
@@ -406,10 +414,37 @@ extension ProductSelectorView {
                     .font(.textBodySR12160())
                     .foregroundColor(.textPlaceholder)
                 
-                ProductSelectorView.ProductContentView(viewModel: viewModel.productViewModel)
-                    .onTapGesture {
-                        viewModel.action.send(ProductSelectorView.ProductAction.Toggle())
+                if let productViewModel = viewModel.productViewModel {
+                    
+                    ProductSelectorView.ProductContentView(viewModel: productViewModel)
+                        .onTapGesture {
+                            viewModel.action.send(ProductSelectorView.ProductAction.Toggle())
+                        }
+                    
+                } else {
+                    
+                    HStack(alignment: .top, spacing: 16) {
+                        
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(Color.mainColorsGrayMedium)
+                            .frame(width: 32, height: 22)
+                            .shimmering(active: true, bounce: false)
+                        
+                        VStack(alignment: .leading) {
+                            
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(Color.mainColorsGrayMedium)
+                                .frame(height: 12)
+                                .shimmering(active: true, bounce: false)
+                            
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(Color.mainColorsGrayMedium)
+                                .frame(width: 130, height: 8)
+                                .shimmering(active: true, bounce: false)
+                        }
                     }
+                }
+                
             }.padding(.horizontal, 20)
         }
     }
