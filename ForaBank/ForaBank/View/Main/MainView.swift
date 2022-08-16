@@ -132,6 +132,15 @@ struct MainView: View {
 
             case .byPhone(let viewModel):
                     TransferByPhoneView(viewModel: viewModel)
+                
+            case let .openAccount(model):
+
+                if let productsList = model.accountProductsList.value {
+
+                    let viewModel: OpenAccountViewModel = .init(model: model, items: OpenAccountViewModel.reduce(products: productsList))
+
+                    OpenAccountView(viewModel: viewModel)
+                }
             }
         })
         .alert(item: $viewModel.alert, content: { alertViewModel in

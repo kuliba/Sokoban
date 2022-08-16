@@ -200,16 +200,26 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }, template: nil))
                             
                         case .anotherCard:
-                            bottomSheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
-                            })))
+                            if #available(iOS 14, *) {
+                                bottomSheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
+                                    self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                                })))
+                            } else {
+                                sheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
+                                    self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                                })))
+                            }
                             
                         case .betweenSelf:
-                            
-                            bottomSheet = .init(type: .meToMe(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
-                            })))
-                            
-                        case .byBankDetails:
+                            if #available(iOS 14, *) {
+                                bottomSheet = .init(type: .meToMe(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                                })))
+                            } else {
+                                sheet = .init(type: .meToMe(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                                })))
+                            }
+                        
+                    case .byBankDetails:
                             link = .transferByRequisites(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }))
                             
@@ -230,8 +240,13 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 model.cameraAgent.requestPermissions(completion: { available in
                                     
                                     if available {
-                                        self.link = .qrScanner(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                        }))
+                                        if #available(iOS 14, *) {
+                                            self.link = .qrScanner(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                            }))
+                                        } else {
+                                            self.sheet = .init(type: .qrScanner(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                            })))
+                                        }
                                     } else {
                                         self.alert = .init(
                                             title: "Внимание",
@@ -317,6 +332,8 @@ extension PaymentsTransfersViewModel {
         enum Kind {
             case meToMe(MeToMeViewModel)
             case transferByPhone(TransferByPhoneViewModel)
+            case anotherCard(AnotherCardViewModel)
+            case qrScanner(QrViewModel)
         }
     }
     

@@ -176,6 +176,18 @@ struct PaymentsTransfersView: View {
             case let .meToMe(viewModel):
                 MeToMeView(viewModel: viewModel)
                     .edgesIgnoringSafeArea(.bottom)
+                
+            case .anotherCard(let model):
+                AnotherCardView(viewModel: model)
+                    .edgesIgnoringSafeArea(.bottom)
+                    .navigationBarTitle("", displayMode: .inline)
+                    .frame(height: 494)
+                
+            case .qrScanner(let qrViewModel):
+                QrScannerView(viewModel: qrViewModel)
+                    .navigationBarTitle("", displayMode: .inline)
+                    .navigationBarBackButtonHidden(true)
+                    .edgesIgnoringSafeArea(.all)
             }
             
         })
