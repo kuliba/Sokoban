@@ -47,6 +47,36 @@ extension CurrencySelectorView {
         
         private func bind() {
             
+            model.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                    case _ as ModelAction.Account.MakeOpenAccount.Request:
+                        
+                        productAccountSelector = makeProductAccountSelector()
+                        state = .productSelector
+                        
+                        updateProductSelectors(currencyOperation: currencyOperation)
+                            
+                    case let payload as ModelAction.Account.MakeOpenAccount.Response:
+                        
+                        switch payload {
+                        case .complete:
+                            
+                            makeProductViewModel()
+                            
+                        case .failed:
+                            
+                            state = .openAccount
+                        }
+                        
+                    default:
+                        break
+                    }
+                    
+                }.store(in: &bindings)
+            
             $currency
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] currency in
@@ -102,12 +132,27 @@ extension CurrencySelectorView {
             return selectorViewModel
         }
         
+        private func makeProductViewModel() {
+            
+            let products = model.products(currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
+            
+            guard let productData = products.first,
+                  let productAccountSelector = productAccountSelector else {
+                return
+            }
+            
+            productAccountSelector.productViewModel = .init(productId: productData.id, productData: productData, model: model)
+        }
+        
         private func makeProductAccountSelector() -> ProductSelectorView.ViewModel? {
             
             let products = model.products(currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
             
             guard let productData = products.first else {
-                return nil
+                
+                let selectorViewModel: ProductSelectorView.ViewModel = .init(model, currency: currency, currencyOperation: currencyOperation, productViewModel: nil, isDividerHiddable: true)
+                
+                return selectorViewModel
             }
             
             let selectorViewModel: ProductSelectorView.ViewModel = .init(model, currency: currency, currencyOperation: currencyOperation, productViewModel: .init(productId: productData.id, productData: productData, model: model), isDividerHiddable: true)

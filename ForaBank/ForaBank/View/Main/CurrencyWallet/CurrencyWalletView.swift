@@ -17,30 +17,81 @@ struct CurrencyWalletView: View {
 
         VStack {
             
-            ScrollView(showsIndicators: false) {
+            if #available(iOS 14.0, *) {
                 
-                VStack(spacing: 24) {
+                ScrollViewReader { proxy in
                     
-                    ForEach(viewModel.items, id: \.id) { viewModel in
+                    ScrollView(showsIndicators: false) {
                         
-                        switch viewModel {
-                        case let listViewModel as CurrencyListView.ViewModel:
-                            CurrencyListView(viewModel: listViewModel)
+                        VStack(spacing: 24) {
                             
-                        case let swapViewModel as CurrencySwapView.ViewModel:
-                            CurrencySwapView(viewModel: swapViewModel)
+                            ForEach(viewModel.items, id: \.id) { viewModel in
+                                
+                                switch viewModel {
+                                case let listViewModel as CurrencyListView.ViewModel:
+                                    CurrencyListView(viewModel: listViewModel)
+                                        .id(viewModel.id)
+                                    
+                                case let swapViewModel as CurrencySwapView.ViewModel:
+                                    CurrencySwapView(viewModel: swapViewModel)
+                                        .id(viewModel.id)
+                                    
+                                case let selectorViewModel as CurrencySelectorView.ViewModel:
+                                    CurrencySelectorView(viewModel: selectorViewModel)
+                                        .id(viewModel.id)
+                                    
+                                case let confirmationViewModel as CurrencyExchangeConfirmationView.ViewModel:
+                                    CurrencyExchangeConfirmationView(viewModel: confirmationViewModel)
+                                        .id(viewModel.id)
+                                    
+                                case let successViewModel as CurrencyExchangeSuccessView.ViewModel:
+                                    CurrencyExchangeSuccessView(viewModel: successViewModel)
+                                        .id(viewModel.id)
+                                    
+                                default:
+                                    Color.clear
+                                }
+                            }
+                        }
+                    }.onChange(of: viewModel.scrollToItem) { newValue in
+                        
+                        guard let newValue = newValue else {
+                            return
+                        }
+                        
+                        withAnimation {
+                            proxy.scrollTo(newValue, anchor: .center)
+                        }
+                    }
+                }
+                
+            } else {
+                
+                ScrollView(showsIndicators: false) {
+                    
+                    VStack(spacing: 24) {
+                        
+                        ForEach(viewModel.items, id: \.id) { viewModel in
                             
-                        case let selectorViewModel as CurrencySelectorView.ViewModel:
-                            CurrencySelectorView(viewModel: selectorViewModel)
-                            
-                        case let confirmationViewModel as CurrencyExchangeConfirmationView.ViewModel:
-                            CurrencyExchangeConfirmationView(viewModel: confirmationViewModel)
-                            
-                        case let successViewModel as CurrencyExchangeSuccessView.ViewModel:
-                            CurrencyExchangeSuccessView(viewModel: successViewModel)
-                            
-                        default:
-                            Color.clear
+                            switch viewModel {
+                            case let listViewModel as CurrencyListView.ViewModel:
+                                CurrencyListView(viewModel: listViewModel)
+                                
+                            case let swapViewModel as CurrencySwapView.ViewModel:
+                                CurrencySwapView(viewModel: swapViewModel)
+                                
+                            case let selectorViewModel as CurrencySelectorView.ViewModel:
+                                CurrencySelectorView(viewModel: selectorViewModel)
+                                
+                            case let confirmationViewModel as CurrencyExchangeConfirmationView.ViewModel:
+                                CurrencyExchangeConfirmationView(viewModel: confirmationViewModel)
+                                
+                            case let successViewModel as CurrencyExchangeSuccessView.ViewModel:
+                                CurrencyExchangeSuccessView(viewModel: successViewModel)
+                                
+                            default:
+                                Color.clear
+                            }
                         }
                     }
                 }
