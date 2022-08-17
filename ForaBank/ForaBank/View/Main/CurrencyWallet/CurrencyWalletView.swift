@@ -30,29 +30,25 @@ struct CurrencyWalletView: View {
                                 switch viewModel {
                                 case let listViewModel as CurrencyListView.ViewModel:
                                     CurrencyListView(viewModel: listViewModel)
-                                        .id(viewModel.id)
                                     
                                 case let swapViewModel as CurrencySwapView.ViewModel:
                                     CurrencySwapView(viewModel: swapViewModel)
-                                        .id(viewModel.id)
                                     
                                 case let selectorViewModel as CurrencySelectorView.ViewModel:
                                     CurrencySelectorView(viewModel: selectorViewModel)
-                                        .id(viewModel.id)
                                     
                                 case let confirmationViewModel as CurrencyExchangeConfirmationView.ViewModel:
                                     CurrencyExchangeConfirmationView(viewModel: confirmationViewModel)
-                                        .id(viewModel.id)
                                     
                                 case let successViewModel as CurrencyExchangeSuccessView.ViewModel:
                                     CurrencyExchangeSuccessView(viewModel: successViewModel)
-                                        .id(viewModel.id)
                                     
                                 default:
                                     Color.clear
                                 }
                             }
                         }
+                        
                     }.onChange(of: viewModel.scrollToItem) { newValue in
                         
                         guard let newValue = newValue else {
