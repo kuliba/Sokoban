@@ -149,6 +149,25 @@ class CustomPopUpWithRateView: UIViewController {
         self.bottomView.currencySymbol = currency
     }
     
+    func backButton() {
+        let button = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                     action: #selector(back))
+        navigationItem.leftBarButtonItem = button
+    }
+    
+    @objc func back(){
+        
+        if #available(iOS 15, *) {
+            viewModel.closeAction()
+            navigationController?.popViewController(animated: true)
+        } else {
+            viewModel.closeAction()
+        }
+    }
+    
     func bind() {
         model.action
             .receive(on: DispatchQueue.main)
