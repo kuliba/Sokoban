@@ -254,46 +254,65 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         
         switch segue.identifier {
         case "avtodor":
-            let dc = segue.destination as! AvtodorDetailsFormController
-            dc.customGroup = customGroup
-            if let latestOp = InternetTVMainViewModel.latestOp {
-                dc.operatorData = latestOp.op
-                dc.latestOperation = latestOp
-                InternetTVMainViewModel.latestOp = nil
-            }
-        case "mosparking":
-            let dc = segue.destination as! MosParkingViewController
-            dc.operatorData = customGroup?.op
-        case "input":
-            let dc = segue.destination as! InternetTVDetailsFormController
-            if let latestOp = InternetTVMainViewModel.latestOp {
-                dc.operatorData = latestOp.op
-                dc.latestOperation = latestOp
-                dc.operatorsViewModel = operatorsViewModel
-                InternetTVMainViewModel.latestOp = nil
-            } else {
-                dc.operatorData = customGroup?.op
-                // Переход по QR
-                if viewModel.qrData.count != 0 {
-                    let dc = segue.destination as! InternetTVDetailsFormController
-                    dc.operatorData = viewModel.operatorFromQR
-                    dc.qrData = viewModel.qrData
-                    dc.operatorsViewModel = operatorsViewModel
+            
+            if let dc = segue.destination as? UINavigationController,
+               let targetController = dc.topViewController as? AvtodorDetailsFormController {
+                
+                targetController.customGroup = customGroup
+                if let latestOp = InternetTVMainViewModel.latestOp {
+                    targetController.operatorData = latestOp.op
+                    targetController.latestOperation = latestOp
+                    InternetTVMainViewModel.latestOp = nil
                 }
             }
-            viewModel.qrData.removeAll()
+            
+        case "mosparking":
+            
+            if let dc = segue.destination as? UINavigationController,
+               let targetController = dc.topViewController as? MosParkingViewController {
+                targetController.operatorData = customGroup?.op
+            }
+            
+        case "input":
+            
+            if let dc = segue.destination as? UINavigationController,
+               let targetController = dc.topViewController as? InternetTVDetailsFormController {
+                if let latestOp = InternetTVMainViewModel.latestOp {
+                    targetController.operatorData = latestOp.op
+                    targetController.latestOperation = latestOp
+                    targetController.operatorsViewModel = operatorsViewModel
+                    InternetTVMainViewModel.latestOp = nil
+                } else {
+                    targetController.operatorData = customGroup?.op
+                    // Переход по QR
+                    if viewModel.qrData.count != 0 {
+                        let dc = segue.destination as! InternetTVDetailsFormController
+                        dc.operatorData = viewModel.operatorFromQR
+                        dc.qrData = viewModel.qrData
+                        dc.operatorsViewModel = operatorsViewModel
+                    }
+                }
+                viewModel.qrData.removeAll()
+            }
+            
         case "qr":
             let dc = segue.destination as! QRViewController
+            
         case "gbdd":
+            
             InternetTVApiRequests.getClientInfo()
-            let dc = segue.destination as! GIBDDFineDetailsFormController
-            if let latestOp = InternetTVMainViewModel.latestOp {
-                dc.operatorData = latestOp.op
-                dc.latestOperation = latestOp
-                InternetTVMainViewModel.latestOp = nil
-            } else {
-                dc.operatorData = customGroup?.op
+            
+            if let dc = segue.destination as? UINavigationController,
+               let targetController = dc.topViewController as? GIBDDFineDetailsFormController {
+                if let latestOp = InternetTVMainViewModel.latestOp {
+                    targetController.operatorData = latestOp.op
+                    targetController.latestOperation = latestOp
+                    InternetTVMainViewModel.latestOp = nil
+                } else {
+                    targetController.operatorData = customGroup?.op
+                }
             }
+            
         case .none:
             break
         case .some(_):
@@ -310,25 +329,25 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
 }
 
 extension InternetTVMainController {
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.arrCustomOrg.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: GHKCell.reuseId, for: indexPath) as! GHKCell
         let item = viewModel.arrCustomOrg[indexPath.row]
         cell.set(item: item)
         return cell
     }
-
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         64
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         searchController.searchBar.searchTextField.endEditing(true)
-
+        
         let item = viewModel.arrCustomOrg[indexPath.row]
         if (item.op?.puref == "iFora||4990") {
             performSegue(withIdentifier: "mosparking", sender: self)
