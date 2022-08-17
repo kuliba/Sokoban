@@ -18,15 +18,14 @@ extension CurrencySelectorView {
         @Published var currency: Currency
         @Published var currencyOperation: CurrencyOperation
         @Published var isUserInteractionEnabled: Bool
+        @Published var productCardSelector: ProductSelectorViewModel?
+        @Published var productAccountSelector: ProductSelectorViewModel?
         
         let model: Model
         let id = UUID().uuidString
         
-        private var bindings = Set<AnyCancellable>()
-        
-        lazy var productCardSelector: ProductSelectorViewModel? = makeProductCardSelector()
-        lazy var productAccountSelector: ProductSelectorViewModel? = makeProductAccountSelector()
         lazy var openAccount: CurrencyWalletAccountView.ViewModel = makeOpenAccount()
+        private var bindings = Set<AnyCancellable>()        
         
         init(_ model: Model, state: State, currency: Currency, currencyOperation: CurrencyOperation, isUserInteractionEnabled: Bool = true) {
             
@@ -35,6 +34,9 @@ extension CurrencySelectorView {
             self.currency = currency
             self.currencyOperation = currencyOperation
             self.isUserInteractionEnabled = isUserInteractionEnabled
+            
+            productCardSelector = makeProductCardSelector()
+            productAccountSelector = makeProductAccountSelector()
             
             bind()
         }
