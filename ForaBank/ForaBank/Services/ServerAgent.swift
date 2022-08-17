@@ -151,6 +151,43 @@ class ServerAgent: NSObject, ServerAgentProtocol {
             completion(.failure(ServerAgentError.requestCreationError(error)))
         }
     }
+    
+    func executeUploadCommand<Command>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void) where Command : ServerUploadCommand {
+        
+        do {
+            
+            let request = try uploadRequest(with: command)
+            
+            session.uploadTask(with: request, from: request.httpBody) { [unowned self] data, response, error in
+                
+                if let error = error {
+                    
+                    completion(.failure(.sessionError(error)))
+                    return
+                }
+  
+                guard let data = data else {
+                    completion(.failure(.emptyResponseData))
+                    return
+                }
+                
+                do {
+                        let response = try decoder.decode(Command.Response.self, from: data)
+                        completion(.success(response))
+
+                    
+                } catch {
+                    
+                    completion(.failure(.curruptedData(error)))
+                }
+                
+            }.resume()
+            
+        } catch {
+            
+            completion(.failure(ServerAgentError.requestCreationError(error)))
+        }
+    }
 }
 
 //MARK: - Request
@@ -274,6 +311,66 @@ internal extension ServerAgent {
         return request
     }
     
+    func uploadRequest<Command>(with command: Command) throws -> URLRequest where Command : ServerUploadCommand {
+        
+        let url = try url(with: command.endpoint)
+        
+        var request = URLRequest(url: url)
+        
+        // generate boundary string using a unique per-app string
+        let boundary = UUID().uuidString
+        
+        // cookies headers
+        request.httpShouldHandleCookies = false
+        if let cookies = self.cookies {
+           
+            request.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
+        }
+        
+        // headers
+        request.httpMethod = command.method.rawValue
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        
+        // token
+        request.setValue(command.token, forHTTPHeaderField: "X-XSRF-TOKEN")
+        
+        // parameters
+        if let parameters = command.parameters, parameters.isEmpty == false {
+            
+            var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            urlComponents?.queryItems = parameters.map{ URLQueryItem(name: $0.name, value: $0.value) }
+            
+            guard let updatedURL = urlComponents?.url else {
+                throw ServerRequestCreationError.unableCounstructURLWithParameters
+            }
+            
+            request.url = updatedURL
+        }
+        
+        // body
+        request.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        
+        var data = Data()
+        data.append("--\(boundary)\r\n")
+        data.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(command.media.fileName)\"\r\n")
+        data.append("Content-Type: \(command.media.mimeType)\r\n")
+        data.append("\r\n")
+        data.append(command.media.data)
+        data.append("\r\n")
+        data.append("--\(boundary)--\r\n")
+        request.httpBody = data
+        
+        request.addValue(String(data.count), forHTTPHeaderField: "Content-Length")
+        
+        // timeout
+        if let timeout = command.timeout {
+            
+            request.timeoutInterval = timeout
+        }
+        
+        return request
+    }
+    
     //TODO: tests
     func url(with endpoint: String) throws -> URL {
         
@@ -322,4 +419,17 @@ extension ServerAgent: URLSessionTaskDelegate {
 //MARK: - URLSessionDataDelegate
 extension ServerAgent: URLSessionDataDelegate {
     
+}
+
+//TODO: make throw
+private extension Data {
+    
+    mutating func append(_ string: String) {
+        
+        guard let data = string.data(using: .utf8) else {
+            return
+        }
+        
+        self.append(data)
+    }
 }

@@ -65,6 +65,7 @@ struct AccountCellButtonView: View {
                     Text(verbatim: viewModel.content)
                         .font(.textH4M16240())
                         .foregroundColor(.textSecondary)
+                        .multilineTextAlignment(.leading)
                 }
                 
                 Spacer()

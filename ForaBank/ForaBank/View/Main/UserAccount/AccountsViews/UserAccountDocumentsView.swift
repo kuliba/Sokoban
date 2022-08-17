@@ -39,7 +39,7 @@ extension UserAccountDocumentsView {
                     })
             ]
             
-            let userInn = userData.INN ?? ""
+            let userInn = userData.inn ?? ""
             accountDocuments.append(DocumentCellView.ViewModel(
                 itemType: .inn,
                 content: userInn.addMask(for: .inn),

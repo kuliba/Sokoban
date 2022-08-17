@@ -69,6 +69,7 @@ struct UserAccountExitInfoView: View {
             
         }
         .padding(20)
+        .padding(.bottom, 60)
     }
 }
 
