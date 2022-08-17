@@ -76,7 +76,7 @@ struct MessagesHistoryItemView: View {
                     .font(.textH4M16240())
                     .foregroundColor(.textSecondary)
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 8) {
                     
                     Text(viewModel.content)
                         .font(.textBodySR12160())

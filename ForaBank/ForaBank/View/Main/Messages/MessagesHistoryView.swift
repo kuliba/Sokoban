@@ -25,7 +25,7 @@ struct MessagesHistoryView: View {
                         MessagesHistorySectionView(viewModel: section)
                     }
                 }
-                .padding(.leading, 15)
+                .padding(.leading, 20)
                 .background(GeometryReader { geo in
                     
                     Color.clear
