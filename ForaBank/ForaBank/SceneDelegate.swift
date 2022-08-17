@@ -155,4 +155,27 @@ extension SceneDelegate {
             }))
         }
     }
+    
+    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+
+        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+            let urlToOpen = userActivity.webpageURL else { return }
+        
+        var deepLinkType: DeepLinkType = .invalidLink
+        deepLinkType = .c2b(urlToOpen.absoluteString)
+        
+        switch deepLinkType {
+
+        case let .c2b(urlString):
+            GlobalModule.c2bURL = urlString
+            rootViewModel.action.send(RootViewModelAction.C2bShow())
+            
+        case .invalidLink:
+            rootViewModel.alert = .init(title: "Ошибка", message: "Мы не смогли распознать ссылку", primary: .init(type: .default, title: "OK", action: { [weak self] in
+                self?.rootViewModel.action.send(RootViewModelAction.CloseAlert())
+            }))
+        case .me2me(_):
+            break
+        }
+    }
 }

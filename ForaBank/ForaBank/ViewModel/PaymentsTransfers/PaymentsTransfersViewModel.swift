@@ -88,9 +88,17 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         model.cameraAgent.requestPermissions(completion: { available in
                             
                             if available {
-                                self.link = .qrScanner(.init(closeAction: {[weak self] in
+                                self.link = .qrScanner(.init(closeAction: { [weak self] value  in
+                                    
+                                    if !value {
                                     self?.action.send(PaymentsTransfersViewModelAction
-                                                      .Close.Link() )}))
+                                                      .Close.Link() )
+                                } else {
+                                    let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                    }, template: nil)
+                                    self?.link = .serviceOperators(serviceOperators)
+                                    InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
+                                }}))
                             } else {
                                 self.alert = .init(
                                     title: "Внимание",
@@ -111,9 +119,17 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     link = nil
                     
                 case _ as PaymentsTransfersViewModelAction.OpenQr:
-                    link = .qrScanner(.init(closeAction:  { [weak self] in
-                        self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                    }))
+                    link = .qrScanner(.init(closeAction:  { [weak self] value  in
+                        
+                        if !value {
+                        self?.action.send(PaymentsTransfersViewModelAction
+                                          .Close.Link() )
+                    } else {
+                        let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                        }, template: nil)
+                        self?.link = .serviceOperators(serviceOperators)
+                        InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
+                    }}))
                   
                 case _ as PaymentsTransfersViewModelAction.ViewDidApear:
                     

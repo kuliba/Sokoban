@@ -137,6 +137,14 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         let tax = response?.data?.fee ?? 0.0
         ob?.taxTransaction = tax.currencyFormatter(symbol: "RUB")
         ob?.cardFrom = footerView.cardFromField.model
+       
+        if let paymentOperationDetailId = response?.data?.paymentOperationDetailID , let name = operatorData?.name {
+            if ob?.template == nil {
+                ob?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+            } else {
+                ob?.templateButtonViewModel = .template(paymentOperationDetailId)
+            }
+        }
         
         DispatchQueue.main.async {
             let vc = InternetTVConfirmViewController()
@@ -264,8 +272,12 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     }
     
     @objc func onTouchBackButton() {
-        viewModel.closeAction()
-        navigationController?.popToRootViewController(animated: true)
+            if #available(iOS 15, *) {
+                viewModel.closeAction()
+            navigationController?.popViewController(animated: true)
+            } else {
+                viewModel.closeAction()
+            }
     }
     
     @objc private func updateNameTemplate() {

@@ -17,7 +17,7 @@ extension CountryPaymentView {
         let paymentType: PaymentType
         let bank: BanksList?
         var paymentTemplate: PaymentTemplateData? = nil
-        var operatorsViewModel: OperatorsViewModel? = nil
+        var operatorsViewModel: OperatorsViewModel?
         
         struct AddressViewModel {
             
@@ -69,6 +69,16 @@ extension CountryPaymentView {
             self.puref = countryData.puref
             self.country = Model.shared.dictionaryCountry(for: countryData.countryCode)?.getCountriesList()
             self.bank = Self.findBankByPuref(purefString: countryData.puref)
+        }
+        
+        init(operatorsViewModel: OperatorsViewModel) {
+            
+            self.operatorsViewModel = operatorsViewModel
+            self.paymentTemplate = operatorsViewModel.template
+            self.paymentType = .template(templateViewModel: operatorsViewModel.template!)
+            self.puref = nil
+            self.country = nil
+            self.bank = nil
         }
         
         init(paymentTemplate: PaymentTemplateData) {
@@ -161,13 +171,12 @@ struct CountryPaymentView: UIViewControllerRepresentable {
             //MARK: ContactInputViewController init(117)
 
             switch templateViewModel.type {
-                
             case .direct:
                 vc = .init(paymentTemplate: templateViewModel)
-
+                vc.operatorsViewModel = viewModel.operatorsViewModel
             case .contactAdressless:
                 vc = .init(paymentTemplate: templateViewModel)
-
+                vc.operatorsViewModel = self.viewModel.operatorsViewModel
             default :
                 break
             }

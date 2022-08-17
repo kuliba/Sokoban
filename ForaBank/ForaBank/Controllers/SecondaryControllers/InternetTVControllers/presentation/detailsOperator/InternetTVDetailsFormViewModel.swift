@@ -11,7 +11,7 @@ class InternetTVDetailsFormViewModel {
     var puref = ""
     var cardNumber = "-1"
     var product: GetProductListDatum?
-    let closeAction: () -> Void = {}
+    var closeAction: () -> Void = {}
 
     func setupNextStep(_ answer: CreateTransferAnswerModel) {
         fillRequisites(answer: answer)

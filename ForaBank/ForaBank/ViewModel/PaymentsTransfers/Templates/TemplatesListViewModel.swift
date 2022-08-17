@@ -139,7 +139,9 @@ private extension TemplatesListViewModel {
                         print("Скорее всего не будет сделано в ближайшее время")
                         
                     case .betweenTheir:
-                        link = .betweenTheir(.init(type: .template(temp), closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        link = .betweenTheir(.init(type: .template(temp), closeAction: {[weak self] in
+                            
+                            self?.action.send(TemplatesListViewModelAction.CloseAction())
                         }))
                         
                     case .insideBank:
@@ -147,31 +149,47 @@ private extension TemplatesListViewModel {
                         }))
                         
                     case .byPhone:
-                        link = .byPhone(.init(insideByPhone: temp))
+                        link = .byPhone(.init(insideByPhone: temp, closeAction: {[weak self] in
+                            self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        }))
                         
                     case .sfp:
-                        link = .byPhone(.init(spf: temp))
+                        link = .byPhone(.init(spf: temp, closeAction: {[weak self] in
+                            self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        }))
 
                     case .direct:
-                        link = .direct(temp)
+                        let operatorsViewModel = OperatorsViewModel(closeAction: {  [weak self] in
+                            self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        }, template: temp)
+                        link = .direct(CountryPaymentView.ViewModel(operatorsViewModel: operatorsViewModel))
 
                     case .contactAdressless:
-                        link = .contactAdressless(temp)
+                        let operatorsViewModel = OperatorsViewModel(closeAction: {  [weak self] in
+                            self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        }, template: temp)
+                        link = .contactAdressless(CountryPaymentView.ViewModel(operatorsViewModel: operatorsViewModel))
                         
                     case .housingAndCommunalService:
                         link = .housingAndCommunalService(.init(model: model, closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
                         }, paymentTemplate: temp))
 
                     case .mobile:
-                        link = .mobile(.init(paymentTemplate: temp, closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        link = .mobile(.init(paymentTemplate: temp, closeAction: {[weak self] in
+                            
+                            self?.action.send(TemplatesListViewModelAction.CloseAction())
                         }))
                         
                     case .internet:
-                        link = .internet(.init(model: model, closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        link = .internet(.init(model: model, closeAction: {[weak self] in
+                            
+                            self?.action.send(TemplatesListViewModelAction.CloseAction())
                         }, paymentTemplate: temp))
 
                     case .transport:
-                        link = .internet(.init(model: model, closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        link = .internet(.init(model: model, closeAction: {[weak self] in
+                            
+                            self?.action.send(TemplatesListViewModelAction.CloseAction())
                         }, paymentTemplate: temp))
 
                     case .externalEntity:
@@ -360,8 +378,8 @@ extension TemplatesListViewModel {
 
         case byPhone(PaymentByPhoneViewModel)
         case sfp(PaymentByPhoneViewModel)
-        case direct(PaymentTemplateData)
-        case contactAdressless(PaymentTemplateData)
+        case direct(CountryPaymentView.ViewModel)
+        case contactAdressless(CountryPaymentView.ViewModel)
         case housingAndCommunalService(InternetTVDetailsViewModel)
         case mobile(MobilePayViewModel)
         case internet(InternetTVDetailsViewModel)

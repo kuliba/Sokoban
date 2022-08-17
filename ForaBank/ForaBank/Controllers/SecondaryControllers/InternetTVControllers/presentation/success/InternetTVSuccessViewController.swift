@@ -41,7 +41,6 @@ class InternetTVSuccessViewController: UIViewController {
             guard let self = self else {
                 return
             }
-            let templateButtonViewModel = self.confirmModel?.templateButtonViewModel
             
             guard let templateButtonViewModel = self.confirmModel?.templateButtonViewModel,
                   case .sfp(let name, let paymentOperationDetailId) = templateButtonViewModel else {

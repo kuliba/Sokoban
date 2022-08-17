@@ -13,6 +13,7 @@ import IQKeyboardManagerSwift
 extension CustomPopUpWithRateView {
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.backButton()
         setupUI()
         setupConstraint()
         
