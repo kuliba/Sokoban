@@ -48,6 +48,11 @@ extension ImageData {
  
         return Image(uiImage: uiImage)
     }
+    
+    var jpegData: Data? {
+        
+        self.uiImage?.jpegData(compressionQuality: 1.0)
+    }
 }
 
 extension ImageData {

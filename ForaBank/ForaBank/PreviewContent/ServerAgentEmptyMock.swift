@@ -21,4 +21,9 @@ class ServerAgentEmptyMock: ServerAgentProtocol {
         
         completion(.failure(.emptyResponseData))
     }
+    
+    func executeUploadCommand<Command>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void) where Command : ServerUploadCommand {
+        
+        completion(.failure(.emptyResponseData))
+    }
 }

@@ -27,12 +27,14 @@ struct ClientInfoData: Codable, Equatable, Identifiable {
     let phone: String
     let phoneSMS: String?
     let email: String?
-    let INN: String?
+    let inn: String?
+    let customName: String?
     
     enum CodingKeys: String, CodingKey {
         
         case id = "clientId"
-        case lastName, firstName, patronymic, birthDay,regSeries, regNumber, birthPlace, dateOfIssue, codeDepartment, regDepartment, address, addressInfo, addressResidential, addressResidentialInfo, phone, phoneSMS, email, INN
+        case inn = "INN"
+        case lastName, firstName, patronymic, birthDay,regSeries, regNumber, birthPlace, dateOfIssue, codeDepartment, regDepartment, address, addressInfo, addressResidential, addressResidentialInfo, phone, phoneSMS, email, customName
     }
     
     struct AddressInfo: Codable {
@@ -62,7 +64,7 @@ struct ClientInfoData: Codable, Equatable, Identifiable {
         lhs.phone == rhs.phone &&
         lhs.phoneSMS == rhs.phoneSMS &&
         lhs.email == rhs.email &&
-        lhs.INN == rhs.INN
+        lhs.inn == rhs.inn
     }
 }
 

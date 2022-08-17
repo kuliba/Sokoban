@@ -439,6 +439,8 @@
 		6822EFD226B935DB00125EEC /* BaseTableViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */; };
 		6822EFD626B935FF00125EEC /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */; };
 		6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */; };
+		6828806F28A2D8F500186F32 /* DeleteAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6828806E28A2D8F400186F32 /* DeleteAccountView.swift */; };
+		6828807228A32F0200186F32 /* OptionsButtonsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6828807128A32F0200186F32 /* OptionsButtonsViewComponent.swift */; };
 		6830A02227D37821003CA4F1 /* DepositProductData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6830A02127D37821003CA4F1 /* DepositProductData.swift */; };
 		6830A02427D37E87003CA4F1 /* BannerCatalogListData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6830A02327D37E87003CA4F1 /* BannerCatalogListData.swift */; };
 		6830A02627D3858E003CA4F1 /* GetDepositProductListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 6830A02527D3858E003CA4F1 /* GetDepositProductListResponseGeneric.json */; };
@@ -1841,6 +1843,8 @@
 		6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewViewController.swift; sourceTree = "<group>"; };
 		6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
 		6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BaseTableViewCell.xib; sourceTree = "<group>"; };
+		6828806E28A2D8F400186F32 /* DeleteAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountView.swift; sourceTree = "<group>"; };
+		6828807128A32F0200186F32 /* OptionsButtonsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsButtonsViewComponent.swift; sourceTree = "<group>"; };
 		6830A02127D37821003CA4F1 /* DepositProductData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositProductData.swift; sourceTree = "<group>"; };
 		6830A02327D37E87003CA4F1 /* BannerCatalogListData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerCatalogListData.swift; sourceTree = "<group>"; };
 		6830A02527D3858E003CA4F1 /* GetDepositProductListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetDepositProductListResponseGeneric.json; sourceTree = "<group>"; };
@@ -3777,6 +3781,14 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		6828807028A32E6100186F32 /* OptionsButtonsViewComponent */ = {
+			isa = PBXGroup;
+			children = (
+				6828807128A32F0200186F32 /* OptionsButtonsViewComponent.swift */,
+			);
+			path = OptionsButtonsViewComponent;
+			sourceTree = "<group>";
+		};
 		6833E0B32732B749004C070F /* DetailOperationCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -4503,6 +4515,7 @@
 				774A8B362865FCDD00B81140 /* UserAccountView.swift */,
 				774A8B2F2865FCDD00B81140 /* UserDocumentView.swift */,
 				774A8B302865FCDD00B81140 /* AccountsViews */,
+				6828806E28A2D8F400186F32 /* DeleteAccountView.swift */,
 			);
 			path = UserAccount;
 			sourceTree = "<group>";
@@ -5719,6 +5732,7 @@
 		ED15DAE32811639D00BF7E9F /* Account */ = {
 			isa = PBXGroup;
 			children = (
+				6828807028A32E6100186F32 /* OptionsButtonsViewComponent */,
 				EDB02AE12816E9C6005F64B5 /* AccountCellDefaultViewModel.swift */,
 				EDB02AE32816EB07005F64B5 /* AccountCellFullButtonViewComponent.swift */,
 				ED5CB96F28720EE8008D8A1E /* AccountCellFullButtonWithInfoViewComponent.swift */,
@@ -8099,6 +8113,7 @@
 				77F5CE1528060A9600611B66 /* AtmCityData.swift in Sources */,
 				ED0AF88B286B3C2C00F86B68 /* ImagePicker.swift in Sources */,
 				503F073E28252CBA00E84A77 /* DepositBottomSheetViewModel.swift in Sources */,
+				6828806F28A2D8F500186F32 /* DeleteAccountView.swift in Sources */,
 				775E068527E8A0D1006A9886 /* Model+PaymentsTaxesFNSMock.swift in Sources */,
 				68673B4F26F2F29300F67A8C /* RequisitesViewController.swift in Sources */,
 				A5F15C0B27495F7C00DC91DA /* GlobalModule.swift in Sources */,
@@ -8399,6 +8414,7 @@
 				0B66E8D826CC5EC400FD735D /* ExtensionDevice.swift in Sources */,
 				0B216FC326D1B30C0023C878 /* ExtensionGKHCitySearchController.swift in Sources */,
 				ED60A1E126DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift in Sources */,
+				6828807228A32F0200186F32 /* OptionsButtonsViewComponent.swift in Sources */,
 				ED4B54462703465200C87A1A /* CardsScrollModel.swift in Sources */,
 				ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */,
 				68D099D9273B5D110017D777 /* PaymentByPhoneCoordinator.swift in Sources */,

@@ -41,73 +41,73 @@ extension ProductProfileOptionsPannelView {
             
             switch type {
             case .refillFromOtherBank:
-                return .init(icon: .init(image: .ic40SBP, style: .original, background: .circle), title: .init(text: "С моего счета в другом банке", style: .bold), orientation: .horizontal, action: action)
+                return .init(icon: .init(image: .ic40SBP, style: .original, background: .circleSmall), title: .init(text: "С моего счета в другом банке", style: .bold), orientation: .horizontal, action: action)
                 
             case .refillFromOtherProduct:
-                return .init(icon: .init(image: .ic24Between, background: .circle), title: .init(text: "Со своего счета", style: .bold), orientation: .horizontal, action: action)
+                return .init(icon: .init(image: .ic24Between, background: .circleSmall), title: .init(text: "Со своего счета", style: .bold), orientation: .horizontal, action: action)
 
             case .requisites:
                 switch productType {
                 case .card:
-                    return .init(icon: .init(image: .ic24FileText, background: .circle), title: .init(text: "Реквизиты счета карты", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24FileText, background: .circleSmall), title: .init(text: "Реквизиты счета карты", style: .bold), orientation: .horizontal, action: action)
                     
                 case .account:
-                    return .init(icon: .init(image: .ic24FileText, background: .circle), title: .init(text: "Реквизиты счета", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24FileText, background: .circleSmall), title: .init(text: "Реквизиты счета", style: .bold), orientation: .horizontal, action: action)
                     
                 case .deposit:
-                    return .init(icon: .init(image: .ic24FileText, background: .circle), title: .init(text: "Реквизиты счета вклада", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24FileText, background: .circleSmall), title: .init(text: "Реквизиты счета вклада", style: .bold), orientation: .horizontal, action: action)
                     
                 case .loan:
-                    return .init(icon: .init(image: .ic24FileText, background: .circle), title: .init(text: "Реквизиты счета кредита", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24FileText, background: .circleSmall), title: .init(text: "Реквизиты счета кредита", style: .bold), orientation: .horizontal, action: action)
                 }
                 
             case .statement:
                 switch productType {
                 case .card:
-                    return .init(icon: .init(image: .ic24FileHash, background: .circle), title: .init(text: "Выписка по счету карты", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24FileHash, background: .circleSmall), title: .init(text: "Выписка по счету карты", style: .bold), orientation: .horizontal, action: action)
                     
                 case .account:
-                    return .init(icon: .init(image: .ic24FileHash, background: .circle), title: .init(text: "Выписка по счету", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24FileHash, background: .circleSmall), title: .init(text: "Выписка по счету", style: .bold), orientation: .horizontal, action: action)
                     
                 case .deposit:
-                    return .init(icon: .init(image: .ic24FileHash, background: .circle), title: .init(text: "Выписка по счету вклада", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24FileHash, background: .circleSmall), title: .init(text: "Выписка по счету вклада", style: .bold), orientation: .horizontal, action: action)
                     
                 case .loan:
-                    return .init(icon: .init(image: .ic24FileHash, background: .circle), title: .init(text: "Выписка по счету кредита", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24FileHash, background: .circleSmall), title: .init(text: "Выписка по счету кредита", style: .bold), orientation: .horizontal, action: action)
                 }
                 
             case .info:
                 switch productType {
                 case .card:
-                    return .init(icon: .init(image: .ic24Info, background: .circle), title: .init(text: "Информация по счету карты", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24Info, background: .circleSmall), title: .init(text: "Информация по счету карты", style: .bold), orientation: .horizontal, action: action)
 
                 case .account:
-                    return .init(icon: .init(image: .ic24Info, background: .circle), title: .init(text: "Информация по счету", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24Info, background: .circleSmall), title: .init(text: "Информация по счету", style: .bold), orientation: .horizontal, action: action)
                     
                 case .deposit:
-                    return .init(icon: .init(image: .ic24Info, background: .circle), title: .init(text: "Информация по вкладу", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24Info, background: .circleSmall), title: .init(text: "Информация по вкладу", style: .bold), orientation: .horizontal, action: action)
                     
                 case .loan:
-                    return .init(icon: .init(image: .ic24Info, background: .circle), title: .init(text: "Информация по счету кредита", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24Info, background: .circleSmall), title: .init(text: "Информация по счету кредита", style: .bold), orientation: .horizontal, action: action)
                 }
                 
             case .conditions:
                 switch productType {
                 case .card:
-                    return .init(icon: .init(image: .ic24File, background: .circle), title: .init(text: "Условия по счету карты", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24File, background: .circleSmall), title: .init(text: "Условия по счету карты", style: .bold), orientation: .horizontal, action: action)
 
                 case .account:
-                    return .init(icon: .init(image: .ic24File, background: .circle), title: .init(text: "Условия по счету", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24File, background: .circleSmall), title: .init(text: "Условия по счету", style: .bold), orientation: .horizontal, action: action)
                     
                 case .deposit:
-                    return .init(icon: .init(image: .ic24File, background: .circle), title: .init(text: "Условия по вкладу", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24File, background: .circleSmall), title: .init(text: "Условия по вкладу", style: .bold), orientation: .horizontal, action: action)
                     
                 case .loan:
-                    return .init(icon: .init(image: .ic24File, background: .circle), title: .init(text: "Условия по счету кредита", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24File, background: .circleSmall), title: .init(text: "Условия по счету кредита", style: .bold), orientation: .horizontal, action: action)
                 }
                 
             case .closeDeposit:
-                return .init(icon: .init(image: .ic24Close, background: .circle), title: .init(text: "Закрыть вклад", style: .bold), orientation: .horizontal, action: action)
+                return .init(icon: .init(image: .ic24Close, background: .circleSmall), title: .init(text: "Закрыть вклад", style: .bold), orientation: .horizontal, action: action)
             }
         }
         
@@ -174,6 +174,6 @@ struct ProductProfileOptionsPannelViewComponent_Previews: PreviewProvider {
 
 extension ProductProfileOptionsPannelView.ViewModel {
     
-    static let sample = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttons: [.init(icon: .init(image: .ic40SBP, style: .original, background: .circle), title: .init(text: "С моего счета в другом банке", style: .bold), orientation: .horizontal, action: {}), .init(icon: .init(image: .ic24Between, background: .circle), title: .init(text: "Со своего счета", style: .bold), orientation: .horizontal, action: {}), .init(icon: .init(image: .ic24CreditCard, background: .circle), title: .init(text: "С карты другого банка", style: .bold), orientation: .horizontal, action: {})])
+    static let sample = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttons: [.init(icon: .init(image: .ic40SBP, style: .original, background: .circleSmall), title: .init(text: "С моего счета в другом банке", style: .bold), orientation: .horizontal, action: {}), .init(icon: .init(image: .ic24Between, background: .circleSmall), title: .init(text: "Со своего счета", style: .bold), orientation: .horizontal, action: {}), .init(icon: .init(image: .ic24CreditCard, background: .circleSmall), title: .init(text: "С карты другого банка", style: .bold), orientation: .horizontal, action: {})])
 
 }
