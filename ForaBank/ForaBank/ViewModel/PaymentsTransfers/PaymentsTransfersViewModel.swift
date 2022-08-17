@@ -257,10 +257,10 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                     
                                     if available {
                                         if #available(iOS 14, *) {
-                                            self.link = .qrScanner(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                            self.link = .qrScanner(.init(closeAction: { [weak self] _ in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                                             }))
                                         } else {
-                                            self.sheet = .init(type: .qrScanner(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                            self.sheet = .init(type: .qrScanner(.init(closeAction: { [weak self] _ in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                                             })))
                                         }
                                     } else {

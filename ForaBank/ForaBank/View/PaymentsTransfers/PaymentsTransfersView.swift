@@ -177,8 +177,8 @@ struct PaymentsTransfersView: View {
                 MeToMeView(viewModel: viewModel)
                     .edgesIgnoringSafeArea(.bottom)
                 
-            case .anotherCard(let model):
-                AnotherCardView(viewModel: model)
+            case .anotherCard(let anotherCardViewModel):
+                AnotherCardView(viewModel: anotherCardViewModel)
                     .edgesIgnoringSafeArea(.bottom)
                     .navigationBarTitle("", displayMode: .inline)
                     .frame(height: 494)

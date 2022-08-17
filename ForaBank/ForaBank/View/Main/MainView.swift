@@ -109,8 +109,8 @@ struct MainView: View {
         .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
 
             switch bottomSheet.type {
-            case let .openAccount(model):
-                OpenAccountView(viewModel: model)
+            case let .openAccount(openAccountViewModel):
+                OpenAccountView(viewModel: openAccountViewModel)
 
             }
         }
