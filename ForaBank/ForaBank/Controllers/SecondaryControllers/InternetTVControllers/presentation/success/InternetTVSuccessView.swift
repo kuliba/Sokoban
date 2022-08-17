@@ -65,7 +65,17 @@ class InternetTVSuccessView: UIView {
         statusLabel.text = model.statusIsSuccess
             ? "Успешный перевод" : "Операция неуспешна!"
         summLabel.text = model.sumTransaction
+        
+        if let templateButtonViewModel = model.templateButtonViewModel {
+            
+            updateTemplateButton(with: templateButtonViewModel)
+            
+        } else {
+            
+            templateButton.isHidden = true
+        }
     }
+    
     
     func updateTemplateButton(with viewModel: InternetTVConfirmViewModel.TemplateButtonViewModel) {
         templateButton.layer.cornerRadius = 28
