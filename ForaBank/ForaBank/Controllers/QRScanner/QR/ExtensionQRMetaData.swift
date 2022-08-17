@@ -62,7 +62,7 @@ extension QRViewController: AVCaptureMetadataOutputObjectsDelegate, CALayerDeleg
                     
                     if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
                         
-                        viewModel?.closeAction()
+                        viewModel?.closeAction(false)
                         let nav = UINavigationController(rootViewController: vc)
                         nav.modalPresentationStyle = .fullScreen
                         present(nav, animated: true, completion: nil)
@@ -77,7 +77,7 @@ extension QRViewController: AVCaptureMetadataOutputObjectsDelegate, CALayerDeleg
                     let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
                     
                     if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
-                        viewModel?.closeAction()
+                        viewModel?.closeAction(false)
                         self.present(vc, animated: true)
                     }
                 }
