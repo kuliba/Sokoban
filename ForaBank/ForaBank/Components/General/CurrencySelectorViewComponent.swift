@@ -17,6 +17,7 @@ extension CurrencySelectorView {
         @Published var state: State
         @Published var currency: Currency
         @Published var currencyOperation: CurrencyOperation
+        @Published var bottomSheet: BottomSheet?
         @Published var isUserInteractionEnabled: Bool
         @Published var productCardSelector: ProductSelectorViewModel?
         @Published var productAccountSelector: ProductSelectorViewModel?
@@ -47,6 +48,16 @@ extension CurrencySelectorView {
             case productSelector
         }
         
+        struct BottomSheet: Identifiable {
+            
+            let id = UUID()
+            let type: SheetType
+            
+            enum SheetType {
+                case openAccount(OpenAccountViewModel)
+            }
+        }
+        
         private func bind() {
             
             model.action
@@ -57,20 +68,44 @@ extension CurrencySelectorView {
                     case _ as ModelAction.Account.MakeOpenAccount.Request:
                         
                         productAccountSelector = makeProductAccountSelector()
+                        updateProductSelectors(currencyOperation: currencyOperation)
+                        
                         state = .productSelector
                         
-                        updateProductSelectors(currencyOperation: currencyOperation)
-                            
                     case let payload as ModelAction.Account.MakeOpenAccount.Response:
-                        
-                        switch payload {
-                        case .complete:
-                            
-                            makeProductViewModel()
-                            
-                        case .failed:
-                            
+                      
+                        if case .failed = payload {
                             state = .openAccount
+                        }
+                     
+                    default:
+                        break
+                    }
+                    
+                }.store(in: &bindings)
+            
+            model.products
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] productsData in
+                    
+                    makeProductViewModel(products: productsData)
+
+                }.store(in: &bindings)
+            
+            openAccount.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                    case _ as CurrencyWalletAccountView.ProductAction.Toggle:
+                        
+                        let productsList = model.accountProductsList.value.filter { $0.currency.rawValue == currency.description }
+                        
+                        if productsList.isEmpty == false {
+                            
+                            let viewModel: OpenAccountViewModel = .init(model: model, items: OpenAccountViewModel.reduce(products: productsList), currency: currency)
+                            
+                            bottomSheet = .init(type: .openAccount(viewModel))
                         }
                         
                     default:
@@ -134,9 +169,9 @@ extension CurrencySelectorView {
             return selectorViewModel
         }
         
-        private func makeProductViewModel() {
+        private func makeProductViewModel(products: ProductsData) {
             
-            let products = model.products(currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
+            let products = model.products(products: products, currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
             
             guard let productData = products.first,
                   let productAccountSelector = productAccountSelector else {
@@ -187,16 +222,25 @@ extension CurrencySelectorView {
                     productAccountSelector.dividerViewModel.pathInset = equalityOperation ? 5 : -5
                 }
             }
+            
+            if state == .openAccount {
+                
+                withAnimation {
+                    openAccount.title = currencyOperation == .buy ? "Куда" : "Откуда"
+                }
+            }
         }
         
         private func makeOpenAccount() -> CurrencyWalletAccountView.ViewModel {
             
+            let title = currencyOperation == .buy ? "Куда" : "Откуда"
+            
             if let currencyData = model.dictionaryCurrency(for: currency.description),
                let currencySymbol = currencyData.currencySymbol {
-                return .init(model: model, currencySymbol: currencySymbol, currency: currency)
+                return .init(model: model, title: title, currencySymbol: currencySymbol, currency: currency)
             }
             
-            return .init(model: model, currency: currency)
+            return .init(model: model, title: title, currency: currency)
         }
     }
 }
@@ -317,6 +361,12 @@ struct CurrencySelectorView: View {
                 }
                 
             }.padding(.vertical, 20)
+        }
+        .bottomSheet(item: $viewModel.bottomSheet, keyboardOfssetMultiplier: 0.7) { bottomSheet in
+            switch bottomSheet.type {
+            case let .openAccount(viewModel):
+                OpenAccountView(viewModel: viewModel)
+            }
         }
         .fixedSize(horizontal: false, vertical: true)
         .padding(.horizontal, 20)

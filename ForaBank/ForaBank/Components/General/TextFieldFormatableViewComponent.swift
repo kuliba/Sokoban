@@ -288,7 +288,9 @@ struct TextFieldFormatableView: UIViewRepresentable {
                     // return formatted double value, example: `1234.56` -> `1 234,56 ₽`
                     return formatter.string(from: NSNumber(value: doubleValue))
                 case .currencyWallet:
-                    return updatedValue
+                    
+                    let filterredUpdate = filterredUpdateFixed.replacingOccurrences(of: ".", with: ",")
+                    return filterredUpdate
                 }
             }
             

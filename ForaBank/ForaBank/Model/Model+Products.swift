@@ -49,6 +49,12 @@ extension Model {
         return products
     }
     
+    func products(products: ProductsData, currency: Currency, currencyOperation: CurrencyOperation) -> [ProductData] {
+        
+        let products = products.values.flatMap {$0}
+        return filterredProducts(currency: currency, currencyOperation: currencyOperation, products: products)
+    }
+    
     func products(currency: Currency, currencyOperation: CurrencyOperation) -> [ProductData] {
         
         let products = products.value.values.flatMap {$0}
