@@ -264,8 +264,12 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     }
     
     @objc func onTouchBackButton() {
-        viewModel.closeAction()
-        navigationController?.popToRootViewController(animated: true)
+            if #available(iOS 15, *) {
+                viewModel.closeAction()
+            navigationController?.popViewController(animated: true)
+            } else {
+                viewModel.closeAction()
+            }
     }
     
     @objc private func updateNameTemplate() {

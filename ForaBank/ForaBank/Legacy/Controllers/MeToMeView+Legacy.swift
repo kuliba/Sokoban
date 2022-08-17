@@ -36,7 +36,7 @@ struct MeToMeView: UIViewControllerRepresentable {
                 vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
                 vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
             })
-            controller.addBackButton()
+           
             return controller
             
         case let .refill(productData):
