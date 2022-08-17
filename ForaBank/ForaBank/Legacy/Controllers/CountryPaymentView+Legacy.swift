@@ -90,6 +90,29 @@ extension CountryPaymentView {
             self.bank = nil
         }
         
+        init(country: String, operatorsViewModel: OperatorsViewModel) {
+            
+            self.paymentTemplate = nil
+            self.paymentType = .withOutAddress(withOutViewModel: .init(phoneNumber: nil))
+            self.puref = nil
+            self.country = Self.getCountry(code: country)
+            self.bank = nil
+            self.operatorsViewModel = operatorsViewModel
+        }
+        
+        private static func getCountry(code: String) -> CountriesList? {
+            
+            let model = Model.shared
+            var countryValue: CountriesList?
+            let list = model.countriesList.value.map { $0.getCountriesList() }
+            list.forEach({ country in
+                if country.code == code || country.contactCode == code {
+                    countryValue = country
+                }
+            })
+            return countryValue
+        }
+        
         private static func findBankByPuref(purefString: String) -> BanksList? {
             let model = Model.shared
             let paymentSystems = model.paymentSystemList.value.map { $0.getPaymentSystem() }
