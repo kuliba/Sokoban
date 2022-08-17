@@ -121,4 +121,12 @@ enum MainSectionViewModelAction {
         }
     }
     
+    enum PromoAction {
+
+        struct ButtonTapped: Action {
+            
+            let actionData: BannerAction
+        }
+    }
+    
 }

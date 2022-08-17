@@ -84,7 +84,10 @@ struct MainView: View {
                     case .messages(let messagesHistoryViewModel):
                         MessagesHistoryView(viewModel: messagesHistoryViewModel)
                         
-                    case .openDeposit(let openDepositViewModel):
+                    case .openDeposit(let depositListViewModel):
+                        ProductDetailView(viewModel: depositListViewModel)
+                        
+                    case .openDepositsList(let openDepositViewModel):
                         OpenDepositView(viewModel: openDepositViewModel)
                         
                     case .templates(let templatesViewModel):
@@ -101,6 +104,12 @@ struct MainView: View {
                         
                     case let .myProducts(myProductsViewModel):
                         MyProductsView(viewModel: myProductsViewModel)
+                        
+                    case let .country(countyViewModel):
+                        CountryPaymentView(viewModel: countyViewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
                     }
                 }
             }

@@ -89,7 +89,7 @@ class MainViewModel: ObservableObject, Resetable {
                 case _ as MainViewModelAction.Show.OpenDeposit:
                     let openDepositViewModel = OpenDepositViewModel(model, catalogType: .deposit, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())
                     })
-                    link = .openDeposit(openDepositViewModel)
+                    link = .openDepositsList(openDepositViewModel)
                     
                 case _ as MainViewModelAction.ButtonTapped.UserAccount:
                     guard let clientInfo = model.clientInfo.value else {
@@ -217,6 +217,37 @@ class MainViewModel: ObservableObject, Resetable {
                                 }
                             }
                             
+                        default:
+                            break
+                        }
+                        
+                    }.store(in: &bindings)
+                
+                // Promo section
+            case let promo as MainSectionPromoView.ViewModel:
+                promo.action
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] action in
+                        
+                        switch action {
+                        case let payload as MainSectionViewModelAction.PromoAction.ButtonTapped:
+                            switch payload.actionData {
+                            case let payload as BannerActionDepositOpen:
+                                
+                                self.link = .openDeposit(.init(depositId: payload.depositProductId))
+                                
+                            case _ as BannerActionDepositsList:
+                                
+                                self.link = .openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in
+                                    self?.action.send(MainViewModelAction.Close.Link())
+                                }))
+                            case let payload as BannerActionMigTransfer:
+                                
+                                self.link = .country(.init(country: payload.countryId, operatorsViewModel: .init(closeAction: { [weak self] in
+                                    self?.action.send(MainViewModelAction.Close.Link())
+                                }, template: nil)))
+                            default: break
+                            }
                         default:
                             break
                         }
@@ -461,11 +492,14 @@ extension MainViewModel {
         case userAccount(UserAccountViewModel)
         case productProfile(ProductProfileViewModel)
         case messages(MessagesHistoryViewModel)
-        case openDeposit(OpenDepositViewModel)
+        case openDeposit(OpenProductViewModel)
+        case openDepositsList(OpenDepositViewModel)
         case templates(TemplatesListViewModel)
         case qrScanner(QrViewModel)
         case currencyWallet(CurrencyWalletViewModel)
         case myProducts(MyProductsViewModel)
+        case country(CountryPaymentView.ViewModel)
+
     }
 
     struct BottomSheet: Identifiable {

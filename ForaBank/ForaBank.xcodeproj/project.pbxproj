@@ -610,6 +610,7 @@
 		68EACA55289142E100B27B50 /* DeepLinkType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68EACA54289142E100B27B50 /* DeepLinkType.swift */; };
 		68EB187827CEDFC600745558 /* ProductProfileHistoryViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68EB187727CEDFC600745558 /* ProductProfileHistoryViewComponent.swift */; };
 		68EB187A27CEE85700745558 /* SegmentedBarViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68EB187927CEE85700745558 /* SegmentedBarViewComponent.swift */; };
+		68ECB85528A6A2B600F6EDD1 /* GetBannerCatalogListResponseGenericFromServer.json in Resources */ = {isa = PBXBuildFile; fileRef = 68ECB85428A6A2B600F6EDD1 /* GetBannerCatalogListResponseGenericFromServer.json */; };
 		68ECC2BA285C580900A95CE8 /* PhonePaymentView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68ECC2B9285C580900A95CE8 /* PhonePaymentView+Legacy.swift */; };
 		68ECC2BE285C693500A95CE8 /* CountryPaymentView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68ECC2BD285C693500A95CE8 /* CountryPaymentView+Legacy.swift */; };
 		68F5E11A28509FD2003018E5 /* BankData+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F5E11928509FD2003018E5 /* BankData+Legacy.swift */; };
@@ -2007,6 +2008,7 @@
 		68EACA54289142E100B27B50 /* DeepLinkType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkType.swift; sourceTree = "<group>"; };
 		68EB187727CEDFC600745558 /* ProductProfileHistoryViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileHistoryViewComponent.swift; sourceTree = "<group>"; };
 		68EB187927CEE85700745558 /* SegmentedBarViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedBarViewComponent.swift; sourceTree = "<group>"; };
+		68ECB85428A6A2B600F6EDD1 /* GetBannerCatalogListResponseGenericFromServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetBannerCatalogListResponseGenericFromServer.json; sourceTree = "<group>"; };
 		68ECC2B9285C580900A95CE8 /* PhonePaymentView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhonePaymentView+Legacy.swift"; sourceTree = "<group>"; };
 		68ECC2BD285C693500A95CE8 /* CountryPaymentView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CountryPaymentView+Legacy.swift"; sourceTree = "<group>"; };
 		68F5E11928509FD2003018E5 /* BankData+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BankData+Legacy.swift"; sourceTree = "<group>"; };
@@ -5354,6 +5356,7 @@
 				68831451283F74EB00BFF24E /* CloseDepositResponseGenericMin.json */,
 				689ECA822848DB5B0098664F /* CreateInterestDepositTransferResponseGeneric.json */,
 				77370905284A2CA20033B1CA /* GetAccountStatementResponseServer.json */,
+				68ECB85428A6A2B600F6EDD1 /* GetBannerCatalogListResponseGenericFromServer.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -7595,6 +7598,7 @@
 				77517FBB27A94E28005CFB77 /* CreateAnywayTransferResponseMin.json in Resources */,
 				68DF16D228084B38005D8D3E /* GetProductDynamicParamsGenericTest.json in Resources */,
 				68419314279ED96800B4E184 /* GetCardStatementResponseGenericMin.json in Resources */,
+				68ECB85528A6A2B600F6EDD1 /* GetBannerCatalogListResponseGenericFromServer.json in Resources */,
 				77F5CE1D28060E4E00611B66 /* GetAtmRegionListResponseGeneric.json in Resources */,
 				77517FB327A94D21005CFB77 /* GetVerificationCodeResponseGeneric.json in Resources */,
 				77A76A8627FB049000A271B3 /* GetAtmMetroStationListResponseGeneric.json in Resources */,
