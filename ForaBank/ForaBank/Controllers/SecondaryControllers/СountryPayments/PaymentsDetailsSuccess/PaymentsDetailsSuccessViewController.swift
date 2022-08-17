@@ -69,6 +69,13 @@ class PaymentsDetailsSuccessViewController: UIViewController {
             self.model.action.send(ModelAction.PaymentTemplate.Save.Requested(name: name, paymentOperationDetailId: paymentOperationDetailId))
         }
         
+        guard let paymentOperationDetailId = confurmVCModel?.cardFromCardId else { return }
+        
+        if let cardId = NumberFormatter().number(from: paymentOperationDetailId) {
+            let integerCardId = cardId.intValue
+            self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+          }
+        
         bind()
     }
     
