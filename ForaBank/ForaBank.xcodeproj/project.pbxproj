@@ -948,6 +948,7 @@
 		77E1805A27AC8BE20006ACC9 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1805927AC8BE20006ACC9 /* main.swift */; };
 		77E1805C27AC8CAE0006ACC9 /* TestingAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1805B27AC8CAE0006ACC9 /* TestingAppDelegate.swift */; };
 		77E1805E27AC8CE60006ACC9 /* TestingSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1805D27AC8CE60006ACC9 /* TestingSceneDelegate.swift */; };
+		77E24F1728AE2D1A005899BA /* GetProductListByTypeResponseCorrupted.json in Resources */ = {isa = PBXBuildFile; fileRef = 77E24F1628AE2D1A005899BA /* GetProductListByTypeResponseCorrupted.json */; };
 		77E2899C2858EF440048141B /* ProductProfileDetailDateProgressViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E2899B2858EF440048141B /* ProductProfileDetailDateProgressViewComponent.swift */; };
 		77E289A02859221D0048141B /* Calendar+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E2899F2859221D0048141B /* Calendar+Extensions.swift */; };
 		77E289A228592A8E0048141B /* CalendarExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E289A128592A8E0048141B /* CalendarExtensionsTests.swift */; };
@@ -2345,6 +2346,7 @@
 		77E1805927AC8BE20006ACC9 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		77E1805B27AC8CAE0006ACC9 /* TestingAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingAppDelegate.swift; sourceTree = "<group>"; };
 		77E1805D27AC8CE60006ACC9 /* TestingSceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingSceneDelegate.swift; sourceTree = "<group>"; };
+		77E24F1628AE2D1A005899BA /* GetProductListByTypeResponseCorrupted.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductListByTypeResponseCorrupted.json; sourceTree = "<group>"; };
 		77E2899B2858EF440048141B /* ProductProfileDetailDateProgressViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileDetailDateProgressViewComponent.swift; sourceTree = "<group>"; };
 		77E2899F2859221D0048141B /* Calendar+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Calendar+Extensions.swift"; sourceTree = "<group>"; };
 		77E289A128592A8E0048141B /* CalendarExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarExtensionsTests.swift; sourceTree = "<group>"; };
@@ -5348,6 +5350,7 @@
 				68DF16D128084B38005D8D3E /* GetProductDynamicParamsGenericTest.json */,
 				68DF16D3280863A0005D8D3E /* GetProductDynamicParamsListGenericTest.json */,
 				68A07C38281097C400797A54 /* GetProductListByTypeResponseGeneric.json */,
+				77E24F1628AE2D1A005899BA /* GetProductListByTypeResponseCorrupted.json */,
 				502A98A3283A950900C6A621 /* GetProductListByTypeResponseServer.json */,
 				50E3A05A28390935003FF316 /* GetProductListByTypeResponseMin.json */,
 				77A76A7F27FB03CF00A271B3 /* GetAtmListResponseGeneric.json */,
@@ -7632,6 +7635,7 @@
 				5ADDC85727997CF800488139 /* GetAccountStatementResponseGeneric.json in Resources */,
 				5A5ABFA527AAF7DD00D548AA /* GetLatestPayments.json in Resources */,
 				77EC58CD27713A860054D75C /* PaymentTemplateEncodingMin.json in Resources */,
+				77E24F1728AE2D1A005899BA /* GetProductListByTypeResponseCorrupted.json in Resources */,
 				77517FB527A94D4D005CFB77 /* IsSingleServiceResponseGeneric.json in Resources */,
 				F8CA5CB827EB764C00D11E34 /* ChangeNotificationStatusGeneric.json in Resources */,
 				68E7652D2797009A005860FE /* CheckClientResponseGeneric.json in Resources */,
