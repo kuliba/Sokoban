@@ -14,13 +14,19 @@ extension CurrencyExchangeSuccessView {
     
     class ViewModel: ObservableObject, CurrencyWalletItem {
         
+        let action: PassthroughSubject<Action, Never> = .init()
+        
         @Published var isPresent = false
+        @Published var state: State
         
         var id: String { title }
         let icon: Image
         let title: String
         let amount: String
         let delay: TimeInterval?
+        
+        lazy var buttons: [ButtonIconTextView.ViewModel] = makeButtons()
+        lazy var simpleButton: ButtonSimpleView.ViewModel = makeSimpleButton()
 
         enum State {
                 
@@ -37,10 +43,11 @@ extension CurrencyExchangeSuccessView {
             }
         }
             
-        internal init(icon: Image, title: String, amount: String, delay: TimeInterval?) {
+        internal init(icon: Image, title: String, state: State, amount: String, delay: TimeInterval?) {
             
             self.icon = icon
             self.title = title
+            self.state = state
             self.amount = amount
             self.delay = delay
         }
@@ -50,12 +57,28 @@ extension CurrencyExchangeSuccessView {
                 
             self.icon = state.appearance.icon
             self.title = state.appearance.text
+            self.state = state
             self.amount = model.amountFormatted(amount: amount,
                                                 currencyCode: currency.description,
                                                 style: .normal) ?? String(amount)
             self.delay = delay
         }
 
+        private func makeButtons() -> [ButtonIconTextView.ViewModel] {
+            
+            [.init(icon: .init(image: .ic24CurrencyExchange, background: .circle), title: .init(text: "Документ"), orientation: .vertical) { [weak self] in
+                
+                guard let self = self else { return }
+                self.action.send(CurrencyExchangeSuccessAction.Button.Document())
+            }]
+        }
+        
+        private func makeSimpleButton() -> ButtonSimpleView.ViewModel {
+            
+            .init(title: "Повторить", style: .gray) {
+                self.action.send(CurrencyExchangeSuccessAction.Button.Repeat())
+            }
+        }
     }
 }
 
@@ -85,6 +108,25 @@ struct CurrencyExchangeSuccessView: View {
                         .font(.textH1SB24322())
                         .foregroundColor(.textSecondary)
                 }
+                
+                if viewModel.state == .success {
+                    
+                    HStack(alignment: .center, spacing: 36) {
+                        
+                        ForEach(viewModel.buttons) { viewModel in
+                            ButtonIconTextView(viewModel: viewModel)
+                        }
+                        
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top)
+                    
+                } else {
+                    
+                    ButtonSimpleView(viewModel: viewModel.simpleButton)
+                        .frame(height: 48)
+                        .padding(.horizontal, 20)
+                }
             }
             
         }.onAppear {
@@ -95,8 +137,21 @@ struct CurrencyExchangeSuccessView: View {
             } else {
                 viewModel.isPresent = true
             }
-        }
+            
+        }.padding(.vertical, 20)
+    }
+}
+
+// MARK: - Actions
+
+enum CurrencyExchangeSuccessAction {
+    
+    enum Button {
         
+        struct Template: Action {}
+        struct Document: Action {}
+        struct Details: Action {}
+        struct Repeat: Action {}
     }
 }
 
@@ -109,14 +164,11 @@ struct CurrencyExchangeSuccessView_Previews: PreviewProvider {
         Group {
             
             CurrencyExchangeSuccessView(viewModel: .success)
-                .previewLayout(.fixed(width: 375, height: 150))
-            
             CurrencyExchangeSuccessView(viewModel: .error)
-                .previewLayout(.fixed(width: 375, height: 300))
-            
             CurrencyExchangeSuccessView(viewModel: .waiting)
-                .previewLayout(.fixed(width: 375, height: 300))
         }
+        .frame(width: 375)
+        .previewLayout(.sizeThatFits)
     }
 }
 
@@ -125,22 +177,21 @@ extension CurrencyExchangeSuccessView.ViewModel {
     static var success = CurrencyExchangeSuccessView
                             .ViewModel(icon: Image("Done"),
                                        title: "Успешный перевод",
+                                       state: .success,
                                        amount: "100.23 $",
                                        delay: 2.0)
     
     static var error = CurrencyExchangeSuccessView
                             .ViewModel(icon: Image("Denied"),
                                        title: "Операция неуспешна!",
+                                       state: .error,
                                        amount: "80.23 $",
                                        delay: nil )
     
     static var waiting = CurrencyExchangeSuccessView
                             .ViewModel(icon: Image("waiting"),
                                        title: "Операция в обработке!",
+                                       state: .wait,
                                        amount: "99.23 $",
                                        delay: nil)
-    
-    
 }
-
-
