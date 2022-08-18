@@ -57,34 +57,6 @@ class CurrencyWalletViewModel: ObservableObject {
     
     private var bindings = Set<AnyCancellable>()
     
-    private var productType: ProductType? {
-        
-        var productId: ProductData.ID?
-        
-        if let selectorViewModel = selectorViewModel,
-           let productCardSelector = selectorViewModel.productCardSelector,
-           let productAccountSelector = selectorViewModel.productAccountSelector {
-            
-            switch currencyOperation {
-            case .buy:
-                if let productViewModel = productAccountSelector.productViewModel {
-                    productId = productViewModel.productId
-                }
-            case .sell:
-                if let productViewModel = productCardSelector.productViewModel {
-                    productId = productViewModel.productId
-                }
-            }
-        }
-        
-        guard let productId = productId,
-              let productData = model.product(productId: productId) else {
-            return nil
-        }
-        
-        return productData.productType
-    }
-    
     enum ButtonActionState {
         
         case button
@@ -440,14 +412,12 @@ class CurrencyWalletViewModel: ObservableObject {
             state = .button
             makeConfirmationViewModel(data: response)
             
-            if let productType = productType, let creditAmount = response.creditAmount, let currencyPayee = response.currencyPayee, let item = items.last {
+            if let creditAmount = response.creditAmount, let currencyPayee = response.currencyPayee, let item = items.last {
                 
                 let title = NumberFormatter.decimal(creditAmount)
                 continueButton.title = "Купить \(title) \(currencyPayee.description)"
                 
                 scrollToItem = item.id
-                
-                model.action.send(ModelAction.Products.Update.ForProductType(productType: productType))
             }
             
         case let .failure(error):
@@ -460,8 +430,13 @@ class CurrencyWalletViewModel: ObservableObject {
         switch payload {
         case .successed:
             
-            guard let confirmationViewModel = confirmationViewModel,
-                  let item = items.last else {
+            guard let selectorViewModel = selectorViewModel,
+                  let productCardSelector = selectorViewModel.productCardSelector,
+                  let productAccountSelector = selectorViewModel.productAccountSelector,
+                  let productCardViewModel = productCardSelector.productViewModel,
+                  let productAccountViewModel = productAccountSelector.productViewModel,
+                  let confirmationViewModel = confirmationViewModel,
+                  let lastItem = items.last else {
                 return
             }
             
@@ -469,9 +444,10 @@ class CurrencyWalletViewModel: ObservableObject {
             continueButton.title = "На главную"
             makeSuccessViewModel(confirmationViewModel.debitAmount, currency: confirmationViewModel.currencyPayer)
             
-            scrollToItem = item.id
+            scrollToItem = lastItem.id
             
-            model.action.send(ModelAction.Products.Update.Total.All())
+            model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productCardViewModel.productId))
+            model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productAccountViewModel.productId))
             
         case let .failed(error):
             makeAlert(error: error)
@@ -503,6 +479,8 @@ class CurrencyWalletViewModel: ObservableObject {
             primary: .init(type: .default, title: "Ok") { [weak self] in
                 
                 guard let self = self else { return }
+                
+                self.isUserInteractionEnabled = true
                 self.state = .button
                 self.alert = nil
             })
