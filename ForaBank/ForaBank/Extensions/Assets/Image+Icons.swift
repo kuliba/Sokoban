@@ -767,4 +767,5 @@ public extension Image {
     static var ic64TouchID: Image { Image(#function) }
     static var ic64FaceId: Image { Image(#function) }
     static var ic64ForaColor: Image { Image(#function) }
+    static var ic24CurrencyExchange: Image { Image(#function) }
 }
