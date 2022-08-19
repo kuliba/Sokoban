@@ -72,11 +72,29 @@ struct OperationDetailData: Codable, Equatable {
     let transferEnum: TransferEnum?
     let transferNumber: String?
     let transferReference: String?
+    let cursivePayerAmount: String?
+    let cursivePayeeAmount: String?
+    let cursiveAmount: String?
+    let serviceSelect: String?
+    let serviceName: String?
+    let merchantSubName: String?
+    let merchantIcon: String?
+    let operationStatus: OperationStatus?
+    let shopLink: String?
+    let payeeCheckAccount: String?
     
     enum ExternalTransferType: String, Codable, Unknownable {
         
         case entity = "ENTITY"
         case individual = "INDIVIDUAL"
+        case unknown
+    }
+    
+    enum OperationStatus: String, Codable, Unknownable {
+        
+        case complete = "COMPLETE"
+        case inProgress = "IN_PROGRESS"
+        case rejected = "REJECTED"
         case unknown
     }
     
@@ -186,5 +204,15 @@ struct OperationDetailData: Codable, Equatable {
         case transferEnum
         case transferNumber
         case transferReference
+        case cursivePayerAmount
+        case cursivePayeeAmount
+        case cursiveAmount
+        case serviceSelect
+        case serviceName
+        case merchantSubName
+        case merchantIcon
+        case operationStatus
+        case shopLink
+        case payeeCheckAccount
     }
 }
