@@ -290,7 +290,7 @@ extension ServerCommands {
             
             private struct CorruptedProduct: Codable {}
             
-            internal init(token: String, serial: String?, productType: ProductType) {
+            internal init(token: String, serial: String? = nil, productType: ProductType) {
                 
                 self.token = token
                 
