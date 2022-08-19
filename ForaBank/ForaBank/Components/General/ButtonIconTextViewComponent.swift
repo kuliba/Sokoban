@@ -33,6 +33,7 @@ extension ButtonIconTextView {
             
             enum Background {
                 
+                case circleSmall
                 case circle
                 case square
             }
@@ -131,6 +132,7 @@ extension ButtonIconTextView {
         var side: CGFloat {
             
             switch viewModel.background {
+            case .circleSmall: return 40
             case .circle: return 56
             case .square: return 48
             }
@@ -171,6 +173,11 @@ extension ButtonIconTextView {
                 RoundedRectangle(cornerRadius: 8)
                     .foregroundColor(.mainColorsGrayLightest)
                     .frame(width: 48, height: 48)
+                
+            case .circleSmall:
+                Circle()
+                    .foregroundColor(.mainColorsGrayLightest)
+                    .frame(width: 40, height: 40)
             }
         }
     }

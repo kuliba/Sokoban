@@ -53,7 +53,8 @@ class ServerCommandsPersontTests: XCTestCase {
                 phone: "79998887766",
                 phoneSMS: "79998887766",
                 email: "test@test.com",
-                INN: "7723384619")
+                inn: "7723384619",
+                customName: nil)
         )
         
         // when

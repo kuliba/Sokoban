@@ -208,34 +208,87 @@ extension ServerCommands {
                     
                     while listContainer.isAtEnd == false {
                         
-                        let productData = try listContainer.decode(ProductData.self)
-                        
-                        switch productData.productType {
-                        case .card:
+                        do {
                             
-                            let productData = try items.decode(ProductCardData.self)
-                            data.append(productData)
+                            let productData = try listContainer.decode(ProductData.self)
+                            switch productData.productType {
+                            case .card:
+                                
+                                do {
+                                    
+                                    let productCardData = try items.decode(ProductCardData.self)
+                                    data.append(productCardData)
+                                    
+                                } catch {
+                                   
+                                    // increase items counter
+                                    let _ = try items.decode(CorruptedProduct.self)
+                                    
+                                    //TODO: log incorrect product card data
+                                }
+
+                            case .account:
+                                
+                                do {
+                                    
+                                    let productAccountData = try items.decode(ProductAccountData.self)
+                                    data.append(productAccountData)
+                                    
+                                } catch {
+                                    
+                                    // increase items counter
+                                    let _ = try items.decode(CorruptedProduct.self)
+                                    
+                                    //TODO: log incorrect product account data
+                                }
+                                
+                            case .deposit:
+                                
+                                do {
+                                    
+                                    let productDepositData = try items.decode(ProductDepositData.self)
+                                    data.append(productDepositData)
+                                    
+                                } catch {
+                                    
+                                    // increase items counter
+                                    let _ = try items.decode(CorruptedProduct.self)
+                                    
+                                    //TODO: log incorrect product deposit data
+                                }
+                                
+                            case .loan:
+                                
+                                do {
+                                    
+                                    let productLoanData = try items.decode(ProductLoanData.self)
+                                    data.append(productLoanData)
+                                    
+                                } catch {
+                                    
+                                    // increase items counter
+                                    let _ = try items.decode(CorruptedProduct.self)
+                                    
+                                    //TODO: log incorrect product loan data
+                                }
+                            }
                             
-                        case .account:
+                        } catch {
+                           
+                            // increase listContainer counter
+                            let _ = try listContainer.decode(CorruptedProduct.self)
+                            // increase items counter
+                            let _ = try items.decode(CorruptedProduct.self)
                             
-                            let productData = try items.decode(ProductAccountData.self)
-                            data.append(productData)
-                            
-                        case .deposit:
-                            
-                            let productData = try items.decode(ProductDepositData.self)
-                            data.append(productData)
-                            
-                        case .loan:
-                            
-                            let productData = try items.decode(ProductLoanData.self)
-                            data.append(productData)
+                            //TODO: log incorrect product data
                         }
                     }
                     
                     self.data = .init(serial: serial, productList: data)
                 }
             }
+            
+            private struct CorruptedProduct: Codable {}
             
             internal init(token: String, serial: String?, productType: ProductType) {
                 

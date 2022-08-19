@@ -415,8 +415,9 @@ extension Model {
                     break
                 }
 
-                let serial = productsCacheSerial(for: productType)
-                let command = ServerCommands.ProductController.GetProductListByType(token: token, serial: serial, productType: productType)
+                //FIXME: some problems with serial on server side
+                // let serial = productsCacheSerial(for: productType)
+                let command = ServerCommands.ProductController.GetProductListByType(token: token, serial: nil, productType: productType)
                              
                 do {
                     
@@ -469,8 +470,9 @@ extension Model {
 
             self.productsUpdating.value.append(product.productType)
 
-            let serial = productsCacheSerial(for: product.productType)
-            let command = ServerCommands.ProductController.GetProductListByType(token: token, serial: serial, productType: product.productType)
+            //FIXME: some problems with serial on server side
+//            let serial = productsCacheSerial(for: product.productType)
+            let command = ServerCommands.ProductController.GetProductListByType(token: token, serial: nil, productType: product.productType)
 
             do {
 

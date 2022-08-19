@@ -89,7 +89,7 @@ class MainViewModel: ObservableObject, Resetable {
                 case _ as MainViewModelAction.Show.OpenDeposit:
                     let openDepositViewModel = OpenDepositViewModel(model, catalogType: .deposit, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())
                     })
-                    link = .openDeposit(openDepositViewModel)
+                    link = .openDepositsList(openDepositViewModel)
                     
                 case _ as MainViewModelAction.ButtonTapped.UserAccount:
                     guard let clientInfo = model.clientInfo.value else {
@@ -153,8 +153,14 @@ class MainViewModel: ObservableObject, Resetable {
                             
                             switch payload.productType {
                             case .account:
-                                bottomSheet = .init(type: .openAccount(model))
                                 
+                                let accountProductsList = model.accountProductsList.value
+                                let items = OpenAccountViewModel.reduce(products: accountProductsList)
+                                
+                                let openAccountViewModel: OpenAccountViewModel = .init(model: model, items: items, currency: .rub)
+                                
+                                bottomSheet = .init(type: .openAccount(openAccountViewModel))
+
                             case .deposit:
                                 self.action.send(MainViewModelAction.Show.OpenDeposit())
                                 
@@ -189,9 +195,16 @@ class MainViewModel: ObservableObject, Resetable {
                                     model.cameraAgent.requestPermissions(completion: { available in
                                         
                                         if available {
-                                            self.link = .qrScanner(.init(closeAction: { [weak self] in
-                                                self?.action.send(MainViewModelAction.Close.Link())
-                                            }))
+                                            self.link = .qrScanner(.init(closeAction: { [weak self] value  in
+                                                
+                                                if value == false {
+                                                self?.action.send(PaymentsTransfersViewModelAction
+                                                                  .Close.Link() )
+                                            } else {
+                                                self?.action.send(PaymentsTransfersViewModelAction
+                                                                  .Close.Link() )
+                                                self?.action.send(PTSectionPaymentsViewAction.ButtonTapped.Payment(type: .service))
+                                            }}))
                                         } else {
                                             self.alert = .init(
                                                 title: "Внимание",
@@ -203,6 +216,37 @@ class MainViewModel: ObservableObject, Resetable {
                                 }
                             }
                             
+                        default:
+                            break
+                        }
+                        
+                    }.store(in: &bindings)
+                
+                // Promo section
+            case let promo as MainSectionPromoView.ViewModel:
+                promo.action
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] action in
+                        
+                        switch action {
+                        case let payload as MainSectionViewModelAction.PromoAction.ButtonTapped:
+                            switch payload.actionData {
+                            case let payload as BannerActionDepositOpen:
+                                
+                                self.link = .openDeposit(.init(depositId: payload.depositProductId))
+                                
+                            case _ as BannerActionDepositsList:
+                                
+                                self.link = .openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in
+                                    self?.action.send(MainViewModelAction.Close.Link())
+                                }))
+                            case let payload as BannerActionMigTransfer:
+                                
+                                self.link = .country(.init(country: payload.countryId, operatorsViewModel: .init(closeAction: { [weak self] in
+                                    self?.action.send(MainViewModelAction.Close.Link())
+                                }, template: nil)))
+                            default: break
+                            }
                         default:
                             break
                         }
@@ -427,6 +471,7 @@ extension MainViewModel {
             case messages(MessagesHistoryViewModel)
             case places(PlacesViewModel)
             case byPhone(TransferByPhoneViewModel)
+            case openAccount(OpenAccountViewModel)
         }
     }
     
@@ -435,11 +480,14 @@ extension MainViewModel {
         case userAccount(UserAccountViewModel)
         case productProfile(ProductProfileViewModel)
         case messages(MessagesHistoryViewModel)
-        case openDeposit(OpenDepositViewModel)
+        case openDeposit(OpenProductViewModel)
+        case openDepositsList(OpenDepositViewModel)
         case templates(TemplatesListViewModel)
         case qrScanner(QrViewModel)
         case currencyWallet(CurrencyWalletViewModel)
         case myProducts(MyProductsViewModel)
+        case country(CountryPaymentView.ViewModel)
+
     }
 
     struct BottomSheet: Identifiable {
@@ -449,7 +497,7 @@ extension MainViewModel {
 
         enum BottomSheetType {
 
-            case openAccount(Model)
+            case openAccount(OpenAccountViewModel)
         }
     }
 }

@@ -41,7 +41,6 @@ class InternetTVSuccessViewController: UIViewController {
             guard let self = self else {
                 return
             }
-            let templateButtonViewModel = self.confirmModel?.templateButtonViewModel
             
             guard let templateButtonViewModel = self.confirmModel?.templateButtonViewModel,
                   case .sfp(let name, let paymentOperationDetailId) = templateButtonViewModel else {
@@ -52,6 +51,13 @@ class InternetTVSuccessViewController: UIViewController {
         }
         
         bind()
+        
+        guard let cardId = self.confirmModel?.cardFromCardId else { return }
+        
+        if let cardId = NumberFormatter().number(from: cardId) {
+            let integerCardId = cardId.intValue
+            self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+        }
     }
     
     func bind() {

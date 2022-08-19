@@ -45,7 +45,7 @@ extension CurrencyExchangeSuccessView {
                 }
             }
         }
-            
+        
         internal init(icon: Image, title: String, state: State, amount: String, delay: TimeInterval?) {
             
             self.icon = icon
@@ -68,7 +68,7 @@ extension CurrencyExchangeSuccessView {
         }
 
         private func makeButtons() -> [ButtonIconTextView.ViewModel] {
-            [documentButton, detailsButton]
+            [documentButton]
         }
         
         private func makeDocumentButton() -> ButtonIconTextView.ViewModel {

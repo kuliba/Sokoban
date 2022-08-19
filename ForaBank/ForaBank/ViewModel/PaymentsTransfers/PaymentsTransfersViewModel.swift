@@ -88,9 +88,17 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         model.cameraAgent.requestPermissions(completion: { available in
                             
                             if available {
-                                self.link = .qrScanner(.init(closeAction: {[weak self] in
+                                self.link = .qrScanner(.init(closeAction: { [weak self] value  in
+                                    
+                                    if !value {
                                     self?.action.send(PaymentsTransfersViewModelAction
-                                                      .Close.Link() )}))
+                                                      .Close.Link() )
+                                } else {
+                                    let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                    }, template: nil)
+                                    self?.link = .serviceOperators(serviceOperators)
+                                    InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
+                                }}))
                             } else {
                                 self.alert = .init(
                                     title: "Внимание",
@@ -111,9 +119,17 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     link = nil
                     
                 case _ as PaymentsTransfersViewModelAction.OpenQr:
-                    link = .qrScanner(.init(closeAction:  { [weak self] in
-                        self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                    }))
+                    link = .qrScanner(.init(closeAction:  { [weak self] value  in
+                        
+                        if !value {
+                        self?.action.send(PaymentsTransfersViewModelAction
+                                          .Close.Link() )
+                    } else {
+                        let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                        }, template: nil)
+                        self?.link = .serviceOperators(serviceOperators)
+                        InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
+                    }}))
                   
                 case _ as PaymentsTransfersViewModelAction.ViewDidApear:
                     
@@ -200,16 +216,26 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }, template: nil))
                             
                         case .anotherCard:
-                            bottomSheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
-                            })))
+                            if #available(iOS 14, *) {
+                                bottomSheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
+                                    self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                                })))
+                            } else {
+                                sheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
+                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Sheet())
+                                })))
+                            }
                             
                         case .betweenSelf:
-                            
-                            bottomSheet = .init(type: .meToMe(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
-                            })))
-                            
-                        case .byBankDetails:
+                            if #available(iOS 14, *) {
+                                bottomSheet = .init(type: .meToMe(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                                })))
+                            } else {
+                                sheet = .init(type: .meToMe(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Sheet())
+                                })))
+                            }
+                        
+                    case .byBankDetails:
                             link = .transferByRequisites(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }))
                             
@@ -230,8 +256,13 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 model.cameraAgent.requestPermissions(completion: { available in
                                     
                                     if available {
-                                        self.link = .qrScanner(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                        }))
+                                        if #available(iOS 14, *) {
+                                            self.link = .qrScanner(.init(closeAction: { [weak self] _ in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                            }))
+                                        } else {
+                                            self.sheet = .init(type: .qrScanner(.init(closeAction: { [weak self] _ in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                            })))
+                                        }
                                     } else {
                                         self.alert = .init(
                                             title: "Внимание",
@@ -317,6 +348,8 @@ extension PaymentsTransfersViewModel {
         enum Kind {
             case meToMe(MeToMeViewModel)
             case transferByPhone(TransferByPhoneViewModel)
+            case anotherCard(AnotherCardViewModel)
+            case qrScanner(QrViewModel)
         }
     }
     

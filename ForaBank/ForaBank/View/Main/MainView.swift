@@ -84,7 +84,10 @@ struct MainView: View {
                     case .messages(let messagesHistoryViewModel):
                         MessagesHistoryView(viewModel: messagesHistoryViewModel)
                         
-                    case .openDeposit(let openDepositViewModel):
+                    case .openDeposit(let depositListViewModel):
+                        ProductDetailView(viewModel: depositListViewModel)
+                        
+                    case .openDepositsList(let openDepositViewModel):
                         OpenDepositView(viewModel: openDepositViewModel)
                         
                     case .templates(let templatesViewModel):
@@ -101,6 +104,12 @@ struct MainView: View {
                         
                     case let .myProducts(myProductsViewModel):
                         MyProductsView(viewModel: myProductsViewModel)
+                        
+                    case let .country(countyViewModel):
+                        CountryPaymentView(viewModel: countyViewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
                     }
                 }
             }
@@ -109,14 +118,8 @@ struct MainView: View {
         .bottomSheet(item: $viewModel.bottomSheet, keyboardOfssetMultiplier: 0.7) { bottomSheet in
 
             switch bottomSheet.type {
-            case let .openAccount(model):
-
-                if let productsList = model.accountProductsList.value {
-
-                    let viewModel: OpenAccountViewModel = .init(model: model, items: OpenAccountViewModel.reduce(products: productsList), currency: .rub)
-
-                    OpenAccountView(viewModel: viewModel)
-                }
+            case let .openAccount(openAccountViewModel):
+                OpenAccountView(viewModel: openAccountViewModel)
             }
         }
         .sheet(item: $viewModel.sheet, content: { sheet in
@@ -132,6 +135,10 @@ struct MainView: View {
 
             case .byPhone(let viewModel):
                     TransferByPhoneView(viewModel: viewModel)
+                
+            case let .openAccount(openAccountViewModel):
+                OpenAccountView(viewModel: openAccountViewModel)
+                
             }
         })
         .alert(item: $viewModel.alert, content: { alertViewModel in

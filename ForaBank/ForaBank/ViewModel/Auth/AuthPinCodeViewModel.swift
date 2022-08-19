@@ -268,7 +268,7 @@ class AuthPinCodeViewModel: ObservableObject {
                         AudioServicesPlaySystemSound(1156)
 
                     case .exit:
-                        alert = .init(title: "Внимание!", message: "Вы действительно хотите выйти из аккаунта?", primary: .init(type: .cancel, title: "Отмена", action: {}), secondary: .init(type: .distructive, title: "Выйти", action: { [weak self] in
+                        alert = .init(title: "Внимание!", message: "Вы действительно хотите выйти из аккаунта?", primary: .init(type: .cancel, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Выйти", action: { [weak self] in
                             self?.alert = nil
                             self?.action.send(AuthPinCodeViewModelAction.Exit())}))
                         AudioServicesPlaySystemSound(1156)
