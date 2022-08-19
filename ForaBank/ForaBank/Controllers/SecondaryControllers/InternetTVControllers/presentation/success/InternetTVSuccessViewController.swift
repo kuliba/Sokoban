@@ -52,9 +52,30 @@ class InternetTVSuccessViewController: UIViewController {
         
         bind()
         
-        guard let cardId = self.confirmModel?.cardFromCardId else { return }
+        guard let fromCardId = self.confirmModel?.cardFromCardId else { return }
         
-        if let cardId = NumberFormatter().number(from: cardId) {
+        if let cardId = NumberFormatter().number(from: fromCardId) {
+            let integerCardId = cardId.intValue
+            self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+        }
+        
+        guard let toCardId = self.confirmModel?.cardToCardId else { return }
+        
+        if let cardId = NumberFormatter().number(from: toCardId) {
+            let integerCardId = cardId.intValue
+            self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+        }
+        
+        guard let toAcccountId = self.confirmModel?.cardToAccountId else { return }
+        
+        if let cardId = NumberFormatter().number(from: toAcccountId) {
+            let integerCardId = cardId.intValue
+            self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+        }
+        
+        guard let fromAcccountId = self.confirmModel?.cardFromAccountId else { return }
+        
+        if let cardId = NumberFormatter().number(from: fromAcccountId) {
             let integerCardId = cardId.intValue
             self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
         }

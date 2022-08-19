@@ -69,12 +69,33 @@ class PaymentsDetailsSuccessViewController: UIViewController {
             self.model.action.send(ModelAction.PaymentTemplate.Save.Requested(name: name, paymentOperationDetailId: paymentOperationDetailId))
         }
         
-        guard let paymentOperationDetailId = confurmVCModel?.cardFromCardId else { return }
+        guard let paymentFromCardId = confurmVCModel?.cardFromCardId else { return }
         
-        if let cardId = NumberFormatter().number(from: paymentOperationDetailId) {
+        if let cardId = NumberFormatter().number(from: paymentFromCardId) {
             let integerCardId = cardId.intValue
             self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
           }
+        
+        guard let paymentToCardId = confurmVCModel?.cardToCardId else { return }
+        
+        if let cardId = NumberFormatter().number(from: paymentToCardId) {
+            let integerCardId = cardId.intValue
+            self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+          }
+        
+        guard let toAcccountId = self.confurmVCModel?.cardToAccountId else { return }
+        
+        if let cardId = NumberFormatter().number(from: toAcccountId) {
+            let integerCardId = cardId.intValue
+            self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+        }
+        
+        guard let fromAcccountId = self.confurmVCModel?.cardFromAccountId else { return }
+        
+        if let cardId = NumberFormatter().number(from: fromAcccountId) {
+            let integerCardId = cardId.intValue
+            self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+        }
         
         bind()
     }
