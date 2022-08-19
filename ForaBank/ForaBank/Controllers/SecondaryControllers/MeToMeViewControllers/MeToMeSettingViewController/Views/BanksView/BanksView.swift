@@ -12,6 +12,8 @@ class BanksView: UIView {
     //MARK: - Property
     let kContentXibName = "BanksView"
     
+    var content: ((CGFloat) -> Void)?
+    
     @IBOutlet weak var collectionView: UICollectionView!
     
     @IBOutlet var labelArray: [UILabel]!
@@ -22,6 +24,21 @@ class BanksView: UIView {
             collectionView.reloadData()
         }
     }
+    
+    func banksNameCount () -> CGFloat {
+        let minimumHight = banksName?.count ?? 0
+        switch minimumHight {
+        case 0: return CGFloat(100)
+        default: return 200
+        }
+    }
+    
+    override func layoutSubviews() {
+            super.layoutSubviews()
+            
+            invalidateIntrinsicContentSize()
+        }
+    
     var consentList: [ConsentList]? {
         didSet {
             guard let list = consentList else { return }

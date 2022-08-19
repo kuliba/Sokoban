@@ -386,7 +386,6 @@ class ContactConfurmViewController: UIViewController {
     
     func setupData(with model: ConfirmViewControllerModel) {
         currTransctionField.isHidden = true
-        
         summTransctionField.text = model.summTransction
         taxTransctionField.text = model.taxTransction
 

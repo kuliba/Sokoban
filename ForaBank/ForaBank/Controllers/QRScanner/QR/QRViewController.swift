@@ -168,7 +168,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
             
             let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
             if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
-                viewModel?.closeAction()
+                viewModel?.closeAction(false)
                 self.present(vc, animated: true)
             }
         }
@@ -177,7 +177,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
     final func onC2B(link: String) {
         qrCodesession.stopRunning()
         GlobalModule.c2bURL = link
-        viewModel?.closeAction()
+        viewModel?.closeAction(false)
         navigationController?.popViewController(animated: true)
         self.presentingViewController?.dismiss(animated: true, completion: nil)
         
@@ -190,22 +190,35 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
 
     final func returnKey() {
         qrCodesession.stopRunning()
-        viewModel?.closeAction()
+
         if operators != nil {
             GlobalModule.qrOperator = operators
             GlobalModule.qrData = qrData
-            self.definesPresentationContext = true
-            navigationController?.popViewController(animated: true)
-            self.presentingViewController?.dismiss(animated: true, completion: nil)
-
-            if GlobalModule.qrOperator != nil && GlobalModule.qrData != nil, let controller = InternetTVMainController.storyboardInstance() {
-                    let nc = UINavigationController(rootViewController: controller)
-                    nc.modalPresentationStyle = .fullScreen
-                    present(nc, animated: false)
+            if viewModel != nil {
+                viewModel?.closeAction(true)
+            } else if segueOut == true {
+                self.navigationController?.popViewController(animated: true)
+            } else {
+                self.dismiss(animated: true)
             }
             
-        } else {
             
+//            GlobalModule.qrOperator = operators
+//            GlobalModule.qrData = qrData
+//            self.definesPresentationContext = true
+//            navigationController?.popViewController(animated: true)
+////            self.presentingViewController?.dismiss(animated: true, completion: nil)
+//            self.tabBarController?.tabBar.layer.zPosition = 0
+//            navigationController?.isNavigationBarHidden = false
+
+//            if GlobalModule.qrOperator != nil && GlobalModule.qrData != nil, let controller = InternetTVMainController.storyboardInstance() {
+//                    let nc = UINavigationController(rootViewController: controller)
+//                    nc.modalPresentationStyle = .fullScreen
+//                    present(nc, animated: false)
+//            }
+            
+        } else {
+
             let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
             if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
                 self.present(vc, animated: true)
@@ -217,7 +230,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
         
         qrCodesession.stopRunning()
         if viewModel != nil {
-            viewModel?.closeAction()
+            viewModel?.closeAction(false)
         } else if segueOut == true {
             self.navigationController?.popViewController(animated: true)
         } else {
@@ -285,7 +298,7 @@ extension QRViewController {
                 
                 let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
                 if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
-                    self?.viewModel?.closeAction()
+                    self?.viewModel?.closeAction(false)
                     self?.present(vc, animated: true)
                 }
             }

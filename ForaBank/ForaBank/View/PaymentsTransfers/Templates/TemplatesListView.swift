@@ -118,12 +118,12 @@ struct TemplatesListView: View {
                             .navigationBarBackButtonHidden(true)
 
                     case .direct(let paymentTemplateData):
-                        CountryPaymentView(viewModel: .init(paymentTemplate: paymentTemplateData))
+                        CountryPaymentView(viewModel: paymentTemplateData)
                             .edgesIgnoringSafeArea(.bottom)
                             .navigationBarBackButtonHidden(true)
 
                     case .contactAdressless(let paymentTemplateData):
-                        CountryPaymentView(viewModel: .init(paymentTemplate: paymentTemplateData))
+                        CountryPaymentView(viewModel: paymentTemplateData)
                             .edgesIgnoringSafeArea(.bottom)
                             .navigationBarBackButtonHidden(true)
 

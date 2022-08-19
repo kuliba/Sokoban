@@ -84,7 +84,10 @@ struct MainView: View {
                     case .messages(let messagesHistoryViewModel):
                         MessagesHistoryView(viewModel: messagesHistoryViewModel)
                         
-                    case .openDeposit(let openDepositViewModel):
+                    case .openDeposit(let depositListViewModel):
+                        ProductDetailView(viewModel: depositListViewModel)
+                        
+                    case .openDepositsList(let openDepositViewModel):
                         OpenDepositView(viewModel: openDepositViewModel)
                         
                     case .templates(let templatesViewModel):
@@ -101,6 +104,12 @@ struct MainView: View {
                         
                     case let .myProducts(myProductsViewModel):
                         MyProductsView(viewModel: myProductsViewModel)
+                        
+                    case let .country(countyViewModel):
+                        CountryPaymentView(viewModel: countyViewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
                     }
                 }
             }
@@ -109,7 +118,8 @@ struct MainView: View {
         .bottomSheet(item: $viewModel.bottomSheet, keyboardOfssetMultiplier: 0.7) { bottomSheet in
 
             switch bottomSheet.type {
-            case let .openAccount(model):
+            case let .openAccount(openAccountViewModel):
+                OpenAccountView(viewModel: openAccountViewModel)
 
                 if let productsList = model.accountProductsList.value {
 
@@ -132,6 +142,10 @@ struct MainView: View {
 
             case .byPhone(let viewModel):
                     TransferByPhoneView(viewModel: viewModel)
+                
+            case let .openAccount(openAccountViewModel):
+                OpenAccountView(viewModel: openAccountViewModel)
+                
             }
         })
         .alert(item: $viewModel.alert, content: { alertViewModel in

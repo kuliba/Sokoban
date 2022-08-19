@@ -181,7 +181,7 @@ struct NavigationBarView: View {
             }
         }
         .frame(height: 48)
-        .padding(.horizontal, 18)
+        .padding(.horizontal, 15)
         .background(backgroundColor.edgesIgnoringSafeArea(.top))
     }
 }

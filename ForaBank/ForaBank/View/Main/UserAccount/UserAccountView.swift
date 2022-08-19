@@ -63,6 +63,16 @@ struct UserAccountView: View {
                         
                     case let .fastPaymentSettings(meToMeSettingsViewModel):
                         MeToMeSettingView(viewModel: meToMeSettingsViewModel)
+                    
+                    case let .deleteUserInfo(deleteInfoViewModel):
+                        DeleteAccountView(viewModel: deleteInfoViewModel)
+                            .navigationBarBackButtonHidden(true)
+                        
+                    case .imagePicker(let imagePicker):
+                        ImagePicker(viewModel: imagePicker)
+                            .edgesIgnoringSafeArea(.all)
+                            .navigationBarBackButtonHidden(false)
+                            .navigationBarTitle("Выберите фото", displayMode: .inline)
                     }
                 }
             }
@@ -86,23 +96,14 @@ struct UserAccountView: View {
                 
             case let .camera(model):
                 UserAccountPhotoSourceView(viewModel: model)
-            }
-        })
-        .actionSheet(item: $viewModel.camSheet, content: { buttons in
-            ActionSheet(title: Text("Изменить фото"), buttons: buttons.buttons)
-        })
-        .present(item: $viewModel.sheetFullscreen, style: .fullScreen, content: { item in
-            switch item.type {
+                
+            case let .avatarOptions(optionViewModel):
+                OptionsButtonsViewComponent(viewModel: optionViewModel)
                 
             case .imageCapture(let imageCapture):
                 ImageCapture(viewModel: imageCapture)
                     .edgesIgnoringSafeArea(.all)
-                    .onDisappear { viewModel.sheetFullscreen = nil }
-                
-            case .imagePicker(let imagePicker):
-                ImagePicker(viewModel: imagePicker)
-                    .edgesIgnoringSafeArea(.all)
-                    .onDisappear { viewModel.sheetFullscreen = nil }
+                    .navigationBarBackButtonHidden(false)
             }
         })
         .alert(item: $viewModel.alert, content: { alertViewModel in

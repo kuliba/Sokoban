@@ -120,7 +120,7 @@ class BottomPopUpViewAdapter: UIViewController {
                 self.bottomConstraint.constant = self.hight
                 self.popupView.layer.cornerRadius = 0
                 self.overlayView.alpha = 0
-                self.navigationController?.isNavigationBarHidden = false
+                self.navigationController?.isNavigationBarHidden = true
             }
             self.view.layoutIfNeeded()
         })

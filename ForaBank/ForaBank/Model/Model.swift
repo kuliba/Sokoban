@@ -250,6 +250,7 @@ class Model {
                     loadSettings()
                     action.send(ModelAction.Products.Update.Total.All())
                     action.send(ModelAction.ClientInfo.Fetch.Request())
+                    action.send(ModelAction.ClientPhoto.Load())
                     action.send(ModelAction.Rates.Update.All())
                     action.send(ModelAction.Deposits.List.Request())
                     action.send(ModelAction.Notification.Fetch.New.Request())
@@ -487,7 +488,10 @@ class Model {
                     handleClientInfoFetchRequest()
                     
                 case let payload as ModelAction.ClientPhoto.Save:
-                    handleClientPhotoRequest(payload)
+                    handleClientPhotoSave(payload)
+                    
+                case _ as ModelAction.ClientPhoto.Load:
+                    handleClientPhotoRequest()
                     
                 case _ as ModelAction.ClientPhoto.Delete:
                     handleMediaDeleteAvatarRequest()
@@ -495,8 +499,17 @@ class Model {
                 case let payload as ModelAction.ClientName.Save:
                     handleClientNameSave(payload)
                     
+                case _ as ModelAction.ClientName.Get.Request:
+                    handleClientNameLoad()
+                    
                 case _ as ModelAction.FastPaymentSettings.ContractFindList.Request:
                     handleContractFindListRequest()
+                    
+                case _ as ModelAction.ClientName.Delete:
+                    handleClientNameDelete()
+                    
+                case _ as ModelAction.ClientInfo.Delete.Request:
+                    handleClientInfoDelete()
                     
                     //MARK: - Settings Actions
                     

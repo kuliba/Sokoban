@@ -92,21 +92,21 @@ class PaymentByPhoneViewModel {
     }
     
     // Init for SPF with Template
-    internal init(spf template: PaymentTemplateData) {
+    internal init(spf template: PaymentTemplateData, closeAction: @escaping () -> Void ) {
         self.template = template
         self.phoneNumber = template.spfPhoneNumber
         self.bankId = template.spfBankId ?? ""
         self.amount = template.amount
-        
+        self.closeAction = closeAction
     }
     
     // Init for Inside bank by phone with Tamplate
-    internal init(insideByPhone template: PaymentTemplateData) {
+    internal init(insideByPhone template: PaymentTemplateData, closeAction: @escaping () -> Void ) {
         self.template = template
         self.phoneNumber = template.insideByPhonePhoneNumber
         self.bankId = template.insideByPhoneBankId ?? ""
         self.amount = template.amount
-        
+        self.closeAction = closeAction
     }
     
     

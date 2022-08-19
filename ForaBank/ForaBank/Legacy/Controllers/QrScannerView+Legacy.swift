@@ -30,5 +30,5 @@ struct QrScannerView: UIViewControllerRepresentable {
 
 struct QrViewModel {
 
-    let closeAction: () -> Void
+    let closeAction: (Bool) -> Void
 }
