@@ -52,11 +52,36 @@ class InternetTVSuccessViewController: UIViewController {
         
         bind()
         
-        guard let cardId = self.confirmModel?.cardFromCardId else { return }
+        if let fromCardId = self.confirmModel?.cardFromCardId {
+            
+            if let cardId = NumberFormatter().number(from: fromCardId) {
+                let integerCardId = cardId.intValue
+                self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+            }
+        }
         
-        if let cardId = NumberFormatter().number(from: cardId) {
-            let integerCardId = cardId.intValue
-            self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+        if let toCardId = self.confirmModel?.cardToCardId {
+            
+            if let cardId = NumberFormatter().number(from: toCardId) {
+                let integerCardId = cardId.intValue
+                self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+            }
+        }
+        
+        if let toAcccountId = self.confirmModel?.cardToAccountId {
+            
+            if let cardId = NumberFormatter().number(from: toAcccountId) {
+                let integerCardId = cardId.intValue
+                self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+            }
+        }
+        
+        if let fromAcccountId = self.confirmModel?.cardFromAccountId {
+            
+            if let cardId = NumberFormatter().number(from: fromAcccountId) {
+                let integerCardId = cardId.intValue
+                self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+            }
         }
     }
     
@@ -82,7 +107,7 @@ class InternetTVSuccessViewController: UIViewController {
     fileprivate func setupUI() {
         navigationController?.navigationBar.isHidden = true
         view.backgroundColor = .white
-
+        
         view.addSubview(button)
         button.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
                       right: view.rightAnchor, paddingLeft: 20, paddingBottom: 20,
