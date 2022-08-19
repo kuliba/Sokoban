@@ -27,6 +27,9 @@ extension CurrencyExchangeSuccessView {
         
         lazy var buttons: [ButtonIconTextView.ViewModel] = makeButtons()
         lazy var simpleButton: ButtonSimpleView.ViewModel = makeSimpleButton()
+        
+        private lazy var documentButton: ButtonIconTextView.ViewModel = makeDocumentButton()
+        private lazy var detailsButton: ButtonIconTextView.ViewModel = makeDetailsButton()
 
         enum State {
                 
@@ -65,12 +68,25 @@ extension CurrencyExchangeSuccessView {
         }
 
         private func makeButtons() -> [ButtonIconTextView.ViewModel] {
+            [documentButton, detailsButton]
+        }
+        
+        private func makeDocumentButton() -> ButtonIconTextView.ViewModel {
             
-            [.init(icon: .init(image: .ic24CurrencyExchange, background: .circle), title: .init(text: "Документ"), orientation: .vertical) { [weak self] in
+            .init(icon: .init(image: .ic24CurrencyExchange, background: .circle), title: .init(text: "Документ"), orientation: .vertical) { [weak self] in
                 
                 guard let self = self else { return }
                 self.action.send(CurrencyExchangeSuccessAction.Button.Document())
-            }]
+            }
+        }
+        
+        private func makeDetailsButton() -> ButtonIconTextView.ViewModel {
+            
+            .init(icon: .init(image: .ic24Info, background: .circle), title: .init(text: "Детали"), orientation: .vertical) { [weak self] in
+                
+                guard let self = self else { return }
+                self.action.send(CurrencyExchangeSuccessAction.Button.Details())
+            }
         }
         
         private func makeSimpleButton() -> ButtonSimpleView.ViewModel {

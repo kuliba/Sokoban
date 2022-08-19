@@ -527,6 +527,9 @@ class CurrencyWalletViewModel: ObservableObject {
                         
                         sheet = .init(type: .printForm(printViewModel))
                         
+                    case _ as CurrencyExchangeSuccessAction.Button.Details:
+                        break
+                        
                     case _ as CurrencyExchangeSuccessAction.Button.Repeat:
                         
                         _ = items.removeLast()
