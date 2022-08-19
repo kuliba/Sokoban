@@ -45,15 +45,16 @@ struct BannerCatalogListData: Codable, Equatable, Identifiable {
         conditionURL = try container.decode(URL.self, forKey: .conditionURL)
         
         if let action = try? container.decodeIfPresent(BannerActionDepositOpen.self, forKey: .action) {
-            self.action = action
             
+            self.action = action
         } else if let action = try? container.decodeIfPresent(BannerActionMigTransfer.self, forKey: .action) {
-            self.action = action
             
+            self.action = action
         } else if let action = try? container.decodeIfPresent(BannerActionDepositsList.self, forKey: .action) {
-            self.action = action
             
-        } else {
+            self.action = action
+        } else  {
+            
             self.action = nil
         }
     }
@@ -101,14 +102,14 @@ class BannerAction: Codable, Equatable {
 class BannerActionDepositOpen: BannerAction {
     
     override var type: BannerActionType { .openDeposit }
-    let depositProductId: Int
+    let depositProductId: String
     
     private enum CodingKeys: String, CodingKey {
         
-        case depositProductId
+        case depositProductId = "depositProductID"
     }
     
-    internal init(depositProductId: Int) {
+    internal init(depositProductId: String) {
         self.depositProductId = depositProductId
         super.init()
     }
@@ -116,7 +117,7 @@ class BannerActionDepositOpen: BannerAction {
     required init(from decoder: Decoder) throws {
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        depositProductId = try container.decode(Int.self, forKey: .depositProductId)
+        depositProductId = try container.decode(String.self, forKey: .depositProductId)
         
         try super.init(from: decoder)
     }

@@ -323,17 +323,8 @@ struct OfferProductView: View {
             
             if #available(iOS 14.0, *) {
                 
-                //                Link(destination: viewModel.url) {
-                //
-                //                    Text(viewModel.title)
-                //                        .foregroundColor(.textWhite)
-                //                        .padding(.vertical, 12)
-                //                        .frame(width: 166)
-                //                        .background(Color.buttonPrimary)
-                //                        .cornerRadius(8)
-                //                }
-                if let id = viewModel.id {
-                    NavigationLink(destination: ProductDetailView(viewModel: .init(depositId: id))) {
+                if let id = viewModel.id, let openViewModel: OpenProductViewModel = .init(depositId: String(id)){
+                    NavigationLink(destination: ProductDetailView(viewModel: openViewModel)) {
                         Text(viewModel.orderButton.title)
                             .foregroundColor(.textWhite)
                             .padding(.vertical, 12)

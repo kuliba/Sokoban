@@ -234,8 +234,10 @@ class MainViewModel: ObservableObject, Resetable {
                             switch payload.actionData {
                             case let payload as BannerActionDepositOpen:
                                 
-                                self.link = .openDeposit(.init(depositId: payload.depositProductId))
-                                
+                                if let openDepositViewModel: OpenProductViewModel = .init(depositId: payload.depositProductId) {
+                                    
+                                    self.link = .openDeposit(openDepositViewModel)
+                                }
                             case _ as BannerActionDepositsList:
                                 
                                 self.link = .openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in

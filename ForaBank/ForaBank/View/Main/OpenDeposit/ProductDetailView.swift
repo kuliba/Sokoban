@@ -32,8 +32,11 @@ class OpenProductViewModel: ObservableObject {
         
     }
     
-    init(depositId: Int) {
+    init?(depositId: String) {
         
+        guard let depositId = Int(depositId) else {
+            return nil
+        }
         self.depositId = depositId
         
         let deposit = model.deposits.value.first(where: { $0.depositProductID == depositId })!
