@@ -30,6 +30,10 @@ struct PagerScrollView<Content: View>: View {
     @State var contentSize: CGSize = .zero
     @State var offset: CGFloat = 0
     
+    private var contentOffset: CGFloat {
+        -CGFloat(currentIndex) * (contentSize.width + spacing)
+    }
+    
     private var currentIndex: Int { viewModel.currentIndex }
     
     private let spacing: CGFloat
@@ -60,6 +64,9 @@ struct PagerScrollView<Content: View>: View {
                 }
                 .content.offset(x: offset)
                 .padding(.horizontal, padding)
+                .onAppear {
+                    offset = currentIndex == 0 ? offset : contentOffset
+                }
                 .gesture(DragGesture()
                     .onChanged { value in
                         
@@ -99,9 +106,13 @@ struct PagerScrollView<Content: View>: View {
                 )
             }.onPreferenceChange(PagerPreferenceKey.self) { self.contentSize = $0 }
             
-            PageIndicatorView(
-                pageCount: viewModel.pagesCount,
-                currentIndex: $viewModel.currentIndex)
+            if viewModel.pagesCount > 1 {
+                
+                PageIndicatorView(
+                    pageCount: viewModel.pagesCount,
+                    currentIndex: $viewModel.currentIndex)
+                .padding(.bottom, 12)
+            }
         }
     }
 }

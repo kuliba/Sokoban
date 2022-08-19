@@ -257,8 +257,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Juanpe/SkeletonView.git",
       "state" : {
-        "revision" : "b640c1d8eee79c3a5ad6e0ae1afd2ae0fea30423",
-        "version" : "1.29.3"
+        "revision" : "969f06848060ef4ced7ed274e91bb2c749d0ca22",
+        "version" : "1.30.1"
       }
     },
     {
@@ -284,8 +284,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "8fc79cae9d03a5e623c52cc2dbd2df165a7832b0",
-        "version" : "1.4.3"
+        "revision" : "6fe203dc33195667ce1759bf0182975e4653ba1c",
+        "version" : "1.4.4"
       }
     },
     {
@@ -329,8 +329,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Square/Valet",
       "state" : {
-        "revision" : "2bf3329055f5d71d42a12801dd69d1d770fafa5e",
-        "version" : "4.1.2"
+        "revision" : "26689601804b0cc86ed212a6b137232c22210d28",
+        "version" : "4.1.3"
       }
     }
   ],

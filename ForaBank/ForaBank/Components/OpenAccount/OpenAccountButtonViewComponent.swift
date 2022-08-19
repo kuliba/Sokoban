@@ -20,12 +20,12 @@ extension OpenAccountButtonView {
         let action: () -> Void
 
         static private func makeTitle(
-            currencyName: String,
+            currency: Currency,
             operationType: OpenAccountPerformType) -> String {
 
             switch operationType {
-            case .open: return "Открыть \(currencyName) счет"
-            case .opened, .opening: return "Открыть еще один \(currencyName) счет"
+            case .open: return "Открыть \(currency.description) счет"
+            case .opened, .opening: return "Открыть еще один \(currency.description) счет"
             case .edit, .confirm: return "Подтвердить"
             }
         }
@@ -55,17 +55,17 @@ extension OpenAccountButtonView {
             }
 
         func update(operationType: OpenAccountPerformType,
-                    currencyName: String,
+                    currency: Currency,
                     confirmCode: String) {
 
-            title = Self.makeTitle(currencyName: currencyName, operationType: operationType)
+            title = Self.makeTitle(currency: currency, operationType: operationType)
             titleColor = Self.makeTitleColor(confirmCode: confirmCode, operationType: operationType)
             backgroundColor = Self.makeBackgroundColor(confirmCode: confirmCode, operationType: operationType)
         }
 
-        init(currencyName: String, confirmCode: String, operationType: OpenAccountPerformType, action: @escaping () -> Void) {
+        init(currency: Currency, confirmCode: String, operationType: OpenAccountPerformType, action: @escaping () -> Void) {
 
-            self.title = Self.makeTitle(currencyName: currencyName, operationType: operationType)
+            self.title = Self.makeTitle(currency: currency, operationType: operationType)
             self.titleColor = Self.makeTitleColor(confirmCode: confirmCode, operationType: operationType)
             self.backgroundColor = Self.makeBackgroundColor(confirmCode: confirmCode, operationType: operationType)
             self.action = action
@@ -102,7 +102,7 @@ struct OpenAccountButtonViewComponent_Previews: PreviewProvider {
     static var previews: some View {
         OpenAccountButtonView(
             viewModel: .init(
-                currencyName: "USD",
+                currency: .init(description: "USD"),
                 confirmCode: "567834",
                 operationType: .open,
                 action: {}))

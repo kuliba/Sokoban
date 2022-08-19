@@ -17,19 +17,95 @@ struct CurrencyWalletView: View {
 
         VStack {
             
-            ScrollView(showsIndicators: false) {
+            if #available(iOS 14.0, *) {
                 
-                CurrencyListView(viewModel: viewModel.listViewModel)
-                CurrencySwapView(viewModel: viewModel.swapViewModel)
+                ScrollViewReader { proxy in
+                    
+                    ScrollView(showsIndicators: false) {
+                        
+                        VStack(spacing: 24) {
+                            
+                            ForEach(viewModel.items, id: \.id) { viewModel in
+                                
+                                switch viewModel {
+                                case let listViewModel as CurrencyListView.ViewModel:
+                                    CurrencyListView(viewModel: listViewModel)
+                                    
+                                case let swapViewModel as CurrencySwapView.ViewModel:
+                                    CurrencySwapView(viewModel: swapViewModel)
+                                    
+                                case let selectorViewModel as CurrencySelectorView.ViewModel:
+                                    CurrencySelectorView(viewModel: selectorViewModel)
+                                    
+                                case let confirmationViewModel as CurrencyExchangeConfirmationView.ViewModel:
+                                    CurrencyExchangeConfirmationView(viewModel: confirmationViewModel)
+                                    
+                                case let successViewModel as CurrencyExchangeSuccessView.ViewModel:
+                                    CurrencyExchangeSuccessView(viewModel: successViewModel)
+                                    
+                                default:
+                                    Color.clear
+                                }
+                            }
+                        }
+                        
+                    }.onChange(of: viewModel.scrollToItem) { newValue in
+                        
+                        guard let newValue = newValue else {
+                            return
+                        }
+                        
+                        withAnimation {
+                            proxy.scrollTo(newValue, anchor: .center)
+                        }
+                    }
+                }
                 
-                /*
-                 CurrencySelectorView(viewModel: viewModel.selectorViewModel)
-                */
+            } else {
+                
+                ScrollView(showsIndicators: false) {
+                    
+                    VStack(spacing: 24) {
+                        
+                        ForEach(viewModel.items, id: \.id) { viewModel in
+                            
+                            switch viewModel {
+                            case let listViewModel as CurrencyListView.ViewModel:
+                                CurrencyListView(viewModel: listViewModel)
+                                
+                            case let swapViewModel as CurrencySwapView.ViewModel:
+                                CurrencySwapView(viewModel: swapViewModel)
+                                
+                            case let selectorViewModel as CurrencySelectorView.ViewModel:
+                                CurrencySelectorView(viewModel: selectorViewModel)
+                                
+                            case let confirmationViewModel as CurrencyExchangeConfirmationView.ViewModel:
+                                CurrencyExchangeConfirmationView(viewModel: confirmationViewModel)
+                                
+                            case let successViewModel as CurrencyExchangeSuccessView.ViewModel:
+                                CurrencyExchangeSuccessView(viewModel: successViewModel)
+                                
+                            default:
+                                Color.clear
+                            }
+                        }
+                    }
+                }
             }
             
-            ButtonSimpleView(viewModel: viewModel.continueButton)
-                .frame(height: 48)
-                .padding(20)
+            switch viewModel.state {
+            case .button:
+                
+                ButtonSimpleView(viewModel: viewModel.continueButton)
+                    .frame(height: 48)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, viewModel.verticalPadding)
+                
+            case .spinner:
+                
+                SpinnerRefreshView(icon: viewModel.icon)
+                    .padding(.vertical, viewModel.verticalPadding)
+            }
         }
         .ignoreKeyboard()
         .navigationBarTitle(Text(viewModel.title), displayMode: .inline)
@@ -39,12 +115,23 @@ struct CurrencyWalletView: View {
                 .renderingMode(.template)
                 .foregroundColor(.iconBlack)
         })
+        .sheet(item: $viewModel.sheet) { sheet in
+            
+            switch sheet.type {
+            case let .printForm(printViewModel):
+                PrintFormView(viewModel: printViewModel)
+            }
+        }
+        .alert(item: $viewModel.alert) { alert in
+            Alert(with: alert)
+        }
         .onTapGesture {
             
             viewModel.resetCurrencySwap()
             UIApplication.shared.endEditing()
         }
-        .padding(.vertical, 20)
+        .padding(.top, 12)
+        .padding(.bottom, 20)
         .edgesIgnoringSafeArea(.bottom)
     }
 }
@@ -55,8 +142,13 @@ struct CurrencyWalletView_Previews: PreviewProvider {
     static var previews: some View {
         CurrencyWalletView(viewModel: .init(
             .emptyMock,
-            listViewModel: .sample,
-            swapViewModel: .sample,
-            selectorViewModel: .sample) {})
+            currency: .rub,
+            currencyItem: .init(
+                icon: nil,
+                currency: .rub,
+                rateBuy: "1,00",
+                rateSell: "64,50"),
+            currencyOperation: .buy,
+            currencySymbol: "₽") {})
     }
 }

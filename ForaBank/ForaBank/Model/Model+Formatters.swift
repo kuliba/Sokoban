@@ -12,6 +12,7 @@ extension Model {
     enum AmountFormatStyle {
         
         case normal
+        case fraction
         case clipped
     }
     
@@ -54,6 +55,11 @@ extension Model {
         switch style {
         case .normal:
             
+            return formatter.string(from: NSNumber(value: amount))
+            
+        case .fraction:
+            
+            let formatter: NumberFormatter = .currency(currencySymbol)
             return formatter.string(from: NSNumber(value: amount))
             
         case .clipped:

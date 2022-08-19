@@ -16,74 +16,65 @@ extension CurrencyWalletAccountView {
         
         let action: PassthroughSubject<Action, Never> = .init()
         
-        @Published var cardIcon: Image
+        @Published var title: String
+        @Published var currencySymbol: String
         @Published var openAccountIcon: Image
         @Published var currency: Currency
         @Published var currencyName: String
-        @Published var warning: WarningViewModel
-        @Published var bottomSheet: BottomSheet?
+        @Published var isUserInteractionEnabled: Bool
         
+        lazy var warning: WarningViewModel = makeWarning()
         var bindings = Set<AnyCancellable>()
         
         private let model: Model
-        let title: String
         
-        var currencyTitle: String {
+        var openTitle: String {
             "Открыть \(currency.description) счет"
         }
         
-        struct BottomSheet: Identifiable {
-            
-            let id = UUID()
-            let type: SheetType
-            
-            enum SheetType {
-                case openAccount(OpenAccountViewModel)
-            }
-        }
+        let cardIcon: Image = .init("Accounts")
         
         init(model: Model,
-             title: String = "Куда",
-             cardIcon: Image,
+             title: String,
+             currencySymbol: String = "",
              openAccountIcon: Image = Image("Plus Account"),
-             currency: Currency,
-             currencyName: String,
-             warning: WarningViewModel) {
+             currencyName: String = "Валютный",
+             isUserInteractionEnabled: Bool = true,
+             currency: Currency) {
             
             self.model = model
             self.title = title
-            self.cardIcon = cardIcon
+            self.currencySymbol = currencySymbol
             self.openAccountIcon = openAccountIcon
             self.currency = currency
             self.currencyName = currencyName
-            self.warning = warning
+            self.isUserInteractionEnabled = isUserInteractionEnabled
             
             bind()
         }
         
         private func bind() {
             
-            action
+            $currency
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] action in
+                .sink { [unowned self] currency in
                     
-                    switch action {
-                    case _ as CurrencyWalletAccountView.ProductAction.Toggle:
-                        
-                        let productsList = model.accountProductsList.value
-                        
-                        if productsList.isEmpty == false {
-                            
-                            let viewModel: OpenAccountViewModel = .init(model: model, items: OpenAccountViewModel.reduce(products: productsList))
-                            
-                            bottomSheet = .init(type: .openAccount(viewModel))
-                        }
-                        
-                    default:
-                        break
+                    warning.description = warningTitle(currency)
+                    
+                    if let currencyData = model.dictionaryCurrency(for: currency.description),
+                       let currencySymbol = currencyData.currencySymbol {
+                        self.currencySymbol = currencySymbol
                     }
                     
                 }.store(in: &bindings)
+        }
+        
+        private func warningTitle(_ currency: Currency) -> String {
+            "Для завершения операции Вам необходимо открыть счет \(currency.currencyTitle)"
+        }
+        
+        private func makeWarning() -> WarningViewModel {
+            .init(icon: Image("Warning Account"), description: warningTitle(currency))
         }
     }
 }
@@ -94,10 +85,10 @@ extension CurrencyWalletAccountView.ViewModel {
     
     class WarningViewModel: ObservableObject {
         
+        @Published var description: String
         let icon: Image
-        let description: String
         
-        init(icon: Image = Image("Warning Account"), description: String) {
+        init(icon: Image, description: String) {
             
             self.icon = icon
             self.description = description
@@ -118,13 +109,8 @@ struct CurrencyWalletAccountView: View {
             ProductView(viewModel: viewModel)
             WarningView(viewModel: viewModel.warning)
         }
-        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
-            switch bottomSheet.type {
-            case let .openAccount(viewModel):
-                OpenAccountView(viewModel: viewModel)
-            }
-        }
         .background(Color.mainColorsGrayLightest)
+        .disabled(viewModel.isUserInteractionEnabled == false)
         .padding(.horizontal, 20)
     }
 }
@@ -147,16 +133,33 @@ extension CurrencyWalletAccountView {
                 
                 HStack(alignment: .top, spacing: 16) {
                     
-                    viewModel.cardIcon
-                        .resizable()
-                        .frame(width: 32, height: 32)
-                        .offset(y: -3)
+                    if viewModel.currencySymbol.isEmpty == false {
+                        
+                        ZStack {
+                            
+                            RoundedRectangle(cornerRadius: 3)
+                                .foregroundColor(.cardAccount)
+                                .frame(width: 32, height: 22)
+                            
+                            Text(viewModel.currencySymbol)
+                                .foregroundColor(.mainColorsWhite)
+                                .fixedSize(horizontal: true, vertical: true)
+                            
+                        }.padding(.top, 2)
+                        
+                    } else {
+                        
+                        viewModel.cardIcon
+                            .resizable()
+                            .frame(width: 32, height: 32)
+                            .offset(y: -3)
+                    }
                     
                     VStack(alignment: .leading, spacing: 0) {
                         
                         HStack(alignment: .center, spacing: 10) {
                             
-                            Text(viewModel.currencyTitle)
+                            Text(viewModel.openTitle)
                                 .font(.textBodyMM14200())
                                 .foregroundColor(.mainColorsBlack)
                             
@@ -189,7 +192,7 @@ extension CurrencyWalletAccountView {
         
         var body: some View {
             
-            HStack(spacing: 20) {
+            HStack(alignment: .top, spacing: 20) {
                 
                 viewModel.icon
                     .resizable()
@@ -199,6 +202,8 @@ extension CurrencyWalletAccountView {
                 Text(viewModel.description)
                     .font(.textBodySR12160())
                     .foregroundColor(.mainColorsGray)
+                    .frame(height: 48, alignment: .top)
+                    .padding(.trailing)
             }
         }
     }
@@ -216,12 +221,7 @@ extension CurrencyWalletAccountView {
 
 extension CurrencyWalletAccountView.ViewModel {
     
-    static let sample = CurrencyWalletAccountView.ViewModel(
-        model: .productsMock,
-        cardIcon: Image("USD Account"),
-        currency: Currency(description: "USD"),
-        currencyName: "Валютный",
-        warning: .init(description: "Для завершения операции Вам необходимо открыть счет в долларах США"))
+    static let sample: CurrencyWalletAccountView.ViewModel = .init(model: .productsMock, title: "Откуда", currencySymbol: "$", currency: .usd)
 }
 
 // MARK: - Previews

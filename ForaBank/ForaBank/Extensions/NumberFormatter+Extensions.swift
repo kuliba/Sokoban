@@ -30,13 +30,25 @@ extension NumberFormatter {
         return formatter
     }
     
+    static func currency(_ currencySymbol: String) -> NumberFormatter {
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencySymbol = currencySymbol
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        formatter.locale = Locale.current
+        
+        return formatter
+    }
+    
     static func decimal() -> NumberFormatter {
         
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
-        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.locale = Locale.current
         
         return formatter
     }

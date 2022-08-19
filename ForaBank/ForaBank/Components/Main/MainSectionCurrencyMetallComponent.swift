@@ -155,18 +155,18 @@ extension MainSectionCurrencyMetallView {
                               title: item.code,
                               subtitle: dict.first(where: { $0.code == item.code })?.shortName ?? "",
                               action: itemAction(Currency(description: item.code)),
-                              topDashboard: .init(kindImage: item.rateBuyDelta > 0 ? .up
-                                                           : item.rateBuyDelta == 0 ? .no : .down,
-                                                  valueText: String(item.rateBuy),
+                              topDashboard: .init(kindImage: item.rateSellDelta > 0 ? .up
+                                                           : item.rateSellDelta == 0 ? .no : .down,
+                                                  valueText: NumberFormatter.decimal(item.rateSell),
                                                   type: .buy,
                                                   action: buyAction(Currency(description: item.code)) ),
-                              bottomDashboard: .init(kindImage: item.rateSellDelta > 0 ? .up
-                                                              : item.rateSellDelta == 0 ? .no : .down,
-                                                     valueText: String(item.rateSell),
+                              bottomDashboard: .init(kindImage: item.rateBuyDelta > 0 ? .up
+                                                              : item.rateBuyDelta == 0 ? .no : .down,
+                                                     valueText: NumberFormatter.decimal(item.rateBuy),
                                                      type: .sell,
                                                      action: sellAction(Currency(description: item.code)) ))
             }
-                    
+            
             let imagesMd5ToUpload = items.filter { $0.mainImg.img == nil }
                                          .map { $0.mainImg.md5 }
                     
