@@ -206,7 +206,7 @@ internal extension ServerAgent {
         
         // cookies headers
         request.httpShouldHandleCookies = false
-        if let cookies = self.cookies {
+        if command.cookiesProvider == false, let cookies = self.cookies {
            
             request.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
         }
@@ -215,7 +215,10 @@ internal extension ServerAgent {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         // token
-        request.setValue(command.token , forHTTPHeaderField: "X-XSRF-TOKEN")
+        if command.cookiesProvider == false {
+            
+            request.setValue(command.token, forHTTPHeaderField: "X-XSRF-TOKEN")
+        }
         
         // parameters
         if let parameters = command.parameters, parameters.isEmpty == false {
