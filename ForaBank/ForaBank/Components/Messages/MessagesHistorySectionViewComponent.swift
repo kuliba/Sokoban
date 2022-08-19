@@ -54,8 +54,7 @@ struct MessagesHistorySectionView: View {
             Text(viewModel.title)
                 .font(.textBodyMSB14200())
                 .foregroundColor(.textSecondary)
-                .padding(.top, 28)
-                .padding(.leading, 5)
+                .padding(.top, 30)
                 .lineLimit(2)
             
             ForEach(viewModel.items) { item in

@@ -747,7 +747,6 @@ class ServerCommandsDictionaryTests: XCTestCase {
     //MARK: - GetBannerCatalogList
     
     func testGetBannerCatalogList_Response_Decoding() throws {
-
         
         // given
         guard let url = bundle.url(forResource: "GetBannerCatalogListResponseGeneric", withExtension: "json") else {
@@ -761,7 +760,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let imageLink = "dict/getBannerCatalogImage?image=banner_1"
         let orderLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/")!
         
-        let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(bannerCatalogList: [.init(productName: "Кэшбек", conditions: ["string"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink)], serial: "bea36075a58954199a6b8980549f6b69"), errorMessage: "string")
+        let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(bannerCatalogList: [.init(productName: "Кэшбек", conditions: ["string"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: nil)], serial: "bea36075a58954199a6b8980549f6b69"), errorMessage: "string")
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetBannerCatalogList.Response.self, from: json)
@@ -770,6 +769,29 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(result, expected)
     }
     
+    func testGetBannerCatalogListFromServer_Response_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetBannerCatalogListResponseGenericFromServer", withExtension: "json") else {
+            XCTFail("testGetBannerCatalogList_Response_Decoding : Missing file: GetBannerCatalogList.json")
+            return
+        }
+        
+        let json = try Data(contentsOf: url)
+        
+        let conditionalLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/")!
+        let imageLink = "dict/getBannerCatalogImage?image=banner_1"
+        let orderLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/")!
+        
+        let migTransferAction = BannerActionMigTransfer(countryId: "AM")
+        let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(bannerCatalogList: [.init(productName: "АКЦИЯ", conditions: ["Нам 30 лет!"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: nil), .init(productName: "Переводы МИГ", conditions: ["Мгновенные переводы в Армению Комиссия 1%"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: migTransferAction), .init(productName: "Переводы Турция", conditions: ["Мгновенные переводы в Турцию Комиссия 0%"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: nil)], serial: "serial"), errorMessage: "string")
+        
+        // when
+        let result = try decoder.decode(ServerCommands.DictionaryController.GetBannerCatalogList.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
     //MARK: - GetBannerCatalogImage
     
     func testGetBannerCatalogImage_Response_Encoding() throws {
@@ -785,3 +807,4 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(command.parameters?[0].value, "Ic128Icon")
     }
 }
+    

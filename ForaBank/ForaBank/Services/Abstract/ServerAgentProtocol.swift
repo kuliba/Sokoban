@@ -15,6 +15,7 @@ protocol ServerAgentProtocol {
     
     func executeCommand<Command: ServerCommand>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void)
     func executeDownloadCommand<Command: ServerDownloadCommand>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void)
+    func executeUploadCommand<Command: ServerUploadCommand>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void)
 }
 
 /// Regular server request
@@ -45,6 +46,27 @@ protocol ServerDownloadCommand {
     var payload: Payload? { get }
     var timeout: TimeInterval? { get }
     var cachePolicy: URLRequest.CachePolicy { get }
+}
+
+/// Multipart upload server request
+protocol ServerUploadCommand {
+    
+    associatedtype Response: ServerResponse
+
+    var token: String { get }
+    var endpoint: String { get }
+    var method: ServerCommandMethod { get }
+    var parameters: [ServerCommandParameter]? { get }
+    var media: ServerCommandMediaParameter { get }
+    var timeout: TimeInterval? { get }
+}
+
+//MARK: - Default Implementation
+
+extension ServerUploadCommand {
+
+    var parameters: [ServerCommandParameter]? { nil }
+    var timeout: TimeInterval? { nil }
 }
 
 /// Regular server request response
@@ -80,6 +102,7 @@ enum ServerCommandMethod: String {
     case post = "POST"
     case get = "GET"
     case delete = "DELETE"
+    case patch = "PATCH"
 }
 
 struct ServerCommandParameter: CustomDebugStringConvertible {
@@ -88,6 +111,30 @@ struct ServerCommandParameter: CustomDebugStringConvertible {
     let value: String
     
     var debugDescription: String { "\(name), \(value)" }
+}
+
+struct ServerCommandMediaParameter {
+    
+    let fileName: String
+    let data: Data
+    let mimeType: String
+    
+    internal init(fileName: String, data: Data, mimeType: String) {
+        self.fileName = fileName
+        self.data = data
+        self.mimeType = mimeType
+    }
+    
+    init?(with imageData: ImageData, fileName: String) {
+
+        guard let data = imageData.jpegData else {
+            return nil
+        }
+        
+        self.fileName = fileName + ".jpeg"
+        self.data = data
+        self.mimeType = "image/jpeg"
+    }
 }
 
 enum ServerAgentAction {

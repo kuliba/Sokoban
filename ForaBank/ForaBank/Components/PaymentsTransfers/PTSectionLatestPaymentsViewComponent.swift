@@ -201,6 +201,7 @@ struct PTSectionLatestPaymentsView: View {
     var viewModel: ViewModel
     
     var body: some View {
+        
         Text(viewModel.title)
             .frame(maxWidth: .infinity, alignment: .leading)
             .font(.textH1SB24322())
@@ -246,18 +247,16 @@ extension PTSectionLatestPaymentsView {
                     .fill(Color.mainColorsGray.opacity(0.4))
                     .frame(width: 56, height: 56)
                 
-                Spacer()
-                    .frame(width: 80, height: 32)
-                    .overlay13 {
-                        VStack(alignment: .center, spacing: 8) {
-                            RoundedRectangle(cornerRadius: 6)
-                                .frame(width: 65, height: 8, alignment: .center)
-                                
-                            RoundedRectangle(cornerRadius: 6)
-                                .frame(width: 45, height: 8, alignment: .center)
-                            
-                        }.foregroundColor(.mainColorsGray.opacity(0.4))
-                    }
+                VStack(alignment: .center, spacing: 8) {
+                    
+                    RoundedRectangle(cornerRadius: 6)
+                        .frame(width: 65, height: 8, alignment: .center)
+
+                    RoundedRectangle(cornerRadius: 6)
+                        .frame(width: 45, height: 8, alignment: .center)
+                }
+                .foregroundColor(.mainColorsGray.opacity(0.4))
+                .frame(width: 80, height: 32)
             }
             
         }
@@ -273,6 +272,7 @@ extension PTSectionLatestPaymentsView {
         let viewModel: ViewModel.LatestPaymentButtonVM
         
         var body: some View {
+            
             Button(action: viewModel.action, label: {
                 VStack(alignment: .center, spacing: 8) {
                     ZStack {
@@ -280,48 +280,48 @@ extension PTSectionLatestPaymentsView {
                         Circle()
                             .fill(Color.mainColorsGrayLightest)
                             .frame(height: 56)
-                            .overlay13 {
-                                
-                                switch viewModel.avatar {
-                                case let .image(image):
+                            
+                        switch viewModel.avatar {
+                        case let .image(image):
                                    
-                                    image
-                                        .resizable()
-                                        .scaledToFit()
-                                        .clipShape(Circle())
-                                        .frame(height: 56)
+                            image
+                                .renderingMode(.original)
+                                .resizable()
+                                .scaledToFit()
+                                .clipShape(Circle())
+                                .frame(height: 56)
                                     
-                                case let .text(text):
-                                   
-                                    Text(text)
-                                        .font(.textH4M16240())
-                                        .foregroundColor(.textPlaceholder)
+                        case let .text(text):
+                            Text(text)
+                                .font(.textH4M16240())
+                                .foregroundColor(.textPlaceholder)
                                     
-                                case let .icon(icon, color):
-                                    
-                                    icon
-                                        .resizable()
-                                        .frame(width: 24, height: 24)
-                                        .foregroundColor(color)
-                                }
-                            }
-                    }
-                    .overlay13(alignment: .topTrailing) {
+                        case let .icon(icon, color):
+                            icon
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(color)
+                        }
+                            
                         if let topIcon = viewModel.topIcon {
                             topIcon
+                                .renderingMode(.original)
                                 .resizable()
                                 .clipShape(Circle())
                                 .frame(width: 24, height: 24)
+                                .position(x: 64, y: 12)
                         }
+                        
                     }
                     
                     Text(viewModel.description)
                         .font(.textBodySR12160())
                         .lineLimit(2)
                         .foregroundColor(.textSecondary)
-                        .frame(width: 80, height: 32, alignment: .center)
+                        .frame(width: 80, height: 32, alignment: .top)
                         .multilineTextAlignment(.center)
                 }
+                .frame(width: 80, height: 96)
             })
         }
     }

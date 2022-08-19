@@ -17,7 +17,7 @@ extension CountryPaymentView {
         let paymentType: PaymentType
         let bank: BanksList?
         var paymentTemplate: PaymentTemplateData? = nil
-        var operatorsViewModel: OperatorsViewModel? = nil
+        var operatorsViewModel: OperatorsViewModel?
         
         struct AddressViewModel {
             
@@ -71,6 +71,16 @@ extension CountryPaymentView {
             self.bank = Self.findBankByPuref(purefString: countryData.puref)
         }
         
+        init(operatorsViewModel: OperatorsViewModel) {
+            
+            self.operatorsViewModel = operatorsViewModel
+            self.paymentTemplate = operatorsViewModel.template
+            self.paymentType = .template(templateViewModel: operatorsViewModel.template!)
+            self.puref = nil
+            self.country = nil
+            self.bank = nil
+        }
+        
         init(paymentTemplate: PaymentTemplateData) {
             
             self.paymentTemplate = paymentTemplate
@@ -78,6 +88,29 @@ extension CountryPaymentView {
             self.puref = nil
             self.country = nil
             self.bank = nil
+        }
+        
+        init(country: String, operatorsViewModel: OperatorsViewModel) {
+            
+            self.paymentTemplate = nil
+            self.paymentType = .withOutAddress(withOutViewModel: .init(phoneNumber: nil))
+            self.puref = nil
+            self.country = Self.getCountry(code: country)
+            self.bank = nil
+            self.operatorsViewModel = operatorsViewModel
+        }
+        
+        private static func getCountry(code: String) -> CountriesList? {
+            
+            let model = Model.shared
+            var countryValue: CountriesList?
+            let list = model.countriesList.value.map { $0.getCountriesList() }
+            list.forEach({ country in
+                if country.code == code || country.contactCode == code {
+                    countryValue = country
+                }
+            })
+            return countryValue
         }
         
         private static func findBankByPuref(purefString: String) -> BanksList? {
@@ -161,13 +194,12 @@ struct CountryPaymentView: UIViewControllerRepresentable {
             //MARK: ContactInputViewController init(117)
 
             switch templateViewModel.type {
-                
             case .direct:
                 vc = .init(paymentTemplate: templateViewModel)
-
+                vc.operatorsViewModel = viewModel.operatorsViewModel
             case .contactAdressless:
                 vc = .init(paymentTemplate: templateViewModel)
-
+                vc.operatorsViewModel = self.viewModel.operatorsViewModel
             default :
                 break
             }

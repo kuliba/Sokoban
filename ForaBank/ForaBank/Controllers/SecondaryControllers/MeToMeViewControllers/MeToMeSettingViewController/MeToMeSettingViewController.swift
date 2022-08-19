@@ -134,7 +134,26 @@ class MeToMeSettingViewController: UIViewController {
     }
     
     func setupStackView() {
-        banksView.anchor(height: 200)
+        banksView.anchor(height: 150)
+//        DispatchQueue.main.async {
+//            self.banksView.sizeToFit()
+//            self.banksView.content = { [weak self] height in
+//                self?.banksView.anchor(height: height)
+//            }
+//            self.banksView.layoutIfNeeded()
+//            self.banksView.sizeToFit()
+//            self.stackView.layoutIfNeeded()
+//            self.stackView.sizeToFit()
+//            self.topSwitch.layoutIfNeeded()
+//            self.topSwitch.sizeToFit()
+//            self.cardFromField.layoutIfNeeded()
+//            self.cardFromField.sizeToFit()
+//            self.cardListView.layoutIfNeeded()
+//            self.cardListView.sizeToFit()
+//            self.defaultBank.layoutIfNeeded()
+//            self.defaultBank.sizeToFit()
+//
+//        }
         
         stackView = UIStackView(arrangedSubviews: [topSwitch, cardFromField, cardListView, banksView, defaultBank])
         stackView.axis = .vertical
@@ -148,7 +167,7 @@ class MeToMeSettingViewController: UIViewController {
                          left: view.leftAnchor,
                          right: view.rightAnchor)
     }
-
+   
     func setupPaymentsUI() {
         // настраиваем название контроллера в 2 строки
         self.navigationItem.titleView = setTitle(title: "Настройки СБП", subtitle: "Система быстрых платежей")

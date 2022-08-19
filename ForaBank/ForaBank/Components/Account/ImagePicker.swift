@@ -61,8 +61,7 @@ struct ImagePicker: UIViewControllerRepresentable {
         
         func imagePicker(_ picker: ImagePickerController, didFinishPicking result: PickerResult) {
             self.parent.viewModel.closeAction(result.assets.first?.image)
-            
-            picker.dismiss(animated: true, completion: nil)
+            picker.navigationController?.popViewController(animated: true)
         }
         
         func dataTrack(page: AnyImagePage, state: AnyImagePageState) {
@@ -77,6 +76,5 @@ struct ImagePicker: UIViewControllerRepresentable {
         func dataTrack(event: AnyImageEvent, userInfo: [AnyImageEventUserInfoKey: Any]) {
             print("[Data Track] EVENT: \(event.rawValue), userInfo: \(userInfo)")
         }
-        
     }
 }

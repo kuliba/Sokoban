@@ -20,6 +20,7 @@ struct InternetTVDetailsView: UIViewControllerRepresentable {
             vc.template = template
             vc.operatorData = viewModel.latestOpsDO?.op
             vc.latestOperation = viewModel.latestOpsDO
+            vc.viewModel.closeAction = viewModel.closeAction
         }
         vc.modalPresentationStyle = .fullScreen
         context.coordinator.parentObserver = vc.observe(\.parent, changeHandler: { vc, _ in
