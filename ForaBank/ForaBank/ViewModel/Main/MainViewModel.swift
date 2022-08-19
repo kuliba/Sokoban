@@ -153,15 +153,14 @@ class MainViewModel: ObservableObject, Resetable {
                             
                             switch payload.productType {
                             case .account:
-                                if #available(iOS 14, *) {
-                                    let openAccountItemViewModel = model.accountProductsList.value
-                                    bottomSheet = .init(type: .openAccount(.init(model: model, items: OpenAccountViewModel.reduce(products: openAccountItemViewModel))))
-                                    
-                                } else {
-                                    let openAccountItemViewModel = model.accountProductsList.value
-                                    sheet = .init(type: .openAccount(.init(model: model, items: OpenAccountViewModel.reduce(products: openAccountItemViewModel))))
-                                }
                                 
+                                let accountProductsList = model.accountProductsList.value
+                                let items = OpenAccountViewModel.reduce(products: accountProductsList)
+                                
+                                let openAccountViewModel: OpenAccountViewModel = .init(model: model, items: items, currency: .rub)
+                                
+                                bottomSheet = .init(type: .openAccount(openAccountViewModel))
+
                             case .deposit:
                                 self.action.send(MainViewModelAction.Show.OpenDeposit())
                                 

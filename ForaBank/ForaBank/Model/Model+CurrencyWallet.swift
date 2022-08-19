@@ -36,7 +36,7 @@ extension ModelAction {
                 
                 enum Response: Action {
                   
-                    case successed
+                    case successed(Int)
                     case failed(ModelCurrencyWalletError)
                 }
 
@@ -138,8 +138,13 @@ extension Model {
                 switch response.statusCode {
                 case .ok:
                     
+                    guard let data = response.data else {
+                        self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve.Response.failed(.statusError(status: response.statusCode, message: response.errorMessage)))
+                        return
+                    }
+                    
                     self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve
-                        .Response.successed)
+                        .Response.successed(data.paymentOperationDetailId))
                     
                 default:
                     self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve

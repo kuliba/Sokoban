@@ -32,6 +32,7 @@ class CurrencyWalletViewModel: ObservableObject {
     @Published var isShouldScrollToTop: Bool
     @Published var alert: Alert.ViewModel?
     @Published var scrollToItem: String?
+    @Published var sheet: Sheet?
     
     private lazy var listViewModel: CurrencyListView.ViewModel = makeCurrencyList()
     private lazy var swapViewModel: CurrencySwapView.ViewModel = makeCurrencySwap()
@@ -57,38 +58,21 @@ class CurrencyWalletViewModel: ObservableObject {
     
     private var bindings = Set<AnyCancellable>()
     
-    private var productType: ProductType? {
-        
-        var productId: ProductData.ID?
-        
-        if let selectorViewModel = selectorViewModel,
-           let productCardSelector = selectorViewModel.productCardSelector,
-           let productAccountSelector = selectorViewModel.productAccountSelector {
-            
-            switch currencyOperation {
-            case .buy:
-                if let productViewModel = productAccountSelector.productViewModel {
-                    productId = productViewModel.productId
-                }
-            case .sell:
-                if let productViewModel = productCardSelector.productViewModel {
-                    productId = productViewModel.productId
-                }
-            }
-        }
-        
-        guard let productId = productId,
-              let productData = model.product(productId: productId) else {
-            return nil
-        }
-        
-        return productData.productType
-    }
-    
     enum ButtonActionState {
         
         case button
         case spinner
+    }
+    
+    struct Sheet: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            
+            case printForm(PrintFormView.ViewModel)
+        }
     }
     
     init(_ model: Model, currency: Currency, currencyItem: CurrencyItemViewModel, currencyOperation: CurrencyOperation, currencySymbol: String, items: [CurrencyWalletItem], state: ButtonActionState, action: @escaping () -> Void) {
@@ -440,14 +424,12 @@ class CurrencyWalletViewModel: ObservableObject {
             state = .button
             makeConfirmationViewModel(data: response)
             
-            if let productType = productType, let creditAmount = response.creditAmount, let currencyPayee = response.currencyPayee, let item = items.last {
+            if let creditAmount = response.creditAmount, let currencyPayee = response.currencyPayee, let item = items.last {
                 
                 let title = NumberFormatter.decimal(creditAmount)
                 continueButton.title = "Купить \(title) \(currencyPayee.description)"
                 
                 scrollToItem = item.id
-                
-                model.action.send(ModelAction.Products.Update.ForProductType(productType: productType))
             }
             
         case let .failure(error):
@@ -458,24 +440,37 @@ class CurrencyWalletViewModel: ObservableObject {
     private func handleExchangeApproveResponse(_ payload: ModelAction.CurrencyWallet.ExchangeOperations.Approve.Response) {
         
         switch payload {
-        case .successed:
+        case let .successed(paymentOperationDetailId):
             
-            guard let confirmationViewModel = confirmationViewModel,
-                  let item = items.last else {
+            guard let selectorViewModel = selectorViewModel,
+                  let productCardSelector = selectorViewModel.productCardSelector,
+                  let productAccountSelector = selectorViewModel.productAccountSelector,
+                  let productCardViewModel = productCardSelector.productViewModel,
+                  let productAccountViewModel = productAccountSelector.productViewModel,
+                  let confirmationViewModel = confirmationViewModel,
+                  let lastItem = items.last else {
                 return
             }
             
-            state = .button
-            continueButton.title = "На главную"
-            makeSuccessViewModel(confirmationViewModel.debitAmount, currency: confirmationViewModel.currencyPayer)
+            makeSuccessViewModel(paymentOperationDetailId, amount: confirmationViewModel.debitAmount, currency: confirmationViewModel.currencyPayer, state: .success)
             
-            scrollToItem = item.id
+            scrollToItem = lastItem.id
             
-            model.action.send(ModelAction.Products.Update.Total.All())
+            model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productCardViewModel.productId))
+            model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productAccountViewModel.productId))
             
         case let .failed(error):
+            
+            guard let confirmationViewModel = confirmationViewModel else {
+                return
+            }
+            
+            makeSuccessViewModel(amount: confirmationViewModel.debitAmount, currency: confirmationViewModel.currencyPayer, state: .error)
             makeAlert(error: error)
         }
+        
+        state = .button
+        continueButton.title = "На главную"
     }
     
     private func makeAlert(error: ModelCurrencyWalletError) {
@@ -503,21 +498,48 @@ class CurrencyWalletViewModel: ObservableObject {
             primary: .init(type: .default, title: "Ok") { [weak self] in
                 
                 guard let self = self else { return }
+                
+                self.isUserInteractionEnabled = true
                 self.state = .button
                 self.alert = nil
             })
     }
     
-    private func makeSuccessViewModel(_ amount: Double, currency: Currency) {
+    private func makeSuccessViewModel(_ paymentOperationDetailId: Int = 0, amount: Double, currency: Currency, state: CurrencyExchangeSuccessView.ViewModel.State) {
         
         successViewModel = .init(
-            state: .success,
+            state: state,
             amount: amount,
             currency: currency,
             delay: 2,
             model: model)
         
         if let successViewModel = successViewModel {
+            
+            successViewModel.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                    case _ as CurrencyExchangeSuccessAction.Button.Document:
+                        
+                        let printViewModel: PrintFormView.ViewModel = .init(type: .operation(paymentOperationDetailId: paymentOperationDetailId, printFormType: .internal), model: model)
+                        
+                        sheet = .init(type: .printForm(printViewModel))
+                        
+                    case _ as CurrencyExchangeSuccessAction.Button.Details:
+                        break
+                        
+                    case _ as CurrencyExchangeSuccessAction.Button.Repeat:
+                        
+                        _ = items.removeLast()
+                        sendExchangeApproveRequest()
+                        
+                    default:
+                        break
+                    }
+                    
+                }.store(in: &bindings)
             
             successViewModel.$isPresent
                 .receive(on: DispatchQueue.main)

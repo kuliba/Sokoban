@@ -160,7 +160,7 @@ extension Model {
     }
 }
 
-// MARK: - Reset
+// MARK: - Update
 
 extension Model {
 

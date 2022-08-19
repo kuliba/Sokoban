@@ -120,13 +120,6 @@ struct MainView: View {
             switch bottomSheet.type {
             case let .openAccount(openAccountViewModel):
                 OpenAccountView(viewModel: openAccountViewModel)
-
-                if let productsList = model.accountProductsList.value {
-
-                    let viewModel: OpenAccountViewModel = .init(model: model, items: OpenAccountViewModel.reduce(products: productsList), currency: .rub)
-
-                    OpenAccountView(viewModel: viewModel)
-                }
             }
         }
         .sheet(item: $viewModel.sheet, content: { sheet in

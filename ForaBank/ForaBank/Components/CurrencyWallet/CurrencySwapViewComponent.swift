@@ -261,6 +261,10 @@ extension CurrencySwapView {
                     currencySwap.isUserInteractionEnabled = isEnabled
                     сurrencyCurrentSwap.isUserInteractionEnabled = isEnabled
                     swapButton.isUserInteractionEnabled = isEnabled
+                    
+                    if isEnabled == true {
+                        swapButton.state = .normal
+                    }
                 
                 }.store(in: &bindings)
         }

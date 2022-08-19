@@ -115,6 +115,13 @@ struct CurrencyWalletView: View {
                 .renderingMode(.template)
                 .foregroundColor(.iconBlack)
         })
+        .sheet(item: $viewModel.sheet) { sheet in
+            
+            switch sheet.type {
+            case let .printForm(printViewModel):
+                PrintFormView(viewModel: printViewModel)
+            }
+        }
         .alert(item: $viewModel.alert) { alert in
             Alert(with: alert)
         }

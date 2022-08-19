@@ -16,18 +16,17 @@ extension CurrencyWalletAccountView {
         
         let action: PassthroughSubject<Action, Never> = .init()
         
+        @Published var title: String
         @Published var currencySymbol: String
         @Published var openAccountIcon: Image
         @Published var currency: Currency
         @Published var currencyName: String
-        @Published var bottomSheet: BottomSheet?
         @Published var isUserInteractionEnabled: Bool
         
         lazy var warning: WarningViewModel = makeWarning()
         var bindings = Set<AnyCancellable>()
         
         private let model: Model
-        let title: String
         
         var openTitle: String {
             "Открыть \(currency.description) счет"
@@ -35,18 +34,8 @@ extension CurrencyWalletAccountView {
         
         let cardIcon: Image = .init("Accounts")
         
-        struct BottomSheet: Identifiable {
-            
-            let id = UUID()
-            let type: SheetType
-            
-            enum SheetType {
-                case openAccount(OpenAccountViewModel)
-            }
-        }
-        
         init(model: Model,
-             title: String = "Куда",
+             title: String,
              currencySymbol: String = "",
              openAccountIcon: Image = Image("Plus Account"),
              currencyName: String = "Валютный",
@@ -65,28 +54,6 @@ extension CurrencyWalletAccountView {
         }
         
         private func bind() {
-            
-            action
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] action in
-                    
-                    switch action {
-                    case _ as CurrencyWalletAccountView.ProductAction.Toggle:
-                        
-                        let productsList = model.accountProductsList.value.filter { $0.currency.rawValue == currency.description }
-                        
-                        if productsList.isEmpty == false {
-                            
-                            let viewModel: OpenAccountViewModel = .init(model: model, items: OpenAccountViewModel.reduce(products: productsList), currency: currency)
-                            
-                            bottomSheet = .init(type: .openAccount(viewModel))
-                        }
-                        
-                    default:
-                        break
-                    }
-                    
-                }.store(in: &bindings)
             
             $currency
                 .receive(on: DispatchQueue.main)
@@ -141,12 +108,6 @@ struct CurrencyWalletAccountView: View {
             
             ProductView(viewModel: viewModel)
             WarningView(viewModel: viewModel.warning)
-        }
-        .bottomSheet(item: $viewModel.bottomSheet, keyboardOfssetMultiplier: 0.7) { bottomSheet in
-            switch bottomSheet.type {
-            case let .openAccount(viewModel):
-                OpenAccountView(viewModel: viewModel)
-            }
         }
         .background(Color.mainColorsGrayLightest)
         .disabled(viewModel.isUserInteractionEnabled == false)
@@ -260,7 +221,7 @@ extension CurrencyWalletAccountView {
 
 extension CurrencyWalletAccountView.ViewModel {
     
-    static let sample: CurrencyWalletAccountView.ViewModel = .init(model: .productsMock, currencySymbol: "$", currency: .usd)
+    static let sample: CurrencyWalletAccountView.ViewModel = .init(model: .productsMock, title: "Откуда", currencySymbol: "$", currency: .usd)
 }
 
 // MARK: - Previews
