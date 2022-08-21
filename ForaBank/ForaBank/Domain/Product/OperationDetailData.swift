@@ -82,6 +82,11 @@ struct OperationDetailData: Codable, Equatable {
     let operationStatus: OperationStatus?
     let shopLink: String?
     let payeeCheckAccount: String?
+    let depositNumber: String?
+    let depositDateOpen: String?
+    let currencyRate: Double?
+    let mcc: String?
+    let printData: PrintMapData?
     
     enum ExternalTransferType: String, Codable, Unknownable {
         
@@ -137,6 +142,82 @@ struct OperationDetailData: Codable, Equatable {
         case ctbPayment = "C2B_PAYMENT"
         case interestDeposit = "INTEREST_DEPOSIT"
         case unknown
+    }
+    
+    struct PrintMapData: Codable, Equatable {
+        
+        let claimId: String
+        let requestDate: String
+        let responseDate: String
+        let transferDate: String
+        let payerCardId: Int?
+        let payerCardNumber: String?
+        let payerAccountId: Int
+        let payerAccountNumber: String
+        let payerFullName: String
+        let payerAddress: String
+        let payerAmount: Double
+        let cursivePayerAmount: String?
+        let payerFee: Double
+        let payerCurrency: String
+        let payeeFullName: String?
+        let payeePhone: String?
+        let payeeBankName: String?
+        let payeeAmount: Double?
+        let cursivePayeeAmount: String?
+        let payeeCurrency: String?
+        let amount: Double
+        let cursiveAmount: String?
+        let currencyAmount: String
+        let comment: String?
+        let accountTitle: String?
+        let account: String?
+        let transferEnum: TransferEnum?
+        let externalTransferType: ExternalTransferType?
+        let isForaBank: Bool?
+        let transferReference: String?
+        let payerSurName: String?
+        let payerFirstName: String
+        let payerMiddleName: String?
+        let payeeSurName: String?
+        let payeeFirstName: String?
+        let payeeMiddleName: String?
+        let countryName: String?
+        let payerDocument: String?
+        let period: String?
+        let provider: String?
+        let payerPhone: String?
+        let transferNumber: String?
+        let payeeBankCorrAccount: String?
+        let payeeCardNumber: String?
+        let payeeCardId: Int?
+        let payeeAccountNumber: String?
+        let payeeAccountId: Int?
+        let operation: String?
+        let puref: String?
+        let memberId: String?
+        let driverLicense: String?
+        let regCert: String?
+        let billNumber: String?
+        let billDate: String?
+        let isTrafficPoliceService: Bool
+        let division: String?
+        let serviceSelect: String?
+        let serviceName: String?
+        let merchantSubName: String?
+        let merchantIcon: String?
+        let operationStatus: OperationStatus?
+        let shopLink: String?
+        let payeeCheckAccount: String?
+        let depositNumber: String?
+        let depositDateOpen: String?
+        let currencyRate: Double?
+        let payerINN: String
+        let payeeINN: String?
+        let payeeKPP: String?
+        let payeeBankBIC: String?
+        let oktmo: String?
+        let mcc: String?
     }
     
     enum CodingKeys : String, CodingKey {
@@ -214,5 +295,10 @@ struct OperationDetailData: Codable, Equatable {
         case operationStatus
         case shopLink
         case payeeCheckAccount
+        case depositNumber
+        case depositDateOpen
+        case currencyRate
+        case printData = "printDataForOperationDetailResponse"
+        case mcc = "MCC"
     }
 }

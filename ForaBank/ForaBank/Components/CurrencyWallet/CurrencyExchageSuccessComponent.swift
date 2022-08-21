@@ -46,7 +46,7 @@ extension CurrencyExchangeSuccessView {
             }
         }
         
-        internal init(icon: Image, title: String, state: State, amount: String, delay: TimeInterval?) {
+        internal init(icon: Image, title: String, state: State, amount: String, delay: TimeInterval? = 0) {
             
             self.icon = icon
             self.title = title
@@ -56,7 +56,7 @@ extension CurrencyExchangeSuccessView {
         }
             
         init(state: State, amount: Double, currency: Currency,
-             delay: TimeInterval?, model: Model ) {
+             delay: TimeInterval? = 0, model: Model ) {
                 
             self.icon = state.appearance.icon
             self.title = state.appearance.text
@@ -68,12 +68,12 @@ extension CurrencyExchangeSuccessView {
         }
 
         private func makeButtons() -> [ButtonIconTextView.ViewModel] {
-            [documentButton]
+            [documentButton, detailsButton]
         }
         
         private func makeDocumentButton() -> ButtonIconTextView.ViewModel {
             
-            .init(icon: .init(image: .ic24CurrencyExchange, background: .circle), title: .init(text: "Документ"), orientation: .vertical) { [weak self] in
+            .init(icon: .init(image: .ic16File, background: .circle), title: .init(text: "Документ"), orientation: .vertical) { [weak self] in
                 
                 guard let self = self else { return }
                 self.action.send(CurrencyExchangeSuccessAction.Button.Document())

@@ -26,7 +26,7 @@ extension ModelAction {
                 struct Response: Action {
                     
                     let result: Result<CurrencyExchangeConfirmationData,
-                                       ModelCurrencyWalletError>
+                                       ModelError>
                 }
             }
             
@@ -37,7 +37,7 @@ extension ModelAction {
                 enum Response: Action {
                   
                     case successed(Int)
-                    case failed(ModelCurrencyWalletError)
+                    case failed(ModelError)
                 }
 
             }
@@ -114,9 +114,8 @@ extension Model {
                 
                 self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start
                                     .Response(result: .failure(
-                                        .serverCommandError(error: error))))
+                                        .serverCommandError(error: error.localizedDescription))))
             }
-            
         }
     }
     
@@ -158,23 +157,10 @@ extension Model {
             
             case let .failure(error):
                 
-                self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve
-                                    .Response.failed(.serverCommandError(error: error)))
+                self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve.Response.failed(.serverCommandError(error: error.localizedDescription)))
             }
             
         }
     }
     
 }
-
-//MARK: - Error
-
-enum ModelCurrencyWalletError: Swift.Error {
-    
-    case emptyData(message: String?)
-    case statusError(status: ServerStatusCode, message: String?)
-    case serverCommandError(error: Error)
-    case cacheError(Error)
-}
-                
-   

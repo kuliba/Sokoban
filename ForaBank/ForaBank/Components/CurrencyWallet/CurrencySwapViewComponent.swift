@@ -47,6 +47,8 @@ extension CurrencySwapView {
             }
         }
         
+//        getProductByType
+        
         private var bindings = Set<AnyCancellable>()
 
         init(_ model: Model, currencySwap: CurrencyViewModel, сurrencyCurrentSwap: CurrencyViewModel, currencyOperation: CurrencyOperation, currency: Currency, currencyRate: Double, quotesInfo: String, isUserInteractionEnabled: Bool = true) {
@@ -158,17 +160,8 @@ extension CurrencySwapView {
                         
                     case let payload as CurrencySwapAction.TextField.Done:
                         
-                        let currencyAmount = payload.currencyAmount
-                                                
-                        if currencyOperation == .sell {
-                            сurrencyCurrentSwap.lastCurrencyAmount = 0
-                        }
-                        
-                        let isEquality = currencyEquality(lhs: сurrencyCurrentSwap.currencyAmount / currencyRate, rhs: currencyAmount)
-                        
-                        if isEquality == false {
-                            updateCurrencyAction(currencyAmount)
-                        }
+                        сurrencyCurrentSwap.lastCurrencyAmount = 0
+                        updateCurrencyAction(payload.currencyAmount)
                         
                     default:
                         break
@@ -187,15 +180,8 @@ extension CurrencySwapView {
                         
                     case let payload as CurrencySwapAction.TextField.Done:
                         
-                        let currencyAmount = payload.currencyAmount
-                        
-                        let isEquality = currencyEquality(lhs: currencySwap.currencyAmount * currencyRate, rhs: currencyAmount)
-                        
-                        if isEquality == false {
-                            currencySwap.lastCurrencyAmount = 0
-                        }
-                        
-                        updateCurrencyCurrentAction(currencyAmount)
+                        currencySwap.lastCurrencyAmount = 0
+                        updateCurrencyCurrentAction(payload.currencyAmount)
                         
                     default:
                         break
@@ -218,6 +204,7 @@ extension CurrencySwapView {
                     
                     let isEquality = currencyEquality(lhs: currencySwap.currencyAmount, rhs: value)
                     
+                    
                     if isEquality == false {
                         сurrencyCurrentSwap.currencyAmount = value * currencyRate
                     } else {
@@ -228,6 +215,8 @@ extension CurrencySwapView {
                             сurrencyCurrentSwap.currencyAmount = сurrencyCurrentSwap.lastCurrencyAmount
                         }
                     }
+                    
+                    сurrencyCurrentSwap.textField.isEditing = false
                     
                 }.store(in: &bindings)
             
@@ -251,6 +240,8 @@ extension CurrencySwapView {
                     case .sell:
                         currencySwap.currencyAmount = roundUp(value: value / currencyRate)
                     }
+                    
+                    currencySwap.textField.isEditing = false
                     
                 }.store(in: &bindings)
             

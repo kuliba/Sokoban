@@ -320,11 +320,11 @@ extension ProductSelectorView.ViewModel {
             case let product as ProductCardData:
                 
                 let numberCard = product.displayNumber ?? "XXXX"
-                let description = ProductView.ViewModel.name(product: productData, style: .main)
-                
+                let name = ProductView.ViewModel.name(product: productData, style: .main)
+                let description = product.additionalField
                 let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
                 
-                self.init(productId: productId, cardIcon: product.smallDesign.image, paymentSystemIcon: product.paymentSystemImage?.image, name: product.displayName, balance: balance, numberCard: numberCard, description: description)
+                self.init(productId: productId, cardIcon: product.smallDesign.image, paymentSystemIcon: product.paymentSystemImage?.image, name: name, balance: balance, numberCard: numberCard, description: description)
                 
             case let product as ProductAccountData:
                 
