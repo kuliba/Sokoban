@@ -207,6 +207,23 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         })
                         link = .template(viewModel)
                         
+                    case _ as PTSectionLatestPaymentsViewAction.ButtonTapped.CurrencyWallet:
+                        guard let firstCurrencyWalletData = model.currencyWalletList.value.first else {
+                            return
+                        }
+                        
+                        let currency = Currency(description: firstCurrencyWalletData.code)
+                        
+                        guard let walletViewModel = CurrencyWalletViewModel(currency: currency, currencyOperation: .buy, model: model, dismissAction: { [weak self] in
+                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())}) else {
+                            return
+                        }
+
+                        model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
+                        
+                        link = .currencyWallet(walletViewModel)
+                        
+                        
                     //Transfers Section
                     case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
                         
@@ -371,6 +388,7 @@ extension PaymentsTransfersViewModel {
         case template(TemplatesListViewModel)
         case qrScanner(QrViewModel)
         case country(CountryPaymentView.ViewModel)
+        case currencyWallet(CurrencyWalletViewModel)
     }
     
 }

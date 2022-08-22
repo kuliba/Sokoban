@@ -38,6 +38,7 @@ extension PTSectionLatestPaymentsView {
         enum ItemViewModel: Identifiable {
 
             case templates(LatestPaymentButtonVM)
+            case currencyWallet(LatestPaymentButtonVM)
             case latestPayment(LatestPaymentButtonVM)
             case placeholder(PlaceholderViewModel)
 
@@ -45,6 +46,7 @@ extension PTSectionLatestPaymentsView {
             
                switch self {
                case let .templates(templatesButtonViewModel): return String(templatesButtonViewModel.id)
+               case let .currencyWallet(currencyButtonViewModel): return String(currencyButtonViewModel.id)
                case let .latestPayment(latestPaymentButtonVM): return String(latestPaymentButtonVM.id)
                case let .placeholder(placeholderViewModel): return placeholderViewModel.id.uuidString
                }
@@ -170,8 +172,15 @@ extension PTSectionLatestPaymentsView {
                       avatar: .icon(.ic24Star, .iconBlack),
                       topIcon: nil,
                       description: "Шаблоны",
-                      action: { [self] in
-                          self.action.send(PTSectionLatestPaymentsViewAction.ButtonTapped.Templates())
+                      action: { [weak self] in
+                          self?.action.send(PTSectionLatestPaymentsViewAction.ButtonTapped.Templates())
+                      }),
+                .init(id: -1,
+                      avatar: .icon(.ic24CurrencyExchange, .iconBlack),
+                      topIcon: nil,
+                      description: "Обмен валют",
+                      action: { [weak self] in
+                          self?.action.send(PTSectionLatestPaymentsViewAction.ButtonTapped.CurrencyWallet())
                       })
             ]
         }()
@@ -185,6 +194,8 @@ enum PTSectionLatestPaymentsViewAction {
     enum ButtonTapped {
 
         struct Templates: Action {}
+        
+        struct CurrencyWallet: Action {}
 
         struct LatestPayment: Action {
 
@@ -216,6 +227,9 @@ struct PTSectionLatestPaymentsView: View {
                     switch item {
                     case let .templates(templateVM):
                         LatestPaymentButtonView(viewModel: templateVM)
+                    
+                    case let .currencyWallet(currencyWalletButtonViewModel):
+                        LatestPaymentButtonView(viewModel: currencyWalletButtonViewModel)
                     
                     case let .latestPayment(latestPaymentVM):
                         LatestPaymentButtonView(viewModel: latestPaymentVM)
