@@ -103,6 +103,23 @@ class CurrencyWalletViewModel: ObservableObject {
         bind()
     }
     
+    convenience init?(currency: Currency, currencyOperation: CurrencyOperation, model: Model, dismissAction: @escaping () -> Void) {
+        
+        let currencyWalletList = model.currencyWalletList.value
+        let currencyList = model.currencyList.value
+        let images = model.images.value
+        
+        let items = CurrencyListViewModel.reduceCurrencyWallet(currencyWalletList, images: images, currency: currency)
+        let item = items.first(where: { $0.currency.description == currency.description })
+        let data = currencyList.first(where: { $0.code == currency.description })
+        
+        guard let item = item, let currencySymbol = data?.currencySymbol else {
+            return nil
+        }
+        
+        self.init(model, currency: currency, currencyItem: item, currencyOperation: currencyOperation, currencySymbol: currencySymbol, action: dismissAction)
+    }
+    
     private func bind() {
         
         model.action

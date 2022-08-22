@@ -276,18 +276,18 @@ class MainViewModel: ObservableObject, Resetable {
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Item:
                         
-                        let walletViewModel = makeCurrencyWalletViewModel(currency: payload.code, currencyOperation: .buy)
-                    
-                        guard let walletViewModel = walletViewModel else {
+                        guard let walletViewModel = CurrencyWalletViewModel(currency: payload.code, currencyOperation: .buy, model: model, dismissAction: { [weak self] in
+                            self?.action.send(MainViewModelAction.Close.Link())}) else {
                             return
                         }
-                        
+
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
                         link = .currencyWallet(walletViewModel)
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Buy:
                         
-                        guard let walletViewModel = makeCurrencyWalletViewModel(currency: payload.code, currencyOperation: .buy) else {
+                        guard let walletViewModel = CurrencyWalletViewModel(currency: payload.code, currencyOperation: .buy, model: model, dismissAction: { [weak self] in
+                            self?.action.send(MainViewModelAction.Close.Link())}) else {
                             return
                         }
                         
@@ -296,7 +296,8 @@ class MainViewModel: ObservableObject, Resetable {
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Sell:
                         
-                        guard let walletViewModel = makeCurrencyWalletViewModel(currency: payload.code, currencyOperation: .sell) else {
+                        guard let walletViewModel = CurrencyWalletViewModel(currency: payload.code, currencyOperation: .sell, model: model, dismissAction: { [weak self] in
+                            self?.action.send(MainViewModelAction.Close.Link())}) else {
                             return
                         }
                         
@@ -332,27 +333,6 @@ class MainViewModel: ObservableObject, Resetable {
         }
     }
     
-    private func makeCurrencyWalletViewModel(currency: Currency, currencyOperation: CurrencyOperation) -> CurrencyWalletViewModel? {
-        
-        let currencyWalletList = model.currencyWalletList.value
-        let currencyList = model.currencyList.value
-        let images = model.images.value
-        
-        let items = CurrencyListViewModel.reduceCurrencyWallet(currencyWalletList, images: images, currency: currency)
-        let item = items.first(where: { $0.currency.description == currency.description })
-        let data = currencyList.first(where: { $0.code == currency.description })
-        
-        guard let item = item, let currencySymbol = data?.currencySymbol else {
-            return nil
-        }
-        
-        let walletViewModel: CurrencyWalletViewModel = .init(model, currency: currency, currencyItem: item, currencyOperation: currencyOperation, currencySymbol: currencySymbol) { [weak self] in
-            self?.action.send(MainViewModelAction.Close.Link())
-        }
-        
-        return walletViewModel
-    }
-
     private func bind(_ productProfile: ProductProfileViewModel) {
         
         productProfile.action
