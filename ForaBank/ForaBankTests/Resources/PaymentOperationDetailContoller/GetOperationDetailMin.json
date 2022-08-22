@@ -20,6 +20,10 @@
 	"requestDate": "20.12.2021 13:06:05",
 	"responseDate": "20.12.2021 13:06:13",
 	"transferDate": "20.12.2021",
+    "cursivePayerAmount": "Двести пятьдесять рублей 50 копеек",
+    "cursivePayeeAmount": "Одна тысяча один рубль",
+    "cursiveAmount": "Двести пятьдесять рублей 50 копеек",
+    "currencyRate": 250.5
   },
   "errorMessage": "string",
   "statusCode": 0

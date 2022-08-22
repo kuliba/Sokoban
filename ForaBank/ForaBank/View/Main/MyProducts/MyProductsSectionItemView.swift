@@ -46,9 +46,11 @@ struct MyProductsSectionItemView: View {
                         if let icon = viewModel.icon {
                             icon
                                 .renderingMode(.original)
+                                .resizable()
+                                .frame(width: 32, height: 22)
                         } else {
                             EmptyView()
-                                .frame(width: 32, height: 32)
+                                .frame(width: 32, height: 22)
                             //TODO: Placeholder Image
                         }
                         Spacer()

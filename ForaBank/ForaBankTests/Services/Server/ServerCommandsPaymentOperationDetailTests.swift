@@ -350,7 +350,8 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         let url = bundle.url(forResource: "GetOperationDetail", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let data = OperationDetailData(oktmo: "36634436",account: "1001200158",
+        let data = OperationDetailData(oktmo: "36634436",
+                                       account: "1001200158",
                                        accountTitle: "1001200158",
                                        amount: 250.5,
                                        billDate: "2019-07-19",
@@ -411,7 +412,22 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                        transferDate: "20.12.2021",
                                        transferEnum: .cardToCard,
                                        transferNumber: "A1355080358996010000057CAFC75755",
-                                       transferReference: "848197415")
+                                       transferReference: "848197415",
+                                       cursivePayerAmount: "Двести пятьдесять рублей 50 копеек",
+                                       cursivePayeeAmount: "Одна тысяча один рубль",
+                                       cursiveAmount: "Двести пятьдесять рублей 50 копеек",
+                                       serviceSelect: nil,
+                                       serviceName: nil,
+                                       merchantSubName: nil,
+                                       merchantIcon: nil,
+                                       operationStatus: nil,
+                                       shopLink: nil,
+                                       payeeCheckAccount: nil,
+                                       depositNumber: nil,
+                                       depositDateOpen: nil,
+                                       currencyRate: 250.5,
+                                       mcc: nil,
+                                       printData: nil)
         
         let expected = ServerCommands
                         .PaymentOperationDetailContoller
@@ -449,7 +465,6 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                        externalTransferType: nil,
                                        isForaBank: nil,
                                        isTrafficPoliceService: false,
-                                       
                                        memberId: nil,
                                        operation: nil,
                                        payeeAccountId: nil,
@@ -468,46 +483,50 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                        payeeMiddleName: nil,
                                        payeePhone: nil,
                                        payeeSurName: nil,
-                                       
                                        payerAccountId: 10004111477,
                                        payerAccountNumber: "40817810052005000621",
                                        payerAddress: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 141006, Московская обл, Мытищи г, Олимпийский пр-кт ,  д. 13,  корп. 2,  кв. 9",
                                        payerAmount: 1011.01,
-                                       
                                        payerCardId: nil,
                                        payerCardNumber: nil,
-                                       
                                        payerCurrency: "RUB",
-                                       
                                        payerDocument: nil,
-                                       
                                        payerFee: 10.01,
                                        payerFirstName: "Иван",
                                        payerFullName: "Иван Иванович И.",
                                        payerINN: "123456789012",
-                                       
                                        payerMiddleName: nil,
                                        payerPhone: nil,
-                                       
                                        payerSurName: "Иванов",
                                        paymentOperationDetailId: 1,
-                                       
                                        paymentTemplateId: nil,
                                        period: nil,
-                                       
                                        printFormType: .internal,
-                                       
                                        provider: nil,
                                        puref: nil,
                                        regCert: nil,
-                                       
                                        requestDate: "20.12.2021 13:06:05",
                                        responseDate: "20.12.2021 13:06:13",
                                        returned: nil,
                                        transferDate: "20.12.2021",
                                        transferEnum: nil,
                                        transferNumber: nil,
-                                       transferReference: nil)
+                                       transferReference: nil,
+                                       cursivePayerAmount: "Двести пятьдесять рублей 50 копеек",
+                                       cursivePayeeAmount: "Одна тысяча один рубль",
+                                       cursiveAmount: "Двести пятьдесять рублей 50 копеек",
+                                       serviceSelect: nil,
+                                       serviceName: nil,
+                                       merchantSubName: nil,
+                                       merchantIcon: nil,
+                                       operationStatus: nil,
+                                       shopLink: nil,
+                                       payeeCheckAccount: nil,
+                                       depositNumber: nil,
+                                       depositDateOpen: nil,
+                                       currencyRate: 250.5,
+                                       mcc: nil,
+                                       printData: nil)
         
         let expected = ServerCommands
                         .PaymentOperationDetailContoller

@@ -461,6 +461,9 @@ class Model {
                 case let payload as ModelAction.Payment.OperationDetail.Request:
                     handleOperationDetailRequest(payload)
                     
+                case let payload as ModelAction.Payment.OperationDetailByPaymentId.Request:
+                    handleOperationDetailByPaymentIdRequest(payload)
+                    
                     //MARK: - Transfers
                     
                 case let payload as ModelAction.Transfers.CreateInterestDepositTransfer.Request:

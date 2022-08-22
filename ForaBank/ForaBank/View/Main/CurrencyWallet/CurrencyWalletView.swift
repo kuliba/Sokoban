@@ -120,6 +120,9 @@ struct CurrencyWalletView: View {
             switch sheet.type {
             case let .printForm(printViewModel):
                 PrintFormView(viewModel: printViewModel)
+                
+            case let .detailInfo(detailViewModel):
+                OperationDetailInfoView(viewModel: detailViewModel)
             }
         }
         .alert(item: $viewModel.alert) { alert in
