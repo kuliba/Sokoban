@@ -482,10 +482,19 @@ class CurrencyWalletViewModel: ObservableObject {
             state = .button
             makeConfirmationViewModel(data: response)
             
-            if let creditAmount = response.creditAmount, let currencyPayee = response.currencyPayee, let item = items.last {
+            if let creditAmount = response.creditAmount, let debitAmount = response.debitAmount, let currencyPayee = response.currencyPayee, let currencyPayer = response.currencyPayer, let item = items.last {
                 
-                let title = NumberFormatter.decimal(creditAmount)
-                continueButton.title = "Купить \(title) \(currencyPayee.description)"
+                switch currencyOperation {
+                case .buy:
+                    
+                    let title = NumberFormatter.decimal(creditAmount)
+                    continueButton.title = "Купить \(title) \(currencyPayee.description)"
+                    
+                case .sell:
+                    
+                    let title = NumberFormatter.decimal(debitAmount)
+                    continueButton.title = "Продать \(title) \(currencyPayer.description)"
+                }
                 
                 scrollToItem = item.id
             }
