@@ -98,12 +98,12 @@ class CurrencyWalletViewModel: ObservableObject {
         
         self.init(model, currency: currency, currencyItem: currencyItem, currencyOperation: currencyOperation, currencySymbol: currencySymbol, items: .init(), state: state, action: action)
         
+        items = [listViewModel, swapViewModel]
+        
         bind()
     }
     
     private func bind() {
-       
-        items = [listViewModel, swapViewModel]
         
         model.action
             .receive(on: DispatchQueue.main)
@@ -141,6 +141,18 @@ class CurrencyWalletViewModel: ObservableObject {
                 }
                 
                 updateButtonStyle(products: products)
+                
+            }.store(in: &bindings)
+        
+        model.productsUpdating
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] productTypes in
+                
+                let containsTypes = productTypes.contains(where: { $0 == .card || $0 == .account})
+                
+                if containsTypes == false {
+                    buttonStyle = .red
+                }
                 
             }.store(in: &bindings)
         
