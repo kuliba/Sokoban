@@ -281,6 +281,35 @@ extension ServerCommands {
         }
         
         /*
+         http://10.1.206.21:8080/swagger-ui/index.html#/PaymentOperationDetailController/getOperationDetailByPaymentId
+         */
+        struct GetOperationDetailByPaymentId: ServerCommand {
+            
+            let token: String
+            let endpoint = "/rest/getOperationDetailByPaymentId"
+            let method: ServerCommandMethod = .post
+            let payload: Payload?
+            
+            struct Payload: Encodable {
+                
+                let paymentOperationDetailId: Int
+            }
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: OperationDetailData?
+            }
+            
+            internal init(token: String, payload: Payload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+        }
+        
+        /*
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getPaymentCountriesUsingGET
          */
         struct GetPaymentCountries: ServerCommand {

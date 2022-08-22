@@ -149,8 +149,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/marmelroy/PhoneNumberKit.git",
       "state" : {
-        "revision" : "104a53d62c55aa5794faf30b29ccad319653b552",
-        "version" : "3.4.5"
+        "revision" : "2c21751b2dbee8f1d8b06e2e3772030658916deb",
+        "version" : "3.4.6"
       }
     },
     {
@@ -203,8 +203,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/realm/realm-cocoa.git",
       "state" : {
-        "revision" : "a107f5660b0b6067700923af7f107b6af73c546b",
-        "version" : "10.28.5"
+        "revision" : "5629961d905387b40fb2e1e9d8594c87a2ab8811",
+        "version" : "10.28.6"
       }
     },
     {
@@ -212,8 +212,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/realm/realm-core",
       "state" : {
-        "revision" : "2b8def17bb8e0cddbcc754db6b6466b8487feebf",
-        "version" : "12.5.0"
+        "revision" : "6f6a0f415bd33cf2ced4467e36a47f7c84f0a1d7",
+        "version" : "12.5.1"
       }
     },
     {

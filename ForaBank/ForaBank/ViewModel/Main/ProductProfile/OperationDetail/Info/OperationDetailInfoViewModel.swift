@@ -29,6 +29,15 @@ final class OperationDetailInfoViewModel: Identifiable {
         
     }
     
+    init(model: Model, operation: OperationDetailData, dismissAction: @escaping () -> Void) {
+        
+        self.model = model
+        self.dismissAction = dismissAction
+        self.cells = []
+        
+        cells = makeItems(operation: operation)
+    }
+    
     init?(with statement: ProductStatementData, operation: OperationDetailData?, product: ProductData, dismissAction: @escaping () -> Void, model: Model) {
         
         self.model = model
@@ -622,6 +631,115 @@ private extension OperationDetailInfoViewModel {
         let productName = product.mainField
         
         return ProductCellViewModel(title: "Счет списания", icon: smallDesign, name: productName, iconPaymentService: nil, balance: balanceString, description: "· \(description) · \(additionalField)")
+    }
+}
+
+// MARK: - Methods
+
+extension OperationDetailInfoViewModel {
+    
+    private func makeItems(operation: OperationDetailData) -> [DefaultCellViewModel] {
+        
+        let payeeProductId = [operation.payeeCardId, operation.payeeAccountId].compactMap {$0}.first
+        let payeeProductNumber = [operation.payeeCardNumber, operation.payeeAccountNumber].compactMap {$0}.first
+        
+        let payerProductId = [operation.payerCardId, operation.payerAccountId].compactMap {$0}.first
+        let payerProductNumber = [operation.payerCardNumber, operation.payerAccountNumber].compactMap {$0}.first
+        
+        let payeeViewModel = makeProductViewModel(
+            title: "Счет пополнения",
+            productId: payeeProductId,
+            productNumber: payeeProductNumber)
+        
+        let balanceViewModel = makePropertyViewModel(
+            productId: payerProductId,
+            operation: operation,
+            iconType: .balance)
+        
+        let commissionViewModel = makePropertyViewModel(
+            productId: payerProductId,
+            operation: operation,
+            iconType: .commission)
+        
+        let payerViewModel = makeProductViewModel(
+            title: "Счет списания",
+            productId: payerProductId,
+            productNumber: payerProductNumber)
+        
+        let dateViewModel = makePropertyViewModel(
+            productId: payerProductId,
+            operation: operation,
+            iconType: .date)
+        
+        return [
+            payeeViewModel,
+            balanceViewModel,
+            commissionViewModel,
+            payerViewModel,
+            dateViewModel].compactMap {$0}
+    }
+    
+    func makePropertyViewModel(productId: Int?, operation: OperationDetailData, iconType: PropertyIconType) -> PropertyCellViewModel? {
+        
+        guard let productId = productId,
+              let productData = model.product(productId: productId) else {
+            return nil
+        }
+        
+        switch iconType {
+        case .balance:
+            
+            let formattedAmount = model.amountFormatted(amount: operation.amount, currencyCode: productData.currency, style: .fraction)
+            
+            guard let formattedAmount = formattedAmount else {
+                return nil
+            }
+            
+            return .init(title: "Сумма перевода", iconType: .balance, value: formattedAmount)
+            
+        case .commission:
+            
+            let payerFee = model.amountFormatted(amount: operation.payerFee, currencyCode: productData.currency, style: .fraction)
+            
+            guard let payerFee = payerFee else {
+                return nil
+            }
+            
+            return .init(title: "Комиссия", iconType: .commission, value: payerFee)
+            
+        case .date:
+            return .init(title: "Дата и время операции (МСК)", iconType: .date, value: operation.responseDate)
+            
+        default:
+            return nil
+        }
+    }
+    
+    private func makeProductViewModel(title: String, productId: Int?, productNumber: String?) -> ProductCellViewModel? {
+        
+        guard let productId = productId,
+              let productData = model.product(productId: productId),
+              let icon = productData.smallDesign.image,
+              let balance = productData.balance,
+              let formattedBalance = model.amountFormatted(amount: balance, currencyCode: productData.currency, style: .fraction) else {
+            return nil
+        }
+        
+        var image: Image? = nil
+        
+        if let productCardData = productData as? ProductCardData,
+           let paymentSystemImage = productCardData.paymentSystemImage {
+            image = paymentSystemImage.image
+        }
+        
+        let productNumber = productNumber ?? ""
+        let lastNumber = productNumber.isEmpty == false ? "• \(productNumber.suffix(4)) • " : ""
+        let name = ProductView.ViewModel.name(product: productData, style: .main)
+        let description = productData.additionalField ?? ""
+        
+        let viewModel: ProductCellViewModel = .init(title: title, icon: icon, name: name, iconPaymentService: image, balance: formattedBalance, description: "\(lastNumber)\(description)")
+        
+        return viewModel
     }
 }
 
