@@ -1,6 +1,7 @@
 import UIKit
 import Foundation
 import IQKeyboardManagerSwift
+import Combine
 
 class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
     
@@ -75,6 +76,11 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
 
     @IBOutlet weak var recipientIcon: UIImageView!
     
+    let limitAlertView = UIView()
+    var limitInfoViewBottomConstraint: NSLayoutConstraint!
+    var limitAlertContentLable = UILabel()
+    private var bindings: Set<AnyCancellable> = []
+    let model = Model.shared
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -130,6 +136,36 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
             openSuccessScreen()
             return
         }
+        
+        view.insertSubview(limitAlertView, at: 1)
+        limitAlertView.addSubview(limitAlertContentLable)
+        limitAlertView.backgroundColor = .orange
+        
+        limitAlertContentLable.font = UIFont.boldSystemFont(ofSize: 17)
+        limitAlertContentLable.textColor = .white
+        limitAlertContentLable.textAlignment = .center
+        limitAlertContentLable.translatesAutoresizingMaskIntoConstraints = false
+        limitAlertContentLable.numberOfLines = 0
+        limitAlertContentLable.heightAnchor.constraint(equalToConstant: 80.0).isActive = true
+        limitAlertContentLable.topAnchor.constraint(equalTo: limitAlertView.topAnchor, constant: 10).isActive = true
+        limitAlertContentLable.leadingAnchor.constraint(equalTo: limitAlertView.leadingAnchor, constant: 30).isActive = true
+        limitAlertContentLable.trailingAnchor.constraint(equalTo: limitAlertView.trailingAnchor, constant: -30).isActive = true
+        
+        limitAlertContentLable.text = ""
+        
+        limitAlertView.translatesAutoresizingMaskIntoConstraints = false
+        
+        limitAlertView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 80).isActive = true
+        limitAlertView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
+        limitAlertView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
+        
+        limitAlertContentLable.heightAnchor.constraint(equalToConstant: 80.0).isActive = true
+        
+        limitInfoViewBottomConstraint = NSLayoutConstraint(item: limitAlertView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0.0, constant: 0)
+        limitInfoViewBottomConstraint.isActive = true
+        
+        bind()
+        model.action.send(ModelAction.Transfers.TransferLimit.Request())
     }
 
 
@@ -279,12 +315,50 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         viewModel.createC2BTransfer(body: body) { modelCreateC2BTransfer, error in
             if (error != nil) {
                 self.dismissActivity()
-                self.showAlert(with: "Ошибка", and: error?.description ?? "")
+                self.showLimitInfoView(true)
             } else {
+                self.showLimitInfoView(false)
                 C2BDetailsViewModel.modelCreateC2BTransfer = modelCreateC2BTransfer
                 self.makeTransfer()
             }
         }
+    }
+    
+    private func showLimitInfoView (_ value: Bool) {
+        
+        if value == true {
+            self.limitInfoViewBottomConstraint.constant = 275
+        } else {
+            self.limitInfoViewBottomConstraint.constant = 0
+        }
+        
+        UIView.animate(withDuration: 1) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    private func bind() {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+
+                switch action {
+
+                case let payload as ModelAction.Transfers.TransferLimit.Response:
+                    switch payload {
+                    case .limit( let value ):
+                        let limit = NumberFormatter.decimal(value.limit)
+                        self.limitAlertContentLable.text = "Сумма операции должна быть меньше \(limit)" + " ₽"
+                    case .noLimit:
+                        break
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
+                default:
+                    break
+                }
+            }.store(in: &bindings)
     }
 
     private func makeTransfer() {
@@ -505,4 +579,3 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         dismiss(animated: true, completion: nil)
     }
 }
-

@@ -489,5 +489,34 @@ extension ServerCommands {
                 self.payload = payload
             }
         }
+        
+        struct GetTransferLimit: ServerCommand {
+            
+            let token: String
+            let endpoint = "/rest/transfer/getTransferLimit"
+            let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]?
+            
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: TransferLimitData?
+            }
+            
+            init(token: String, transferType: String? = nil) {
+                
+                self.token = token
+                if let transferType = transferType {
+                    
+                    self.parameters = [.init(name: "transferType", value: transferType)]
+                } else {
+                    
+                    self.parameters = nil
+                }
+            }
+        }
     }
 }
