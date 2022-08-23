@@ -13,7 +13,7 @@ class ProductCardData: ProductData {
     let cardId: Int
     let name: String
     let validThru: Date
-    var status: Status
+    private(set) var status: Status
     let expireDate: String?
     let holderName: String?
     let product: String?
@@ -22,11 +22,11 @@ class ProductCardData: ProductData {
     let paymentSystemName: String?
     let paymentSystemImage: SVGImageData?
     let loanBaseParam: LoanBaseParamInfoData?
-    var statusPc: StatusPC?
+    private(set) var statusPc: StatusPC?
     let isMain: Bool?
     let externalId: Int?
     
-    internal init(id: Int, productType: ProductType, number: String, numberMasked: String, accountNumber: String, balance: Double, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date, ownerId: Int, branchId: Int, allowCredit: Bool, allowDebit: Bool,extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], accountId: Int?, cardId: Int, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: ProductData.StatusPC?, isMain: Bool?, externalId: Int?) {
+    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], accountId: Int?, cardId: Int, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: ProductData.StatusPC?, isMain: Bool?, externalId: Int?) {
 
         self.accountId = accountId
         self.cardId = cardId
@@ -127,6 +127,8 @@ class ProductCardData: ProductData {
     }
 }
 
+//MARK: - PaymentDataItem
+
 extension ProductCardData {
     
     struct PaymentDataItem: Codable, Equatable {
@@ -175,6 +177,8 @@ extension ProductCardData {
     }
 }
 
+//MARK: - LoanBaseParamInfoData
+
 extension ProductCardData {
     
     struct LoanBaseParamInfoData: Codable {
@@ -200,7 +204,6 @@ extension ProductCardData {
             case clientId = "clientID"
             case currencyId = "currencyID"
             case number, currencyNumber, currencyCode, minimumPayment, gracePeriodPayment, overduePayment, availableExceedLimit, ownFunds, debtAmount, totalAvailableAmount, totalDebtAmount
-            
         }
         
         internal init(loanId: Int, clientId: Int, number: String, currencyId: Int?, currencyNumber: Int?, currencyCode: String?, minimumPayment: Double?, gracePeriodPayment: Double?, overduePayment: Double?, availableExceedLimit: Double?, ownFunds: Double?, debtAmount: Double?, totalAvailableAmount: Double?, totalDebtAmount: Double?) {
@@ -222,6 +225,8 @@ extension ProductCardData {
     }
 }
 
+//MARK: - Helpers
+
 extension ProductCardData {
 
     var isNotActivated: Bool {
@@ -236,6 +241,12 @@ extension ProductCardData {
     
     var isActivated: Bool {
         isNotActivated == false
+    }
+    
+    func activate() {
+        
+        status = .active
+        statusPc = .active
     }
 
     var isBlocked: Bool {

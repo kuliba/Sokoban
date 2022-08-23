@@ -279,7 +279,7 @@ extension Model {
                     }
                     
                     // update products
-                    let updatedProducts = self.reduce(products: self.products.value, with: params)
+                    let updatedProducts = Self.reduce(products: self.products.value, with: params)
                     self.products.value = updatedProducts
                     
                     // cache products
@@ -335,7 +335,7 @@ extension Model {
                     }
                     
                     // update products
-                    let updatedProducts = self.reduce(products: self.products.value, with: params, productId: payload.productId)
+                    let updatedProducts = Self.reduce(products: self.products.value, with: params, productId: payload.productId)
                     self.products.value = updatedProducts
                     
                     // cache products
@@ -426,7 +426,7 @@ extension Model {
                     }
                     
                     // update products
-                    let updatedProducts = reduce(products: self.products.value, with: result.products, allowed: self.productsAllowed)
+                    let updatedProducts = Self.reduce(products: self.products.value, with: result.products, for: productType)
                     self.products.value = updatedProducts
                     
                     // cache products
@@ -454,10 +454,10 @@ extension Model {
         }
     }
 
-    func handleProductsUpdateTotalProduct(_ product: ModelAction.Products.Update.ForProductType) {
+    func handleProductsUpdateTotalProduct(_ payload: ModelAction.Products.Update.ForProductType) {
 
-        guard productsUpdating.value.contains(product.productType) == false,
-              productsAllowed.contains(product.productType) == true else {
+        guard productsUpdating.value.contains(payload.productType) == false,
+              productsAllowed.contains(payload.productType) == true else {
                   return
               }
 
@@ -468,22 +468,22 @@ extension Model {
 
         Task {
 
-            self.productsUpdating.value.append(product.productType)
+            self.productsUpdating.value.append(payload.productType)
 
-            let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: product.productType)
+            let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: payload.productType)
 
             do {
 
                 let result = try await productsFetchWithCommand(command: command)
 
                 // updating status
-                if let index = self.productsUpdating.value.firstIndex(of: product.productType) {
+                if let index = self.productsUpdating.value.firstIndex(of: payload.productType) {
 
                     self.productsUpdating.value.remove(at: index)
                 }
 
                 // update products
-                let updatedProducts = reduce(products: self.products.value, with: result.products, allowed: self.productsAllowed)
+                let updatedProducts = Self.reduce(products: self.products.value, with: result.products, for: payload.productType)
                 self.products.value = updatedProducts
                 
                 // cache products
@@ -499,7 +499,7 @@ extension Model {
             } catch {
 
                 // updating status
-                if let index = self.productsUpdating.value.firstIndex(of: product.productType) {
+                if let index = self.productsUpdating.value.firstIndex(of: payload.productType) {
 
                     self.productsUpdating.value.remove(at: index)
                 }
@@ -510,7 +510,7 @@ extension Model {
         }
         
         // update additional products data
-        switch product.productType {
+        switch payload.productType {
         case .deposit:
             self.action.send(ModelAction.Deposits.Info.All())
             
@@ -881,8 +881,7 @@ extension Model {
                 let result = try await loansFetchWithCommand(command: command)
                 
                 self.loansUpdating.value.remove(payload.productId)
-                self.loans.value = reduce(loans: self.loans.value, personsCreditData: result.original, productId: payload.productId)
-                
+                self.loans.value = Self.reduce(loans: self.loans.value, personsCreditData: result.original, productId: payload.productId)
                 
                 //TODO: update loan product's custom name with result.customName?
                 
@@ -934,35 +933,48 @@ extension Model {
 
 //MARK: - Reducers
 
-//TODO: tests
 extension Model {
     
-    func reduce(products: ProductsData, with productsList: [ProductData], allowed: Set<ProductType>) -> ProductsData {
+    /// Products data
+    static func reduce(products: ProductsData, with productsList: [ProductData], for type: ProductType) -> ProductsData {
         
-        var productsUpdated = products
-        
-        for productType in ProductType.allCases {
+        func isCorrect(type: ProductType, for productsList: [ProductData]) -> Bool {
             
-            if allowed.contains(productType) {
+            switch type {
+            case .card:
+                return productsList is [ProductCardData]
                 
-                let productsForType = productsList.filter{ $0.productType == productType }
+            case .account:
+                return productsList is [ProductAccountData]
                 
-                guard productsForType.isEmpty == false else {
-                    continue
-                }
+            case .deposit:
+                return productsList is [ProductDepositData]
                 
-                productsUpdated[productType] = productsForType
-                
-            } else {
-                
-                productsUpdated[productType] = nil
+            case .loan:
+                return productsList is [ProductLoanData]
             }
         }
         
-        return productsUpdated
+        var result = products
+        
+        if productsList.isEmpty == false {
+            
+            guard isCorrect(type: type, for: productsList) else {
+                return products
+            }
+            
+            result[type] = productsList
+            
+        } else {
+            
+            result[type] = nil
+        }
+        
+        return result
     }
     
-    func reduce(products: ProductsData, with params: ProductDynamicParamsData, productId: Int) -> ProductsData {
+    /// Dynamic parameter
+    static func reduce(products: ProductsData, with params: ProductDynamicParamsData, productId: Int) -> ProductsData {
         
         var productsUpdated = ProductsData()
         
@@ -990,7 +1002,8 @@ extension Model {
         return productsUpdated
     }
     
-    func reduce(products: ProductsData, with params: ProductsDynamicParams) -> ProductsData {
+    /// Dynamic parameters
+    static func reduce(products: ProductsData, with params: ProductsDynamicParams) -> ProductsData {
         
         var productsUpdated = ProductsData()
         
@@ -1027,13 +1040,14 @@ extension Model {
             return products
         }
 
-        productCard.status = .active
-        productCard.statusPc = .active
+        productCard.activate()
 
         return products
     }
     
-    func reduce(loans: LoansData, personsCreditData: PersonsCreditData, productId: ProductData.ID) -> LoansData {
+    //TODO: tests
+    /// Loans data
+    static func reduce(loans: LoansData, personsCreditData: PersonsCreditData, productId: ProductData.ID) -> LoansData {
 
         if loans.contains(where: { $0.loandId == productId}) {
             
