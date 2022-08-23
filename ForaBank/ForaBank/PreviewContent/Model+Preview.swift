@@ -22,7 +22,7 @@ extension Model {
            let json = try? Data(contentsOf: url),
            let productsData = try? JSONDecoder.serverDate.decode([ProductData].self, from: json)  {
             
-            model.products.value = model.reduce(products: [:], with: productsData, allowed: model.productsAllowed)
+            model.products.value = Model.reduce(products: [:], with: productsData, for: .card)
         }
         return model
     }()
@@ -38,7 +38,6 @@ extension Model {
            let statements = try? JSONDecoder.serverDate.decode([ProductStatementData].self, from: json)  {
             
             let update = ProductStatementsStorage.Update(period: Period(daysBack: 1, from: Date()), statements: statements, direction: .eldest, limitDate: Date())
-//            model.statements.value = Model.reduce(statements: [:], with: update, for: .sa)
         }
         
         return model
