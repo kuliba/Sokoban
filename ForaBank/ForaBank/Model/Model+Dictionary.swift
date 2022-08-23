@@ -1,4 +1,4 @@
-//
+ //
 //  Model+Dictionary.swift
 //  ForaBank
 //
@@ -135,7 +135,11 @@ extension Model {
         
         case .currencyWalletList:
             return localAgent.load(type: [CurrencyWalletData].self) != nil
+            
+        case .centralBanksRates:
+            return localAgent.load(type: [CentralBankRatesData].self) != nil
         }
+        
     }
     
     func dictionaryCacheSerial(for dictionaryType: DictionaryType) -> String? {
@@ -203,6 +207,9 @@ extension Model {
         
         case .currencyWalletList:
             return localAgent.serial(for: [CurrencyWalletData].self)
+        
+        case .centralBanksRates:
+            return localAgent.serial(for: [CentralBankRatesData].self)
         }
     }
     
@@ -271,6 +278,9 @@ extension Model {
         
         case .currencyWalletList:
             try? localAgent.clear(type: [CurrencyWalletData].self)
+        
+        case .centralBanksRates:
+            try? localAgent.clear(type: [CentralBankRatesData].self)
         }
     }
 }
@@ -694,7 +704,49 @@ extension Model {
             }
         }
     }
+    
+    // CentralBankRates
+    func handleDictionaryCentralBankRates() {
         
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+            
+        let typeDict: DictionaryType = .centralBanksRates
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands
+                        .DictionaryController
+                        .GetCentralBankRates(token: token)
+            
+        serverAgent.executeCommand(command: command) { [unowned self] result in
+                
+            self.dictionariesUpdating.value.remove(typeDict)
+            
+            switch result {
+            case let .success(response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data
+                    else {
+                        handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                        
+                    self.centralBankRates.value = data.ratesCb
+                        
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                    
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
     // CurrencyList
     func handleDictionaryCurrencyList(_ serial: String?) {
         

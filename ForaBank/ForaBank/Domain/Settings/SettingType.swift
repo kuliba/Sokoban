@@ -38,6 +38,7 @@ enum SettingType {
         case tempates
         case productsHidden
         case productsSections
+        case productsMoney
     }
 }
 

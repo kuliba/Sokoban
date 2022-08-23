@@ -3,9 +3,11 @@
 //  ForaBank
 //
 //  Created by Pavel Samsonov on 10.04.2022.
+//  Full refactored by Dmitry Martynov on 20.08.2022
 //
 
 import SwiftUI
+import Shimmer
 
 struct MyProductsMoneyView: View {
     
@@ -13,126 +15,180 @@ struct MyProductsMoneyView: View {
     
     var body: some View {
 
-        VStack {
-            
-            ZStack() {
-                
-                VStack {
-                    
-                    HStack(alignment: .top) {
-                        
-                        if viewModel.isSingleLineBalance {
+        VStack(alignment: .trailing, spacing: 4) {
+        
+            switch viewModel.balanceVM {
+            case .placeholder:
                             
-                            Text(viewModel.title)
+                HStack {
+                            
+                    Text(viewModel.allMoneyTitle)
+                        .font(.textH2SB20282())
+                        .foregroundColor(.mainColorsBlack)
+                        .lineLimit(1)
+                        .layoutPriority(1)
+                        
+                    GeometryReader { geo in
+                       Group {
+                           
+                           RoundedRectangle(cornerRadius: 90)
+                               .foregroundColor(.mainColorsGrayMedium.opacity(0.4))
+                               .frame(width: 2.3 * geo.size.width / 3)
+                               .shimmering(active: true, bounce: true)
+                           
+                        }.frame(width: geo.size.width, alignment: .trailing)
+                    }.frame(height: 24)
+                        
+                        CurrencyButtonView(viewModel: viewModel.currencyButtonVM)
+                }
+                            
+            case let .balanceTitle(balanceStr):
+                            
+                if viewModel.balanceVM.isSingleLineView {
+                            
+                    HStack {
+                            
+                        Text(viewModel.allMoneyTitle)
+                                
+                        Spacer()
+                                
+                        Text(balanceStr)
+                                    
+                        CurrencyButtonView(viewModel: viewModel.currencyButtonVM)
+                    }
+                    .font(.textH2SB20282())
+                    .foregroundColor(.mainColorsBlack)
+                            
+                }  else {
+                               
+                    VStack(alignment: .leading, spacing: 4) {
+                                
+                        Text(viewModel.allMoneyTitle)
+                            .font(.textH2SB20282())
+                            .foregroundColor(.mainColorsBlack)
+                                
+                        HStack {
+                                        
+                            Text(balanceStr)
                                 .font(.textH2SB20282())
                                 .foregroundColor(.mainColorsBlack)
-                            
-                            VStack(alignment: .trailing) {
-                                
-                                HStack {
-                                    
-                                    Spacer()
-                                    
-                                    Text(viewModel.balance)
-                                        .font(.textH2SB20282())
-                                        .foregroundColor(.mainColorsBlack)
-                                }
-                                HStack {
-                                    
-                                    Spacer()
-                                    
-                                    Text(viewModel.subtitle)
-                                        .font(.textBodySR12160())
-                                        .foregroundColor(.mainColorsGray)
-                                }
-                            }
-                            
-                        } else {
-                            VStack(alignment: .leading, spacing: 8) {
-                                
-                                Text(viewModel.title)
-                                    .font(.textH2SB20282())
-                                    .foregroundColor(.mainColorsBlack)
-                                
-                                VStack(alignment: .leading) {
-                                    
-                                    Text(viewModel.balance)
-                                        .font(.textH2SB20282())
-                                        .foregroundColor(.mainColorsBlack)
-                                    
-                                    HStack {
                                         
-                                        Text(viewModel.subtitle)
-                                            .font(.textBodySR12160())
-                                            .foregroundColor(.mainColorsGray)
-                                        
-                                        Spacer()
-                                    }
-                                }
-                            }
-                            
                             Spacer()
-                        }
-                        if let currencyButton = viewModel.currencyButton {
-                            MyProductsMoneyViewButton(viewModel: currencyButton)
+                                        
+                            CurrencyButtonView(viewModel: viewModel.currencyButtonVM)
                         }
                     }
-                    .padding([.horizontal, .top], 20)
-                    .padding(.bottom, 4)
-
                 }
             }
-            .fixedSize(horizontal: false, vertical: true)
-            .padding(.bottom, 16)
-        }.background(Color.barsTabbar)
+                   
+            Text(viewModel.cbRateTitle)
+                .font(.textBodySR12160())
+                .foregroundColor(.mainColorsGray)
+                .zIndex(-1)
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 12)
+        .background(Color.barsTabbar)
+        .onAppear {
+            viewModel.action.send(MyProductsMoneyViewModelAction.ViewDidApear())
+        }
+
     }
 }
 
 extension MyProductsMoneyView {
 
-    struct MyProductsMoneyViewButton: View {
+    struct CurrencyButtonView: View {
 
         @ObservedObject var viewModel: MyProductsMoneyViewModel.CurrencyButtonViewModel
 
-        private var foregroundColor: Color {
-
-            if viewModel.isSelected {
-                return .mainColorsBlack
-            }
-
-            return .mainColorsGrayMedium
-        }
-
         var body: some View {
+            
             Button {
                 
-                viewModel.isSelected.toggle()
-                
+                viewModel.action.send(CurrencyButtonViewModelAction.ButtonTapped())
+            
             } label: {
-
+            
                 ZStack {
-
-                    HStack {
-
-                        Capsule()
-                            .foregroundColor(foregroundColor)
-
-                    }.frame(width: 40, height: 24)
-
-                    HStack(spacing: 3) {
-
-                        Text(viewModel.title)
+                        
+                    RoundedRectangle(cornerRadius: 90)
+                        .frame(width: 40, height: 24)
+                        .foregroundColor(viewModel.state.isDisable
+                                            ? .mainColorsGrayMedium.opacity(0.4)
+                                            : .mainColorsBlack)
+                        .shimmering(active: viewModel.state.isDisable, bounce: true)
+        
+                    HStack(spacing: 1) {
+                        
+                        Text(viewModel.currencySymbol)
                             .font(.textBodyMM14200())
-                            .foregroundColor(.textWhite)
-
-                        viewModel.icon
-                            .foregroundColor(.iconWhite)
-
-                    }.padding(.vertical, 4)
+                            
+                        Image.ic16ChevronDown
+            
+                    }.foregroundColor(.mainColorsWhite)
                 }
             }
-            .padding(.trailing, 19)
+            .disabled(viewModel.state.isDisable)
+            .overlay13 {
+                
+                if case let .expanded(currencyItemsVM) = viewModel.state {
+    
+                    ZStack(alignment: .leading) {
+                       
+                        RoundedRectangle(cornerRadius: 12)
+                            .foregroundColor(.mainColorsWhite)
+                            .shadow(color: .mainColorsGrayMedium, radius: 3, x: 0, y: 3)
+                    
+                        ScrollView(showsIndicators: false) {
+                            
+                            VStack(alignment: .leading, spacing: 16) {
+                    
+                                ForEach(currencyItemsVM) { item in
+                        
+                                    Button {
+                                        item.action()
+                                    } label: {
+                            
+                                        HStack {
+                                
+                                            Text(item.symbol)
+                                                .font(.textBodyMM14200())
+                                                .frame(width: 24, height: 24)
+                                                .foregroundColor(.mainColorsWhite)
+                                                .background(Circle()
+                                                    .foregroundColor(.mainColorsBlack))
+                                
+                                            VStack(alignment: .leading, spacing: 1) {
+                                                
+                                                Text(item.name)
+                                                    .font(.textBodyMM14200())
+                                
+                                                Text(item.rateFormatted)
+                                                    .foregroundColor(.textPlaceholder)
+                                                    .font(.textBodySR12160())
+                                                
+                                            }.padding(.top, 4)
+                                            
+                                            Spacer()
+                                            
+                                            if item.isSelected { Image.ic16Check }
+                                        }
+                                    }.foregroundColor(.mainColorsBlack)
+                                    .frame(height: 36)
+                        
+                                } //ForEach
+                            }
+                            
+                        }.padding(11) //Scroll
+                    }
+                    .frame(width: 240, height: 270)
+                    .offset(x: -100, y: 153)
+                    
+                }
+            }
         }
+        
     }
 }
 
@@ -141,10 +197,16 @@ struct MyProductsTotalMoneyView_Previews: PreviewProvider {
 
         Group {
 
-            MyProductsMoneyView(viewModel: .sample1)
-                .previewLayout(.sizeThatFits)
-
-            MyProductsMoneyView(viewModel: .sample2)
+            MyProductsMoneyView(viewModel: .sampleBalance)
+                .previewDevice("iPhone SE (1st generation)")
+                .previewLayout(.fixed(width: 350, height: 200))
+            
+            MyProductsMoneyView(viewModel: .sampleExpanded)
+                .previewDevice("iPhone 13 Pro Max")
+                .previewLayout(.fixed(width: 400, height: 600))
+                
+            MyProductsMoneyView(viewModel: .samplePlaceholder)
+                .previewDevice("iPhone SE (1st generation)")
                 .previewLayout(.sizeThatFits)
         }
     }

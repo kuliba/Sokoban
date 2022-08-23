@@ -30,4 +30,5 @@ enum DictionaryType: CaseIterable  {
     case atmMetroStationList
     case atmCityList
     case atmRegionList
+    case centralBanksRates
 }
