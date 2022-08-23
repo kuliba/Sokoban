@@ -469,6 +469,9 @@ class Model {
                 case let payload as ModelAction.Transfers.CreateInterestDepositTransfer.Request:
                     handleCreateInterestDepositTransferRequest(payload)
                     
+                case let payload as ModelAction.Transfers.TransferLimit.Request:
+                    handleTransferLimitRequest(payload)
+                    
                     //MARK: - CurrencyWallet
                     
                 case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Start.Request:

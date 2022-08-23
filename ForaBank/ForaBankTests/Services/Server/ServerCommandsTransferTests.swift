@@ -367,4 +367,21 @@ class ServerCommandsTransferTests: XCTestCase {
         // then
         XCTAssertEqual(result, expected)
     }
+    
+    //MARK: - TransferLimit
+    
+    func testTransferLimitData_Response_Decoding() throws {
+
+        // given
+        let url = bundle.url(forResource: "TransferLimitGenegic", withExtension: "json")!
+        let json = try Data(contentsOf: url)
+        
+        let expected = ServerCommands.TransferController.GetTransferLimit.Response(statusCode: .ok, errorMessage: "string", data: .init(limit: 1000000, currencyLimit: "RUB"))
+        
+        // when
+        let result = try decoder.decode(ServerCommands.TransferController.GetTransferLimit.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
 }
