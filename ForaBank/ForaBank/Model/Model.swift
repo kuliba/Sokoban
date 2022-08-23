@@ -47,6 +47,7 @@ class Model {
     let paymentSystemList: CurrentValueSubject<[PaymentSystemData], Never>
     let bankList: CurrentValueSubject<[BankData], Never>
     let currencyWalletList: CurrentValueSubject<[CurrencyWalletData], Never>
+    let centralBankRates: CurrentValueSubject<[CentralBankRatesData], Never>
     var images: CurrentValueSubject<[String: ImageData], Never>
     
     //MARK: Deposits
@@ -134,6 +135,7 @@ class Model {
         self.catalogBanners = .init([])
         self.currencyList = .init([])
         self.currencyWalletList = .init([])
+        self.centralBankRates = .init([])
         self.bankList = .init([])
         self.countriesList = .init([])
         self.paymentSystemList = .init([])
@@ -630,6 +632,9 @@ class Model {
                     
                     case .currencyWalletList:
                         handleDictionaryCurrencyWalletList(payload.serial)
+                        
+                    case .centralBanksRates:
+                        handleDictionaryCentralBankRates()
                     }
                     
                 case let payload as ModelAction.Dictionary.DownloadImages.Request:

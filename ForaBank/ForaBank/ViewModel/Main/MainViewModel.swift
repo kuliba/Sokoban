@@ -382,6 +382,16 @@ class MainViewModel: ObservableObject, Resetable {
                         self.action.send(MainViewModelAction.Show.OpenDeposit())
                     }
 
+                case _ as MyProductsViewModelAction.Tapped.CancelExpandedCurrency:
+                    
+                    switch myProductsViewModel.totalMoneyVM.currencyButtonVM.state {
+                    case .expanded:
+                        withAnimation {
+                            myProductsViewModel.totalMoneyVM.currencyButtonVM.state = .enabled
+                        }
+                    case .disabled, .enabled: break
+                    }
+                    
                 default:
                     break
                 }

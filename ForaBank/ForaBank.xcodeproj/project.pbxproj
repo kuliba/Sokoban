@@ -244,10 +244,12 @@
 		0C4B0BBC28623DD5004B7F69 /* Model+FastPaymentSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4B0BBB28623DD5004B7F69 /* Model+FastPaymentSettings.swift */; };
 		0C4B0BBF28624B97004B7F69 /* MeToMeSettingView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4B0BBE28624B97004B7F69 /* MeToMeSettingView+Legacy.swift */; };
 		0C4B0BC128635898004B7F69 /* BankFullInfoData+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4B0BC028635898004B7F69 /* BankFullInfoData+Legacy.swift */; };
+		0C5CE76228B2D2F200C30CD3 /* ProductsMoneySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CE76128B2D2F200C30CD3 /* ProductsMoneySettings.swift */; };
 		0C6508CF28299C6D0058916A /* PaymentsTransfersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */; };
 		0C6508D228299DAF0058916A /* PaymentsTransfersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */; };
 		0C78331C287DC201003ADC73 /* MainSectionCurrencyMetalComponentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78331B287DC201003ADC73 /* MainSectionCurrencyMetalComponentMock.swift */; };
 		0C78332328847DFC003ADC73 /* CurrencyExchageSuccessComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78332228847DFC003ADC73 /* CurrencyExchageSuccessComponent.swift */; };
+		0C89318B28ABEDF200835694 /* CentralBankRatesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C89318A28ABEDF200835694 /* CentralBankRatesData.swift */; };
 		0C8CF960282179E80047DDAE /* SendMailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8CF95F282179E80047DDAE /* SendMailView.swift */; };
 		0C99077728733835000831BB /* MainSectionCurrencyMetallComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C99077628733835000831BB /* MainSectionCurrencyMetallComponent.swift */; };
 		0C9CC08728992517000DB396 /* ProductStatementMerchantGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9CC08628992517000DB396 /* ProductStatementMerchantGroup.swift */; };
@@ -1651,10 +1653,12 @@
 		0C4B0BBB28623DD5004B7F69 /* Model+FastPaymentSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+FastPaymentSettings.swift"; sourceTree = "<group>"; };
 		0C4B0BBE28624B97004B7F69 /* MeToMeSettingView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MeToMeSettingView+Legacy.swift"; sourceTree = "<group>"; };
 		0C4B0BC028635898004B7F69 /* BankFullInfoData+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BankFullInfoData+Legacy.swift"; sourceTree = "<group>"; };
+		0C5CE76128B2D2F200C30CD3 /* ProductsMoneySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsMoneySettings.swift; sourceTree = "<group>"; };
 		0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersView.swift; sourceTree = "<group>"; };
 		0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModel.swift; sourceTree = "<group>"; };
 		0C78331B287DC201003ADC73 /* MainSectionCurrencyMetalComponentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionCurrencyMetalComponentMock.swift; sourceTree = "<group>"; };
 		0C78332228847DFC003ADC73 /* CurrencyExchageSuccessComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchageSuccessComponent.swift; sourceTree = "<group>"; };
+		0C89318A28ABEDF200835694 /* CentralBankRatesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CentralBankRatesData.swift; sourceTree = "<group>"; };
 		0C8CF95F282179E80047DDAE /* SendMailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMailView.swift; sourceTree = "<group>"; };
 		0C99077628733835000831BB /* MainSectionCurrencyMetallComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionCurrencyMetallComponent.swift; sourceTree = "<group>"; };
 		0C9CC08628992517000DB396 /* ProductStatementMerchantGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductStatementMerchantGroup.swift; sourceTree = "<group>"; };
@@ -3734,6 +3738,7 @@
 			isa = PBXGroup;
 			children = (
 				6820927A27AB0D9F003DCAFD /* BankFullInfoData.swift */,
+				0C89318A28ABEDF200835694 /* CentralBankRatesData.swift */,
 				6820927C27AB0DD9003DCAFD /* OperatorGroupData.swift */,
 				6820927E27AB0E1B003DCAFD /* BankData.swift */,
 				6820928027AB0E49003DCAFD /* CountryData.swift */,
@@ -4769,6 +4774,7 @@
 				774A82C627BAE4BF00E5A5E9 /* SettingType.swift */,
 				77A411E627EB962100D36E46 /* MainSectionsSettings.swift */,
 				0C39B783289FBE840017FAAB /* ProductsSectionsSettings.swift */,
+				0C5CE76128B2D2F200C30CD3 /* ProductsMoneySettings.swift */,
 				7728A17C283632D600EE4CA6 /* MainProductsGroupSettings.swift */,
 			);
 			path = Settings;
@@ -7738,6 +7744,7 @@
 				EDDFE3BA2756ED7A00F57C71 /* DepositCalculatorViewControllerDataSource.swift in Sources */,
 				ED2BE17F26A0498400647CB1 /* AllCardListViewController.swift in Sources */,
 				774A8B372865FCDD00B81140 /* UserDocumentView.swift in Sources */,
+				0C5CE76228B2D2F200C30CD3 /* ProductsMoneySettings.swift in Sources */,
 				77F158232812CD7B00CA5E4E /* ForaApplication.swift in Sources */,
 				EDBEEA1D26B1AF2F00265683 /* FullBankInfoCell.swift in Sources */,
 				A578AA842795F70900F1867B /* MosParkingViewController.swift in Sources */,
@@ -8389,6 +8396,7 @@
 				503F074128252CBA00E84A77 /* DepositCalculatorViewModel.swift in Sources */,
 				50087821285348A90033DDD5 /* Collection+Safe.swift in Sources */,
 				ED5CB97028720EE9008D8A1E /* AccountCellFullButtonWithInfoViewComponent.swift in Sources */,
+				0C89318B28ABEDF200835694 /* CentralBankRatesData.swift in Sources */,
 				ED687C2D2768906800A38E87 /* DepositInfoViewController.swift in Sources */,
 				77EC58E3277217D20054D75C /* ServerAgent.swift in Sources */,
 				0B95C40C26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift in Sources */,

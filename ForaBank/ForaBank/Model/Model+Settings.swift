@@ -63,6 +63,19 @@ extension Model {
         }
     }
     
+    var settingsProductsMoney: ProductsMoneySettings {
+        
+        do {
+    
+            let settings: ProductsMoneySettings = try settingsAgent.load(type: .interface(.productsMoney))
+            return settings
+        
+        } catch {
+            
+            return ProductsMoneySettings(selectedCurrencyId: "RUB",
+                                         selectedCurrencySymbol: "\u{20BD}")
+        }
+    }
     
     func settingsMainSectionsUpdate(_ settings: MainSectionsSettings) {
         
@@ -82,6 +95,19 @@ extension Model {
         do {
             
             try settingsAgent.store(settings, type: .interface(.productsSections))
+            
+        } catch {
+            
+            //TODO: log
+            print(error.localizedDescription)
+        }
+    }
+    
+    func settingsProductsMoneyUpdate(_ settings: ProductsMoneySettings) {
+        
+        do {
+            
+            try settingsAgent.store(settings, type: .interface(.productsMoney))
             
         } catch {
             
