@@ -228,7 +228,7 @@ extension Model {
                 
                 do {
                     
-                    try localAgent.clear(type: ImageData.self)
+                    try localAgent.clear(type: ClientPhotoData.self)
                     
                 } catch {
                     
