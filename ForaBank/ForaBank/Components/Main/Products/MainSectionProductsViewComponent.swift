@@ -81,7 +81,8 @@ extension MainSectionProductsView {
                                 } else {
                                     
                                     // create new product view model
-                                    let productViewModel = ProductView.ViewModel(with: product, size: .normal, style: .main, model: model, action: { [weak self] in  self?.action.send(MainSectionViewModelAction.Products.ProductDidTapped(productId: product.id)) })
+                                    let productViewModel = ProductView.ViewModel(with: product, size: .normal, style: .main, model: model)
+                                    bind(productViewModel)
                                     productsViewModelsUpdated.append(productViewModel)
                                 }
                             }
@@ -207,6 +208,23 @@ extension MainSectionProductsView {
                  
                 }.store(in: &bindings)
             
+        }
+        
+        private func bind(_ product: ProductView.ViewModel) {
+            
+            product.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                    case _ as ProductViewModelAction.ProductDidTapped:
+                        self.action.send(MainSectionViewModelAction.Products.ProductDidTapped(productId: product.id))
+                        
+                    default:
+                        break
+                    }
+                    
+                }.store(in: &bindings)
         }
         
         private func bind(_ selector: OptionSelectorView.ViewModel?) {

@@ -23,10 +23,16 @@ extension ModelAction {
                 let cardNumber: String
             }
             
-            enum Response: Action {
+            struct Response: Action {
                 
-                case success
-                case failure(message: String)
+                let cardId: Int
+                let result: Result
+                
+                enum Result {
+                    
+                    case success
+                    case failure(message: String)
+                }
             }
         }
         
@@ -58,7 +64,6 @@ extension Model {
             return
         }
         let command = ServerCommands.CardController.UnblockCard(token: token, payload: .init(cardID: payload.cardId, cardNumber: payload.cardNumber))
-        
         serverAgent.executeCommand(command: command) { result in
             
             switch result {
@@ -69,18 +74,23 @@ extension Model {
                         self.handleServerCommandEmptyData(command: command)
                         return
                     }
-                    self.action.send(ModelAction.Card.Unblock.Response.success)
+                    self.action.send(ModelAction.Card.Unblock.Response(cardId: payload.cardId, result: .success))
                     
                 default:
-                    if let error = response.errorMessage {
+                    if let errorMessage = response.errorMessage {
                         
-                        self.action.send(ModelAction.Card.Unblock.Response.failure(message: error))
+                        self.action.send(ModelAction.Card.Unblock.Response(cardId: payload.cardId, result: .failure(message: errorMessage)))
+                        
+                    } else {
+                        
+                        self.action.send(ModelAction.Card.Unblock.Response(cardId: payload.cardId, result: .failure(message: self.defaultErrorMessage)))
                     }
+                    
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
             case .failure(let error):
+                self.action.send(ModelAction.Card.Unblock.Response(cardId: payload.cardId, result: .failure(message: self.defaultErrorMessage)))
                 self.handleServerCommandError(error: error, command: command)
-                
             }
         }
     }

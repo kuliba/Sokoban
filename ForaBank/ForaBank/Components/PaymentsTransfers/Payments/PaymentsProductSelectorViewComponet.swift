@@ -32,25 +32,15 @@ extension PaymentsProductSelectorView {
         
         init(_ model: Model) {
             
-            self.categories = .init(options: [.init(id: "0", name: "Карты"), .init(id: "1", name: "Счета"), .init(id: "2", name: "Вклады")], selected: "0", style: .productsSmall)
+            self.categories = nil
             self.productsFilterred = []
             self.products = []
-            
-            let classicSmall = ProductView.ViewModel(id: 2, header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardClassic, image: nil), size: .small), isUpdating: false,  productType: .card, action: {[weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: 2))})
-            
-            let classicSmall1 = ProductView.ViewModel(id: 3, header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil), size: .small), isUpdating: false,  productType: .card, action: {[weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: 2))})
-            
-            let classicSmall2 = ProductView.ViewModel(id: 4, header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardAccount, image: nil), size: .small), isUpdating: false,  productType: .card, action: {[weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: 2))})
-            
-            let classicSmall3 = ProductView.ViewModel(id: 5, header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardGold, image: nil), size: .small), isUpdating: false,  productType: .card, action: {[weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: 2))})
-            
-            self.productsFilterred = [classicSmall, classicSmall1, classicSmall2, classicSmall3]
-            
+
             bind()
             bindCategories()
         }
         
-        func bind() {
+        internal func bind() {
             
             $products
                 .receive(on: DispatchQueue.main)
@@ -66,6 +56,26 @@ extension PaymentsProductSelectorView {
                     }
                     
                 }.store(in: &bindings)
+        }
+        
+        internal func bind(_ products: [ProductView.ViewModel]) {
+            
+            for product in products {
+                
+                product.action
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] action in
+                        
+                        switch action {
+                        case _ as ProductViewModelAction.ProductDidTapped:
+                            self.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: product.id))
+                            
+                        default:
+                            break
+                        }
+                        
+                    }.store(in: &bindings)
+            }
         }
         
         func bindCategories() {

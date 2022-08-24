@@ -241,7 +241,7 @@ extension Model {
         return isSensorEnabled != nil
     }
     
-    var authDefaultErrorMessage: String { "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения." }
+  
         
     func authStoredPincode() throws -> String {
         
@@ -352,7 +352,7 @@ internal extension Model {
                                 //TODO: log error
                                 print("Model: handleAuthCheckClientRequest: decrypt phone error \(error.localizedDescription)")
                                 
-                                self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: self.authDefaultErrorMessage))
+                                self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: self.defaultErrorMessage))
                             }
                             
                         } else {
@@ -360,7 +360,7 @@ internal extension Model {
                             //TODO: log error
                             print("Model: handleAuthCheckClientRequest: empty data status \(response.statusCode), message: \(String(describing: response.errorMessage))")
                             
-                            let message = response.errorMessage ?? self.authDefaultErrorMessage
+                            let message = response.errorMessage ?? self.defaultErrorMessage
                             self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: message))
                         }
                         
@@ -368,7 +368,7 @@ internal extension Model {
                         //TODO: log error
                         print("Model: handleAuthCheckClientRequest: error \(error.localizedDescription)")
                         
-                        self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: self.authDefaultErrorMessage))
+                        self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: self.defaultErrorMessage))
                     }
                 }
 
@@ -377,7 +377,7 @@ internal extension Model {
                 //TODO: log error
                 print("Model: handleAuthCheckClientRequest: error: \(error.localizedDescription)")
                 
-                self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: self.authDefaultErrorMessage))
+                self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: self.defaultErrorMessage))
             }
         }
     }
@@ -415,7 +415,7 @@ internal extension Model {
                             //TODO: log error
                             print("Model: handleAuthVerificationCodeConfirmRequest: data status \(response.statusCode), message: \(String(describing: response.errorMessage))")
                             
-                            let message = response.errorMessage ?? self.authDefaultErrorMessage
+                            let message = response.errorMessage ?? self.defaultErrorMessage
                             self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.failure(message: message))
                         }
                         
@@ -424,7 +424,7 @@ internal extension Model {
                         //TODO: log error
                         print("Model: handleAuthVerificationCodeConfirmRequest: error \(error.localizedDescription)")
                         
-                        self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.failure(message: self.authDefaultErrorMessage))
+                        self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.failure(message: self.defaultErrorMessage))
                     }
                 }
                 
@@ -433,7 +433,7 @@ internal extension Model {
                 //TODO: log error
                 print("Model: handleAuthVerificationCodeConfirmRequest: error \(error.localizedDescription)")
                 
-                self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.failure(message: self.authDefaultErrorMessage))
+                self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.failure(message: self.defaultErrorMessage))
             }
         }
     }
@@ -463,7 +463,7 @@ internal extension Model {
                             //TODO: log error
                             print("Model: handleAuthVerificationCodeResendRequest: data status \(response.statusCode), message: \(String(describing: response.errorMessage))")
                             
-                            let message = response.errorMessage ?? self.authDefaultErrorMessage
+                            let message = response.errorMessage ?? self.defaultErrorMessage
                             self.action.send(ModelAction.Auth.VerificationCode.Resend.Response.failure(message: message))
                         }
                         
@@ -472,7 +472,7 @@ internal extension Model {
                         //TODO: log error
                         print("Model: handleAuthVerificationCodeResendRequest: error \(error.localizedDescription)")
                         
-                        self.action.send(ModelAction.Auth.VerificationCode.Resend.Response.failure(message: self.authDefaultErrorMessage))
+                        self.action.send(ModelAction.Auth.VerificationCode.Resend.Response.failure(message: self.defaultErrorMessage))
                     }
                 }
                 
@@ -481,7 +481,7 @@ internal extension Model {
                 //TODO: log error
                 print("Model: handleAuthVerificationCodeResendRequest: error \(error.localizedDescription)")
                 
-                self.action.send(ModelAction.Auth.VerificationCode.Resend.Response.failure(message: self.authDefaultErrorMessage))
+                self.action.send(ModelAction.Auth.VerificationCode.Resend.Response.failure(message: self.defaultErrorMessage))
             }
         }
     }
@@ -531,7 +531,7 @@ internal extension Model {
                                     //TODO: log error
                                     print("Model: handleAuthRegisterRequest: decrypt phone error \(error.localizedDescription)")
                                     
-                                    self.action.send(ModelAction.Auth.Register.Response.failure(message: self.authDefaultErrorMessage))
+                                    self.action.send(ModelAction.Auth.Register.Response.failure(message: self.defaultErrorMessage))
                                 }
                                 
                             } else {
@@ -539,7 +539,7 @@ internal extension Model {
                                 //TODO: log error
                                 print("Model: handleAuthRegisterRequest: empty data status \(response.statusCode), message: \(String(describing: response.errorMessage))")
                                 
-                                let message = response.errorMessage ?? self.authDefaultErrorMessage
+                                let message = response.errorMessage ?? self.defaultErrorMessage
                                 self.action.send(ModelAction.Auth.Register.Response.failure(message: message))
                             }
                             
@@ -548,7 +548,7 @@ internal extension Model {
                             //TODO: log error
                             print("Model: handleAuthRegisterRequest: data status \(response.statusCode), message: \(String(describing: response.errorMessage))")
                             
-                            let message = response.errorMessage ?? self.authDefaultErrorMessage
+                            let message = response.errorMessage ?? self.defaultErrorMessage
                             self.action.send(ModelAction.Auth.Register.Response.failure(message: message))
                         }
                         
@@ -557,7 +557,7 @@ internal extension Model {
                         //TODO: log error
                         print("Model: handleAuthRegisterRequest: error \(error.localizedDescription)")
                         
-                        self.action.send(ModelAction.Auth.Register.Response.failure(message: self.authDefaultErrorMessage))
+                        self.action.send(ModelAction.Auth.Register.Response.failure(message: self.defaultErrorMessage))
                     }
                 }
                 
@@ -566,7 +566,7 @@ internal extension Model {
                 //TODO: log error
                 print("Model: handleAuthRegisterRequest: error \(error.localizedDescription)")
                 
-                self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.failure(message: self.authDefaultErrorMessage))
+                self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.failure(message: self.defaultErrorMessage))
             }
         }
     }
@@ -765,7 +765,7 @@ internal extension Model {
                             //TODO: log error
                             print("Model: handleAuthLoginRequest: data status \(response.statusCode), message: \(String(describing: response.errorMessage))")
                             
-                            let message = response.errorMessage ?? self.authDefaultErrorMessage
+                            let message = response.errorMessage ?? self.defaultErrorMessage
                             self.action.send(ModelAction.Auth.Login.Response.failure(message: message))
                         }
                         
@@ -774,7 +774,7 @@ internal extension Model {
                         //TODO: log error
                         print("Model: handleAuthLoginRequest: error \(error.localizedDescription)")
                         
-                        self.action.send(ModelAction.Auth.Login.Response.failure(message: self.authDefaultErrorMessage))
+                        self.action.send(ModelAction.Auth.Login.Response.failure(message: self.defaultErrorMessage))
                     }
                 }
                 
@@ -783,7 +783,7 @@ internal extension Model {
                 //TODO: log error
                 print("Model: handleAuthRegisterRequest: error \(error.localizedDescription)")
                 
-                self.action.send(ModelAction.Auth.Login.Response.failure(message: self.authDefaultErrorMessage))
+                self.action.send(ModelAction.Auth.Login.Response.failure(message: self.defaultErrorMessage))
             }
         }
     }
