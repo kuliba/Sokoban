@@ -139,7 +139,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         ob?.cardFrom = footerView.cardFromField.model
        
         if let paymentOperationDetailId = response?.data?.paymentOperationDetailID , let name = operatorData?.name {
-            if ob?.template == nil {
+            if ( ob?.template == nil && self.template == nil )  {
                 ob?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
             } else {
                 ob?.templateButtonViewModel = .template(paymentOperationDetailId)
