@@ -23,6 +23,7 @@ extension TextFieldFormatableView {
         
         let type: Kind
         let toolbar: ToolbarViewModel?
+        var becomeFirstResponder: () -> Void
         var dismissKeyboard: () -> Void
         
         var bindings = Set<AnyCancellable>()
@@ -51,6 +52,7 @@ extension TextFieldFormatableView {
             self.isEditing = isEditing
             self.limit = limit
             self.toolbar = toolbar
+            self.becomeFirstResponder = {}
             self.dismissKeyboard = {}
         }
     }
@@ -107,6 +109,7 @@ struct TextFieldFormatableView: UIViewRepresentable {
         textField.tintColor = tintColor.uiColor()
         textField.keyboardType = keyboardType
         
+        viewModel.becomeFirstResponder = { textField.becomeFirstResponder() }
         viewModel.dismissKeyboard = { textField.resignFirstResponder() }
         
         if viewModel.toolbar != nil {

@@ -130,10 +130,14 @@ class CurrencyWalletViewModel: ObservableObject {
                 case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Start.Response:
                     
                     handleExchangeStartResponse(payload)
+                    
                     swapViewModel.swapButton.isUserInteractionEnabled = true
+                    listViewModel.isUserInteractionEnabled = true
                     
                 case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Approve.Response:
+                    
                     handleExchangeApproveResponse(payload)
+                    listViewModel.isUserInteractionEnabled = true
                     
                 case let payload as ModelAction.Payment.OperationDetailByPaymentId.Response:
                     handleOperationDetailResponse(payload)
@@ -165,7 +169,11 @@ class CurrencyWalletViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] productTypes in
                 
-                let containsTypes = productTypes.contains(where: { $0 == .card || $0 == .account})
+                guard selectorState == .productSelector else {
+                    return
+                }
+                
+                let containsTypes = productTypes.contains(where: { $0 == .card || $0 == .account })
                 
                 if containsTypes == false {
                     buttonStyle = .red
@@ -184,9 +192,11 @@ class CurrencyWalletViewModel: ObservableObject {
                     selectorViewModel.currency = currency
                 }
                 
+                setCurrencyItem()
                 setCurrencySymbol(currency)
+                resetCurrencySwapIfNeeds()
                 resetToInitial(animation: nil)
-                
+                  
             }.store(in: &bindings)
         
         $buttonStyle
@@ -196,7 +206,7 @@ class CurrencyWalletViewModel: ObservableObject {
                 continueButton.style = buttonStyle
                 
             }.store(in: &bindings)
-        
+                
         swapViewModel.$currencyOperation
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] currencyOperation in
@@ -228,7 +238,6 @@ class CurrencyWalletViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] isEnabled in
                 
-                listViewModel.isUserInteractionEnabled = isEnabled
                 swapViewModel.isUserInteractionEnabled = isEnabled
                 selectorViewModel?.isUserInteractionEnabled = isEnabled
                 
@@ -279,33 +288,10 @@ class CurrencyWalletViewModel: ObservableObject {
         let productsData = model.products(products: products, currency: currency, currencyOperation: currencyOperation)
         
         if productsData.isEmpty == false {
+            
+            selectorState = .productSelector
             buttonStyle = .red
         }
-    }
-    
-    private func resetToInitial(animation: Animation?) {
-        
-        withAnimation(animation) {
-        
-            items = items.compactMap { currencyItem in
-                
-                if currencyItem is CurrencyListView.ViewModel ||
-                    currencyItem is CurrencySwapView.ViewModel {
-                    
-                    return currencyItem
-                }
-                
-                return nil
-            }
-        }
-
-        selectorViewModel = nil
-        confirmationViewModel = nil
-        successViewModel = nil
-        
-        continueButton = makeContinueButton()
-        
-        isUserInteractionEnabled = true
     }
     
     private func makeSelectorViewModel() -> CurrencySelectorView.ViewModel {
@@ -349,9 +335,10 @@ class CurrencyWalletViewModel: ObservableObject {
     
     private func makeConfirmationViewModel(data: CurrencyExchangeConfirmationData) {
         
-        if confirmationViewModel == nil {
+        if confirmationViewModel == nil, let responseCurrencyRate = data.currencyRate {
             
-            confirmationViewModel = .init(response: data, model: model)
+            let isCourseChange = checkCourseChange(responseCurrencyRate)
+            confirmationViewModel = .init(response: data, isCourseChange: isCourseChange ,model: model)
             
             if let confirmationViewModel = confirmationViewModel {
                 
@@ -359,6 +346,19 @@ class CurrencyWalletViewModel: ObservableObject {
                     self.items.append(confirmationViewModel)
                 }
             }
+        }
+    }
+    
+    private func checkCourseChange(_ responseCurrencyRate: Double) -> Bool {
+        
+        let currencyRate = currencyOperation == .buy ? currencyItem.rateBuy : currencyItem.rateSell
+        let formattedCurrencyRate = NumberFormatter.decimal(currencyRate)
+        
+        if let formattedCurrencyRate = formattedCurrencyRate,
+           formattedCurrencyRate.round() == responseCurrencyRate.round() {
+            return false
+        } else {
+            return true
         }
     }
     
@@ -390,6 +390,17 @@ class CurrencyWalletViewModel: ObservableObject {
                 }
             }
         }
+    }
+    
+    private func setCurrencyItem() {
+        
+        let currencyItem = listViewModel.items.first(where: { $0.currency == currency })
+        
+        guard let currencyItem = currencyItem else {
+            return
+        }
+        
+        self.currencyItem = currencyItem
     }
     
     private func setCurrencySymbol(_ currency: Currency) {
@@ -436,6 +447,8 @@ class CurrencyWalletViewModel: ObservableObject {
         guard isAmountMore == false else {
             return
         }
+        
+        listViewModel.isUserInteractionEnabled = false
         
         if let selectorViewModel = selectorViewModel,
            let productCardSelector = selectorViewModel.productCardSelector,
@@ -500,6 +513,8 @@ class CurrencyWalletViewModel: ObservableObject {
     }
     
     private func sendExchangeApproveRequest() {
+        
+        listViewModel.isUserInteractionEnabled = false
         model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve.Request())
     }
     
@@ -667,7 +682,57 @@ class CurrencyWalletViewModel: ObservableObject {
         }
     }
     
-    func resetCurrencySwap() {
+    private func resetToInitial(animation: Animation?) {
+        
+        withAnimation(animation) {
+        
+            items = items.compactMap { currencyItem in
+                
+                if currencyItem is CurrencyListView.ViewModel ||
+                    currencyItem is CurrencySwapView.ViewModel {
+                    
+                    return currencyItem
+                }
+                
+                return nil
+            }
+        }
+
+        selectorViewModel = nil
+        confirmationViewModel = nil
+        successViewModel = nil
+        
+        continueButton = makeContinueButton()
+        isUserInteractionEnabled = true
+    }
+    
+    private func resetCurrencySwapIfNeeds() {
+        
+        let isContainsCurrencyItems = items.contains { $0 is CurrencyExchangeConfirmationView.ViewModel || $0 is CurrencyExchangeSuccessView.ViewModel
+        }
+        
+        guard isContainsCurrencyItems == true else {
+            return
+        }
+        
+        let currencySwap = swapViewModel.currencySwap
+        let сurrencyCurrentSwap = swapViewModel.сurrencyCurrentSwap
+        
+        let currencyRate = currencyOperation == .buy ? currencyItem.rateBuy : currencyItem.rateSell
+        let currencyCurrentAmount = NumberFormatter.decimal(currencyRate)
+        
+        guard let currencyCurrentAmount = currencyCurrentAmount else {
+            return
+        }
+        
+        currencySwap.currencyAmount = 1.0
+        currencySwap.lastCurrencyAmount = 0
+        
+        сurrencyCurrentSwap.currencyAmount = currencyCurrentAmount
+        сurrencyCurrentSwap.lastCurrencyAmount = 0
+    }
+    
+    func updateCurrencySwap() {
         
         let currencySwap = swapViewModel.currencySwap
         let сurrencyCurrentSwap = swapViewModel.сurrencyCurrentSwap
