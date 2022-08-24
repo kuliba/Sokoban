@@ -43,7 +43,6 @@ extension UserAccountSecurityView {
                     .receive(on: DispatchQueue.main)
                     .sink { [unowned self] isActive in
                         action.send(UserAccountViewModelAction.Switch(type: item.type, value: isActive))
-                        
                     }.store(in: &bindings)
                 
             }

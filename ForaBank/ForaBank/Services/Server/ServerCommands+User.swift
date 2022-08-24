@@ -93,6 +93,13 @@ extension ServerCommands {
                 self.token = token
                 self.payload = payload
             }
+            
+            init<UserSetting: UserSettingProtocol>(token: String, userSetting: UserSetting) {
+                
+                self.token = token
+                let userSettingData = userSetting.userSettingData
+                self.payload = .init(settingName: userSettingData.name, settingSysName: userSettingData.sysName, settingValue: userSettingData.value)
+            }
         }
     }
 }
