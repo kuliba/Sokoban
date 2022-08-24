@@ -48,7 +48,7 @@ extension ProductProfileCardView {
             var productsViewModels = [ProductView.ViewModel]()
             for product in productsForType {
                 
-                let productViewModel = ProductView.ViewModel(with: product, size: .large, style: .profile, model: model, action: {})
+                let productViewModel = ProductView.ViewModel(with: product, size: .large, style: .profile, model: model)
                 productsViewModels.append(productViewModel)
             }
             
@@ -69,6 +69,11 @@ extension ProductProfileCardView {
             
             bind()
             bind(selector)
+            
+            for product in products {
+                
+                bind(product)
+            }
         }
         
         private func bind() {
@@ -86,14 +91,12 @@ extension ProductProfileCardView {
                             if let productViewModel = self.products.first(where: { $0.id == product.id }) {
                                 
                                 productViewModel.update(with: product, model: model)
-                                //TODO: - action
-                                productViewModel.action = {}
                                 updatedProducts.append(productViewModel)
                                 
                             } else {
                                 
-                                //TODO: - action
-                                let productViewModel = ProductView.ViewModel(with: product, size: .large, style: .profile, model: model, action: {})
+                                let productViewModel = ProductView.ViewModel(with: product, size: .large, style: .profile, model: model)
+                                bind(productViewModel)
                                 updatedProducts.append(productViewModel)
                             }
                         }
@@ -116,7 +119,6 @@ extension ProductProfileCardView {
                         
                         // nothing to display
                         //TODO: dismiss action
-                        
                     }
        
                 }.store(in: &bindings)
@@ -157,6 +159,31 @@ extension ProductProfileCardView {
                     
                 }.store(in: &bindings)
             
+            model.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                    case let payload as ModelAction.Card.Unblock.Response:
+                        
+                        let productViewModel = products.first(where: { $0.id == payload.cardId})
+                        
+                        switch payload.result {
+                        case .success:
+                            productViewModel?.action.send(ProductViewModelAction.CardActivation.Complete())
+                            model.action.send(ModelAction.Products.Update.ForProductType(productType: .card))
+                            
+                        case .failure(message: let message):
+                            productViewModel?.action.send(ProductViewModelAction.CardActivation.Failed())
+                            self.action.send(ProductProfileCardViewModelAction.ShowAlert(title: "Ошибка", message: message))
+                        }
+                        
+                    default:
+                        break
+                    }
+                    
+                }.store(in: &bindings)
+            
             $activeProductId
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] active in
@@ -168,6 +195,32 @@ extension ProductProfileCardView {
                     
                 }.store(in: &bindings)
             
+        }
+        
+        private func bind(_ product: ProductView.ViewModel) {
+            
+            product.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                    case _ as ProductViewModelAction.CardActivation.Started:
+                        
+                        let products = model.products.value.values.flatMap({$0})
+                        
+                        guard let productData = products.first(where: { $0.id == product.id}),
+                              let cardProduct = productData as? ProductCardData,
+                              let cardNumber = cardProduct.number else {
+                            
+                            return
+                        }
+                        model.action.send(ModelAction.Card.Unblock.Request(cardId: cardProduct.id, cardNumber: cardNumber))
+                        
+                    default:
+                        break
+                    }
+                    
+                }.store(in: &bindings)
         }
         
         func bind(_ selector: SelectorViewModel?) {
@@ -202,6 +255,12 @@ extension ProductProfileCardView {
 enum ProductProfileCardViewModelAction {
 
     struct MoreButtonTapped: Action {}
+    
+    struct ShowAlert: Action {
+        
+        let title: String
+        let message: String
+    }
 }
 
 extension ProductProfileCardView.ViewModel {
@@ -365,7 +424,7 @@ extension ProductProfileCardView {
                             .scrollId(thumbnail.id)
                     }
                     
-                    MoreButtonView(viewModel: viewModel.moreButton)
+                    ProductProfileCardView.MoreButtonView(viewModel: viewModel.moreButton)
                 }
                 .padding(.horizontal, UIScreen.main.bounds.size.width / 2 - 48 + 48 / 2)
                 .onReceive(viewModel.$selected) { selected in

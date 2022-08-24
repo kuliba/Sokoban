@@ -66,9 +66,8 @@ extension ProductsListView {
                         
                         if let productType = ProductType(rawValue: selected) {
                             
-                            products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType) {
-                                self.action.send(ProductSelectorView.ProductAction.Selected(productId: $0))
-                            }
+                            products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType)
+                            bind(products)
                             
                             if products.isEmpty == true {
                                 
@@ -79,9 +78,8 @@ extension ProductsListView {
                             
                         } else {
                             
-                            products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation) {
-                                self.action.send(ProductSelectorView.ProductAction.Selected(productId: $0))
-                            }
+                            products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation)
+                            bind(products)
                         }
                         
                     }.store(in: &bindings)
@@ -92,8 +90,27 @@ extension ProductsListView {
                     .receive(on: DispatchQueue.main)
                     .sink { [unowned self] currency in
                         
-                        products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation) {
-                            self.action.send(ProductSelectorView.ProductAction.Selected(productId: $0))
+                        products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation)
+                        bind(products)
+                        
+                    }.store(in: &bindings)
+            }
+        }
+        
+        func bind(_ products: [ProductView.ViewModel]) {
+            
+            for product in products {
+                
+                product.action
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] action in
+                        
+                        switch action {
+                        case _ as ProductViewModelAction.ProductDidTapped:
+                            self.action.send(ProductSelectorView.ProductAction.Selected(productId: product.id))
+                            
+                        default:
+                            break
                         }
                         
                     }.store(in: &bindings)
@@ -120,9 +137,8 @@ extension ProductsListView {
                             
                             if let productType = ProductType(rawValue: selected) {
                                 
-                                self.products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType) {
-                                    self.action.send(ProductSelectorView.ProductAction.Selected(productId: $0))
-                                }
+                                self.products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType)
+                                bind(self.products)
                                 
                                 if products.isEmpty == true {
                                     
@@ -133,9 +149,8 @@ extension ProductsListView {
                                 
                             } else {
                                 
-                                self.products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation) {
-                                    self.action.send(ProductSelectorView.ProductAction.Selected(productId: $0))
-                                }
+                                self.products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation)
+                                bind(self.products)
                             }
                             
                         }.store(in: &bindings)
@@ -184,28 +199,20 @@ extension ProductsListView.ViewModel {
         return options
     }
     
-    static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType, action: @escaping (ProductData.ID) -> Void) -> [ProductView.ViewModel] {
+    static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType) -> [ProductView.ViewModel] {
         
         let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
         
-        let products = filterredProducts.map { productData in
-            ProductView.ViewModel(with: productData, size: .small, style: .main, model: model) {
-                action(productData.id)
-            }
-        }
+        let products = filterredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model) }
         
         return products
     }
     
-    static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, action: @escaping (ProductData.ID) -> Void) -> [ProductView.ViewModel] {
+    static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation) -> [ProductView.ViewModel] {
         
         let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
         
-        let products = filterredProducts.map { productData in
-            ProductView.ViewModel(with: productData, size: .small, style: .main, model: model) {
-                action(productData.id)
-            }
-        }
+        let products = filterredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model) }
         
         return products
     }

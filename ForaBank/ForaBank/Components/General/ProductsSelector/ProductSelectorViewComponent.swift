@@ -174,6 +174,26 @@ extension ProductSelectorView {
                 }.store(in: &bindings)
         }
         
+        private func bind(_ products: [ProductView.ViewModel]) {
+            
+            for product in products {
+                
+                product.action
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] action in
+                        
+                        switch action {
+                        case _ as ProductViewModelAction.ProductDidTapped:
+                            self.action.send(ProductSelectorView.ProductAction.Selected(productId: product.id))
+                            
+                        default:
+                            break
+                        }
+                        
+                    }.store(in: &bindings)
+            }
+        }
+        
         private func bindList() {
             
             if let listViewModel = listViewModel {
@@ -203,24 +223,19 @@ extension ProductSelectorView {
                 return nil
             }
             
-            let products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productData.productType) {
-                self.action.send(ProductSelectorView.ProductAction.Selected(productId: $0))
-            }
+            let products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productData.productType)
+            bind(products)
             
             let listViewModel: ProductsListView.ViewModel = .init(model, currencyOperation: currencyOperation, currency: currency, productType: productData.productType, products: products)
             
             return listViewModel
         }
         
-        static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType, action: @escaping (ProductData.ID) -> Void) -> [ProductView.ViewModel] {
+        static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType) -> [ProductView.ViewModel] {
             
             let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType)
             
-            let products = filterredProducts.map { productData in
-                ProductView.ViewModel(with: productData, size: .small, style: .main, model: model) {
-                    action(productData.id)
-                }
-            }
+            let products = filterredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model)}
             
             return products
         }
