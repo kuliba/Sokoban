@@ -65,34 +65,39 @@ extension Model {
     
     func handledUnauthorizedCommandAttempt(_ method: String = #function) {
         
-        print("log: Unauthorized Request Attempt, method: \(method)")
+        LoggerAgent.shared.log(level: .error, category: .model, message: "Unauthorized Request Attempt, method: \(method)")
     }
     
     func handleServerCommandStatus<Command: ServerCommand>(command: Command, serverStatusCode: ServerStatusCode, errorMessage: String?) {
         
-        //TODO: handle unexpected server status
-        print("log: Unexpected status code: \(serverStatusCode), errorMessage: \(String(describing: errorMessage)), endpoint: \(command.endpoint)")
+        if let errorMessage = errorMessage {
+            
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Server Command Status for command: \(command) with status code: \(serverStatusCode) errorMessage: \(errorMessage)")
+        } else {
+            
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Server Command Status for command: \(command) with status code: \(serverStatusCode)")
+
+        }
     }
 
     func handleServerCommandError<Command: ServerCommand>(error: Error, command: Command) {
         
-        print("log: DownloadError: \(error.localizedDescription), command: \(command)")
-        
+        LoggerAgent.shared.log(level: .error, category: .model, message: "Server Command Error for command: \(command) with error: \(error)")
     }
     
     func handleServerCommandCachingError<Command: ServerCommand>(error: Error, command: Command) {
         
-        print("CachingError: \(error.localizedDescription), command: \(command)")
+        LoggerAgent.shared.log(level: .error, category: .model, message: "Server command: \(command) caching error: \(error.localizedDescription)")
     }
     
-    func handleServerCommandEmptyData<Command: ServerCommand>(command: Command){
-        
-        print("log: DownloadEmptyData command: \(command)")
+    func handleServerCommandEmptyData<Command: ServerCommand>(command: Command) {
+            
+        LoggerAgent.shared.log(level: .error, category: .model, message: "Server Command return Empty Data for command \(command)")
     }
 
-    func handleSettingsCachingError(error: Error) {
+    func handleSettingsCachingError(error: Error, method: String = #function) {
 
-        print("CachingError: \(error.localizedDescription)")
+        LoggerAgent.shared.log(level: .error, category: .model, message: "Settings Caching Error: \(error.localizedDescription), on method: \(method)")
     }
 }
 

@@ -56,11 +56,10 @@ class NetworkManagerExt<T: NetworkModelProtocol> {
         
         debuggedApi.forEach { filter in
             if (request.url?.absoluteString ?? "").contains(filter) {
-                print("NET5555", request.url?.absoluteString ?? "")
+
             }
         }
         
-        print("DEBUG: urlParametrs count",urlParametrs.count)
         if request.httpMethod != "GET" {
             /// URL Parameters
             if var urlComponents = URLComponents(url: request.url!,
@@ -74,7 +73,6 @@ class NetworkManagerExt<T: NetworkModelProtocol> {
                     urlComponents.queryItems?.append(queryItem)
                 })
                 
-                print("DEBUG: URLrequest:", urlComponents.query ?? "")
                 request.url = urlComponents.url
             }
             request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
@@ -90,7 +88,7 @@ class NetworkManagerExt<T: NetworkModelProtocol> {
                 debuggedApi.forEach { filter in
                     if (request.url?.absoluteString ?? "").contains(filter) {
                         if let data = request.httpBody, let str = String(data: data, encoding: .utf8) {
-                            print("NET5555 Request \(str)")
+
                         }
                     }
                 }
@@ -100,7 +98,6 @@ class NetworkManagerExt<T: NetworkModelProtocol> {
                     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 }
             } catch {
-                debugPrint(NetworkErrorExt.encodingFailed)
             }
             
         }
@@ -116,8 +113,7 @@ class NetworkManagerExt<T: NetworkModelProtocol> {
                                                  value: "\(value)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
                     urlComponents.queryItems?.append(queryItem)
                 })
-                
-                print("DEBUG: URLrequest:", urlComponents.url ?? "")
+
                 request.url = urlComponents.url
             }
         }
@@ -140,10 +136,9 @@ class NetworkManagerExt<T: NetworkModelProtocol> {
                             if (request.url?.absoluteString ?? "").contains(filter) {
                                 do {
                                     if let dataUnw = data, let str = String(data: dataUnw, encoding: .utf8) {
-                                        print("NET5555 Answer \(response.url?.absoluteString ?? "") ", str)
+                                        
                                     }
                                 } catch {
-                                    //debugPrint(NetworkError.encodingFailed)
                                 }
                             }
                         }
@@ -151,7 +146,6 @@ class NetworkManagerExt<T: NetworkModelProtocol> {
                             let returnValue = try T (data: data!)
                             completion(returnValue, nil)
                         } catch {
-                            print(error)
                             completion(nil, NetworkResponseExt.unableToDecode.rawValue)
                         }
                     case .failure(let networkFailureError):

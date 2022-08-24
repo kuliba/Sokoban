@@ -14,7 +14,7 @@ extension PaymentsViewController: UISearchBarDelegate {
     }
     
     func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {
-        print(#function)
+        
         
     }
 }

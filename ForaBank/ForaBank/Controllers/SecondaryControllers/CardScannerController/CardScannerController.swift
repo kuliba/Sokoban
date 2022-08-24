@@ -264,7 +264,6 @@ public class CardScannerController: UIViewController {
         let arrayLines = texts.flatMap({ $0.topCandidates(20).map({ $0.string }) })
 
         for line in arrayLines {
-//            print("Trying to parse: \(line)")
 
             let trimmed = line.replacingOccurrences(of: " ", with: "")
 
@@ -293,7 +292,6 @@ public class CardScannerController: UIViewController {
 extension CardScannerController: AVCaptureVideoDataOutputSampleBufferDelegate {
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let frame = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-            debugPrint("unable to get image from sample buffer")
             return
         }
 

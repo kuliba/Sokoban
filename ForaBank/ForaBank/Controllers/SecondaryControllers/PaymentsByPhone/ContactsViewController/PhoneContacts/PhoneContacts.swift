@@ -16,7 +16,7 @@ class PhoneContacts {
         do {
             allContainers = try contactStore.containers(matching: nil)
         } catch {
-            print("Error fetching containers")
+            
         }
 
         var results: [CNContact] = []
@@ -28,7 +28,7 @@ class PhoneContacts {
                 let containerResults = try contactStore.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch as! [CNKeyDescriptor])
                 results.append(contentsOf: containerResults)
             } catch {
-                print("Error fetching containers")
+                
             }
         }
         return results

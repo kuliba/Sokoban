@@ -51,7 +51,7 @@ class AllCardCell: UICollectionViewCell, SelfConfiguringCell {
     //MARK: - Selectors
     
     @objc func hendleShareTapped() {
-        print(#function)
+        
     }
     
     //MARK: - Helpers

@@ -80,9 +80,7 @@ class OfferCollectionViewCell: UICollectionViewCell, SelfConfiguringCell {
     
     //MARK: - Selectors
     
-    @objc func hendleShareTapped() {
-        print(#function)
-    }
+    @objc func hendleShareTapped() {}
     
     //MARK: - Helpers
     func configure() {

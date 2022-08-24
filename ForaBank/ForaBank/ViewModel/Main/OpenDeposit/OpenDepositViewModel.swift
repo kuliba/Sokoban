@@ -104,8 +104,7 @@ class OpenDepositViewModel: ObservableObject {
                     case .success(let data):
                         
                         guard let image = Image(data: data) else {
-                            //TODO: log
-                            print("AuthProductsViewModel: unable create product image from data for endpoint: \(payload.endpoint)")
+                            //TODO: set logger
                             return
                         }
                         
@@ -128,8 +127,8 @@ class OpenDepositViewModel: ObservableObject {
                         }
                         
                     case .failure(let error):
-                        //TODO: log
-                        print("AuthProductsViewModel: product image download failed for endpoint: \(payload.endpoint) with error: \(error.localizedDescription)")
+                        //TODO: set logger
+                        break
                     }
                 default:
                     break

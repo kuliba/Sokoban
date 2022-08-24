@@ -126,7 +126,6 @@ extension PlacesMapView {
         func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
             
             viewModel.currentRegion = mapView.region
-            print("ATM: region: \(mapView.region)")
         }
         
         func deselectAnnotations() {

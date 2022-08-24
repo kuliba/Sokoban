@@ -83,7 +83,6 @@ extension GKHMainViewController {
                 }
             } else {
                 guard self.alertController == nil else {
-                        print("There is already an alert presented")
                         return
                     }
                 self.alertController = UIAlertController(title: "Внимание", message: "Для сканирования QR кода, необходим доступ к камере", preferredStyle: .alert)

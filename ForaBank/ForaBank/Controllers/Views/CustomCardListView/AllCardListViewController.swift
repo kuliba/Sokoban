@@ -149,18 +149,15 @@ class AllCardListViewController: UITableViewController {
         NetworkManager<GetProductTemplateListDecodableModel>.addRequest(.getProductTemplateList, [:], [:]) { model, error in
             if error != nil {
                 guard let error = error else { return }
-                print("DEBUG: ", #function, error)
 //                completion(nil, error)
             } else {
                 guard let model = model else { return }
                 guard let statusCode = model.statusCode else { return }
                 if statusCode == 0 {
                     guard let tempList = model.data else { return }
-                    print("DEBUG: template List:", tempList)
                     self.saveCardModel = tempList
                 } else {
                     let error = model.errorMessage ?? "nil"
-                    print("DEBUG: ", #function, error)
 //                    completion(nil, error)
                 }
             }

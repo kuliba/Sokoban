@@ -172,8 +172,6 @@
                     if intValue < minSumm ||
                         intValue > maxSumm {
                         
-                        print("TODO: - Validate summ")
-                        
                     }
                 }
             }
@@ -413,16 +411,13 @@
             NetworkManager<OpenDepositDecodableModel>.addRequest(.openDeposit, [:], [:]) { respons, error in
                 self.dismissActivity()
                 if error != nil {
-                    print("DEBUG: Error openDeposit:", error ?? "")
                     self.showAlert(with: "Ошибка", and: error ?? "")
                 }
                 guard let model = respons else { return }
                 if model.statusCode == 0 {
-                    print("DEBUG: Success openDeposit")
                     self.showSmsCode = true
                     self.hideView(self.smsCodeField, needHide: false)
                 } else {
-                    print("DEBUG: Error openDeposit:", model.errorMessage ?? "")
                     self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                 }
             }
@@ -454,20 +449,17 @@
             } else if card.productType == "ACCOUNT" {
                 body["sourceAccountId"] = card.id as AnyObject
             }
-            print(body)
             showActivity()
             
             NetworkManager<MakeDepositDecodableModel>.addRequest(.makeDepositPayment, [:], body) { respons, error in
                 DispatchQueue.main.async {
                     self.dismissActivity()
                     if error != nil {
-                        print("DEBUG: Error: ", error ?? "")
                         self.showAlert(with: "Ошибка", and: error ?? "")
                     }
                     guard let model = respons else { return }
                     
                     if model.statusCode == 0 {
-                        print("DEBUG: Success payment")
                         
                         let confurmVCModel = ConfirmViewControllerModel(type: .openDeposit)
                         confurmVCModel.cardFromRealm = self.cardFromField.model
@@ -488,7 +480,6 @@
                         
                         self.present(vc, animated: true, completion: nil)
                     } else {
-                        print("DEBUG: Error: ", model.errorMessage ?? "")
                         self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                     }
                 }

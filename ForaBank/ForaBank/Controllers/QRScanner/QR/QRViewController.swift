@@ -93,7 +93,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
                 device?.torchMode = device?.torchMode == AVCaptureDevice.TorchMode.on ? .off : .on
                 device?.unlockForConfiguration()
             } catch {
-                print(error.localizedDescription)
+
             }
         }
     }
@@ -111,7 +111,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
                 documentPickerController.delegate = self
                 self?.present(documentPickerController, animated: true, completion: nil)
             default:
-                print()
+                break
             }
 
 

@@ -891,7 +891,6 @@ extension Model {
                     
                 } catch {
                     
-                    print("Model: handleLoansUpdateSingleRequest: caching LoansData error: \(error)")
                 }
 
             } catch {

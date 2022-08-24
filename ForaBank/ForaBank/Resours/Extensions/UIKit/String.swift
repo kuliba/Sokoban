@@ -7,7 +7,6 @@ extension String {
     /// конвертирует имя контролева из String значения в UIViewController
     func getViewController() -> UIViewController? {
         if let appName = Bundle.main.infoDictionary?["CFBundleName"] as? String {
-            print("CFBundleName - \(appName)")
             if let viewControllerType = NSClassFromString("\(appName).\(self)") as? UIViewController.Type {
                 return viewControllerType.init()
             }
@@ -41,7 +40,7 @@ extension String {
                         let str = String(unicode)
                         resultString.append(str)
                     } else {
-                        print("invalid input")
+
                     }
                 }
             }

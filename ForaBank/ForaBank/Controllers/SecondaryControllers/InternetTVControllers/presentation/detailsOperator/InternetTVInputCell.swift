@@ -69,7 +69,6 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
             placeholderLable.text = item.title
         }
         additionalList.forEach { model in
-            print("setupUI5555__ \(model.fieldName ?? "") \(model.fieldValue ?? "")")
         }
         
         if let textSubTitle = item.subTitle, !textSubTitle.isEmpty {

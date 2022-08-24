@@ -332,7 +332,6 @@ extension CustomPopUpWithRateView {
             }
             
             cardFromListView.lastItemTap = {
-                print("Открывать все карты ")
                 let vc = AllCardListViewController()
                 vc.withTemplate = false
                 if self.onlyMy {
@@ -393,7 +392,6 @@ extension CustomPopUpWithRateView {
         }
         
         cardToListView.lastItemTap = {
-            print("Открывать все карты ")
             let vc = AllCardListViewController()
             if self.onlyMy {
                 vc.onlyCard = false

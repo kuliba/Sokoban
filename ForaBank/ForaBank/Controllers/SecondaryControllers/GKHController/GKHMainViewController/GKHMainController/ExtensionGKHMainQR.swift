@@ -30,14 +30,12 @@ extension GKHMainViewController: QRProtocol {
         NetworkManager<IsSingleServiceDecodableModel>.addRequest(.isSingleService, [:], body) { model, error in
             
             if error != nil {
-                print(#function, "Error")
             }
             guard let model = model else { return }
             if model.statusCode == 0 {
                 guard let data = model.data else { return }
                 complition(data)
             } else {
-                print(#function, model.errorMessage ?? "")
                 complition(true)
             }
         }

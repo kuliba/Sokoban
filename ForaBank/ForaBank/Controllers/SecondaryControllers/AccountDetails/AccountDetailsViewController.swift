@@ -69,7 +69,6 @@ class AccountDetailsViewController: UIViewController {
         NetworkManager<GetProductDetailsDecodableModel>.addRequest(.getProductDetails, [:], body) { model, error in
             self.dismissActivity()
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else { return }
             if model.statusCode == 0 {
@@ -121,7 +120,6 @@ class AccountDetailsViewController: UIViewController {
         dateFormatter.timeZone = .current
         dateFormatter.locale = Locale(identifier: "ru_RU")
         var localDate = dateFormatter.string(from: date)
-        print(localDate)
         if localDate == "1 января 1970"{
             localDate = "-"
         }
@@ -137,7 +135,7 @@ class AccountDetailsViewController: UIViewController {
         NetworkManager<DepositInfoGetDepositInfoDecodebleModel>.addRequest(.getDepositInfo, [:], bodyForInfo) { model, error in
             self.dismissActivity()
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
+                
             }
             guard let model = model else { return }
             if model.statusCode == 0 {

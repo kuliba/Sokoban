@@ -42,7 +42,7 @@ struct GetNotificationsModelSaved {
                 }
                 tempResultArray.append(getNotificationsModel)
                 resultArray += tempResultArray
-                print()
+                
             }
             
             do {
@@ -59,14 +59,13 @@ struct GetNotificationsModelSaved {
                 // second transaction: add fresh data from server
                 try realm.write {
                     realm.add(resultArray)
-                    print("REALM", realm.configuration.fileURL?.absoluteString ?? "" )
                 }
                 
                 completion(nil)
                 
             } catch {
                 
-                print(error.localizedDescription)
+                
                 completion(nil)
             }
         }

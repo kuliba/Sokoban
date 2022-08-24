@@ -123,7 +123,6 @@ extension Model {
                             
                         } catch {
                             
-                            print(error.localizedDescription)
                             completion(.failure(error))
                         }
                     }
@@ -178,7 +177,6 @@ extension Model {
                     do {
 
                         let transferStepData = try await paymentsTransferAnywayStep(with: parameters, include: ["a3_BillNumber_1_1"], step: .initial)
-                        print(transferStepData.parameterListForNextStep.map{ $0.debugDescription})
                         let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData)
                         let additionalParameters = paymentsAdditionalParameters(for: transferStepData)
                         
@@ -219,7 +217,6 @@ extension Model {
                         
                     } catch {
                         
-                        print(error.localizedDescription)
                         completion(.failure(error))
                     }
                 }

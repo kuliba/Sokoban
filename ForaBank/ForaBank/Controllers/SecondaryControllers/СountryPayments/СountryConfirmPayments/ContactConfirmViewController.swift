@@ -850,8 +850,7 @@ class ContactConfurmViewController: UIViewController {
                         case "COMPLETE": self.confurmVCModel?.status = .succses
                         case "IN_PROGRESS": self.confurmVCModel?.status = .inProgress
                         case "REJECTED": self.confurmVCModel?.status = .error
-                        default:
-                            print("Не известный статус документа")
+                        default: break
                         }
                         
                         if let closeAction = self.confurmVCModel?.closeAction {
@@ -949,8 +948,7 @@ class ContactConfurmViewController: UIViewController {
                         case "COMPLETED": self.confurmVCModel?.status = .succses
                         case "IN_PROGRESS": self.confurmVCModel?.status = .inProgress
                         case "REJECTED": self.confurmVCModel?.status = .error
-                        default:
-                            print("Не известный статус документа")
+                        default: break
                         }
                         self.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
                         switch self.confurmVCModel?.type {

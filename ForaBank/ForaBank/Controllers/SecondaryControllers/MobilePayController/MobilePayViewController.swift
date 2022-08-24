@@ -379,7 +379,6 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
 extension MobilePayViewController: EPPickerDelegate {
     
     func epContactPicker(_: EPContactsPicker, didContactFetchFailed error : NSError) {
-        print("Failed with error \(error.description)")
     }
     
     func epContactPicker(_: EPContactsPicker, didSelectContact contact : EPContact) {
@@ -402,12 +401,10 @@ extension MobilePayViewController: EPPickerDelegate {
     }
     
     func epContactPicker(_: EPContactsPicker, didCancel error : NSError) {
-        print("User canceled the selection");
     }
     
     func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) {
         for contact in contacts {
-            print("\(contact.displayName())")
         }
     }
     

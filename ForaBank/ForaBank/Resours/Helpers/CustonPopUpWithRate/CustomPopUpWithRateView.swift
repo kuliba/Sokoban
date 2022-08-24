@@ -299,7 +299,6 @@ class CustomPopUpWithRateView: UIViewController {
         guard let cardFrom = model.cardFromRealm else { return }
         guard let cardTo = model.cardToRealm else { return }
         
-        print("Отображаем кнопку для переворачивания списка карт")
         /// Отображаем кнопку для переворачивания списка карт
         
         self.seporatorView.changeAccountButton.isHidden = false

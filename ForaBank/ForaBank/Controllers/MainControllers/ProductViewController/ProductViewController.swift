@@ -629,7 +629,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         NetworkManager<PersonsCreditsDecodableModel>.addRequest(.getPersonsCredit, [:], params) { model, error in
             
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
+
             }
             guard let model = model else { return }
             if model.statusCode == 0 {
@@ -877,7 +877,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         NetworkManager<DepositInfoGetDepositInfoDecodebleModel>.addRequest(.getDepositInfo, [:], bodyForInfo) { model, error in
             self.dismissActivity()
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
+
             }
             guard let model = model else { return }
             if model.statusCode == 0 {

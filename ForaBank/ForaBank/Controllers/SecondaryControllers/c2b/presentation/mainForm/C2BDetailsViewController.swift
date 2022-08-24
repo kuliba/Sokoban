@@ -575,7 +575,6 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     
     @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
         let tappedImage = tapGestureRecognizer.view as! UIImageView
-        print("back5555")
         dismiss(animated: true, completion: nil)
     }
 }

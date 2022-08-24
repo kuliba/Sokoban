@@ -63,8 +63,6 @@ class PaymentsOperationViewModel: ObservableObject {
     
     internal init(_ model: Model, operation: Payments.Operation, rootActions: PaymentsViewModel.RootActions) {
         
-        print("Payments: init operation")
-        
         self.model = model
         self.header = .init(title: operation.service.name, action: rootActions.dismiss)
         self.itemsVisible = []
@@ -83,8 +81,6 @@ class PaymentsOperationViewModel: ObservableObject {
         bind(model: model)
         bindAction()
         bindItems()
-        
-        print("Payments: bind operation")
     }
     
     //MARK: Bind Model
@@ -100,12 +96,10 @@ class PaymentsOperationViewModel: ObservableObject {
                     rootActions.spinner.hide()
                     switch payload.result {
                     case .step(let operation):
-                        print("Payments: step")
                         createItemsAndFooter(from: operation.parameters)
                         self.operation = operation
                         
                     case .confirm(let operation):
-                        print("Payments: confirm")
                         confirmViewModel = PaymentsConfirmViewModel(model, operation: operation, rootActions: .init(dismiss: {[weak self] in
                             self?.action.send(PaymentsOperationViewModelAction.DismissConfirm())
                         }, spinner: rootActions.spinner, alert: rootActions.alert))
@@ -113,7 +107,6 @@ class PaymentsOperationViewModel: ObservableObject {
                         self.operation = self.operation.finalized()
                         
                     case .failure(let errorMessage):
-                        print("Payments: failure")
                         rootActions.alert(errorMessage)
                     }
                     
@@ -162,7 +155,6 @@ class PaymentsOperationViewModel: ObservableObject {
                     })
 
                 case _ as PaymentsOperationViewModelAction.DismissConfirm:
-                    print("Payments: confirm dismiss action: \(String(describing: self))", isConfirmViewActive)
                     isConfirmViewActive = false
                     confirmViewModel = nil
                     
@@ -411,16 +403,12 @@ extension PaymentsOperationViewModel {
         guard value.isChanged == true else {
             return
         }
-        
-        print("Payments: item value changed")
 
         let results = self.itemsAll.map{ ($0.result, $0.source.affectsHistory) }
         let update = operation.update(with: results)
         
         switch update.type {
         case .normal:
-            
-            print("Payments: normal update")
             
             if isAutoContinueRequired(for: value.id) {
                 
@@ -434,7 +422,6 @@ extension PaymentsOperationViewModel {
             
         case .historyChanged:
             
-            print("Payments: history changed")
             action.send(PaymentsOperationViewModelAction.Continue())
         }
     }
@@ -479,12 +466,10 @@ extension PaymentsOperationViewModel {
 
         switch footer {
         case .button(let continueButtonViewModel):
-            print("Payments: footer button updated", isContinueEnabled)
             continueButtonViewModel.isEnabled = isContinueEnabled
             self.footer = .button(continueButtonViewModel)
             
         case .amount(let amountViewModel):
-            print("Payments: footer amount updated", isContinueEnabled)
             amountViewModel.updateTranferButton(isEnabled: isContinueEnabled)
             self.footer = .amount(amountViewModel)
         }

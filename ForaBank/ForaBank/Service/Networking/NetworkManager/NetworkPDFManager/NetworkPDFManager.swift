@@ -26,7 +26,7 @@ class NetworkPDFManager: NSObject, URLSessionDownloadDelegate {
                 router?.setValue("application/json", forHTTPHeaderField: "Content-Type")
             }
         } catch {
-            debugPrint(NetworkError.encodingFailed)
+            
         }
         
         let session = URLSession(configuration: .default, delegate: self, delegateQueue: .main)
@@ -37,12 +37,10 @@ class NetworkPDFManager: NSObject, URLSessionDownloadDelegate {
         let u = router?.url?.absoluteString
         let m = router?.httpMethod
         let c = router?.allHTTPHeaderFields
-        print("DEBUG PDF :", u!, m!, c!)
         session.downloadTask(with: router!) { (url, response, err) in
             
             if let response = response as? HTTPURLResponse {
                 
-                print(response.mimeType)
             }
         }.resume()
     
@@ -70,7 +68,7 @@ class NetworkPDFManager: NSObject, URLSessionDownloadDelegate {
 
 extension NetworkPDFManager {
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-               print("DEBUG PDF Delegate downloadLocation:", location)
+               
                do {
                    let documentsURL = try
                        FileManager.default.url(for: .documentDirectory,

@@ -81,7 +81,6 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 popView.transitioningDelegate = self
                 self.present(popView, animated: true, completion: nil)
             } else {
-                print("DEBUG: " + #function + transfers[indexPath.row].name)
                 if let viewController = transfers[indexPath.row].controllerName.getViewController() {
                     let navController = UINavigationController(rootViewController: viewController)
                     if transfers[indexPath.row].name == "По номеру телефона" {

@@ -40,12 +40,12 @@ class InternetTVSuccessView: UIView {
     }
     
     @IBAction func saveButtonTapped(_ sender: Any) {
-        print(#function)
+        
         saveTapped?()
     }
     
     @IBAction func detailBattonTapped(_ sender: Any) {
-        print(#function)
+        
         detailTapped?()
     }
     

@@ -76,14 +76,12 @@ extension CustomPopUpWithRateView {
                         "accountNumber" : viewModel.cardToAccountNumber,
                         "productCustomName" : viewModel.cardToCastomName
                      ] ] as [String : AnyObject]
-        print("DEBUG: ", #function, body)
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { [weak self] model, error in
             DispatchQueue.main.async {
                 self?.dismissActivity()
                 self?.bottomView.doneButtonIsEnabled(false)
                 if error != nil {
                     guard let error = error else { return }
-                    print("DEBUG: ", #function, error)
                     self?.showAlert(with: "Ошибка", and: error)
                 } else {
                     guard let model = model else { return }
@@ -93,7 +91,6 @@ extension CustomPopUpWithRateView {
                             if needMake {
                                 viewModel.taxTransction = "\(model.data?.fee ?? 0)"
                                 viewModel.status = .succses
-                                print("DEBUG: cardToCard payment Succses", #function, model)
                                 let vc = ContactConfurmViewController()
                                 vc.modalPresentationStyle = .fullScreen
                                 vc.confurmVCModel?.type = .card2card
@@ -141,7 +138,6 @@ extension CustomPopUpWithRateView {
                             self?.present(vc, animated: true, completion: nil)
                         }
                     } else {
-                        print("DEBUG: ", #function, model.errorMessage ?? "nil")
                         self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                     }
                 }

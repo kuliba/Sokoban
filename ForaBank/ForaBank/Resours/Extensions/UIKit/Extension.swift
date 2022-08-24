@@ -48,7 +48,6 @@ extension String {
 
     func sha256() -> String{
         if let stringData = self.data(using: String.Encoding.utf8) {
-            print(hexStringFromData(input: stringData as NSData))
             return (digest(input: stringData as NSData).base64EncodedString(options: .endLineWithCarriageReturn))
         }
         return ""
@@ -80,17 +79,12 @@ extension String {
             let aes = try AES(keyString: key)
 
             let stringToEncrypt: String = "\(string)"
-            
-            print("String to encrypt:\t\t\t\(stringToEncrypt)")
 
             let encryptedData: Data = try aes.encrypt(stringToEncrypt)
-            print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
             
             let decryptedData: String = try aes.decrypt(encryptedData)
-            print("String decrypted:\t\t\t\(decryptedData)")
             return encryptedData.base64EncodedString()
         } catch {
-            print("Something went wrong: \(error)")
             return nil
         }
     }

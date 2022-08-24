@@ -172,9 +172,6 @@ extension ProductProfileHistoryView {
                             .reduce(into: [ ProductStatementMerchantGroup: Double]()) {
                                 $0[.init($1.groupName), default: 0] += $1.amount
                             }
-                // Debug
-                dict.forEach { print("mdy: \($0.key) - \($0.value)") }
-                //endDEbug
                 
                 segmentBarViewModel = .init(mappedValues: dict,
                                         productType: product.productType,
@@ -186,9 +183,6 @@ extension ProductProfileHistoryView {
                             .reduce(into: [ String: Double]()) {
                                 $0[$1.groupName, default: 0] += $1.amount
                             }
-                // Debug
-                dict.forEach { print("mdy: \($0.key) - \($0.value)") }
-                //endDEbug
                 
                 segmentBarViewModel = .init(stringValues: dict,
                                         productType: product.productType,
@@ -196,11 +190,6 @@ extension ProductProfileHistoryView {
                                         model: model)
                 
             }
-                
-            //Debug
-            Dictionary(grouping: statements, by: {$0.groupName}).forEach { print("mdy: \($0.key) )") }
-            //endDebug
-            
         }
         
         func updateContent(with groups: [HistoryListViewModel.DayGroupViewModel]) {

@@ -141,7 +141,6 @@ class MeToMeRequestController: UIViewController {
         
         checkAuth { error in
             if error != nil {
-                print(error!)
 //                self.goToPinVC(.validate)
             } else {
                 DispatchQueue.main.async {
@@ -265,7 +264,7 @@ class MeToMeRequestController: UIViewController {
     
     //MARK: - Actions
     @objc func doneButtonTapped() {
-//        print(#function)
+//        
         if nextStep {
             showActivity()
             createPermanentConsentMe2Me { error in
@@ -320,7 +319,7 @@ class MeToMeRequestController: UIViewController {
     }
     
     @objc func cancelButtonTapped() {
-        print(#function)
+        
         if nextStep {
             self.showActivity()
             createIsOneTimeConsentMe2Me { error in
@@ -362,35 +361,8 @@ class MeToMeRequestController: UIViewController {
     }
     
     @objc func tariffButtonTapped() {
-        print(#function)
+        
     }
-    
-    
-//    func goToPinVC(_ mode: ALMode) {
-//        DispatchQueue.main.async { [weak self] in
-//            var options = ALOptions()
-//            options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
-//            options.onSuccessfulDismiss = { (mode: ALMode?) in
-//                self?.nextButton.isEnabled = true
-//                self?.cancelButton.isEnabled = true
-
-//                if let mode = mode {
-//                    DispatchQueue.main.async { [weak self] in
-//                        print("Password \(String(describing: mode)) successfully")
-//                        let vc = MainTabBarViewController()
-//                        vc.modalPresentationStyle = .fullScreen
-//                        self?.present(vc, animated: true, completion: nil)
-//                    }
-//                } else {
-//                    print("User Cancelled")
-//                }
-//            }
-//            options.onFailedAttempt = { (mode: ALMode?) in
-//                print("Failed to \(String(describing: mode))")
-//            }
-//        }
-//    }
-    
     
     //MARK: - API
     private func checkAuth(completion: @escaping (_ error: String?) -> () ) {

@@ -78,14 +78,16 @@ struct ImageCapture: UIViewControllerRepresentable {
         func dataTrack(page: AnyImagePage, state: AnyImagePageState) {
             switch state {
             case .enter:
-                print("[Data Track] ENTER Page: \(page.rawValue)")
+                //TODO: set logger
+                break
             case .leave:
-                print("[Data Track] LEAVE Page: \(page.rawValue)")
+                //TODO: set logger
+                break
             }
         }
         
         func dataTrack(event: AnyImageEvent, userInfo: [AnyImageEventUserInfoKey: Any]) {
-            print("[Data Track] EVENT: \(event.rawValue), userInfo: \(userInfo)")
+            //TODO: set logger
         }
     }
 }

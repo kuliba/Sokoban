@@ -206,7 +206,6 @@ class MeToMeSettingViewController: UIViewController {
         
         // действие по нажатию на поле с текущем счетом
         cardFromField.didChooseButtonTapped = { () in
-            print("cardField didChooseButtonTapped")
             self.openOrHideView(self.cardListView)
             
         }
@@ -215,7 +214,6 @@ class MeToMeSettingViewController: UIViewController {
     private func setupBankField() {
         // действие по нажатию на поле с банком
         banksView.didChooseButtonTapped = { () in
-            print("bankField didChooseButtonTapped")
             let settingVC = MeToMeSearchBanksViewController()
             settingVC.rootVC = self
             let navVC = UINavigationController(rootViewController: settingVC)
@@ -403,17 +401,14 @@ class MeToMeSettingViewController: UIViewController {
             self?.dismissActivity()
             if error != nil {
                 guard let error = error else { return }
-                print("DEBUG: Error: ", error)
                 completion(nil, error)
             }
             guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 guard let data  = model.data else { return }
                 completion(data.consentList ?? [], nil)
             } else {
                 guard let error = model.errorMessage else { return }
-                print("DEBUG: Error: ", error)
 
                 completion(nil, error)
             }
