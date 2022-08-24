@@ -130,14 +130,12 @@ class CurrencyWalletViewModel: ObservableObject {
                 case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Start.Response:
                     
                     handleExchangeStartResponse(payload)
-                    
-                    swapViewModel.swapButton.isUserInteractionEnabled = true
-                    listViewModel.isUserInteractionEnabled = true
+                    setUserInteractionEnabled()
                     
                 case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Approve.Response:
                     
                     handleExchangeApproveResponse(payload)
-                    listViewModel.isUserInteractionEnabled = true
+                    setUserInteractionEnabled()
                     
                 case let payload as ModelAction.Payment.OperationDetailByPaymentId.Response:
                     handleOperationDetailResponse(payload)
@@ -388,6 +386,18 @@ class CurrencyWalletViewModel: ObservableObject {
         }
     }
     
+    private func setUserInteractionEnabled(_ enabled: Bool) {
+        
+        listViewModel.isUserInteractionEnabled = enabled
+        swapViewModel.isUserInteractionEnabled = enabled
+    }
+    
+    private func setUserInteractionEnabled() {
+        
+        listViewModel.isUserInteractionEnabled = true
+        swapViewModel.swapButton.isUserInteractionEnabled = true
+    }
+    
     private func setCurrencyItem() {
         
         let currencyItem = listViewModel.items.first(where: { $0.currency == currency })
@@ -523,7 +533,7 @@ class CurrencyWalletViewModel: ObservableObject {
     
     private func sendExchangeApproveRequest() {
         
-        listViewModel.isUserInteractionEnabled = false
+        setUserInteractionEnabled(false)
         model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve.Request())
     }
     
