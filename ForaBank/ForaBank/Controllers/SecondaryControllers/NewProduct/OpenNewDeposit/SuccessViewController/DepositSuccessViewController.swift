@@ -9,8 +9,10 @@ import UIKit
 
 class DepositSuccessViewController: UIViewController {
 
+    let model = Model.shared
     var id: Int?
     var printFormType: String?
+    
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
@@ -57,6 +59,24 @@ class DepositSuccessViewController: UIViewController {
         
         
         cardFromField.model = confurmVCModel?.cardFromRealm
+ 
+        self.model.action.send(ModelAction.Products.Update.ForProductType(productType: .deposit))
+        
+        if let paymentFromCardId = confurmVCModel?.cardFromCardId {
+            
+            if let cardId = NumberFormatter().number(from: paymentFromCardId) {
+                let integerCardId = cardId.intValue
+                self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+            }
+        }
+        
+        if let fromAcccountId = self.confurmVCModel?.cardFromAccountId {
+            
+            if let cardId = NumberFormatter().number(from: fromAcccountId) {
+                let integerCardId = cardId.intValue
+                self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+            }
+        }
     }
 
     
