@@ -130,14 +130,12 @@ class CurrencyWalletViewModel: ObservableObject {
                 case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Start.Response:
                     
                     handleExchangeStartResponse(payload)
-                    
-                    swapViewModel.swapButton.isUserInteractionEnabled = true
-                    listViewModel.isUserInteractionEnabled = true
+                    setUserInteractionEnabled()
                     
                 case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Approve.Response:
                     
                     handleExchangeApproveResponse(payload)
-                    listViewModel.isUserInteractionEnabled = true
+                    setUserInteractionEnabled()
                     
                 case let payload as ModelAction.Payment.OperationDetailByPaymentId.Response:
                     handleOperationDetailResponse(payload)
@@ -296,10 +294,6 @@ class CurrencyWalletViewModel: ObservableObject {
     
     private func makeSelectorViewModel() -> CurrencySelectorView.ViewModel {
         
-        let products = model.products(currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
-        
-        selectorState = products.isEmpty == false ? .productSelector : .openAccount
-        
         let productSelectorViewModel = CurrencySelectorView.ViewModel(model, state: selectorState, currency: currency, currencyOperation: currencyOperation)
         
         if let productCardSelector = productSelectorViewModel.productCardSelector,
@@ -392,6 +386,18 @@ class CurrencyWalletViewModel: ObservableObject {
         }
     }
     
+    private func setUserInteractionEnabled(_ enabled: Bool) {
+        
+        listViewModel.isUserInteractionEnabled = enabled
+        swapViewModel.isUserInteractionEnabled = enabled
+    }
+    
+    private func setUserInteractionEnabled() {
+        
+        listViewModel.isUserInteractionEnabled = true
+        swapViewModel.swapButton.isUserInteractionEnabled = true
+    }
+    
     private func setCurrencyItem() {
         
         let currencyItem = listViewModel.items.first(where: { $0.currency == currency })
@@ -417,6 +423,19 @@ class CurrencyWalletViewModel: ObservableObject {
     }
     
     private func appendSelectorViewIfNeeds() {
+        
+        let products = model.products(currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
+        
+        if products.isEmpty == false {
+            
+            selectorState = .productSelector
+            buttonStyle = .red
+            
+        } else {
+            
+            selectorState = .openAccount
+            buttonStyle = .inactive
+        }
         
         selectorViewModel = makeSelectorViewModel()
         
@@ -514,7 +533,7 @@ class CurrencyWalletViewModel: ObservableObject {
     
     private func sendExchangeApproveRequest() {
         
-        listViewModel.isUserInteractionEnabled = false
+        setUserInteractionEnabled(false)
         model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve.Request())
     }
     
@@ -702,6 +721,7 @@ class CurrencyWalletViewModel: ObservableObject {
         confirmationViewModel = nil
         successViewModel = nil
         
+        buttonStyle = .red
         continueButton = makeContinueButton()
         isUserInteractionEnabled = true
     }
