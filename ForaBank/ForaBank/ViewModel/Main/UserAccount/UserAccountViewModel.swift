@@ -239,7 +239,7 @@ class UserAccountViewModel: ObservableObject {
                     alert = .init(
                         title: "Выход", message: "Вы действительно хотите выйти из учетной записи?\nДля повторного входа Вам необходимо будет пройти повторную регистрацию",
                         primary: .init(type: .default, title: "Выход", action: {
-                            self.model.auth.value = .unlockRequired
+                            self.model.auth.value = .unlockRequiredManual
                         }),
                         secondary: .init(type: .cancel, title: "Отмена", action: { }))
                     

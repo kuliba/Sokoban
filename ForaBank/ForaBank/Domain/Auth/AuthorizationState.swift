@@ -12,5 +12,6 @@ enum AuthorizationState {
     case registerRequired
     case signInRequired
     case unlockRequired
+    case unlockRequiredManual
     case authorized
 }
