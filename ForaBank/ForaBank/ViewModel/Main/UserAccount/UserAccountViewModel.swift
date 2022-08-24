@@ -306,7 +306,8 @@ class UserAccountViewModel: ObservableObject {
                             print("Open FaceIdSwitch", payload.value)
                             
                         case .notification:
-                            print("Open NotificationSwitch", payload.value)
+                            
+                            self.model.action.send(ModelAction.Settings.UpdateUserSettingPush(userSetting: .init(value: payload.value)))
                         }
                         
                     case let payload as UserAccountViewModelAction.OpenDocument:
@@ -345,13 +346,24 @@ class UserAccountViewModel: ObservableObject {
     }
     
     func createSections(userData: ClientInfoData, customName: String?) -> [AccountSectionViewModel] {
-        [
+        
+        var sections: [AccountSectionViewModel] = [
             UserAccountContactsView.ViewModel(userData: userData, customName: customName, isCollapsed: false),
             UserAccountDocumentsView.ViewModel(userData: userData, isCollapsed: false),
-            UserAccountPaymentsView.ViewModel(isCollapsed: false),
-            UserAccountSecurityView.ViewModel(isActiveFaceId: false, isActivePush: true, isCollapsed: false)
-        ]
+            UserAccountPaymentsView.ViewModel(isCollapsed: false)]
+        
+        if let pushSetting: UserSettingPush = self.model.userSetting(for: .disablePush) {
+            
+            sections.append(UserAccountSecurityView.ViewModel(isActiveFaceId: false, isActivePush: pushSetting.value, isCollapsed: false))
+            
+        } else {
+            
+            sections.append(UserAccountSecurityView.ViewModel(isActiveFaceId: false, isActivePush: true, isCollapsed: false))
+        }
+        
+        return sections
     }
+    
 }
 
 extension UserAccountViewModel {

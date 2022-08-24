@@ -72,6 +72,9 @@ class Model {
     let clientName: CurrentValueSubject<ClientNameData?, Never>
     let fastPaymentContractFullInfo: CurrentValueSubject<[FastPaymentContractFullInfoType], Never>
     
+    //MARK: - User Settings
+    let userSettings: CurrentValueSubject<[UserSettingData], Never>
+
     //MARK: Loacation
     let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
 
@@ -154,7 +157,8 @@ class Model {
         self.informer = .init(nil)
         self.notificationsTransition = .init(nil)
         self.dictionariesUpdating = .init([])
-
+        self.userSettings = .init([])
+        
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
         self.localAgent = localAgent
@@ -261,6 +265,7 @@ class Model {
                     action.send(ModelAction.PaymentTemplate.List.Requested())
                     action.send(ModelAction.Account.ProductList.Request())
                     action.send(ModelAction.AppVersion.Request())
+                    action.send(ModelAction.Settings.GetUserSettings())
                     
                 default:
                     break
@@ -518,6 +523,13 @@ class Model {
                     
                 case _ as ModelAction.ClientInfo.Delete.Request:
                     handleClientInfoDelete()
+                    
+                    //MARK: - User Settings
+                case let payload as ModelAction.Settings.UpdateUserSettingPush:
+                    handleUpdateUserSetting(payload)
+                    
+                case let _ as ModelAction.Settings.GetUserSettings:
+                    handleGetUserSettings()
                     
                     //MARK: - Settings Actions
                     
@@ -905,6 +917,11 @@ private extension Model {
             
             handleSettingsCachingError(error: error)
         }
+        
+        if let userSettings = localAgent.load(type: [UserSettingData].self) {
+            
+            self.userSettings.value = userSettings
+        }
     }
     
     func clearKeychainData() {
@@ -1061,6 +1078,7 @@ private extension Model {
         currentUserLoaction.value = nil
         dictionariesUpdating.value = []
         currencyWalletList.value = []
+        userSettings.value = []
         
         print("Model: memory data cleaned")
     }

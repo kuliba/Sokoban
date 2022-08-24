@@ -446,6 +446,7 @@
 		6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */; };
 		6828806F28A2D8F500186F32 /* DeleteAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6828806E28A2D8F400186F32 /* DeleteAccountView.swift */; };
 		6828807228A32F0200186F32 /* OptionsButtonsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6828807128A32F0200186F32 /* OptionsButtonsViewComponent.swift */; };
+		682C62BD28B38CCC00C9A00D /* SettingsModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 682C62BC28B38CCC00C9A00D /* SettingsModelTests.swift */; };
 		6830A02227D37821003CA4F1 /* DepositProductData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6830A02127D37821003CA4F1 /* DepositProductData.swift */; };
 		6830A02427D37E87003CA4F1 /* BannerCatalogListData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6830A02327D37E87003CA4F1 /* BannerCatalogListData.swift */; };
 		6830A02627D3858E003CA4F1 /* GetDepositProductListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 6830A02527D3858E003CA4F1 /* GetDepositProductListResponseGeneric.json */; };
@@ -1855,6 +1856,7 @@
 		6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BaseTableViewCell.xib; sourceTree = "<group>"; };
 		6828806E28A2D8F400186F32 /* DeleteAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountView.swift; sourceTree = "<group>"; };
 		6828807128A32F0200186F32 /* OptionsButtonsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsButtonsViewComponent.swift; sourceTree = "<group>"; };
+		682C62BC28B38CCC00C9A00D /* SettingsModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModelTests.swift; sourceTree = "<group>"; };
 		6830A02127D37821003CA4F1 /* DepositProductData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositProductData.swift; sourceTree = "<group>"; };
 		6830A02327D37E87003CA4F1 /* BannerCatalogListData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerCatalogListData.swift; sourceTree = "<group>"; };
 		6830A02527D3858E003CA4F1 /* GetDepositProductListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetDepositProductListResponseGeneric.json; sourceTree = "<group>"; };
@@ -3801,6 +3803,14 @@
 			path = OptionsButtonsViewComponent;
 			sourceTree = "<group>";
 		};
+		682C62BB28B38CAF00C9A00D /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				682C62BC28B38CCC00C9A00D /* SettingsModelTests.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		6833E0B32732B749004C070F /* DetailOperationCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -4679,6 +4689,7 @@
 			children = (
 				68DF16D52808A2B1005D8D3E /* Products */,
 				7758401927B2A0B000251969 /* Payments */,
+				682C62BB28B38CAF00C9A00D /* Settings */,
 				77FF670227B446D7009FEA09 /* AsyncAwaitTests.swift */,
 				0BCFBE022817F77D003F2F36 /* ModelNotificationsTests.swift */,
 				77F15826281682D400CA5E4E /* ModelDictionaryAtmTests.swift */,
@@ -8723,6 +8734,7 @@
 				68AD340527997DC000647665 /* ServerCommandsCardTests.swift in Sources */,
 				68E765282796D6DF005860FE /* ServerCommandsRegistrationTests.swift in Sources */,
 				682092AA27AC069F003DCAFD /* ServerCommandsSuggestTests.swift in Sources */,
+				682C62BD28B38CCC00C9A00D /* SettingsModelTests.swift in Sources */,
 				684192EC2799C0D000B4E184 /* ServerCommandsConsentTests.swift in Sources */,
 				682092BD27AC17D2003DCAFD /* ServerCommandsDaDataTests.swift in Sources */,
 				77517FEA27A98F2D005CFB77 /* ServerCommandsUserTests.swift in Sources */,
