@@ -47,8 +47,6 @@ extension CurrencySwapView {
             }
         }
         
-//        getProductByType
-        
         private var bindings = Set<AnyCancellable>()
 
         init(_ model: Model, currencySwap: CurrencyViewModel, сurrencyCurrentSwap: CurrencyViewModel, currencyOperation: CurrencyOperation, currency: Currency, currencyRate: Double, quotesInfo: String, isUserInteractionEnabled: Bool = true) {
@@ -762,6 +760,9 @@ extension CurrencySwapView {
                         Text(viewModel.currency.description)
                             .font(.textH4M16240())
                             .foregroundColor(.mainColorsGrayMedium)
+                        
+                    }.onTapGesture {
+                        viewModel.textField.becomeFirstResponder()
                     }
                 }
             }

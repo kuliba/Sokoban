@@ -36,7 +36,7 @@ extension CurrencyExchangeConfirmationView {
             self.currencyPayer = currencyPayer
         }
         
-        init?(response: CurrencyExchangeConfirmationData, model: Model) {
+        init?(response: CurrencyExchangeConfirmationData, isCourseChange: Bool, model: Model) {
             
             guard let debitAmount = response.debitAmount,
                   let fee = response.fee,
@@ -62,9 +62,12 @@ extension CurrencyExchangeConfirmationView {
                                                 currencyCode: currencyPayee.description,
                                                 style: .fraction) ?? String(creditAmount)
             
-            courseChangeViewModel = makeCourseChange(model: model,
-                                                     currencyCode: currencyPayee.description,
-                                                     currencyRate: currencyRate)
+            if isCourseChange == true {
+                
+                courseChangeViewModel = makeCourseChange(model: model,
+                                                         currencyCode: currencyPayee.description,
+                                                         currencyRate: currencyRate)
+            }
         }
     }
 }

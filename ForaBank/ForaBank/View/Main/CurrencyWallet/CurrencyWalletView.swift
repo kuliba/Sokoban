@@ -130,7 +130,7 @@ struct CurrencyWalletView: View {
         }
         .onTapGesture {
             
-            viewModel.resetCurrencySwap()
+            viewModel.updateCurrencySwap()
             UIApplication.shared.endEditing()
         }
         .padding(.top, 12)
