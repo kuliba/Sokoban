@@ -63,6 +63,12 @@ class RootViewModel: ObservableObject, Resetable {
                     action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel, animated: false))
                     
                 case .unlockRequired:
+                    let lockViewModel = AuthPinCodeViewModel(model, mode: .unlock(attempt: 0, auto: true), rootActions: rootActions)
+                    action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel, animated: true))
+                    action.send(RootViewModelAction.DismissAll())
+                    action.send(RootViewModelAction.SwitchTab(tabType: .main))
+                
+                case .unlockRequiredManual:
                     let lockViewModel = AuthPinCodeViewModel(model, mode: .unlock(attempt: 0, auto: false), rootActions: rootActions)
                     action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel, animated: true))
                     action.send(RootViewModelAction.DismissAll())
@@ -70,6 +76,7 @@ class RootViewModel: ObservableObject, Resetable {
                     
                 case .authorized:
                     action.send(RootViewModelAction.Cover.Hide())
+                    action.send(RootViewModelAction.DismissAll())
                     
                     switch model.notificationsTransition.value {
                     case .history:
