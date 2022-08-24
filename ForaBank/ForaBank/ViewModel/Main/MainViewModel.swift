@@ -341,6 +341,7 @@ class MainViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case let payload as ProductProfileViewModelAction.MyProductsTapped.ProductProfile:
+                    
                     self.action.send(MainViewModelAction.Close.Link())
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
                         
@@ -369,34 +370,26 @@ class MainViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case let payload as MyProductsViewModelAction.Tapped.Product:
-                    self.action.send(MainViewModelAction.Close.Sheet())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                    
+                    self.action.send(MainViewModelAction.Close.Link())
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
                         
                         self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
                     }
                     
                 case _ as MyProductsViewModelAction.Tapped.OpenDeposit:
-                    self.action.send(MainViewModelAction.Close.Sheet())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                    
+                    self.action.send(MainViewModelAction.Close.Link())
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
                         
                         self.action.send(MainViewModelAction.Show.OpenDeposit())
-                    }
-
-                case _ as MyProductsViewModelAction.Tapped.CancelExpandedCurrency:
-                    
-                    switch myProductsViewModel.totalMoneyVM.currencyButtonVM.state {
-                    case .expanded:
-                        withAnimation {
-                            myProductsViewModel.totalMoneyVM.currencyButtonVM.state = .enabled
-                        }
-                    case .disabled, .enabled: break
                     }
                     
                 default:
                     break
                 }
                 
-            }.store(in: &bindings)
+        }.store(in: &bindings)
     }
     
     private func update(_ sections: [MainSectionViewModel], with settings: MainSectionsSettings) {

@@ -392,14 +392,20 @@ class ProductProfileViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as MyProductsViewModelAction.Tapped.Product:
+                    
                     if product.products.contains(where: { $0.id == payload.productId}) {
                         
-                        self.action.send(ProductProfileViewModelAction.Close.Sheet())
-                        product.activeProductId = payload.productId
+                        self.action.send(ProductProfileViewModelAction.Close.Link())
+                        //product.activeProductId = payload.productId
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                            
+                            self.action.send(ProductProfileViewModelAction.MyProductsTapped.ProductProfile(productId: payload.productId))
+                        }
                         
                     } else {
                         
-                        self.action.send(ProductProfileViewModelAction.Close.Sheet())
+                        self.action.send(ProductProfileViewModelAction.Close.Link())
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                             
                             self.action.send(ProductProfileViewModelAction.MyProductsTapped.ProductProfile(productId: payload.productId))

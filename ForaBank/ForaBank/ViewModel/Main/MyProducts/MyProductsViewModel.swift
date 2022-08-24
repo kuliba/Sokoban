@@ -51,6 +51,27 @@ class MyProductsViewModel: ObservableObject {
 
     private func bind() {
 
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as MyProductsViewModelAction.Tapped.CancelExpandedCurrency:
+                    
+                    switch totalMoneyVM.currencyButtonVM.state {
+                    case .expanded:
+                        withAnimation {
+                            totalMoneyVM.currencyButtonVM.state = .enabled
+                        }
+                    case .disabled, .enabled: break
+                    }
+                    
+                default:
+                    break
+                }
+        }.store(in: &bindings)
+        
+        
         model.products
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] products in
