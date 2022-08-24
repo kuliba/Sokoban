@@ -525,12 +525,11 @@ extension CurrencySwapView.ViewModel {
         let swapButton: SwapButtonViewModel
         private var bindings = Set<AnyCancellable>()
         
-        init(currencyOperation: CurrencyOperation, swapButton: SwapButtonViewModel) {
+        init(currencyOperation: CurrencyOperation, swapButton: SwapButtonViewModel, pathInset: Double = 5) {
             
             self.currencyOperation = currencyOperation
             self.swapButton = swapButton
-            
-            pathInset = 0
+            self.pathInset = pathInset
             
             bind()
         }
@@ -542,8 +541,6 @@ extension CurrencySwapView.ViewModel {
                 .sink { [unowned self] currencyOperation in
                     
                     withAnimation(.easeInOut) {
-                        
-                        pathInset = currencyOperation == .buy ? 5 : -5
                         swapButton.isCurrencySwap.toggle()
                     }
                 }.store(in: &bindings)
