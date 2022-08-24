@@ -207,7 +207,6 @@ extension CurrencySelectorView {
                     
                     productCardSelector.title = equalityOperation ? "Откуда" : "Куда"
                     productCardSelector.isDividerHiddable = equalityOperation ? false : true
-                    productCardSelector.dividerViewModel.pathInset = equalityOperation ? 5 : -5
                 }
             }
             
@@ -219,7 +218,6 @@ extension CurrencySelectorView {
 
                     productAccountSelector.title = equalityOperation ? "Куда" : "Откуда"
                     productAccountSelector.isDividerHiddable = equalityOperation ? true : false
-                    productAccountSelector.dividerViewModel.pathInset = equalityOperation ? 5 : -5
                 }
             }
             
