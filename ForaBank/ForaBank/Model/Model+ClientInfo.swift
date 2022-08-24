@@ -105,16 +105,22 @@ extension Model {
                         
                     } catch {
                         
-                        //TODO: log error
-                        print("handleClientInfoFetchRequest: caching error: \(error.localizedDescription)")
+                        self.handleServerCommandCachingError(error: error, command: command)
                     }
                     
                 default:
                     self.action.send(ModelAction.ClientInfo.Fetch.Response(result: .failure(ModelClientInfoError.statusError(status: response.statusCode, message: response.errorMessage))))
+                    if let errorMessage = response.errorMessage {
+
+                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: errorMessage)
+                    } else {
+                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: nil)
+                    }
                 }
                 
             case .failure(let error):
                 self.action.send(ModelAction.ClientInfo.Fetch.Response(result: .failure(ModelClientInfoError.serverCommandError(error: error))))
+                self.handleServerCommandError(error: error, command: command)
             }
         }
     }
@@ -151,17 +157,18 @@ extension Model {
                         try localAgent.store(clientPhotoData, serial: nil)
                         
                     } catch {
-                        
+                        //TODO: added handler for upload command
                         print("Model: handleClientPhotoSave error: \(error.localizedDescription)")
                     }
                     
                 default:
+                    //TODO: added handler for upload command
                     break
                     
                 }
                 
             case .failure(let error):
-                
+                //TODO: added handler for upload command
                 print("Model: handleClientPhotoSave error: \(error)")
 
             }
@@ -181,6 +188,10 @@ extension Model {
             switch result {
             case .success(let data):
                 
+                guard data.count != 0 else {
+                    return
+                }
+                
                 let clientPhotoData = ClientPhotoData(photo: .init(data: data))
                 clientPhoto.value = clientPhotoData
 
@@ -189,11 +200,12 @@ extension Model {
                     try localAgent.store(clientPhotoData, serial: nil)
                     
                 } catch {
-                    
+                    //TODO: added handler for download command
                     print("Model: store: ClientPhotoData error: \(error.localizedDescription)")
                 }
                 
             case .failure(let error):
+                //TODO: added handler for download command
                 print("Model: store: ClientPhotoData error: \(error)")
             }
         }
@@ -220,12 +232,12 @@ extension Model {
                     
                 } catch {
                     
-                    print("Model: handleMediaDeleteAvatarRequest error: \(error.localizedDescription)")
+                    self.handleServerCommandCachingError(error: error, command: command)
                 }
                 
             case .failure(let error):
                 
-                print("Model: handleMediaDeleteAvatarRequest error: \(error)")
+                self.handleServerCommandError(error: error, command: command)
             }
         }
     }
@@ -248,7 +260,7 @@ extension Model {
                 self.action.send(ModelAction.ClientInfo.Fetch.Request())
                 
             case .failure(let error):
-                print("Model: handleClientNameSave error: \(error)")
+                self.handleServerCommandError(error: error, command: command)
             }
         }
     }
@@ -275,11 +287,11 @@ extension Model {
                         
                     } catch {
                         
-                        print("Model: handleClientNameLoad error: \(error.localizedDescription)")
+                        self.handleServerCommandCachingError(error: error, command: command)
                     }
                 
             case .failure(let error):
-                print("Model: handleClientNameLoad error: \(error)")
+                self.handleServerCommandError(error: error, command: command)
             }
         }
     }
@@ -301,7 +313,7 @@ extension Model {
                 self.action.send(ModelAction.ClientName.Get.Request())
                 
             case .failure(let error):
-                print("Model: handleClientNameDelete error: \(error)")
+                self.handleServerCommandError(error: error, command: command)
             }
         }
     }
@@ -321,7 +333,7 @@ extension Model {
                 self.action.send(ModelAction.ClientInfo.Delete.Response.success)
                 
             case .failure(let error):
-                print("Model: handleClientInfoDelete error: \(error)")
+                self.handleServerCommandError(error: error, command: command)
             }
         }
     }
