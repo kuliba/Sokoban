@@ -19,7 +19,7 @@ class MyProductsViewModel: ObservableObject {
     private let model: Model
 
     let navigationBar: NavigationBarView.ViewModel
-    let totalMoney: MyProductsMoneyViewModel
+    let totalMoneyVM: MyProductsMoneyViewModel
     
     private var bindings = Set<AnyCancellable>()
     
@@ -29,7 +29,7 @@ class MyProductsViewModel: ObservableObject {
 
         self.model = .emptyMock
         self.navigationBar = navigationBar
-        self.totalMoney = totalMoney
+        self.totalMoneyVM = totalMoney
         self.sections = sections
         
         bind()
@@ -44,8 +44,8 @@ class MyProductsViewModel: ObservableObject {
                               leftButtons: [ NavigationBarView.ViewModel.BackButtonViewModel
                                 .init(icon: .ic24ChevronLeft, action: dismissAction) ],
                               background: .barsTabbar)
-        totalMoney = .init()
         
+        totalMoneyVM = .init(model: model)
         bind()
     }
 
@@ -136,16 +136,6 @@ class MyProductsViewModel: ObservableObject {
                 if let notAcivatedSection = sections.first(where: { $0.id == MyProductsSectionViewModel.blockedSectionId }) {
                     sortedSections.append(notAcivatedSection)
                 }
-                
-                
-                let balance = products.values
-                    .flatMap({ $0 })
-                    .reduce(into: 0.0) { result, item in
-                        result += item.balanceRub ?? 0
-                        
-                    }
-                
-                totalMoney.updateBalance(balance: balance)
                 
                 update(sortedSections, with: model.settingsProductsSections)
                 
@@ -446,6 +436,8 @@ enum MyProductsViewModelAction {
         }
         
         struct OpenDeposit: Action {}
+        
+        struct CancelExpandedCurrency: Action {}
     }
 }
 
@@ -457,7 +449,7 @@ extension MyProductsViewModel {
             leftButtons: [NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: {})],
             rightButtons: [.init(icon: .ic24Plus, action: { })],
             background: .barsTabbar),
-        totalMoney: .sample1,
+        totalMoney: .sampleBalance,
         sections: [.sample1, .sample2, .sample3, .sample4, .sample5, .sample6]
     )
 }

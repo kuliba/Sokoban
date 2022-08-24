@@ -140,7 +140,7 @@ extension ServerCommands {
         
         /*
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/dict/getCurrencyWalletList
-         */
+        */
         struct GetCurrencyWalletList: ServerCommand {
             
             let token: String
@@ -178,6 +178,31 @@ extension ServerCommands {
                     self.parameters = nil
                 }
             }
+        }
+        
+        /*
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/dict/getCentralBankRates
+        */
+        struct GetCentralBankRates: ServerCommand {
+            
+            let token: String
+            let endpoint = "/dict/getCentralBankRates"
+            let method: ServerCommandMethod = .get
+            
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: CentralBankRatesList?
+                
+                struct CentralBankRatesList: Decodable, Equatable {
+                    
+                    let ratesCb: [CentralBankRatesData]
+                }
+            }
+            
         }
         
         /*

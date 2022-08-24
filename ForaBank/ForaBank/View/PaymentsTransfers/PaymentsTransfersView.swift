@@ -143,6 +143,9 @@ struct PaymentsTransfersView: View {
                             .navigationBarTitle("", displayMode: .inline)
                             .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
+                        
+                    case .currencyWallet(let currencyWalletViewModel):
+                        CurrencyWalletView(viewModel: currencyWalletViewModel)
                     }
                 }
             }

@@ -20,7 +20,7 @@ struct MyProductsView: View {
             
             VStack(spacing: 0) {
                 
-                MyProductsMoneyView(viewModel: viewModel.totalMoney)
+                MyProductsMoneyView(viewModel: viewModel.totalMoneyVM).zIndex(1)
                 
                 ScrollView {
                     
@@ -46,6 +46,9 @@ struct MyProductsView: View {
                         .padding(.trailing, 19)
                 }
             }
+        }.onTapGesture {
+            
+            viewModel.action.send(MyProductsViewModelAction.Tapped.CancelExpandedCurrency())
         }
     }
 }
@@ -58,5 +61,6 @@ struct AllMoneyView_Previews: PreviewProvider {
         NavigationView {
             MyProductsView(viewModel: .sample)
         }
+        .previewDevice("iPhone SE (1st generation)")
     }
 }

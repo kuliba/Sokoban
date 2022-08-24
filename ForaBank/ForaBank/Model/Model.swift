@@ -47,6 +47,7 @@ class Model {
     let paymentSystemList: CurrentValueSubject<[PaymentSystemData], Never>
     let bankList: CurrentValueSubject<[BankData], Never>
     let currencyWalletList: CurrentValueSubject<[CurrencyWalletData], Never>
+    let centralBankRates: CurrentValueSubject<[CentralBankRatesData], Never>
     var images: CurrentValueSubject<[String: ImageData], Never>
     
     //MARK: Deposits
@@ -71,6 +72,9 @@ class Model {
     let clientName: CurrentValueSubject<ClientNameData?, Never>
     let fastPaymentContractFullInfo: CurrentValueSubject<[FastPaymentContractFullInfoType], Never>
     
+    //MARK: - User Settings
+    let userSettings: CurrentValueSubject<[UserSettingData], Never>
+
     //MARK: Loacation
     let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
 
@@ -134,6 +138,7 @@ class Model {
         self.catalogBanners = .init([])
         self.currencyList = .init([])
         self.currencyWalletList = .init([])
+        self.centralBankRates = .init([])
         self.bankList = .init([])
         self.countriesList = .init([])
         self.paymentSystemList = .init([])
@@ -152,7 +157,8 @@ class Model {
         self.informer = .init(nil)
         self.notificationsTransition = .init(nil)
         self.dictionariesUpdating = .init([])
-
+        self.userSettings = .init([])
+        
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
         self.localAgent = localAgent
@@ -259,6 +265,7 @@ class Model {
                     action.send(ModelAction.PaymentTemplate.List.Requested())
                     action.send(ModelAction.Account.ProductList.Request())
                     action.send(ModelAction.AppVersion.Request())
+                    action.send(ModelAction.Settings.GetUserSettings())
                     
                 default:
                     break
@@ -469,6 +476,9 @@ class Model {
                 case let payload as ModelAction.Transfers.CreateInterestDepositTransfer.Request:
                     handleCreateInterestDepositTransferRequest(payload)
                     
+                case let payload as ModelAction.Transfers.TransferLimit.Request:
+                    handleTransferLimitRequest(payload)
+                    
                     //MARK: - CurrencyWallet
                     
                 case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Start.Request:
@@ -513,6 +523,13 @@ class Model {
                     
                 case _ as ModelAction.ClientInfo.Delete.Request:
                     handleClientInfoDelete()
+                    
+                    //MARK: - User Settings
+                case let payload as ModelAction.Settings.UpdateUserSettingPush:
+                    handleUpdateUserSetting(payload)
+                    
+                case let _ as ModelAction.Settings.GetUserSettings:
+                    handleGetUserSettings()
                     
                     //MARK: - Settings Actions
                     
@@ -627,6 +644,9 @@ class Model {
                     
                     case .currencyWalletList:
                         handleDictionaryCurrencyWalletList(payload.serial)
+                        
+                    case .centralBanksRates:
+                        handleDictionaryCentralBankRates()
                     }
                     
                 case let payload as ModelAction.Dictionary.DownloadImages.Request:
@@ -897,6 +917,11 @@ private extension Model {
             
             handleSettingsCachingError(error: error)
         }
+        
+        if let userSettings = localAgent.load(type: [UserSettingData].self) {
+            
+            self.userSettings.value = userSettings
+        }
     }
     
     func clearKeychainData() {
@@ -1053,6 +1078,7 @@ private extension Model {
         currentUserLoaction.value = nil
         dictionariesUpdating.value = []
         currencyWalletList.value = []
+        userSettings.value = []
         
         print("Model: memory data cleaned")
     }

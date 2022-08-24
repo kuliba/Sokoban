@@ -351,11 +351,10 @@ internal extension ServerAgent {
         }
         
         // body
-        request.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         
         var data = Data()
         data.append("--\(boundary)\r\n")
-        data.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(command.media.fileName)\"\r\n")
+        data.append("Content-Disposition: form-data; name=\"image\"; filename=\"\(command.media.fileName)\"\r\n")
         data.append("Content-Type: \(command.media.mimeType)\r\n")
         data.append("\r\n")
         data.append(command.media.data)
