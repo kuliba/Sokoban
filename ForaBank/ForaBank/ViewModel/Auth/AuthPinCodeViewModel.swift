@@ -204,7 +204,7 @@ class AuthPinCodeViewModel: ObservableObject {
                         
                     case .failure:
                         rootActions.spinner.hide()
-                        alert = Alert.ViewModel(title: "Ошибка", message: model.authDefaultErrorMessage, primary: .init(type: .default, title: "Ok", action: {[weak self] in
+                        alert = Alert.ViewModel(title: "Ошибка", message: model.defaultErrorMessage, primary: .init(type: .default, title: "Ok", action: {[weak self] in
                             self?.alert = nil
                             self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt())
                         }))

@@ -16,8 +16,7 @@ extension PaymentsProductSelectorView.ViewModel {
         var products = [ProductView.ViewModel]()
         for product in productsData {
             
-            let productViewModel = ProductView.ViewModel(with: product, size: .small, style: .main, model: model, action: { [weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: product.id))})
-            
+            let productViewModel = ProductView.ViewModel(with: product, size: .small, style: .main, model: model)
             products.append(productViewModel)
         }
         
@@ -36,6 +35,8 @@ extension PaymentsProductSelectorView.ViewModel {
             bindCategories()
         }
         self.products = products
+        
         bind()
+        bind(products)
     }
 }

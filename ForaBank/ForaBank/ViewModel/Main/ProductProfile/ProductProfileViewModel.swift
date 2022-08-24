@@ -193,16 +193,6 @@ class ProductProfileViewModel: ObservableObject {
                         }))
                     }
                     
-                case let payload as ModelAction.Card.Unblock.Response:
-                    switch payload {
-                    case .success:
-                        self.model.action.send(ModelAction.Products.Update.ForProductType.init(productType: .card))
-
-                    case .failure(let errorMessage):
-                        alert = .init(title: "Ошибка", message: errorMessage, primary: .init(type: .default, title: "ОК", action: { [weak self] in
-                            self?.alert = nil
-                        }))
-                    }
                 case let payload as ModelAction.Products.DepositConditionsPrintForm.Response:
                     switch payload.result {
                     case .success(let data):
@@ -375,6 +365,9 @@ class ProductProfileViewModel: ObservableObject {
                     let myProductsViewModel = MyProductsViewModel(model, dismissAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link()) })
                     bind(myProductsViewModel)
                     link = .myProducts(myProductsViewModel)
+                    
+                case let payload as ProductProfileCardViewModelAction.ShowAlert:
+                    self.alert = Alert.ViewModel(title: payload.title, message: payload.message, primary: .init(type: .default, title: "Ок", action: {}))
                     
                 default:
                     break

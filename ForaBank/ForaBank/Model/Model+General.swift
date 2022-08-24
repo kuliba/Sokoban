@@ -27,6 +27,13 @@ extension ModelAction {
     }
 }
 
+//MARK: - Helpers
+
+extension Model {
+    
+    var defaultErrorMessage: String { "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения." }
+}
+
 //MARK: - Handlers
 
 extension Model {
