@@ -126,8 +126,8 @@ class GKHMainViewController: UIViewController, UITableViewDelegate {
         case .notDetermined:
             // Первый запрос на доступ к камере
             AVCaptureDevice.requestAccess(for: .video) { isAllowed($0) }
-        @unknown default:
-            print()
+        @unknown default: break
+            
         }
     }
     

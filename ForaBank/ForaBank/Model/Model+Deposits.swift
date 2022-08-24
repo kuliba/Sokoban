@@ -91,8 +91,7 @@ extension Model {
                         
                     } catch {
                         
-                        //TODO: log error
-                        print("handleDepositsListRequest: caching error: \(error.localizedDescription)")
+                        //TODO: set logger
                     }
 
                 default:
@@ -179,8 +178,7 @@ extension Model {
                         
                     } catch {
                         
-                        //TODO: log
-                        print("log: handleDepositsInfoRequest: storing to cache error: \(error)")
+                        //TODO: set logger
                     }
   
                 default:

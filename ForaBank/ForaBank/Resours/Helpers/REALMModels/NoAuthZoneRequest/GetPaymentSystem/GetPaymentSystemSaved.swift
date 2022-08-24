@@ -15,7 +15,7 @@ struct GetPaymentSystemSaved: DownloadQueueProtocol {
         NetworkManager<GetPaymentSystemListDecodableModel>.addRequest(.getPaymentSystemList, param, body) { model, error in
             
             if let error = error {
-                print("DEBUG: error", error)
+                
                 completion(.failed(nil))
                 return
             }

@@ -67,7 +67,8 @@ class PaymentsViewModel: ObservableObject {
                         model.action.send(ModelAction.Payment.Begin.Request(source: .service(service)))
                         
                     case .failed(let error):
-                        print(error.localizedDescription)
+                        //TODO: set logger
+                        break
                     }
                     
                 case let payload as ModelAction.Payment.Begin.Response:

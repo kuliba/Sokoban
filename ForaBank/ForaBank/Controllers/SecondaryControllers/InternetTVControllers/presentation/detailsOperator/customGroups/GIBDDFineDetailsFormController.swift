@@ -121,7 +121,6 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
 
         if let list = operatorData?.parameterList {
             list.forEach { item in
-                print("item5555", "\(item.id) - \(item.title)")
                 if selectedValue != "-1" && (item.type == "MaskList" || item.type == "Select") {
                     if item.id == "a3_SearchType_1_1" {
                         InternetTVDetailsFormViewModel.additionalDic["fieldName"] = ["fieldid": "\(item.order ?? 0)",

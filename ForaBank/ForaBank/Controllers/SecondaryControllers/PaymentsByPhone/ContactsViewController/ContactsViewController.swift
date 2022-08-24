@@ -221,7 +221,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
     func getFastPaymentContractList() {
         NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
             if error != nil {
-                print("DEBUG: Error: ")
+
             }
             guard let model = model else { return }
             
@@ -244,7 +244,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
                     self.userPhoneView.userPhone.text = maskPhone?.description
                 }
             } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
+
             }
         }
     }
@@ -386,15 +386,12 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
                     
                     if contacts.count == 0 {
                         message = "No contacts were found matching the given phone number."
-                        print(message!)
                     }
                 } catch {
                     message = "Unable to fetch contacts."
                 }
                 if message != nil {
-                    DispatchQueue.main.async {
-                        print(message!)
-                    }
+                    
                 } else {
                     // Success
                     DispatchQueue.main.async {
@@ -421,7 +418,6 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
                                                          keysToFetch: allowedContactKeys())
         }
         catch {
-            print("Error!")
         }
     }
     
@@ -686,10 +682,8 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
         
         NetworkManager<FastPaymentBanksListDecodableModel>.addRequest(.fastPaymentBanksList, [:], [:]) { model, error in
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 self.dismissActivity()
                 guard let data  = model.data else { return }
@@ -702,7 +696,6 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 }
             } else {
                 self.dismissActivity()
-                print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
         
@@ -713,10 +706,9 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
         NetworkManager<GetLatestPaymentsDecodableModel>.addRequest(.getLatestPayments, [:], [:]) { model, error in
             self.dismissActivity()
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
+
             }
             guard let model = model else { return }
-            print("DEBUG: LatestPayment: ", model)
             if model.statusCode == 0 {
                 guard let data  = model.data else { return }
                 DispatchQueue.main.async {
@@ -725,7 +717,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                     self.lastPaymentsCollectionView.reloadData()
                 }
             } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
+
             }
         }
     }
@@ -745,7 +737,6 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
         NetworkManager<GetLatestPhonePaymentsDecodableModel>.addRequest(.getLatestPhonePayments, [:], body) { model, error in
             self.dismissActivity()
             guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 self.dismissActivity()
                 guard let data  = model.data else { return }
@@ -765,7 +756,6 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 }
             } else {
                 self.dismissActivity()
-                print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
         
@@ -853,7 +843,6 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
                         for number in contact.phoneNumbers {
                             let phone: PhoneContact = .init(contact: contact)
                             phone.phoneNumber = phone.phoneNumber.filter({$0 == number.value.stringValue})
-                            print(number.value.stringValue)
                             self.reserveContacts.append(phone)
                         }
                     }
@@ -935,7 +924,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             }
             //Catching exception as enumerateContactsWithFetchRequest can throw errors
             catch let error as NSError {
-                print(error.localizedDescription)
+                
             }
             
         }
@@ -1000,7 +989,6 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             return contactsForSection?.count ?? 0
         } else {
             if resultSearchController == true {
-                print(filteredContacts.count)
                 return filteredContacts.count
             }
             if let contactsForSection = orderedContacts[sortedContactKeys[section]] {
@@ -1139,7 +1127,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
         
         tableView.scrollToRow(at: IndexPath(row: 0, section: index), at: UITableView.ScrollPosition.top , animated: false)
         for item in orderedBanks {
-            print(item)
+
         }
         if firstTap{
             orderedBanks.removeAll()

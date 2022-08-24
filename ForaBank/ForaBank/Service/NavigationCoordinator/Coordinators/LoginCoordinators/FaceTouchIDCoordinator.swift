@@ -21,7 +21,7 @@ class FaceTouchIDCoordinator: Coordinator {
     }
     
     deinit {
-        print("FaceTouchIDCoordinatorDelegate deinit")
+        
     }
     
     override func start() {

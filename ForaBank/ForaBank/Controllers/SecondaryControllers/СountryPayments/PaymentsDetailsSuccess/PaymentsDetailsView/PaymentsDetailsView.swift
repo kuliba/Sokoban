@@ -70,7 +70,6 @@ class PaymentsDetailsView: UIView {
     }
     
     @IBAction func saveButtonTapped(_ sender: Any) {
-        print(#function)
         saveTapped?()
     }
     
@@ -83,7 +82,6 @@ class PaymentsDetailsView: UIView {
     }
     
     @IBAction func detailBattonTapped(_ sender: Any) {
-        print(#function)
         detailTapped?()
     }
     

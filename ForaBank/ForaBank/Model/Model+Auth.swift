@@ -284,6 +284,7 @@ internal extension Model {
                 
             } catch {
                 
+                LoggerAgent.shared.log(level: .error, category: .model, message: "Auth Session Request Error: \(error.localizedDescription)")
                 self.action.send(ModelAction.Auth.Session.Start.Response(result: .failure(error)))
             }
         }
@@ -305,25 +306,23 @@ internal extension Model {
                 case .ok:
                     guard let duration = response.data else {
                         
-                        //TODO: handle error
+                        self.handleServerCommandEmptyData(command: command)
                         return
                     }
                     self.action.send(ModelAction.Auth.Session.Extend.Response(result: .success(TimeInterval(duration))))
                     
                 default:
-                    break
-                    //TODO: handle error
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: String(describing: response.errorMessage))
                 }
 
             case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
                 self.action.send(ModelAction.Auth.Session.Extend.Response(result: .failure(error)))
             }
         }
     }
     
     func handleAuthCheckClientRequest(payload: ModelAction.Auth.CheckClient.Request) {
-        
-        print("SessionAgent: CHECK REQUESTED")
         
         Task {
             
@@ -345,38 +344,31 @@ internal extension Model {
                                 
                                 let decryptedPhone = try credentials.csrfAgent.decrypt(data.phone)
                                 self.action.send(ModelAction.Auth.CheckClient.Response.success(codeLength: self.authVerificationCodeLength, phone: decryptedPhone, resendCodeDelay: self.authVerificationCodeResendDelay))
-                                print("SessionAgent: CHECK REQUEST COMPLETE")
                                 
                             } catch {
                                 
-                                //TODO: log error
-                                print("Model: handleAuthCheckClientRequest: decrypt phone error \(error.localizedDescription)")
-                                
+                                self.handleServerCommandError(error: error, command: command)
                                 self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: self.defaultErrorMessage))
                             }
                             
                         } else {
                             
-                            //TODO: log error
-                            print("Model: handleAuthCheckClientRequest: empty data status \(response.statusCode), message: \(String(describing: response.errorMessage))")
+                            self.handleServerCommandEmptyData(command: command)
                             
                             let message = response.errorMessage ?? self.defaultErrorMessage
                             self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: message))
                         }
                         
                     case .failure(let error):
-                        //TODO: log error
-                        print("Model: handleAuthCheckClientRequest: error \(error.localizedDescription)")
                         
+                        self.handleServerCommandError(error: error, command: command)
                         self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: self.defaultErrorMessage))
                     }
                 }
 
             } catch {
                 
-                //TODO: log error
-                print("Model: handleAuthCheckClientRequest: error: \(error.localizedDescription)")
-                
+                LoggerAgent.shared.log(level: .error, category: .model, message: "Auth Check Client Request Task Error: \(error.localizedDescription)")
                 self.action.send(ModelAction.Auth.CheckClient.Response.failure(message: self.defaultErrorMessage))
             }
         }
@@ -412,8 +404,13 @@ internal extension Model {
                             
                         default:
                             
-                            //TODO: log error
-                            print("Model: handleAuthVerificationCodeConfirmRequest: data status \(response.statusCode), message: \(String(describing: response.errorMessage))")
+                            if let errorMessage = response.errorMessage {
+                             
+                                self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: errorMessage)
+                            } else {
+                                
+                                self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: nil)
+                            }
                             
                             let message = response.errorMessage ?? self.defaultErrorMessage
                             self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.failure(message: message))
@@ -421,18 +418,14 @@ internal extension Model {
                         
                     case .failure(let error):
                         
-                        //TODO: log error
-                        print("Model: handleAuthVerificationCodeConfirmRequest: error \(error.localizedDescription)")
-                        
+                        self.handleServerCommandError(error: error, command: command)
                         self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.failure(message: self.defaultErrorMessage))
                     }
                 }
                 
             } catch {
                 
-                //TODO: log error
-                print("Model: handleAuthVerificationCodeConfirmRequest: error \(error.localizedDescription)")
-                
+                LoggerAgent.shared.log(level: .error, category: .model, message: "Auth Verification Code Confirm Request Task Error: \(error.localizedDescription)")
                 self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.failure(message: self.defaultErrorMessage))
             }
         }
@@ -460,8 +453,13 @@ internal extension Model {
                             
                         default:
                             
-                            //TODO: log error
-                            print("Model: handleAuthVerificationCodeResendRequest: data status \(response.statusCode), message: \(String(describing: response.errorMessage))")
+                            if let errorMessage = response.errorMessage {
+                             
+                                self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: errorMessage)
+                            } else {
+                                
+                                self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: nil)
+                            }
                             
                             let message = response.errorMessage ?? self.defaultErrorMessage
                             self.action.send(ModelAction.Auth.VerificationCode.Resend.Response.failure(message: message))
@@ -469,26 +467,20 @@ internal extension Model {
                         
                     case .failure(let error):
                         
-                        //TODO: log error
-                        print("Model: handleAuthVerificationCodeResendRequest: error \(error.localizedDescription)")
-                        
+                        self.handleServerCommandError(error: error, command: command)
                         self.action.send(ModelAction.Auth.VerificationCode.Resend.Response.failure(message: self.defaultErrorMessage))
                     }
                 }
                 
             } catch {
                
-                //TODO: log error
-                print("Model: handleAuthVerificationCodeResendRequest: error \(error.localizedDescription)")
-                
+                LoggerAgent.shared.log(level: .error, category: .model, message: "Auth Verification Code Resend Request Task Error: \(error.localizedDescription)")
                 self.action.send(ModelAction.Auth.VerificationCode.Resend.Response.failure(message: self.defaultErrorMessage))
             }
         }
     }
     
     func handleAuthRegisterRequest() {
-        
-        print("log: model: REGISTER REQUESTED")
         
         Task {
             
@@ -528,25 +520,26 @@ internal extension Model {
                                     
                                 } catch {
                                     
-                                    //TODO: log error
-                                    print("Model: handleAuthRegisterRequest: decrypt phone error \(error.localizedDescription)")
-                                    
+                                    self.handleServerCommandError(error: error, command: command)
                                     self.action.send(ModelAction.Auth.Register.Response.failure(message: self.defaultErrorMessage))
                                 }
                                 
                             } else {
                                 
-                                //TODO: log error
-                                print("Model: handleAuthRegisterRequest: empty data status \(response.statusCode), message: \(String(describing: response.errorMessage))")
-                                
+                                self.handleServerCommandEmptyData(command: command)
                                 let message = response.errorMessage ?? self.defaultErrorMessage
                                 self.action.send(ModelAction.Auth.Register.Response.failure(message: message))
                             }
                             
                         default:
                             
-                            //TODO: log error
-                            print("Model: handleAuthRegisterRequest: data status \(response.statusCode), message: \(String(describing: response.errorMessage))")
+                            if let errorMessage = response.errorMessage {
+                             
+                                self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: errorMessage)
+                            } else {
+                                
+                                self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: nil)
+                            }
                             
                             let message = response.errorMessage ?? self.defaultErrorMessage
                             self.action.send(ModelAction.Auth.Register.Response.failure(message: message))
@@ -554,18 +547,14 @@ internal extension Model {
                         
                     case .failure(let error):
                         
-                        //TODO: log error
-                        print("Model: handleAuthRegisterRequest: error \(error.localizedDescription)")
-                        
+                        self.handleServerCommandError(error: error, command: command)
                         self.action.send(ModelAction.Auth.Register.Response.failure(message: self.defaultErrorMessage))
                     }
                 }
                 
             } catch {
                 
-                //TODO: log error
-                print("Model: handleAuthRegisterRequest: error \(error.localizedDescription)")
-                
+                LoggerAgent.shared.log(level: .error, category: .model, message: "Auth Register Request Task Error: \(error.localizedDescription)")
                 self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.failure(message: self.defaultErrorMessage))
             }
         }
@@ -580,9 +569,7 @@ internal extension Model {
             
         } catch {
             
-            //TODO: log error
-            print("Model: handleAuthPincodeSetRequest: error \(error.localizedDescription)")
-            
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Auth Pincode Set Request error: \(error.localizedDescription)")
             action.send(ModelAction.Auth.Pincode.Set.Response.failure(message: "Невозможно сохранить пин-код в крипто-хранилище. Попробуйте переустановить приложение. В случае, если ошибка повториться, обратитесь в службу поддержки."))
         }
     }
@@ -612,9 +599,7 @@ internal extension Model {
             
         } catch {
             
-            //TODO: log error
-            print("Model: handleAuthPincodeCheckRequest: error \(error.localizedDescription)")
-            
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Auth Pincode Check Request Error: \(error.localizedDescription)")
             action.send(ModelAction.Auth.Pincode.Check.Response.failure(message: "Невозможно прочитать данные пинкода из крипто-хранилища. Необходимо выйти из аккаунта и заново пройти процедуру авторизации."))
         }
     }
@@ -632,8 +617,8 @@ internal extension Model {
             
         } catch {
             
-            //TODO: log error
-            print("Model: handleAuthSensorSettings: error \(error.localizedDescription)")
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Auth Sensonr Settings Error: \(error.localizedDescription)")
+
         }
     }
     
@@ -670,7 +655,7 @@ internal extension Model {
                     //MARK: remove error from cancel biometric auth
                     
                     //self.action.send(ModelAction.Auth.Sensor.Evaluate.Response.failure(message: "При попытке авторизации через сенсор возникла ошибка: \(error.localizedDescription)"))
-                    print("Model: failedEvaluatePolicyWithError: error \(error.localizedDescription)")
+                    LoggerAgent.shared.log(level: .error, category: .model, message: "Auth Sensor Evaluate Error: \(error.localizedDescription)")
 
                 }
             }
@@ -694,6 +679,7 @@ internal extension Model {
                 
             } catch {
                 
+                LoggerAgent.shared.log(level: .error, category: .model, message: "Auth Register Request Error: \(error.localizedDescription)")
                 action.send(ModelAction.Auth.Push.Register.Response.failure(error))
             }
         }
@@ -716,14 +702,13 @@ internal extension Model {
                 
             } catch {
                 
+                LoggerAgent.shared.log(level: .error, category: .model, message: "Auth Set Device Settings Request Error: \(error.localizedDescription)")
                 action.send(ModelAction.Auth.SetDeviceSettings.Response.failure(error))
             }
         }
     }
     
     func handleAuthLoginRequest(payload: ModelAction.Auth.Login.Request) {
-        
-        print("log: model: LOGIN REQUESTED")
         
         Task {
             
@@ -762,8 +747,13 @@ internal extension Model {
 
                         default:
                             
-                            //TODO: log error
-                            print("Model: handleAuthLoginRequest: data status \(response.statusCode), message: \(String(describing: response.errorMessage))")
+                            if let errorMessage = response.errorMessage {
+                             
+                                self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: errorMessage)
+                            } else {
+                                
+                                self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: nil)
+                            }
                             
                             let message = response.errorMessage ?? self.defaultErrorMessage
                             self.action.send(ModelAction.Auth.Login.Response.failure(message: message))
@@ -771,18 +761,14 @@ internal extension Model {
                         
                     case .failure(let error):
                         
-                        //TODO: log error
-                        print("Model: handleAuthLoginRequest: error \(error.localizedDescription)")
-                        
+                        self.handleServerCommandError(error: error, command: command)
                         self.action.send(ModelAction.Auth.Login.Response.failure(message: self.defaultErrorMessage))
                     }
                 }
                 
             } catch {
                 
-                //TODO: log error
-                print("Model: handleAuthRegisterRequest: error \(error.localizedDescription)")
-                
+                LoggerAgent.shared.log(level: .error, category: .model, message: "Auth Login Request Task Error: \(error.localizedDescription)")
                 self.action.send(ModelAction.Auth.Login.Response.failure(message: self.defaultErrorMessage))
             }
         }
@@ -903,8 +889,6 @@ extension Model {
     
     func authSetDeviceSettings(credentials: SessionCredentials) async throws {
         
-        print("SessionAgent: SET DEVICE SETTINGS: REQUESTED")
-        
         let pushDeviceId = try await authPushDeviceId()
         let pushFcmToken = try await authPushFcmToken()
         let serverDeviceGUID = try authServerDeviceGUID()
@@ -913,8 +897,6 @@ extension Model {
         
         let command = try ServerCommands.RegistrationContoller.SetDeviceSettings(credentials: credentials, pushDeviceId: pushDeviceId, pushFcmToken: pushFcmToken, serverDeviceGUID: serverDeviceGUID, loginValue: loginValue, availableSensorType: authAvailableBiometricSensorType, isSensorEnabled: authIsBiometricSensorEnabled)
         
-        print("SessionAgent: SET DEVICE SETTINGS: COMMAND OK")
-        
         return try await withCheckedThrowingContinuation({ continuation in
             
             self.serverAgent.executeCommand(command: command) { result in
@@ -924,24 +906,19 @@ extension Model {
                     switch response.statusCode {
                     case .ok:
                         continuation.resume()
-                        print("SessionAgent: SET DEVICE SETTINGS: OK")
                         
                     default:
                         continuation.resume(throwing: ModelAuthError.setDeviceSettingsFailed(status: response.statusCode, message: response.errorMessage))
-                        print("SessionAgent: SET DEVICE SETTINGS: FAIL \(response.statusCode), \(response.errorMessage)")
                     }
                     
                 case .failure(let error):
                     continuation.resume(throwing: error)
-                    print("SessionAgent: SET DEVICE SETTINGS: FAIL \(error.localizedDescription)")
                 }
             }
         })
     }
     
     func authSetDeviceSettings(credentials: SessionCredentials, sensorType: BiometricSensorType?) async throws {
-        
-        print("SessionAgent: SET DEVICE SETTINGS: REQUESTED")
         
         let pushDeviceId = try await authPushDeviceId()
         let pushFcmToken = try await authPushFcmToken()
@@ -950,8 +927,6 @@ extension Model {
         let loginValue = try pincode.sha256Base64String()
         let command = try ServerCommands.RegistrationContoller.SetDeviceSettings(credentials: credentials, pushDeviceId: pushDeviceId, pushFcmToken: pushFcmToken, serverDeviceGUID: serverDeviceGUID, loginValue: loginValue, availableSensorType: sensorType, isSensorEnabled: authIsBiometricSensorEnabled)
         
-        print("SessionAgent: SET DEVICE SETTINGS: COMMAND OK")
-        
         return try await withCheckedThrowingContinuation({ continuation in
             
             self.serverAgent.executeCommand(command: command) { result in
@@ -961,16 +936,13 @@ extension Model {
                     switch response.statusCode {
                     case .ok:
                         continuation.resume()
-                        print("SessionAgent: SET DEVICE SETTINGS: OK")
                         
                     default:
                         continuation.resume(throwing: ModelAuthError.setDeviceSettingsFailed(status: response.statusCode, message: response.errorMessage))
-                        print("SessionAgent: SET DEVICE SETTINGS: FAIL \(response.statusCode), \(response.errorMessage)")
                     }
                     
                 case .failure(let error):
                     continuation.resume(throwing: error)
-                    print("SessionAgent: SET DEVICE SETTINGS: FAIL \(error.localizedDescription)")
                 }
             }
         })

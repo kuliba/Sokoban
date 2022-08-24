@@ -271,7 +271,6 @@ class AccountStatementController: UIViewController {
             
         if let date = sender?.date {
             selectDate = date
-            print("Picked the date \(dateFormatter.string(from: date))")
         }
     }
 
@@ -321,7 +320,7 @@ class AccountStatementController: UIViewController {
     }
     
     @objc private func generateButtonTapped() {
-        print(#function)
+        
         guard let card = cardFromField.model else { return }
         
         let startDate = self.startDate ?? Date()

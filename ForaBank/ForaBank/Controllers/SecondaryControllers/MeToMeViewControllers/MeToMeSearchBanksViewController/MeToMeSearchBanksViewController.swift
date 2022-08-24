@@ -236,17 +236,14 @@ class MeToMeSearchBanksViewController: UIViewController {
             self?.dismissActivity()
             if error != nil {
                 guard let error = error else { return }
-                print("DEBUG: Error: ", error)
                 completion(nil, error)
             }
             guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 guard let data  = model.data else { return }
                 completion(data.consentList ?? [], nil)
             } else {
                 guard let error = model.errorMessage else { return }
-                print("DEBUG: Error: ", error)
                 completion(nil, error)
             }
         }

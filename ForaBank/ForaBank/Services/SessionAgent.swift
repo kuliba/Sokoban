@@ -96,8 +96,6 @@ class SessionAgent: SessionAgentProtocol {
                updateState(with: time)
                 
             }.store(in: &timerBindings)
-        
-        print("log: SessionAgent: timer: STARTED")
     }
     
     private func timerStop() {
@@ -107,7 +105,6 @@ class SessionAgent: SessionAgentProtocol {
         }
         
         timerBindings = Set<AnyCancellable>()
-        print("log: SessionAgent: timer: STOPPED")
     }
     
     private func updateState(with time: TimeInterval) {
@@ -127,8 +124,6 @@ class SessionAgent: SessionAgentProtocol {
             
             action.send(SessionAgentAction.Session.Extend.Request())
         }
-        
-//        print("log: SessionAgent: remain time: \(sessionTimeRemain)")
     }
     
     func sessionTimeRemain(for time: TimeInterval) -> TimeInterval {

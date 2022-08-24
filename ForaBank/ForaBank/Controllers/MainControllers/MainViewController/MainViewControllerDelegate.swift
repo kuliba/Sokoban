@@ -53,7 +53,6 @@ extension MainViewController: UICollectionViewDelegate {
                         }
                     } else {
                         guard self.alertController == nil else {
-                            print("There is already an alert presented")
                             return
                         }
                         self.alertController = UIAlertController(title: "Внимание", message: "Для сканирования QR кода, необходим доступ к камере", preferredStyle: .alert)
@@ -123,8 +122,7 @@ extension MainViewController: UICollectionViewDelegate {
         case .notDetermined:
             // Первый запрос на доступ к камере
             AVCaptureDevice.requestAccess(for: .video) { isAllowed($0) }
-        @unknown default:
-            print()
+        @unknown default: break
         }
     }
     

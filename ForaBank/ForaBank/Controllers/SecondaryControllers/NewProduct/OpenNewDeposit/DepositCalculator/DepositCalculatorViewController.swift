@@ -86,7 +86,7 @@ class DepositCalculatorViewController: UICollectionViewController {
 
 extension DepositCalculatorViewController: CalculatorDepositDelegate {
     func openDetailController(with model: [TermRateSumTermRateList]?) {
-        print(#function)
+        
         let controller = SelectDepositPeriodViewController()
         controller.elements = model
         controller.itemIsSelect = { elem in

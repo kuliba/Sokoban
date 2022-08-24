@@ -743,7 +743,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                 completion(data.bankFullInfoList ?? [])
                 
             } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
+
             }
         }
     }

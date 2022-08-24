@@ -136,7 +136,8 @@ private extension TemplatesListViewModel {
                     switch temp.type {
                         
                     case .otherBank:
-                        print("Скорее всего не будет сделано в ближайшее время")
+                        //TODO: set action
+                        break
                         
                     case .betweenTheir:
                         link = .betweenTheir(.init(type: .template(temp), closeAction: {[weak self] in

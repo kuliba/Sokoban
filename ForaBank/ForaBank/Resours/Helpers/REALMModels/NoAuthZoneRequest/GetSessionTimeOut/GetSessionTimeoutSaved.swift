@@ -15,7 +15,7 @@ struct GetSessionTimeoutSaved: DownloadQueueProtocol {
         NetworkManager<GetSessionTimeoutDecodableModel>.addRequest(.getSessionTimeout, param, body) { model, error in
             
             if error != nil {
-                print("DEBUG: error", error!)
+                
                 completion(.failed(nil))
             } else {
                 guard let statusCode = model?.statusCode else {
@@ -29,7 +29,6 @@ struct GetSessionTimeoutSaved: DownloadQueueProtocol {
                     let sessionTimeOutParameters = returnRealmModel()
                     sessionTimeOutParameters.maxTimeOut = StaticDefaultTimeOut.staticDefaultTimeOut
                     sessionTimeOutParameters.mustCheckTimeOut = true
-                    print("Debugging GetSessionTimeoutSaved", sessionTimeOutParameters.mustCheckTimeOut)
                     /// Сохраняем в REALM
                     do {
                         let realm = try? Realm()

@@ -148,7 +148,6 @@ extension AppDelegate {
     func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:] ) -> Bool {
 
         // Determine who sent the URL.
-        print("qr5555 application application UIApplication open")
         GlobalModule.c2bURL = url.description
         let sendingAppID = options[.sourceApplication]
         // Process the URL.

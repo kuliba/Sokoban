@@ -90,7 +90,7 @@ extension GKHInputViewController {
         NetworkManager<CreateDirectTransferDecodableModel>.addRequest(.createServiceTransfer, [:], body) { respModel, error in
             self.dismissActivity()
             if error != nil {
-                print("DEBUG: Error: ContaktPaymentBegin ", error ?? "")
+
                 completion(nil, error!)
             }
             if self.operatorType == true {
@@ -109,7 +109,7 @@ extension GKHInputViewController {
                     completion(model, nil)
                     
                 } else {
-                    print("DEBUG: Error: ContaktPaymentBegin ", respModel.errorMessage ?? "")
+
                     completion(nil, respModel.errorMessage)
                 }
             } else {
@@ -144,7 +144,7 @@ final func operatorStep() {
     NetworkManager<CreateServiceTransferDecodableModel>.addRequest(.createServiceTransfer, [:], body) { model, error in
         self.dismissActivity()
         if error != nil {
-            print(#function, "CreateServiceTransfer Error")
+
         }
         guard let respModel = model else { return }
         if respModel.errorMessage != "" {
@@ -189,7 +189,7 @@ final func operatorStep() {
                 self.emptyArray.removeAll()
             }
         } else {
-            print(#function, respModel.errorMessage ?? "")
+
         }
     }
 }
@@ -206,7 +206,7 @@ final func operatorNexStep(amount: String ,completion: @escaping (_ model: NextS
     NetworkManager<NextStepServiceTransferDecodableModel>.addRequest(.nextStepServiceTransfer, [:], body) { model, error in
         self.dismissActivity()
         if error != nil {
-            print(#function, "CreateServiceTransfer Error")
+
         }
         guard let respModel = model else { return }
         if respModel.statusCode == 0 {
@@ -230,7 +230,7 @@ final func operatorNexStep(amount: String ,completion: @escaping (_ model: NextS
                 completion(respModel, nil)
             }
         } else {
-            print(#function, respModel.errorMessage ?? "")
+
         }
     }
 }

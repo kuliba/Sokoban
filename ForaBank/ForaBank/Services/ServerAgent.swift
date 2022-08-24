@@ -21,7 +21,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
         configuration.httpShouldSetCookies = false
         configuration.httpCookieAcceptPolicy = .never
 
-        return URLSession(configuration: configuration)
+        return URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }()
     
     private lazy var sessionCached: URLSession = {
@@ -406,21 +406,33 @@ extension ServerAgent {
     }
 }
 
-//MARK: - URLSessionDelegate
-
-extension ServerAgent: URLSessionDelegate {
-    
-}
-
 //MARK: - URLSessionTaskDelegate
 
 extension ServerAgent: URLSessionTaskDelegate {
-    
-}
+ 
+    func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
+        
+        if let error = error {
+            
+            LoggerAgent.shared.log(level: .error, category: .network, message: "URL Session did become invalid with error: \(error.localizedDescription)")
 
-//MARK: - URLSessionDataDelegate
-extension ServerAgent: URLSessionDataDelegate {
+        } else {
+
+            LoggerAgent.shared.log(level: .error, category: .network, message: "URL Session did become invalid")
+       }
+    }
     
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        
+        if let error = error {
+            
+            LoggerAgent.shared.log(level: .error, category: .network, message: "URLSessionTask: \(String(describing: task.originalRequest?.url)) did complete with error: \(error.localizedDescription)")
+
+        } else {
+
+            LoggerAgent.shared.log(level: .error, category: .network, message: "URLSessionTask: \(String(describing: task.originalRequest?.url)) did complete unexpected")
+        }
+    }
 }
 
 //TODO: make throw

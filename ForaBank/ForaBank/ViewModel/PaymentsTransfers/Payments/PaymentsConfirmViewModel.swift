@@ -13,8 +13,6 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
     
     override init(_ model: Model, operation: Payments.Operation, rootActions: PaymentsViewModel.RootActions) {
         
-        print("Payments: init confirm")
-        
         super.init(model, operation: operation, rootActions: rootActions)
         
     }
@@ -31,8 +29,6 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
         bind(model: model)
         bindAction()
         bindItems()
-        
-        print("Payments: bind confirm")
     }
     
     override func bind(model: Model) {

@@ -102,7 +102,6 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
                 router?.setValue("application/json", forHTTPHeaderField: "Content-Type")
             }
         } catch {
-            debugPrint(NetworkError.encodingFailed)
         }
         
         let session = URLSession(configuration: .default, delegate: self, delegateQueue: .main)
@@ -149,7 +148,6 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
                 router?.setValue("application/json", forHTTPHeaderField: "Content-Type")
             }
         } catch {
-            debugPrint(NetworkError.encodingFailed)
         }
         
         let session = URLSession(configuration: .default, delegate: self, delegateQueue: .main)

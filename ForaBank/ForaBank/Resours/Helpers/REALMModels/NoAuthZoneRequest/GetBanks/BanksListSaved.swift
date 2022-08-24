@@ -15,7 +15,7 @@ struct BanksListSaved: DownloadQueueProtocol {
         NetworkManager<GetFullBankInfoListDecodableModel>.addRequest(.getFullBankInfoList, param, body) { model, error in
             
             if let error = error {
-                print("DEBUG: error", error)
+                
                 completion(.failed(nil))
                 return
             }

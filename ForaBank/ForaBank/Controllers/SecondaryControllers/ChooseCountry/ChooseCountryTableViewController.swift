@@ -73,14 +73,11 @@ class ChooseCountryTableViewController: UITableViewController {
     //MARK: - API
     private func loadLastPayments() {
         NetworkManager<GetPaymentCountriesDecodableModel>.addRequest(.getPaymentCountries, [:], [:]) { model, error in
-//            print(model)
             if error != nil {
-                print("DEBUG: error", error!)
             } else {
                 guard let model = model else { return }
                 guard let lastPaymentsList = model.data else { return }
                 self.lastPaymentsList = lastPaymentsList
-                print("DEBUG: lastPaymentsList count", lastPaymentsList.count)
             }
         }
     }
@@ -228,10 +225,8 @@ class ChooseCountryTableViewController: UITableViewController {
         let selectedCountry: CountriesList
         if searching {
             selectedCountry = searchedCountry[indexPath.row]
-            print(selectedCountry)
         } else {
             selectedCountry = countries[indexPath.row]
-            print(selectedCountry)
         }
 
         self.searchController.searchBar.searchTextField.endEditing(true)

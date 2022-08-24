@@ -91,15 +91,6 @@ extension ChooseCountryHeaderView: UICollectionViewDelegate {
         let cell = collectionView.cellForItem(at: indexPath) as! ChooseCountryHeaderCell
         guard let model = cell.viewModel else { return }
         didChooseCountryHeaderTapped?(model)
-//        print(cell.viewModel?.shortName)
-        
-//            if indexPath.item == 0 {
-//                let card = bankList[indexPath.item]
-//                didSeeAll?(card)
-//            } else {
-//                let card = bankList[indexPath.item]
-//                didBankTapped?(card)
-//            }
         
     }
 }

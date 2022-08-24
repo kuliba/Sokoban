@@ -371,11 +371,8 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                         /*
                          self.delegate.didFetchContacts(contacts) <= which extracts the required info and puts it in a tableview
                          */
-                        print(contacts) // Will print all contact info for each contact (multiple line is, for example, there are multiple phone numbers or email addresses)
                         let contact = contacts[0] // For just the first contact (if two contacts had the same phone number)
                         completion(contact)
-                        print(contact.givenName) // Print the "first" name
-                        print(contact.familyName) // Print the "last" name
                         if contact.isKeyAvailable(CNContactImageDataKey) {
                             
                         } else {
@@ -419,7 +416,6 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                     if authorizationStatus == CNAuthorizationStatus.denied {
                         DispatchQueue.main.async {
                             let message = "\(accessError!.localizedDescription)\n\nPlease allow the app to access your contacts through the Settings."
-                            print(message)
                         }
                     }
                 }

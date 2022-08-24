@@ -178,7 +178,7 @@ extension UserAccountViewModel {
             image: Image("imgMainBanner2"),
             //image: nil,
             action: {
-                print("Open peacker")
+                //TODO: set action
             }),
         sections:
             [UserAccountContactsView.ViewModel.contact,
@@ -190,7 +190,7 @@ extension UserAccountViewModel {
             icon: .ic24LogOut,
             content: "Выход из приложения",
             action: {
-                print("Exit action")
+            //TODO: set action
             }),
         deleteAccountButton: .init(
             icon: .ic24UserX, content: "Удалить учетную запись",

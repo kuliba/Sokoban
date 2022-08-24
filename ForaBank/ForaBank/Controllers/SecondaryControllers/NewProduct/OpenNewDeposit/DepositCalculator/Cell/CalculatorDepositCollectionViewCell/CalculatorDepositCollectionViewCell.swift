@@ -85,7 +85,7 @@ class CalculatorDepositCollectionViewCell: UICollectionViewCell {
     
     
     @IBAction func dateButtonTapped(_ sender: Any) {
-        print(#function)
+        
         delegate?.openDetailController(with: choosenRateList)
     }
     

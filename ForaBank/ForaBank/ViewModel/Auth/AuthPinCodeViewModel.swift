@@ -214,7 +214,6 @@ class AuthPinCodeViewModel: ObservableObject {
                     rootActions.spinner.hide()
                     switch payload {
                     case .failure(message: let message):
-                        print("SessionAgent: LOGIN FAILED")
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in
                             self?.alert = nil
                             self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt()) 

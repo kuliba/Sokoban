@@ -34,8 +34,7 @@ struct CodeVerificationViewModel {
                     }
                 }
             }
-        case .createTransfer:
-            print("DEBUG: get code for ", type)
+        case .createTransfer: break
         }
         
         

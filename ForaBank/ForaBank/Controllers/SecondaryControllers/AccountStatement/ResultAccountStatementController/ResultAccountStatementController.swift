@@ -53,7 +53,7 @@ class ResultAccountStatementController: UIViewController {
     
     
     @IBAction func watchDocumentButtonTapped(_ sender: Any) {
-        print(#function)
+        
         
 //        let vc = AccountStatementPDFController()
 //        let navVC = UINavigationController(rootViewController: vc)

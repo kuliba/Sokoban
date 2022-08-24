@@ -68,7 +68,7 @@ extension PushHistoryViewController: UITableViewDelegate, UITableViewDataSource 
             realm?.delete(c!)
             try realm?.commitWrite()
         } catch {
-            print(error.localizedDescription)
+            
         }
     }
     

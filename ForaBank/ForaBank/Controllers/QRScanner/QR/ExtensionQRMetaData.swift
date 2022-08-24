@@ -84,7 +84,6 @@ extension QRViewController: AVCaptureMetadataOutputObjectsDelegate, CALayerDeleg
             } else {
                 DispatchQueue.main.async {
                     guard self.alertController == nil else {
-                        print("There is already an alert presented")
                         return
                     }
                     self.alertController = UIAlertController(title: "Код не получен", message: object.stringValue ?? "", preferredStyle: .actionSheet)
@@ -92,7 +91,7 @@ extension QRViewController: AVCaptureMetadataOutputObjectsDelegate, CALayerDeleg
                         return
                     }
                     alert.addAction(UIAlertAction(title: "Повторить попытку", style: .default, handler: { (action) in
-                        print(object.stringValue ?? "")
+
                         self.alertController = nil
                     }))
                     self.present(alert, animated: true, completion: nil)

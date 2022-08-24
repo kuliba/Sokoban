@@ -110,11 +110,9 @@ class AuthConfirmViewModel: ObservableObject {
                     case .success:
                         pincodeViewModel = AuthPinCodeViewModel(model, mode: .create(step: .one), rootActions: rootActions)
                         isPincodeViewPresented = true
-                        print("SessionAgent: REGISTER DONE, addr:\(Unmanaged.passUnretained(self).toOpaque())")
                         
                     case .failure(message: let message):
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
-                        print("SessionAgent: REGISTER ERROR")
                     }
                     
                 case let payload as ModelAction.Auth.VerificationCode.Resend.Response:
@@ -180,7 +178,6 @@ class AuthConfirmViewModel: ObservableObject {
                     code.textField.dismissKeyboard()
                     rootActions.spinner.show()
                     model.action.send(ModelAction.Auth.VerificationCode.Confirm.Request(code: code.textField.text))
-                    print("SessionAgent: CONFIRM CODE REQUEST")
                     
                 default:
                     break

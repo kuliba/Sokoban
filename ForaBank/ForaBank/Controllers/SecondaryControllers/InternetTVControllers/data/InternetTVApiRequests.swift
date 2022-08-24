@@ -9,7 +9,7 @@ struct InternetTVApiRequests {
         let body = ["puref" : puref] as [String: AnyObject]
         NetworkManager<IsSingleServiceModel>.addRequest(.isSingleService, [:], body) { model, error in
             if error != nil {
-                print("DEBUG: error", error!)
+                
             } else {
                 guard let model = model else { return }
                 guard let data = model.data else { return }
@@ -22,7 +22,7 @@ struct InternetTVApiRequests {
     static func getMosParkingList() {
         NetworkManager<MosParkingListModel>.addRequest(.getMosParkingList, [:], [:]) { model, error in
             if error != nil {
-                print("DEBUG: error", error!)
+                
             } else {
                 guard let model = model else { return }
                 guard let data = model.data else { return }
@@ -35,7 +35,7 @@ struct InternetTVApiRequests {
     static func getClientInfo() {
         NetworkManager<ClintInfoModel>.addRequest(.getClientInfo, [:], [:]) { model, error in
             if error != nil {
-                print("DEBUG: error", error!)
+                
             } else {
                 guard let model = model else { return }
                 guard let data = model.data else { return }

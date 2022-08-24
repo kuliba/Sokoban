@@ -204,7 +204,6 @@ class ChangeReturnCountryController: UIViewController {
     }
     
     @objc func doneButtonTapped() {
-        print(#function)
         switch type {
         case .returnPay:
             returnPay()

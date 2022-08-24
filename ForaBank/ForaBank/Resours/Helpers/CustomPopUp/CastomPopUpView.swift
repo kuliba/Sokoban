@@ -371,7 +371,6 @@ class MemeDetailVC: UIViewController {
             }
         }
         cardFromListView.lastItemTap = {
-            print("Открывать все карты ")
             let vc = AllCardListViewController()
             vc.withTemplate = false
             if self.onlyMy {
@@ -395,7 +394,6 @@ class MemeDetailVC: UIViewController {
         cardToListView.canAddNewCard = onlyMy ? false : true
         
         cardToListView.firstItemTap = {
-            print("Показываем окно новой карты ")
             self.view.addSubview(self.cardView)
             self.cardView.frame = self.view.bounds
             self.cardView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
@@ -421,7 +419,6 @@ class MemeDetailVC: UIViewController {
             }
         }
         cardToListView.lastItemTap = {
-            print("Открывать все карты ")
             let vc = AllCardListViewController()
             if self.onlyMy {
                 vc.onlyCard = false
@@ -554,7 +551,6 @@ class MemeDetailVC: UIViewController {
                 self?.bottomView.doneButtonIsEnabled(false)
                 if error != nil {
                     guard let error = error else { return }
-                    print("DEBUG: ", #function, error)
                     self?.showAlert(with: "Ошибка", and: error)
                 } else {
                     guard let model = model else { return }
@@ -564,7 +560,6 @@ class MemeDetailVC: UIViewController {
                             if needMake {
                                 viewModel.taxTransction = "\(model.data?.fee ?? 0)"
                                 viewModel.status = .succses
-                                print("DEBUG: cardToCard payment Succses", #function, model)
                                 let vc = ContactConfurmViewController()
                                 vc.modalPresentationStyle = .fullScreen
                                 vc.confurmVCModel?.type = .card2card
@@ -606,7 +601,6 @@ class MemeDetailVC: UIViewController {
                             self?.present(nav, animated: true, completion: nil)
                         }
                     } else {
-                        print("DEBUG: ", #function, model.errorMessage ?? "nil")
                         self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                     }
                 }

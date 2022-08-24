@@ -389,8 +389,7 @@ class MainViewController: UIViewController {
                         openProductMutable[openDepositIndex] = depositProduct
                         openProductViewModels = openProductMutable
                         
-                    case .failure(let error):
-                        print("loading deposits list error: \(error)")
+                    case .failure(let error): break
                     }
                   
                     /*
@@ -482,26 +481,6 @@ class MainViewController: UIViewController {
     }
     
     func setupData() {
-       /*
-        let baners = model.catalogBanners.value
-        var items: [PaymentsModel] = []
-        baners.forEach { baner in
-            #if DEBUG
-            let host = ServerAgent.Environment.test
-            #else
-            let host = ServerAgent.Environment.prod
-            #endif
-            let urlString = host.baseURL + "/" + baner.imageLink
-            print(host.baseURL + "/" + baner.imageLink)
-            let cell = PaymentsModel(name: baner.productName, iconName: urlString, controllerName: baner.orderLink.absoluteString)
-            items.append(cell)
-        }
-        
-        promoViewModels = items
-        exchangeRatesViewModels = MockItems.returnCurrency()
-        paymentsViewModels = MockItems.returnFastPay()
-        openProductViewModels = MockItems.returnOpenProduct()
-        */
     }
     
     private func setupCollectionView() {
@@ -597,7 +576,6 @@ class MainViewController: UIViewController {
         
         NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], body) { model, error in
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else {
                 return
@@ -608,7 +586,6 @@ class MainViewController: UIViewController {
                 }
                 self.dataUSD = lastPaymentsList
             } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
                 
             }
         }
@@ -619,7 +596,6 @@ class MainViewController: UIViewController {
         NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], bodyEURO) { model, error in
             if error != nil {
                 
-                print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else {
                 return
@@ -630,7 +606,6 @@ class MainViewController: UIViewController {
                 }
                 self.dataEuro = lastPaymentsList
             } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
                 
             }
         }

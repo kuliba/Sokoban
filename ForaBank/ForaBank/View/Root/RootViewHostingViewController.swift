@@ -33,8 +33,6 @@ class RootViewHostingViewController: UIHostingController<RootView> {
     
     private func bind() {
         
-        print("SessionAgent: RootViewHostingViewController BIND")
-        
         viewModel.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
@@ -46,28 +44,23 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                     let loginViewController = UIHostingController(rootView: loginView)
                     let navigation = UINavigationController(rootViewController: loginViewController)
                     presentCover(navigation, of: .login, animated: false)
-                    print("SessionAgent: PRESENT LOGIN, childs: \(children.count) , addr:\(Unmanaged.passUnretained(navigation).toOpaque())")
                     
                 case let payload as RootViewModelAction.Cover.ShowLock:
                     dismissCover(animated: false)
                     let lockView = AuthPinCodeView(viewModel: payload.viewModel)
                     let lockViewController = UIHostingController(rootView: lockView)
                     presentCover(lockViewController, of: .lock, animated: payload.animated)
-                    print("SessionAgent: PRESENT LOCK")
       
                 case _ as RootViewModelAction.Cover.Hide:
                     if isCoverDismissing == false {
                         dismissCover(animated: true)
                     }
-                    print("SessionAgent: DISMISS COVER")
                     
                 case let payload as RootViewModelAction.Spinner.Show:
                     presentSpinner(viewModel: payload.viewModel)
-                    print("SessionAgent: SPINNER SHOW")
                     
                 case _ as RootViewModelAction.Spinner.Hide:
                     dismissSpinner()
-                    print("SessionAgent: SPINNER HIDE")
                     
                 default:
                     return
@@ -147,14 +140,10 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                 }
             }
             
-            print("SessionAgent: COVER DISMISSED ANIMATED, addr:\(Unmanaged.passUnretained(cover.controller).toOpaque())")
-            
         } else {
             
             cover.window.isHidden = true
             self.cover = nil
-            
-            print("SessionAgent: COVER DISMISSED addr:\(Unmanaged.passUnretained(cover.controller).toOpaque())")
         }
     }
     

@@ -303,7 +303,8 @@ class UserAccountViewModel: ObservableObject {
                         switch payload.type {
                             
                         case .faceId:
-                            print("Open FaceIdSwitch", payload.value)
+                            //TODO: set action
+                            break
                             
                         case .notification:
                             

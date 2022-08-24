@@ -45,7 +45,6 @@ class ContactInputViewController: UIViewController {
     
     var country: CountriesList? {
         didSet {
-            print("Set country", country ?? "nil")
             if country?.code == "AM" {
                 self.typeOfPay = .mig
                 self.configure(with: country, byPhone: true)
@@ -379,7 +378,6 @@ class ContactInputViewController: UIViewController {
         
         cardListView.lastItemTap = {
 //        TODO: Открывать все карты доработать
-            print("Открывать все карты доработать")
         }
         
         bottomView.buttonIsTapped = {
@@ -616,13 +614,13 @@ class ContactInputViewController: UIViewController {
 extension ContactInputViewController: EPPickerDelegate {
     
     func epContactPicker(_: EPContactsPicker, didContactFetchFailed error : NSError) {
-        print("Failed with error \(error.description)")
+        
     }
     
     func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) {
-        print("The following contacts are selected")
+        
         for contact in contacts {
-            print("\(contact.displayName())")
+            
         }
     }
     
@@ -641,7 +639,7 @@ extension ContactInputViewController: EPPickerDelegate {
     }
     
     func epContactPicker(_: EPContactsPicker, didCancel error : NSError) {
-        print("User canceled the selection");
+        
     }
     
 }

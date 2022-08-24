@@ -50,16 +50,13 @@ class ContactCollectionViewCell: UICollectionViewCell{
         NetworkManager<GetOwnerPhoneNumberPhoneDecodableModel>.addRequest(.getOwnerPhoneNumber, [:], body) { model, error in
             if error != nil {
                 checkOwner = false
-                print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else { return }
-            print("DEBUG: getOwnerPhoneNumber: ", model)
+            
             if model.statusCode == 0 {
-                print("DEBUG: getOwnerPhoneNumber: ", "true")
                 checkOwner = true
             } else {
                 checkOwner = false
-                print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
         return checkOwner
