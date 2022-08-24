@@ -296,10 +296,6 @@ class CurrencyWalletViewModel: ObservableObject {
     
     private func makeSelectorViewModel() -> CurrencySelectorView.ViewModel {
         
-        let products = model.products(currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
-        
-        selectorState = products.isEmpty == false ? .productSelector : .openAccount
-        
         let productSelectorViewModel = CurrencySelectorView.ViewModel(model, state: selectorState, currency: currency, currencyOperation: currencyOperation)
         
         if let productCardSelector = productSelectorViewModel.productCardSelector,
@@ -417,6 +413,19 @@ class CurrencyWalletViewModel: ObservableObject {
     }
     
     private func appendSelectorViewIfNeeds() {
+        
+        let products = model.products(currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
+        
+        if products.isEmpty == false {
+            
+            selectorState = .productSelector
+            buttonStyle = .red
+            
+        } else {
+            
+            selectorState = .openAccount
+            buttonStyle = .inactive
+        }
         
         selectorViewModel = makeSelectorViewModel()
         
@@ -702,6 +711,7 @@ class CurrencyWalletViewModel: ObservableObject {
         confirmationViewModel = nil
         successViewModel = nil
         
+        buttonStyle = .red
         continueButton = makeContinueButton()
         isUserInteractionEnabled = true
     }
