@@ -17,6 +17,8 @@ class OpenAccountViewModel: ObservableObject {
     @Published var currency: Currency
 
     let model: Model
+    let style: Style
+    let closeAction: () -> Void
 
     private var bindings = Set<AnyCancellable>()
 
@@ -34,15 +36,24 @@ class OpenAccountViewModel: ObservableObject {
             return 225
         }
     }
+    
+    enum Style {
+        
+        case openAccount
+        case currencyWallet
+    }
 
     init(model: Model,
+         style: Style = .openAccount,
          items: [OpenAccountItemViewModel],
-         currency: Currency) {
+         currency: Currency, closeAction: @escaping () -> Void = {}) {
 
         self.model = model
+        self.style = style
         self.item = .empty
         self.items = items
         self.currency = currency
+        self.closeAction = closeAction
 
         pagerViewModel = .init(pagesCount: items.count)
 
