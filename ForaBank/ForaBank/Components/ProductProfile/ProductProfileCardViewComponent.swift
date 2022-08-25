@@ -45,8 +45,9 @@ extension ProductProfileCardView {
             }
             
             // generate products view models
+            let productsWithRelated = Self.reduce(products: productsForType, with: model.products.value)
             var productsViewModels = [ProductView.ViewModel]()
-            for product in productsForType {
+            for product in productsWithRelated {
                 
                 let productViewModel = ProductView.ViewModel(with: product, size: .large, style: .profile, model: model)
                 productsViewModels.append(productViewModel)
@@ -59,7 +60,7 @@ extension ProductProfileCardView {
             
             // filter products data with products view models
             let productsViewModelsIds = productsViewModels.map{ $0.id }
-            let productsForTypeDisplayed = productsForType.filter({ productsViewModelsIds.contains($0.id)})
+            let productsForTypeDisplayed = productsWithRelated.filter({ productsViewModelsIds.contains($0.id)})
             
             self.selector = SelectorViewModel(with: productsForTypeDisplayed, selected: productData.id)
             self.products = productsViewModels
@@ -76,6 +77,45 @@ extension ProductProfileCardView {
             }
         }
         
+        static func reduce(products: [ProductData], with productsData: ProductsData) -> [ProductData] {
+            
+            var result = [ProductData]()
+            
+            for product in products {
+                
+                switch product {
+                case let accountProduct as ProductAccountData:
+                    if let loansProducts = productsData[.loan] as? [ProductLoanData],
+                        let relatedLoanProduct = loansProducts.first(where: { $0.settlementAccountId == accountProduct.id}) {
+                        
+                        result.append(relatedLoanProduct)
+                        result.append(accountProduct)
+                        
+                    } else {
+                        
+                        result.append(accountProduct)
+                    }
+                    
+                case let loanProduct as ProductLoanData:
+                    if let accountProducts = productsData[.account] as? [ProductAccountData],
+                       let relatedAccountProduct = accountProducts.first(where: { $0.id == loanProduct.settlementAccountId}) {
+                        
+                        result.append(loanProduct)
+                        result.append(relatedAccountProduct)
+                        
+                    } else {
+                        
+                        result.append(loanProduct)
+                    }
+                    
+                default:
+                    result.append(product)
+                }
+            }
+            
+            return result
+        }
+        
         private func bind() {
             
             model.products
@@ -84,9 +124,11 @@ extension ProductProfileCardView {
                     
                     if let productsForType = productsData[productType], productsForType.isEmpty == false {
                         
+                        let productsWithRelated = Self.reduce(products: productsForType, with: productsData)
+                        
                         // update products view models
                         var updatedProducts = [ProductView.ViewModel]()
-                        for product in productsForType {
+                        for product in productsWithRelated {
                             
                             if let productViewModel = self.products.first(where: { $0.id == product.id }) {
                                 
@@ -105,7 +147,7 @@ extension ProductProfileCardView {
                         
                         // update selector
                         let productsViewModelsIds = updatedProducts.map{ $0.id }
-                        let productsForTypeDisplayed = productsForType.filter({ productsViewModelsIds.contains($0.id)})
+                        let productsForTypeDisplayed = productsWithRelated.filter({ productsViewModelsIds.contains($0.id)})
                         selector = SelectorViewModel(with: productsForTypeDisplayed, selected: activeProductId)
                         bind(selector)
                         
