@@ -12,7 +12,7 @@ struct DepositInfoDataItem: Equatable {
 
 	let balance: Double
 	let dateEnd: Date?
-	let dateNext: Date
+	let dateNext: Date?
 	let dateOpen: Date
 	let id: Int
 	let initialAmount: Double
@@ -24,7 +24,7 @@ struct DepositInfoDataItem: Equatable {
 	let termDay: String?
     let sumPayPrc: Double?
     
-    init(balance: Double, dateEnd: Date?, dateNext: Date, dateOpen: Date, id: Int, initialAmount: Double, interestRate: Double, sumAccInt: Double, sumCredit: Double?, sumDebit: Double?, sumPayInt: Double, termDay: String?, sumPayPrc: Double?) {
+    init(balance: Double, dateEnd: Date?, dateNext: Date?, dateOpen: Date, id: Int, initialAmount: Double, interestRate: Double, sumAccInt: Double, sumCredit: Double?, sumDebit: Double?, sumPayInt: Double, termDay: String?, sumPayPrc: Double?) {
         
         self.id = id
         self.balance = balance
@@ -63,8 +63,13 @@ extension DepositInfoDataItem: Codable {
             self.dateEnd = nil
         }
 
-        let dateNext = try container.decode(Int.self, forKey: .dateNext)
-        self.dateNext = Date(timeIntervalSince1970: TimeInterval(dateNext / 1000))
+        if let dateNext = try container.decodeIfPresent(Int.self, forKey: .dateNext) {
+            
+            self.dateNext = Date(timeIntervalSince1970: TimeInterval(dateNext / 1000))
+        } else {
+            
+            self.dateNext = nil
+        }
         
         let dateOpen = try container.decode(Int.self, forKey: .dateOpen)
         self.dateOpen = Date(timeIntervalSince1970: TimeInterval(dateOpen / 1000))
@@ -88,7 +93,10 @@ extension DepositInfoDataItem: Codable {
             
             try container.encode(Int(dateEnd.timeIntervalSince1970) * 1000, forKey: .dateEnd)
         }
-        try container.encode(Int(dateNext.timeIntervalSince1970) * 1000, forKey: .dateNext)
+        if let dateNext = dateNext {
+            
+            try container.encode(Int(dateNext.timeIntervalSince1970) * 1000, forKey: .dateNext)
+        }
         try container.encode(Int(dateOpen.timeIntervalSince1970) * 1000, forKey: .dateOpen)
         try container.encode(id, forKey: .id)
         try container.encode(initialAmount, forKey: .initialAmount)

@@ -585,6 +585,7 @@
 		68D099D2273A73CA0017D777 /* SettingViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D099D1273A73C90017D777 /* SettingViewCoordinator.swift */; };
 		68D099D6273A7A3E0017D777 /* ProductCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D099D5273A7A3E0017D777 /* ProductCoordinator.swift */; };
 		68D099D9273B5D110017D777 /* PaymentByPhoneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D099D8273B5D110017D777 /* PaymentByPhoneCoordinator.swift */; };
+		68D0A42328B79EA2004FA277 /* GetDepositInfoServerResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 68D0A42228B79EA2004FA277 /* GetDepositInfoServerResponse.json */; };
 		68D3F8D527CECB00002753BD /* ProductProfileButtonsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D3F8D427CECB00002753BD /* ProductProfileButtonsViewComponent.swift */; };
 		68DBA96D28800D9300A169B4 /* NSNotification+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DBA96C28800D9300A169B4 /* NSNotification+Extension.swift */; };
 		68DBA96F288197C400A169B4 /* MeToMeRequestView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DBA96E288197C400A169B4 /* MeToMeRequestView+Legacy.swift */; };
@@ -1993,6 +1994,7 @@
 		68D099D1273A73C90017D777 /* SettingViewCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewCoordinator.swift; sourceTree = "<group>"; };
 		68D099D5273A7A3E0017D777 /* ProductCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCoordinator.swift; sourceTree = "<group>"; };
 		68D099D8273B5D110017D777 /* PaymentByPhoneCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByPhoneCoordinator.swift; sourceTree = "<group>"; };
+		68D0A42228B79EA2004FA277 /* GetDepositInfoServerResponse.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetDepositInfoServerResponse.json; sourceTree = "<group>"; };
 		68D3F8D427CECB00002753BD /* ProductProfileButtonsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileButtonsViewComponent.swift; sourceTree = "<group>"; };
 		68DBA96C28800D9300A169B4 /* NSNotification+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNotification+Extension.swift"; sourceTree = "<group>"; };
 		68DBA96E288197C400A169B4 /* MeToMeRequestView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MeToMeRequestView+Legacy.swift"; sourceTree = "<group>"; };
@@ -5399,6 +5401,7 @@
 				689ECA822848DB5B0098664F /* CreateInterestDepositTransferResponseGeneric.json */,
 				77370905284A2CA20033B1CA /* GetAccountStatementResponseServer.json */,
 				68ECB85428A6A2B600F6EDD1 /* GetBannerCatalogListResponseGenericFromServer.json */,
+				68D0A42228B79EA2004FA277 /* GetDepositInfoServerResponse.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -7605,6 +7608,7 @@
 				77517FD827A98189005CFB77 /* GetProductListResponseGeneric.json in Resources */,
 				502A98A4283A950900C6A621 /* GetProductListByTypeResponseServer.json in Resources */,
 				77EC58C9277133910054D75C /* PaymentTemplateDecodingGeneric.json in Resources */,
+				68D0A42328B79EA2004FA277 /* GetDepositInfoServerResponse.json in Resources */,
 				5A5ABFC027ABCF8C00D548AA /* GetDepositStatementMin.json in Resources */,
 				68419312279ED85F00B4E184 /* BlockCardResponseGenericMin.json in Resources */,
 				5A5ABFAD27AAF7DD00D548AA /* GetLatestMobilePayments.json in Resources */,
@@ -8934,7 +8938,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -8993,7 +8997,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=*]" = ru.forabank.sense;
