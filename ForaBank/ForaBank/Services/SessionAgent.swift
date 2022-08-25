@@ -96,8 +96,6 @@ class SessionAgent: SessionAgentProtocol {
                updateState(with: time)
                 
             }.store(in: &timerBindings)
-        
-        print("log: SessionAgent: timer: STARTED")
     }
     
     private func timerStop() {
@@ -107,7 +105,6 @@ class SessionAgent: SessionAgentProtocol {
         }
         
         timerBindings = Set<AnyCancellable>()
-        print("log: SessionAgent: timer: STOPPED")
     }
     
     private func updateState(with time: TimeInterval) {
@@ -116,29 +113,31 @@ class SessionAgent: SessionAgentProtocol {
             return
         }
         
-        let sessionTimeRemain = sessionTimeRemain(for: time)
-        guard sessionTimeRemain > 0 else {
+        let sessionTimeRemain = Self.sessionTimeRemain(currentTime: time, lastNetworkActivityTime: lastUserActivityTime, sessionDuration: sessionDuration)
+        let sessionTimeRemainAdjusted = max(sessionTimeRemain - 10, 0)
+        
+        guard sessionTimeRemainAdjusted > 0 else {
             
             sessionState.send(.expired)
             return
         }
         
-        if isSessionExtendRequired(for: sessionTimeRemain) == true {
+        let isSessionExtendRequired = Self.isSessionExtendRequired(sessionTimeRemain: sessionTimeRemainAdjusted, sessionDuration: sessionDuration, sessionExtentThreshold: sessionExtentThreshold, lastNetworkActivityTime: lastNetworkActivityTime, lastUserActivityTime: lastUserActivityTime)
+        
+        if isSessionExtendRequired == true {
             
             action.send(SessionAgentAction.Session.Extend.Request())
         }
-        
-//        print("log: SessionAgent: remain time: \(sessionTimeRemain)")
     }
     
-    func sessionTimeRemain(for time: TimeInterval) -> TimeInterval {
+    static func sessionTimeRemain(currentTime: TimeInterval, lastNetworkActivityTime: TimeInterval, sessionDuration: TimeInterval) -> TimeInterval {
         
-        let timeSinceLastNetworkActivity = time - lastNetworkActivityTime
+        let timeSinceLastNetworkActivity = currentTime - lastNetworkActivityTime
         
         return max(sessionDuration - timeSinceLastNetworkActivity, 0)
     }
     
-    func isSessionExtendRequired(for sessionTimeRemain: TimeInterval) -> Bool {
+    static func isSessionExtendRequired(sessionTimeRemain: TimeInterval, sessionDuration: TimeInterval, sessionExtentThreshold: Double, lastNetworkActivityTime: TimeInterval, lastUserActivityTime: TimeInterval) -> Bool {
         
         return Double(sessionTimeRemain / sessionDuration) < (1 - sessionExtentThreshold) && lastUserActivityTime > lastNetworkActivityTime
     }

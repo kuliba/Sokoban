@@ -44,7 +44,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
         
         debuggedApi.forEach { filter in
                     if (request.url?.absoluteString ?? "").contains(filter) {
-                        print("NET5555", request.url?.absoluteString ?? "")
+                        
                     }
                 }
 
@@ -84,7 +84,6 @@ final class NetworkManager<T: NetworkModelProtocol> {
                 debuggedApi.forEach { filter in
                                     if (request.url?.absoluteString ?? "").contains(filter) {
                                         if let data = request.httpBody, let str = String(data: data, encoding: .utf8) {
-                                            print("NET5555 Request \(str)")
                                         }
                                     }
                                 }
@@ -95,7 +94,6 @@ final class NetworkManager<T: NetworkModelProtocol> {
                     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 }
             } catch {
-                debugPrint(NetworkError.encodingFailed)
             }
             
         }
@@ -140,11 +138,11 @@ final class NetworkManager<T: NetworkModelProtocol> {
                                                     if (request.url?.absoluteString ?? "").contains(filter) {
                                                         do {
                                                             if let dataUnw = data, let str = String(data: dataUnw, encoding: .utf8) {
-                                                                print("NET5555 Answer \(response.url?.absoluteString ?? "") ", str)
+                                                                
                                                             
                                                             }
                                                         } catch {
-                                                            //debugPrint(NetworkError.encodingFailed)
+                                                            
                                                         }
                                                     }
                                                 }
@@ -158,14 +156,14 @@ final class NetworkManager<T: NetworkModelProtocol> {
                             r?.add(updatingTimeObject)
                             try r?.commitWrite()
                         } catch {
-                            print(error.localizedDescription)
+                            
                         }
                         do {
                             let returnValue = try T (data: data!)
                             
                             completion(returnValue, nil)
                         } catch {
-                            print(error)
+                            
                             completion(nil, NetworkResponse.unableToDecode.rawValue)
                         }
                     case .failure(let networkFailureError):
@@ -195,7 +193,6 @@ func returnRealmModel() -> GetSessionTimeout {
     let lastActionTimestamp = timeObject.lastActionTimestamp
     let maxTimeOut = timeObject.maxTimeOut
     let mustCheckTimeOut = timeObject.mustCheckTimeOut
-    print("Debugging NetworkManager", mustCheckTimeOut)
     // Сохраняем текущее время
     let updatingTimeObject = GetSessionTimeout()
     

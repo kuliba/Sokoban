@@ -47,8 +47,6 @@ class AuthLoginViewModel: ObservableObject {
     }
     
     private func bind() {
-        
-        print("SessionAgent: AuthLoginViewModel BIND addr:\(Unmanaged.passUnretained(self).toOpaque())")
 
         model.action
             .receive(on: DispatchQueue.main)
@@ -61,8 +59,6 @@ class AuthLoginViewModel: ObservableObject {
                     case .success(codeLength: let codeLength, phone: let phone, resendCodeDelay: let resendCodeDelay):
                         let confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: codeLength, phoneNumber: phone, resendCodeDelay: resendCodeDelay, backAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Close.Link())}, rootActions: rootActions)
                         link = .confirm(confirmViewModel)
-                        
-                        print("SessionAgent: CHECK DONE")
                         
                     case .failure(message: let message):
                         alert = .init(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
@@ -83,7 +79,6 @@ class AuthLoginViewModel: ObservableObject {
                     model.action.send(ModelAction.Auth.CheckClient.Request(number: payload.cardNumber))
                     card.textField.dismissKeyboard()
                     self.action.send(AuthLoginViewModelAction.Spinner.Show())
-                    print("SessionAgent: CHECK CLIENT")
                     
                 case _ as AuthLoginViewModelAction.Show.Products:
                     let productsViewModel = AuthProductsViewModel(model, products: model.catalogProducts.value, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Close.Link())})
@@ -153,7 +148,7 @@ class AuthLoginViewModel: ObservableObject {
     
     deinit {
         
-        print("SessionAgent: AuthLoginViewModel DEINIT")
+        //TODO: set logger
     }
 }
 

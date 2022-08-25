@@ -19,7 +19,7 @@ class MainTabBarCoordinator: Coordinator {
     }
     
     deinit {
-        print("Deinit main coordinator")
+        
     }
     
     override func start() {

@@ -32,7 +32,7 @@ class DocDepositCollectionViewCell: UICollectionViewCell {
     
     
     @IBAction func hideButton(_ sender: Any) {
-        print(#function)
+        
     }
     
 }

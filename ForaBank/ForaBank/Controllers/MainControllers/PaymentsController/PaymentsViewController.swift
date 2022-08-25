@@ -153,10 +153,8 @@ extension PaymentsViewController {
         let param = ["isPhonePayments": "true", "isCountriesPayments": "true", "isMobilePayments": "true", "isServicePayments": "true", "isInternetPayments": "true", "isTransportPayments":"true"]
         NetworkManager<GetAllLatestPaymentsDecodableModel>.addRequest(.getAllLatestPayments, param, [:]) { model, error in
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else { return }
-            print("DEBUG: LatestPayment: ", model)
             if model.statusCode == 0 {
                 guard let lastPaymentsList  = model.data else { return }
                 lastPaymentsList.forEach { lastPayment in
@@ -186,7 +184,6 @@ extension PaymentsViewController {
 
                 }
             } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
     }
@@ -194,15 +191,12 @@ extension PaymentsViewController {
     func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {
         NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
                 completion(nil, error)
             }
             guard let model = model else { return }
-            print("DEBUG: fastPaymentContractFindList", model)
             if model.statusCode == 0 {
                 completion(model.data,nil)
             } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
                 completion(nil, model.errorMessage)
             }
         }

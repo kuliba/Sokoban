@@ -571,20 +571,11 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
 //MARK: EPContactsPicker delegates
 extension PaymentByPhoneViewController: EPPickerDelegate {
     
-    func epContactPicker(_: EPContactsPicker, didContactFetchFailed error : NSError) {
-        print("Failed with error \(error.description)")
-    }
+    func epContactPicker(_: EPContactsPicker, didContactFetchFailed error : NSError) {}
     
-    func epContactPicker(_: EPContactsPicker, didCancel error : NSError) {
-        print("User canceled the selection");
-    }
+    func epContactPicker(_: EPContactsPicker, didCancel error : NSError) {}
     
-    func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) {
-        print("The following contacts are selected")
-        for contact in contacts {
-            print("\(contact.displayName())")
-        }
-    }
+    func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) {}
     
     func epContactPicker(_: EPContactsPicker, didSelectContact contact : EPContact) {
         let phoneFromContact = contact.phoneNumbers.first?.phoneNumber

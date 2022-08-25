@@ -38,7 +38,6 @@ extension GKHInputViewController: UITableViewDataSource, TableViewDelegate {
                     self?.emptyArray.removeLast()
                 }
             self?.empty()
-                print("self?.emptyArray", self?.emptyArray.count ?? 0, value)
             } else {
                 guard self?.emptyArray.count ?? 0 > 0 else {return}
                 self?.emptyArray.removeLast()

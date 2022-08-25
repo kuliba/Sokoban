@@ -55,7 +55,6 @@ class GKHInputViewController: BottomPopUpViewAdapter {
     // Тип оператора (одношаговый или многошаговый)
     var operatorType: Bool = true {
         didSet {
-            print("operatorType", operatorType)
         }
     }
     

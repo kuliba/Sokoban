@@ -154,7 +154,8 @@ class RootViewModel: ObservableObject, Resetable {
                             
                         case let .failure(error):
                             
-                            print("AppVersion Response error: \(error) ")
+                            break
+                            //TODO: set logger
                         }
                     }
                 case let payload as ModelAction.Consent.Me2MeDebit.Response:
@@ -170,8 +171,8 @@ class RootViewModel: ObservableObject, Resetable {
                         
                     case .failure(let error):
                         
-                        print("Me2MeDebit Response error: \(error) ")
-
+                        break
+                        //TODO: set logger
                     }
                 default:
                     break

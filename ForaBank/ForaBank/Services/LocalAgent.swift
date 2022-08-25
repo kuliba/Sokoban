@@ -56,8 +56,7 @@ class LocalAgent: LocalAgentProtocol {
                 
             } catch {
                 
-                //TODO: log
-                print("log: LocalAgent: failed save serials file with error: \(error.localizedDescription)")
+                //TODO: set logger
             }
             
             return nil

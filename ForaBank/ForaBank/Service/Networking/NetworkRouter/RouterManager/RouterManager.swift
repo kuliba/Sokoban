@@ -124,7 +124,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -139,7 +139,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -154,7 +154,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -169,7 +169,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -184,7 +184,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -199,7 +199,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -214,7 +214,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -229,7 +229,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -244,7 +244,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -259,7 +259,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -274,7 +274,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -289,7 +289,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -304,7 +304,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -319,7 +319,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -334,7 +334,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -349,7 +349,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -364,7 +364,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -379,7 +379,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -394,7 +394,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -409,7 +409,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -424,7 +424,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -439,7 +439,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -454,7 +454,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -469,7 +469,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -484,7 +484,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -499,7 +499,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -514,7 +514,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -529,7 +529,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -544,7 +544,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -559,7 +559,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -574,7 +574,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -589,7 +589,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -604,7 +604,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -619,7 +619,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -634,7 +634,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -649,7 +649,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -664,7 +664,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -679,7 +679,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -694,7 +694,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -709,7 +709,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -724,7 +724,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -739,7 +739,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -754,7 +754,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
 
             guard resultUrl != nil else { return nil}
@@ -769,7 +769,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -784,7 +784,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -799,7 +799,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -814,7 +814,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -829,7 +829,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
 
             guard resultUrl != nil else { return nil}
@@ -844,7 +844,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -859,7 +859,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -873,7 +873,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -888,7 +888,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -902,7 +902,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -917,7 +917,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -932,7 +932,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
 
             guard resultUrl != nil else { return nil}
@@ -947,7 +947,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
 
             guard resultUrl != nil else { return nil}
@@ -962,7 +962,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -977,7 +977,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -992,7 +992,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1007,7 +1007,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1022,7 +1022,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1037,7 +1037,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1052,7 +1052,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1067,7 +1067,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1082,7 +1082,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1097,7 +1097,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1112,7 +1112,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1127,7 +1127,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1142,7 +1142,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1157,7 +1157,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1172,7 +1172,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1187,7 +1187,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1203,7 +1203,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
         case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1218,7 +1218,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
         case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1233,7 +1233,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
         case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1248,7 +1248,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
         case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1263,7 +1263,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1277,7 +1277,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1291,7 +1291,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1305,7 +1305,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             
             guard resultUrl != nil else { return nil}
@@ -1321,7 +1321,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1335,7 +1335,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1349,7 +1349,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1363,7 +1363,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1377,7 +1377,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1391,7 +1391,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1405,7 +1405,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1419,7 +1419,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1433,7 +1433,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1447,7 +1447,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1461,7 +1461,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1475,7 +1475,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1489,7 +1489,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1503,7 +1503,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1517,7 +1517,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1531,7 +1531,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1545,7 +1545,7 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
+                
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1559,7 +1559,6 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
@@ -1573,7 +1572,6 @@ extension RouterManager {
                 resultUrl = url.absoluteURL
             case .failure(let error):
                 resultUrl = nil
-                debugPrint(error)
             }
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)

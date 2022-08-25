@@ -88,6 +88,37 @@ enum ServerAgentError: Error {
     case emptyResponseData
     case curruptedData(Error)
     case serverStatus(ServerStatusCode, errorMessage: String?)
+    
+    var localizedDescription: String {
+        
+        switch self {
+        case .requestCreationError(let error):
+                
+            return "Request Creation Error: \(error.localizedDescription))"
+            
+        case .sessionError(let error):
+            return "Session Error: \(error.localizedDescription)"
+
+        case .emptyResponse:
+            return "Empty Response"
+
+        case .emptyResponseData:
+            return "Empty Response Data"
+
+        case .curruptedData(let error):
+            return "Currupted Data: \(error.localizedDescription)"
+
+        case .serverStatus(let serverStatusCode, let errorMessage):
+            
+            if let errorMessage = errorMessage {
+                
+                return "Server Status: \(serverStatusCode) \(errorMessage)"
+            } else {
+                
+                return "Server Status: \(serverStatusCode)"
+            }
+        }
+    }
 }
 
 enum ServerRequestCreationError: Error {

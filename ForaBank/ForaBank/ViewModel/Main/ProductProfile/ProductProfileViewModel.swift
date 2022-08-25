@@ -536,7 +536,9 @@ class ProductProfileViewModel: ObservableObject {
                             }
                             
                         case .account:
-                            print("disabled")
+                            
+                            //TODO: set action
+                            break
                             
                         case .deposit:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.closeDeposit], productType: product.productType)

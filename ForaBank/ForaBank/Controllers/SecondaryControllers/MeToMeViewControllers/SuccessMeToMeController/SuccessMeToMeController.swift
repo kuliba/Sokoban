@@ -44,7 +44,7 @@ class SuccessMeToMeController: UIViewController {
     }
     
     @IBAction func doneButtonTapped(_ sender: Any) {
-        print(#function)
+        
         dismissViewControllers()
     }
     

@@ -101,9 +101,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         super.viewDidLoad()
         observerRealm()
         
-        AddAllUserCardtList.add() {
-            print("REALM Add")
-        }
+        AddAllUserCardtList.add() {}
         
         allProductList?.forEach({ product in
             products.append(product)
@@ -206,7 +204,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             }
         } else {
-            print("is Invalidate")
+            
         }
         
     }
@@ -329,8 +327,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                     cell.cardTypeImage.isHidden = true
                 }
             }
-        default:
-            print("nil")
+        default: break
         }
         
         return cell
@@ -364,8 +361,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                     viewController.product = self.loans[indexPath.row]
                 case 6:
                     viewController.product = self.blocked[indexPath.row]
-                default:
-                    print("default")
+                default: break
                 }
                 viewController.products = products
                 let navVC = UINavigationController(rootViewController: viewController)
@@ -384,8 +380,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                     delegateProducts?.sendMyDataBack(product: self.loans[indexPath.row], products: products)
                 case 6:
                     delegateProducts?.sendMyDataBack(product: self.blocked[indexPath.row], products: products)
-                default:
-                    print("default")
+                default: break
                 }
                 dismiss(animated: true, completion: nil)
             }
@@ -434,23 +429,18 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             
             NetworkManager<UnBlockCardDecodableModel>.addRequest(.unblockCard, [:], body) { model, error in
                 if error != nil {
-                    print("DEBUG: Error: ", error ?? "")
                     self.showAlert(with: "Ошибка", and: error ?? "")
                 }
                 guard let model = model else { return }
-                print("DEBUG: LatestPayment: ", model)
                 if model.statusCode == 0 {
                     self.showAlert(with: "Карта активирована", and: "")
                     
                     DispatchQueue.main.async {
-                        AddAllUserCardtList.add() {
-                            print("REALM Add")
-                        }
+                        AddAllUserCardtList.add() {}
                         
                     }
                 } else {
                     self.showAlert(with: "Ошибка", and: error ?? "")
-                    print("DEBUG: Error: ", model.errorMessage ?? "")
                 }
             }
             
@@ -510,8 +500,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             } else{
                 label.alpha = 0.3
             }
-        default:
-            print("")
+        default: break
         }
         return headerView
         

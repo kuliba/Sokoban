@@ -105,7 +105,6 @@ struct NetworkHelper {
             
             NetworkManager<GetProductListDecodableModel>.addRequest(.getProductList, tempParameters, body) { model, error in
                 if error != nil {
-                    print("DEBUG: Error: ", error ?? "")
                     completion(nil, error)
                 }
                 guard let model = model else { return }
@@ -140,7 +139,7 @@ struct NetworkHelper {
                     Dict.shared.countries = list.countriesList
                     completion(list.countriesList, nil)
                 } catch {
-                    print(error)
+
                 }
                 
                 getCountries(withId: countriesListSerial)
@@ -155,7 +154,6 @@ struct NetworkHelper {
                 NetworkManager<GetCountriesDecodebleModel>.addRequest(.getCountries, param, body) { model, error in
                     if error != nil {
                         guard let error = error else { return }
-                        print("DEBUG: ", #function, error)
                         completion(nil, error)
                     } else {
                         guard let statusCode = model?.statusCode else { return }
@@ -173,7 +171,6 @@ struct NetworkHelper {
                                 do {
                                      try json!.write(to: filePath)
                                 } catch {
-                                    print("Failed to write JSON data: \(error.localizedDescription)")
                                 }
                                 
                                 UserDefaults().set(data.serial, forKey: "CountriesListSerial")
@@ -182,12 +179,10 @@ struct NetworkHelper {
                                 Dict.shared.countries = countries
                                 completion(countries, nil)
                             } else {
-                                print("DEBUG: CountriesList уже есть")
                             }
                             
                         } else {
                             let error = model?.errorMessage ?? "nil"
-                            print("DEBUG: ", #function, error)
                             completion(nil, error)
                         }
                     }
@@ -209,7 +204,6 @@ struct NetworkHelper {
                     Dict.shared.bankFullInfoList = list.bankFullInfoList
                     completion(list.bankFullInfoList, nil)
                 } catch {
-                    print(error)
                 }
                 
                 getBanks(withId: banksListSerial)
@@ -223,11 +217,9 @@ struct NetworkHelper {
 //                    "bic": ""
 //                ] as [String : AnyObject]
                 let param = ["bic": "","serial" : withId ?? ""]
-//                print("DEBUG: BankFullInfoList param", param)
                 NetworkManager<GetFullBankInfoListDecodableModel>.addRequest(.getFullBankInfoList, param, [:]) { model, error in
                     if error != nil {
                         guard let error = error else { return }
-                        print("DEBUG: ", #function, error)
                         completion(nil, error)
                     } else {
                         guard let statusCode = model?.statusCode else { return }
@@ -245,7 +237,6 @@ struct NetworkHelper {
                                 do {
                                      try json!.write(to: filePath)
                                 } catch {
-                                    print("Failed to write JSON data: \(error.localizedDescription)")
                                 }
                                 
                                 UserDefaults().set(data.serial, forKey: "BankFullInfoListSerial")
@@ -254,12 +245,10 @@ struct NetworkHelper {
                                 Dict.shared.bankFullInfoList = banks
                                 completion(banks, nil)
                             } else {
-                                print("DEBUG: BankFullInfoList уже есть")
                             }
                             
                         } else {
                             let error = model?.errorMessage ?? "nil"
-                            print("DEBUG: ", #function, error)
                             completion(nil, error)
                         }
                     }
@@ -281,7 +270,6 @@ struct NetworkHelper {
                     Dict.shared.banks = list.banksList
                     completion(list.banksList, nil)
                 } catch {
-                    print(error)
                 }
                 
                 getBanks(withId: banksListSerial)
@@ -293,11 +281,9 @@ struct NetworkHelper {
             func getBanks(withId: String? = nil) {
                 
                 let param = ["serial" : withId ?? ""]
-                print("DEBUG: getBanks param", param)
                 NetworkManager<GetBanksDecodableModel>.addRequest(.getBanks, param, body) { model, error in
                     if error != nil {
                         guard let error = error else { return }
-                        print("DEBUG: ", #function, error)
                         completion(nil, error)
                     } else {
                         guard let statusCode = model?.statusCode else { return }
@@ -315,7 +301,6 @@ struct NetworkHelper {
                                 do {
                                      try json!.write(to: filePath)
                                 } catch {
-                                    print("Failed to write JSON data: \(error.localizedDescription)")
                                 }
                                 
                                 UserDefaults().set(data.serial, forKey: "BanksListSerial")
@@ -324,12 +309,10 @@ struct NetworkHelper {
                                 Dict.shared.banks = banks
                                 completion(banks, nil)
                             } else {
-                                print("DEBUG: BanksList уже есть")
                             }
                             
                         } else {
                             let error = model?.errorMessage ?? "nil"
-                            print("DEBUG: ", #function, error)
                             completion(nil, error)
                         }
                     }
@@ -351,7 +334,7 @@ struct NetworkHelper {
                     Dict.shared.paymentList = list.paymentSystemList
                     completion(list.paymentSystemList, nil)
                 } catch {
-                    print(error)
+                    
                 }
                 getPayments(withId: banksListSerial)
             } else {
@@ -361,11 +344,9 @@ struct NetworkHelper {
             func getPayments(withId: String? = nil) {
                 
                 let param = ["serial" : withId ?? ""]
-                print("DEBUG: getPayments param", param)
                 NetworkManager<GetPaymentSystemListDecodableModel>.addRequest(.getPaymentSystemList, param, body) { model, error in
                     if error != nil {
                         guard let error = error else { return }
-                        print("DEBUG: ", #function, error)
                         completion(nil, error)
                     } else {
                         guard let statusCode = model?.statusCode else { return }
@@ -381,7 +362,7 @@ struct NetworkHelper {
                                 let json = try? JSONEncoder().encode(data)
 
                                 do { try json!.write(to: filePath) }
-                                catch { print("Failed to write JSON: \(error.localizedDescription)") }
+                                catch { }
                                 
                                 UserDefaults().set(data.serial, forKey: "PaymentListSerial")
                                 
@@ -389,12 +370,10 @@ struct NetworkHelper {
                                 Dict.shared.paymentList = payments
                                 completion(payments, nil)
                             } else {
-                                print("DEBUG: BanksList уже есть")
                             }
                             
                         } else {
                             let error = model?.errorMessage ?? "nil"
-                            print("DEBUG: ", #function, error)
                             completion(nil, error)
                         }
                     }
@@ -416,7 +395,7 @@ struct NetworkHelper {
                     Dict.shared.mobileSystem = list.mobileList
                     completion(list.mobileList, nil)
                 } catch {
-                    print(error)
+                    
                 }
                 getPayments(withId: banksListSerial)
             } else {
@@ -426,11 +405,9 @@ struct NetworkHelper {
             func getPayments(withId: String? = nil) {
                 
                 let param = ["serial" : withId ?? ""]
-                print("DEBUG: getPayments param", param)
                 NetworkManager<GetMobileListDecodableModel>.addRequest(.getMobileList, param, body) { model, error in
                     if error != nil {
                         guard let error = error else { return }
-                        print("DEBUG: ", #function, error)
                         completion(nil, error)
                     } else {
                         guard let statusCode = model?.statusCode else { return }
@@ -446,7 +423,7 @@ struct NetworkHelper {
                                 let json = try? JSONEncoder().encode(data)
 
                                 do { try json!.write(to: filePath) }
-                                catch { print("Failed to write JSON: \(error.localizedDescription)") }
+                                catch {  }
                                 
                                 UserDefaults().set(data.serial, forKey: "getMobileSystem")
                                 
@@ -454,12 +431,11 @@ struct NetworkHelper {
                                 Dict.shared.mobileSystem = payments
                                 completion(payments, nil)
                             } else {
-                                print("DEBUG: BanksList уже есть")
+
                             }
                             
                         } else {
                             let error = model?.errorMessage ?? "nil"
-                            print("DEBUG: ", #function, error)
                             completion(nil, error)
                         }
                     }
@@ -502,7 +478,6 @@ struct NetworkHelper {
             /// Курс обмена валют
             NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, tempParameters, body) { model, error in
                 if error != nil {
-                    print("DEBUG: Error: ", error ?? "")
                     completion(nil, error)
                 }
                 guard let model = model else { return }
@@ -530,7 +505,7 @@ struct NetworkHelper {
                     Dict.shared.currencyList = list.currencyList
                     completion(list.currencyList, nil)
                 } catch {
-                    print(error)
+
                 }
                 getCurrency(withId: banksListSerial)
             } else {
@@ -540,11 +515,9 @@ struct NetworkHelper {
             func getCurrency(withId: String? = nil) {
                 
                 let param = ["serial" : withId ?? ""]
-                print("DEBUG: getPayments param", param)
                 NetworkManager<GetCurrencyListDecodableModel>.addRequest(.getCurrencyList, param, body) { model, error in
                     if error != nil {
                         guard let error = error else { return }
-                        print("DEBUG: ", #function, error)
                         completion(nil, error)
                     } else {
                         guard let statusCode = model?.statusCode else { return }
@@ -560,7 +533,7 @@ struct NetworkHelper {
                                 let json = try? JSONEncoder().encode(data)
 
                                 do { try json!.write(to: filePath) }
-                                catch { print("Failed to write JSON: \(error.localizedDescription)") }
+                                catch {}
                                 
                                 UserDefaults().set(data.serial, forKey: "CurrencyListSerial")
                                 
@@ -568,12 +541,10 @@ struct NetworkHelper {
                                 Dict.shared.currencyList = payments
                                 completion(payments, nil)
                             } else {
-                                print("DEBUG: CurrencyList уже есть")
                             }
                             
                         } else {
                             let error = model?.errorMessage ?? "nil"
-                            print("DEBUG: ", #function, error)
                             completion(nil, error)
                         }
                     }

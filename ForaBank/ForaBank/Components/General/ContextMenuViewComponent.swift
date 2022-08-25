@@ -79,17 +79,17 @@ extension ContextMenuViewModel {
             .init(icon: Image("bar-in-order"),
                   title: "Последовательность",
                   action: {
-                      print("")
+                      //TODO: set action
                   }),
             .init(icon: Image("grid"),
                   title: "Вид (Плитка)",
                   action: {
-                      print("")
+                      //TODO: set action
                   }),
             .init(icon: Image("trash_empty"),
                   title: "Удалить",
                   action: {
-                      print("")
+                      //TODO: set action
                   })
         ])
 }

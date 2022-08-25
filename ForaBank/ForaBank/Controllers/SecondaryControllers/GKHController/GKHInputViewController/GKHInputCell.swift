@@ -128,7 +128,6 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         haveEmptyCell()
         //        let previousText:NSString = textField.text! as NSString
         //        let updatedText = previousText.replacingCharacters(in: range, with: string)
-        //        print("updatedText > ", updatedText)
         return true
     }
     

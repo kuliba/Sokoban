@@ -22,7 +22,7 @@ class PermissionHelper {
                 isAllowed($0, nil)
             }
         @unknown default:
-            print()
+            break
         }
     }
 }

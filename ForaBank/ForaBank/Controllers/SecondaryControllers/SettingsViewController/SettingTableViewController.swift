@@ -154,8 +154,7 @@ class SettingTableViewController: UITableViewController {
                 imagePickerController.sourceType = .photoLibrary
                 imagePickerController.navigationController?.navigationBar.tintColor = .black
                 self?.present(imagePickerController, animated: true, completion: nil)
-            default:
-                print()
+            default: break
             }
             
         }

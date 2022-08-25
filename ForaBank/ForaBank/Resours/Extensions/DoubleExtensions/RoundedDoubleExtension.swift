@@ -108,7 +108,7 @@ extension Double {
                         resultString.append(str)
                     }
                     else {
-                        print("invalid input")
+
                     }
                 }
             }
@@ -163,7 +163,7 @@ extension Double {
                         resultString.append(str)
                     }
                     else {
-                        print("invalid input")
+
                     }
                 }
             }

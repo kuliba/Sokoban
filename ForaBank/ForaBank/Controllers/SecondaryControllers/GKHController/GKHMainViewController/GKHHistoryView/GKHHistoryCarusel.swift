@@ -62,6 +62,6 @@ class GKHCaruselCollectionView: UICollectionView, UICollectionViewDelegate, UICo
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let operatorsModel = cells[indexPath.row].operatorsModel
         cellData?([:], operatorsModel)
-        print()
+        
     }
 }

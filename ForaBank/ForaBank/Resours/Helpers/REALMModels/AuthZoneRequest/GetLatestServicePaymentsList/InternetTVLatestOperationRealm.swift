@@ -8,7 +8,7 @@ struct InternetTVLatestOperationRealm {
         var latestOperations = [InternetTVLatestOperationsModel]()
         NetworkManager<GetLatestServicePaymentsDecodableModel>.addRequest(.getLatestInternetTVPayments, [:], [:]) { model, error in
             if error != nil {
-                print("DEBUG: error", error!)
+                
             } else {
                 guard let model = model else { return }
                 guard let additionalListData = model.data else { return }
@@ -37,7 +37,7 @@ struct InternetTVLatestOperationRealm {
                     realm?.add(latestOperations)
                     try realm?.commitWrite()
                 } catch {
-                    print(error.localizedDescription)
+                    
                 }
             }
         }
@@ -45,7 +45,7 @@ struct InternetTVLatestOperationRealm {
         var latestOperationsTransport = [InternetTVLatestOperationsTransport]()
         NetworkManager<GetLatestServicePaymentsDecodableModel>.addRequest(.getLatestInternetTVPaymentsTransport, [:], [:]) { model, error in
             if error != nil {
-                print("DEBUG: error", error!)
+                
             } else {
                 guard let model = model else { return }
                 guard let additionalListData = model.data else { return }
@@ -74,7 +74,7 @@ struct InternetTVLatestOperationRealm {
                     realm?.add(latestOperationsTransport)
                     try realm?.commitWrite()
                 } catch {
-                    print(error.localizedDescription)
+                    
                 }
             }
         }

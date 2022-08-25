@@ -32,7 +32,6 @@ class PushHistoryViewController: UIViewController {
     func downloadPushArray() {
         self.isLoadingList = true
         showActivity()
-        print("tempOffset :", offsetNumber)
         let body = ["offset": offsetNumber,
                     "limit": "10" ]
         

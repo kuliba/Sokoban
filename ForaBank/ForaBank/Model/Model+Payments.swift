@@ -198,8 +198,6 @@ extension Model {
     
     func handlePaymentsContinueRequest(_ payload: ModelAction.Payment.Continue.Request) {
         
-        print("Payments: continue request")
-        
         let operation = payload.operation
         
         parameters(for: operation.service, parameters: operation.parameters, history: operation.history) { result in
@@ -229,8 +227,6 @@ extension Model {
     }
     
     func handlePaymentsCompleteRequest(_ payload: ModelAction.Payment.Complete.Request) {
-        
-        print("Payments: complete request")
         
         guard let codeParameter = payload.operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.code.rawValue })?.parameter, let codeValue = codeParameter.value else {
             
@@ -457,8 +453,6 @@ extension Model {
         
         let step = history.count
         
-        print("Payments: step \(step)")
-        
         switch service {
         case .fns:
             parametersFNS(parameters, step, completion)
@@ -543,8 +537,6 @@ extension Model {
         }
         
         let command = ServerCommands.TransferController.CreateAnywayTransfer(token: token, isNewPayment: step.isNewPayment, payload: .init(amount: amount, check: step.check, comment: nil, currencyAmount: currency, payer: payer, additional: additional, puref: puref))
-        
-        print("Payments: command : \(command.debugDescription)")
         
         return try await withCheckedThrowingContinuation({ continuation in
             

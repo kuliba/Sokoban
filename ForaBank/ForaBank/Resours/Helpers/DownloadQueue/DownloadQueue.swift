@@ -16,8 +16,6 @@ final class DownloadQueue {
 
     func download() {
         
-        print("DownloadQueue: started")
-        
         let tasks = prepareTasks()
         
         for task in tasks {
@@ -33,20 +31,19 @@ final class DownloadQueue {
                     switch result {
                     case .updated(let serial):
                         self.serialsStorage.store(serial: serial, of: task.kind)
-                        print("DownloadQueue: \(type(of: task.handler)), serial: \(serial)")
                         
                     case .passed:
-                        print("DownloadQueue: \(type(of: task.handler)) passed")
+                        //TODO: set logger
+                        break
                     
                     case .failed(let error):
                         
                         if let error = error {
-                            
-                            print("DownloadQueue: \(type(of: task.handler)) failed, \(error.localizedDescription)")
+                            //TODO: set logger
                             
                         } else {
-                            
-                            print("DownloadQueue: \(type(of: task.handler)) failed")
+                            //TODO: set logger
+
                         }
                     }
 

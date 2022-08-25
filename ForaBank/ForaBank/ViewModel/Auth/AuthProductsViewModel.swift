@@ -65,8 +65,7 @@ class AuthProductsViewModel: ObservableObject {
                     case .success(let data):
       
                         guard let image = Image(data: data) else {
-                            //TODO: log
-                            print("AuthProductsViewModel: unable create product image from data for endpoint: \(payload.endpoint)")
+                            //TODO: set logger
                             return
                         }
                         
@@ -89,8 +88,8 @@ class AuthProductsViewModel: ObservableObject {
                         }
                         
                     case .failure(let error):
-                        //TODO: log
-                        print("AuthProductsViewModel: product image download failed for endpoint: \(payload.endpoint) with error: \(error.localizedDescription)")
+                        break
+                        //TODO: set logger
                     }
                 default:
                     break

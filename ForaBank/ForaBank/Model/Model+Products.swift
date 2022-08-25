@@ -401,18 +401,6 @@ extension Model {
                     continue
                 }
                 
-                // update additional products data
-                switch productType {
-                case .deposit:
-                    self.action.send(ModelAction.Deposits.Info.All())
-                    
-                case .loan:
-                    self.action.send(ModelAction.Loans.Update.All())
-                    
-                default:
-                    break
-                }
-
                 let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: productType)
                              
                 do {
@@ -437,6 +425,18 @@ extension Model {
                     } catch {
                         
                         self.handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                    // update additional products data
+                    switch productType {
+                    case .deposit:
+                        self.action.send(ModelAction.Deposits.Info.All())
+                        
+                    case .loan:
+                        self.action.send(ModelAction.Loans.Update.All())
+                        
+                    default:
+                        break
                     }
 
                 } catch {
@@ -495,6 +495,18 @@ extension Model {
                     
                     self.handleServerCommandCachingError(error: error, command: command)
                 }
+                
+                // update additional products data
+                switch payload.productType {
+                case .deposit:
+                    self.action.send(ModelAction.Deposits.Info.All())
+                    
+                case .loan:
+                    self.action.send(ModelAction.Loans.Update.All())
+                    
+                default:
+                    break
+                }
 
             } catch {
 
@@ -507,18 +519,6 @@ extension Model {
                 self.handleServerCommandError(error: error, command: command)
                 //TODO: show error message in UI
             }
-        }
-        
-        // update additional products data
-        switch payload.productType {
-        case .deposit:
-            self.action.send(ModelAction.Deposits.Info.All())
-            
-        case .loan:
-            self.action.send(ModelAction.Loans.Update.All())
-            
-        default:
-            break
         }
     }
 
@@ -891,7 +891,6 @@ extension Model {
                     
                 } catch {
                     
-                    print("Model: handleLoansUpdateSingleRequest: caching LoansData error: \(error)")
                 }
 
             } catch {

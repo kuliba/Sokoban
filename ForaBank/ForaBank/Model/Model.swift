@@ -223,8 +223,6 @@ class Model {
             .receive(on: queue)
             .sink { [unowned self] sessionState in
                 
-                print("log: session state: \(sessionState)")
-                
                 switch sessionState {
                 case .inactive:
                     auth.value = authIsCredentialsStored ? .signInRequired : .registerRequired
@@ -266,6 +264,7 @@ class Model {
                     action.send(ModelAction.Account.ProductList.Request())
                     action.send(ModelAction.AppVersion.Request())
                     action.send(ModelAction.Settings.GetUserSettings())
+                    action.send(ModelAction.Dictionary.UpdateCache.List(types: [.bannerCatalogList]))
                     
                 default:
                     break
@@ -761,7 +760,7 @@ private extension Model {
                     
                 } catch {
                     
-                    print("logger: legacy auth update error: \(error)")
+                    //TODO: set logger
                 }
                 
                 do {
@@ -772,7 +771,7 @@ private extension Model {
                     
                 } catch {
                     
-                    print("logger: is sensor enabled setting update error: \(error)")
+                    //TODO: set logger
                 }
                 
                 do {
@@ -782,7 +781,7 @@ private extension Model {
                     
                 } catch {
                     
-                    print("logger: first launch setting update error: \(error)")
+                    //TODO: set logger
                 }
                 
                 do {
@@ -794,7 +793,7 @@ private extension Model {
                     
                 } catch {
                     
-                    print("logger: legacy auth cleanup error: \(error)")
+                    //TODO: set logger
                 }
                 
             } else {
@@ -809,7 +808,7 @@ private extension Model {
                     
                 } catch {
                     
-                    print("logger: first launch setting update error: \(error)")
+                    //TODO: set logger
                 }
             }
         }
@@ -933,8 +932,7 @@ private extension Model {
 
         } catch {
             
-            //TODO: log error
-            print("Model: handleAuthLogoutRequest: unable clear pincode with error: \(error.localizedDescription)")
+            //TODO: set logger
         }
     }
     
@@ -946,7 +944,7 @@ private extension Model {
             
         } catch {
             
-            print("Model: clearCachedData: templates error: \(error.localizedDescription)")
+            //TODO: set logger
         }
         
         do {
@@ -955,7 +953,7 @@ private extension Model {
             
         } catch {
             
-            print("Model: clearCachedData: products error: \(error.localizedDescription)")
+            //TODO: set logger
         }
 
         do {
@@ -964,7 +962,7 @@ private extension Model {
 
         } catch {
 
-            print("Model: clearCachedData: productsList error: \(error.localizedDescription)")
+            //TODO: set logger
         }
         
         do {
@@ -973,7 +971,7 @@ private extension Model {
             
         } catch {
             
-            print("Model: clearCachedData: statements error: \(error.localizedDescription)")
+            //TODO: set logger
         }
         
         do {
@@ -982,7 +980,7 @@ private extension Model {
             
         } catch {
             
-            print("Model: clearCachedData: ClientInfoData error: \(error.localizedDescription)")
+            //TODO: set logger
         }
         
         do {
@@ -991,7 +989,7 @@ private extension Model {
             
         } catch {
             
-            print("Model: clearCachedData: DepositProductData error: \(error.localizedDescription)")
+            //TODO: set logger
         }
         
         do {
@@ -1000,7 +998,7 @@ private extension Model {
             
         } catch {
             
-            print("Model: clearCachedData: ClientPhotoData error: \(error.localizedDescription)")
+            //TODO: set logger
         }
         
         do {
@@ -1009,7 +1007,7 @@ private extension Model {
             
         } catch {
             
-            print("Model: clearCachedData: ClientNameData error: \(error.localizedDescription)")
+            //TODO: set logger
         }
         
         do {
@@ -1018,7 +1016,7 @@ private extension Model {
             
         } catch {
             
-            print("Model: clearCachedData: LoansData error: \(error.localizedDescription)")
+            //TODO: set logger
         }
         
         do {
@@ -1027,7 +1025,7 @@ private extension Model {
             
         } catch {
             
-            print("Model: clearCachedData: [LatestPaymentData] error: \(error.localizedDescription)")
+            //TODO: set logger
         }
         
         do {
@@ -1036,7 +1034,7 @@ private extension Model {
             
         } catch {
             
-            print("Model: clearCachedData: DepositsInfoData error: \(error.localizedDescription)")
+            //TODO: set logger
         }
         
         do {
@@ -1045,7 +1043,7 @@ private extension Model {
             
         } catch {
             
-            print("Model: clearCachedData: [NotificationData] error: \(error.localizedDescription)")
+            //TODO: set logger
         }
         
         do {
@@ -1054,7 +1052,7 @@ private extension Model {
             
         } catch {
             
-            print("Model: clearCachedData: [FastPaymentContractFullInfoType] error: \(error.localizedDescription)")
+            //TODO: set logger
         }
     }
     

@@ -295,8 +295,6 @@ class ContactConfurmViewController: UIViewController {
     var fromTitle = "От куда"
     var toTitle = "Куда"
     
-    var updateSuccessScreen: Bool = true
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         IQKeyboardManager.shared.enable = false
@@ -332,7 +330,6 @@ class ContactConfurmViewController: UIViewController {
         NotificationCenter.default.addObserver(forName: NSNotification.Name("dismissSwiftUI"), object: nil, queue: nil) { data in
             
             let vc = PaymentsDetailsSuccessViewController()
-            self.updateSuccessScreen = false
             vc.confurmView.statusImageView.image = UIImage(named: "waiting")
             vc.confurmView.summLabel.text = self.summTransctionField.text
             vc.confurmView.statusLabel.text = "Перевод отменен!"
@@ -822,21 +819,13 @@ class ContactConfurmViewController: UIViewController {
 
         showActivity()
         
-        self.timeOut() {
-            self.dismissActivity()
-            self.doneButtonIsEnabled(false)
-            return
-        }
-        
         switch confurmVCModel?.type {
         
         case .card2card, .requisites, .phoneNumber, .gkh, .mobilePayment:
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { response, error in
-                self.updateSuccessScreen = false
                 if error != nil {
                     self.dismissActivity()
                     self.doneButtonIsEnabled(false)
-                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                 }
                 
                 guard let model = response else { return }
@@ -850,8 +839,7 @@ class ContactConfurmViewController: UIViewController {
                         case "COMPLETE": self.confurmVCModel?.status = .succses
                         case "IN_PROGRESS": self.confurmVCModel?.status = .inProgress
                         case "REJECTED": self.confurmVCModel?.status = .error
-                        default:
-                            print("Не известный статус документа")
+                        default: break
                         }
                         
                         if let closeAction = self.confurmVCModel?.closeAction {
@@ -933,9 +921,7 @@ class ContactConfurmViewController: UIViewController {
         default:
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
                 self.dismissActivity()
-                self.updateSuccessScreen = false
                 if error != nil {
-                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                     self.doneButtonIsEnabled(false)
                 }
                 guard let model = respons else { return }
@@ -944,13 +930,11 @@ class ContactConfurmViewController: UIViewController {
                     let documentStatus = model.data?.documentStatus ?? ""
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
-                        self.updateSuccessScreen = false
                         switch documentStatus {
                         case "COMPLETED": self.confurmVCModel?.status = .succses
                         case "IN_PROGRESS": self.confurmVCModel?.status = .inProgress
                         case "REJECTED": self.confurmVCModel?.status = .error
-                        default:
-                            print("Не известный статус документа")
+                        default: break
                         }
                         self.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
                         switch self.confurmVCModel?.type {
@@ -1044,30 +1028,6 @@ class ContactConfurmViewController: UIViewController {
             }
         }
     }
-    
-    private func timeOut(_ complition: @escaping () -> Void) {
-        var runCount = 0
-
-        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
-            runCount += 1
-            
-            guard self.updateSuccessScreen == true else {
-                timer.invalidate()
-                return
-            }
-            
-            if runCount == 60 {
-                timer.invalidate()
-                let vc = PaymentsDetailsSuccessViewController()
-                self.confurmVCModel?.status = .timeOut
-                vc.confurmVCModel = self.confurmVCModel
-                vc.operatorsViewModel = self.operatorsViewModel
-                self.navigationController?.pushViewController(vc, animated: true)
-                complition()
-            }
-        }
-    }
-
 }
 
 extension ConfirmViewControllerModel {

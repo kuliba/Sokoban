@@ -43,12 +43,12 @@ class OpenNewDepositViewControllerCell: UICollectionViewCell {
 
     //MARK: - IBAction
     @IBAction func moreDetailButtonTapped(_ sender: Any) {
-        print(#function)
+        
         delegate?.openDetailController(indexPath: index)
     }
     
     @IBAction func openDepositButtonTapped(_ sender: Any) {
-        print(#function)
+        
         delegate?.openCalculatorController(indexPath: index)
     }
     
@@ -80,7 +80,7 @@ class OpenNewDepositViewControllerCell: UICollectionViewCell {
         case .success(let url):
             depositImage.sd_setImage(with: url, completed: nil)
         case .failure(let error):
-            debugPrint(error)
+            
             return
         }
         

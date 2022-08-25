@@ -112,8 +112,8 @@ class MyProductsMoneyViewModel: ObservableObject {
             let action: () -> Void
         
             var rateFormatted: String {
-                id != "RUB" ? "1 \(symbol) - \(rate) \u{20BD}"
-                            : "1 \(symbol) - 1 \u{20BD}"
+                id == "RUB" ? "1 \(symbol) - 1 \u{20BD}"
+                            : "1 \(symbol) - \(String(format: "%.4f", rate)) \u{20BD}"
             }
         
             init(id: String, symbol: String, name: String, rate: Double, isSelected: Bool,

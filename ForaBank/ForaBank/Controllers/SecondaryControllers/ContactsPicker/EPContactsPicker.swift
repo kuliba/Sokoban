@@ -290,10 +290,9 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
                 }
                 //Catching exception as enumerateContactsWithFetchRequest can throw errors
                 catch let error as NSError {
-                    print(error.localizedDescription)
+                    
                 }
-        @unknown default:
-            print("Error CNContactStore.authorizationStatus")
+        @unknown default: break
         }
     }
     
@@ -462,7 +461,6 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
                                                          keysToFetch: allowedContactKeys())
         }
         catch {
-            print("Error!")
         }
     }
     
@@ -511,7 +509,7 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
                 }
                 if message != nil {
                     DispatchQueue.main.async {
-                        print(message!)
+
                     }
                 } else {
                     // Success

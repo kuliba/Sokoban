@@ -224,8 +224,7 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
                 
                 
             }
-        default:
-            print("default")
+        default: break
             
         }
     }

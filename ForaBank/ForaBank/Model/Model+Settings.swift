@@ -92,8 +92,7 @@ extension Model {
             
         } catch {
             
-            //TODO: log
-            print(error.localizedDescription)
+            //TODO: set logger
         }
     }
     
@@ -105,8 +104,7 @@ extension Model {
             
         } catch {
             
-            //TODO: log
-            print(error.localizedDescription)
+            //TODO: set logger
         }
     }
     

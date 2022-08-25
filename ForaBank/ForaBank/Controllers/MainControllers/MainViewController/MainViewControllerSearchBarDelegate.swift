@@ -14,8 +14,5 @@ extension MainViewController: UISearchBarDelegate {
         
     }
     
-    func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {
-        print(#function)
-        
-    }
+    func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {}
 }

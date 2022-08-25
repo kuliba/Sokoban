@@ -158,7 +158,6 @@ class MeToMeViewController: UIViewController {
         cardFromField.layoutIfNeeded()
         
         cardFromField.didChooseButtonTapped = { () in
-            print("cardField didChooseButtonTapped")
             DispatchQueue.main.async {
                 UIView.animate(withDuration: 0.2) {
                     if self.cardListView.isHidden == true {
@@ -263,7 +262,6 @@ class MeToMeViewController: UIViewController {
         }
         
         bankField.didChooseButtonTapped = { () in
-            print("bankField didChooseButtonTapped")
             DispatchQueue.main.async {
                 UIView.animate(withDuration: 0.2) {
                     if self.bankListView.isHidden == true {
@@ -408,11 +406,9 @@ class MeToMeViewController: UIViewController {
             self?.dismissActivity()
             if error != nil {
                 guard let error = error else { return }
-                print("DEBUG: Error: ", error)
                 completion(nil, error)
             }
             guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 guard let data  = model.data else { return }
                 var filterBank: [BankFullInfoList] = []
@@ -426,7 +422,6 @@ class MeToMeViewController: UIViewController {
                 completion(list, nil)
             } else {
                 guard let error = model.errorMessage else { return }
-                print("DEBUG: Error: ", error)
 
                 completion(nil, error)
             }
@@ -438,17 +433,14 @@ class MeToMeViewController: UIViewController {
         NetworkManager<AntiFraudDecodableModel>.addRequest(.antiFraud, [:], [:]) { model, error in
             if error != nil {
                 guard let error = error else { return }
-                print("DEBUG: Error: ", error)
                 completion(false, error)
             }
             guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 guard let data  = model.data else { return }
                 completion(data, nil)
             } else {
                 guard let error = model.errorMessage else { return }
-                print("DEBUG: Error: ", error)
 
                 completion(false, error)
             }
@@ -481,16 +473,13 @@ class MeToMeViewController: UIViewController {
         NetworkManager<CreateFastPaymentContractDecodableModel>.addRequest(.createMe2MePullCreditTransfer, [:], body) { model, error in
             if error != nil {
                 guard let error = error else { return }
-                print("DEBUG: Error: ", error)
                 completion(false, error)
             }
             guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 completion(true, nil)
             } else {
                 guard let error = model.errorMessage else { return }
-                print("DEBUG: Error: ", error)
 
                 completion(false, error)
             }

@@ -200,7 +200,12 @@ class InfoProductViewModel: ObservableObject {
                         }
                         
                         list.append(.init(title: "Ставка по вкладу", subtitle: "\(data.interestRate)%"))
-                        list.append(.init(title: "Дата следующего начисления процентов", subtitle: dateFormatter.string(from: data.dateNext)))
+
+                        if let dateNext = data.dateNext {
+
+                            list.append(.init(title: "Дата следующего начисления процентов", subtitle: dateFormatter.string(from: dateNext)))
+
+                        }
                         list.append(.init(title: "Сумма выплаченных процентов всего", subtitle: data.sumPayInt.currencyFormatter(symbol: product.currency)))
                         
                         if let sumCredit = data.sumCredit?.currencyFormatter(symbol: product.currency) {

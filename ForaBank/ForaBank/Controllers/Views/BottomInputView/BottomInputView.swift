@@ -252,7 +252,6 @@ class BottomInputView: UIView {
                         let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
                         self.buttomLabel.text = tempLable
                         self.currencyCode = self.tempArray[0]?.currencyCodeAlpha ?? ""
-                        print(self.currencyCode)
                     case (_, nil):
                         self.currencySymbol = "₽"
                         self.currencySwitchButton.setTitle("₽" + " ⇆ " + (self.tempArray[1]?.currencyCodeAlpha?.getSymbol() ?? ""), for: .normal)
@@ -263,7 +262,6 @@ class BottomInputView: UIView {
                         let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
                         self.buttomLabel.text = tempLable
                         self.currencyCode = "RUB"
-                        print(self.currencyCode)
                     case (_, _):
                         break
                     }
@@ -287,7 +285,7 @@ class BottomInputView: UIView {
     }
     
     @IBAction func doneButtonTapped(_ sender: Any) {
-        print(#function)
+        
         guard let amount = amountTextField.text else { return }
         let unformatText = moneyFormatter?.unformat(amount)
         let text = unformatText?.replacingOccurrences(of: ",", with: ".")

@@ -79,10 +79,10 @@ extension GKHMainViewController: UITableViewDataSource {
         case "qr":
             let dc = segue.destination as! QRViewController
             dc.delegate = self
-        case .none:
-            print()
-        case .some(_):
-            print()
+        case .none: break
+            
+        case .some(_): break
+            
         }
         
     }

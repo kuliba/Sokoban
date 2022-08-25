@@ -15,7 +15,7 @@ struct CountriesListSaved: DownloadQueueProtocol {
         NetworkManager<GetCountriesDecodebleModel>.addRequest(.getCountries, param, body) { model, error in
             
             if let error = error {
-                print("DEBUG: error", error)
+                
                 completion(.failed(nil))
                 return
             }

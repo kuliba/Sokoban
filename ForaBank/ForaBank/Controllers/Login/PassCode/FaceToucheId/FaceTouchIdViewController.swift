@@ -168,7 +168,6 @@ class FaceTouchIdViewController: UIViewController {
                                     DispatchQueue.main.async {
                                         self.dismissActivity()
                                         if error != nil {
-                                            print("DEBUG: Error getCSRF: ", error!)
                                         } else {
                                             AppDelegate.shared.isAuth = true
                                             // Обновление времени старта после ввода нового пина при авторизации
@@ -182,9 +181,8 @@ class FaceTouchIdViewController: UIViewController {
                                                 realm?.delete(b!)
                                                 realm?.add(timeOutObjects)
                                                 try realm?.commitWrite()
-                                                print("REALM", realm?.configuration.fileURL?.absoluteString ?? "")
                                             } catch {
-                                                print(error.localizedDescription)
+                                                
                                             }
                                             self.dismissActivity()
                                             self.delegate?.goToTabBar()

@@ -13,7 +13,6 @@ class TermsDepositCollectionViewCell: UICollectionViewCell {
 
     var documentsList: [String] = [] {
         didSet {
-            print(documentsList.count)
             tableView.reloadData()
         }
     }

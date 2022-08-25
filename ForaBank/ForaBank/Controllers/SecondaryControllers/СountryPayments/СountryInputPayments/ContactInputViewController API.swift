@@ -72,8 +72,7 @@ extension ContactInputViewController {
                 phone = phone.applyPatternOnNumbers(pattern: "##-###-#######", replacmentCharacter: "#")
             case "+374":
                 phone = phone.applyPatternOnNumbers(pattern: "###-##-######", replacmentCharacter: "#")
-            default:
-                print("Phone Error")
+            default: break
             }
             
             switch phone.prefix(3) {
@@ -83,8 +82,7 @@ extension ContactInputViewController {
                 phone = phone.applyPatternOnNumbers(pattern: "#-###-#######", replacmentCharacter: "#")
             case "374":
                 phone = phone.applyPatternOnNumbers(pattern: "###-##-######", replacmentCharacter: "#")
-            default:
-                print("Phone Error")
+            default: break
             }
             
             switch phone.prefix(2) {
@@ -95,16 +93,14 @@ extension ContactInputViewController {
             case "90":
                 phone = phone.applyPatternOnNumbers(pattern: "##-###-#######", replacmentCharacter: "#")
             
-            default:
-                print("Phone Error")
+            default: break
             }
             
             switch phone.prefix(1) {
             case "8":
                 phone = phone.applyPatternOnNumbers(pattern: "#-###-#######", replacmentCharacter: "#")
                 
-            default:
-                print("Phone Error")
+            default: break
             }
             
             let field = ["fieldid": 6,
