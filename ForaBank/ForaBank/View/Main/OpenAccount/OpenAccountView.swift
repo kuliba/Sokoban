@@ -29,7 +29,10 @@ struct OpenAccountView: View {
                 viewModel: .init(
                     model: viewModel.model,
                     item: viewModel.item,
-                    currency: viewModel.currency))
+                    currency: viewModel.currency,
+                    style: viewModel.style) {
+                        viewModel.closeAction()
+                    })
             .padding(.bottom, 4)
         }
     }
