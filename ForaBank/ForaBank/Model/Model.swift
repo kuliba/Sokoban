@@ -264,6 +264,7 @@ class Model {
                     action.send(ModelAction.Account.ProductList.Request())
                     action.send(ModelAction.AppVersion.Request())
                     action.send(ModelAction.Settings.GetUserSettings())
+                    action.send(ModelAction.Dictionary.UpdateCache.List(types: [.bannerCatalogList]))
                     
                 default:
                     break
