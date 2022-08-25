@@ -198,6 +198,7 @@ class MainViewModel: ObservableObject, Resetable {
                                             self.link = .qrScanner(.init(closeAction: { [weak self] value  in
                                                 
                                                 if value == false {
+                                                self?.action.send(MainViewModelAction.Close.Link())
                                                 self?.action.send(PaymentsTransfersViewModelAction
                                                                   .Close.Link() )
                                             } else {
