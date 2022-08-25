@@ -26,6 +26,9 @@ extension OpenAccountPerformView {
         let spinnerIcon: Image
 
         private let model: Model
+        private let style: OpenAccountViewModel.Style
+        private let closeAction: () -> Void
+
         private var bindings = Set<AnyCancellable>()
 
         var currencyTitle: String {
@@ -60,49 +63,23 @@ extension OpenAccountPerformView {
             return .open
         }
 
-        lazy var agreement: AgreementView.ViewModel = {
-
-            let termsAction: () -> Void = { [weak self] in
-                self?.action.send(OpenAccountPerformAction.Button.Terms())
-            }
-
-            let ratesAction: () -> Void = { [weak self] in
-                self?.action.send(OpenAccountPerformAction.Button.Rates())
-            }
-
-            return .init(icon: .init("Checkbox Active"),
-                         termsButton: .init(action: termsAction),
-                         ratesButton: .init(action: ratesAction)
-            )
-        }()
-
-        lazy var confirm: ConfirmView.ViewModel = .init(prepareData: prepareData, confirmCode: confirmCode)
-
-        lazy var button: OpenAccountButtonView.ViewModel = .init(currency: currency, confirmCode: confirmCode, operationType: operationType) { [weak self] in
-
-            guard let self = self else {
-                return
-            }
-
-            switch self.operationType {
-            case .open, .opened:
-                self.action.send(OpenAccountPerformAction.Button.Tapped())
-            case .edit:
-                self.action.send(OpenAccountPerformAction.Button.Confirm())
-            default:
-                break
-            }
-        }
+        lazy var agreement: AgreementView.ViewModel = makeAgreement()
+        lazy var confirm: ConfirmView.ViewModel = makeConfirm()
+        lazy var button: OpenAccountButtonView.ViewModel = makeButton()
 
         init(model: Model,
              item: OpenAccountItemViewModel,
              spinnerIcon: Image = .init("Logo Fora Bank"),
-             currency: Currency) {
+             currency: Currency,
+             style: OpenAccountViewModel.Style,
+             closeAction: @escaping () -> Void = {}) {
 
             self.model = model
             self.item = item
             self.spinnerIcon = spinnerIcon
             self.currency = currency
+            self.style = style
+            self.closeAction = closeAction
             self.operationType = item.isAccountOpen ? .opened : .open
 
             prepareData = .init()
@@ -214,6 +191,9 @@ extension OpenAccountPerformView {
                             currency: currency,
                             currencyCode: item.currencyCode)
                         )
+                        
+                    case _ as OpenAccountPerformAction.Button.Close:
+                        closeAction()
 
                     case _ as OpenAccountPerformAction.Button.Terms:
 
@@ -269,14 +249,11 @@ extension OpenAccountPerformView {
                 }.store(in: &bindings)
 
             $operationType
-                .combineLatest($currency, $confirmCode)
+                .combineLatest($currency)
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] data in
 
-                    button.update(
-                        operationType: data.0,
-                        currency: data.1,
-                        confirmCode: data.2)
+                    button.update(operationType: data.0, currency: data.1)
 
                 }.store(in: &bindings)
 
@@ -298,6 +275,53 @@ extension OpenAccountPerformView {
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
+        }
+        
+        private func makeButton() -> OpenAccountButtonView.ViewModel {
+            
+            .init(currency: currency, operationType: operationType, style: style) { [weak self] in
+                
+                guard let self = self else {
+                    return
+                }
+                
+                switch self.operationType {
+                case .open:
+                    self.action.send(OpenAccountPerformAction.Button.Tapped())
+                case .opened:
+                    
+                    switch self.style {
+                    case .openAccount:
+                        self.action.send(OpenAccountPerformAction.Button.Tapped())
+                    case .currencyWallet:
+                        self.action.send(OpenAccountPerformAction.Button.Close())
+                    }
+                case .edit:
+                    self.action.send(OpenAccountPerformAction.Button.Confirm())
+                default:
+                    break
+                }
+            }
+        }
+        
+        private func makeAgreement() -> AgreementView.ViewModel {
+            
+            let termsAction: () -> Void = { [weak self] in
+                self?.action.send(OpenAccountPerformAction.Button.Terms())
+            }
+
+            let ratesAction: () -> Void = { [weak self] in
+                self?.action.send(OpenAccountPerformAction.Button.Rates())
+            }
+
+            return .init(icon: .init("Checkbox Active"),
+                         termsButton: .init(action: termsAction),
+                         ratesButton: .init(action: ratesAction)
+            )
+        }
+        
+        private func makeConfirm() -> ConfirmView.ViewModel {
+            .init(prepareData: prepareData, confirmCode: confirmCode)
         }
 
         private func makeAlert(error: Model.ProductsListError) {
@@ -485,6 +509,7 @@ enum OpenAccountPerformAction {
         struct Confirm: Action {}
         struct Terms: Action {}
         struct Rates: Action {}
+        struct Close: Action {}
     }
 
     struct PushRecieved: Action {
@@ -526,13 +551,15 @@ struct OpenAccountPerformViewComponent_Previews: PreviewProvider {
                 viewModel: .init(
                     model: .productsMock,
                     item: .empty,
-                    currency: .init(description: "USD")))
+                    currency: .init(description: "USD"),
+                    style: .openAccount))
 
             OpenAccountPerformView(
                 viewModel: .init(
                     model: .productsMock,
                     item: .empty,
-                    currency: .init(description: "USD")))
+                    currency: .init(description: "EUR"),
+                    style: .openAccount))
         }
         .frame(height: 220)
         .padding(.top)

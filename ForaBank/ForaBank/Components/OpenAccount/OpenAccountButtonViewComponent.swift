@@ -17,57 +17,86 @@ extension OpenAccountButtonView {
         @Published var titleColor: Color
         @Published var backgroundColor: Color
 
+        private let style: OpenAccountViewModel.Style
         let action: () -> Void
 
         static private func makeTitle(
             currency: Currency,
-            operationType: OpenAccountPerformType) -> String {
+            operationType: OpenAccountPerformType,
+            style: OpenAccountViewModel.Style) -> String {
 
             switch operationType {
             case .open: return "Открыть \(currency.description) счет"
-            case .opened, .opening: return "Открыть еще один \(currency.description) счет"
+            case .opening: return "Открыть еще один \(currency.description) счет"
+            case .opened: return makeTitleStyle(style, currency: currency)
             case .edit, .confirm: return "Подтвердить"
+            }
+        }
+        
+        static private func makeTitleStyle(_ style: OpenAccountViewModel.Style, currency: Currency) -> String {
+            
+            switch style {
+            case .openAccount:
+                return "Открыть еще один \(currency.description) счет"
+            case .currencyWallet:
+                return "Продолжить"
             }
         }
 
         static private func makeTitleColor(
-            confirmCode: String,
-            operationType: OpenAccountPerformType) -> Color {
+            operationType: OpenAccountPerformType,
+            style: OpenAccountViewModel.Style) -> Color {
 
                 switch operationType {
                 case .opened:
-                    return .mainColorsBlack
+                    return makeTitleColorStyle(style)
                 default:
                     return .mainColorsWhite
                 }
             }
+        
+        static private func makeTitleColorStyle(_ style: OpenAccountViewModel.Style) -> Color {
+            
+            switch style {
+            case .openAccount: return .mainColorsBlack
+            case .currencyWallet: return .mainColorsWhite
+            }
+        }
 
         static private func makeBackgroundColor(
-            confirmCode: String,
-            operationType: OpenAccountPerformType) -> Color {
+            operationType: OpenAccountPerformType,
+            style: OpenAccountViewModel.Style) -> Color {
 
                 switch operationType {
                 case .opened:
-                    return .mainColorsGrayLightest
+                    return makeBackgroundColorStyle(style)
                 default:
                     return .mainColorsRed
                 }
             }
-
-        func update(operationType: OpenAccountPerformType,
-                    currency: Currency,
-                    confirmCode: String) {
-
-            title = Self.makeTitle(currency: currency, operationType: operationType)
-            titleColor = Self.makeTitleColor(confirmCode: confirmCode, operationType: operationType)
-            backgroundColor = Self.makeBackgroundColor(confirmCode: confirmCode, operationType: operationType)
+        
+        static private func makeBackgroundColorStyle(_ style: OpenAccountViewModel.Style) -> Color {
+            
+            switch style {
+            case .openAccount: return .mainColorsGrayLightest
+            case .currencyWallet: return .mainColorsRed
+            }
         }
 
-        init(currency: Currency, confirmCode: String, operationType: OpenAccountPerformType, action: @escaping () -> Void) {
+        func update(operationType: OpenAccountPerformType, currency: Currency) {
 
-            self.title = Self.makeTitle(currency: currency, operationType: operationType)
-            self.titleColor = Self.makeTitleColor(confirmCode: confirmCode, operationType: operationType)
-            self.backgroundColor = Self.makeBackgroundColor(confirmCode: confirmCode, operationType: operationType)
+            title = Self.makeTitle(currency: currency, operationType: operationType, style: style)
+            titleColor = Self.makeTitleColor(operationType: operationType, style: style)
+            backgroundColor = Self.makeBackgroundColor(operationType: operationType, style: style)
+        }
+
+        init(currency: Currency, operationType: OpenAccountPerformType, style: OpenAccountViewModel.Style, action: @escaping () -> Void) {
+
+            self.title = Self.makeTitle(currency: currency, operationType: operationType, style: style)
+            self.titleColor = Self.makeTitleColor(operationType: operationType, style: style)
+            self.backgroundColor = Self.makeBackgroundColor(operationType: operationType, style: style)
+            
+            self.style = style
             self.action = action
         }
     }
@@ -103,8 +132,8 @@ struct OpenAccountButtonViewComponent_Previews: PreviewProvider {
         OpenAccountButtonView(
             viewModel: .init(
                 currency: .init(description: "USD"),
-                confirmCode: "567834",
                 operationType: .open,
+                style: .openAccount,
                 action: {}))
             .frame(height: 48)
             .padding()
