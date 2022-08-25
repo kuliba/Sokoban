@@ -156,9 +156,6 @@ struct TemplatesListView: View {
                         TransferByRequisitesView(viewModel: transferByRequisitesView)
                             .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.bottom)
-
-                    case .openProduct(let productProfileViewModel):
-                        ProductProfileView(viewModel: productProfileViewModel)
                         
                     case .betweenTheir(let meToMeViewModel):
                         MeToMeView(viewModel: meToMeViewModel)
