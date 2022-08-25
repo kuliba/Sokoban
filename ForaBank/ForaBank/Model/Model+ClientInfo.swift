@@ -188,20 +188,34 @@ extension Model {
             switch result {
             case .success(let data):
                 
-                guard data.count != 0 else {
-                    return
-                }
-                
-                let clientPhotoData = ClientPhotoData(photo: .init(data: data))
-                clientPhoto.value = clientPhotoData
+                if data.count != 0 {
+                    
+                    let clientPhotoData = ClientPhotoData(photo: .init(data: data))
+                    clientPhoto.value = clientPhotoData
 
-                do {
+                    do {
+                        
+                        try localAgent.store(clientPhotoData, serial: nil)
+                        
+                    } catch {
+                        
+                        //TODO: added handler for download command
+                        print("Model: store: ClientPhotoData error: \(error.localizedDescription)")
+                    }
                     
-                    try localAgent.store(clientPhotoData, serial: nil)
+                } else {
                     
-                } catch {
-                    //TODO: added handler for download command
-                    print("Model: store: ClientPhotoData error: \(error.localizedDescription)")
+                    clientPhoto.value = nil
+                    
+                    do {
+                        
+                        try localAgent.clear(type: ClientPhotoData.self)
+                        
+                    } catch {
+                        
+                        //TODO: added handler for download command
+                        print("Model: localAgent clear error: \(error.localizedDescription)")
+                    }
                 }
                 
             case .failure(let error):
