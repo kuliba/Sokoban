@@ -249,7 +249,8 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
                                              action: #selector(onTouchBackButton))
             backButton.tintColor = .black
             navigationItem.leftBarButtonItem = backButton
-            
+            definesPresentationContext = true
+            navigationItem.hidesSearchBarWhenScrolling = false
         } else {
             
             let operatorsName = operatorData?.name ?? ""
@@ -268,6 +269,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             }
             navigationItem.hidesSearchBarWhenScrolling = false
             definesPresentationContext = true
+            
         }
     }
     

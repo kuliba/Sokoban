@@ -54,10 +54,7 @@ class BottomPopUpViewAdapter: UIViewController {
         super.viewDidLoad()
         layout()
         popupView.addGestureRecognizer(panRecognizer)
-    }
-    
-    override var prefersStatusBarHidden: Bool {
-        return true
+        self.modalPresentationCapturesStatusBarAppearance = true
     }
     
     // MARK: - Layout

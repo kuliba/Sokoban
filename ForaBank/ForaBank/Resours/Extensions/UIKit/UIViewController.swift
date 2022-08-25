@@ -85,7 +85,7 @@ extension UIViewController {
             actionHandler?(textField.text)
         }))
         alert.addAction(UIAlertAction(title: cancelTitle, style: .cancel, handler: cancelHandler))
-        
+        alert.modalPresentationCapturesStatusBarAppearance = true
         self.present(alert, animated: true, completion: nil)
     }
     
