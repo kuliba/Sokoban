@@ -204,13 +204,7 @@ private extension TemplatesListViewModel {
                     default:
                         break
                     }
-                    
-                case _ as TemplatesListViewModelAction.AddTemplate:
-                    
-                    if let product = model.products.value.values.flatMap({ $0 }).first, let viewModel: ProductProfileViewModel = .init(model, product: product, dismissAction: {[weak self] in self?.link = nil }) {
-                        link = .openProduct(viewModel)
-                    }
-                    
+                                        
                 case _ as TemplatesListViewModelAction.ToggleStyle:
                     
                     withAnimation {
@@ -387,7 +381,6 @@ extension TemplatesListViewModel {
         case transport(OperatorsViewModel)
         case externalEntity(TransferByRequisitesViewModel)
         case externalIndividual(TransferByRequisitesViewModel)
-        case openProduct(ProductProfileViewModel)
         case betweenTheir(MeToMeViewModel)
                            
     }

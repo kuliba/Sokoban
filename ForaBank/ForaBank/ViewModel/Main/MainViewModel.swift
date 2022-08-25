@@ -183,8 +183,11 @@ class MainViewModel: ObservableObject, Resetable {
                         case let payload as MainSectionViewModelAction.FastPayment.ButtonTapped:
                             switch payload.operationType {
                             case .templates:
-                                link = .templates(.init(model, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())
-                                }))
+                                
+                                let templatesListviewModel = TemplatesListViewModel(
+                                    model, dismissAction: { [weak self] in self?.action.send(MainViewModelAction.Close.Link()) })
+                                bind(templatesListviewModel)
+                                link = .templates(templatesListviewModel)
                                 
                             case .byPhone:
                                 sheet = .init(type: .byPhone(.init(closeAction: { [weak self] in
@@ -384,6 +387,30 @@ class MainViewModel: ObservableObject, Resetable {
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
                         
                         self.action.send(MainViewModelAction.Show.OpenDeposit())
+                    }
+                    
+                default:
+                    break
+                }
+                
+        }.store(in: &bindings)
+    }
+    
+    private func bind(_ templatesListViewModel: TemplatesListViewModel) {
+        
+        templatesListViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as TemplatesListViewModelAction.AddTemplate:
+                
+                    self.action.send(MainViewModelAction.Close.Link())
+                    if let productFirst = model.products.value.values.flatMap({ $0 }).first {
+                
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
+                            self.action.send(MainViewModelAction.Show.ProductProfile(productId: productFirst.id))
+                        }
                     }
                     
                 default:
