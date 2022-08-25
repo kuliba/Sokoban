@@ -101,6 +101,38 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 		// then
 		XCTAssertEqual(result, expected)
 	}
+    
+    func testGetDepositInfo_ServerResponse_Decoding() throws {
+
+        // given
+        let url = bundle.url(forResource: "GetDepositInfoServerResponse", withExtension: "json")!
+        let json = try Data(contentsOf: url)
+        let dateOpen = Date(timeIntervalSince1970: TimeInterval(10000184511 / 1000))
+
+        let data = DepositInfoDataItem(balance: 100856.4700,
+                                       dateEnd: nil,
+                                       dateNext: nil,
+                                       dateOpen: dateOpen,
+                                       id: 10001765678,
+                                       initialAmount: 100831.0200,
+                                       interestRate: 0.0100,
+                                       sumAccInt: 0.0000,
+                                       sumCredit: 0.0000,
+                                       sumDebit: 100831.0200,
+                                       sumPayInt: 856.4700,
+                                       termDay: nil,
+                                       sumPayPrc: 856.4700)
+
+        let expected = ServerCommands.DepositController.GetDepositInfo.Response(statusCode: .ok,
+                                                                                errorMessage: nil,
+                                                                                data: data)
+
+        // when
+        let result = try decoder.decode(ServerCommands.DepositController.GetDepositInfo.Response.self, from: json)
+
+        // then
+        XCTAssertEqual(result, expected)
+    }
 
 	//MARK: - GetDepositStatement
 
