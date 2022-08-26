@@ -591,12 +591,25 @@ class ProductProfileViewModel: ObservableObject {
                             self.link = .productStatement(productStatementViewModel)
                             
                         case .refillFromOtherProduct:
-                            let meToMeViewModel = MeToMeViewModel(type: .refill(productData), closeAction: {})
-                            self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
+                            if let productData = productData as? ProductLoanData, let loanAccount = self.model.products.value[.account]?.first(where: {$0.number == productData.settlementAccount}) {
+                                
+                                let meToMeViewModel = MeToMeViewModel(type: .refill(loanAccount), closeAction: {})
+                                self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
+                            } else {
+                                let meToMeViewModel = MeToMeViewModel(type: .refill(productData), closeAction: {})
+                                self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
+                            }
                             
                         case .refillFromOtherBank:
-                            let meToMeExternalViewModel = MeToMeExternalViewModel(productTo: productData, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())})
-                            self.link = .meToMeExternal(meToMeExternalViewModel)
+                            if let productData = productData as? ProductLoanData, let loanAccount = self.model.products.value[.account]?.first(where: {$0.number == productData.settlementAccount}) {
+                                
+                                let meToMeExternalViewModel = MeToMeExternalViewModel(productTo: loanAccount, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())})
+                                self.link = .meToMeExternal(meToMeExternalViewModel)
+                            } else {
+                                
+                                let meToMeExternalViewModel = MeToMeExternalViewModel(productTo: productData, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())})
+                                self.link = .meToMeExternal(meToMeExternalViewModel)
+                            }
                             
                         case .conditions:
                             self.model.action.send(ModelAction.Products.DepositConditionsPrintForm.Request(depositId: productData.id))

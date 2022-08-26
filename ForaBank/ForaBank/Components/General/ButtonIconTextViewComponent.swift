@@ -109,20 +109,34 @@ struct ButtonIconTextView: View {
                 
             case .horizontal:
 
-                HStack(spacing: 16) {
+                if viewModel.isActive {
                     
-                    IconView(viewModel: viewModel.icon)
-                    
-                    Text(viewModel.title.text)
-                        .font(titleFont)
-                        .foregroundColor(viewModel.title.color)
-                        .multilineTextAlignment(.center)
+                    HStack(spacing: 16) {
                         
+                        IconView(viewModel: viewModel.icon)
+                        
+                        Text(viewModel.title.text)
+                            .font(titleFont)
+                            .foregroundColor(viewModel.title.color)
+                            .multilineTextAlignment(.center)
+                            
+                    }
+                } else {
+                    
+                    HStack(spacing: 16) {
+                        
+                        IconView(viewModel: viewModel.icon)
+                        
+                        Text(viewModel.title.text)
+                            .font(titleFont)
+                            .foregroundColor(viewModel.title.color)
+                            .multilineTextAlignment(.center)
+                    }.opacity(0.6)
                 }
             }
             
         }.buttonStyle(PushButtonStyle())
-        .disabled(viewModel.isActive)
+        .disabled(!viewModel.isActive)
     }
 }
 
