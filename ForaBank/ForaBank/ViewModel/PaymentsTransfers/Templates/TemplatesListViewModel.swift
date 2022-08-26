@@ -198,7 +198,7 @@ private extension TemplatesListViewModel {
                         }))
 
                     case .externalIndividual:
-                        link = .externalEntity(.init(type: .template(temp), closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        link = .externalIndividual(.init(type: .template(temp), closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
                         }))
 
                     default:

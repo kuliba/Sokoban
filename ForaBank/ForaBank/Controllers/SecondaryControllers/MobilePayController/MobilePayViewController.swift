@@ -348,6 +348,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                             vc.addCloseButton()
                             vc.title = "Подтвердите реквизиты"
                             vc.operatorsViewModel = self?.operatorsViewModel
+                            vc.confurmVCModel?.template = self?.paymentTemplate
                             if let viewModel = self?.viewModel {
                                 
                                 vc.operatorsViewModel?.closeAction = viewModel.closeAction
