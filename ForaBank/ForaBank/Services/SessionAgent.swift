@@ -113,31 +113,27 @@ class SessionAgent: SessionAgentProtocol {
             return
         }
         
-        let sessionTimeRemain = Self.sessionTimeRemain(currentTime: time, lastNetworkActivityTime: lastUserActivityTime, sessionDuration: sessionDuration)
-        let sessionTimeRemainAdjusted = max(sessionTimeRemain - 10, 0)
-        
-        guard sessionTimeRemainAdjusted > 0 else {
+        let sessionTimeRemain = sessionTimeRemain(for: time)
+        guard sessionTimeRemain > 0 else {
             
             sessionState.send(.expired)
             return
         }
         
-        let isSessionExtendRequired = Self.isSessionExtendRequired(sessionTimeRemain: sessionTimeRemainAdjusted, sessionDuration: sessionDuration, sessionExtentThreshold: sessionExtentThreshold, lastNetworkActivityTime: lastNetworkActivityTime, lastUserActivityTime: lastUserActivityTime)
-        
-        if isSessionExtendRequired == true {
+        if isSessionExtendRequired(for: sessionTimeRemain) == true {
             
             action.send(SessionAgentAction.Session.Extend.Request())
         }
     }
     
-    static func sessionTimeRemain(currentTime: TimeInterval, lastNetworkActivityTime: TimeInterval, sessionDuration: TimeInterval) -> TimeInterval {
+    func sessionTimeRemain(for time: TimeInterval) -> TimeInterval {
         
-        let timeSinceLastNetworkActivity = currentTime - lastNetworkActivityTime
+        let timeSinceLastNetworkActivity = time - lastNetworkActivityTime
         
         return max(sessionDuration - timeSinceLastNetworkActivity, 0)
     }
     
-    static func isSessionExtendRequired(sessionTimeRemain: TimeInterval, sessionDuration: TimeInterval, sessionExtentThreshold: Double, lastNetworkActivityTime: TimeInterval, lastUserActivityTime: TimeInterval) -> Bool {
+    func isSessionExtendRequired(for sessionTimeRemain: TimeInterval) -> Bool {
         
         return Double(sessionTimeRemain / sessionDuration) < (1 - sessionExtentThreshold) && lastUserActivityTime > lastNetworkActivityTime
     }

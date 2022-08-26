@@ -106,8 +106,8 @@ extension ProductProfileOptionsPannelView {
                     return .init(icon: .init(image: .ic24File, background: .circleSmall), title: .init(text: "Условия по счету кредита", style: .bold), orientation: .horizontal, action: action)
                 }
                 
-            case .closeDeposit:
-                return .init(icon: .init(image: .ic24Close, background: .circleSmall), title: .init(text: "Закрыть вклад", style: .bold), orientation: .horizontal, action: action)
+            case .closeDeposit(let isActive):
+                return .init(icon: .init(image: .ic24Close, background: .circleSmall), title: .init(text: "Закрыть вклад", style: .bold), orientation: .horizontal, action: action, isActive: false)
             }
         }
         
@@ -119,7 +119,7 @@ extension ProductProfileOptionsPannelView {
             case statement
             case info
             case conditions
-            case closeDeposit
+            case closeDeposit(Bool)
         }
     }
 }

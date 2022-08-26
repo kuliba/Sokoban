@@ -18,6 +18,7 @@ extension ButtonIconTextView {
         let title: Title
         let orientation: Orientation
         let action: () -> Void
+        var isActive: Bool = true
         
         struct Icon {
             
@@ -58,12 +59,13 @@ extension ButtonIconTextView {
             case horizontal
         }
 
-        init(id: UUID = UUID(), icon: ButtonIconTextView.ViewModel.Icon, title: ButtonIconTextView.ViewModel.Title, orientation: ButtonIconTextView.ViewModel.Orientation, action: @escaping () -> Void) {
+        init(id: UUID = UUID(), icon: ButtonIconTextView.ViewModel.Icon, title: ButtonIconTextView.ViewModel.Title, orientation: ButtonIconTextView.ViewModel.Orientation, action: @escaping () -> Void, isActive: Bool = true) {
             self.id = id
             self.icon = icon
             self.title = title
             self.orientation = orientation
             self.action = action
+            self.isActive = isActive
         }
 
         static func == (lhs: ViewModel, rhs: ViewModel) -> Bool {
@@ -120,6 +122,7 @@ struct ButtonIconTextView: View {
             }
             
         }.buttonStyle(PushButtonStyle())
+        .disabled(viewModel.isActive)
     }
 }
 

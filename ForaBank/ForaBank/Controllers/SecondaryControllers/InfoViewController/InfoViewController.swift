@@ -38,8 +38,8 @@ class InfoViewController: UIViewController {
     fileprivate func setupConstraints() {
         
         image.centerX(inView: view)
-        titleLabel.anchor(top: image.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
-                          paddingTop: 24, paddingLeft: 20, paddingRight: 20)
+        titleLabel.anchor(top: image.bottomAnchor, left: view.leftAnchor,  bottom: view.bottomAnchor, right: view.rightAnchor,
+                          paddingTop: 24, paddingLeft: 20, paddingBottom: 80, paddingRight: 20)
     
     }
 }

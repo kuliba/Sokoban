@@ -170,6 +170,21 @@ extension ProductDepositData {
         depositProductId == Self.foraHitProductId
     }
     
+    var isCanClosedDeposit: Bool {
+        
+        if let endDate = endDate, endDate <= Date() {
+            
+          return false
+            
+        } else if endDate == nil {
+            
+            return false
+        } else {
+            
+           return true
+        }
+    }
+    
     enum TransferType {
         
         case remains
