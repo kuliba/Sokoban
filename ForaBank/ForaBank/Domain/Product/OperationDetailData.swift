@@ -54,7 +54,7 @@ struct OperationDetailData: Codable, Equatable {
     let payerFee: Double
     let payerFirstName: String
     let payerFullName: String
-    let payerINN: String
+    let payerINN: String?
     let payerMiddleName: String?
     let payerPhone: String?
     let payerSurName: String?
@@ -212,7 +212,7 @@ struct OperationDetailData: Codable, Equatable {
         let depositNumber: String?
         let depositDateOpen: String?
         let currencyRate: Double?
-        let payerINN: String
+        let payerINN: String?
         let payeeINN: String?
         let payeeKPP: String?
         let payeeBankBIC: String?
