@@ -716,12 +716,17 @@ class CurrencyWalletViewModel: ObservableObject {
                 return nil
             }
         }
+        
+        let containsTypes = model.productsUpdating.value.contains(where: { $0 == .card || $0 == .account })
+        
+        if containsTypes == false {
+            buttonStyle = .red
+        }
 
         selectorViewModel = nil
         confirmationViewModel = nil
         successViewModel = nil
         
-        buttonStyle = .red
         continueButton = makeContinueButton()
         isUserInteractionEnabled = true
     }
