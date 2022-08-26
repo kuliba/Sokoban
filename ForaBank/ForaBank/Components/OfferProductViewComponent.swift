@@ -395,6 +395,7 @@ struct OfferProductView: View {
                         }
                     }
                 }
+                .padding(.bottom, 60)
             }
             .padding(.horizontal, 20)
         }

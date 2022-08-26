@@ -107,7 +107,7 @@ extension ProductProfileOptionsPannelView {
                 }
                 
             case .closeDeposit(let isActive):
-                return .init(icon: .init(image: .ic24Close, background: .circleSmall), title: .init(text: "Закрыть вклад", style: .bold), orientation: .horizontal, action: action, isActive: false)
+                return .init(icon: .init(image: .ic24Close, background: .circleSmall), title: .init(text: "Закрыть вклад", style: .bold), orientation: .horizontal, action: action, isActive: isActive)
             }
         }
         
