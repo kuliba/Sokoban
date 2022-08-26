@@ -42,6 +42,12 @@ struct TransferByRequisitesView: UIViewControllerRepresentable {
                 let controller = TransferByRequisitesViewController(orgPaymentTemplate: templateData)
                 controller.viewModel.closeAction = viewModel.closeAction
                 return controller
+                
+            case .externalIndividual:
+                
+                let controller = TransferByRequisitesViewController(orgPaymentTemplate: templateData)
+                controller.viewModel.closeAction = viewModel.closeAction
+                return controller
 
             default:
                 

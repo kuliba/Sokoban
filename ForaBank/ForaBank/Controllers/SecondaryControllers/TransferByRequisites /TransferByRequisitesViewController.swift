@@ -859,7 +859,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                         vc.title = "Подтвердите реквизиты"
                         vc.confurmVCModel = self.viewModel
                         vc.addCloseButton()
-
+                        vc.confurmVCModel?.template = self.viewModel.template
                         let navController = UINavigationController(rootViewController: vc)
                         navController.modalPresentationStyle = .fullScreen
                         self.present(navController, animated: true, completion: nil)
