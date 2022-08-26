@@ -541,8 +541,12 @@ class ProductProfileViewModel: ObservableObject {
                             break
                             
                         case .deposit:
-                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.closeDeposit], productType: product.productType)
-                            self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
+                            
+                            if let deposit = productData as? ProductDepositData {
+                                
+                                let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.closeDeposit(deposit.isCanClosedDeposit)], productType: product.productType)
+                                self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
+                            }
                             
                         case .loan:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.refillFromOtherBank, .refillFromOtherProduct], productType: product.productType)
