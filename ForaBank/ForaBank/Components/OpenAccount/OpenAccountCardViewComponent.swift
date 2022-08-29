@@ -21,11 +21,16 @@ extension OpenAccountCardView {
         let currencyBalance: String
 
         var numberCardLast: String {
-            "• \(numberCard.suffix(4))"
+            
+            if numberCard.isEmpty == false {
+                return "• \(numberCard.suffix(4))"
+            } else {
+                return ""
+            }
         }
 
         init(balance: Double = 0,
-             numberCard: String = "XXXXXXXXXXXXXXXX",
+             numberCard: String = "",
              currrentAccountTitle: String = "Текущий счет",
              currencyType: OpenAccountСurrencyType) {
 
