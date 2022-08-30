@@ -216,7 +216,7 @@ extension MainView {
                             viewModel.logo
                                 .renderingMode(.original)
                         }
-                        .offset(x: 14, y: -14)
+                        .offset(x: 18, y: -14)
                         
                     }
                     
