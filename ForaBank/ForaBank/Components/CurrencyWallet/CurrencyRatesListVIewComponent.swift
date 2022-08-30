@@ -124,13 +124,13 @@ extension CurrencyRatesListView {
                 ItemViewModel(id: item.code,
                               mainImage: (item.md5hash, model.images.value[item.md5hash]?.image),
                               nameCurrency: dict.first(where: { $0.code == item.code })?.shortName ?? "",
-                              buySection: .init(kindImage: item.rateBuyDelta > 0 ? .up
-                                                         : item.rateBuyDelta == 0 ? nil : .down,
-                                                  valueText: String(item.rateBuy),
+                              buySection: .init(kindImage: item.rateSellDelta > 0 ? .up
+                                                         : item.rateSellDelta == 0 ? nil : .down,
+                                                  valueText: String(item.rateSell),
                                                   type: .buy),
-                              sellSection: .init(kindImage: item.rateSellDelta > 0 ? .up
-                                                          : item.rateSellDelta == 0 ? nil : .down,
-                                                     valueText: String(item.rateSell),
+                              sellSection: .init(kindImage: item.rateBuyDelta > 0 ? .up
+                                                          : item.rateBuyDelta == 0 ? nil : .down,
+                                                     valueText: String(item.rateBuy),
                                                      type: .sell ))
             }
                     
