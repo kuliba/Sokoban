@@ -63,6 +63,10 @@ extension DepositCalculateAmountViewModel {
     var lowerBoundCurrency: String {
         "От \(bounds.lowerBound.currencyDepositShortFormatter())"
     }
+    
+    var lowerBound: Double {
+        bounds.lowerBound
+    }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
 
@@ -74,8 +78,13 @@ extension DepositCalculateAmountViewModel {
                 textField.text = self.valueCurrency
                 return
             }
+            
+            if value < self.lowerBound {
+                self.value = self.lowerBound
+            } else {
+                self.value = value
+            }
 
-            self.value = value
             self.isFirstResponder = false
         }
     }
