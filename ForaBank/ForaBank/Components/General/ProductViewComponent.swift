@@ -663,9 +663,11 @@ extension ProductView {
                     .frame(width: size.width, height: size.height)
                     .foregroundColor(.iconWhite)
                 
-                icon
+                icon.resizable()
                     .renderingMode(.template)
                     .foregroundColor(color)
+                    .frame(width: size.width / 1.6, height: size.height / 1.6)
+                    
             }
         }
     }
