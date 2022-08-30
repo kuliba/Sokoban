@@ -5,7 +5,7 @@
 //  Created by Pavel Samsonov on 13.06.2022.
 //
 
-import Foundation
+import SwiftUI
 
 // MARK: - Handlers
 
@@ -124,7 +124,7 @@ extension Model {
                 currencyCode: payload.currencyCode))
         let productsListError = ProductsListError.emptyData(message: ProductsListError.errorMessage)
 
-        action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет открывается"))
+        action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет открывается", icon: .ic24RefreshCw))
 
         serverAgent.executeCommand(command: command) { result in
 
@@ -141,7 +141,7 @@ extension Model {
                         return
                     }
 
-                    self.action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет открыт"))
+                    self.action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет открыт", icon: .ic16Check))
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.complete(data))
 
                 default:
@@ -150,11 +150,16 @@ extension Model {
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: errorMessage)
 
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .statusError(status: response.statusCode, message: errorMessage)))
+                    
+                    self.action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет не открыт", icon: .ic16Close))
                 }
 
             case let .failure(error):
+                
                 self.handleServerCommandError(error: error, command: command)
                 self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .serverCommandError(error: error.localizedDescription)))
+                
+                self.action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет не открыт", icon: .ic16Close))
             }
         }
     }
@@ -196,7 +201,9 @@ extension Model {
         let rawValue = accountRawResponse(error: error)
         
         switch rawValue {
-        default:
+        case .exhaust, .incorrect:
+            return 2
+        case .none:
             return 0
         }
     }
@@ -342,6 +349,7 @@ extension ModelAction {
             struct Show: Action {
 
                 let message: String
+                let icon: Image
             }
 
             struct Dismiss: Action {

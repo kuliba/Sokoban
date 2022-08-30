@@ -211,7 +211,7 @@ extension OpenAccountPerformView {
                     case _ as OpenAccountPerformAction.ResetData:
 
                         item.header.isAccountOpened = false
-                        item.card.numberCard = "XXXXXXXXXXXXXXXX"
+                        item.card.numberCard = ""
                         confirmCode = ""
 
                     default:
