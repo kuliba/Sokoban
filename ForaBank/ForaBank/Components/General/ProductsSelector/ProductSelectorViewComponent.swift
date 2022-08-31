@@ -10,6 +10,8 @@ import Combine
 import Shimmer
 
 typealias ProductSelectorViewModel = ProductSelectorView.ViewModel
+typealias ProductContentViewModel = ProductSelectorViewModel.ProductContentViewModel
+typealias ProductListViewModel = ProductsListView.ViewModel
 
 // MARK: - ViewModel
 
@@ -63,6 +65,14 @@ extension ProductSelectorView {
             isDividerHiddable: Bool = false) {
             
                 self.init(model, title: "", currency: currency, currencyOperation: currencyOperation, productViewModel: productViewModel, listViewModel: listViewModel, isDividerHiddable: isDividerHiddable)
+        }
+        
+        convenience init(_ model: Model, product: ProductData) {
+            
+            let currency: Currency = .init(description: product.currency)
+            let productViewModel: ProductContentViewModel = .init(productId: product.id, productData: product, model: model)
+            
+            self.init(model, title: "", currency: currency, currencyOperation: .buy, productViewModel: productViewModel)
         }
         
         private func bind() {
@@ -568,7 +578,7 @@ extension ProductSelectorView {
 
 extension ProductSelectorView.ViewModel {
     
-    static let sample1 = ProductSelectorView.ViewModel(
+    static let sample1 = ProductSelectorViewModel(
         .emptyMock,
         title: "Откуда",
         currency: .rub,
@@ -582,7 +592,7 @@ extension ProductSelectorView.ViewModel {
             numberCard: "2953",
             description: "Все включено"))
     
-    static let sample2 = ProductSelectorView.ViewModel(
+    static let sample2 = ProductSelectorViewModel(
         .emptyMock,
         title: "Откуда",
         currency: .rub,
@@ -597,14 +607,14 @@ extension ProductSelectorView.ViewModel {
             description: "Все включено"),
         listViewModel: .sample)
     
-    static let sample3 = ProductSelectorView.ViewModel(
+    static let sample3 = ProductSelectorViewModel(
         .emptyMock,
         title: "Куда",
-        currency: .usd,
+        currency: .rub,
         currencyOperation: .sell,
         productViewModel: .init(
             productId: 3,
-            cardIcon: Image("Platinum Card"),
+            cardIcon: Image("RUB Account"),
             paymentSystemIcon: nil,
             name: "Текущий счет",
             balance: "0 $",
@@ -630,7 +640,7 @@ struct ProductSelectorViewComponent_Previews: PreviewProvider {
             ProductSelectorView(viewModel: .sample3)
                 .previewLayout(.sizeThatFits)
         }
-        .background(Color.mainColorsGrayLightest)
         .padding(.vertical)
+        .background(Color.mainColorsGrayLightest)
     }
 }

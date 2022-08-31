@@ -334,6 +334,7 @@
 		50BE3FB72889354D006BA4E1 /* CurrencyRatesListVIewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50BE3FB62889354C006BA4E1 /* CurrencyRatesListVIewComponent.swift */; };
 		50C66A4228893CA5001957D9 /* CurrencyRatesListViewComponentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C66A4128893CA5001957D9 /* CurrencyRatesListViewComponentMock.swift */; };
 		50D3D4842865C006002D7FB4 /* CurrencySwapViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D3D4832865C006002D7FB4 /* CurrencySwapViewComponent.swift */; };
+		50D40D3328BF506000AE0208 /* CloseAccountViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D40D3228BF506000AE0208 /* CloseAccountViewComponent.swift */; };
 		50D6C951287F45EE009F2193 /* CurrencyWalletAccountViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D6C950287F45EE009F2193 /* CurrencyWalletAccountViewComponent.swift */; };
 		50E3A05B28390935003FF316 /* GetProductListByTypeResponseMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 50E3A05A28390935003FF316 /* GetProductListByTypeResponseMin.json */; };
 		5A5ABF8227AAF4BF00D548AA /* LatestPaymentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8127AAF4BF00D548AA /* LatestPaymentData.swift */; };
@@ -1746,6 +1747,7 @@
 		50BE3FB62889354C006BA4E1 /* CurrencyRatesListVIewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyRatesListVIewComponent.swift; sourceTree = "<group>"; };
 		50C66A4128893CA5001957D9 /* CurrencyRatesListViewComponentMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyRatesListViewComponentMock.swift; sourceTree = "<group>"; };
 		50D3D4832865C006002D7FB4 /* CurrencySwapViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySwapViewComponent.swift; sourceTree = "<group>"; };
+		50D40D3228BF506000AE0208 /* CloseAccountViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseAccountViewComponent.swift; sourceTree = "<group>"; };
 		50D6C950287F45EE009F2193 /* CurrencyWalletAccountViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyWalletAccountViewComponent.swift; sourceTree = "<group>"; };
 		50E3A05A28390935003FF316 /* GetProductListByTypeResponseMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductListByTypeResponseMin.json; sourceTree = "<group>"; };
 		5A5ABF8127AAF4BF00D548AA /* LatestPaymentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestPaymentData.swift; sourceTree = "<group>"; };
@@ -4426,6 +4428,7 @@
 				ED374C8E2861FBCE00A97219 /* ActivityViewComponent.swift */,
 				77448C0E2872FC05009EEEA8 /* PrintFormViewComponent.swift */,
 				774A8B7F2865FF3600B81140 /* RefreshingIndicatorViewComponent.swift */,
+				50D40D3228BF506000AE0208 /* CloseAccountViewComponent.swift */,
 				5043E55128847BDE002C7465 /* CurrencySelectorViewComponent.swift */,
 				50AF668E28831070003D6824 /* ProductsSelector */,
 				5088A0862855F411003C39D7 /* Paging */,
@@ -8415,6 +8418,7 @@
 				0C4B0BBC28623DD5004B7F69 /* Model+FastPaymentSettings.swift in Sources */,
 				6880D32D26A70585008FBCB4 /* FaceTouchIdViewController.swift in Sources */,
 				503F074128252CBA00E84A77 /* DepositCalculatorViewModel.swift in Sources */,
+				50D40D3328BF506000AE0208 /* CloseAccountViewComponent.swift in Sources */,
 				50087821285348A90033DDD5 /* Collection+Safe.swift in Sources */,
 				ED5CB97028720EE9008D8A1E /* AccountCellFullButtonWithInfoViewComponent.swift in Sources */,
 				0C89318B28ABEDF200835694 /* CentralBankRatesData.swift in Sources */,
