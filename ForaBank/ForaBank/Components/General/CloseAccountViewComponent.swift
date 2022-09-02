@@ -45,7 +45,7 @@ extension CloseAccountView {
 extension CloseAccountView.ViewModel {
     
     private static func makeProductFromSelector(_ model: Model, product: ProductData) -> ProductSelectorViewModel {
-        .init(model, product: product)
+        .init(model, product: product, backgroundColor: .mainColorsWhite)
     }
     
     private static func makeProductToSelector(_ model: Model, product: ProductData) -> ProductSelectorViewModel {
@@ -57,25 +57,13 @@ extension CloseAccountView.ViewModel {
             productData: product,
             model: model)
         
-        let products = ProductSelectorViewModel.reduce(
-            model,
-            currency: currency,
-            currencyOperation: .buy,
-            productType: product.productType)
-        
-        let productListViewModel: ProductListViewModel = .init(
-            model,
-            currencyOperation: .buy,
-            currency: currency,
-            productType: product.productType,
-            products: products)
-        
         let productSelector: ProductSelectorViewModel = .init(
             model,
             currency: currency,
-            currencyOperation: .buy,
+            currencyOperation: .sell,
             productViewModel: productContentViewModel,
-            listViewModel: productListViewModel)
+            backgroundColor: .mainColorsWhite,
+            isDividerHiddable: true)
         
         return productSelector
     }
@@ -111,9 +99,6 @@ struct CloseAccountView: View {
         
         ZStack {
             
-            RoundedRectangle(cornerRadius: 12)
-                .foregroundColor(.mainColorsGrayLightest)
-            
             VStack(alignment: .leading, spacing: 20) {
                 
                 Text(viewModel.title)
@@ -127,16 +112,15 @@ struct CloseAccountView: View {
                     .padding(.top, 32)
                 
             }.padding(.top, 20)
-        }
-        .fixedSize(horizontal: false, vertical: true)
-        .padding(.horizontal, 20)
+            
+        }.fixedSize(horizontal: false, vertical: true)
     }
 }
 
 struct CloseAccountView_Previews: PreviewProvider {
     static var previews: some View {
         CloseAccountView(viewModel: .init(.productsMock, productFrom: .sample1, productTo: .sample3))
+            .background(Color.mainColorsGrayLightest)
             .previewLayout(.sizeThatFits)
-            .padding(.vertical)
     }
 }

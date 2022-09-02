@@ -28,6 +28,7 @@ class Model {
 
     //MARK: Account
     let accountProductsList: CurrentValueSubject<[OpenAccountProductData], Never>
+    let accountOpening: CurrentValueSubject<Bool, Never>
     
     //MARK: Statements
     let statements: CurrentValueSubject<StatementsData, Never>
@@ -125,6 +126,7 @@ class Model {
         self.products = .init([:])
         self.productsUpdating = .init([])
         self.accountProductsList = .init([])
+        self.accountOpening = .init(false)
         self.productsFastUpdating = .init([])
         self.productsHidden = .init([])
         self.loans = .init([])

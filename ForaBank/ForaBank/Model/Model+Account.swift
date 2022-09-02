@@ -124,6 +124,7 @@ extension Model {
                 currencyCode: payload.currencyCode))
         let productsListError = ProductsListError.emptyData(message: ProductsListError.errorMessage)
 
+        accountOpening.value = true
         action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет открывается", icon: .ic24RefreshCw))
 
         serverAgent.executeCommand(command: command) { result in
@@ -141,6 +142,7 @@ extension Model {
                         return
                     }
 
+                    self.accountOpening.value = false
                     self.action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет открыт", icon: .ic16Check))
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.complete(data))
 
@@ -148,6 +150,8 @@ extension Model {
                     let errorMessage = response.errorMessage
 
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: errorMessage)
+                    
+                    self.accountOpening.value = false
 
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .statusError(status: response.statusCode, message: errorMessage)))
                     
@@ -158,6 +162,8 @@ extension Model {
                 
                 self.handleServerCommandError(error: error, command: command)
                 self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .serverCommandError(error: error.localizedDescription)))
+                
+                self.accountOpening.value = false
                 
                 self.action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет не открыт", icon: .ic16Close))
             }

@@ -208,6 +208,26 @@ extension MainSectionProductsView {
                  
                 }.store(in: &bindings)
             
+            model.accountOpening
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] accountOpening in
+                    
+                    switch content {
+                    case let .groups(groups):
+                        
+                        guard let accountsGroup = groups.first(where: { $0.productType == .account }) else {
+                            return
+                        }
+                        
+                        withAnimation {
+                            accountsGroup.isOpeningProduct = accountOpening
+                        }
+                        
+                    default:
+                        break
+                    }
+                    
+                }.store(in: &bindings)
         }
         
         private func bind(_ product: ProductView.ViewModel) {

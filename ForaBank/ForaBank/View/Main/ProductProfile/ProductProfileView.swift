@@ -136,6 +136,11 @@ struct ProductProfileView: View {
                 MeToMeView(viewModel: meToMeViewModel)
                     .edgesIgnoringSafeArea(.bottom)
                     .frame(height: 474)
+                
+            case let .closeAccount(viewModel):
+                MeToMeView(viewModel: viewModel)
+                    .edgesIgnoringSafeArea(.bottom)
+                    .frame(height: 474)
             }
         })
         .sheet(item: $viewModel.sheet, content: { sheet in

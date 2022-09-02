@@ -27,7 +27,9 @@ extension ProductSelectorView {
         @Published var isDividerHiddable: Bool
         @Published var productViewModel: ProductContentViewModel?
         @Published var listViewModel: ProductsListView.ViewModel?
+        @Published var excludeProductId: ProductData.ID?
         @Published var isUserInteractionEnabled: Bool
+        @Published var backgroundColor: Color
         
         var bindings = Set<AnyCancellable>()
         
@@ -41,6 +43,7 @@ extension ProductSelectorView {
              currencyOperation: CurrencyOperation,
              productViewModel: ProductContentViewModel? = nil,
              listViewModel: ProductsListView.ViewModel? = nil,
+             backgroundColor: Color = .mainColorsGrayLightest,
              isUserInteractionEnabled: Bool = true,
              isDividerHiddable: Bool = false) {
             
@@ -50,6 +53,7 @@ extension ProductSelectorView {
             self.currencyOperation = currencyOperation
             self.productViewModel = productViewModel
             self.listViewModel = listViewModel
+            self.backgroundColor = backgroundColor
             self.isUserInteractionEnabled = isUserInteractionEnabled
             self.isDividerHiddable = isDividerHiddable
             
@@ -62,17 +66,18 @@ extension ProductSelectorView {
             currencyOperation: CurrencyOperation,
             productViewModel: ProductContentViewModel? = nil,
             listViewModel: ProductsListView.ViewModel? = nil,
+            backgroundColor: Color = .mainColorsGrayLightest,
             isDividerHiddable: Bool = false) {
             
-                self.init(model, title: "", currency: currency, currencyOperation: currencyOperation, productViewModel: productViewModel, listViewModel: listViewModel, isDividerHiddable: isDividerHiddable)
+                self.init(model, title: "", currency: currency, currencyOperation: currencyOperation, productViewModel: productViewModel, listViewModel: listViewModel, backgroundColor: backgroundColor, isDividerHiddable: isDividerHiddable)
         }
         
-        convenience init(_ model: Model, product: ProductData) {
+        convenience init(_ model: Model, product: ProductData, backgroundColor: Color) {
             
             let currency: Currency = .init(description: product.currency)
             let productViewModel: ProductContentViewModel = .init(productId: product.id, productData: product, model: model)
             
-            self.init(model, title: "", currency: currency, currencyOperation: .buy, productViewModel: productViewModel)
+            self.init(model, title: "", currency: currency, currencyOperation: .buy, productViewModel: productViewModel, backgroundColor: backgroundColor)
         }
         
         private func bind() {
@@ -243,7 +248,7 @@ extension ProductSelectorView {
         
         static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType) -> [ProductView.ViewModel] {
             
-            let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType)
+            let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
             
             let products = filterredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model)}
             
@@ -407,7 +412,7 @@ struct ProductSelectorView: View {
             }
         }
         .disabled(viewModel.isUserInteractionEnabled == false)
-        .background(Color.mainColorsGrayLightest)
+        .background(viewModel.backgroundColor)
     }
 }
 
