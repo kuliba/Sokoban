@@ -130,7 +130,7 @@ class MemeDetailVC: UIViewController {
         view.addSubview(bottomView)
         bottomView.anchor(
             left: view.leftAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            bottom: view.bottomAnchor,
             right: view.rightAnchor)
         
         let saveAreaView = UIView()

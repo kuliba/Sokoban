@@ -179,7 +179,7 @@ extension ContactInputViewController {
             left: view.leftAnchor,
             bottom: view.bottomAnchor,
             right: view.rightAnchor,
-            paddingBottom: 30)
+            paddingBottom: 0)
         
         stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
                          left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20)
