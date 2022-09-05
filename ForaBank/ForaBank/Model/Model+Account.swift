@@ -186,19 +186,8 @@ extension Model {
             // Обновление списка счетов
             action.send(ModelAction.Account.ProductList.Request())
 
-            // Скрыть уведомление об открытии счета через 4 сек
-            action.send(ModelAction.Account.Informer.Dismiss(after: 4))
-
-        case .failed(error: let error):
-            
-            let time = accountInformerDismissTime(error: error)
-            
-            // Скрыть уведомление об открытии счета:
-            // - некорректный код - через 0 сек
-            // - исчерпали все попытки - 0 сек
-            // - время для ввода истекло - 0 сек
-            
-            action.send(ModelAction.Account.Informer.Dismiss(after: time))
+        case .failed:
+            action.send(ModelAction.Account.Informer.Dismiss())
         }
     }
     
@@ -260,14 +249,11 @@ extension Model {
 extension Model {
 
     func handleInformerShow(payload: ModelAction.Account.Informer.Show) {
-        informer.value = .init(message: payload.message)
+        informer.value = .init(icon: payload.icon, color: payload.color, message: payload.message)
     }
 
-    func handleInformerDismiss(payload: ModelAction.Account.Informer.Dismiss) {
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + payload.after) {
-            self.informer.value = nil
-        }
+    func handleInformerDismiss() {
+        informer.value = nil
     }
 }
 
@@ -356,12 +342,17 @@ extension ModelAction {
 
                 let message: String
                 let icon: Image
+                let color: Color
+                
+                init(message: String, icon: Image, color: Color = .mainColorsBlack) {
+                    
+                    self.message = message
+                    self.icon = icon
+                    self.color = color
+                }
             }
 
-            struct Dismiss: Action {
-
-                let after: TimeInterval
-            }
+            struct Dismiss: Action {}
         }
     }
 }

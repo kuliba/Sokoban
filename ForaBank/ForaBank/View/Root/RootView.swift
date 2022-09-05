@@ -53,9 +53,12 @@ struct RootView: View {
                 
             }.accentColor(.black)
             
-            InformerView(viewModel: viewModel.informerViewModel)
-                .zIndex(1)
-                .padding(.top, 64)
+            if let informerViewModel = viewModel.informerViewModel {
+                
+                InformerView(viewModel: informerViewModel)
+                    .zIndex(1)
+                    .padding(.top, 64)
+            }
             
             if let link = viewModel.link  {
                 

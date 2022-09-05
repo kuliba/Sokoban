@@ -137,8 +137,7 @@ struct MainView: View {
                     TransferByPhoneView(viewModel: viewModel)
                 
             case let .openAccount(openAccountViewModel):
-                OpenAccountView(viewModel: openAccountViewModel)
-                
+                OpenAccountView(viewModel: openAccountViewModel)      
             }
         })
         .alert(item: $viewModel.alert, content: { alertViewModel in

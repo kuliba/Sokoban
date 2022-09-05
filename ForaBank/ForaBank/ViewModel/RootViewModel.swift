@@ -14,14 +14,14 @@ class RootViewModel: ObservableObject, Resetable {
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var selected: TabType
+    @Published var alert: Alert.ViewModel?
+    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var isLinkActive: Bool = false
+    @Published var informerViewModel: InformerView.ViewModel?
     
     let mainViewModel: MainViewModel
     let paymentsViewModel: PaymentsTransfersViewModel
     let chatViewModel: ChatViewModel
-    let informerViewModel: InformerView.ViewModel
-    @Published var alert: Alert.ViewModel?
-    @Published var link: Link? { didSet { isLinkActive = link != nil } }
-    @Published var isLinkActive: Bool = false
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -32,7 +32,6 @@ class RootViewModel: ObservableObject, Resetable {
         self.mainViewModel = MainViewModel(model)
         self.paymentsViewModel = .init(model: model)
         self.chatViewModel = .init()
-        self.informerViewModel = .init()
         self.model = model
         
         mainViewModel.rootActions = rootActions
@@ -99,8 +98,24 @@ class RootViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] data in
                 
+                guard let informerData = data else {
+                    return
+                }
+                
+                if informerViewModel == nil {
+                    
+                    informerViewModel = .init {
+                        
+                        self.informerViewModel = nil
+                        self.model.informer.value = nil
+                    }
+                }
+                
                 withAnimation {
-                    informerViewModel.message = data?.message
+                    
+                    if let informerViewModel = informerViewModel {
+                        informerViewModel.informers.append(informerData)
+                    }
                 }
             }.store(in: &bindings)
         

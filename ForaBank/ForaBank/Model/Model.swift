@@ -699,8 +699,8 @@ class Model {
                 case let payload as ModelAction.Account.Informer.Show:
                     handleInformerShow(payload: payload)
 
-                case let payload as ModelAction.Account.Informer.Dismiss:
-                    handleInformerDismiss(payload: payload)
+                case _ as ModelAction.Account.Informer.Dismiss:
+                    handleInformerDismiss()
 
                 //MARK: - AppStore Version
                 case _ as ModelAction.AppVersion.Request:
