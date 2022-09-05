@@ -56,10 +56,10 @@ struct MyProductsSectionItemView: View {
                         Spacer()
                         
                     }
-                    .padding(.top, 4)
+                    .padding(.top, 8)
                     .padding(.leading, 20)
 
-                    VStack(spacing: 8) {
+                    VStack(spacing: 0) {
                         
                         HStack {
 
@@ -78,8 +78,7 @@ struct MyProductsSectionItemView: View {
                                 .font(.textBodyMM14200())
                                 .foregroundColor(.mainColorsBlack)
                                 .frame(alignment: .trailing)
-                        }
-                        .padding(.top, 4)
+                        } .padding(.bottom, 4)
                         
                         HStack {
 
@@ -99,7 +98,7 @@ struct MyProductsSectionItemView: View {
                                     .foregroundColor(.mainColorsGray)
                             }
                             Spacer()
-                        }
+                        }.padding(.bottom, 12)
                         
                         Divider()
                             .background(Color.mainColorsGrayLightest)
@@ -185,10 +184,10 @@ struct MyProductsSectionButtonItemView: View {
                     Spacer()
                     
                 }
-                .padding(.top, 4)
+                .padding(.top, 8)
                 .padding(.leading, 20)
                 
-                VStack(spacing: 8) {
+                VStack(spacing: 0) {
                     
                     HStack {
                         
@@ -198,8 +197,7 @@ struct MyProductsSectionButtonItemView: View {
                         
                         Spacer()
                         
-                    }
-                    .padding(.top, 4)
+                    } .padding(.bottom, 4)
                     
                     HStack {
                         
@@ -210,7 +208,7 @@ struct MyProductsSectionButtonItemView: View {
                         }
                         
                         Spacer()
-                    }
+                    } .padding(.bottom, 12)
                     
                     Divider()
                         .background(Color.mainColorsGrayLightest)
