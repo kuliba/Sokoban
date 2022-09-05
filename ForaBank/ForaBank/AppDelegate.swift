@@ -135,33 +135,4 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
     }
 }
 
-//MARK: - Deep Links
-
-extension AppDelegate {
-    
-    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        
-        GlobalModule.c2bURL = "\(url.description)  d"
-        return true
-    }
-
-    func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:] ) -> Bool {
-
-        // Determine who sent the URL.
-        GlobalModule.c2bURL = url.description
-        let sendingAppID = options[.sourceApplication]
-        // Process the URL.
-        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
-            let albumPath = components.path,
-            let params = components.queryItems else {
-                return false
-        }
-        if let photoIndex = params.first(where: { $0.name == "id" })?.value {
-            return true
-        } else {
-            return false
-        }
-    }
-}
-
 

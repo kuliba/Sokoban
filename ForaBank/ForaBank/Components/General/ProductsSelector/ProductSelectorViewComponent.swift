@@ -26,6 +26,7 @@ extension ProductSelectorView {
         @Published var productViewModel: ProductContentViewModel?
         @Published var listViewModel: ProductsListView.ViewModel?
         @Published var isUserInteractionEnabled: Bool
+        let backgroundColor: BackgroundColor
         
         var bindings = Set<AnyCancellable>()
         
@@ -40,7 +41,8 @@ extension ProductSelectorView {
              productViewModel: ProductContentViewModel? = nil,
              listViewModel: ProductsListView.ViewModel? = nil,
              isUserInteractionEnabled: Bool = true,
-             isDividerHiddable: Bool = false) {
+             isDividerHiddable: Bool = false,
+             backgroundColor: BackgroundColor = .gray) {
             
             self.model = model
             self.title = title
@@ -50,6 +52,7 @@ extension ProductSelectorView {
             self.listViewModel = listViewModel
             self.isUserInteractionEnabled = isUserInteractionEnabled
             self.isDividerHiddable = isDividerHiddable
+            self.backgroundColor = backgroundColor
             
             bind()
         }
@@ -60,9 +63,15 @@ extension ProductSelectorView {
             currencyOperation: CurrencyOperation,
             productViewModel: ProductContentViewModel? = nil,
             listViewModel: ProductsListView.ViewModel? = nil,
-            isDividerHiddable: Bool = false) {
+            isDividerHiddable: Bool = false, backgroundColor: BackgroundColor = .gray) {
             
-                self.init(model, title: "", currency: currency, currencyOperation: currencyOperation, productViewModel: productViewModel, listViewModel: listViewModel, isDividerHiddable: isDividerHiddable)
+                self.init(model, title: "", currency: currency, currencyOperation: currencyOperation, productViewModel: productViewModel, listViewModel: listViewModel, isDividerHiddable: isDividerHiddable, backgroundColor: backgroundColor)
+        }
+        
+        enum BackgroundColor {
+            
+            case white
+            case gray
         }
         
         private func bind() {
@@ -377,6 +386,14 @@ struct ProductSelectorView: View {
     
     @ObservedObject var viewModel: ViewModel
     
+    var background: Color {
+        
+        switch viewModel.backgroundColor {
+        case .gray: return Color.mainColorsGrayLightest
+        case .white: return Color.white
+        }
+    }
+    
     var body: some View {
         
         VStack(alignment: .leading, spacing: 12) {
@@ -397,7 +414,7 @@ struct ProductSelectorView: View {
             }
         }
         .disabled(viewModel.isUserInteractionEnabled == false)
-        .background(Color.mainColorsGrayLightest)
+        .background(background)
     }
 }
 
