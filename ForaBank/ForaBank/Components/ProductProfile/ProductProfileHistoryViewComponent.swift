@@ -163,14 +163,17 @@ extension ProductProfileHistoryView {
             }
             
             let statementFilteredPeriod = statementFilteredOperation
-                .filter { Calendar.current.component(.month, from: $0.date)
-                       == Calendar.current.component(.month, from: Date()) }
+                .filter { Calendar.current.dateComponents([.year, .month], from: $0.dateValue)
+                    == Calendar.current.dateComponents([.year, .month], from: Date()) }
             
             if isMapped {
                 
                 let dict = statementFilteredPeriod
                             .reduce(into: [ ProductStatementMerchantGroup: Double]()) {
-                                $0[.init($1.groupName), default: 0] += $1.amount
+                                if let documentAmount = $1.documentAmount {
+                                    
+                                    $0[.init($1.groupName), default: 0] += documentAmount
+                                }
                             }
                 
                 segmentBarViewModel = .init(mappedValues: dict,
@@ -181,7 +184,10 @@ extension ProductProfileHistoryView {
                 
                 let dict = statementFilteredPeriod
                             .reduce(into: [ String: Double]()) {
-                                $0[$1.groupName, default: 0] += $1.amount
+                                if let documentAmount = $1.documentAmount {
+                                    
+                                    $0[$1.groupName, default: 0] += documentAmount
+                                }
                             }
                 
                 segmentBarViewModel = .init(stringValues: dict,
