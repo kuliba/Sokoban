@@ -16,11 +16,12 @@ extension InformerView {
         
         @Published var informers: [InformerData]
         @Published var informerViewModel: InformerViewModel?
+        @Published var showInformer: Bool
+        
+        private lazy var timer = Timer.publish(every: interval, on: .main, in: .common)
         
         private let interval: TimeInterval
         private let closeAction: () -> Void
-        
-        private lazy var timer = Timer.publish(every: interval, on: .main, in: .common)
         
         private var timerBindings = Set<AnyCancellable>()
         private var bindings = Set<AnyCancellable>()
@@ -39,14 +40,15 @@ extension InformerView {
             }
         }
         
-        init(interval: TimeInterval = 4, closeAction: @escaping () -> Void) {
+        init(interval: TimeInterval = 3, closeAction: @escaping () -> Void) {
             
-            self.closeAction = closeAction
             self.interval = interval
+            self.closeAction = closeAction
+            
             informers = []
+            showInformer = true
             
             bind()
-            startTimer()
         }
         
         convenience init(_ informerViewModel: InformerViewModel?) {
@@ -54,7 +56,7 @@ extension InformerView {
             self.init {}
             self.informerViewModel = informerViewModel
         }
-        
+ 
         private func bind() {
             
             $informers
@@ -62,7 +64,9 @@ extension InformerView {
                 .sink { [unowned self] informers in
                     
                     if informers.isEmpty == false, informerViewModel == nil {
+                        
                         makeInformerViewModel()
+                        startTimer()
                     }
                     
                 }.store(in: &bindings)
@@ -70,24 +74,31 @@ extension InformerView {
         
         private func makeInformerViewModel() {
             
+            guard informers.isEmpty == false else {
+                return
+            }
+            
             let informer = informers.removeFirst()
-            informerViewModel = .init(message: informer.message, icon: informer.icon, color: informer.color)
+            
+            withAnimation {
+                informerViewModel = .init(message: informer.message, icon: informer.icon, color: informer.color)
+            }
         }
         
         private func startTimer() {
             
             timer
                 .autoconnect()
-                .map { date in date.timeIntervalSinceReferenceDate }
-                .sink { [unowned self] time in
+                .sink { [unowned self] _ in
                     
-                    if informers.isEmpty == true {
+                    if informers.isEmpty == false {
                         
-                        stopTimer()
+                        makeInformerViewModel()
                         
                     } else {
                         
-                        makeInformerViewModel()
+                        reset()
+                        stopTimer()
                     }
                     
                 }.store(in: &timerBindings)
@@ -99,8 +110,14 @@ extension InformerView {
                 binding.cancel()
             }
             
-            closeAction()
             timerBindings = Set<AnyCancellable>()
+        }
+        
+        private func reset() {
+            
+            closeAction()
+            informerViewModel = nil
+            showInformer = false
         }
     }
 }
@@ -113,7 +130,7 @@ struct InformerView: View {
     
     var body: some View {
         
-        if let informerViewModel = viewModel.informerViewModel {
+        if let informerViewModel = viewModel.informerViewModel, viewModel.showInformer == true {
             
             ZStack {
                 
@@ -151,7 +168,7 @@ struct InformerViewComponent_Previews: PreviewProvider {
     static var previews: some View {
 
         Group {
-
+            
             InformerView(viewModel: .init(.init(message: "USD счет открывается", icon: .ic24RefreshCw)))
             InformerView(viewModel: .init(.init(message: "USD счет открыт", icon: .ic16Check)))
             InformerView(viewModel: .init(.init(message: "USD счет не открыт", icon: .ic16Close)))

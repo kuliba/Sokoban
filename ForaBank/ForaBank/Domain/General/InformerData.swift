@@ -11,5 +11,5 @@ struct InformerData {
 
     let icon: Image
     let color: Color
-    var message: String
+    let message: String
 }

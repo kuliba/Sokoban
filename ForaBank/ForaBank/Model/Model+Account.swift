@@ -125,7 +125,7 @@ extension Model {
         let productsListError = ProductsListError.emptyData(message: ProductsListError.errorMessage)
 
         accountOpening.value = true
-        action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет открывается", icon: .ic24RefreshCw))
+        action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет открывается", icon: .refresh))
 
         serverAgent.executeCommand(command: command) { result in
 
@@ -143,7 +143,7 @@ extension Model {
                     }
 
                     self.accountOpening.value = false
-                    self.action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет открыт", icon: .ic16Check))
+                    self.action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет открыт", icon: .check))
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.complete(data))
 
                 default:
@@ -155,7 +155,7 @@ extension Model {
 
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .statusError(status: response.statusCode, message: errorMessage)))
                     
-                    self.action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет не открыт", icon: .ic16Close))
+                    self.action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет не открыт", icon: .close))
                 }
 
             case let .failure(error):
@@ -165,7 +165,7 @@ extension Model {
                 
                 self.accountOpening.value = false
                 
-                self.action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет не открыт", icon: .ic16Close))
+                self.action.send(ModelAction.Account.Informer.Show(message: "\(payload.currency.description) счет не открыт", icon: .close))
             }
         }
     }
@@ -249,7 +249,7 @@ extension Model {
 extension Model {
 
     func handleInformerShow(payload: ModelAction.Account.Informer.Show) {
-        informer.value = .init(icon: payload.icon, color: payload.color, message: payload.message)
+        informer.value = .init(icon: payload.icon.image, color: payload.color, message: payload.message)
     }
 
     func handleInformerDismiss() {
@@ -341,14 +341,30 @@ extension ModelAction {
             struct Show: Action {
 
                 let message: String
-                let icon: Image
+                let icon: IcomType
                 let color: Color
                 
-                init(message: String, icon: Image, color: Color = .mainColorsBlack) {
+                init(message: String, icon: IcomType, color: Color = .mainColorsBlack) {
                     
                     self.message = message
                     self.icon = icon
                     self.color = color
+                }
+                
+                enum IcomType {
+                    
+                    case refresh
+                    case check
+                    case close
+                    
+                    var image: Image {
+                        
+                        switch self {
+                        case .refresh: return .ic24RefreshCw
+                        case .check: return .ic16Check
+                        case .close: return .ic16Close
+                        }
+                    }
                 }
             }
 

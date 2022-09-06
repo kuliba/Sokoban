@@ -96,9 +96,9 @@ class RootViewModel: ObservableObject, Resetable {
         
         model.informer
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] data in
+            .sink { [unowned self] informerData in
                 
-                guard let informerData = data else {
+                guard let informerData = informerData else {
                     return
                 }
                 
@@ -111,12 +111,22 @@ class RootViewModel: ObservableObject, Resetable {
                     }
                 }
                 
-                withAnimation {
+                if let informerViewModel = informerViewModel {
                     
-                    if let informerViewModel = informerViewModel {
-                        informerViewModel.informers.append(informerData)
-                    }
+                    informerViewModel.showInformer = model.showInformer.value
+                    informerViewModel.informers.append(informerData)
                 }
+                
+            }.store(in: &bindings)
+        
+        model.showInformer
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] showInformer in
+                
+                if let informerViewModel = informerViewModel {
+                    informerViewModel.showInformer = showInformer
+                }
+                
             }.store(in: &bindings)
         
         action

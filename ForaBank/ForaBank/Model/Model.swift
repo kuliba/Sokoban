@@ -81,6 +81,7 @@ class Model {
 
     //MARK: Informer
     let informer: CurrentValueSubject<InformerData?, Never>
+    let showInformer: CurrentValueSubject<Bool, Never>
 
     //MARK: SBPay
     let deepLinkType: CurrentValueSubject<DeepLinkType?, Never>
@@ -160,6 +161,7 @@ class Model {
         self.fastPaymentContractFullInfo = .init([])
         self.currentUserLoaction = .init(nil)
         self.informer = .init(nil)
+        self.showInformer = .init(false)
         self.notificationsTransition = .init(nil)
         self.dictionariesUpdating = .init([])
         self.userSettings = .init([])
