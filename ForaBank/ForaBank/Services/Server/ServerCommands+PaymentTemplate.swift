@@ -30,7 +30,7 @@ enum ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: EmptyData
+                let data: EmptyData?
             }
             
             internal init(token: String, payload: Payload) {
@@ -84,8 +84,7 @@ enum ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                //FIXME: data must be optional
-                let data: Data
+                let data: Data?
                 
                 struct Data: Decodable, Equatable {
                     
@@ -119,8 +118,7 @@ enum ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                //FIXME: data must be optional
-                let data: EmptyData
+                let data: EmptyData?
             }
             
             internal init(token: String, payload: Payload) {
@@ -151,8 +149,7 @@ enum ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                //FIXME: data must be optional
-                let data: EmptyData
+                let data: EmptyData?
             }
             
             internal init(token: String, payload: Payload) {

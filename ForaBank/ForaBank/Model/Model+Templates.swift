@@ -158,8 +158,12 @@ extension Model {
             case .success(let response):
                 switch response.statusCode {
                 case .ok:
+                    guard let templateData = response.data else {
+                        self.handleServerCommandEmptyData(command: command)
+                        return
+                    }
                     // confirm template saved
-                    self.action.send(ModelAction.PaymentTemplate.Save.Complete(paymentTemplateId: response.data.paymentTemplateId))
+                    self.action.send(ModelAction.PaymentTemplate.Save.Complete(paymentTemplateId: templateData.paymentTemplateId))
                     // request all templates from server
                     self.action.send(ModelAction.PaymentTemplate.List.Requested())
                     

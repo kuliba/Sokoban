@@ -280,7 +280,7 @@ extension Model {
     }
     
     func handleClientNameLoad() {
-
+        
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
             return
@@ -290,19 +290,24 @@ extension Model {
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
-            case .success(let data):
-
-                    let clientNameData = ClientNameData(name: data.data.firstname)
-                    clientName.value = clientNameData
+            case .success(let response):
+                
+                guard let personData = response.data else {
+                    handleServerCommandEmptyData(command: command)
+                    return
+                }
+                
+                let clientNameData = ClientNameData(name: personData.firstname)
+                clientName.value = clientNameData
+                
+                do {
                     
-                    do {
-                        
-                        try localAgent.store(clientNameData, serial: nil)
-                        
-                    } catch {
-                        
-                        self.handleServerCommandCachingError(error: error, command: command)
-                    }
+                    try localAgent.store(clientNameData, serial: nil)
+                    
+                } catch {
+                    
+                    self.handleServerCommandCachingError(error: error, command: command)
+                }
                 
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)

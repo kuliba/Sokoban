@@ -242,9 +242,8 @@ extension ServerCommands {
             struct Response: ServerResponse {
                 
                 let statusCode: ServerStatusCode
-                let data: Data?
                 let errorMessage: String?
-                
+                let data: Data?
             }
             
             init(token: String, payload: BasePayload) {
