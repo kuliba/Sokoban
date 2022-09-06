@@ -10,7 +10,7 @@ import Combine
 
 //MARK: - ViewModel
 
-extension PaymentsCardView {
+extension PaymentsProductView {
     
     class ViewModel: PaymentsParameterViewModel {
         
@@ -39,7 +39,7 @@ extension PaymentsCardView {
         
         static let cardIconPlaceholder = Image("Placeholder Card Small")
         
-        init(title: String, cardIcon: Image, paymentSystemIcon: Image?, name: String, amount: String, captionItems: [CaptionItemViewModel], state: State, model: Model = .emptyMock, parameterCard: Payments.ParameterCard = .init()) {
+        init(title: String, cardIcon: Image, paymentSystemIcon: Image?, name: String, amount: String, captionItems: [CaptionItemViewModel], state: State, model: Model = .emptyMock, parameterProduct: Payments.ParameterProduct = .init()) {
             
             self.title = title
             self.cardIcon = cardIcon
@@ -50,10 +50,10 @@ extension PaymentsCardView {
             self.state = state
             self.model = model
             
-            super.init(source: parameterCard)
+            super.init(source: parameterProduct)
         }
 
-        init(_ model: Model, parameterCard: Payments.ParameterCard) {
+        init(_ model: Model, parameterProduct: Payments.ParameterProduct) {
             
             self.title = "Счет списания"
             self.cardIcon = Self.cardIconPlaceholder
@@ -64,7 +64,7 @@ extension PaymentsCardView {
             self.state = .normal
             self.model = model
             
-            super.init(source: parameterCard)
+            super.init(source: parameterProduct)
             bind()
         }
         
@@ -75,7 +75,7 @@ extension PaymentsCardView {
                 .sink {[unowned self] action in
                     
                     switch action {
-                    case _ as PaymentsCardView.ViewModelAction.ToggleSelector:
+                    case _ as PaymentsProductView.ViewModelAction.ToggleSelector:
                         
                         withAnimation {
                             
@@ -140,7 +140,7 @@ extension PaymentsCardView {
 
 //MARK: - View
 
-struct PaymentsCardView: View {
+struct PaymentsProductView: View {
     
     @ObservedObject var viewModel: ViewModel
     
@@ -192,7 +192,7 @@ struct PaymentsCardView: View {
                       
                         ForEach(viewModel.captionItems) { itemViewModel in
                             
-                            PaymentsCardView.CaptionItemView(viewModel: itemViewModel)
+                            PaymentsProductView.CaptionItemView(viewModel: itemViewModel)
                         }
                     }
                 }
@@ -201,7 +201,7 @@ struct PaymentsCardView: View {
                 
                 if viewModel.isEditable == true {
 
-                    viewModel.action.send(PaymentsCardView.ViewModelAction.ToggleSelector())
+                    viewModel.action.send(PaymentsProductView.ViewModelAction.ToggleSelector())
                 }
             }
             
@@ -217,7 +217,7 @@ struct PaymentsCardView: View {
     }
 }
 
-extension PaymentsCardView {
+extension PaymentsProductView {
     
     struct CaptionItemView: View {
         
@@ -247,10 +247,10 @@ struct PaymentsCardView_Previews: PreviewProvider {
         
         Group {
             
-            PaymentsCardView(viewModel: .sample)
+            PaymentsProductView(viewModel: .sample)
                 .previewLayout(.fixed(width: 375, height: 90))
             
-            PaymentsCardView(viewModel: .sampleExpanded)
+            PaymentsProductView(viewModel: .sampleExpanded)
                 .previewLayout(.fixed(width: 375, height: 200))
         }
     }
@@ -258,11 +258,11 @@ struct PaymentsCardView_Previews: PreviewProvider {
 
 //MARK: - Preview Content
 
-extension PaymentsCardView.ViewModel {
+extension PaymentsProductView.ViewModel {
     
-    static let sample = PaymentsCardView.ViewModel(title: "Счет списания", cardIcon: cardIconPlaceholder, paymentSystemIcon: Image("card_mastercard_logo"), name: "Основная", amount: "170 897 ₽", captionItems: [.init(title: "4996"), .init(title: "Корпоротивная")], state: .normal)
+    static let sample = PaymentsProductView.ViewModel(title: "Счет списания", cardIcon: cardIconPlaceholder, paymentSystemIcon: Image("card_mastercard_logo"), name: "Основная", amount: "170 897 ₽", captionItems: [.init(title: "4996"), .init(title: "Корпоротивная")], state: .normal)
     
-    static let sampleExpanded = PaymentsCardView.ViewModel(title: "Счет списания", cardIcon: cardIconPlaceholder, paymentSystemIcon: Image("card_mastercard_logo"), name: "Основная", amount: "170 897 ₽", captionItems: [.init(title: "4996"), .init(title: "Корпоротивная")], state: .expanded(.sample))
+    static let sampleExpanded = PaymentsProductView.ViewModel(title: "Счет списания", cardIcon: cardIconPlaceholder, paymentSystemIcon: Image("card_mastercard_logo"), name: "Основная", amount: "170 897 ₽", captionItems: [.init(title: "4996"), .init(title: "Корпоротивная")], state: .expanded(.sample))
 }
 
 

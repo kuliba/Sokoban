@@ -8,9 +8,9 @@
 import Foundation
 import SwiftUI
 
-extension PaymentsCardView.ViewModel {
+extension PaymentsProductView.ViewModel {
     
-    convenience init(parameterCard: Payments.ParameterCard, model: Model) {
+    convenience init(parameterProduct: Payments.ParameterProduct, model: Model) {
         
         self.init(title: "",
                   cardIcon: Self.cardIconPlaceholder,
@@ -20,9 +20,9 @@ extension PaymentsCardView.ViewModel {
                   captionItems: [],
                   state: .normal,
                   model: model,
-                  parameterCard: parameterCard)
+                  parameterProduct: parameterProduct)
         
-        if let value = parameterCard.parameter.value,
+        if let value = parameterProduct.parameter.value,
            let productId = Int(value),
            let product = model.paymentsProduct(with: productId)  {
             
@@ -45,7 +45,7 @@ extension PaymentsCardView.ViewModel {
             .sink {[unowned self] action in
                 
                 switch action {
-                case _ as PaymentsCardView.ViewModelAction.ToggleSelector:
+                case _ as PaymentsProductView.ViewModelAction.ToggleSelector:
                     
                     withAnimation {
                         

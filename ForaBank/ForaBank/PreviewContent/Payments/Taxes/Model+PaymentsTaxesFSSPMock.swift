@@ -125,7 +125,7 @@ extension Model {
                     firstName: .init(title: "Имя", value: "Иван"),
                     middleName: .init(title: "Отчество", value: "Петрович"))
                 
-                let cardParameter = Payments.ParameterCard()
+                let productParameter = Payments.ParameterProduct()
                 
                 let innParameter = Payments.ParameterInput(
                     .init(id: UUID().uuidString,
@@ -154,7 +154,7 @@ extension Model {
                     currency: .init(description: "RUB"),
                     validator: .init(minAmount: 10, maxAmount: 1000))
                 
-                completion(.success( parameters + [infoParameter, fioParameter, cardParameter, innParameter, oktmoParameter, adressParameter, amountParameter]))
+                completion(.success( parameters + [infoParameter, fioParameter, productParameter, innParameter, oktmoParameter, adressParameter, amountParameter]))
             
             default:
                 completion(.failure(Payments.Error.unexpectedOperatorValue))
@@ -182,7 +182,7 @@ extension Model {
                     firstName: .init(title: "Имя", value: "Иван"),
                     middleName: .init(title: "Отчество", value: "Петрович"))
                 
-                let cardParameter = Payments.ParameterCard()
+                let productParameter = Payments.ParameterProduct()
                 
                 let innParameter = Payments.ParameterInput(
                     .init(id: UUID().uuidString,
@@ -211,7 +211,7 @@ extension Model {
                     currency: .init(description: "RUB"),
                     validator: .init(minAmount: 10, maxAmount: 1000))
                 
-                completion(.success( parameters + [infoParameter, fioParameter, cardParameter, innParameter, oktmoParameter, adressParameter, amountParameter]))
+                completion(.success( parameters + [infoParameter, fioParameter, productParameter, innParameter, oktmoParameter, adressParameter, amountParameter]))
                 
             case "uin", "ip":
                 // make all parameters not editable

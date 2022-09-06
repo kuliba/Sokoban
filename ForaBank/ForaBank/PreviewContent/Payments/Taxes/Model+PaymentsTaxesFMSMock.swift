@@ -139,7 +139,7 @@ extension Model {
             
         case 3:
             
-            let cardParameter = Payments.ParameterCard()
+            let productParameter = Payments.ParameterProduct()
             
             let amountParameter = Payments.ParameterAmount(
                 .init(id: Payments.Parameter.Identifier.amount.rawValue, value: "1234"),
@@ -147,7 +147,7 @@ extension Model {
                 currency: .init(description: "RUB"),
                 validator: .init(minAmount: 10, maxAmount: 1000))
             
-            completion(.success( parameters + [cardParameter, amountParameter]))
+            completion(.success( parameters + [productParameter, amountParameter]))
             
         case 4:
             // make all parameters not editable

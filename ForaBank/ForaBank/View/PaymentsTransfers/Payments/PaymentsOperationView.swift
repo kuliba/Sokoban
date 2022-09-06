@@ -42,8 +42,8 @@ struct PaymentsOperationView: View {
                         case let nameViewModel as PaymentsNameView.ViewModel:
                             PaymentsNameView(viewModel: nameViewModel)
                             
-                        case let cardViewModel as PaymentsCardView.ViewModel:
-                            PaymentsCardView(viewModel: cardViewModel)
+                        case let cardViewModel as PaymentsProductView.ViewModel:
+                            PaymentsProductView(viewModel: cardViewModel)
                             
                         case let selectViewModels as PaymentsSelectSimpleView.ViewModel:
                             PaymentsSelectSimpleView(viewModel: selectViewModels)
@@ -126,7 +126,7 @@ extension PaymentsOperationViewModel {
     
     static let sample: PaymentsOperationViewModel = {
         
-        let items: [PaymentsParameterViewModel] = [PaymentsSwitchView.ViewModel.sample, PaymentsSelectView.ViewModel.selectedMock, PaymentsInfoView.ViewModel.sample, PaymentsNameView.ViewModel.normal, PaymentsNameView.ViewModel.edit, PaymentsCardView.ViewModel.sample]
+        let items: [PaymentsParameterViewModel] = [PaymentsSwitchView.ViewModel.sample, PaymentsSelectView.ViewModel.selectedMock, PaymentsInfoView.ViewModel.sample, PaymentsNameView.ViewModel.normal, PaymentsNameView.ViewModel.edit, PaymentsProductView.ViewModel.sample]
         
         return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги", action: {}), items: items, footer: .amount(PaymentsAmountView.ViewModel.amountCurrencyInfoAlert), rootActions: .init(dismiss: {}, spinner: .init(show: {}, hide: {}), alert: { _ in }))
     }()

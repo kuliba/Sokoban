@@ -213,7 +213,7 @@ extension Model {
                     firstName: .init(title: "Имя", value: "Иван"),
                     middleName: .init(title: "Отчество", value: "Петрович"))
                 
-                let cardParameter = Payments.ParameterCard()
+                let productParameter = Payments.ParameterProduct()
                 
                 let innParameter = Payments.ParameterInput(
                     .init(id: UUID().uuidString,
@@ -242,7 +242,7 @@ extension Model {
                     currency: .init(description: "RUB"),
                     validator: .init(minAmount: 10, maxAmount: 1000))
                 
-                completion(.success( updatedParameters + [infoParameter, fioParameter, cardParameter, innParameter, oktmoParameter, adressParameter, amountParameter]))
+                completion(.success( updatedParameters + [infoParameter, fioParameter, productParameter, innParameter, oktmoParameter, adressParameter, amountParameter]))
                 
             default:
                 completion(.failure(Payments.Error.unexpectedOperatorValue))
@@ -349,7 +349,7 @@ extension Model {
                     title: "Номер документа:",
                     validator: .init(minLength: 1, maxLength: nil, regEx: nil))
                 
-                let cardParameter = Payments.ParameterCard()
+                let productParameter = Payments.ParameterProduct()
                 
                 // collapsable
                 let division0Parameter = Payments.ParameterInfo(
@@ -388,7 +388,7 @@ extension Model {
                     currency: .init(description: "RUB"),
                     validator: .init(minAmount: 10, maxAmount: 1000))
                 
-                completion(.success( parameters + [fioParameter, adressParameter, docParameter, numDocParameter, cardParameter, division0Parameter, division1Parameter, division2Parameter, division3Parameter, division4Parameter, division5Parameter, amountParameter]))
+                completion(.success( parameters + [fioParameter, adressParameter, docParameter, numDocParameter, productParameter, division0Parameter, division1Parameter, division2Parameter, division3Parameter, division4Parameter, division5Parameter, amountParameter]))
                 
             default:
                 completion(.failure(Payments.Error.unexpectedOperatorValue))

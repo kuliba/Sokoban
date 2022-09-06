@@ -59,12 +59,6 @@ enum Payments {
         let service: Service
         let parameters: [ParameterRepresentable]
         let history: [[Parameter]]
-        
-        enum Kind {
-            
-            case service(title: String, icon: ImageData)
-            case template(template: PaymentTemplateData.ID, name: String)
-        }
     }
     
     struct Success {
@@ -198,26 +192,39 @@ protocol ParameterRepresentable {
     /// the parameter can be collapsed
     var collapsable: Bool { get }
     
+    /// the parameter can be hidden
+    var visible: Bool { get }
+    
     /// the parameter affects the history and the operation is reset to the step at which the value was originally set
     var affectsHistory: Bool { get }
     
     /// the paramreter after value update requests auto continue operation
     var autoContinue: Bool { get }
     
+    /// transaction step on witch parameter must be processed
+    var processStep: Int? { get }
+    
+    /// the parameter affects other parameters
+    var affectsParameters: Bool { get }
+    
     func updated(value: String?) -> ParameterRepresentable
     func updated(editable: Bool) -> ParameterRepresentable
     func updated(collapsable: Bool) -> ParameterRepresentable
+    func updated(visible: Bool) -> ParameterRepresentable
 }
 
 extension ParameterRepresentable {
-    
-    
+
     var editable: Bool { false }
     var collapsable: Bool { false }
+    var visible: Bool { true }
     var affectsHistory: Bool { false }
     var autoContinue: Bool { false }
+    var processStep: Int? { nil }
+    var affectsParameters: Bool { false }
     
     func updated(value: String?) -> ParameterRepresentable { self }
     func updated(editable: Bool) -> ParameterRepresentable { self }
     func updated(collapsable: Bool) -> ParameterRepresentable { self }
+    func updated(visible: Bool) -> ParameterRepresentable { self }
 }
