@@ -11,5 +11,6 @@ enum DeepLinkType {
     
     case me2me(String)
     case c2b(String)
+    case sbpPay(String)
     case invalidLink
 }

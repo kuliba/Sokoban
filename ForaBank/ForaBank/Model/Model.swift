@@ -82,6 +82,9 @@ class Model {
     //MARK: Informer
     let informer: CurrentValueSubject<InformerData?, Never>
 
+    //MARK: SBPay
+    let deepLinkType: CurrentValueSubject<DeepLinkType?, Never>
+    
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
     let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
@@ -160,6 +163,7 @@ class Model {
         self.notificationsTransition = .init(nil)
         self.dictionariesUpdating = .init([])
         self.userSettings = .init([])
+        self.deepLinkType = .init(nil)
         
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
@@ -268,6 +272,10 @@ class Model {
                     action.send(ModelAction.Settings.GetUserSettings())
                     action.send(ModelAction.Dictionary.UpdateCache.List(types: [.bannerCatalogList]))
                     
+                    if let deepLinkType = deepLinkType.value {
+                        
+                        setupDeepLink(deepLinkType: deepLinkType)
+                    }
                 default:
                     break
                 }
@@ -324,6 +332,11 @@ class Model {
 
                 case _ as ModelAction.App.Activated:
                     sessionAgent.action.send(SessionAgentAction.Timer.Start())
+                    
+                    if let deepLinkType = deepLinkType.value {
+                        
+                        setupDeepLink(deepLinkType: deepLinkType)
+                    }
                     
                 case _ as ModelAction.App.Inactivated:
                     sessionAgent.action.send(SessionAgentAction.Timer.Stop())
@@ -525,11 +538,21 @@ class Model {
                 case _ as ModelAction.ClientInfo.Delete.Request:
                     handleClientInfoDelete()
                     
+                case let payload as ModelAction.GetPersonAgreement.Request:
+                    handleClientAgreement(payload)
+                    
+                    //MARK: - SBPay
+                case let payload as ModelAction.SbpPay.Register.Request:
+                    handleRegisterSbpPay(payload)
+                    
+                case let payload as ModelAction.SbpPay.ProcessTokenIntent.Request:
+                    processTokenIntent(payload)
+                    
                     //MARK: - User Settings
                 case let payload as ModelAction.Settings.UpdateUserSettingPush:
                     handleUpdateUserSetting(payload)
                     
-                case let _ as ModelAction.Settings.GetUserSettings:
+                case _ as ModelAction.Settings.GetUserSettings:
                     handleGetUserSettings()
                     
                     //MARK: - Settings Actions
@@ -1081,5 +1104,24 @@ private extension Model {
         userSettings.value = []
         
         print("Model: memory data cleaned")
+    }
+    
+    func setupDeepLink(deepLinkType: DeepLinkType) {
+        
+        switch deepLinkType {
+        case let .me2me(bankId):
+            self.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
+            
+        case let .c2b(urlString):
+            GlobalModule.c2bURL = urlString
+            self.action.send(ModelAction.C2bShow())
+        
+        case let .sbpPay(tokenIntent):
+                
+            self.action.send(ModelAction.SbpPay.Register.Request(tokenIntent: tokenIntent))
+
+        case .invalidLink:
+            break
+        }
     }
 }

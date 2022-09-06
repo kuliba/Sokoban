@@ -63,4 +63,20 @@ class ServerCommandsPersontTests: XCTestCase {
         // then
         XCTAssertEqual(result, expected)
     }
+    
+    func testGetPersonAgreements_Response_Decoding() throws {
+
+        // given
+        let url = bundle.url(forResource: "GetPersonAgreementsDecodingGeneric", withExtension: "json")!
+        let json = try Data(contentsOf: url)
+        let formatter = DateFormatter.iso8601
+        let date = formatter.date(from: "2022-08-27T08:21:14.000Z")!
+        let expected = ServerCommands.PersonController.GetPersonAgreement.Response(statusCode: .ok, errorMessage: "string", data: [.init(system: .sbp, type: .termsAndConditions, externalUrl: .init(string: "https://www.forabank.ru/sbpay/conditions.pdf")!, version: "1.2.15", date: date, comment: "Условия обслуживания Участника СБП")])
+        
+        // when
+        let result = try decoder.decode(ServerCommands.PersonController.GetPersonAgreement.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
 }

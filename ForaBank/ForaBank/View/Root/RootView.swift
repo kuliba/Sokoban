@@ -75,6 +75,10 @@ struct RootView: View {
                     C2BDetailsView()
                         .zIndex(.greatestFiniteMagnitude)
 
+                case .userAccount(let viewModel):
+                    UserAccountView(viewModel: viewModel)
+                        .zIndex(.greatestFiniteMagnitude)
+                        .background(Color.white)
                 }
             }
             

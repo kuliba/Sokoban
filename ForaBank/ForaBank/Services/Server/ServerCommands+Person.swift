@@ -209,5 +209,39 @@ extension ServerCommands {
                 self.token = token
             }
         }
+        
+        /*
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/getPersonAgreement
+         */
+        
+        struct GetPersonAgreement: ServerCommand {
+            
+            let token: String
+            let endpoint = "/rest/getPersonAgreements"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+            
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: [PersonAgreement]?
+            }
+            
+            internal init(token: String, system: PersonAgreement.System, type: PersonAgreement.TypeDocument?) {
+                
+                self.token = token
+                if let type = type {
+                    
+                    self.parameters = [.init(name: "system", value: system.rawValue), .init(name: "type", value: type.rawValue)]
+                    
+                } else {
+                    
+                    self.parameters = [.init(name: "system", value: system.rawValue)]
+                }
+            }
+        }
     }
 }

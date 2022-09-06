@@ -49,7 +49,7 @@ struct ProductProfileView: View {
                     }
                     .zIndex(0)
                     
-                    VStack(spacing: 0) {
+                    VStack(spacing: 12) {
                         
                         ProductProfileCardView(viewModel: viewModel.product)
                         

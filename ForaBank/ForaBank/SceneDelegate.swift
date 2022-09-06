@@ -36,6 +36,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         legacyNavigationBarBackground()
         setAlertAppearance()
         setIconBangeNumber()
+        
+        self.scene(scene, openURLContexts: connectionOptions.urlContexts)
     }
     
     //FIXME: remove after refactor paymnets
@@ -122,37 +124,28 @@ extension SceneDelegate {
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         
-        var deepLinkType: DeepLinkType = .invalidLink
         guard let url = URLContexts.first?.url else { return }
-        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
-              let params = components.queryItems else {
+        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true) else {
             return
         }
         
-        if let bankId = params.first?.value {
+        let params = components.queryItems
+        
+        if let bankId = params?.first?.value {
             
             let bankId = String(bankId.dropFirst(4))
-            deepLinkType = .me2me(bankId)
+            AppDelegate.shared.model.deepLinkType.value = .me2me(bankId)
             
         } else if url.description.contains("qr.nspk.ru") {
             
             var strUrl = url.description.replacingOccurrences(of: "https2", with: "https")
             strUrl = strUrl.replacingOccurrences(of:"amp;", with:"")
-            deepLinkType = .c2b(strUrl)
-        }
-                
-        switch deepLinkType {
-        case let .me2me(bankId):
-            AppDelegate.shared.model.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
+            AppDelegate.shared.model.deepLinkType.value = .c2b(strUrl)
             
-        case let .c2b(urlString):
-            GlobalModule.c2bURL = urlString
-            rootViewModel.action.send(RootViewModelAction.C2bShow())
+        } else if url.description.contains("sbpay") {
             
-        case .invalidLink:
-            rootViewModel.alert = .init(title: "Ошибка", message: "Мы не смогли распознать ссылку", primary: .init(type: .default, title: "OK", action: { [weak self] in
-                self?.rootViewModel.action.send(RootViewModelAction.CloseAlert())
-            }))
+            let tokenIntent = url.description.replacingOccurrences(of: "bank100000000217://sbpay/tokenIntent/", with: "")
+            AppDelegate.shared.model.deepLinkType.value = .sbpPay(tokenIntent)
         }
     }
     
@@ -168,13 +161,16 @@ extension SceneDelegate {
 
         case let .c2b(urlString):
             GlobalModule.c2bURL = urlString
-            rootViewModel.action.send(RootViewModelAction.C2bShow())
+            AppDelegate.shared.model.action.send(ModelAction.C2bShow())
             
         case .invalidLink:
             rootViewModel.alert = .init(title: "Ошибка", message: "Мы не смогли распознать ссылку", primary: .init(type: .default, title: "OK", action: { [weak self] in
                 self?.rootViewModel.action.send(RootViewModelAction.CloseAlert())
             }))
         case .me2me(_):
+            break
+            
+        default:
             break
         }
     }

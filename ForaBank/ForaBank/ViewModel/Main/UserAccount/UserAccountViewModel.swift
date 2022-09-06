@@ -24,7 +24,6 @@ class UserAccountViewModel: ObservableObject {
     @Published var bottomSheet: BottomSheet?
     @Published var sheet: Sheet?
     @Published var alert: Alert.ViewModel?
-    
     @Published var textFieldAlert: AlertTextFieldView.ViewModel?
     
     private let model: Model
@@ -40,7 +39,7 @@ class UserAccountViewModel: ObservableObject {
         self.deleteAccountButton = deleteAccountButton
     }
     
-    init(model: Model, clientInfo: ClientInfoData, dismissAction: @escaping () -> Void) {
+    init(model: Model, clientInfo: ClientInfoData, dismissAction: @escaping () -> Void, bottomSheet: BottomSheet? = nil) {
         
         self.model = model
         sections = []
@@ -61,6 +60,9 @@ class UserAccountViewModel: ObservableObject {
             action: { [weak self] in
                 self?.action.send(UserAccountViewModelAction.DeleteAction())
             })
+        
+        self.bottomSheet = bottomSheet
+        
         bind()
     }
     
@@ -447,6 +449,7 @@ extension UserAccountViewModel {
             case camera(UserAccountPhotoSourceView.ViewModel)
             case avatarOptions(OptionsButtonsViewComponent.ViewModel)
             case imageCapture(ImageCaptureViewModel)
+            case sbpay(SbpPayViewModel)
         }
     }
     

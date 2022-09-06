@@ -56,6 +56,7 @@ extension ProductSelectorView {
             self.backgroundColor = backgroundColor
             self.isUserInteractionEnabled = isUserInteractionEnabled
             self.isDividerHiddable = isDividerHiddable
+            self.backgroundColor = backgroundColor
             
             bind()
         }

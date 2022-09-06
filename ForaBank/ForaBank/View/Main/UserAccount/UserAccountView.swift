@@ -100,10 +100,13 @@ struct UserAccountView: View {
             case let .avatarOptions(optionViewModel):
                 OptionsButtonsViewComponent(viewModel: optionViewModel)
                 
-            case .imageCapture(let imageCapture):
+            case let .imageCapture(imageCapture):
                 ImageCapture(viewModel: imageCapture)
                     .edgesIgnoringSafeArea(.all)
                     .navigationBarBackButtonHidden(false)
+                
+            case let .sbpay(viewModel):
+                SbpPayView(viewModel: viewModel)
             }
         })
         .alert(item: $viewModel.alert, content: { alertViewModel in

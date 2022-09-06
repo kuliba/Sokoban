@@ -132,8 +132,13 @@ class RootViewModel: ObservableObject, Resetable {
                 case _ as RootViewModelAction.DismissAll:
                     reset()
                     
-                case _ as RootViewModelAction.C2bShow:
-                    link = .c2b
+                case let payload as RootViewModelAction.ShowUserProfile:
+                    guard let clientInfo = model.clientInfo.value else {
+                        return
+                    }
+                    link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {
+                        self.link = nil
+                    }, bottomSheet: .init(sheetType: .sbpay(.init(model, personAgreements: payload.conditions, rootActions: rootActions)))))
                 
                 case _ as RootViewModelAction.CloseAlert:
                     alert = nil
@@ -189,11 +194,42 @@ class RootViewModel: ObservableObject, Resetable {
                         break
                         //TODO: set logger
                     }
+                    
+                case let payload as ModelAction.SbpPay.Register.Response:
+                    switch payload.result {
+                    case .success:
+                        
+                        self.model.action.send(ModelAction.GetPersonAgreement.Request(system: .sbp, type: nil))
+                        self.model.action.send(ModelAction.FastPaymentSettings.ContractFindList.Request())
+                    case .failed:
+                        
+                        break
+                        //TODO: set logger
+                    }
+                case let payload as ModelAction.GetPersonAgreement.Response:
+                    switch payload.result {
+                    case let .success(personAgreement):
+                        
+                        self.action.send(RootViewModelAction.DismissAll())
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+
+                            self.action.send(RootViewModelAction.ShowUserProfile(conditions: personAgreement))
+                        }
+                        
+                    case let .failure(error):
+                        
+                        break
+                        //TODO: set logger
+                    }
+                case _ as ModelAction.C2bShow:
+                    link = .c2b
+                    
                 default:
                     break
                 }
             }.store(in: &bindings)
-        
+
         model.notificationsTransition
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] transition in
@@ -297,6 +333,7 @@ extension RootViewModel {
         case messages(MessagesHistoryViewModel)
         case me2me(RequestMeToMeModel)
         case c2b
+        case userAccount(UserAccountViewModel)
     }
 }
 
@@ -344,5 +381,8 @@ enum RootViewModelAction {
     
     struct CloseAlert: Action {}
     
-    struct C2bShow: Action {}
+    struct ShowUserProfile: Action {
+        
+        let conditions: [PersonAgreement]
+    }
 }
