@@ -472,6 +472,7 @@ public extension Image {
     static var ic24Crop: Image { Image(#function) }
     static var ic24Crosshair: Image { Image(#function) }
     static var ic24Crosshair1: Image { Image(#function) }
+    static var ic24CurrencyExchange: Image { Image(#function) }
     static var ic24Customer: Image { Image(#function) }
     static var ic24Database: Image { Image(#function) }
     static var ic24DeactivatedCreditCard: Image { Image(#function) }
@@ -742,6 +743,9 @@ public extension Image {
     static var ic40Card: Image { Image(#function) }
     static var ic40Delete: Image { Image(#function) }
     static var ic40FaceId: Image { Image(#function) }
+    static var ic40FinancialRiskInsurance: Image { Image(#function) }
+    static var ic40Lock: Image { Image(#function) }
+    static var ic40PropertyInsurance: Image { Image(#function) }
     static var ic48Abroad: Image { Image(#function) }
     static var ic48AlertCircle: Image { Image(#function) }
     static var ic48AnotherCard: Image { Image(#function) }
@@ -767,5 +771,4 @@ public extension Image {
     static var ic64TouchID: Image { Image(#function) }
     static var ic64FaceId: Image { Image(#function) }
     static var ic64ForaColor: Image { Image(#function) }
-    static var ic24CurrencyExchange: Image { Image(#function) }
 }
