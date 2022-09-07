@@ -27,6 +27,7 @@ extension ProductSelectorView {
         @Published var listViewModel: ProductsListView.ViewModel?
         @Published var isUserInteractionEnabled: Bool
         let backgroundColor: BackgroundColor
+        let titleIndent: TitleIndent
         
         var bindings = Set<AnyCancellable>()
         
@@ -42,7 +43,8 @@ extension ProductSelectorView {
              listViewModel: ProductsListView.ViewModel? = nil,
              isUserInteractionEnabled: Bool = true,
              isDividerHiddable: Bool = false,
-             backgroundColor: BackgroundColor = .gray) {
+             backgroundColor: BackgroundColor = .gray,
+             titleIndent: TitleIndent = .normal) {
             
             self.model = model
             self.title = title
@@ -53,6 +55,7 @@ extension ProductSelectorView {
             self.isUserInteractionEnabled = isUserInteractionEnabled
             self.isDividerHiddable = isDividerHiddable
             self.backgroundColor = backgroundColor
+            self.titleIndent = titleIndent
             
             bind()
         }
@@ -63,15 +66,23 @@ extension ProductSelectorView {
             currencyOperation: CurrencyOperation,
             productViewModel: ProductContentViewModel? = nil,
             listViewModel: ProductsListView.ViewModel? = nil,
-            isDividerHiddable: Bool = false, backgroundColor: BackgroundColor = .gray) {
+            isDividerHiddable: Bool = false,
+            backgroundColor: BackgroundColor = .gray,
+            titleIndent: TitleIndent = .normal) {
             
-                self.init(model, title: "", currency: currency, currencyOperation: currencyOperation, productViewModel: productViewModel, listViewModel: listViewModel, isDividerHiddable: isDividerHiddable, backgroundColor: backgroundColor)
+                self.init(model, title: "", currency: currency, currencyOperation: currencyOperation, productViewModel: productViewModel, listViewModel: listViewModel, isDividerHiddable: isDividerHiddable, backgroundColor: backgroundColor, titleIndent: titleIndent)
         }
         
         enum BackgroundColor {
             
             case white
             case gray
+        }
+        
+        enum TitleIndent {
+            
+            case normal
+            case left
         }
         
         private func bind() {
@@ -442,9 +453,19 @@ extension ProductSelectorView {
             
             Group {
                 
-                Text(viewModel.title)
-                    .font(.textBodySR12160())
-                    .foregroundColor(.textPlaceholder)
+                switch viewModel.titleIndent {
+                case .normal:
+                    Text(viewModel.title)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.textPlaceholder)
+                    
+                case .left:
+                    Text(viewModel.title)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.textPlaceholder)
+                        .padding(.leading, 48)
+                    
+                }
                 
                 if let productViewModel = viewModel.productViewModel {
                     

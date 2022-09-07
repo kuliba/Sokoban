@@ -20,6 +20,7 @@ class ProductData: Identifiable, Codable {
     
     private(set) var balance: Double?
     private(set) var balanceRub: Double?
+    //TODO: Currency type??
     let currency: String // example: RUB
     
     let mainField: String // example: Gold

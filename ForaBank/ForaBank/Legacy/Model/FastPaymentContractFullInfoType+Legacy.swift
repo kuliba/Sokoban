@@ -13,7 +13,7 @@ extension FastPaymentContractFullInfoType {
                 
                 fastPaymentContractAccountAttributeList?.map {
                     FastPaymentContractAccountAttributeList
-                        .init(accountID: $0.accountID,
+                        .init(accountID: $0.accountId,
                               flagPossibAddAccount: $0.flagPossibAddAccount?.rawValue,
                               maxAddAccount: $0.maxAddAccount != nil ? Int($0.maxAddAccount!) : nil,
                               minAddAccount: $0.minAddAccount != nil ? Int($0.minAddAccount!) : nil,
@@ -24,22 +24,22 @@ extension FastPaymentContractFullInfoType {
                 
                 fastPaymentContractAttributeList?.map {
                     FastPaymentContractAttributeList
-                        .init(accountID: $0.accountID,
-                              branchID: $0.branchID,
-                              clientID: $0.clientID,
+                        .init(accountID: $0.accountId,
+                              branchID: $0.branchId,
+                              clientID: $0.clientId,
                               flagBankDefault: $0.flagBankDefault?.rawValue,
                               flagClientAgreementIn: $0.flagClientAgreementIn?.rawValue,
                               flagClientAgreementOut: $0.flagClientAgreementOut?.rawValue,
                               phoneNumber: $0.phoneNumber,
-                              branchBIC: $0.branchBIC,
-                              fpcontractID: $0.fpcontractID)
+                              branchBIC: $0.branchBic,
+                              fpcontractID: $0.fpcontractId)
                 },
         
               fastPaymentContractClAttributeList:
                 
                 fastPaymentContractClAttributeList?.map {
                     FastPaymentContractClAttributeList
-                        .init(clientInfo: .init(clientID: $0.clientInfo?.clientID,
+                        .init(clientInfo: .init(clientID: $0.clientInfo?.clientId,
                                                 inn: $0.clientInfo?.inn,
                                                 name: $0.clientInfo?.name,
                                                 nm: $0.clientInfo?.nm,
