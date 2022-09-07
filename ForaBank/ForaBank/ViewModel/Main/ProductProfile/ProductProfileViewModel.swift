@@ -517,6 +517,10 @@ class ProductProfileViewModel: ObservableObject {
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .info, .conditions], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                             
+                        case .account:
+                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .statementOpenAccount(false), .tariffsByAccount, .termsOfService], productType: product.productType)
+                            self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
+                            
                         default:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
@@ -647,6 +651,19 @@ class ProductProfileViewModel: ObservableObject {
                                                                  primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())}),
                                                                  secondary: .init(type: .default, title: "ОК", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}))
                             self.alert = .init(alertViewModel)
+                            
+                        case .statementOpenAccount:
+                            break
+                            
+                        case .tariffsByAccount:
+                            
+                            let linkURL = "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf"
+                            self.openLinkURL(linkURL)
+                            
+                        case .termsOfService:
+                            
+                            let linkURL = "https://www.forabank.ru/dkbo/dkbo.pdf"
+                            self.openLinkURL(linkURL)
                         }
                         
                     default:
@@ -799,6 +816,17 @@ class ProductProfileViewModel: ObservableObject {
             
         default:
             return nil
+        }
+    }
+    
+    private func openLinkURL(_ linkURL: String) {
+
+        guard let url = URL(string: linkURL) else {
+            return
+        }
+
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }
 }
