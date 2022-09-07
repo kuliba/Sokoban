@@ -61,6 +61,13 @@ extension Model {
         return filterredProducts(currency: currency, currencyOperation: currencyOperation, products: products)
     }
     
+    func products(currency: Currency) -> [ProductData] {
+        
+        let clientId = Model.shared.clientInfo.value?.id
+        let products = products.value.values.flatMap {$0}.filter({ $0.ownerId == clientId }).filter({$0.currency == currency.description})
+        return products
+    }
+    
     func products(currency: Currency, currencyOperation: CurrencyOperation, products: ProductsData) -> [ProductData] {
         
         let products = products.values.flatMap {$0}

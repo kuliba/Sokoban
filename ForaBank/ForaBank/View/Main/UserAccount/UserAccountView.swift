@@ -63,7 +63,9 @@ struct UserAccountView: View {
                         
                     case let .fastPaymentSettings(meToMeSettingsViewModel):
                         MeToMeSettingView(viewModel: meToMeSettingsViewModel)
-                    
+                            .navigationBarBackButtonHidden(true)
+                            .navigationBarTitle("", displayMode: .inline)
+                        
                     case let .deleteUserInfo(deleteInfoViewModel):
                         DeleteAccountView(viewModel: deleteInfoViewModel)
                             .navigationBarBackButtonHidden(true)
