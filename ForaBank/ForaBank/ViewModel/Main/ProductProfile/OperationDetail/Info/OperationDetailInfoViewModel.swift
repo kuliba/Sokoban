@@ -68,7 +68,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: payerFee.currencyFormatter(symbol: currency)))
             }
             
-            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
+            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -139,7 +139,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
             }
             
-            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
+            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -177,7 +177,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             cells.append(PropertyCellViewModel(title: "Способ выплаты", iconType: .cash, value: "Наличные"))
             
             
-            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
+            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -230,7 +230,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Сумма зачисления в валюте", iconType: .balance, value: payeeAmount.currencyFormatter(symbol: payeeCurrency)))
             }
             
-            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
+            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -274,7 +274,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
             }
             
-            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
+            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -319,7 +319,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
             }
             
-            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
+            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -366,7 +366,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
             }
             
-            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
+            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -394,7 +394,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
             }
             
-            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
+            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -432,7 +432,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
             }
             
-            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
+            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -445,7 +445,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             
         case .outsideCash:
             
-            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
+            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -483,7 +483,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
             }
             
-            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
+            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -518,7 +518,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
             }
             
-            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
+            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -559,7 +559,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
             }
             
-            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
+            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -588,7 +588,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             }
             cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: dateString))
             cells.append(BankCellViewModel(title: "Статус операции", icon: Image("OkOperators"), name: "Исполнен"))
-            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
+            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
                 cells.append(debitAccounCell)
             }
             let payeerLabel = statement.operationType == .debit ? "Получатель" : "Отправитель"
@@ -626,9 +626,10 @@ final class OperationDetailInfoViewModel: Identifiable {
 
 private extension OperationDetailInfoViewModel {
     
-    static func debitAccountCell(with product: ProductData, currency: String) -> DefaultCellViewModel? {
+    static func accountCell(with product: ProductData, currency: String, operationType: OperationType) -> DefaultCellViewModel? {
         
         let productCurrency = product.currency
+        let title = operationType == .debit ? "Счет списания" : "Счет зачисления"
         
         guard let smallDesign = product.smallDesign.image,
               let additionalField = product.additionalField,
@@ -639,7 +640,7 @@ private extension OperationDetailInfoViewModel {
         
         let productName = product.mainField
         
-        return ProductCellViewModel(title: "Счет списания", icon: smallDesign, name: productName, iconPaymentService: nil, balance: balanceString, description: "· \(description) · \(additionalField)")
+        return ProductCellViewModel(title: title, icon: smallDesign, name: productName, iconPaymentService: nil, balance: balanceString, description: "· \(description) · \(additionalField)")
     }
 }
 
