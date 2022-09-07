@@ -104,7 +104,9 @@ class InternetTVConfirmViewController: UIViewController {
             return
         }
         self.otpCode = otpCode.filter { "0"..."9" ~= $0 }
-        smsCodeField.text =  self.otpCode
+        DispatchQueue.main.async {
+            self.smsCodeField.text =  self.otpCode
+        }
     }
     
     func setupData(with model: InternetTVConfirmViewModel) {
