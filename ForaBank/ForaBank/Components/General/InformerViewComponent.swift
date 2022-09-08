@@ -14,14 +14,16 @@ extension InformerView {
     
     class ViewModel: ObservableObject {
         
-        @Published var informers: [InformerData]
+        @Published var events: [Event]
         @Published var informerViewModel: InformerViewModel?
         @Published var showInformer: Bool
-        
-        private lazy var timer = Timer.publish(every: interval, on: .main, in: .common)
-        
+
+        private let model: Model
+        private let timer = Timer.publish(every: 1, on: .main, in: .common)
         private let interval: TimeInterval
         private let closeAction: () -> Void
+        
+        private var currentEvent: (event: Event, startTime: TimeInterval)?
         
         private var timerBindings = Set<AnyCancellable>()
         private var bindings = Set<AnyCancellable>()
@@ -31,79 +33,132 @@ extension InformerView {
             let message: String
             let icon: Image
             let color: Color
+            let interval: TimeInterval
             
-            init(message: String, icon: Image, color: Color = .mainColorsBlack) {
+            init(message: String, icon: Image, color: Color = .mainColorsBlack, interval: TimeInterval = 2) {
                 
                 self.message = message
                 self.icon = icon
                 self.color = color
+                self.interval = interval
             }
         }
         
-        init(interval: TimeInterval = 3, closeAction: @escaping () -> Void) {
+        enum Event {
             
+            case informer(InformerViewModel)
+            case pause(TimeInterval)
+        }
+        
+        init(_ model: Model, interval: TimeInterval = 3, closeAction: @escaping () -> Void) {
+            
+            self.model = model
             self.interval = interval
             self.closeAction = closeAction
             
-            informers = []
+            events = []
             showInformer = true
             
             bind()
         }
         
-        convenience init(_ informerViewModel: InformerViewModel?) {
+        convenience init(_ model: Model, informerViewModel: InformerViewModel?) {
             
-            self.init {}
+            self.init(model) {}
             self.informerViewModel = informerViewModel
+        }
+        
+        deinit {
+            
+            stopTimer()
         }
  
         private func bind() {
             
-            $informers
+            model.informer
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] informers in
+                .sink { [unowned self] informerData in
                     
-                    if informers.isEmpty == false, informerViewModel == nil {
-                        
-                        makeInformerViewModel()
-                        startTimer()
+                    guard let informerData = informerData else {
+                        return
                     }
                     
+                    let informerViewModel: InformerViewModel = .init(message: informerData.message, icon: informerData.icon, color: informerData.color, interval: informerData.interval)
+                    
+                    events.append(.informer(informerViewModel))
+                    events.append(.pause(1))
+                    
+                    startTimer()
+                    
                 }.store(in: &bindings)
-        }
-        
-        private func makeInformerViewModel() {
             
-            guard informers.isEmpty == false else {
-                return
-            }
-            
-            let informer = informers.removeFirst()
-            
-            withAnimation {
-                informerViewModel = .init(message: informer.message, icon: informer.icon, color: informer.color)
-            }
+            model.showInformer
+                .receive(on: DispatchQueue.main)
+                .sink { showInformer in
+                    
+                    self.showInformer = showInformer
+                    
+                }.store(in: &bindings)
         }
         
         private func startTimer() {
             
             timer
                 .autoconnect()
-                .sink { [unowned self] _ in
+                .map { $0.timeIntervalSinceReferenceDate }
+                .sink { [unowned self] time in
                     
-                    if informers.isEmpty == false {
+                    if let currentEvent = currentEvent {
                         
-                        makeInformerViewModel()
+                        switch currentEvent.event {
+                        case .informer(let informerViewModel):
+                            
+                            guard time - currentEvent.startTime > informerViewModel.interval else {
+                                return
+                            }
+                            
+                            resetInformer()
+                            makeNextEvent(time)
+                            
+                        case let .pause(pause):
+                            
+                            guard time - currentEvent.startTime > pause else {
+                                return
+                            }
+                            
+                            resetInformer()
+                            makeNextEvent(time)
+                        }
                         
                     } else {
                         
-                        reset()
-                        stopTimer()
+                        makeNextEvent(time)
                     }
                     
                 }.store(in: &timerBindings)
         }
         
+        private func makeNextEvent(_ time: TimeInterval) {
+            
+            guard events.isEmpty == false else {
+                return
+            }
+            
+            let nextEvent = events.removeFirst()
+            currentEvent = (nextEvent, time)
+            
+            switch nextEvent {
+            case .informer(let informerViewModel):
+                
+                withAnimation {
+                    self.informerViewModel = informerViewModel
+                }
+            
+            default:
+                break
+            }
+        }
+
         private func stopTimer() {
             
             for binding in timerBindings {
@@ -113,11 +168,15 @@ extension InformerView {
             timerBindings = Set<AnyCancellable>()
         }
         
-        private func reset() {
+        private func resetInformer() {
+                        
+            withAnimation {
+                
+                informerViewModel = nil
+            }
             
+            currentEvent = nil
             closeAction()
-            informerViewModel = nil
-            showInformer = false
         }
     }
 }
@@ -162,6 +221,17 @@ struct InformerView: View {
     }
 }
 
+// MARK: - Preview Content
+
+extension InformerView.ViewModel {
+    
+    static let sample1: InformerView.ViewModel = .init(.emptyMock, informerViewModel: .init(message: "USD счет открывается", icon: .ic24RefreshCw))
+    
+    static let sample2: InformerView.ViewModel = .init(.emptyMock, informerViewModel: .init(message: "USD счет открыт", icon: .ic16Check))
+    
+    static let sample3: InformerView.ViewModel = .init(.emptyMock, informerViewModel: .init(message: "USD счет не открыт", icon: .ic16Close))
+}
+
 //MARK: - Preview
 
 struct InformerViewComponent_Previews: PreviewProvider {
@@ -169,9 +239,9 @@ struct InformerViewComponent_Previews: PreviewProvider {
 
         Group {
             
-            InformerView(viewModel: .init(.init(message: "USD счет открывается", icon: .ic24RefreshCw)))
-            InformerView(viewModel: .init(.init(message: "USD счет открыт", icon: .ic16Check)))
-            InformerView(viewModel: .init(.init(message: "USD счет не открыт", icon: .ic16Close)))
+            InformerView(viewModel: .sample1)
+            InformerView(viewModel: .sample2)
+            InformerView(viewModel: .sample3)
         }
         .previewLayout(.sizeThatFits)
         .padding(8)

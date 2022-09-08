@@ -12,4 +12,16 @@ struct InformerData {
     let icon: Image
     let color: Color
     let message: String
+    let interval: TimeInterval
+    
+    init(icon: Image,
+         color: Color = .mainColorsBlack,
+         message: String,
+         interval: TimeInterval = 2) {
+        
+        self.icon = icon
+        self.color = color
+        self.message = message
+        self.interval = interval
+    }
 }

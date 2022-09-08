@@ -249,7 +249,7 @@ extension Model {
 extension Model {
 
     func handleInformerShow(payload: ModelAction.Account.Informer.Show) {
-        informer.value = .init(icon: payload.icon.image, color: payload.color, message: payload.message)
+        informer.value = .init(icon: payload.icon.image, color: payload.color, message: payload.message, interval: payload.interval)
     }
 
     func handleInformerDismiss() {
@@ -343,12 +343,17 @@ extension ModelAction {
                 let message: String
                 let icon: IcomType
                 let color: Color
+                let interval: TimeInterval
                 
-                init(message: String, icon: IcomType, color: Color = .mainColorsBlack) {
+                init(message: String,
+                     icon: IcomType,
+                     color: Color = .mainColorsBlack,
+                     interval: TimeInterval = 2) {
                     
                     self.message = message
                     self.icon = icon
                     self.color = color
+                    self.interval = interval
                 }
                 
                 enum IcomType {

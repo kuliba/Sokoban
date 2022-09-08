@@ -17,11 +17,11 @@ class RootViewModel: ObservableObject, Resetable {
     @Published var alert: Alert.ViewModel?
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
-    @Published var informerViewModel: InformerView.ViewModel?
     
     let mainViewModel: MainViewModel
     let paymentsViewModel: PaymentsTransfersViewModel
     let chatViewModel: ChatViewModel
+    let informerViewModel: InformerView.ViewModel
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -34,8 +34,9 @@ class RootViewModel: ObservableObject, Resetable {
         self.chatViewModel = .init()
         self.model = model
         
+        informerViewModel = .init(model) { model.informer.value = nil }
         mainViewModel.rootActions = rootActions
-        
+                
         bind()
     }
     
@@ -90,41 +91,6 @@ class RootViewModel: ObservableObject, Resetable {
                     default:
                         break
                     } 
-                }
-                
-            }.store(in: &bindings)
-        
-        model.informer
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] informerData in
-                
-                guard let informerData = informerData else {
-                    return
-                }
-                
-                if informerViewModel == nil {
-                    
-                    informerViewModel = .init {
-                        
-                        self.informerViewModel = nil
-                        self.model.informer.value = nil
-                    }
-                }
-                
-                if let informerViewModel = informerViewModel {
-                    
-                    informerViewModel.showInformer = model.showInformer.value
-                    informerViewModel.informers.append(informerData)
-                }
-                
-            }.store(in: &bindings)
-        
-        model.showInformer
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] showInformer in
-                
-                if let informerViewModel = informerViewModel {
-                    informerViewModel.showInformer = showInformer
                 }
                 
             }.store(in: &bindings)
