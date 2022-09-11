@@ -13,6 +13,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
     
     private let viewModel: RootViewModel
     private var cover: Cover?
+    private var informer: Informer?
     private var isCoverDismissing: Bool
     private var spinner: UIViewController?
     private var bindings = Set<AnyCancellable>()
@@ -21,6 +22,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
         
         self.viewModel = viewModel
         self.cover = nil
+        self.informer = nil
         self.isCoverDismissing = false
         super.init(rootView: RootView(viewModel: viewModel))
         
@@ -50,6 +52,19 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                     let lockView = AuthPinCodeView(viewModel: payload.viewModel)
                     let lockViewController = UIHostingController(rootView: lockView)
                     presentCover(lockViewController, of: .lock, animated: payload.animated)
+                    
+                case let payload as RootViewModelAction.Informer.Show:
+                    
+                    if informer == nil {
+                        
+                        let rootView = InformerView(viewModel: payload.viewModel)
+                        let informerViewController = UIHostingController(rootView: rootView)
+                        
+                        presentInformer(informerViewController, animated: true)
+                    }
+                    
+                case _ as RootViewModelAction.Informer.Dismiss:
+                    informer = nil
       
                 case _ as RootViewModelAction.Cover.Hide:
                     if isCoverDismissing == false {
@@ -205,6 +220,38 @@ class RootViewHostingViewController: UIHostingController<RootView> {
             self.spinner = nil
         }
     }
+    
+    private func presentInformer(_ viewController: UIViewController, animated: Bool) {
+        
+        guard let scene = view.window?.windowScene else {
+            return
+        }
+        
+        let rootViewController = UIViewController()
+        rootViewController.view.backgroundColor = .clear
+        
+        rootViewController.view.addSubview(viewController.view)
+        rootViewController.addChild(viewController)
+        viewController.didMove(toParent: rootViewController)
+        
+        let window = InformerWindow(windowScene: scene)
+        window.backgroundColor = .clear
+        window.windowLevel = .normal + 1
+        window.rootViewController = rootViewController
+        window.makeKeyAndVisible()
+        
+        viewController.view.backgroundColor = .clear
+        viewController.view.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            viewController.view.leadingAnchor.constraint(equalTo: rootViewController.view.leadingAnchor, constant: 20),
+            viewController.view.trailingAnchor.constraint(equalTo: rootViewController.view.trailingAnchor, constant: -20),
+            viewController.view.topAnchor.constraint(equalTo: rootViewController.view.topAnchor, constant: UIApplication.safeAreaInsets.top + 60),
+            viewController.view.heightAnchor.constraint(equalToConstant: viewController.view.frame.height)
+        ])
+        
+        informer = .init(controller: viewController, window: window)
+    }
 }
 
 extension RootViewHostingViewController {
@@ -219,6 +266,25 @@ extension RootViewHostingViewController {
             
             case login
             case lock
+        }
+    }
+    
+    struct Informer {
+        
+        let controller: UIViewController
+        let window: UIWindow
+    }
+    
+    class InformerWindow: UIWindow {
+        
+        override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+            
+            guard let hitTest = super.hitTest(point, with: event),
+                  let rootViewController = rootViewController else {
+                return nil
+            }
+            
+            return rootViewController.view == hitTest ? nil : hitTest
         }
     }
     

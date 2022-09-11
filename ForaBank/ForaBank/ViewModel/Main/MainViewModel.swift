@@ -160,7 +160,6 @@ class MainViewModel: ObservableObject, Resetable {
                                 let openAccountViewModel: OpenAccountViewModel = .init(model: model, items: items, currency: .rub)
                                 
                                 bottomSheet = .init(type: .openAccount(openAccountViewModel))
-                                bind(model)
 
                             case .deposit:
                                 self.action.send(MainViewModelAction.Show.OpenDeposit())
@@ -419,17 +418,6 @@ class MainViewModel: ObservableObject, Resetable {
                 }
                 
         }.store(in: &bindings)
-    }
-    
-    private func bind(_ model: Model) {
-        
-        $bottomSheet
-            .receive(on: DispatchQueue.main)
-            .sink { bottomSheet in
-                
-                model.showInformer.value = bottomSheet == nil
-                
-            }.store(in: &bindings)
     }
     
     private func update(_ sections: [MainSectionViewModel], with settings: MainSectionsSettings) {

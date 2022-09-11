@@ -21,7 +21,6 @@ class RootViewModel: ObservableObject, Resetable {
     let mainViewModel: MainViewModel
     let paymentsViewModel: PaymentsTransfersViewModel
     let chatViewModel: ChatViewModel
-    let informerViewModel: InformerView.ViewModel
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -34,7 +33,6 @@ class RootViewModel: ObservableObject, Resetable {
         self.chatViewModel = .init()
         self.model = model
         
-        informerViewModel = .init(model) { model.informer.value = nil }
         mainViewModel.rootActions = rootActions
                 
         bind()
@@ -91,6 +89,23 @@ class RootViewModel: ObservableObject, Resetable {
                     default:
                         break
                     } 
+                }
+                
+            }.store(in: &bindings)
+        
+        model.informer
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] informerData in
+                
+                if let informerData = informerData {
+                    
+                    let informerViewModel: InformerView.ViewModel = .init(model, informerViewModel: .init(message: informerData.message, icon: informerData.icon, color: informerData.color, interval: informerData.interval)) {}
+                    
+                    action.send(RootViewModelAction.Informer.Show(viewModel: informerViewModel))
+                    
+                } else {
+                    
+                    action.send(RootViewModelAction.Informer.Dismiss())
                 }
                 
             }.store(in: &bindings)
@@ -360,5 +375,15 @@ enum RootViewModelAction {
     struct ShowUserProfile: Action {
         
         let conditions: [PersonAgreement]
+    }
+    
+    enum Informer {
+        
+        struct Show: Action {
+            
+            let viewModel: InformerView.ViewModel
+        }
+        
+        struct Dismiss: Action {}
     }
 }

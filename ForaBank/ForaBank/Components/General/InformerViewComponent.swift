@@ -16,11 +16,9 @@ extension InformerView {
         
         @Published var events: [Event]
         @Published var informerViewModel: InformerViewModel?
-        @Published var showInformer: Bool
 
         private let model: Model
         private let timer = Timer.publish(every: 1, on: .main, in: .common)
-        private let interval: TimeInterval
         private let closeAction: () -> Void
         
         private var currentEvent: (event: Event, startTime: TimeInterval)?
@@ -50,22 +48,15 @@ extension InformerView {
             case pause(TimeInterval)
         }
         
-        init(_ model: Model, interval: TimeInterval = 3, closeAction: @escaping () -> Void) {
+        init(_ model: Model, informerViewModel: InformerViewModel, closeAction: @escaping () -> Void) {
             
             self.model = model
-            self.interval = interval
+            self.informerViewModel = informerViewModel
             self.closeAction = closeAction
             
             events = []
-            showInformer = true
             
             bind()
-        }
-        
-        convenience init(_ model: Model, informerViewModel: InformerViewModel?) {
-            
-            self.init(model) {}
-            self.informerViewModel = informerViewModel
         }
         
         deinit {
@@ -89,14 +80,6 @@ extension InformerView {
                     events.append(.pause(1))
                     
                     startTimer()
-                    
-                }.store(in: &bindings)
-            
-            model.showInformer
-                .receive(on: DispatchQueue.main)
-                .sink { showInformer in
-                    
-                    self.showInformer = showInformer
                     
                 }.store(in: &bindings)
         }
@@ -175,6 +158,7 @@ extension InformerView {
                 informerViewModel = nil
             }
             
+            model.informer.value = nil
             currentEvent = nil
             closeAction()
         }
@@ -189,7 +173,7 @@ struct InformerView: View {
     
     var body: some View {
         
-        if let informerViewModel = viewModel.informerViewModel, viewModel.showInformer == true {
+        if let informerViewModel = viewModel.informerViewModel {
             
             ZStack {
                 
@@ -225,11 +209,11 @@ struct InformerView: View {
 
 extension InformerView.ViewModel {
     
-    static let sample1: InformerView.ViewModel = .init(.emptyMock, informerViewModel: .init(message: "USD счет открывается", icon: .ic24RefreshCw))
+    static let sample1: InformerView.ViewModel = .init(.emptyMock, informerViewModel: .init(message: "USD счет открывается", icon: .ic24RefreshCw)) {}
     
-    static let sample2: InformerView.ViewModel = .init(.emptyMock, informerViewModel: .init(message: "USD счет открыт", icon: .ic16Check))
+    static let sample2: InformerView.ViewModel = .init(.emptyMock, informerViewModel: .init(message: "USD счет открыт", icon: .ic16Check)) {}
     
-    static let sample3: InformerView.ViewModel = .init(.emptyMock, informerViewModel: .init(message: "USD счет не открыт", icon: .ic16Close))
+    static let sample3: InformerView.ViewModel = .init(.emptyMock, informerViewModel: .init(message: "USD счет не открыт", icon: .ic16Close)) {}
 }
 
 //MARK: - Preview
