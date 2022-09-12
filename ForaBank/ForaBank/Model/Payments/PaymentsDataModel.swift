@@ -61,6 +61,13 @@ enum Payments {
         case updateParameters
     }
 
+    enum ParameterProcessType {
+        
+        case none
+        case initial
+        case step(Int)
+    }
+    
     struct Operation {
         
         let service: Service
@@ -205,8 +212,8 @@ protocol PaymentsParameterRepresentable {
     /// action performed in case of parameter value change
     var onChange: Payments.ParameterOnChangeAction { get }
 
-    /// transaction step on witch parameter must be processed
-    var processStep: Int? { get }
+    /// type of processing the parameter during the execution of the transaction
+    var process: Payments.ParameterProcessType { get }
     
     func updated(value: String?) -> PaymentsParameterRepresentable
     func updated(isEditable: Bool) -> PaymentsParameterRepresentable
@@ -219,7 +226,7 @@ extension PaymentsParameterRepresentable {
     var isCollapsable: Bool { false }
     var isHidden: Bool { false }
     var onChange: Payments.ParameterOnChangeAction { .none }
-    var processStep: Int? { nil }
+    var process: Payments.ParameterProcessType { .none }
     
     func updated(value: String?) -> PaymentsParameterRepresentable { self }
     func updated(isEditable: Bool) -> PaymentsParameterRepresentable { self }

@@ -740,6 +740,10 @@ extension Model {
     /// - Returns: true - restart is required
     func paymentsIsTransferRestartRequired(parameters: [PaymentsParameterRepresentable], history: [[Parameter]]) -> Bool {
         
+        //FIXME: refactor
+        return false
+        
+        /*
         for parameter in parameters {
             
             // check if parameter should be processed on some step of transaction
@@ -760,6 +764,7 @@ extension Model {
         }
         
         return false
+         */
     }
     
     /// Returns minmal transfer step. This value required to determinate parameters for 'initial' transfer step.
@@ -767,7 +772,11 @@ extension Model {
     /// - Returns: minimal transfer step or nil
     func paymentsTransferProcessStepMin(parameters: [PaymentsParameterRepresentable]) -> Int? {
         
+        //FIXME: refactor
+        return nil
+        /*
         parameters.compactMap({ $0.processStep }).min()
+         */
     }
     
     /// Returns parameters for transfer step
@@ -777,9 +786,13 @@ extension Model {
     /// - Returns: parameters for step or nil
     func paymentsTransferParametersForStep(parameters: [PaymentsParameterRepresentable], step: Int) -> [Payments.Parameter]? {
         
+        //FIXME: refactor
+        return nil
+        /*
         let result = parameters.filter({$0.processStep == step }).map({ $0.parameter })
         
         return result.isEmpty == false ? result : nil
+         */
     }
 }
 
