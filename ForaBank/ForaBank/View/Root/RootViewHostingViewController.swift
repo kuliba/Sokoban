@@ -52,19 +52,6 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                     let lockView = AuthPinCodeView(viewModel: payload.viewModel)
                     let lockViewController = UIHostingController(rootView: lockView)
                     presentCover(lockViewController, of: .lock, animated: payload.animated)
-                    
-                case let payload as RootViewModelAction.Informer.Show:
-                    
-                    if informer == nil {
-                        
-                        let rootView = InformerView(viewModel: payload.viewModel)
-                        let informerViewController = UIHostingController(rootView: rootView)
-                        
-                        presentInformer(informerViewController, animated: true)
-                    }
-                    
-                case _ as RootViewModelAction.Informer.Dismiss:
-                    informer = nil
       
                 case _ as RootViewModelAction.Cover.Hide:
                     if isCoverDismissing == false {
@@ -80,6 +67,24 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                 default:
                     return
                     
+                }
+                
+            }.store(in: &bindings)
+        
+        viewModel.informerViewModel.$informerViewModel
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] informerViewModel in
+                
+                if informerViewModel == nil {
+                    
+                    informer = nil
+                    
+                } else {
+                    
+                    let rootView = InformerView(viewModel: viewModel.informerViewModel)
+                    let informerViewController = UIHostingController(rootView: rootView)
+                    
+                    presentInformer(informerViewController, animated: true)
                 }
                 
             }.store(in: &bindings)
@@ -246,7 +251,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
         NSLayoutConstraint.activate([
             viewController.view.leadingAnchor.constraint(equalTo: rootViewController.view.leadingAnchor, constant: 20),
             viewController.view.trailingAnchor.constraint(equalTo: rootViewController.view.trailingAnchor, constant: -20),
-            viewController.view.topAnchor.constraint(equalTo: rootViewController.view.topAnchor, constant: UIApplication.safeAreaInsets.top + 60),
+            viewController.view.topAnchor.constraint(equalTo: rootViewController.view.topAnchor, constant: UIApplication.safeAreaInsets.top + 80),
             viewController.view.heightAnchor.constraint(equalToConstant: viewController.view.frame.height)
         ])
         

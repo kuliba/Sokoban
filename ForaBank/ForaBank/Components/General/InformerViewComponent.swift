@@ -14,48 +14,26 @@ extension InformerView {
     
     class ViewModel: ObservableObject {
         
-        @Published var events: [Event]
         @Published var informerViewModel: InformerViewModel?
 
         private let model: Model
+        private var events: [Event]
         private let timer = Timer.publish(every: 1, on: .main, in: .common)
-        private let closeAction: () -> Void
         
         private var currentEvent: (event: Event, startTime: TimeInterval)?
-        
         private var timerBindings = Set<AnyCancellable>()
         private var bindings = Set<AnyCancellable>()
         
-        struct InformerViewModel {
-            
-            let message: String
-            let icon: Image
-            let color: Color
-            let interval: TimeInterval
-            
-            init(message: String, icon: Image, color: Color = .mainColorsBlack, interval: TimeInterval = 2) {
-                
-                self.message = message
-                self.icon = icon
-                self.color = color
-                self.interval = interval
-            }
-        }
-        
-        enum Event {
-            
-            case informer(InformerViewModel)
-            case pause(TimeInterval)
-        }
-        
-        init(_ model: Model, informerViewModel: InformerViewModel, closeAction: @escaping () -> Void) {
+        init(informerViewModel: InformerViewModel?, model: Model, events: [Event]) {
             
             self.model = model
             self.informerViewModel = informerViewModel
-            self.closeAction = closeAction
+            self.events = events
+        }
+        
+        convenience init(_ model: Model) {
             
-            events = []
-            
+            self.init(informerViewModel: nil, model: model, events: [])
             bind()
         }
         
@@ -66,20 +44,25 @@ extension InformerView {
  
         private func bind() {
             
-            model.informer
+            model.action
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] informerData in
+                .sink { [unowned self] action in
                     
-                    guard let informerData = informerData else {
-                        return
+                    switch action {
+                    case let payload as ModelAction.Informer.Show:
+                        
+                        let informerViewModel: InformerViewModel = .init(message: payload.message, icon: payload.icon.image, color: payload.color, interval: payload.interval)
+                        
+                        events.append(.informer(informerViewModel))
+                        events.append(.pause(1))
+                        
+                        if currentEvent == nil {
+                            startTimer()
+                        }
+                        
+                    default:
+                        break
                     }
-                    
-                    let informerViewModel: InformerViewModel = .init(message: informerData.message, icon: informerData.icon, color: informerData.color, interval: informerData.interval)
-                    
-                    events.append(.informer(informerViewModel))
-                    events.append(.pause(1))
-                    
-                    startTimer()
                     
                 }.store(in: &bindings)
         }
@@ -124,6 +107,8 @@ extension InformerView {
         private func makeNextEvent(_ time: TimeInterval) {
             
             guard events.isEmpty == false else {
+                
+                stopTimer()
                 return
             }
             
@@ -154,14 +139,36 @@ extension InformerView {
         private func resetInformer() {
                         
             withAnimation {
-                
                 informerViewModel = nil
             }
             
-            model.informer.value = nil
             currentEvent = nil
-            closeAction()
         }
+    }
+}
+
+extension InformerView {
+    
+    struct InformerViewModel {
+        
+        let message: String
+        let icon: Image
+        let color: Color
+        let interval: TimeInterval
+        
+        init(message: String, icon: Image, color: Color = .mainColorsBlack, interval: TimeInterval = 2) {
+            
+            self.message = message
+            self.icon = icon
+            self.color = color
+            self.interval = interval
+        }
+    }
+    
+    enum Event {
+        
+        case informer(InformerViewModel)
+        case pause(TimeInterval)
     }
 }
 
@@ -209,11 +216,11 @@ struct InformerView: View {
 
 extension InformerView.ViewModel {
     
-    static let sample1: InformerView.ViewModel = .init(.emptyMock, informerViewModel: .init(message: "USD счет открывается", icon: .ic24RefreshCw)) {}
+    static let sample1: InformerView.ViewModel = .init(informerViewModel: .init(message: "USD счет открывается", icon: .ic24RefreshCw), model: .emptyMock, events: [])
     
-    static let sample2: InformerView.ViewModel = .init(.emptyMock, informerViewModel: .init(message: "USD счет открыт", icon: .ic16Check)) {}
+    static let sample2: InformerView.ViewModel = .init(informerViewModel: .init(message: "USD счет открыт", icon: .ic16Check), model: .emptyMock, events: [])
     
-    static let sample3: InformerView.ViewModel = .init(.emptyMock, informerViewModel: .init(message: "USD счет не открыт", icon: .ic16Close)) {}
+    static let sample3: InformerView.ViewModel = .init(informerViewModel: .init(message: "USD счет не открыт", icon: .ic16Close), model: .emptyMock, events: [])
 }
 
 //MARK: - Preview

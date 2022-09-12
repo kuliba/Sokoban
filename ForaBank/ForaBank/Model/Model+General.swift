@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension ModelAction {
     
@@ -24,6 +25,46 @@ extension ModelAction {
                 let result: Result<Data, Error>
             }
         }
+    }
+    
+    enum Informer {
+
+        struct Show: Action {
+
+            let message: String
+            let icon: IcomType
+            let color: Color
+            let interval: TimeInterval
+            
+            init(message: String,
+                 icon: IcomType,
+                 color: Color = .mainColorsBlack,
+                 interval: TimeInterval = 2) {
+                
+                self.message = message
+                self.icon = icon
+                self.color = color
+                self.interval = interval
+            }
+            
+            enum IcomType {
+                
+                case refresh
+                case check
+                case close
+                
+                var image: Image {
+                    
+                    switch self {
+                    case .refresh: return .ic24RefreshCw
+                    case .check: return .ic16Check
+                    case .close: return .ic16Close
+                    }
+                }
+            }
+        }
+
+        struct Dismiss: Action {}
     }
 }
 
