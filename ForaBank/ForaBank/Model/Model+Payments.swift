@@ -631,7 +631,7 @@ extension Model {
     
     func paymentsTransferPayer(with parameters: [ParameterRepresentable], currency: Currency) -> TransferData.Payer? {
         
-        if let parameterCard = parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.card.rawValue }), let productIdValue = parameterCard.parameter.value,
+        if let parameterCard = parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.product.rawValue }), let productIdValue = parameterCard.parameter.value,
            let productId = Int(productIdValue),
            let productType = paymentsProductType(for: productId) {
             
@@ -722,6 +722,60 @@ extension Model {
     }
 }
 
+// MARK: - Transfer Restart
+
+extension Model {
+    
+    /// This method checks if transfer restart is required. If any parameter has property 'processStep' other than 'nil', and current parameter value has any difference with values from the history - in this case transfer restart is required.
+    /// - Parameters:
+    ///   - parameters: list of parameters
+    ///   - history: history of parameters values changing
+    /// - Returns: true - restart is required
+    func paymentsIsTransferRestartRequired(parameters: [ParameterRepresentable], history: [[Parameter]]) -> Bool {
+        
+        for parameter in parameters {
+            
+            // check if parameter should be processed on some step of transaction
+            guard parameter.processStep != nil else {
+                continue
+            }
+            
+            let parameterHistory = history.flatMap({ $0 }).filter({ $0.id == parameter.parameter.id })
+            
+            // check if any parameter's value in history doesn't match to the parameter's value
+            for parameterHistroryItem in parameterHistory {
+                
+                guard parameterHistroryItem.value == parameter.parameter.value else {
+                    // some parameter's value in the history doesn't match, this means that transfer restart is requiered
+                    return true
+                }
+            }
+        }
+        
+        return false
+    }
+    
+    /// Returns minmal transfer step. This value required to determinate parameters for 'initial' transfer step.
+    /// - Parameter parameters: list of parameters
+    /// - Returns: minimal transfer step or nil
+    func paymentsTransferProcessStepMin(parameters: [ParameterRepresentable]) -> Int? {
+        
+        parameters.compactMap({ $0.processStep }).min()
+    }
+    
+    /// Returns parameters for transfer step
+    /// - Parameters:
+    ///   - parameters: list of parameters
+    ///   - step: transfer step
+    /// - Returns: parameters for step or nil
+    func paymentsTransferParametersForStep(parameters: [ParameterRepresentable], step: Int) -> [Payments.Parameter]? {
+        
+        let result = parameters.filter({$0.processStep == step }).map({ $0.parameter })
+        
+        return result.isEmpty == false ? result : nil
+    }
+}
+
 // MARK: - Parameters Helpers
 
 extension Model {
@@ -751,7 +805,7 @@ extension Model {
                 
                 if filter.contains(parameter.parameter.id) {
                     
-                    return parameter.updated(editable: editable)
+                    return parameter.updated(isEditable: editable)
                     
                 } else {
                     
@@ -761,7 +815,7 @@ extension Model {
             
         } else {
             
-            return parameters.map{ $0.updated(editable: editable) }
+            return parameters.map{ $0.updated(isEditable: editable) }
         }
     }
     

@@ -27,7 +27,7 @@ extension Model {
                     icon: parameter.iconData ?? .parameterSample,
                     title: parameter.title,
                     selectionTitle: "Выберете категорию",
-                    options: categoryParameterOptions, autoContinue: false)
+                    options: categoryParameterOptions, isAutoContinue: false)
                 parameters.append(result)
                 
             case "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1","a3_docValue_4_2", "a3_docNumber_2_2", "a3_BillNumber_1_1", "a3_IPnumber_1_1", "a3_lastName_1_2", "a3_firstName_2_2", "a3_middleName_3_2", "a3_docNumber_2_1", "a3_lastName_1_3", "a3_firstName_2_3", "a3_middleName_3_3":
@@ -55,7 +55,7 @@ extension Model {
                     icon: parameter.iconData ?? .parameterSample,
                     title: parameter.title,
                     selectionTitle: "Выберете тип документа",
-                    options: parameter.options ?? [], autoContinue: false)
+                    options: parameter.options ?? [], isAutoContinue: false)
                 parameters.append(result)
                 
             default:
@@ -81,7 +81,7 @@ extension Model {
                 throw Payments.Error.failedObtainProductId
             }
             
-            parameters.append(Payments.ParameterProduct(value: "\(productId)", editable: false))
+            parameters.append(Payments.ParameterProduct(value: "\(productId)", isEditable: false))
             
             let amountParameter = Payments.ParameterAmount(
                 .init(id: Payments.Parameter.Identifier.amount.rawValue, value: nil),
@@ -112,7 +112,7 @@ extension Model {
             Payments.ParameterInfo(
                 .init(id: addition.fieldName, value: addition.fieldValue),
                 icon: addition.iconData ?? .parameterDocument,
-                title: addition.fieldTitle, collapsable: true)
+                title: addition.fieldTitle, isCollapsable: true)
         }
     }
 }

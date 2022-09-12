@@ -12,8 +12,8 @@ class PaymentsParameterViewModel: Identifiable, ObservableObject {
     @Published var value: Value
     
     var isValid: Bool { true }
-    var isEditable: Bool { source.editable }
-    var isCollapsable: Bool { source.collapsable }
+    var isEditable: Bool { source.isEditable }
+    var isCollapsable: Bool { source.isCollapsable }
     
     var id: Payments.Parameter.ID { source.parameter.id }
     var result: Payments.Parameter { .init(id: id, value: value.current)}

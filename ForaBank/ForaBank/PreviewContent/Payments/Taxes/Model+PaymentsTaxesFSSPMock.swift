@@ -133,7 +133,7 @@ extension Model {
                     icon: .parameterDocument,
                     title: "ИНН Получателя",
                     validator: .init(minLength: 1, maxLength: nil, regEx: nil),
-                    collapsable: true)
+                    isCollapsable: true)
                 
                 let oktmoParameter = Payments.ParameterInput(
                     .init(id: UUID().uuidString,
@@ -141,12 +141,12 @@ extension Model {
                     icon: .parameterHash,
                     title: "ОКТМО (ОКАТО)",
                     validator: .init(minLength: 1, maxLength: nil, regEx: nil),
-                    collapsable: true)
+                    isCollapsable: true)
                 
                 let adressParameter = Payments.ParameterInfo(
                     .init(id: "a3_address_2_2", value: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 432011, Ульяновская обл, Ульяновск г, Радищева ул ,  д. 124,  кв. 28"),
                     icon: .parameterLocation,
-                    title: "Адрес проживания", collapsable: true)
+                    title: "Адрес проживания", isCollapsable: true)
                 
                 let amountParameter = Payments.ParameterAmount(
                     .init(id: Payments.Parameter.Identifier.amount.rawValue, value: "1234"),
@@ -190,7 +190,7 @@ extension Model {
                     icon: .parameterDocument,
                     title: "ИНН Получателя",
                     validator: .init(minLength: 1, maxLength: nil, regEx: nil),
-                    collapsable: true)
+                    isCollapsable: true)
                 
                 let oktmoParameter = Payments.ParameterInput(
                     .init(id: UUID().uuidString,
@@ -198,12 +198,12 @@ extension Model {
                     icon: .parameterHash,
                     title: "ОКТМО (ОКАТО)",
                     validator: .init(minLength: 1, maxLength: nil, regEx: nil),
-                    collapsable: true)
+                    isCollapsable: true)
                 
                 let adressParameter = Payments.ParameterInfo(
                     .init(id: "a3_address_2_2", value: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 432011, Ульяновская обл, Ульяновск г, Радищева ул ,  д. 124,  кв. 28"),
                     icon: .parameterLocation,
-                    title: "Адрес проживания", collapsable: true)
+                    title: "Адрес проживания", isCollapsable: true)
                 
                 let amountParameter = Payments.ParameterAmount(
                     .init(id: Payments.Parameter.Identifier.amount.rawValue, value: "1234"),
@@ -218,7 +218,7 @@ extension Model {
                 var updatedParameters = [ParameterRepresentable]()
                 for parameter in parameters {
                     
-                    updatedParameters.append(parameter.updated(editable: false))
+                    updatedParameters.append(parameter.updated(isEditable: false))
                 }
                 
                 let codeParameter = Payments.ParameterInput(
@@ -248,7 +248,7 @@ extension Model {
                 var updatedParameters = [ParameterRepresentable]()
                 for parameter in parameters {
                     
-                    updatedParameters.append(parameter.updated(editable: false))
+                    updatedParameters.append(parameter.updated(isEditable: false))
                 }
                 
                 let codeParameter = Payments.ParameterInput(

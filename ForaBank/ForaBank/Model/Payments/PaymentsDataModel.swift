@@ -187,19 +187,19 @@ protocol ParameterRepresentable {
     var parameter: Payments.Parameter { get }
     
     /// the paramreter can be edited
-    var editable: Bool { get }
+    var isEditable: Bool { get }
     
     /// the parameter can be collapsed
-    var collapsable: Bool { get }
+    var isCollapsable: Bool { get }
     
     /// the parameter can be hidden
-    var visible: Bool { get }
+    var isHidden: Bool { get }
     
     /// the parameter affects the history and the operation is reset to the step at which the value was originally set
     var affectsHistory: Bool { get }
     
     /// the paramreter after value update requests auto continue operation
-    var autoContinue: Bool { get }
+    var isAutoContinue: Bool { get }
     
     /// transaction step on witch parameter must be processed
     var processStep: Int? { get }
@@ -208,23 +208,21 @@ protocol ParameterRepresentable {
     var affectsParameters: Bool { get }
     
     func updated(value: String?) -> ParameterRepresentable
-    func updated(editable: Bool) -> ParameterRepresentable
-    func updated(collapsable: Bool) -> ParameterRepresentable
-    func updated(visible: Bool) -> ParameterRepresentable
+    func updated(isEditable: Bool) -> ParameterRepresentable
+    func updated(isHidden: Bool) -> ParameterRepresentable
 }
 
 extension ParameterRepresentable {
 
-    var editable: Bool { false }
-    var collapsable: Bool { false }
-    var visible: Bool { true }
+    var isEditable: Bool { false }
+    var isCollapsable: Bool { false }
+    var isHidden: Bool { false }
     var affectsHistory: Bool { false }
-    var autoContinue: Bool { false }
+    var isAutoContinue: Bool { false }
     var processStep: Int? { nil }
     var affectsParameters: Bool { false }
     
     func updated(value: String?) -> ParameterRepresentable { self }
-    func updated(editable: Bool) -> ParameterRepresentable { self }
-    func updated(collapsable: Bool) -> ParameterRepresentable { self }
-    func updated(visible: Bool) -> ParameterRepresentable { self }
+    func updated(isEditable: Bool) -> ParameterRepresentable { self }
+    func updated(isHidden: Bool) -> ParameterRepresentable { self }
 }

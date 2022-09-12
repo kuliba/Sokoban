@@ -765,6 +765,7 @@
 		774E318D27A05112005A067B /* LocalAgentEmptyMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774E318C27A05112005A067B /* LocalAgentEmptyMock.swift */; };
 		774E318F27A05197005A067B /* TemplatesListViewModel+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774E318E27A05197005A067B /* TemplatesListViewModel+Preview.swift */; };
 		774E319327A06F3D005A067B /* TemplatesListViewHostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774E319227A06F3D005A067B /* TemplatesListViewHostingViewController.swift */; };
+		77504C8D28C8B07C00A2F444 /* PaymentsParameterHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77504C8C28C8B07C00A2F444 /* PaymentsParameterHelpersTests.swift */; };
 		77517F9427A800C6005CFB77 /* ServerCommands+Transfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517F9327A800C6005CFB77 /* ServerCommands+Transfer.swift */; };
 		77517F9927A858C2005CFB77 /* TransferResponseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517F9827A858C2005CFB77 /* TransferResponseData.swift */; };
 		77517F9B27A858F8005CFB77 /* TransferAnywayResponseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517F9A27A858F8005CFB77 /* TransferAnywayResponseData.swift */; };
@@ -2174,6 +2175,7 @@
 		774E318C27A05112005A067B /* LocalAgentEmptyMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentEmptyMock.swift; sourceTree = "<group>"; };
 		774E318E27A05197005A067B /* TemplatesListViewModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TemplatesListViewModel+Preview.swift"; sourceTree = "<group>"; };
 		774E319227A06F3D005A067B /* TemplatesListViewHostingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListViewHostingViewController.swift; sourceTree = "<group>"; };
+		77504C8C28C8B07C00A2F444 /* PaymentsParameterHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsParameterHelpersTests.swift; sourceTree = "<group>"; };
 		77517F9327A800C6005CFB77 /* ServerCommands+Transfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+Transfer.swift"; sourceTree = "<group>"; };
 		77517F9827A858C2005CFB77 /* TransferResponseData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferResponseData.swift; sourceTree = "<group>"; };
 		77517F9A27A858F8005CFB77 /* TransferAnywayResponseData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAnywayResponseData.swift; sourceTree = "<group>"; };
@@ -4705,6 +4707,7 @@
 			isa = PBXGroup;
 			children = (
 				7758401A27B2A0CB00251969 /* PaymentsOperationTests.swift */,
+				77504C8C28C8B07C00A2F444 /* PaymentsParameterHelpersTests.swift */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -8744,6 +8747,7 @@
 				77E1804327AC34A90006ACC9 /* ServerCommandsPushDeviceTests.swift in Sources */,
 				68AD340527997DC000647665 /* ServerCommandsCardTests.swift in Sources */,
 				68E765282796D6DF005860FE /* ServerCommandsRegistrationTests.swift in Sources */,
+				77504C8D28C8B07C00A2F444 /* PaymentsParameterHelpersTests.swift in Sources */,
 				682092AA27AC069F003DCAFD /* ServerCommandsSuggestTests.swift in Sources */,
 				682C62BD28B38CCC00C9A00D /* SettingsModelTests.swift in Sources */,
 				684192EC2799C0D000B4E184 /* ServerCommandsConsentTests.swift in Sources */,

@@ -390,7 +390,7 @@ extension PaymentsOperationViewModel {
             return false
         }
  
-        return parameterViewModel.source.autoContinue
+        return parameterViewModel.source.isAutoContinue
     }
 }
 
