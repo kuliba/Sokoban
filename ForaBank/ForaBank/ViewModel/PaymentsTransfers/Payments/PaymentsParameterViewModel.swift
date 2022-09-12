@@ -18,9 +18,9 @@ class PaymentsParameterViewModel: Identifiable, ObservableObject {
     var id: Payments.Parameter.ID { source.parameter.id }
     var result: Payments.Parameter { .init(id: id, value: value.current)}
     
-    internal let source: ParameterRepresentable
+    internal let source: PaymentsParameterRepresentable
     
-    init(source: ParameterRepresentable) {
+    init(source: PaymentsParameterRepresentable) {
         
         self.value = .init(with: source)
         self.source = source
@@ -46,7 +46,7 @@ class PaymentsParameterViewModel: Identifiable, ObservableObject {
             self.current = current
         }
         
-        init(with representable: ParameterRepresentable) {
+        init(with representable: PaymentsParameterRepresentable) {
             
             self.id = representable.parameter.id
             self.original = representable.parameter.value

@@ -9,7 +9,7 @@ import Foundation
 
 extension Model {
     
-    func parametersFNSMock(_ parameters: [ParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[ParameterRepresentable], Error>) -> Void) {
+    func parametersFNSMock(_ parameters: [PaymentsParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[PaymentsParameterRepresentable], Error>) -> Void) {
         
         let paramOperator = Payments.Parameter.Identifier.operator.rawValue
      
@@ -46,7 +46,7 @@ extension Model {
                             .init(id: "16", name: "УСН", icon: .parameterSample),
                             .init(id: "17", name: "Страховые взносы", icon: .parameterSample),
                             .init(id: "18", name: "Патенты", icon: .parameterSample)
-                        ], affectsHistory: true)
+                        ])
                     
                     completion(.success( parameters + [categoryParameter]))
                     
@@ -73,7 +73,7 @@ extension Model {
                     options: [
                         .init(id: Operator.fns.rawValue, name: Operator.fns.name),
                         .init(id: Operator.fnsUin.rawValue, name: Operator.fnsUin.name)
-                    ], affectsHistory: true)
+                    ])
                 
                 // category
                 let categoryParameter = Payments.ParameterSelect(
@@ -98,7 +98,7 @@ extension Model {
                         .init(id: "16", name: "УСН", icon: .parameterSample),
                         .init(id: "17", name: "Страховые взносы", icon: .parameterSample),
                         .init(id: "18", name: "Патенты", icon: .parameterSample)
-                    ], affectsHistory: true)
+                    ])
                 
                 completion(.success( parameters + [operatorParameter, categoryParameter]))
             }
@@ -118,7 +118,7 @@ extension Model {
                 if let divisionParameter = parameters.first(where: { $0.parameter.id == "a3_divisionSelect_2_1" }),
                    let divisionParameterValue = divisionParameter.parameter.value {
                     
-                    var updatedParameters = [ParameterRepresentable]()
+                    var updatedParameters = [PaymentsParameterRepresentable]()
                     for parameter in parameters {
                         
                         switch parameter.parameter.id {
@@ -169,7 +169,7 @@ extension Model {
                         selectionTitle: "Выберете подразделение",
                         description: nil,
                         options: [.init(id: "inn_oktmo", name: "ИНН и ОКТМО подразделения"),
-                                  .init(id: "number", name: "Номер подразделения")], affectsHistory: true)
+                                  .init(id: "number", name: "Номер подразделения")])
                     
                     let unnParameter = Payments.ParameterInput(
                         .init(id: "a3_INN_4_1", value: "7723013452"),
@@ -189,7 +189,7 @@ extension Model {
 
             case .fnsUin:
                 
-                var updatedParameters = [ParameterRepresentable]()
+                var updatedParameters = [PaymentsParameterRepresentable]()
                 for parameter in parameters {
                     
                     switch parameter.parameter.id {
@@ -269,14 +269,14 @@ extension Model {
                     options: [.init(id: "0", name: "Транспортный налог с физических лиц (сумма платежа перерасчеты недоимка и задолженность по соответствующему платежу том числе по отмененному)"),
                               .init(id: "1", name: "Транспортный налог с физических лиц (пени по соответствующему платежу)"),
                               .init(id: "2", name: "Транспортный налог с физических лиц (проценты по соответствующему платежу)"),
-                              .init(id: "3", name: "Транспортный налог с физических лиц (суммы денежных взысканий (штрафов) по соответствующему платежу согласно законодательству РФ)")], isAutoContinue: false)
+                              .init(id: "3", name: "Транспортный налог с физических лиц (суммы денежных взысканий (штрафов) по соответствующему платежу согласно законодательству РФ)")], onChange: .none)
                 
                 completion(.success( parameters + [serviceParameter]))
                 
             case .fnsUin:
                 
                 // make all parameters not editable
-                var updatedParameters = [ParameterRepresentable]()
+                var updatedParameters = [PaymentsParameterRepresentable]()
                 for parameter in parameters {
                     
                     updatedParameters.append(parameter.updated(isEditable: false))
@@ -308,7 +308,7 @@ extension Model {
             switch operatorSelected {
             case .fns:
                 
-                var updatedParameters = [ParameterRepresentable]()
+                var updatedParameters = [PaymentsParameterRepresentable]()
                 for parameter in parameters {
                     
                     switch parameter.parameter.id {
@@ -406,7 +406,7 @@ extension Model {
             switch operatorSelected {
             case .fns:
                 // make all parameters not editable
-                var updatedParameters = [ParameterRepresentable]()
+                var updatedParameters = [PaymentsParameterRepresentable]()
                 for parameter in parameters {
                     
                     updatedParameters.append(parameter.updated(isEditable: false))

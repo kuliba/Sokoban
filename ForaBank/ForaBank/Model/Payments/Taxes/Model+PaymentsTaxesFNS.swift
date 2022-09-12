@@ -9,7 +9,7 @@ import Foundation
 
 extension Model {
     
-    func parametersFNS(_ parameters: [ParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[ParameterRepresentable], Error>) -> Void) {
+    func parametersFNS(_ parameters: [PaymentsParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[PaymentsParameterRepresentable], Error>) -> Void) {
         
         let paramOperator = Payments.Parameter.Identifier.operator.rawValue
         
@@ -34,7 +34,7 @@ extension Model {
                     let categoryParameter = Payments.ParameterSelect(
                         Parameter(id: "a3_dutyCategory_1_1", value: nil),
                         title: "Категория платежа",
-                        options: fnsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample)}, affectsHistory: true)
+                        options: fnsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample)})
                     
                     completion(.success(updatedParameters + [categoryParameter]))
                     
@@ -68,7 +68,7 @@ extension Model {
                     options: [
                         .init(id: Operator.fns.rawValue, name: Operator.fns.name),
                         .init(id: Operator.fnsUin.rawValue, name: Operator.fnsUin.name)
-                    ], affectsHistory: true)
+                    ])
                 
                 // category
                 guard let fnsCategoriesList = dictionaryFTSList() else {
@@ -79,7 +79,7 @@ extension Model {
                 let categoryParameter = Payments.ParameterSelect(
                     Parameter(id: "a3_dutyCategory_1_1", value: nil),
                     title: "Категория платежа",
-                    options: fnsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample)}, affectsHistory: true)
+                    options: fnsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample)})
                 
                 completion(.success( parameters + [operatorParameter, categoryParameter]))
             }
@@ -144,8 +144,7 @@ extension Model {
                         icon: divisionAnywayParameter.iconData ?? .parameterSample,
                         title: divisionAnywayParameter.title,
                         selectionTitle: "Выберете услугу",
-                        options: divisionAnywayParameterOptions,
-                        affectsHistory: true)
+                        options: divisionAnywayParameterOptions)
                     
                     Task {
                         

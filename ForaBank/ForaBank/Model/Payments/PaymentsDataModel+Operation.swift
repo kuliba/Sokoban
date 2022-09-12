@@ -29,7 +29,7 @@ extension Payments.Operation {
             let historyStepParametersIds = historyStep.map{ $0.id }
             let historyStepParameters = self.parameters.filter{ historyStepParametersIds.contains($0.parameter.id) }
             
-            var updatedHistoryStepParameters = [ParameterRepresentable]()
+            var updatedHistoryStepParameters = [PaymentsParameterRepresentable]()
             
             for param in historyStepParameters {
                 
@@ -53,7 +53,7 @@ extension Payments.Operation {
             
         } else {
             
-            var updatedParameters = [ParameterRepresentable]()
+            var updatedParameters = [PaymentsParameterRepresentable]()
             
             for parameter in parameters {
                 
@@ -83,7 +83,7 @@ extension Payments.Operation {
     }
     
     //TODO: Tests
-    static func history(for parameters: [ParameterRepresentable]) -> [Parameter] {
+    static func history(for parameters: [PaymentsParameterRepresentable]) -> [Parameter] {
         
         parameters.map{ $0.parameter }.filter{ $0.value != nil }
     }

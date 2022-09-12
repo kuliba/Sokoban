@@ -449,7 +449,7 @@ extension Model {
     
     //MARK: - Parameters
     
-    func parameters(for service: Service, parameters: [ParameterRepresentable], history: [[Parameter]] , completion: @escaping (Result<[ParameterRepresentable], Error>) -> Void) {
+    func parameters(for service: Service, parameters: [PaymentsParameterRepresentable], history: [[Parameter]] , completion: @escaping (Result<[PaymentsParameterRepresentable], Error>) -> Void) {
         
         let step = history.count
         
@@ -512,7 +512,7 @@ extension Model {
 extension Model {
     
     @discardableResult
-    func paymentsTransferAnywayStep(with parameters: [ParameterRepresentable], include: [Payments.Parameter.ID], step: TransferData.Step = .next) async throws -> TransferAnywayResponseData {
+    func paymentsTransferAnywayStep(with parameters: [PaymentsParameterRepresentable], include: [Payments.Parameter.ID], step: TransferData.Step = .next) async throws -> TransferAnywayResponseData {
         
         guard let token = token else {
             throw Payments.Error.notAuthorized
@@ -629,7 +629,7 @@ extension Model {
         })
     }
     
-    func paymentsTransferPayer(with parameters: [ParameterRepresentable], currency: Currency) -> TransferData.Payer? {
+    func paymentsTransferPayer(with parameters: [PaymentsParameterRepresentable], currency: Currency) -> TransferData.Payer? {
         
         if let parameterCard = parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.product.rawValue }), let productIdValue = parameterCard.parameter.value,
            let productId = Int(productIdValue),
@@ -675,7 +675,7 @@ extension Model {
         productsData.first(where: { $0.id == id })
     }
     
-    func paymentsTransferAmount(with parameters: [ParameterRepresentable]) -> Double? {
+    func paymentsTransferAmount(with parameters: [PaymentsParameterRepresentable]) -> Double? {
         
         guard let amountParameter = parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.amount.rawValue}) as? Payments.ParameterAmount else {
             
@@ -685,13 +685,13 @@ extension Model {
         return amountParameter.amount
     }
     
-    func paymentsTransferCurrency(with parameters: [ParameterRepresentable]) -> String? {
+    func paymentsTransferCurrency(with parameters: [PaymentsParameterRepresentable]) -> String? {
         
         //TODO: real implementation required
         return "RUB"
     }
     
-    func paymentsTransferPuref(with parameters: [ParameterRepresentable]) -> String? {
+    func paymentsTransferPuref(with parameters: [PaymentsParameterRepresentable]) -> String? {
         
         guard let operatorParameter = parameters.first(where: { $0.parameter.id ==  Payments.Parameter.Identifier.operator.rawValue}) else {
             
@@ -701,7 +701,7 @@ extension Model {
         return operatorParameter.parameter.value
     }
     
-    func paymentsTransferAnywayAdditional(with parameters: [ParameterRepresentable], _ include: [Payments.Parameter.ID]) -> [TransferAnywayData.Additional]? {
+    func paymentsTransferAnywayAdditional(with parameters: [PaymentsParameterRepresentable], _ include: [Payments.Parameter.ID]) -> [TransferAnywayData.Additional]? {
         
         guard include.isEmpty == false else {
             return []
@@ -731,7 +731,7 @@ extension Model {
     ///   - parameters: list of parameters
     ///   - history: history of parameters values changing
     /// - Returns: true - restart is required
-    func paymentsIsTransferRestartRequired(parameters: [ParameterRepresentable], history: [[Parameter]]) -> Bool {
+    func paymentsIsTransferRestartRequired(parameters: [PaymentsParameterRepresentable], history: [[Parameter]]) -> Bool {
         
         for parameter in parameters {
             
@@ -758,7 +758,7 @@ extension Model {
     /// Returns minmal transfer step. This value required to determinate parameters for 'initial' transfer step.
     /// - Parameter parameters: list of parameters
     /// - Returns: minimal transfer step or nil
-    func paymentsTransferProcessStepMin(parameters: [ParameterRepresentable]) -> Int? {
+    func paymentsTransferProcessStepMin(parameters: [PaymentsParameterRepresentable]) -> Int? {
         
         parameters.compactMap({ $0.processStep }).min()
     }
@@ -768,7 +768,7 @@ extension Model {
     ///   - parameters: list of parameters
     ///   - step: transfer step
     /// - Returns: parameters for step or nil
-    func paymentsTransferParametersForStep(parameters: [ParameterRepresentable], step: Int) -> [Payments.Parameter]? {
+    func paymentsTransferParametersForStep(parameters: [PaymentsParameterRepresentable], step: Int) -> [Payments.Parameter]? {
         
         let result = parameters.filter({$0.processStep == step }).map({ $0.parameter })
         
@@ -780,24 +780,24 @@ extension Model {
 
 extension Model {
     
-    func paymentsParametersContains(_ parameters: [ParameterRepresentable], id: Payments.Parameter.ID) -> Bool {
+    func paymentsParametersContains(_ parameters: [PaymentsParameterRepresentable], id: Payments.Parameter.ID) -> Bool {
         
         let parametersIds = parameters.map{ $0.parameter.id }
         
         return parametersIds.contains(id)
     }
     
-    func paymentsParameter(_ parameters: [ParameterRepresentable], id: Payments.Parameter.ID) -> Payments.Parameter? {
+    func paymentsParameter(_ parameters: [PaymentsParameterRepresentable], id: Payments.Parameter.ID) -> Payments.Parameter? {
         
         return parameters.first(where: { $0.parameter.id == id })?.parameter
     }
     
-    func paymentsParameterValue(_ parameters: [ParameterRepresentable], id: Payments.Parameter.ID) -> Payments.Parameter.Value {
+    func paymentsParameterValue(_ parameters: [PaymentsParameterRepresentable], id: Payments.Parameter.ID) -> Payments.Parameter.Value {
         
         return parameters.first(where: { $0.parameter.id == id })?.parameter.value
     }
     
-    func paymentsParametersEditable(_ parameters: [ParameterRepresentable], editable: Bool, filter: [String]? = nil) -> [ParameterRepresentable] {
+    func paymentsParametersEditable(_ parameters: [PaymentsParameterRepresentable], editable: Bool, filter: [String]? = nil) -> [PaymentsParameterRepresentable] {
         
         if let filter = filter {
             
@@ -819,7 +819,7 @@ extension Model {
         }
     }
     
-    func paymentsParametersRemove(_ parameters: [ParameterRepresentable], filter: [String]) -> [ParameterRepresentable] {
+    func paymentsParametersRemove(_ parameters: [PaymentsParameterRepresentable], filter: [String]) -> [PaymentsParameterRepresentable] {
         
         return parameters.compactMap { parameter in
             

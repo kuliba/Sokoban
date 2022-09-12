@@ -17,7 +17,7 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
         
     }
     
-    override func createFooter(from parameters: [ParameterRepresentable]) -> PaymentsOperationViewModel.FooterViewModel? {
+    override func createFooter(from parameters: [PaymentsParameterRepresentable]) -> PaymentsOperationViewModel.FooterViewModel? {
         
         return .button(.init(title: "Оплатить", isEnabled: false, action: { [weak self] in
             self?.action.send(PaymentsOperationViewModelAction.Confirm())
@@ -60,10 +60,14 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
                 
                 switch action {
                 case _ as PaymentsOperationViewModelAction.Confirm:
+                    //FIXME: refactor
+                    break
+                    /*
                     let results = itemsAll.map{ ($0.result, $0.source.affectsHistory) }
                     let update = operation.update(with: results)
                     model.action.send(ModelAction.Payment.Complete.Request(operation: update.operation))
                     rootActions.spinner.show()
+                     */
      
                 default:
                     break

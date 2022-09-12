@@ -54,10 +54,17 @@ enum Payments {
         var debugDescription: String { "id: \(id), value: \(value != nil ? value! : "empty")" }
     }
     
+    enum ParameterOnChangeAction {
+        
+        case none
+        case autoContinue
+        case updateParameters
+    }
+
     struct Operation {
         
         let service: Service
-        let parameters: [ParameterRepresentable]
+        let parameters: [PaymentsParameterRepresentable]
         let history: [[Parameter]]
     }
     
@@ -182,7 +189,7 @@ enum Payments {
     }
 }
 
-protocol ParameterRepresentable {
+protocol PaymentsParameterRepresentable {
 
     var parameter: Payments.Parameter { get }
     
@@ -195,34 +202,26 @@ protocol ParameterRepresentable {
     /// the parameter can be hidden
     var isHidden: Bool { get }
     
-    /// the parameter affects the history and the operation is reset to the step at which the value was originally set
-    var affectsHistory: Bool { get }
-    
-    /// the paramreter after value update requests auto continue operation
-    var isAutoContinue: Bool { get }
-    
+    /// action performed in case of parameter value change
+    var onChange: Payments.ParameterOnChangeAction { get }
+
     /// transaction step on witch parameter must be processed
     var processStep: Int? { get }
     
-    /// the parameter affects other parameters
-    var affectsParameters: Bool { get }
-    
-    func updated(value: String?) -> ParameterRepresentable
-    func updated(isEditable: Bool) -> ParameterRepresentable
-    func updated(isHidden: Bool) -> ParameterRepresentable
+    func updated(value: String?) -> PaymentsParameterRepresentable
+    func updated(isEditable: Bool) -> PaymentsParameterRepresentable
+    func updated(isHidden: Bool) -> PaymentsParameterRepresentable
 }
 
-extension ParameterRepresentable {
+extension PaymentsParameterRepresentable {
 
     var isEditable: Bool { false }
     var isCollapsable: Bool { false }
     var isHidden: Bool { false }
-    var affectsHistory: Bool { false }
-    var isAutoContinue: Bool { false }
+    var onChange: Payments.ParameterOnChangeAction { .none }
     var processStep: Int? { nil }
-    var affectsParameters: Bool { false }
     
-    func updated(value: String?) -> ParameterRepresentable { self }
-    func updated(isEditable: Bool) -> ParameterRepresentable { self }
-    func updated(isHidden: Bool) -> ParameterRepresentable { self }
+    func updated(value: String?) -> PaymentsParameterRepresentable { self }
+    func updated(isEditable: Bool) -> PaymentsParameterRepresentable { self }
+    func updated(isHidden: Bool) -> PaymentsParameterRepresentable { self }
 }

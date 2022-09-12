@@ -9,7 +9,7 @@ import Foundation
 
 extension Model {
     
-    func parametersFSSP(_ parameters: [ParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[ParameterRepresentable], Error>) -> Void) {
+    func parametersFSSP(_ parameters: [PaymentsParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[PaymentsParameterRepresentable], Error>) -> Void) {
         
         switch step {
         case 0:
@@ -31,7 +31,7 @@ extension Model {
                     let documentParameter = Payments.ParameterSelect(
                         Parameter(id: "a3_docName_1_2", value: nil),
                         title: "Тип документа",
-                        options: fsspDocumentList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) }, affectsHistory: true)
+                        options: fsspDocumentList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) })
                     
                     completion(.success(updatedParameters + [documentParameter]))
                     
@@ -112,7 +112,7 @@ extension Model {
                         .init(id: "20", name: "Документ"),
                         .init(id: "30", name: "УИН"),
                         .init(id: "40", name: "ИП")
-                    ], affectsHistory: true)
+                    ])
                 
                 // documents
                 guard let fsspDocumentList = dictionaryFSSPDocumentList() else {
@@ -123,7 +123,7 @@ extension Model {
                 let documentParameter = Payments.ParameterSelect(
                     Parameter(id: "a3_docName_1_2", value: nil),
                     title: "Тип документа",
-                    options: fsspDocumentList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) }, affectsHistory: true)
+                    options: fsspDocumentList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) })
                 
                 completion(.success([operatorParameter, searchTypeParameter, documentParameter]))
             }

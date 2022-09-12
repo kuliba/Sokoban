@@ -134,16 +134,24 @@ class PaymentsOperationViewModel: ObservableObject {
                 
                 switch action {
                 case _ as PaymentsOperationViewModelAction.Continue:
+                    //FIXME: refactor
+                    break
+                    /*
                     let results = itemsAll.map{ ($0.result, $0.source.affectsHistory) }
                     let update = operation.update(with: results)
                     model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
                     rootActions.spinner.show()
+                     */
                     
                 case _ as PaymentsOperationViewModelAction.Confirm:
+                    //FIXME: refactor
+                    break
+                    /*
                     let results = itemsAll.map{ ($0.result, $0.source.affectsHistory) }
                     let update = operation.update(with: results)
                     model.action.send(ModelAction.Payment.Complete.Request(operation: update.operation))
                     rootActions.spinner.show()
+                     */
                     
                 case let payload as PaymentsOperationViewModelAction.ShowPopUpSelectView:
                     popUpSelector = PaymentsPopUpSelectView.ViewModel(title: payload.title, description: payload.description, options: payload.options, selected: payload.selected, action: { [weak self] selectedId in
@@ -290,7 +298,7 @@ class PaymentsOperationViewModel: ObservableObject {
     
     //MARK: - Create Items
     
-    func createItemsAndFooter(from parameters: [ParameterRepresentable]) {
+    func createItemsAndFooter(from parameters: [PaymentsParameterRepresentable]) {
         
         items.value = createItems(from: parameters)
 
@@ -302,7 +310,7 @@ class PaymentsOperationViewModel: ObservableObject {
         updateFooter(isContinueEnabled: isItemsValuesValid())
     }
     
-    func createItems(from parameters: [ParameterRepresentable]) -> [PaymentsParameterViewModel] {
+    func createItems(from parameters: [PaymentsParameterRepresentable]) -> [PaymentsParameterViewModel] {
 
         var result = [PaymentsParameterViewModel]()
         for parameter in parameters {
@@ -338,7 +346,7 @@ class PaymentsOperationViewModel: ObservableObject {
         return result
     }
     
-    func createFooter(from parameters: [ParameterRepresentable]) -> FooterViewModel? {
+    func createFooter(from parameters: [PaymentsParameterRepresentable]) -> FooterViewModel? {
 
         var footer: FooterViewModel?  = .button(.init(title: "Продолжить", isEnabled: false, action: { [weak self] in
             self?.action.send(PaymentsOperationViewModelAction.Continue())
@@ -390,7 +398,7 @@ extension PaymentsOperationViewModel {
             return false
         }
  
-        return parameterViewModel.source.isAutoContinue
+        return parameterViewModel.source.onChange == .autoContinue
     }
 }
 
@@ -404,6 +412,9 @@ extension PaymentsOperationViewModel {
             return
         }
 
+        //FIXME: refactor
+        return
+        /*
         let results = self.itemsAll.map{ ($0.result, $0.source.affectsHistory) }
         let update = operation.update(with: results)
         
@@ -424,6 +435,7 @@ extension PaymentsOperationViewModel {
             
             action.send(PaymentsOperationViewModelAction.Continue())
         }
+         */
     }
     
     func updateCollapsable(items: [PaymentsParameterViewModel], isCollapsed: Bool) -> [PaymentsParameterViewModel] {

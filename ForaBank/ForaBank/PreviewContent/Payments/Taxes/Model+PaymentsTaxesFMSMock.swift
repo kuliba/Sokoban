@@ -9,7 +9,7 @@ import Foundation
 
 extension Model {
     
-    func parametersFMSMock(_ parameters: [ParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[ParameterRepresentable], Error>) -> Void) {
+    func parametersFMSMock(_ parameters: [PaymentsParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[PaymentsParameterRepresentable], Error>) -> Void) {
         
         switch step {
         case 0:
@@ -27,7 +27,7 @@ extension Model {
                     .init(id: "3", name: "Загран паспорт", icon: .parameterSample),
                     .init(id: "4", name: "Разрешения", icon: .parameterSample),
                     .init(id: "5", name: "Бюджет (поступления/возврат)", icon: .parameterSample),
-                    .init(id: "6", name: "Штрафы", icon: .parameterSample)], affectsHistory: true)
+                    .init(id: "6", name: "Штрафы", icon: .parameterSample)])
             
             completion(.success( parameters + [operatorParameter, categoryParameter]))
             
@@ -37,7 +37,7 @@ extension Model {
                let divisionValue = divisionParameter.parameter.value {
                 
                 // remove division parameters
-                var updatedParameters = [ParameterRepresentable]()
+                var updatedParameters = [PaymentsParameterRepresentable]()
                 for parameter in parameters {
                     
                     switch parameter.parameter.id {
@@ -89,8 +89,7 @@ extension Model {
                     selectionTitle: "Выберете услугу",
                     options: [
                         .init(id: "inn_oktmo", name: "ИНН и ОКТМО подразделения"),
-                        .init(id: "number", name: "Номер подразделения")],
-                    affectsHistory: true)
+                        .init(id: "number", name: "Номер подразделения")])
                 
                 let unnParameter = Payments.ParameterInput(
                     .init(id: "a3_INN_4_1", value: "7878787878"),
@@ -109,7 +108,7 @@ extension Model {
             
         case 2:
             
-            var updatedParameters = [ParameterRepresentable]()
+            var updatedParameters = [PaymentsParameterRepresentable]()
             for parameter in parameters {
                 
                 switch parameter.parameter.id {
@@ -133,7 +132,7 @@ extension Model {
                     .init(id: "2", name: "В возрасте до 14 лет"),
                     .init(id: "3", name: "В возрасте до 14 лет (новый образец)"),
                     .init(id: "4", name: "Содержащего электронный носитель информации (паспорта нового поколения)"),
-                    .init(id: "4", name: "За внесение изменений в паспорт")], isAutoContinue: false)
+                    .init(id: "4", name: "За внесение изменений в паспорт")], onChange: .none)
             
             completion(.success( updatedParameters + [serviceParameter]))
             
@@ -151,7 +150,7 @@ extension Model {
             
         case 4:
             // make all parameters not editable
-            var updatedParameters = [ParameterRepresentable]()
+            var updatedParameters = [PaymentsParameterRepresentable]()
             for parameter in parameters {
                 
                 updatedParameters.append(parameter.updated(isEditable: false))

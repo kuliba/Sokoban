@@ -9,7 +9,7 @@ import Foundation
 
 extension Model {
     
-    func parametersFSSPMock(_ parameters: [ParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[ParameterRepresentable], Error>) -> Void) {
+    func parametersFSSPMock(_ parameters: [PaymentsParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[PaymentsParameterRepresentable], Error>) -> Void) {
         
         switch step {
         case 0:
@@ -17,7 +17,7 @@ extension Model {
             if let searchTypeParameter = parameters.first(where: { $0.parameter.id == "a3_SearchType_1_1" }),
                 let searchTypeParameterValue = searchTypeParameter.parameter.value  {
                 
-                var updatedParameters = [ParameterRepresentable]()
+                var updatedParameters = [PaymentsParameterRepresentable]()
                 for parameter in parameters {
                     
                     switch parameter.parameter.id {
@@ -39,7 +39,7 @@ extension Model {
                             .init(id: "2", name: "ИНН", icon: .parameterSample),
                             .init(id: "3", name: "СНИЛС", icon: .parameterSample),
                             .init(id: "4", name: "Водительское удостоверение", icon: .parameterSample),
-                            .init(id: "5", name: "Свидетельство о регистрации ТС (СТС)", icon: .parameterSample)], affectsHistory: true)
+                            .init(id: "5", name: "Свидетельство о регистрации ТС (СТС)", icon: .parameterSample)])
                     
                     completion(.success( parameters + [documentParameter]))
                     
@@ -78,7 +78,7 @@ extension Model {
                         .init(id: "document", name: "Документ"),
                         .init(id: "uin", name: "УИН"),
                         .init(id: "ip", name: "ИП")
-                    ], affectsHistory: true)
+                    ])
                 
                 let documentParameter = Payments.ParameterSelect(
                     Parameter(id: "a3_dutyCategory_1_1_document", value: nil),
@@ -88,7 +88,7 @@ extension Model {
                         .init(id: "2", name: "ИНН", icon: .parameterSample),
                         .init(id: "3", name: "СНИЛС", icon: .parameterSample),
                         .init(id: "4", name: "Водительское удостоверение", icon: .parameterSample),
-                        .init(id: "5", name: "Свидетельство о регистрации ТС (СТС)", icon: .parameterSample)], affectsHistory: true)
+                        .init(id: "5", name: "Свидетельство о регистрации ТС (СТС)", icon: .parameterSample)])
                 
                 completion(.success( parameters + [operatorParameter, searchTypeParameter, documentParameter]))
                 
@@ -215,7 +215,7 @@ extension Model {
                 
             case "uin", "ip":
                 // make all parameters not editable
-                var updatedParameters = [ParameterRepresentable]()
+                var updatedParameters = [PaymentsParameterRepresentable]()
                 for parameter in parameters {
                     
                     updatedParameters.append(parameter.updated(isEditable: false))
@@ -245,7 +245,7 @@ extension Model {
             switch searchTypeParameterValue {
             case "document":
                 // make all parameters not editable
-                var updatedParameters = [ParameterRepresentable]()
+                var updatedParameters = [PaymentsParameterRepresentable]()
                 for parameter in parameters {
                     
                     updatedParameters.append(parameter.updated(isEditable: false))

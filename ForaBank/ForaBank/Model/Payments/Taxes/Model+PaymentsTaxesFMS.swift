@@ -9,7 +9,7 @@ import Foundation
 
 extension Model {
     
-    func parametersFMS(_ parameters: [ParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[ParameterRepresentable], Error>) -> Void) {
+    func parametersFMS(_ parameters: [PaymentsParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[PaymentsParameterRepresentable], Error>) -> Void) {
         
         let paramOperator = Payments.Parameter.Identifier.operator.rawValue
         
@@ -28,7 +28,7 @@ extension Model {
             let categoryParameter = Payments.ParameterSelect(
                 Parameter(id: "a3_dutyCategory_1_1", value: nil),
                 title: "Категория платежа",
-                options: fmsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) }, affectsHistory: true)
+                options: fmsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) })
             
             completion(.success( parameters + [operatorParameter, categoryParameter]))
             
@@ -86,8 +86,7 @@ extension Model {
                     icon: divisionAnywayParameter.iconData ?? .parameterSample,
                     title: divisionAnywayParameter.title,
                     selectionTitle: "Выберете подразделение",
-                    options: divisionAnywayParameterOptions,
-                    affectsHistory: true)
+                    options: divisionAnywayParameterOptions)
                 
                 Task {
                     

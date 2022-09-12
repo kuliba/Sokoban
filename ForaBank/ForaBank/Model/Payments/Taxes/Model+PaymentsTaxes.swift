@@ -9,9 +9,9 @@ import Foundation
 
 extension Model {
     
-    func paymentsTaxesNextStepParameters(for transferData: TransferAnywayResponseData, samples: [String: String] = [:]) throws -> [ParameterRepresentable] {
+    func paymentsTaxesNextStepParameters(for transferData: TransferAnywayResponseData, samples: [String: String] = [:]) throws -> [PaymentsParameterRepresentable] {
         
-        var parameters = [ParameterRepresentable]()
+        var parameters = [PaymentsParameterRepresentable]()
         
         for parameter in transferData.parameterListForNextStep {
             
@@ -27,7 +27,7 @@ extension Model {
                     icon: parameter.iconData ?? .parameterSample,
                     title: parameter.title,
                     selectionTitle: "Выберете категорию",
-                    options: categoryParameterOptions, isAutoContinue: false)
+                    options: categoryParameterOptions, onChange: .none)
                 parameters.append(result)
                 
             case "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1","a3_docValue_4_2", "a3_docNumber_2_2", "a3_BillNumber_1_1", "a3_IPnumber_1_1", "a3_lastName_1_2", "a3_firstName_2_2", "a3_middleName_3_2", "a3_docNumber_2_1", "a3_lastName_1_3", "a3_firstName_2_3", "a3_middleName_3_3":
@@ -55,7 +55,7 @@ extension Model {
                     icon: parameter.iconData ?? .parameterSample,
                     title: parameter.title,
                     selectionTitle: "Выберете тип документа",
-                    options: parameter.options ?? [], isAutoContinue: false)
+                    options: parameter.options ?? [], onChange: .none)
                 parameters.append(result)
                 
             default:
@@ -105,7 +105,7 @@ extension Model {
         return parameters
     }
     
-    func paymentsAdditionalParameters(for transferData: TransferAnywayResponseData) -> [ParameterRepresentable] {
+    func paymentsAdditionalParameters(for transferData: TransferAnywayResponseData) -> [PaymentsParameterRepresentable] {
         
         transferData.additionalList.map { addition in
             
