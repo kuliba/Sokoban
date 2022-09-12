@@ -13,16 +13,25 @@ extension Payments.Operation {
     
     func historyUpdated() -> [[Parameter]] {
         
+        //FIXME: refactor
+        return [[]]
+        /*
         var historyUpdated = history
         let update = Self.history(for: parameters)
         historyUpdated.append(update)
         
         return historyUpdated
+         */
     }
     
     //TODO: Tests
     func update(with results: [(param: Parameter, affectsHistory: Bool)]) -> Update {
         
+        //FIXME: refactor
+        
+        return Update(operation: .emptyMock, type: .historyChanged)
+
+        /*
         if let historyChangedStep = historyChangedStep(history: history, results: results) {
             
             let historyStep = history[historyChangedStep]
@@ -80,6 +89,7 @@ extension Payments.Operation {
             
             return .init(operation: .init(service: service, parameters: updatedParameters, history: history), type: .normal)
         }
+         */
     }
     
     //TODO: Tests
@@ -135,10 +145,10 @@ extension Payments.Operation {
         var updatedParameters = parameters
         updatedParameters.append(Payments.ParameterFinal())
         
-        return Payments.Operation(service: service, parameters: updatedParameters, history: history)
+        return Payments.Operation(service: service, parameters: updatedParameters, processed: processed)
     }
     
-    static let emptyMock = Payments.Operation(service: .fms, parameters: [], history: [[]])
+    static let emptyMock = Payments.Operation(service: .fms, parameters: [], processed: [])
 }
 
 extension Payments.Operation {

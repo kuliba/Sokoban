@@ -65,7 +65,7 @@ enum Payments {
         
         let service: Service
         let parameters: [PaymentsParameterRepresentable]
-        let history: [[Parameter]]
+        let processed: [Parameter]
     }
     
     struct Success {

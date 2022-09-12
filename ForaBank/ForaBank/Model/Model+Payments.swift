@@ -200,6 +200,9 @@ extension Model {
         
         let operation = payload.operation
         
+        //FIXME: refactor
+        
+        /*
         parameters(for: operation.service, parameters: operation.parameters, history: operation.history) { result in
             
             switch result {
@@ -224,6 +227,7 @@ extension Model {
                 self.action.send(ModelAction.Payment.Continue.Response(result: .failure(self.paymentsAlertMessage(with: error))))
             }
         }
+         */
     }
     
     func handlePaymentsCompleteRequest(_ payload: ModelAction.Payment.Complete.Request) {
@@ -415,6 +419,8 @@ extension Model {
     
     func operation(for service: Service, completion: @escaping (Result<Operation, Error>) -> Void) {
         
+        //FIXME: refactor
+        /*
         parameters(for: service, parameters: [], history: []) { result in
             
             switch result {
@@ -434,6 +440,7 @@ extension Model {
                 completion(.failure(error))
             }
         }
+         */
     }
     
     func operation(for tempaleId: PaymentTemplateData.ID, completion: @escaping (Result<Operation, Error>) -> Void) {
