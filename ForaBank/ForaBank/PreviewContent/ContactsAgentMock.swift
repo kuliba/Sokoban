@@ -16,9 +16,9 @@ class ContactsAgentMock: ContactsAgentProtocol {
         return nil
     }
     
-    func requestPermission() {
-        
+    func requestPermission() {}
+    
+    func fetchContactsList() -> [AddressBookContact] {
+        return []
     }
-    
-    
 }

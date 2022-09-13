@@ -12,7 +12,6 @@ protocol PhoneNumberFormaterProtocol {
     func format(_ phoneNumber: String) -> String
 }
 
-
 struct PhoneNumberFormater: PhoneNumberFormaterProtocol {
     
     private let phoneNumberKit = PhoneNumberKit()
