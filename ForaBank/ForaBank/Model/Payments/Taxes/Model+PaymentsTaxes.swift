@@ -81,7 +81,7 @@ extension Model {
                 throw Payments.Error.failedObtainProductId
             }
             
-            parameters.append(Payments.ParameterProduct(value: "\(productId)", isEditable: false))
+            parameters.append(Payments.ParameterProduct(value: "\(productId)", isEditable: false, present: .feed))
             
             let amountParameter = Payments.ParameterAmount(
                 .init(id: Payments.Parameter.Identifier.amount.rawValue, value: nil),

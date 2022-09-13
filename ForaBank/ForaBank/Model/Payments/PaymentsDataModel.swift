@@ -53,21 +53,7 @@ enum Payments {
         
         var debugDescription: String { "id: \(id), value: \(value != nil ? value! : "empty")" }
     }
-    
-    enum ParameterOnChangeAction {
-        
-        case none
-        case autoContinue
-        case updateParameters
-    }
 
-    enum ParameterProcessType {
-        
-        case none
-        case initial
-        case step(Int)
-    }
-    
     struct Operation {
         
         let service: Service
@@ -169,6 +155,74 @@ enum Payments {
             }
         }
     }
+}
+
+protocol PaymentsParameterRepresentable {
+
+    var parameter: Payments.Parameter { get }
+    
+    /// the paramreter can be edited
+    var isEditable: Bool { get }
+    
+    /// the parameter can be collapsed
+    var isCollapsable: Bool { get }
+    
+    /// the parameter can be hidden
+    var present: Payments.ParameterPresentType { get }
+    
+    /// action performed in case of parameter value change
+    var onChange: Payments.ParameterOnChangeAction { get }
+
+    /// type of processing the parameter during the execution of the transaction
+    var process: Payments.ParameterProcessType { get }
+    
+    func updated(value: String?) -> PaymentsParameterRepresentable
+    func updated(isEditable: Bool) -> PaymentsParameterRepresentable
+    func updated(present: Payments.ParameterPresentType) -> PaymentsParameterRepresentable
+}
+
+extension PaymentsParameterRepresentable {
+
+    var isEditable: Bool { false }
+    var isCollapsable: Bool { false }
+    var present: Payments.ParameterPresentType { .feed }
+    var onChange: Payments.ParameterOnChangeAction { .none }
+    var process: Payments.ParameterProcessType { .none }
+    
+    func updated(value: String?) -> PaymentsParameterRepresentable { self }
+    func updated(isEditable: Bool) -> PaymentsParameterRepresentable { self }
+    func updated(present: Payments.ParameterPresentType) -> PaymentsParameterRepresentable { self }
+}
+
+//MARK: - Parameter types
+
+extension Payments {
+    
+    enum ParameterOnChangeAction {
+        
+        case none
+        case autoContinue
+        case updateParameters
+    }
+
+    enum ParameterProcessType {
+        
+        case none
+        case initial
+        case step(Int)
+    }
+    
+    enum ParameterPresentType {
+        
+        case none
+        case feed
+        case bottom
+    }
+}
+
+//MARK: - Error
+
+extension Payments {
     
     enum Error: Swift.Error {
         
@@ -194,41 +248,4 @@ enum Payments {
         case notAuthorized
         case unsupported
     }
-}
-
-protocol PaymentsParameterRepresentable {
-
-    var parameter: Payments.Parameter { get }
-    
-    /// the paramreter can be edited
-    var isEditable: Bool { get }
-    
-    /// the parameter can be collapsed
-    var isCollapsable: Bool { get }
-    
-    /// the parameter can be hidden
-    var isHidden: Bool { get }
-    
-    /// action performed in case of parameter value change
-    var onChange: Payments.ParameterOnChangeAction { get }
-
-    /// type of processing the parameter during the execution of the transaction
-    var process: Payments.ParameterProcessType { get }
-    
-    func updated(value: String?) -> PaymentsParameterRepresentable
-    func updated(isEditable: Bool) -> PaymentsParameterRepresentable
-    func updated(isHidden: Bool) -> PaymentsParameterRepresentable
-}
-
-extension PaymentsParameterRepresentable {
-
-    var isEditable: Bool { false }
-    var isCollapsable: Bool { false }
-    var isHidden: Bool { false }
-    var onChange: Payments.ParameterOnChangeAction { .none }
-    var process: Payments.ParameterProcessType { .none }
-    
-    func updated(value: String?) -> PaymentsParameterRepresentable { self }
-    func updated(isEditable: Bool) -> PaymentsParameterRepresentable { self }
-    func updated(isHidden: Bool) -> PaymentsParameterRepresentable { self }
 }

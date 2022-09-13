@@ -58,6 +58,7 @@ extension Payments {
     struct ParameterTemplate: PaymentsParameterRepresentable {
         
         let parameter: Parameter
+        let present: Payments.ParameterPresentType = .none
         var templateId: PaymentTemplateData.ID? {
             
             guard let value = parameter.value else {
@@ -76,6 +77,8 @@ extension Payments {
     struct ParameterOperator: PaymentsParameterRepresentable {
         
         let parameter: Parameter
+        let present: Payments.ParameterPresentType = .none
+        let process: Payments.ParameterProcessType = .initial
         var `operator`: Operator? {
             
             guard let value = parameter.value else {
@@ -373,6 +376,7 @@ extension Payments {
         let title: String
         let currency: Currency
         let validator: Validator
+        let present: Payments.ParameterPresentType = .bottom
         
         var amount: Double {
  
@@ -417,41 +421,42 @@ extension Payments {
         
         let parameter: Parameter
         let isEditable: Bool
-        let isHidden: Bool
         let onChange: Payments.ParameterOnChangeAction = .updateParameters
         let process: Payments.ParameterProcessType = .initial
+        let present: Payments.ParameterPresentType
         
-        init(_ parameter: Parameter, isEditable: Bool, isHidden: Bool) {
+        init(_ parameter: Parameter, isEditable: Bool, present: Payments.ParameterPresentType) {
             
             self.parameter = parameter
             self.isEditable = isEditable
-            self.isHidden = isHidden
+            self.present = present
         }
         
-        init(value: String? = nil, isEditable: Bool = true, isHidden: Bool = true) {
+        init(value: String? = nil, isEditable: Bool = true, present: Payments.ParameterPresentType = .none) {
             
-            self.init(Parameter(id: Payments.Parameter.Identifier.product.rawValue, value: value), isEditable: isEditable, isHidden: isHidden)
+            self.init(Parameter(id: Payments.Parameter.Identifier.product.rawValue, value: value), isEditable: isEditable, present: present)
         }
         
         func updated(value: String?) -> PaymentsParameterRepresentable {
             
-            ParameterProduct(value: value, isEditable: isEditable, isHidden: isHidden)
+            ParameterProduct(value: value, isEditable: isEditable, present: present)
         }
         
         func updated(isEditable: Bool) -> PaymentsParameterRepresentable {
             
-            ParameterProduct(parameter, isEditable: isEditable, isHidden: isHidden)
+            ParameterProduct(parameter, isEditable: isEditable, present: present)
         }
         
-        func updated(isHidden: Bool) -> PaymentsParameterRepresentable {
+        func updated(present: Payments.ParameterPresentType) -> PaymentsParameterRepresentable {
             
-            ParameterProduct(parameter, isEditable: isEditable, isHidden: isHidden)
+            ParameterProduct(parameter, isEditable: isEditable, present: present)
         }
     }
     
     struct ParameterFinal: PaymentsParameterRepresentable {
         
         let parameter: Parameter
+        let present: Payments.ParameterPresentType = .none
 
         internal init() {
             
@@ -462,12 +467,13 @@ extension Payments {
     struct ParameterMock: PaymentsParameterRepresentable {
         
         let parameter: Parameter
-        let processStep: Int?
+        let process: Payments.ParameterProcessType
+        let present: Payments.ParameterPresentType = .none
 
-        internal init(id: Payments.Parameter.ID = Payments.Parameter.Identifier.mock.rawValue, value: Payments.Parameter.Value = nil, processStep: Int? = nil) {
+        internal init(id: Payments.Parameter.ID = Payments.Parameter.Identifier.mock.rawValue, value: Payments.Parameter.Value = nil, process: Payments.ParameterProcessType = .none) {
             
             self.parameter = Parameter(id: id, value: value)
-            self.processStep = processStep
+            self.process = process
         }
     }
 }
