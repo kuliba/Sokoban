@@ -44,7 +44,6 @@ extension ProductSelectorView {
              currencyOperation: CurrencyOperation,
              productViewModel: ProductContentViewModel? = nil,
              listViewModel: ProductsListView.ViewModel? = nil,
-             backgroundColor: Color = .mainColorsGrayLightest,
              isUserInteractionEnabled: Bool = true,
              isDividerHiddable: Bool = false,
              backgroundColor: BackgroundColor = .gray,
@@ -56,7 +55,6 @@ extension ProductSelectorView {
             self.currencyOperation = currencyOperation
             self.productViewModel = productViewModel
             self.listViewModel = listViewModel
-            self.backgroundColor = backgroundColor
             self.isUserInteractionEnabled = isUserInteractionEnabled
             self.isDividerHiddable = isDividerHiddable
             self.backgroundColor = backgroundColor
@@ -78,12 +76,18 @@ extension ProductSelectorView {
                 self.init(model, title: "", currency: currency, currencyOperation: currencyOperation, productViewModel: productViewModel, listViewModel: listViewModel, isDividerHiddable: isDividerHiddable, backgroundColor: backgroundColor, titleIndent: titleIndent)
         }
         
-        convenience init(_ model: Model, product: ProductData, backgroundColor: Color) {
+        convenience init(_ model: Model, product: ProductData, backgroundColor: BackgroundColor) {
             
             let currency: Currency = .init(description: product.currency)
             let productViewModel: ProductContentViewModel = .init(productId: product.id, productData: product, model: model)
             
             self.init(model, title: "", currency: currency, currencyOperation: .buy, productViewModel: productViewModel, backgroundColor: backgroundColor)
+        }
+        
+        enum BackgroundColor {
+            
+            case white
+            case gray
         }
         
         enum TitleIndent {
@@ -404,6 +408,14 @@ struct ProductSelectorView: View {
     
     @ObservedObject var viewModel: ViewModel
     
+    var background: Color {
+        
+        switch viewModel.backgroundColor {
+        case .gray: return Color.mainColorsGrayLightest
+        case .white: return Color.white
+        }
+    }
+    
     var body: some View {
         
         VStack(alignment: .leading, spacing: 12) {
@@ -424,7 +436,7 @@ struct ProductSelectorView: View {
             }
         }
         .disabled(viewModel.isUserInteractionEnabled == false)
-        .background(viewModel.backgroundColor)
+        .background(background)
     }
 }
 

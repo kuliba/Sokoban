@@ -45,7 +45,7 @@ extension CloseAccountView {
 extension CloseAccountView.ViewModel {
     
     private static func makeProductFromSelector(_ model: Model, product: ProductData) -> ProductSelectorViewModel {
-        .init(model, product: product, backgroundColor: .mainColorsWhite)
+        .init(model, product: product, backgroundColor: .gray)
     }
     
     private static func makeProductToSelector(_ model: Model, product: ProductData) -> ProductSelectorViewModel {
@@ -62,7 +62,6 @@ extension CloseAccountView.ViewModel {
             currency: currency,
             currencyOperation: .sell,
             productViewModel: productContentViewModel,
-            backgroundColor: .mainColorsWhite,
             isDividerHiddable: true)
         
         return productSelector

@@ -148,22 +148,22 @@ class SbpPayViewModel: ObservableObject {
             return nil
         }
         
-        guard let accountId = model.fastPaymentContractFullInfo.value.first?.fastPaymentContractAccountAttributeList?.first?.accountID else {
+        guard let accountId = model.fastPaymentContractFullInfo.value.first?.fastPaymentContractAccountAttributeList?.first?.accountId else {
             return nil
         }
         
         if let product = products.filter({($0 as? ProductCardData)?.accountId == accountId}).first {
             
-            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, title: title, currency: .rub, currencyOperation: .buy, productViewModel: .init(productId: product.id, productData: product, model: model), backgroundColor: .white, isDividerHiddable: true)
+            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, title: title, currency: .rub, currencyOperation: .buy, productViewModel: .init(productId: product.id, productData: product, model: model), isDividerHiddable: true, backgroundColor: .white)
             return selectorViewModel
             
         } else if let product = products.filter({$0.id == accountId}).first {
             
-            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, title: title, currency: .rub, currencyOperation: .buy, productViewModel: .init(productId: product.id, productData: product, model: model), backgroundColor: .white, isDividerHiddable: true)
+            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, title: title, currency: .rub, currencyOperation: .buy, productViewModel: .init(productId: product.id, productData: product, model: model), isDividerHiddable: true, backgroundColor: .white)
             return selectorViewModel
         }
         
-        let selectorViewModel: ProductSelectorView.ViewModel = .init(model, title: title, currency: .rub, currencyOperation: .buy, productViewModel: .init(productId: productData.id, productData: productData, model: model), backgroundColor: .white, isDividerHiddable: true)
+        let selectorViewModel: ProductSelectorView.ViewModel = .init(model, title: title, currency: .rub, currencyOperation: .buy, productViewModel: .init(productId: productData.id, productData: productData, model: model), isDividerHiddable: true, backgroundColor: .white)
 
         return selectorViewModel
     }
