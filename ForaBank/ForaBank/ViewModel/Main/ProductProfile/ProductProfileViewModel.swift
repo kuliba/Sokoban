@@ -136,6 +136,12 @@ class ProductProfileViewModel: ObservableObject {
                 case let payload as ProductProfileViewModelAction.Product.UpdateCustomName:
                     textFieldAlert = customNameAlert(for: payload.productType, alertTitle: payload.alertTitle)
                     
+                case let payload as ProductProfileViewModelAction.Product.CloseAccount:
+                    
+                    let viewModel: MeToMeViewModel = .init(type: .closeAccount(payload.productFrom, payload.productFrom.balanceValue)) {}
+                    
+                    bottomSheet = .init(type: .closeAccount(viewModel))
+                    
                 case _ as ProductProfileViewModelAction.Close.Link:
                     link = nil
                     
@@ -511,6 +517,10 @@ class ProductProfileViewModel: ObservableObject {
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .info, .conditions], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                             
+                        case .account:
+                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .statementOpenAccount(false), .tariffsByAccount, .termsOfService], productType: product.productType)
+                            self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
+                            
                         default:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
@@ -537,8 +547,29 @@ class ProductProfileViewModel: ObservableObject {
                             
                         case .account:
                             
-                            //TODO: set action
-                            break
+                            guard let productFrom = productData,
+                                  let accountNumber = productFrom.accountNumber else {
+                                return
+                            }
+                            
+                            let lastAccountNumber = "*\(accountNumber.suffix(4))"
+                            let title = "Закрыть счет"
+                            
+                            let message = "Вы действительно хотите закрыть счет \(lastAccountNumber)?\n\nПри закрытии будет предложено перевести остаток денежных средств на другой счет/карту. Счет будет закрыт после совершения перевода."
+                            
+                            alert = .init(
+                                title: title,
+                                message: message,
+                                primary: .init(type: .default, title: "Отмена") { [weak self] in
+                                    
+                                    guard let self = self else { return }
+                                    self.alert = nil
+                                },
+                                secondary: .init(type: .default, title: "Закрыть") { [weak self] in
+                                    
+                                    guard let self = self else { return }
+                                    self.action.send(ProductProfileViewModelAction.Product.CloseAccount(productFrom: productFrom))
+                                })
                             
                         case .deposit:
                             
@@ -620,6 +651,19 @@ class ProductProfileViewModel: ObservableObject {
                                                                  primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())}),
                                                                  secondary: .init(type: .default, title: "ОК", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}))
                             self.alert = .init(alertViewModel)
+                            
+                        case .statementOpenAccount:
+                            break
+                            
+                        case .tariffsByAccount:
+                            
+                            let linkURL = "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf"
+                            self.openLinkURL(linkURL)
+                            
+                        case .termsOfService:
+                            
+                            let linkURL = "https://www.forabank.ru/dkbo/dkbo.pdf"
+                            self.openLinkURL(linkURL)
                         }
                         
                     default:
@@ -774,6 +818,17 @@ class ProductProfileViewModel: ObservableObject {
             return nil
         }
     }
+    
+    private func openLinkURL(_ linkURL: String) {
+
+        guard let url = URL(string: linkURL) else {
+            return
+        }
+
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+    }
 }
 
 fileprivate extension NavigationBarView.ViewModel {
@@ -860,6 +915,7 @@ extension ProductProfileViewModel {
             case operationDetail(OperationDetailViewModel)
             case optionsPannel(ProductProfileOptionsPannelView.ViewModel)
             case meToMe(MeToMeViewModel)
+            case closeAccount(MeToMeViewModel)
         }
     }
     
@@ -911,6 +967,11 @@ enum ProductProfileViewModelAction {
             let productId: ProductData.ID
             let productType: ProductType
             let alertTitle: String
+        }
+        
+        struct CloseAccount: Action {
+            
+            let productFrom: ProductData
         }
     }
 

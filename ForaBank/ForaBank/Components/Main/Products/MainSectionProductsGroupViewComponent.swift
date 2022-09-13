@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 import ScrollViewProxy
+import Shimmer
 
 //MARK: - ViewModel
 
@@ -26,6 +27,7 @@ extension MainSectionProductsGroupView {
         @Published var isCollapsed: Bool
         @Published var isSeparator: Bool
         @Published var isUpdating: Bool
+        @Published var isOpeningProduct: Bool
         let dimensions: Dimensions = .initial
         
         private var products: CurrentValueSubject<[ProductView.ViewModel], Never> = .init([])
@@ -33,7 +35,7 @@ extension MainSectionProductsGroupView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(productType: ProductType, visible: [ProductView.ViewModel], newProduct: ButtonNewProduct.ViewModel?, groupButton: GroupButtonViewModel?, isCollapsed: Bool, isSeparator: Bool, isUpdating: Bool, settings: MainProductsGroupSettings = .base, model: Model = .emptyMock) {
+        init(productType: ProductType, visible: [ProductView.ViewModel], newProduct: ButtonNewProduct.ViewModel?, groupButton: GroupButtonViewModel?, isCollapsed: Bool, isSeparator: Bool, isUpdating: Bool, isOpeningProduct: Bool, settings: MainProductsGroupSettings = .base, model: Model = .emptyMock) {
             
             self.productType = productType
             self.visible = visible
@@ -42,6 +44,7 @@ extension MainSectionProductsGroupView {
             self.isCollapsed = isCollapsed
             self.isSeparator = isSeparator
             self.isUpdating = isUpdating
+            self.isOpeningProduct = isOpeningProduct
             self.products.value = visible
             self.settings = settings
             self.model = model
@@ -57,6 +60,7 @@ extension MainSectionProductsGroupView {
             self.isCollapsed = true
             self.isSeparator = true
             self.isUpdating = false
+            self.isOpeningProduct = false
             self.model = model
             
             bind()
@@ -70,6 +74,12 @@ extension MainSectionProductsGroupView {
         var width: CGFloat {
             
             var result: CGFloat = 0
+            
+            // Opening product
+            if isOpeningProduct == true {
+                
+                result += dimensions.widths.product
+            }
             
             // products width
             result += CGFloat(visible.count) * dimensions.widths.product
@@ -294,6 +304,45 @@ struct MainSectionProductsGroupView: View {
         
         HStack(alignment: .top, spacing: viewModel.dimensions.spacing) {
             
+            if viewModel.isOpeningProduct == true {
+                
+                ZStack(alignment: .leading) {
+                    
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.cardAccount)
+                        .frame(width: viewModel.dimensions.widths.product, height: 104)
+                    
+                    VStack(alignment: .leading, spacing: 20) {
+                        
+                        HStack {
+                            
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(Color.mainColorsGray)
+                                .frame(width: 24, height: 24)
+                                .shimmering()
+                            
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(Color.mainColorsGray)
+                                .frame(width: 44, height: 8)
+                                .shimmering()
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 12) {
+                            
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(Color.mainColorsGray)
+                                .frame(width: 122, height: 8)
+                                .shimmering()
+                            
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(Color.mainColorsGray)
+                                .frame(width: 58, height: 8)
+                                .shimmering()
+                        }
+                    }.padding(.horizontal)
+                }
+            }
+            
             ForEach(viewModel.visible) { productViewModel in
 
                 VStack {
@@ -391,8 +440,12 @@ struct MainSectionProductsGroupView_Previews: PreviewProvider {
             MainSectionProductsGroupView(viewModel: .sampleWant)
                 .previewLayout(.fixed(width: 375, height: 200))
             
-            MainSectionProductsGroupView(viewModel: .sampleGroup)
-                .previewLayout(.fixed(width: 375, height: 200))
+            ScrollView(.horizontal) {
+                
+                MainSectionProductsGroupView(viewModel: .sampleGroup)
+                    .previewLayout(.fixed(width: 375, height: 200))
+                
+            }.previewLayout(.fixed(width: 400, height: 200))
             
             MainSectionProductsGroupView(viewModel: .sampleGroupCollapsed)
                 .previewLayout(.fixed(width: 375, height: 200))
@@ -410,11 +463,11 @@ struct MainSectionProductsGroupView_Previews: PreviewProvider {
 
 extension MainSectionProductsGroupView.ViewModel {
     
-    static let sampleWant = MainSectionProductsGroupView.ViewModel(productType: .card, visible: [.classic], newProduct: .sampleWantCard, groupButton: nil, isCollapsed: false, isSeparator: false, isUpdating: false)
+    static let sampleWant = MainSectionProductsGroupView.ViewModel(productType: .card, visible: [.classic], newProduct: .sampleWantCard, groupButton: nil, isCollapsed: false, isSeparator: false, isUpdating: false, isOpeningProduct: false)
     
-    static let sampleGroup = MainSectionProductsGroupView.ViewModel(productType: .card, visible: [.classic], newProduct: nil, groupButton: .init(content: .title("+5"), action: {}), isCollapsed: false, isSeparator: true, isUpdating: false)
+    static let sampleGroup = MainSectionProductsGroupView.ViewModel(productType: .card, visible: [.classic], newProduct: nil, groupButton: .init(content: .title("+5"), action: {}), isCollapsed: false, isSeparator: true, isUpdating: false, isOpeningProduct: true)
     
-    static let sampleGroupCollapsed = MainSectionProductsGroupView.ViewModel(productType: .card, visible: [.classic], newProduct: nil, groupButton: .init(content: .title("+5"), action: {}), isCollapsed: true, isSeparator: true, isUpdating: false)
+    static let sampleGroupCollapsed = MainSectionProductsGroupView.ViewModel(productType: .card, visible: [.classic], newProduct: nil, groupButton: .init(content: .title("+5"), action: {}), isCollapsed: true, isSeparator: true, isUpdating: false, isOpeningProduct: false)
     
     static let sampleProducts = MainSectionProductsGroupView.ViewModel(productType: .card, products: [.classic, .account, .blocked], model: .emptyMock)
     

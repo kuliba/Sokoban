@@ -118,9 +118,10 @@ struct ButtonIconTextView: View {
                         Text(viewModel.title.text)
                             .font(titleFont)
                             .foregroundColor(viewModel.title.color)
-                            .multilineTextAlignment(.center)
-                            
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
+                    
                 } else {
                     
                     HStack(spacing: 16) {
@@ -130,7 +131,9 @@ struct ButtonIconTextView: View {
                         Text(viewModel.title.text)
                             .font(titleFont)
                             .foregroundColor(viewModel.title.color)
-                            .multilineTextAlignment(.center)
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)
+                        
                     }.opacity(0.6)
                 }
             }

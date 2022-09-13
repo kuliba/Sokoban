@@ -14,14 +14,14 @@ class RootViewModel: ObservableObject, Resetable {
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var selected: TabType
+    @Published var alert: Alert.ViewModel?
+    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var isLinkActive: Bool = false
     
     let mainViewModel: MainViewModel
     let paymentsViewModel: PaymentsTransfersViewModel
     let chatViewModel: ChatViewModel
     let informerViewModel: InformerView.ViewModel
-    @Published var alert: Alert.ViewModel?
-    @Published var link: Link? { didSet { isLinkActive = link != nil } }
-    @Published var isLinkActive: Bool = false
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -32,11 +32,11 @@ class RootViewModel: ObservableObject, Resetable {
         self.mainViewModel = MainViewModel(model)
         self.paymentsViewModel = .init(model: model)
         self.chatViewModel = .init()
-        self.informerViewModel = .init()
+        self.informerViewModel = .init(model)
         self.model = model
         
         mainViewModel.rootActions = rootActions
-        
+                
         bind()
     }
     
@@ -93,15 +93,6 @@ class RootViewModel: ObservableObject, Resetable {
                     } 
                 }
                 
-            }.store(in: &bindings)
-        
-        model.informer
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] data in
-                
-                withAnimation {
-                    informerViewModel.message = data?.message
-                }
             }.store(in: &bindings)
         
         action

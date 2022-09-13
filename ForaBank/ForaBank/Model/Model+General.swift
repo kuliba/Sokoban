@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension ModelAction {
     
@@ -23,6 +24,14 @@ extension ModelAction {
                 let endpoint: String
                 let result: Result<Data, Error>
             }
+        }
+    }
+    
+    enum Informer {
+
+        struct Show: Action {
+
+            let informer: InformerData
         }
     }
 }

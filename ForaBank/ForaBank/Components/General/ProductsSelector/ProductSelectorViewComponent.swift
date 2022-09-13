@@ -10,6 +10,8 @@ import Combine
 import Shimmer
 
 typealias ProductSelectorViewModel = ProductSelectorView.ViewModel
+typealias ProductContentViewModel = ProductSelectorViewModel.ProductContentViewModel
+typealias ProductListViewModel = ProductsListView.ViewModel
 
 // MARK: - ViewModel
 
@@ -25,6 +27,7 @@ extension ProductSelectorView {
         @Published var isDividerHiddable: Bool
         @Published var productViewModel: ProductContentViewModel?
         @Published var listViewModel: ProductsListView.ViewModel?
+        @Published var excludeProductId: ProductData.ID?
         @Published var isUserInteractionEnabled: Bool
         let backgroundColor: BackgroundColor
         let titleIndent: TitleIndent
@@ -71,6 +74,14 @@ extension ProductSelectorView {
             titleIndent: TitleIndent = .normal) {
             
                 self.init(model, title: "", currency: currency, currencyOperation: currencyOperation, productViewModel: productViewModel, listViewModel: listViewModel, isDividerHiddable: isDividerHiddable, backgroundColor: backgroundColor, titleIndent: titleIndent)
+        }
+        
+        convenience init(_ model: Model, product: ProductData, backgroundColor: BackgroundColor) {
+            
+            let currency: Currency = .init(description: product.currency)
+            let productViewModel: ProductContentViewModel = .init(productId: product.id, productData: product, model: model)
+            
+            self.init(model, title: "", currency: currency, currencyOperation: .buy, productViewModel: productViewModel, backgroundColor: backgroundColor)
         }
         
         enum BackgroundColor {
@@ -253,7 +264,7 @@ extension ProductSelectorView {
         
         static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType) -> [ProductView.ViewModel] {
             
-            let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType)
+            let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
             
             let products = filterredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model)}
             
@@ -606,7 +617,7 @@ extension ProductSelectorView {
 
 extension ProductSelectorView.ViewModel {
     
-    static let sample1 = ProductSelectorView.ViewModel(
+    static let sample1 = ProductSelectorViewModel(
         .emptyMock,
         title: "Откуда",
         currency: .rub,
@@ -620,7 +631,7 @@ extension ProductSelectorView.ViewModel {
             numberCard: "2953",
             description: "Все включено"))
     
-    static let sample2 = ProductSelectorView.ViewModel(
+    static let sample2 = ProductSelectorViewModel(
         .emptyMock,
         title: "Откуда",
         currency: .rub,
@@ -635,14 +646,14 @@ extension ProductSelectorView.ViewModel {
             description: "Все включено"),
         listViewModel: .sample)
     
-    static let sample3 = ProductSelectorView.ViewModel(
+    static let sample3 = ProductSelectorViewModel(
         .emptyMock,
         title: "Куда",
-        currency: .usd,
+        currency: .rub,
         currencyOperation: .sell,
         productViewModel: .init(
             productId: 3,
-            cardIcon: Image("Platinum Card"),
+            cardIcon: Image("RUB Account"),
             paymentSystemIcon: nil,
             name: "Текущий счет",
             balance: "0 $",
@@ -668,7 +679,7 @@ struct ProductSelectorViewComponent_Previews: PreviewProvider {
             ProductSelectorView(viewModel: .sample3)
                 .previewLayout(.sizeThatFits)
         }
-        .background(Color.mainColorsGrayLightest)
         .padding(.vertical)
+        .background(Color.mainColorsGrayLightest)
     }
 }
