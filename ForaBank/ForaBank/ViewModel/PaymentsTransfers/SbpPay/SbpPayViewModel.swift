@@ -30,7 +30,7 @@ class SbpPayViewModel: ObservableObject {
     
     struct FooterViewModel {
         
-        let descriptionButton = "Нажимая кнопку \("Подключить") вы соглашаетесь с условиями обслуживания Банка и СБПэй"
+        let descriptionButton = #"Нажимая кнопку "Подключить" вы соглашаетесь с условиями обслуживания Банка и СБПэй"#
         let spinnerIcon: Image = .init("Logo Fora Bank")
         let state: State
         
@@ -43,7 +43,7 @@ class SbpPayViewModel: ObservableObject {
     
     struct ConditionViewModel: Hashable {
         
-        let image: Image = .ic24File
+        let image: Image = .ic24FileText
         let title: String
         let link: URL
         
@@ -142,7 +142,7 @@ class SbpPayViewModel: ObservableObject {
     static func makeProductCardSelector(model: Model) -> ProductSelectorView.ViewModel? {
         
         let title = "Счет списания"
-        let products = model.products(currency: .rub, currencyOperation: .buy).filter({$0.productType == .account || $0.productType == .card})
+        let products = model.products(currency: .rub).filter({$0.productType == .account || $0.productType == .card})
         
         guard let productData = products.first else {
             return nil
@@ -164,6 +164,7 @@ class SbpPayViewModel: ObservableObject {
         }
         
         let selectorViewModel: ProductSelectorView.ViewModel = .init(model, title: title, currency: .rub, currencyOperation: .buy, productViewModel: .init(productId: productData.id, productData: productData, model: model), backgroundColor: .white, isDividerHiddable: true)
+
         return selectorViewModel
     }
 }

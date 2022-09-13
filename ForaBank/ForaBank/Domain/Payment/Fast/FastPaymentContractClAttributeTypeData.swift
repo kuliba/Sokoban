@@ -17,7 +17,7 @@ extension FastPaymentContractClAttributeTypeData {
     struct ClientDocBaseInfoType: Codable, Equatable {
         
         let address: String?
-        let clientID: Int?
+        let clientId: Int?
         let clientName: String?
         let clientPatronymicName: String?
         let clientSurName: String?
@@ -27,5 +27,11 @@ extension FastPaymentContractClAttributeTypeData {
         let nm: String?
         let regNumber: String?
         let regSeries: String?
+        
+        private enum CodingKeys: String, CodingKey {
+            
+            case clientId = "clientID"
+            case address, clientName, clientPatronymicName, clientSurName, docType, inn, name, nm, regNumber, regSeries
+        }
     }
 }

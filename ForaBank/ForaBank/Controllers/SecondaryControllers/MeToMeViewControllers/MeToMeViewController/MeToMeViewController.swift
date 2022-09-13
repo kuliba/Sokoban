@@ -183,14 +183,14 @@ class MeToMeViewController: UIViewController {
         bottomView.currencySymbol = "₽"
         bottomView.anchor(
             left: view.leftAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            bottom: view.bottomAnchor,
             right: view.rightAnchor)
         
         let saveAreaView = UIView()
         saveAreaView.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
         view.addSubview(saveAreaView)
         saveAreaView.anchor(
-            top: view.safeAreaLayoutGuide.bottomAnchor,
+            top: view.bottomAnchor,
             left: view.leftAnchor,
             bottom: view.bottomAnchor,
             right: view.rightAnchor)

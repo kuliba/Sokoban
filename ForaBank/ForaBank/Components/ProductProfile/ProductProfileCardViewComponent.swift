@@ -410,8 +410,8 @@ struct ProductProfileCardView: View {
                                 .offset(.init(x: 0, y: 6))
                                 .foregroundColor(.mainColorsBlackMedium)
                                 .opacity(0.3)
-                                .blur(radius: 12)
-                                .frame(width: shadowWidth(for: product), height: 172)
+                                .blur(radius: 10)
+                                .frame(width: shadowWidth(for: product), height: 165)
                             
                             ProductView(viewModel: product)
                                 .frame(width: productWidth(for: product), height: 160)

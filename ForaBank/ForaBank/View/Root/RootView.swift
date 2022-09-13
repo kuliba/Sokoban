@@ -69,9 +69,11 @@ struct RootView: View {
                         .zIndex(.greatestFiniteMagnitude)
 
                 case .userAccount(let viewModel):
-                    UserAccountView(viewModel: viewModel)
-                        .zIndex(.greatestFiniteMagnitude)
-                        .background(Color.white)
+   
+                    NavigationView {
+                          
+                          UserAccountView(viewModel: viewModel)
+                      }
                 }
             }
             
