@@ -71,20 +71,20 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                 
             }.store(in: &bindings)
         
-        viewModel.informerViewModel.$informerViewModel
+        viewModel.informerViewModel.$informerItemViewModel
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] informerViewModel in
+            .sink { [unowned self] informerItemViewModel in
                 
-                if informerViewModel == nil {
+                if let informerItemViewModel = informerItemViewModel {
                     
-                    informer = nil
-                    
-                } else {
-                    
-                    let rootView = InformerView(viewModel: viewModel.informerViewModel)
+                    let rootView = InformerView(viewModel: informerItemViewModel)
                     let informerViewController = UIHostingController(rootView: rootView)
                     
                     presentInformer(informerViewController, animated: true)
+                    
+                } else {
+                    
+                    dismissInformer(animated: true)
                 }
                 
             }.store(in: &bindings)
@@ -256,6 +256,13 @@ class RootViewHostingViewController: UIHostingController<RootView> {
         ])
         
         informer = .init(controller: viewController, window: window)
+    }
+    
+    private func dismissInformer(animated: Bool) {
+        
+        withAnimation {
+            informer = nil
+        }
     }
 }
 

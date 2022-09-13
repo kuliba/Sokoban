@@ -125,8 +125,8 @@ extension Model {
         let productsListError = ProductsListError.emptyData(message: ProductsListError.errorMessage)
 
         accountOpening.value = true
-        action.send(ModelAction.Informer.Show(message: "\(payload.currency.description) счет открывается", icon: .refresh))
-
+        action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет открывается", icon: .refresh)))
+        
         serverAgent.executeCommand(command: command) { result in
 
             switch result {
@@ -143,7 +143,7 @@ extension Model {
                     }
 
                     self.accountOpening.value = false
-                    self.action.send(ModelAction.Informer.Show(message: "\(payload.currency.description) счет открыт", icon: .check))
+                    self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет открыт", icon: .check)))
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.complete(data))
 
                 default:
@@ -155,7 +155,7 @@ extension Model {
 
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .statusError(status: response.statusCode, message: errorMessage)))
                     
-                    self.action.send(ModelAction.Informer.Show(message: "\(payload.currency.description) счет не открыт", icon: .close))
+                    self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет не открыт", icon: .close)))
                 }
 
             case let .failure(error):
@@ -165,7 +165,7 @@ extension Model {
                 
                 self.accountOpening.value = false
                 
-                self.action.send(ModelAction.Informer.Show(message: "\(payload.currency.description) счет не открыт", icon: .close))
+                self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет не открыт", icon: .close)))
             }
         }
     }
@@ -176,18 +176,14 @@ extension Model {
 extension Model {
 
     func handleMakeOpenAccountUpdate(payload: ModelAction.Account.MakeOpenAccount.Response) {
-
-        switch payload {
-        case .complete:
-
+        
+        if case .complete = payload {
+            
             // Обновление открытых счетов на главном экране
             action.send(ModelAction.Products.Update.ForProductType(productType: .account))
-
+            
             // Обновление списка счетов
             action.send(ModelAction.Account.ProductList.Request())
-
-        case .failed:
-            action.send(ModelAction.Informer.Dismiss())
         }
     }
     

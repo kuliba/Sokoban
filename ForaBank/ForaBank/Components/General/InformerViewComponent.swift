@@ -14,7 +14,7 @@ extension InformerView {
     
     class ViewModel: ObservableObject {
         
-        @Published var informerViewModel: InformerViewModel?
+        @Published var informerItemViewModel: InformerItemViewModel?
 
         private let model: Model
         private var events: [Event]
@@ -24,10 +24,10 @@ extension InformerView {
         private var timerBindings = Set<AnyCancellable>()
         private var bindings = Set<AnyCancellable>()
         
-        init(informerViewModel: InformerViewModel?, model: Model, events: [Event]) {
+        init(informerViewModel: InformerItemViewModel?, model: Model, events: [Event]) {
             
             self.model = model
-            self.informerViewModel = informerViewModel
+            self.informerItemViewModel = informerViewModel
             self.events = events
         }
         
@@ -51,7 +51,9 @@ extension InformerView {
                     switch action {
                     case let payload as ModelAction.Informer.Show:
                         
-                        let informerViewModel: InformerViewModel = .init(message: payload.message, icon: payload.icon.image, color: payload.color, interval: payload.interval)
+                        let informer = payload.informer
+                        
+                        let informerViewModel: InformerItemViewModel = .init(message: informer.message, icon: informer.icon.image, color: informer.color, interval: informer.interval)
                         
                         events.append(.informer(informerViewModel))
                         events.append(.pause(1))
@@ -119,7 +121,7 @@ extension InformerView {
             case .informer(let informerViewModel):
                 
                 withAnimation {
-                    self.informerViewModel = informerViewModel
+                    self.informerItemViewModel = informerViewModel
                 }
             
             default:
@@ -139,7 +141,7 @@ extension InformerView {
         private func resetInformer() {
                         
             withAnimation {
-                informerViewModel = nil
+                informerItemViewModel = nil
             }
             
             currentEvent = nil
@@ -149,7 +151,7 @@ extension InformerView {
 
 extension InformerView {
     
-    struct InformerViewModel {
+    struct InformerItemViewModel {
         
         let message: String
         let icon: Image
@@ -167,7 +169,7 @@ extension InformerView {
     
     enum Event {
         
-        case informer(InformerViewModel)
+        case informer(InformerItemViewModel)
         case pause(TimeInterval)
     }
 }
@@ -176,51 +178,42 @@ extension InformerView {
 
 struct InformerView: View {
     
-    @ObservedObject var viewModel: ViewModel
+    let viewModel: InformerItemViewModel
     
     var body: some View {
         
-        if let informerViewModel = viewModel.informerViewModel {
+        ZStack {
             
-            ZStack {
+            HStack(spacing: 10) {
                 
-                HStack(spacing: 10) {
-                    
-                    informerViewModel.icon
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .foregroundColor(.mainColorsWhite)
-                    
-                    Text(informerViewModel.message)
-                        .font(.textH4R16240())
-                        .foregroundColor(.mainColorsWhite)
-                }
-                .padding([.leading, .trailing], 16)
-                .padding([.top, .bottom], 12)
+                viewModel.icon
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(.mainColorsWhite)
                 
+                Text(viewModel.message)
+                    .font(.textH4R16240())
+                    .foregroundColor(.mainColorsWhite)
             }
-            .background(informerViewModel.color)
-            .cornerRadius(8)
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(informerViewModel.color.opacity(0.5), lineWidth: 1))
+            .padding([.leading, .trailing], 16)
+            .padding([.top, .bottom], 12)
             
-        } else {
-            
-            EmptyView()
         }
+        .background(viewModel.color)
+        .cornerRadius(8)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(viewModel.color.opacity(0.5), lineWidth: 1))
     }
 }
 
 // MARK: - Preview Content
 
-extension InformerView.ViewModel {
+extension InformerView.InformerItemViewModel {
     
-    static let sample1: InformerView.ViewModel = .init(informerViewModel: .init(message: "USD счет открывается", icon: .ic24RefreshCw), model: .emptyMock, events: [])
-    
-    static let sample2: InformerView.ViewModel = .init(informerViewModel: .init(message: "USD счет открыт", icon: .ic16Check), model: .emptyMock, events: [])
-    
-    static let sample3: InformerView.ViewModel = .init(informerViewModel: .init(message: "USD счет не открыт", icon: .ic16Close), model: .emptyMock, events: [])
+    static let sample1: InformerView.InformerItemViewModel = .init(message: "USD счет открывается", icon: .ic24RefreshCw)
+    static let sample2: InformerView.InformerItemViewModel = .init(message: "USD счет открывается", icon: .ic16Check)
+    static let sample3: InformerView.InformerItemViewModel = .init(message: "USD счет открывается", icon: .ic16Close)
 }
 
 //MARK: - Preview

@@ -277,6 +277,7 @@
 		502633D928B52BDD00A89940 /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502633D828B52BDD00A89940 /* Double+Extensions.swift */; };
 		502A98A4283A950900C6A621 /* GetProductListByTypeResponseServer.json in Resources */ = {isa = PBXBuildFile; fileRef = 502A98A3283A950900C6A621 /* GetProductListByTypeResponseServer.json */; };
 		503566C3287D56470077BF8B /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503566C2287D56470077BF8B /* Int+Extensions.swift */; };
+		5036DC7928D07E540032811F /* InformerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5036DC7828D07E540032811F /* InformerData.swift */; };
 		503B164E2889853F009F4CE3 /* CurrencyListViewModelMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503B164D2889853F009F4CE3 /* CurrencyListViewModelMock.swift */; };
 		503CF6AD282BE12B0069253E /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503CF6AC282BE12B0069253E /* TextField.swift */; };
 		503F073328252B7900E84A77 /* DepositToggleViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F073128252B7900E84A77 /* DepositToggleViewComponent.swift */; };
@@ -1695,6 +1696,7 @@
 		502633D828B52BDD00A89940 /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
 		502A98A3283A950900C6A621 /* GetProductListByTypeResponseServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductListByTypeResponseServer.json; sourceTree = "<group>"; };
 		503566C2287D56470077BF8B /* Int+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extensions.swift"; sourceTree = "<group>"; };
+		5036DC7828D07E540032811F /* InformerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformerData.swift; sourceTree = "<group>"; };
 		503B164D2889853F009F4CE3 /* CurrencyListViewModelMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyListViewModelMock.swift; sourceTree = "<group>"; };
 		503CF6AC282BE12B0069253E /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		503F073128252B7900E84A77 /* DepositToggleViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositToggleViewComponent.swift; sourceTree = "<group>"; };
@@ -5147,6 +5149,7 @@
 				77F5CE0C28056BB700611B66 /* LocationData.swift */,
 				77B6B3532850961A00E3001B /* Period.swift */,
 				68EACA54289142E100B27B50 /* DeepLinkType.swift */,
+				5036DC7828D07E540032811F /* InformerData.swift */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -7800,6 +7803,7 @@
 				EDDFE3BA2756ED7A00F57C71 /* DepositCalculatorViewControllerDataSource.swift in Sources */,
 				ED2BE17F26A0498400647CB1 /* AllCardListViewController.swift in Sources */,
 				774A8B372865FCDD00B81140 /* UserDocumentView.swift in Sources */,
+				5036DC7928D07E540032811F /* InformerData.swift in Sources */,
 				0C5CE76228B2D2F200C30CD3 /* ProductsMoneySettings.swift in Sources */,
 				77F158232812CD7B00CA5E4E /* ForaApplication.swift in Sources */,
 				EDBEEA1D26B1AF2F00265683 /* FullBankInfoCell.swift in Sources */,
