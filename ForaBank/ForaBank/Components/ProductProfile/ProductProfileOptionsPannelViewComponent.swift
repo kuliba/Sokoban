@@ -41,7 +41,7 @@ extension ProductProfileOptionsPannelView {
             
             switch type {
             case .refillFromOtherBank:
-                return .init(icon: .init(image: .ic40SBP, style: .original, background: .circleSmall), title: .init(text: "С моего счета в другом банке", style: .bold), orientation: .horizontal, action: action)
+                return .init(icon: .init(image: .ic40Sbp, style: .original, background: .circleSmall), title: .init(text: "С моего счета в другом банке", style: .bold), orientation: .horizontal, action: action)
                 
             case .refillFromOtherProduct:
                 return .init(icon: .init(image: .ic24Between, background: .circleSmall), title: .init(text: "Со своего счета", style: .bold), orientation: .horizontal, action: action)
@@ -186,6 +186,6 @@ struct ProductProfileOptionsPannelViewComponent_Previews: PreviewProvider {
 
 extension ProductProfileOptionsPannelView.ViewModel {
     
-    static let sample = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttons: [.init(icon: .init(image: .ic40SBP, style: .original, background: .circleSmall), title: .init(text: "С моего счета в другом банке", style: .bold), orientation: .horizontal, action: {}), .init(icon: .init(image: .ic24Between, background: .circleSmall), title: .init(text: "Со своего счета", style: .bold), orientation: .horizontal, action: {}), .init(icon: .init(image: .ic24CreditCard, background: .circleSmall), title: .init(text: "С карты другого банка", style: .bold), orientation: .horizontal, action: {})])
+    static let sample = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttons: [.init(icon: .init(image: .ic40Sbp, style: .original, background: .circleSmall), title: .init(text: "С моего счета в другом банке", style: .bold), orientation: .horizontal, action: {}), .init(icon: .init(image: .ic24Between, background: .circleSmall), title: .init(text: "Со своего счета", style: .bold), orientation: .horizontal, action: {}), .init(icon: .init(image: .ic24CreditCard, background: .circleSmall), title: .init(text: "С карты другого банка", style: .bold), orientation: .horizontal, action: {})])
 
 }

@@ -91,7 +91,7 @@ extension AuthPermissionsViewModel {
             switch sensorType {
             case .touch:
                 title = "Вместо  пароля вы можете использовать отпечаток для входа"
-                icon = .ic64TouchID
+                icon = .ic64TouchId
                 
             case .face:
                 title = "Вместо  пароля вы можете использовать Face ID для входа"

@@ -41,7 +41,7 @@ extension BiometricSensorType {
         
         switch self {
         case .face: return .ic40FaceId
-        case .touch: return .ic40TouchID
+        case .touch: return .ic40TouchId
         }
     }
 }

@@ -25,7 +25,7 @@ class SbpPayViewModel: ObservableObject {
     struct HeaderViewModel {
         
         let title = "Подключение счета к СБПэй"
-        let image: Image = Image.ic40SBP
+        let image: Image = Image.ic40Sbp
     }
     
     struct FooterViewModel {
