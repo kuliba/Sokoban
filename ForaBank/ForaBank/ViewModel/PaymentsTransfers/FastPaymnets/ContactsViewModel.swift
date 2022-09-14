@@ -14,65 +14,34 @@ class ContactsViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     
     let title = "Выберите контакт"
-    let contacts: [Contact]
-    let searchViewModel: SearchBarComponent.ViewModel
-    let topListViewModel: [TopListViewModel]?
-    @Published var selfContact: Contact?
+    let searchBar: SearchBarComponent.ViewModel
+    @Published var mode: Mode
+    
+    enum Mode {
+        
+        case contacts(LatestPaymentsViewComponent.ViewModel, ContactsListViewModel)
+        case contactsSearch(ContactsListViewModel)
+        case banks(String, TopBanksViewModel, BanksListViewModel)
+    }
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(_ model: Model, searchViewModel: SearchBarComponent.ViewModel, topListViewModel: [TopListViewModel]?) {
+    internal init(_ model: Model, searchBar: SearchBarComponent.ViewModel, mode: Mode) {
         
+        self.searchBar = searchBar
         self.model = model
-        self.searchViewModel = searchViewModel
-        let contacts = Self.reduce(addressBookContact: model.contactsAgent.fetchContactsList())
-        self.contacts = contacts
-        self.selfContact = nil
-        self.topListViewModel = topListViewModel
-        
-        if model.clientInfo.value == nil {
-            
-            self.model.action.send(ModelAction.ClientInfo.Fetch.Request())
-        }
-        
-        bind()
+        self.mode = mode
     }
     
-    init(_ model: Model, contacts: [AddressBookContact], searchViewModel: SearchBarComponent.ViewModel, selfContact: Contact?, topListViewModel: [TopListViewModel]?) {
-        
-        self.model = model
-        self.searchViewModel = searchViewModel
-        self.contacts = Self.reduce(addressBookContact: contacts)
-        self.selfContact = selfContact
-        self.topListViewModel = topListViewModel
+    convenience init(_ model: Model) {
+
+        let contacts = Self.reduce(addressBookContact: model.contactsAgent.fetchContactsList())
+        let searchBar: SearchBarComponent.ViewModel = .init(placeHolder: .contacts)
+        self.init(model, searchBar: searchBar, mode: .contactsSearch(contacts))
     }
     
     private func bind() {
-
-        model.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                switch action {
-                case let payload as ModelAction.OwnerPhone.Response:
-                    
-                    switch payload {
-                    case let .success(phone):
-                        
-                        for contact in contacts {
-                            if contact.phone == phone {
-                        
-                                withAnimation {
-                                    
-                                    contact.icon = Image("foraContactImage")
-                                }
-                            }
-                        } 
-                    }
-                    
-                default: break
-                }
-            }.store(in: &bindings)
         
         model.clientInfo
             .combineLatest(model.clientInfo)
@@ -84,10 +53,10 @@ class ContactsViewModel: ObservableObject {
                 if let phone = clientInfo?.phone {
                     
                     withAnimation(.easeInOut(duration: 1)) {
-                        self.selfContact = .init(fullName: "Себе", image: nil, phone: phone, icon: nil, action: {
-                            
-                            self.searchViewModel.text = phone.description
-                        })
+//                        self.selfContact = .init(fullName: "Себе", image: nil, phone: phone, icon: nil, action: {
+//
+//                            self.searchBar.text = phone.description
+//                        })
                         
                     }
                 }
@@ -100,7 +69,7 @@ class ContactsViewModel: ObservableObject {
                 
                 if let photoData = clientPhotoData?.photo, let image = photoData.image{
                     
-                    self.selfContact?.image = image
+//                    self.selfContact?.image = image
                 }
                 
             }.store(in: &bindings)
@@ -120,10 +89,34 @@ class ContactsViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
+        
+        //MARK: SearchViewModel
+        
+//        searchViewModel.$text
+//            .receive(on: DispatchQueue.main)
+//            .sink { [unowned self] data in
+//
+//                if data.digits.count == 9 {
+//
+//                    self.listState = .banks
+//                }
+//            }.store(in: &bindings)
+    }
+    
+    class ContactsListViewModel: ObservableObject {
+        
+        @Published var selfContact: Contact?
+        @Published var contacts: [Contact]
+        
+        init(selfContact: Contact?, contacts: [Contact]) {
+            
+            self.selfContact = selfContact
+            self.contacts = contacts
+        }
     }
     
     class Contact: ObservableObject, Identifiable, Hashable {
-        
+     
         let id = UUID()
         let fullName: String?
         let phone: String
@@ -140,7 +133,7 @@ class ContactsViewModel: ObservableObject {
             self.action = action
         }
         
-        static func == (lhs: ContactsViewModel.Contact, rhs: ContactsViewModel.Contact) -> Bool {
+        static func == (lhs: Contact, rhs: Contact) -> Bool {
             
             lhs.fullName == rhs.fullName && lhs.phone == rhs.phone
         }
@@ -151,30 +144,73 @@ class ContactsViewModel: ObservableObject {
         }
     }
     
-    class TopListViewModel: Identifiable, Hashable {
+    class TopBanksViewModel {
         
-        let id = UUID()
-        let image: Image?
-        let name: String
-        let description: String?
+        let banks: [Bank]
         
-        internal init(image: Image?, name: String, description: String?) {
-            self.image = image
-            self.name = name
-            self.description = description
+        internal init(banks: [ContactsViewModel.TopBanksViewModel.Bank]) {
+            self.banks = banks
         }
         
-        static func == (lhs: ContactsViewModel.TopListViewModel, rhs: ContactsViewModel.TopListViewModel) -> Bool {
-            lhs.name == rhs.name && lhs.id == rhs.id
-        }
-        
-        func hash(into hasher: inout Hasher) {
+        struct Bank: Identifiable, Hashable {
+         
+            let id = UUID()
+            let image: Image?
+            let favorite: Bool
+            let name: String?
+            let bankName: String
+            let action: () -> Void
             
-            hasher.combine(name)
+            internal init(image: Image?, favorite: Bool, name: String?, bankName: String, action: @escaping () -> Void) {
+                
+                self.image = image
+                self.name = name
+                self.favorite = favorite
+                self.bankName = bankName
+                self.action = action
+            }
+            
+            static func == (lhs: Bank, rhs: Bank) -> Bool {
+                lhs.name == rhs.name && lhs.id == rhs.id
+            }
+            
+            func hash(into hasher: inout Hasher) {
+                
+                hasher.combine(name)
+            }
         }
     }
     
-    static func reduce(addressBookContact: [AddressBookContact]) -> [Contact] {
+    struct BanksListViewModel {
+        
+        let bank: [Bank]
+        
+        class Bank: Hashable, Identifiable {
+            
+            let id = UUID()
+            let title: String
+            let image: Image?
+            let action: () -> Void
+            
+            internal init(title: String, image: Image?, action: @escaping () -> Void) {
+                
+                self.title = title
+                self.image = image
+                self.action = action
+            }
+            
+            static func == (lhs: Bank, rhs: Bank) -> Bool {
+                lhs.id == rhs.id && lhs.title == rhs.title
+            }
+            
+            func hash(into hasher: inout Hasher) {
+                
+                hasher.combine(title)
+            }
+        }
+    }
+    
+    static func reduce(addressBookContact: [AddressBookContact]) -> ContactsListViewModel {
         
         var contacts = [Contact]()
         
@@ -187,13 +223,25 @@ class ContactsViewModel: ObservableObject {
             return contact < secondContact
         })
         
-        return contacts
+        let contactsViewModel = ContactsListViewModel(selfContact: nil, contacts: contacts)
+        return contactsViewModel
+    }
+    
+    static func reduceBanks(bankData: [BankData]) -> [BanksListViewModel.Bank] {
+        
+        var banks = [BanksListViewModel.Bank]()
+        
+        banks = bankData.map({BanksListViewModel.Bank.init(title: $0.memberNameRus, image: $0.svgImage.image, action: {})})
+        
+        return banks
     }
 }
 
 extension ContactsViewModel {
     
-    static let sample: ContactsViewModel = .init(.emptyMock, contacts: [.init(phone: "+7 925 279 86 13", firstName: "Иван", middleName: "Иванович", lastName: "Иванов", avatar: nil), .init(phone: "+7 925 279 86 13", firstName: "Иван", middleName: "Иванович", lastName: "Иванов", avatar: nil)], searchViewModel: .init(placeHolder: .contacts), selfContact: .init(fullName: "Себе", image: nil, phone: "+7 925 279 86 13", icon: nil, action: {}), topListViewModel: [.init(image: nil, name: "+7 925 279 86 13", description: nil)])
+    static let sample: ContactsViewModel = .init(.emptyMock, searchBar: .init(placeHolder: .contacts), mode: .contactsSearch(.init(selfContact: .init(fullName: "Себе", image: nil, phone: "8 (925) 279 96-13", icon: nil, action: {}), contacts: [.init(fullName: "Андрей Андропов", image: nil, phone: "+7 (903) 333-67-32", icon: nil, action: {})])))
     
-    static let emptyNameSample: ContactsViewModel = .init(.emptyMock, contacts: [.init(phone: "+7 925 279 86 13", firstName: nil, middleName: nil, lastName: nil, avatar: nil), .init(phone: "+7 925 279 86 13", firstName: "Иван", middleName: "Иванович", lastName: "Иванов", avatar: nil)], searchViewModel: .init(isEditing: true, placeHolder: .contacts), selfContact: nil, topListViewModel: nil)
+    static let sampleLatestPayment: ContactsViewModel = .init(.emptyMock, searchBar: .init(placeHolder: .contacts), mode: .contacts(.init(items: [.latestPayment(.init(id: 5, avatar: .icon(Image("ic24Smartphone"), .iconGray), topIcon: Image("azerFlag"), description: "+994 12 493 23 87", action: {}))], model: .emptyMock), .init(selfContact: .init(fullName: "Себе", image: nil, phone: "8 (925) 279 96-13", icon: nil, action: {}), contacts: [.init(fullName: "Андрей Андропов", image: nil, phone: "+7 (903) 333-67-32", icon: nil, action: {})])))
+    
+    static let sampleBanks: ContactsViewModel = .init(.emptyMock, searchBar: .init(placeHolder: .contacts), mode: .banks("phone", .init(banks: [.init(image: nil, favorite: false, name: "Юрка Б.", bankName: "ЛокоБанк", action: {}), .init(image: nil, favorite: true, name: "Юрка Б.", bankName: "Сбербанк", action: {}), .init(image: nil, favorite: false, name: nil, bankName: "Тинькофф", action: {})]), .init(bank: [.init(title: "Эвокабанк", image: nil, action: {}), .init(title: "Ардшидбанк", image: nil, action: {}), .init(title: "IDBank", image: nil, action: {})])))
 }

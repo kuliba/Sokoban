@@ -20,51 +20,179 @@ struct ContactsView: View {
                 Text(viewModel.title)
                     .font(.textH3SB18240())
                 
-                SearchBarComponent(viewModel: viewModel.searchViewModel)
+                SearchBarComponent(viewModel: viewModel.searchBar)
                 
             }
             .padding(.horizontal, 20)
             
-            if let topList = viewModel.topListViewModel {
+            switch viewModel.mode {
+            
+            case let .contactsSearch(contacts):
+                
+                ContactListView(viewModel: contacts)
+                
+            case let .contacts(latestPayments, contacts):
+                
+                LatestPaymentsViewComponent(viewModel: latestPayments)
+                
+                ContactListView(viewModel: contacts)
+                
+            case let .banks(phone, topBanks, banksList):
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     
-                    ForEach(topList, id: \.self) { item in
-                        
-                        VStack {
+                    HStack(alignment: .top, spacing: 4) {
+                     
+                        ForEach(topBanks.banks, id: \.self) { bank in
                             
-                            if let image = item.image {
+                            Button {
                                 
-                                image
-                                    .resizable()
-                                    .frame(width: 56, height: 56, alignment: .center)
-                            } else {
+                                bank.action()
+                                
+                            } label: {
                                 
                                 ZStack {
                                     
-                                    Color.mainColorsGrayLightest
-                                        .frame(width: 56, height: 56, alignment: .center)
-                                        .cornerRadius(90)
+                                    VStack(spacing: 8) {
+                                        
+                                        if let image = bank.image {
+                                            
+                                            ZStack {
+                                                
+                                                image
+                                                    .resizable()
+                                                    .frame(width: 56, height: 56, alignment: .center)
+                                                    .cornerRadius(90)
+                                            }
+
+                                        } else {
+                                            ZStack {
+                                                
+                                                Color.mainColorsGrayLightest
+                                                    .frame(width: 56, height: 56, alignment: .center)
+                                                    .cornerRadius(90)
+                                                
+                                            }
+                                        }
+                                        
+                                        VStack(spacing: 4) {
+                                            
+                                            if let title = bank.name {
+                                                
+                                                Text(title)
+                                                    .font(.textBodyXSSB11140())
+                                                    .foregroundColor(Color.textSecondary)
+                                            }
+                                            
+                                            Text(bank.bankName)
+                                                .foregroundColor(Color.textPlaceholder)
+                                                .font(.textBodyXSR11140())
+                                        }
+                                    }
                                     
-                                    Image.ic24Smartphone
+                                    if bank.favorite {
+                                        
+                                        ZStack {
+                                            
+                                            Color.mainColorsBlack
+                                                .frame(width: 24, height: 24, alignment: .top)
+                                                .cornerRadius(90)
+                                            
+                                            Image.ic24Star
+                                                .resizable()
+                                                .frame(width: 16, height: 16, alignment: .center)
+                                                .foregroundColor(Color.mainColorsWhite)
+                                        }
+                                        .offset(x: 25, y: -35)
+                                    }
                                 }
-                            }
-                            
-                            Text(item.name)
-                                .foregroundColor(Color.textSecondary)
-                                .lineLimit(5)
-                                .font(.system(size: 12))
-                            
-                            if let description = item.description {
-                             
-                                Text(description)
+                                .frame(width: 80)
                             }
                         }
-                        .frame(width: 82)
                     }
                 }
                 .padding(.horizontal, 20)
+                
+                Divider()
+                    .frame(height: 1)
+                
+                CollapsebleView()
+                
+                OptionSelectorView(viewModel: .init(options: [.init(id: "Российские", name: "Российские"), .init(id: "Иностранные", name: "Иностранные"), .init(id: "Все", name: "Все")], selected: "Иностранные", style: .template))
+                    .padding()
+                
+                ScrollView(.vertical, showsIndicators: false) {
+                    
+                    VStack(spacing: 24) {
+                        
+                        ForEach(banksList.bank, id: \.self) { bank in
+
+                            Button {
+
+                                bank.action()
+                            } label: {
+
+                                BankView(viewModel: bank)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 50)
+                }
             }
+        }
+    }
+}
+
+extension ContactsView {
+    
+    struct CollapsebleView: View {
+        
+        var body: some View {
+            
+            HStack(alignment: .center, spacing: 8.5) {
+            
+                Image.ic24Bank
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                
+                Text("В другой банк")
+                    .foregroundColor(Color.textSecondary)
+                    .font(.textH3SB18240())
+                
+                Spacer()
+                
+                Button {
+                    
+                } label: {
+                    
+                    Image.ic24Search
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(Color.iconGray)
+                    
+                }
+                
+                Button {
+                    
+                } label: {
+                    
+                    Image.ic24ChevronDown
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(Color.iconGray)
+                    
+                }
+            }
+            .padding(.horizontal, 20)
+        }
+    }
+    
+    struct ContactListView: View {
+        
+        @ObservedObject var viewModel: ContactsViewModel.ContactsListViewModel
+        
+        var body: some View {
             
             if let selfContact = viewModel.selfContact {
                 
@@ -76,7 +204,7 @@ struct ContactsView: View {
                     selfContact.action()
                 } label: {
                     
-                    ContactView(viewModel: selfContact)
+                    ContactListView.ContactView(viewModel: selfContact)
                         .padding(.horizontal, 20)
                 }
                 
@@ -89,31 +217,94 @@ struct ContactsView: View {
                 VStack(spacing: 24) {
                     
                     ForEach(viewModel.contacts, id: \.self) { contact in
-                        
+
                         Button {
-                            
+
                             contact.action()
                         } label: {
-                            
+
                             ContactView(viewModel: contact)
                         }
                     }
                 }
-                .padding(.bottom, 50)
-                .padding(.horizontal, 20)
+            }
+            .padding(.horizontal, 20)
+            .padding(.bottom, 50)
+        }
+        
+        struct ContactView: View {
+            
+            @ObservedObject var viewModel: ContactsViewModel.Contact
+            
+            var body: some View {
+                
+                HStack(alignment: .center, spacing: 20) {
+                    
+                    if let avatar = viewModel.image {
+                        
+                        avatar
+                            .resizable()
+                            .frame(width: 40, height: 40, alignment: .center)
+                            .cornerRadius(90)
+                        
+                    } else {
+                        
+                        IconPlaceholder()
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        
+                        if let fullName = viewModel.fullName {
+                            
+                            Text(fullName)
+                                .foregroundColor(Color.textSecondary)
+                                .lineLimit(1)
+                                .font(.system(size: 16))
+                        }
+                        
+                        if let phone = viewModel.phone {
+                            
+                            Text(phone)
+                                .foregroundColor(Color.textPlaceholder)
+                                .font(.system(size: 12))
+                        }
+                    }
+                    
+                    Spacer()
+                    
+                    if let icon = viewModel.icon {
+                        
+                        icon
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                    }
+                }
+            }
+            
+            struct IconPlaceholder: View {
+                
+                var body: some View {
+                
+                    ZStack {
+                     
+                        Color.mainColorsGrayLightest
+                            .frame(width: 40, height: 40, alignment: .center)
+                            .cornerRadius(90)
+                        
+                        Image.ic24Smartphone
+                            .foregroundColor(Color.textPlaceholder)
+                    }
+                }
             }
         }
     }
-}
-
-extension ContactsView {
     
-    struct ContactView: View {
+    struct BankView: View {
         
-        @ObservedObject var viewModel: ContactsViewModel.Contact
+        let viewModel: ContactsViewModel.BanksListViewModel.Bank
         
         var body: some View {
-            
+           
             HStack(alignment: .center, spacing: 20) {
                 
                 if let avatar = viewModel.image {
@@ -125,51 +316,20 @@ extension ContactsView {
                     
                 } else {
                     
-                    IconPlaceholder()
-                }
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    
-                    if let fullName = viewModel.fullName {
-                        
-                        Text(fullName)
-                            .foregroundColor(Color.textSecondary)
-                            .lineLimit(1)
-                            .font(.system(size: 16))
-                    }
-                    
-                    if let phone = viewModel.phone {
-                        
-                        Text(phone)
-                            .foregroundColor(Color.textPlaceholder)
-                            .font(.system(size: 12))
-                    }
-                }
-                
-                Spacer()
-                
-                if let icon = viewModel.icon {
-                    
-                    icon
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                }
-            }
-        }
-        
-        struct IconPlaceholder: View {
-            
-            var body: some View {
-            
-                ZStack {
-                 
                     Color.mainColorsGrayLightest
                         .frame(width: 40, height: 40, alignment: .center)
                         .cornerRadius(90)
-                    
-                    Image.ic24Smartphone
-                        .foregroundColor(Color.textPlaceholder)
                 }
+                
+                VStack(alignment: .leading, spacing: 8) {
+                        
+                    Text(viewModel.title)
+                            .foregroundColor(Color.textSecondary)
+                            .lineLimit(1)
+                            .font(.system(size: 16))
+                }
+                
+                Spacer()
             }
         }
     }
@@ -181,12 +341,13 @@ struct ContactsView_Previews: PreviewProvider {
         Group {
             
             ContactsView(viewModel: .sample)
-                .previewLayout(.fixed(width: 375, height: 400))
                 .previewDisplayName("Contacts List")
-            
-            ContactsView(viewModel: .emptyNameSample)
-                .previewLayout(.fixed(width: 375, height: 400))
-                .previewDisplayName("Empty Name Contact")
+
+            ContactsView(viewModel: .sampleLatestPayment)
+                .previewDisplayName("Contacts List")
+
+            ContactsView(viewModel: .sampleBanks)
+                .previewDisplayName("Contact List Banks")
         }
     }
 }
