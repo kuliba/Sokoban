@@ -37,7 +37,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     init(model: Model) {
         self.navButtonsRight = []
         self.sections = [
-            PTSectionLatestPaymentsView.ViewModel(model: model),
+            LatestPaymentsViewComponent.ViewModel(model: model),
             PTSectionTransfersView.ViewModel(),
             PTSectionPaymentsView.ViewModel()
         ]

@@ -11,7 +11,7 @@ import Shimmer
 
 //MARK: Section ViewModel
 
-extension PTSectionLatestPaymentsView {
+extension LatestPaymentsViewComponent {
     
     class ViewModel: PaymentsTransfersSectionViewModel {
         
@@ -206,7 +206,7 @@ enum PTSectionLatestPaymentsViewAction {
 
 //MARK: Section View
 
-struct PTSectionLatestPaymentsView: View {
+struct LatestPaymentsViewComponent: View {
     
     @ObservedObject
     var viewModel: ViewModel
@@ -247,7 +247,7 @@ struct PTSectionLatestPaymentsView: View {
 
 //MARK: - PlaceholderView
 
-extension PTSectionLatestPaymentsView {
+extension LatestPaymentsViewComponent {
     
     struct PlaceholderView: View {
         
@@ -279,7 +279,7 @@ extension PTSectionLatestPaymentsView {
 
 //MARK: - LatestPaymentButtonView
 
-extension PTSectionLatestPaymentsView {
+extension LatestPaymentsViewComponent {
     
     struct LatestPaymentButtonView: View {
         
@@ -377,7 +377,7 @@ extension LatestPaymentData.Kind {
 
 //MARK: LatestPaymentButtonVM init
 
-extension PTSectionLatestPaymentsView.ViewModel.LatestPaymentButtonVM {
+extension LatestPaymentsViewComponent.ViewModel.LatestPaymentButtonVM {
     
     init(data: LatestPaymentData, model: Model, action: @escaping () -> Void) {
         
@@ -533,7 +533,7 @@ struct PTSectionLatestPaymentsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PTSectionLatestPaymentsView(viewModel: .sample)
+        LatestPaymentsViewComponent(viewModel: .sample)
             .previewLayout(.fixed(width: 350, height: 150))
             .previewDisplayName("Section LatestPayments")
     }
