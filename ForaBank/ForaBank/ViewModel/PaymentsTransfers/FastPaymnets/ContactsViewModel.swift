@@ -7,8 +7,11 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
-class ContactsViewModel {
+class ContactsViewModel: ObservableObject {
+    
+    let action: PassthroughSubject<Action, Never> = .init()
     
     let title = "Выберите контакт"
     let contacts: [Contact]
@@ -16,37 +19,125 @@ class ContactsViewModel {
     let topListViewModel: [TopListViewModel]?
     @Published var selfContact: Contact?
     
-    init(_ model: Model, searchViewModel: SearchBarComponent.ViewModel, selfContact: Contact?, topListViewModel: [TopListViewModel]?) {
+    private let model: Model
+    private var bindings = Set<AnyCancellable>()
+    
+    init(_ model: Model, searchViewModel: SearchBarComponent.ViewModel, topListViewModel: [TopListViewModel]?) {
         
+        self.model = model
         self.searchViewModel = searchViewModel
         let contacts = Self.reduce(addressBookContact: model.contactsAgent.fetchContactsList())
         self.contacts = contacts
-        self.selfContact = selfContact
+        self.selfContact = nil
         self.topListViewModel = topListViewModel
+        
+        if model.clientInfo.value == nil {
+            
+            self.model.action.send(ModelAction.ClientInfo.Fetch.Request())
+        }
+        
+        bind()
     }
     
-    init(contacts: [AddressBookContact], searchViewModel: SearchBarComponent.ViewModel, selfContact: Contact?, topListViewModel: [TopListViewModel]?) {
+    init(_ model: Model, contacts: [AddressBookContact], searchViewModel: SearchBarComponent.ViewModel, selfContact: Contact?, topListViewModel: [TopListViewModel]?) {
         
+        self.model = model
         self.searchViewModel = searchViewModel
         self.contacts = Self.reduce(addressBookContact: contacts)
         self.selfContact = selfContact
         self.topListViewModel = topListViewModel
     }
     
-    class Contact: Identifiable, Hashable {
+    private func bind() {
+
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                switch action {
+                case let payload as ModelAction.OwnerPhone.Response:
+                    
+                    switch payload {
+                    case let .success(phone):
+                        
+                        for contact in contacts {
+                            if contact.phone == phone {
+                        
+                                withAnimation {
+                                    
+                                    contact.icon = Image("foraContactImage")
+                                }
+                            }
+                        } 
+                    }
+                    
+                default: break
+                }
+            }.store(in: &bindings)
+        
+        model.clientInfo
+            .combineLatest(model.clientInfo)
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] data in
+                
+                let clientInfo = data.0
+                
+                if let phone = clientInfo?.phone {
+                    
+                    withAnimation(.easeInOut(duration: 1)) {
+                        self.selfContact = .init(fullName: "Себе", image: nil, phone: phone, icon: nil, action: {
+                            
+                            self.searchViewModel.text = phone.description
+                        })
+                        
+                    }
+                }
+                
+            }.store(in: &bindings)
+        
+        model.clientPhoto
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] clientPhotoData in
+                
+                if let photoData = clientPhotoData?.photo, let image = photoData.image{
+                    
+                    self.selfContact?.image = image
+                }
+                
+            }.store(in: &bindings)
+        
+        model.latestPayments
+            .combineLatest(model.latestPaymentsUpdating)
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] data in
+                
+                let latestPayments = data.0
+                
+                let latestPaymentsFilterred = latestPayments.filter({ $0.type == .phone })
+                
+                withAnimation(.easeInOut(duration: 1)) {
+                    
+                    //TODO: reduce last payments
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    class Contact: ObservableObject, Identifiable, Hashable {
         
         let id = UUID()
         let fullName: String?
         let phone: String
-        let image: Image?
+        var image: Image?
         @Published var icon: Image?
+        let action: () -> Void
         
-        internal init(fullName: String?, image: Image?, phone: String) {
+        internal init(fullName: String?, image: Image?, phone: String, icon: Image?, action: @escaping () -> Void) {
             
             self.phone = phone
             self.fullName = fullName
             self.image = image
-            self._icon = .init(initialValue: .ic24LogoForaColor)
+            self.icon = icon
+            self.action = action
         }
         
         static func == (lhs: ContactsViewModel.Contact, rhs: ContactsViewModel.Contact) -> Bool {
@@ -87,11 +178,14 @@ class ContactsViewModel {
         
         var contacts = [Contact]()
         
-        for contact in addressBookContact {
+        contacts = addressBookContact.map({ Contact(fullName: $0.fullName, image: $0.avatar?.image, phone: $0.phone, icon: nil, action: {} )})
         
-            contacts.append(.init(fullName: contact.fullName, image: contact.avatar?.image, phone: contact.phone))
-            
-        }
+        contacts = contacts.sorted(by: {
+            guard let contact = $0.fullName, let secondContact = $1.fullName else {
+                return false
+            }
+            return contact < secondContact
+        })
         
         return contacts
     }
@@ -99,7 +193,7 @@ class ContactsViewModel {
 
 extension ContactsViewModel {
     
-    static let sample: ContactsViewModel = .init(contacts: [.init(phone: "+7 925 279 86 13", firstName: "Иван", middleName: "Иванович", lastName: "Иванов", avatar: nil), .init(phone: "+7 925 279 86 13", firstName: "Иван", middleName: "Иванович", lastName: "Иванов", avatar: nil)], searchViewModel: .init(placeHolder: .contacts), selfContact: .init(fullName: "Себе", image: nil, phone: "+7 925 279 86 13"), topListViewModel: [.init(image: nil, name: "+7 925 279 86 13", description: nil)])
+    static let sample: ContactsViewModel = .init(.emptyMock, contacts: [.init(phone: "+7 925 279 86 13", firstName: "Иван", middleName: "Иванович", lastName: "Иванов", avatar: nil), .init(phone: "+7 925 279 86 13", firstName: "Иван", middleName: "Иванович", lastName: "Иванов", avatar: nil)], searchViewModel: .init(placeHolder: .contacts), selfContact: .init(fullName: "Себе", image: nil, phone: "+7 925 279 86 13", icon: nil, action: {}), topListViewModel: [.init(image: nil, name: "+7 925 279 86 13", description: nil)])
     
-    static let emptyNameSample: ContactsViewModel = .init(contacts: [.init(phone: "+7 925 279 86 13", firstName: nil, middleName: nil, lastName: nil, avatar: nil), .init(phone: "+7 925 279 86 13", firstName: "Иван", middleName: "Иванович", lastName: "Иванов", avatar: nil)], searchViewModel: .init(isEditing: true, placeHolder: .contacts), selfContact: nil, topListViewModel: nil)
+    static let emptyNameSample: ContactsViewModel = .init(.emptyMock, contacts: [.init(phone: "+7 925 279 86 13", firstName: nil, middleName: nil, lastName: nil, avatar: nil), .init(phone: "+7 925 279 86 13", firstName: "Иван", middleName: "Иванович", lastName: "Иванов", avatar: nil)], searchViewModel: .init(isEditing: true, placeHolder: .contacts), selfContact: nil, topListViewModel: nil)
 }

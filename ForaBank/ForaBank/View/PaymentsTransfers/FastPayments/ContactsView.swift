@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContactsView: View {
     
-    let viewModel: ContactsViewModel
+    @ObservedObject var viewModel: ContactsViewModel
     
     var body: some View {
         
@@ -71,8 +71,14 @@ struct ContactsView: View {
                 Divider()
                     .frame(height: 1)
                 
-                ContactView(viewModel: selfContact)
-                    .padding(.horizontal, 20)
+                Button {
+                    
+                    selfContact.action()
+                } label: {
+                    
+                    ContactView(viewModel: selfContact)
+                        .padding(.horizontal, 20)
+                }
                 
                 Divider()
                     .frame(height: 1)
@@ -84,7 +90,13 @@ struct ContactsView: View {
                     
                     ForEach(viewModel.contacts, id: \.self) { contact in
                         
-                        ContactView(viewModel: contact)
+                        Button {
+                            
+                            contact.action()
+                        } label: {
+                            
+                            ContactView(viewModel: contact)
+                        }
                     }
                 }
                 .padding(.bottom, 50)
@@ -98,7 +110,7 @@ extension ContactsView {
     
     struct ContactView: View {
         
-        let viewModel: ContactsViewModel.Contact
+        @ObservedObject var viewModel: ContactsViewModel.Contact
         
         var body: some View {
             
@@ -139,6 +151,8 @@ extension ContactsView {
                 if let icon = viewModel.icon {
                     
                     icon
+                        .resizable()
+                        .frame(width: 24, height: 24)
                 }
             }
         }

@@ -51,6 +51,19 @@ extension ModelAction {
             }
         }
     }
+    
+    enum OwnerPhone {
+        
+        struct Request: Action {
+            
+            let phone: String
+        }
+        
+        enum Response: Action {
+            
+            case success(phone: String)
+        }
+    }
 }
 
 //MARK: - Handlers
@@ -120,6 +133,41 @@ extension Model {
                         
                         self.action.send(ModelAction.Card.Block.Response.failure(message: error))
                     }
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+            case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
+                
+            }
+        }
+    }
+    
+    func handleOwnerPhoneRequest(_ payload: ModelAction.OwnerPhone.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.CardController.GetOwnerPhoneNumber(token: token, payload: .init(phoneNumber: payload.phone))
+        serverAgent.executeCommand(command: command) { result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        self.handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    if data != "" {
+                        
+                        self.action.send(ModelAction.OwnerPhone.Response.success(phone: payload.phone))
+                    }
+                    
+                default:
+
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
             case .failure(let error):

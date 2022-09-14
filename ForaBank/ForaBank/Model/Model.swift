@@ -558,6 +558,11 @@ class Model {
                 case let payload as ModelAction.Settings.UpdateProductsHidden:
                     handleUpdateProductsHidden(payload.productID)
                     
+                    //MARK: - Card
+                
+                case let payload as ModelAction.OwnerPhone.Request:
+                    handleOwnerPhoneRequest(payload)
+                    
                     //MARK: - Notifications
                        
                 case _ as ModelAction.Notification.Fetch.New.Request:
