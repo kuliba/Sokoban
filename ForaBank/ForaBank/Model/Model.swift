@@ -585,6 +585,9 @@ class Model {
                 case _ as ModelAction.LatestPayments.List.Requested:
                     handleLatestPaymentsListRequest()
                     
+                case let payload as ModelAction.LatestPayments.BanksList.Request:
+                    handleGetBanksListByPhoneRequest(payload)
+                    
                     //MARK: - Templates Actions
                     
                 case _ as ModelAction.PaymentTemplate.List.Requested:

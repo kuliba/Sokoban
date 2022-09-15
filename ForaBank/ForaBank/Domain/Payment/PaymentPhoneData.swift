@@ -12,4 +12,5 @@ struct PaymentPhoneData: Codable, Equatable {
 	let bankId: String?
 	let bankName: String?
 	let payment: Bool?
+    let defaultBank: Bool?
 }

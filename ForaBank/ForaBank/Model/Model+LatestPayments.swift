@@ -22,6 +22,19 @@ extension ModelAction {
             }
         
         }
+        
+        enum BanksList {
+            
+            struct Request: Action {
+                
+                let phone: String
+            }
+            
+            struct Response: Action {
+                
+                let result: Result<[PaymentPhoneData], Error>
+            }
+        }
     }
 }
 
@@ -89,6 +102,43 @@ extension Model {
                                 .Response(result: .failure(error)))
             }
             
+        }
+    }
+    
+    func handleGetBanksListByPhoneRequest(_ payload: ModelAction.LatestPayments.BanksList.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.PaymentOperationDetailContoller.GetLatestPhonePayments(token: token, payload: .init(phoneNumber: payload.phone))
+        
+        serverAgent.executeCommand(command: command) { result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        self.handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    self.action.send(ModelAction.LatestPayments.BanksList.Response(result: .success(data)))
+                    
+                default:
+                    if let errorMessage = response.errorMessage {
+
+                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: errorMessage)
+                    } else {
+                        
+                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: nil)
+                    }
+                }
+            case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
+            }
         }
     }
 }

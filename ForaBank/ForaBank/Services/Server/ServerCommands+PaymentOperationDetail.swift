@@ -176,13 +176,13 @@ extension ServerCommands {
         struct GetLatestPhonePayments: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/getLatestPhonePayments"
+            let endpoint = "/rest/getLatestPhonePaymentsWithDefaultBank"
             let method: ServerCommandMethod = .post
             let payload: Payload?
             
             struct Payload: Encodable {
                 
-                let phoneNumber: String?
+                let phoneNumber: String
             }
             
             struct Response: ServerResponse {
