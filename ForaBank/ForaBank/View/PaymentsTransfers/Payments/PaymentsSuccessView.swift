@@ -120,13 +120,13 @@ extension PaymentsSuccessView {
             
             ZStack {
                 
-                viewModel.color
+                Circle()
+                    .foregroundColor(viewModel.color)
+                
                 viewModel.image
                     .foregroundColor(.mainColorsWhite)
-                    .frame(width: viewModel.size.width, height: viewModel.size.height)
-            }
-            .cornerRadius(44)
-            .frame(width: 88, height: 88)
+                
+            }.frame(width: 88, height: 88)
         }
     }
     

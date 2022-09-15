@@ -27,34 +27,39 @@ extension PaymentsSuccessViewModel.OptionViewModel {
     static let sample2: OptionViewModel = .init(image: .ic24Coins, title: "Сумма операции", subTitle: nil, description: "16 006,22 ₽")
 }
 
+extension ButtonSimpleView.ViewModel {
+    
+    static let sample: ButtonSimpleView.ViewModel = .init(title: "На главную", style: .red, action: {})
+}
+
 // MARK: - ViewModel
 
 extension PaymentsSuccessViewModel {
-    
-    static let sample1: PaymentsSuccessViewModel = .init(.emptyMock, iconType: .success, title: "Успешный перевод", amount: 1000, optionButtons: [.sample1, .sample2, .sample3], dismissAction: {}
+
+    static let sample1: PaymentsSuccessViewModel = .init(iconType: .success, title: "Успешный перевод", amount: "1 000 ₽", optionButtons: [.sample1, .sample2, .sample3], actionButton: .sample
     )
     
-    static let sample2: PaymentsSuccessViewModel = .init(.emptyMock, iconType: .accepted, title: "Платеж принят в обработку", amount: 1000, optionButtons: [.sample1, .sample3], dismissAction: {}
+    static let sample2: PaymentsSuccessViewModel = .init(iconType: .accepted, title: "Платеж принят в обработку", amount: "1 000 ₽", optionButtons: [.sample1, .sample3], actionButton: .sample
     )
     
-    static let sample3: PaymentsSuccessViewModel = .init(.emptyMock, iconType: .error, title: "Операция неуспешна!", amount: 1000, optionButtons: [.sample3], repeatButton: .init(title: "Повторить", style: .gray, action: {}), dismissAction: {}
+    static let sample3: PaymentsSuccessViewModel = .init(iconType: .error, title: "Операция неуспешна!", amount: "1 000 ₽", repeatButton: .init(title: "Повторить", style: .gray, action: {}), optionButtons: [.sample3], actionButton: .sample
     )
     
-    static let sample4: PaymentsSuccessViewModel = .init(.emptyMock, iconType: .accepted, title: "Платеж принят в обработку", amount: 1000, options: nil, logo: .init(title: "сбп", image: .ic40Sbp), warningTitle: nil, optionButtons: [.sample3], dismissAction: {}
+    static let sample4: PaymentsSuccessViewModel = .init(iconType: .accepted, title: "Платеж принят в обработку", amount: "1 000 ₽", options: nil, logo: .init(title: "сбп", image: .ic40Sbp), optionButtons: [.sample3], actionButton: .sample
     )
     
-    static let sample5: PaymentsSuccessViewModel = .init(.emptyMock, iconType: .accepted, title: "Операция в обработке!", amount: nil, options: [.sample1, .sample2], logo: .init(title: "сбп", image: .ic40Sbp), warningTitle: nil, optionButtons: [.sample2, .sample3], dismissAction: {}
+    static let sample5: PaymentsSuccessViewModel = .init(iconType: .accepted, title: "Операция в обработке!", amount: nil, options: [.sample1, .sample2], logo: .init(title: "сбп", image: .ic40Sbp), warningTitle: nil, optionButtons: [.sample2, .sample3], actionButton: .sample
     )
     
-    static let sample6: PaymentsSuccessViewModel = .init(.emptyMock, iconType: .accepted, title: "Время на подтверждение перевода вышло", amount: 1000, options: nil, logo: .init(title: "сбп", image: .ic40Sbp), warningTitle: "Перевод отменен!", optionButtons: [], dismissAction: {}
+    static let sample6: PaymentsSuccessViewModel = .init(iconType: .accepted, title: "Время на подтверждение перевода вышло", amount: "1 000 ₽", options: nil, logo: .init(title: "сбп", image: .ic40Sbp), warningTitle: "Перевод отменен!", optionButtons: [], actionButton: .sample
     )
     
-    static let sample7: PaymentsSuccessViewModel = .init(.emptyMock, iconType: .accepted, title: nil, amount: 1000, options: nil, logo: .init(title: "сбп", image: .ic40Sbp), warningTitle: "Перевод отменен!", optionButtons: [], dismissAction: {}
+    static let sample7: PaymentsSuccessViewModel = .init(iconType: .accepted, title: nil, amount: "1 000 ₽", options: nil, logo: .init(title: "сбп", image: .ic40Sbp), warningTitle: "Перевод отменен!", optionButtons: [], actionButton: .sample
     )
     
-    static let sample8: PaymentsSuccessViewModel = .init(.emptyMock, iconType: .accepted, title: "Запрос на пополнение со своего счета принят", amount: 500, service: .init(title: "Из банка:", description: "Сбербанк"), optionButtons: [], logo: .init(title: "сбп", image: .ic40Sbp), dismissAction: {}
+    static let sample8: PaymentsSuccessViewModel = .init(iconType: .accepted, title: "Запрос на пополнение со своего счета принят", amount: "500 ₽", service: .init(title: "Из банка:", description: "Сбербанк"), logo: .init(title: "сбп", image: .ic40Sbp), optionButtons: [], actionButton: .sample
     )
     
-    static let sample9: PaymentsSuccessViewModel = .init(.emptyMock, iconType: .accepted, title: "Запрос на пополнение со своего счета принят в обработку", amount: 500, service: .init(title: "Из банка:", description: "Сбербанк"), optionButtons: [], logo: .init(title: "сбп", image: .ic40Sbp), dismissAction: {}
+    static let sample9: PaymentsSuccessViewModel = .init(iconType: .accepted, title: "Запрос на пополнение со своего счета принят в обработку", amount: "500 ₽", service: .init(title: "Из банка:", description: "Сбербанк"), logo: .init(title: "сбп", image: .ic40Sbp), optionButtons: [], actionButton: .sample
     )
 }

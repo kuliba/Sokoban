@@ -53,38 +53,6 @@ extension NumberFormatter {
         return formatter
     }
     
-    static func currency(_ value: Double) -> String {
-        
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.maximumFractionDigits = 0
-        formatter.minimumFractionDigits = 2
-        formatter.locale = Locale(identifier: "ru_RU")
-        
-        if let string = formatter.string(from: NSNumber(value: value)) {
-            return string
-        }
-        
-        return String(value)
-    }
-    
-    static func currency(_ value: Double?) -> String? {
-        
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.maximumFractionDigits = 0
-        formatter.minimumFractionDigits = 2
-        formatter.locale = Locale(identifier: "ru_RU")
-        
-        if let value = value {
-            
-            let string = formatter.string(from: NSNumber(value: value))
-            return string
-        }
-        
-        return nil
-    }
-    
     static func decimal(_ value: Double) -> String {
         
         let currencyFormatter = NumberFormatter()

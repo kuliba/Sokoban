@@ -27,40 +27,36 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(iconType: IconTypeViewModel, title: String?, amount: String?, service: ServiceViewModel?, options: [OptionViewModel]?, logo: LogoIconViewModel?, warningTitle: String?, optionButtons: [PaymentsSuccessOptionButtonViewModel], repeatButton: ButtonSimpleView.ViewModel?, actionButton: ButtonSimpleView.ViewModel, model: Model = .emptyMock) {
+    init(model: Model = .emptyMock,
+         iconType: IconTypeViewModel,
+         title: String? = nil,
+         amount: String? = nil,
+         service: ServiceViewModel? = nil,
+         options: [OptionViewModel]? = nil,
+         logo: LogoIconViewModel? = nil,
+         warningTitle: String? = nil,
+         repeatButton: ButtonSimpleView.ViewModel? = nil,
+         optionButtons: [PaymentsSuccessOptionButtonViewModel],
+         actionButton: ButtonSimpleView.ViewModel) {
         
+        self.model = model
         self.iconType = iconType
         self.title = title
-        self.warningTitle = warningTitle
         self.amount = amount
         self.service = service
         self.options = options
         self.logo = logo
-        self.optionButtons = optionButtons
+        self.warningTitle = warningTitle
         self.repeatButton = repeatButton
+        self.optionButtons = optionButtons
         self.actionButton = actionButton
-        self.model = model
     }
     
     convenience init(_ model: Model, iconType: IconTypeViewModel, paymentSuccess: Payments.Success, dismissAction: @escaping () -> Void) {
         
-        let amount = NumberFormatter.currency(paymentSuccess.amount)
+        let amount = model.amountFormatted(amount: paymentSuccess.amount, currencyCode: nil, style: .normal)
         
-        self.init(iconType: iconType, title: paymentSuccess.status.description, amount: amount, service: nil, options: nil, logo: .init(title: "сбп", image: paymentSuccess.icon?.image ?? .ic40Sbp), warningTitle: nil, optionButtons: [], repeatButton: nil, actionButton: .init(title: "На главную", style: .red, action: dismissAction), model: model)
-    }
-    
-    convenience init(_ model: Model, iconType: IconTypeViewModel, title: String, amount: Double, service: ServiceViewModel? = nil, optionButtons: [PaymentsSuccessOptionButtonViewModel], logo: LogoIconViewModel? = nil, repeatButton: ButtonSimpleView.ViewModel? = nil, dismissAction: @escaping () -> Void) {
-        
-        let amount = NumberFormatter.currency(amount)
-        
-        self.init(iconType: iconType, title: title, amount: amount, service: service, options: nil, logo: logo, warningTitle: nil, optionButtons: optionButtons, repeatButton: repeatButton, actionButton: .init(title: "На главную", style: .red, action: dismissAction), model: model)
-    }
-
-    convenience init(_ model: Model, iconType: IconTypeViewModel, title: String?, amount: Double?, options: [OptionViewModel]?, logo: LogoIconViewModel?, warningTitle: String?, optionButtons: [PaymentsSuccessOptionButtonViewModel], dismissAction: @escaping () -> Void) {
-        
-        let amount = NumberFormatter.currency(amount)
-        
-        self.init(iconType: iconType, title: title, amount: amount, service: nil, options: options, logo: logo, warningTitle: warningTitle, optionButtons: optionButtons, repeatButton: nil, actionButton: .init(title: "На главную", style: .red, action: dismissAction), model: model)
+        self.init(model: model, iconType: iconType, title: paymentSuccess.status.description, amount: amount, logo: .init(title: "сбп", image: paymentSuccess.icon?.image ?? .ic40Sbp), optionButtons: [], actionButton: .init(title: "На главную", style: .red, action: dismissAction))
     }
 }
 
@@ -90,16 +86,6 @@ extension PaymentsSuccessViewModel {
             case .accepted: return .systemColorWarning
             case .transfer: return .systemColorWarning
             case .error: return .systemColorError
-            }
-        }
-        
-        var size: CGSize {
-            
-            switch self {
-            case .success: return .init(width: 40, height: 28)
-            case .accepted: return .init(width: 40, height: 40)
-            case .transfer: return .init(width: 18, height: 21)
-            case .error: return .init(width: 40, height: 40)
             }
         }
     }
