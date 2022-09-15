@@ -93,7 +93,7 @@ class PaymentsViewModel: ObservableObject {
                     
                     switch payload {
                     case .success(let paymentSuccess):
-                        successViewModel = PaymentsSuccessViewModel(model, paymentSuccess: paymentSuccess, dismissAction: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())})
+                        successViewModel = PaymentsSuccessViewModel(model, iconType: .success, paymentSuccess: paymentSuccess, dismissAction: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())})
                         
                     case .failure(let errorMessage):
                         self.action.send(PaymentsViewModelAction.Alert(message: errorMessage))
