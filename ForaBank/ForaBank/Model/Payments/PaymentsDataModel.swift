@@ -7,6 +7,8 @@
 
 import Foundation
 
+//MARK: - General
+
 enum Payments {
 
     enum Category: String {
@@ -42,6 +44,11 @@ enum Payments {
         case fns        = "iFora||6273"
         case fnsUin     = "iFora||7069"
     }
+}
+
+//MARK: - Parameter
+
+extension Payments {
     
     struct Parameter: Equatable, CustomDebugStringConvertible {
         
@@ -53,13 +60,111 @@ enum Payments {
         
         var debugDescription: String { "id: \(id), value: \(value != nil ? value! : "empty")" }
     }
+    
+    enum ParameterOnChangeAction {
+        
+        case none
+        case autoContinue
+        case updateParameters
+    }
 
+    enum ParameterPresentType {
+        
+        case none
+        case feed
+        case bottom
+    }
+}
+
+//MARK: - Operation
+
+extension Payments {
+    
     struct Operation {
         
         let service: Service
-        let parameters: [PaymentsParameterRepresentable]
-        let processed: [Parameter]
+        let source: Source
+        let steps: [Step]
     }
+}
+
+extension Payments.Operation {
+    
+    /// Source of operation
+    enum Source {
+        
+        /// started fresh operation with no source
+        case none
+        
+        /// operation started from template
+        case template(PaymentTemplateData.ID)
+        
+        /// operation started from latest operation
+        case latestPayment(LatestPaymentData.ID)
+    }
+    
+    /// Operation step
+    struct Step {
+        
+        /// Parameters provided on each operation step
+        let parameters: [PaymentsParameterRepresentable]
+        
+        /// Terms requred to process on this step
+        let terms: [Term]
+        
+        /// Parameters processed on this step
+        let processed: [Parameter]?
+        
+        struct Term {
+            
+            let parameterId: Parameter.ID
+            let impact: Impact
+        }
+        
+        enum Impact: Int {
+            
+            case rollback
+            case restart
+            case confirm
+        }
+
+        enum State {
+            
+            case pending([Parameter])
+            case complete
+            case impact(Impact)
+        }
+        
+        struct StateData {
+            
+            let current: Parameter
+            let processed: Parameter
+            let impact: Impact
+        }
+    }
+    
+    enum Action {
+        
+        // required parameters for step
+        case parameters(stepIndex: Int)
+        
+        // process parameters with transaction
+        case process(parameters: [Parameter], isBegin: Bool)
+        
+        // confirm transaction
+        case confirm(parameters: [Parameter])
+        
+        // restart operation
+        case restart
+        
+        // rollback operation to step
+        case rollback(stepIndex: Int)
+    }
+}
+
+//MARK: - Success
+
+extension Payments {
     
     struct Success {
 
@@ -89,6 +194,9 @@ enum Payments {
         
         static func amount(with response: TransferResponseBaseData, operation: Payments.Operation) throws -> Double {
         
+            //FIXME: - refactor
+            return 0
+            /*
             if let anywayTransferResponse = response as? TransferAnywayResponseData,
                 let amount = anywayTransferResponse.amount {
                 
@@ -102,10 +210,14 @@ enum Payments {
                 
                 throw Payments.Error.missingAmountParameter
             }
+             */
         }
         
         static func currency(with response: TransferResponseBaseData, operation: Payments.Operation) throws -> Currency {
         
+            //FIXME: - refactor
+            return .eur
+            /*
             if let anywayTransferResponse = response as? TransferAnywayResponseData,
                 let currencyValue = anywayTransferResponse.currencyAmount {
                 
@@ -119,6 +231,7 @@ enum Payments {
                 
                 throw Payments.Error.missingCurrency
             }
+             */
         }
         
         enum Status {
@@ -157,69 +270,6 @@ enum Payments {
     }
 }
 
-protocol PaymentsParameterRepresentable {
-
-    var parameter: Payments.Parameter { get }
-    
-    /// the paramreter can be edited
-    var isEditable: Bool { get }
-    
-    /// the parameter can be collapsed
-    var isCollapsable: Bool { get }
-    
-    /// the parameter can be hidden
-    var present: Payments.ParameterPresentType { get }
-    
-    /// action performed in case of parameter value change
-    var onChange: Payments.ParameterOnChangeAction { get }
-
-    /// type of processing the parameter during the execution of the transaction
-    var process: Payments.ParameterProcessType { get }
-    
-    func updated(value: String?) -> PaymentsParameterRepresentable
-    func updated(isEditable: Bool) -> PaymentsParameterRepresentable
-    func updated(present: Payments.ParameterPresentType) -> PaymentsParameterRepresentable
-}
-
-extension PaymentsParameterRepresentable {
-
-    var isEditable: Bool { false }
-    var isCollapsable: Bool { false }
-    var present: Payments.ParameterPresentType { .feed }
-    var onChange: Payments.ParameterOnChangeAction { .none }
-    var process: Payments.ParameterProcessType { .none }
-    
-    func updated(value: String?) -> PaymentsParameterRepresentable { self }
-    func updated(isEditable: Bool) -> PaymentsParameterRepresentable { self }
-    func updated(present: Payments.ParameterPresentType) -> PaymentsParameterRepresentable { self }
-}
-
-//MARK: - Parameter types
-
-extension Payments {
-    
-    enum ParameterOnChangeAction {
-        
-        case none
-        case autoContinue
-        case updateParameters
-    }
-
-    enum ParameterProcessType {
-        
-        case none
-        case initial
-        case step(Int)
-    }
-    
-    enum ParameterPresentType {
-        
-        case none
-        case feed
-        case bottom
-    }
-}
-
 //MARK: - Error
 
 extension Payments {
@@ -247,5 +297,7 @@ extension Payments {
         case anywayTransferFinalStepExpected
         case notAuthorized
         case unsupported
+        case operationAppendingIncorrectParametersTerms
+        case stepIncorrectParametersProcessed
     }
 }

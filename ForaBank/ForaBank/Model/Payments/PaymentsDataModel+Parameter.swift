@@ -7,6 +7,49 @@
 
 import Foundation
 
+//MARK: - Parameter Representable
+
+protocol PaymentsParameterRepresentable {
+
+    var id: Payments.Parameter.ID { get }
+    var value: Payments.Parameter.Value? { get }
+    
+    var parameter: Payments.Parameter { get }
+    
+    /// the paramreter can be edited
+    var isEditable: Bool { get }
+    
+    /// the parameter can be collapsed
+    var isCollapsable: Bool { get }
+    
+    /// presentation type of the parameter
+    var present: Payments.ParameterPresentType { get }
+    
+    /// action performed in case of parameter value change
+    var onChange: Payments.ParameterOnChangeAction { get }
+    
+    func updated(value: String?) -> PaymentsParameterRepresentable
+    func updated(isEditable: Bool) -> PaymentsParameterRepresentable
+    func updated(present: Payments.ParameterPresentType) -> PaymentsParameterRepresentable
+}
+
+extension PaymentsParameterRepresentable {
+
+    var id: Payments.Parameter.ID { parameter.id }
+    var value: Payments.Parameter.Value? { parameter.value }
+    
+    var isEditable: Bool { false }
+    var isCollapsable: Bool { false }
+    var present: Payments.ParameterPresentType { .feed }
+    var onChange: Payments.ParameterOnChangeAction { .none }
+    
+    func updated(value: String?) -> PaymentsParameterRepresentable { self }
+    func updated(isEditable: Bool) -> PaymentsParameterRepresentable { self }
+    func updated(present: Payments.ParameterPresentType) -> PaymentsParameterRepresentable { self }
+}
+
+//MARK: - Parameter Identifier
+
 extension Payments.Parameter {
     
     enum Identifier: String {
@@ -24,6 +67,8 @@ extension Payments.Parameter {
     
     static let emptyMock = Payments.Parameter(id: Identifier.mock.rawValue, value: nil)
 }
+
+//MARK: - Representable Parameters
 
 extension Payments {
     
@@ -78,7 +123,6 @@ extension Payments {
         
         let parameter: Parameter
         let present: Payments.ParameterPresentType = .none
-        let process: Payments.ParameterProcessType = .initial
         var `operator`: Operator? {
             
             guard let value = parameter.value else {
@@ -102,9 +146,8 @@ extension Payments {
         let isEditable: Bool
         let isCollapsable: Bool
         let onChange: Payments.ParameterOnChangeAction
-        let process: Payments.ParameterProcessType
         
-        init(_ parameter: Parameter, title: String, options: [Option], isEditable: Bool = true, isCollapsable: Bool = false, onChange: Payments.ParameterOnChangeAction = .autoContinue, process: Payments.ParameterProcessType = .none) {
+        init(_ parameter: Parameter, title: String, options: [Option], isEditable: Bool = true, isCollapsable: Bool = false, onChange: Payments.ParameterOnChangeAction = .autoContinue) {
             
             self.parameter = parameter
             self.title = title
@@ -112,17 +155,16 @@ extension Payments {
             self.isEditable = isEditable
             self.isCollapsable = isCollapsable
             self.onChange = onChange
-            self.process = process
         }
         
         func updated(value: String?) -> PaymentsParameterRepresentable {
             
-            ParameterSelect(.init(id: parameter.id, value: value), title: title, options: options, isEditable: isEditable, isCollapsable: isCollapsable, onChange: onChange, process: process)
+            ParameterSelect(.init(id: parameter.id, value: value), title: title, options: options, isEditable: isEditable, isCollapsable: isCollapsable, onChange: onChange)
         }
         
         func updated(isEditable: Bool) -> PaymentsParameterRepresentable {
             
-            ParameterSelect(parameter, title: title, options: options, isEditable: isEditable, isCollapsable: isCollapsable, onChange: onChange, process: process)
+            ParameterSelect(parameter, title: title, options: options, isEditable: isEditable, isCollapsable: isCollapsable, onChange: onChange)
         }
         
         struct Option: Identifiable {
@@ -144,9 +186,8 @@ extension Payments {
         let isEditable: Bool
         let isCollapsable: Bool
         let onChange: Payments.ParameterOnChangeAction
-        let process: Payments.ParameterProcessType
         
-        init(_ parameter: Parameter, icon: ImageData, title: String, selectionTitle: String, description: String? = nil, options: [Option], isEditable: Bool = true, isCollapsable: Bool = false, onChange: Payments.ParameterOnChangeAction = .autoContinue, process: Payments.ParameterProcessType = .none) {
+        init(_ parameter: Parameter, icon: ImageData, title: String, selectionTitle: String, description: String? = nil, options: [Option], isEditable: Bool = true, isCollapsable: Bool = false, onChange: Payments.ParameterOnChangeAction = .autoContinue) {
             
             self.parameter = parameter
             self.icon = icon
@@ -157,17 +198,16 @@ extension Payments {
             self.isEditable = isEditable
             self.isCollapsable = isCollapsable
             self.onChange = onChange
-            self.process = process
         }
         
         func updated(value: String?) -> PaymentsParameterRepresentable {
             
-            ParameterSelectSimple(.init(id: parameter.id, value: value), icon: icon, title: title, selectionTitle: selectionTitle, description: description, options: options, isEditable: isEditable, isCollapsable: isCollapsable, onChange: onChange, process: process)
+            ParameterSelectSimple(.init(id: parameter.id, value: value), icon: icon, title: title, selectionTitle: selectionTitle, description: description, options: options, isEditable: isEditable, isCollapsable: isCollapsable, onChange: onChange)
         }
         
         func updated(isEditable: Bool) -> PaymentsParameterRepresentable {
             
-            ParameterSelectSimple(parameter, icon: icon, title: title, selectionTitle: selectionTitle, description: description, options: options, isEditable: isEditable, isCollapsable: isCollapsable, onChange: onChange, process: process)
+            ParameterSelectSimple(parameter, icon: icon, title: title, selectionTitle: selectionTitle, description: description, options: options, isEditable: isEditable, isCollapsable: isCollapsable, onChange: onChange)
         }
     }
     
@@ -178,26 +218,24 @@ extension Payments {
         let isEditable: Bool
         let isCollapsable: Bool
         let onChange: Payments.ParameterOnChangeAction
-        let process: Payments.ParameterProcessType
         
-        init(_ parameter: Parameter, options: [Option], isEditable: Bool = true, isCollapsable: Bool = false, onChange: Payments.ParameterOnChangeAction = .autoContinue, process: Payments.ParameterProcessType = .none) {
+        init(_ parameter: Parameter, options: [Option], isEditable: Bool = true, isCollapsable: Bool = false, onChange: Payments.ParameterOnChangeAction = .autoContinue) {
             
             self.parameter = parameter
             self.options = options
             self.isEditable = isEditable
             self.isCollapsable = isCollapsable
             self.onChange = onChange
-            self.process = process
         }
         
         func updated(value: String?) -> PaymentsParameterRepresentable {
             
-            ParameterSelectSwitch(.init(id: parameter.id, value: value), options: options, isEditable: isEditable, isCollapsable: isCollapsable, onChange: onChange, process: process)
+            ParameterSelectSwitch(.init(id: parameter.id, value: value), options: options, isEditable: isEditable, isCollapsable: isCollapsable)
         }
         
         func updated(isEditable: Bool) -> PaymentsParameterRepresentable {
             
-            ParameterSelectSwitch(parameter, options: options, isEditable: isEditable, isCollapsable: isCollapsable, onChange: onChange, process: process)
+            ParameterSelectSwitch(parameter, options: options, isEditable: isEditable, isCollapsable: isCollapsable, onChange: onChange)
         }
         
         struct Option: Identifiable {
@@ -215,9 +253,8 @@ extension Payments {
         let validator: Validator
         let isEditable: Bool
         let isCollapsable: Bool
-        let process: Payments.ParameterProcessType
         
-        init(_ parameter: Parameter, icon: ImageData, title: String, validator: Validator, isEditable: Bool = true, isCollapsable: Bool = false, process: Payments.ParameterProcessType = .none) {
+        init(_ parameter: Parameter, icon: ImageData, title: String, validator: Validator, isEditable: Bool = true, isCollapsable: Bool = false) {
             
             self.parameter = parameter
             self.icon = icon
@@ -225,17 +262,16 @@ extension Payments {
             self.validator = validator
             self.isEditable = isEditable
             self.isCollapsable = isCollapsable
-            self.process = process
         }
         
         func updated(value: String?) -> PaymentsParameterRepresentable {
             
-            ParameterInput(.init(id: parameter.id, value: value), icon: icon, title: title, validator: validator,isEditable: isEditable, isCollapsable: isCollapsable, process: process)
+            ParameterInput(.init(id: parameter.id, value: value), icon: icon, title: title, validator: validator,isEditable: isEditable, isCollapsable: isCollapsable)
         }
         
         func updated(isEditable: Bool) -> PaymentsParameterRepresentable {
             
-            ParameterInput(parameter, icon: icon, title: title, validator: validator, isEditable: isEditable, isCollapsable: isCollapsable, process: process)
+            ParameterInput(parameter, icon: icon, title: title, validator: validator, isEditable: isEditable, isCollapsable: isCollapsable)
         }
         
         struct Validator: ValidatorProtocol {
@@ -303,9 +339,8 @@ extension Payments {
         let middleName: Name
         let isEditable: Bool
         let isCollapsable: Bool
-        let process: Payments.ParameterProcessType
         
-        init(_ parameter: Parameter, title: String, lastName: Name, firstName: Name, middleName: Name, isEditable: Bool = true, isCollapsable: Bool = false, process: Payments.ParameterProcessType = .none) {
+        init(_ parameter: Parameter, title: String, lastName: Name, firstName: Name, middleName: Name, isEditable: Bool = true, isCollapsable: Bool = false) {
             
             self.parameter = parameter
             self.title = title
@@ -314,12 +349,11 @@ extension Payments {
             self.middleName = middleName
             self.isEditable = isEditable
             self.isCollapsable = isCollapsable
-            self.process = process
         }
         
-        init(id: Parameter.ID, value: String?, title: String, editable: Bool = true, collapsable: Bool = false, process: Payments.ParameterProcessType = .none) {
+        init(id: Parameter.ID, value: String?, title: String, editable: Bool = true, collapsable: Bool = false) {
             
-            self.init(.init(id: id, value: value), title: title, lastName: .init(title: "Фамилия", value: name(with: value, index: 0)), firstName: .init(title: "Имя", value: name(with: value, index: 1)), middleName: .init(title: "Отчество", value: name(with: value, index: 2)), isEditable: editable, isCollapsable: collapsable, process: process)
+            self.init(.init(id: id, value: value), title: title, lastName: .init(title: "Фамилия", value: name(with: value, index: 0)), firstName: .init(title: "Имя", value: name(with: value, index: 1)), middleName: .init(title: "Отчество", value: name(with: value, index: 2)), isEditable: editable, isCollapsable: collapsable)
             
             func name(with value: String?, index: Int) -> String {
                 
@@ -355,12 +389,12 @@ extension Payments {
         
         func updated(value: String?) -> PaymentsParameterRepresentable {
             
-            ParameterName(.init(id: parameter.id, value: value), title: title, lastName: lastName, firstName: firstName, middleName: middleName, isEditable: isEditable, isCollapsable: isCollapsable, process: process)
+            ParameterName(.init(id: parameter.id, value: value), title: title, lastName: lastName, firstName: firstName, middleName: middleName, isEditable: isEditable, isCollapsable: isCollapsable)
         }
         
         func updated(isEditable: Bool) -> PaymentsParameterRepresentable {
             
-            ParameterName(parameter, title: title, lastName: lastName, firstName: firstName, middleName: middleName, isEditable: isEditable, isCollapsable: isCollapsable, process: process)
+            ParameterName(parameter, title: title, lastName: lastName, firstName: firstName, middleName: middleName, isEditable: isEditable, isCollapsable: isCollapsable)
         }
         
         struct Name {
@@ -422,7 +456,6 @@ extension Payments {
         let parameter: Parameter
         let isEditable: Bool
         let onChange: Payments.ParameterOnChangeAction = .updateParameters
-        let process: Payments.ParameterProcessType = .initial
         let present: Payments.ParameterPresentType
         
         init(_ parameter: Parameter, isEditable: Bool, present: Payments.ParameterPresentType) {
@@ -467,13 +500,11 @@ extension Payments {
     struct ParameterMock: PaymentsParameterRepresentable {
         
         let parameter: Parameter
-        let process: Payments.ParameterProcessType
         let present: Payments.ParameterPresentType = .none
 
-        internal init(id: Payments.Parameter.ID = Payments.Parameter.Identifier.mock.rawValue, value: Payments.Parameter.Value = nil, process: Payments.ParameterProcessType = .none) {
+        internal init(id: Payments.Parameter.ID = Payments.Parameter.Identifier.mock.rawValue, value: Payments.Parameter.Value = nil) {
             
             self.parameter = Parameter(id: id, value: value)
-            self.process = process
         }
     }
 }

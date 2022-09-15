@@ -232,6 +232,9 @@ extension Model {
     
     func handlePaymentsCompleteRequest(_ payload: ModelAction.Payment.Complete.Request) {
         
+        //FIXME: - refactor
+
+        /*
         guard let codeParameter = payload.operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.code.rawValue })?.parameter, let codeValue = codeParameter.value else {
             
             self.action.send(ModelAction.Payment.Complete.Response.failure(self.paymentsAlertMessage(with: Payments.Error.missingCodeParameter)))
@@ -251,6 +254,7 @@ extension Model {
                 self.action.send(ModelAction.Payment.Complete.Response.failure(self.paymentsAlertMessage(with: error)))
             }
         }
+         */
         
         //paymentsTransferComplete mock
         /*
@@ -407,6 +411,12 @@ extension Model {
                 
             case .unsupported:
                 return "unsupported"
+                
+            case .operationAppendingIncorrectParametersTerms:
+                return "operationAppendingIncorrectParametersTerms"
+                
+            case .stepIncorrectParametersProcessed:
+                return "operationAppendingIncorrectParametersTerms"
             }
             
         } else {

@@ -11,6 +11,216 @@ extension Payments.Operation {
     
     typealias Parameter = Payments.Parameter
     
+    var parameters: [PaymentsParameterRepresentable] { steps.flatMap{ $0.parameters } }
+    var nextStep: Int { steps.isEmpty ? 0 : steps.count + 1 }
+
+    /// Appends new parameters to operation.
+    /// - Parameters:
+    ///   - parameters: parameters to append
+    ///   - requred: parameters ids requred on next step opf transaction
+    /// - Returns: Updated operation
+    func appending(parameters: [PaymentsParameterRepresentable], terms: [Payments.Operation.Step.Term]) throws -> Payments.Operation {
+        
+        let appendingParametersIds = Set(parameters.map({ $0.id }))
+        let requiredParametersIds = Set(terms.map({ $0.parameterId }))
+        
+        // check if terms contains in parameters
+        guard appendingParametersIds.isSuperset(of: requiredParametersIds) else {
+            throw Payments.Error.operationAppendingIncorrectParametersTerms
+        }
+        
+        var stepsUpdated = steps
+        stepsUpdated.append(.init(parameters: parameters, terms: terms, processed: []))
+
+        return .init(service: service, source: source, steps: stepsUpdated)
+    }
+
+    /// Update operation parameters with new values, history doesn't change
+    /// - Parameter updatedParameters: updated parameters
+    /// - Returns: updated operation
+    func updated(updatedParameters: [Parameter]) -> Payments.Operation {
+        
+        var stepsUpdated = [Payments.Operation.Step]()
+        
+        for step in steps {
+            
+            var parametersUpdated = [PaymentsParameterRepresentable]()
+            for parameter in self.parameters {
+                
+                if let update = updatedParameters.first(where: { $0.id == parameter.id }) {
+                    
+                    let parameterUpdated = parameter.updated(value: update.value)
+                    parametersUpdated.append(parameterUpdated)
+                    
+                } else {
+                    
+                    parametersUpdated.append(parameter)
+                }
+            }
+            
+            stepsUpdated.append(.init(parameters: parametersUpdated, terms: step.terms, processed: step.processed))
+        }
+        
+        return .init(service: service, source: source, steps: stepsUpdated)
+    }
+    
+    /// Rolls back operation to some step
+    /// - Parameter step: step to roll back on
+    /// - Returns: updated operation
+    func rollback(to stepIndex: Int) -> Payments.Operation {
+        
+        assert(stepIndex >= 0)
+        return .init(service: service, source: source, steps: Array(steps.prefix(stepIndex)))
+    }
+    
+    /// Updates operation history with processed parameters
+    /// - Parameters:
+    ///   - parametersIds: parametrs ids processed
+    ///   - isBegining: is it the beggining of transaction or some step?
+    /// - Returns: updated operation
+    func processed(parameters: [Parameter], stepIndex: Int) throws -> Payments.Operation {
+        
+        assert(stepIndex >= 0 && stepIndex < steps.count)
+        
+        let step = steps[stepIndex]
+        let updatedStep = try step.processed(parameters: parameters)
+        
+        var updatedSteps = steps
+        updatedSteps.replaceSubrange(stepIndex...stepIndex, with: [updatedStep])
+        
+        return .init(service: service, source: source, steps: steps)
+    }
+    
+    func parametersRequired(for stepIndex: Int) -> [Parameter]? {
+        
+        guard stepIndex >= 0, stepIndex < steps.count else {
+            return nil
+        }
+        
+        let requiredParametersIds = steps[stepIndex].terms.map{ $0.parameterId }
+        
+        return parameters.filter({ requiredParametersIds.contains($0.id) }).map({ $0.parameter })
+    }
+    
+    func stepIndex(for parameterId: Parameter.ID) -> Int? {
+        
+        for (index, step) in steps.enumerated() {
+            
+            if step.contains(parameterId: parameterId) {
+                
+                return index
+            }
+        }
+        
+        return nil
+    }
+
+    func nextAction() -> Action {
+        
+        var isBegin = true
+        
+        for (index, step) in steps.enumerated() {
+            
+            switch step.state {
+            case let .impact(impact):
+                switch impact {
+                case .rollback: return .rollback(stepIndex: index)
+                case .restart: return .restart
+                case .confirm: return .confirm(parameters: step.termsParameters)
+                }
+                
+            case let .pending(pendingParameters):
+                return .process(parameters: pendingParameters, isBegin: isBegin)
+                
+            case .complete:
+                isBegin = false
+            }
+        }
+        
+        return .parameters(stepIndex: nextStep)
+    }
+}
+
+extension Payments.Operation.Step {
+    
+    typealias Parameter = Payments.Parameter
+    
+    var state: State {
+        
+        guard let stateDataList = stateDataList else {
+            return .pending(termsParameters)
+        }
+        
+        var impacts = [Impact]()
+        
+        for statedata in stateDataList {
+            
+            if statedata.processed != statedata.current {
+                
+                impacts.append(statedata.impact)
+            }
+        }
+        
+        let sortedImpacts = impacts.sorted(by: { $0.rawValue < $1.rawValue })
+        
+        guard let firstImpact = sortedImpacts.first else {
+            return .complete
+        }
+        
+        return .impact(firstImpact)
+    }
+
+    var termsParameters: [Parameter] {
+        
+        let termsParametersIds = terms.map{ $0.parameterId }
+        return parameters.filter({ termsParametersIds.contains($0.id) }).map{ $0.parameter }
+    }
+    
+    var stateDataList: [StateData]? {
+        
+        guard let processed = processed else {
+            return nil
+        }
+        
+        let termsSorted = terms.sorted(by: { $0.parameterId < $1.parameterId })
+        
+        let termsParametersIds = termsSorted.map{ $0.parameterId }
+        let currentParameters = parameters.filter({ termsParametersIds.contains($0.id) }).map{ $0.parameter }
+        
+        let processedParametersSorted = processed.sorted(by: { $0.id < $1.id })
+        let impacts = termsSorted.map{ $0.impact }
+        
+        var result = [StateData]()
+        
+        for (processed, (current, impact)) in zip(processedParametersSorted, zip(currentParameters, impacts)) {
+            
+            result.append(.init(current: current, processed: processed, impact: impact))
+        }
+        
+        return result
+    }
+    
+    func contains(parameterId: Parameter.ID) -> Bool {
+        
+        parameters.map{ $0.id }.contains(parameterId)
+    }
+    
+    func processed(parameters: [Parameter]) throws -> Payments.Operation.Step {
+ 
+        let requiredParametersIds = Set(terms.map({ $0.parameterId }))
+        let processedParametersIds = Set(parameters.map({ $0.id }))
+        
+        //caheck if correct parameters procrssed
+        guard processedParametersIds == requiredParametersIds else {
+            throw Payments.Error.stepIncorrectParametersProcessed
+        }
+        
+        return .init(parameters: self.parameters, terms: terms, processed: parameters)
+    }
+}
+
+extension Payments.Operation {
+    
     func historyUpdated() -> [[Parameter]] {
         
         //FIXME: refactor
@@ -142,13 +352,17 @@ extension Payments.Operation {
     
     func finalized() -> Payments.Operation {
         
+        //FIXME: - refactor
+        return .emptyMock
+        /*
         var updatedParameters = parameters
         updatedParameters.append(Payments.ParameterFinal())
         
         return Payments.Operation(service: service, parameters: updatedParameters, processed: processed)
+         */
     }
     
-    static let emptyMock = Payments.Operation(service: .fms, parameters: [], processed: [])
+    static let emptyMock = Payments.Operation(service: .fms, source: .none, steps: [])
 }
 
 extension Payments.Operation {
