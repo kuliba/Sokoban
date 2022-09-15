@@ -221,7 +221,7 @@ extension Model {
                     icon: .parameterDocument,
                     title: "ИНН Получателя",
                     validator: .init(minLength: 1, maxLength: nil, regEx: nil),
-                    isCollapsable: true)
+                    present: .spoiler)
                 
                 let oktmoParameter = Payments.ParameterInput(
                     .init(id: UUID().uuidString,
@@ -229,12 +229,12 @@ extension Model {
                     icon: .parameterHash,
                     title: "ОКТМО (ОКАТО)",
                     validator: .init(minLength: 1, maxLength: nil, regEx: nil),
-                    isCollapsable: true)
+                    present: .spoiler)
                 
                 let adressParameter = Payments.ParameterInfo(
                     .init(id: "a3_address_2_2", value: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 432011, Ульяновская обл, Ульяновск г, Радищева ул ,  д. 124,  кв. 28"),
                     icon: .parameterLocation,
-                    title: "Адрес проживания", isCollapsable: true)
+                    title: "Адрес проживания", present: .spoiler)
                 
                 let amountParameter = Payments.ParameterAmount(
                     .init(id: Payments.Parameter.Identifier.amount.rawValue, value: "1234"),
@@ -355,32 +355,32 @@ extension Model {
                 let division0Parameter = Payments.ParameterInfo(
                     .init(id: "a3_iRecipientName_6_1", value: "Управление Федерального казначейства по г. Москве (Инспекция ФНС России № 23 по г.Москве)"),
                     icon: .parameterDocument,
-                    title: "Получатель платежа:", isCollapsable: true)
+                    title: "Получатель платежа:", present: .spoiler)
                 
                 let division1Parameter = Payments.ParameterInfo(
                     .init(id: "a3_iRecipientKPP_8_1", value: "772301001"),
                     icon: .parameterHash,
-                    title: "КПП:", isCollapsable: true)
+                    title: "КПП:", present: .spoiler)
                 
                 let division2Parameter = Payments.ParameterInfo(
                     .init(id: "a3_iRecipientAccount_9_1", value: "03100643000000017300"),
                     icon: .parameterHash,
-                    title: "Расчетный счет:", isCollapsable: true)
+                    title: "Расчетный счет:", present: .spoiler)
                 
                 let division3Parameter = Payments.ParameterInfo(
                     .init(id: "a3_iRecipientBankName_10_1", value: "ГУ БАНКА РОССИИ ПО ЦФО//УФК ПО Г. МОСКВЕ г. Москва"),
                     icon: .parameterSample,
-                    title: "Банк получателя:", isCollapsable: true)
+                    title: "Банк получателя:", present: .spoiler)
                 
                 let division4Parameter = Payments.ParameterInfo(
                     .init(id: "a3_iRecipientBIC_11_1", value: "004525988"),
                     icon: .parameterDocument,
-                    title: "БИК:", isCollapsable: true)
+                    title: "БИК:", present: .spoiler)
                 
                 let division5Parameter = Payments.ParameterInfo(
                     .init(id: "a3_iRecipientKBK_13_1", value: "18210606041031000110"),
                     icon: .parameterDocument,
-                    title: "КБК:", isCollapsable: true)
+                    title: "КБК:", present: .spoiler)
                 
                 let amountParameter = Payments.ParameterAmount(
                     .init(id: Payments.Parameter.Identifier.amount.rawValue, value: "1234"),

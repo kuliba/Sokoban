@@ -112,7 +112,7 @@ extension Model {
             Payments.ParameterInfo(
                 .init(id: addition.fieldName, value: addition.fieldValue),
                 icon: addition.iconData ?? .parameterDocument,
-                title: addition.fieldTitle, isCollapsable: true)
+                title: addition.fieldTitle, present: .spoiler)
         }
     }
 }

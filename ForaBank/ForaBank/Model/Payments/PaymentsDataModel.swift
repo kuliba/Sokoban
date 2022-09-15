@@ -72,6 +72,7 @@ extension Payments {
         
         case none
         case feed
+        case spoiler
         case bottom
     }
 }
