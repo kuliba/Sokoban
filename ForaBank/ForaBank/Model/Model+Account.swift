@@ -155,7 +155,19 @@ extension Model {
 
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .statusError(status: response.statusCode, message: errorMessage)))
                     
-                    self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет не открыт", icon: .close)))
+                    if let errorMessage = errorMessage, let rawValue: OpenAccountRawResponse = .init(rawValue: errorMessage) {
+                        
+                        switch rawValue {
+                        case .incorrect:
+                            self.action.send(ModelAction.Informer.Dismiss())
+                        default:
+                            break
+                        }
+                        
+                    } else {
+                        
+                        self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет не открыт", icon: .close)))
+                    }
                 }
 
             case let .failure(error):
@@ -184,18 +196,6 @@ extension Model {
             
             // Обновление списка счетов
             action.send(ModelAction.Account.ProductList.Request())
-        }
-    }
-    
-    func accountInformerDismissTime(error: Model.ProductsListError) -> TimeInterval {
-        
-        let rawValue = accountRawResponse(error: error)
-        
-        switch rawValue {
-        case .exhaust, .incorrect:
-            return 2
-        case .none:
-            return 0
         }
     }
     

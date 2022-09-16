@@ -409,24 +409,27 @@ enum OpenAccountRawResponse: RawRepresentable {
     case none
     
     var rawValue: String {
+        
         switch self {
-        case .incorrect:
-            return "Вы исчерпали все попытки"
-        case .exhaust:
-            return "Введен некорректный код. Попробуйте еще раз"
-        case .none:
-            return ""
+        case .incorrect: return "Введен некорректный код. Попробуйте еще раз"
+        case .exhaust: return "Вы исчерпали все попытки"
+        case .none: return ""
         }
     }
     
     init?(rawValue: String) {
+        
+        if rawValue.contains("некорректный") {
+            self = .incorrect
+            return
+        }
         
         if rawValue.contains("исчерпали") {
             self = .exhaust
             return
         }
         
-        self = .incorrect
+        return nil
     }
 }
 
