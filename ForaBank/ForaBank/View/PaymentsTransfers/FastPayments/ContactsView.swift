@@ -37,95 +37,188 @@ struct ContactsView: View {
                 
                 ContactListView(viewModel: contacts)
                 
-            case let .banks(phone, topBanks, banksList):
+            case let .banks(topBanks, banksList):
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     
-                    HStack(alignment: .top, spacing: 4) {
-                     
-                        ForEach(topBanks.banks, id: \.self) { bank in
-                            
-                            Button {
-                                
-                                bank.action()
-                                
-                            } label: {
-                                
-                                ZStack {
-                                    
-                                    VStack(spacing: 8) {
-                                        
-                                        if let image = bank.image {
-                                            
-                                            ZStack {
-                                                
-                                                image
-                                                    .resizable()
-                                                    .frame(width: 56, height: 56, alignment: .center)
-                                                    .cornerRadius(90)
-                                            }
+                    switch topBanks {
+                    case let .banks(topBanks):
+                        TopBankView(viewModel: topBanks)
 
-                                        } else {
-                                            ZStack {
-                                                
-                                                Color.mainColorsGrayLightest
-                                                    .frame(width: 56, height: 56, alignment: .center)
-                                                    .cornerRadius(90)
-                                                
-                                            }
-                                        }
-                                        
-                                        VStack(spacing: 4) {
-                                            
-                                            if let title = bank.name {
-                                                
-                                                Text(title)
-                                                    .font(.textBodyXSSB11140())
-                                                    .foregroundColor(Color.textSecondary)
-                                            }
-                                            
-                                            Text(bank.bankName)
-                                                .foregroundColor(Color.textPlaceholder)
-                                                .font(.textBodyXSR11140())
-                                        }
-                                    }
-                                    
-                                    if bank.favorite {
-                                        
-                                        ZStack {
-                                            
-                                            Color.mainColorsBlack
-                                                .frame(width: 24, height: 24, alignment: .top)
-                                                .cornerRadius(90)
-                                            
-                                            Image.ic24Star
-                                                .resizable()
-                                                .frame(width: 16, height: 16, alignment: .center)
-                                                .foregroundColor(Color.mainColorsWhite)
-                                        }
-                                        .offset(x: 25, y: -35)
-                                    }
-                                }
-                                .frame(width: 80)
+                    case .placeHolder:
+                        HStack(alignment: .top, spacing: 4) {
+                            
+                            ForEach(0..<5) {_ in
+                                
+                                LatestPaymentsViewComponent.PlaceholderView(viewModel: .init())
                             }
                         }
                     }
                 }
-                .padding(.horizontal, 20)
+                .padding(.leading, 8)
                 
                 Divider()
                     .frame(height: 1)
+                    .foregroundColor(Color.mainColorsGrayLightest)
                 
-                CollapsebleView()
-                
-                OptionSelectorView(viewModel: .init(options: [.init(id: "Российские", name: "Российские"), .init(id: "Иностранные", name: "Иностранные"), .init(id: "Все", name: "Все")], selected: "Иностранные", style: .template))
-                    .padding()
-                
-                ScrollView(.vertical, showsIndicators: false) {
+                ForEach(banksList, id: \.self) { item in
                     
-                    VStack(spacing: 24) {
+                    CollapsebleView(viewModel: item)
+                    
+                }
+                
+                Spacer()
+            }
+        }
+    }
+}
+
+extension ContactsView {
+    
+    struct TopBankView: View {
+        
+        let viewModel: ContactsViewModel.TopBanksViewModel
+        
+        var body: some View {
+            
+            HStack(alignment: .top, spacing: 4) {
+             
+                ForEach(viewModel.banks, id: \.self) { bank in
+                    
+                    Button {
                         
-                        ForEach(banksList.bank, id: \.self) { bank in
+                        bank.action()
+                        
+                    } label: {
+                        
+                        ZStack {
+                            
+                            VStack(spacing: 8) {
+                                
+                                if let image = bank.image {
+                                    
+                                    ZStack {
+                                        
+                                        image
+                                            .resizable()
+                                            .frame(width: 56, height: 56, alignment: .center)
+                                            .cornerRadius(90)
+                                    }
+
+                                } else {
+                                    ZStack {
+                                        
+                                        Color.mainColorsGrayLightest
+                                            .frame(width: 56, height: 56, alignment: .center)
+                                            .cornerRadius(90)
+                                        
+                                    }
+                                }
+                                
+                                VStack(spacing: 4) {
+                                    
+                                    if let title = bank.name {
+                                        
+                                        Text(title)
+                                            .font(.textBodyXSSB11140())
+                                            .foregroundColor(Color.textSecondary)
+                                    }
+                                    
+                                    Text(bank.bankName)
+                                        .foregroundColor(Color.textPlaceholder)
+                                        .font(.textBodyXSR11140())
+                                }
+                            }
+                            
+                            if bank.favorite {
+                                
+                                ZStack {
+                                    
+                                    Color.mainColorsBlack
+                                        .frame(width: 24, height: 24, alignment: .top)
+                                        .cornerRadius(90)
+                                    
+                                    Image.ic24Star
+                                        .resizable()
+                                        .frame(width: 16, height: 16, alignment: .center)
+                                        .foregroundColor(Color.mainColorsWhite)
+                                }
+                                .offset(x: 25, y: -35)
+                            }
+                        }
+                        .frame(width: 80)
+                    }
+                }
+            }
+        }
+    }
+    
+    struct CollapsebleView: View {
+        
+        @ObservedObject var viewModel: ContactsViewModel.BanksListViewModel
+        
+        var body: some View {
+            
+            switch viewModel.mode {
+            case let .normal(collapsedViewModel):
+                
+                HStack(alignment: .center, spacing: 8.5) {
+                
+                    collapsedViewModel.icon
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                    
+                    Text(collapsedViewModel.title.rawValue)
+                        .foregroundColor(Color.textSecondary)
+                        .font(.textH3SB18240())
+                    
+                    Spacer()
+                
+                    if let searchButton = collapsedViewModel.searchButton {
+                     
+                        Button {
+                            
+                            searchButton.action()
+                            
+                        } label: {
+                            
+                            searchButton.icon
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(Color.iconGray)
+                        }
+                    }
+                    
+                    Button {
+                        
+                        collapsedViewModel.toggleButton.action()
+                        viewModel.isCollapsed.toggle()
+                        
+                    } label: {
+                        
+                        collapsedViewModel.toggleButton.icon
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(Color.iconGray)
+                        
+                    }
+                }
+                .padding(.horizontal, 20)
+                
+            case let .search(searchViewModel):
+                SearchBarComponent(viewModel: searchViewModel)
+            }
+            
+            if viewModel.isCollapsed {
+
+                OptionSelectorView(viewModel: viewModel.optionViewModel)
+                    .padding()
+
+                ScrollView(.vertical, showsIndicators: false) {
+
+                    VStack(spacing: 24) {
+
+                        ForEach(viewModel.bank, id: \.self) { bank in
 
                             Button {
 
@@ -136,55 +229,10 @@ struct ContactsView: View {
                             }
                         }
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 50)
                 }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 50)
             }
-        }
-    }
-}
-
-extension ContactsView {
-    
-    struct CollapsebleView: View {
-        
-        var body: some View {
-            
-            HStack(alignment: .center, spacing: 8.5) {
-            
-                Image.ic24Bank
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                
-                Text("В другой банк")
-                    .foregroundColor(Color.textSecondary)
-                    .font(.textH3SB18240())
-                
-                Spacer()
-                
-                Button {
-                    
-                } label: {
-                    
-                    Image.ic24Search
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .foregroundColor(Color.iconGray)
-                    
-                }
-                
-                Button {
-                    
-                } label: {
-                    
-                    Image.ic24ChevronDown
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .foregroundColor(Color.iconGray)
-                    
-                }
-            }
-            .padding(.horizontal, 20)
         }
     }
     
@@ -198,6 +246,7 @@ extension ContactsView {
                 
                 Divider()
                     .frame(height: 1)
+                    .foregroundColor(Color.mainColorsGrayLightest)
                 
                 Button {
                     
@@ -210,6 +259,7 @@ extension ContactsView {
                 
                 Divider()
                     .frame(height: 1)
+                    .foregroundColor(Color.mainColorsGrayLightest)
             }
             
             ScrollView(.vertical, showsIndicators: false) {
