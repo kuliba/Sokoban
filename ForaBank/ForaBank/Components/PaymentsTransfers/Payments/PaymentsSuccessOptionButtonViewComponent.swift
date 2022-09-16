@@ -35,6 +35,7 @@ struct PaymentsSuccessOptionButtonView: View {
                     
                     viewModel.icon
                         .resizable()
+                        .foregroundColor(.mainColorsBlack)
                         .frame(width: 24, height: 24)
                 }
             }
@@ -52,7 +53,7 @@ struct PaymentsSuccessOptionButtonView: View {
 struct PaymentsSuccessOptionButtonView_Previews: PreviewProvider {
     
     static var previews: some View {
-        PaymentsSuccessOptionButtonView(viewModel: .init(id: UUID(), icon: Image("Payments Icon Success File"), title: "Детали", action: {}))
+        PaymentsSuccessOptionButtonView(viewModel: .init(icon: Image("Payments Icon Success File"), title: "Детали", action: {}))
             .previewLayout(.fixed(width: 100, height: 100))
     }
 }

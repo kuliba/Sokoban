@@ -13,81 +13,220 @@ struct PaymentsSuccessView: View {
     
     let viewModel: PaymentsSuccessViewModel
     
-    @Environment(\.presentationMode) var presentationMode
-    
     var body: some View {
         
-        VStack(alignment:.center, spacing: 20) {
+        VStack(alignment: .center, spacing: 24) {
             
-            HeaderView(viewModel: viewModel.header)
-                .padding(.top, 134)
-            
-            Spacer()
-            
-            HStack(spacing: 52) {
+            Group {
                 
-                ForEach(viewModel.optionButtons) { buttonViewModel in
-                    
-                    switch buttonViewModel {
-                    case let optionButtonViewModel as PaymentsSuccessOptionButtonView.ViewModel:
-                        PaymentsSuccessOptionButtonView(viewModel: optionButtonViewModel)
-                        
-                    default:
-                        EmptyView()
-                    }
-                }
+                StateIconView(viewModel: viewModel.iconType)
+                    .padding(.top, 132)
             }
             
-            ButtonSimpleView(viewModel: viewModel.actionButton)
-                .frame(width: 336, height: 48)
-                .padding()
+            Group {
+                
+                if let warningTitle = viewModel.warningTitle {
+                    
+                    Text(warningTitle)
+                        .font(.textH4M16240())
+                        .foregroundColor(.systemColorError)
+                        .padding(.horizontal, 20)
+                }
+                
+                if let title = viewModel.title {
+                    
+                    Text(title)
+                        .font(.textH3SB18240())
+                        .foregroundColor(.mainColorsBlack)
+                        .multilineTextAlignment(.center)
+                        .frame(width: 250)
+                }
+                
+                if let service = viewModel.service {
+                    ServiceView(viewModel: service)
+                }
+                
+                if let amount = viewModel.amount {
+                    
+                    Text(amount)
+                        .font(.textH1SB24322())
+                        .foregroundColor(.mainColorsBlack)
+                        .padding(.horizontal, 20)
+                }
+                
+                if let options = viewModel.options {
+                    
+                    HStack {
+                        
+                        VStack(alignment: .leading,spacing: 24) {
+                            
+                            ForEach(options) { viewModel in
+                                OptionView(viewModel: viewModel)
+                            }
+                        }
+                        
+                        Spacer()
+                        
+                    }.padding(.horizontal, 20)
+                }
+                
+                if let logoIconViewModel = viewModel.logo {
+                    LogoIconView(viewModel: logoIconViewModel)
+                }
+                
+                Spacer()
+            }
+            
+            Group {
+                
+                HStack(spacing: 52) {
+                    
+                    ForEach(viewModel.optionButtons) { buttonViewModel in
+                        
+                        switch buttonViewModel {
+                        case let optionButtonViewModel as PaymentsSuccessOptionButtonView.ViewModel:
+                            PaymentsSuccessOptionButtonView(viewModel: optionButtonViewModel)
+                            
+                        default:
+                            EmptyView()
+                        }
+                    }
+                }.padding(.bottom, 20)
+                
+                if let repeatButton = viewModel.repeatButton {
+                    
+                    ButtonSimpleView(viewModel: repeatButton)
+                        .frame(height: 48)
+                        .padding(.horizontal, 20)
+                }
+                
+                ButtonSimpleView(viewModel: viewModel.actionButton)
+                    .frame(height: 48)
+                    .padding(.horizontal, 20)
+            }
         }
     }
 }
-
-//MARK: - Subviews
 
 extension PaymentsSuccessView {
     
-    struct HeaderView: View {
+    // MARK: - Icon
+    
+    struct StateIconView: View {
         
-        let viewModel: PaymentsSuccessViewModel.HeaderViewModel
+        let viewModel: PaymentsSuccessViewModel.IconTypeViewModel
         
         var body: some View {
             
-            VStack(alignment:.center, spacing: 0) {
+            ZStack {
                 
-                viewModel.stateIcon
-                    .frame(width: 88, height: 88)
-                    .padding()
+                Circle()
+                    .foregroundColor(viewModel.color)
+                
+                viewModel.image
+                    .foregroundColor(.mainColorsWhite)
+                
+            }.frame(width: 88, height: 88)
+        }
+    }
+    
+    // MARK: - Option
+    
+    struct OptionView: View {
+        
+        let viewModel: PaymentsSuccessViewModel.OptionViewModel
+        
+        var body: some View {
+            
+            HStack(spacing: 14) {
+                
+                viewModel.image
+                    .renderingMode(.original)
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    
+                    Text(viewModel.title)
+                        .font(.textBodyMR14200())
+                        .foregroundColor(.mainColorsGray)
+                    
+                    Text(viewModel.description)
+                        .font(.textH4M16240())
+                        .foregroundColor(.mainColorsBlack)
+                    
+                    if let subTitle = viewModel.subTitle {
+                        
+                        Text(subTitle)
+                            .font(.textBodyMR14200())
+                            .foregroundColor(.mainColorsGray)
+                    }
+                }
+            }
+        }
+    }
+    
+    // MARK: - Logo
+    
+    struct LogoIconView: View {
+        
+        let viewModel: PaymentsSuccessViewModel.LogoIconViewModel
+        
+        var body: some View {
+            
+            HStack(spacing: 0) {
+                
+                viewModel.image
+                    .renderingMode(.original)
+                    .resizable()
+                    .frame(width: 44, height: 44)
+                
                 Text(viewModel.title)
-                    .font(Font.custom("Inter-SemiBold", size: 18))
-                    .foregroundColor(Color(hex: "#1C1C1C"))
+                    .font(.textH3SB18240())
+                    .foregroundColor(.mainColorsBlack)
+            }
+        }
+    }
+    
+    // MARK: - Service
+    
+    struct ServiceView: View {
+        
+        let viewModel: PaymentsSuccessViewModel.ServiceViewModel
+        
+        var body: some View {
+            
+            VStack(spacing: 8) {
+                
+                Text(viewModel.title)
+                    .font(.textBodyMR14200())
+                    .foregroundColor(.mainColorsGray)
+                
                 Text(viewModel.description)
-                    .font(Font.custom("Inter-SemiBold", size: 24))
-                    .foregroundColor(Color(hex: "#1C1C1C"))
-                    .padding()
-                viewModel.operatorIcon
-                    .frame(width: 32, height: 32)
-                    .padding()
+                    .font(.textH3SB18240())
+                    .foregroundColor(.mainColorsBlack)
             }
         }
     }
 }
 
-//MARK: - Preview
+// MARK: - Preview
 
 struct PaymentsSuccessScreenView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PaymentsSuccessView(viewModel: .sample)
+        Group {
+            
+            PaymentsSuccessView(viewModel: .sample1)
+            PaymentsSuccessView(viewModel: .sample2)
+            PaymentsSuccessView(viewModel: .sample3)
+            PaymentsSuccessView(viewModel: .sample4)
+            PaymentsSuccessView(viewModel: .sample5)
+            PaymentsSuccessView(viewModel: .sample6)
+            PaymentsSuccessView(viewModel: .sample7)
+            PaymentsSuccessView(viewModel: .sample8)
+            PaymentsSuccessView(viewModel: .sample9)
+        }
     }
-}
-
-//MARK: - Preview Content
-
-extension PaymentsSuccessViewModel {
-    
-    static let sample = PaymentsSuccessViewModel(header: .init(stateIcon: Image("OkOperators"), title: "Успешный перевод", description: "1 000,00 ₽", operatorIcon: Image("Payments Service Sample")), optionButtons: [PaymentsSuccessOptionButtonView.ViewModel(id: UUID(), icon: Image("Payments Icon Success Info"), title: "Детали", action: {}), PaymentsSuccessOptionButtonView.ViewModel(id: UUID(), icon: Image("Payments Icon Success File"),title: "Документ", action: {}) ], actionButton: .init(title: "На главную", style: .red, action: {}))
 }
