@@ -144,6 +144,7 @@ extension Model {
 
                     self.accountOpening.value = false
                     self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет открыт", icon: .check)))
+                    
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.complete(data))
 
                 default:
@@ -151,20 +152,10 @@ extension Model {
 
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: errorMessage)
                     
-                    self.accountOpening.value = false
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .statusError(status: response.statusCode, message: errorMessage)))
                     
-                    if let errorMessage = errorMessage, let rawValue: OpenAccountRawResponse = .init(rawValue: errorMessage) {
-                        
-                        switch rawValue {
-                        case .incorrect, .exhaust:
-                            self.action.send(ModelAction.Informer.Dismiss())
-                        }
-                        
-                    } else {
-                        
-                        self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет не открыт", icon: .close)))
-                    }
+                    self.accountOpening.value = false
+                    self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет не открыт", icon: .close)))
                 }
 
             case let .failure(error):
@@ -173,7 +164,6 @@ extension Model {
                 self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .serverCommandError(error: error.localizedDescription)))
                 
                 self.accountOpening.value = false
-                
                 self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет не открыт", icon: .close)))
             }
         }

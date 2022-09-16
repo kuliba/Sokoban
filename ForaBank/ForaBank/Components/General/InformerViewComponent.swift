@@ -62,11 +62,6 @@ extension InformerView {
                             startTimer()
                         }
                         
-                    case _ as ModelAction.Informer.Dismiss:
-                        
-                        resetInformer()
-                        makeNextEvent(1)
-                        
                     default:
                         break
                     }

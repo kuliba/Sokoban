@@ -33,8 +33,6 @@ extension ModelAction {
 
             let informer: InformerData
         }
-        
-        struct Dismiss: Action {}
     }
 }
 

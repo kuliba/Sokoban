@@ -360,7 +360,7 @@ extension OpenAccountPerformView {
             if let rawValue = rawValue {
                 
                 switch rawValue {
-                case .incorrect:
+                case .incorrect, .expired:
                     operationType = .edit
                 case .exhaust:
                     operationType = currentOperationType
@@ -402,12 +402,14 @@ extension OpenAccountPrepareViewModel {
 enum OpenAccountRawResponse: RawRepresentable {
     
     case incorrect
+    case expired
     case exhaust
     
     var rawValue: String {
         
         switch self {
         case .incorrect: return "Введен некорректный код. Попробуйте еще раз"
+        case .expired: return "Время для ввода истекло. Запросите код повторно"
         case .exhaust: return "Вы исчерпали все попытки"
         }
     }
@@ -416,6 +418,11 @@ enum OpenAccountRawResponse: RawRepresentable {
         
         if rawValue.contains("некорректный") {
             self = .incorrect
+            return
+        }
+        
+        if rawValue.contains("истекло") {
+            self = .expired
             return
         }
         
