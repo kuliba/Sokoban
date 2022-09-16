@@ -134,15 +134,11 @@ extension OpenAccountPerformView {
                             
                             let rawValue = model.accountRawResponse(error: error)
                             
-                            switch rawValue {
-                            case .exhaust:
+                            if rawValue == .exhaust {
                                 
                                 confirm.confirmCode = ""
                                 confirm.enterCode = ""
                                 confirm.textFieldToolbar.text = ""
-                                
-                            default:
-                                break
                             }
                             
                             confirm.isResendCode = true
@@ -361,14 +357,15 @@ extension OpenAccountPerformView {
             
             let rawValue = model.accountRawResponse(error: error)
             
-            switch rawValue {
-            case .incorrect:
-                operationType = .edit
-            case .exhaust:
-                operationType = currentOperationType
-                self.action.send(OpenAccountPerformAction.ResetData())
-            case .none:
-                break
+            if let rawValue = rawValue {
+                
+                switch rawValue {
+                case .incorrect:
+                    operationType = .edit
+                case .exhaust:
+                    operationType = currentOperationType
+                    self.action.send(OpenAccountPerformAction.ResetData())
+                }
             }
         }
     }
@@ -406,14 +403,12 @@ enum OpenAccountRawResponse: RawRepresentable {
     
     case incorrect
     case exhaust
-    case none
     
     var rawValue: String {
         
         switch self {
         case .incorrect: return "Введен некорректный код. Попробуйте еще раз"
         case .exhaust: return "Вы исчерпали все попытки"
-        case .none: return ""
         }
     }
     

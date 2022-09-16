@@ -152,16 +152,13 @@ extension Model {
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: errorMessage)
                     
                     self.accountOpening.value = false
-
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .statusError(status: response.statusCode, message: errorMessage)))
                     
                     if let errorMessage = errorMessage, let rawValue: OpenAccountRawResponse = .init(rawValue: errorMessage) {
                         
                         switch rawValue {
-                        case .incorrect:
+                        case .incorrect, .exhaust:
                             self.action.send(ModelAction.Informer.Dismiss())
-                        default:
-                            break
                         }
                         
                     } else {
@@ -230,10 +227,12 @@ extension Model {
         return messageError
     }
     
-    func accountRawResponse(error: Model.ProductsListError) -> OpenAccountRawResponse {
+    func accountRawResponse(error: Model.ProductsListError) -> OpenAccountRawResponse? {
         
-        guard let rawValue = OpenAccountRawResponse(rawValue: messageError(error: error)) else {
-            return .none
+        let rawValue = OpenAccountRawResponse(rawValue: messageError(error: error))
+        
+        guard let rawValue = rawValue else {
+            return nil
         }
         
         return rawValue
