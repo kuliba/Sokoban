@@ -125,7 +125,7 @@ extension Model {
         let productsListError = ProductsListError.emptyData(message: ProductsListError.errorMessage)
 
         accountOpening.value = true
-        action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет открывается", icon: .refresh)))
+        action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет открывается", icon: .refresh, type: .openAccount)))
         
         serverAgent.executeCommand(command: command) { result in
 
@@ -155,7 +155,15 @@ extension Model {
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .statusError(status: response.statusCode, message: errorMessage)))
                     
                     self.accountOpening.value = false
-                    self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет не открыт", icon: .close)))
+                    
+                    if let errorMessage = errorMessage, OpenAccountRawResponse(rawValue: errorMessage) == nil {
+                        
+                        self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет не открыт", icon: .close)))
+                        
+                    } else {
+                        
+                        self.action.send(ModelAction.Informer.Dismiss(type: .openAccount))
+                    }
                 }
 
             case let .failure(error):

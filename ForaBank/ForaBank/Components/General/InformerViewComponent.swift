@@ -53,14 +53,19 @@ extension InformerView {
                         
                         let informer = payload.informer
                         
-                        let informerViewModel: InformerItemViewModel = .init(message: informer.message, icon: informer.icon.image, color: informer.color, interval: informer.interval)
+                        let informerViewModel: InformerItemViewModel = .init(message: informer.message, icon: informer.icon.image, color: informer.color, interval: informer.interval, type: informer.type)
+                        
+                        let pauseViewModel: PauseItemViewModel = .init(interval: 1, type: informer.type)
                         
                         events.append(.informer(informerViewModel))
-                        events.append(.pause(1))
+                        events.append(.pause(pauseViewModel))
                         
                         if currentEvent == nil {
                             startTimer()
                         }
+                        
+                    case let payload as ModelAction.Informer.Dismiss:
+                        cancelInformers(for: payload.type)
                         
                     default:
                         break
@@ -90,7 +95,7 @@ extension InformerView {
                             
                         case let .pause(pause):
                             
-                            guard time - currentEvent.startTime > pause else {
+                            guard time - currentEvent.startTime > pause.interval else {
                                 return
                             }
                             
@@ -146,6 +151,38 @@ extension InformerView {
             
             currentEvent = nil
         }
+        
+        private func cancelInformers(for type: InformerData.CancelableType) {
+            
+            self.events = events.filter { event -> Bool in
+                
+                switch event {
+                case let .informer(informerViewModel):
+                    
+                    if let type = informerViewModel.type {
+                        
+                        switch type {
+                        case .openAccount:
+                            return false
+                        }
+                    }
+                    
+                case let .pause(pauseViewModel):
+                    
+                    if let type = pauseViewModel.type {
+                        
+                        switch type {
+                        case .openAccount:
+                            return false
+                        }
+                    }
+                }
+                
+                return true
+            }
+            
+            resetInformer()
+        }
     }
 }
 
@@ -157,20 +194,34 @@ extension InformerView {
         let icon: Image
         let color: Color
         let interval: TimeInterval
+        let type: InformerData.CancelableType?
         
-        init(message: String, icon: Image, color: Color = .mainColorsBlack, interval: TimeInterval = 2) {
+        init(message: String, icon: Image, color: Color = .mainColorsBlack, interval: TimeInterval = 2, type: InformerData.CancelableType? = nil) {
             
             self.message = message
             self.icon = icon
             self.color = color
             self.interval = interval
+            self.type = type
+        }
+    }
+    
+    struct PauseItemViewModel {
+        
+        let interval: TimeInterval
+        let type: InformerData.CancelableType?
+        
+        init(interval: TimeInterval = 2, type: InformerData.CancelableType? = nil) {
+            
+            self.interval = interval
+            self.type = type
         }
     }
     
     enum Event {
         
         case informer(InformerItemViewModel)
-        case pause(TimeInterval)
+        case pause(PauseItemViewModel)
     }
 }
 

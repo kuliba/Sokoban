@@ -33,6 +33,11 @@ extension ModelAction {
 
             let informer: InformerData
         }
+        
+        struct Dismiss: Action {
+            
+            let type: InformerData.CancelableType
+        }
     }
 }
 
