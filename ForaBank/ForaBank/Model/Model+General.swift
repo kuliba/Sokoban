@@ -106,4 +106,5 @@ enum ModelError: Error {
     case emptyData(message: String?)
     case statusError(status: ServerStatusCode, message: String?)
     case serverCommandError(error: String)
+    case unauthorizedCommandAttempt
 }
