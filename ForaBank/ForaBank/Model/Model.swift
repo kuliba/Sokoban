@@ -237,9 +237,6 @@ class Model {
                     action.send(ModelAction.Dictionary.UpdateCache.All())
 
                 case .expired, .failed:
-                    guard auth.value == .authorized else {
-                        return
-                    }
                     auth.value = authIsCredentialsStored ? .unlockRequired : .registerRequired
                 }
                 

@@ -113,27 +113,30 @@ class SessionAgent: SessionAgentProtocol {
             return
         }
         
-        let sessionTimeRemain = sessionTimeRemain(for: time)
+        let sessionTimeRemain = Self.sessionTimeRemain(currentTime: time, lastNetworkActivityTime: lastUserActivityTime, sessionDuration: sessionDuration)
+        
         guard sessionTimeRemain > 0 else {
             
             sessionState.send(.expired)
             return
         }
         
-        if isSessionExtendRequired(for: sessionTimeRemain) == true {
+        let isSessionExtendRequired = Self.isSessionExtendRequired(sessionTimeRemain: sessionTimeRemain, sessionDuration: sessionDuration, sessionExtentThreshold: sessionExtentThreshold, lastNetworkActivityTime: lastNetworkActivityTime, lastUserActivityTime: lastUserActivityTime)
+        
+        if isSessionExtendRequired == true {
             
             action.send(SessionAgentAction.Session.Extend.Request())
         }
     }
     
-    func sessionTimeRemain(for time: TimeInterval) -> TimeInterval {
+    static func sessionTimeRemain(currentTime: TimeInterval, lastNetworkActivityTime: TimeInterval, sessionDuration: TimeInterval) -> TimeInterval {
         
-        let timeSinceLastNetworkActivity = time - lastNetworkActivityTime
+        let timeSinceLastNetworkActivity = currentTime - lastNetworkActivityTime
         
         return max(sessionDuration - timeSinceLastNetworkActivity, 0)
     }
     
-    func isSessionExtendRequired(for sessionTimeRemain: TimeInterval) -> Bool {
+    static func isSessionExtendRequired(sessionTimeRemain: TimeInterval, sessionDuration: TimeInterval, sessionExtentThreshold: Double, lastNetworkActivityTime: TimeInterval, lastUserActivityTime: TimeInterval) -> Bool {
         
         return Double(sessionTimeRemain / sessionDuration) < (1 - sessionExtentThreshold) && lastUserActivityTime > lastNetworkActivityTime
     }

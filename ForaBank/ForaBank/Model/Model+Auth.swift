@@ -293,6 +293,7 @@ internal extension Model {
     func handleAuthSessionExtendRequest() {
         
         guard let token = token else {
+            self.action.send(ModelAction.Auth.Session.Extend.Response(result: .failure(ModelError.unauthorizedCommandAttempt)))
             handledUnauthorizedCommandAttempt()
             return
         }
@@ -304,20 +305,24 @@ internal extension Model {
             case .success(let response):
                 switch response.statusCode {
                 case .ok:
-                    guard let duration = response.data else {
+                    if let duration = response.data  {
                         
+                        self.action.send(ModelAction.Auth.Session.Extend.Response(result: .success(TimeInterval(duration))))
+                        
+                    } else {
+                        
+                        self.action.send(ModelAction.Auth.Session.Extend.Response(result: .failure(ModelError.emptyData(message: response.errorMessage))))
                         self.handleServerCommandEmptyData(command: command)
-                        return
                     }
-                    self.action.send(ModelAction.Auth.Session.Extend.Response(result: .success(TimeInterval(duration))))
-                    
+
                 default:
+                    self.action.send(ModelAction.Auth.Session.Extend.Response(result: .failure(ModelError.statusError(status: response.statusCode, message: response.errorMessage))))
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: String(describing: response.errorMessage))
                 }
 
             case .failure(let error):
-                self.handleServerCommandError(error: error, command: command)
                 self.action.send(ModelAction.Auth.Session.Extend.Response(result: .failure(error)))
+                self.handleServerCommandError(error: error, command: command)
             }
         }
     }
