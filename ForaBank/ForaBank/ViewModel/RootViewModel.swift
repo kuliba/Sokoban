@@ -185,7 +185,6 @@ class RootViewModel: ObservableObject, Resetable {
                     case .success:
                         
                         self.model.action.send(ModelAction.GetPersonAgreement.Request(system: .sbp, type: nil))
-                        self.model.action.send(ModelAction.FastPaymentSettings.ContractFindList.Request())
                     case .failed:
                         
                         break

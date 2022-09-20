@@ -1114,6 +1114,7 @@ private extension Model {
         case let .sbpPay(tokenIntent):
                 
             self.action.send(ModelAction.SbpPay.Register.Request(tokenIntent: tokenIntent))
+            self.action.send(ModelAction.FastPaymentSettings.ContractFindList.Request())
 
         case .invalidLink:
             break
