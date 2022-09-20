@@ -125,7 +125,7 @@ extension Model {
         let productsListError = ProductsListError.emptyData(message: ProductsListError.errorMessage)
 
         accountOpening.value = true
-        action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет открывается", icon: .refresh)))
+        action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет открывается", icon: .refresh, type: .openAccount)))
         
         serverAgent.executeCommand(command: command) { result in
 
@@ -144,6 +144,7 @@ extension Model {
 
                     self.accountOpening.value = false
                     self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет открыт", icon: .check)))
+                    
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.complete(data))
 
                 default:
@@ -151,11 +152,18 @@ extension Model {
 
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: errorMessage)
                     
-                    self.accountOpening.value = false
-
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .statusError(status: response.statusCode, message: errorMessage)))
                     
-                    self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет не открыт", icon: .close)))
+                    self.accountOpening.value = false
+                    
+                    if let errorMessage = errorMessage, OpenAccountRawResponse(rawValue: errorMessage) == nil {
+                        
+                        self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет не открыт", icon: .close)))
+                        
+                    } else {
+                        
+                        self.action.send(ModelAction.Informer.Dismiss(type: .openAccount))
+                    }
                 }
 
             case let .failure(error):
@@ -164,7 +172,6 @@ extension Model {
                 self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .serverCommandError(error: error.localizedDescription)))
                 
                 self.accountOpening.value = false
-                
                 self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет не открыт", icon: .close)))
             }
         }
@@ -184,18 +191,6 @@ extension Model {
             
             // Обновление списка счетов
             action.send(ModelAction.Account.ProductList.Request())
-        }
-    }
-    
-    func accountInformerDismissTime(error: Model.ProductsListError) -> TimeInterval {
-        
-        let rawValue = accountRawResponse(error: error)
-        
-        switch rawValue {
-        case .exhaust, .incorrect:
-            return 2
-        case .none:
-            return 0
         }
     }
     
@@ -230,10 +225,12 @@ extension Model {
         return messageError
     }
     
-    func accountRawResponse(error: Model.ProductsListError) -> OpenAccountRawResponse {
+    func accountRawResponse(error: Model.ProductsListError) -> OpenAccountRawResponse? {
         
-        guard let rawValue = OpenAccountRawResponse(rawValue: messageError(error: error)) else {
-            return .none
+        let rawValue = OpenAccountRawResponse(rawValue: messageError(error: error))
+        
+        guard let rawValue = rawValue else {
+            return nil
         }
         
         return rawValue
