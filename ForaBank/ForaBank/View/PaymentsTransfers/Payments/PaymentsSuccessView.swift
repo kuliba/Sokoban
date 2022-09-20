@@ -104,13 +104,18 @@ struct PaymentsSuccessView: View {
                 ButtonSimpleView(viewModel: viewModel.actionButton)
                     .frame(height: 48)
                     .padding(.horizontal, 20)
-                    .padding(.bottom, viewModel.bottomPadding)
+                    .padding(.bottom, bottomPadding)
             }
         }
     }
 }
 
 extension PaymentsSuccessView {
+    
+    var bottomPadding: CGFloat {
+        
+        UIApplication.safeAreaInsets.bottom == 0 ? 20 : 0
+    }
     
     // MARK: - Icon
     
