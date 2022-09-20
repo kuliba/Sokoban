@@ -235,9 +235,6 @@ class Model {
                     action.send(ModelAction.Dictionary.UpdateCache.All())
 
                 case .expired, .failed:
-                    guard auth.value == .authorized else {
-                        return
-                    }
                     auth.value = authIsCredentialsStored ? .unlockRequired : .registerRequired
                 }
                 
@@ -886,7 +883,7 @@ private extension Model {
     
     func loadCachedAuthorizedData() {
         
-        self.products.value = productsCacheLoadData()
+        self.products.value = productsCacheLoad()
         
         if let paymentTemplates = localAgent.load(type: [PaymentTemplateData].self) {
             
@@ -962,7 +959,7 @@ private extension Model {
         
         do {
             
-            try productsCacheClearData()
+            try productsCacheClear()
             
         } catch {
             
@@ -1107,6 +1104,7 @@ private extension Model {
         case let .sbpPay(tokenIntent):
                 
             self.action.send(ModelAction.SbpPay.Register.Request(tokenIntent: tokenIntent))
+            self.action.send(ModelAction.FastPaymentSettings.ContractFindList.Request())
 
         case .invalidLink:
             break

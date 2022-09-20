@@ -12,7 +12,6 @@ import RealmSwift
 
 final class OperationDetailInfoViewModel: Identifiable {
     
-    
     let id = UUID()
     let title = "Детали операции"
     var logo: Image?
@@ -587,20 +586,49 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(BankCellViewModel(title: "Наименование ТСП", icon: image, name: statement.merchant))
             }
             cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: dateString))
-            cells.append(BankCellViewModel(title: "Статус операции", icon: Image("OkOperators"), name: "Исполнен"))
+            
+            if let status = operation?.operationStatus {
+             
+                let title = "Статус операции"
+                switch status {
+                    
+                case .complete:
+                    cells.append(BankCellViewModel(title: title, icon: Image("OkOperators"), name: "Успешно"))
+                    
+                case .inProgress:
+                    cells.append(BankCellViewModel(title: title, icon: Image("waiting"), name: "В обработке"))
+
+                case .rejected:
+                    cells.append(BankCellViewModel(title: title, icon: Image("rejected"), name: "Отказ"))
+
+                case .unknown:
+                    break
+                }
+                
+            } else if let isCancellation = statement.isCancellation, isCancellation {
+                
+                cells.append(BankCellViewModel(title: title, icon: Image("rejected"), name: "Отказ"))
+                
+            } else if operation == nil, statement.isCancellation == nil {
+                
+                cells.append(BankCellViewModel(title: title, icon: Image("OkOperators"), name: "Успешно"))
+            }
+            
             if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
+            
                 cells.append(debitAccounCell)
             }
+            
             let payeerLabel = statement.operationType == .debit ? "Получатель" : "Отправитель"
             
             cells.append(BankCellViewModel(title: payeerLabel, icon: Image("hash"), name: statement.fastPayment?.foreignName ?? ""))
             if let bankName = statement.fastPayment?.foreignBankName, statement.operationType == .debit {
                 
-                cells.append(BankCellViewModel(title: "Банк получателя", icon:  imageBank ?? Image("bank_icon"), name: bankName))
+                cells.append(BankCellViewModel(title: "Банк получателя", icon:  imageBank ?? Image("BankIcon"), name: bankName))
                 
-            } else if let bankName = statement.fastPayment?.foreignBankName, let image = imageBank {
+            } else if let bankName = statement.fastPayment?.foreignBankName {
                 
-                cells.append(BankCellViewModel(title: "Банк отправителя", icon: image, name: bankName))
+                cells.append(BankCellViewModel(title: "Банк отправителя", icon: imageBank ?? Image("BankIcon"), name: bankName))
             }
             
             if let comment = statement.fastPayment?.documentComment {
@@ -632,7 +660,6 @@ private extension OperationDetailInfoViewModel {
         let title = operationType == .debit ? "Счет списания" : "Счет зачисления"
         
         guard let smallDesign = product.smallDesign.image,
-              let additionalField = product.additionalField,
               let description = product.number?.suffix(4),
               let balanceString = product.balance?.currencyFormatter(symbol: productCurrency) else  {
             return nil
@@ -640,7 +667,13 @@ private extension OperationDetailInfoViewModel {
         
         let productName = product.mainField
         
-        return ProductCellViewModel(title: title, icon: smallDesign, name: productName, iconPaymentService: nil, balance: balanceString, description: "· \(description) · \(additionalField)")
+        if let additionalField = product.additionalField {
+         
+            return ProductCellViewModel(title: title, icon: smallDesign, name: productName, iconPaymentService: nil, balance: balanceString, description: "· \(description) · \(additionalField)")
+        } else {
+            
+            return ProductCellViewModel(title: title, icon: smallDesign, name: productName, iconPaymentService: nil, balance: balanceString, description: "· \(description)")
+        }
     }
 }
 

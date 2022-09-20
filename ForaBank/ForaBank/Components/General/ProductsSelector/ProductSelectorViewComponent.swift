@@ -31,6 +31,7 @@ extension ProductSelectorView {
         @Published var isUserInteractionEnabled: Bool
         let backgroundColor: BackgroundColor
         let titleIndent: TitleIndent
+        @Published var context: Context
         
         var bindings = Set<AnyCancellable>()
         
@@ -47,7 +48,8 @@ extension ProductSelectorView {
              isUserInteractionEnabled: Bool = true,
              isDividerHiddable: Bool = false,
              backgroundColor: BackgroundColor = .gray,
-             titleIndent: TitleIndent = .normal) {
+             titleIndent: TitleIndent = .normal,
+             context: Context) {
             
             self.model = model
             self.title = title
@@ -59,6 +61,7 @@ extension ProductSelectorView {
             self.isDividerHiddable = isDividerHiddable
             self.backgroundColor = backgroundColor
             self.titleIndent = titleIndent
+            self.context = context
             
             bind()
         }
@@ -71,9 +74,10 @@ extension ProductSelectorView {
             listViewModel: ProductsListView.ViewModel? = nil,
             isDividerHiddable: Bool = false,
             backgroundColor: BackgroundColor = .gray,
-            titleIndent: TitleIndent = .normal) {
+            titleIndent: TitleIndent = .normal,
+            context: Context) {
             
-                self.init(model, title: "", currency: currency, currencyOperation: currencyOperation, productViewModel: productViewModel, listViewModel: listViewModel, isDividerHiddable: isDividerHiddable, backgroundColor: backgroundColor, titleIndent: titleIndent)
+                self.init(model, title: "", currency: currency, currencyOperation: currencyOperation, productViewModel: productViewModel, listViewModel: listViewModel, isDividerHiddable: isDividerHiddable, backgroundColor: backgroundColor, titleIndent: titleIndent, context: context)
         }
         
         convenience init(_ model: Model, product: ProductData, backgroundColor: BackgroundColor) {
@@ -116,14 +120,14 @@ extension ProductSelectorView {
                     
                     switch action {
                         
-                    case _ as ProductSelectorView.ProductAction.Toggle:
+                    case let payload as ProductSelectorView.ProductAction.Toggle:
                         
                         withAnimation {
                             
                             switch listViewModel == nil {
                             case true:
                                 
-                                self.listViewModel = makeProductsList()
+                                self.listViewModel = makeProductsList(with: payload.context)
                                 bindList()
                                 
                                 listViewModel?.$products
@@ -248,7 +252,7 @@ extension ProductSelectorView {
             }
         }
         
-        private func makeProductsList() -> ProductsListView.ViewModel? {
+        private func makeProductsList(with context: Context) -> ProductsListView.ViewModel? {
             
             guard let productViewModel = productViewModel, let productData = model.product(productId: productViewModel.productId) else {
                 return nil
@@ -257,7 +261,7 @@ extension ProductSelectorView {
             let products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productData.productType)
             bind(products)
             
-            let listViewModel: ProductsListView.ViewModel = .init(model, currencyOperation: currencyOperation, currency: currency, productType: productData.productType, products: products)
+            let listViewModel: ProductsListView.ViewModel = .init(model, currencyOperation: currencyOperation, currency: currency, productType: productData.productType, products: products, context: .init(isAdditionalProducts: false))
             
             return listViewModel
         }
@@ -335,6 +339,11 @@ extension ProductSelectorView {
 extension ProductSelectorView.ViewModel {
     
     // MARK: - ProductContent
+    
+    struct Context {
+        
+        let isAdditionalProducts: Bool
+    }
     
     class ProductContentViewModel: ObservableObject {
         
@@ -446,7 +455,10 @@ extension ProductSelectorView {
     
     enum ProductAction {
     
-        struct Toggle: Action {}
+        struct Toggle: Action {
+            
+            let context: ProductSelectorView.ViewModel.Context
+        }
         
         struct Selected: Action {
             
@@ -482,7 +494,7 @@ extension ProductSelectorView {
                     
                     ProductSelectorView.ProductContentView(viewModel: productViewModel)
                         .onTapGesture {
-                            viewModel.action.send(ProductSelectorView.ProductAction.Toggle())
+                            viewModel.action.send(ProductSelectorView.ProductAction.Toggle(context: viewModel.context))
                         }
                     
                 } else {
@@ -629,7 +641,8 @@ extension ProductSelectorView.ViewModel {
             name: "Platinum",
             balance: "2,71 млн ₽",
             numberCard: "2953",
-            description: "Все включено"))
+            description: "Все включено"),
+        context: .init(isAdditionalProducts: false))
     
     static let sample2 = ProductSelectorViewModel(
         .emptyMock,
@@ -644,7 +657,8 @@ extension ProductSelectorView.ViewModel {
             balance: "2,71 млн ₽",
             numberCard: "2953",
             description: "Все включено"),
-        listViewModel: .sample)
+        listViewModel: .sample,
+        context: .init(isAdditionalProducts: false))
     
     static let sample3 = ProductSelectorViewModel(
         .emptyMock,
@@ -659,7 +673,8 @@ extension ProductSelectorView.ViewModel {
             balance: "0 $",
             numberCard: "",
             description: "Валютный"),
-        isDividerHiddable: true)
+        isDividerHiddable: true,
+        context: .init(isAdditionalProducts: false))
 }
 
 // MARK: - Previews

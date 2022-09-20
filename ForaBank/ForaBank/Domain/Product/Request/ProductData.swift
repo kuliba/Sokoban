@@ -279,3 +279,30 @@ extension ProductData {
         allowCredit == (currencyOperation == .sell) ? true : false
     }
 }
+
+//MARK: ProductData Helpers
+
+extension ProductData {
+    
+    var ownerProduct: Bool {
+        
+        let clientId = Model.shared.clientInfo.value?.id
+        return self.ownerId == clientId
+    }
+    
+    var additionalAccountId: Int? {
+        
+        switch self {
+        case let card as ProductCardData:
+           
+            return card.accountId
+            
+        case let deposit as ProductDepositData:
+
+            return deposit.accountId
+            
+        default:
+            return nil
+        }
+    }
+}

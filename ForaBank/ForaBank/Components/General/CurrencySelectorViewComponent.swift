@@ -166,7 +166,7 @@ extension CurrencySelectorView {
                 return nil
             }
             
-            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, currency: .rub, currencyOperation: currencyOperation, productViewModel: .init(productId: productData.id, productData: productData, model: model))
+            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, currency: .rub, currencyOperation: currencyOperation, productViewModel: .init(productId: productData.id, productData: productData, model: model), context: .init(isAdditionalProducts: true))
             
             return selectorViewModel
         }
@@ -189,12 +189,12 @@ extension CurrencySelectorView {
             
             guard let productData = products.first else {
                 
-                let selectorViewModel: ProductSelectorView.ViewModel = .init(model, currency: currency, currencyOperation: currencyOperation, productViewModel: nil, isDividerHiddable: true)
+                let selectorViewModel: ProductSelectorView.ViewModel = .init(model, currency: currency, currencyOperation: currencyOperation, productViewModel: nil, isDividerHiddable: true, context: .init(isAdditionalProducts: true))
                 
                 return selectorViewModel
             }
             
-            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, currency: currency, currencyOperation: currencyOperation, productViewModel: .init(productId: productData.id, productData: productData, model: model), isDividerHiddable: true)
+            let selectorViewModel: ProductSelectorView.ViewModel = .init(model, currency: currency, currencyOperation: currencyOperation, productViewModel: .init(productId: productData.id, productData: productData, model: model), isDividerHiddable: true, context: .init(isAdditionalProducts: true))
             
             return selectorViewModel
         }

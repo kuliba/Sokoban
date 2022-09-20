@@ -292,7 +292,7 @@ extension Model {
                     // cache products
                     do {
                         
-                        try self.productsCaheData(productsData: updatedProducts)
+                        try self.productsCaheStore(productsData: updatedProducts)
                         
                     } catch {
                         
@@ -348,7 +348,7 @@ extension Model {
                     // cache products
                     do {
                         
-                        try self.productsCaheData(productsData: updatedProducts)
+                        try self.productsCaheStore(productsData: updatedProducts)
                         
                     } catch {
                         
@@ -427,7 +427,7 @@ extension Model {
                     // cache products
                     do {
                         
-                        try self.productsCaheData(productsData: updatedProducts)
+                        try self.productsCaheStore(productsData: updatedProducts)
                         
                     } catch {
                         
@@ -496,7 +496,7 @@ extension Model {
                 // cache products
                 do {
                     
-                    try self.productsCaheData(productsData: updatedProducts)
+                    try self.productsCaheStore(productsData: updatedProducts)
                     
                 } catch {
                     
@@ -563,7 +563,7 @@ extension Model {
                     // cache products
                     do {
                         
-                        try self.productsCaheData(productsData: updatedProducts)
+                        try self.productsCaheStore(productsData: updatedProducts)
                         
                     } catch {
                         
@@ -1087,26 +1087,194 @@ extension Model {
 
 extension Model {
     
-    func productsCaheData(productsData: ProductsData) throws {
+    func productsCaheStore(productsData: ProductsData) throws {
         
-        try localAgent.store(productsData, serial: nil)
-    }
+        var errors = [Error]()
+        
+        for type in ProductType.allCases {
+        
+            switch type {
+            case .card:
+                if let cardProducts = productsData[.card] as? [ProductCardData] {
+                    
+                    do {
+                    
+                        try localAgent.store(cardProducts, serial: nil)
+                        
+                    } catch {
+                        
+                        errors.append(error)
+                    }
+                    
+                } else {
+                    
+                    do {
+                        
+                        try localAgent.clear(type: [ProductCardData].self)
     
-    func productsCacheLoadData() -> ProductsData {
+                    } catch {
+                        
+                        errors.append(error)
+                    }
+                }
+            
+            case .account:
+                if let accountProducts = productsData[.account] as? [ProductAccountData] {
+                    
+                    do {
+                    
+                        try localAgent.store(accountProducts, serial: nil)
+                        
+                    } catch {
+                        
+                        errors.append(error)
+                    }
+                    
+                } else {
+                    
+                    do {
+                        
+                        try localAgent.clear(type: [ProductAccountData].self)
+    
+                    } catch {
+                        
+                        errors.append(error)
+                    }
+                }
+                
+            case .deposit:
+                if let depositProducts = productsData[.deposit] as? [ProductDepositData] {
+                    
+                    do {
+                    
+                        try localAgent.store(depositProducts, serial: nil)
+                        
+                    } catch {
+                        
+                        errors.append(error)
+                    }
+                    
+                } else {
+                    
+                    do {
+                        
+                        try localAgent.clear(type: [ProductDepositData].self)
+    
+                    } catch {
+                        
+                        errors.append(error)
+                    }
+                }
+                
+            case .loan:
+                if let loanProducts = productsData[type] as? [ProductLoanData] {
+                    
+                    do {
+                    
+                        try localAgent.store(loanProducts, serial: nil)
+                        
+                    } catch {
+                        
+                        errors.append(error)
+                    }
+                    
+                } else {
+                    
+                    do {
+                        
+                        try localAgent.clear(type: [ProductLoanData].self)
+    
+                    } catch {
+                        
+                        errors.append(error)
+                    }
+                }
+            }
+        }
         
-        if let productsData = localAgent.load(type: ProductsData.self) {
+        if errors.isEmpty == false {
             
-            return productsData
-            
-        } else {
-            
-            return ProductsData()
+            throw ModelProductsError.cacheStoreErrors(errors)
         }
     }
     
-    func productsCacheClearData() throws  {
+    func productsCacheLoad() -> ProductsData {
         
-        try localAgent.clear(type: ProductsData.self)
+        var productsData = ProductsData()
+        
+        for type in ProductType.allCases {
+            
+            switch type {
+            case .card:
+                productsData[.card] = localAgent.load(type: [ProductCardData].self)
+                
+            case .account:
+                productsData[.account] = localAgent.load(type: [ProductAccountData].self)
+                
+            case .deposit:
+                productsData[.deposit] = localAgent.load(type: [ProductDepositData].self)
+                
+            case .loan:
+                productsData[.loan] = localAgent.load(type: [ProductLoanData].self)
+            }
+        }
+        
+        return productsData
+    }
+    
+    func productsCacheClear() throws  {
+        
+        var errors = [Error]()
+        
+        for type in ProductType.allCases {
+            
+            switch type {
+            case .card:
+                do {
+                    
+                    try localAgent.clear(type: [ProductCardData].self)
+                    
+                } catch {
+                    
+                    errors.append(error)
+                }
+                
+            case .account:
+                do {
+                    
+                    try localAgent.clear(type: [ProductAccountData].self)
+                    
+                } catch {
+                    
+                    errors.append(error)
+                }
+                
+            case .deposit:
+                do {
+                    
+                    try localAgent.clear(type: [ProductDepositData].self)
+                    
+                } catch {
+                    
+                    errors.append(error)
+                }
+                
+            case .loan:
+                do {
+                    
+                    try localAgent.clear(type: [ProductLoanData].self)
+                    
+                } catch {
+                    
+                    errors.append(error)
+                }
+            }
+        }
+        
+        if errors.isEmpty == false {
+            
+            throw ModelProductsError.cacheClearErrors(errors)
+        }
     }
 }
 
@@ -1118,5 +1286,6 @@ enum ModelProductsError: Swift.Error {
     case statusError(status: ServerStatusCode, message: String?)
     case serverCommandError(error: String)
     case unableCacheUnknownProductType
-    case clearCacheErrors([Error])
+    case cacheStoreErrors([Error])
+    case cacheClearErrors([Error])
 }

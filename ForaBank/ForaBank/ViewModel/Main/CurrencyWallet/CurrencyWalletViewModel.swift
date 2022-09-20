@@ -633,6 +633,9 @@ class CurrencyWalletViewModel: ObservableObject {
             messageError = message
         case let .serverCommandError(error):
             messageError = error.description
+            
+        default:
+            messageError = nil
         }
 
         guard let messageError = messageError else {
