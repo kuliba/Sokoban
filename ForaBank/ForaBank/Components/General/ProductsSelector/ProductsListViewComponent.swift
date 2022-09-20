@@ -21,17 +21,19 @@ extension ProductsListView {
         @Published var productType: ProductType
         @Published var currencyOperation: CurrencyOperation
         @Published var currency: Currency
+        @Published var context: ProductSelectorView.ViewModel.Context
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(_ model: Model, currencyOperation: CurrencyOperation, currency: Currency, productType: ProductType, products: [ProductView.ViewModel]) {
+        init(_ model: Model, currencyOperation: CurrencyOperation, currency: Currency, productType: ProductType, products: [ProductView.ViewModel], context: ProductSelectorView.ViewModel.Context) {
             
             self.model = model
             self.currencyOperation = currencyOperation
             self.currency = currency
             self.productType = productType
             self.products = products
+            self.context = context
             
             let products = model.products(currency: currency, currencyOperation: currencyOperation)
             optionSelector = Self.makeOptionSelector(products: products, selected: productType.rawValue)
@@ -66,7 +68,7 @@ extension ProductsListView {
                         
                         if let productType = ProductType(rawValue: selected) {
                             
-                            products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType)
+                            products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType, context: context)
                             bind(products)
                             
                             if products.isEmpty == true {
@@ -137,7 +139,7 @@ extension ProductsListView {
                             
                             if let productType = ProductType(rawValue: selected) {
                                 
-                                self.products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType)
+                                self.products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType, context: context)
                                 bind(self.products)
                                 
                                 if products.isEmpty == true {
@@ -199,21 +201,26 @@ extension ProductsListView.ViewModel {
         return options
     }
     
-    static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType) -> [ProductView.ViewModel] {
-        
-        let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
+    static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType, context: ProductSelectorView.ViewModel.Context) -> [ProductView.ViewModel] {
+
+        var filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
+
+        if !context.isAdditionalProducts {
+            
+            filterredProducts = filterredProducts.filter({ $0.ownerProduct }).uniqueValues(value: { $0.additionalAccountId })
+        }
         
         let products = filterredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model) }
-        
+
         return products
     }
-    
+
     static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation) -> [ProductView.ViewModel] {
-        
+
         let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
-        
+
         let products = filterredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model) }
-        
+
         return products
     }
 }
@@ -266,7 +273,7 @@ enum ProductsListAction {
 
 extension ProductsListView.ViewModel {
     
-    static let sample = ProductsListView.ViewModel(.emptyMock, currencyOperation: .buy, currency: .rub, productType: .card, products: [.classicSmall, .accountSmall, .accountSmall])
+    static let sample = ProductsListView.ViewModel(.emptyMock, currencyOperation: .buy, currency: .rub, productType: .card, products: [.classicSmall, .accountSmall, .accountSmall], context: .init(isAdditionalProducts: false))
 }
 
 // MARK: - Previews
