@@ -893,7 +893,7 @@ private extension Model {
     
     func loadCachedAuthorizedData() {
         
-        self.products.value = productsCacheLoadData()
+        self.products.value = productsCacheLoad()
         
         if let paymentTemplates = localAgent.load(type: [PaymentTemplateData].self) {
             
@@ -969,7 +969,7 @@ private extension Model {
         
         do {
             
-            try productsCacheClearData()
+            try productsCacheClear()
             
         } catch {
             
