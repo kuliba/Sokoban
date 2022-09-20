@@ -15,7 +15,7 @@ import Combine
 extension MainSectionPromoView {
     
     class ViewModel: MainSectionViewModel {
-
+        
         override var type: MainSectionType { .promo }
         @Published var banners: [BannerViewModel]
         
@@ -54,7 +54,7 @@ extension MainSectionPromoView {
                             case let payload as BannerActionDepositOpen:
                                 let action: () -> Void = { self.action.send(MainSectionViewModelAction.PromoAction.ButtonTapped(actionData: payload))}
                                 bannerViewModel.showAction = action
-
+                                
                             case let payload as BannerActionDepositsList:
                                 let action: () -> Void = { self.action.send(MainSectionViewModelAction.PromoAction.ButtonTapped(actionData: payload))}
                                 bannerViewModel.showAction = action
@@ -62,9 +62,14 @@ extension MainSectionPromoView {
                             case let payload as BannerActionMigTransfer:
                                 let action: () -> Void = { self.action.send(MainSectionViewModelAction.PromoAction.ButtonTapped(actionData: payload))}
                                 bannerViewModel.showAction = action
+                                
+                            case let payload as BannerActionContactTransfer:
+                                let action: () -> Void = { self.action.send(MainSectionViewModelAction.PromoAction.ButtonTapped(actionData: payload))}
+                                bannerViewModel.showAction = action
+                                
                             default: break
                             }
-                    
+                            
                             updated.append(bannerViewModel)
                             
                             guard bannerViewModel.image == nil else { continue }
@@ -87,6 +92,11 @@ extension MainSectionPromoView {
                             case let payload as BannerActionMigTransfer:
                                 let action: () -> Void = { self.action.send(MainSectionViewModelAction.PromoAction.ButtonTapped(actionData: payload))}
                                 bannerViewModel.showAction = action
+                                
+                            case let payload as BannerActionContactTransfer:
+                                let action: () -> Void = { self.action.send(MainSectionViewModelAction.PromoAction.ButtonTapped(actionData: payload))}
+                                bannerViewModel.showAction = action
+                                
                             default: break
                             }
                             
@@ -100,7 +110,7 @@ extension MainSectionPromoView {
                         
                         banners = updated
                     }
-    
+                    
                 }.store(in: &bindings)
             
             model.action
@@ -112,33 +122,36 @@ extension MainSectionPromoView {
                         switch payload.result {
                         case .success(let data):
                             
+                            
                             if let image = Image(data: data) {
                                 
-                                let bannerViewModel = banners.first(where: { $0.id == payload.endpoint })
+                                let bannersFilter = banners.filter({$0.image == .endpoint(payload.endpoint)})
                                 
                                 withAnimation {
                                     
-                                    bannerViewModel?.image = image
+                                    for banner in bannersFilter {
+                                        
+                                        banner.image = .image(image)
+                                    }
                                 }
-                            
+                                
                             } else {
                                 
                                 // remove banner if creating image from data failed
                                 withAnimation {
                                     
-                                    banners = banners.filter{ $0.id != payload.endpoint }
+                                    banners = banners.filter{ $0.image != .endpoint(payload.endpoint) }
                                 }
                             }
                             
                         case .failure:
-                           
                             // remove banner if image downloading failed
                             withAnimation {
                                 
-                                banners = banners.filter{ $0.id != payload.endpoint }
+                                banners = banners.filter{ $0.image != .endpoint(payload.endpoint) }
                             }
                         }
-    
+                        
                     default:
                         break
                     }
@@ -151,15 +164,21 @@ extension MainSectionPromoView {
 extension MainSectionPromoView.ViewModel {
     
     class BannerViewModel: Identifiable, ObservableObject {
-
+        
         let id: BannerCatalogListData.ID
-        @Published var image: Image?
+        @Published var image: BannerImage
         let url: URL
         var showAction: () -> Void?
         let openLink: Bool
-
-        internal init(id: String = UUID().uuidString, image: Image?, url: URL, showAction: @escaping () -> Void, openLink: Bool) {
-
+        
+        enum BannerImage: Equatable {
+            
+            case endpoint(String)
+            case image(Image)
+        }
+        
+        internal init(id: Int, image: BannerImage, url: URL, showAction: @escaping () -> Void, openLink: Bool) {
+            
             self.id = id
             self.image = image
             self.url = url
@@ -169,8 +188,9 @@ extension MainSectionPromoView.ViewModel {
         
         convenience init(with bannerData: BannerCatalogListData) {
             
+            let image: BannerImage = .endpoint(bannerData.imageEndpoint)
             let openLink = { bannerData.action != nil }()
-            self.init(id: bannerData.id, image: nil, url: bannerData.orderURL, showAction: {}, openLink: openLink)
+            self.init(id: bannerData.id, image: image, url: bannerData.orderURL, showAction: {}, openLink: openLink)
         }
     }
 }
@@ -186,7 +206,7 @@ struct MainSectionPromoView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             
             HStack(spacing: 8) {
-                                
+                
                 ForEach(viewModel.banners) { bannerViewModel in
                     
                     BannerView(viewModel: bannerViewModel)
@@ -202,79 +222,43 @@ struct MainSectionPromoView: View {
         
         var body: some View {
             
-            if let image = viewModel.image {
-                
-                if #available(iOS 14.0, *) {
-                    
-                    if viewModel.openLink {
-                        
-                        Button{
-                            viewModel.showAction()
-                            
-                        } label: {
-                            
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 288, height: 124)
-                                .cornerRadius(12)
-                            
-                        }.buttonStyle(PushButtonStyle())
-                        
-                    } else {
-                        
-                        Link(destination: viewModel.url) {
-                            
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 288, height: 124)
-                                .cornerRadius(12)
-                            
-                        }.buttonStyle(PushButtonStyle())
-                    }
-                    
-                } else {
-                    
-                    if viewModel.openLink {
-                        
-                        Button{
-                            viewModel.showAction()
-                            
-                        } label: {
-                            
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 288, height: 124)
-                                .cornerRadius(12)
-                            
-                        }.buttonStyle(PushButtonStyle())
-                        
-                    } else  {
-                     
-                        Button{
-                            
-                            UIApplication.shared.open(viewModel.url)
-                            
-                        } label: {
-                            
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 288, height: 124)
-                                .cornerRadius(12)
-                            
-                        }.buttonStyle(PushButtonStyle())
-                    }
-                }
-                
-            } else {
+            switch viewModel.image {
+            case .endpoint:
                 
                 Color.mainColorsGrayLightest
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .frame(width: 288, height: 124)
                     .shimmering(active: true, bounce: false)
+                
+            case .image(let image):
+                
+                if viewModel.openLink {
+                    
+                    Button{
+                        viewModel.showAction()
+                        
+                    } label: {
+                        
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 288, height: 124)
+                            .cornerRadius(12)
+                        
+                    }.buttonStyle(PushButtonStyle())
+                    
+                } else {
+                    
+                    Link(destination: viewModel.url) {
+                        
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 288, height: 124)
+                            .cornerRadius(12)
+                        
+                    }.buttonStyle(PushButtonStyle())
+                }
             }
         }
     }
@@ -291,7 +275,7 @@ struct MainSectionPromotionsView_Previews: PreviewProvider {
             MainSectionPromoView(viewModel: .sample)
                 .previewLayout(.fixed(width: 375, height: 300))
             
-            MainSectionPromoView.BannerView(viewModel: .init(id: UUID().uuidString, image: nil, url: URL(string: "https://google.com")!, showAction: {}, openLink: true))
+            MainSectionPromoView.BannerView(viewModel: .init(id: 0, image: .image(.ic48Abroad), url: URL(string: "https://google.com")!, showAction: {}, openLink: true))
                 .previewLayout(.fixed(width: 375, height: 300))
         }
     }
@@ -300,6 +284,6 @@ struct MainSectionPromotionsView_Previews: PreviewProvider {
 //MARK: - Preview Content
 
 extension MainSectionPromoView.ViewModel {
-
-    static let sample = MainSectionPromoView.ViewModel(banners: [.init(image: Image("Promo Banner Cashback"), url: URL(string: "https://google.com")!, showAction: {}, openLink: true), .init(image: Image("Promo Banner Mig"), url: URL(string: "https://google.com")!, showAction: {}, openLink: true)])
+    
+    static let sample = MainSectionPromoView.ViewModel(banners: [.init(id: 1, image: .image(Image("Promo Banner Cashback")), url: URL(string: "https://google.com")!, showAction: {}, openLink: true), .init(id: 0, image: .endpoint(""), url: URL(string: "https://google.com")!, showAction: {}, openLink: true)])
 }

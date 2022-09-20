@@ -7,15 +7,15 @@
 
 import Foundation
 
-struct BannerCatalogListData: Codable, Equatable, Identifiable {
+struct BannerCatalogListData: Codable, Equatable, Identifiable, Hashable {
     
-    var id: String { imageEndpoint }
+    var id: Int { hashValue }
     let productName: String
     let conditions: [String]
     let imageEndpoint: String
     let orderURL: URL
     let conditionURL: URL
-    var action: BannerAction?
+    let action: BannerAction?
     
     internal init(productName: String, conditions: [String], imageEndpoint: String, orderURL: URL, conditionURL: URL, action: BannerAction?) {
         self.productName = productName
@@ -53,7 +53,10 @@ struct BannerCatalogListData: Codable, Equatable, Identifiable {
         } else if let action = try? container.decodeIfPresent(BannerActionDepositsList.self, forKey: .action) {
             
             self.action = action
-        } else  {
+        } else if let action = try? container.decodeIfPresent(BannerActionContactTransfer.self, forKey: .action) {
+            
+            self.action = action
+        } else {
             
             self.action = nil
         }
@@ -69,17 +72,6 @@ struct BannerCatalogListData: Codable, Equatable, Identifiable {
         try container.encode(orderURL, forKey: .orderURL)
         try container.encode(conditionURL, forKey: .conditionURL)
     }
-    
-    static func == (lhs: BannerCatalogListData, rhs: BannerCatalogListData) -> Bool {
-        
-        lhs.conditionURL == rhs.conditionURL &&
-        lhs.productName == rhs.productName &&
-        lhs.conditions == rhs.conditions &&
-        lhs.imageEndpoint == rhs.imageEndpoint &&
-        lhs.orderURL == rhs.orderURL &&
-        lhs.conditionURL == rhs.conditionURL &&
-        lhs.action == rhs.action
-    }
 }
 
 enum BannerActionType: String, Codable, Equatable {
@@ -87,15 +79,20 @@ enum BannerActionType: String, Codable, Equatable {
     case openDeposit = "DEPOSIT_OPEN"
     case depositsList = "DEPOSITS"
     case migTransfer = "MIG_TRANSFER"
+    case contact = "CONTACT_TRANSFER"
 }
 
-class BannerAction: Codable, Equatable {
+class BannerAction: Codable, Equatable, Hashable {
     
     var type: BannerActionType { fatalError("Override in subclass") }
     
     static func == (lhs: BannerAction, rhs: BannerAction) -> Bool {
         
         lhs.type == rhs.type
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(type)
     }
 }
 
@@ -168,3 +165,34 @@ class BannerActionMigTransfer: BannerAction {
     }
 }
 
+class BannerActionContactTransfer: BannerAction {
+    
+    override var type: BannerActionType { .contact }
+    let countryId: String
+    
+    private enum CodingKeys: String, CodingKey {
+        
+        case countryId
+    }
+    
+    internal init(countryId: String) {
+        self.countryId = countryId
+        super.init()
+    }
+    
+    required init(from decoder: Decoder) throws {
+        
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        countryId = try container.decode(String.self, forKey: .countryId)
+        
+        try super.init(from: decoder)
+    }
+    
+    override func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(countryId, forKey: .countryId)
+        
+        try super.encode(to: encoder)
+    }
+}
