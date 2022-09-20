@@ -19,8 +19,9 @@ struct PaymentsSuccessView: View {
             
             Group {
                 
+                Spacer()
+                
                 StateIconView(viewModel: viewModel.iconType)
-                    .padding(.top, 132)
             }
             
             Group {
@@ -103,6 +104,7 @@ struct PaymentsSuccessView: View {
                 ButtonSimpleView(viewModel: viewModel.actionButton)
                     .frame(height: 48)
                     .padding(.horizontal, 20)
+                    .padding(.bottom, viewModel.bottomPadding)
             }
         }
     }

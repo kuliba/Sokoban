@@ -27,6 +27,11 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
+    var bottomPadding: CGFloat {
+        
+        UIApplication.safeAreaInsets.bottom == 0 ? 20 : 0
+    }
+    
     init(model: Model = .emptyMock,
          iconType: IconTypeViewModel,
          title: String? = nil,
