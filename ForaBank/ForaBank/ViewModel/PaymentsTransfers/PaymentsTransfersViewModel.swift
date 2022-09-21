@@ -257,7 +257,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }))
                             
                         case .byPhoneNumber:
-                            sheet = .init(type: .transferByPhone(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Sheet())})))
+                    
+                            bottomSheet = .init(type: .fastPayment(.init(self.model)))
                         }
                         
                     //Payments Section
@@ -354,6 +355,7 @@ extension PaymentsTransfersViewModel {
             case exampleDetail(String)
             case anotherCard(AnotherCardViewModel)
             case meToMe(MeToMeViewModel)
+            case fastPayment(ContactsViewModel)
         }
     }
     

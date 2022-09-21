@@ -15,17 +15,20 @@ extension SearchBarComponent {
         
         let action: PassthroughSubject<Action, Never> = .init()
         
-        @Published var text: String = ""
+        let icon: Image?
+        @Published var text: String
         @Published var isEditing = false
         let placeHolder: PlaceHolder
         let cancelButtonLabel = "Отмена"
         
         private var bindings = Set<AnyCancellable>()
         
-        internal init(isEditing: Bool = false, placeHolder: PlaceHolder) {
+        internal init(isEditing: Bool = false, placeHolder: PlaceHolder, icon: Image? = nil, text: String = "") {
             
             self.isEditing = isEditing
             self.placeHolder = placeHolder
+            self.icon = icon
+            self.text = text
             
             bind()
         }
@@ -35,22 +38,7 @@ extension SearchBarComponent {
             self.init(placeHolder: placeHolder)
         }
         
-        private func bind() {
-            
-            $text
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] text in
-                    
-                    let phoneNumberKit = PhoneNumberKit()
-                    let phone = try? phoneNumberKit.parse(text)
-                    if let phone = phone {
-                        
-                        let contactPhone = phoneNumberKit.format(phone, toType: .national)
-                        
-                        self.text = contactPhone
-                    }
-                }.store(in: &bindings)
-        }
+        private func bind() {}
         
         enum PlaceHolder: String {
             
