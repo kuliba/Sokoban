@@ -57,7 +57,24 @@ extension ModelAction {
                 case failure(message: String)
             }
         }
+        
+        struct CloseNotified: Action {
+            
+            let productId: ProductData.ID
+        }
     }
+}
+
+//MARK: - Data Helpers
+
+extension Model {
+
+   var depositsCloseNotified: [DepositCloseNotification] {
+
+       guard let depositsCloseNotified = localAgent.load(type: [DepositCloseNotification].self) else { return [] }
+
+       return depositsCloseNotified
+   }
 }
 
 //MARK: - Handlers
@@ -188,6 +205,22 @@ extension Model {
                 self.handleServerCommandError(error: error, command: command)
                 self.action.send(ModelAction.Deposits.Info.Single.Response.failure(message: error.localizedDescription))
             }
+        }
+    }
+    
+    func handleDidShowCloseAlert(_ payload: ModelAction.Deposits.CloseNotified) {
+        
+        let depositsCloseNotified = self.depositsCloseNotified
+        let newDepositClose: [DepositCloseNotification] = [.init(depositId: payload.productId)]
+        let generalDepositsClose = depositsCloseNotified + newDepositClose
+        
+        do {
+            
+            try self.localAgent.store(generalDepositsClose, serial: nil)
+            
+        } catch(let error) {
+            
+            LoggerAgent.shared.log(category: .cache, message: "Caching error: \(error)")
         }
     }
 }
