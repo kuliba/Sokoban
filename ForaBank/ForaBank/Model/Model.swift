@@ -81,6 +81,9 @@ class Model {
     //MARK: Informer
     let informer: CurrentValueSubject<InformerData?, Never>
 
+    //MARK: Bank Client Info
+    let bankClientInfo: CurrentValueSubject<[BankClientInfo?], Never>
+    
     //MARK: SBPay
     let deepLinkType: CurrentValueSubject<DeepLinkType?, Never>
     
@@ -162,6 +165,7 @@ class Model {
         self.dictionariesUpdating = .init([])
         self.userSettings = .init([])
         self.deepLinkType = .init(nil)
+        self.bankClientInfo = .init([])
         
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
@@ -933,6 +937,11 @@ private extension Model {
         if let depositsInfo = localAgent.load(type: DepositsInfoData.self) {
             
             self.depositsInfo.value = depositsInfo
+        }
+        
+        if let bankClientInfo = localAgent.load(type: [BankClientInfo?].self) {
+            
+            self.bankClientInfo.value = bankClientInfo
         }
     }
     

@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+struct BankClientInfo: Codable {
+    
+    let phone: String
+}

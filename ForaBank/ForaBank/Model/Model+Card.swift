@@ -56,12 +56,7 @@ extension ModelAction {
         
         struct Request: Action {
             
-            let phone: String
-        }
-        
-        enum Response: Action {
-            
-            case success(phone: String)
+            let phones: [String]
         }
     }
 }
@@ -149,30 +144,70 @@ extension Model {
             return
         }
         
-        let command = ServerCommands.CardController.GetOwnerPhoneNumber(token: token, payload: .init(phoneNumber: payload.phone))
-        serverAgent.executeCommand(command: command) { result in
+        Task {
             
-            switch result {
-            case .success(let response):
-                switch response.statusCode {
-                case .ok:
-                    guard let data = response.data else {
-                        self.handleServerCommandEmptyData(command: command)
-                        return
-                    }
-                    
-                    if data != "" {
-                        
-                        self.action.send(ModelAction.OwnerPhone.Response.success(phone: payload.phone))
-                    }
-                    
-                default:
+            for phone in payload.phones {
 
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                let command = ServerCommands.CardController.GetOwnerPhoneNumber(token: token, payload: .init(phoneNumber: phone))
+
+                do {
+                    
+                    let result = try await ratesFetchWithCommand(command: command)
+
+                    if result.phone != "", self.bankClientInfo.value.contains(where: {$0?.phone == result.phone}) {
+                        
+                        self.bankClientInfo.value.append(result)
+                        
+                        do {
+                            
+                            try localAgent.store(self.bankClientInfo.value, serial: nil)
+                            
+                        } catch(let error) {
+                            
+                            LoggerAgent.shared.log(category: .cache, message: "Chaching Error: \(error)")
+                        }
+                    }
+
+                } catch {
+                    
+                    self.handleServerCommandError(error: error, command: command)
                 }
-            case .failure(let error):
-                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    func ratesFetchWithCommand(command: ServerCommands.CardController.GetOwnerPhoneNumber) async throws -> BankClientInfo {
+        
+        try await withCheckedThrowingContinuation { continuation in
+            
+            serverAgent.executeCommand(command: command) { result in
                 
+                switch result {
+                case .success(let response):
+                    switch response.statusCode {
+                    case .ok:
+                        guard let data = response.data else {
+                            self.handleServerCommandEmptyData(command: command)
+                            return
+                        }
+                        
+                        if data != "", let phone = command.payload?.phoneNumber {
+                            
+                            continuation.resume(returning: .init(phone: phone))
+                        } else {
+                            
+                            continuation.resume(returning: .init(phone: ""))
+                        }
+                        
+                    default:
+
+                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                        
+                    }
+                case .failure(let error):
+                    self.handleServerCommandError(error: error, command: command)
+                    
+                }
             }
         }
     }
