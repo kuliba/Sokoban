@@ -62,7 +62,8 @@ extension CloseAccountView.ViewModel {
             currency: currency,
             currencyOperation: .sell,
             productViewModel: productContentViewModel,
-            isDividerHiddable: true)
+            isDividerHiddable: true,
+            context: .init(isAdditionalProducts: true))
         
         return productSelector
     }

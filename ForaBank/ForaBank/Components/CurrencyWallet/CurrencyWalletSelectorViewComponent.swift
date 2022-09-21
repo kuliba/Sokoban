@@ -9,13 +9,13 @@ import SwiftUI
 import Combine
 import Shimmer
 
-typealias ProductSelectorViewModel = ProductSelectorView.ViewModel
-typealias ProductContentViewModel = ProductSelectorViewModel.ProductContentViewModel
-typealias ProductListViewModel = ProductsListView.ViewModel
+typealias CurrencyWalletSelectorViewModel = CurrencyWalletSelectorView.ViewModel
+typealias CurrencyWalletContentViewModel = CurrencyWalletSelectorViewModel.ProductContentViewModel
+typealias CurrencyWalletListViewModel = CurrencyWalletListView.ViewModel
 
 // MARK: - ViewModel
 
-extension ProductSelectorView {
+extension CurrencyWalletSelectorView {
 
     class ViewModel: ObservableObject {
         
@@ -26,10 +26,9 @@ extension ProductSelectorView {
         @Published var currencyOperation: CurrencyOperation
         @Published var isDividerHiddable: Bool
         @Published var productViewModel: ProductContentViewModel?
-        @Published var listViewModel: ProductsListView.ViewModel?
+        @Published var listViewModel: CurrencyWalletListViewModel?
         @Published var excludeProductId: ProductData.ID?
         @Published var isUserInteractionEnabled: Bool
-        @Published var context: Context
         
         private let model: Model
         
@@ -37,7 +36,7 @@ extension ProductSelectorView {
         let titleIndent: TitleIndent
         
         var bindings = Set<AnyCancellable>()
-        
+
         lazy var dividerViewModel: DividerViewModel = .init()
         
         init(_ model: Model,
@@ -45,12 +44,11 @@ extension ProductSelectorView {
              currency: Currency,
              currencyOperation: CurrencyOperation,
              productViewModel: ProductContentViewModel? = nil,
-             listViewModel: ProductsListView.ViewModel? = nil,
+             listViewModel: CurrencyWalletListViewModel? = nil,
              isUserInteractionEnabled: Bool = true,
              isDividerHiddable: Bool = false,
              backgroundColor: BackgroundColor = .gray,
-             titleIndent: TitleIndent = .normal,
-             context: Context) {
+             titleIndent: TitleIndent = .normal) {
             
             self.model = model
             self.title = title
@@ -62,7 +60,6 @@ extension ProductSelectorView {
             self.isDividerHiddable = isDividerHiddable
             self.backgroundColor = backgroundColor
             self.titleIndent = titleIndent
-            self.context = context
             
             bind()
         }
@@ -72,13 +69,12 @@ extension ProductSelectorView {
             currency: Currency,
             currencyOperation: CurrencyOperation,
             productViewModel: ProductContentViewModel? = nil,
-            listViewModel: ProductsListView.ViewModel? = nil,
+            listViewModel: CurrencyWalletListViewModel? = nil,
             isDividerHiddable: Bool = false,
             backgroundColor: BackgroundColor = .gray,
-            titleIndent: TitleIndent = .normal,
-            context: Context) {
+            titleIndent: TitleIndent = .normal) {
             
-                self.init(model, title: "", currency: currency, currencyOperation: currencyOperation, productViewModel: productViewModel, listViewModel: listViewModel, isDividerHiddable: isDividerHiddable, backgroundColor: backgroundColor, titleIndent: titleIndent, context: context)
+                self.init(model, title: "", currency: currency, currencyOperation: currencyOperation, productViewModel: productViewModel, listViewModel: listViewModel, isDividerHiddable: isDividerHiddable, backgroundColor: backgroundColor, titleIndent: titleIndent)
         }
         
         convenience init(_ model: Model, product: ProductData, backgroundColor: BackgroundColor) {
@@ -86,7 +82,7 @@ extension ProductSelectorView {
             let currency: Currency = .init(description: product.currency)
             let productViewModel: ProductContentViewModel = .init(productId: product.id, productData: product, model: model)
             
-            self.init(model, title: "", currency: currency, currencyOperation: .buy, productViewModel: productViewModel, backgroundColor: backgroundColor, context: .init(isAdditionalProducts: true))
+            self.init(model, title: "", currency: currency, currencyOperation: .buy, productViewModel: productViewModel, backgroundColor: backgroundColor)
         }
         
         enum BackgroundColor {
@@ -121,14 +117,14 @@ extension ProductSelectorView {
                     
                     switch action {
                         
-                    case let payload as ProductSelectorView.ProductAction.Toggle:
+                    case _ as CurrencyWalletSelectorView.ProductAction.Toggle:
                         
                         withAnimation {
                             
                             switch listViewModel == nil {
                             case true:
                                 
-                                self.listViewModel = makeProductsList(with: payload.context)
+                                self.listViewModel = makeProductsList()
                                 bindList()
                                 
                                 listViewModel?.$products
@@ -145,7 +141,7 @@ extension ProductSelectorView {
                             }
                         }
                         
-                    case let payload as ProductSelectorView.ProductAction.Selected:
+                    case let payload as CurrencyWalletSelectorView.ProductAction.Selected:
                         
                         withAnimation { listViewModel = nil }
                         setProductSelectorData(productId: payload.productId)
@@ -162,7 +158,7 @@ extension ProductSelectorView {
                     
                     switch action {
                    
-                    case let payload as ProductSelectorView.ProductAction.Selected:
+                    case let payload as CurrencyWalletSelectorView.ProductAction.Selected:
                         
                         withAnimation { listViewModel = nil }
                         setProductSelectorData(productId: payload.productId)
@@ -220,7 +216,7 @@ extension ProductSelectorView {
                         
                         switch action {
                         case _ as ProductViewModelAction.ProductDidTapped:
-                            self.action.send(ProductSelectorView.ProductAction.Selected(productId: product.id))
+                            self.action.send(CurrencyWalletSelectorView.ProductAction.Selected(productId: product.id))
                             
                         default:
                             break
@@ -240,7 +236,7 @@ extension ProductSelectorView {
                         
                         switch action {
                             
-                        case let payload as ProductSelectorView.ProductAction.Selected:
+                        case let payload as CurrencyWalletSelectorView.ProductAction.Selected:
                             
                             withAnimation { self.listViewModel = nil }
                             setProductSelectorData(productId: payload.productId)
@@ -253,7 +249,7 @@ extension ProductSelectorView {
             }
         }
         
-        private func makeProductsList(with context: Context) -> ProductsListView.ViewModel? {
+        private func makeProductsList() -> CurrencyWalletListViewModel? {
             
             guard let productViewModel = productViewModel, let productData = model.product(productId: productViewModel.productId) else {
                 return nil
@@ -262,7 +258,7 @@ extension ProductSelectorView {
             let products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productData.productType)
             bind(products)
             
-            let listViewModel: ProductsListView.ViewModel = .init(model, currencyOperation: currencyOperation, currency: currency, productType: productData.productType, products: products, context: .init(isAdditionalProducts: false))
+            let listViewModel: CurrencyWalletListViewModel = .init(model, currencyOperation: currencyOperation, currency: currency, productType: productData.productType, products: products)
             
             return listViewModel
         }
@@ -337,14 +333,9 @@ extension ProductSelectorView {
     }
 }
 
-extension ProductSelectorView.ViewModel {
+extension CurrencyWalletSelectorViewModel {
     
     // MARK: - ProductContent
-    
-    struct Context {
-        
-        let isAdditionalProducts: Bool
-    }
     
     class ProductContentViewModel: ObservableObject {
         
@@ -414,7 +405,7 @@ extension ProductSelectorView.ViewModel {
 
 // MARK: - View
 
-struct ProductSelectorView: View {
+struct CurrencyWalletSelectorView: View {
     
     @ObservedObject var viewModel: ViewModel
     
@@ -434,7 +425,7 @@ struct ProductSelectorView: View {
             
             if let listViewModel = viewModel.listViewModel {
                 
-                ProductsListView(viewModel: listViewModel)
+                CurrencyWalletListView(viewModel: listViewModel)
                     .padding(.top, 8)
                 
             } else {
@@ -450,16 +441,13 @@ struct ProductSelectorView: View {
     }
 }
 
-extension ProductSelectorView {
+extension CurrencyWalletSelectorView {
     
     // MARK: - Action
     
     enum ProductAction {
     
-        struct Toggle: Action {
-            
-            let context: ProductSelectorView.ViewModel.Context
-        }
+        struct Toggle: Action {}
         
         struct Selected: Action {
             
@@ -493,9 +481,9 @@ extension ProductSelectorView {
                 
                 if let productViewModel = viewModel.productViewModel {
                     
-                    ProductSelectorView.ProductContentView(viewModel: productViewModel)
+                    CurrencyWalletSelectorView.ProductContentView(viewModel: productViewModel)
                         .onTapGesture {
-                            viewModel.action.send(ProductSelectorView.ProductAction.Toggle(context: viewModel.context))
+                            viewModel.action.send(CurrencyWalletSelectorView.ProductAction.Toggle())
                         }
                     
                 } else {
@@ -628,9 +616,9 @@ extension ProductSelectorView {
 
 // MARK: - Preview Content
 
-extension ProductSelectorView.ViewModel {
+extension CurrencyWalletSelectorViewModel {
     
-    static let sample1 = ProductSelectorViewModel(
+    static let sample1 = CurrencyWalletSelectorViewModel(
         .emptyMock,
         title: "Откуда",
         currency: .rub,
@@ -642,10 +630,9 @@ extension ProductSelectorView.ViewModel {
             name: "Platinum",
             balance: "2,71 млн ₽",
             numberCard: "2953",
-            description: "Все включено"),
-        context: .init(isAdditionalProducts: false))
+            description: "Все включено"))
     
-    static let sample2 = ProductSelectorViewModel(
+    static let sample2 = CurrencyWalletSelectorViewModel(
         .emptyMock,
         title: "Откуда",
         currency: .rub,
@@ -658,10 +645,9 @@ extension ProductSelectorView.ViewModel {
             balance: "2,71 млн ₽",
             numberCard: "2953",
             description: "Все включено"),
-        listViewModel: .sample,
-        context: .init(isAdditionalProducts: false))
+        listViewModel: .sample)
     
-    static let sample3 = ProductSelectorViewModel(
+    static let sample3 = CurrencyWalletSelectorViewModel(
         .emptyMock,
         title: "Куда",
         currency: .rub,
@@ -674,25 +660,24 @@ extension ProductSelectorView.ViewModel {
             balance: "0 $",
             numberCard: "",
             description: "Валютный"),
-        isDividerHiddable: true,
-        context: .init(isAdditionalProducts: false))
+        isDividerHiddable: true)
 }
 
 // MARK: - Previews
 
-struct ProductSelectorViewComponent_Previews: PreviewProvider {
+struct CurrencyWalletSelectorViewComponent_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
             
-            ProductSelectorView(viewModel: .sample1)
+            CurrencyWalletSelectorView(viewModel: .sample1)
                 .previewLayout(.sizeThatFits)
                 .fixedSize()
             
-            ProductSelectorView(viewModel: .sample2)
+            CurrencyWalletSelectorView(viewModel: .sample2)
                 .previewLayout(.sizeThatFits)
             
-            ProductSelectorView(viewModel: .sample3)
+            CurrencyWalletSelectorView(viewModel: .sample3)
                 .previewLayout(.sizeThatFits)
         }
         .padding(.vertical)
