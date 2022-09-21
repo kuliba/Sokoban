@@ -155,17 +155,17 @@ class SbpPayViewModel: ObservableObject {
          
             if let product = products.filter({($0 as? ProductCardData)?.accountId == accountId}).first {
                 
-                let selectorViewModel: ProductSelectorView.ViewModel = .init(model, title: title, currency: .rub, currencyOperation: .buy, productViewModel: .init(productId: product.id, productData: product, model: model), isDividerHiddable: true, backgroundColor: .white, titleIndent: .left, context: .init(isAdditionalProducts: false))
+                let selectorViewModel: ProductSelectorView.ViewModel = .init(model, productViewModel: .init(productId: product.id, productData: product, model: model), context: .init(title: title, backgroundColor: .white, titleIndent: .left, isAdditionalProducts: false))
                 return selectorViewModel
                 
             } else if let product = products.filter({$0.id == accountId}).first {
                 
-                let selectorViewModel: ProductSelectorView.ViewModel = .init(model, title: title, currency: .rub, currencyOperation: .buy, productViewModel: .init(productId: product.id, productData: product, model: model), isDividerHiddable: true, backgroundColor: .white, titleIndent: .left, context: .init(isAdditionalProducts: false))
+                let selectorViewModel: ProductSelectorView.ViewModel = .init(model, productViewModel: .init(productId: product.id, productData: product, model: model), context: .init(title: title, backgroundColor: .white, titleIndent: .left, isAdditionalProducts: false))
                 return selectorViewModel
             }
         }
         
-        let selectorViewModel: ProductSelectorView.ViewModel = .init(model, title: title, currency: .rub, currencyOperation: .buy, productViewModel: .init(productId: productData.id, productData: productData, model: model), isDividerHiddable: true, backgroundColor: .white, titleIndent: .left, context: .init(isAdditionalProducts: false))
+        let selectorViewModel: ProductSelectorView.ViewModel = .init(model, productViewModel: .init(productId: productData.id, productData: productData, model: model), context: .init(title: title, backgroundColor: .white, titleIndent: .left, isAdditionalProducts: false))
 
         return selectorViewModel
     }

@@ -19,87 +19,26 @@ extension ProductsListView {
         @Published var optionSelector: OptionSelectorView.ViewModel?
         @Published var products: [ProductView.ViewModel]
         @Published var productType: ProductType
-        @Published var currencyOperation: CurrencyOperation
-        @Published var currency: Currency
         @Published var context: ProductSelectorView.ViewModel.Context
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(_ model: Model, currencyOperation: CurrencyOperation, currency: Currency, productType: ProductType, products: [ProductView.ViewModel], context: ProductSelectorView.ViewModel.Context) {
+        init(_ model: Model, productType: ProductType, products: [ProductView.ViewModel], context: ProductSelectorView.ViewModel.Context) {
             
             self.model = model
-            self.currencyOperation = currencyOperation
-            self.currency = currency
             self.productType = productType
             self.products = products
             self.context = context
             
-            let products = model.products(currency: currency, currencyOperation: currencyOperation)
+            let products = model.products(currency: context.currency)
             optionSelector = Self.makeOptionSelector(products: products, selected: productType.rawValue)
             
             bind()
-            bindOption(productsData: model.products.value, currencyOperation: currencyOperation)
+            bindOption(productsData: model.products.value, currency: context.currency)
         }
         
-        private func bind() {
-            
-            model.products
-                .combineLatest($currencyOperation)
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] data in
-                    
-                    let productsData = data.0
-                    let currencyOperation = data.1
-                    
-                    bindOption(productsData: productsData, currencyOperation: currencyOperation)
-                    
-                }.store(in: &bindings)
-            
-            if let optionSelector = optionSelector {
-                
-                optionSelector.$selected
-                    .combineLatest($currency)
-                    .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] data in
-                        
-                        let selected = data.0
-                        let currency = data.1
-                        
-                        if let productType = ProductType(rawValue: selected) {
-                            
-                            products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType, context: context)
-                            bind(products)
-                            
-                            if products.isEmpty == true {
-                                
-                                if let option = optionSelector.options.first {
-                                    optionSelector.selected = option.id
-                                }
-                            }
-                            
-                        } else {
-                            
-                            products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation)
-                            bind(products)
-                        }
-                        
-                    }.store(in: &bindings)
-                
-            } else {
-                
-                $currency
-                    .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] currency in
-                        
-                        products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation)
-                        bind(products)
-                        
-                    }.store(in: &bindings)
-            }
-        }
-        
-        func bind(_ products: [ProductView.ViewModel]) {
+        func bind() {
             
             for product in products {
                 
@@ -119,9 +58,9 @@ extension ProductsListView {
             }
         }
         
-        private func bindOption(productsData: ProductsData, currencyOperation: CurrencyOperation) {
+        private func bindOption(productsData: ProductsData, currency: Currency) {
             
-            let products = model.products(currency: currency, currencyOperation: currencyOperation, products: productsData)
+            let products = model.products(currency: currency, currencyOperation: .buy, products: productsData)
             
             if optionSelector == nil {
                 
@@ -130,17 +69,12 @@ extension ProductsListView {
                 if let optionSelector = optionSelector {
                     
                     optionSelector.$selected
-                        .combineLatest($currency)
                         .receive(on: DispatchQueue.main)
-                        .sink { [unowned self] data in
-                            
-                            let selected = data.0
-                            let currency = data.1
+                        .sink { [unowned self] selected in
                             
                             if let productType = ProductType(rawValue: selected) {
                                 
-                                self.products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType, context: context)
-                                bind(self.products)
+                                self.products = Self.reduce(model, currency: currency, currencyOperation: .buy, productType: productType, context: context)
                                 
                                 if products.isEmpty == true {
                                     
@@ -151,8 +85,7 @@ extension ProductsListView {
                                 
                             } else {
                                 
-                                self.products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation)
-                                bind(self.products)
+                                self.products = Self.reduce(model, currency: currency, currencyOperation: .buy)
                             }
                             
                         }.store(in: &bindings)
@@ -273,7 +206,7 @@ enum ProductsListAction {
 
 extension ProductsListView.ViewModel {
     
-    static let sample = ProductsListView.ViewModel(.emptyMock, currencyOperation: .buy, currency: .rub, productType: .card, products: [.classicSmall, .accountSmall, .accountSmall], context: .init(isAdditionalProducts: false))
+    static let sample = ProductsListView.ViewModel(.emptyMock, productType: .card, products: [.classicSmall, .accountSmall, .accountSmall], context: .init(isAdditionalProducts: false))
 }
 
 // MARK: - Previews
