@@ -91,7 +91,7 @@ class ContactsAgent: ContactsAgentProtocol {
             if let phoneNumber = (contact.phoneNumbers.first?.value as? CNPhoneNumber)?.value(forKey: "digits") as? String,
                let phone = try? phoneNumberKit.parse(phoneNumber) {
                 
-                let contactPhone = phoneNumberKit.format(phone, toType: .national)
+                let contactPhone = phoneNumberKit.format(phone, toType: .international)
                 
                 bookContacts.append(AddressBookContact(phone: contactPhone,
                                                        firstName: contact.givenName,
@@ -100,7 +100,8 @@ class ContactsAgent: ContactsAgentProtocol {
                                                        avatar: avatar(for: contact)))
             }
         }
-        
+        let phones = bookContacts.map({$0.phone})
+        Model.shared.action.send(ModelAction.OwnerPhone.Request.init(phones: phones))
         return bookContacts
     }
     

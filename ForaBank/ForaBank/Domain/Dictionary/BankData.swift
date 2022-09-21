@@ -16,3 +16,28 @@ struct BankData: Codable, Equatable {
     let paymentSystemCodeList: [String]
     let svgImage: SVGImageData
 }
+
+//BankData Helper
+extension BankData {
+    
+    var banksType: BanksTypes? {
+        
+        if let paymentSystem = self.paymentSystemCodeList.first, paymentSystem == "SFP" {
+            
+            return .sfp
+        } else if let paymentSystem = self.paymentSystemCodeList.first, paymentSystem == "DIRECT" {
+            
+            return .direct
+        } else {
+            
+            return nil
+        }
+    }
+}
+
+enum BanksTypes: String, CaseIterable {
+    
+    case sfp = "Российские"
+    case direct = "Иностранные"
+    case all = "Все"
+}
