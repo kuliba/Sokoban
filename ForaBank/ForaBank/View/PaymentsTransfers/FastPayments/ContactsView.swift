@@ -28,8 +28,10 @@ struct ContactsView: View {
             switch viewModel.mode {
             
             case let .contactsSearch(contacts):
-                
-                ContactListView(viewModel: contacts)
+                if let contacts = contacts {
+                    
+                    ContactListView(viewModel: contacts)
+                }
                 
             case let .contacts(latestPayments, contacts):
                 
@@ -130,7 +132,7 @@ extension ContactsView {
                                 }
                             }
                             
-                            if bank.favorite {
+                            if bank.defaultBank {
                                 
                                 ZStack {
                                     
@@ -284,23 +286,37 @@ extension ContactsView {
         
         struct ContactView: View {
             
-            @ObservedObject var viewModel: ContactsViewModel.Contact
+            @ObservedObject var viewModel: ContactsViewModel.ContactViewModel
             
             var body: some View {
                 
                 HStack(alignment: .center, spacing: 20) {
                     
-                    if let avatar = viewModel.image {
+                        switch viewModel.image {
                         
-                        avatar
-                            .resizable()
-                            .frame(width: 40, height: 40, alignment: .center)
-                            .cornerRadius(90)
+                        case let .image(image):
+                            image
+                                .resizable()
+                                .frame(width: 40, height: 40, alignment: .center)
+                                .cornerRadius(90)
+                        case let .initials(initials):
+                            
+                            ZStack {
+
+                                Color.mainColorsGrayLightest
+                                    .frame(width: 40, height: 40, alignment: .center)
+                                    .cornerRadius(90)
+                                
+                                Text(initials)
+                                    .foregroundColor(.textPlaceholder)
+                                    .font(.textH3M18240())
+                            }
                         
-                    } else {
+                        default:
+                            
+                            IconPlaceholder()
+                        }
                         
-                        IconPlaceholder()
-                    }
                     
                     VStack(alignment: .leading, spacing: 8) {
                         
@@ -334,9 +350,9 @@ extension ContactsView {
             struct IconPlaceholder: View {
                 
                 var body: some View {
-                
+                    
                     ZStack {
-                     
+                        
                         Color.mainColorsGrayLightest
                             .frame(width: 40, height: 40, alignment: .center)
                             .cornerRadius(90)
