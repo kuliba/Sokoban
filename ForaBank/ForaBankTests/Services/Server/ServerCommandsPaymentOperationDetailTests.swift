@@ -213,7 +213,8 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
 
         let data = PaymentPhoneData(bankId: nil,
                                     bankName: nil,
-                                    payment: nil)
+                                    payment: nil,
+                                    defaultBank: nil)
 
         let expected = ServerCommands
                         .PaymentOperationDetailContoller
@@ -238,7 +239,8 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
 
         let data = PaymentPhoneData(bankId: "string",
                                     bankName: "string",
-                                    payment: true)
+                                    payment: true,
+                                    defaultBank: nil)
 
         let expected = ServerCommands
                         .PaymentOperationDetailContoller
