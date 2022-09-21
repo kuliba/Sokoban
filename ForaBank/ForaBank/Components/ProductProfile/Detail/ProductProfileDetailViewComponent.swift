@@ -270,7 +270,6 @@ struct ProductProfileDetailView: View {
     
     @ObservedObject var viewModel: ProductProfileDetailView.ViewModel
 
-    @available(iOS 14.0, *)
     @Namespace var namespace
     
     var body: some View {

@@ -15,6 +15,7 @@ extension LatestPaymentsViewComponent {
     
     class ViewModel: PaymentsTransfersSectionViewModel {
         
+        let titleHidden: Bool
         @Published var items: [ItemViewModel]
         
         override var type: PaymentsTransfersSectionType { .latestPayments }
@@ -22,7 +23,9 @@ extension LatestPaymentsViewComponent {
         
         private var bindings = Set<AnyCancellable>()
         
-        init(items: [ItemViewModel], model: Model) {
+        init(titleHidden: Bool, items: [ItemViewModel], model: Model) {
+            
+            self.titleHidden = titleHidden
             self.items = items
             self.model = model
             super.init()
@@ -31,6 +34,7 @@ extension LatestPaymentsViewComponent {
         init(model: Model) {
             self.items = []
             self.model = model
+            self.titleHidden = false
             super.init()
             bind()
         }
@@ -213,12 +217,15 @@ struct LatestPaymentsViewComponent: View {
     
     var body: some View {
         
-        Text(viewModel.title)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .font(.textH1SB24322())
-            .foregroundColor(.textSecondary)
-            .padding(.vertical, 16)
-            .padding(.leading, 20)
+        if !viewModel.titleHidden {
+         
+            Text(viewModel.title)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.textH1SB24322())
+                .foregroundColor(.textSecondary)
+                .padding(.vertical, 16)
+                .padding(.leading, 20)
+        }
         
         ScrollView(.horizontal,showsIndicators: false) {
             HStack(spacing: 4) {

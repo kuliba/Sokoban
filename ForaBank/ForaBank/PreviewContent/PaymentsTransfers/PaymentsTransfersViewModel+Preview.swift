@@ -45,7 +45,7 @@ extension LatestPaymentsViewComponent.ViewModel {
         
         let items = latestPaymentsButtons.map { ItemViewModel.latestPayment($0) }
         
-        let latestPaymentsVM = ViewModel(items: items, model: .emptyMock)
+        let latestPaymentsVM = ViewModel(titleHidden: false, items: items, model: .emptyMock)
         let baseButtons = latestPaymentsVM.baseButtons.map { ItemViewModel.templates($0) }
         latestPaymentsVM.items = baseButtons + latestPaymentsVM.items
         return latestPaymentsVM
@@ -91,7 +91,7 @@ extension PaymentsTransfersViewModel {
         let sections: [PaymentsTransfersSectionViewModel] =
         [
             LatestPaymentsViewComponent.ViewModel(
-                items: LatestPaymentsViewComponent.ViewModel.sample.items,
+                titleHidden: false, items: LatestPaymentsViewComponent.ViewModel.sample.items,
                 model: .emptyMock
             ),
           
