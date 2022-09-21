@@ -44,20 +44,16 @@ class AuthConfirmViewModel: ObservableObject {
         self.resendCodeDelay = resendCodeDelay
         self.backAction = backAction
         self.rootActions = rootActions
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "initialized")
     }
     
-    init(_ model: Model, confirmCodeLength: Int, phoneNumber: String, resendCodeDelay: TimeInterval, backAction: @escaping () -> Void, rootActions: RootViewModel.RootActions) {
+    convenience init(_ model: Model, confirmCodeLength: Int, phoneNumber: String, resendCodeDelay: TimeInterval, backAction: @escaping () -> Void, rootActions: RootViewModel.RootActions) {
         
-        self.model = model
-        self.navigationBar = NavigationBarViewModel(action: backAction)
-        self.code = CodeViewModel(title: "Введите код из сообщения", lenght: confirmCodeLength, state: .openening)
-        self.info = nil
-        self.isPincodeViewPresented = false
-        self.showingAlert = false
-        self.phoneNumber = phoneNumber
-        self.resendCodeDelay = resendCodeDelay
-        self.backAction = backAction
-        self.rootActions = rootActions
+        let navigationBar = NavigationBarViewModel(action: backAction)
+        let code = CodeViewModel(title: "Введите код из сообщения", lenght: confirmCodeLength, state: .openening)
+     
+        self.init(navigationBar: navigationBar, code: code, info: nil, isPincodeViewPresented: false, model: model, showingAlert: false, phoneNumber: phoneNumber, resendCodeDelay: resendCodeDelay, backAction: backAction, rootActions: rootActions)
         
         bind()
         
@@ -79,59 +75,107 @@ class AuthConfirmViewModel: ObservableObject {
                 case let payload as ModelAction.Auth.VerificationCode.Confirm.Response:
                     switch payload {
                     case .correct:
+                        LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.VerificationCode.Confirm.Response: correct")
+                        
+                        LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Register.Request")
                         model.action.send(ModelAction.Auth.Register.Request())
        
                     case .incorrect(let message):
+                        LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.VerificationCode.Confirm.Response: incorrect message \(message)")
+                        
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "hide spinner")
                         rootActions.spinner.hide()
+                        
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in
                             self?.alert = nil
                             self?.code.state = .edit
                             self?.code.textField.text = ""
                             self?.code.textField.showKeyboard()
+                            LoggerAgent.shared.log(level: .debug, category: .ui, message: "reset code, show keyboard")
                         }))
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                         
                     case .restricted(let message):
+                        LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.VerificationCode.Confirm.Response: restricted message \(message)")
+                        
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "hide spinner")
                         rootActions.spinner.hide()
-                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(AuthConfirmViewModelAction.Dismiss())}))
+                        
+                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(AuthConfirmViewModelAction.Dismiss())
+                            LoggerAgent.shared.log(level: .debug, category: .ui, message: "sent AuthConfirmViewModelAction.Dismiss")
+                        }))
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                         
                     case .failure(message: let message):
+                        LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.VerificationCode.Confirm.Response: failure message \(message)")
+                        
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "hide spinner")
                         rootActions.spinner.hide()
+                        
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in
                             self?.alert = nil
                             self?.code.state = .edit
                             self?.code.textField.text = ""
                             self?.code.textField.showKeyboard()
+                            LoggerAgent.shared.log(level: .debug, category: .ui, message: "reset code, show keyboard")
                         }))
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                     }
                     
                 case let payload as ModelAction.Auth.Register.Response:
+                    LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.VerificationCode.Confirm.Response")
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "hide spinner")
                     rootActions.spinner.hide()
+                    
                     switch payload {
                     case .success:
+                        LoggerAgent.shared.log(category: .ui, message: "ModelAction.Auth.VerificationCode.Confirm.Response: success")
                         pincodeViewModel = AuthPinCodeViewModel(model, mode: .create(step: .one), rootActions: rootActions)
                         isPincodeViewPresented = true
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "show pincode")
                         
                     case .failure(message: let message):
+                        LoggerAgent.shared.log(category: .ui, message: "ModelAction.Auth.VerificationCode.Confirm.Response: failure message: \(message)")
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                     }
                     
                 case let payload as ModelAction.Auth.VerificationCode.Resend.Response:
                     switch payload {
                     case .success:
-                        info?.state = .timer(.init(delay: resendCodeDelay, description: "Запросить повторно можно через:", completeAction: { [weak self] in self?.action.send(AuthConfirmViewModelAction.RepeatCode.DelayFinished()) }))
+                        LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.VerificationCode.Resend.Response: success")
+                        info?.state = .timer(.init(delay: resendCodeDelay, description: "Запросить повторно можно через:", completeAction: { [weak self] in
+                            
+                            LoggerAgent.shared.log(category: .ui, message: "sent AuthConfirmViewModelAction.RepeatCode.DelayFinished")
+                            self?.action.send(AuthConfirmViewModelAction.RepeatCode.DelayFinished())
+                            
+                        }))
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "update timer")
                         
                     case .restricted(let message):
-                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(AuthConfirmViewModelAction.Dismiss())}))
+                        LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.VerificationCode.Resend.Response: restricted message: \(message)")
+                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in
+                            
+                            LoggerAgent.shared.log(category: .ui, message: "sent AuthConfirmViewModelAction.Dismiss")
+                            self?.action.send(AuthConfirmViewModelAction.Dismiss())
+                            
+                        }))
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                         
                     case .failure(message: let message):
+                        LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.VerificationCode.Resend.Response: failure message: \(message)")
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                     }
                     
                 case let payload as ModelAction.Auth.VerificationCode.PushRecieved:
+                    LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.VerificationCode.PushRecieved")
                     guard payload.code.count == code.codeLenght else {
                         return
                     }
                     code.textField.text = payload.code
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "code inserted in textfield")
  
                 default:
                     break
@@ -145,17 +189,28 @@ class AuthConfirmViewModel: ObservableObject {
                 
                 switch action {
                 case _ as AuthConfirmViewModelAction.RepeatCode.DelayFinished:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthConfirmViewModelAction.RepeatCode.DelayFinished")
                     withAnimation {
-                        info?.state = .button(.init(action: { [weak self] in self?.action.send(AuthConfirmViewModelAction.RepeatCode.Requested())}))
+                        info?.state = .button(.init(action: { [weak self] in
+                            LoggerAgent.shared.log(category: .ui, message: "sent AuthConfirmViewModelAction.RepeatCode.Requested")
+                            self?.action.send(AuthConfirmViewModelAction.RepeatCode.Requested())
+                        }))
                     }
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "repeat code button added")
                     
                 case _ as AuthConfirmViewModelAction.RepeatCode.Requested:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthConfirmViewModelAction.RepeatCode.Requested")
+                    
                     currentResendCodeAttempt += 1
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.VerificationCode.Resend.Request")
                     model.action.send(ModelAction.Auth.VerificationCode.Resend.Request(attempt: currentResendCodeAttempt))
                     
                 case _ as AuthConfirmViewModelAction.Dismiss:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthConfirmViewModelAction.Dismiss")
                     alert = nil
                     backAction()
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "alert closed, back action executed")
     
                 default:
                     break
@@ -173,10 +228,14 @@ class AuthConfirmViewModel: ObservableObject {
                     code.textField.showKeyboard()
                     code.code = code.setupCode(codeLenght: code.codeLenght)
                     code.textField.text = ""
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "code state: edit, show keyboard, reset code")
                     
                 case .check:
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "code state: check, hide keyboard, show spinner")
                     code.textField.dismissKeyboard()
                     rootActions.spinner.show()
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.VerificationCode.Confirm.Request")
                     model.action.send(ModelAction.Auth.VerificationCode.Confirm.Request(code: code.textField.text))
                     
                 default:
@@ -184,6 +243,11 @@ class AuthConfirmViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    deinit {
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
 }
 

@@ -149,7 +149,9 @@ class MosParkingViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let dc = segue.destination as? InternetTVDetailsFormController {
+        
+        if let dc = segue.destination as? UINavigationController,
+           let targetController = dc.topViewController as? InternetTVDetailsFormController {
             var value = "-1"
             if let list = MosParkingViewController.mosParkingList?.mosParkingList {
                 for item in list {
@@ -161,9 +163,9 @@ class MosParkingViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
                     }
                 }
             }
-            dc.operatorData = operatorData
-            dc.selectedValue = value
-            dc.operatorsViewModel = operatorsViewModel
+            targetController.operatorData = operatorData
+            targetController.selectedValue = value
+            targetController.operatorsViewModel = operatorsViewModel
         }
     }
     
