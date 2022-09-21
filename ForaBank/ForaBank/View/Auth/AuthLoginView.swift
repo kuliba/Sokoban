@@ -156,6 +156,7 @@ extension AuthLoginView {
                                         nextButton.icon
                                             .foregroundColor(.white)
                                     }
+                                    .frame(width: 44, height: 44)
                                 }
                             }
                         }

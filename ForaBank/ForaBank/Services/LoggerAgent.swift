@@ -11,15 +11,17 @@ import OSLog
 class LoggerAgent: LoggerAgentProtocol {
     
     static let shared = LoggerAgent()
+    static let subsystem = "ru.forabank.sense"
     
-    private let modelLogger = OSLog(subsystem: "ru.forabank.sense", category: LoggerAgentCategory.model.rawValue)
-    private let uiLogger = OSLog(subsystem: "ru.forabank.sense", category: LoggerAgentCategory.ui.rawValue)
-    private let networkLogger = OSLog(subsystem: "ru.forabank.sense", category: LoggerAgentCategory.network.rawValue)
-    private let cacheLogger = OSLog(subsystem: "ru.forabank.sense", category: LoggerAgentCategory.cache.rawValue)
+    private let modelLogger = OSLog(subsystem: subsystem, category: LoggerAgentCategory.model.rawValue)
+    private let uiLogger = OSLog(subsystem: subsystem, category: LoggerAgentCategory.ui.rawValue)
+    private let networkLogger = OSLog(subsystem: subsystem, category: LoggerAgentCategory.network.rawValue)
+    private let cacheLogger = OSLog(subsystem: subsystem, category: LoggerAgentCategory.cache.rawValue)
+    private let sessionLogger = OSLog(subsystem: subsystem, category: LoggerAgentCategory.session.rawValue)
     
-    func log(level: LoggerAgentLevel = .default, category: LoggerAgentCategory, file: String = #file, line: Int = #line, message: String) {
+    func log(level: LoggerAgentLevel = .default, category: LoggerAgentCategory, message: String, file: String = #file, line: Int = #line) {
         
-        let logMessage = "\(message)\n[FILE]: \(extractFileName(from: file)) [LINE]: \(line)"
+        let logMessage = "\(extractFileName(from: file)): \(message), #:\(line)"
         
         switch category {
         case .model:
@@ -33,11 +35,14 @@ class LoggerAgent: LoggerAgentProtocol {
             
         case .cache:
             os_log("%@", log: cacheLogger, type: level.osLogType, logMessage)
+            
+        case .session:
+            os_log("%@", log: sessionLogger, type: level.osLogType, logMessage)
         }
     }
     
     private func extractFileName(from path: String) -> String {
-        path.components(separatedBy: "/").last ?? ""
+        path.components(separatedBy: "/").last?.components(separatedBy: ".").first ?? ""
     }
 }
 

@@ -112,7 +112,7 @@ class Model {
         return credentials.token
     }
     
-    internal var credentials: SessionCredentials? {
+    internal var activeCredentials: SessionCredentials? {
         
         guard case .active(_, let credentials) = sessionAgent.sessionState.value else {
             return nil
@@ -124,7 +124,7 @@ class Model {
     init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol, cameraAgent: CameraAgentProtocol, imageGalleryAgent: ImageGalleryAgentProtocol) {
         
         self.action = .init()
-        self.auth = .init(.registerRequired)
+        self.auth = keychainAgent.isStoredString(values: [.pincode, .serverDeviceGUID]) ? .init(.signInRequired) : .init(.registerRequired)
         self.products = .init([:])
         self.productsUpdating = .init([])
         self.accountProductsList = .init([])
@@ -174,6 +174,8 @@ class Model {
         self.cameraAgent = cameraAgent
         self.imageGalleryAgent = imageGalleryAgent
         self.bindings = []
+        
+        LoggerAgent.shared.log(level: .debug, category: .model, message: "initialized")
 
         bind()
     }
@@ -229,14 +231,27 @@ class Model {
                 
                 switch sessionState {
                 case .inactive:
+                    LoggerAgent.shared.log(category: .model, message: "session: inactive")
+                    
                     auth.value = authIsCredentialsStored ? .signInRequired : .registerRequired
                     action.send(ModelAction.Auth.Session.Start.Request())
+                    LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Start.Request")
                     
                 case .active:
+                    LoggerAgent.shared.log(category: .model, message: "session: active")
+                    
                     loadCachedPublicData()
                     action.send(ModelAction.Dictionary.UpdateCache.All())
+                    LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Dictionary.UpdateCache.All")
 
-                case .expired, .failed:
+                case .expired:
+                    LoggerAgent.shared.log(category: .model, message: "session: expired")
+    
+                    auth.value = authIsCredentialsStored ? .unlockRequired : .registerRequired
+                    
+                case .failed(let error):
+                    LoggerAgent.shared.log(category: .model, message: "session: failed, error: \(error.localizedDescription)")
+    
                     auth.value = authIsCredentialsStored ? .unlockRequired : .registerRequired
                 }
                 
@@ -251,6 +266,7 @@ class Model {
                 
                 switch auth {
                 case .authorized:
+                    LoggerAgent.shared.log(category: .model, message: "auth: authorized")
                     loadCachedAuthorizedData()
                     loadSettings()
                     action.send(ModelAction.Products.Update.Total.All())
@@ -271,8 +287,18 @@ class Model {
                         
                         setupDeepLink(deepLinkType: deepLinkType)
                     }
-                default:
-                    break
+                    
+                case .registerRequired:
+                    LoggerAgent.shared.log(category: .model, message: "auth: registerRequired")
+                    
+                case .signInRequired:
+                    LoggerAgent.shared.log(category: .model, message: "auth: signInRequired")
+                    
+                case .unlockRequired:
+                    LoggerAgent.shared.log(category: .model, message: "auth: unlockRequired")
+                    
+                case .unlockRequiredManual:
+                    LoggerAgent.shared.log(category: .model, message: "auth: unlockRequiredManual")
                 }
                 
             }.store(in: &bindings)
@@ -283,7 +309,10 @@ class Model {
                 
                 switch action {
                 case _ as SessionAgentAction.Session.Extend.Request:
+                    LoggerAgent.shared.log(category: .model, message: "received SessionAgentAction.Session.Extend.Request")
+                    
                     self.action.send(ModelAction.Auth.Session.Extend.Request())
+                    LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Extend.Request")
                     
                 default:
                     break

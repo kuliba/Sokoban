@@ -56,26 +56,45 @@ class RootViewModel: ObservableObject, Resetable {
                 switch auth {
                 case .registerRequired:
                     let loginViewModel = AuthLoginViewModel(model, rootActions: rootActions)
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLogin")
                     action.send(RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel))
                     
                 case .signInRequired:
                     let lockViewModel = AuthPinCodeViewModel(model, mode: .unlock(attempt: 0, auto: true), rootActions: rootActions)
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLock, animated: false")
                     action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel, animated: false))
                     
                 case .unlockRequired:
                     let lockViewModel = AuthPinCodeViewModel(model, mode: .unlock(attempt: 0, auto: true), rootActions: rootActions)
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLock, animated: false")
                     action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel, animated: true))
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.DismissAll")
                     action.send(RootViewModelAction.DismissAll())
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.SwitchTab, type: .main")
                     action.send(RootViewModelAction.SwitchTab(tabType: .main))
                 
                 case .unlockRequiredManual:
                     let lockViewModel = AuthPinCodeViewModel(model, mode: .unlock(attempt: 0, auto: false), rootActions: rootActions)
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLock, animated: true")
                     action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel, animated: true))
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.DismissAll")
                     action.send(RootViewModelAction.DismissAll())
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.SwitchTab, type: .main")
                     action.send(RootViewModelAction.SwitchTab(tabType: .main))
                     
                 case .authorized:
+                    LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.Hide")
                     action.send(RootViewModelAction.Cover.Hide())
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.DismissAll")
                     action.send(RootViewModelAction.DismissAll())
                     
                     switch model.notificationsTransition.value {

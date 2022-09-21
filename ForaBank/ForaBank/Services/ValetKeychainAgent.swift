@@ -40,4 +40,21 @@ class ValetKeychainAgent: KeychainAgentProtocol {
         
         try valet.removeObject(forKey: type.rawValue)
     }
+    
+    func isStoredString(values: [KeychainValueType]) -> Bool {
+        
+        do {
+            
+            for value in values {
+                
+                let _ :String = try load(type: value)
+            }
+            
+            return true
+            
+        } catch {
+            
+            return false
+        }
+    }
 }
