@@ -32,6 +32,8 @@ class SessionAgent: SessionAgentProtocol {
         self.lastUserActivityTime = Date.distantPast.timeIntervalSinceReferenceDate
         self.sessionExtentThreshold = sessionExtentThreshold
         
+        LoggerAgent.shared.log(level: .debug, category: .session, message: "initialized")
+        
         bind()
     }
     
@@ -44,22 +46,38 @@ class SessionAgent: SessionAgentProtocol {
                 case let payload as SessionAgentAction.Session.Start.Response:
                     switch payload.result {
                     case .success(let credentials):
+                        LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.Session.Start.Response: success")
+                        
                         let start = Date.timeIntervalSinceReferenceDate
+                        LoggerAgent.shared.log(category: .session, message: "session state: active")
                         sessionState.value = .active(start: start, credentials: credentials)
+                        
                         updateLastNetworkActivityTime()
+                        
+                        LoggerAgent.shared.log(category: .session, message: "sent SessionAgentAction.Session.Extend.Request")
                         self.action.send(SessionAgentAction.Session.Extend.Request())
                         
                     case .failure(let error):
+                        LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.Session.Start.Response: failure")
+                        
+                        LoggerAgent.shared.log(category: .session, message: "session state: failed")
                         sessionState.value = .failed(error)
                     }
                     
                 case let payload as SessionAgentAction.Session.Extend.Response:
                     switch payload.result {
                     case .success(let duration):
+                        LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.Session.Extend.Response: success, duration: \(duration)")
+                        
                         sessionDuration = duration
+                        LoggerAgent.shared.log(level: .debug, category: .session, message: "session duration updated")
+                        
                         updateLastNetworkActivityTime()
                         
                     case .failure(let error):
+                        LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.Session.Extend.Response: failure")
+                        
+                        LoggerAgent.shared.log(category: .session, message: "session state: failed")
                         sessionState.value = .failed(error)
                     }
                     
@@ -70,13 +88,21 @@ class SessionAgent: SessionAgentProtocol {
                     updateLastUserActivityTime()
                     
                 case _ as SessionAgentAction.Session.Terminate:
+                    LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.Session.Terminate")
+                    
+                    LoggerAgent.shared.log(category: .session, message: "session state: inactive")
                     sessionState.value = .inactive
                     
                 case _ as SessionAgentAction.Timer.Start:
+                    LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.Timer.Start")
+                    
                     updateState(with: Date().timeIntervalSinceReferenceDate)
                     timerStart()
                     
+                    
                 case _ as SessionAgentAction.Timer.Stop:
+                    LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.Timer.Stop")
+                    
                     timerStop()
                     
                 default:
@@ -96,6 +122,8 @@ class SessionAgent: SessionAgentProtocol {
                updateState(with: time)
                 
             }.store(in: &timerBindings)
+        
+        LoggerAgent.shared.log(category: .session, message: "timer started")
     }
     
     private func timerStop() {
@@ -105,6 +133,8 @@ class SessionAgent: SessionAgentProtocol {
         }
         
         timerBindings = Set<AnyCancellable>()
+        
+        LoggerAgent.shared.log(category: .session, message: "timer stopped")
     }
     
     private func updateState(with time: TimeInterval) {
@@ -113,8 +143,8 @@ class SessionAgent: SessionAgentProtocol {
             return
         }
         
-        let sessionTimeRemain = Self.sessionTimeRemain(currentTime: time, lastNetworkActivityTime: lastUserActivityTime, sessionDuration: sessionDuration)
-        
+        let sessionTimeRemain = Self.sessionTimeRemain(currentTime: time, lastNetworkActivityTime: lastNetworkActivityTime, sessionDuration: sessionDuration)
+    
         guard sessionTimeRemain > 0 else {
             
             sessionState.send(.expired)

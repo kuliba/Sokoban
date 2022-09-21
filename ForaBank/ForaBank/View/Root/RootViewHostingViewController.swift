@@ -52,6 +52,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                     let loginViewController = UIHostingController(rootView: loginView)
                     let navigation = UINavigationController(rootViewController: loginViewController)
                     presentCover(navigation, of: .login, animated: false)
+                    LoggerAgent.shared.log(category: .ui, message: "presented cover: .login, animated: false")
                     
                 case let payload as RootViewModelAction.Cover.ShowLock:
                     if let cover = cover {
@@ -66,6 +67,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                     let lockView = AuthPinCodeView(viewModel: payload.viewModel)
                     let lockViewController = UIHostingController(rootView: lockView)
                     presentCover(lockViewController, of: .lock, animated: payload.animated)
+                    LoggerAgent.shared.log(category: .ui, message: "presented cover: .lock, animated: \(payload.animated)")
       
                 case _ as RootViewModelAction.Cover.Hide:
                     guard isCoverDismissing == false else {
@@ -73,6 +75,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                     }
                     
                     dismissCover(animated: true)
+                    LoggerAgent.shared.log(category: .ui, message: "dismissed cover, animated: true")
                     
                 case let payload as RootViewModelAction.Spinner.Show:
                     presentSpinner(viewModel: payload.viewModel)
