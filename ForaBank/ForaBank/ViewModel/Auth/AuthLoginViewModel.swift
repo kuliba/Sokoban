@@ -34,14 +34,13 @@ class AuthLoginViewModel: ObservableObject {
         self.products = products
         self.rootActions = rootActions
         self.model = model
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "initialized")
     }
     
-    init(_ model: Model, rootActions: RootViewModel.RootActions) {
+    convenience init(_ model: Model, rootActions: RootViewModel.RootActions) {
         
-        self.model = model
-        self.header = HeaderViewModel()
-        self.products = .init(button: nil)
-        self.rootActions = rootActions
+        self.init(header: HeaderViewModel(), products: .init(button: nil), rootActions: rootActions, model: model)
         
         bind()
     }
@@ -54,14 +53,26 @@ class AuthLoginViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as ModelAction.Auth.CheckClient.Response:
+                    LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.CheckClient.Response")
+                    
                     self.action.send(AuthLoginViewModelAction.Spinner.Hide())
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "sent AuthLoginViewModelAction.Spinner.Hide")
+                    
                     switch payload {
                     case .success(codeLength: let codeLength, phone: let phone, resendCodeDelay: let resendCodeDelay):
-                        let confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: codeLength, phoneNumber: phone, resendCodeDelay: resendCodeDelay, backAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Close.Link())}, rootActions: rootActions)
-                        link = .confirm(confirmViewModel)
+                        LoggerAgent.shared.log(category: .ui, message: "ModelAction.Auth.CheckClient.Response: success")
                         
+                        let confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: codeLength, phoneNumber: phone, resendCodeDelay: resendCodeDelay, backAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Close.Link())}, rootActions: rootActions)
+                        
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "presented confirm view")
+                        link = .confirm(confirmViewModel)
+     
                     case .failure(message: let message):
+                        LoggerAgent.shared.log(category: .ui, message: "ModelAction.Auth.CheckClient.Response: failure message \(message)")
+                        
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "alert presented")
                         alert = .init(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
+                        
                     }
     
                 default:
@@ -76,15 +87,29 @@ class AuthLoginViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as AuthLoginViewModelAction.Register:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Register")
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "send ModelAction.Auth.CheckClient.Request number: ...\(payload.cardNumber.suffix(4))")
                     model.action.send(ModelAction.Auth.CheckClient.Request(number: payload.cardNumber))
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "dismiss keyboard")
                     card.textField.dismissKeyboard()
+                    
                     self.action.send(AuthLoginViewModelAction.Spinner.Show())
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "sent AuthLoginViewModelAction.Spinner.Show")
                     
                 case _ as AuthLoginViewModelAction.Show.Products:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Show.Products")
+                    
                     let productsViewModel = AuthProductsViewModel(model, products: model.catalogProducts.value, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Close.Link())})
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "presented products view")
                     link = .products(productsViewModel)
                     
                 case _ as AuthLoginViewModelAction.Show.Scaner:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Show.Scaner")
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "presented card scanner")
                     cardScanner = .init(closeAction: { number in
                         guard let value = number else {
                             self.cardScanner = nil
@@ -97,12 +122,15 @@ class AuthLoginViewModel: ObservableObject {
                     })
                     
                 case _ as AuthLoginViewModelAction.Close.Link:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Close.Link")
                     link = nil
                     
                 case _ as AuthLoginViewModelAction.Spinner.Show:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Spinner.Show")
                     rootActions.spinner.show()
                     
                 case _ as AuthLoginViewModelAction.Spinner.Hide:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Spinner.Hide")
                     rootActions.spinner.hide()
                     
                 default:
@@ -121,7 +149,9 @@ class AuthLoginViewModel: ObservableObject {
                     card.nextButton = nil
                     return
                 }
+                LoggerAgent.shared.log(category: .ui, message: "card state: .ready")
                 
+                LoggerAgent.shared.log(level: .debug, category: .ui, message: "next button presented")
                 card.nextButton = CardViewModel.NextButtonViewModel(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Register(cardNumber: cardNumber))})
                 
             }.store(in: &bindings)
@@ -132,11 +162,16 @@ class AuthLoginViewModel: ObservableObject {
                 
                 if catalogProducts.count > 0 {
                     
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "catalog products button presented")
+                    
                     withAnimation {
                         products.button = .init(action: { self.action.send(AuthLoginViewModelAction.Show.Products()) })
                     }
 
+
                 } else {
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "catalog products button dismissed")
                     
                     withAnimation {
                         products.button = nil
@@ -148,7 +183,7 @@ class AuthLoginViewModel: ObservableObject {
     
     deinit {
         
-        //TODO: set logger
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
 }
 

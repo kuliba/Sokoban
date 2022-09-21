@@ -28,5 +28,10 @@ class KeychainAgentMock: KeychainAgentProtocol {
     func clear(type: KeychainValueType) throws {
         
         storage[type.rawValue] = nil
-    }  
+    }
+    
+    func isStoredString(values: [KeychainValueType]) -> Bool {
+        
+        false
+    }
 }
