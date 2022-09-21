@@ -311,8 +311,8 @@ class Model {
                 case _ as SessionAgentAction.Session.Extend.Request:
                     LoggerAgent.shared.log(category: .model, message: "received SessionAgentAction.Session.Extend.Request")
                     
-                    self.action.send(ModelAction.Auth.Session.Extend.Request())
                     LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Extend.Request")
+                    self.action.send(ModelAction.Auth.Session.Extend.Request())
                     
                 default:
                     break
@@ -355,6 +355,9 @@ class Model {
                     bind(sessionAgent: sessionAgent)
 
                 case _ as ModelAction.App.Activated:
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.App.Activated")
+                    
+                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Timer.Start")
                     sessionAgent.action.send(SessionAgentAction.Timer.Start())
                     
                     if let deepLinkType = deepLinkType.value {
@@ -363,6 +366,9 @@ class Model {
                     }
                     
                 case _ as ModelAction.App.Inactivated:
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.App.Inactivated")
+                    
+                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Timer.Stop")
                     sessionAgent.action.send(SessionAgentAction.Timer.Stop())
                     
                     //MARK: - General

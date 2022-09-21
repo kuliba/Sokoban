@@ -69,7 +69,7 @@ class RootViewModel: ObservableObject, Resetable {
                 case .unlockRequired:
                     let lockViewModel = AuthPinCodeViewModel(model, mode: .unlock(attempt: 0, auto: true), rootActions: rootActions)
                     
-                    LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLock, animated: false")
+                    LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLock, animated: true")
                     action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel, animated: true))
                     
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.DismissAll")
