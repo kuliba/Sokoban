@@ -713,6 +713,9 @@ class Model {
                     
                 case let payload as ModelAction.Deposits.Close.Request:
                     handleCloseDepositRequest(payload)
+                
+                case let payload as ModelAction.Deposits.CloseNotified:
+                    handleDidShowCloseAlert(payload)
                     
                     //MARK: - Location Actions
                     
@@ -1080,6 +1083,15 @@ private extension Model {
         do {
             
             try localAgent.clear(type: DepositsInfoData.self)
+            
+        } catch {
+            
+            //TODO: set logger
+        }
+        
+        do {
+            
+            try localAgent.clear(type: [ProductData.ID].self)
             
         } catch {
             
