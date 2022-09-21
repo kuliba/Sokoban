@@ -267,11 +267,6 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
                 imageView.image = UIImage(named: "GKH")
                 navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageView)
             }
-            navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "back_button"), style: .plain, target: self, action: #selector(backAction))
-            navigationItem.leftBarButtonItem?.setTitleTextAttributes(
-                    [.foregroundColor: UIColor.black], for: .normal)
-            navigationItem.leftBarButtonItem?.setTitleTextAttributes(
-                    [.foregroundColor: UIColor.black], for: .highlighted)
             navigationItem.hidesSearchBarWhenScrolling = false
             definesPresentationContext = true
             
