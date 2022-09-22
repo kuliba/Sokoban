@@ -132,9 +132,9 @@ class MainViewModel: ObservableObject, Resetable {
                         self.alert = .init(title: "Срок действия вклада истек", message: "Переведите деньги со вклада на свою карту/счет в любое время", primary: .init(type: .default, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Ok", action: {
                             
                             self.action.send(MainViewModelAction.Show.ProductProfile(productId: deposit.id))
-                            self.model.action.send(ModelAction.Deposits.CloseNotified(productId: deposit.id))
-                            
                         }))
+                        
+                        self.model.depositsCloseNotified.append(.init(depositId: deposit.id))
                     }
                 }
             }.store(in: &bindings)
