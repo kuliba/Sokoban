@@ -29,7 +29,7 @@ extension ProductSelectorView {
         init(_ model: Model,
              productViewModel: ProductContentViewModel? = nil,
              listViewModel: ProductsListView.ViewModel? = nil,
-             context: Context) {
+             context: Context = .init()) {
             
             self.model = model
             self.productViewModel = productViewModel
@@ -43,7 +43,7 @@ extension ProductSelectorView {
         
         convenience init(_ model: Model, currency: Currency, product: ProductData) {
             
-            let productViewModel: ProductContentViewModel = .init(productId: product.id, productData: product, model: model)
+            let productViewModel: ProductContentViewModel = .init(id: product.id, productData: product, model: model)
             let context: Context = .init(currency: currency, isAdditionalProducts: true)
             
             self.init(model, productViewModel: productViewModel, context: context)
@@ -185,7 +185,7 @@ extension ProductSelectorView.ViewModel {
         let isAdditionalProducts: Bool
         let isUserInteractionEnabled: Bool
         
-        init(title: String = "", currency: Currency = .rub, direction: Direction = .from, excludeTypes: [ProductType]? = nil, selectedProductId: ProductData.ID? = nil, excludeProductId: ProductData.ID? = nil, backgroundColor: BackgroundColor = .gray, titleIndent: TitleIndent = .normal, isDividerHiddable: Bool = false,  isAdditionalProducts: Bool, isUserInteractionEnabled: Bool = true) {
+        init(title: String = "", currency: Currency = .rub, direction: Direction = .from, excludeTypes: [ProductType]? = nil, selectedProductId: ProductData.ID? = nil, excludeProductId: ProductData.ID? = nil, backgroundColor: BackgroundColor = .gray, titleIndent: TitleIndent = .normal, isDividerHiddable: Bool = false,  isAdditionalProducts: Bool = false, isUserInteractionEnabled: Bool = true) {
             
             self.title = title
             self.currency = currency
@@ -231,11 +231,11 @@ extension ProductSelectorView.ViewModel {
         @Published var description: String?
         @Published var isCollapsed: Bool
         
-        let productId: Int
+        let id: ProductData.ID
         
-        init(productId: Int, cardIcon: Image? = nil, paymentSystemIcon: Image? = nil, name: String, balance: String, numberCard: String, description: String? = nil, isCollapsed: Bool = true) {
+        init(id: ProductData.ID, cardIcon: Image? = nil, paymentSystemIcon: Image? = nil, name: String, balance: String, numberCard: String, description: String? = nil, isCollapsed: Bool = true) {
             
-            self.productId = productId
+            self.id = id
             self.cardIcon = cardIcon
             self.paymentSystemIcon = paymentSystemIcon
             self.name = name
@@ -245,7 +245,7 @@ extension ProductSelectorView.ViewModel {
             self.isCollapsed = isCollapsed
         }
         
-        convenience init(productId: Int, productData: ProductData, model: Model) {
+        convenience init(id: ProductData.ID, productData: ProductData, model: Model) {
             
             switch productData {
             case let product as ProductCardData:
@@ -255,14 +255,14 @@ extension ProductSelectorView.ViewModel {
                 let description = product.additionalField
                 let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
                 
-                self.init(productId: productId, cardIcon: product.smallDesign.image, paymentSystemIcon: product.paymentSystemImage?.image, name: name, balance: balance, numberCard: numberCard, description: description)
+                self.init(id: id, cardIcon: product.smallDesign.image, paymentSystemIcon: product.paymentSystemImage?.image, name: name, balance: balance, numberCard: numberCard, description: description)
                 
             case let product as ProductAccountData:
                 
                 let numberCard = product.displayNumber ?? "XXXX"
                 let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
                 
-                self.init(productId: productId, cardIcon: product.smallDesign.image, paymentSystemIcon: nil, name: product.displayName, balance: balance, numberCard: numberCard, description: nil)
+                self.init(id: id, cardIcon: product.smallDesign.image, paymentSystemIcon: nil, name: product.displayName, balance: balance, numberCard: numberCard, description: nil)
                 
             default:
                 
@@ -270,7 +270,7 @@ extension ProductSelectorView.ViewModel {
                 
                 let numberCard = productData.displayNumber ?? "XXXX"
                 
-                self.init(productId: productId, name: productData.displayName, balance: NumberFormatter.decimal(productData.balanceValue), numberCard: numberCard)
+                self.init(id: id, name: productData.displayName, balance: NumberFormatter.decimal(productData.balanceValue), numberCard: numberCard)
             }
         }
     }
@@ -291,7 +291,7 @@ extension ProductSelectorView.ViewModel {
     
     private func makeProductsList(with context: Context) -> ProductsListView.ViewModel? {
         
-        guard let productViewModel = productViewModel, let productData = model.product(productId: productViewModel.productId) else {
+        guard let productViewModel = productViewModel, let productData = model.product(productId: productViewModel.id) else {
             return nil
         }
         
@@ -320,7 +320,7 @@ extension ProductSelectorView.ViewModel {
             return
         }
         
-        self.productViewModel = .init(productId: productId, productData: productData, model: model)
+        self.productViewModel = .init(id: productId, productData: productData, model: model)
     }
     
     func setProductSelectorData(productId: ProductData.ID) {
@@ -331,7 +331,7 @@ extension ProductSelectorView.ViewModel {
             return
         }
         
-        self.productViewModel = .init(productId: productId, productData: productData, model: model)
+        self.productViewModel = .init(id: productId, productData: productData, model: model)
     }
     
     private func setProductSelectorData() {
@@ -343,7 +343,7 @@ extension ProductSelectorView.ViewModel {
             let productsData = model.products.value.values.flatMap { $0 }.filter { $0.productType.rawValue == option.id }.sorted { $0.productType.order < $1.productType.order }
             
             if let productData = productsData.first {
-                self.productViewModel = .init(productId: productData.id, productData: productData, model: model)
+                self.productViewModel = .init(id: productData.id, productData: productData, model: model)
             }
         }
     }
@@ -374,7 +374,7 @@ struct ProductSelectorView: View {
             if let listViewModel = viewModel.listViewModel {
                 
                 ProductsListView(viewModel: listViewModel)
-                    .padding(.top, 8)
+                    .padding(.top, 4)
                 
             } else {
                 
@@ -384,6 +384,7 @@ struct ProductSelectorView: View {
                 }
             }
         }
+        .fixedSize(horizontal: false, vertical: true)
         .disabled(viewModel.context.isUserInteractionEnabled == false)
         .background(background)
     }
@@ -571,41 +572,55 @@ extension ProductSelectorView.ViewModel {
     static let sample1 = ProductSelectorView.ViewModel(
         .emptyMock,
         productViewModel: .init(
-            productId: 1,
+            id: 1,
             cardIcon: Image("Platinum Card"),
             paymentSystemIcon: Image("Platinum Logo"),
             name: "Platinum",
             balance: "2,71 млн ₽",
             numberCard: "2953",
             description: "Все включено"),
-        context: .init(isAdditionalProducts: true))
+        context: .init(
+            title: "Откуда",
+            isDividerHiddable: true,
+            isAdditionalProducts: true))
     
     static let sample2 = ProductSelectorView.ViewModel(
         .emptyMock,
         productViewModel: .init(
-            productId: 2,
+            id: 2,
             cardIcon: Image("Platinum Card"),
             paymentSystemIcon: Image("Platinum Logo"),
             name: "Platinum",
             balance: "2,71 млн ₽",
             numberCard: "2953",
             description: "Все включено"),
-        listViewModel: .sample,
-        context: .init(isAdditionalProducts: false))
+        listViewModel: .sample1,
+        context: .init(title: "Откуда"))
     
     static let sample3 = ProductSelectorView.ViewModel(
         .emptyMock,
         productViewModel: .init(
-            productId: 3,
+            id: 3,
             cardIcon: Image("RUB Account"),
             paymentSystemIcon: nil,
             name: "Текущий счет",
             balance: "0 $",
             numberCard: "",
             description: "Валютный"),
-        context: .init(
-            isDividerHiddable: true,
-            isAdditionalProducts: false))
+        context: .init(title: "Куда", isDividerHiddable: true))
+    
+    static let sample4 = ProductSelectorView.ViewModel(
+        .emptyMock,
+        productViewModel: .init(
+            id: 2,
+            cardIcon: Image("Platinum Card"),
+            paymentSystemIcon: Image("Platinum Logo"),
+            name: "Platinum",
+            balance: "2,71 млн ₽",
+            numberCard: "2953",
+            description: "Все включено"),
+        listViewModel: .sample2,
+        context: .init(title: "Откуда"))
 }
 
 // MARK: - Previews
@@ -616,15 +631,11 @@ struct ProductSelectorViewComponent_Previews: PreviewProvider {
         Group {
             
             ProductSelectorView(viewModel: .sample1)
-                .previewLayout(.sizeThatFits)
-                .fixedSize()
-            
             ProductSelectorView(viewModel: .sample2)
-                .previewLayout(.sizeThatFits)
-            
             ProductSelectorView(viewModel: .sample3)
-                .previewLayout(.sizeThatFits)
+            
         }
+        .previewLayout(.sizeThatFits)
         .padding(.vertical)
         .background(Color.mainColorsGrayLightest)
     }

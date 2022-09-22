@@ -190,7 +190,7 @@ struct ProductsListView: View {
                     }
                 }.padding(.horizontal, 20)
             }
-        }
+        }.padding(.vertical, 4)
     }
 }
 
@@ -206,15 +206,23 @@ enum ProductsListAction {
 
 extension ProductsListView.ViewModel {
     
-    static let sample = ProductsListView.ViewModel(.emptyMock, productType: .card, products: [.classicSmall, .accountSmall, .accountSmall], context: .init(isAdditionalProducts: false))
+    static let sample1 = ProductsListView.ViewModel(.emptyMock, productType: .card, products: [.classicSmall, .accountSmall, .accountSmall], context: .init(isAdditionalProducts: false))
+    
+    static let sample2 = ProductsListView.ViewModel(.emptyMock, productType: .card, products: [.accountSmall, .classicSmall, .classicSmall], context: .init(isAdditionalProducts: false))
 }
 
 // MARK: - Previews
 
 struct ProductsListViewComponent_Previews: PreviewProvider {
+    
     static var previews: some View {
-        ProductsListView(viewModel: .sample)
-            .previewLayout(.sizeThatFits)
-            .padding(.vertical)
+        
+        Group {
+            
+            ProductsListView(viewModel: .sample1)
+            ProductsListView(viewModel: .sample2)
+        }
+        .previewLayout(.sizeThatFits)
+        .padding(.vertical, 8)
     }
 }
