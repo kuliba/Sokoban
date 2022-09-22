@@ -354,6 +354,7 @@ class Model {
                     //MARK: - App
                     
                 case _ as ModelAction.App.Launched:
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.App.Launched")
                     handleAppFirstLaunch()
                     bind(sessionAgent: sessionAgent)
 
@@ -382,18 +383,29 @@ class Model {
                     //MARK: - Auth Actions
                     
                 case _ as ModelAction.Auth.Session.Start.Request:
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Start.Request")
                     handleAuthSessionStartRequest()
                     
                 case let payload as ModelAction.Auth.Session.Start.Response:
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Start.Response")
+                    
+                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Start.Response")
                     sessionAgent.action.send(SessionAgentAction.Session.Start.Response(result: payload.result))
                     
                 case _ as ModelAction.Auth.Session.Extend.Request:
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Extend.Request")
                     handleAuthSessionExtendRequest()
                     
                 case let payload as ModelAction.Auth.Session.Extend.Response:
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Extend.Response")
+                    
+                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Extend.Response")
                     sessionAgent.action.send(SessionAgentAction.Session.Extend.Response(result: payload.result))
                  
                 case _ as ModelAction.Auth.Session.Terminate:
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Terminate")
+                    
+                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Terminate")
                     sessionAgent.action.send(SessionAgentAction.Session.Terminate())
                     
                 case let payload as ModelAction.Auth.CheckClient.Request:
@@ -430,15 +442,17 @@ class Model {
                     handleAuthLoginRequest(payload: payload)
                     
                 case let payload as ModelAction.Auth.Login.Response:
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Login.Response")
                     switch payload {
                     case .success:
                         auth.value = .authorized
                     
                     default:
-                        break
+                        auth.value = keychainAgent.isStoredString(values: [.pincode, .serverDeviceGUID]) ? .signInRequired : .registerRequired
                     }
                     
                 case _ as ModelAction.Auth.Logout:
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Logout")
                     clearKeychainData()
                     clearCachedAuthorizedData()
                     clearMemoryData()
@@ -941,7 +955,8 @@ private extension Model {
             self.paymentTemplates.value = paymentTemplates
         }
         
-        if let statements = localAgent.load(type: StatementsData.self) {
+        if localAgent.serial(for: StatementsData.self) == Self.statementsSerial,
+            let statements = localAgent.load(type: StatementsData.self) {
             
             self.statements.value = statements
         }

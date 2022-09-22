@@ -14,8 +14,16 @@ protocol SettingsAgentProtocol {
     func clear(type: SettingType)
 }
 
-enum SettingsAgentError: Error {
+enum SettingsAgentError: LocalizedError {
     
     case unableLoadDataType(SettingType)
+    
+    var errorDescription: String? {
+        
+        switch self {
+        case .unableLoadDataType(let settingType):
+            return "Unable to load setting data of type: \(settingType)"
+        }
+    }
 }
 

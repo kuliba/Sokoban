@@ -94,9 +94,9 @@ extension Model {
         LoggerAgent.shared.log(level: .error, category: .model, message: "Server Command return Empty Data for command \(command)", file: file, line: line)
     }
 
-    func handleSettingsCachingError(error: Error, method: String = #function, file: String = #file, line: Int = #line) {
+    func handleSettingsCachingError(error: Error, file: String = #file, line: Int = #line) {
 
-        LoggerAgent.shared.log(level: .error, category: .model, message: "Settings Caching Error: \(error.localizedDescription), on method: \(method)", file: file, line: line)
+        LoggerAgent.shared.log(level: .error, category: .model, message: "Settings Caching Error: \(error.localizedDescription)", file: file, line: line)
     }
 }
 
