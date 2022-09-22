@@ -52,7 +52,7 @@ class Model {
     
     //MARK: Deposits
     let deposits: CurrentValueSubject<[DepositProductData], Never>
-    var depositsCloseNotified: [DepositCloseNotification]
+    var depositsCloseNotified: DepositCloseNotification?
     
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
@@ -163,7 +163,7 @@ class Model {
         self.dictionariesUpdating = .init([])
         self.userSettings = .init([])
         self.deepLinkType = .init(nil)
-        self.depositsCloseNotified = .init([])
+        self.depositsCloseNotified = nil
         
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
@@ -271,7 +271,7 @@ class Model {
                     LoggerAgent.shared.log(category: .model, message: "auth: authorized")
                     loadCachedAuthorizedData()
                     loadSettings()
-                    depositsCloseNotified = []
+                    depositsCloseNotified = nil
                     action.send(ModelAction.Products.Update.Total.All())
                     action.send(ModelAction.ClientInfo.Fetch.Request())
                     action.send(ModelAction.ClientPhoto.Load())
@@ -722,6 +722,9 @@ class Model {
                     
                 case let payload as ModelAction.Deposits.Close.Request:
                     handleCloseDepositRequest(payload)
+                    
+                case let payload as ModelAction.Deposits.CloseNotified:
+                    handleDidShowCloseAlert(payload)
                     
                     //MARK: - Location Actions
                     
