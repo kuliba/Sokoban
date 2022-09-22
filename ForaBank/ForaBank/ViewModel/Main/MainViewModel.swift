@@ -121,20 +121,22 @@ class MainViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] products in
                 
+                guard model.depositsCloseNotified == nil else { return }
+                
                 let products = products.values.flatMap {$0}
                 
                 let deposits = products.filter({$0.productType == .deposit})
                 
                 for deposit in deposits {
                     
-                    if !model.depositsCloseNotified.contains(where: {$0.depositId == deposit.id}), let deposit = deposit as? ProductDepositData, let endDate = deposit.endDateNf, endDate {
+                    if let deposit = deposit as? ProductDepositData, let endDate = deposit.endDateNf, endDate {
                         
                         self.alert = .init(title: "Срок действия вклада истек", message: "Переведите деньги со вклада на свою карту/счет в любое время", primary: .init(type: .default, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Ok", action: {
                             
                             self.action.send(MainViewModelAction.Show.ProductProfile(productId: deposit.id))
-                            self.model.action.send(ModelAction.Deposits.CloseNotified(productId: deposit.id))
-                            
                         }))
+                        
+                        self.model.action.send(ModelAction.Deposits.CloseNotified(productId: deposit.id))
                     }
                 }
             }.store(in: &bindings)
@@ -272,7 +274,14 @@ class MainViewModel: ObservableObject, Resetable {
                                 
                                 self.link = .country(.init(country: payload.countryId, operatorsViewModel: .init(closeAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
-                                }, template: nil)))
+                                }, template: nil), paymentType: .withOutAddress(withOutViewModel: .init(phoneNumber: nil))))
+                                
+                            case let payload as BannerActionContactTransfer:
+                                  
+                                self.link = .country(.init(country: payload.countryId, operatorsViewModel: .init(closeAction: { [weak self] in
+                                    self?.action.send(MainViewModelAction.Close.Link())
+                                }, template: nil), paymentType: .turkeyWithOutAddress(turkeyWithOutAddress: .init(firstName: "", middleName: "", surName: "", phoneNumber: ""))))
+                                
                             default: break
                             }
                         default:
