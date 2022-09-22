@@ -119,7 +119,8 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
                 self.viewReceiver.isHidden = false
-                let cardList = ReturnAllCardList.cards()
+                let cardList = ReturnAllCardList.cards().uniqueValues(value: {$0.accountID})
+                
                 cardList.forEach({ card in
                     if card.id == cardId {
                         self.cardFromField.model = card
@@ -207,8 +208,16 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
             })
             let clientId = Model.shared.clientInfo.value?.id
             
-            self.cardListView.cardList = filterProduct.filter({$0.ownerID == clientId})
-            self.cardFromField.model = filterProduct.first
+            self.cardListView.cardList = filterProduct.filter({$0.ownerID == clientId}).uniqueValues(value: {$0.accountID})
+            let accountId = self.model.fastPaymentContractFullInfo.value.first?.fastPaymentContractAccountAttributeList?.first?.accountId
+
+            if filterProduct.filter({$0.accountID == accountId}).count >= 1 {
+                
+                self.cardFromField.model = filterProduct.filter({$0.accountID == accountId}).first
+            } else {
+                
+                self.cardFromField.model = filterProduct.first
+            }
         }
     }
     
@@ -228,18 +237,17 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         }
         let amountFound = params?.filter({ $0.type == "AMOUNT" })
         if (amountFound != nil && amountFound?.count ?? 0 > 0) {
-            amount = amountFound?[0].value ?? ""
+            amount = amountFound?.first?.value ?? ""
         }
         let bankRecipientFound = params?.filter({ $0.type == "BANK" })
         if (bankRecipientFound != nil && bankRecipientFound?.count ?? 0 > 0) {
-            bankRecipientCode = bankRecipientFound?[0].value ?? ""
+            bankRecipientCode = bankRecipientFound?.first?.value ?? ""
         }
-        guard let allBanks = Model.shared.dictionaryFullBankInfoList() else { return }
-        let banks = allBanks.map({$0.fullBankInfoList})
-        let foundBank = banks.filter({ $0.memberID == bankRecipientCode })
-        if foundBank.count > 0, let bankRusName = foundBank[0].rusName {
-            let bankIconSvg = foundBank[0].svgImage
-            imgBank.image = bankIconSvg?.convertSVGStringToImage()
+        let allBanks = Model.shared.bankList.value
+        let foundBank = allBanks.filter({ $0.memberId == bankRecipientCode })
+        if foundBank.count > 0, let bankRusName = foundBank.first?.memberNameRus {
+            let bankIconSvg = foundBank.first?.svgImage
+            imgBank.image = bankIconSvg?.uiImage
             labelBank.text = bankRusName
             C2BSuccessView.bankImg = imgBank.image
             C2BSuccessView.bankName = bankRusName

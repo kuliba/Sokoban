@@ -121,7 +121,7 @@ class PaymentsDetailsView: UIView {
         switch model.status {
         case .inProgress:
             statusLabel.text = "В обработке"
-            statusImageView.image = UIImage(named: "OkOperators")
+            statusImageView.image = UIImage(named: "waiting")
             
         case .succses:
             statusLabel.text = "Успешный перевод"
