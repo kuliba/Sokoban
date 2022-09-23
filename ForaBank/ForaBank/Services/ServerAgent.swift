@@ -51,6 +51,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
         do {
             
             let request = try request(with: command)
+            LoggerAgent.shared.log(category: .network, message: "data request: \(request)")
             session.dataTask(with: request) {[unowned self] data, response, error in
                 
                 self.action.send(ServerAgentAction.NetworkActivityEvent())
@@ -107,6 +108,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
         do {
             
             let request = try downloadRequest(with: command)
+            LoggerAgent.shared.log(category: .network, message: "download request: \(request)")
             sessionCached.downloadTask(with: request) { localFileURL, response, error in
                 
                 if let error = error {
@@ -157,7 +159,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
         do {
             
             let request = try uploadRequest(with: command)
-            
+            LoggerAgent.shared.log(category: .network, message: "upload request: \(request)")
             session.uploadTask(with: request, from: request.httpBody) { [unowned self] data, response, error in
                 
                 if let error = error {
@@ -172,10 +174,10 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                 }
                 
                 do {
-                        let response = try decoder.decode(Command.Response.self, from: data)
-                        completion(.success(response))
-
                     
+                    let response = try decoder.decode(Command.Response.self, from: data)
+                    completion(.success(response))
+ 
                 } catch {
                     
                     completion(.failure(.curruptedData(error)))

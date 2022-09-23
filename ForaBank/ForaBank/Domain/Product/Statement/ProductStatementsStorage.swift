@@ -31,7 +31,8 @@ struct ProductStatementsStorage: Codable {
     init(with update: Update, historyLimitDate: Date?) {
         
         self.period = update.period
-        self.statements = update.statements.sorted(by: { $0.date < $1.date })
+        let updateStatementsUnique = Set(update.statements)
+        self.statements = updateStatementsUnique.sorted(by: { $0.date < $1.date })
         self.historyLimitDate = historyLimitDate
     }
 }
@@ -43,9 +44,25 @@ extension ProductStatementsStorage {
     func updated(with update: Update, historyLimitDate: Date?) -> ProductStatementsStorage {
         
         let updatedPeriod = period.including(update.period)
-        let updatedStatements = Array(Set(statements + update.statements)).sorted(by: { $0.date < $1.date })
-        
-        return ProductStatementsStorage(period: updatedPeriod, statements: updatedStatements, historyLimitDate: historyLimitDate)
+        let updateStatementsUnique = Set(update.statements)
+        if let earlestUpdateDate = update.statements.map({ $0.date }).min() {
+            
+            var statementsUpdated = statements
+            
+            if update.override == true {
+
+                statementsUpdated = statements.filter({ $0.date < earlestUpdateDate })
+            }
+
+            statementsUpdated.append(contentsOf: updateStatementsUnique)
+            let statementsSorted = statementsUpdated.sorted(by: { $0.date < $1.date })
+            
+            return ProductStatementsStorage(period: updatedPeriod, statements: statementsSorted, historyLimitDate: historyLimitDate)
+            
+        } else {
+            
+            return ProductStatementsStorage(period: updatedPeriod, statements: statements, historyLimitDate: historyLimitDate)
+        }
     }
     
     func latestPeriod(days: Int, limitDate: Date) -> Period? {
@@ -68,6 +85,18 @@ extension ProductStatementsStorage {
         
         let startDate = max(period.start.advanced(by: -TimeInterval.value(days: days)), limitDate)
         let endDate = period.start
+        
+        return Period(start: startDate, end: endDate)
+    }
+    
+    func latestPeriod(days: Int, limitDate: Date, offset: Int) -> Period? {
+        
+        guard let latestPeriod = latestPeriod(days: days, limitDate: limitDate) else {
+            return nil
+        }
+        
+        let startDate = latestPeriod.end.advanced(by: -TimeInterval.value(days: offset))
+        let endDate = latestPeriod.end
         
         return Period(start: startDate, end: endDate)
     }
@@ -110,6 +139,7 @@ extension ProductStatementsStorage {
         let period: Period
         let direction: Period.Direction
         let limitDate: Date
+        var override: Bool = false
         
         var debugDescription: String {
             
@@ -123,5 +153,6 @@ extension ProductStatementsStorage {
         let statements: [ProductStatementData]
         let direction: Period.Direction
         let limitDate: Date
+        let override: Bool
     }
 }

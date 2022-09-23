@@ -22,7 +22,7 @@ enum LoggerAgentLevel {
     case fault
 }
 
-enum LoggerAgentCategory: String {
+enum LoggerAgentCategory: String, CaseIterable {
     
     case model
     case ui
