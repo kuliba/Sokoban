@@ -85,7 +85,7 @@ extension ProductSelectorView {
             let currency: Currency = .init(description: product.currency)
             let productViewModel: ProductContentViewModel = .init(productId: product.id, productData: product, model: model)
             
-            self.init(model, title: "", currency: currency, currencyOperation: .buy, productViewModel: productViewModel, backgroundColor: backgroundColor)
+            self.init(model, title: "", currency: currency, currencyOperation: .buy, productViewModel: productViewModel, backgroundColor: backgroundColor, context: .init(isAdditionalProducts: true))
         }
         
         enum BackgroundColor {
