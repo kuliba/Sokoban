@@ -68,6 +68,11 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     return
                 }
                 
+                guard response.statusCode == 200 else {
+                    completion(.failure(.unexpectedResponseStatus(response.statusCode)))
+                    return
+                }
+                
                 if command.cookiesProvider == true,
                    let headers = response.allHeaderFields as? [String: String],
                    let url = request.url {
@@ -117,9 +122,14 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     return
                 }
                 
-                guard let response = response else {
+                guard let response = response as? HTTPURLResponse else {
                     
                     completion(.failure(.emptyResponse))
+                    return
+                }
+                
+                guard response.statusCode == 200 else {
+                    completion(.failure(.unexpectedResponseStatus(response.statusCode)))
                     return
                 }
                 
@@ -165,6 +175,17 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                 if let error = error {
                     
                     completion(.failure(.sessionError(error)))
+                    return
+                }
+                
+                guard let response = response as? HTTPURLResponse else {
+                    
+                    completion(.failure(.emptyResponse))
+                    return
+                }
+                
+                guard response.statusCode == 200 else {
+                    completion(.failure(.unexpectedResponseStatus(response.statusCode)))
                     return
                 }
   

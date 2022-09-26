@@ -65,23 +65,23 @@ extension Model {
     
     func handledUnauthorizedCommandAttempt(_ method: String = #function, file: String = #file, line: Int = #line) {
         
-        LoggerAgent.shared.log(level: .error, category: .model, message: "Unauthorized Request Attempt, method: \(method)", file: file, line: line)
+        LoggerAgent.shared.log(level: .error, category: .model, message: "Unauthorized request attempt, method: \(method)", file: file, line: line)
     }
     
     func handleServerCommandStatus<Command: ServerCommand>(command: Command, serverStatusCode: ServerStatusCode, errorMessage: String?, file: String = #file, line: Int = #line) {
         
         if let errorMessage = errorMessage {
             
-            LoggerAgent.shared.log(level: .error, category: .model, message: "Server Command Status for command: \(command) with status code: \(serverStatusCode) errorMessage: \(errorMessage)", file: file, line: line)
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Server command: \(command) status code: \(serverStatusCode) errorMessage: \(errorMessage)", file: file, line: line)
         } else {
             
-            LoggerAgent.shared.log(level: .error, category: .model, message: "Server Command Status for command: \(command) with status code: \(serverStatusCode)", file: file, line: line)
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Server command: \(command) status code: \(serverStatusCode)", file: file, line: line)
         }
     }
 
     func handleServerCommandError<Command: ServerCommand>(error: Error, command: Command, file: String = #file, line: Int = #line) {
         
-        LoggerAgent.shared.log(level: .error, category: .model, message: "Server Command Error for command: \(command) with error: \(error)", file: file, line: line)
+        LoggerAgent.shared.log(level: .error, category: .model, message: "Server command: \(command)  error: \(error.localizedDescription)", file: file, line: line)
     }
     
     func handleServerCommandCachingError<Command: ServerCommand>(error: Error, command: Command, file: String = #file, line: Int = #line) {
@@ -91,12 +91,12 @@ extension Model {
     
     func handleServerCommandEmptyData<Command: ServerCommand>(command: Command, file: String = #file, line: Int = #line) {
             
-        LoggerAgent.shared.log(level: .error, category: .model, message: "Server Command return Empty Data for command \(command)", file: file, line: line)
+        LoggerAgent.shared.log(level: .error, category: .model, message: "Server command \(command) responded with unexpected empty data", file: file, line: line)
     }
 
     func handleSettingsCachingError(error: Error, file: String = #file, line: Int = #line) {
 
-        LoggerAgent.shared.log(level: .error, category: .model, message: "Settings Caching Error: \(error.localizedDescription)", file: file, line: line)
+        LoggerAgent.shared.log(level: .error, category: .model, message: "Settings caching error: \(error.localizedDescription)", file: file, line: line)
     }
 }
 
