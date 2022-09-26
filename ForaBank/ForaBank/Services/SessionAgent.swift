@@ -43,15 +43,31 @@ class SessionAgent: SessionAgentProtocol {
             .sink { [unowned self] action in
             
                 switch action {
+                case _ as SessionAgentAction.App.Activated:
+                    LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.App.Activated")
+                    
+                    updateState(with: Date().timeIntervalSinceReferenceDate)
+                    timerStart()
+                    
+                    guard case .inactive = sessionState.value else {
+                        return
+                    }
+                    
+                    LoggerAgent.shared.log(category: .session, message: "sent SessionAgentAction.Session.Start.Request")
+                    self.action.send(SessionAgentAction.Session.Start.Request())
+                    
+                case _ as SessionAgentAction.App.Inactivated:
+                    LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.App.Inactivated")
+                    
+                    timerStop()
+                    
                 case let payload as SessionAgentAction.Session.Start.Response:
                     switch payload.result {
                     case .success(let credentials):
                         LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.Session.Start.Response: success")
                         
                         let start = Date.timeIntervalSinceReferenceDate
-                        LoggerAgent.shared.log(category: .session, message: "session state: active")
                         sessionState.value = .active(start: start, credentials: credentials)
-                        
                         updateLastNetworkActivityTime()
                         
                         LoggerAgent.shared.log(category: .session, message: "sent SessionAgentAction.Session.Extend.Request")
@@ -59,8 +75,6 @@ class SessionAgent: SessionAgentProtocol {
                         
                     case .failure(let error):
                         LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.Session.Start.Response: failure")
-                        
-                        LoggerAgent.shared.log(category: .session, message: "session state: failed")
                         sessionState.value = .failed(error)
                     }
                     
@@ -77,7 +91,6 @@ class SessionAgent: SessionAgentProtocol {
                     case .failure(let error):
                         LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.Session.Extend.Response: failure")
                         
-                        LoggerAgent.shared.log(category: .session, message: "session state: failed")
                         sessionState.value = .failed(error)
                     }
                     
@@ -93,21 +106,16 @@ class SessionAgent: SessionAgentProtocol {
                     LoggerAgent.shared.log(category: .session, message: "session state: inactive")
                     sessionState.value = .inactive
                     
-                case _ as SessionAgentAction.Timer.Start:
-                    LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.Timer.Start")
-                    
-                    updateState(with: Date().timeIntervalSinceReferenceDate)
-                    timerStart()
-                    
-                    
-                case _ as SessionAgentAction.Timer.Stop:
-                    LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.Timer.Stop")
-                    
-                    timerStop()
-                    
                 default:
                     break
                 }
+                
+            }.store(in: &bindings)
+        
+        sessionState
+            .sink {[unowned self] sessionState in
+                
+                LoggerAgent.shared.log(category: .session, message: "session: \(sessionState)")
                 
             }.store(in: &bindings)
     }

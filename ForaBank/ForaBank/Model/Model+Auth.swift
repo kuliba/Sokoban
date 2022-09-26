@@ -37,6 +37,8 @@ extension ModelAction {
                 }
             }
             
+            struct Activated: Action {}
+            
             struct Terminate: Action {}
         }
         
@@ -255,6 +257,15 @@ extension Model {
         
         keychainAgent.isStoredString(values: [.pincode, .serverDeviceGUID])
     }
+    
+    var authIsSessionActive: Bool {
+        
+        guard case .active(_, _) = sessionAgent.sessionState.value else {
+            return false
+        }
+        
+        return true
+    }
 }
 
 //MARK: - Handlers
@@ -264,6 +275,17 @@ internal extension Model {
     func handleAuthSessionStartRequest() {
         
         LoggerAgent.shared.log(category: .model, message: "handleAuthSessionStartRequest")
+        
+        switch sessionAgent.sessionState.value {
+        case .activating:
+            LoggerAgent.shared.log(level: .debug, category: .model, message: "session alredy activating")
+            return
+            
+        default:
+            break
+        }
+        
+        sessionAgent.sessionState.value = .activating
         
         Task {
             
@@ -898,7 +920,17 @@ extension Model {
         
         LoggerAgent.shared.log(category: .model, message: "authSessionCredentials, restartSession: \(restartSession)")
         
+        switch sessionAgent.sessionState.value {
+        case .activating:
+            throw ModelAuthError.sessionActivating
+            
+        default:
+            break
+        }
+
         if restartSession == true {
+            
+            sessionAgent.sessionState.value = .activating
             
             let credentials = try await authCSRF()
             LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Start, success, credentials")
@@ -913,6 +945,8 @@ extension Model {
                 return activeCredentials
                 
             } else {
+                
+                sessionAgent.sessionState.value = .activating
                 
                 let credentials = try await authCSRF()
                 LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Start, success, credentials")
@@ -1040,5 +1074,6 @@ enum ModelAuthError: Error {
     case keyExchangeFailed(status: ServerStatusCode, message: String?)
     case checkClientFailed(status: ServerStatusCode, message: String?)
     case setDeviceSettingsFailed(status: ServerStatusCode, message: String?)
+    case sessionActivating
 }
 
