@@ -80,7 +80,7 @@ class SbpPayViewModel: ObservableObject {
             
             self?.footer = .init(state: .spinner)
             
-            guard let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == paymentProduct?.productViewModel?.id }) else {
+            guard let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == paymentProduct?.productViewModel.id }) else {
                 return
             }
             
@@ -88,7 +88,7 @@ class SbpPayViewModel: ObservableObject {
                 
                 self?.model.action.send(ModelAction.SbpPay.ProcessTokenIntent.Request(accountId: accountId, status: .success))
                 
-            } else if let accountId = paymentProduct?.productViewModel?.id.description {
+            } else if let accountId = paymentProduct?.productViewModel.id.description {
                 
                 self?.model.action.send(ModelAction.SbpPay.ProcessTokenIntent.Request(accountId: accountId, status: .success))
             }
@@ -155,18 +155,26 @@ class SbpPayViewModel: ObservableObject {
          
             if let product = products.filter({($0 as? ProductCardData)?.accountId == accountId}).first {
                 
-                let selectorViewModel: ProductSelectorView.ViewModel = .init(model, productViewModel: .init(id: product.id, productData: product, model: model), context: .init(title: title, backgroundColor: .white, titleIndent: .left))
-                return selectorViewModel
+                let productViewModel = ProductSelectorView.ViewModel.makeProduct(model, productData: product)
+                
+                let productSelectorViewModel: ProductSelectorView.ViewModel = .init(model: model, productViewModel: productViewModel, context: .init(title: title, currency: .init(description: product.currency), backgroundColor: .white, titleIndent: .left))
+                
+                return productSelectorViewModel
                 
             } else if let product = products.filter({$0.id == accountId}).first {
                 
-                let selectorViewModel: ProductSelectorView.ViewModel = .init(model, productViewModel: .init(id: product.id, productData: product, model: model), context: .init(title: title, backgroundColor: .white, titleIndent: .left))
-                return selectorViewModel
+                let productViewModel = ProductSelectorView.ViewModel.makeProduct(model, productData: product)
+                
+                let productSelectorViewModel: ProductSelectorView.ViewModel = .init(model: model, productViewModel: productViewModel, context: .init(title: title, currency: .init(description: product.currency), backgroundColor: .white, titleIndent: .left))
+                
+                return productSelectorViewModel
             }
         }
         
-        let selectorViewModel: ProductSelectorView.ViewModel = .init(model, productViewModel: .init(id: productData.id, productData: productData, model: model), context: .init(title: title, backgroundColor: .white, titleIndent: .left))
-
-        return selectorViewModel
+        let productViewModel = ProductSelectorView.ViewModel.makeProduct(model, productData: productData)
+        
+        let productSelectorViewModel: ProductSelectorView.ViewModel = .init(model: model, productViewModel: productViewModel, context: .init(title: title, currency: .init(description: productData.currency), backgroundColor: .white, titleIndent: .left))
+        
+        return productSelectorViewModel
     }
 }

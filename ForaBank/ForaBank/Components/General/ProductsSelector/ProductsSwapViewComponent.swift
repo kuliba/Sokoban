@@ -31,13 +31,8 @@ extension ProductsSwapView {
             }
         })
         
-        var from: ProductSelectorView.ViewModel {
-            items.first ?? .init(model)
-        }
-        
-        var to: ProductSelectorView.ViewModel {
-            items.last ?? .init(model)
-        }
+        var from: ProductSelectorView.ViewModel? { items.first }
+        var to: ProductSelectorView.ViewModel? { items.last }
         
         init(model: Model, items: [ProductSelectorView.ViewModel]) {
             
@@ -52,7 +47,7 @@ extension ProductsSwapView {
             action
                 .receive(on: DispatchQueue.main)
                 .throttle(for: .milliseconds(500), scheduler: DispatchQueue.main, latest: false)
-                .sink { [unowned self] action in
+                .sink { action in
                     
                     switch action {
                     case _ as ProductsSwapAction.Button.Tap:
@@ -181,17 +176,27 @@ struct ProductsSwapView: View {
             
             VStack(alignment: .leading, spacing: 0) {
 
-                ProductSelectorView(viewModel: viewModel.from)
-                    .padding(.vertical, 20)
+                if let from = viewModel.from {
+                    
+                    ProductSelectorView(viewModel: from)
+                        .padding(.horizontal, 20)
+                        .padding(.top, 20)
+                        .padding(.bottom, 12)
+                }
                 
                 SwapView(viewModel: viewModel.swapViewModel)
+                    .padding(.horizontal, 20)
                 
-                ProductSelectorView(viewModel: viewModel.to)
-                    .padding(.top, 8)
-                    .padding(.bottom, 20)
+                if let to = viewModel.to {
+                    
+                    ProductSelectorView(viewModel: to)
+                        .padding(.horizontal, 20)
+                        .padding(.top, 8)
+                        .padding(.bottom, 20)
+                }
             }
-        }
-        .fixedSize(horizontal: false, vertical: true)
+            
+        }.fixedSize(horizontal: false, vertical: true)
     }
 }
 
@@ -224,8 +229,7 @@ extension ProductsSwapView {
                     }
                     
                     ProductsSwapView.SwapButtonView(viewModel: viewModel.swapButton)
-                    
-                }.padding(.horizontal, 20)
+                }
         }
     }
     
@@ -278,11 +282,8 @@ struct ProductsSwapViewComponent_Previews: PreviewProvider {
         
         Group {
             
+            ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sample1, .sample2]))
             ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sample1, .sample3]))
-            
-            ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sample2, .sample3]))
-            
-            ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sample2, .sample4]))
         }
         .previewLayout(.sizeThatFits)
         .background(Color.mainColorsGrayLightest)

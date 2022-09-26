@@ -882,6 +882,8 @@ struct CurrencySwapVIewComponent_Previews: PreviewProvider {
 
         VStack {
             CurrencySwapView(viewModel: .sample)
-        }.previewLayout(.sizeThatFits)
+        }
+        .previewLayout(.sizeThatFits)
+        .padding(.vertical)
     }
 }
