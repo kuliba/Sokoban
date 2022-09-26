@@ -230,28 +230,18 @@ class Model {
             .sink { [unowned self] sessionState in
                 
                 switch sessionState {
-                case .inactive:
-                    LoggerAgent.shared.log(category: .model, message: "session: inactive")
-                    
-                    auth.value = authIsCredentialsStored ? .signInRequired : .registerRequired
-                    action.send(ModelAction.Auth.Session.Start.Request())
-                    LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Start.Request")
-                    
                 case .active:
-                    LoggerAgent.shared.log(category: .model, message: "session: active")
+                    LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Activated")
+                    action.send(ModelAction.Auth.Session.Activated())
                     
                     loadCachedPublicData()
-                    action.send(ModelAction.Dictionary.UpdateCache.All())
                     LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Dictionary.UpdateCache.All")
-
-                case .expired:
-                    LoggerAgent.shared.log(category: .model, message: "session: expired")
-    
-                    auth.value = authIsCredentialsStored ? .unlockRequired : .registerRequired
+                    action.send(ModelAction.Dictionary.UpdateCache.All())
                     
-                case .failed(let error):
-                    LoggerAgent.shared.log(category: .model, message: "session: failed, error: \(error.localizedDescription)")
-    
+                case .inactive:
+                    auth.value = authIsCredentialsStored ? .signInRequired : .registerRequired
+                    
+                case .activating, .expired, .failed:
                     auth.value = authIsCredentialsStored ? .unlockRequired : .registerRequired
                 }
                 
@@ -309,6 +299,12 @@ class Model {
             .sink { [unowned self] action in
                 
                 switch action {
+                case _ as SessionAgentAction.Session.Start.Request:
+                    LoggerAgent.shared.log(category: .model, message: "received SessionAgentAction.Session.Start.Request")
+                    
+                    LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Start.Request")
+                    self.action.send(ModelAction.Auth.Session.Start.Request())
+                    
                 case _ as SessionAgentAction.Session.Extend.Request:
                     LoggerAgent.shared.log(category: .model, message: "received SessionAgentAction.Session.Extend.Request")
                     
@@ -359,8 +355,8 @@ class Model {
                 case _ as ModelAction.App.Activated:
                     LoggerAgent.shared.log(category: .model, message: "received ModelAction.App.Activated")
                     
-                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Timer.Start")
-                    sessionAgent.action.send(SessionAgentAction.Timer.Start())
+                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.App.Activated")
+                    sessionAgent.action.send(SessionAgentAction.App.Activated())
                     
                     if let deepLinkType = deepLinkType.value {
                         
@@ -370,8 +366,8 @@ class Model {
                 case _ as ModelAction.App.Inactivated:
                     LoggerAgent.shared.log(category: .model, message: "received ModelAction.App.Inactivated")
                     
-                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Timer.Stop")
-                    sessionAgent.action.send(SessionAgentAction.Timer.Stop())
+                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.App.Inactivated")
+                    sessionAgent.action.send(SessionAgentAction.App.Inactivated())
                     
                     //MARK: - General
                     
@@ -446,7 +442,7 @@ class Model {
                         auth.value = .authorized
                     
                     default:
-                        auth.value = keychainAgent.isStoredString(values: [.pincode, .serverDeviceGUID]) ? .signInRequired : .registerRequired
+                        auth.value = authIsCredentialsStored ? .signInRequired : .registerRequired
                     }
                     
                 case _ as ModelAction.Auth.Logout:

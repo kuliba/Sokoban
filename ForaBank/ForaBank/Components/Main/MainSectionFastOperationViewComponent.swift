@@ -94,7 +94,7 @@ struct MainSectionFastOperationView: View {
                             .frame(width: 80)
                     }
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, 8)
             }
         }
     }

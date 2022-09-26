@@ -125,7 +125,9 @@ extension PlacesMapView {
         
         func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
             
-            viewModel.currentRegion = mapView.region
+            DispatchQueue.main.async {
+                self.viewModel.currentRegion = mapView.region
+            }
         }
         
         func deselectAnnotations() {
