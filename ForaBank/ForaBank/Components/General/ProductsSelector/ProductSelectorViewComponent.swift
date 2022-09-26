@@ -21,6 +21,8 @@ extension ProductSelectorView {
         @Published var context: Context
         @Published var isCollapsed: Bool
         
+        let id: UUID = .init()
+        
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         

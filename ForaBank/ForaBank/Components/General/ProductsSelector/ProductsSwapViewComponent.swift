@@ -16,7 +16,8 @@ extension ProductsSwapView {
         
         let action: PassthroughSubject<Action, Never> = .init()
         
-        @Published var items: [ProductSelectorView.ViewModel]
+        var items: [ProductSelectorView.ViewModel]
+        @Published var isReversed: Bool = false
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
@@ -47,11 +48,16 @@ extension ProductsSwapView {
             action
                 .receive(on: DispatchQueue.main)
                 .throttle(for: .milliseconds(500), scheduler: DispatchQueue.main, latest: false)
-                .sink { action in
+                .sink { [unowned self] action in
                     
                     switch action {
                     case _ as ProductsSwapAction.Button.Tap:
-                        break
+                        
+                        items = items.reversed()
+                        
+                        withAnimation {
+                            isReversed.toggle()
+                        }
                         
                     case _ as ProductsSwapAction.Button.Reset:
                         break
@@ -165,6 +171,7 @@ extension ProductsSwapView.ViewModel {
 
 struct ProductsSwapView: View {
     
+    @Namespace private var namespace
     @ObservedObject var viewModel: ViewModel
     
     var body: some View {
@@ -175,24 +182,54 @@ struct ProductsSwapView: View {
                 .foregroundColor(.mainColorsGrayLightest)
             
             VStack(alignment: .leading, spacing: 0) {
-
-                if let from = viewModel.from {
-                    
-                    ProductSelectorView(viewModel: from)
-                        .padding(.horizontal, 20)
-                        .padding(.top, 20)
-                        .padding(.bottom, 12)
-                }
                 
+                if viewModel.isReversed == false {
+                    
+                    if let from = viewModel.items.first {
+                        
+                        ProductSelectorView(viewModel: from)
+                            .matchedGeometryEffect(id: from.id, in: namespace)
+                            .padding(.horizontal, 20)
+                            .padding(.top, 20)
+                            .padding(.bottom, 12)
+                    }
+                    
+                } else {
+                    
+                    if let to = viewModel.items.first {
+                        
+                        ProductSelectorView(viewModel: to)
+                            .matchedGeometryEffect(id: to.id, in: namespace)
+                            .padding(.horizontal, 20)
+                            .padding(.top, 20)
+                            .padding(.bottom, 12)
+                    }
+                }
+
                 SwapView(viewModel: viewModel.swapViewModel)
                     .padding(.horizontal, 20)
                 
-                if let to = viewModel.to {
+                if viewModel.isReversed == false {
                     
-                    ProductSelectorView(viewModel: to)
-                        .padding(.horizontal, 20)
-                        .padding(.top, 8)
-                        .padding(.bottom, 20)
+                    if let to = viewModel.items.last {
+                        
+                        ProductSelectorView(viewModel: to)
+                            .matchedGeometryEffect(id: to.id, in: namespace)
+                            .padding(.horizontal, 20)
+                            .padding(.top, 8)
+                            .padding(.bottom, 20)
+                    }
+                    
+                } else {
+                    
+                    if let from = viewModel.items.last {
+                        
+                        ProductSelectorView(viewModel: from)
+                            .matchedGeometryEffect(id: from.id, in: namespace)
+                            .padding(.horizontal, 20)
+                            .padding(.top, 8)
+                            .padding(.bottom, 20)
+                    }
                 }
             }
             
@@ -286,6 +323,6 @@ struct ProductsSwapViewComponent_Previews: PreviewProvider {
             ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sample1, .sample3]))
         }
         .previewLayout(.sizeThatFits)
-        .background(Color.mainColorsGrayLightest)
+        .padding()
     }
 }
