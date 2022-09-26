@@ -188,6 +188,8 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             if viewModel.firstStep {
                 viewModel.firstStep = false
                 viewModel.doFirstStep(amount: "0")
+            } else {
+                viewModel.doNextStep(amount: "null")
             }
         }
     }
