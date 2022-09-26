@@ -49,7 +49,7 @@ extension ProductSelectorView.ViewModel {
         listViewModel: .init(
             model: .emptyMock,
             products: [.classicSmall, .accountSmall],
-            selector: nil),
+            options: nil),
         context: .init(title: "Куда"),
         isCollapsed: false)
 }

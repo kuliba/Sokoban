@@ -1,5 +1,5 @@
 //
-//  ProductCollapsableViewComponent.swift
+//  ProductSelectorView.swift
 //  ForaBank
 //
 //  Created by Pavel Samsonov on 24.09.2022.

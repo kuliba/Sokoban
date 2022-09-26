@@ -1,5 +1,5 @@
 //
-//  ProductsListViewComponent.swift
+//  ProductsListView.swift
 //  ForaBank
 //
 //  Created by Pavel Samsonov on 25.09.2022.
@@ -17,31 +17,31 @@ extension ProductsListView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var products: [ProductView.ViewModel]
-        @Published var selector: OptionSelectorView.ViewModel?
+        @Published var options: OptionSelectorView.ViewModel?
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(model: Model, products: [ProductView.ViewModel], selector: OptionSelectorView.ViewModel?) {
+        init(model: Model, products: [ProductView.ViewModel], options: OptionSelectorView.ViewModel?) {
             
             self.model = model
             self.products = products
-            self.selector = selector
+            self.options = options
         }
         
         convenience init(model: Model, products: [ProductData], productType: ProductType) {
             
-            let selector = Self.makeSelector(products: products, selected: productType.rawValue)
+            let options = Self.makeOptions(products: products, selected: productType.rawValue)
             let products = Self.reduce(model: model, products: products)
             
-            self.init(model: model, products: products, selector: selector)
+            self.init(model: model, products: products, options: options)
         }
     }
 }
 
 extension ProductsListView.ViewModel {
     
-    static func makeSelector(products: [ProductData], selected: Option.ID) -> OptionSelectorView.ViewModel? {
+    static func makeOptions(products: [ProductData], selected: Option.ID) -> OptionSelectorView.ViewModel? {
         
         let options = reduce(products: products)
         
@@ -119,7 +119,7 @@ struct ProductsListView_Previews: PreviewProvider {
         ProductsListView(viewModel: .init(
             model: .emptyMock,
             products: [.classicSmall, .accountSmall, .accountSmall],
-            selector: nil))
+            options: nil))
         .previewLayout(.sizeThatFits)
         .padding(.vertical, 8)
     }

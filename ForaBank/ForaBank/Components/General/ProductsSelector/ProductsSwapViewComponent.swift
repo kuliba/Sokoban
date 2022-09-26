@@ -1,5 +1,5 @@
 //
-//  ProductsSwapViewComponent.swift
+//  ProductsSwapView.swift
 //  ForaBank
 //
 //  Created by Pavel Samsonov on 22.09.2022.
