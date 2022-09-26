@@ -22,6 +22,7 @@ extension MainSectionProductsView {
         @Published var content: Content
         @Published var selector: OptionSelectorView.ViewModel?
         @Published var moreButton: MoreButtonViewModel?
+        @Published var isScrollChangeSelectorEnable = true
         
         enum Content {
             
@@ -392,6 +393,8 @@ struct MainSectionProductsView: View {
                                 
                                 switch action {
                                 case let payload as MainSectionViewModelAction.Products.ScrollToGroup:
+                                    
+                                    viewModel.isScrollChangeSelectorEnable = false
                                     scrollToGroup(groupId: payload.groupId)
                                     
                                 default:
@@ -400,7 +403,10 @@ struct MainSectionProductsView: View {
                             }
                             .onReceive(proxy.offset) { offset in
                                 
+                                if viewModel.isScrollChangeSelectorEnable == true {
+                                    
                                 viewModel.action.send( MainSectionViewModelAction.Products.HorizontalOffsetDidChanged(offset: offset.x))
+                                }
                             }
                         }
                     }
@@ -429,6 +435,9 @@ struct MainSectionProductsView: View {
         
         let targetRect = CGRect(x: offset, y: 0, width: scrollView.bounds.width , height: scrollView.bounds.height)
         scrollView.scrollRectToVisible(targetRect, animated: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
+            viewModel.isScrollChangeSelectorEnable = true
+        }
     }
 }
 
