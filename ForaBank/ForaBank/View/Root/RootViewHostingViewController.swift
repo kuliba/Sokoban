@@ -31,6 +31,12 @@ class RootViewHostingViewController: UIHostingController<RootView> {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        viewModel.action.send(RootViewModelAction.Appear())
+    }
+    
     private func bind() {
         
         viewModel.action
@@ -97,6 +103,8 @@ class RootViewHostingViewController: UIHostingController<RootView> {
             return
         }
         
+        viewModel.coverPresented = type
+        
         let window = UIWindow(windowScene: scene)
         window.backgroundColor = .clear
         window.windowLevel = .alert + 1
@@ -145,6 +153,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                     cover.window.isHidden = true
                     self.cover = nil
                     self.isCoverDismissing = false
+                    self.viewModel.coverPresented = nil
                 }
                 
             case .lock:
@@ -158,6 +167,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                     cover.window.isHidden = true
                     self.cover = nil
                     self.isCoverDismissing = false
+                    self.viewModel.coverPresented = nil
                 }
             }
             
@@ -165,6 +175,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
             
             cover.window.isHidden = true
             self.cover = nil
+            self.viewModel.coverPresented = nil
         }
     }
     

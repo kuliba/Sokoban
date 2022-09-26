@@ -95,16 +95,12 @@ extension SceneDelegate {
     
     func sceneDidBecomeActive(_ scene: UIScene) {
         
-        DispatchQueue.main.async {
-            self.window?.deleteBlure()
-        }
+        self.window?.deleteBlure()
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
         
-        DispatchQueue.main.async {
-            self.window?.addBlure()
-        }
+        self.window?.addBlure()
     }
     
     func sceneWillEnterForeground(_ scene: UIScene) {
