@@ -38,6 +38,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         setIconBangeNumber()
         
         self.scene(scene, openURLContexts: connectionOptions.urlContexts)
+        
+        if let userActivity = connectionOptions.userActivities.first {
+            self.scene(scene, continue: userActivity)
+        }
     }
     
     //FIXME: remove after refactor paymnets
@@ -119,55 +123,19 @@ extension SceneDelegate {
 extension SceneDelegate {
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        
-        guard let url = URLContexts.first?.url else { return }
-        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true) else {
-            return
-        }
-        
-        let params = components.queryItems
-        
-        if let bankId = params?.first?.value {
-            
-            let bankId = String(bankId.dropFirst(4))
-            AppDelegate.shared.model.deepLinkType.value = .me2me(bankId)
-            
-        } else if url.description.contains("qr.nspk.ru") {
-            
-            var strUrl = url.description.replacingOccurrences(of: "https2", with: "https")
-            strUrl = strUrl.replacingOccurrences(of:"amp;", with:"")
-            AppDelegate.shared.model.deepLinkType.value = .c2b(strUrl)
-            
-        } else if url.description.contains("sbpay") {
-            
-            let tokenIntent = url.description.replacingOccurrences(of: "bank100000000217://sbpay/tokenIntent/", with: "")
-            AppDelegate.shared.model.deepLinkType.value = .sbpPay(tokenIntent)
-        }
+
+        guard let context = URLContexts.first, let deepLinkType = DeepLinkType(url: context.url) else { return }
+          
+        AppDelegate.shared.model.action.send(ModelAction.DeepLink.Set(type: deepLinkType))
     }
     
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
 
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-            let urlToOpen = userActivity.webpageURL else { return }
-        
-        var deepLinkType: DeepLinkType = .invalidLink
-        deepLinkType = .c2b(urlToOpen.absoluteString)
-        
-        switch deepLinkType {
+                   let url = userActivity.webpageURL else { return }
 
-        case let .c2b(urlString):
-            GlobalModule.c2bURL = urlString
-            AppDelegate.shared.model.action.send(ModelAction.C2bShow())
-            
-        case .invalidLink:
-            rootViewModel.alert = .init(title: "Ошибка", message: "Мы не смогли распознать ссылку", primary: .init(type: .default, title: "OK", action: { [weak self] in
-                self?.rootViewModel.action.send(RootViewModelAction.CloseAlert())
-            }))
-        case .me2me(_):
-            break
-            
-        default:
-            break
-        }
+        guard let deepLink = DeepLinkType(url: url) else { return }
+        
+        AppDelegate.shared.model.action.send(ModelAction.DeepLink.Set(type: deepLink))
     }
 }

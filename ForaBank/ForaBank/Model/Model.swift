@@ -65,7 +65,7 @@ class Model {
     
     //MARK: Notifications
     let notifications: CurrentValueSubject<[NotificationData], Never>
-    let notificationsTransition: CurrentValueSubject<NotificationTransition?, Never>
+    var notificationsTransition: NotificationTransition?
     
     //MARK: - Client Info
     let clientInfo: CurrentValueSubject<ClientInfoData?, Never>
@@ -82,8 +82,8 @@ class Model {
     //MARK: Informer
     let informer: CurrentValueSubject<InformerData?, Never>
 
-    //MARK: SBPay
-    let deepLinkType: CurrentValueSubject<DeepLinkType?, Never>
+    //MARK: DeepLink
+    var deepLinkType: DeepLinkType?
     
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
@@ -159,10 +159,10 @@ class Model {
         self.fastPaymentContractFullInfo = .init([])
         self.currentUserLoaction = .init(nil)
         self.informer = .init(nil)
-        self.notificationsTransition = .init(nil)
+        self.notificationsTransition = nil
         self.dictionariesUpdating = .init([])
         self.userSettings = .init([])
-        self.deepLinkType = .init(nil)
+        self.deepLinkType = nil
         self.depositsCloseNotified = nil
         
         self.sessionAgent = sessionAgent
@@ -279,9 +279,14 @@ class Model {
                     action.send(ModelAction.Settings.GetUserSettings())
                     action.send(ModelAction.Dictionary.UpdateCache.List(types: [.bannerCatalogList]))
                     
-                    if let deepLinkType = deepLinkType.value {
+                    if let deepLinkType = deepLinkType {
                         
-                        setupDeepLink(deepLinkType: deepLinkType)
+                        action.send(ModelAction.DeepLink.Process(type: deepLinkType))
+                    }
+                    
+                    if let notification = notificationsTransition {
+                        
+                        action.send(ModelAction.Notification.Transition.Process(transition: notification))
                     }
                     
                 case .registerRequired:
@@ -363,9 +368,14 @@ class Model {
                     LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.App.Activated")
                     sessionAgent.action.send(SessionAgentAction.App.Activated())
                     
-                    if let deepLinkType = deepLinkType.value {
+                    if auth.value == .authorized, let deepLinkType = deepLinkType {
                         
-                        setupDeepLink(deepLinkType: deepLinkType)
+                        self.action.send(ModelAction.DeepLink.Process(type: deepLinkType))
+                    }
+                    
+                    if auth.value == .authorized, let notification = notificationsTransition {
+                        
+                        self.action.send(ModelAction.Notification.Transition.Process(transition: notification))
                     }
                     
                 case _ as ModelAction.App.Inactivated:
@@ -773,7 +783,15 @@ class Model {
 
                 case let payload as ModelAction.Account.Informer.Dismiss:
                     handleInformerDismiss(payload: payload)
-
+                
+                //MARK: - DeepLink
+                    
+                case let payload as ModelAction.DeepLink.Set:
+                    handleDeepLinkSet(payload)
+                    
+                case _ as ModelAction.DeepLink.Clear:
+                    handleDeepLinkClear()
+                    
                 //MARK: - AppStore Version
                 case _ as ModelAction.AppVersion.Request:
                     handleVersionAppStore()
@@ -1163,25 +1181,5 @@ private extension Model {
         userSettings.value = []
         
         print("Model: memory data cleaned")
-    }
-    
-    func setupDeepLink(deepLinkType: DeepLinkType) {
-        
-        switch deepLinkType {
-        case let .me2me(bankId):
-            self.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
-            
-        case let .c2b(urlString):
-            GlobalModule.c2bURL = urlString
-            self.action.send(ModelAction.C2bShow())
-        
-        case let .sbpPay(tokenIntent):
-                
-            self.action.send(ModelAction.SbpPay.Register.Request(tokenIntent: tokenIntent))
-            self.action.send(ModelAction.FastPaymentSettings.ContractFindList.Request())
-
-        case .invalidLink:
-            break
-        }
     }
 }

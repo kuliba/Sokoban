@@ -18,7 +18,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     var amount = "0.0"
     var modeConsent = "update"
     var contractId = ""
-    
+    var closeAction: () -> Void = {}
     
     @IBOutlet weak var viewLimit: UIView!
     
@@ -584,5 +584,6 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
         let tappedImage = tapGestureRecognizer.view as! UIImageView
         dismiss(animated: true, completion: nil)
+        closeAction()
     }
 }

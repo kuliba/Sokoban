@@ -61,6 +61,7 @@
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<string>qr.nspk.ru</string>
 		<string>sbpay</string>
 		<string>maps</string>
 	</array>
