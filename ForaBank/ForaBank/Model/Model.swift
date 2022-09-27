@@ -241,8 +241,11 @@ class Model {
                 case .inactive:
                     auth.value = authIsCredentialsStored ? .signInRequired : .registerRequired
                     
-                case .activating, .expired, .failed:
+                case .expired, .failed:
                     auth.value = authIsCredentialsStored ? .unlockRequired : .registerRequired
+                    
+                default:
+                    break
                 }
                 
             }.store(in: &bindings)

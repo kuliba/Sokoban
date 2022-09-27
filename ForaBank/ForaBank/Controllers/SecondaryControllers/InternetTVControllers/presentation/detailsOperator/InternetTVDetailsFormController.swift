@@ -43,7 +43,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         super.viewWillAppear(true)
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = true
-        self.viewModel.doFirstStep(amount: "0")
+
     }
     
     override func viewDidLoad() {
