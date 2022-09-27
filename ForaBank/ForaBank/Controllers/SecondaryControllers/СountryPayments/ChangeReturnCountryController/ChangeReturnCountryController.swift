@@ -194,13 +194,7 @@ class ChangeReturnCountryController: UIViewController {
     @objc
     func closeButtonTapped() {
         
-        if let closeAction = operatorsViewModel?.closeAction {
-            
-            closeAction()
-        } else {
-            
-            navigationController?.popViewController(animated: true)
-        }
+        navigationController?.popViewController(animated: true)
     }
     
     @objc func doneButtonTapped() {
