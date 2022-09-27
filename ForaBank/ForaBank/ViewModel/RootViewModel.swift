@@ -133,23 +133,31 @@ class RootViewModel: ObservableObject, Resetable {
                     bindAuth()
                     
                 case let payload as RootViewModelAction.SwitchTab:
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.SwitchTab, tab: \(payload.tabType.name)")
                     withAnimation {
                         selected = payload.tabType
                     }
                     
                 case _ as RootViewModelAction.DismissAll:
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.DismissAll")
                     reset()
                     
                 case let payload as RootViewModelAction.ShowUserProfile:
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.ShowUserProfile")
                     guard let clientInfo = model.clientInfo.value else {
                         return
                     }
-                    link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {
-                        self.link = nil
+                    link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {[weak self] in
+                        self?.action.send(RootViewModelAction.CloseLink())
                     }, bottomSheet: .init(sheetType: .sbpay(.init(model, personAgreements: payload.conditions, rootActions: rootActions)))))
                 
                 case _ as RootViewModelAction.CloseAlert:
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.CloseAlert")
                     alert = nil
+                    
+                case _ as RootViewModelAction.CloseLink:
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.CloseLink")
+                    link = nil
                     
                 default:
                     break
@@ -173,7 +181,7 @@ class RootViewModel: ObservableObject, Resetable {
                     case let .c2b(urlString):
                         GlobalModule.c2bURL = urlString
                         link = .c2b(.init(closeAction: {[weak self] in
-                            self?.link = nil
+                            self?.action.send(RootViewModelAction.CloseLink())
                         }))
                         model.action.send(ModelAction.DeepLink.Clear())
 
@@ -186,15 +194,12 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     switch payload.transition {
                     case .history:
-                        
                         self.rootActions.dismissAll()
-                        
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
                             
-                            let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: self.model, closeAction: {[weak self] in self?.link = nil })
+                            let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: self.model, closeAction: {[weak self] in self?.action.send(RootViewModelAction.CloseLink()) })
                             self.link = .messages(messagesHistoryViewModel)
                             self.model.action.send(ModelAction.Notification.Transition.Clear())
-                            
                         }
                         
                     case .me2me(let requestMeToMeModel):
@@ -208,6 +213,7 @@ class RootViewModel: ObservableObject, Resetable {
                         
                         switch payload.result {
                         case let .success(appInfo):
+                            LoggerAgent.shared.log(level: .debug, category: .ui, message: "received ModelAction.AppVersion.Response, success, info: \(appInfo)")
                             
                             if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String, appInfo.version > appVersion {
                                 
@@ -221,58 +227,51 @@ class RootViewModel: ObservableObject, Resetable {
                             }
                             
                         case let .failure(error):
-                            
-                            break
-                            //TODO: set logger
+                            LoggerAgent.shared.log(level: .error, category: .ui, message: "received ModelAction.AppVersion.Response, failure, error: \(error.localizedDescription)")
                         }
                     }
                 case let payload as ModelAction.Consent.Me2MeDebit.Response:
                     switch payload.result {
                     case .success(let consentData):
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "received ModelAction.Consent.Me2MeDebit.Response, success, consentData: \(consentData)")
                         
                         self.action.send(RootViewModelAction.DismissAll())
-                        
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
 
                             self.link = .me2me(.init(model: consentData.getConcentLegacy()))
                         }
                         
                     case .failure(let error):
-                        
-                        break
-                        //TODO: set logger
+                        LoggerAgent.shared.log(level: .error, category: .ui, message: "received ModelAction.Consent.Me2MeDebit.Response, failure, error: \(error.localizedDescription)")
                     }
                     
                 case let payload as ModelAction.SbpPay.Register.Response:
                     switch payload.result {
                     case .success:
-                        
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "received ModelAction.SbpPay.Register.Response, success")
                         self.model.action.send(ModelAction.GetPersonAgreement.Request(system: .sbp, type: nil))
                     case .failed:
-                        
-                        break
-                        //TODO: set logger
+                        LoggerAgent.shared.log(level: .error, category: .ui, message: "received ModelAction.SbpPay.Register.Response, failed")
                     }
                 case let payload as ModelAction.GetPersonAgreement.Response:
                     switch payload.result {
                     case let .success(personAgreement):
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "received ModelAction.GetPersonAgreement.Response, success, personAgreement: \(personAgreement)")
                         
                         self.action.send(RootViewModelAction.DismissAll())
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
 
                             self.action.send(RootViewModelAction.ShowUserProfile(conditions: personAgreement))
                         }
                         
                     case let .failure(error):
-                        
-                        break
-                        //TODO: set logger
+                        LoggerAgent.shared.log(level: .error, category: .ui, message: "received ModelAction.GetPersonAgreement.Response, failure, error: \(error.localizedDescription)")
                     }
                     
                 default:
                     break
                 }
+                
             }.store(in: &bindings)
     }
     
@@ -397,6 +396,8 @@ enum RootViewModelAction {
     struct DismissAll: Action {}
     
     struct CloseAlert: Action {}
+    
+    struct CloseLink: Action {}
     
     struct ShowUserProfile: Action {
         
