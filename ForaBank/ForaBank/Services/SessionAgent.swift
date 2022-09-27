@@ -49,12 +49,18 @@ class SessionAgent: SessionAgentProtocol {
                     updateState(with: Date().timeIntervalSinceReferenceDate)
                     timerStart()
                     
-                    guard case .inactive = sessionState.value else {
-                        return
+                    switch sessionState.value {
+                    case .inactive:
+                        LoggerAgent.shared.log(category: .session, message: "sent SessionAgentAction.Session.Start.Request")
+                        self.action.send(SessionAgentAction.Session.Start.Request())
+                        
+                    case .active:
+                        LoggerAgent.shared.log(category: .session, message: "sent SessionAgentAction.Session.Extend.Request")
+                        self.action.send(SessionAgentAction.Session.Extend.Request())
+                        
+                    default:
+                        break
                     }
-                    
-                    LoggerAgent.shared.log(category: .session, message: "sent SessionAgentAction.Session.Start.Request")
-                    self.action.send(SessionAgentAction.Session.Start.Request())
                     
                 case _ as SessionAgentAction.App.Inactivated:
                     LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.App.Inactivated")
@@ -113,7 +119,7 @@ class SessionAgent: SessionAgentProtocol {
             }.store(in: &bindings)
         
         sessionState
-            .sink {[unowned self] sessionState in
+            .sink { sessionState in
                 
                 LoggerAgent.shared.log(category: .session, message: "session: \(sessionState)")
                 
@@ -163,7 +169,8 @@ class SessionAgent: SessionAgentProtocol {
         
         if isSessionExtendRequired == true {
             
-            action.send(SessionAgentAction.Session.Extend.Request())
+            LoggerAgent.shared.log(category: .session, message: "sent SessionAgentAction.Session.Extend.Request")
+            self.action.send(SessionAgentAction.Session.Extend.Request())
         }
     }
     
