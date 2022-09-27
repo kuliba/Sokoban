@@ -120,17 +120,8 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         
         let userInfo = response.notification.request.content.userInfo
         
-        //FIX: to do switch
-        
-        if let type = userInfo["type"] as? String, type == "сonsentMe2MePull" {
-                
-                let requestMeToMeModel: RequestMeToMeModel = .init(userInfo: userInfo)
-                model.action.send(ModelAction.Notification.Transition.Set(transition: .me2me(requestMeToMeModel)))
+        model.action.send(ModelAction.Notification.Transition.Set(transition: .init(userInfo: userInfo)))
 
-        } else {
-            
-               model.action.send(ModelAction.Notification.Transition.Set(transition: .history))
-        }
         completionHandler()
     }
 }

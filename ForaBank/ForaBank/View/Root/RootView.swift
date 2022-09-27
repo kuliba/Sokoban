@@ -68,9 +68,10 @@ struct RootView: View {
                     MeToMeRequestView(viewModel: requestMeToMeModel)
                         .zIndex(.greatestFiniteMagnitude)
 
-                case .c2b:
-                    C2BDetailsView()
-                        .zIndex(.greatestFiniteMagnitude)
+                case .c2b(let viewModel):
+                        
+                    C2BDetailsView(viewModel: viewModel)
+                            .zIndex(.greatestFiniteMagnitude)
 
                 case .userAccount(let viewModel):
    

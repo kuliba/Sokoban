@@ -108,20 +108,6 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.SwitchTab, type: .main")
                     action.send(RootViewModelAction.SwitchTab(tabType: .main))
-                    
-                    switch model.notificationsTransition.value {
-                    case .history:
-                        let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {[weak self] in self?.link = nil })
-                        link = .messages(messagesHistoryViewModel)
-                        model.notificationsTransition.value = nil
-                        
-                    case .me2me(let requestMeToMeModel):
-                        link = .me2me(requestMeToMeModel)
-                        model.notificationsTransition.value = nil
-
-                    default:
-                        break
-                    }
                 }
             }
     }
@@ -176,6 +162,46 @@ class RootViewModel: ObservableObject, Resetable {
             .sink { [unowned self] action in
                 
                 switch action {
+                
+                case let payload as ModelAction.DeepLink.Process:
+                    
+                    switch payload.type {
+                    case let .me2me(bankId):
+                        self.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
+                        model.action.send(ModelAction.DeepLink.Clear())
+
+                    case let .c2b(urlString):
+                        GlobalModule.c2bURL = urlString
+                        link = .c2b(.init(closeAction: {[weak self] in
+                            self?.link = nil
+                        }))
+                        model.action.send(ModelAction.DeepLink.Clear())
+
+                    case let .sbpPay(tokenIntent):
+                        self.action.send(ModelAction.SbpPay.Register.Request(tokenIntent: tokenIntent))
+                        self.action.send(ModelAction.FastPaymentSettings.ContractFindList.Request())
+                    }
+                    
+                case let payload as ModelAction.Notification.Transition.Process:
+                    
+                    switch payload.transition {
+                    case .history:
+                        
+                        self.rootActions.dismissAll()
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
+                            
+                            let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: self.model, closeAction: {[weak self] in self?.link = nil })
+                            self.link = .messages(messagesHistoryViewModel)
+                            self.model.action.send(ModelAction.Notification.Transition.Clear())
+                            
+                        }
+                        
+                    case .me2me(let requestMeToMeModel):
+                        link = .me2me(requestMeToMeModel)
+                        self.model.action.send(ModelAction.Notification.Transition.Clear())
+                    }
+                    
                 case let payload as ModelAction.AppVersion.Response:
                     
                     withAnimation {
@@ -243,42 +269,10 @@ class RootViewModel: ObservableObject, Resetable {
                         break
                         //TODO: set logger
                     }
-                case _ as ModelAction.C2bShow:
-                    link = .c2b
                     
                 default:
                     break
                 }
-            }.store(in: &bindings)
-
-        model.notificationsTransition
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] transition in
-                
-                if model.auth.value == .authorized {
-                 
-                    switch transition {
-                    case .history:
-                        
-                        self.rootActions.dismissAll()
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-
-                            let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: self.model, closeAction: {[weak self] in self?.link = nil })
-                            self.link = .messages(messagesHistoryViewModel)
-                            self.model.notificationsTransition.value = nil
-                            
-                        }
-
-                    case .me2me(let requestMeToMeModel):
-                        link = .me2me(requestMeToMeModel)
-                        model.notificationsTransition.value = nil
-
-                    default:
-                        break
-                    }
-                }
-                
             }.store(in: &bindings)
     }
     
@@ -353,7 +347,7 @@ extension RootViewModel {
         
         case messages(MessagesHistoryViewModel)
         case me2me(RequestMeToMeModel)
-        case c2b
+        case c2b(C2BViewModel)
         case userAccount(UserAccountViewModel)
     }
 }
