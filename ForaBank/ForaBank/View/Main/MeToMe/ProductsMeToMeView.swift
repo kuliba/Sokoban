@@ -15,19 +15,19 @@ struct ProductsMeToMeView: View {
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 0) {
             
             Text(viewModel.title)
                 .font(.textH3SB18240())
                 .foregroundColor(.mainColorsBlack)
+                .padding(.horizontal, 20)
             
-            VStack(spacing: 0) {
+            VStack {
                 
                 ProductsSwapView(viewModel: viewModel.swapViewModel)
                 PaymentsAmountView(viewModel: viewModel.paymentsAmount)
             }
-            
-        }.padding(.horizontal, 20)
+        }
     }
 }
 
@@ -37,8 +37,12 @@ struct ProductsMeToMeView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ProductsMeToMeView(viewModel: .init(model: .emptyMock, items: [.sample1, .sample2], amount: 150))
+        ProductsMeToMeView(
+            viewModel: .init(
+                model: .emptyMock,
+                items: [.sample1, .sample2],
+                amount: 150))
             .previewLayout(.sizeThatFits)
-            .padding(.vertical)
+            .padding(.top)
     }
 }

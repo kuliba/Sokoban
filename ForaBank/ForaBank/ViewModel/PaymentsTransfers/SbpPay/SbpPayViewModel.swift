@@ -157,7 +157,7 @@ class SbpPayViewModel: ObservableObject {
                 
                 let productViewModel = ProductSelectorView.ViewModel.makeProduct(model, productData: product)
                 
-                let productSelectorViewModel: ProductSelectorView.ViewModel = .init(model: model, productViewModel: productViewModel, context: .init(title: title, currency: .init(description: product.currency), backgroundColor: .white, titleIndent: .left))
+                let productSelectorViewModel: ProductSelectorView.ViewModel = .init(model: model, productViewModel: productViewModel, context: .init(title: title, currency: .init(description: product.currency), titleIndent: .left))
                 
                 return productSelectorViewModel
                 
@@ -165,7 +165,7 @@ class SbpPayViewModel: ObservableObject {
                 
                 let productViewModel = ProductSelectorView.ViewModel.makeProduct(model, productData: product)
                 
-                let productSelectorViewModel: ProductSelectorView.ViewModel = .init(model: model, productViewModel: productViewModel, context: .init(title: title, currency: .init(description: product.currency), backgroundColor: .white, titleIndent: .left))
+                let productSelectorViewModel: ProductSelectorView.ViewModel = .init(model: model, productViewModel: productViewModel, context: .init(title: title, currency: .init(description: product.currency), titleIndent: .left))
                 
                 return productSelectorViewModel
             }
@@ -173,7 +173,7 @@ class SbpPayViewModel: ObservableObject {
         
         let productViewModel = ProductSelectorView.ViewModel.makeProduct(model, productData: productData)
         
-        let productSelectorViewModel: ProductSelectorView.ViewModel = .init(model: model, productViewModel: productViewModel, context: .init(title: title, currency: .init(description: productData.currency), backgroundColor: .white, titleIndent: .left))
+        let productSelectorViewModel: ProductSelectorView.ViewModel = .init(model: model, productViewModel: productViewModel, context: .init(title: title, currency: .init(description: productData.currency), titleIndent: .left))
         
         return productSelectorViewModel
     }

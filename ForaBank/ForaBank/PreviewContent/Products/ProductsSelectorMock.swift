@@ -26,19 +26,6 @@ extension ProductSelectorView.ViewModel {
         model: .emptyMock,
         productViewModel: .init(
             id: 10002585802,
-            cardIcon: .init("RUB Account"),
-            name: "Текущий счет",
-            balance: "0 $",
-            numberCard: "",
-            description: "Валютный"),
-        context: .init(
-            title: "Куда",
-            isDividerHiddable: true))
-    
-    static let sample3 = ProductSelectorView.ViewModel(
-        model: .emptyMock,
-        productViewModel: .init(
-            id: 10002585803,
             cardIcon: .init("Platinum Card"),
             paymentIcon: .init("Platinum Logo"),
             name: "Platinum",
@@ -50,6 +37,23 @@ extension ProductSelectorView.ViewModel {
             model: .emptyMock,
             products: [.classicSmall, .accountSmall],
             options: nil),
-        context: .init(title: "Куда"),
-        isCollapsed: false)
+        context: .init(title: "Куда"))
+    
+    static let sample3 = ProductSelectorView.ViewModel(
+        model: .emptyMock,
+        productViewModel: .init(
+            id: 10002585803,
+            cardIcon: .init("RUB Account"),
+            name: "Текущий счет",
+            balance: "0 $",
+            numberCard: "",
+            description: "Валютный",
+            isCollapsed: false),
+        listViewModel: .init(
+            model: .emptyMock,
+            products: [.classicSmall, .accountSmall],
+            options: nil),
+        context: .init(
+            title: "Куда",
+            isDividerHiddable: true))
 }

@@ -56,7 +56,9 @@ extension ProductsSwapView {
                         items = items.reversed()
                         
                         withAnimation {
+                            
                             isReversed.toggle()
+                            swapViewModel.isToogleButton.toggle()
                         }
                         
                     case _ as ProductsSwapAction.Button.Reset:
@@ -98,9 +100,10 @@ extension ProductsSwapView.ViewModel {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] isToogleButton in
                     
-                    withAnimation(.easeInOut) {
-                        swapButton.isCurrencySwap.toggle()
+                    withAnimation {
+                        swapButton.isSwap = isToogleButton
                     }
+
                 }.store(in: &bindings)
         }
     }
@@ -109,7 +112,7 @@ extension ProductsSwapView.ViewModel {
 
     class SwapButtonViewModel: ObservableObject {
         
-        @Published var isCurrencySwap: Bool
+        @Published var isSwap: Bool
         @Published var isUserInteractionEnabled: Bool
         @Published var icon: Image
         @Published var state: State
@@ -119,7 +122,7 @@ extension ProductsSwapView.ViewModel {
         private var bindings = Set<AnyCancellable>()
         
         var rotationAngle: Angle {
-            isCurrencySwap ? .degrees(0) : .degrees(180)
+            isSwap ? .degrees(0) : .degrees(180)
         }
         
         enum State {
@@ -128,9 +131,9 @@ extension ProductsSwapView.ViewModel {
             case reset
         }
         
-        init(isCurrencySwap: Bool = false, isUserInteractionEnabled: Bool = true, icon: Image = .ic32Swap, action: @escaping () -> Void) {
+        init(isSwap: Bool = false, isUserInteractionEnabled: Bool = true, icon: Image = .ic32Swap, action: @escaping () -> Void) {
             
-            self.isCurrencySwap = isCurrencySwap
+            self.isSwap = isSwap
             self.isUserInteractionEnabled = isUserInteractionEnabled
             self.icon = icon
             self.action = action
@@ -176,64 +179,50 @@ struct ProductsSwapView: View {
     
     var body: some View {
         
-        ZStack {
-
-            RoundedRectangle(cornerRadius: 12)
-                .foregroundColor(.mainColorsGrayLightest)
+        VStack(alignment: .leading, spacing: 0) {
             
-            VStack(alignment: .leading, spacing: 0) {
+            if viewModel.isReversed == false {
                 
-                if viewModel.isReversed == false {
+                if let from = viewModel.items.first {
                     
-                    if let from = viewModel.items.first {
-                        
-                        ProductSelectorView(viewModel: from)
-                            .matchedGeometryEffect(id: from.id, in: namespace)
-                            .padding(.horizontal, 20)
-                            .padding(.top, 20)
-                            .padding(.bottom, 12)
-                    }
-                    
-                } else {
-                    
-                    if let to = viewModel.items.first {
-                        
-                        ProductSelectorView(viewModel: to)
-                            .matchedGeometryEffect(id: to.id, in: namespace)
-                            .padding(.horizontal, 20)
-                            .padding(.top, 20)
-                            .padding(.bottom, 12)
-                    }
+                    ProductSelectorView(viewModel: from)
+                        .matchedGeometryEffect(id: from.id, in: namespace)
+                        .padding(.bottom, 12)
                 }
-
-                SwapView(viewModel: viewModel.swapViewModel)
-                    .padding(.horizontal, 20)
                 
-                if viewModel.isReversed == false {
+            } else {
+                
+                if let to = viewModel.items.first {
                     
-                    if let to = viewModel.items.last {
-                        
-                        ProductSelectorView(viewModel: to)
-                            .matchedGeometryEffect(id: to.id, in: namespace)
-                            .padding(.horizontal, 20)
-                            .padding(.top, 8)
-                            .padding(.bottom, 20)
-                    }
-                    
-                } else {
-                    
-                    if let from = viewModel.items.last {
-                        
-                        ProductSelectorView(viewModel: from)
-                            .matchedGeometryEffect(id: from.id, in: namespace)
-                            .padding(.horizontal, 20)
-                            .padding(.top, 8)
-                            .padding(.bottom, 20)
-                    }
+                    ProductSelectorView(viewModel: to)
+                        .matchedGeometryEffect(id: to.id, in: namespace)
+                        .padding(.bottom, 12)
                 }
             }
             
-        }.fixedSize(horizontal: false, vertical: true)
+            SwapView(viewModel: viewModel.swapViewModel)
+            
+            if viewModel.isReversed == false {
+                
+                if let to = viewModel.items.last {
+                    
+                    ProductSelectorView(viewModel: to)
+                        .matchedGeometryEffect(id: to.id, in: namespace)
+                        .padding(.top, 8)
+                }
+                
+            } else {
+                
+                if let from = viewModel.items.last {
+                    
+                    ProductSelectorView(viewModel: from)
+                        .matchedGeometryEffect(id: from.id, in: namespace)
+                        .padding(.top, 8)
+                }
+            }
+        }
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(20)
     }
 }
 
@@ -315,14 +304,14 @@ enum ProductsSwapAction {
 // MARK: - Previews
 
 struct ProductsSwapViewComponent_Previews: PreviewProvider {
+    
     static var previews: some View {
         
         Group {
             
             ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sample1, .sample2]))
             ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sample1, .sample3]))
-        }
-        .previewLayout(.sizeThatFits)
-        .padding()
+            
+        }.previewLayout(.sizeThatFits)
     }
 }

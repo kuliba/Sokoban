@@ -19,28 +19,26 @@ extension ProductSelectorView {
         @Published var productViewModel: ProductViewModel
         @Published var listViewModel: ProductsListView.ViewModel?
         @Published var context: Context
-        @Published var isCollapsed: Bool
         
         let id: UUID = .init()
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(model: Model, productViewModel: ProductViewModel, listViewModel: ProductsListView.ViewModel? = nil, context: Context, isCollapsed: Bool) {
+        init(model: Model, productViewModel: ProductViewModel, listViewModel: ProductsListView.ViewModel?, context: Context) {
             
             self.model = model
             self.productViewModel = productViewModel
             self.listViewModel = listViewModel
             self.context = context
-            self.isCollapsed = isCollapsed
         }
         
         convenience init(model: Model, productViewModel: ProductViewModel, context: Context) {
             
             self.init(model: model,
                       productViewModel: productViewModel,
-                      context: context,
-                      isCollapsed: true)
+                      listViewModel: nil,
+                      context: context)
             
             bind()
         }
@@ -104,13 +102,12 @@ extension ProductSelectorView.ViewModel {
         let excludeTypes: [ProductType]?
         let selectedProductId: ProductData.ID?
         let excludeProductId: ProductData.ID?
-        let backgroundColor: BackgroundColor
         let titleIndent: TitleIndent
         let isDividerHiddable: Bool
         let isAdditionalProducts: Bool
         let isUserInteractionEnabled: Bool
         
-        init(title: String, currency: Currency = .rub, direction: Direction = .from, products: [ProductData]? = nil, productType: ProductType = .card, excludeTypes: [ProductType]? = nil, selectedProductId: ProductData.ID? = nil, excludeProductId: ProductData.ID? = nil, backgroundColor: BackgroundColor = .gray, titleIndent: TitleIndent = .normal, isDividerHiddable: Bool = false,  isAdditionalProducts: Bool = false, isUserInteractionEnabled: Bool = true) {
+        init(title: String, currency: Currency = .rub, direction: Direction = .from, products: [ProductData]? = nil, productType: ProductType = .card, excludeTypes: [ProductType]? = nil, selectedProductId: ProductData.ID? = nil, excludeProductId: ProductData.ID? = nil, titleIndent: TitleIndent = .normal, isDividerHiddable: Bool = false,  isAdditionalProducts: Bool = false, isUserInteractionEnabled: Bool = true) {
             
             self.title = title
             self.currency = currency
@@ -120,7 +117,6 @@ extension ProductSelectorView.ViewModel {
             self.excludeTypes = excludeTypes
             self.selectedProductId = selectedProductId
             self.excludeProductId = excludeProductId
-            self.backgroundColor = backgroundColor
             self.titleIndent = titleIndent
             self.isDividerHiddable = isDividerHiddable
             self.isAdditionalProducts = isAdditionalProducts
@@ -131,12 +127,6 @@ extension ProductSelectorView.ViewModel {
             
             case from
             case to
-        }
-        
-        enum BackgroundColor {
-            
-            case white
-            case gray
         }
         
         enum TitleIndent {
@@ -155,11 +145,11 @@ extension ProductSelectorView.ViewModel {
         @Published var paymentIcon: Image?
         @Published var name: String
         @Published var balance: String
-        @Published var numberCard: String
+        @Published var numberCard: String?
         @Published var description: String?
         @Published var isCollapsed: Bool
         
-        init(id: Int, cardIcon: Image? = nil, paymentIcon: Image? = nil, name: String, balance: String, numberCard: String, description: String? = nil, isCollapsed: Bool = true) {
+        init(id: Int, cardIcon: Image? = nil, paymentIcon: Image? = nil, name: String, balance: String, numberCard: String? = nil, description: String? = nil, isCollapsed: Bool = true) {
             
             self.id = id
             self.cardIcon = cardIcon
@@ -181,17 +171,12 @@ extension ProductSelectorView.ViewModel {
         let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
         
         var paymentSystemImage: SVGImageData?
-        var numberCard: String = ""
         
         if let product = productData as? ProductCardData {
             paymentSystemImage = product.paymentSystemImage
         }
-        
-        if let displayNumber = productData.displayNumber {
-            numberCard = displayNumber
-        }
   
-        let productViewModel: ProductViewModel = .init(id: productData.id, cardIcon: productData.smallDesign.image, paymentIcon: paymentSystemImage?.image, name: name, balance: balance, numberCard: numberCard, description: productData.additionalField)
+        let productViewModel: ProductViewModel = .init(id: productData.id, cardIcon: productData.smallDesign.image, paymentIcon: paymentSystemImage?.image, name: name, balance: balance, numberCard: productData.displayNumber, description: productData.additionalField)
         
         return productViewModel
     }
@@ -280,13 +265,13 @@ extension ProductSelectorView {
                     
                     HStack {
                         
-                        if viewModel.numberCard.isEmpty == false {
+                        if let numberCard = viewModel.numberCard {
                             
                             Circle()
                                 .frame(width: 3, height: 3)
                                 .foregroundColor(.mainColorsGray)
                             
-                            Text(viewModel.numberCard)
+                            Text(numberCard)
                                 .font(.textBodySR12160())
                                 .foregroundColor(.mainColorsGray)
                             
@@ -342,11 +327,13 @@ extension ProductSelectorView.ViewModel.ProductViewModel {
 struct ProductSelectorView_Previews: PreviewProvider {
     
     static var previews: some View {
-        
-        ProductSelectorView(viewModel: .init(
-            model: .emptyMock,
-            productViewModel: .sample,
-            context: .init(title: "Откуда", products: [], productType: .card)))
+
+        Group {
+
+            ProductSelectorView(viewModel: .sample1)
+            ProductSelectorView(viewModel: .sample2)
+            ProductSelectorView(viewModel: .sample3)
+        }
         .previewLayout(.sizeThatFits)
         .padding()
     }
