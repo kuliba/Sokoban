@@ -210,10 +210,14 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
             
             self.cardListView.cardList = filterProduct.filter({$0.ownerID == clientId}).uniqueValues(value: {$0.accountID})
             let accountId = self.model.fastPaymentContractFullInfo.value.first?.fastPaymentContractAccountAttributeList?.first?.accountId
-
-            if filterProduct.filter({$0.accountID == accountId}).count >= 1 {
+            
+            if filterProduct.filter({$0.id == accountId}).count >= 1 {
                 
-                self.cardFromField.model = filterProduct.filter({$0.accountID == accountId}).first
+                self.cardFromField.model = filterProduct.filter({$0.id == accountId}).first
+            } else if filterProduct.filter({$0.cardID == accountId}).count >= 1 {
+                
+                self.cardFromField.model = filterProduct.filter({$0.cardID == accountId}).first
+                
             } else {
                 
                 self.cardFromField.model = filterProduct.first

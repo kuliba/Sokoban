@@ -25,9 +25,8 @@ class C2BSuccessView: UIView {
     
     
     @IBOutlet weak var layoutLink: UIStackView!
-    
-    @IBOutlet weak var labelLink: UILabel!
 
+    @IBOutlet weak var button: UIButton!
     @IBOutlet weak var recipientIcon: UIImageView!
     
     
@@ -54,7 +53,9 @@ class C2BSuccessView: UIView {
                 layoutLink.isHidden = true
             } else {
                 layoutLink.isHidden = false
-                labelLink.text = C2BDetailsViewModel.operationDetail?.shopLink
+                button.setTitle(C2BDetailsViewModel.operationDetail?.shopLink, for: .normal)
+                button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+
             }
         } else {
             layoutLink.isHidden = true
@@ -105,4 +106,11 @@ class C2BSuccessView: UIView {
         
         detailTapped?()
     }
+    
+    @objc func buttonAction(sender: UIButton!) {
+        guard let link = C2BDetailsViewModel.operationDetail?.shopLink, let url = URL.init(string: link) else {
+            return
+        }
+        UIApplication.shared.open(url)
+       }
 }
