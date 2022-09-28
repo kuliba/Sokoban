@@ -261,7 +261,7 @@ class Model {
                 
                 switch auth {
                 case .authorized:
-                    LoggerAgent.shared.log(category: .model, message: "auth: authorized")
+                    LoggerAgent.shared.log(category: .model, message: "auth: AUTHORIZED")
                     loadCachedAuthorizedData()
                     loadSettings()
                     depositsCloseNotified = nil
@@ -290,16 +290,16 @@ class Model {
                     }
                     
                 case .registerRequired:
-                    LoggerAgent.shared.log(category: .model, message: "auth: registerRequired")
+                    LoggerAgent.shared.log(category: .model, message: "auth: REGISTER REQUIRED")
                     
                 case .signInRequired:
-                    LoggerAgent.shared.log(category: .model, message: "auth: signInRequired")
+                    LoggerAgent.shared.log(category: .model, message: "auth: SIGN IN REQUIRED")
                     
                 case .unlockRequired:
-                    LoggerAgent.shared.log(category: .model, message: "auth: unlockRequired")
+                    LoggerAgent.shared.log(category: .model, message: "auth: UNLOCK REQUIRED")
                     
                 case .unlockRequiredManual:
-                    LoggerAgent.shared.log(category: .model, message: "auth: unlockRequiredManual")
+                    LoggerAgent.shared.log(category: .model, message: "auth: UNLOCK REQUIRED MANUAL")
                 }
                 
             }.store(in: &bindings)
@@ -310,15 +310,15 @@ class Model {
                 
                 switch action {
                 case _ as SessionAgentAction.Session.Start.Request:
-                    LoggerAgent.shared.log(category: .model, message: "received SessionAgentAction.Session.Start.Request")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received SessionAgentAction.Session.Start.Request")
                     
-                    LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Start.Request")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent ModelAction.Auth.Session.Start.Request")
                     self.action.send(ModelAction.Auth.Session.Start.Request())
                     
                 case _ as SessionAgentAction.Session.Extend.Request:
-                    LoggerAgent.shared.log(category: .model, message: "received SessionAgentAction.Session.Extend.Request")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received SessionAgentAction.Session.Extend.Request")
                     
-                    LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Extend.Request")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent ModelAction.Auth.Session.Extend.Request")
                     self.action.send(ModelAction.Auth.Session.Extend.Request())
                     
                 default:
@@ -365,7 +365,7 @@ class Model {
                 case _ as ModelAction.App.Activated:
                     LoggerAgent.shared.log(category: .model, message: "received ModelAction.App.Activated")
                     
-                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.App.Activated")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.App.Activated")
                     sessionAgent.action.send(SessionAgentAction.App.Activated())
                     
                     if auth.value == .authorized, let deepLinkType = deepLinkType {
@@ -396,9 +396,9 @@ class Model {
                     handleAuthSessionStartRequest()
                     
                 case let payload as ModelAction.Auth.Session.Start.Response:
-                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Start.Response")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received ModelAction.Auth.Session.Start.Response")
                     
-                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Start.Response")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.Session.Start.Response")
                     sessionAgent.action.send(SessionAgentAction.Session.Start.Response(result: payload.result))
                     
                 case _ as ModelAction.Auth.Session.Extend.Request:
@@ -406,9 +406,9 @@ class Model {
                     handleAuthSessionExtendRequest()
                     
                 case let payload as ModelAction.Auth.Session.Extend.Response:
-                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Extend.Response")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received ModelAction.Auth.Session.Extend.Response")
                     
-                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Extend.Response")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.Session.Extend.Response")
                     sessionAgent.action.send(SessionAgentAction.Session.Extend.Response(result: payload.result))
                  
                 case _ as ModelAction.Auth.Session.Terminate:
@@ -451,7 +451,7 @@ class Model {
                     handleAuthLoginRequest(payload: payload)
                     
                 case let payload as ModelAction.Auth.Login.Response:
-                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Login.Response")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received ModelAction.Auth.Login.Response")
                     switch payload {
                     case .success:
                         auth.value = .authorized
