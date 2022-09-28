@@ -50,6 +50,8 @@ class RootViewModel: ObservableObject, Resetable {
         chatViewModel.reset()
     }
     
+
+    
     private func bindAuth() {
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "bind auth")
@@ -64,6 +66,8 @@ class RootViewModel: ObservableObject, Resetable {
                         return
                     }
                     
+                    resetRootView()
+                    
                     let loginViewModel = AuthLoginViewModel(model, rootActions: rootActions)
                     
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLogin")
@@ -73,6 +77,8 @@ class RootViewModel: ObservableObject, Resetable {
                     guard coverPresented != .lock else {
                         return
                     }
+                    
+                    resetRootView()
                     
                     let lockViewModel = AuthPinCodeViewModel(model, mode: .unlock(attempt: 0, auto: true), rootActions: rootActions)
                     
@@ -84,6 +90,8 @@ class RootViewModel: ObservableObject, Resetable {
                         return
                     }
                     
+                    resetRootView()
+                    
                     let lockViewModel = AuthPinCodeViewModel(model, mode: .unlock(attempt: 0, auto: true), rootActions: rootActions)
                     
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLock, animated: true")
@@ -94,22 +102,29 @@ class RootViewModel: ObservableObject, Resetable {
                         return
                     }
                     
+                    resetRootView()
+                    
                     let lockViewModel = AuthPinCodeViewModel(model, mode: .unlock(attempt: 0, auto: false), rootActions: rootActions)
                     
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLock, animated: true")
                     action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel, animated: true))
                     
                 case .authorized:
+                    resetRootView()
+                    
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.Hide")
                     action.send(RootViewModelAction.Cover.Hide())
-                    
-                    LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.DismissAll")
-                    action.send(RootViewModelAction.DismissAll())
-                    
-                    LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.SwitchTab, type: .main")
-                    action.send(RootViewModelAction.SwitchTab(tabType: .main))
                 }
             }
+    }
+    
+    fileprivate func resetRootView() {
+        
+        LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.DismissAll")
+        action.send(RootViewModelAction.DismissAll())
+        
+        LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.SwitchTab, type: .main")
+        action.send(RootViewModelAction.SwitchTab(tabType: .main))
     }
     
     private func bind() {
@@ -133,7 +148,7 @@ class RootViewModel: ObservableObject, Resetable {
                     bindAuth()
                     
                 case let payload as RootViewModelAction.SwitchTab:
-                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.SwitchTab, tab: \(payload.tabType.name)")
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.SwitchTab, tab: .\(payload.tabType.rawValue)")
                     withAnimation {
                         selected = payload.tabType
                     }
