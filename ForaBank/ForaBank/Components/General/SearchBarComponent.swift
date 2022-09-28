@@ -20,29 +20,33 @@ extension SearchBarComponent {
         @Published var isEditing = false
         let placeHolder: PlaceHolder
         let cancelButtonLabel = "Отмена"
+        var textColor: Color
         
         private var bindings = Set<AnyCancellable>()
         
-        internal init(isEditing: Bool = false, placeHolder: PlaceHolder, icon: Image? = nil, text: String = "") {
+        internal init(isEditing: Bool = false, placeHolder: PlaceHolder, icon: Image? = nil, text: String = "", textColor: Color) {
             
             self.isEditing = isEditing
             self.placeHolder = placeHolder
             self.icon = icon
             self.text = text
+            self.textColor = textColor
             
             bind()
         }
         
         convenience init(_ model: Model, placeHolder: PlaceHolder) {
             
-            self.init(placeHolder: placeHolder)
+            self.init(placeHolder: placeHolder, textColor: .textPlaceholder)
         }
         
-        private func bind() {}
+        private func bind() {
+        }
         
         enum PlaceHolder: String {
             
             case contacts = "Номер телефона или имя"
+            case banks = "Введите название банка"
         }
     }
 }
@@ -62,7 +66,7 @@ struct SearchBarComponent: View {
                 .onTapGesture {
                     self.viewModel.isEditing = true
                 }
-                .foregroundColor(.textPlaceholder)
+                .foregroundColor(viewModel.textColor)
             
             if viewModel.isEditing {
                 
@@ -108,10 +112,10 @@ struct SearchBarComponent_Previews: PreviewProvider {
         
         Group {
             
-            SearchBarComponent(viewModel: .init(placeHolder: .contacts))
+            SearchBarComponent(viewModel: .init(.emptyMock, placeHolder: .contacts))
                 .previewLayout(.fixed(width: 375, height: 100))
             
-            SearchBarComponent(viewModel: .init(isEditing: true, placeHolder: .contacts))
+            SearchBarComponent(viewModel: .init(isEditing: true, placeHolder: .contacts, textColor: .textPlaceholder))
                 .previewLayout(.fixed(width: 375, height: 100))
         }
     }

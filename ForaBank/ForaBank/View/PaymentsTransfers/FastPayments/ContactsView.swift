@@ -63,10 +63,25 @@ struct ContactsView: View {
                     .frame(height: 1)
                     .foregroundColor(Color.mainColorsGrayLightest)
                 
+                VStack(spacing: 32) {
+                 
+                    ForEach(banksList, id: \.self) { item in
+                        
+                        CollapsebleView(viewModel: item)
+                        
+                    }
+                }
+                
+                Spacer()
+            case .banksSearch(let banksList):
+                
+                Divider()
+                    .frame(height: 1)
+                    .foregroundColor(Color.mainColorsGrayLightest)
+                
                 ForEach(banksList, id: \.self) { item in
                     
                     CollapsebleView(viewModel: item)
-                    
                 }
                 
                 Spacer()
@@ -161,79 +176,86 @@ extension ContactsView {
         
         var body: some View {
             
-            switch viewModel.mode {
-            case let .normal(collapsedViewModel):
-                
-                HStack(alignment: .center, spacing: 8.5) {
-                
-                    collapsedViewModel.icon
-                        .resizable()
-                        .frame(width: 24, height: 24)
+            VStack {
+             
+                switch viewModel.mode {
+                case let .normal(collapsedViewModel):
                     
-                    Text(collapsedViewModel.title.rawValue)
-                        .foregroundColor(Color.textSecondary)
-                        .font(.textH3SB18240())
+                    HStack(alignment: .center, spacing: 8.5) {
                     
-                    Spacer()
-                
-                    if let searchButton = collapsedViewModel.searchButton {
-                     
+                        collapsedViewModel.icon
+                            .renderingMode(.original)
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                        
+                        Text(collapsedViewModel.title.rawValue)
+                            .foregroundColor(Color.textSecondary)
+                            .font(.textH3SB18240())
+                        
+                        Spacer()
+                    
+                        if let searchButton = collapsedViewModel.searchButton {
+                         
+                            Button {
+                                
+                                searchButton.action()
+                                
+                            } label: {
+                                
+                                searchButton.icon
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                                    .foregroundColor(Color.iconGray)
+                            }
+                        }
+                        
                         Button {
                             
-                            searchButton.action()
+                            collapsedViewModel.toggleButton.action()
+                            viewModel.isCollapsed.toggle()
                             
                         } label: {
                             
-                            searchButton.icon
+                            collapsedViewModel.toggleButton.icon
                                 .resizable()
                                 .frame(width: 24, height: 24)
                                 .foregroundColor(Color.iconGray)
+                            
                         }
                     }
+                    .padding(.horizontal, 20)
                     
-                    Button {
-                        
-                        collapsedViewModel.toggleButton.action()
-                        viewModel.isCollapsed.toggle()
-                        
-                    } label: {
-                        
-                        collapsedViewModel.toggleButton.icon
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .foregroundColor(Color.iconGray)
-                        
-                    }
+                case let .search(searchViewModel):
+                    SearchBarComponent(viewModel: searchViewModel)
+                        .padding(.horizontal, 20)
                 }
-                .padding(.horizontal, 20)
                 
-            case let .search(searchViewModel):
-                SearchBarComponent(viewModel: searchViewModel)
-            }
-            
-            if viewModel.isCollapsed {
+                if viewModel.isCollapsed {
 
-                OptionSelectorView(viewModel: viewModel.optionViewModel)
-                    .padding()
+                    if let viewModel = viewModel.optionViewModel {
+                     
+                        OptionSelectorView(viewModel: viewModel)
+                            .padding()
+                    }
 
-                ScrollView(.vertical, showsIndicators: false) {
+                    ScrollView(.vertical, showsIndicators: false) {
 
-                    VStack(spacing: 24) {
+                        VStack(spacing: 24) {
 
-                        ForEach(viewModel.bank, id: \.self) { bank in
+                            ForEach(viewModel.bank, id: \.self) { bank in
 
-                            Button {
+                                Button {
 
-                                bank.action()
-                            } label: {
+                                    bank.action()
+                                } label: {
 
-                                BankView(viewModel: bank)
+                                    BankView(viewModel: bank)
+                                }
                             }
                         }
                     }
+                    .padding(.horizontal, 20)
                 }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 50)
             }
         }
     }
