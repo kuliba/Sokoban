@@ -269,8 +269,9 @@ extension ProductProfileHistoryView {
                     case let .list(listViewModel):
                         if listViewModel.latestUpdate != nil {
                             
-                            //TODO: formatted period from storage
-                            let failViewModel = HistoryListViewModel.LatestUpdateState.FailViewModel(title: "Ошибка! Попробуйте позже.", subtitle: "Отражены данные на ...")
+                            let formatter = DateFormatter.historyDateAndTimeFormatter
+                            let endDateString = formatter.string(from: storage.period.end)
+                            let failViewModel = HistoryListViewModel.LatestUpdateState.FailViewModel(title: "Ошибка! Попробуйте позже.", subtitle: "Отражены данные на \(endDateString)")
                             listViewModel.latestUpdate = .fail(failViewModel)
                         }
                         listViewModel.eldestUpdate = nil
