@@ -9,7 +9,6 @@ import Foundation
 
 enum ModelAction {
 
-    struct C2bShow: Action {}
     //TODO: remove after refactoring
     struct LoggedIn: Action {}
     

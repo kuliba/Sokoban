@@ -71,6 +71,8 @@ enum MainSectionViewModelAction {
             let groupId: MainSectionProductsGroupView.ViewModel.ID
         }
         
+        struct ScrollToFirstGroup: Action {}
+        
         struct MoreButtonTapped: Action {}
         
         struct HorizontalOffsetDidChanged: Action {

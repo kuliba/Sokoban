@@ -106,7 +106,7 @@ class SbpPayViewModel: ObservableObject {
                 case let payload as ModelAction.SbpPay.ProcessTokenIntent.Response:
                     
                     rootActions?.dismissAll()
-                    switch model.deepLinkType.value {
+                    switch model.deepLinkType {
                         
                     case let .sbpPay(tokenIntentId):
                         
@@ -118,7 +118,7 @@ class SbpPayViewModel: ObservableObject {
                             return
                         }
                         
-                        model.deepLinkType.value = nil
+                        model.action.send(ModelAction.DeepLink.Clear())
                         
                         UIApplication.shared.open(url, options: [:], completionHandler: nil)
                         

@@ -66,7 +66,7 @@ class Model {
     
     //MARK: Notifications
     let notifications: CurrentValueSubject<[NotificationData], Never>
-    let notificationsTransition: CurrentValueSubject<NotificationTransition?, Never>
+    var notificationsTransition: NotificationTransition?
     
     //MARK: - Client Info
     let clientInfo: CurrentValueSubject<ClientInfoData?, Never>
@@ -80,8 +80,8 @@ class Model {
     //MARK: Loacation
     let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
 
-    //MARK: SBPay
-    let deepLinkType: CurrentValueSubject<DeepLinkType?, Never>
+    //MARK: DeepLink
+    var deepLinkType: DeepLinkType?
     
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
@@ -157,10 +157,11 @@ class Model {
         self.clientName = .init(nil)
         self.fastPaymentContractFullInfo = .init([])
         self.currentUserLoaction = .init(nil)
-        self.notificationsTransition = .init(nil)
+        self.notificationsTransition = .init(userInfo: [:])
+        self.notificationsTransition = nil
         self.dictionariesUpdating = .init([])
         self.userSettings = .init([])
-        self.deepLinkType = .init(nil)
+        self.deepLinkType = nil
         self.depositsCloseNotified = nil
         
         self.sessionAgent = sessionAgent
@@ -259,7 +260,7 @@ class Model {
                 
                 switch auth {
                 case .authorized:
-                    LoggerAgent.shared.log(category: .model, message: "auth: authorized")
+                    LoggerAgent.shared.log(category: .model, message: "auth: AUTHORIZED")
                     loadCachedAuthorizedData()
                     loadSettings()
                     depositsCloseNotified = nil
@@ -277,22 +278,27 @@ class Model {
                     action.send(ModelAction.Settings.GetUserSettings())
                     action.send(ModelAction.Dictionary.UpdateCache.List(types: [.bannerCatalogList]))
                     
-                    if let deepLinkType = deepLinkType.value {
+                    if let deepLinkType = deepLinkType {
                         
-                        setupDeepLink(deepLinkType: deepLinkType)
+                        action.send(ModelAction.DeepLink.Process(type: deepLinkType))
+                    }
+                    
+                    if let notification = notificationsTransition {
+                        
+                        action.send(ModelAction.Notification.Transition.Process(transition: notification))
                     }
                     
                 case .registerRequired:
-                    LoggerAgent.shared.log(category: .model, message: "auth: registerRequired")
+                    LoggerAgent.shared.log(category: .model, message: "auth: REGISTER REQUIRED")
                     
                 case .signInRequired:
-                    LoggerAgent.shared.log(category: .model, message: "auth: signInRequired")
+                    LoggerAgent.shared.log(category: .model, message: "auth: SIGN IN REQUIRED")
                     
                 case .unlockRequired:
-                    LoggerAgent.shared.log(category: .model, message: "auth: unlockRequired")
+                    LoggerAgent.shared.log(category: .model, message: "auth: UNLOCK REQUIRED")
                     
                 case .unlockRequiredManual:
-                    LoggerAgent.shared.log(category: .model, message: "auth: unlockRequiredManual")
+                    LoggerAgent.shared.log(category: .model, message: "auth: UNLOCK REQUIRED MANUAL")
                 }
                 
             }.store(in: &bindings)
@@ -303,15 +309,15 @@ class Model {
                 
                 switch action {
                 case _ as SessionAgentAction.Session.Start.Request:
-                    LoggerAgent.shared.log(category: .model, message: "received SessionAgentAction.Session.Start.Request")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received SessionAgentAction.Session.Start.Request")
                     
-                    LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Start.Request")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent ModelAction.Auth.Session.Start.Request")
                     self.action.send(ModelAction.Auth.Session.Start.Request())
                     
                 case _ as SessionAgentAction.Session.Extend.Request:
-                    LoggerAgent.shared.log(category: .model, message: "received SessionAgentAction.Session.Extend.Request")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received SessionAgentAction.Session.Extend.Request")
                     
-                    LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Extend.Request")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent ModelAction.Auth.Session.Extend.Request")
                     self.action.send(ModelAction.Auth.Session.Extend.Request())
                     
                 default:
@@ -358,12 +364,17 @@ class Model {
                 case _ as ModelAction.App.Activated:
                     LoggerAgent.shared.log(category: .model, message: "received ModelAction.App.Activated")
                     
-                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.App.Activated")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.App.Activated")
                     sessionAgent.action.send(SessionAgentAction.App.Activated())
                     
-                    if let deepLinkType = deepLinkType.value {
+                    if auth.value == .authorized, let deepLinkType = deepLinkType {
                         
-                        setupDeepLink(deepLinkType: deepLinkType)
+                        self.action.send(ModelAction.DeepLink.Process(type: deepLinkType))
+                    }
+                    
+                    if auth.value == .authorized, let notification = notificationsTransition {
+                        
+                        self.action.send(ModelAction.Notification.Transition.Process(transition: notification))
                     }
                     
                 case _ as ModelAction.App.Inactivated:
@@ -384,9 +395,9 @@ class Model {
                     handleAuthSessionStartRequest()
                     
                 case let payload as ModelAction.Auth.Session.Start.Response:
-                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Start.Response")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received ModelAction.Auth.Session.Start.Response")
                     
-                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Start.Response")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.Session.Start.Response")
                     sessionAgent.action.send(SessionAgentAction.Session.Start.Response(result: payload.result))
                     
                 case _ as ModelAction.Auth.Session.Extend.Request:
@@ -394,9 +405,9 @@ class Model {
                     handleAuthSessionExtendRequest()
                     
                 case let payload as ModelAction.Auth.Session.Extend.Response:
-                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Extend.Response")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received ModelAction.Auth.Session.Extend.Response")
                     
-                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Extend.Response")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.Session.Extend.Response")
                     sessionAgent.action.send(SessionAgentAction.Session.Extend.Response(result: payload.result))
                  
                 case _ as ModelAction.Auth.Session.Terminate:
@@ -439,7 +450,7 @@ class Model {
                     handleAuthLoginRequest(payload: payload)
                     
                 case let payload as ModelAction.Auth.Login.Response:
-                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Login.Response")
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received ModelAction.Auth.Login.Response")
                     switch payload {
                     case .success:
                         auth.value = .authorized
@@ -763,6 +774,14 @@ class Model {
 
                 case let payload as ModelAction.Account.MakeOpenAccount.Response:
                     handleMakeOpenAccountUpdate(payload: payload)
+                
+                //MARK: - DeepLink
+
+                case let payload as ModelAction.DeepLink.Set:
+                    handleDeepLinkSet(payload)
+                    
+                case _ as ModelAction.DeepLink.Clear:
+                    handleDeepLinkClear()
 
                 //MARK: - AppStore Version
                 case _ as ModelAction.AppVersion.Request:
@@ -1153,25 +1172,5 @@ private extension Model {
         userSettings.value = []
         
         print("Model: memory data cleaned")
-    }
-    
-    func setupDeepLink(deepLinkType: DeepLinkType) {
-        
-        switch deepLinkType {
-        case let .me2me(bankId):
-            self.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
-            
-        case let .c2b(urlString):
-            GlobalModule.c2bURL = urlString
-            self.action.send(ModelAction.C2bShow())
-        
-        case let .sbpPay(tokenIntent):
-                
-            self.action.send(ModelAction.SbpPay.Register.Request(tokenIntent: tokenIntent))
-            self.action.send(ModelAction.FastPaymentSettings.ContractFindList.Request())
-
-        case .invalidLink:
-            break
-        }
     }
 }
