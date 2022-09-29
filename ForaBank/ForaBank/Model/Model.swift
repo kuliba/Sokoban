@@ -80,12 +80,6 @@ class Model {
     //MARK: Loacation
     let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
 
-    //MARK: SBPay
-    let deepLinkType: CurrentValueSubject<DeepLinkType?, Never>
-
-    //MARK: Informer
-    let informer: CurrentValueSubject<InformerData?, Never>
-
     //MARK: DeepLink
     var deepLinkType: DeepLinkType?
     
@@ -163,8 +157,7 @@ class Model {
         self.clientName = .init(nil)
         self.fastPaymentContractFullInfo = .init([])
         self.currentUserLoaction = .init(nil)
-        self.notificationsTransition = .init(nil)
-        self.informer = .init(nil)
+        self.notificationsTransition = .init(userInfo: [:])
         self.notificationsTransition = nil
         self.dictionariesUpdating = .init([])
         self.userSettings = .init([])
@@ -781,14 +774,6 @@ class Model {
 
                 case let payload as ModelAction.Account.MakeOpenAccount.Response:
                     handleMakeOpenAccountUpdate(payload: payload)
-
-                // MARK: - Informer
-
-                case let payload as ModelAction.Account.Informer.Show:
-                    handleInformerShow(payload: payload)
-
-                case let payload as ModelAction.Account.Informer.Dismiss:
-                    handleInformerDismiss(payload: payload)
                 
                 //MARK: - DeepLink
 

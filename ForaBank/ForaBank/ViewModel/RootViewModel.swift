@@ -128,15 +128,6 @@ class RootViewModel: ObservableObject, Resetable {
     }
     
     private func bind() {
-
-        model.informer
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] data in
-                
-                withAnimation {
-                    informerViewModel.message = data?.message
-                }
-            }.store(in: &bindings)
         
         action
             .receive(on: DispatchQueue.main)
