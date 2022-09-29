@@ -59,6 +59,11 @@ extension ModelAction {
                 let transition: NotificationTransition
             }
             
+            struct Process: Action {
+               
+                let transition: NotificationTransition
+            }
+            
             struct Clear: Action {}
         }
     }
@@ -76,12 +81,17 @@ extension Model {
     
     func handleNotificationTransitionSet(payload: ModelAction.Notification.Transition.Set) {
 
-        notificationsTransition.value = payload.transition
+        notificationsTransition = payload.transition
+        
+        if auth.value == .authorized {
+            
+            action.send(ModelAction.Notification.Transition.Process(transition: payload.transition))
+        }
     }
 
     func handleNotificationTransitionClear() {
 
-        notificationsTransition.value = nil
+        notificationsTransition = nil
     }
     
     func handleNotificationsFetchNewRequest() {

@@ -63,6 +63,16 @@ class MainViewModel: ObservableObject, Resetable {
         link = nil
         bottomSheet = nil
         isTabBarHidden = false
+        
+        for section in sections {
+            
+            switch section {
+            case let productsSection as MainSectionProductsView.ViewModel:
+                productsSection.action.send(MainSectionViewModelAction.Products.ScrollToFirstGroup())
+            default:
+                continue
+            }
+        }
     }
     
     private func bind() {
