@@ -16,7 +16,8 @@ extension ProductSelectorView {
         
         let action: PassthroughSubject<Action, Never> = .init()
         
-        @Published var productViewModel: ProductViewModel
+        @Published var productViewModel: ProductViewModel?
+        @Published var placeholderViewModel: PlaceholderViewModel?
         @Published var listViewModel: ProductsListView.ViewModel?
         @Published var context: Context
         
@@ -25,10 +26,11 @@ extension ProductSelectorView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(model: Model, productViewModel: ProductViewModel, listViewModel: ProductsListView.ViewModel?, context: Context) {
+        init(model: Model, productViewModel: ProductViewModel?, placeholderViewModel: PlaceholderViewModel?, listViewModel: ProductsListView.ViewModel?, context: Context) {
             
             self.model = model
             self.productViewModel = productViewModel
+            self.placeholderViewModel = placeholderViewModel
             self.listViewModel = listViewModel
             self.context = context
         }
@@ -37,14 +39,32 @@ extension ProductSelectorView {
             
             self.init(model: model,
                       productViewModel: productViewModel,
+                      placeholderViewModel: nil,
                       listViewModel: nil,
                       context: context)
             
-            bind()
+            bindProduct()
         }
         
-        private func bind() {
+        convenience init(model: Model, context: Context) {
             
+            let placeholderViewModel: PlaceholderViewModel = .init()
+            
+            self.init(model: model,
+                      productViewModel: nil,
+                      placeholderViewModel: placeholderViewModel,
+                      listViewModel: nil,
+                      context: context)
+            
+            bindPlaceholder()
+        }
+        
+        private func bindProduct() {
+            
+            guard let productViewModel = productViewModel else {
+                return
+            }
+
             productViewModel.$isCollapsed
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] isCollapsed in
@@ -84,6 +104,29 @@ extension ProductSelectorView {
                         
                     }.store(in: &bindings)
             }
+        }
+        
+        private func bindPlaceholder() {
+            
+            guard let placeholderViewModel = placeholderViewModel else {
+                return
+            }
+
+            placeholderViewModel.$isCollapsed
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isCollapsed in
+                    
+                    withAnimation {
+                        
+                        switch isCollapsed {
+                        case true: listViewModel = nil
+                        case false:
+                            listViewModel = Self.makeList(model, context: context)
+                            bindList()
+                        }
+                    }
+                    
+                }.store(in: &bindings)
         }
     }
 }
@@ -161,6 +204,20 @@ extension ProductSelectorView.ViewModel {
             self.isCollapsed = isCollapsed
         }
     }
+    
+    // MARK: - Placeholder
+    
+    class PlaceholderViewModel: ObservableObject {
+        
+        @Published var isCollapsed: Bool
+        let description: String
+        
+        init(description: String = "Номер карты или счета", isCollapsed: Bool = true) {
+            
+            self.description = description
+            self.isCollapsed = isCollapsed
+        }
+    }
 }
 
 extension ProductSelectorView.ViewModel {
@@ -205,7 +262,11 @@ struct ProductSelectorView: View {
                 .font(.textBodySR12160())
                 .foregroundColor(.mainColorsBlack)
             
-            ProductView(viewModel: viewModel.productViewModel)
+            if let productViewModel = viewModel.productViewModel {
+                ProductView(viewModel: productViewModel)
+            } else if let placeholderViewModel = viewModel.placeholderViewModel {
+                ProductPlaceholderView(viewModel: placeholderViewModel)
+            }
             
             if let listViewModel = viewModel.listViewModel {
                 ProductsListView(viewModel: listViewModel)
@@ -298,6 +359,39 @@ extension ProductSelectorView {
             }
         }
     }
+    
+    // MARK: - Placeholder
+    
+    struct ProductPlaceholderView: View {
+        
+        @ObservedObject var viewModel: ViewModel.PlaceholderViewModel
+        
+        var body: some View {
+            
+            HStack {
+
+                Text(viewModel.description)
+                    .font(.textBodyMR14200())
+                    .foregroundColor(.mainColorsGray)
+                
+                Spacer()
+                
+                Image.ic24ChevronDown
+                    .renderingMode(.template)
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(.mainColorsGray)
+                    .rotationEffect(viewModel.isCollapsed == false ? .degrees(0) : .degrees(-90))
+            
+            }.onTapGesture {
+                
+                withAnimation {
+                    
+                    viewModel.isCollapsed.toggle()
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Action
@@ -333,6 +427,7 @@ struct ProductSelectorView_Previews: PreviewProvider {
             ProductSelectorView(viewModel: .sample1)
             ProductSelectorView(viewModel: .sample2)
             ProductSelectorView(viewModel: .sample3)
+            ProductSelectorView(viewModel: .sample4)
         }
         .previewLayout(.sizeThatFits)
         .padding()

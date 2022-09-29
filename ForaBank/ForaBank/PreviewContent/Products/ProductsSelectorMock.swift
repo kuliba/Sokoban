@@ -33,6 +33,7 @@ extension ProductSelectorView.ViewModel {
             numberCard: "2953",
             description: "Все включено",
             isCollapsed: false),
+        placeholderViewModel: nil,
         listViewModel: .init(
             model: .emptyMock,
             products: [.classicSmall, .accountSmall],
@@ -49,6 +50,7 @@ extension ProductSelectorView.ViewModel {
             numberCard: "",
             description: "Валютный",
             isCollapsed: false),
+        placeholderViewModel: nil,
         listViewModel: .init(
             model: .emptyMock,
             products: [.classicSmall, .accountSmall],
@@ -56,4 +58,14 @@ extension ProductSelectorView.ViewModel {
         context: .init(
             title: "Куда",
             isDividerHiddable: true))
+    
+    static let sample4 = ProductSelectorView.ViewModel(
+        model: .emptyMock,
+        productViewModel: nil,
+        placeholderViewModel: .init(),
+        listViewModel: nil,
+        context: .init(
+            title: "Откуда",
+            isDividerHiddable: true,
+            isAdditionalProducts: true))
 }

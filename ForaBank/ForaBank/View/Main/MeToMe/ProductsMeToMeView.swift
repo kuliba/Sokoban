@@ -37,12 +37,21 @@ struct ProductsMeToMeView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ProductsMeToMeView(
-            viewModel: .init(
-                model: .emptyMock,
-                items: [.sample1, .sample2],
-                amount: 150))
-            .previewLayout(.sizeThatFits)
-            .padding(.top)
+        Group {
+            
+            ProductsMeToMeView(
+                viewModel: .init(
+                    model: .emptyMock,
+                    items: [.sample1, .sample2],
+                    amount: 150))
+            
+            ProductsMeToMeView(
+                viewModel: .init(
+                    model: .emptyMock,
+                    items: [.sample1, .sample4],
+                    amount: 150))
+        }
+        .previewLayout(.sizeThatFits)
+        .padding(.top)
     }
 }

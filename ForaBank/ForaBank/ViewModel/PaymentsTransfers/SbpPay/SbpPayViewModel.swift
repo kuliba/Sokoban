@@ -80,7 +80,7 @@ class SbpPayViewModel: ObservableObject {
             
             self?.footer = .init(state: .spinner)
             
-            guard let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == paymentProduct?.productViewModel.id }) else {
+            guard let productViewModel = paymentProduct?.productViewModel, let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == productViewModel.id }) else {
                 return
             }
             
@@ -88,8 +88,9 @@ class SbpPayViewModel: ObservableObject {
                 
                 self?.model.action.send(ModelAction.SbpPay.ProcessTokenIntent.Request(accountId: accountId, status: .success))
                 
-            } else if let accountId = paymentProduct?.productViewModel.id.description {
+            } else if let productViewModel = paymentProduct?.productViewModel {
                 
+                let accountId = productViewModel.id.description
                 self?.model.action.send(ModelAction.SbpPay.ProcessTokenIntent.Request(accountId: accountId, status: .success))
             }
         })))
