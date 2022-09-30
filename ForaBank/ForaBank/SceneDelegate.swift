@@ -35,7 +35,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
         legacyNavigationBarBackground()
         setAlertAppearance()
-        setIconBangeNumber()
         
         self.scene(scene, openURLContexts: connectionOptions.urlContexts)
         
@@ -110,11 +109,13 @@ extension SceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) {
         
         AppDelegate.shared.model.action.send(ModelAction.App.Activated())
+        setIconBangeNumber()
     }
     
     func sceneDidEnterBackground(_ scene: UIScene) {
         
         AppDelegate.shared.model.action.send(ModelAction.App.Inactivated())
+        setIconBangeNumber()
     }
 }
 

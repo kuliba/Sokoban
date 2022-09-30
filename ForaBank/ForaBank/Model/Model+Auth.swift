@@ -27,7 +27,7 @@ extension ModelAction {
                 }
             }
             
-            struct Extend {
+            struct Timeout {
                 
                 struct Request: Action {}
                 
@@ -266,6 +266,15 @@ extension Model {
         
         return true
     }
+    
+    var authIsSessionActivating: Bool {
+        
+        guard case .activating = sessionAgent.sessionState.value else {
+            return false
+        }
+        
+        return true
+    }
 }
 
 //MARK: - Handlers
@@ -276,41 +285,22 @@ internal extension Model {
         
         LoggerAgent.shared.log(category: .model, message: "handleAuthSessionStartRequest")
         
-        switch sessionAgent.sessionState.value {
-        case .activating:
+        guard authIsSessionActivating == false else {
             LoggerAgent.shared.log(level: .debug, category: .model, message: "session alredy activating")
             return
-            
-        default:
-            break
         }
-        
-        sessionAgent.sessionState.value = .activating
         
         Task {
             
-            do {
-                
-                let credentials = try await authCSRF()
-                
-                LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Start.Response, success, credentials ")
-                self.action.send(ModelAction.Auth.Session.Start.Response(result: .success(credentials)))
-                
-            } catch {
-                
-                LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.Session.Start.Response, failure, error: \(error.localizedDescription)")
-                self.action.send(ModelAction.Auth.Session.Start.Response(result: .failure(error)))
-            }
+            try await authStartSession()
         }
     }
     
-    func handleAuthSessionExtendRequest() {
+    func handleAuthSessionTimeoutRequest() {
         
-        LoggerAgent.shared.log(category: .model, message: "handleAuthSessionExtendRequest")
+        LoggerAgent.shared.log(category: .model, message: "handleAuthSessionTimeoutRequest")
         
         guard let token = token else {
-            LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.Session.Extend.Response, failure")
-            self.action.send(ModelAction.Auth.Session.Extend.Response(result: .failure(ModelError.unauthorizedCommandAttempt)))
             handledUnauthorizedCommandAttempt()
             return
         }
@@ -325,26 +315,26 @@ internal extension Model {
                 case .ok:
                     if let duration = response.data  {
                         
-                        LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Extend.Response, success, duration: \(duration)")
-                        self.action.send(ModelAction.Auth.Session.Extend.Response(result: .success(TimeInterval(duration))))
+                        LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Timeout.Response, success, duration: \(duration)")
+                        self.action.send(ModelAction.Auth.Session.Timeout.Response(result: .success(TimeInterval(duration))))
                         
                     } else {
                         
-                        LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.Session.Extend.Response, failure")
-                        self.action.send(ModelAction.Auth.Session.Extend.Response(result: .failure(ModelError.emptyData(message: response.errorMessage))))
+                        LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.Session.Timeout.Response, failure")
+                        self.action.send(ModelAction.Auth.Session.Timeout.Response(result: .failure(ModelError.emptyData(message: response.errorMessage))))
                         self.handleServerCommandEmptyData(command: command)
                     }
 
                 default:
-                    LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.Session.Extend.Response, failure")
-                    self.action.send(ModelAction.Auth.Session.Extend.Response(result: .failure(ModelError.statusError(status: response.statusCode, message: response.errorMessage))))
+                    LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.Session.Timeout.Response, failure")
+                    self.action.send(ModelAction.Auth.Session.Timeout.Response(result: .failure(ModelError.statusError(status: response.statusCode, message: response.errorMessage))))
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: String(describing: response.errorMessage))
                 }
 
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)
-                LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.Session.Extend.Response, failure")
-                self.action.send(ModelAction.Auth.Session.Extend.Response(result: .failure(error)))
+                LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.Session.Timeout.Response, failure")
+                self.action.send(ModelAction.Auth.Session.Timeout.Response(result: .failure(error)))
             }
         }
     }
@@ -920,23 +910,13 @@ extension Model {
         
         LoggerAgent.shared.log(category: .model, message: "authSessionCredentials, restartSession: \(restartSession)")
         
-        switch sessionAgent.sessionState.value {
-        case .activating:
+        guard authIsSessionActivating == false else {
             throw ModelAuthError.sessionActivating
-            
-        default:
-            break
         }
 
         if restartSession == true {
-            
-            sessionAgent.sessionState.value = .activating
-            
-            let credentials = try await authCSRF()
-            LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Start, success, credentials")
-            action.send(ModelAction.Auth.Session.Start.Response(result: .success(credentials)))
-            
-            return credentials
+
+            return try await authStartSession()
             
         } else {
            
@@ -946,14 +926,31 @@ extension Model {
                 
             } else {
                 
-                sessionAgent.sessionState.value = .activating
-                
-                let credentials = try await authCSRF()
-                LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Start, success, credentials")
-                action.send(ModelAction.Auth.Session.Start.Response(result: .success(credentials)))
-                
-                return credentials
+                return try await authStartSession()
             }
+        }
+    }
+    
+    @discardableResult
+    private func authStartSession() async throws -> SessionCredentials {
+                
+        sessionAgent.sessionState.value = .activating
+        
+        do {
+            
+            let credentials = try await authCSRF()
+            
+            LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Start.Response, success, credentials ")
+            self.action.send(ModelAction.Auth.Session.Start.Response(result: .success(credentials)))
+            
+            return credentials
+            
+        } catch {
+            
+            LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.Session.Start.Response, failure, error: \(error.localizedDescription)")
+            self.action.send(ModelAction.Auth.Session.Start.Response(result: .failure(error)))
+            
+            throw error
         }
     }
 
