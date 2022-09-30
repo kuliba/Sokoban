@@ -257,8 +257,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Juanpe/SkeletonView.git",
       "state" : {
-        "revision" : "ca7d2edceee613e47b7857029fc82de633460e6f",
-        "version" : "1.30.2"
+        "revision" : "cb4d48d603b650808677f2ddb381b05261b94a16",
+        "version" : "1.30.3"
       }
     },
     {

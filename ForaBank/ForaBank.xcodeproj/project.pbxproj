@@ -280,8 +280,8 @@
 		5028F76B28DB2A70000DB351 /* CurrencyWalletListViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5028F76928DB2A70000DB351 /* CurrencyWalletListViewComponent.swift */; };
 		502A98A4283A950900C6A621 /* GetProductListByTypeResponseServer.json in Resources */ = {isa = PBXBuildFile; fileRef = 502A98A3283A950900C6A621 /* GetProductListByTypeResponseServer.json */; };
 		503566C3287D56470077BF8B /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503566C2287D56470077BF8B /* Int+Extensions.swift */; };
-		5036B0F628E20C570052FACE /* ProductsMeToMeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5036B0F528E20C570052FACE /* ProductsMeToMeViewModel.swift */; };
-		5036B0F928E20C830052FACE /* ProductsMeToMeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5036B0F828E20C820052FACE /* ProductsMeToMeView.swift */; };
+		5036B0F628E20C570052FACE /* PaymentsMeToMeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5036B0F528E20C570052FACE /* PaymentsMeToMeViewModel.swift */; };
+		5036B0F928E20C830052FACE /* PaymentsMeToMeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5036B0F828E20C820052FACE /* PaymentsMeToMeView.swift */; };
 		5036DC7928D07E540032811F /* InformerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5036DC7828D07E540032811F /* InformerData.swift */; };
 		503B164E2889853F009F4CE3 /* CurrencyListViewModelMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503B164D2889853F009F4CE3 /* CurrencyListViewModelMock.swift */; };
 		503CF6AD282BE12B0069253E /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503CF6AC282BE12B0069253E /* TextField.swift */; };
@@ -1707,8 +1707,8 @@
 		5028F76928DB2A70000DB351 /* CurrencyWalletListViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyWalletListViewComponent.swift; sourceTree = "<group>"; };
 		502A98A3283A950900C6A621 /* GetProductListByTypeResponseServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductListByTypeResponseServer.json; sourceTree = "<group>"; };
 		503566C2287D56470077BF8B /* Int+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extensions.swift"; sourceTree = "<group>"; };
-		5036B0F528E20C570052FACE /* ProductsMeToMeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsMeToMeViewModel.swift; sourceTree = "<group>"; };
-		5036B0F828E20C820052FACE /* ProductsMeToMeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsMeToMeView.swift; sourceTree = "<group>"; };
+		5036B0F528E20C570052FACE /* PaymentsMeToMeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsMeToMeViewModel.swift; sourceTree = "<group>"; };
+		5036B0F828E20C820052FACE /* PaymentsMeToMeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsMeToMeView.swift; sourceTree = "<group>"; };
 		5036DC7828D07E540032811F /* InformerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformerData.swift; sourceTree = "<group>"; };
 		503B164D2889853F009F4CE3 /* CurrencyListViewModelMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyListViewModelMock.swift; sourceTree = "<group>"; };
 		503CF6AC282BE12B0069253E /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
@@ -3555,7 +3555,7 @@
 		5036B0F428E20C3E0052FACE /* MeToMe */ = {
 			isa = PBXGroup;
 			children = (
-				5036B0F528E20C570052FACE /* ProductsMeToMeViewModel.swift */,
+				5036B0F528E20C570052FACE /* PaymentsMeToMeViewModel.swift */,
 			);
 			path = MeToMe;
 			sourceTree = "<group>";
@@ -3563,7 +3563,7 @@
 		5036B0F728E20C710052FACE /* MeToMe */ = {
 			isa = PBXGroup;
 			children = (
-				5036B0F828E20C820052FACE /* ProductsMeToMeView.swift */,
+				5036B0F828E20C820052FACE /* PaymentsMeToMeView.swift */,
 			);
 			path = MeToMe;
 			sourceTree = "<group>";
@@ -7845,7 +7845,7 @@
 				ED0B48A3267E71DC0037EA06 /* FCMToken.swift in Sources */,
 				5088A08928560B3F003C39D7 /* OpenAccountItemViewComponent.swift in Sources */,
 				EDCF8A1026CE876600DC9F54 /* MeToMeSearchBanksViewController.swift in Sources */,
-				5036B0F928E20C830052FACE /* ProductsMeToMeView.swift in Sources */,
+				5036B0F928E20C830052FACE /* PaymentsMeToMeView.swift in Sources */,
 				68EB187A27CEE85700745558 /* SegmentedBarViewComponent.swift in Sources */,
 				682092A627AC0673003DCAFD /* ServerCommands+Suggest.swift in Sources */,
 				A50869DA2767F394004C5E17 /* InternetTVSuccessView.swift in Sources */,
@@ -8691,7 +8691,7 @@
 				6820927F27AB0E1B003DCAFD /* BankData.swift in Sources */,
 				EDDFE3A62756BEC600F57C71 /* DetailInformationViewCell.swift in Sources */,
 				6819084428BCAAE3003E81A3 /* SbpPayView.swift in Sources */,
-				5036B0F628E20C570052FACE /* ProductsMeToMeViewModel.swift in Sources */,
+				5036B0F628E20C570052FACE /* PaymentsMeToMeViewModel.swift in Sources */,
 				681E073F273D478700551FAD /* ProductViewControllerDelegate.swift in Sources */,
 				7758400927B13F8700251969 /* ValidatorProtocol.swift in Sources */,
 				68D06F2426C3C0F300F9BE4C /* MainViewControllerLayout.swift in Sources */,
