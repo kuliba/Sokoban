@@ -53,9 +53,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
             let request = try request(with: command)
             LoggerAgent.shared.log(category: .network, message: "data request: \(request)")
             session.dataTask(with: request) {[unowned self] data, response, error in
-                
-                self.action.send(ServerAgentAction.NetworkActivityEvent())
-                
+
                 if let error = error {
                     
                     completion(.failure(.sessionError(error)))
@@ -68,7 +66,17 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     return
                 }
                 
-                guard response.statusCode == 200 else {
+                if response.statusCode == 200 {
+                    
+                    self.action.send(ServerAgentAction.NetworkActivityEvent())
+                    
+                } else {
+                    
+                    if response.statusCode == 401 {
+                        
+                        self.action.send(ServerAgentAction.NotAuthorized())
+                    }
+                    
                     completion(.failure(.unexpectedResponseStatus(response.statusCode)))
                     return
                 }
@@ -92,12 +100,19 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                 do {
                     
                     let response = try decoder.decode(Command.Response.self, from: data)
-                    completion(.success(response))
-                    
+                    if response.statusCode == .userNotAuthorized {
+                        
+                        self.action.send(ServerAgentAction.NotAuthorized())
+                        completion(.failure(.notAuthorized))
+                        
+                    } else {
+                        
+                        completion(.success(response))
+                    }
+
                 } catch {
                     
                     completion(.failure(.curruptedData(error)))
-                     
                 }
      
             }.resume()
@@ -128,7 +143,17 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     return
                 }
                 
-                guard response.statusCode == 200 else {
+                if response.statusCode == 200 {
+                    
+                    self.action.send(ServerAgentAction.NetworkActivityEvent())
+                    
+                } else {
+                    
+                    if response.statusCode == 401 {
+                        
+                        self.action.send(ServerAgentAction.NotAuthorized())
+                    }
+                    
                     completion(.failure(.unexpectedResponseStatus(response.statusCode)))
                     return
                 }
@@ -184,7 +209,17 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     return
                 }
                 
-                guard response.statusCode == 200 else {
+                if response.statusCode == 200 {
+                    
+                    self.action.send(ServerAgentAction.NetworkActivityEvent())
+                    
+                } else {
+                    
+                    if response.statusCode == 401 {
+                        
+                        self.action.send(ServerAgentAction.NotAuthorized())
+                    }
+                    
                     completion(.failure(.unexpectedResponseStatus(response.statusCode)))
                     return
                 }

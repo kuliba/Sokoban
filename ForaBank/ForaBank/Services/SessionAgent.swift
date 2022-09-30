@@ -17,8 +17,7 @@ class SessionAgent: SessionAgentProtocol {
     private var lastNetworkActivityTime: TimeInterval
     private var lastUserActivityTime: TimeInterval
     private var sessionExtendThreshold: Double
-    private var isSessionExtending: Bool = false
-    
+
     private let timer = Timer.publish(every: 1, on: .main, in: .common)
     
     private var timerBindings = Set<AnyCancellable>()
@@ -37,9 +36,7 @@ class SessionAgent: SessionAgentProtocol {
         
         bind()
     }
-    
 
-    
     func bind() {
 
         action
@@ -58,8 +55,12 @@ class SessionAgent: SessionAgentProtocol {
                         self.action.send(SessionAgentAction.Session.Start.Request())
                         
                     case .active:
-                        extendSession()
-                        
+                        DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(100)) {
+                            
+                            LoggerAgent.shared.log(category: .session, message: "sent SessionAgentAction.Session.Extend")
+                            self.action.send(SessionAgentAction.Session.Extend())
+                        }
+
                     default:
                         break
                     }
@@ -76,47 +77,25 @@ class SessionAgent: SessionAgentProtocol {
                         
                         let start = Date.timeIntervalSinceReferenceDate
                         sessionState.value = .active(start: start, credentials: credentials)
-                        updateLastNetworkActivityTime()
-                        extendSession()
+                        
+                        LoggerAgent.shared.log(category: .session, message: "sent SessionAgentAction.Session.Timeout.Request")
+                        self.action.send(SessionAgentAction.Session.Timeout.Request())
                         
                     case .failure(let error):
                         LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.Session.Start.Response: failure")
                         sessionState.value = .failed(error)
                     }
                     
-                case let payload as SessionAgentAction.Session.Extend.Response:
-                    isSessionExtending = false
+                case let payload as SessionAgentAction.Session.Timeout.Response:
                     switch payload.result {
                     case .success(let duration):
-                        LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.Session.Extend.Response: success, duration: \(duration)")
+                        LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.Session.Timeout.Response: success, duration: \(duration)")
                         
                         sessionDuration = duration
                         LoggerAgent.shared.log(level: .debug, category: .session, message: "session duration updated")
-                        
-                        updateLastNetworkActivityTime()
-                        
+   
                     case .failure(let error):
-                        switch error {
-                        case let serverError as ServerAgentError:
-                            switch serverError {
-                            case .sessionError(let sessionError):
-                                let nsSessionError = sessionError as NSError
-                                switch nsSessionError.code {
-                                case -1005:
-                                    LoggerAgent.shared.log(level: .error, category: .session, message: "received SessionAgentAction.Session.Extend.Response: failure, code:-1005, Network connection lost.")
-                                    extendSession()
-                                    
-                                default:
-                                    sessionExtendingFailed(with: error)
-                                }
-                                
-                            default:
-                                sessionExtendingFailed(with: error)
-                            }
-                            
-                        default:
-                            sessionExtendingFailed(with: error)
-                        }
+                        LoggerAgent.shared.log(level: .error, category: .session, message: "received SessionAgentAction.Session.Timeout.Response: failure, error: \(error.localizedDescription)")
                     }
                     
                 case _ as SessionAgentAction.Event.Network:
@@ -128,7 +107,6 @@ class SessionAgent: SessionAgentProtocol {
                 case _ as SessionAgentAction.Session.Terminate:
                     LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.Session.Terminate")
                     
-                    LoggerAgent.shared.log(category: .session, message: "session state: inactive")
                     sessionState.value = .inactive
                     
                 default:
@@ -188,7 +166,8 @@ class SessionAgent: SessionAgentProtocol {
         
         if isSessionExtendRequired == true {
             
-            extendSession()
+            LoggerAgent.shared.log(category: .session, message: "sent SessionAgentAction.Session.Extend")
+            self.action.send(SessionAgentAction.Session.Extend())
         }
     }
     
@@ -212,23 +191,5 @@ class SessionAgent: SessionAgentProtocol {
     func updateLastUserActivityTime() {
         
         lastUserActivityTime = Date().timeIntervalSinceReferenceDate
-    }
-    
-    fileprivate func extendSession() {
-        
-        guard isSessionExtending == false else {
-            return
-        }
-        
-        isSessionExtending = true
-        
-        LoggerAgent.shared.log(category: .session, message: "sent SessionAgentAction.Session.Extend.Request")
-        self.action.send(SessionAgentAction.Session.Extend.Request())
-    }
-    
-    fileprivate func sessionExtendingFailed(with error: Error) {
-        
-        LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.Session.Extend.Response: failure")
-        sessionState.value = .failed(error)
     }
 }
