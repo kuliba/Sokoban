@@ -35,7 +35,7 @@ enum SessionAgentAction {
             }
         }
         
-        enum Extend {
+        enum Timeout {
        
             struct Request: Action {}
             
@@ -44,6 +44,8 @@ enum SessionAgentAction {
                 let result: Result<TimeInterval, Error>
             }
         }
+        
+        struct Extend: Action {}
         
         struct Terminate: Action {}
     }
