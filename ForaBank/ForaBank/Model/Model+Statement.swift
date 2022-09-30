@@ -123,12 +123,14 @@ extension Model {
 
                 } while continueRequests
                 
+                statementsUpdating.value[product.id] = .idle
+                
             } catch {
 
                 LoggerAgent.shared.log(level: .error, category: .model, message: "Failed downloading statements for productId: \(payload.productId) direction: \(payload.direction), with error: \(error)")
+                statementsUpdating.value[product.id] = .failed
             }
             
-            statementsUpdating.value[product.id] = .idle
             self.statements.value[product.id] = storage
 
             do {

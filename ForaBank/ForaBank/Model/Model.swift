@@ -265,7 +265,7 @@ class Model {
                     loadSettings()
                     depositsCloseNotified = nil
                     action.send(ModelAction.Products.Update.Total.All())
-                    action.send(ModelAction.ClientInfo.Fetch.Request())
+                    action.send(ModelAction.ClientInfo.Fetch())
                     action.send(ModelAction.ClientPhoto.Load())
                     action.send(ModelAction.Rates.Update.All())
                     action.send(ModelAction.Deposits.List.Request())
@@ -314,11 +314,17 @@ class Model {
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "sent ModelAction.Auth.Session.Start.Request")
                     self.action.send(ModelAction.Auth.Session.Start.Request())
                     
-                case _ as SessionAgentAction.Session.Extend.Request:
-                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received SessionAgentAction.Session.Extend.Request")
+                case _ as SessionAgentAction.Session.Extend:
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received SessionAgentAction.Session.Extend")
                     
-                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent ModelAction.Auth.Session.Extend.Request")
-                    self.action.send(ModelAction.Auth.Session.Extend.Request())
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent ModelAction.ClientInfo.Fetch")
+                    self.action.send(ModelAction.ClientInfo.Fetch())
+                    
+                case _ as SessionAgentAction.Session.Timeout.Request:
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received SessionAgentAction.Session.Timeout.Request")
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent ModelAction.Auth.Session.Timeout.Request")
+                    self.action.send(ModelAction.Auth.Session.Timeout.Request())
                     
                 default:
                     break
@@ -333,6 +339,12 @@ class Model {
                 switch action {
                 case _ as ServerAgentAction.NetworkActivityEvent:
                     sessionAgent.action.send(SessionAgentAction.Event.Network())
+                    
+                case _ as ServerAgentAction.NotAuthorized:
+                    LoggerAgent.shared.log(level: .error, category: .model, message: "received ServerAgentAction.NotAuthorized")
+                    
+                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Terminate")
+                    sessionAgent.action.send(SessionAgentAction.Session.Terminate())
                     
                 default:
                     break
@@ -400,15 +412,15 @@ class Model {
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.Session.Start.Response")
                     sessionAgent.action.send(SessionAgentAction.Session.Start.Response(result: payload.result))
                     
-                case _ as ModelAction.Auth.Session.Extend.Request:
-                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Extend.Request")
-                    handleAuthSessionExtendRequest()
+                case _ as ModelAction.Auth.Session.Timeout.Request:
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Timeout.Request")
+                    handleAuthSessionTimeoutRequest()
                     
-                case let payload as ModelAction.Auth.Session.Extend.Response:
-                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received ModelAction.Auth.Session.Extend.Response")
+                case let payload as ModelAction.Auth.Session.Timeout.Response:
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received ModelAction.Auth.Session.Timeout.Response")
                     
-                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.Session.Extend.Response")
-                    sessionAgent.action.send(SessionAgentAction.Session.Extend.Response(result: payload.result))
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.Session.Timeout.Response")
+                    sessionAgent.action.send(SessionAgentAction.Session.Timeout.Response(result: payload.result))
                  
                 case _ as ModelAction.Auth.Session.Terminate:
                     LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Terminate")
@@ -566,8 +578,8 @@ class Model {
                     
                     //MARK: - Client Info
                     
-                case _ as ModelAction.ClientInfo.Fetch.Request:
-                    handleClientInfoFetchRequest()
+                case _ as ModelAction.ClientInfo.Fetch:
+                    handleClientInfoFetch()
                     
                 case let payload as ModelAction.ClientPhoto.Save:
                     handleClientPhotoSave(payload)

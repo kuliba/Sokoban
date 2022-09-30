@@ -19,6 +19,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     var modeConsent = "update"
     var contractId = ""
     var closeAction: () -> Void = {}
+    var operationLimit = 0.0
     
     @IBOutlet weak var viewLimit: UIView!
     
@@ -327,7 +328,11 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         viewModel.createC2BTransfer(body: body) { modelCreateC2BTransfer, error in
             if (error != nil) {
                 self.dismissActivity()
-                self.showLimitInfoView(true)
+                if self.cardFromField.model?.balanceRUB ?? 0.0 < self.operationLimit {
+                    self.showAlert(with: "Ошибка", and: error?.description ?? "")
+                } else {
+                    self.showLimitInfoView(true)
+                }
             } else {
                 self.showLimitInfoView(false)
                 C2BDetailsViewModel.modelCreateC2BTransfer = modelCreateC2BTransfer
@@ -360,6 +365,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
                 case let payload as ModelAction.Transfers.TransferLimit.Response:
                     switch payload {
                     case .limit( let value ):
+                        self.operationLimit = value.limit
                         let limit = NumberFormatter.decimal(value.limit)
                         self.limitAlertContentLable.text = "Сумма операции должна быть меньше \(limit)" + " ₽"
                     case .noLimit:
