@@ -17,16 +17,16 @@ extension ProductsListView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var products: [ProductView.ViewModel]
-        @Published var options: OptionSelectorView.ViewModel?
+        @Published var typeSelector: OptionSelectorView.ViewModel?
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(model: Model, products: [ProductView.ViewModel], options: OptionSelectorView.ViewModel?) {
+        init(model: Model, products: [ProductView.ViewModel], typeSelector: OptionSelectorView.ViewModel?) {
             
             self.model = model
             self.products = products
-            self.options = options
+            self.typeSelector = typeSelector
         }
         
         convenience init?(model: Model, context: ProductSelectorView.ViewModel.Context) {
@@ -36,10 +36,30 @@ extension ProductsListView {
             }
             
             let filterred = Self.filterred(products: productsData.products, context: context)
-            let products = Self.reduce(model: model, products: filterred)
-            let options = Self.makeOptions(selected: productsData.productType.rawValue)
+            let products = Self.reduce(model, products: filterred)
+            let typeSelector = Self.makeTypeSelector(model, selected: productsData.productType.rawValue)
             
-            self.init(model: model, products: products, options: options)
+            self.init(model: model, products: products, typeSelector: typeSelector)
+            
+            bind()
+        }
+        
+        private func bind() {
+            
+            if let typeSelector = typeSelector {
+                
+                typeSelector.$selected
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] option in
+                        
+                        if let productType = ProductType(rawValue: option),
+                           let products = model.products(productType) {
+                            
+                            self.products = Self.reduce(model, products: products)
+                        }
+                        
+                    }.store(in: &bindings)
+            }
         }
     }
 }
@@ -86,12 +106,9 @@ extension ProductsListView.ViewModel {
                 }
                 
                 return product.status == .notBlocked
-                
-            case .deposit:
-                return true
-                
+
             default:
-                return false
+                return true
             }
         }
         
@@ -101,7 +118,7 @@ extension ProductsListView.ViewModel {
         }
     }
   
-    static func reduce(model: Model, products: [ProductData]) -> [ProductView.ViewModel] {
+    static func reduce(_ model: Model, products: [ProductData]) -> [ProductView.ViewModel] {
         
         let sortedProducts = products.sorted { $0.productType.order < $1.productType.order }
         let products = sortedProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model) }
@@ -109,13 +126,13 @@ extension ProductsListView.ViewModel {
         return products
     }
     
-    static func makeOptions(selected: Option.ID) -> OptionSelectorView.ViewModel? {
+    static func makeTypeSelector(_ model: Model, selected: Option.ID) -> OptionSelectorView.ViewModel {
         
-        let sortedTypes = ProductType.allCases.filter { $0 != .loan }.sorted { $0.order < $1.order }
-        let options = sortedTypes.map { Option(id: $0.rawValue, name: $0.pluralName) }
+        let sortedTypes = model.productsTypes.filter { $0 != .loan }.sorted { $0.order < $1.order }
+        var options = sortedTypes.map { Option(id: $0.rawValue, name: $0.pluralName) }
         
         if 0...1 ~= options.count {
-            return nil
+            options.removeAll()
         }
         
         return .init(options: options, selected: selected, style: .productsSmall)
@@ -132,19 +149,27 @@ struct ProductsListView: View {
     
     var body: some View {
         
-        ScrollView(.horizontal, showsIndicators: false) {
+        VStack(spacing: 8) {
             
-            HStack(spacing: 8) {
+            if let typeSelector = viewModel.typeSelector {
+                OptionSelectorView(viewModel: typeSelector)
+            }
+            
+            ScrollView(.horizontal, showsIndicators: false) {
                 
-                ForEach(viewModel.products) { product in
-                    ProductView(viewModel: product)
-                        .frame(width: 112, height: 72)
-                        .onTapGesture {
-                            
-                            viewModel.action.send(ProductsListAction.SelectedProduct(id: product.id))
-                        }
-                }
-            }.padding(.horizontal, 20)
+                HStack(spacing: 8) {
+                    
+                    ForEach(viewModel.products) { product in
+                        ProductView(viewModel: product)
+                            .frame(width: 112, height: 72)
+                            .onTapGesture {
+                                viewModel.action.send(ProductsListAction.SelectedProduct(id: product.id))
+                            }
+                    }
+                    
+                }.padding(.bottom, 8)
+                
+            }.shadow(color: .mainColorsGray.opacity(0.2), radius: 8, y: 10)
         }
     }
 }
@@ -167,8 +192,14 @@ struct ProductsListView_Previews: PreviewProvider {
         ProductsListView(viewModel: .init(
             model: .emptyMock,
             products: [.classicSmall, .accountSmall, .accountSmall],
-            options: nil))
+            typeSelector: .init(
+                options: [
+                    .init(id: "CARD", name: ProductType.card.pluralName),
+                    .init(id: "ACCOUNT", name: ProductType.account.pluralName)
+                ],
+                selected: "CARD", style: .productsSmall)))
         .previewLayout(.sizeThatFits)
         .padding(.vertical, 8)
+        .padding(.horizontal)
     }
 }

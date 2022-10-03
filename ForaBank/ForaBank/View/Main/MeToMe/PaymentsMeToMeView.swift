@@ -46,8 +46,9 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
                     items: [.sample1, .sample2]),
                 paymentsAmount: .init(
                     title: "Сумма перевода",
-                    amount: 0,
-                    transferButton: .inactive(title: "Перевести")),
+                    amount: 150,
+                    transferButton: .active(title: "Перевести") {},
+                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})),
                 closeAction: {}))
             
             PaymentsMeToMeView(viewModel: .init(
@@ -58,7 +59,8 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
                 paymentsAmount: .init(
                     title: "Сумма перевода",
                     amount: 0,
-                    transferButton: .inactive(title: "Перевести")),
+                    transferButton: .active(title: "Перевести") {},
+                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})),
                 closeAction: {}))
         }
         .previewLayout(.sizeThatFits)

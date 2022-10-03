@@ -37,20 +37,26 @@ extension ProductSelectorView {
             self.content = content
             self.list = listViewModel
             self.context = .init(context)
-        }
-        
-        convenience init(_ model: Model, productData: ProductData, context: Context) {
-            
-            let productViewModel = Self.makeProduct(model, productData: productData)
-            self.init(model, content: .product(productViewModel), listViewModel: nil, context: context)
             
             bind()
+            bindList()
+        }
+        
+        convenience init(_ model: Model, productData: ProductData, productsList: ProductsListView.ViewModel? = nil, context: Context) {
+            
+            let productViewModel = Self.makeProduct(model, productData: productData)
+            self.init(model, content: .product(productViewModel), listViewModel: productsList, context: context)
+            
+            bind()
+            bindList()
         }
         
         convenience init(_ model: Model, context: Context) {
             
             self.init(model, content: .placeholder(.init()), listViewModel: nil, context: context)
+            
             bind()
+            bindList()
         }
         
         private func bind() {
@@ -72,11 +78,7 @@ extension ProductSelectorView {
                                     withAnimation {
                                         
                                         switch list == nil {
-                                        case true:
-                                            
-                                            list = Self.makeList(model, context: context.value)
-                                            bindList()
-                                            
+                                        case true: list = Self.makeList(model, context: context.value)
                                         case false: list = nil
                                         }
                                     }
@@ -99,11 +101,7 @@ extension ProductSelectorView {
                                     withAnimation {
                                         
                                         switch list == nil {
-                                        case true:
-                                            
-                                            list = Self.makeList(model, context: context.value)
-                                            bindList()
-                                            
+                                        case true: list = Self.makeList(model, context: context.value)
                                         case false: list = nil
                                         }
                                     }
@@ -114,6 +112,21 @@ extension ProductSelectorView {
                                 
                             }.store(in: &bindings)
                     }
+                    
+                }.store(in: &bindings)
+            
+            context
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] context in
+                    
+                    switch content {
+                    case let .product(productViewModel):
+                        productViewModel.update(context: context)
+                    case .placeholder:
+                        break
+                    }
+                    
+                    list?.update(context: context)
                     
                 }.store(in: &bindings)
         }
@@ -160,24 +173,6 @@ extension ProductSelectorView {
                         
                     }.store(in: &bindings)
             }
-        }
-        
-        private func bindContext() {
-            
-            context
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] context in
-                    
-                    switch content {
-                    case let .product(productViewModel):
-                        productViewModel.update(context: context)
-                    case .placeholder:
-                        break
-                    }
-                    
-                    list?.update(context: context)
-                    
-                }.store(in: &bindings)
         }
     }
 }
@@ -262,7 +257,7 @@ extension ProductSelectorView.ViewModel {
             self.isCollapsed = isCollapsed
         }
         
-        func update(context: Context) {}
+        func update(context: ProductSelectorView.ViewModel.Context) {}
     }
     
     // MARK: - Placeholder

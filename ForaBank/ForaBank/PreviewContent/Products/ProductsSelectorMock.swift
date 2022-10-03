@@ -21,7 +21,12 @@ extension ProductSelectorView.ViewModel {
         listViewModel: .init(
             model: .emptyMock,
             products: [.classicSmall, .accountSmall],
-            options: nil),
+            typeSelector: .init(
+                options: [
+                    .init(id: "CARD", name: ProductType.card.pluralName),
+                    .init(id: "ACCOUNT", name: ProductType.account.pluralName)
+                ],
+                selected: "CARD", style: .productsSmall)),
         context: .init(
             title: "Куда",
             direction: .to))

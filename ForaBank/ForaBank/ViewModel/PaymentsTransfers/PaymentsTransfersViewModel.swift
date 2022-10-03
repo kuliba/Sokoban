@@ -245,11 +245,22 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                         case .betweenSelf:
                             if #available(iOS 14, *) {
-                                bottomSheet = .init(type: .meToMe(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
-                                })))
+                                
+                                if let productData = model.product() {
+                                    
+                                    bottomSheet = .init(type: .meToMe(.init(model, type: .general(productData)) { [weak self] in
+                                        self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                                    }))
+                                }
+                                
                             } else {
-                                sheet = .init(type: .meToMe(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Sheet())
-                                })))
+                                
+                                if let productData = model.product() {
+                                    
+                                    sheet = .init(type: .meToMe(.init(model, type: .general(productData)) { [weak self] in
+                                        self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                                    }))
+                                }
                             }
                         
                     case .byBankDetails:
@@ -353,7 +364,7 @@ extension PaymentsTransfersViewModel {
             
             case exampleDetail(String)
             case anotherCard(AnotherCardViewModel)
-            case meToMe(MeToMeViewModel)
+            case meToMe(PaymentsMeToMeViewModel)
         }
     }
     
@@ -363,7 +374,7 @@ extension PaymentsTransfersViewModel {
         let type: Kind
         
         enum Kind {
-            case meToMe(MeToMeViewModel)
+            case meToMe(PaymentsMeToMeViewModel)
             case transferByPhone(TransferByPhoneViewModel)
             case anotherCard(AnotherCardViewModel)
             case qrScanner(QrViewModel)

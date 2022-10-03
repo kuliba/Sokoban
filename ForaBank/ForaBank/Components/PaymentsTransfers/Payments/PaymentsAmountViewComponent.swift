@@ -169,6 +169,7 @@ struct PaymentsAmountView: View {
                     
                     InfoView(viewModel: infoViewModel)
                         .frame(height: 32)
+                        .padding(.bottom)
                     
                 } else {
                     

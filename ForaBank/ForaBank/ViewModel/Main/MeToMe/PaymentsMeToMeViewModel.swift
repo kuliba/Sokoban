@@ -57,8 +57,11 @@ extension PaymentsMeToMeViewModel {
     
     static func makeSwap(_ model: Model, productData: ProductData) -> ProductsSwapView.ViewModel {
         
-        let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: .init(title: "Откуда", direction: .from))
-        let to: ProductSelectorView.ViewModel = .init(model, context: .init(title: "Куда", direction: .to))
+        let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from)
+        let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to)
+        
+        let from: ProductSelectorView.ViewModel = .init(model, productData: productData, productsList: .init(model: model, context: contextFrom), context: contextFrom)
+        let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
         
         return .init(model: model, items: [from, to])
     }
@@ -69,9 +72,10 @@ extension PaymentsMeToMeViewModel {
 extension PaymentsMeToMeViewModel {
     
     static func makeAmount() -> PaymentsAmountView.ViewModel {
-        
+
         .init(title: "Сумма перевода",
               amount: 0,
-              transferButton: .active(title: "Перевести") {})
+              transferButton: .active(title: "Перевести") {},
+              info: .button(title: "Без комиссии", icon: .ic16Info, action: {}))
     }
 }

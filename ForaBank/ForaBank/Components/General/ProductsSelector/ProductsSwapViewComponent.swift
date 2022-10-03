@@ -16,8 +16,7 @@ extension ProductsSwapView {
         
         let action: PassthroughSubject<Action, Never> = .init()
         
-        var items: [ProductSelectorView.ViewModel]
-        @Published var isReversed: Bool = false
+        @Published var items: [ProductSelectorView.ViewModel]
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
@@ -52,13 +51,10 @@ extension ProductsSwapView {
                     
                     switch action {
                     case _ as ProductsSwapAction.Button.Tap:
-                        
-                        // TODO
-                        items = items.reversed()
-                        
+                                                
                         withAnimation {
                             
-                            isReversed.toggle()
+                            items = items.reversed()
                             swapViewModel.isToogleButton.toggle()
                         }
                         
@@ -83,6 +79,7 @@ extension ProductsSwapView.ViewModel {
         @Published var isToogleButton: Bool
         @Published var pathInset: Double
         
+        let id: UUID = .init()
         let swapButton: SwapButtonViewModel
         private var bindings = Set<AnyCancellable>()
         
@@ -182,43 +179,14 @@ struct ProductsSwapView: View {
         
         VStack(alignment: .leading, spacing: 0) {
             
-            if viewModel.isReversed == false {
+            ForEach(viewModel.items) { item in
+                ProductSelectorView(viewModel: item)
+                    .matchedGeometryEffect(id: item.id, in: namespace)
+                    .padding(.vertical, 4)
                 
-                if let from = viewModel.items.first {
-                    
-                    ProductSelectorView(viewModel: from)
-                        .matchedGeometryEffect(id: from.id, in: namespace)
-                        .padding(.bottom, 12)
-                }
-                
-            } else {
-                
-                if let to = viewModel.items.first {
-                    
-                    ProductSelectorView(viewModel: to)
-                        .matchedGeometryEffect(id: to.id, in: namespace)
-                        .padding(.bottom, 12)
-                }
-            }
-            
-            SwapView(viewModel: viewModel.swapViewModel)
-            
-            if viewModel.isReversed == false {
-                
-                if let to = viewModel.items.last {
-                    
-                    ProductSelectorView(viewModel: to)
-                        .matchedGeometryEffect(id: to.id, in: namespace)
-                        .padding(.top, 8)
-                }
-                
-            } else {
-                
-                if let from = viewModel.items.last {
-                    
-                    ProductSelectorView(viewModel: from)
-                        .matchedGeometryEffect(id: from.id, in: namespace)
-                        .padding(.top, 8)
+                if let from = viewModel.from, item.id == from.id {
+                    SwapView(viewModel: viewModel.swapViewModel)
+                        .padding(.vertical, 8)
                 }
             }
         }
