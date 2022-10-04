@@ -14,7 +14,7 @@ import Shimmer
 
 extension MainSectionCurrencyMetallView {
     
-    class ViewModel: MainSectionCollapsableViewModel {
+    class ViewModel: MainSectionCollapsableViewModel, ObservableObject {
 
         override var type: MainSectionType { .currencyMetall }
         

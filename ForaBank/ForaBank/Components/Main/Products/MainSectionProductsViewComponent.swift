@@ -15,7 +15,7 @@ import Shimmer
 
 extension MainSectionProductsView {
     
-    class ViewModel: MainSectionCollapsableViewModel {
+    class ViewModel: MainSectionCollapsableViewModel, ObservableObject {
         
         override var type: MainSectionType { .products }
         
