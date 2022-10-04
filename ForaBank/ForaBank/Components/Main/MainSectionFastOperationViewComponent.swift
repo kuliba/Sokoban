@@ -12,7 +12,7 @@ import SwiftUI
 
 extension MainSectionFastOperationView {
     
-    class ViewModel: MainSectionCollapsableViewModel {
+    class ViewModel: MainSectionCollapsableViewModel, ObservableObject {
         
         override var type: MainSectionType { .fastOperations }
         @Published var items: [ButtonIconTextView.ViewModel]

@@ -14,7 +14,7 @@ import Combine
 
 extension MainSectionPromoView {
     
-    class ViewModel: MainSectionViewModel {
+    class ViewModel: MainSectionViewModel, ObservableObject {
         
         override var type: MainSectionType { .promo }
         @Published var banners: [BannerViewModel]
