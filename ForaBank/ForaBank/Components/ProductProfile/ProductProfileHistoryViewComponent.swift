@@ -651,75 +651,36 @@ extension ProductProfileHistoryView {
         
         var body: some View {
             
-            if #available(iOS 14.0, *) {
+            LazyVStack {
                 
-                LazyVStack {
+                //TODO: expences view
+                
+                if let latestUpdate = viewModel.latestUpdate {
                     
-                    //TODO: expences view
-                    
-                    if let latestUpdate = viewModel.latestUpdate {
+                    switch latestUpdate {
+                    case .updating:
+                        ProductProfileHistoryView.LoadingItemView()
                         
-                        switch latestUpdate {
-                        case .updating:
-                            ProductProfileHistoryView.LoadingItemView()
-                            
-                        case .fail(let failViewModel):
-                            ProductProfileHistoryView.EldestUpdateFailView(viewModel: failViewModel)
-                        }
-                    }
-                    
-                    ForEach(viewModel.groups) { groupViewModel in
-                        
-                        ProductProfileHistoryView.GroupView(viewModel: groupViewModel)
-                            .padding(.bottom, 32)
-                    }
-                    
-                    if let eldestUpdate = viewModel.eldestUpdate {
-                        
-                        switch eldestUpdate {
-                        case .more(let buttonViewModel):
-                            ButtonSimpleView(viewModel: buttonViewModel)
-                                .frame(height: 48)
-                            
-                        case .updating:
-                            ProductProfileHistoryView.LoadingItemView()
-                        }
+                    case .fail(let failViewModel):
+                        ProductProfileHistoryView.EldestUpdateFailView(viewModel: failViewModel)
                     }
                 }
                 
-            } else {
+                ForEach(viewModel.groups) { groupViewModel in
+                    
+                    ProductProfileHistoryView.GroupView(viewModel: groupViewModel)
+                        .padding(.bottom, 32)
+                }
                 
-                VStack {
+                if let eldestUpdate = viewModel.eldestUpdate {
                     
-                    //TODO: expences view
-                    
-                    if let latestUpdate = viewModel.latestUpdate {
+                    switch eldestUpdate {
+                    case .more(let buttonViewModel):
+                        ButtonSimpleView(viewModel: buttonViewModel)
+                            .frame(height: 48)
                         
-                        switch latestUpdate {
-                        case .updating:
-                            ProductProfileHistoryView.LoadingItemView()
-                            
-                        case .fail(let failViewModel):
-                            ProductProfileHistoryView.EldestUpdateFailView(viewModel: failViewModel)
-                        }
-                    }
-                    
-                    ForEach(viewModel.groups) { groupViewModel in
-                        
-                        ProductProfileHistoryView.GroupView(viewModel: groupViewModel)
-                            .padding(.bottom, 32)
-                    }
-                    
-                    if let eldestUpdate = viewModel.eldestUpdate {
-                        
-                        switch eldestUpdate {
-                        case .more(let buttonViewModel):
-                            ButtonSimpleView(viewModel: buttonViewModel)
-                                .frame(height: 48)
-                            
-                        case .updating:
-                            ProductProfileHistoryView.LoadingItemView()
-                        }
+                    case .updating:
+                        ProductProfileHistoryView.LoadingItemView()
                     }
                 }
             }

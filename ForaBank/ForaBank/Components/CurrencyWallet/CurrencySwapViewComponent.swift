@@ -94,17 +94,9 @@ extension CurrencySwapView {
 
                     switch action {
                     case _ as CurrencySwapAction.Button.Tapped:
-
-                        if #available(iOS 14.0, *) {
-
-                            withAnimation {
-                                toggleCurrencyType()
-                            }
-                        } else {
-
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                toggleCurrencyType()
-                            }
+                        
+                        withAnimation {
+                            toggleCurrencyType()
                         }
                         
                         let currencyWalletList = model.currencyWalletList.value
@@ -634,8 +626,6 @@ struct CurrencySwapView: View {
             HStack {
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    
-                    if #available(iOS 14.0, *) {
                         
                         if viewModel.currencyOperation == .buy {
                             
@@ -661,32 +651,6 @@ struct CurrencySwapView: View {
                                 .matchedGeometryEffect(id: "getCurrency", in: namespace)
                         }
                         
-                    } else {
-                        
-                        if viewModel.currencyOperation == .buy {
-                            
-                            CurrencySwapView.CurrencyView(viewModel: viewModel.сurrencyCurrentSwap)
-                                .transition(bottomTransition)
-                            
-                        } else {
-                            
-                            CurrencySwapView.CurrencyView(viewModel: viewModel.currencySwap)
-                                .transition(bottomTransition)
-                        }
-                        
-                        CurrencySwitchView(viewModel: viewModel.switchViewModel)
-                        
-                        if viewModel.currencyOperation == .buy {
-                            
-                            CurrencySwapView.CurrencyView(viewModel: viewModel.currencySwap)
-                                .transition(topTransition)
-                            
-                        } else {
-                            
-                            CurrencySwapView.CurrencyView(viewModel: viewModel.сurrencyCurrentSwap)
-                                .transition(topTransition)
-                        }
-                    }
                 }.padding(.vertical, 20)
             }
             

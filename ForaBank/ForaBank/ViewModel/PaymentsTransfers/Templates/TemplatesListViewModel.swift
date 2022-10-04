@@ -579,22 +579,20 @@ private extension TemplatesListViewModel {
         menuItems.append(orderMenuItem)
          */
         
-        if #available(iOS 14, *) {
-            switch style {
-            case .list:
-                let styleMenuItem = ContextMenuViewModel.MenuItemViewModel(icon: Image("grid"), title: "Вид (Плитка)") { [weak self] in
-                    self?.action.send(TemplatesListViewModelAction.ToggleStyle())
-                    self?.closeContextMenu()
-                }
-                menuItems.append(styleMenuItem)
-                
-            case .tiles:
-                let styleMenuItem = ContextMenuViewModel.MenuItemViewModel(icon: Image("Templates Menu Icon List"), title: "Вид (Список)") { [weak self] in
-                    self?.action.send(TemplatesListViewModelAction.ToggleStyle())
-                    self?.closeContextMenu()
-                }
-                menuItems.append(styleMenuItem)
+        switch style {
+        case .list:
+            let styleMenuItem = ContextMenuViewModel.MenuItemViewModel(icon: Image("grid"), title: "Вид (Плитка)") { [weak self] in
+                self?.action.send(TemplatesListViewModelAction.ToggleStyle())
+                self?.closeContextMenu()
             }
+            menuItems.append(styleMenuItem)
+            
+        case .tiles:
+            let styleMenuItem = ContextMenuViewModel.MenuItemViewModel(icon: Image("Templates Menu Icon List"), title: "Вид (Список)") { [weak self] in
+                self?.action.send(TemplatesListViewModelAction.ToggleStyle())
+                self?.closeContextMenu()
+            }
+            menuItems.append(styleMenuItem)
         }
         
         let deleteMenuItem = ContextMenuViewModel.MenuItemViewModel(icon: Image("trash_empty"), title: "Удалить") { [weak self] in

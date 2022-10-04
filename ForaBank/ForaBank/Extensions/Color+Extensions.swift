@@ -39,12 +39,7 @@ extension Color {
     
     func uiColor() -> UIColor {
 
-        if #available(iOS 14.0, *) {
-            return UIColor(self)
-        }
-
-        let components = self.components()
-        return UIColor(red: components.r, green: components.g, blue: components.b, alpha: components.a)
+        return UIColor(self)
     }
 
     func components() -> (r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat) {

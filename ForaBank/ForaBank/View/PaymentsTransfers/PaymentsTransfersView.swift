@@ -150,6 +150,30 @@ struct PaymentsTransfersView: View {
                 }
             }
         }
+        .sheet(item: $viewModel.sheet, content: { sheet in
+            
+            switch sheet.type {
+                
+            case let .transferByPhone(viewModel):
+                TransferByPhoneView(viewModel: viewModel)
+                    .edgesIgnoringSafeArea(.all)
+                
+            case let .meToMe(viewModel):
+                MeToMeView(viewModel: viewModel)
+                    .edgesIgnoringSafeArea(.bottom)
+                
+            case .anotherCard(let anotherCardViewModel):
+                AnotherCardView(viewModel: anotherCardViewModel)
+                    .edgesIgnoringSafeArea(.bottom)
+                
+            case .qrScanner(let qrViewModel):
+                QrScannerView(viewModel: qrViewModel)
+                    .navigationBarTitle("", displayMode: .inline)
+                    .navigationBarBackButtonHidden(true)
+                    .edgesIgnoringSafeArea(.all)
+            }
+            
+        })
         .bottomSheet(item: $viewModel.bottomSheet) { sheet in
             
             switch sheet.type {
@@ -168,32 +192,6 @@ struct PaymentsTransfersView: View {
                     .frame(height: 494)
             }
         }
-        .sheet(item: $viewModel.sheet, content: { sheet in
-            
-            switch sheet.type {
-                
-            case let .transferByPhone(viewModel):
-                TransferByPhoneView(viewModel: viewModel)
-                    .edgesIgnoringSafeArea(.all)
-                
-            case let .meToMe(viewModel):
-                MeToMeView(viewModel: viewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                
-            case .anotherCard(let anotherCardViewModel):
-                AnotherCardView(viewModel: anotherCardViewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .navigationBarTitle("", displayMode: .inline)
-                    .frame(height: 494)
-                
-            case .qrScanner(let qrViewModel):
-                QrScannerView(viewModel: qrViewModel)
-                    .navigationBarTitle("", displayMode: .inline)
-                    .navigationBarBackButtonHidden(true)
-                    .edgesIgnoringSafeArea(.all)
-            }
-            
-        })
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })

@@ -743,52 +743,22 @@ extension ProductDetailView {
                     
                     ForEach(viewModel.documents, id: \.self) { item in
                         
-                        if #available(iOS 14.0, *) {
+                        Link(destination: item.url) {
                             
-                            Link(destination: item.url) {
+                            HStack(alignment: .top, spacing: 16) {
                                 
-                                HStack(alignment: .top, spacing: 16) {
-                                    
-                                    Image.ic24FileText
-                                        .resizable()
-                                        .frame(width: 24, height: 24, alignment: .top)
-                                        .foregroundColor(.mainColorsGray)
-                                    
-                                    Text(item.title)
-                                        .foregroundColor(.mainColorsBlack)
-                                        .font(.system(size: 16))
-                                        .multilineTextAlignment(.leading)
-                                    
-                                    Spacer()
-                                    
-                                }
-                            }
-                            
-                        } else {
-                            
-                            ForEach(viewModel.documents, id: \.self) { item in
+                                Image.ic24FileText
+                                    .resizable()
+                                    .frame(width: 24, height: 24, alignment: .top)
+                                    .foregroundColor(.mainColorsGray)
                                 
-                                Button{
-                                    
-                                    UIApplication.shared.open(item.url)
-                                    
-                                } label: {
-                                    
-                                    HStack(spacing: 10) {
-                                        
-                                        Image.ic24FileText
-                                            .resizable()
-                                            .frame(width: 24, height: 24, alignment: .top)
-                                            .foregroundColor(.mainColorsGray)
-                                        
-                                        Text(item.title)
-                                            .foregroundColor(.mainColorsBlack)
-                                            .font(.system(size: 16))
-                                        
-                                        Spacer()
-                                        
-                                    }
-                                }
+                                Text(item.title)
+                                    .foregroundColor(.mainColorsBlack)
+                                    .font(.system(size: 16))
+                                    .multilineTextAlignment(.leading)
+                                
+                                Spacer()
+                                
                             }
                         }
                     }

@@ -15,29 +15,21 @@ struct HideTabBarModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         
-        if #available(iOS 14, *) {
-            
-            content
-                .introspectTabBarController(customize: { tabBarController in
-                    
-                    self.tabBarController = tabBarController
-                    
-                })
-                .onChange(of: isHidden, perform: { newValue in
-                    
-                    guard let tabBarController = tabBarController else {
-                        return
-                    }
-                    
-                    tabBarController.tabBar.isHidden = newValue
-                    UIView.transition(with: tabBarController.view, duration: 0.35, options: .transitionCrossDissolve, animations: nil)
-                })
-            
-        } else {
-            
-            //TODO: iOS 13 implementation
-            content
-        }
+        content
+            .introspectTabBarController(customize: { tabBarController in
+                
+                self.tabBarController = tabBarController
+                
+            })
+            .onChange(of: isHidden, perform: { newValue in
+                
+                guard let tabBarController = tabBarController else {
+                    return
+                }
+                
+                tabBarController.tabBar.isHidden = newValue
+                UIView.transition(with: tabBarController.view, duration: 0.35, options: .transitionCrossDissolve, animations: nil)
+            })
     }
 }
 
