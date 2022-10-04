@@ -62,17 +62,9 @@ extension LocationAgent {
     }
     
     func updateStatus() {
-    
-        if #available(iOS 14.0, *) {
-            
-            let authStatus = locationManager.authorizationStatus
-            status.value = .init(with: authStatus)
-            
-        } else {
-            
-            let authStatus = CLLocationManager.authorizationStatus()
-            status.value = .init(with: authStatus)
-        }
+        
+        let authStatus = locationManager.authorizationStatus
+        status.value = .init(with: authStatus)
     }
 }
 

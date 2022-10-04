@@ -103,52 +103,30 @@ struct PTSectionPaymentsView: View {
             ScrollView(.horizontal, showsIndicators: false) { proxy in
                 
                 HStack(spacing: 64) {
-                
-                if #available(iOS 14.0, *) {
-
+                    
                     let gridItems = Array(repeating: GridItem(.fixed(48), spacing: 8),
                                           count: rowsCount)
-
+                    
                     LazyHGrid(rows: gridItems, spacing: 64) {
                         ForEach(viewModel.paymentButtons.indices, id: \.self) { index in
-
+                            
                             ButtonPayGroupView(viewModel: viewModel.paymentButtons[index])
-                                                                    .scrollId(index)
+                                .scrollId(index)
                         }
                     }
-
-                } else { //iOS13
-                
-                    let payButtonsCount = viewModel.paymentButtons.count
-                    let columnsCount = (payButtonsCount / rowsCount)
-                                     + (payButtonsCount % rowsCount == 0 ? 0 : 1)
                     
-                    ForEach(0..<columnsCount, id: \.self) { column in
-                        VStack {
-                            ForEach(0..<rowsCount, id: \.self) { row in
-                                
-                                let index = rowsCount * column + row
-                                if payButtonsCount > index {
-                                    ButtonPayGroupView(viewModel: viewModel.paymentButtons[index])
-                                                                            .scrollId(index)
-                                    
-                                } else { Spacer() }
-                            }
-                        }
-                    }
-                } //iOS14
                     Spacer(minLength: 1)
                 }
                 .onReceive(proxy.offset) { scrollOffsetX = $0.x }
                 .onAppear { scrollProxy = proxy }
-
+                
             }
             .frame(width: pageScrollViewWidth)
             .introspectScrollView {
                 $0.isPagingEnabled = true
                 $0.clipsToBounds = false
             }
-        
+            
             Color.clear
                 .contentShape(Rectangle())
                 .gesture(DragGesture().onEnded { _ in scrollToRight() })
