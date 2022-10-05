@@ -442,12 +442,48 @@ class ProductProfileViewModel: ObservableObject {
                        
                        self.bottomSheet = .init(type: .operationDetail(operationDetailViewModel))
                        
+                       if #unavailable(iOS 14.5) {
+                           
+                           self.bind(operationDetailViewModel)
+                       }
+                       
                    default:
                        break
                    }
                    
                }.store(in: &bindings)
        }
+    
+    func bind(_ operationDetailViewModel: OperationDetailViewModel) {
+        
+        operationDetailViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as OperationDetailViewModelAction.ShowInfo:
+                    self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
+
+                        self.sheet = .init(type: .info(payload.viewModel))
+                    }
+                
+                case let payload as OperationDetailViewModelAction.ShowDocument:
+                    self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
+                        
+                        self.sheet = .init(type: .printForm(payload.viewModel))
+                    }
+                
+                case _ as OperationDetailViewModelAction.CloseSheet:
+                    sheet = nil
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
     
     func bind(buttons: ProductProfileButtonsView.ViewModel) {
         
@@ -880,6 +916,7 @@ extension ProductProfileViewModel {
             
             case printForm(PrintFormView.ViewModel)
             case placesMap(PlacesViewModel)
+            case info(OperationDetailInfoViewModel)
         }
     }
 }
