@@ -50,7 +50,7 @@ enum Payments {
 
 extension Payments {
     
-    struct Parameter: Equatable, CustomDebugStringConvertible {
+    struct Parameter: Equatable, Hashable, CustomDebugStringConvertible {
         
         typealias ID = String
         typealias Value = String?
@@ -84,7 +84,7 @@ extension Payments {
     struct Operation {
         
         let service: Service
-        let source: Source
+        let source: Source?
         let steps: [Step]
     }
 }
@@ -94,49 +94,77 @@ extension Payments.Operation {
     /// Source of operation
     enum Source {
         
-        /// started fresh operation with no source
-        case none
-        
         /// operation started from template
         case template(PaymentTemplateData.ID)
         
         /// operation started from latest operation
         case latestPayment(LatestPaymentData.ID)
+        
+        case qr
+        //....
     }
     
     /// Operation step
     struct Step {
         
-        /// Parameters provided on each operation step
         let parameters: [PaymentsParameterRepresentable]
+        let front: Front
+        let back: Back?
         
-        /// Terms requred to process on this step
-        let terms: [Term]
+        struct Front {
+            
+            /// Parameters visible in UI
+            let visible: [Parameter.ID]
+            
+            /// Is user complete updatding all parameters for this step
+            let isCompleted: Bool
+        }
         
-        /// Parameters processed on this step
-        let processed: [Parameter]?
-        
+        struct Back {
+            
+            let stage: Stage
+            
+            /// Terms requred to process on this step
+            let terms: [Term]
+            
+            /// Parameters processed on this step
+            let processed: [Parameter]?
+        }
+
         struct Term {
             
+            /// parameter id required to process
             let parameterId: Parameter.ID
+            
+            /// the impact produced by changing the value of this parameter
             let impact: Impact
         }
         
         enum Impact: Int {
             
+            /// parameter change requires rollback transfer to this step
             case rollback
-            case restart
-            case confirm
-        }
-
-        enum State {
             
-            case pending([Parameter])
-            case complete
-            case impact(Impact)
+            /// parameter change requires restart transfer from the begining
+            case restart
         }
         
-        struct StateData {
+        enum Status {
+            
+            /// updating parameters on front side
+            case updating
+            
+            /// pending parameters to back side
+            case pending(parameters: [Parameter], stage: Stage)
+            
+            /// parematers updated on front side and processed on back side if required
+            case complete
+            
+            /// parameters changed after procrssing
+            case invalidated(Impact)
+        }
+        
+        struct ProcessedData {
             
             let current: Parameter
             let processed: Parameter
@@ -144,21 +172,28 @@ extension Payments.Operation {
         }
     }
     
+    enum Stage {
+        
+        case initial
+        case next
+        case final
+    }
+    
     enum Action {
         
-        // required parameters for step
-        case parameters(stepIndex: Int)
+        /// required update on front side
+        case frontUpdate
         
-        // process parameters with transaction
-        case process(parameters: [Parameter], isBegin: Bool)
+        /// required parameters for step
+        case backParameters(stepIndex: Int)
         
-        // confirm transaction
-        case confirm(parameters: [Parameter])
+        /// process parameters with transaction
+        case backProcess(parameters: [Parameter], stepIndex: Int, stage: Stage)
         
-        // restart operation
+        /// restart operation
         case restart
         
-        // rollback operation to step
+        /// rollback operation to step
         case rollback(stepIndex: Int)
     }
 }
@@ -298,7 +333,5 @@ extension Payments {
         case anywayTransferFinalStepExpected
         case notAuthorized
         case unsupported
-        case operationAppendingIncorrectParametersTerms
-        case stepIncorrectParametersProcessed
     }
 }

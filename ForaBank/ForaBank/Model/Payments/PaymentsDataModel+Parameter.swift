@@ -491,5 +491,10 @@ extension Payments {
             
             self.parameter = Parameter(id: id, value: value)
         }
+        
+        func updated(value: String?) -> PaymentsParameterRepresentable {
+            
+            ParameterMock(id: parameter.id, value: value)
+        }
     }
 }

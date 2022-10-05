@@ -659,6 +659,7 @@
 		7705ABC927E8846E000E99CA /* Model+PaymentsTaxes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7705ABC827E8846E000E99CA /* Model+PaymentsTaxes.swift */; };
 		77067CD9275FBB70000C442B /* StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77067CD8275FBB70000C442B /* StringExtensionsTests.swift */; };
 		77067CDD275FCBA5000C442B /* DownloadQueueSerialsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77067CDC275FCBA5000C442B /* DownloadQueueSerialsStorage.swift */; };
+		7709F12428EDDC22008B5EC4 /* PaymentsDataModel+Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7709F12328EDDC22008B5EC4 /* PaymentsDataModel+Step.swift */; };
 		770DCE8F27BBE6AB004099C1 /* Model+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770DCE8E27BBE6AB004099C1 /* Model+Auth.swift */; };
 		770DCE9127BBF7F4004099C1 /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770DCE9027BBF7F4004099C1 /* RootViewModel.swift */; };
 		770DCE9327BBF93B004099C1 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770DCE9227BBF93B004099C1 /* RootView.swift */; };
@@ -2068,6 +2069,7 @@
 		7705ABC827E8846E000E99CA /* Model+PaymentsTaxes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTaxes.swift"; sourceTree = "<group>"; };
 		77067CD8275FBB70000C442B /* StringExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionsTests.swift; sourceTree = "<group>"; };
 		77067CDC275FCBA5000C442B /* DownloadQueueSerialsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadQueueSerialsStorage.swift; sourceTree = "<group>"; };
+		7709F12328EDDC22008B5EC4 /* PaymentsDataModel+Step.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsDataModel+Step.swift"; sourceTree = "<group>"; };
 		770DCE8E27BBE6AB004099C1 /* Model+Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Auth.swift"; sourceTree = "<group>"; };
 		770DCE9027BBF7F4004099C1 /* RootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
 		770DCE9227BBF93B004099C1 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -4685,6 +4687,7 @@
 				77178A7027C1F32E0095CF8C /* PaymentsDataModel+Operator.swift */,
 				77FF670427B4B07B009FEA09 /* PaymentsDataModel+Parameter.swift */,
 				7758401627B1BD6000251969 /* PaymentsDataModel+Operation.swift */,
+				7709F12328EDDC22008B5EC4 /* PaymentsDataModel+Step.swift */,
 				77FF66CB27B42DAF009FEA09 /* Taxes */,
 			);
 			path = Payments;
@@ -8232,6 +8235,7 @@
 				6833E0D1273920CE004C070F /* MainTabBarCoordinator.swift in Sources */,
 				689ECA812846A4CB0098664F /* Model+Legacy.swift in Sources */,
 				774A8B4A2865FD3600B81140 /* MyProductsView.swift in Sources */,
+				7709F12428EDDC22008B5EC4 /* PaymentsDataModel+Step.swift in Sources */,
 				EDDFE39D2756926000F57C71 /* GetDepositProductListDecodableModel.swift in Sources */,
 				0B7A18B226836A400007CC75 /* NetworkPDFManager.swift in Sources */,
 				ED0AF88F286B68B900F86B68 /* UIImage+Extensions.swift in Sources */,

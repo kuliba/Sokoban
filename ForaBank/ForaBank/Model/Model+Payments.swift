@@ -411,12 +411,6 @@ extension Model {
                 
             case .unsupported:
                 return "unsupported"
-                
-            case .operationAppendingIncorrectParametersTerms:
-                return "operationAppendingIncorrectParametersTerms"
-                
-            case .stepIncorrectParametersProcessed:
-                return "operationAppendingIncorrectParametersTerms"
             }
             
         } else {
