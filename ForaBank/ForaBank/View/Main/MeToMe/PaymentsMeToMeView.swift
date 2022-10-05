@@ -41,6 +41,7 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
 
             PaymentsMeToMeView(viewModel: .init(
                 .emptyMock,
+                mode: .general,
                 swapViewModel: .init(
                     model: .emptyMock,
                     items: [.sample1, .sample2]),
@@ -53,6 +54,7 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
             
             PaymentsMeToMeView(viewModel: .init(
                 .emptyMock,
+                mode: .general,
                 swapViewModel: .init(
                     model: .emptyMock,
                     items: [.sample1, .sample3]),

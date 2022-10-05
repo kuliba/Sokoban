@@ -204,6 +204,7 @@ enum OpenAccountСurrencyType: String {
     case EUR
     case GBP
     case CHF
+    case CNY
 
     var icon: Image {
 
@@ -214,6 +215,7 @@ enum OpenAccountСurrencyType: String {
         case .EUR: return .init("EUR")
         case .GBP: return .init("GBP")
         case .CHF: return .init("CHF")
+        case .CNY: return .init("CNY")
         }
     }
 
@@ -226,6 +228,7 @@ enum OpenAccountСurrencyType: String {
         case .EUR: return .init("EUR Detail")
         case .GBP: return .init("GBP Detail")
         case .CHF: return .init("CHF Detail")
+        case .CNY: return .init("CNY Detail")
         }
     }
 
@@ -238,6 +241,7 @@ enum OpenAccountСurrencyType: String {
         case .EUR: return "€"
         case .GBP: return "£"
         case .CHF: return "₣"
+        case .CNY: return "¥"
         }
     }
 }

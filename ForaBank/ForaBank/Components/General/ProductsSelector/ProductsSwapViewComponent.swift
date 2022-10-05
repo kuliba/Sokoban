@@ -21,9 +21,9 @@ extension ProductsSwapView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        lazy var swapViewModel: SwapViewModel = .init(swapButton: .init() {
+        lazy var divider: DividerViewModel = .init(swapButton: .init() {
             
-            switch self.swapViewModel.swapButton.state {
+            switch self.divider.swapButton.state {
             case .normal:
                 self.action.send(ProductsSwapAction.Button.Tap())
             case .reset:
@@ -55,7 +55,7 @@ extension ProductsSwapView {
                         withAnimation {
                             
                             items = items.reversed()
-                            swapViewModel.isToogleButton.toggle()
+                            divider.isToogleButton.toggle()
                         }
                         
                     case _ as ProductsSwapAction.Button.Reset:
@@ -66,15 +66,37 @@ extension ProductsSwapView {
                     }
                     
                 }.store(in: &bindings)
+            
+            $items
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] items in
+                    
+                    guard let from = from, let to = to else {
+                        return
+                    }
+
+                    var contextFrom = from.context.value
+                    var contextTo = to.context.value
+                    
+                    contextFrom.direction = .from
+                    contextTo.direction = .to
+                    
+                    contextFrom.title = "Откуда"
+                    contextTo.title = "Куда"
+                    
+                    from.context.send(contextFrom)
+                    to.context.send(contextTo)
+                    
+                }.store(in: &bindings)
         }
     }
 }
 
 extension ProductsSwapView.ViewModel {
     
-    // MARK: - Swap
+    // MARK: - Divider
     
-    class SwapViewModel: ObservableObject {
+    class DividerViewModel: ObservableObject {
         
         @Published var isToogleButton: Bool
         @Published var pathInset: Double
@@ -185,7 +207,7 @@ struct ProductsSwapView: View {
                     .padding(.vertical, 4)
                 
                 if let from = viewModel.from, item.id == from.id {
-                    SwapView(viewModel: viewModel.swapViewModel)
+                    DividerView(viewModel: viewModel.divider)
                         .padding(.vertical, 8)
                 }
             }
@@ -197,11 +219,11 @@ struct ProductsSwapView: View {
 
 extension ProductsSwapView {
     
-    // MARK: - Swap
+    // MARK: - Divider
     
-    struct SwapView: View {
+    struct DividerView: View {
         
-        @ObservedObject var viewModel: ViewModel.SwapViewModel
+        @ObservedObject var viewModel: ViewModel.DividerViewModel
   
         var body: some View {
             

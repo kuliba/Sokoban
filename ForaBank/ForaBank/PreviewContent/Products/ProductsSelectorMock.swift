@@ -9,15 +9,15 @@ extension ProductSelectorView.ViewModel {
     
     static let sample1 = ProductSelectorView.ViewModel(
         .emptyMock,
-        content: .product(.sample),
+        content: .product(.sample1),
         listViewModel: nil,
         context: .init(
             title: "Откуда",
             direction: .from))
         
-    static let sample2 = ProductSelectorView.ViewModel(
+    static let sample2: ProductSelectorView.ViewModel = .init(
         .emptyMock,
-        content: .product(.sample),
+        content: .product(.sample2),
         listViewModel: .init(
             model: .emptyMock,
             products: [.classicSmall, .accountSmall],
@@ -31,11 +31,5 @@ extension ProductSelectorView.ViewModel {
             title: "Куда",
             direction: .to))
     
-    static let sample3 = ProductSelectorView.ViewModel(
-        .emptyMock,
-        content: .placeholder(.init()),
-        listViewModel: nil,
-        context: .init(
-            title: "Куда",
-            direction: .to))
+    static let sample3: ProductSelectorView.ViewModel = .init(.emptyMock, context: .init(title: "Куда", direction: .to))
 }

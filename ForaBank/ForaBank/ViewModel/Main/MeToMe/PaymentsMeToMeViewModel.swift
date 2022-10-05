@@ -13,30 +13,37 @@ import Combine
 class PaymentsMeToMeViewModel: ObservableObject {
     
     private let model: Model
+    private let mode: Mode
+    
     let swapViewModel: ProductsSwapView.ViewModel
     let paymentsAmount: PaymentsAmountView.ViewModel
         
     let title: String
     let closeAction: () -> Void
     
-    init(_ model: Model, swapViewModel: ProductsSwapView.ViewModel, paymentsAmount: PaymentsAmountView.ViewModel, title: String = "Между своими", closeAction: @escaping () -> Void) {
+    init(_ model: Model, mode: Mode, swapViewModel: ProductsSwapView.ViewModel, paymentsAmount: PaymentsAmountView.ViewModel, title: String = "Между своими", closeAction: @escaping () -> Void) {
         
         self.model = model
+        self.mode = mode
         self.swapViewModel = swapViewModel
         self.paymentsAmount = paymentsAmount
         self.title = title
         self.closeAction = closeAction
     }
     
-    convenience init(_ model: Model, type: Mode, closeAction: @escaping () -> Void) {
+    convenience init?(_ model: Model, mode: Mode, closeAction: @escaping () -> Void) {
         
-        switch type {
-        case let .general(productData):
+        switch mode {
+        case .general:
+            
+            guard let productData = model.product() else {
+                return nil
+            }
             
             let swapViewModel = Self.makeSwap(model, productData: productData)
             let amountViewModel = Self.makeAmount()
             
-            self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, closeAction: closeAction)
+            self.init(model, mode: mode, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, closeAction: closeAction)
         }
     }
 }
@@ -47,7 +54,7 @@ extension PaymentsMeToMeViewModel {
     
     enum Mode {
         
-        case general(ProductData)
+        case general
     }
 }
 
@@ -60,7 +67,7 @@ extension PaymentsMeToMeViewModel {
         let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from)
         let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to)
         
-        let from: ProductSelectorView.ViewModel = .init(model, productData: productData, productsList: .init(model: model, context: contextFrom), context: contextFrom)
+        let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
         let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
         
         return .init(model: model, items: [from, to])

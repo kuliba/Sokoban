@@ -29,7 +29,7 @@ struct OpenAccountProductData: Codable, Equatable {
         case eur = "EUR"
         case gbp = "GBP"
         case chf = "CHF"
-        case chy = "CHY"
+        case cny = "CNY"
         case unknown
     }
 

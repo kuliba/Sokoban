@@ -11,6 +11,13 @@ import Combine
 protocol BottomSheetCustomizable: Identifiable {
     
     var keyboardOfssetMultiplier: CGFloat { get }
+    var animationSpeed: Double { get }
+}
+
+extension BottomSheetCustomizable {
+    
+    var keyboardOfssetMultiplier: CGFloat { 0.6 }
+    var animationSpeed: Double { 0.5 }
 }
 
 // MARK: - View Extensions
@@ -31,7 +38,7 @@ extension View {
         
         if let itemWrappedValue = item.wrappedValue {
             
-            return modifier(BottomSheetItemModifier(item: item, keyboardOfssetMultiplier: itemWrappedValue.keyboardOfssetMultiplier, animationSpeed: animationSpeed, sheetContent: content))
+            return modifier(BottomSheetItemModifier(item: item, keyboardOfssetMultiplier: itemWrappedValue.keyboardOfssetMultiplier, animationSpeed: itemWrappedValue.animationSpeed, sheetContent: content))
             
         } else {
             

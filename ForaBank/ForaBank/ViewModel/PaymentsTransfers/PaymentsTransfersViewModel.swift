@@ -244,25 +244,15 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }
                             
                         case .betweenSelf:
-                            if #available(iOS 14, *) {
-                                
-                                if let productData = model.product() {
-                                    
-                                    bottomSheet = .init(type: .meToMe(.init(model, type: .general(productData)) { [weak self] in
-                                        self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
-                                    }))
-                                }
-                                
-                            } else {
-                                
-                                if let productData = model.product() {
-                                    
-                                    sheet = .init(type: .meToMe(.init(model, type: .general(productData)) { [weak self] in
-                                        self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
-                                    }))
-                                }
+                            
+                            let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .general) { [weak self] in
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
                             }
-                        
+                            
+                            if let viewModel = viewModel {
+                                bottomSheet = .init(type: .meToMe(viewModel))
+                            }
+
                     case .byBankDetails:
                             link = .transferByRequisites(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }))
@@ -358,7 +348,21 @@ extension PaymentsTransfersViewModel {
         let id = UUID()
         let type: Kind
         
-        var keyboardOfssetMultiplier: CGFloat { return 0 }
+        var keyboardOfssetMultiplier: CGFloat {
+            
+            switch type {
+            case .meToMe: return 1
+            default: return 0
+            }
+        }
+        
+        var animationSpeed: Double {
+            
+            switch type {
+            case .meToMe: return 0.3
+            default: return 0.5
+            }
+        }
         
         enum Kind {
             

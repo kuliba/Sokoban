@@ -150,17 +150,14 @@ struct PaymentsTransfersView: View {
                 }
             }
         }
-        .bottomSheet(item: $viewModel.bottomSheet, animationSpeed: 0.3) { sheet in
+        .bottomSheet(item: $viewModel.bottomSheet) { sheet in
             
             switch sheet.type {
             case let .exampleDetail(title):
                 ExampleDetailMock(title: title)
             
             case let .meToMe(viewModel):
-                
                 PaymentsMeToMeView(viewModel: viewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .fixedSize(horizontal: false, vertical: true)
                 
             case .anotherCard(let model):
                 AnotherCardView(viewModel: model)
@@ -180,6 +177,7 @@ struct PaymentsTransfersView: View {
             case let .meToMe(viewModel):
                 PaymentsMeToMeView(viewModel: viewModel)
                     .edgesIgnoringSafeArea(.bottom)
+                    .fixedSize(horizontal: false, vertical: true)
                 
             case .anotherCard(let anotherCardViewModel):
                 AnotherCardView(viewModel: anotherCardViewModel)

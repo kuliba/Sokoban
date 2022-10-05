@@ -37,29 +37,69 @@ extension ProductSelectorView {
             self.content = content
             self.list = listViewModel
             self.context = .init(context)
-            
-            bind()
-            bindList()
         }
         
-        convenience init(_ model: Model, productData: ProductData, productsList: ProductsListView.ViewModel? = nil, context: Context) {
+        convenience init(_ model: Model, productData: ProductData, context: Context, isListOpen: Bool = false) {
             
-            let productViewModel = Self.makeProduct(model, productData: productData)
-            self.init(model, content: .product(productViewModel), listViewModel: productsList, context: context)
+            let productViewModel: ProductViewModel = .init(model, productData: productData, context: context)
+
+            if isListOpen == false {
+                
+                self.init(model, content: .product(productViewModel), listViewModel: nil, context: context)
+                
+            } else {
+                
+                let list: ProductsListView.ViewModel? = .init(model: model, context: context)
+                self.init(model, content: .product(productViewModel), listViewModel: list, context: context)
+                
+                if let list = list {
+                    bindList(list)
+                }
+            }
             
             bind()
-            bindList()
         }
         
         convenience init(_ model: Model, context: Context) {
             
-            self.init(model, content: .placeholder(.init()), listViewModel: nil, context: context)
-            
+            self.init(model, content: .placeholder(.init(context)), listViewModel: nil, context: context)
             bind()
-            bindList()
         }
         
         private func bind() {
+            
+            $list
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] list in
+                    
+                    if let list = list {
+                        
+                        list.action
+                            .receive(on: DispatchQueue.main)
+                            .sink { [unowned self] action in
+                                
+                                switch action {
+                                case _ as ProductsListAction.Option.Selected:
+                                    bindList(list)
+                                    
+                                default:
+                                    break
+                                }
+                                
+                            }.store(in: &bindings)
+                    }
+
+                    withAnimation {
+
+                        switch content {
+                        case let .product(productViewModel):
+                            productViewModel.isCollapsed = list == nil
+                        case let .placeholder(placeholderViewModel):
+                            placeholderViewModel.isCollapsed = list == nil
+                        }
+                    }
+
+                }.store(in: &bindings)
             
             $content
                 .receive(on: DispatchQueue.main)
@@ -78,7 +118,14 @@ extension ProductSelectorView {
                                     withAnimation {
                                         
                                         switch list == nil {
-                                        case true: list = Self.makeList(model, context: context.value)
+                                        case true:
+                                            
+                                            list = .init(model: model, context: context.value)
+                                            
+                                            if let list = list {
+                                                bindList(list)
+                                            }
+                                            
                                         case false: list = nil
                                         }
                                     }
@@ -101,7 +148,14 @@ extension ProductSelectorView {
                                     withAnimation {
                                         
                                         switch list == nil {
-                                        case true: list = Self.makeList(model, context: context.value)
+                                        case true:
+                                            
+                                            list = .init(model: model, context: context.value)
+                                            
+                                            if let list = list {
+                                                bindList(list)
+                                            }
+                                            
                                         case false: list = nil
                                         }
                                     }
@@ -122,31 +176,38 @@ extension ProductSelectorView {
                     switch content {
                     case let .product(productViewModel):
                         productViewModel.update(context: context)
-                    case .placeholder:
-                        break
+                        
+                    case let .placeholder(placeholderViewModel):
+                        placeholderViewModel.update(context: context)
                     }
                     
-                    list?.update(context: context)
+                    if let list = list {
+                        list.update(context: context)
+                    }
                     
                 }.store(in: &bindings)
         }
         
-        private func bindList() {
-            
-            if let list = list {
+        private func bindList(_ list: ProductsListView.ViewModel) {
+
+            for product in list.products {
                 
-                list.action
+                product.action
                     .receive(on: DispatchQueue.main)
                     .sink { [unowned self] action in
                         
                         switch action {
+                        case _ as ProductViewModelAction.ProductDidTapped:
                             
-                        case let payload as ProductsListAction.SelectedProduct:
-                            
-                            if let product = model.product(productId: payload.id) {
+                            if let product = model.product(productId: product.id) {
                                 
-                                let productViewModel = Self.makeProduct(model, productData: product)
+                                let productViewModel: ProductViewModel = .init(
+                                    model,
+                                    productData: product,
+                                    context: context.value)
+
                                 content = .product(productViewModel)
+                                self.list = nil
                             }
                             
                         default:
@@ -154,49 +215,8 @@ extension ProductSelectorView {
                         }
                         
                     }.store(in: &bindings)
-                
-                $list
-                    .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] list in
-                        
-                        let isCollapsed = list == nil
-                        
-                        withAnimation {
-                            
-                            switch content {
-                            case let .product(productViewModel):
-                                productViewModel.isCollapsed = isCollapsed
-                            case let .placeholder(placeholderViewModel):
-                                placeholderViewModel.isCollapsed = isCollapsed
-                            }
-                        }
-                        
-                    }.store(in: &bindings)
             }
         }
-    }
-}
-
-// MARK: - Make
-
-extension ProductSelectorView.ViewModel {
-    
-    static func makeProduct(_ model: Model, productData: ProductData) -> ProductViewModel {
-        
-        let name = ProductView.ViewModel.name(product: productData, style: .main)
-        let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
-        
-        var paymentSystemImage: SVGImageData?
-        
-        if let product = productData as? ProductCardData {
-            paymentSystemImage = product.paymentSystemImage
-        }
-  
-        return .init(id: productData.id, cardIcon: productData.smallDesign.image, paymentIcon: paymentSystemImage?.image, name: name, balance: balance, numberCard: productData.displayNumber, description: productData.additionalField)
-    }
-    
-    static func makeList(_ model: Model, context: Context) -> ProductsListView.ViewModel? {
-        .init(model: model, context: context)
     }
 }
 
@@ -237,6 +257,7 @@ extension ProductSelectorView.ViewModel {
         let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var id: Int
+        @Published var title: String
         @Published var cardIcon: Image?
         @Published var paymentIcon: Image?
         @Published var name: String
@@ -245,9 +266,10 @@ extension ProductSelectorView.ViewModel {
         @Published var description: String?
         @Published var isCollapsed: Bool
         
-        init(id: Int, cardIcon: Image? = nil, paymentIcon: Image? = nil, name: String, balance: String, numberCard: String? = nil, description: String? = nil, isCollapsed: Bool = true) {
+        init(id: Int, title: String = "", cardIcon: Image? = nil, paymentIcon: Image? = nil, name: String, balance: String, numberCard: String? = nil, description: String? = nil, isCollapsed: Bool = true) {
             
             self.id = id
+            self.title = title
             self.cardIcon = cardIcon
             self.paymentIcon = paymentIcon
             self.name = name
@@ -257,7 +279,23 @@ extension ProductSelectorView.ViewModel {
             self.isCollapsed = isCollapsed
         }
         
-        func update(context: ProductSelectorView.ViewModel.Context) {}
+        convenience init(_ model: Model, productData: ProductData, context: Context) {
+            
+            let name = ProductView.ViewModel.name(product: productData, style: .main)
+            let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
+            
+            var paymentSystemImage: SVGImageData?
+            
+            if let product = productData as? ProductCardData {
+                paymentSystemImage = product.paymentSystemImage
+            }
+            
+            self.init(id: productData.id, title: context.title, cardIcon: productData.smallDesign.image, paymentIcon: paymentSystemImage?.image, name: name, balance: balance, numberCard: productData.displayNumber, description: productData.additionalField)
+        }
+        
+        func update(context: ProductSelectorView.ViewModel.Context) {
+            title = context.title
+        }
     }
     
     // MARK: - Placeholder
@@ -266,13 +304,24 @@ extension ProductSelectorView.ViewModel {
         
         let action: PassthroughSubject<Action, Never> = .init()
         
+        @Published var title: String
         @Published var isCollapsed: Bool
+        
         let description: String
         
-        init(description: String = "Номер карты или счета", isCollapsed: Bool = true) {
+        init(title: String = "", isCollapsed: Bool = true, description: String = "Номер карты или счета") {
             
-            self.description = description
+            self.title = title
             self.isCollapsed = isCollapsed
+            self.description = description
+        }
+        
+        convenience init(_ context: Context) {
+            self.init(title: context.title)
+        }
+        
+        func update(context: ProductSelectorView.ViewModel.Context) {
+            title = context.title
         }
     }
 }
@@ -286,11 +335,7 @@ struct ProductSelectorView: View {
     var body: some View {
         
         VStack(alignment: .leading, spacing: 14) {
-            
-            Text(viewModel.context.value.title)
-                .font(.textBodySR12160())
-                .foregroundColor(.mainColorsBlack)
-            
+
             switch viewModel.content {
             case let .product(productViewModel):
                 ProductView(viewModel: productViewModel)
@@ -315,75 +360,82 @@ extension ProductSelectorView {
         
         var body: some View {
             
-            HStack(alignment: .top, spacing: 16) {
+            VStack(alignment: .leading, spacing: 14) {
                 
-                if let cardIcon = viewModel.cardIcon {
-                    
-                    cardIcon
-                        .resizable()
-                        .frame(width: 32, height: 32)
-                        .offset(y: -3)
-                }
+                Text(viewModel.title)
+                    .font(.textBodySR12160())
+                    .foregroundColor(.mainColorsBlack)
                 
-                VStack(alignment: .leading, spacing: 2) {
+                HStack(alignment: .top, spacing: 16) {
                     
-                    HStack(alignment: .center, spacing: 10) {
+                    if let cardIcon = viewModel.cardIcon {
                         
-                        if let paymentIcon = viewModel.paymentIcon {
+                        cardIcon
+                            .resizable()
+                            .frame(width: 32, height: 32)
+                            .offset(y: -3)
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        
+                        HStack(alignment: .center, spacing: 10) {
                             
-                            paymentIcon
+                            if let paymentIcon = viewModel.paymentIcon {
+                                
+                                paymentIcon
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                            }
+                            
+                            Text(viewModel.name)
+                                .font(.textBodyMM14200())
+                                .foregroundColor(.textSecondary)
+                            
+                            Spacer()
+                            
+                            Text(viewModel.balance)
+                                .font(.textBodyMM14200())
+                                .foregroundColor(.textSecondary)
+                            
+                            Image.ic24ChevronDown
+                                .renderingMode(.template)
                                 .resizable()
                                 .frame(width: 24, height: 24)
+                                .foregroundColor(.mainColorsGray)
+                                .rotationEffect(viewModel.isCollapsed == false ? .degrees(0) : .degrees(-90))
                         }
                         
-                        Text(viewModel.name)
-                            .font(.textBodyMM14200())
-                            .foregroundColor(.textSecondary)
-                        
-                        Spacer()
-                        
-                        Text(viewModel.balance)
-                            .font(.textBodyMM14200())
-                            .foregroundColor(.textSecondary)
-                        
-                        Image.ic24ChevronDown
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .foregroundColor(.mainColorsGray)
-                            .rotationEffect(viewModel.isCollapsed == false ? .degrees(0) : .degrees(-90))
-                    }
-                    
-                    HStack {
-                        
-                        if let numberCard = viewModel.numberCard {
+                        HStack {
                             
-                            Circle()
-                                .frame(width: 3, height: 3)
-                                .foregroundColor(.mainColorsGray)
+                            if let numberCard = viewModel.numberCard {
+                                
+                                Circle()
+                                    .frame(width: 3, height: 3)
+                                    .foregroundColor(.mainColorsGray)
+                                
+                                Text(numberCard)
+                                    .font(.textBodySR12160())
+                                    .foregroundColor(.mainColorsGray)
+                                
+                                Circle()
+                                    .frame(width: 3, height: 3)
+                                    .foregroundColor(.mainColorsGray)
+                            }
                             
-                            Text(numberCard)
-                                .font(.textBodySR12160())
-                                .foregroundColor(.mainColorsGray)
-                            
-                            Circle()
-                                .frame(width: 3, height: 3)
-                                .foregroundColor(.mainColorsGray)
+                            if let description = viewModel.description {
+                                
+                                Text(description)
+                                    .font(.textBodySR12160())
+                                    .foregroundColor(.mainColorsGray)
+                            }
                         }
                         
-                        if let description = viewModel.description {
-                            
-                            Text(description)
-                                .font(.textBodySR12160())
-                                .foregroundColor(.mainColorsGray)
-                        }
-                    }
-                    
-                }.onTapGesture {
-                    
-                    withAnimation {
+                    }.onTapGesture {
                         
-                        viewModel.action.send(ProductSelectorAction.Collapsed.Product())
+                        withAnimation {
+                            
+                            viewModel.action.send(ProductSelectorAction.Collapsed.Product())
+                        }
                     }
                 }
             }
@@ -398,26 +450,33 @@ extension ProductSelectorView {
         
         var body: some View {
             
-            HStack {
-
-                Text(viewModel.description)
-                    .font(.textBodyMR14200())
-                    .foregroundColor(.mainColorsGray)
+            VStack(alignment: .leading, spacing: 14) {
                 
-                Spacer()
+                Text(viewModel.title)
+                    .font(.textBodySR12160())
+                    .foregroundColor(.mainColorsBlack)
                 
-                Image.ic24ChevronDown
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                    .foregroundColor(.mainColorsGray)
-                    .rotationEffect(viewModel.isCollapsed == false ? .degrees(0) : .degrees(-90))
-            
-            }.onTapGesture {
-                
-                withAnimation {
+                HStack {
                     
-                    viewModel.action.send(ProductSelectorAction.Collapsed.Placeholder())
+                    Text(viewModel.description)
+                        .font(.textBodyMR14200())
+                        .foregroundColor(.mainColorsGray)
+                    
+                    Spacer()
+                    
+                    Image.ic24ChevronDown
+                        .renderingMode(.template)
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(.mainColorsGray)
+                        .rotationEffect(viewModel.isCollapsed == false ? .degrees(0) : .degrees(-90))
+                    
+                }.onTapGesture {
+                    
+                    withAnimation {
+                        
+                        viewModel.action.send(ProductSelectorAction.Collapsed.Placeholder())
+                    }
                 }
             }
         }
@@ -436,15 +495,25 @@ enum ProductSelectorAction {
     enum Collapsed {
 
         struct Product: Action {}
-        
         struct Placeholder: Action {}
     }
 }
 
 extension ProductSelectorView.ViewModel.ProductViewModel {
     
-    static let sample: ProductSelectorView.ViewModel.ProductViewModel = .init(
-        id: 10002585800,
+    static let sample1: ProductSelectorView.ViewModel.ProductViewModel = .init(
+        id: 10002585801,
+        title: "Откуда",
+        cardIcon: .init("Platinum Card"),
+        paymentIcon: .init("Platinum Logo"),
+        name: "Platinum",
+        balance: "2,71 млн ₽",
+        numberCard: "2953",
+        description: "Все включено")
+    
+    static let sample2: ProductSelectorView.ViewModel.ProductViewModel = .init(
+        id: 10002585802,
+        title: "Куда",
         cardIcon: .init("Platinum Card"),
         paymentIcon: .init("Platinum Logo"),
         name: "Platinum",

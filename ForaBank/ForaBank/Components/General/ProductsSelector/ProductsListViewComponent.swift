@@ -58,6 +58,8 @@ extension ProductsListView {
                             self.products = Self.reduce(model, products: products)
                         }
                         
+                        action.send(ProductsListAction.Option.Selected())
+                        
                     }.store(in: &bindings)
             }
         }
@@ -160,16 +162,23 @@ struct ProductsListView: View {
                 HStack(spacing: 8) {
                     
                     ForEach(viewModel.products) { product in
-                        ProductView(viewModel: product)
-                            .frame(width: 112, height: 72)
-                            .onTapGesture {
-                                viewModel.action.send(ProductsListAction.SelectedProduct(id: product.id))
-                            }
+                        
+                        ZStack {
+    
+                            RoundedRectangle(cornerRadius: 12)
+                                .frame(width: 62, height: 64)
+                                .foregroundColor(.mainColorsBlack)
+                                .opacity(0.15)
+                                .offset(x: 0, y: 13)
+                                .blur(radius: 8)
+                            
+                            ProductView(viewModel: product)
+                                .frame(width: 112, height: 72)
+                            
+                        }.padding(.bottom, 20)
                     }
-                    
-                }.padding(.bottom, 8)
-                
-            }.shadow(color: .mainColorsGray.opacity(0.2), radius: 8, y: 10)
+                }
+            }
         }
     }
 }
@@ -178,9 +187,9 @@ struct ProductsListView: View {
 
 enum ProductsListAction {
     
-    struct SelectedProduct: Action {
+    enum Option {
         
-        let id: ProductData.ID
+        struct Selected: Action {}
     }
 }
 
