@@ -128,17 +128,22 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                 
                 switch action {
                 case let payload as OperationDetailViewModelAction.ShowInfo:
-                    sheet = .init(type: .info(payload.viewModel))
+                    if #available(iOS 14.5, *) {
+                        sheet = .init(type: .info(payload.viewModel))
+                    }
                 
                 case let payload as OperationDetailViewModelAction.ShowDocument:
-                    let printFormViewModel = PrintFormView.ViewModel(type: .operation(paymentOperationDetailId: payload.paymentOperationDetailID, printFormType: payload.printFormType), model: model)
-                    sheet = .init(type: .printForm(printFormViewModel))
+                    if #available(iOS 14.5, *) {
+                        sheet = .init(type: .printForm(payload.viewModel))
+                    }
                     
                 case let payload as OperationDetailViewModelAction.ShowChangeReturn:
                     fullScreenSheet = .init(type: .changeReturn(payload.viewModel))
                     
                 case _ as OperationDetailViewModelAction.CloseSheet:
-                    sheet = nil
+                    if #available(iOS 14.5, *) {
+                        sheet = nil
+                    }
                     
                 case _ as OperationDetailViewModelAction.CloseFullScreenSheet:
                     fullScreenSheet = nil
@@ -212,8 +217,7 @@ enum OperationDetailViewModelAction {
     
     struct ShowDocument: Action {
         
-        let paymentOperationDetailID: Int
-        let printFormType: PrintFormType
+        let viewModel: PrintFormView.ViewModel
     }
     
     struct ShowInfo: Action {
@@ -254,7 +258,16 @@ private extension OperationDetailViewModel {
         let paymentOperationDetailID = operationDetail.paymentOperationDetailId
         let printFormType = operationDetail.printFormType
         
-        return FeatureButtonViewModel(kind: .document, icon: "Operation Details Document", name: "Документ", action: { [weak self] in self?.action.send(OperationDetailViewModelAction.ShowDocument(paymentOperationDetailID: paymentOperationDetailID, printFormType: printFormType))})
+        return FeatureButtonViewModel(kind: .document, icon: "Operation Details Document", name: "Документ", action: { [weak self] in
+            
+            guard let self = self else {
+                return
+            }
+            
+            let printFormViewModel = PrintFormView.ViewModel(type: .operation(paymentOperationDetailId: paymentOperationDetailID, printFormType: printFormType), model: self.model)
+            
+            self.action.send(OperationDetailViewModelAction.ShowDocument(viewModel: printFormViewModel))
+        })
     }
     
     func templateButtonViewModel(with productStatement: ProductStatementData, operationDetail: OperationDetailData) -> FeatureButtonViewModel? {

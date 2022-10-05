@@ -125,8 +125,11 @@ struct ProductProfileView: View {
             case let .printForm(printFormViewModel):
                 PrintFormView(viewModel: printFormViewModel)
                 
-            case .placesMap(let placesViewModel):
+            case let .placesMap(placesViewModel):
                 PlacesView(viewModel: placesViewModel)
+                
+            case let .info(operationDetailInfoViewModel):
+                OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
             }
         })
         .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
