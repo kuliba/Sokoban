@@ -154,7 +154,7 @@ extension Model {
                     
                     let result = try await ratesFetchWithCommand(command: command)
 
-                    if result.phone != "", self.bankClientInfo.value.contains(where: {$0?.phone == result.phone}) {
+                    if result.phone != "" || self.bankClientInfo.value.contains(where: {$0?.phone == result.phone}) {
                         
                         self.bankClientInfo.value.append(result)
                         

@@ -21,6 +21,7 @@ extension SearchBarComponent {
         let placeHolder: PlaceHolder
         let cancelButtonLabel = "Отмена"
         var textColor: Color
+        let phoneNumberKit = PhoneNumberKit()
         
         private var bindings = Set<AnyCancellable>()
         
@@ -40,13 +41,36 @@ extension SearchBarComponent {
             self.init(placeHolder: placeHolder, textColor: .textPlaceholder)
         }
         
-        private func bind() {
-        }
-        
         enum PlaceHolder: String {
             
             case contacts = "Номер телефона или имя"
             case banks = "Введите название банка"
+        }
+        
+        private func bind() {
+            
+            $text
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] text in
+                    
+//                    self.parseNumber(text)
+                    
+                }.store(in: &bindings)
+        }
+        
+        func parseNumber(_ number: String) {
+            do {
+                let phoneNumber = try phoneNumberKit.parse(number, ignoreType: true)
+                self.text = self.phoneNumberKit.format(phoneNumber, toType: .international)
+//                self.parsedCountryCodeLabel.text = String(phoneNumber.countryCode)
+                if let regionCode = phoneNumberKit.mainCountry(forCode: phoneNumber.countryCode) {
+                    let country = Locale.current.localizedString(forRegionCode: regionCode)
+//                    self.parsedCountryLabel.text = country
+                }
+            } catch {
+//                self.clearResults()
+                print("Something went wrong")
+            }
         }
     }
 }
@@ -67,6 +91,7 @@ struct SearchBarComponent: View {
                     self.viewModel.isEditing = true
                 }
                 .foregroundColor(viewModel.textColor)
+                
             
             if viewModel.isEditing {
                 
