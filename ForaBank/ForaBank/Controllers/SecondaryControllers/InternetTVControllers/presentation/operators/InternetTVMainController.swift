@@ -302,15 +302,13 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
             
             InternetTVApiRequests.getClientInfo()
             
-            if let dc = segue.destination as? UINavigationController,
-               let targetController = dc.topViewController as? GIBDDFineDetailsFormController {
-                if let latestOp = InternetTVMainViewModel.latestOp {
-                    targetController.operatorData = latestOp.op
-                    targetController.latestOperation = latestOp
-                    InternetTVMainViewModel.latestOp = nil
-                } else {
-                    targetController.operatorData = customGroup?.op
-                }
+            let targetController = segue.destination as? GIBDDFineDetailsFormController
+            if let latestOp = InternetTVMainViewModel.latestOp {
+                targetController?.operatorData = latestOp.op
+                targetController?.latestOperation = latestOp
+                InternetTVMainViewModel.latestOp = nil
+            } else {
+                targetController?.operatorData = customGroup?.op
             }
             
         case .none:

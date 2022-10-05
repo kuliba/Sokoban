@@ -79,7 +79,8 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
         if fromPaymentVc == false {
             viewModel.puref = operatorData?.puref ?? ""
         }
-
+        btnContract.setTitleColor(.black, for: .normal)
+        btnTransponder.setTitleColor(.black, for: .normal)
         selectedValue = "20"
         latestOperation?.additionalList.forEach { item in
             if item.fieldName == "a3_SearchType_1_1" {

@@ -140,38 +140,16 @@ extension AuthProductsView {
         
         var body: some View {
             
-            if #available(iOS 14.0, *) {
+            Link(destination: viewModel.url) {
                 
-                Link(destination: viewModel.url) {
+                HStack {
                     
-                    HStack {
-                        
-                        viewModel.icon
-                            .foregroundColor(color)
-                        
-                        Text(viewModel.title)
-                            .foregroundColor(color)
-                            .multilineTextAlignment(.leading)
-                    }
-                }
-                
-            } else {
-                
-                Button{
+                    viewModel.icon
+                        .foregroundColor(color)
                     
-                    UIApplication.shared.open(viewModel.url)
-                    
-                } label: {
-                    
-                    HStack {
-                        
-                        viewModel.icon
-                            .foregroundColor(color)
-                        
-                        Text(viewModel.title)
-                            .foregroundColor(color)
-                            .multilineTextAlignment(.leading)
-                    }
+                    Text(viewModel.title)
+                        .foregroundColor(color)
+                        .multilineTextAlignment(.leading)
                 }
             }
         }
@@ -183,34 +161,15 @@ extension AuthProductsView {
         
         var body: some View {
             
-            if #available(iOS 14.0, *) {
+            Link(destination: viewModel.url) {
                 
-                Link(destination: viewModel.url) {
-                    
-                    Text(viewModel.title)
-                        .foregroundColor(.textWhite)
-                        .padding(.vertical, 12)
-                        .frame(width: 166)
-                        .background(Color.buttonPrimary)
-                        .cornerRadius(8)
-                }
-                
-            } else {
-                
-                Button{
-                    
-                    UIApplication.shared.open(viewModel.url)
-                    
-                } label: {
-                    
-                    Text(viewModel.title)
-                        .foregroundColor(.textWhite)
-                        .padding(.vertical, 12)
-                        .frame(width: 166)
-                        .background(Color.buttonPrimary)
-                        .cornerRadius(8)
-                }
-            }
+                Text(viewModel.title)
+                    .foregroundColor(.textWhite)
+                    .padding(.vertical, 12)
+                    .frame(width: 166)
+                    .background(Color.buttonPrimary)
+                    .cornerRadius(8)
+            }   
         }
     }
 }
