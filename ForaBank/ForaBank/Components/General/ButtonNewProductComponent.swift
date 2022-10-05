@@ -87,76 +87,37 @@ struct ButtonNewProduct: View {
             }.buttonStyle(PushButtonStyle())
             
         case let .url(url):
-            if #available(iOS 14.0, *) {
+            
+            Link(destination: url) {
                 
-                Link(destination: url) {
+                ZStack(alignment: .leading) {
                     
-                    ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 12)
+                        .foregroundColor(.mainColorsGrayLightest)
+                    
+                    VStack(alignment: .leading) {
                         
-                        RoundedRectangle(cornerRadius: 12)
-                            .foregroundColor(.mainColorsGrayLightest)
+                        viewModel.icon
+                            .renderingMode(.original)
                         
-                        VStack(alignment: .leading) {
-                            
-                            viewModel.icon
-                                .renderingMode(.original)
-                            
-                            Spacer()
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                
-                                Text(viewModel.title)
-                                    .font(.textBodyMM14200())
-                                    .foregroundColor(.textSecondary)
-                                
-                                Text(viewModel.subTitle)
-                                    .font(.textBodyMR14200())
-                                    .foregroundColor(.textPlaceholder)
-                                    .lineLimit(1)
-                            }
-                            
-                        }.padding(11)
-                    }
-                    
-                }.buttonStyle(PushButtonStyle())
-                
-            } else {
-                
-                Button{
-                    
-                    UIApplication.shared.open(url)
-                    
-                } label: {
-                    
-                    ZStack(alignment: .leading) {
+                        Spacer()
                         
-                        RoundedRectangle(cornerRadius: 12)
-                            .foregroundColor(.mainColorsGrayLightest)
-                        
-                        VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 4) {
                             
-                            viewModel.icon
-                                .renderingMode(.original)
+                            Text(viewModel.title)
+                                .font(.textBodyMM14200())
+                                .foregroundColor(.textSecondary)
                             
-                            Spacer()
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                
-                                Text(viewModel.title)
-                                    .font(.textBodyMM14200())
-                                    .foregroundColor(.textSecondary)
-                                
-                                Text(viewModel.subTitle)
-                                    .font(.textBodyMR14200())
-                                    .foregroundColor(.textPlaceholder)
-                                    .lineLimit(1)
-                            }
+                            Text(viewModel.subTitle)
+                                .font(.textBodyMR14200())
+                                .foregroundColor(.textPlaceholder)
+                                .lineLimit(1)
                         }
-                        .padding(11)
-                    }
-                    
-                }.buttonStyle(PushButtonStyle())
-            }
+                        
+                    }.padding(11)
+                }
+                
+            }.buttonStyle(PushButtonStyle())
         }
     }
 }

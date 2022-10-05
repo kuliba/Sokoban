@@ -102,7 +102,7 @@ struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModi
     
     func body(content: Content) -> some View {
         
-        if #available(iOS 14.0, *) {
+        if item != nil {
             
             content
                 .transaction({ transaction in
@@ -119,17 +119,13 @@ struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModi
             
         } else {
             
-            content.sheet(item: $item) { item in
-                
-                sheetContent(item)
-            }
+            content
         }
     }
 }
 
 //MARK: - Bottom Sheet View
 
-@available(iOS 14.0, *)
 struct BottomSheetView<Content: View>: View {
     
     @Binding var isPresented: Bool
@@ -232,7 +228,6 @@ struct BottomSheetView<Content: View>: View {
     }
 }
 
-@available(iOS 14.0, *)
 extension BottomSheetView {
     
     struct DimmView: View {

@@ -63,6 +63,8 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        btnContract.setTitleColor(.black, for: .normal)
+        btnTransponder.setTitleColor(.black, for: .normal)
         if operatorData == nil {
             operatorData = customGroup?.childsOperators[0]
         } else {

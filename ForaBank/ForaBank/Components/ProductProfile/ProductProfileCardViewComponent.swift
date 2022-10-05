@@ -398,34 +398,27 @@ struct ProductProfileCardView: View {
             
             SelectorView(viewModel: viewModel.selector)
             
-            if #available(iOS 14.0, *) {
+            TabView(selection: $viewModel.activeProductId) {
                 
-                TabView(selection: $viewModel.activeProductId) {
+                ForEach(viewModel.products) { product in
                     
-                    ForEach(viewModel.products) { product in
+                    ZStack {
+                        // shadow
+                        RoundedRectangle(cornerRadius: 12)
+                            .offset(.init(x: 0, y: 6))
+                            .foregroundColor(.mainColorsBlackMedium)
+                            .opacity(0.3)
+                            .blur(radius: 10)
+                            .frame(width: shadowWidth(for: product), height: 165)
                         
-                        ZStack {
-                            // shadow
-                            RoundedRectangle(cornerRadius: 12)
-                                .offset(.init(x: 0, y: 6))
-                                .foregroundColor(.mainColorsBlackMedium)
-                                .opacity(0.3)
-                                .blur(radius: 10)
-                                .frame(width: shadowWidth(for: product), height: 165)
-                            
-                            ProductView(viewModel: product)
-                                .frame(width: productWidth(for: product), height: 160)
-                            
-                        }.tag(product.id)
-                    }
+                        ProductView(viewModel: product)
+                            .frame(width: productWidth(for: product), height: 160)
+                        
+                    }.tag(product.id)
                 }
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .frame(height: 210)
-                
-            } else {
-                
-                // Fallback on earlier versions
             }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .frame(height: 210)
         }
     }
     

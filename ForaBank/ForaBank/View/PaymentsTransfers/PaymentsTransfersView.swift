@@ -182,8 +182,6 @@ struct PaymentsTransfersView: View {
             case .anotherCard(let anotherCardViewModel):
                 AnotherCardView(viewModel: anotherCardViewModel)
                     .edgesIgnoringSafeArea(.bottom)
-                    .navigationBarTitle("", displayMode: .inline)
-                    .frame(height: 494)
                 
             case .qrScanner(let qrViewModel):
                 QrScannerView(viewModel: qrViewModel)
@@ -193,6 +191,24 @@ struct PaymentsTransfersView: View {
             }
             
         })
+        .bottomSheet(item: $viewModel.bottomSheet) { sheet in
+            
+            switch sheet.type {
+            case let .exampleDetail(title):
+                ExampleDetailMock(title: title)
+            
+            case let .meToMe(viewModel):
+                MeToMeView(viewModel: viewModel)
+                    .edgesIgnoringSafeArea(.bottom)
+                    .frame(height: 474)
+                
+            case .anotherCard(let model):
+                AnotherCardView(viewModel: model)
+                    .edgesIgnoringSafeArea(.bottom)
+                    .navigationBarTitle("", displayMode: .inline)
+                    .frame(height: 494)
+            }
+        }
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })

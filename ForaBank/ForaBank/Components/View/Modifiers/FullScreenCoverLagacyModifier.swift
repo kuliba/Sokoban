@@ -24,37 +24,9 @@ struct FullScreenCoverLegacy<ViewModel: Identifiable, CoverContent: View>: ViewM
     
     func body(content: Content) -> some View {
         
-        if #available(iOS 14.0, *) {
-            
-            content
-                .fullScreenCover(item: $viewModel, content: coverContent)
-            
-        } else {
-            
-            GeometryReader { geo in
-                
-                ZStack {
-                    
-                    Color.clear
-                    
-                    content
-                    
-                    if let viewModel = viewModel {
-                        
-                        withAnimation {
-                            
-                            ZStack {
-                                
-                                coverBackgroundColor
-                                coverContent(viewModel)
-                            }
-                            .animation(.spring())
-                            .transition(.move(edge: .bottom))
-                        }
-                    }
-                }
-            }
-        }
+        content
+            .fullScreenCover(item: $viewModel, content: coverContent)
+        
     }
 }
 

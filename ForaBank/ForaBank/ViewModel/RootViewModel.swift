@@ -155,7 +155,7 @@ class RootViewModel: ObservableObject, Resetable {
                     }
                     link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {[weak self] in
                         self?.action.send(RootViewModelAction.CloseLink())
-                    }, bottomSheet: .init(sheetType: .sbpay(.init(model, personAgreements: payload.conditions, rootActions: rootActions)))))
+                    }, action: UserAccountViewModelAction.OpenSbpPay(sbpPay: .init(model, personAgreements: payload.conditions, rootActions: rootActions))))
                 
                 case _ as RootViewModelAction.CloseAlert:
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.CloseAlert")
@@ -192,8 +192,8 @@ class RootViewModel: ObservableObject, Resetable {
                         model.action.send(ModelAction.DeepLink.Clear())
 
                     case let .sbpPay(tokenIntent):
-                        self.action.send(ModelAction.SbpPay.Register.Request(tokenIntent: tokenIntent))
-                        self.action.send(ModelAction.FastPaymentSettings.ContractFindList.Request())
+                        self.model.action.send(ModelAction.SbpPay.Register.Request(tokenIntent: tokenIntent))
+                        self.model.action.send(ModelAction.FastPaymentSettings.ContractFindList.Request())
                     }
                     
                 case let payload as ModelAction.Notification.Transition.Process:

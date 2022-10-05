@@ -81,45 +81,19 @@ extension SbpPayView {
                 
                 ForEach(viewModel, id: \.self) { condition in
                     
-                    
-                    if #available(iOS 14.0, *) {
+                    Link(destination: condition.link) {
                         
-                        Link(destination: condition.link) {
+                        HStack(alignment: .top, spacing: 24) {
                             
-                            HStack(alignment: .top, spacing: 24) {
-                                
-                                condition.image
-                                    .foregroundColor(.iconGray)
-                                
-                                Text(condition.title)
-                                    .foregroundColor(.mainColorsBlack)
-                                    .multilineTextAlignment(.leading)
-                                    .font(.textBodyMR14200())
-                                
-                                Spacer()
-                            }
-                        }
-                        
-                    } else {
-                        
-                        Button{
+                            condition.image
+                                .foregroundColor(.iconGray)
                             
-                            UIApplication.shared.open(condition.link)
+                            Text(condition.title)
+                                .foregroundColor(.mainColorsBlack)
+                                .multilineTextAlignment(.leading)
+                                .font(.textBodyMR14200())
                             
-                        } label: {
-                            
-                            HStack(alignment: .top, spacing: 24) {
-                                
-                                condition.image
-                                    .foregroundColor(.iconGray)
-                                
-                                Text(condition.title)
-                                    .foregroundColor(.mainColorsBlack)
-                                    .multilineTextAlignment(.leading)
-                                    .font(.textBodyMR14200())
-                                
-                                Spacer()
-                            }
+                            Spacer()
                         }
                     }
                 }

@@ -39,7 +39,7 @@ class UserAccountViewModel: ObservableObject {
         self.deleteAccountButton = deleteAccountButton
     }
     
-    init(model: Model, clientInfo: ClientInfoData, dismissAction: @escaping () -> Void, bottomSheet: BottomSheet? = nil) {
+    init(model: Model, clientInfo: ClientInfoData, dismissAction: @escaping () -> Void, action: Action? = nil) {
         
         self.model = model
         sections = []
@@ -61,9 +61,12 @@ class UserAccountViewModel: ObservableObject {
                 self?.action.send(UserAccountViewModelAction.DeleteAction())
             })
         
-        self.bottomSheet = bottomSheet
-        
         bind()
+        
+        if let action = action {
+            
+            self.action.send(action)
+        }
     }
     
     func bind(documentInfoViewModel: UserAccountDocumentInfoView.ViewModel) {
@@ -257,6 +260,16 @@ class UserAccountViewModel: ObservableObject {
                 case _ as UserAccountViewModelAction.DeleteInfoAction:
                     
                     bottomSheet = .init(sheetType: .deleteInfo(.exitInfoViewModel))
+                
+                case let payload as UserAccountViewModelAction.OpenSbpPay:
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) { [weak self] in
+                        
+                        withAnimation {
+                            
+                            self?.bottomSheet = .init(sheetType: .sbpay(payload.sbpPay))
+                        }
+                    }
                     
                 default:
                     break
@@ -466,7 +479,12 @@ enum UserAccountViewModelAction {
     struct ChangeUserName: Action {}
     
     struct AvatarAction: Action {}
-    
+
+    struct OpenSbpPay: Action {
+        
+        let sbpPay: SbpPayViewModel
+    }
+
     struct ExitAction: Action {}
     
     struct DeleteAction: Action {}

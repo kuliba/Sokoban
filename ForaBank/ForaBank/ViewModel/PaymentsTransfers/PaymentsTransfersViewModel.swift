@@ -233,18 +233,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }, template: nil))
                             
                         case .anotherCard:
-                            if #available(iOS 14, *) {
-                                bottomSheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
-                                    self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
-                                })))
-                            } else {
-                                sheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
-                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Sheet())
-                                })))
-                            }
+                            bottomSheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                            })))
                             
                         case .betweenSelf:
-                            
+
                             let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .general) { [weak self] in
                                 self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
                             }
@@ -254,6 +248,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }
 
                     case .byBankDetails:
+
                             link = .transferByRequisites(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }))
                             
