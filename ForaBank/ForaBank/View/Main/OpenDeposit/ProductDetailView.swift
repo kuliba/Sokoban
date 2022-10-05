@@ -333,8 +333,13 @@ struct ProductDetailView: View {
                         .padding(.bottom, 50)
                 }
                 .padding(20)
+                .padding(.bottom, 60)
             }
             
+            Color.white
+                .frame(height: 100)
+                .opacity(0.7)
+                
             NavigationLink(destination:
                             ConfirmView(viewModel: viewModel)
                             .edgesIgnoringSafeArea(.bottom)
@@ -349,6 +354,7 @@ struct ProductDetailView: View {
                     .foregroundColor(.white)
                     .cornerRadius(8)
                     .padding(.bottom, 39)
+                
             }
             
             DepositShowBottomSheetView(viewModel: viewModel.calculator.bottomSheet)
@@ -464,38 +470,16 @@ extension ProductDetailView {
                         Spacer()
                     }
                     
+                    
+             
                     VStack(alignment: .center, spacing: 0) {
                         
-                        //                        HStack {
-                        //
-                        //                            Color.white
-                        //                                .background(Color.white)
-                        //                                .frame(width: 91)
-                        //
-                        //                            HStack {
-                        //                                ForEach(viewModel.date, id: \.self) { date in
-                        //
-                        //                                    Text(date)
-                        //                                        .frame(alignment: .center)
-                        //                                        .background(Color.blue)
-                        //                                        .multilineTextAlignment(.center)
-                        //                                }
-                        //                            }
-                        //                        }
-                        //                        .padding(.top, 9)
-                        //                        .padding(.bottom, 5)
-                        //                        .background(Color.white)
-                        //                        .padding(.horizontal, -20)
-                        
                         HStack {
-                            
-                            Color.white
-                                .padding(.leading, 20)
-                                .frame(width: 91, alignment: .leading)
                             
                             Spacer()
                             
                             ForEach(viewModel.date, id: \.self) { date in
+                                
                                 Text(date)
                                     .frame(width: 91)
                                     .padding(.trailing, 20)
@@ -550,6 +534,7 @@ extension ProductDetailView {
                                 .padding(.horizontal, -20)
                             }
                         }
+    
                     }
                     .font(.system(size: 12))
                 }
@@ -918,10 +903,14 @@ extension ProductDetailView {
 }
 
 struct ProductDetailView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        NavigationView {
+        
+        Group {
             
             ProductDetailView(viewModel: .sample)
+            
+            ProductDetailView.PercentView(viewModel: OpenProductViewModel.percentSample)
         }
     }
     
