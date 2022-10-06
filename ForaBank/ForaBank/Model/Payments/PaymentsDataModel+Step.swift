@@ -11,12 +11,12 @@ extension Payments.Operation.Step {
     
     typealias Parameter = Payments.Parameter
     
-    var parametersIds: [Parameter.ID] { parameters.map({ $0.id })}
+    var parametersIds: [Parameter.ID] { parameters.map({ $0.id }) }
     
     func status(with parameters: [PaymentsParameterRepresentable]) -> Status {
         
-        guard front.isCompleted == false else {
-            return .updating
+        guard front.isCompleted == true else {
+            return .editing
         }
         
         if let processedResults = processedResults(with: parameters) {
@@ -54,16 +54,6 @@ extension Payments.Operation.Step {
             }
         }
     }
-
-    func termsParameters(with parameters: [PaymentsParameterRepresentable]) -> [Parameter]? {
-        
-        guard let terms = back?.terms else {
-            return nil
-        }
-        
-        let termsParametersIds = terms.map{ $0.parameterId }
-        return parameters.filter({ termsParametersIds.contains($0.id) }).map{ $0.parameter }
-    }
     
     func processedResults(with parameters: [PaymentsParameterRepresentable]) -> [ProcessedData]? {
         
@@ -75,6 +65,11 @@ extension Payments.Operation.Step {
         
         let termsParametersIds = termsSorted.map{ $0.parameterId }
         let currentParameters = parameters.filter({ termsParametersIds.contains($0.id) }).map{ $0.parameter }
+        
+        // check if we have parameters for terms
+        guard currentParameters.count > 0 else {
+            return nil
+        }
         
         let processedParametersSorted = processed.sorted(by: { $0.id < $1.id })
         let impacts = termsSorted.map{ $0.impact }
@@ -120,7 +115,7 @@ extension Payments.Operation.Step {
     
     func updated(parameter: Parameter) -> Payments.Operation.Step {
         
-        var updatedParameters = parameters
+        var updatedParameters = [PaymentsParameterRepresentable]()
         for param in parameters {
             
             if param.id == parameter.id {
@@ -134,7 +129,10 @@ extension Payments.Operation.Step {
             }
         }
         
-        return .init(parameters: updatedParameters, front: front, back: back)
+        let completeParamsCount = updatedParameters.compactMap({ $0.value }).count
+        let isComplete = updatedParameters.count == completeParamsCount
+        
+        return .init(parameters: updatedParameters, front: .init(visible: front.visible, isCompleted: isComplete), back: back)
     }
     
     func contains(parameterId: Parameter.ID) -> Bool {

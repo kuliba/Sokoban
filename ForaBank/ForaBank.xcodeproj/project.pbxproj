@@ -924,6 +924,7 @@
 		77C3829827E1FEAD00B5246E /* PaymentsProductSelectorViewComponent+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C3829727E1FEAD00B5246E /* PaymentsProductSelectorViewComponent+Legacy.swift */; };
 		77C3829A27E2061800B5246E /* PaymentsCardViewComponent+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C3829927E2061800B5246E /* PaymentsCardViewComponent+Legacy.swift */; };
 		77C3829E27E3351B00B5246E /* TextFieldFormatableViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C3829D27E3351B00B5246E /* TextFieldFormatableViewComponentTests.swift */; };
+		77CCEA6628EF034000C62215 /* PaymentsStepTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77CCEA6528EF034000C62215 /* PaymentsStepTests.swift */; };
 		77D2D9AE275AB90A0097234D /* RealmResults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9AC275AB9090097234D /* RealmResults+Extension.swift */; };
 		77D2D9AF275AB90A0097234D /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9AD275AB90A0097234D /* Array+Extensions.swift */; };
 		77D2D9B2275AB9280097234D /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9B0275AB9280097234D /* Item.swift */; };
@@ -2332,6 +2333,7 @@
 		77C3829727E1FEAD00B5246E /* PaymentsProductSelectorViewComponent+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsProductSelectorViewComponent+Legacy.swift"; sourceTree = "<group>"; };
 		77C3829927E2061800B5246E /* PaymentsCardViewComponent+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsCardViewComponent+Legacy.swift"; sourceTree = "<group>"; };
 		77C3829D27E3351B00B5246E /* TextFieldFormatableViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFormatableViewComponentTests.swift; sourceTree = "<group>"; };
+		77CCEA6528EF034000C62215 /* PaymentsStepTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsStepTests.swift; sourceTree = "<group>"; };
 		77D2D9AC275AB9090097234D /* RealmResults+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RealmResults+Extension.swift"; sourceTree = "<group>"; };
 		77D2D9AD275AB90A0097234D /* Array+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		77D2D9B0275AB9280097234D /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
@@ -4710,6 +4712,7 @@
 			isa = PBXGroup;
 			children = (
 				7758401A27B2A0CB00251969 /* PaymentsOperationTests.swift */,
+				77CCEA6528EF034000C62215 /* PaymentsStepTests.swift */,
 				77504C8C28C8B07C00A2F444 /* PaymentsParameterHelpersTests.swift */,
 			);
 			path = Payments;
@@ -8774,6 +8777,7 @@
 				774A82CB27BAEB6100E5A5E9 /* UserDefaultsSettingsAgentTests.swift in Sources */,
 				5A5ABF9227AAF60000D548AA /* ServerCommandsPaymentOperationDetailTests.swift in Sources */,
 				77E289A228592A8E0048141B /* CalendarExtensionsTests.swift in Sources */,
+				77CCEA6628EF034000C62215 /* PaymentsStepTests.swift in Sources */,
 				684533752798532300104A8B /* CsrfDataTests.swift in Sources */,
 				0BCFBE032817F77D003F2F36 /* ModelNotificationsTests.swift in Sources */,
 				77EC58BB27712AF50054D75C /* TransferAnywayTests.swift in Sources */,

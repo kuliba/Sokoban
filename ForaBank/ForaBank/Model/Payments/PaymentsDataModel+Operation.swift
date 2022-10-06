@@ -13,7 +13,9 @@ extension Payments.Operation {
     
     var nextStep: Int { steps.count }
     
-    var parameters: [PaymentsParameterRepresentable] { steps.flatMap({ $0.parameters })}
+    var parameters: [PaymentsParameterRepresentable] { steps.flatMap({ $0.parameters }) }
+    var visibleParametersIds: [Payments.Parameter.ID] { steps.flatMap({ $0.front.visible }) }
+    var visibleParameters: [PaymentsParameterRepresentable] { parameters.filter({ visibleParametersIds.contains($0.id)} ) }
 
     /// Appends new parameters to operation.
     /// - Parameters:
@@ -25,10 +27,19 @@ extension Payments.Operation {
         let existingParametersIds = Set(parameters.map({ $0.id }))
         let appendingParametersIds = Set(step.parameters.map({ $0.id }))
         
+        // check for duplicate parameters
         guard existingParametersIds.intersection(appendingParametersIds).count == 0 else {
-            throw Payments.Operation.Error.appendingDuplicateParameters
+            throw Payments.Operation.Error.appendingStepDuplicateParameters
         }
         
+        let existingVisibleParametersIds = Set(visibleParametersIds)
+        let appendingVisibleParametersIds = Set(step.front.visible)
+        
+        // check for duplicate visible parameters
+        guard existingVisibleParametersIds.intersection(appendingVisibleParametersIds).count == 0 else {
+            throw Payments.Operation.Error.appendingStepDuplicateVisibleParameters
+        }
+
         if let terms = step.back?.terms {
             
             let allParametersIds = existingParametersIds.union(appendingParametersIds)
@@ -36,7 +47,7 @@ extension Payments.Operation {
             
             // check if terms contains in parameters
             guard requiredParametersIds.isSubset(of: allParametersIds) else {
-                throw Payments.Operation.Error.appendingIncorrectParametersTerms
+                throw Payments.Operation.Error.appendingStepIncorrectParametersTerms
             }
             
             var stepsUpdated = steps
@@ -58,7 +69,7 @@ extension Payments.Operation {
     /// - Returns: updated operation
     func updated(with update: [Parameter]) -> Payments.Operation {
         
-        var updatedSteps = steps
+        var updatedSteps = [Payments.Operation.Step]()
         for step in steps {
             
             var updatedStep = step
@@ -123,7 +134,7 @@ extension Payments.Operation {
         for (index, step) in steps.enumerated() {
             
             switch step.status(with: parameters) {
-            case .updating:
+            case .editing:
                 return .frontUpdate
                 
             case let .invalidated(impact):
@@ -308,8 +319,9 @@ extension Payments.Operation {
     
     enum Error: Swift.Error {
         
-        case appendingDuplicateParameters
-        case appendingIncorrectParametersTerms
+        case appendingStepDuplicateParameters
+        case appendingStepDuplicateVisibleParameters
+        case appendingStepIncorrectParametersTerms
         case rollbackStepIndexOutOfRange
         case processStepIndexOutOfRange
         case stepMissingTermsForProcessedParameters

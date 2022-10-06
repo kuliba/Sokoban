@@ -111,7 +111,7 @@ extension Payments.Operation {
         let front: Front
         let back: Back?
         
-        struct Front {
+        struct Front: Equatable {
             
             /// Parameters visible in UI
             let visible: [Parameter.ID]
@@ -120,7 +120,7 @@ extension Payments.Operation {
             let isCompleted: Bool
         }
         
-        struct Back {
+        struct Back: Equatable {
             
             let stage: Stage
             
@@ -131,7 +131,7 @@ extension Payments.Operation {
             let processed: [Parameter]?
         }
 
-        struct Term {
+        struct Term: Equatable {
             
             /// parameter id required to process
             let parameterId: Parameter.ID
@@ -149,10 +149,10 @@ extension Payments.Operation {
             case restart
         }
         
-        enum Status {
+        enum Status: Equatable {
             
             /// updating parameters on front side
-            case updating
+            case editing
             
             /// pending parameters to back side
             case pending(parameters: [Parameter], stage: Stage)

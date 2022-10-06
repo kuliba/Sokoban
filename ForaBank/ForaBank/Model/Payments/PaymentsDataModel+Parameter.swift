@@ -12,7 +12,7 @@ import Foundation
 protocol PaymentsParameterRepresentable {
 
     var id: Payments.Parameter.ID { get }
-    var value: Payments.Parameter.Value? { get }
+    var value: Payments.Parameter.Value { get }
     
     var parameter: Payments.Parameter { get }
     
@@ -33,7 +33,7 @@ protocol PaymentsParameterRepresentable {
 extension PaymentsParameterRepresentable {
 
     var id: Payments.Parameter.ID { parameter.id }
-    var value: Payments.Parameter.Value? { parameter.value }
+    var value: Payments.Parameter.Value { parameter.value }
     
     var isEditable: Bool { false }
     var present: Payments.ParameterPresentType { .feed }
