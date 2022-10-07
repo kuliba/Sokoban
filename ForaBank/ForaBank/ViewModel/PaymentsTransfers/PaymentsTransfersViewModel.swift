@@ -354,7 +354,7 @@ extension PaymentsTransfersViewModel {
         var animationSpeed: Double {
             
             switch type {
-            case .meToMe: return 0.3
+            case .meToMe: return 0.4
             default: return 0.5
             }
         }

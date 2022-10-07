@@ -461,7 +461,7 @@ extension CurrencySwapView.ViewModel {
         }
         
         lazy var textField: TextFieldFormatableView.ViewModel = .init(
-            type: .currencyWallet,
+            type: .currency,
             value: currencyAmount,
             formatter: .decimal(),
             isEnabled: true,

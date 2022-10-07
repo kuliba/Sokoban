@@ -13,7 +13,6 @@ import Combine
 class PaymentsMeToMeViewModel: ObservableObject {
     
     private let model: Model
-    private let mode: Mode
     
     let swapViewModel: ProductsSwapView.ViewModel
     let paymentsAmount: PaymentsAmountView.ViewModel
@@ -21,10 +20,11 @@ class PaymentsMeToMeViewModel: ObservableObject {
     let title: String
     let closeAction: () -> Void
     
-    init(_ model: Model, mode: Mode, swapViewModel: ProductsSwapView.ViewModel, paymentsAmount: PaymentsAmountView.ViewModel, title: String = "Между своими", closeAction: @escaping () -> Void) {
+    private var bindings = Set<AnyCancellable>()
+    
+    init(_ model: Model, swapViewModel: ProductsSwapView.ViewModel, paymentsAmount: PaymentsAmountView.ViewModel, title: String = "Между своими", closeAction: @escaping () -> Void) {
         
         self.model = model
-        self.mode = mode
         self.swapViewModel = swapViewModel
         self.paymentsAmount = paymentsAmount
         self.title = title
@@ -32,19 +32,51 @@ class PaymentsMeToMeViewModel: ObservableObject {
     }
     
     convenience init?(_ model: Model, mode: Mode, closeAction: @escaping () -> Void) {
-        
-        switch mode {
-        case .general:
-            
-            guard let productData = model.product() else {
-                return nil
-            }
-            
-            let swapViewModel = Self.makeSwap(model, productData: productData)
-            let amountViewModel = Self.makeAmount()
-            
-            self.init(model, mode: mode, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, closeAction: closeAction)
+
+        guard let productData = model.product() else {
+            return nil
         }
+        
+        let swapViewModel: ProductsSwapView.ViewModel = .init(model, productData: productData, mode: mode)
+        let amountViewModel: PaymentsAmountView.ViewModel = .init(productData: productData) {} infoAction: {}
+        
+        self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, closeAction: closeAction)
+        
+        bind()
+    }
+    
+    private func bind() {
+        
+        swapViewModel.$items
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] items in
+                
+                if let from = items.first {
+                    
+                    switch from.content {
+                    case let .product(viewModel):
+                        
+                        if let product = model.product(productId: viewModel.id) {
+
+                            let currency = Currency(description: product.currency)
+                            let formatter: NumberFormatter = .currency(with: currency.currencySymbol)
+                            
+                            let value = paymentsAmount.textField.value
+                            
+                            guard let stringValue = formatter.string(from: .init(value: value)) else {
+                                return
+                            }
+                            
+                            paymentsAmount.textField.formatter.currencySymbol = currency.currencySymbol
+                            paymentsAmount.textField.text = stringValue
+                        }
+                        
+                    case .placeholder:
+                        break
+                    }
+                }
+                
+            }.store(in: &bindings)
     }
 }
 
@@ -55,34 +87,5 @@ extension PaymentsMeToMeViewModel {
     enum Mode {
         
         case general
-    }
-}
-
-// MARK: - Make
-
-extension PaymentsMeToMeViewModel {
-    
-    static func makeSwap(_ model: Model, productData: ProductData) -> ProductsSwapView.ViewModel {
-        
-        let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from)
-        let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to)
-        
-        let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
-        let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
-        
-        return .init(model: model, items: [from, to])
-    }
-}
-
-// MARK: - Methods
-
-extension PaymentsMeToMeViewModel {
-    
-    static func makeAmount() -> PaymentsAmountView.ViewModel {
-
-        .init(title: "Сумма перевода",
-              amount: 0,
-              transferButton: .active(title: "Перевести") {},
-              info: .button(title: "Без комиссии", icon: .ic16Info, action: {}))
     }
 }

@@ -38,6 +38,21 @@ extension ProductsSwapView {
             
             self.model = model
             self.items = items
+        }
+        
+        convenience init(_ model: Model, productData: ProductData, mode: PaymentsMeToMeViewModel.Mode) {
+            
+            switch mode {
+            case .general:
+                
+                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from)
+                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to)
+                
+                let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
+                let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
+                
+                self.init(model: model, items: [from, to])
+            }
             
             bind()
         }

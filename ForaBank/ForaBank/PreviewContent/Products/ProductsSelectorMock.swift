@@ -26,7 +26,8 @@ extension ProductSelectorView.ViewModel {
                     .init(id: "CARD", name: ProductType.card.pluralName),
                     .init(id: "ACCOUNT", name: ProductType.account.pluralName)
                 ],
-                selected: "CARD", style: .productsSmall)),
+                selected: "CARD", style: .productsSmall),
+            context: .init(title: "Куда", direction: .to)),
         context: .init(
             title: "Куда",
             direction: .to))

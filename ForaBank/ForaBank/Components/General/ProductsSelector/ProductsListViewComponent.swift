@@ -18,15 +18,17 @@ extension ProductsListView {
         
         @Published var products: [ProductView.ViewModel]
         @Published var typeSelector: OptionSelectorView.ViewModel?
+        @Published var context: ProductSelectorView.ViewModel.Context
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(model: Model, products: [ProductView.ViewModel], typeSelector: OptionSelectorView.ViewModel?) {
+        init(model: Model, products: [ProductView.ViewModel], typeSelector: OptionSelectorView.ViewModel?, context: ProductSelectorView.ViewModel.Context) {
             
             self.model = model
             self.products = products
             self.typeSelector = typeSelector
+            self.context = context
         }
         
         convenience init?(model: Model, context: ProductSelectorView.ViewModel.Context) {
@@ -39,7 +41,7 @@ extension ProductsListView {
             let products = Self.reduce(model, products: filterred)
             let typeSelector = Self.makeTypeSelector(model, selected: productsData.productType.rawValue)
             
-            self.init(model: model, products: products, typeSelector: typeSelector)
+            self.init(model: model, products: products, typeSelector: typeSelector, context: context)
             
             bind()
         }
@@ -49,13 +51,18 @@ extension ProductsListView {
             if let typeSelector = typeSelector {
                 
                 typeSelector.$selected
+                    .combineLatest($context)
                     .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] option in
+                    .sink { [unowned self] data in
+                        
+                        let option = data.0
+                        let context = data.1
                         
                         if let productType = ProductType(rawValue: option),
                            let products = model.products(productType) {
                             
-                            self.products = Self.reduce(model, products: products)
+                            let filterred = Self.filterred(products: products, context: context)
+                            self.products = Self.reduce(model, products: filterred)
                         }
                         
                         action.send(ProductsListAction.Option.Selected())
@@ -139,8 +146,6 @@ extension ProductsListView.ViewModel {
         
         return .init(options: options, selected: selected, style: .productsSmall)
     }
-    
-    func update(context: ProductSelectorView.ViewModel.Context) {}
 }
 
 // MARK: - View
@@ -206,7 +211,8 @@ struct ProductsListView_Previews: PreviewProvider {
                     .init(id: "CARD", name: ProductType.card.pluralName),
                     .init(id: "ACCOUNT", name: ProductType.account.pluralName)
                 ],
-                selected: "CARD", style: .productsSmall)))
+                selected: "CARD", style: .productsSmall),
+            context: .init(title: "Откуда", direction: .from)))
         .previewLayout(.sizeThatFits)
         .padding(.vertical, 8)
         .padding(.horizontal)

@@ -182,7 +182,7 @@ extension ProductSelectorView {
                     }
                     
                     if let list = list {
-                        list.update(context: context)
+                        list.context = context
                     }
                     
                 }.store(in: &bindings)

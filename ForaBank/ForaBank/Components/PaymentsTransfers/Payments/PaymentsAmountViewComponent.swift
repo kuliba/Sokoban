@@ -53,6 +53,28 @@ extension PaymentsAmountView {
             bind()
         }
         
+        init(_ title: String, textField: TextFieldFormatableView.ViewModel, currencySwitch: CurrencySwitchViewModel? = nil, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil,  alert: AlertViewModel? = nil, actionTitle: String = "", action: @escaping () -> Void = {}) {
+            
+            self.title = title
+            self.textField = textField
+            self.transferButton = transferButton
+            self.info = info
+            self.currencySwitch = currencySwitch
+            self.alert = alert
+            self.actionTitle = actionTitle
+            self.action = action
+            
+            super.init(source: Payments.ParameterMock())
+        }
+        
+        convenience init(_ value: Double = 0, productData: ProductData, transferAction: @escaping () -> Void, infoAction: @escaping () -> Void) {
+            
+            let currency = Currency(description: productData.currency)
+            let textField: TextFieldFormatableView.ViewModel = .init(value, currencySymbol: currency.currencySymbol)
+            
+            self.init("Сумма перевода", textField: textField, transferButton: .active(title: "Перевести", action: transferAction), info: .button(title: "Без комиссии", icon: .ic16Info, action: infoAction))
+        }
+
         func bind() {
             
             textField.$text
