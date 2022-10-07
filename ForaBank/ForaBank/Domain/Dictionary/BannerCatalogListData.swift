@@ -67,12 +67,6 @@ struct BannerCatalogListData: Codable, Equatable, Identifiable, Hashable {
             
         } else {
             
-            self.action = action
-        } else if let action = try? container.decodeIfPresent(BannerActionContactTransfer.self, forKey: .action) {
-            
-            self.action = action
-        } else {
-            
             self.action = nil
         }
     }
@@ -208,38 +202,6 @@ class BannerActionContactTransfer: BannerAction {
     internal init(countryId: String) {
         self.countryId = countryId
         super.init(type: .contact)
-    }
-    
-    required init(from decoder: Decoder) throws {
-        
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        countryId = try container.decode(String.self, forKey: .countryId)
-        
-        try super.init(from: decoder)
-    }
-    
-    override func encode(to encoder: Encoder) throws {
-        
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(countryId, forKey: .countryId)
-        
-        try super.encode(to: encoder)
-    }
-}
-
-class BannerActionContactTransfer: BannerAction {
-    
-    override var type: BannerActionType { .contact }
-    let countryId: String
-    
-    private enum CodingKeys: String, CodingKey {
-        
-        case countryId
-    }
-    
-    internal init(countryId: String) {
-        self.countryId = countryId
-        super.init()
     }
     
     required init(from decoder: Decoder) throws {
