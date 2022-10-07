@@ -15,12 +15,13 @@ extension TemplatesListViewModel {
             state: .normal,
             style: .list,
             title: "Шаблоны",
+            navButtonBack: .init(icon: .ic24ChevronLeft, action: {}),
             navButtonsRight: [
                 .init(icon: Image("searchBarIcon"), action: {
-                    print("SearchAction")
+                    //TODO: set action
                 }),
                 .init(icon: Image("more-horizontal"), action: {
-                    print("OpenMenuAction")
+                    //TODO: set action
                 })
             ],
             categorySelector: .init(options: [
@@ -75,12 +76,13 @@ extension TemplatesListViewModel {
             state: .normal,
             style: .tiles,
             title: "Шаблоны",
+            navButtonBack: .init(icon: .ic24ChevronLeft, action: {}),
             navButtonsRight: [
                 .init(icon: Image("more-horizontal"), action: {
-                    print("OpenMenuAction")
+                    //TODO: set action
                 }),
                 .init(icon: Image("searchBarIcon"), action: {
-                    print("SearchAction")
+                    //TODO: set action
                 })
             ],
             categorySelector: .init(options: [
@@ -129,9 +131,10 @@ extension TemplatesListViewModel {
             state: .select,
             style: .tiles,
             title: "Выбрать объекты",
+            navButtonBack: .init(icon: .ic24ChevronLeft, action: {}),
             navButtonsRight: [
                 .init(icon: Image("Operation Details Close Button Icon"), action: {
-                    print("OpenMenuAction")
+                    //TODO: set action
                 })
             ],
             categorySelector: .init(options: [
@@ -164,17 +167,17 @@ extension TemplatesListViewModel {
                     .init(icon: Image("bar-in-order"),
                           title: "Последовательность",
                           action: {
-                              print("")
+                              //TODO: set action
                           }),
                     .init(icon: Image("grid"),
                           title: "Вид (Плитка)",
                           action: {
-                              print("")
+                              //TODO: set action
                           }),
                     .init(icon: Image("trash_empty"),
                           title: "Удалить",
                           action: {
-                              print("")
+                              //TODO: set action
                           })
                 ]),
             deletePannel: .init(description: "Выбрано 1 объект", button: .init(icon: Image("trash"), caption: "Удалить все", isEnabled: true, action: { })),

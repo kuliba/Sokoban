@@ -44,11 +44,12 @@ class TransferResponseBaseData: Codable {
 
 extension TransferResponseBaseData {
     
-    enum DocumentStatus: String, Codable, Equatable {
+    enum DocumentStatus: String, Codable, Equatable, Unknownable {
         
         case complete = "COMPLETE"
         case inProgress = "IN_PROGRESS"
         case rejected = "REJECTED"
+        case unknown
     }
 }
 

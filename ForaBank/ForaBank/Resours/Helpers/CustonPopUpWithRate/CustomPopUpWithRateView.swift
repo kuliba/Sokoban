@@ -9,14 +9,13 @@ import UIKit
 import RealmSwift
 import Combine
 
-class CustomPopUpWithRateView : AddHeaderImageViewController {
+class CustomPopUpWithRateView: UIViewController {
     
     private var bindings = Set<AnyCancellable>()
     let model: Model = .shared
     
     var titleLabel = UILabel(text: "Между счетами", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
-    lazy var realm = try? Realm()
-    var token: NotificationToken?
+    
     var onlyMy = true
     var cardTo: UserAllCardsModel?
     var cardFrom: UserAllCardsModel?
@@ -62,11 +61,6 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     
     var stackView = UIStackView(arrangedSubviews: [])
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        token?.invalidate()
-    }
-    
     init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -74,10 +68,13 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     init(cardTo: UserAllCardsModel) {
         super.init(nibName: nil, bundle: nil)
         self.cardTo = cardTo
+        self.cardToField.model = cardTo
     }
     
     init(cardFrom: UserAllCardsModel, maxSum: Double?) {
         super.init(nibName: nil, bundle: nil)
+        self.sumMax = maxSum
+        
         self.cardFrom = cardFrom
         self.cardFromField.model = cardFrom
         self.cardFromField.choseButton?.isHidden = true
@@ -108,9 +105,67 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
             
             self.bottomView.amountTextField.text = String(maxSum)
             self.bottomView.setupMoneyController(amount: String(maxSum), currency: currency)
+            self.bottomView.maxSum = maxSum
         }
         
         self.bottomView.currencySymbol = currency
+    }
+    
+    init(cardFrom: UserAllCardsModel, totalAmount: Double) {
+        super.init(nibName: nil, bundle: nil)
+        self.sumMax = totalAmount
+        self.cardFrom = cardFrom
+        self.cardFromField.model = cardFrom
+        self.cardFromField.choseButton?.isHidden = true
+        self.cardFromField.choseButton?.isHidden = true
+        self.cardFromField.didChooseButtonTapped = nil
+        
+        self.bottomView.isEnable = false
+        self.withProducts = false
+        
+        self.bottomView.buttomLabel.text = "Условия снятия"
+        self.bottomView.buttomLabel.isHidden = false
+        self.bottomView.buttomLabel.alpha = 1
+        
+        self.bottomView.infoButton.isHidden = false
+        self.bottomView.infoButton.addTarget(self, action: #selector(buttonActionTotal), for: .touchUpInside)
+        self.bottomView.infoButton.setTitle("", for: .normal)
+        self.bottomView.infoButton.isHidden = false
+        
+        self.bottomView.topLabel.alpha = 1
+        
+        self.bottomView.doneButton.isEnabled = true
+        self.bottomView.doneButtonIsEnabled(false)
+        
+        bind()
+        
+        guard let currency = cardFrom.currency?.getSymbol() else {
+            return
+        }
+        
+        self.bottomView.amountTextField.text = String(totalAmount)
+        self.bottomView.setupMoneyController(amount: String(totalAmount), currency: currency)
+        self.bottomView.amountTextField.isUserInteractionEnabled = false
+        self.bottomView.currencySymbol = currency
+    }
+    
+    func backButton() {
+        let button = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                     action: #selector(back))
+        navigationItem.leftBarButtonItem = button
+    }
+    
+    @objc func back(){
+        
+        if #available(iOS 15, *) {
+            viewModel.closeAction()
+            navigationController?.popViewController(animated: true)
+        } else {
+            viewModel.closeAction()
+        }
     }
     
     func bind() {
@@ -159,9 +214,7 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
                         vc.confurmVCModel?.type = .closeDeposit
                         vc.printFormType = "closeDeposit"
                         
-                        let nav = UINavigationController(rootViewController: vc)
-                        nav.modalPresentationStyle = .fullScreen
-                        self.present(nav, animated: true, completion: nil)
+                        self.present(vc, animated: true, completion: nil)
                         
                     case .failure(let error):
                         self.showAlert(with: "Ошибка", and: error)
@@ -190,9 +243,7 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
                         vc.confurmVCModel?.type = .card2card
                         vc.printFormType = "closeDeposit"
                         
-                        let nav = UINavigationController(rootViewController: vc)
-                        nav.modalPresentationStyle = .fullScreen
-                        self.present(nav, animated: true, completion: nil)
+                        self.present(vc, animated: true, completion: nil)
                         
                     case .failure(let error):
                         self.showAlert(with: "Ошибка", and: error)
@@ -224,6 +275,17 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
         
     }
     
+    @objc func buttonActionTotal(sender: UIButton) {
+        
+        let vc = InfoViewController()
+        vc.infoTitle = "Вы можете снять полную сумму вклада и выплаченных процентов"
+        
+        let nav = UINavigationController(rootViewController: vc)
+        nav.modalPresentationStyle = .custom
+        nav.transitioningDelegate = self
+        self.present(nav, animated: true, completion: nil)
+    }
+    
     init(paymentTemplate: PaymentTemplateData) {
         super.init(nibName: nil, bundle: nil)
         self.paymentTemplate = paymentTemplate
@@ -233,13 +295,10 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        token?.invalidate()
-    }
-    
     final func checkModel(with model: ConfirmViewControllerModel) {
         guard let cardFrom = model.cardFromRealm else { return }
         guard let cardTo = model.cardToRealm else { return }
+        
         /// Отображаем кнопку для переворачивания списка карт
         
         self.seporatorView.changeAccountButton.isHidden = false
@@ -266,13 +325,8 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
             self.cardToField.model = accountLoan.first
             self.viewModel.cardToRealm = accountLoan.first
         }
-        if cardFrom != nil {
-            
-            self.viewModel.cardFromRealm = cardFrom
-        } else {
-            
-            self.viewModel.cardFromRealm = cards.first
-        }
+        
+        self.viewModel.cardFromRealm = cards.first
     }
     
 }

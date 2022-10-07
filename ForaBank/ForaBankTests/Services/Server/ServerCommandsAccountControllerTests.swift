@@ -16,42 +16,17 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 	let encoder = JSONEncoder.serverDate
 	let formatter = DateFormatter.iso8601
 
-	//MARK: - GetAccountStatementResponseGeneric
-
-	func testGetAccountStatement_Payload_Encoding() throws {
-
-		// given
-		let endDate = formatter.date(from: "2022-01-20T16:44:35.147Z")
-		let startDate = formatter.date(from: "2022-01-20T16:44:35.147Z")
-
-		let command = ServerCommands.AccountController.GetAccountStatement(token: "",
-																		   accountNumber: "string",
-																		   endDate: endDate,
-																		   id: 0,
-																		   name: "string",
-																		   startDate: startDate,
-																		   statementFormat: .csv)
-
-		let expected = "{\"statementFormat\":\"CSV\",\"id\":0,\"endDate\":\"2022-01-20T16:44:35.147Z\",\"name\":\"string\",\"startDate\":\"2022-01-20T16:44:35.147Z\",\"accountNumber\":\"string\"}"
-
-		// when
-		let result = try encoder.encode(command.payload)
-		let resultString = String(decoding: result, as: UTF8.self)
-
-		// then
-		XCTAssertEqual(resultString, expected)
-	}
+	//MARK: - GetAccountStatement
 
 	func testGetAccountStatement_Response_Decoding() throws {
 
 		// given
 		let url = bundle.url(forResource: "GetAccountStatementResponseGeneric", withExtension: "json")!
 		let json = try Data(contentsOf: url)
-		let date = formatter.date(from: "2022-01-25T10:32:41.777Z")!
-		let tranDate = formatter.date(from: "2022-01-25T10:32:41.777Z")!
+        let date = Date(timeIntervalSince1970: TimeInterval(1648512000000 / 1000))
 
-		let accountStatementData = ProductStatementData(MCC: 3245,
-														accountID: 10004111477,
+		let accountStatementData = ProductStatementData(mcc: 3245,
+														accountId: 10004111477,
 														accountNumber: "70601810711002740401",
 														amount: 144.21,
 														cardTranNumber: "4256901080508437",
@@ -62,14 +37,14 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 														date: date,
 														deviceCode: "string",
 														documentAmount: 144.21,
-														documentID: 10230444722,
+														documentId: 10230444722,
 														fastPayment: .init(documentComment: "string",
 																		   foreignBankBIC: "044525491",
 																		   foreignBankID: "10000001153",
 																		   foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"",
 																		   foreignName: "Петров Петр Петрович",
 																		   foreignPhoneNumber: "70115110217",
-                                                                           opkcid: "A1355084612564010000057CAFC75755", operTypeFP: nil),
+                                                                           opkcid: "A1355084612564010000057CAFC75755", operTypeFP: "string", tradeName: "string", guid: "string"),
 														groupName: "Прочие операции",
 														isCancellation: false,
 														md5hash: "75f3ee3b2d44e5808f41777c613f23c9",
@@ -81,7 +56,7 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 														paymentDetailType: .betweenTheir,
 														svgImage: .init(description: "string"),
 														terminalCode: "41010601",
-														tranDate: tranDate,
+														tranDate: date,
 														type: .inside)
 
 		let expected = ServerCommands.AccountController.GetAccountStatement.Response(statusCode: .ok,
@@ -95,16 +70,15 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 		XCTAssertEqual(result, expected)
 	}
 	
-	func testGetAccountStatement_MinResponse_Decoding() throws {
+	func testGetAccountStatement_Response_Min_Decoding() throws {
 
 		// given
 		let url = bundle.url(forResource: "GetAccountStatementResponseGenericMin", withExtension: "json")!
 		let json = try Data(contentsOf: url)
-		let date = formatter.date(from: "2022-01-25T10:32:41.777Z")!
-		let tranDate = formatter.date(from: "2022-01-25T10:32:41.777Z")!
+		let date = Date(timeIntervalSince1970: TimeInterval(1648512000000 / 1000))
 
-		let accountStatementData = ProductStatementData(MCC: nil,
-														accountID: nil,
+		let accountStatementData = ProductStatementData(mcc: nil,
+														accountId: nil,
 														accountNumber: "70601810711002740401",
 														amount: 144.21,
 														cardTranNumber: nil,
@@ -115,26 +89,20 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 														date: date,
 														deviceCode: nil,
 														documentAmount: nil,
-														documentID: nil,
-														fastPayment: .init(documentComment: "string",
-																		   foreignBankBIC: "044525491",
-																		   foreignBankID: "10000001153",
-																		   foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"",
-																		   foreignName: "Петров Петр Петрович",
-																		   foreignPhoneNumber: "70115110217",
-                                                                           opkcid: "A1355084612564010000057CAFC75755", operTypeFP: nil),
+														documentId: nil,
+														fastPayment: nil,
 														groupName: "Прочие операции",
-														isCancellation: false,
+														isCancellation: nil,
 														md5hash: "75f3ee3b2d44e5808f41777c613f23c9",
-														merchantName: "DBO MERCHANT FORA, Zubovskiy 2",
+														merchantName: nil,
 														merchantNameRus: nil,
 														opCode: nil,
 														operationId: nil,
 														operationType: .debit,
 														paymentDetailType: .betweenTheir,
-														svgImage: .init(description: "string"),
+														svgImage: nil,
 														terminalCode: nil,
-														tranDate: tranDate,
+														tranDate: nil,
 														type: .inside)
 
 		let expected = ServerCommands.AccountController.GetAccountStatement.Response(statusCode: .ok,
@@ -148,34 +116,20 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 		XCTAssertEqual(result, expected)
 	}
 	
-	
-
-	//MARK: - GetPrintFormForAccountStatement
-
-	func testGetPrintFormForAccountStatement_Payload_Encoding() throws {
-
-		// given
-		let endDate = formatter.date(from: "2022-01-20T16:46:58.563Z")
-		let startDate = formatter.date(from: "2022-01-20T16:46:58.563Z")
-
-		let command = ServerCommands.AccountController.GetAccountStatement(token: "",
-																		   accountNumber: "string",
-																		   endDate: endDate,
-																		   id: 0,
-																		   name: "string",
-																		   startDate: startDate,
-																		   statementFormat: .csv)
-
-		let expected = "{\"statementFormat\":\"CSV\",\"id\":0,\"endDate\":\"2022-01-20T16:46:58.563Z\",\"name\":\"string\",\"startDate\":\"2022-01-20T16:46:58.563Z\",\"accountNumber\":\"string\"}"
-		
-		// when
-		let result = try encoder.encode(command.payload)
-		let resultString = String(decoding: result, as: UTF8.self)
-		
-		// then
-		XCTAssertEqual(resultString, expected)
-	}
     
+    func testGetAccountStatement_Response_From_Server_Decoding() throws {
+
+        // given
+        guard let url = bundle.url(forResource: "GetAccountStatementResponseServer", withExtension: "json") else {
+            XCTFail()
+            return
+        }
+        
+        let json = try Data(contentsOf: url)
+
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.AccountController.GetAccountStatement.Response.self, from: json))
+    }
+	
     //MARK: - SaveAccountName
 
     func testSaveAccountName_Response_Decoding() throws {

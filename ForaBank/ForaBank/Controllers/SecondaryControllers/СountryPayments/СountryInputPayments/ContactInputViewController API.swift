@@ -12,13 +12,11 @@ extension ContactInputViewController {
     
     func getBankList(completion: @escaping (_ banksList: [BanksList]?, _ error: String?)->()) {
         
-        NetworkHelper.request(.getBanks) { banksList , error in
-            if error != nil {
-                completion(nil, error)
-            }
-            guard let banksList = banksList as? [BanksList] else { return }
-            completion(banksList, nil)
+        guard let banks = model.dictionaryBankListLegacy else {
+            return completion(nil, "Не удалось загрузить список банков")
         }
+            
+        completion(banks, nil)
     }
     
     //90-535-8663013
@@ -28,7 +26,7 @@ extension ContactInputViewController {
             return str as String
         }
     
-    func contaktPayment(with card: UserAllCardsModel, surname: String, name: String, secondName: String, amount: Double, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
+    func contaktPayment(with card: UserAllCardsModel, surname: String, name: String, secondName: String, phone: String?, amount: Double, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
         
         guard let countryCode = country?.contactCode else { return }
         guard let currencyAmount = card.currency else { return }
@@ -67,15 +65,14 @@ extension ContactInputViewController {
         
         if country?.code == "TR" {
             
-            var phone = self.phoneField.textField.unmaskedText ?? ""
+            var phone = phone ?? ""
         
             switch phone.prefix(4) {
             case "+90-":
                 phone = phone.applyPatternOnNumbers(pattern: "##-###-#######", replacmentCharacter: "#")
             case "+374":
                 phone = phone.applyPatternOnNumbers(pattern: "###-##-######", replacmentCharacter: "#")
-            default:
-                print("Phone Error")
+            default: break
             }
             
             switch phone.prefix(3) {
@@ -85,8 +82,7 @@ extension ContactInputViewController {
                 phone = phone.applyPatternOnNumbers(pattern: "#-###-#######", replacmentCharacter: "#")
             case "374":
                 phone = phone.applyPatternOnNumbers(pattern: "###-##-######", replacmentCharacter: "#")
-            default:
-                print("Phone Error")
+            default: break
             }
             
             switch phone.prefix(2) {
@@ -97,16 +93,16 @@ extension ContactInputViewController {
             case "90":
                 phone = phone.applyPatternOnNumbers(pattern: "##-###-#######", replacmentCharacter: "#")
             
-            default:
-                print("Phone Error")
+            default: break
             }
+            
             switch phone.prefix(1) {
             case "8":
                 phone = phone.applyPatternOnNumbers(pattern: "#-###-#######", replacmentCharacter: "#")
-            
-            default:
-                print("Phone Error")
+                
+            default: break
             }
+            
             let field = ["fieldid": 6,
                          "fieldname": "bPhone",
                          "fieldvalue": phone] as [String: AnyObject]
@@ -134,7 +130,7 @@ extension ContactInputViewController {
             if error != nil {
                 completion(nil, error!)
             }
-            let phone = self.phoneField.textField.unmaskedText ?? ""
+            let phone = self.phoneField.textField.phoneNumber?.numberString ?? ""
             guard let respModel = respModel else { return }
             if respModel.statusCode == 0 {
                 guard let country = self.country else { return }
@@ -170,8 +166,11 @@ extension ContactInputViewController {
         })
     }
     
-    func migPayment(with card: UserAllCardsModel, phone: String, amount: Double, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
-        
+    func migPayment(with card: UserAllCardsModel, phone: String?, amount: Double, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
+        guard let phone = phone?.replacingOccurrences(of: "+", with: "") else {
+            return
+        }
+
         var body = ["check" : false,
                     "amount" : amount,
                     "currencyAmount" : self.currency,

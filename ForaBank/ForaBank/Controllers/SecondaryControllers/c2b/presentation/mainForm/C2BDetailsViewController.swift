@@ -1,7 +1,7 @@
 import UIKit
-import RealmSwift
 import Foundation
-
+import IQKeyboardManagerSwift
+import Combine
 
 class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
     
@@ -11,7 +11,6 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     }
 
     let currencySymbol = "₽"
-    lazy var realm = try? Realm()
     var cardFromField = CardChooseView()
     var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
     var qrData = [String: String]()
@@ -19,7 +18,8 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     var amount = "0.0"
     var modeConsent = "update"
     var contractId = ""
-    
+    var closeAction: () -> Void = {}
+    var operationLimit = 0.0
     
     @IBOutlet weak var viewLimit: UIView!
     
@@ -77,6 +77,11 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
 
     @IBOutlet weak var recipientIcon: UIImageView!
     
+    let limitAlertView = UIView()
+    var limitInfoViewBottomConstraint: NSLayoutConstraint!
+    var limitAlertContentLable = UILabel()
+    private var bindings: Set<AnyCancellable> = []
+    let model = Model.shared
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -98,8 +103,6 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         goButton?.backgroundColor = .lightGray
         
         bottomInputView?.currencySymbol = "₽"
-        AddAllUserCardtList.add {
-        }
         
         bottomInputView?.didDoneButtonTapped = { amount in
             self.doPayment(amountArg: amount)
@@ -108,7 +111,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         sourceHolder.addArrangedSubview(cardFromField)
         sourceHolder.addArrangedSubview(cardListView)
 
-        cardFromField.titleLabel.text = "              Счёт списания"
+        cardFromField.titleLabel.text = "Счёт списания"
         cardFromField.didChooseButtonTapped = { () in
             self.viewReceiver.isHidden = !self.viewReceiver.isHidden
             self.openOrHideView(self.cardListView)
@@ -117,7 +120,8 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
                 self.viewReceiver.isHidden = false
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                let cardList = ReturnAllCardList.cards().uniqueValues(value: {$0.accountID})
+                
                 cardList.forEach({ card in
                     if card.id == cardId {
                         self.cardFromField.model = card
@@ -129,38 +133,43 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
             }
         }
         readAndSetupCard()
-
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-
         if GlobalModule.c2bURL ?? "" == "success" {
             dismissActivity()
             openSuccessScreen()
             return
         }
+        
+        view.insertSubview(limitAlertView, at: 1)
+        limitAlertView.addSubview(limitAlertContentLable)
+        limitAlertView.backgroundColor = .orange
+        
+        limitAlertContentLable.font = UIFont.boldSystemFont(ofSize: 17)
+        limitAlertContentLable.textColor = .white
+        limitAlertContentLable.textAlignment = .center
+        limitAlertContentLable.translatesAutoresizingMaskIntoConstraints = false
+        limitAlertContentLable.numberOfLines = 0
+        limitAlertContentLable.heightAnchor.constraint(equalToConstant: 80.0).isActive = true
+        limitAlertContentLable.topAnchor.constraint(equalTo: limitAlertView.topAnchor, constant: 10).isActive = true
+        limitAlertContentLable.leadingAnchor.constraint(equalTo: limitAlertView.leadingAnchor, constant: 30).isActive = true
+        limitAlertContentLable.trailingAnchor.constraint(equalTo: limitAlertView.trailingAnchor, constant: -30).isActive = true
+        
+        limitAlertContentLable.text = ""
+        
+        limitAlertView.translatesAutoresizingMaskIntoConstraints = false
+        
+        limitAlertView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 80).isActive = true
+        limitAlertView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
+        limitAlertView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
+        
+        limitAlertContentLable.heightAnchor.constraint(equalToConstant: 80.0).isActive = true
+        
+        limitInfoViewBottomConstraint = NSLayoutConstraint(item: limitAlertView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0.0, constant: 0)
+        limitInfoViewBottomConstraint.isActive = true
+        
+        bind()
+        model.action.send(ModelAction.Transfers.TransferLimit.Request())
     }
 
-    @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            //rootView.frame.origin.y -= keyboardSize.height
-            //rootView.layoutIfNeeded()
-            for constraint in rootView.constraints {
-                if constraint.identifier == "myBottomHolderConstr" {
-                    constraint.constant -= keyboardSize.height
-                }
-            }
-            rootView.layoutIfNeeded()
-        }
-    }
-
-    @objc func keyboardWillHide(notification: NSNotification) {
-        for constraint in rootView.constraints {
-            if constraint.identifier == "myBottomHolderConstr" {
-                constraint.constant = 0
-            }
-        }
-        rootView.layoutIfNeeded()
-    }
 
     func openOrHideView(_ view: UIView) {
         DispatchQueue.main.async {
@@ -198,8 +207,22 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
                     }
                 }
             })
-            self.cardListView.cardList = filterProduct
-            self.cardFromField.model = filterProduct.first
+            let clientId = Model.shared.clientInfo.value?.id
+            
+            self.cardListView.cardList = filterProduct.filter({$0.ownerID == clientId}).uniqueValues(value: {$0.accountID})
+            let accountId = self.model.fastPaymentContractFullInfo.value.first?.fastPaymentContractAccountAttributeList?.first?.accountId
+            
+            if filterProduct.filter({$0.id == accountId}).count >= 1 {
+                
+                self.cardFromField.model = filterProduct.filter({$0.id == accountId}).first
+            } else if filterProduct.filter({$0.cardID == accountId}).count >= 1 {
+                
+                self.cardFromField.model = filterProduct.filter({$0.cardID == accountId}).first
+                
+            } else {
+                
+                self.cardFromField.model = filterProduct.first
+            }
         }
     }
     
@@ -219,18 +242,17 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         }
         let amountFound = params?.filter({ $0.type == "AMOUNT" })
         if (amountFound != nil && amountFound?.count ?? 0 > 0) {
-            amount = amountFound?[0].value ?? ""
+            amount = amountFound?.first?.value ?? ""
         }
         let bankRecipientFound = params?.filter({ $0.type == "BANK" })
         if (bankRecipientFound != nil && bankRecipientFound?.count ?? 0 > 0) {
-            bankRecipientCode = bankRecipientFound?[0].value ?? ""
+            bankRecipientCode = bankRecipientFound?.first?.value ?? ""
         }
-        let allBanks = Dict.shared.bankFullInfoList
-        let foundBank = allBanks?.filter({ $0.memberID == bankRecipientCode })
-        if foundBank != nil && foundBank?.count ?? 0 > 0 {
-            let bankRusName = foundBank?[0].rusName ?? ""
-            let bankIconSvg = foundBank?[0].svgImage ?? ""
-            imgBank.image = bankIconSvg.convertSVGStringToImage()
+        let allBanks = Model.shared.bankList.value
+        let foundBank = allBanks.filter({ $0.memberId == bankRecipientCode })
+        if foundBank.count > 0, let bankRusName = foundBank.first?.memberNameRus {
+            let bankIconSvg = foundBank.first?.svgImage
+            imgBank.image = bankIconSvg?.uiImage
             labelBank.text = bankRusName
             C2BSuccessView.bankImg = imgBank.image
             C2BSuccessView.bankName = bankRusName
@@ -306,12 +328,55 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         viewModel.createC2BTransfer(body: body) { modelCreateC2BTransfer, error in
             if (error != nil) {
                 self.dismissActivity()
-                self.showAlert(with: "Ошибка", and: error?.description ?? "")
+                if self.cardFromField.model?.balanceRUB ?? 0.0 < self.operationLimit {
+                    self.showAlert(with: "Ошибка", and: error?.description ?? "")
+                } else {
+                    self.showLimitInfoView(true)
+                }
             } else {
+                self.showLimitInfoView(false)
                 C2BDetailsViewModel.modelCreateC2BTransfer = modelCreateC2BTransfer
                 self.makeTransfer()
             }
         }
+    }
+    
+    private func showLimitInfoView (_ value: Bool) {
+        
+        if value == true {
+            self.limitInfoViewBottomConstraint.constant = 275
+        } else {
+            self.limitInfoViewBottomConstraint.constant = 0
+        }
+        
+        UIView.animate(withDuration: 1) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    private func bind() {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+
+                switch action {
+
+                case let payload as ModelAction.Transfers.TransferLimit.Response:
+                    switch payload {
+                    case .limit( let value ):
+                        self.operationLimit = value.limit
+                        let limit = NumberFormatter.decimal(value.limit)
+                        self.limitAlertContentLable.text = "Сумма операции должна быть меньше \(limit)" + " ₽"
+                    case .noLimit:
+                        break
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
+                default:
+                    break
+                }
+            }.store(in: &bindings)
     }
 
     private func makeTransfer() {
@@ -442,10 +507,22 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         goButton?.isHidden = true
         qrData.removeAll()
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
     }
     
     func setupToolbar() {
@@ -516,8 +593,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     
     @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
         let tappedImage = tapGestureRecognizer.view as! UIImageView
-        print("back5555")
         dismiss(animated: true, completion: nil)
+        closeAction()
     }
 }
-

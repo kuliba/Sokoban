@@ -8,7 +8,7 @@
 import Foundation
 import CoreText
 
-struct PaymentTemplateData: Equatable, Cachable, Identifiable {
+struct PaymentTemplateData: Identifiable, Equatable {
     
     var id: Int { paymentTemplateId }
     let groupName: String
@@ -25,7 +25,7 @@ struct PaymentTemplateData: Equatable, Cachable, Identifiable {
 
 extension PaymentTemplateData {
     
-    enum Kind: String, Codable, Equatable, CaseIterable {
+    enum Kind: String, Codable, Equatable, Unknownable {
         
         case betweenTheir = "BETWEEN_THEIR"
         case insideBank = "INSIDE_BANK"

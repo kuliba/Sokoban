@@ -60,13 +60,12 @@ class AuthProductsViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
-                case let payload as ModelAction.Auth.ProductImage.Response:
+                case let payload as ModelAction.General.DownloadImage.Response:
                     switch payload.result {
                     case .success(let data):
       
                         guard let image = Image(data: data) else {
-                            //TODO: log
-                            print("AuthProductsViewModel: unable create product image from data for endpoint: \(payload.endpoint)")
+                            //TODO: set logger
                             return
                         }
                         
@@ -89,8 +88,8 @@ class AuthProductsViewModel: ObservableObject {
                         }
                         
                     case .failure(let error):
-                        //TODO: log
-                        print("AuthProductsViewModel: product image download failed for endpoint: \(payload.endpoint) with error: \(error.localizedDescription)")
+                        break
+                        //TODO: set logger
                     }
                 default:
                     break
@@ -103,7 +102,7 @@ class AuthProductsViewModel: ObservableObject {
         
         for product in products {
         
-            model.action.send(ModelAction.Auth.ProductImage.Request(endpoint: product.imageEndpoint))
+            model.action.send(ModelAction.General.DownloadImage.Request(endpoint: product.imageEndpoint))
         }
     }
     
@@ -111,7 +110,8 @@ class AuthProductsViewModel: ObservableObject {
         
         for product in products {
         
-            model.action.send(ModelAction.Auth.ProductImage.Request(endpoint: product.generalСondition.imageLink))
+            //FIXME: - posible wrong
+            model.action.send(ModelAction.General.DownloadImage.Request(endpoint: product.generalСondition.imageLink))
         }
     }
 }

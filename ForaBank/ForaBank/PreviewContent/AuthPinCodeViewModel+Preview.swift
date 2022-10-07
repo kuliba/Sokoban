@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension AuthPinCodeViewModel {
     
@@ -19,7 +20,7 @@ extension AuthPinCodeViewModel {
                                              cancelButton: .init(title: "Отменить",
                                                                  action: {}))
         
-        return AuthPinCodeViewModel(pinCode: pinCode, numpad: numpad, footer: footer, backAction: {}, dismissAction: {})
+        return AuthPinCodeViewModel(pincodeValue: .init(""), pinCode: pinCode, numpad: numpad, footer: footer, rootActions: .emptyMock)
     }()
 }
 
@@ -28,9 +29,23 @@ extension AuthPinCodeViewModel.PinCodeViewModel {
     
     static let empty = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeLength: 4)
     
-    static let editing = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeLength: 4, pincode: "12")
+    static let editing = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeValue: "12", pincodeLength: 4)
     
-    static let correct = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeLength: 4, pincode: "1234", style: .correct)
+    static let correct = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeValue: "1234", pincodeLength: 4, style: .correct)
     
-    static let incorrect = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeLength: 4, pincode: "1234", style: .incorrect)
+    static let incorrect = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeValue: "1234", pincodeLength: 4, style: .incorrect)
+    
+    static let correctAnimating: AuthPinCodeViewModel.PinCodeViewModel = {
+        
+        let viewModel = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeValue: "1234", pincodeLength: 4, style: .correct)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
+            
+            withAnimation {
+                viewModel.isAnimated = true
+            }
+        }
+        
+        return viewModel
+    }()
 }

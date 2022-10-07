@@ -12,39 +12,43 @@ extension ServerCommands {
     enum RatesController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/RatesController/getExchangeCurrencyRatesUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/RatesController/getExchangeCurrencyRatesUsingPOST
          */
         struct GetExchangeCurrencyRates: ServerCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/rest/getExchangeCurrencyRates"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
-                let branchID: Int?
-                let cashID: Int?
                 let currencyCodeAlpha: String
-                let currencyCodeNumeric: String?
-                let currencyID: Int?
-                let dateTime: Date?
-                let rateTypeID: Int
+                var branchID: Int? = nil
+                var cashID: Int? = nil
+                var currencyCodeNumeric: String? = nil
+                var currencyID: Int? = nil
+                var dateTime: Date? = nil
+                var rateTypeID: Int? = nil
             }
             
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: ExchangeRateData?
             }
             
-            internal init(token: String, payload: Payload) {
+            init(token: String, payload: Payload) {
                 
                 self.token = token
                 self.payload = payload
+            }
+            
+            init(token: String, currency: Currency) {
+                
+                self.token = token
+                self.payload = .init(currencyCodeAlpha: currency.description)
             }
         }
     }

@@ -70,7 +70,6 @@ class PaymentsDetailsView: UIView {
     }
     
     @IBAction func saveButtonTapped(_ sender: Any) {
-        print(#function)
         saveTapped?()
     }
     
@@ -83,7 +82,6 @@ class PaymentsDetailsView: UIView {
     }
     
     @IBAction func detailBattonTapped(_ sender: Any) {
-        print(#function)
         detailTapped?()
     }
     
@@ -123,7 +121,7 @@ class PaymentsDetailsView: UIView {
         switch model.status {
         case .inProgress:
             statusLabel.text = "В обработке"
-            statusImageView.image = UIImage(named: "OkOperators")
+            statusImageView.image = UIImage(named: "waiting")
             
         case .succses:
             statusLabel.text = "Успешный перевод"

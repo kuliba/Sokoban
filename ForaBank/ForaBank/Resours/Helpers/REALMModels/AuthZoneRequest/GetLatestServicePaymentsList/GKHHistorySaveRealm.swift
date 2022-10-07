@@ -23,7 +23,7 @@ struct AddHistoryList {
             
             if let error = error {
                 
-                print("DEBUG: error", error)
+                
                 return
             }
             
@@ -51,7 +51,7 @@ struct AddHistoryList {
                 
             } catch {
                 
-                print(error.localizedDescription)
+                
             }
         }
     }

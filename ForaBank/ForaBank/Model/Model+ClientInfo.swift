@@ -1,0 +1,389 @@
+//
+//  Model+ClientInfo.swift
+//  ForaBank
+//
+//  Created by Max Gribov on 26.05.2022.
+//
+
+import Foundation
+
+//MARK: - Actions
+
+extension ModelAction {
+    
+    enum ClientInfo {
+        
+        struct Fetch: Action {}
+        
+        enum Delete {
+            
+            struct Request: Action {}
+            
+            enum Response: Action {
+                
+                case success
+                case failure(Error)
+            }
+            
+        }
+    }
+    
+    enum ClientPhoto {
+        
+        struct Load: Action { }
+        
+        struct Save: Action {
+            
+            let image: ImageData
+        }
+        
+        struct Delete: Action { }
+    }
+    
+    enum ClientName {
+        
+        struct Save: Action {
+            
+            let name: String?
+        }
+        
+        enum Get {
+            
+            struct Request: Action {}
+            
+            struct Response: Action {
+                
+                let result: Result<ServerCommands.PersonController.GetPerson.Response.PersonData, Error>
+            }
+        }
+        
+        struct Delete: Action {}
+    }
+    
+    struct GetPersonAgreement {
+        
+        struct Request: Action {
+            
+            let system: PersonAgreement.System
+            let type: PersonAgreement.TypeDocument?
+        }
+        
+        struct Response: Action {
+            
+            let result: Result<[PersonAgreement], Error>
+        }
+    }
+}
+
+//MARK: - Handlers
+
+extension Model {
+    
+    func handleClientInfoFetch() {
+        
+        LoggerAgent.shared.log(category: .model, message: "handleClientInfoFetch")
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.PersonController.GetClientInfo(token: token)
+        serverAgent.executeCommand(command: command) { result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    
+                    guard let clientInfo = response.data else {
+                        
+                        return
+                    }
+
+                    self.clientInfo.value = clientInfo
+                    self.clientName.value = .init(name: clientInfo.customName ?? clientInfo.firstName)
+
+                    // cache
+                    do {
+                        
+                        try self.localAgent.store(clientInfo, serial: nil)
+                        
+                    } catch {
+                        
+                        self.handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    
+    func handleClientPhotoSave(_ payload: ModelAction.ClientPhoto.Save) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        guard let image = payload.image.uiImage else { return }
+        
+        guard let imageData: ImageData = .init(with: image) else { return }
+        
+        guard let mediaParameter: ServerCommandMediaParameter = .init(with: imageData, fileName: image.hashValue.description) else { return }
+        
+        let command = ServerCommands.PersonController.UpdatePersonImage(token: token, media: mediaParameter)
+        
+        serverAgent.executeUploadCommand(command: command) {[self] result in
+
+            switch result {
+            case .success(let response):
+                    
+                switch response.statusCode {
+                case .ok:
+                    
+                    let clientPhotoData = ClientPhotoData(photo: payload.image)
+                    clientPhoto.value = clientPhotoData
+
+                    do {
+                        
+                        try localAgent.store(clientPhotoData, serial: nil)
+                        
+                    } catch {
+                        //TODO: added handler for upload command
+                        print("Model: handleClientPhotoSave error: \(error.localizedDescription)")
+                    }
+                    
+                default:
+                    //TODO: added handler for upload command
+                    break
+                    
+                }
+                
+            case .failure(let error):
+                //TODO: added handler for upload command
+                print("Model: handleClientPhotoSave error: \(error)")
+
+            }
+        }
+    }
+    
+    func handleClientPhotoRequest() {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.PersonController.GetPersonImage(token: token)
+        serverAgent.executeDownloadCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let data):
+                
+                if data.count != 0 {
+                    
+                    let clientPhotoData = ClientPhotoData(photo: .init(data: data))
+                    clientPhoto.value = clientPhotoData
+
+                    do {
+                        
+                        try localAgent.store(clientPhotoData, serial: nil)
+                        
+                    } catch {
+                        
+                        //TODO: added handler for download command
+                        print("Model: store: ClientPhotoData error: \(error.localizedDescription)")
+                    }
+                    
+                } else {
+                    
+                    clientPhoto.value = nil
+                    
+                    do {
+                        
+                        try localAgent.clear(type: ClientPhotoData.self)
+                        
+                    } catch {
+                        
+                        //TODO: added handler for download command
+                        print("Model: localAgent clear error: \(error.localizedDescription)")
+                    }
+                }
+                
+            case .failure(let error):
+                //TODO: added handler for download command
+                print("Model: store: ClientPhotoData error: \(error)")
+            }
+        }
+    }
+    
+    func handleMediaDeleteAvatarRequest() {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.PersonController.RemovePersonImage(token: token)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(_):
+
+                self.clientPhoto.value = nil
+                
+                do {
+                    
+                    try localAgent.clear(type: ClientPhotoData.self)
+                    
+                } catch {
+                    
+                    self.handleServerCommandCachingError(error: error, command: command)
+                }
+                
+            case .failure(let error):
+                
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    func handleClientNameSave(_ payload: ModelAction.ClientName.Save) {
+
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        guard let name = payload.name else { return }
+        
+        let command = ServerCommands.PersonController.SetPersonCustomName(token: token, payload: .init(customName: name))
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(_):
+                self.action.send(ModelAction.ClientInfo.Fetch())
+                
+            case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    func handleClientNameLoad() {
+
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.PersonController.GetPerson(token: token)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let data):
+
+                    let clientNameData = ClientNameData(name: data.data.firstname)
+                    clientName.value = clientNameData
+                    
+                    do {
+                        
+                        try localAgent.store(clientNameData, serial: nil)
+                        
+                    } catch {
+                        
+                        self.handleServerCommandCachingError(error: error, command: command)
+                    }
+                
+            case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    func handleClientNameDelete() {
+
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.PersonController.RemovePersonCustomName(token: token)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(_):
+
+                clientName.value = nil
+                self.action.send(ModelAction.ClientName.Get.Request())
+                
+            case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    func handleClientInfoDelete() {
+
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.PersonController.DeleteAllPersonProperties(token: token)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(_):
+                self.action.send(ModelAction.ClientInfo.Delete.Response.success)
+                
+            case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    func handleClientAgreement(_ payload: ModelAction.GetPersonAgreement.Request) {
+
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.PersonController.GetPersonAgreement(token: token, system: payload.system, type: payload.type)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                
+                guard let data = response.data else {
+                    self.handleServerCommandEmptyData(command: command)
+                    return
+                }
+                
+                self.action.send(ModelAction.GetPersonAgreement.Response(result: .success(data)))
+                
+            case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
+                self.action.send(ModelAction.GetPersonAgreement.Response(result: .failure(error)))
+            }
+        }
+    }
+}
+
+//MARK: - Error
+
+enum ModelClientInfoError: Swift.Error {
+    
+    case emptyData(message: String?)
+    case statusError(status: ServerStatusCode, message: String?)
+    case serverCommandError(error: Error)
+    case cacheError(Error)
+}

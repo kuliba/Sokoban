@@ -9,7 +9,7 @@ import Foundation
 import CoreLocation
 import SwiftUI
 
-struct AtmData: Identifiable, Codable, Equatable, Cachable {
+struct AtmData: Identifiable, Codable, Equatable {
     
     let id: String
     let name: String
@@ -85,11 +85,12 @@ struct AtmData: Identifiable, Codable, Equatable, Cachable {
 
 extension AtmData {
     
-    enum Action: String, Codable {
+    enum Action: String, Codable, Unknownable {
         
         case insert = "INSERT"
         case update = "UPDATE"
         case delete = "DELETE"
+        case unknown
     }
     
     enum Category: Int, CaseIterable {

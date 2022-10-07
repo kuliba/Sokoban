@@ -258,9 +258,9 @@ class SelectVC : AddHeaderImageViewController {
     }
 
     @objc func myButtonAction(sender: UIButton!) {
-        print("My Button tapped \(sender.tag)")
         InternetTVInputCell.spinnerValuesSelected[elementID] = spinnerValuesIndexed[sender.tag]
         InternetTVInputCell.iMsg?.handleMsg(what: InternetTVDetailsFormController.msgUpdateTable)
+        self.modalPresentationCapturesStatusBarAppearance = true
         dismiss(animated: true)
     }
 

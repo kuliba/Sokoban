@@ -8,14 +8,15 @@
 import UIKit
 import RealmSwift
 import AnyFormatKit
+import IQKeyboardManagerSwift
 
-class MemeDetailVC : AddHeaderImageViewController {
+class MemeDetailVC: UIViewController {
 
-    var titleLabel = UILabel(text: "Между своими", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
+    var titleLabel = UILabel(text: "На другую карту", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
     
     var onlyMy = false
     var onlyCard = true
-    
+    var anotherCardModel: AnotherCardViewModel?
     var paymentTemplate: PaymentTemplateData? = nil
     
     var viewModel = ConfirmViewControllerModel(type: .card2card) {
@@ -34,7 +35,7 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     var stackView = UIStackView(arrangedSubviews: [])
     
-    lazy var realm = try? Realm()
+    let model = Model.shared
     var token: NotificationToken?
     
     init() {
@@ -57,9 +58,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         setupConstraint()
         setupActions()
         setupCardViewActions()
-    
-        AddAllUserCardtList.add() {}
-        
+        hideKeyboardWhenTappedAround()
         if let template = paymentTemplate {
             addBackButton()
             updateObjectWithTamplate(paymentTemplate: template)
@@ -77,6 +76,16 @@ class MemeDetailVC : AddHeaderImageViewController {
                 self.setupAmount(amount: template.amount)
             }
         }
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
+        IQKeyboardManager.shared.enableAutoToolbar = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
     }
     
     deinit {
@@ -89,7 +98,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         setupListFrom()
         setupListTo()
                 
-        paymentTemplate == nil ? self.addHeaderImage() : nil
+//        paymentTemplate == nil ? self.addHeaderImage() : nil
         
         self.view.layer.cornerRadius = 16
         self.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -121,7 +130,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         view.addSubview(bottomView)
         bottomView.anchor(
             left: view.leftAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            bottom: view.bottomAnchor,
             right: view.rightAnchor)
         
         let saveAreaView = UIView()
@@ -189,8 +198,8 @@ class MemeDetailVC : AddHeaderImageViewController {
                     paymentTemplateId: templateId))
                     
                 // FIXME: В рефактре нужно слушатель на обновление title
-                self.title = text
-                
+                    self.parent?.title = text
+
                 } else {
                     self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")
                 }
@@ -208,23 +217,26 @@ class MemeDetailVC : AddHeaderImageViewController {
     }
     
     func updateObjectWithNotification(cardId: Int? = nil) {
-        let object = realm?.objects(UserAllCardsModel.self)
+        var products: [UserAllCardsModel] = []
+        let types: [ProductType] = [.card]
+        types.forEach { type in
+            products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+        }
+        
+        let clientId = Model.shared.clientInfo.value?.id
+        cardFromListView.cardList = products.filter({$0.ownerID == clientId})
+        cardToListView.cardList = products
+        
         if let cardId = cardId {
-            let card = object?.first(where: { $0.id == cardId })
+            
+            let card = products.first(where: { $0.id == cardId })
             self.cardFromField.model = card
             self.viewModel.cardFromRealm = card
+            
         } else {
-            token = object?.observe { ( changes: RealmCollectionChange) in
-                switch changes {
-                case .initial:
-                    self.cardFromField.model = self.updateCardsList(with: object).first
-                    self.viewModel.cardFromRealm = self.updateCardsList(with: object).first
-                case .update:
-                    self.cardFromField.model = self.updateCardsList(with: object).first
-                case .error(let error):
-                    fatalError("\(error)")
-                }
-            }
+            
+            self.cardFromField.model = products.first
+            self.viewModel.cardFromRealm = products.first
         }
     }
     
@@ -333,8 +345,12 @@ class MemeDetailVC : AddHeaderImageViewController {
         
         cardFromListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
-                cardList.forEach({ card in
+                var products: [UserAllCardsModel] = []
+                let types: [ProductType] = [.card]
+                types.forEach { type in
+                    products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+                }
+                products.forEach({ card in
                     if card.id == cardId {
                         self.viewModel.cardFromRealm = card
                         self.cardFromField.model = card
@@ -355,15 +371,14 @@ class MemeDetailVC : AddHeaderImageViewController {
             }
         }
         cardFromListView.lastItemTap = {
-            print("Открывать все карты ")
             let vc = AllCardListViewController()
             vc.withTemplate = false
             if self.onlyMy {
                 vc.onlyCard = false
             }
             vc.didCardTapped = { [weak self] card in
-                self?.viewModel.cardFrom = card
-                self?.cardFromField.cardModel = card
+                self?.viewModel.cardFromRealm = card
+                self?.cardFromField.model = card
                 self?.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
                 self?.hideAllCardList()
                 vc.dismiss(animated: true, completion: nil)
@@ -379,7 +394,6 @@ class MemeDetailVC : AddHeaderImageViewController {
         cardToListView.canAddNewCard = onlyMy ? false : true
         
         cardToListView.firstItemTap = {
-            print("Показываем окно новой карты ")
             self.view.addSubview(self.cardView)
             self.cardView.frame = self.view.bounds
             self.cardView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
@@ -390,8 +404,12 @@ class MemeDetailVC : AddHeaderImageViewController {
         }
         cardToListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
-                cardList.forEach({ card in
+                var products: [UserAllCardsModel] = []
+                let types: [ProductType] = [.card]
+                types.forEach { type in
+                    products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+                }
+                products.forEach({ card in
                     if card.id == cardId {
                         self.viewModel.cardToRealm = card
                         self.cardToField.model = card
@@ -401,17 +419,14 @@ class MemeDetailVC : AddHeaderImageViewController {
             }
         }
         cardToListView.lastItemTap = {
-            print("Открывать все карты ")
             let vc = AllCardListViewController()
             if self.onlyMy {
                 vc.onlyCard = false
                 vc.withTemplate = false
             }
             vc.didCardTapped = { [weak self] card in
-//                self?.viewModel.cardToRealm = card
-                self?.viewModel.cardTo = card
-                self?.cardToField.cardModel = card
-//                self?.bottomView.currency = card.currency?.getSymbol() ?? ""
+                self?.viewModel.cardToRealm = card
+                self?.cardToField.model = card
                 self?.hideAllCardList()
                 vc.dismiss(animated: true, completion: nil)
             }
@@ -536,7 +551,6 @@ class MemeDetailVC : AddHeaderImageViewController {
                 self?.bottomView.doneButtonIsEnabled(false)
                 if error != nil {
                     guard let error = error else { return }
-                    print("DEBUG: ", #function, error)
                     self?.showAlert(with: "Ошибка", and: error)
                 } else {
                     guard let model = model else { return }
@@ -546,7 +560,6 @@ class MemeDetailVC : AddHeaderImageViewController {
                             if needMake {
                                 viewModel.taxTransction = "\(model.data?.fee ?? 0)"
                                 viewModel.status = .succses
-                                print("DEBUG: cardToCard payment Succses", #function, model)
                                 let vc = ContactConfurmViewController()
                                 vc.modalPresentationStyle = .fullScreen
                                 vc.confurmVCModel?.type = .card2card
@@ -559,6 +572,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                                 vc.addCloseButton()
                                 vc.title = "Подтвердите реквизиты"
                                 let navVC = UINavigationController(rootViewController: vc)
+                                navVC.modalPresentationStyle = .fullScreen
                                 self?.present(navVC, animated: true)
                                 
                             } else {
@@ -588,7 +602,6 @@ class MemeDetailVC : AddHeaderImageViewController {
                             self?.present(nav, animated: true, completion: nil)
                         }
                     } else {
-                        print("DEBUG: ", #function, model.errorMessage ?? "nil")
                         self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                     }
                 }

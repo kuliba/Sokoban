@@ -130,8 +130,7 @@ extension Model {
                             
                         } catch {
                             
-                            //TODO: log
-                            print("Model: handleTemplatesListRequest: deleting templates cache data error: \(error)")
+                            //TODO: set logger
                         }
                         
                         self.action.send(ModelAction.PaymentTemplate.List.Complete(paymentTemplates: []))

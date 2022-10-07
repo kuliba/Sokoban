@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "waiting.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

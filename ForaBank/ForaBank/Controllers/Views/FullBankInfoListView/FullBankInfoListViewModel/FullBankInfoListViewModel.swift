@@ -56,8 +56,6 @@ struct FullBankInfoListViewModel {
     init(bank: BankFullInfoList, index: IndexPath) {
         self.bank = bank
         self.index = index
-//        let name = "ПАО \"БЕСТ ЭФФОРТС БАНК\""
-//        print("bankName \(bank.fullName) have /: ", self.check(bank.fullName ?? ""))
     }
     
     private func updateInitialsColorForIndexPath(_ indexpath: IndexPath) -> UIColor {

@@ -32,8 +32,6 @@ extension MainViewController: UICollectionViewDelegate {
                     
                     productsList.append(product)
                 }
-                
-                delegate?.goProductViewController(product: productsList[productIndex], products: productsList)
             }
             
         case .offer:
@@ -55,7 +53,6 @@ extension MainViewController: UICollectionViewDelegate {
                         }
                     } else {
                         guard self.alertController == nil else {
-                            print("There is already an alert presented")
                             return
                         }
                         self.alertController = UIAlertController(title: "Внимание", message: "Для сканирования QR кода, необходим доступ к камере", preferredStyle: .alert)
@@ -80,7 +77,7 @@ extension MainViewController: UICollectionViewDelegate {
                
                 //FIXME: inject from parent view model after refactoring
                 let model = Model.shared
-                let templatesViewModel = TemplatesListViewModel(model)
+                let templatesViewModel = TemplatesListViewModel(model, dismissAction: {})
                 let templatesViewController = TemplatesListViewHostingViewController(with: templatesViewModel)
                 templatesViewController.delegate = self
                 let navigationViewController = UINavigationController(rootViewController: templatesViewController)
@@ -90,10 +87,12 @@ extension MainViewController: UICollectionViewDelegate {
         case .openProduct:
             if indexPath.row == 1 {
                 
+                /*
                 let vc = OpenProductHostingViewController(with: .init(self.model, products: self.model.depositsProducts.value, style: .deposit))
                 vc.hidesBottomBarWhenPushed = true
                 let navigationViewController = UINavigationController(rootViewController: vc)
                 present(navigationViewController, animated: true)
+                 */
 
             } else {
                 
@@ -123,8 +122,7 @@ extension MainViewController: UICollectionViewDelegate {
         case .notDetermined:
             // Первый запрос на доступ к камере
             AVCaptureDevice.requestAccess(for: .video) { isAllowed($0) }
-        @unknown default:
-            print()
+        @unknown default: break
         }
     }
     

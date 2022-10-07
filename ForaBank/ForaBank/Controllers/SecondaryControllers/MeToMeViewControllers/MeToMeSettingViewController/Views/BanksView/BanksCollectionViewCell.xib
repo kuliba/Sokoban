@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Inter-VariableFont_slnt,wght.ttf">
+            <string>Inter-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="NNS-jN-Djc" customClass="BanksCollectionViewCell" customModule="ForaBank" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="120" height="32"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="x1Z-z2-7dX">
+                <rect key="frame" x="0.0" y="0.0" width="120" height="32"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BankName" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wku-4a-BRy" userLabel="BankName">
+                        <rect key="frame" x="6" y="7.5" width="85" height="17"/>
+                        <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="close" translatesAutoresizingMaskIntoConstraints="NO" id="0NA-pO-w4N">
+                        <rect key="frame" x="101" y="8" width="16" height="16"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="16" id="HqV-Qe-Tou"/>
+                            <constraint firstAttribute="height" constant="16" id="i99-p3-yIo"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <color key="backgroundColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                <constraints>
+                    <constraint firstItem="wku-4a-BRy" firstAttribute="leading" secondItem="x1Z-z2-7dX" secondAttribute="leading" multiplier="3" constant="6" id="9v8-Cp-gNN"/>
+                    <constraint firstItem="wku-4a-BRy" firstAttribute="centerY" secondItem="x1Z-z2-7dX" secondAttribute="centerY" id="Gjj-dr-r4g"/>
+                    <constraint firstAttribute="trailing" secondItem="0NA-pO-w4N" secondAttribute="trailing" constant="3" id="Gv1-jq-AFm"/>
+                    <constraint firstItem="0NA-pO-w4N" firstAttribute="leading" secondItem="wku-4a-BRy" secondAttribute="trailing" constant="10" id="Qai-FL-SWx"/>
+                    <constraint firstItem="0NA-pO-w4N" firstAttribute="centerY" secondItem="x1Z-z2-7dX" secondAttribute="centerY" id="nmg-aU-ULG"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <size key="customSize" width="93" height="50"/>
+            <connections>
+                <outlet property="bankName" destination="wku-4a-BRy" id="Cc4-K8-5Mu"/>
+                <outlet property="itemView" destination="x1Z-z2-7dX" id="IMb-oN-pvi"/>
+            </connections>
+            <point key="canvasLocation" x="601.44927536231887" y="97.767857142857139"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="close" width="16" height="16"/>
+    </resources>
+</document>

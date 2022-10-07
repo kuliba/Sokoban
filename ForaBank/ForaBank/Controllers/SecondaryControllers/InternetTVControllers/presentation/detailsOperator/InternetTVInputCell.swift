@@ -69,7 +69,6 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
             placeholderLable.text = item.title
         }
         additionalList.forEach { model in
-            print("setupUI5555__ \(model.fieldName ?? "") \(model.fieldValue ?? "")")
         }
         
         if let textSubTitle = item.subTitle, !textSubTitle.isEmpty {
@@ -151,7 +150,7 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
                                                                        "fieldname" : fieldName,
                                                                        "fieldvalue" : textValue]
         }
-        let t = qrData
+        
         if isPersonalAcc_1(strCheck: item.title ?? ""), let textValue = qrData["Расчетный счет Получателя"]  {
             textView.text = textValue
             InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,

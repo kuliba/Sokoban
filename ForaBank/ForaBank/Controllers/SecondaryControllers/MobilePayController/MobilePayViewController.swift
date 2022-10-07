@@ -7,11 +7,13 @@
 
 import UIKit
 import RealmSwift
+import IQKeyboardManagerSwift
 
 class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
-    lazy var realm = try? Realm()
-    
+    let model = Model.shared
+    var operatorsViewModel: OperatorsViewModel?
+    var viewModel: MobilePayViewModel? = nil
     var recipiendId = String()
     var phoneNumber: String?
     var regEx = ""
@@ -68,6 +70,9 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
         
         if let template = paymentTemplate {
             runBlockAfterDelay(0.2) {
@@ -78,20 +83,26 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func getUserCard() -> UserAllCardsModel?  {
-        let cards = ReturnAllCardList.cards()
-        let filterProduct = cards.filter({
-            ($0.productType == "CARD" || $0.productType == "ACCOUNT") && $0.currency == "RUB" })
+        let productTypes: [ProductType] = [.card, .account]
         
-        if filterProduct.count > 0 {
+        let allCards = ReturnAllCardList.cards()
+        var productsFilterredMapped = [UserAllCardsModel]()
+        
+        productTypes.forEach { type in
+            
+            productsFilterredMapped += allCards.filter { $0.productType == type.rawValue && $0.currency == "RUB" }
+        }
+        
+        if productsFilterredMapped.count > 0 {
             if let template = self.paymentTemplate,
                let transfer = template.parameterList.first as? TransferAnywayData,
                let cardId = transfer.payer.cardId {
                 
-                let card = filterProduct.first(where: { $0.id == cardId })
+                let card = productsFilterredMapped.first(where: { $0.id == cardId })
                 return card
                 
             } else {
-                return filterProduct.first
+                return productsFilterredMapped.first
             }
         }
         return nil
@@ -131,8 +142,10 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         
         cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
-                cardList.forEach({ card in
+                
+                let products = self.model.products.value.values.flatMap({ $0 }).map { $0.userAllProducts() }
+                
+                products.forEach({ card in
                     if card.id == cardId {
                         self.cardField.model = card
                         if self.cardListView.isHidden == false {
@@ -143,12 +156,13 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
             }
         }
         
+        
         cardListView.lastItemTap = {
             let vc = AllCardListViewController()
             vc.withTemplate = false
             vc.didCardTapped = { card in
-                self.cardField.cardModel = card
-//                self.selectedCardNumber = card.cardID ?? 0
+                self.cardField.model = card
+                //                self.selectedCardNumber = card.cardID ?? 0
                 self.hideView(self.cardListView, needHide: true)
                 vc.dismiss(animated: true, completion: nil)
             }
@@ -164,6 +178,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                 subtitleCellType: SubtitleCellValue.phoneNumber)
             
             let navigationController = UINavigationController(rootViewController: contactPickerScene)
+            navigationController.modalPresentationStyle = .automatic
             self.present(navigationController, animated: true, completion: nil)
         }
         
@@ -204,6 +219,11 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     fileprivate func setupUI() {
         title = "Мобильная связь"
         
+        if let paymentTemplate = paymentTemplate {
+            
+            title = paymentTemplate.name
+        }
+        
         phoneField.textField.delegate = self
         phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "user-plus"), for: .normal)
         if selectNumber != nil {
@@ -226,7 +246,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(bottomView)
         bottomView.anchor(
             left: view.leftAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            bottom: view.bottomAnchor,
             right: view.rightAnchor)
         bottomView.currencySymbol = "₽"
         
@@ -306,6 +326,10 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                         model.operatorImage = svgImage ?? ""
                         model.cardFromRealm = self?.cardField.model
                         
+                        if let closeAction = self?.viewModel?.closeAction {
+                            
+                            model.closeAction = closeAction
+                        }
                         let a = data?.data?.additionalList
                         
                         a?.forEach{ list in
@@ -323,7 +347,12 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                             vc.confurmVCModel = model
                             vc.addCloseButton()
                             vc.title = "Подтвердите реквизиты"
-                            
+                            vc.operatorsViewModel = self?.operatorsViewModel
+                            vc.confurmVCModel?.template = self?.paymentTemplate
+                            if let viewModel = self?.viewModel {
+                                
+                                vc.operatorsViewModel?.closeAction = viewModel.closeAction
+                            }
                             let navController = UINavigationController(rootViewController: vc)
                             navController.modalPresentationStyle = .fullScreen
                             self?.present(navController, animated: true, completion: nil)
@@ -339,12 +368,18 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         })
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = true
+    }
+    
 }
 
 extension MobilePayViewController: EPPickerDelegate {
     
     func epContactPicker(_: EPContactsPicker, didContactFetchFailed error : NSError) {
-        print("Failed with error \(error.description)")
     }
     
     func epContactPicker(_: EPContactsPicker, didSelectContact contact : EPContact) {
@@ -367,12 +402,10 @@ extension MobilePayViewController: EPPickerDelegate {
     }
     
     func epContactPicker(_: EPContactsPicker, didCancel error : NSError) {
-        print("User canceled the selection");
     }
     
     func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) {
         for contact in contacts {
-            print("\(contact.displayName())")
         }
     }
     

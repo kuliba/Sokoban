@@ -102,7 +102,6 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
                 router?.setValue("application/json", forHTTPHeaderField: "Content-Type")
             }
         } catch {
-            debugPrint(NetworkError.encodingFailed)
         }
         
         let session = URLSession(configuration: .default, delegate: self, delegateQueue: .main)
@@ -135,6 +134,12 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
     func createPdfDocument(_ requestBody: [String: AnyObject]?) {
         
         var router = RouterManager.getPrintFormForAccountStatement.request()
+        
+        if let cookies = Model.shared.cookies {
+            
+            router?.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
+        }
+        
         do {
             let jsonAsData = try JSONSerialization.data(withJSONObject: requestBody!, options: [])
             router?.httpBody = jsonAsData
@@ -143,12 +148,14 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
                 router?.setValue("application/json", forHTTPHeaderField: "Content-Type")
             }
         } catch {
-            debugPrint(NetworkError.encodingFailed)
         }
         
         let session = URLSession(configuration: .default, delegate: self, delegateQueue: .main)
+        session.configuration.httpCookieAcceptPolicy = .never
+        session.configuration.httpShouldSetCookies = false
+        
         router?.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        if let token = CSRFToken.token {
+        if let token = Model.shared.token {
             router?.allHTTPHeaderFields = ["X-XSRF-TOKEN": token]
         }
         

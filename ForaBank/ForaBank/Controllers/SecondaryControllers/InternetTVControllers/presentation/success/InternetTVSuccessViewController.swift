@@ -1,7 +1,9 @@
 import UIKit
+import Combine
 
 class InternetTVSuccessViewController: UIViewController {
     
+    var operatorsViewModel: OperatorsViewModel?
     var id: Int?
     var printFormType: String?
     let mainView = InternetTVSuccessView()
@@ -12,6 +14,9 @@ class InternetTVSuccessViewController: UIViewController {
             mainView.confirmModel = model
         }
     }
+    
+    private let model: Model = Model.shared
+    private var bindings = Set<AnyCancellable>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,12 +35,79 @@ class InternetTVSuccessViewController: UIViewController {
             navVC.modalPresentationStyle = .fullScreen
             self?.present(navVC, animated: true, completion: nil)
         }
+        
+        mainView.templateTapped = { [weak self] in
+            
+            guard let self = self else {
+                return
+            }
+            
+            guard let templateButtonViewModel = self.confirmModel?.templateButtonViewModel,
+                  case .sfp(let name, let paymentOperationDetailId) = templateButtonViewModel else {
+                return
+            }
+            
+            self.model.action.send(ModelAction.PaymentTemplate.Save.Requested(name: name, paymentOperationDetailId: paymentOperationDetailId))
+        }
+        
+        bind()
+        
+        if let fromCardId = self.confirmModel?.cardFromCardId {
+            
+            if let cardId = NumberFormatter().number(from: fromCardId) {
+                let integerCardId = cardId.intValue
+                self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+            }
+        }
+        
+        if let toCardId = self.confirmModel?.cardToCardId {
+            
+            if let cardId = NumberFormatter().number(from: toCardId) {
+                let integerCardId = cardId.intValue
+                self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+            }
+        }
+        
+        if let toAcccountId = self.confirmModel?.cardToAccountId {
+            
+            if let cardId = NumberFormatter().number(from: toAcccountId) {
+                let integerCardId = cardId.intValue
+                self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+            }
+        }
+        
+        if let fromAcccountId = self.confirmModel?.cardFromAccountId {
+            
+            if let cardId = NumberFormatter().number(from: fromAcccountId) {
+                let integerCardId = cardId.intValue
+                self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+            }
+        }
+    }
+    
+    func bind() {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ModelAction.PaymentTemplate.Save.Complete:
+                    let templateButtonViewModel: InternetTVConfirmViewModel.TemplateButtonViewModel = .template(payload.paymentTemplateId)
+                    confirmModel?.templateButtonViewModel = templateButtonViewModel
+                    mainView.updateTemplateButton(with: templateButtonViewModel)
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
     
     fileprivate func setupUI() {
         navigationController?.navigationBar.isHidden = true
         view.backgroundColor = .white
-
+        
         view.addSubview(button)
         button.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
                       right: view.rightAnchor, paddingLeft: 20, paddingBottom: 20,
@@ -50,8 +122,9 @@ class InternetTVSuccessViewController: UIViewController {
     }
     
     @objc func doneButtonTapped() {
-        print(#function)
-        dismissViewControllers()
+        view.window?.rootViewController?.dismiss(animated: true)
+        operatorsViewModel?.closeAction()
+        NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
     }
     
     func openDetailVC() {
@@ -73,9 +146,5 @@ class InternetTVSuccessViewController: UIViewController {
         vc.title = "Детали операции"
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true)
-    }
-
-    func dismissViewControllers() {
-        view.window?.rootViewController?.dismiss(animated: true)
     }
 }

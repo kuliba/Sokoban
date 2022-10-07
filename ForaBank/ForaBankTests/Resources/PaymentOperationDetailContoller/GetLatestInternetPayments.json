@@ -10,10 +10,10 @@
         }
       ],
       "amount": 100,
-      "date": "2022-01-24T15:00:50.853Z",
+      "date": 1653570551608,
       "paymentDate": "21.12.2021 11:04:26",
       "puref": "iFora||4285",
-      "type": "phone"
+      "type": "internet"
     }
   ],
   "errorMessage": "string",

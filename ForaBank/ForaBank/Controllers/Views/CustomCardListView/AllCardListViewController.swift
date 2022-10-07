@@ -39,7 +39,9 @@ class AllCardListViewController: UITableViewController {
     var onlyCard = true
     var withTemplate = true
     
-    var cardModel: [GetProductListDatum] = [] {
+    let model = Model.shared
+    
+    var cardModel: [UserAllCardsModel] = [] {
         didSet { DispatchQueue.main.async {
             self.tableView.reloadData() } } }
     
@@ -47,7 +49,7 @@ class AllCardListViewController: UITableViewController {
         didSet { DispatchQueue.main.async {
             self.tableView.reloadData() } } }
 
-    var didCardTapped: ((GetProductListDatum) -> Void)?
+    var didCardTapped: ((UserAllCardsModel) -> Void)?
     var didTemplateTapped: ((GetProductTemplateDatum) -> Void)?
     
     override func viewDidLoad() {
@@ -61,17 +63,18 @@ class AllCardListViewController: UITableViewController {
         tableView.register(CardTableCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.tableFooterView = UIView()
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 60, bottom: 0, right: 20)
-        getCardList { [weak self] data ,error in
-            DispatchQueue.main.async {
-                
-                if error != nil {
-                    self?.showAlert(with: "Ошибка", and: error!)
-                }
-                guard let data = data else { return }
-                self?.cardModel = data
-                
-            }
+        
+        var products: [UserAllCardsModel] = []
+        var types: [ProductType] = [.card]
+        if !onlyCard {
+            types.append(.account)
         }
+        types.forEach { type in
+            products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+        }
+        
+        let clientId = Model.shared.clientInfo.value?.id
+        cardModel = products.filter({$0.ownerID == clientId})
         
         if withTemplate {
             getProductTemplate()
@@ -119,7 +122,7 @@ class AllCardListViewController: UITableViewController {
         switch indexPath.section {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! CardTableCell
-            cell.cardView.cardModel = cardModel[indexPath.row]
+            cell.cardView.model = cardModel[indexPath.row]
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! CardTableCell
@@ -141,50 +144,20 @@ class AllCardListViewController: UITableViewController {
     }
     
     //MARK: - API
-    private func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?) ->() ) {
-        
-        let param = ["isCard": "true", "isAccount": "\(!onlyCard)", "isDeposit": "false", "isLoan": "false"]
-        
-        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
-            if error != nil {
-                completion(nil, error)
-            }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                guard let cardList = model.data else { return }
-                completion(cardList, nil)
-            } else {
-                guard let error = model.errorMessage else { return }
-                completion(nil, error)
-            }
-        }
-//
-//        NetworkHelper.request(.getProductList) { cardList , error in
-//            if error != nil {
-//                completion(nil, error)
-//            }
-//            guard let cardList = cardList as? [GetProductListDatum] else { return }
-//            completion(cardList, nil)
-//            print("DEBUG: Load card list... Count is: ", cardList.count)
-//        }
-    }
     
     private func getProductTemplate() {
         NetworkManager<GetProductTemplateListDecodableModel>.addRequest(.getProductTemplateList, [:], [:]) { model, error in
             if error != nil {
                 guard let error = error else { return }
-                print("DEBUG: ", #function, error)
 //                completion(nil, error)
             } else {
                 guard let model = model else { return }
                 guard let statusCode = model.statusCode else { return }
                 if statusCode == 0 {
                     guard let tempList = model.data else { return }
-                    print("DEBUG: template List:", tempList)
                     self.saveCardModel = tempList
                 } else {
                     let error = model.errorMessage ?? "nil"
-                    print("DEBUG: ", #function, error)
 //                    completion(nil, error)
                 }
             }

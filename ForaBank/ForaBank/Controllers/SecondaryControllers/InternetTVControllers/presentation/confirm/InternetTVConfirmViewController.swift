@@ -1,8 +1,10 @@
 import UIKit
-import RealmSwift
-
+import IQKeyboardManagerSwift
 
 class InternetTVConfirmViewController: UIViewController {
+    
+    var operatorsViewModel: OperatorsViewModel?
+    
     var viewModel: InternetTVConfirmViewModel? {
         didSet {
             guard let model = viewModel else { return }
@@ -102,7 +104,9 @@ class InternetTVConfirmViewController: UIViewController {
             return
         }
         self.otpCode = otpCode.filter { "0"..."9" ~= $0 }
-        smsCodeField.text =  self.otpCode
+        DispatchQueue.main.async {
+            self.smsCodeField.text =  self.otpCode
+        }
     }
     
     func setupData(with model: InternetTVConfirmViewModel) {
@@ -176,13 +180,44 @@ class InternetTVConfirmViewController: UIViewController {
                     self.viewModel?.statusIsSuccess = true
                     vc.confirmModel = self.viewModel
                     vc.id = model.data?.paymentOperationDetailId ?? 0
+                    vc.operatorsViewModel = self.operatorsViewModel
                     if self.viewModel?.type == .gkh {
                         vc.printFormType = "housingAndCommunalService"
+                        vc.confirmModel?.type = .gkh
+                        if let name = self.viewModel?.fullName, let paymentOperationDetailId = model.data?.paymentOperationDetailId {
+                            
+                            if self.viewModel?.template == nil {
+                                self.viewModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+                                
+                            } else {
+                                self.viewModel?.templateButtonViewModel = .template(paymentOperationDetailId)
+                            }
+                        }
                     } else if self.viewModel?.type == .internetTV {
                         vc.printFormType = "internet"
+                        vc.confirmModel?.type = .internetTV
+                        if let name = self.viewModel?.fullName, let paymentOperationDetailId = model.data?.paymentOperationDetailId {
+                            
+                            if self.viewModel?.template == nil {
+                                self.viewModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+                                
+                            } else {
+                                self.viewModel?.templateButtonViewModel = .template(paymentOperationDetailId)
+                            }
+                        }
                     }
                     else if self.viewModel?.type == .transport {
                         vc.printFormType = "transport"
+                        vc.confirmModel?.type = .transport
+                        if let name = self.viewModel?.fullName, let paymentOperationDetailId = model.data?.paymentOperationDetailId {
+                            
+                            if self.viewModel?.template == nil {
+                                self.viewModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+                                
+                            } else {
+                                self.viewModel?.templateButtonViewModel = .template(paymentOperationDetailId)
+                            }
+                        }
                     }
                     vc.modalPresentationStyle = .fullScreen
                     self.present(vc, animated: true, completion: nil)
@@ -191,5 +226,17 @@ class InternetTVConfirmViewController: UIViewController {
                 self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
             }
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
     }
 }

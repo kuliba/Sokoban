@@ -1,0 +1,8 @@
+{
+  "statusCode": 0,
+  "errorMessage": "string",
+  "data": {
+    "limit": 1000000,
+    "currencyLimit": "RUB"
+  }
+}

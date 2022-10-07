@@ -43,7 +43,7 @@ class C2BDetailsFormViewController: UIViewController {
 
     var bankField = C2BDetailsInputView(
             viewModel: C2BDetailsInputViewModel(
-                    title: "Банк",
+                    title: "Банк получателя",
                     text: C2BSuccessView.bankName,
                     image: C2BSuccessView.bankImg,
                     isEditable: false))

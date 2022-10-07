@@ -13,16 +13,14 @@ extension ServerCommands {
     enum FastPaymentController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/createFastPaymentContract
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/createFastPaymentContract
          */
         struct CreateFastPaymentContract: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/createFastPaymentContract"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: BasePayload?
-            let timeout: TimeInterval? = nil
             
             struct Response: ServerResponse {
                 
@@ -39,17 +37,14 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/fastPaymentContractFindList
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/fastPaymentContractFindList
          */
         struct FastPaymentContractFindList: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/fastPaymentContractFindList"
             let method: ServerCommandMethod = .get
-            let parameters: [ServerCommandParameter]? = nil
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {}
             
             struct Response: ServerResponse {
@@ -57,13 +52,6 @@ extension ServerCommands {
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: [FastPaymentContractFullInfoType]?
-                
-                struct FastPaymentContractFullInfoType: Decodable, Equatable {
-                    
-                    let fastPaymentContractAccountAttributeList: [FastPaymentContractAccountAttributeTypeData]?
-                    let fastPaymentContractAttributeList: [FastPaymentContractAttributeTypeData]?
-                    let fastPaymentContractClAttributeList: [FastPaymentContractClAttributeTypeData]?
-                }
             }
             
             internal init(token: String) {
@@ -73,16 +61,14 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/updateFastPaymentContract
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/updateFastPaymentContract
          */
         struct UpdateFastPaymentContract: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/updateFastPaymentContract"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: BasePayload?
-            let timeout: TimeInterval? = nil
             
             struct Response: ServerResponse {
                 

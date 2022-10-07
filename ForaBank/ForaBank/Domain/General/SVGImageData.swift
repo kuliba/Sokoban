@@ -10,7 +10,7 @@ import SVGKit
 import UIKit
 import SwiftUI
 
-struct SVGImageData: CustomStringConvertible, Equatable {
+struct SVGImageData: CustomStringConvertible, Equatable, Hashable {
 
     let description: String
     

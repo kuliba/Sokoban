@@ -7,7 +7,7 @@
 
     import UIKit
     import AnyFormatKit
-    import RealmSwift
+    import IQKeyboardManagerSwift
 
     class ConfurmOpenDepositViewController: PaymentViewController {
         
@@ -25,7 +25,7 @@
                 }
             }
         }
-        lazy var realm = try? Realm()
+        
         var product: OpenDepositDatum? {
             didSet {
                 guard let product = product else { return }
@@ -172,8 +172,6 @@
                     if intValue < minSumm ||
                         intValue > maxSumm {
                         
-                        print("TODO: - Validate summ")
-                        
                     }
                 }
             }
@@ -207,6 +205,18 @@
             calculateSumm(with: startAmount)
             
             bottomView.doneButtonIsEnabled(newText.isEmpty)
+            
+            IQKeyboardManager.shared.enable = true
+            IQKeyboardManager.shared.enableAutoToolbar = true
+            IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        }
+        
+        override func viewDidDisappear(_ animated: Bool) {
+            super.viewDidDisappear(animated)
+            IQKeyboardManager.shared.enable = false
+            IQKeyboardManager.shared.enableAutoToolbar = false
+            IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+    
         }
         
         //MARK: - Helper
@@ -251,7 +261,7 @@
             
             cardListView.didCardTapped = { cardId in
                 DispatchQueue.main.async {
-                    let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                    let cardList = ReturnAllCardList.cards()
                     cardList.forEach({ card in
                         if card.id == cardId {
                             self.cardFromField.model = card
@@ -401,16 +411,13 @@
             NetworkManager<OpenDepositDecodableModel>.addRequest(.openDeposit, [:], [:]) { respons, error in
                 self.dismissActivity()
                 if error != nil {
-                    print("DEBUG: Error openDeposit:", error ?? "")
                     self.showAlert(with: "Ошибка", and: error ?? "")
                 }
                 guard let model = respons else { return }
                 if model.statusCode == 0 {
-                    print("DEBUG: Success openDeposit")
                     self.showSmsCode = true
                     self.hideView(self.smsCodeField, needHide: false)
                 } else {
-                    print("DEBUG: Error openDeposit:", model.errorMessage ?? "")
                     self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                 }
             }
@@ -442,20 +449,17 @@
             } else if card.productType == "ACCOUNT" {
                 body["sourceAccountId"] = card.id as AnyObject
             }
-            print(body)
             showActivity()
             
             NetworkManager<MakeDepositDecodableModel>.addRequest(.makeDepositPayment, [:], body) { respons, error in
                 DispatchQueue.main.async {
                     self.dismissActivity()
                     if error != nil {
-                        print("DEBUG: Error: ", error ?? "")
                         self.showAlert(with: "Ошибка", and: error ?? "")
                     }
                     guard let model = respons else { return }
                     
                     if model.statusCode == 0 {
-                        print("DEBUG: Success payment")
                         
                         let confurmVCModel = ConfirmViewControllerModel(type: .openDeposit)
                         confurmVCModel.cardFromRealm = self.cardFromField.model
@@ -476,7 +480,6 @@
                         
                         self.present(vc, animated: true, completion: nil)
                     } else {
-                        print("DEBUG: Error: ", model.errorMessage ?? "")
                         self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                     }
                 }

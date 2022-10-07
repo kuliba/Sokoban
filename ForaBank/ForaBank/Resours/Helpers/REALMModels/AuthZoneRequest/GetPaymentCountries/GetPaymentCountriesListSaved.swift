@@ -14,7 +14,7 @@ struct GetPaymentCountriesListSaved {
         
         NetworkManager<GetPaymentCountriesDecodableModel>.addRequest(.getPaymentCountries, param, body) { model, error in
             if error != nil {
-                print("DEBUG: error", error!)
+                
             } else {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
@@ -49,7 +49,7 @@ struct GetPaymentCountriesListSaved {
                         realm?.add(tempArray)
                         try realm?.commitWrite()
                     } catch {
-                        print(error.localizedDescription)
+                        
                     }
                 }
             }

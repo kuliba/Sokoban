@@ -16,7 +16,7 @@ struct AddOperatorsList: DownloadQueueProtocol {
         NetworkManager<GetAnywayOperatorsListDecodableModel>.addRequest(.getAnywayOperatorsList, param, body) { model, error in
             
             if let error = error {
-                print("DEBUG: error", error)
+                
                 completion(.failed(nil))
                 return
             }

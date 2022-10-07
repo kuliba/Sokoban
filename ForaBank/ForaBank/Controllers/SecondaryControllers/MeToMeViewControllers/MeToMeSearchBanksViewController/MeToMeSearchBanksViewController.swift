@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import IQKeyboardManagerSwift
 
 class MeToMeSearchBanksViewController: UIViewController {
+    
+    weak var rootVC: MeToMeSettingViewController?
     
     var allBanks = [BankFullInfoList]()
     var banks = [BankFullInfoList]() {
@@ -90,6 +93,19 @@ class MeToMeSearchBanksViewController: UIViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+    }
+    
     //MARK: - Setup UI
     func setupUI() {
         view.backgroundColor = .white
@@ -165,15 +181,20 @@ class MeToMeSearchBanksViewController: UIViewController {
         selectedBanks.forEach { bank in
             bankList.append(bank.memberID ?? "")
         }
-        
+
         let body = ["bankIdList" : bankList] as [String: AnyObject]
         self.showActivity()
-        NetworkManager<ChangeClientConsentMe2MePullDecodableModel>.addRequest(.changeClientConsentMe2MePull, [:], body) { model, error in
+        NetworkManager<ChangeClientConsentMe2MePullDecodableModel>.addRequest(.changeClientConsentMe2MePull, [:], body) { [unowned self] model, error in
             DispatchQueue.main.async {
                 self.dismissActivity()
                 if error != nil {
                     self.showAlert(with: "Ошибка", and: error!)
                 } else {
+                    
+                    let nameBanksSelected = self.selectedBanks
+                        .compactMap { $0.rusName == nil ? $0.fullName : $0.rusName }
+                    self.rootVC?.banksView.banksName = nameBanksSelected
+                    
                     self.dismiss(animated: true, completion: nil)
                 }
             }
@@ -184,47 +205,29 @@ class MeToMeSearchBanksViewController: UIViewController {
     func suggestBank(_ bic: String, completion: @escaping (_ bankList: [BankFullInfoList]?, _ error: String?) -> Void ) {
         showActivity()
         
-        let body = [ "bic": bic,
-                     "serviceType" : "5",
-                     "type": "20"
-        ]
-        
-        NetworkManager<GetFullBankInfoListDecodableModel>.addRequest(.getFullBankInfoList , body, [:]) { [weak self] model, error in
-            self?.dismissActivity()
-            if error != nil {
-                guard let error = error else { return }
-                print("DEBUG: Error: ", error)
-                completion(nil, error)
+        self.dismissActivity()
+                
+        guard let data = Model.shared.dictionaryFullBankInfoList() else { return }
+        var filterBank: [BankFullInfoList] = []
+        data.forEach({ bank in
+            let fullBankInfoItem = bank.fullBankInfoList
+            if fullBankInfoItem.senderList?.contains("ME2MEPULL") ?? false
+                && fullBankInfoItem.receiverList?.contains("ME2MEPULL") ?? false {
+                filterBank.append(fullBankInfoItem)
             }
-            guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
-            if model.statusCode == 0 {
-                guard let data  = model.data else { return }
-                var filterBank: [BankFullInfoList] = []
-                data.bankFullInfoList?.forEach({ bank in
-                    if bank.senderList?.contains("ME2MEPULL") ?? false
-                        && bank.receiverList?.contains("ME2MEPULL") ?? false {
-                        filterBank.append(bank)
-                    }
-                })
-                var list = filterBank.sorted(by: {$0.rusName ?? "" < $1.rusName ?? ""})
-                //#if RELEASE
-                list.forEach { bank in
-                    if bank.memberID == "100000000217" {
-                        if let index = list.firstIndex(where: {$0.memberID == bank.memberID}) {
-                            list.remove(at: index)
-                        }
-                    }
+        })
+        var list = filterBank.sorted(by: {$0.rusName ?? "" < $1.rusName ?? ""})
+        //#if RELEASE
+        list.forEach { bank in
+            if bank.memberID == "100000000217" {
+                if let index = list.firstIndex(where: {$0.memberID == bank.memberID}) {
+                    list.remove(at: index)
                 }
-                //#endif
-                completion(list, nil)
-            } else {
-                guard let error = model.errorMessage else { return }
-                print("DEBUG: Error: ", error)
-
-                completion(nil, error)
             }
         }
+        //#endif
+        completion(list, nil)
+        
     }
     
     func getClientConsent(completion: @escaping (_ bankList: [ConsentList]?, _ error: String?) -> Void) {
@@ -233,17 +236,14 @@ class MeToMeSearchBanksViewController: UIViewController {
             self?.dismissActivity()
             if error != nil {
                 guard let error = error else { return }
-                print("DEBUG: Error: ", error)
                 completion(nil, error)
             }
             guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 guard let data  = model.data else { return }
                 completion(data.consentList ?? [], nil)
             } else {
                 guard let error = model.errorMessage else { return }
-                print("DEBUG: Error: ", error)
                 completion(nil, error)
             }
         }

@@ -7,47 +7,112 @@
 
 import Foundation
 
+//MARK: - Actions
+
 extension ModelAction {
     
     enum Settings {
         
-        enum GetClientInfo {
+        struct GetUserSettings: Action {}
         
-            struct Requested: Action { }
+        struct UpdateProductsHidden: Action {
             
-            struct Complete: Action {
-                
-                let user: ClientInfoData
-            }
-            
-            struct Failed: Action {
-                
-                let error: Error
-            }
+            let productID: ProductData.ID
+        }
+        
+        struct UpdateUserSettingPush: Action {
+
+            let userSetting: UserSettingPush
         }
     }
 }
 
+//MARK: - Data Helpers
+
 extension Model {
     
-    var settingsMainSections: MainSectionSettings {
+    var settingsLaunchedBefore: Bool {
+        
+        do {
+            
+            let launchedBefore: Bool = try settingsAgent.load(type: .general(.launchedBefore))
+            return launchedBefore
+            
+        } catch {
+            
+            return false
+        }
+    }
+    
+    var settingsMainSections: MainSectionsSettings {
         
         do {
     
-            let settings: MainSectionSettings = try settingsAgent.load(type: .interface(.mainSections))
+            let settings: MainSectionsSettings = try settingsAgent.load(type: .interface(.mainSections))
             return settings
         
         } catch {
             
-            return .initial
+            return MainSectionsSettings(collapsed: [:])
         }
     }
     
-    func settingsUpdate(_ settings: MainSectionSettings) {
+    var settingsProductsSections: ProductsSectionsSettings {
+        
+        do {
+    
+            let settings: ProductsSectionsSettings = try settingsAgent.load(type: .interface(.productsSections))
+            return settings
+        
+        } catch {
+            
+            return ProductsSectionsSettings(collapsed: [:])
+        }
+    }
+    
+    var settingsProductsMoney: ProductsMoneySettings {
+        
+        do {
+    
+            let settings: ProductsMoneySettings = try settingsAgent.load(type: .interface(.productsMoney))
+            return settings
+        
+        } catch {
+            
+            return ProductsMoneySettings(selectedCurrencyId: "RUB",
+                                         selectedCurrencySymbol: "\u{20BD}")
+        }
+    }
+    
+    func settingsMainSectionsUpdate(_ settings: MainSectionsSettings) {
         
         do {
             
             try settingsAgent.store(settings, type: .interface(.mainSections))
+            
+        } catch {
+            
+            //TODO: set logger
+        }
+    }
+    
+    func settingsProductsSectionsUpdate(_ settings: ProductsSectionsSettings) {
+        
+        do {
+            
+            try settingsAgent.store(settings, type: .interface(.productsSections))
+            
+        } catch {
+            
+            //TODO: set logger
+        }
+    }
+    
+    func settingsProductsMoneyUpdate(_ settings: ProductsMoneySettings) {
+        
+        do {
+            
+            try settingsAgent.store(settings, type: .interface(.productsMoney))
             
         } catch {
             
@@ -56,27 +121,168 @@ extension Model {
         }
     }
     
-    func handleGetClientInfoRequest() {
+    func userSetting<Setting: UserSettingProtocol>(for type: UserSettingData.Kind) -> Setting? {
+
+        guard let setting = self.userSettings.value.filter({$0.sysName == type.rawValue}).first else { return nil }
+
+        switch type {
+        case .disablePush:
+            return UserSettingPush(with: setting) as? Setting
+        }
+    }
+}
+
+//MARK: - Handlers
+
+extension Model {
+    
+    func handleUpdateProductsHidden(_ productID: ProductData.ID) {
+
+        var productsHidden = self.productsHidden.value
+
+        if productsHidden.contains(productID) {
+
+            guard let firstIndex = productsHidden.firstIndex(where: { $0 == productID }) else {
+                return
+            }
+
+            productsHidden.remove(at: firstIndex)
+
+        } else {
+
+            productsHidden.append(productID)
+        }
+
+        self.productsHidden.value = productsHidden
+
+        do {
+
+            try settingsAgent.store(self.productsHidden.value, type: .interface(.productsHidden))
+
+        } catch {
+
+            handleSettingsCachingError(error: error)
+        }
+    }
+    
+    func handleUpdateUserSetting(_ payload: ModelAction.Settings.UpdateUserSettingPush) {
+        
         guard let token = token else {
+            handledUnauthorizedCommandAttempt()
             return
         }
-        
-        let command = ServerCommands.PersonController.GetClientInfo(token: token)
-        serverAgent.executeCommand(command: command) { result in
+
+        let command = ServerCommands.UserController.SetUserSetting(token: token, userSetting: payload.userSetting)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
             case .success(let response):
+                    
                 switch response.statusCode {
                 case .ok:
-                    guard let clientInfo = response.data else { return }
-                    self.action.send(ModelAction.Settings.GetClientInfo.Complete(user: clientInfo))
+                    
+                    let reducedSettings = Self.reduceSettings(userSettings: self.userSettings.value, data: payload.userSetting.userSettingData)
+                    self.userSettings.value = reducedSettings
+                    
+                    do {
+                            
+                        try self.localAgent.store(reducedSettings, serial: nil)
+
+                    } catch {
+                        
+                        self.handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
                 default:
-                    //TODO: handle not ok server status
-                    return
+                    if let errorMessage = response.errorMessage {
+                        
+                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: errorMessage)
+                    } else {
+                        
+                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: nil)
+                    }
                 }
+                
             case .failure(let error):
-                self.action.send(ModelAction.Settings.GetClientInfo.Failed(error: error))
+                
+                self.handleServerCommandError(error: error, command: command)
+
             }
         }
+    }
+    
+    func handleGetUserSettings() {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+
+        let command = ServerCommands.UserController.GetUserSettings(token: token)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                    
+                switch response.statusCode {
+                case .ok:
+                    
+                    guard let settings = response.data else {
+                        self.handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    self.userSettings.value = settings.userSettingList
+                    
+                    do {
+                            
+                        try self.localAgent.store(settings.userSettingList, serial: nil)
+
+                    } catch {
+                        
+                        self.handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    
+                    if let errorMessage = response.errorMessage {
+                        
+                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: errorMessage)
+                    } else {
+                        
+                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: nil)
+                    }
+                }
+                
+            case .failure(let error):
+                
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    static func reduceSettings(userSettings: [UserSettingData], data: UserSettingData) -> [UserSettingData] {
+        
+        var settings = [UserSettingData]()
+        
+        for setting in userSettings {
+            
+            if setting.sysName == data.sysName {
+                
+                settings.append(data)
+                
+            } else {
+                
+                settings.append(setting)
+            }
+        }
+        
+        let settingsNames = settings.map{ $0.sysName }
+        if !settingsNames.contains(data.sysName) {
+
+            settings.append(data)
+        }
+
+        return settings
     }
 }

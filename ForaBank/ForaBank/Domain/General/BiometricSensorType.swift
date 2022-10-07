@@ -45,3 +45,14 @@ extension BiometricSensorType {
         }
     }
 }
+
+extension BiometricSensorType: CustomDebugStringConvertible {
+    
+    var debugDescription: String {
+        
+        switch self {
+        case .face: return "Face ID"
+        case .touch: return "Touch ID"
+        }
+    }
+}

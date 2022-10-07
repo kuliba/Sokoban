@@ -7,10 +7,11 @@
 
 import UIKit
 import AVFoundation
-import RealmSwift
+
 import PDFKit
 import MobileCoreServices
 import UniformTypeIdentifiers
+import Combine
 
 
 protocol QRProtocol: AnyObject {
@@ -24,6 +25,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
             return storyboard.instantiateViewController(withIdentifier: "qr") as? QRViewController
         }
     
+    var viewModel: QrViewModel?
     weak var delegate: QRProtocol?
     var qrCodeLayer = AVCaptureVideoPreviewLayer()
     let qrCodesession = AVCaptureSession()
@@ -35,13 +37,12 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
 
     let bottomSpace: CGFloat = 80.0
     var squareView: SquareView? = nil
-    lazy var realm = try? Realm()
-    var operatorsList: Results<GKHOperatorsModel>? = nil
+    var operatorsList: [GKHOperatorsModel]? = nil
     var keyValue = ""
     var qrData = [String: String]()
     var operators: GKHOperatorsModel? = nil
     var qrIsFired = false
-
+    var segueOut = true
     var imagePicker: UIImagePickerController!
 
     @IBOutlet weak var qrView: UIView!
@@ -52,17 +53,31 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
         pdfFile.add_CornerRadius(30)
         zap.add_CornerRadius(30)
         info.add_CornerRadius(30)
-        navigationController?.isNavigationBarHidden = true
         
-        operatorsList = realm?.objects(GKHOperatorsModel.self)
+        operatorsList = getOperatorsList(model: Model.shared)
         setupLayer()
         startQRCodeScanning()
         view.insertSubview(qrView, at: 1)
         backButton.setupButtonRadius()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        navigationController?.isNavigationBarHidden = true
+        self.tabBarController?.tabBar.layer.zPosition = -1
+    }
+    
     public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
         controller.dismiss(animated: true)
+    }
+    
+    func getOperatorsList(model: Model) -> [GKHOperatorsModel] {
+        
+        let operators = (model.dictionaryAnywayOperatorGroups()?.compactMap { $0.returnOperators() }) ?? []
+        let operatorCodes = [GlobalModule.UTILITIES_CODE, GlobalModule.INTERNET_TV_CODE, GlobalModule.PAYMENT_TRANSPORT]
+        let parameterTypes = ["INPUT"]
+        let operatorsList = GKHOperatorsModel.childOperators(with: operators, operatorCodes: operatorCodes, parameterTypes: parameterTypes)
+        return operatorsList
     }
     
     @IBAction func info(_ sender: UIButton) {
@@ -78,7 +93,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
                 device?.torchMode = device?.torchMode == AVCaptureDevice.TorchMode.on ? .off : .on
                 device?.unlockForConfiguration()
             } catch {
-                print(error.localizedDescription)
+
             }
         }
     }
@@ -96,12 +111,13 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
                 documentPickerController.delegate = self
                 self?.present(documentPickerController, animated: true, completion: nil)
             default:
-                print()
+                break
             }
 
 
         }
 
+        
         let navController = UINavigationController(rootViewController: controller)
         navController.modalPresentationStyle = .custom
         navController.transitioningDelegate = self
@@ -149,40 +165,78 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
         })
         returnKey()
         } else {
-            performSegue(withIdentifier: "qrError", sender: nil)
+            
+            let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
+            if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
+                viewModel?.closeAction(false)
+                self.present(vc, animated: true)
+            }
         }
     }
 
     final func onC2B(link: String) {
         qrCodesession.stopRunning()
-        qrView.layer.sublayers?.removeLast()
         GlobalModule.c2bURL = link
-        dismiss(animated: false)
+        viewModel?.closeAction(false)
+        navigationController?.popViewController(animated: true)
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
+        
+        if GlobalModule.c2bURL != nil,  let controller = C2BDetailsViewController.storyboardInstance() {
+            let nc = UINavigationController(rootViewController: controller)
+            nc.modalPresentationStyle = .fullScreen
+            present(nc, animated: false)
+        }
     }
 
     final func returnKey() {
         qrCodesession.stopRunning()
-        qrView.layer.sublayers?.removeLast()
+
         if operators != nil {
             GlobalModule.qrOperator = operators
             GlobalModule.qrData = qrData
-            self.definesPresentationContext = true
-            dismiss(animated: false)
-//            self.presentingViewController?.dismiss(animated: true, completion: nil)
+            if viewModel != nil {
+                viewModel?.closeAction(true)
+            } else if segueOut == true {
+                self.navigationController?.popViewController(animated: true)
+            } else {
+                self.dismiss(animated: true)
+            }
+            
+            
+//            GlobalModule.qrOperator = operators
+//            GlobalModule.qrData = qrData
+//            self.definesPresentationContext = true
 //            navigationController?.popViewController(animated: true)
+////            self.presentingViewController?.dismiss(animated: true, completion: nil)
+//            self.tabBarController?.tabBar.layer.zPosition = 0
+//            navigationController?.isNavigationBarHidden = false
+
+//            if GlobalModule.qrOperator != nil && GlobalModule.qrData != nil, let controller = InternetTVMainController.storyboardInstance() {
+//                    let nc = UINavigationController(rootViewController: controller)
+//                    nc.modalPresentationStyle = .fullScreen
+//                    present(nc, animated: false)
+//            }
+            
         } else {
-            performSegue(withIdentifier: "qrError", sender: nil)
+
+            let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
+            if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
+                self.present(vc, animated: true)
+            }
         }
     }
     
     @IBAction func back(_ sender: UIButton) {
+        
         qrCodesession.stopRunning()
-        qrView.layer.sublayers?.removeLast()
-//        dismiss(animated: false)
+        if viewModel != nil {
+            viewModel?.closeAction(false)
+        } else if segueOut == true {
+            self.navigationController?.popViewController(animated: true)
+        } else {
+            self.dismiss(animated: true)
+        }
 
-        self.definesPresentationContext = true
-        self.presentingViewController?.dismiss(animated: true, completion: nil)
-//        navigationController?.popViewController(animated: true)
     }
 }
 
@@ -241,9 +295,20 @@ extension QRViewController {
             })
                 self?.returnKey()
             } else {
-                self?.performSegue(withIdentifier: "qrError", sender: nil)
+                
+                let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
+                if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
+                    self?.viewModel?.closeAction(false)
+                    self?.present(vc, animated: true)
+                }
             }
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        self.tabBarController?.tabBar.layer.zPosition = 0
+        navigationController?.isNavigationBarHidden = false
     }
 
 }

@@ -9,18 +9,14 @@ import Foundation
 
 extension PaymentsProductSelectorView.ViewModel {
     
-    convenience init(data: [UserAllCardsModel]) {
+    convenience init(productsData: [ProductData], model: Model) {
         
         self.init(categories: nil, products: [])
 
         var products = [ProductView.ViewModel]()
-        for cardData in data {
+        for product in productsData {
             
-            let productId = cardData.id
-            
-            guard let productViewModel = ProductView.ViewModel(data: cardData, action: { [weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: productId))}) else {
-               continue
-            }
+            let productViewModel = ProductView.ViewModel(with: product, size: .small, style: .main, model: model)
             products.append(productViewModel)
         }
         
@@ -39,6 +35,8 @@ extension PaymentsProductSelectorView.ViewModel {
             bindCategories()
         }
         self.products = products
+        
         bind()
+        bind(products)
     }
 }

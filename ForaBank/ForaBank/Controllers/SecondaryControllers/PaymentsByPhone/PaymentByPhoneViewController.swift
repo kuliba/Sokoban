@@ -9,12 +9,12 @@ import UIKit
 import RealmSwift
 import AnyFormatKit
 import SwiftUI
+import IQKeyboardManagerSwift
 
 class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
-
-    lazy var realm = try? Realm()
     
     var viewModel: PaymentByPhoneViewModel
+    let model: Model = .shared
     
     var banks: [BanksList]? {
         didSet {
@@ -91,7 +91,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     
     var bottomView = BottomInputView()
     
-    
+    var selectNumber: String?
     //MARK: - Viewlifecicle
     
     init(viewModel: PaymentByPhoneViewModel) {
@@ -103,11 +103,15 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        AddAllUserCardtList.add() { }
-        
         phoneField.textField.delegate = self
         phoneField.textField.maskString = "+0 000 000-00-00"
         
@@ -115,6 +119,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         
         if let maskPhoneNumber = viewModel.maskPhoneNumber {
             phoneField.text = maskPhoneNumber
+            selectNumber = maskPhoneNumber
         }
         
         setupUI()
@@ -123,20 +128,26 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         
         setupBankList()
         setupActions()
-        if viewModel.amount != nil {
-            setupAmount()
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if let template = viewModel.template {
+            runBlockAfterDelay(0.2) {
+                self.setupAmount(amount: template.amount)
+                self.bottomView.doneButtonIsEnabled(false)
+                self.bottomView.doneButton.isEnabled =  true
+            }
+        }
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
         navigationController?.navigationBar.isHidden = false
     }
     
     //MARK: - Helpers
-    func setupAmount() {
-        let moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## ₽")
-        
+    
+    func setupAmount(amount: Double?) {
+        guard let moneyFormatter = bottomView.moneyFormatter else { return }
         let newText = moneyFormatter.format("\(viewModel.amount ?? 0)") ?? ""
         bottomView.amountTextField.text = newText
     }
@@ -147,6 +158,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
             let updatedText = text.replacingCharacters(in: textRange,
                                                        with: string)
             viewModel.phoneNumber = updatedText
+            selectNumber = updatedText
         }
         return true
     }
@@ -161,26 +173,19 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     }
     
     func setupBankList() {
-        getBankList { [weak self]  banksList, error in
-            DispatchQueue.main.async {
-                if error != nil {
-                    self?.showAlert(with: "Ошибка", and: error!)
+        
+        var filteredbanksList : [BanksList] = []
+        
+        model.dictionaryBankListLegacy?.forEach { bank in
+            let codeList = bank.paymentSystemCodeList
+            codeList?.forEach { code in
+                if code == "SFP" {
+                    filteredbanksList.append(bank)
                 }
-                
-                guard let banksList = banksList else { return }
-                var filteredbanksList : [BanksList] = []
-                
-                banksList.forEach { bank in
-                    guard let codeList = bank.paymentSystemCodeList else { return }
-                    codeList.forEach { code in
-                        if code == "SFP" {
-                            filteredbanksList.append(bank)
-                        }
-                    }
-                }
-                self?.banks = filteredbanksList
             }
         }
+        self.banks = filteredbanksList
+        
     }
     
     func setupActions() {
@@ -190,8 +195,14 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         
         cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
-                cardList.forEach({ card in
+                
+                var products: [UserAllCardsModel] = []
+                
+                let data = self.model.products.value
+                
+                products = data.flatMap({$0.value}).compactMap({$0.userAllProducts()})
+                
+                products.forEach({ card in
                     if card.id == cardId {
                         self.cardField.model = card
                         if self.bankListView.isHidden == false {
@@ -220,8 +231,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                 delegate: self,
                 multiSelection: false,
                 subtitleCellType: SubtitleCellValue.phoneNumber)
-            let navigationController = UINavigationController(rootViewController: contactPickerScene)
-            self.present(navigationController, animated: true, completion: nil)
+            self.present(contactPickerScene, animated: true, completion: nil)
         }
         
         bottomView.didDoneButtonTapped = {(amount) in
@@ -243,6 +253,11 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     }
     
     fileprivate func setupUI() {
+        
+        if selectNumber != nil {
+            phoneField.textField.text = selectNumber ?? ""
+            phoneField.textField.maskString = selectNumber ?? ""
+        }
         view.backgroundColor = .white
         
         cardField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
@@ -262,7 +277,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(bottomView)
         bottomView.anchor(
             left: view.leftAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            bottom: view.bottomAnchor,
             right: view.rightAnchor)
         
         bottomView.currencySymbol = "₽"
@@ -281,12 +296,11 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         
         var sbpimage = UIImage()
         
-        if let paymentSystems = Dict.shared.paymentList{
+        let paymentSystems = Model.shared.paymentSystemList.value.map { $0.getPaymentSystem() }
         
-            for system in paymentSystems{
-                if system.code == "SFP"{
-                    sbpimage = system.svgImage?.convertSVGStringToImage() ?? UIImage()
-                }
+        for system in paymentSystems {
+            if system.code == "SFP" {
+                sbpimage = system.svgImage?.convertSVGStringToImage() ?? UIImage()
             }
         }
         
@@ -299,7 +313,14 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                                          action: #selector(updateNameTemplate))
             button.tintColor = .black
             navigationItem.rightBarButtonItem = button
-            addBackButton()
+            
+            let backButton = UIBarButtonItem(image: UIImage(named: "back_button"),
+                                         landscapeImagePhone: nil,
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(onTouchBackButton))
+            backButton.tintColor = .black
+            navigationItem.leftBarButtonItem = backButton
             
         } else {
             if viewModel.isSbp {
@@ -312,8 +333,22 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
             } else {
                 title = "Перевод по номеру телефона"
             }
+            
+            let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
+                                         landscapeImagePhone: nil,
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(onTouchBackButton))
+            button.tintColor = .black
+            navigationItem.leftBarButtonItem = button
         }
         setupBankField(bank: viewModel.selectedBank)
+    }
+    
+    @objc func onTouchBackButton() {
+        viewModel.closeAction()
+        dismiss(animated: true)
+        navigationController?.popToRootViewController(animated: true)
     }
     
     private func setupBankField(bank: BanksList?) {
@@ -335,14 +370,14 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
             
             if text.isEmpty != true {
                 if text.count < 20 {
-                Model.shared.action.send(ModelAction.PaymentTemplate.Update.Requested(
-                    name: text,
-                    parameterList: nil,
-                    paymentTemplateId: templateId))
+                    Model.shared.action.send(ModelAction.PaymentTemplate.Update.Requested(
+                        name: text,
+                        parameterList: nil,
+                        paymentTemplateId: templateId))
                     
-                // FIXME: В рефактре нужно слушатель на обновление title
-                self.title = text
-                
+                    // FIXME: В рефактре нужно слушатель на обновление title
+                    self.parent?.title = text
+                    
                 } else {
                     self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")
                 }
@@ -355,13 +390,11 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     //MARK: - API
     
     func getBankList(completion: @escaping (_ banksList: [BanksList]?, _ error: String?) -> () ) {
-        NetworkHelper.request(.getBanks) { banksList , error in
-            if error != nil {
-                completion(nil, error)
-            }
-            guard let banksList = banksList as? [BanksList] else { return }
-            completion(banksList, nil)
+        guard let banks = Model.shared.dictionaryBankListLegacy else {
+            return completion(nil, "Не удалось загрузить список банков")
         }
+            
+        completion(banks, nil)
     }
     
     func createTransfer(amount: String, card: UserAllCardsModel?, completion: @escaping (_ error: String?) -> ()) {
@@ -436,7 +469,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         guard let number = phoneField.textField.unmaskedText else { return }
         guard let comment = commentField.textField.text else { return }
         showActivity()
-  
+        
         let newBody = [
             "check" : false,
             "amount" : amount,
@@ -454,14 +487,14 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                     "fieldvalue": number
                 ],
                 [
-                  "fieldid": "2",
-                  "fieldname": "BankRecipientID",
-                  "fieldvalue": viewModel.bankId
+                    "fieldid": "2",
+                    "fieldname": "BankRecipientID",
+                    "fieldvalue": viewModel.bankId
                 ],
                 [
-                  "fieldid": "3",
-                  "fieldname": "Ustrd",
-                  "fieldvalue": comment
+                    "fieldid": "3",
+                    "fieldname": "Ustrd",
+                    "fieldvalue": comment
                 ]
             ]
         ] as [String: AnyObject]
@@ -538,20 +571,11 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
 //MARK: EPContactsPicker delegates
 extension PaymentByPhoneViewController: EPPickerDelegate {
     
-    func epContactPicker(_: EPContactsPicker, didContactFetchFailed error : NSError) {
-        print("Failed with error \(error.description)")
-    }
+    func epContactPicker(_: EPContactsPicker, didContactFetchFailed error : NSError) {}
     
-    func epContactPicker(_: EPContactsPicker, didCancel error : NSError) {
-        print("User canceled the selection");
-    }
+    func epContactPicker(_: EPContactsPicker, didCancel error : NSError) {}
     
-    func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) {
-        print("The following contacts are selected")
-        for contact in contacts {
-            print("\(contact.displayName())")
-        }
-    }
+    func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) {}
     
     func epContactPicker(_: EPContactsPicker, didSelectContact contact : EPContact) {
         let phoneFromContact = contact.phoneNumbers.first?.phoneNumber
@@ -569,5 +593,23 @@ extension PaymentByPhoneViewController: EPPickerDelegate {
             viewModel.phoneNumber = maskPhone ?? ""
         }
     }
+    
+    func epUserPhone(_ phone: String) {
+        var numbers = phone.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
+        if numbers.first == "7" {
+            let mask = StringMask(mask: "+0 (000) 000-00-00")
+            let maskPhone = mask.mask(string: numbers)
+            phoneField.text = maskPhone ?? ""
+            phoneField.textField.text = maskPhone ?? ""
+            selectNumber = maskPhone ?? ""
+        } else if numbers.first == "8" {
+            numbers.removeFirst()
+            let mask = StringMask(mask: "+7 (000) 000-00-00")
+            let maskPhone = mask.mask(string: numbers)
+            phoneField.text = maskPhone ?? ""
+            phoneField.textField.text = maskPhone ?? ""
+            selectNumber = maskPhone ?? ""
+        }
+    }
+    
 }
-

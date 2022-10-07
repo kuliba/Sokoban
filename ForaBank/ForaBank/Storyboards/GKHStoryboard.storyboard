@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eN2-KP-p9s">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eN2-KP-p9s">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="G8s-V3-Z5p">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="812"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="802"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="414" id="aQY-9w-35R"/>
@@ -61,13 +61,13 @@
                                                             <rect key="frame" x="10" y="14" width="354" height="22"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Оплатить по реквизитам" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pc0-yp-QLy">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="327" height="22"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="334" height="22"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YjZ-Y7-Ct9">
-                                                                    <rect key="frame" x="327" y="0.0" width="27" height="22"/>
+                                                                    <rect key="frame" x="334" y="0.0" width="20" height="22"/>
                                                                     <state key="normal" image="Vector_1"/>
                                                                 </button>
                                                             </subviews>
@@ -88,13 +88,13 @@
                                                             <rect key="frame" x="10" y="14" width="354" height="22"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Создать заявку на добавление" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Ye-Fz-wqv">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="331.5" height="22"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="337.5" height="22"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YMd-zK-6Hg">
-                                                                    <rect key="frame" x="331.5" y="0.0" width="22.5" height="22"/>
+                                                                    <rect key="frame" x="337.5" y="0.0" width="16.5" height="22"/>
                                                                     <state key="normal" image="Vector_1"/>
                                                                 </button>
                                                             </subviews>
@@ -167,14 +167,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="topLine" translatesAutoresizingMaskIntoConstraints="NO" id="CK4-qd-kzJ">
-                                <rect key="frame" x="191" y="10" width="32" height="4"/>
+                                <rect key="frame" x="191" y="54" width="32" height="4"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="4" id="UCf-4S-Gkh"/>
                                     <constraint firstAttribute="width" constant="32" id="guF-4C-WR9"/>
                                 </constraints>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TN0-MS-Tq4">
-                                <rect key="frame" x="20" y="29" width="374" height="18"/>
+                                <rect key="frame" x="20" y="73" width="374" height="18"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Выберите регион" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5eY-tk-qQm">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="18"/>
@@ -184,7 +184,7 @@
                                 </subviews>
                             </stackView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Введите название города" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="i3C-bD-8kR">
-                                <rect key="frame" x="20" y="57" width="374" height="40"/>
+                                <rect key="frame" x="20" y="101" width="374" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="ZDx-vi-CsQ"/>
                                 </constraints>
@@ -192,7 +192,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="jPU-35-1Im">
-                                <rect key="frame" x="5" y="107" width="404" height="701"/>
+                                <rect key="frame" x="5" y="151" width="404" height="691"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" textLabel="9s9-hq-eWB" detailTextLabel="XTh-gt-k1e" style="IBUITableViewCellStyleSubtitle" id="oPM-c4-p0M">
@@ -268,7 +268,7 @@
         <scene sceneID="AGV-Uj-suq">
             <objects>
                 <viewController id="aEQ-Qe-EY3" customClass="GKHInputViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="PsL-H1-E18">
+                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="PsL-H1-E18">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -312,7 +312,6 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <viewLayoutGuide key="safeArea" id="2bX-dH-Xft"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="9GB-Uu-AZ1" firstAttribute="trailing" secondItem="PsL-H1-E18" secondAttribute="trailing" id="1LU-dH-CnO"/>
@@ -359,7 +358,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Vector_1" width="16.5" height="16.5"/>
+        <image name="Vector_1" width="12" height="14"/>
         <image name="topLine" width="32" height="4"/>
         <namedColor name="redColorFora">
             <color red="1" green="0.21199999749660492" blue="0.21199999749660492" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

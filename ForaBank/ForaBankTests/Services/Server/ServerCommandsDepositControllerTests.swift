@@ -21,17 +21,10 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 	func testGetDepositInfo_Response_Encoding() throws {
 
 		// given
-		let endDate = formatter.date(from: "2022-02-03T08:37:44.633Z")
-		let startDate = formatter.date(from: "2022-02-03T08:37:44.633Z")
 
-		let command = ServerCommands.DepositController.GetDepositInfo(token: "",
-																	  endDate: endDate,
-																	  id: 10000184511,
-																	  name: "string",
-																	  startDate: startDate,
-																	  statementFormat: .csv)
+        let command = ServerCommands.DepositController.GetDepositInfo(token: "", payload: .init(id: 10000184511))
 
-		let expected = "{\"statementFormat\":\"CSV\",\"id\":10000184511,\"endDate\":\"2022-02-03T08:37:44.633Z\",\"name\":\"string\",\"startDate\":\"2022-02-03T08:37:44.633Z\"}"
+		let expected = "{\"id\":10000184511}"
 
 		// when
 		let result = try encoder.encode(command.payload)
@@ -45,12 +38,12 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 
 		// given
 		let url = bundle.url(forResource: "GetDepositInfo", withExtension: "json")!
-		let json = try Data(contentsOf: url)
-		let dateEnd = formatter.date(from: "2022-02-03T08:37:44.634Z")!
-		let dateNext = formatter.date(from: "2022-02-03T08:37:44.634Z")!
-		let dateOpen = formatter.date(from: "2022-02-03T08:37:44.634Z")!
+        let json = try Data(contentsOf: url)
+        let dateEnd = Date(timeIntervalSince1970: TimeInterval(10000184511 / 1000))
+		let dateNext = Date(timeIntervalSince1970: TimeInterval(10000184511 / 1000))
+		let dateOpen = Date(timeIntervalSince1970: TimeInterval(10000184511 / 1000))
 
-		let data = DepositInfoDataItem(balance: 1000,
+        let data = DepositInfoDataItem(balance: 1000,
 									   dateEnd: dateEnd,
 									   dateNext: dateNext,
 									   dateOpen: dateOpen,
@@ -79,12 +72,12 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 
 		// given
 		let url = bundle.url(forResource: "GetDepositInfoMin", withExtension: "json")!
-		let json = try Data(contentsOf: url)
-		let dateEnd = formatter.date(from: "2022-02-03T08:37:44.634Z")!
-		let dateNext = formatter.date(from: "2022-02-03T08:37:44.634Z")!
-		let dateOpen = formatter.date(from: "2022-02-03T08:37:44.634Z")!
+        let json = try Data(contentsOf: url)
+		let dateEnd = Date(timeIntervalSince1970: TimeInterval(10000184511 / 1000))
+		let dateNext = Date(timeIntervalSince1970: TimeInterval(10000184511 / 1000))
+		let dateOpen = Date(timeIntervalSince1970: TimeInterval(10000184511 / 1000))
 
-		let data = DepositInfoDataItem(balance: 1000,
+        let data = DepositInfoDataItem(balance: 1000,
 									   dateEnd: dateEnd,
 									   dateNext: dateNext,
 									   dateOpen: dateOpen,
@@ -108,42 +101,50 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 		// then
 		XCTAssertEqual(result, expected)
 	}
+    
+    func testGetDepositInfo_ServerResponse_Decoding() throws {
+
+        // given
+        let url = bundle.url(forResource: "GetDepositInfoServerResponse", withExtension: "json")!
+        let json = try Data(contentsOf: url)
+        let dateOpen = Date(timeIntervalSince1970: TimeInterval(10000184511 / 1000))
+
+        let data = DepositInfoDataItem(balance: 100856.4700,
+                                       dateEnd: nil,
+                                       dateNext: nil,
+                                       dateOpen: dateOpen,
+                                       id: 10001765678,
+                                       initialAmount: 100831.0200,
+                                       interestRate: 0.0100,
+                                       sumAccInt: 0.0000,
+                                       sumCredit: 0.0000,
+                                       sumDebit: 100831.0200,
+                                       sumPayInt: 856.4700,
+                                       termDay: nil,
+                                       sumPayPrc: 856.4700)
+
+        let expected = ServerCommands.DepositController.GetDepositInfo.Response(statusCode: .ok,
+                                                                                errorMessage: nil,
+                                                                                data: data)
+
+        // when
+        let result = try decoder.decode(ServerCommands.DepositController.GetDepositInfo.Response.self, from: json)
+
+        // then
+        XCTAssertEqual(result, expected)
+    }
 
 	//MARK: - GetDepositStatement
-
-	func testGetDepositStatement_Response_Encoding() throws {
-
-		// given
-		let endDate = formatter.date(from: "2022-01-31T08:41:30.815Z")
-		let startDate = formatter.date(from: "2022-01-31T08:41:30.816Z")
-
-		let command = ServerCommands.DepositController.GetDepositStatement(token: "",
-																		   endDate: endDate,
-																		   id: 10000184511,
-																		   name: "string",
-																		   startDate: startDate,
-																		   statementFormat: .csv)
-
-		let expected = "{\"statementFormat\":\"CSV\",\"id\":10000184511,\"endDate\":\"2022-01-31T08:41:30.815Z\",\"name\":\"string\",\"startDate\":\"2022-01-31T08:41:30.816Z\"}"
-
-		// when
-		let result = try encoder.encode(command.payload)
-		let resultString = String(decoding: result, as: UTF8.self)
-
-		// then
-		XCTAssertEqual(resultString, expected)
-	}
 
 	func testGetDepositStatement_Response_Decoding() throws {
 
 		// given
 		let url = bundle.url(forResource: "GetDepositStatement", withExtension: "json")!
 		let json = try Data(contentsOf: url)
-		let date = formatter.date(from: "2022-01-31T10:14:01.684Z")!
-		let tranDate = formatter.date(from: "2022-01-31T10:14:01.685Z")!
+        let date = Date(timeIntervalSince1970: .init(1648512000000/1000))
 
-		let data = ProductStatementData(MCC: 3245,
-										accountID: 10004111477,
+		let data = ProductStatementData(mcc: 3245,
+										accountId: 10004111477,
 										accountNumber: "70601810711002740401",
 										amount: 144.21,
 										cardTranNumber: "4256901080508437",
@@ -154,14 +155,14 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 										date: date,
 										deviceCode: "string",
 										documentAmount: 144.21,
-										documentID: 10230444722,
+										documentId: 10230444722,
 										fastPayment: .init(documentComment: "string",
 														   foreignBankBIC: "044525491",
 														   foreignBankID: "10000001153",
 														   foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"",
 														   foreignName: "Петров Петр Петрович",
 														   foreignPhoneNumber: "70115110217",
-                                                           opkcid: "A1355084612564010000057CAFC75755", operTypeFP: nil),
+                                                           opkcid: "A1355084612564010000057CAFC75755", operTypeFP: "string", tradeName: "string", guid: "string"),
 										groupName: "Прочие операции",
 										isCancellation: false,
 										md5hash: "75f3ee3b2d44e5808f41777c613f23c9",
@@ -173,7 +174,7 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 										paymentDetailType: .betweenTheir,
 										svgImage: .init(description: "string"),
 										terminalCode: "41010601",
-										tranDate: tranDate,
+										tranDate: date,
 										type: .inside)
 
 		let expected = ServerCommands.DepositController.GetDepositStatement.Response(statusCode: .ok,
@@ -192,11 +193,10 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 		// given
 		let url = bundle.url(forResource: "GetDepositStatementMin", withExtension: "json")!
 		let json = try Data(contentsOf: url)
-		let date = formatter.date(from: "2022-02-03T08:52:38.454Z")!
-		let tranDate = formatter.date(from: "2022-02-03T08:52:38.454Z")!
+        let date = Date(timeIntervalSince1970: .init(1648512000000/1000))
 
-		let data = ProductStatementData(MCC: nil,
-										accountID: nil,
+		let data = ProductStatementData(mcc: nil,
+										accountId: nil,
 										accountNumber: "70601810711002740401",
 										amount: 144.21,
 										cardTranNumber: nil,
@@ -207,26 +207,20 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 										date: date,
 										deviceCode: nil,
 										documentAmount: nil,
-										documentID: nil,
-										fastPayment: .init(documentComment: "string",
-														   foreignBankBIC: "044525491",
-														   foreignBankID: "10000001153",
-														   foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"",
-														   foreignName: "Петров Петр Петрович",
-														   foreignPhoneNumber: "70115110217",
-                                                           opkcid: "A1355084612564010000057CAFC75755", operTypeFP: nil),
+										documentId: nil,
+										fastPayment: nil,
 										groupName: "Прочие операции",
-										isCancellation: false,
+										isCancellation: nil,
 										md5hash: "75f3ee3b2d44e5808f41777c613f23c9",
-										merchantName: "DBO MERCHANT FORA, Zubovskiy 2",
+										merchantName: nil,
 										merchantNameRus: nil,
 										opCode: nil,
 										operationId: nil,
 										operationType: .debit,
 										paymentDetailType: .betweenTheir,
-										svgImage: .init(description: "string"),
+										svgImage: nil,
 										terminalCode: nil,
-										tranDate: tranDate,
+										tranDate: nil,
 										type: .inside)
 
 		let expected = ServerCommands.DepositController.GetDepositStatement.Response(statusCode: .ok,

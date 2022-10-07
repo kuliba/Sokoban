@@ -104,9 +104,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
     
     //MARK: - Selectors
     
-    @objc func hendleShareTapped() {
-        print(#function)
-    }
+    @objc func hendleShareTapped() {}
     
     //MARK: - Helpers
     func configure() {
@@ -226,7 +224,7 @@ enum Status: String, Codable, Equatable {
     case blocked = "BLOCKED"
 }
 
-enum StatusPC: String{
+enum StatusPC: String, Decodable {
     
     case active = "0"
     case operationsBlocked = "3"

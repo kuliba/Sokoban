@@ -25,11 +25,12 @@ struct AuthPinCodeView: View {
             
             FooterView(viewModel: viewModel.footer)
             
+            
             NavigationLink("", isActive: $viewModel.isPermissionsViewPresented) {
                 
-                if let permissionsViewModel = viewModel.permissionsViewModel {
+                if let permissionViewModel = viewModel.permissionsViewModel {
                     
-                    AuthPermissionsView(viewModel: permissionsViewModel)
+                    AuthPermissionsView(viewModel: permissionViewModel)
                     
                 } else {
                     
@@ -42,6 +43,9 @@ struct AuthPinCodeView: View {
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
+        .onAppear {
+            viewModel.action.send(AuthPinCodeViewModelAction.Appear())
+        }
     }
 }
 
@@ -64,20 +68,24 @@ extension AuthPinCodeView {
                 
                 HStack(spacing: 16) {
                     
-                    ForEach(viewModel.dots) { dotViewModel in
+                    ForEach(viewModel.dots.indices, id: \.self) { index in
                         
-                        DotView(viewModel: dotViewModel, style: viewModel.style)
+                        DotView(viewModel: viewModel.dots[index], style: viewModel.style, isAnimated: $viewModel.isAnimated, delay: TimeInterval(index) * 0.2)
                     }
                 }
-                .modifier(Shake(animatableData: CGFloat(mistakes)))
+                .modifier(AuthPinCodeView.Shake(animatableData: CGFloat(mistakes)))
             }
         }
         
         struct DotView: View {
             
             let color: Color
+            @Binding var isAnimated: Bool
+            let size: CGFloat
+            let duration: TimeInterval
+            let delay: TimeInterval
             
-            init(viewModel: AuthPinCodeViewModel.PinCodeViewModel.DotViewModel, style: AuthPinCodeViewModel.PinCodeViewModel.Style) {
+            init(viewModel: AuthPinCodeViewModel.PinCodeViewModel.DotViewModel, style: AuthPinCodeViewModel.PinCodeViewModel.Style, isAnimated: Binding<Bool>, size: CGFloat = 12, duration: TimeInterval = 1.0, delay: TimeInterval = 0) {
                 
                 if viewModel.isFilled == true {
                     
@@ -96,16 +104,22 @@ extension AuthPinCodeView {
                     
                     self.color = .mainColorsGrayMedium
                 }
+                
+                self._isAnimated = isAnimated
+                self.size = size
+                self.duration = duration
+                self.delay = delay
             }
             
             var body: some View {
-                
+                           
                 Circle()
-                    .frame(width: 12, height: 12)
+                    .frame(width: size, height: size)
                     .foregroundColor(color)
+                    .scaleEffect(isAnimated ? 1.3 : 1.0)
+                    .animation(.easeInOut(duration: duration).repeatForever(autoreverses: true).delay(delay), value: isAnimated)
             }
         }
- 
     }
 }
 
@@ -293,15 +307,19 @@ struct PinCodeView_Previews: PreviewProvider {
             
             AuthPinCodeView.PinCodeView(viewModel: .editing, mistakes: .constant(0))
                 .previewLayout(.fixed(width: 375, height: 100))
-                .previewDisplayName("Pincode Empty")
+                .previewDisplayName("Pincode Editing")
             
             AuthPinCodeView.PinCodeView(viewModel: .correct, mistakes: .constant(0))
                 .previewLayout(.fixed(width: 375, height: 100))
-                .previewDisplayName("Pincode Empty")
+                .previewDisplayName("Pincode Correct")
             
             AuthPinCodeView.PinCodeView(viewModel: .incorrect, mistakes: .constant(0))
                 .previewLayout(.fixed(width: 375, height: 100))
-                .previewDisplayName("Pincode Empty")
+                .previewDisplayName("Pincode Incorrect")
+            
+            AuthPinCodeView.PinCodeView(viewModel: .correctAnimating, mistakes: .constant(0))
+                .previewLayout(.fixed(width: 375, height: 100))
+                .previewDisplayName("Pincode Correct Animating")
         }
     }
 }

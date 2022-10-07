@@ -25,6 +25,7 @@ class LoginCardEntryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
         IQKeyboardManager.shared.enableAutoToolbar = true
         setupUI()
         hideKeyboardWhenTappedAround()
@@ -49,6 +50,7 @@ class LoginCardEntryViewController: UIViewController {
                     
                 } else {
                     DispatchQueue.main.async {
+                        /*
                         AppDelegate.shared.getCSRF { error in
                             if error != nil {
                                 self?.dismissActivity()
@@ -66,6 +68,7 @@ class LoginCardEntryViewController: UIViewController {
                                 }
                             }
                         }
+                         */
                     }
                 }
             }

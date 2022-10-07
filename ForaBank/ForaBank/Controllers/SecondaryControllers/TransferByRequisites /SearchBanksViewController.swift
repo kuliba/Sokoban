@@ -43,6 +43,7 @@ class SearchBanksViewController: UIViewController, UICollectionViewDelegate, UIC
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         searchContact.delegateNumber = self
 //        banks = banks.filter({$0.fullName != "Смотреть все"})
         allBanks = banks

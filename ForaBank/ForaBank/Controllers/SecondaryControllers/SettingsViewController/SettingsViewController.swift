@@ -90,10 +90,10 @@ class SettingsViewController: UIViewController {
     @objc func sbpButtonAction() {
         #if DEBUG
         self.showActivity()
-        getFastPaymentContractList { [weak self] contractList, error in
+        getFastPaymentContractList { [weak self] contractList, fail in
             self?.dismissActivity()
-            if error != nil {
-                self?.showAlert(with: "Ошибка", and: error!)
+            if fail != nil {
+                self?.showAlert(with: "Ошибка", and: fail!)
             } else {
                 DispatchQueue.main.async {
                     let vc = MeToMeSettingViewController()
@@ -128,7 +128,7 @@ class SettingsViewController: UIViewController {
     
     private func cleanAllData() {
         UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
-        AppDelegate.shared.isAuth = false
+//        AppDelegate.shared.isAuth = false
     }
     
     func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {

@@ -11,7 +11,6 @@ import Combine
 struct CSRFToken {
     static var token: String? {
         didSet {
-            print("DEBUG: CSRFToken установлен")
         }
     }
 }

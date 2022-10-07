@@ -89,7 +89,7 @@ class BottomInputView: UIView {
         
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
-        self.heightAnchor.constraint(equalToConstant: 88).isActive = true
+        self.heightAnchor.constraint(equalToConstant: 122).isActive = true
         setupTextFIeld()
         setupMoneyController()
         
@@ -176,7 +176,6 @@ class BottomInputView: UIView {
                 let resultSum = ( tempValue * ((self.currencyFrom?.rateBuy ?? 0) / (self.currencyTo?.rateSell ?? 0))).rounded(toPlaces: 2)
                 let a = String(((self.currencyFrom?.rateBuy ?? 0) / (self.currencyTo?.rateSell ?? 0)).rounded(toPlaces: 2))
                 
-                
                 let tempBottomLable = String(resultSum) + currencyToSimbol + "  |  " + "1" + currencyFromSimbol + " - " + a +  currencyToSimbol
                 let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
                 self.buttomLabel.text = tempLable
@@ -253,7 +252,6 @@ class BottomInputView: UIView {
                         let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
                         self.buttomLabel.text = tempLable
                         self.currencyCode = self.tempArray[0]?.currencyCodeAlpha ?? ""
-                        print(self.currencyCode)
                     case (_, nil):
                         self.currencySymbol = "₽"
                         self.currencySwitchButton.setTitle("₽" + " ⇆ " + (self.tempArray[1]?.currencyCodeAlpha?.getSymbol() ?? ""), for: .normal)
@@ -264,7 +262,6 @@ class BottomInputView: UIView {
                         let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
                         self.buttomLabel.text = tempLable
                         self.currencyCode = "RUB"
-                        print(self.currencyCode)
                     case (_, _):
                         break
                     }
@@ -288,7 +285,7 @@ class BottomInputView: UIView {
     }
     
     @IBAction func doneButtonTapped(_ sender: Any) {
-        print(#function)
+        
         guard let amount = amountTextField.text else { return }
         let unformatText = moneyFormatter?.unformat(amount)
         let text = unformatText?.replacingOccurrences(of: ",", with: ".")

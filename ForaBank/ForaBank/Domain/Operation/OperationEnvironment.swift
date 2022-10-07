@@ -7,8 +7,9 @@
 
 import Foundation
 
-enum OperationEnvironment: String, Codable {
+enum OperationEnvironment: String, Codable, Hashable, Unknownable {
     
     case inside = "INSIDE"
     case outside = "OUTSIDE"
+    case unknown
 }

@@ -9,18 +9,14 @@ import Foundation
 
 enum SettingType {
     
-    case personal(Personal)
+    case general(General)
     case transfers(Transfers)
     case security(Security)
     case interface(Interface)
-    
-    enum Personal: String {
         
-        case photo
-        case name
-        case phone
-        case email
-        case documents
+    enum General: String {
+        
+        case launchedBefore
     }
     
     enum Transfers: String {
@@ -40,6 +36,9 @@ enum SettingType {
         case mainSections
         case inactiveProducts
         case tempates
+        case productsHidden
+        case productsSections
+        case productsMoney
     }
 }
 
@@ -48,17 +47,30 @@ extension SettingType {
     var identifier: String {
         
         switch self {
-        case .personal(let personal):
-            return "setting_personal_\(personal.rawValue)"
+        case let .general(general):
+            return "setting_general_\(general.rawValue)"
             
-        case .transfers(let transfers):
+        case let .transfers(transfers):
             return "setting_transfers_\(transfers.rawValue)"
             
-        case .security(let security):
+        case let .security(security):
             return "setting_security_\(security.rawValue)"
             
-        case .interface(let interface):
+        case let .interface(interface):
             return "setting_interface_\(interface.rawValue)"
+        }
+    }
+}
+
+extension SettingType: CustomDebugStringConvertible {
+    
+    var debugDescription: String {
+        
+        switch self {
+        case .general(let value): return "general : \(value.rawValue)"
+        case .transfers(let value): return "transfers : \(value.rawValue)"
+        case .security(let value): return "security : \(value.rawValue)"
+        case .interface(let value): return "interface : \(value.rawValue)"
         }
     }
 }

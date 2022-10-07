@@ -8,13 +8,15 @@
 import UIKit
 import RealmSwift
 import AnyFormatKit
+import IQKeyboardManagerSwift
 
 extension CustomPopUpWithRateView {
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.backButton()
         setupUI()
         setupConstraint()
-        AddAllUserCardtList.add() { }
+        
         if let template = paymentTemplate {
             
             if let cardId = template.parameterList.first?.payer.cardId {
@@ -35,6 +37,17 @@ extension CustomPopUpWithRateView {
                 self.setupAmount(amount: template.amount)
             }
         }
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false   
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
+
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
     }
     
     override func viewDidLayoutSubviews() {
@@ -48,8 +61,6 @@ extension CustomPopUpWithRateView {
         setupFieldTo()
         setupListFrom()
         setupListTo()
-        
-        paymentTemplate != nil ? nil : addHeaderImage()
         
         view.layer.cornerRadius = 16
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -83,19 +94,10 @@ extension CustomPopUpWithRateView {
         titleLabel.anchor(
             top: view.topAnchor,
             left: view.leftAnchor,
-            paddingTop: 28,
             paddingLeft: 20)
         
         view.addSubview(bottomView)
         bottomView.anchor(
-            left: view.leftAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
-            right: view.rightAnchor)
-        let saveAreaView = UIView()
-        saveAreaView.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
-        view.addSubview(saveAreaView)
-        saveAreaView.anchor(
-            top: view.safeAreaLayoutGuide.bottomAnchor,
             left: view.leftAnchor,
             bottom: view.bottomAnchor,
             right: view.rightAnchor)
@@ -134,18 +136,18 @@ extension CustomPopUpWithRateView {
         switch paymentTemplate.type {
         case .betweenTheir:
             if let transfer = paymentTemplate.parameterList.first as? TransferGeneralData {
-                
-                let object = realm?.objects(UserAllCardsModel.self)
-                
+                                
                 if let cardId = transfer.payeeInternal?.cardId {
                     
-                    let card = object?.first(where: { $0.id == cardId })
+                    let object = model.products.value[.card]?.map({ $0.userAllProducts()}) ?? []
+                    let card = object.first(where: { $0.id == cardId })
                     self.cardToField.model = card
                     self.viewModel.cardToRealm = card
                     
                 } else if let accountId = transfer.payeeInternal?.accountId {
                     
-                    let card = object?.first(where: { $0.id == accountId })
+                    let accounts = model.products.value[.account]?.map({ $0.userAllProducts()}) ?? []
+                    let card = accounts.first(where: { $0.id == accountId })
                     self.cardToField.model = card
                     self.viewModel.cardToRealm = card
                 }
@@ -169,13 +171,13 @@ extension CustomPopUpWithRateView {
             
             if text.isEmpty != true {
                 if text.count < 20 {
-                    Model.shared.action.send(ModelAction.PaymentTemplate.Update.Requested(
+                    self.model.action.send(ModelAction.PaymentTemplate.Update.Requested(
                         name: text,
                         parameterList: nil,
                         paymentTemplateId: templateId))
                     
                     // FIXME: В рефактре нужно слушатель на обновление title
-                    self.title = text
+                    self.parent?.title = text
                     
                 } else {
                     self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")
@@ -195,27 +197,12 @@ extension CustomPopUpWithRateView {
     }
     
     func updateObjectWithNotification(cardId: Int? = nil) {
-        let object = realm?.objects(UserAllCardsModel.self)
-        if let cardId = cardId {
-            let card = object?.first(where: { $0.id == cardId })
-            self.cardFromField.model = card
-            self.viewModel.cardFromRealm = card
-        }
+        let object = model.products.value.compactMap({$0.value}).first
         
-        token = object?.observe { [weak self] changes in
-            
-            guard let self = self else { return }
-            switch changes {
-            case .initial:
-                print("REALM Initial")
-                self.allCardsFromRealm = self.updateCardsList(with: object)
-            case .update:
-                print("REALM Update")
-                self.allCardsFromRealm = self.updateCardsList(with: object)
-            case .error(let error):
-                print("DEBUG token fatalError:", error)
-                fatalError("\(error)")
-            }
+        if let cardId = cardId {
+            let card = object?.first(where: { $0.id == cardId })?.userAllProducts()
+            self.cardFromField.model = card
+            self.viewModel.cardFromRealm =  card
         }
     }
     
@@ -223,9 +210,9 @@ extension CustomPopUpWithRateView {
         var cardsArray = [UserAllCardsModel]()
         let cards = result?.compactMap { $0 } ?? []
         cards.forEach { card in
-            if card.productType == "CARD", card.productType != ProductType.loan.rawValue {
+            if card.productType == ProductType.card.rawValue, card.productType != ProductType.loan.rawValue {
                 cardsArray.append(card)
-            } else if !onlyCard && (card.productType == "ACCOUNT" || card.productType == "DEPOSIT" ), card.productType != ProductType.loan.rawValue {
+            } else if !onlyCard && (card.productType == ProductType.account.rawValue || card.productType == ProductType.account.rawValue ), card.productType != ProductType.loan.rawValue {
                 cardsArray.append(card)
             }
         }
@@ -263,6 +250,10 @@ extension CustomPopUpWithRateView {
         } else {
             bottomView.didDoneButtonTapped = { [weak self] (amount) in
                 self?.viewModel.summTransction = amount
+                if let cardTo = self?.cardTo {
+                    
+                    self?.viewModel.cardToRealm = cardTo
+                }
                 self?.doneButtonTapped(with: self!.viewModel)
             }
         }
@@ -297,6 +288,10 @@ extension CustomPopUpWithRateView {
         ? "Номер карты или счета"
         : "Номер карты получателя"
         
+        if let cardTo = self.cardTo {
+            
+            self.cardToField.model = cardTo
+        }
         cardToField.didChooseButtonTapped = { () in
             self.openOrHideView(self.cardToListView) {
                 self.seporatorView.curvedLineView.isHidden = false
@@ -316,12 +311,13 @@ extension CustomPopUpWithRateView {
             cardFromListView = CardsScrollView(onlyMy: onlyMy, deleteDeposit: true)
             cardFromListView.didCardTapped = { (cardId) in
                 DispatchQueue.main.async {
-                    guard let cardList = self.allCardsFromRealm else { return }
+                    let cardList = ReturnAllCardList.cards()
                     cardList.forEach({ card in
                         if card.id == cardId {
                             self.viewModel.cardFromRealm = card
                             self.reversCard = ""
                             self.cardFromField.model = card
+                            self.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
                             self.hideView(self.cardFromListView, needHide: true) {
                                 if !self.cardToListView.isHidden {
                                     self.hideView(self.cardToListView, needHide: true) { }
@@ -336,16 +332,17 @@ extension CustomPopUpWithRateView {
             }
             
             cardFromListView.lastItemTap = {
-                print("Открывать все карты ")
                 let vc = AllCardListViewController()
                 vc.withTemplate = false
                 if self.onlyMy {
                     vc.onlyCard = false
                 }
                 vc.didCardTapped = { card in
-                    self.viewModel.cardFrom = card
+                    self.viewModel.cardFromRealm = card
                     self.reversCard = ""
-                    self.cardFromField.cardModel = card
+                    self.cardFromField.model = card
+                    self.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
+
                     if !self.cardFromListView.isHidden {
                         self.hideView(self.cardFromListView, needHide: true) {
                             self.hideView(self.cardToListView, needHide: true) {
@@ -376,12 +373,13 @@ extension CustomPopUpWithRateView {
         
         cardToListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
-                guard let cardList = self.allCardsFromRealm else { return }
+                let cardList = ReturnAllCardList.cards()
                 cardList.forEach({ card in
                     if card.id == cardId {
                         self.viewModel.cardToRealm = card
                         self.reversCard = ""
                         self.cardToField.model = card
+                        
                         self.hideView(self.cardToListView, needHide: true) {
                             if self.withProducts, !self.cardFromListView.isHidden {
                                 self.hideView(self.cardFromListView, needHide: true) { }
@@ -394,16 +392,16 @@ extension CustomPopUpWithRateView {
         }
         
         cardToListView.lastItemTap = {
-            print("Открывать все карты ")
             let vc = AllCardListViewController()
             if self.onlyMy {
                 vc.onlyCard = false
                 vc.withTemplate = false
             }
             vc.didCardTapped = { card in
-                self.viewModel.cardTo = card
+                self.viewModel.cardToRealm = card
                 self.reversCard = ""
-                self.cardToField.cardModel = card
+                self.cardToField.model = card
+                
                 self.hideView(self.cardToListView, needHide: true) {
                     if let cardFromListView = self.cardFromListView, !cardFromListView.isHidden {
                         self.hideView(self.cardFromListView, needHide: true) { }
@@ -429,5 +427,5 @@ extension CustomPopUpWithRateView {
             self.present(navVc, animated: true, completion: nil)
         }
     }
-   
+    
 }

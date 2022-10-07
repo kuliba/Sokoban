@@ -44,7 +44,7 @@ class SuccessMeToMeController: UIViewController {
     }
     
     @IBAction func doneButtonTapped(_ sender: Any) {
-        print(#function)
+        
         dismissViewControllers()
     }
     
@@ -52,6 +52,7 @@ class SuccessMeToMeController: UIViewController {
     // MARK:- Dismiss and Pop ViewControllers
     func dismissViewControllers() {
         self.view.window?.rootViewController?.dismiss(animated: true)
+        NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
     }
 
     

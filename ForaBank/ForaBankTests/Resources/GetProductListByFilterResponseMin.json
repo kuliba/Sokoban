@@ -3,6 +3,7 @@
     {
       "XLDesign": "string",
       "accountNumber": "40817810000000000001",
+      "cardID": 10001639855,
       "allowCredit": true,
       "allowDebit": true,
       "background": ["FFBB36"],
@@ -20,7 +21,11 @@
       "ownerID": 10001639855,
       "productName": "VISA REWARDS R-5",
       "productType": "CARD",
-      "smallDesign": "string"
+      "smallDesign": "string",
+      "name": "name",
+      "validThru": 1630530000000,
+      "branch": "branch",
+      "status": "Действует"
     }
   ],
   "errorMessage": "string",

@@ -27,11 +27,12 @@ struct ParameterData: Codable, Equatable {
     let svgImage: SVGImageData?
     let viewType: ViewType
     
-    enum ViewType: String, Codable, Equatable{
+    enum ViewType: String, Codable, Equatable, Unknownable {
         
         case constant = "CONSTANT"
         case input = "INPUT"
         case output = "OUTPUT"
+        case unknown
     }
 }
 

@@ -6,46 +6,39 @@
 //
 
 import Foundation
+import Combine
 
 class ServerAgent: NSObject, ServerAgentProtocol {
 
+    let action: PassthroughSubject<Action, Never> = .init()
+    
     private var baseURL: String { enviroment.baseURL }
     private let enviroment: Environment
   
     private lazy var session: URLSession = {
         
         let configuration = URLSessionConfiguration.default
-        //TODO: Uncomment when updateted auth will be used
-        /*
         configuration.httpShouldSetCookies = false
         configuration.httpCookieAcceptPolicy = .never
-         */
-        
-        return URLSession(configuration: configuration)
+
+        return URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }()
     
     private lazy var sessionCached: URLSession = {
         
         let configuration = URLSessionConfiguration.default
-        //TODO: Uncomment when updateted auth will be used
-        /*
+
         configuration.httpShouldSetCookies = false
         configuration.httpCookieAcceptPolicy = .never
-         */
         configuration.urlCache = URLCache.downloadCache
         
         return URLSession(configuration: configuration)
-        
     }()
     
     private let encoder: JSONEncoder
     private let decoder: JSONDecoder
-    
-    //TODO: Uncomment when updateted auth will be used
-    /*
-    private var cookies: [HTTPCookie]?
-     */
-    
+    var cookies: [HTTPCookie]?
+
     internal init(enviroment: Environment) {
         
         self.enviroment = enviroment
@@ -58,8 +51,9 @@ class ServerAgent: NSObject, ServerAgentProtocol {
         do {
             
             let request = try request(with: command)
+            LoggerAgent.shared.log(category: .network, message: "data request: \(request)")
             session.dataTask(with: request) {[unowned self] data, response, error in
-                
+
                 if let error = error {
                     
                     completion(.failure(.sessionError(error)))
@@ -72,11 +66,24 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     return
                 }
                 
-                //TODO: Uncomment when updateted auth will be used
-                /*
+                if response.statusCode == 200 {
+                    
+                    self.action.send(ServerAgentAction.NetworkActivityEvent())
+                    
+                } else {
+                    
+                    if response.statusCode == 401 {
+                        
+                        self.action.send(ServerAgentAction.NotAuthorized())
+                    }
+                    
+                    completion(.failure(.unexpectedResponseStatus(response.statusCode)))
+                    return
+                }
+                
                 if command.cookiesProvider == true,
-                    let headers = response.allHeaderFields as? [String: String],
-                    let url = request.url {
+                   let headers = response.allHeaderFields as? [String: String],
+                   let url = request.url {
                     
                     let responseCookies = HTTPCookie.cookies(withResponseHeaderFields: headers, for: url)
                     if responseCookies.count > 0 {
@@ -84,8 +91,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                         self.cookies = responseCookies
                     }
                 }
-                 */
-                
+ 
                 guard let data = data else {
                     completion(.failure(.emptyResponseData))
                     return
@@ -94,8 +100,16 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                 do {
                     
                     let response = try decoder.decode(Command.Response.self, from: data)
-                    completion(.success(response))
-                    
+                    if response.statusCode == .userNotAuthorized {
+                        
+                        self.action.send(ServerAgentAction.NotAuthorized())
+                        completion(.failure(.notAuthorized))
+                        
+                    } else {
+                        
+                        completion(.success(response))
+                    }
+
                 } catch {
                     
                     completion(.failure(.curruptedData(error)))
@@ -114,6 +128,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
         do {
             
             let request = try downloadRequest(with: command)
+            LoggerAgent.shared.log(category: .network, message: "download request: \(request)")
             sessionCached.downloadTask(with: request) { localFileURL, response, error in
                 
                 if let error = error {
@@ -122,9 +137,24 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     return
                 }
                 
-                guard let response = response else {
+                guard let response = response as? HTTPURLResponse else {
                     
                     completion(.failure(.emptyResponse))
+                    return
+                }
+                
+                if response.statusCode == 200 {
+                    
+                    self.action.send(ServerAgentAction.NetworkActivityEvent())
+                    
+                } else {
+                    
+                    if response.statusCode == 401 {
+                        
+                        self.action.send(ServerAgentAction.NotAuthorized())
+                    }
+                    
+                    completion(.failure(.unexpectedResponseStatus(response.statusCode)))
                     return
                 }
                 
@@ -158,6 +188,64 @@ class ServerAgent: NSObject, ServerAgentProtocol {
             completion(.failure(ServerAgentError.requestCreationError(error)))
         }
     }
+    
+    func executeUploadCommand<Command>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void) where Command : ServerUploadCommand {
+        
+        do {
+            
+            let request = try uploadRequest(with: command)
+            LoggerAgent.shared.log(category: .network, message: "upload request: \(request)")
+            session.uploadTask(with: request, from: request.httpBody) { [unowned self] data, response, error in
+                
+                if let error = error {
+                    
+                    completion(.failure(.sessionError(error)))
+                    return
+                }
+                
+                guard let response = response as? HTTPURLResponse else {
+                    
+                    completion(.failure(.emptyResponse))
+                    return
+                }
+                
+                if response.statusCode == 200 {
+                    
+                    self.action.send(ServerAgentAction.NetworkActivityEvent())
+                    
+                } else {
+                    
+                    if response.statusCode == 401 {
+                        
+                        self.action.send(ServerAgentAction.NotAuthorized())
+                    }
+                    
+                    completion(.failure(.unexpectedResponseStatus(response.statusCode)))
+                    return
+                }
+  
+                guard let data = data else {
+                    completion(.failure(.emptyResponseData))
+                    return
+                }
+                
+                do {
+                    
+                    let response = try decoder.decode(Command.Response.self, from: data)
+                    completion(.success(response))
+ 
+                } catch {
+                    
+                    completion(.failure(.curruptedData(error)))
+                }
+                
+            }.resume()
+            
+        } catch {
+            
+            completion(.failure(ServerAgentError.requestCreationError(error)))
+        }
+    }
 }
 
 //MARK: - Request
@@ -174,23 +262,20 @@ internal extension ServerAgent {
         // http method
         request.httpMethod = command.method.rawValue
         
-        //TODO: Uncomment when updateted auth will be used
-        /*
         // cookies headers
         request.httpShouldHandleCookies = false
-        if let cookies = self.cookies {
+        if command.cookiesProvider == false, let cookies = self.cookies {
            
             request.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
         }
-         */
         
         // headers
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         // token
-        if let token = command.token {
+        if command.cookiesProvider == false {
             
-            request.setValue(token, forHTTPHeaderField: "X-XSRF-TOKEN")
+            request.setValue(command.token, forHTTPHeaderField: "X-XSRF-TOKEN")
         }
         
         // parameters
@@ -235,15 +320,19 @@ internal extension ServerAgent {
         
         var request = URLRequest(url: url)
         
+        // cookies headers
+        request.httpShouldHandleCookies = false
+        if let cookies = self.cookies {
+           
+            request.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
+        }
+        
         // headers
         request.httpMethod = command.method.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         // token
-        if let token = command.token {
-            
-            request.setValue(token, forHTTPHeaderField: "X-XSRF-TOKEN")
-        }
+        request.setValue(command.token, forHTTPHeaderField: "X-XSRF-TOKEN")
 
         // parameters
         if let parameters = command.parameters, parameters.isEmpty == false {
@@ -283,6 +372,65 @@ internal extension ServerAgent {
         return request
     }
     
+    func uploadRequest<Command>(with command: Command) throws -> URLRequest where Command : ServerUploadCommand {
+        
+        let url = try url(with: command.endpoint)
+        
+        var request = URLRequest(url: url)
+        
+        // generate boundary string using a unique per-app string
+        let boundary = UUID().uuidString
+        
+        // cookies headers
+        request.httpShouldHandleCookies = false
+        if let cookies = self.cookies {
+           
+            request.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
+        }
+        
+        // headers
+        request.httpMethod = command.method.rawValue
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        
+        // token
+        request.setValue(command.token, forHTTPHeaderField: "X-XSRF-TOKEN")
+        
+        // parameters
+        if let parameters = command.parameters, parameters.isEmpty == false {
+            
+            var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            urlComponents?.queryItems = parameters.map{ URLQueryItem(name: $0.name, value: $0.value) }
+            
+            guard let updatedURL = urlComponents?.url else {
+                throw ServerRequestCreationError.unableCounstructURLWithParameters
+            }
+            
+            request.url = updatedURL
+        }
+        
+        // body
+        
+        var data = Data()
+        data.append("--\(boundary)\r\n")
+        data.append("Content-Disposition: form-data; name=\"image\"; filename=\"\(command.media.fileName)\"\r\n")
+        data.append("Content-Type: \(command.media.mimeType)\r\n")
+        data.append("\r\n")
+        data.append(command.media.data)
+        data.append("\r\n")
+        data.append("--\(boundary)--\r\n")
+        request.httpBody = data
+        
+        request.addValue(String(data.count), forHTTPHeaderField: "Content-Length")
+        
+        // timeout
+        if let timeout = command.timeout {
+            
+            request.timeoutInterval = timeout
+        }
+        
+        return request
+    }
+    
     //TODO: tests
     func url(with endpoint: String) throws -> URL {
         
@@ -316,19 +464,44 @@ extension ServerAgent {
     }
 }
 
-//MARK: - URLSessionDelegate
-
-extension ServerAgent: URLSessionDelegate {
-    
-}
-
 //MARK: - URLSessionTaskDelegate
 
 extension ServerAgent: URLSessionTaskDelegate {
+ 
+    func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
+        
+        if let error = error {
+            
+            LoggerAgent.shared.log(level: .error, category: .network, message: "URL Session did become invalid with error: \(error.localizedDescription)")
+
+        } else {
+
+            LoggerAgent.shared.log(level: .error, category: .network, message: "URL Session did become invalid")
+       }
+    }
     
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        
+        if let error = error {
+            
+            LoggerAgent.shared.log(level: .error, category: .network, message: "URLSessionTask: \(String(describing: task.originalRequest?.url)) did complete with error: \(error.localizedDescription)")
+
+        } else {
+
+            LoggerAgent.shared.log(level: .error, category: .network, message: "URLSessionTask: \(String(describing: task.originalRequest?.url)) did complete unexpected")
+        }
+    }
 }
 
-//MARK: - URLSessionDataDelegate
-extension ServerAgent: URLSessionDataDelegate {
+//TODO: make throw
+private extension Data {
     
+    mutating func append(_ string: String) {
+        
+        guard let data = string.data(using: .utf8) else {
+            return
+        }
+        
+        self.append(data)
+    }
 }

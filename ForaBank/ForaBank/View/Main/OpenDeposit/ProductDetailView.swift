@@ -32,11 +32,14 @@ class OpenProductViewModel: ObservableObject {
         
     }
     
-    init(depositId: Int) {
+    init?(depositId: String) {
         
+        guard let depositId = Int(depositId) else {
+            return nil
+        }
         self.depositId = depositId
         
-        let deposit = model.depositsProducts.value.first(where: { $0.depositProductID == depositId })!
+        let deposit = model.deposits.value.first(where: { $0.depositProductID == depositId })!
         
         self.productDetail = .init(name: deposit.name, detail: [.init(title: "Срок вклада", description: deposit.generalСondition.maxTermTxt), .init(title: "Процентная ставка", description: "до \(deposit.generalСondition.maxRate.currencyFormatterForMain()) %")], minAmount: .init(title: "Минимальная  сумма вклада", description: deposit.generalСondition.minSum.currencyFormatter()))
         
@@ -330,11 +333,18 @@ struct ProductDetailView: View {
                         .padding(.bottom, 50)
                 }
                 .padding(20)
+                .padding(.bottom, 60)
             }
             
+            Color.white
+                .frame(height: 100)
+                .opacity(0.7)
+                
             NavigationLink(destination:
                             ConfirmView(viewModel: viewModel)
-                            .navigationBarTitle("Подтвердите параметры вклада", displayMode: .inline)) {
+                            .edgesIgnoringSafeArea(.bottom)
+                            .navigationBarTitle("Подтвердите параметры вклада", displayMode: .inline))
+            {
                 
                 Text("Продолжить")
                     .fontWeight(.semibold)
@@ -343,12 +353,15 @@ struct ProductDetailView: View {
                     .background(Color.buttonPrimary)
                     .foregroundColor(.white)
                     .cornerRadius(8)
+                    .padding(.bottom, 39)
+                
             }
             
             DepositShowBottomSheetView(viewModel: viewModel.calculator.bottomSheet)
         }
         .navigationBarTitle(Text("Подробнее"), displayMode: .inline)
         .foregroundColor(.black)
+        .edgesIgnoringSafeArea(.bottom)
     }
 }
 
@@ -457,38 +470,16 @@ extension ProductDetailView {
                         Spacer()
                     }
                     
+                    
+             
                     VStack(alignment: .center, spacing: 0) {
                         
-                        //                        HStack {
-                        //
-                        //                            Color.white
-                        //                                .background(Color.white)
-                        //                                .frame(width: 91)
-                        //
-                        //                            HStack {
-                        //                                ForEach(viewModel.date, id: \.self) { date in
-                        //
-                        //                                    Text(date)
-                        //                                        .frame(alignment: .center)
-                        //                                        .background(Color.blue)
-                        //                                        .multilineTextAlignment(.center)
-                        //                                }
-                        //                            }
-                        //                        }
-                        //                        .padding(.top, 9)
-                        //                        .padding(.bottom, 5)
-                        //                        .background(Color.white)
-                        //                        .padding(.horizontal, -20)
-                        
                         HStack {
-                            
-                            Color.white
-                                .padding(.leading, 20)
-                                .frame(width: 91, alignment: .leading)
                             
                             Spacer()
                             
                             ForEach(viewModel.date, id: \.self) { date in
+                                
                                 Text(date)
                                     .frame(width: 91)
                                     .padding(.trailing, 20)
@@ -543,6 +534,7 @@ extension ProductDetailView {
                                 .padding(.horizontal, -20)
                             }
                         }
+    
                     }
                     .font(.system(size: 12))
                 }
@@ -736,52 +728,22 @@ extension ProductDetailView {
                     
                     ForEach(viewModel.documents, id: \.self) { item in
                         
-                        if #available(iOS 14.0, *) {
+                        Link(destination: item.url) {
                             
-                            Link(destination: item.url) {
+                            HStack(alignment: .top, spacing: 16) {
                                 
-                                HStack(alignment: .top, spacing: 16) {
-                                    
-                                    Image.ic24FileText
-                                        .resizable()
-                                        .frame(width: 24, height: 24, alignment: .top)
-                                        .foregroundColor(.mainColorsGray)
-                                    
-                                    Text(item.title)
-                                        .foregroundColor(.mainColorsBlack)
-                                        .font(.system(size: 16))
-                                        .multilineTextAlignment(.leading)
-                                    
-                                    Spacer()
-                                    
-                                }
-                            }
-                            
-                        } else {
-                            
-                            ForEach(viewModel.documents, id: \.self) { item in
+                                Image.ic24FileText
+                                    .resizable()
+                                    .frame(width: 24, height: 24, alignment: .top)
+                                    .foregroundColor(.mainColorsGray)
                                 
-                                Button{
-                                    
-                                    UIApplication.shared.open(item.url)
-                                    
-                                } label: {
-                                    
-                                    HStack(spacing: 10) {
-                                        
-                                        Image.ic24FileText
-                                            .resizable()
-                                            .frame(width: 24, height: 24, alignment: .top)
-                                            .foregroundColor(.mainColorsGray)
-                                        
-                                        Text(item.title)
-                                            .foregroundColor(.mainColorsBlack)
-                                            .font(.system(size: 16))
-                                        
-                                        Spacer()
-                                        
-                                    }
-                                }
+                                Text(item.title)
+                                    .foregroundColor(.mainColorsBlack)
+                                    .font(.system(size: 16))
+                                    .multilineTextAlignment(.leading)
+                                
+                                Spacer()
+                                
                             }
                         }
                     }
@@ -859,14 +821,14 @@ extension ProductDetailView {
             
             let vc = ConfurmOpenDepositViewController()
             
-            let deposit = viewModel.model.depositsProducts.value.first(where: { $0.depositProductID == viewModel.depositId })!
+            let deposit = viewModel.model.deposits.value.first(where: { $0.depositProductID == viewModel.depositId })!
             
             vc.product = proxyDepositProductData(data: deposit)
             
             var termRateSumTermRateList: [TermRateSumTermRateList] = []
             var termRateSumTermRateListCap: [TermRateSumTermRateList] = []
 
-            for i in viewModel.model.depositsProducts.value.first(where: { $0.depositProductID == viewModel.depositId })!.termRateList {
+            for i in viewModel.model.deposits.value.first(where: { $0.depositProductID == viewModel.depositId })!.termRateList {
                 
                 if let termList = i.termRateSum
                     .compactMap({$0})
@@ -883,7 +845,7 @@ extension ProductDetailView {
             
             vc.choosenRateList = termRateSumTermRateList
 
-            if let capitalization = viewModel.calculator.capitalization, capitalization.isOn, let capList = viewModel.model.depositsProducts.value.first(where: { $0.depositProductID == viewModel.depositId })!.termRateCapList {
+            if let capitalization = viewModel.calculator.capitalization, capitalization.isOn, let capList = viewModel.model.deposits.value.first(where: { $0.depositProductID == viewModel.depositId })!.termRateCapList {
                 
                 for i in capList {
                     
@@ -941,10 +903,14 @@ extension ProductDetailView {
 }
 
 struct ProductDetailView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        NavigationView {
+        
+        Group {
             
             ProductDetailView(viewModel: .sample)
+            
+            ProductDetailView.PercentView(viewModel: OpenProductViewModel.percentSample)
         }
     }
     

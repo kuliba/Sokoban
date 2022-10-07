@@ -126,7 +126,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
 
@@ -138,7 +138,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -150,7 +150,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -161,7 +161,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -172,7 +172,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -183,7 +183,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -194,7 +194,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
         case .installPushDevice:
@@ -204,7 +204,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -215,7 +215,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
         case .uninstallPushDevice:
@@ -225,7 +225,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -236,7 +236,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -247,7 +247,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -258,7 +258,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -269,7 +269,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -280,7 +280,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -291,7 +291,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -302,7 +302,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -313,7 +313,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -324,7 +324,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -335,7 +335,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -346,7 +346,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -357,7 +357,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -368,7 +368,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -379,7 +379,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -390,7 +390,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -401,7 +401,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -412,7 +412,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -423,7 +423,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -434,7 +434,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -445,7 +445,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -456,7 +456,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -467,7 +467,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -478,7 +478,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -489,7 +489,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -500,7 +500,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -511,7 +511,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -522,7 +522,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -533,7 +533,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -544,7 +544,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -555,7 +555,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -566,7 +566,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -577,7 +577,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
 
@@ -588,7 +588,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -599,7 +599,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -610,7 +610,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -621,7 +621,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -632,7 +632,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
 
@@ -643,7 +643,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -654,7 +654,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -665,7 +665,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
         
@@ -676,7 +676,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
         case .getClientConsentMe2MePull:
@@ -686,7 +686,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
         case .changeClientConsentMe2MePull:
@@ -696,7 +696,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -707,7 +707,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
         case .getLatestInternetTVPayments:
@@ -716,7 +716,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
         case .getLatestInternetTVPaymentsTransport:
@@ -725,7 +725,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
         case .createSFPTransfer:
@@ -735,7 +735,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -746,7 +746,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -757,7 +757,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -768,7 +768,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -779,7 +779,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -790,7 +790,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -801,7 +801,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -812,7 +812,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -823,7 +823,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -834,7 +834,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -845,7 +845,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -856,7 +856,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -867,7 +867,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -878,7 +878,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
         case .createMobileTransfer:
@@ -888,7 +888,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
 
@@ -899,7 +899,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -910,7 +910,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -921,7 +921,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -932,7 +932,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -943,7 +943,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -954,7 +954,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -965,7 +965,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
         case .getOperationDetail:
@@ -975,7 +975,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -986,7 +986,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -996,7 +996,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -1006,7 +1006,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -1016,7 +1016,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -1026,7 +1026,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
 
@@ -1036,7 +1036,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -1046,7 +1046,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -1056,7 +1056,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
 
@@ -1066,7 +1066,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
         case .getClientInfo:
@@ -1075,7 +1075,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -1085,7 +1085,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
 
@@ -1095,7 +1095,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
 
@@ -1105,7 +1105,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -1115,7 +1115,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
 
@@ -1125,7 +1125,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -1135,7 +1135,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -1145,7 +1145,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -1155,7 +1155,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
             
@@ -1165,7 +1165,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
         case .getPrintFormForDepositConditions:
@@ -1174,7 +1174,7 @@ enum RouterUrlList: String {
             case .success(let url):
                 return .success(url.absoluteURL)
             case .failure(let error):
-                debugPrint(error)
+                
                 return .failure(.urlError)
             }
         }

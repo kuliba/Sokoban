@@ -1,12 +1,12 @@
 import UIKit
-import RealmSwift
 import Foundation
-
+import IQKeyboardManagerSwift
 
 class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSource, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
 
+    let model = Model.shared
     static let msgUpdateTable = 3
-
+    var operatorsViewModel: OperatorsViewModel?
     public static func storyboardInstance() -> AvtodorDetailsFormController? {
         let storyboard = UIStoryboard(name: "InternetTV", bundle: nil)
         return storyboard.instantiateViewController(withIdentifier: "InternetTVDetail") as? AvtodorDetailsFormController
@@ -52,7 +52,7 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
     @IBOutlet weak var bottomInputView: BottomInputView?
     @IBOutlet weak var goButton: UIButton?
 
-    lazy var realm = try? Realm()
+
     let footerView = InternetTVSourceView()
 
     override func viewDidAppear(_ animated: Bool) {
@@ -63,6 +63,8 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        btnContract.setTitleColor(.black, for: .normal)
+        btnTransponder.setTitleColor(.black, for: .normal)
         if operatorData == nil {
             operatorData = customGroup?.childsOperators[0]
         } else {
@@ -84,7 +86,7 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
         setupToolbar()
         goButton?.add_CornerRadius(5)
         tableView?.register(UINib(nibName: "InternetInputCell", bundle: nil), forCellReuseIdentifier: InternetTVInputCell.reuseId)
-        AddAllUserCardtList.add {}
+       
 //        setupCardList { error in
 //            guard let error = error else { return }
 //            self.showAlert(with: "Ошибка", and: error)
@@ -117,7 +119,7 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
 
         if let list = operatorData?.parameterList {
             list.forEach { item in
-                print("item5555", "\(item.id) - \(item.title)")
+                
                 if selectedValue != "-1" && (item.type == "MaskList" || item.type == "Select") {
                     if item.id == "a3_serviceId_2_1" {
                         InternetTVDetailsFormViewModel.additionalDic["fieldName"] = ["fieldid": "\(item.order ?? 0)",
@@ -165,7 +167,11 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
         if InternetTVMainViewModel.filter == GlobalModule.PAYMENT_TRANSPORT {
             ob = InternetTVConfirmViewModel(type: .transport)
         }
-
+        
+        if InternetTVMainViewModel.filter == "iFora||1051062" {
+            ob = InternetTVConfirmViewModel(type: .transport)
+        }
+        
         let sum = response?.data?.debitAmount ?? 0.0
         ob?.sumTransaction = sum.currencyFormatter(symbol: "RUB")
         let tax = response?.data?.fee ?? 0.0
@@ -186,6 +192,7 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
             vc.taxTransactionField.isHidden = false
             vc.currTransactionField.isHidden = true
             vc.currencyTransactionField.isHidden = true
+            vc.operatorsViewModel = self.operatorsViewModel
             InternetTVSuccessView.svgImg = self.operatorData?.logotypeList.first?.svgImage ?? ""
             self.navigationController?.pushViewController(vc, animated: true)
         }
@@ -245,11 +252,21 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
             }
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+    }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         goButton?.isHidden = true
         qrData.removeAll()
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = true
     }
 
     func setupToolbar() {
@@ -264,10 +281,21 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
             button.tintColor = .black
             navigationItem.rightBarButtonItem = button
             
+            let backButton = UIBarButtonItem(image: UIImage(named: "back_button"),
+                                         landscapeImagePhone: nil,
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(onTouchBackButton))
+            backButton.tintColor = .black
+            navigationItem.leftBarButtonItem = backButton
+            
         } else {
             
-            let operatorsName = customGroup?.name ?? ""
+            var operatorsName = customGroup?.name ?? ""
             let inn = operatorData?.synonymList.first ?? ""
+            if customGroup?.name == nil {
+                operatorsName = latestOperation?.name ?? ""
+            }
             navigationItem.titleView = setTitle(title: operatorsName, subtitle: "ИНН " +  inn )
             
             let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
@@ -283,6 +311,11 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
             navigationItem.hidesSearchBarWhenScrolling = false
             definesPresentationContext = true
         }
+    }
+    
+    @objc func onTouchBackButton() {
+        viewModel.closeAction()
+        navigationController?.popToRootViewController(animated: true)
     }
 
     @objc private func updateNameTemplate() {
@@ -304,8 +337,8 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
                     paymentTemplateId: templateId))
                     
                 // FIXME: В рефактре нужно слушатель на обновление title
-                self.title = text
-                
+                    self.parent?.title = text
+
                 } else {
                     self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")
                 }
@@ -336,7 +369,7 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
         titleView.setDimensions(height: 30, width: 250)
         titleView.addSubview(titleLabel)
         titleView.addSubview(subtitleLabel)
-        titleLabel.numberOfLines = 3;
+        titleLabel.numberOfLines = 1
 
         titleLabel.anchor( left: titleView.leftAnchor, right: titleView.rightAnchor)
         subtitleLabel.anchor(top: titleLabel.bottomAnchor, left: titleView.leftAnchor, right: titleView.rightAnchor)
@@ -375,32 +408,33 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
 
     private func readAndSetupCard() {
         DispatchQueue.main.async {
-            let cards = ReturnAllCardList.cards()
-            var filterProduct: [UserAllCardsModel] = []
-            cards.forEach({ card in
-                if (card.productType == "CARD" || card.productType == "ACCOUNT") {
-                    if card.currency == "RUB" {
-                        filterProduct.append(card)
-                    }
-                }
-            })
-            self.footerView.cardListView.cardList = filterProduct
+            let productTypes: [ProductType] = [.card, .account]
             
-            if filterProduct.count > 0 {
+            let allCards = ReturnAllCardList.cards()
+            var productsFilterredMapped = [UserAllCardsModel]()
+            
+            productTypes.forEach { type in
+                
+                productsFilterredMapped += allCards.filter { $0.productType == type.rawValue && $0.currency == "RUB" }
+            }
+
+            self.footerView.cardListView.cardList = productsFilterredMapped
+            
+            if productsFilterredMapped.count > 0 {
                 
                 if let cardId = self.template?.parameterList.first?.payer.cardId {
                     
-                    let card = filterProduct.first(where: { $0.id == cardId })
+                    let card = productsFilterredMapped.first(where: { $0.id == cardId })
                     self.footerView.cardFromField.model = card
                     
                 } else if let accountId = self.template?.parameterList.first?.payer.accountId {
                     
-                    let card = filterProduct.first(where: { $0.id == accountId })
+                    let card = productsFilterredMapped.first(where: { $0.id == accountId })
                     self.footerView.cardFromField.model = card
                     
                 } else {
                     
-                    self.footerView.cardFromField.model = filterProduct.first
+                    self.footerView.cardFromField.model = productsFilterredMapped.first
                     
                 }
             }

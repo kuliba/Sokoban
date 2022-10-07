@@ -56,9 +56,7 @@ class ChooseCountryHeaderCell: UICollectionViewCell {
     
     //MARK: - Selectors
     
-    @objc func hendleShareTapped() {
-        print(#function)
-    }
+    @objc func hendleShareTapped() {}
     
     //MARK: - Helpers
     func configure() {

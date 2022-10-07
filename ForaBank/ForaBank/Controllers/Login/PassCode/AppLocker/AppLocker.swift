@@ -233,7 +233,7 @@ public class AppLocker: UIViewController {
         login(with: pin, type: .pin) { error in
             self.clearView()
             if let error = error {
-                print(error)
+                
             } else {
                 self.lockerDelegate?.goToTabBar()
             }
@@ -244,7 +244,7 @@ public class AppLocker: UIViewController {
         login(with: pin, type: .pin) { error in
             self.clearView()
             if let error = error {
-                print(error)
+                
             } else {
                 
                 NotificationCenter.default.post(name: .startProductsUpdate, object: nil)
@@ -341,7 +341,7 @@ public class AppLocker: UIViewController {
             if success {
                 self.login(with: pin, type: biometricType) { error in
                     if let error = error {
-                        print(error)
+                        
                         self.showAlert(with: "Ошибка", and: error)
                     } else {
                         if self.mode == .validate {
@@ -382,7 +382,7 @@ public class AppLocker: UIViewController {
         UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
         //TODO: - Написать очистку данных после выхода из приложения
         ClearRealm.clear()
-        AppDelegate.shared.isAuth = false
+//        AppDelegate.shared.isAuth = false
     }
     
     func exit() {
@@ -393,7 +393,7 @@ public class AppLocker: UIViewController {
 //        let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
 //        navVC.modalPresentationStyle = .fullScreen
 //        self.present(navVC, animated: true, completion: nil)
-        
+        /*
         NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
             DispatchQueue.main.async {
                 self.cleanAllData()
@@ -411,6 +411,7 @@ public class AppLocker: UIViewController {
                 mySceneDelegate?.appCoordinator.start()
             }
         }
+         */
     }
 }
 
@@ -428,6 +429,7 @@ extension AppLocker {
     func login(with code: String, type: BiometricType, completion: @escaping (_ error: String?) ->() ) {
         showActivity()
         DispatchQueue.main.async {
+            /*
             AppDelegate.shared.getCSRF { error in
                 
                 if let error = error {
@@ -446,16 +448,12 @@ extension AppLocker {
                             
                             let stringToEncrypt: String = "\(string)"
                             
-                            print("String to encrypt:\t\t\t\(stringToEncrypt)")
                             
                             let encryptedData: Data = try aes.encrypt(stringToEncrypt)
-                            print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
                             
                             let decryptedData: String = try aes.decrypt(encryptedData)
-                            print("String decrypted:\t\t\t\(decryptedData)")
                             return encryptedData.base64EncodedString()
                         } catch {
-                            print("Something went wrong: \(error)")
                             return nil
                         }
                     }
@@ -534,9 +532,8 @@ extension AppLocker {
                                                     realm?.delete(b!)
                                                     realm?.add(timeOutObjects)
                                                     try realm?.commitWrite()
-                                                    print(realm?.configuration.fileURL?.absoluteString ?? "")
                                                 } catch {
-                                                    print(error.localizedDescription)
+                                                    
                                                 }
                                                 
                                             }
@@ -592,6 +589,7 @@ extension AppLocker {
                     
                 }
             }
+             */
         }
     }
     

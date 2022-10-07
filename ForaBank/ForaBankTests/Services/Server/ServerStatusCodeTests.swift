@@ -93,6 +93,6 @@ class ServerStatusCodeTests: XCTestCase {
         let result = try decoder.decode(ServerStatusCode.self, from: statusCode)
         
         // then
-        XCTAssertEqual(result, .unknownStatus)
+        XCTAssertEqual(result, .unknownStatus(46))
     }
 }

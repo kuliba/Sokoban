@@ -97,8 +97,8 @@ extension Double {
     func currencyFormatter(symbol: String = "") -> String {
         
         var resultString = ""
-        let currArr = Dict.shared.currencyList
-        currArr?.forEach({ currency in
+        let currArr = Model.shared.currencyList.value.map { $0.getCurrencyList() }
+        currArr.forEach({ currency in
             if currency.code == symbol {
                 var symbolArr = currency.cssCode?.components(separatedBy: "\\")
                 symbolArr?.removeFirst()
@@ -108,7 +108,7 @@ extension Double {
                         resultString.append(str)
                     }
                     else {
-                        print("invalid input")
+
                     }
                 }
             }
@@ -163,7 +163,7 @@ extension Double {
                         resultString.append(str)
                     }
                     else {
-                        print("invalid input")
+
                     }
                 }
             }

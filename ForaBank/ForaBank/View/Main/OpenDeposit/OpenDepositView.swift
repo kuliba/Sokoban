@@ -20,50 +20,29 @@ struct OpenDepositView: View {
                 
                 ForEach(viewModel.products) { productCard in
                     
-                    switch viewModel.style {
-                    case .deposit:
-                        OfferProductView(viewModel: productCard)
-
-                    case .catalog:
-                        OfferProductView(viewModel: productCard)
-                    }
-                }
-            }
-            .navigationBarTitle(Text("Вклады"), displayMode: .inline)
-            .foregroundColor(.black)
-
-            ForEach(viewModel.products) { productCard in
-                switch viewModel.style {
-                case .deposit:
-                    DepositShowBottomSheetView(viewModel: productCard)
-
-                case .catalog:
-                    DepositShowBottomSheetView(viewModel: productCard)
-                }
-            }
-        }
-    }
-    
-    struct DepositShowBottomSheetView: View {
-        
-        @ObservedObject var viewModel: OfferProductView.ViewModel
-
-        var body: some View {
-
-            BottomSheetView(isOpen: $viewModel.isShowSheet, maxHeight: CGFloat((viewModel.additionalCondition?.desc.count ?? 0) * 100)) {
-                if let additionalCondition = viewModel.additionalCondition {
+                    OfferProductView(viewModel: productCard)
                     
+                }
+            }
+            .foregroundColor(.black)
+            .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
+                
+                switch bottomSheet.type {
+                case let .openDeposit(additionalCondition):
                     OfferProductView.DetailConditionView(viewModel: additionalCondition)
                 }
             }
-            .offset(y: 180)
         }
+        .navigationBar(with: viewModel.navigationBar)
     }
 }
 
 struct OpenDepositView_Previews: PreviewProvider {
     
     static var previews: some View {
-        OpenDepositView(viewModel: .init(products: [.depositSample, .depositSample], style: .deposit))
+        OpenDepositView(viewModel:
+                .init(navigationBar: .init(title: "Вклады"),
+                      products: [.depositSample, .depositSample],
+                      catalogType: .deposit))
     }
 }

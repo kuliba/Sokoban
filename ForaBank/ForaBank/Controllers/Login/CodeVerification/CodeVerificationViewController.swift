@@ -44,7 +44,6 @@ class CodeVerificationViewController: UIViewController {
         smsCodeView.callBacktext = { str in
             if str == "123456", self.cardNumber == "0565205123484281"{
                 DispatchQueue.main.async {
-//                    print("Password \(String(describing: mode)) successfully")
                     let vc = MainTabBarViewController()
                     UIApplication.shared.windows.first?.rootViewController = vc
                     UIApplication.shared.windows.first?.makeKeyAndVisible()
@@ -82,17 +81,12 @@ class CodeVerificationViewController: UIViewController {
             let aes = try AES(keyString: key)
 
             let stringToEncrypt: String = "\(string)"
-            
-            print("String to encrypt:\t\t\t\(stringToEncrypt)")
 
             let encryptedData: Data = try aes.encrypt(stringToEncrypt)
-            print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
             
             let decryptedData: String = try aes.decrypt(encryptedData)
-            print("String decrypted:\t\t\t\(decryptedData)")
             return encryptedData.base64EncodedString()
         } catch {
-            print("Something went wrong: \(error)")
             return nil
         }
     }
@@ -104,7 +98,6 @@ class CodeVerificationViewController: UIViewController {
             "verificationCode": "\(code)"
         ] as [String : AnyObject]
         
-        print("DEBUG: Start verifyCode with body: ", body)
         NetworkManager<VerifyCodeDecodebleModel>.addRequest(.verifyCode, [:], body) { [weak self] model, error in
             if error != nil {
                 guard let error = error else { return }
@@ -119,25 +112,18 @@ class CodeVerificationViewController: UIViewController {
                     let aes = try AES(keyString: key)
 
                     let stringToEncrypt: String = "\(string)"
-                    
-                    print("String to encrypt:\t\t\t\(stringToEncrypt)")
 
                     let encryptedData: Data = try aes.encrypt(stringToEncrypt)
-                    print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
                     
                     let decryptedData: String = try aes.decrypt(encryptedData)
-                    print("String decrypted:\t\t\t\(decryptedData)")
                     return encryptedData.base64EncodedString()
                 } catch {
-                    print("Something went wrong: \(error)")
                     return nil
                 }
             }
             
             guard let model = model else { return }
             if model.statusCode == 0 {
-                
-                print("DEBUG: messaging().fcmToken = ", Messaging.messaging().fcmToken)
                 
                 let body = [
                     "cryptoVersion": "1.0",
@@ -147,7 +133,6 @@ class CodeVerificationViewController: UIViewController {
                     "pushFcmToken":encript(string: Messaging.messaging().fcmToken as String? ?? "")
                 ] as [String : AnyObject]
                 
-                print("DEBUG: Start doRegistration with body:", body)
                 NetworkManager<DoRegistrationDecodebleModel>.addRequest(.doRegistration, [:], body) { [weak self] model, error in
                     if error != nil {
                         guard let error = error else { return }
@@ -169,7 +154,6 @@ class CodeVerificationViewController: UIViewController {
     //                        let aes = try? AES256(key: KeyFromServer.secretKey!, iv: AES256.randomIv())
     //
     //                        let decryptString = try? aes?.decrypt(data)
-    //                        print(decryptString)
     //                    }
     //                    testEnc()
     //                    let str = model?.data?.phone?.data
@@ -179,13 +163,10 @@ class CodeVerificationViewController: UIViewController {
                                 return
                             }
                             let aes = try AES(keyString: key)
-    //                        let decryptedString = try AES256(key: KeyFromServer.secretKey!, iv: AES256.randomIv()).decrypt(data)
-    //                        print(decryptedString)
                             let decryptedData: String = try aes.decrypt(decodedData!)
-                            print("String decrypted:\t\t\t\(decryptedData)")
                             decryptPhone = decryptedData
                         } catch {
-                            print("Something went wrong: \(error)")
+
                         }
                         UserDefaults.standard.set(decryptPhone, forKey: "serverDeviceGUID")
                         
@@ -208,7 +189,6 @@ class CodeVerificationViewController: UIViewController {
                 }
             } else {
                 DispatchQueue.main.async { [weak self] in
-                    print("Неверный код")
                     self?.smsCodeView.clearnText(error: "error")
                     self?.showAlert(with: model.errorMessage ?? "", and: "Осталось попыток : \(model.data?.verifyOTPCount ?? 0)")
                 }
@@ -221,7 +201,6 @@ class CodeVerificationViewController: UIViewController {
     @objc func updateTimer() {
         if(count > 0) {
             count = count - 1
-//            print(count)
             if count < 10 {
                 timerLabel.text = "00:0\(count)"
             } else {
@@ -230,7 +209,6 @@ class CodeVerificationViewController: UIViewController {
         }
         else {
             resendTimer.invalidate()
-//            print("call your api")
             repeatCodeButton.isHidden = false
             timerLabel.isHidden = true
         }

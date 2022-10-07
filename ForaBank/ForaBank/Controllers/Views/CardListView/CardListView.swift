@@ -76,9 +76,6 @@ final class CardListView: UIView {
 
     func commonInit(onlyMy: Bool) {
         self.onlyMy = onlyMy
-//        print("GEBUG: only:", self.onlyMy)
-        
-//        let height: CGFloat = self.onlyMy ? 110 : 80
         changeCardButtonCollection.isHidden = !self.onlyMy
         self.translatesAutoresizingMaskIntoConstraints = false
         self.heightAnchor.constraint(equalToConstant: self.onlyMy ? 125 : 95).isActive = true
@@ -148,11 +145,9 @@ extension CardListView: UICollectionViewDataSource {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardCell
                 
                 if isFiltered {
-                    print("DEBUG:", #function, filteredCardList.count, indexPath)
                     
                     cell.card = filteredCardList[indexPath.item - 1]
                 } else {
-                    print("DEBUG:", #function, cardList.count, indexPath)
                     cell.card = cardList[indexPath.item - 1]
                 }
                 return cell
@@ -167,10 +162,8 @@ extension CardListView: UICollectionViewDataSource {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardCell
                 
                 if isFiltered {
-                    print("DEBUG:", #function, filteredCardList.count, indexPath)
                     cell.card = filteredCardList[indexPath.item ]
                 } else {
-                    print("DEBUG:", #function, cardList.count, indexPath)
                     cell.card = cardList[indexPath.item]
                 }
                 return cell
@@ -190,11 +183,9 @@ extension CardListView: UICollectionViewDataSource {
 //            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardCell
 //
 //            if isFiltered {
-//                print("DEBUG:", #function, filteredCardList.count, indexPath)
 //
 //                cell.card = filteredCardList[indexPath.item ]
 //            } else {
-//                print("DEBUG:", #function, cardList.count, indexPath)
 //                cell.card = cardList[indexPath.item - 1]
 //            }
 //            return cell
@@ -241,10 +232,8 @@ extension CardListView: UICollectionViewDelegate {
             
             if indexPath.item == 0 {
                 firstItemTap?()
-                print("GoNew")
             } else if indexPath.item == cardList.count + 1 {
                 lastItemTap?()
-                print("GoAll")
             }  else {
                 if isFiltered {
                     let card = filteredCardList[indexPath.item]
@@ -257,7 +246,6 @@ extension CardListView: UICollectionViewDelegate {
         } else {
             if indexPath.item == cardList.count {
                 lastItemTap?()
-                print("GoAll")
             }  else {
                 if isFiltered {
                     let card = filteredCardList[indexPath.item]

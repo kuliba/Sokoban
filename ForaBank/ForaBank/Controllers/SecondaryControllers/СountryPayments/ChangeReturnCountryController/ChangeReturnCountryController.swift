@@ -6,7 +6,7 @@
 //
 
 import UIKit
-//import RealmSwift
+import IQKeyboardManagerSwift
 
 class ChangeReturnCountryController: UIViewController {
     
@@ -17,7 +17,6 @@ class ChangeReturnCountryController: UIViewController {
     
     var type: ChangeReturnType
     
-//    lazy var realm = try? Realm()
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
@@ -63,8 +62,13 @@ class ChangeReturnCountryController: UIViewController {
     
     let doneButton = UIButton(title: "Продолжить")
     
-    init(type: ChangeReturnType) {
+    var operatorsViewModel: OperatorsViewModel?
+    
+    private let modelData: Model = Model.shared
+    
+    init(type: ChangeReturnType, operatorsViewModel: OperatorsViewModel?) {
         self.type = type
+        self.operatorsViewModel = operatorsViewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -81,10 +85,17 @@ class ChangeReturnCountryController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = false
+        navigationController?.isNavigationBarHidden = false
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
+        navigationController?.isNavigationBarHidden = true
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
     }
     
     fileprivate func setupUI() {
@@ -110,6 +121,8 @@ class ChangeReturnCountryController: UIViewController {
         view.addSubview(doneButton)
         doneButton.anchor(left: stackView.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: stackView.rightAnchor,
                           paddingLeft: 20, paddingBottom: 20, paddingRight: 20, height: 44)
+        self.parent?.navigationItem.searchController = nil
+
     }
     
     func setupData(with model: ConfirmViewControllerModel) {
@@ -130,14 +143,33 @@ class ChangeReturnCountryController: UIViewController {
         nameField.text = model.name ?? ""
         secondNameField.text = model.secondName ?? ""
         
+        let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                     action: #selector(closeButtonTapped))
+        button.tintColor = .black
+        self.navigationItem.leftBarButtonItem = button
+        
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "Vector")))
         self.navigationItem.rightBarButtonItem = customViewItem
         
-        if model.paymentSystem != nil {
-            let navImage: UIImage = model.paymentSystem?.svgImage?.convertSVGStringToImage() ?? UIImage()
+        if let paymentSystemIcon = model.paymentSystem?.svgImage?.convertSVGStringToImage() {
             
-            let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
-            self.navigationItem.rightBarButtonItem = customViewItem
+            let navImage: UIImage = paymentSystemIcon
+            
+            let button = UIButton()
+            button.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
+            
+            button.setImage(navImage, for: .normal)
+            button.imageView?.contentMode = .scaleAspectFit
+            button.isUserInteractionEnabled = false
+
+            let buttonBarButton = UIBarButtonItem(customView: UIView(frame: CGRect(x: 0, y: 0, width: 25, height: 25)))
+            buttonBarButton.customView?.addSubview(button)
+            buttonBarButton.customView?.frame = button.frame
+
+            self.navigationItem.rightBarButtonItem = buttonBarButton
         }
         
         switch type {
@@ -146,6 +178,11 @@ class ChangeReturnCountryController: UIViewController {
             surnameField.isHidden = true
             nameField.isHidden = true
             secondNameField.isHidden = true
+            if let surname = model.surname, let name = model.name, let secondName = model.secondName {
+                
+                fullNameField.text = "\(surname) \(name) \(secondName)"
+            }
+            
             doneButton.setTitle("Вернуть", for: .normal)
         case .changePay:
             title = "Изменения перевода"
@@ -154,8 +191,13 @@ class ChangeReturnCountryController: UIViewController {
         }
     }
     
+    @objc
+    func closeButtonTapped() {
+        
+        navigationController?.popViewController(animated: true)
+    }
+    
     @objc func doneButtonTapped() {
-        print(#function)
         switch type {
         case .returnPay:
             returnPay()
@@ -186,8 +228,8 @@ class ChangeReturnCountryController: UIViewController {
                     model.paymentOperationDetailId = modelResp?.data?.paymentOperationDetailId ?? 0
                     controller.confurmVCModel = model
                     controller.printFormType = "returnOutgoing"
-                    controller.modalPresentationStyle = .fullScreen
-                    self.present(controller, animated: true, completion: nil)
+                    controller.operatorsViewModel = self.operatorsViewModel
+                    self.navigationController?.pushViewController(controller, animated: true)
                 } else {
                     self.showAlert(with: "Ошибка", and: modelResp?.errorMessage ?? "")
                 }
@@ -214,8 +256,8 @@ class ChangeReturnCountryController: UIViewController {
                     model.paymentOperationDetailId = modelResp?.data?.paymentOperationDetailId ?? 0
                     controller.confurmVCModel = model
                     controller.printFormType = "changeOutgoing"
-                    controller.modalPresentationStyle = .fullScreen
-                    self.present(controller, animated: true, completion: nil)
+                    controller.operatorsViewModel = self.operatorsViewModel
+                    self.navigationController?.pushViewController(controller, animated: true)
                 } else {
                     self.showAlert(with: "Ошибка", and: modelResp?.errorMessage ?? "")
                 }

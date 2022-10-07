@@ -12,15 +12,21 @@ import SwiftUI
 
 extension MainSectionCurrencyView {
 
-    class ViewModel: MainSectionCollapsableViewModel {
+    class ViewModel: MainSectionCollapsableViewModel, ObservableObject {
         
         override var type: MainSectionType { .currencyExchange }
         let currencyExchange: CurrencyExchangeView.ViewModel
         
-        internal init(currencyExchange: CurrencyExchangeView.ViewModel, isCollapsed: Bool) {
+        init(currencyExchange: CurrencyExchangeView.ViewModel, isCollapsed: Bool) {
             
             self.currencyExchange = currencyExchange
             super.init(isCollapsed: isCollapsed)
+        }
+        
+        init(_ model: Model) {
+            
+            self.currencyExchange = .init(model)
+            super.init(isCollapsed: false)
         }
     }
 }
@@ -33,9 +39,10 @@ struct MainSectionCurrencyView: View {
 
     var body: some View {
         
-        MainSectionCollapsableView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
+        CollapsableSectionView(title: viewModel.title, edges: .horizontal, padding: 20, isCollapsed: $viewModel.isCollapsed) {
             
             CurrencyExchangeView(viewModel: viewModel.currencyExchange)
+                .padding(.horizontal, 20)
         }
     }
 }

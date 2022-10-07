@@ -7,7 +7,6 @@ extension String {
     /// конвертирует имя контролева из String значения в UIViewController
     func getViewController() -> UIViewController? {
         if let appName = Bundle.main.infoDictionary?["CFBundleName"] as? String {
-            print("CFBundleName - \(appName)")
             if let viewControllerType = NSClassFromString("\(appName).\(self)") as? UIViewController.Type {
                 return viewControllerType.init()
             }
@@ -29,8 +28,8 @@ extension String {
     func getSymbol() -> String? {
         
         var resultString = ""
-        let currArr = Dict.shared.currencyList
-        currArr?.forEach({ currency in
+        let currArr = Model.shared.currencyList.value.map { $0.getCurrencyList() }
+        currArr.forEach({ currency in
             if currency.code == self {
                 
                 var symbolArr = currency.cssCode?.components(separatedBy: "\\")
@@ -41,7 +40,7 @@ extension String {
                         let str = String(unicode)
                         resultString.append(str)
                     } else {
-                        print("invalid input")
+
                     }
                 }
             }
@@ -63,9 +62,5 @@ extension String {
     func numberFormatter() -> String{
         let mask = StringMask(mask: "+7 (000) 000-00-00")
         return mask.mask(string: self) ?? ""
-    }
-
-    func filterred() -> String {
-        filter { ("0"..."9").contains($0) }
     }
 }

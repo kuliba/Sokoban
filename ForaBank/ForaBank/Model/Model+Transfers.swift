@@ -22,8 +22,20 @@ extension ModelAction {
             
             enum Response: Action {
                 
-                case success(data: ServerCommands.TransferController.CreateInterestDepositTransfer.Response.CreateTransferResponseData)
+                case success(data: CreateTransferResponseData)
                 case failure(message: String)
+            }
+        }
+        
+        enum TransferLimit {
+            
+            struct Request: Action {}
+            
+            enum Response: Action {
+                
+                case limit(data: TransferLimitData)
+                case noLimit
+                case failure(Error)
             }
         }
     }
@@ -68,4 +80,44 @@ extension Model {
             }
         }
     }
+    
+    func handleTransferLimitRequest(_ payload: ModelAction.Transfers.TransferLimit.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.TransferController.GetTransferLimit(token: token)
+        serverAgent.executeCommand(command: command) { [unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    
+                    if let data = response.data {
+                        
+                        self.action.send(ModelAction.Transfers.TransferLimit.Response.limit(data: data))
+                    } else {
+                        
+                        self.action.send(ModelAction.Transfers.TransferLimit.Response.noLimit)
+                    }
+                    
+                default:
+                    
+                    self.action.send(ModelAction.Transfers.TransferLimit.Response.failure(ModelError.statusError(status: response.statusCode, message: response.errorMessage)))
+                    
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    
+                }
+            case .failure(let error):
+                
+                self.action.send(ModelAction.Transfers.TransferLimit.Response.failure(error))
+                
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
 }

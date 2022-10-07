@@ -10,6 +10,7 @@ import Combine
 
 class PaymentsDetailsSuccessViewController: UIViewController {
     
+    var operatorsViewModel: OperatorsViewModel?
     var printFormType: String?
     let confurmView = PaymentsDetailsView()
     let button = UIButton(title: "На главную")
@@ -23,6 +24,7 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     //TODO: remove after refactoring
     private let model: Model = Model.shared
     private var bindings = Set<AnyCancellable>()
+    var closeAction: (() -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,13 +44,13 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         }
         
         confurmView.changeTapped = { [weak self] () in
-            let controller = ChangeReturnCountryController(type: .changePay)
+            let controller = ChangeReturnCountryController(type: .changePay, operatorsViewModel: self?.operatorsViewModel)
             controller.confurmVCModel = self?.confurmVCModel
             self?.navigationController?.pushViewController(controller, animated: true)
         }
         
         confurmView.returnTapped = { [weak self] () in
-            let controller = ChangeReturnCountryController(type: .returnPay)
+            let controller = ChangeReturnCountryController(type: .returnPay, operatorsViewModel: self?.operatorsViewModel)
             controller.confurmVCModel = self?.confurmVCModel
             self?.navigationController?.pushViewController(controller, animated: true)
         }
@@ -67,7 +69,39 @@ class PaymentsDetailsSuccessViewController: UIViewController {
             self.model.action.send(ModelAction.PaymentTemplate.Save.Requested(name: name, paymentOperationDetailId: paymentOperationDetailId))
         }
         
-       bind()
+        if let paymentFromCardId = confurmVCModel?.cardFromCardId {
+            
+            if let cardId = NumberFormatter().number(from: paymentFromCardId) {
+                let integerCardId = cardId.intValue
+                self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+            }
+        }
+        
+        if let paymentToCardId = confurmVCModel?.cardToCardId {
+            
+            if let cardId = NumberFormatter().number(from: paymentToCardId) {
+                let integerCardId = cardId.intValue
+                self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+            }
+        }
+        
+        if let toAcccountId = self.confurmVCModel?.cardToAccountId {
+            
+            if let cardId = NumberFormatter().number(from: toAcccountId) {
+                let integerCardId = cardId.intValue
+                self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+            }
+        }
+        
+        if let fromAcccountId = self.confurmVCModel?.cardFromAccountId {
+            
+            if let cardId = NumberFormatter().number(from: fromAcccountId) {
+                let integerCardId = cardId.intValue
+                self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
+            }
+        }
+        
+        bind()
     }
     
     func bind() {
@@ -91,8 +125,9 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     
     fileprivate func setupUI() {
         navigationController?.navigationBar.isHidden = true
+        navigationController?.isNavigationBarHidden = true
         view.backgroundColor = .white
-
+        
         view.addSubview(button)
         button.anchor(
             left: view.leftAnchor,
@@ -105,20 +140,18 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         
         view.addSubview(confurmView)
         confurmView.anchor(
-            top: view.safeAreaLayoutGuide.topAnchor,
             left: view.leftAnchor,
             bottom: button.topAnchor,
             right: view.rightAnchor,
-            paddingTop: 120,
             paddingLeft: 20,
             paddingBottom: 90,
             paddingRight: 20)
         
+        confurmView.topAnchor.constraint(lessThanOrEqualToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 120).isActive = true
     }
     
     @objc func doneButtonTapped() {
-        print(#function)
-        dismissViewControllers()
+        NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
     }
     
     func openDetailVC() {
@@ -137,9 +170,12 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     
     // MARK:- Dismiss and Pop ViewControllers
     func dismissViewControllers() {
-        self.view.window?.rootViewController?.dismiss(animated: true)
+        
+        self.dismiss(animated: false)
+        guard let closeAction = closeAction else {
+            return
+        }
+        
+        closeAction()
     }
-
-  
-    
 }

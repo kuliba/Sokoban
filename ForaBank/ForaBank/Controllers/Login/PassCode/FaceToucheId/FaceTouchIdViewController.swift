@@ -161,13 +161,13 @@ class FaceTouchIdViewController: UIViewController {
                 if statusCode == 0 {
                     UserDefaults.standard.set(true, forKey: "UserIsRegister")
                     DispatchQueue.main.async {
+                        /*
                         AppDelegate.shared.getCSRF { errorMessage in
                             if errorMessage == nil {
                                 self.login(with: self.code ?? "", type: .pin) { error in
                                     DispatchQueue.main.async {
                                         self.dismissActivity()
                                         if error != nil {
-                                            print("DEBUG: Error getCSRF: ", error!)
                                         } else {
                                             AppDelegate.shared.isAuth = true
                                             // Обновление времени старта после ввода нового пина при авторизации
@@ -181,9 +181,8 @@ class FaceTouchIdViewController: UIViewController {
                                                 realm?.delete(b!)
                                                 realm?.add(timeOutObjects)
                                                 try realm?.commitWrite()
-                                                print("REALM", realm?.configuration.fileURL?.absoluteString ?? "")
                                             } catch {
-                                                print(error.localizedDescription)
+                                                
                                             }
                                             self.dismissActivity()
                                             self.delegate?.goToTabBar()
@@ -194,6 +193,7 @@ class FaceTouchIdViewController: UIViewController {
                                 self.dismissActivity()
                             }
                         }
+                         */
                     }
                 } else {
                     self.dismissActivity()

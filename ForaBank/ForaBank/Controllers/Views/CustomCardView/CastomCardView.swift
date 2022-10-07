@@ -63,8 +63,9 @@ class CastomCardView: UIView, UITextFieldDelegate {
 //        IQKeyboardManager.shared.toolbarDoneBarButtonItemText = "Продолжить"
 
         let config = IQBarButtonItemConfiguration(title: "Продолжить", action: #selector(doneButtonClicked))
-        cardTextField.addKeyboardToolbarWithTarget(target: self, titleText: "Продолжить", rightBarButtonConfiguration: config)
-        nameTextField.addKeyboardToolbarWithTarget(target: self, titleText: "Продолжить", rightBarButtonConfiguration: config)
+        cardTextField.addKeyboardToolbarWithTarget(target: self, titleText: "", rightBarButtonConfiguration: config)
+        nameTextField.addKeyboardToolbarWithTarget(target: self, titleText: "", rightBarButtonConfiguration: config)
+        
 //        nameTextField.addKeyboardToolbar(withTarget: self, titleText: "Продолжить" , rightBarButtonConfiguration: config, previousBarButtonConfiguration: nil, nextBarButtonConfiguration: nil)
 
         //  any color you like
@@ -99,8 +100,8 @@ class CastomCardView: UIView, UITextFieldDelegate {
                     self.qrButton.alpha = 1
                 }
             }
-        case nameTextField:
-            print(nameTextField.text ?? "")
+        case nameTextField: break
+                //TODO: set action
         default:
             break
         }
@@ -133,7 +134,6 @@ class CastomCardView: UIView, UITextFieldDelegate {
     
     // MARK: - IBActions
     @IBAction func qrButton(_ sender: UIButton) {
-        print(#function + " Открываем экран сканера")
         let scannerView = CardScannerController.getScanner { card in
             guard let cardNumder = card else { return }
             self.cardTextField.text = "\(cardNumder)"
@@ -167,7 +167,6 @@ class CastomCardView: UIView, UITextFieldDelegate {
             DispatchQueue.main.async {
                 if error != nil {
                     guard let error = error else { return }
-                    print("DEBUG: ", #function, error)
                 } else {
                     guard let model = model else { return }
                     guard let statusCode = model.statusCode else { return }
@@ -181,7 +180,6 @@ class CastomCardView: UIView, UITextFieldDelegate {
                         }
                     } else {
                         let error = model.errorMessage ?? "nil"
-                        print("DEBUG: ", #function, error)
                     }
                 }
             }

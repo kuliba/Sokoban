@@ -10,6 +10,7 @@ import UIKit
 extension ContactInputViewController {
     func setupUI() {
         navigationController?.isNavigationBarHidden = false
+        navigationItem.largeTitleDisplayMode = .never
 //        addCloseButton()
         view.backgroundColor = .white
         let saveAreaView = UIView()
@@ -25,7 +26,7 @@ extension ContactInputViewController {
         cardFromField.imageView.isHidden = false
         cardFromField.leftTitleAncor.constant = 64
         cardFromField.layoutIfNeeded()
-        phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "addPerson"), for: .normal)
+//        phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "addPerson"), for: .normal)
 //        view.addSubview(foraSwitchView)
         
         
@@ -46,17 +47,20 @@ extension ContactInputViewController {
         view.addSubview(stackView)
         
         self.view.addSubview(countryListView)
-        countryListView.anchor(top: view.topAnchor, left: view.leftAnchor,
-                               right: view.rightAnchor, height: 100)
+        countryListView.anchor(
+            top: view.safeAreaLayoutGuide.topAnchor,
+            left: view.leftAnchor,
+            right: view.rightAnchor, height: 100)
         
         setupConstraint()
+        self.parent?.navigationItem.searchController = nil
     }
     
     func configure(with: CountriesList?, byPhone: Bool) {
         guard let country = country else { return }
         
         var filterPaymentList: [PaymentSystemList] = []
-        guard let paymentList = Dict.shared.paymentList else { return }
+        let paymentList = model.paymentSystemList.value.map { $0.getPaymentSystem() }
         paymentList.forEach({ payment in
             country.paymentSystemCodeList?.forEach({ countryPayment in
                 if countryPayment == payment.code {
@@ -100,19 +104,24 @@ extension ContactInputViewController {
         UIView.animate(withDuration: 0.1) {
             self.needShowSwitchView = country.code == "AM" ? true : false
             self.bottomView.doneButton.isEnabled = country.code == "AM" ? true : false
-            
+            self.phoneField.textField.withExamplePlaceholder = false
+            self.phoneField.textField.withFlag = false
+            self.phoneField.textField.withPrefix = true
             if country.code == "TR" {
+                
                 self.phoneField.isHidden = false
                 
-//                self.phoneField.textField.maskString = "+90 (000) 000 00 00"
             } else {
+                
                 self.phoneField.isHidden = byPhone ? false : true
-                self.phoneField.textField.maskString = "+374-00-000000"
             }
             self.bankField.isHidden = byPhone ? false : true
             self.surnameField.isHidden = byPhone ? true : false
             self.nameField.isHidden = byPhone ? true : false
             self.secondNameField.isHidden = byPhone ? true : false
+            self.foraSwitchView.bankByPhoneSwitch.isOn = byPhone ? true : false
+            self.foraSwitchView.bankByPhoneSwitch.layer.borderColor = byPhone ? #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            self.foraSwitchView.bankByPhoneSwitch.thumbTintColor = byPhone ? #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             self.stackView.layoutIfNeeded()
         }
         
@@ -122,11 +131,13 @@ extension ContactInputViewController {
         guard let countryName = self.country?.name else { return }
         let subtitle = "Денежные переводы \(system.name ?? "")"
         self.navigationItem.titleView = self.setTitle(title: countryName.capitalizingFirstLetter(), subtitle: subtitle)
-        
+        self.parent?.navigationItem.titleView = self.setTitle(title: countryName.capitalizingFirstLetter(), subtitle: subtitle)
+
         let navImage: UIImage = system.svgImage?.convertSVGStringToImage() ?? UIImage()
         
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
         self.navigationItem.rightBarButtonItem = customViewItem
+        self.parent?.navigationItem.rightBarButtonItem = customViewItem
         setupCurrencyButton(system: system)
     }
     
@@ -165,12 +176,14 @@ extension ContactInputViewController {
     }
     
     func setupConstraint() {
-        bottomView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                          right: view.rightAnchor)
+        bottomView.anchor(
+            left: view.leftAnchor,
+            bottom: view.bottomAnchor,
+            right: view.rightAnchor,
+            paddingBottom: 0)
         
         stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                         left: view.leftAnchor, right: view.rightAnchor,
-                         paddingTop: 20)
+                         left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20)
         
     }
     

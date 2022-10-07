@@ -142,9 +142,11 @@ class MainTabBarViewController: UITabBarController {
     
     private func loadCatalog() {
         
+        /*
         if (GlobalModule.c2bURL == nil) {
             AppUpdater.shared.showUpdate(withConfirmation: true)
         }
+         */
         
         NetworkHelper.request(.getCountries) { model, error in
             if error != nil {
@@ -152,7 +154,6 @@ class MainTabBarViewController: UITabBarController {
             }
             guard let countries = model as? [CountriesList] else { return }
             Dict.shared.countries = countries
-            print("DEBUG: Load Countries")
         }
         
         NetworkHelper.request(.getBanks) { model, error in
@@ -161,7 +162,6 @@ class MainTabBarViewController: UITabBarController {
             }
             guard let banks = model as? [BanksList] else { return }
             Dict.shared.banks = banks
-            print("DEBUG: Load Banks")
         }
         
         
@@ -171,7 +171,6 @@ class MainTabBarViewController: UITabBarController {
             }
             guard let banks = model as? [BankFullInfoList] else { return }
             Dict.shared.bankFullInfoList = banks
-            print("DEBUG: Load Banks")
         }
         
         NetworkHelper.request(.getPaymentSystemList) { model, error in
@@ -180,7 +179,6 @@ class MainTabBarViewController: UITabBarController {
             }
             guard let paymentSystem = model as? [PaymentSystemList] else { return }
             Dict.shared.paymentList = paymentSystem
-            print("DEBUG: Load Payments")
         }
         
         NetworkHelper.request(.getMobileSystem) { model, error in
@@ -189,7 +187,6 @@ class MainTabBarViewController: UITabBarController {
             }
             guard let paymentSystem = model as? [MobileList] else { return }
             Dict.shared.mobileSystem = paymentSystem
-            print("DEBUG: Load Payments")
         }
         
         NetworkHelper.request(.getCurrencyList) { model, error in
@@ -198,14 +195,13 @@ class MainTabBarViewController: UITabBarController {
             }
             guard let currencySystem = model as? [CurrencyList] else { return }
             Dict.shared.currencyList = currencySystem
-            print("DEBUG: Load Currency")
         }
     }
     
     func getFastPaymentContractList() {
         NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
             if error != nil {
-                print("DEBUG: Error: ")
+                
             }
             guard let model = model else { return }
             
@@ -217,7 +213,7 @@ class MainTabBarViewController: UITabBarController {
                 UserDefaults.standard.set(b, forKey: "UserPhone")
                 UserDefaults.standard.set(clientID, forKey: "clientId")
             } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
+                
             }
         }
     }

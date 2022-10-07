@@ -61,7 +61,7 @@ class Encription {
            return privRaw2?.withUnsafeBytes { (unsafeBytes) -> SecKey? in
               let bytes2 =  unsafeBytes.baseAddress?.advanced(by: 0).bindMemory(to: UInt8.self, capacity: 0)
                let CFPrivData1 = CFDataCreate(nil, bytes2, unsafeBytes.count - 0)
-               print(unsafeBytes.count)
+               
                let attributes =  [
                    kSecAttrKeySizeInBits: 384,
                       kSecAttrKeyType: kSecAttrKeyTypeEC,
@@ -76,7 +76,7 @@ class Encription {
                if let publicKey = SecKeyCreateWithData(CFPrivData1!, attributes, &error) {
                    return publicKey
                } else {
-                   print("other EC public: (String(describing: error))")
+                   
                    return nil
                }
            }
@@ -126,36 +126,21 @@ class Encription {
                 let salt = AES256.randomSalt()
     
                 let iv = AES256.randomIv()
-                print("Randomize\(iv)")
     
                 guard let key = KeyFromServer.secretKey else {
                     return nil
                 }
-                print(key)
     
                 let aes = try AES256(key: key, iv: iv)
     
                 let encrypted = try aes.encrypt(digest)
                 let decrypted = try aes.decrypt(encrypted)
     
-                print("Encrypted: \(encrypted.hexadecimal)")
-                print("Decrypted: \(decrypted)")
-    
                 let string1 = encrypted.base64EncodedString()
-                print(string1)
-    
-//                let data: Data = decrypted
-//                if let string = String(data: string1, encoding: .utf8) {
-//                    print(string)
-//                } else {
-//                    print("not a valid UTF-8 sequence")
-//                }
-
                 
                 return encrypted.base64EncodedString()
             } catch {
-                print("Failed")
-                print(error)
+                
                 }
             return nil
         }
@@ -197,7 +182,6 @@ class Encription {
                     var pem = ""
                     //pem.append("-----BEGIN PUBLIC KEY-----\n") //uncomment if needed
                     pem.append((fullKeyData as Data?)?.base64EncodedString() ?? "")
-                    print((fullKeyData as Data?)?.base64EncodedString() ?? "")
                     
                     //pem.append("\n-----END PUBLIC KEY-----\n") //uncomment if needed
 
@@ -211,7 +195,6 @@ class Encription {
             if let cfdata = SecKeyCopyExternalRepresentation(data, &error){
                let data:Data = cfdata as Data
                let b64Key = data.base64EncodedString()
-                print(b64Key)
             }
         }
         
@@ -249,7 +232,6 @@ class Encription {
            let params = [SecKeyKeyExchangeParameter.requestedSize.rawValue: 32, SecKeyKeyExchangeParameter.sharedInfo.rawValue: Data()] as [String: Any]
            
            var error: Unmanaged<CFError>? = nil
-           print(otherPublicKey)
             if let sharedSecret: Data = SecKeyCopyKeyExchangeResult(ownPrivateKey, algorithm, otherPublicKey, params as CFDictionary, &error) as Data? {
                 
         
@@ -260,7 +242,7 @@ class Encription {
                 
                return sharedSecret
            } else {
-               print("key exchange: (String(describing: error))")
+
            }
            return nil
         }
@@ -410,7 +392,6 @@ extension AES: Cryptable {
         let decryptedData: Data = buffer[..<numberBytesDecrypted]
         let decryptedMyData = buffer.prefix(16)
         let newString = decryptedMyData.base64EncodedString()
-        print(newString.base64Decoded())
         guard let decryptedString = String(data: decryptedData, encoding: .utf8) else {
             throw Error.dataToStringFailed
         }

@@ -167,8 +167,7 @@ class HistoryTableViewCell: UITableViewCell {
                     amountLabel.textColor = UIColor(hexString: "22C183")
                     amountLabel.text = "+\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
                 }
-            case .some(_):
-                print("some")
+            case .some(_): break
             }
         }
         

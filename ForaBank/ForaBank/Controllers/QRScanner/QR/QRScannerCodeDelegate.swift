@@ -73,7 +73,7 @@ public class QRCodeScannerController: UIViewController, AVCaptureMetadataOutputO
             do {
                 return try AVCaptureDeviceInput(device: captureDevice)
             } catch let error as NSError {
-                print(error)
+                
             }
         }
         return nil
@@ -85,7 +85,7 @@ public class QRCodeScannerController: UIViewController, AVCaptureMetadataOutputO
             do {
                 return try AVCaptureDeviceInput(device: captureDevice)
             } catch let error as NSError {
-                print(error)
+                
             }
         }
         return nil
@@ -122,7 +122,7 @@ public class QRCodeScannerController: UIViewController, AVCaptureMetadataOutputO
     }
     
     deinit {
-        print("SwiftQRScanner deallocating...")
+        
     }
     
     //MARK: Life cycle methods
@@ -269,7 +269,7 @@ public class QRCodeScannerController: UIViewController, AVCaptureMetadataOutputO
                 
                 defaultDevice.unlockForConfiguration()
             } catch let error as NSError {
-                print(error)
+
             }
         }
     }
@@ -330,7 +330,7 @@ public class QRCodeScannerController: UIViewController, AVCaptureMetadataOutputO
                 captureSession.addInput(defaultDeviceInput)
             }
             break
-        default: print("Do nothing")
+        default: break
         }
         
         if !captureSession.canAddOutput(dataOutput) {

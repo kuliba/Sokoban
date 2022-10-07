@@ -95,12 +95,47 @@ extension TransferGeneralData {
 extension TransferGeneralData {
     
     struct PayeeInternal: Codable, Equatable {
-        
+
         let accountId: Int?
         let accountNumber: String?
         let cardId: Int?
         let cardNumber: String?
         let phoneNumber: String?
         let productCustomName: String?
+        
+        init(accountId: Int?, accountNumber: String?, cardId: Int?, cardNumber: String?, phoneNumber: String?, productCustomName: String?) {
+            self.accountId = accountId
+            self.accountNumber = accountNumber
+            self.cardId = cardId
+            self.cardNumber = cardNumber
+            self.phoneNumber = phoneNumber
+            self.productCustomName = productCustomName
+        }
+        
+        init?(productData: ProductData) {
+            
+            switch productData {
+            case let card as ProductCardData:
+               
+                self = .init(accountId: nil, accountNumber: nil,
+                             cardId: card.id,
+                             cardNumber: nil, phoneNumber: nil, productCustomName: nil)
+                
+            case let account as ProductAccountData:
+               
+                self = .init(accountId: account.id,
+                             accountNumber: nil, cardId: nil, cardNumber: nil,
+                             phoneNumber: nil, productCustomName: nil)
+                
+            case let deposit as ProductDepositData:
+               
+                self = .init(accountId: deposit.accountId,
+                             accountNumber: nil, cardId: nil, cardNumber: nil,
+                             phoneNumber: nil, productCustomName: nil)
+                
+            default: return nil
+            }
+        }
     }
 }
+

@@ -10,34 +10,26 @@ import Foundation
 extension ServerCommands {
     
     enum NotificationController {
-
+        
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/NotificationController/changeNotificationStatus
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/NotificationController/changeNotificationStatus
          */
         struct ChangeNotificationStatus: ServerCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/notification/changeNotificationStatus"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {
                 
                 let eventId: String
                 let cloudId: String
-                let status: CodingKeys
-            }
-
-            enum CodingKeys: String, CodingKey, Encodable {
-                
-                case delivered = "DELIVERED"
-                case read = "READ"
+                let status: NotificationStatus
             }
             
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: EmptyData?
@@ -51,27 +43,25 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/NotificationController/getNotificationsUsingGET
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/NotificationController/getNotificationsUsingGET
          */
         struct GetNotifications: ServerCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/rest/getNotifications"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: [NotificationData]?
             }
             
-            internal init(token: String, offset: Int?, limit: Int?, type: NotificationData.Kind, state: NotificationData.State) {
+            internal init(token: String, offset: Int?, limit: Int?, types: [NotificationData.Kind], states: [NotificationData.State]) {
                 
                 self.token = token
                 var parameters = [ServerCommandParameter]()
@@ -85,9 +75,13 @@ extension ServerCommands {
                     
                     parameters.append(.init(name: "limit", value: "\(limit)"))
                 }
+                // [SEND, PUSH, MAIL]
+                let typesParameters = types.map {ServerCommandParameter(name: "notificationType", value: $0.rawValue) }
+                parameters.append(contentsOf: typesParameters)
                 
-                parameters.append(.init(name: "notificationType", value: type.rawValue))
-                parameters.append(.init(name: "notificationState", value: state.rawValue))
+                let stateParameters = states.map {ServerCommandParameter(name: "notificationState", value: $0.rawValue) }
+                
+                parameters.append(contentsOf: stateParameters)
                 
                 self.parameters = parameters
             }

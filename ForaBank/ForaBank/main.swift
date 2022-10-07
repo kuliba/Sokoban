@@ -9,4 +9,4 @@ import UIKit
 
 let appDelegateClass: AnyClass = NSClassFromString("TestingAppDelegate") ?? AppDelegate.self
 
-UIApplicationMain(CommandLine.argc, CommandLine.unsafeArgv, nil, NSStringFromClass(appDelegateClass))
+UIApplicationMain(CommandLine.argc, CommandLine.unsafeArgv, NSStringFromClass(ForaApplication.self), NSStringFromClass(appDelegateClass))

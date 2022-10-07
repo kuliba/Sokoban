@@ -1,4 +1,4 @@
-//
+ //
 //  Model+Dictionary.swift
 //  ForaBank
 //
@@ -13,55 +13,64 @@ extension ModelAction {
     
     enum Dictionary {
         
-        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList, .atmCityList, .atmRegionList]
-
         enum UpdateCache {
-        
+            
             struct All: Action {}
             
             struct List: Action {
                 
-                let types: [Kind]
+                let types: [DictionaryType]
             }
             
             struct Request: Action {
                 
-                let type: Kind
+                let type: DictionaryType
                 let serial: String?
             }
         }
-
-        enum Kind: CaseIterable {
+        
+        enum DownloadImages {
             
-            case anywayOperators
-            case banks
-            case countries
-            case currencyList
-            case fmsList
-            case fsspDebtList
-            case fsspDocumentList
-            case ftsList
-            case fullBankInfoList
-            case mobileList
-            case mosParkingList
-            case paymentSystemList
-            case productCatalogList
-            case bannerCatalogList
-            case atmList
-            case atmServiceList
-            case atmTypeList
-            case atmMetroStationList
-            case atmCityList
-            case atmRegionList
+            struct Request: Action {
+                
+                let imagesIds: [String]
+            }
+            
+            struct Response: Action {
+                
+                let result: Result<[(id: String, imageData: ImageData)], Error>
+            }
         }
+        
+        static let cached: [DictionaryType] = [
+            .anywayOperators,
+            .fmsList,
+            .fsspDebtList,
+            .fsspDocumentList,
+            .ftsList,
+            .productCatalogList,
+            .bannerCatalogList,
+            .atmList,
+            .atmServiceList,
+            .atmTypeList,
+            .atmMetroStationList,
+            .atmCityList,
+            .atmRegionList,
+            .currencyList,
+            .currencyWalletList,
+            .countries,
+            .banks,
+            .paymentSystemList,
+            .fullBankInfoList
+        ]
     }
 }
 
 //MARK: - Cache
 
 extension Model {
-        
-    func dictionaryCheckCache(for dictionaryType: ModelAction.Dictionary.Kind) -> Bool {
+    
+    func dictionaryCheckCache(for dictionaryType: DictionaryType) -> Bool {
         
         switch dictionaryType {
         case .anywayOperators:
@@ -108,7 +117,7 @@ extension Model {
             
         case .atmList:
             return localAgent.load(type: [AtmData].self) != nil
-        
+            
         case .atmTypeList:
             return localAgent.load(type: [AtmTypeData].self) != nil
             
@@ -123,10 +132,17 @@ extension Model {
             
         case .atmRegionList:
             return localAgent.load(type: [AtmRegionData].self) != nil
+        
+        case .currencyWalletList:
+            return localAgent.load(type: [CurrencyWalletData].self) != nil
+            
+        case .centralBanksRates:
+            return localAgent.load(type: [CentralBankRatesData].self) != nil
         }
+        
     }
     
-    func dictionaryCacheSerial(for dictionaryType: ModelAction.Dictionary.Kind) -> String? {
+    func dictionaryCacheSerial(for dictionaryType: DictionaryType) -> String? {
         
         switch dictionaryType {
         case .anywayOperators:
@@ -173,7 +189,7 @@ extension Model {
             
         case .atmList:
             return localAgent.serial(for: [AtmData].self)
-        
+            
         case .atmTypeList:
             return localAgent.serial(for: [AtmTypeData].self)
             
@@ -188,10 +204,16 @@ extension Model {
             
         case .atmRegionList:
             return localAgent.serial(for: [AtmRegionData].self)
+        
+        case .currencyWalletList:
+            return localAgent.serial(for: [CurrencyWalletData].self)
+        
+        case .centralBanksRates:
+            return localAgent.serial(for: [CentralBankRatesData].self)
         }
     }
     
-    func dictionaryClearCache(for dictionaryType: ModelAction.Dictionary.Kind) {
+    func dictionaryClearCache(for dictionaryType: DictionaryType) {
         
         switch dictionaryType {
         case .anywayOperators:
@@ -238,7 +260,7 @@ extension Model {
             
         case .atmList:
             try? localAgent.clear(type: [AtmData].self)
-        
+            
         case .atmTypeList:
             try? localAgent.clear(type: [AtmTypeData].self)
             
@@ -253,6 +275,12 @@ extension Model {
             
         case .atmRegionList:
             try? localAgent.clear(type: [AtmRegionData].self)
+        
+        case .currencyWalletList:
+            try? localAgent.clear(type: [CurrencyWalletData].self)
+        
+        case .centralBanksRates:
+            try? localAgent.clear(type: [CentralBankRatesData].self)
         }
     }
 }
@@ -261,6 +289,33 @@ extension Model {
 
 extension Model {
     
+    func dictionaryCurrency(for currencyCode: Int) -> CurrencyData? {
+        
+        return currencyList.value.first(where: { $0.codeNumeric == currencyCode })
+    }
+    
+    func dictionaryCurrency(for code: String) -> CurrencyData? {
+
+        return currencyList.value.first(where: { $0.code == code })
+    }
+    
+    func dictionaryCurrencySimbol(for code: String) -> String? {
+        
+        guard let unicode = dictionaryCurrency(for: code)?.unicode
+        else { return nil }
+        
+        return unicode.replacingOccurrences(of: "\\", with: "")
+                      .applyingTransform(.init("Hex/Unicode-Any"), reverse: false)
+    }
+    
+    //MARK: BankList helper
+    
+    var dictionaryBankList: [BankData] {
+        
+        return bankList.value
+    }
+    
+    //Operators&OperatorGroups
     func dictionaryAnywayOperatorGroups() -> [OperatorGroupData]? {
         
         return localAgent.load(type: [OperatorGroupData].self)
@@ -293,6 +348,47 @@ extension Model {
         return anywayOperators.first(where: { $0.code == code })
     }
     
+    //Banks
+    
+    func dictionaryBanks() -> [BankData]? {
+        
+        return localAgent.load(type: [BankData].self)
+    }
+    
+    func dictionaryBank(for memberId: String) -> BankData? {
+        
+        guard let banksList = dictionaryBanks() else { return nil }
+        return banksList.first(where: { $0.memberId == memberId })
+    }
+     
+    // FullBankInfoList
+    
+    func dictionaryFullBankInfoList() -> [BankFullInfoData]? {
+        
+        localAgent.load(type: [BankFullInfoData].self)
+    }
+    
+    func dictionaryFullBankInfoBank(for bic: String) -> BankFullInfoData? {
+        
+        guard let banksList = dictionaryFullBankInfoList() else { return nil }
+        return banksList.first(where: { $0.bic == bic })
+    }
+        
+    //Countries
+    
+    func dictionaryCountries() -> [CountryData]? {
+        
+        return localAgent.load(type: [CountryData].self)
+    }
+    
+    func dictionaryCountry(for code: String) -> CountryData? {
+        
+        guard let countries = dictionaryCountries() else { return nil }
+        return countries.first(where: { $0.code == code })
+    }
+    
+    //FMSList
+    
     func dictionaryFMSList() -> [FMSData]? {
         
         return localAgent.load(type: [FMSData].self)
@@ -319,11 +415,10 @@ extension Model {
     }
     
     func dictionaryAtmServices() -> [AtmServiceData]? {
-
+        
         return localAgent.load(type: [AtmServiceData].self)
     }
 }
-
 
 //MARK: - Reducers
 
@@ -355,6 +450,18 @@ extension Model {
             }
         })
     }
+    
+    func dictionaryImagesReduce(images: [String: ImageData], updateItems: [(id: String, image: ImageData)]) -> [String: ImageData] {
+        
+        var imagesUpdated = images
+        
+        for item in updateItems {
+            
+            imagesUpdated[item.id] = item.image
+        }
+        
+        return imagesUpdated
+    }
 }
 
 //MARK: - Handlers
@@ -364,7 +471,8 @@ extension Model {
     // Update all cached
     func handleDictionaryUpdateAll()  {
         
-        action.send(ModelAction.Dictionary.UpdateCache.List(types: ModelAction.Dictionary.cached))
+        action.send(ModelAction.Dictionary
+                               .UpdateCache.List(types: ModelAction.Dictionary.cached))
     }
     
     // Update list
@@ -389,8 +497,19 @@ extension Model {
     // Anyway Operators
     func handleDictionaryAnywayOperatorsRequest(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetAnywayOperatorsList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .anywayOperators
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetAnywayOperatorsList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -429,8 +548,19 @@ extension Model {
     // Banks
     func handleDictionaryBanks(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetBanks(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .banks
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetBanks(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -446,6 +576,8 @@ extension Model {
                     guard data.banksList.count > 0 else {
                         return
                     }
+                    
+                    self.bankList.value = data.banksList
                     
                     do {
                         
@@ -469,8 +601,19 @@ extension Model {
     // Countries
     func handleDictionaryCountries(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetCountries(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .countries
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetCountries(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -486,6 +629,8 @@ extension Model {
                     guard data.countriesList.count > 0 else {
                         return
                     }
+                    
+                    countriesList.value = data.countriesList
                     
                     do {
                         
@@ -506,11 +651,118 @@ extension Model {
         }
     }
     
+    // CurrencyWalletList
+    func handleDictionaryCurrencyWalletList(_ serial: String?) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+            
+        let typeDict: DictionaryType = .currencyWalletList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands
+                        .DictionaryController
+                        .GetCurrencyWalletList(token: token, serial: serial)
+            
+        serverAgent.executeCommand(command: command) { [unowned self] result in
+                
+            self.dictionariesUpdating.value.remove(typeDict)
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data
+                    else {
+                        handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                        
+                    // check if we have updated data
+                    guard data.list.count > 0 else { return }
+                        
+                    self.currencyWalletList.value = data.list
+                        
+                    do {
+                            
+                        try self.localAgent.store(data.list, serial: data.serial)
+                            
+                    } catch {
+                            
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                        
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                    
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    // CentralBankRates
+    func handleDictionaryCentralBankRates() {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+            
+        let typeDict: DictionaryType = .centralBanksRates
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands
+                        .DictionaryController
+                        .GetCentralBankRates(token: token)
+            
+        serverAgent.executeCommand(command: command) { [unowned self] result in
+                
+            self.dictionariesUpdating.value.remove(typeDict)
+            
+            switch result {
+            case let .success(response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data
+                    else {
+                        handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                        
+                    self.centralBankRates.value = data.ratesCb
+                        
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                    
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
     // CurrencyList
     func handleDictionaryCurrencyList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetCurrencyList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .currencyList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetCurrencyList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -526,6 +778,8 @@ extension Model {
                     guard data.currencyList.count > 0 else {
                         return
                     }
+                    
+                    self.currencyList.value = data.currencyList
                     
                     do {
                         
@@ -549,8 +803,19 @@ extension Model {
     // FMSList
     func handleDictionaryFMSList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetFMSList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .fmsList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetFMSList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -589,8 +854,19 @@ extension Model {
     // FSSPDebtList
     func handleDictionaryFSSPDebtList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetFSSPDebtList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .fsspDebtList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetFSSPDebtList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -629,8 +905,19 @@ extension Model {
     // FSSPDocumentList
     func handleDictionaryFSSPDocumentList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetFSSPDocumentList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .fsspDocumentList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetFSSPDocumentList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -669,8 +956,19 @@ extension Model {
     // FTSList
     func handleDictionaryFTSList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetFTSList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .ftsList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetFTSList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -710,8 +1008,19 @@ extension Model {
     // FullBankInfoList
     func handleDictionaryFullBankInfoList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetFullBankInfoList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .fullBankInfoList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetFullBankInfoList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -750,8 +1059,19 @@ extension Model {
     // MobileList
     func handleDictionaryMobileList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetMobileList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .mobileList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetMobileList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -790,8 +1110,19 @@ extension Model {
     // MosParkingList
     func handleDictionaryMosParkingList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetMosParkingList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .mosParkingList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetMosParkingList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -829,8 +1160,19 @@ extension Model {
     // PaymentSystemList
     func handleDictionaryPaymentSystemList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetPaymentSystemList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .paymentSystemList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetPaymentSystemList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -844,6 +1186,8 @@ extension Model {
                     guard data.paymentSystemList.count > 0 else {
                         return
                     }
+                    
+                    paymentSystemList.value = data.paymentSystemList
                     
                     do {
                         
@@ -868,8 +1212,19 @@ extension Model {
     // ProductCatalogList
     func handleDictionaryProductCatalogList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetProductCatalogList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .productCatalogList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetProductCatalogList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -909,8 +1264,19 @@ extension Model {
     //BannerCatalogListData
     func handleDictionaryBannerCatalogList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetBannerCatalogList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .bannerCatalogList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetBannerCatalogList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -921,15 +1287,15 @@ extension Model {
                     }
                     
                     // check if we have updated data
-                    guard data.BannerCatalogList.count > 0 else {
+                    guard data.bannerCatalogList.count > 0 else {
                         return
                     }
                     
-                    self.catalogBanners.value = data.BannerCatalogList
+                    self.catalogBanners.value = data.bannerCatalogList
                     
                     do {
                         
-                        try self.localAgent.store(data.BannerCatalogList, serial: data.serial)
+                        try self.localAgent.store(data.bannerCatalogList, serial: data.serial)
                         
                     } catch {
                         
@@ -950,8 +1316,19 @@ extension Model {
     //AtmDataList
     func handleDictionaryAtmDataList(_ serial: String?) {
         
-        let command = ServerCommands.AtmController.GetAtmList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .atmList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.AtmController.GetAtmList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -971,7 +1348,7 @@ extension Model {
                     let result = Self.dictionaryAtmReduce(current: atmDataSource, update: data.list)
                     
                     do {
- 
+                        
                         try self.localAgent.store(result, serial: "\(data.version)")
                         
                     } catch {
@@ -992,8 +1369,19 @@ extension Model {
     //AtmServiceDataList
     func handleDictionaryAtmServiceDataList(_ serial: String?) {
         
-        let command = ServerCommands.AtmController.GetAtmServiceList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .atmServiceList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.AtmController.GetAtmServiceList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -1009,7 +1397,7 @@ extension Model {
                     }
                     
                     do {
- 
+                        
                         try self.localAgent.store(data.list, serial: data.serial)
                         
                     } catch {
@@ -1030,8 +1418,19 @@ extension Model {
     //AtmTypeDataList
     func handleDictionaryAtmTypeDataList(_ serial: String?) {
         
-        let command = ServerCommands.AtmController.GetAtmTypeList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .atmTypeList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.AtmController.GetAtmTypeList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -1047,7 +1446,7 @@ extension Model {
                     }
                     
                     do {
- 
+                        
                         try self.localAgent.store(data.list, serial: data.serial)
                         
                     } catch {
@@ -1068,8 +1467,19 @@ extension Model {
     //AtmMetroStationDataList
     func handleDictionaryAtmMetroStationDataList(_ serial: String?) {
         
-        let command = ServerCommands.AtmController.GetMetroStationList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .atmMetroStationList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.AtmController.GetMetroStationList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -1085,7 +1495,7 @@ extension Model {
                     }
                     
                     do {
- 
+                        
                         try self.localAgent.store(data.list, serial: data.serial)
                         
                     } catch {
@@ -1106,8 +1516,19 @@ extension Model {
     //AtmCityDataList
     func handleDictionaryAtmCityDataList(_ serial: String?) {
         
-        let command = ServerCommands.AtmController.GetCityList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .atmCityList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.AtmController.GetCityList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -1123,7 +1544,7 @@ extension Model {
                     }
                     
                     do {
- 
+                        
                         try self.localAgent.store(data.list, serial: data.serial)
                         
                     } catch {
@@ -1144,8 +1565,19 @@ extension Model {
     //AtmRegionDataList
     func handleDictionaryAtmRegionDataList(_ serial: String?) {
         
-        let command = ServerCommands.AtmController.GetRegionList(serial: serial)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .atmRegionList
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.AtmController.GetRegionList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
             
             switch result {
             case .success(let response):
@@ -1161,7 +1593,7 @@ extension Model {
                     }
                     
                     do {
- 
+                        
                         try self.localAgent.store(data.list, serial: data.serial)
                         
                     } catch {
@@ -1178,5 +1610,68 @@ extension Model {
             }
         }
     }
+    
+    //DownloadImages
+    func handleDictionaryDownloadImages(payload: ModelAction.Dictionary.DownloadImages.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.DictionaryController.GetSvgImageList(token: token, payload: .init(md5HashList: payload.imagesIds))
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        handleServerCommandEmptyData(command: command)
+                        self.action.send(ModelAction.Dictionary.DownloadImages.Response(result: .failure(ModelDictionaryError.emptyData(message: response.errorMessage))))
+                        return
+                    }
+                    
+                    let responseItems: [(String, ImageData)] = data.svgImageList.compactMap { item in
+                        
+                        guard let imageData = ImageData(with: item.svgImage) else {
+                            return nil
+                        }
+                        
+                        return (item.md5hash, imageData)
+                    }
+                    self.images.value = dictionaryImagesReduce(images: self.images.value, updateItems: responseItems)
+                    self.action.send(ModelAction.Dictionary.DownloadImages.Response.init(result: .success(responseItems)))
+                    
+                    do {
+                        
+                        try self.localAgent.store(images.value, serial: nil)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.action.send(ModelAction.Dictionary.DownloadImages.Response(result: .failure(ModelDictionaryError.statusError(status: response.statusCode, message: response.errorMessage))))
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+                self.action.send(ModelAction.Dictionary.DownloadImages.Response(result: .failure(ModelDictionaryError.serverCommandError(error: error))))
+            }
+        }
+    }
+}
+
+
+//MARK: - Error
+
+enum ModelDictionaryError: Swift.Error {
+    
+    case emptyData(message: String?)
+    case statusError(status: ServerStatusCode, message: String?)
+    case serverCommandError(error: Error)
 }
 

@@ -1,0 +1,14 @@
+{
+  "statusCode": 0,
+  "errorMessage": "string",
+  "data": {
+    "customName": "Моя карта",
+    "balance": 1000123,
+    "balanceRUB": 1000123,
+    "status": "Действует",
+    "availableExceedLimit": 56305.61,
+    "debtAmount": 56305.61,
+    "totalDebtAmount": 56305.61,
+    "statusPC": "0"
+  }
+}

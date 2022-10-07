@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct OperatorGroupData: Codable, Equatable, Cachable {
+struct OperatorGroupData: Codable, Equatable {
     
     let city: String?
     let code: String

@@ -1,10 +1,10 @@
 import UIKit
-import RealmSwift
 import Foundation
-
+import IQKeyboardManagerSwift
 
 class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSource, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
 
+    let model = Model.shared
     static let msgUpdateTable = 3
 
     public static func storyboardInstance() -> GIBDDFineDetailsFormController? {
@@ -45,13 +45,20 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
     @IBOutlet weak var bottomInputView: BottomInputView?
     @IBOutlet weak var goButton: UIButton?
 
-    lazy var realm = try? Realm()
+    
     let footerView = InternetTVSourceView()
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         goButton?.isHidden = !(bottomInputView?.isHidden ?? false)
         bottomInputView?.updateAmountUI(textAmount: latestOperation?.amount)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
     }
 
     override func viewDidLoad() {
@@ -63,7 +70,7 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
         setupToolbar()
         goButton?.add_CornerRadius(5)
         tableView?.register(UINib(nibName: "InternetInputCell", bundle: nil), forCellReuseIdentifier: InternetTVInputCell.reuseId)
-        AddAllUserCardtList.add {}
+       
 //        setupCardList { error in
 //            guard let error = error else { return }
 //            self.showAlert(with: "Ошибка", and: error)
@@ -72,7 +79,8 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
         if fromPaymentVc == false {
             viewModel.puref = operatorData?.puref ?? ""
         }
-
+        btnContract.setTitleColor(.black, for: .normal)
+        btnTransponder.setTitleColor(.black, for: .normal)
         selectedValue = "20"
         latestOperation?.additionalList.forEach { item in
             if item.fieldName == "a3_SearchType_1_1" {
@@ -114,7 +122,6 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
 
         if let list = operatorData?.parameterList {
             list.forEach { item in
-                print("item5555", "\(item.id) - \(item.title)")
                 if selectedValue != "-1" && (item.type == "MaskList" || item.type == "Select") {
                     if item.id == "a3_SearchType_1_1" {
                         InternetTVDetailsFormViewModel.additionalDic["fieldName"] = ["fieldid": "\(item.order ?? 0)",
@@ -252,6 +259,9 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
         super.viewWillDisappear(true)
         goButton?.isHidden = true
         qrData.removeAll()
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = true
     }
 
     func setupToolbar() {
@@ -264,6 +274,14 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
                                          action: #selector(updateNameTemplate))
             button.tintColor = .black
             navigationItem.rightBarButtonItem = button
+            
+            let backButton = UIBarButtonItem(image: UIImage(named: "back_button"),
+                                         landscapeImagePhone: nil,
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(onTouchBackButton))
+            backButton.tintColor = .black
+            navigationItem.leftBarButtonItem = backButton
             
         } else {
             
@@ -286,6 +304,11 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
         }
     }
 
+    @objc func onTouchBackButton() {
+        viewModel.closeAction()
+        navigationController?.popToRootViewController(animated: true)
+    }
+    
     func setTitle(title:String, subtitle:String) -> UIView {
         let titleLabel = UILabel(frame: CGRect(x: 0, y: -2, width: 0, height: 0))
         titleLabel.backgroundColor = .clear
@@ -342,8 +365,8 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
                     paymentTemplateId: templateId))
                     
                 // FIXME: В рефактре нужно слушатель на обновление title
-                self.title = text
-                
+                    self.parent?.title = text
+
                 } else {
                     self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")
                 }
@@ -355,32 +378,33 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
     
     private func readAndSetupCard() {
         DispatchQueue.main.async {
-            let cards = ReturnAllCardList.cards()
-            var filterProduct: [UserAllCardsModel] = []
-            cards.forEach({ card in
-                if (card.productType == "CARD" || card.productType == "ACCOUNT") {
-                    if card.currency == "RUB" {
-                        filterProduct.append(card)
-                    }
-                }
-            })
-            self.footerView.cardListView.cardList = filterProduct
+            let productTypes: [ProductType] = [.card, .account]
             
-            if filterProduct.count > 0 {
+            let allCards = ReturnAllCardList.cards()
+            var productsFilterredMapped = [UserAllCardsModel]()
+            
+            productTypes.forEach { type in
+                
+                productsFilterredMapped += allCards.filter { $0.productType == type.rawValue && $0.currency == "RUB" }
+            }
+
+            self.footerView.cardListView.cardList = productsFilterredMapped
+            
+            if productsFilterredMapped.count > 0 {
                 
                 if let cardId = self.template?.parameterList.first?.payer.cardId {
                     
-                    let card = filterProduct.first(where: { $0.id == cardId })
+                    let card = productsFilterredMapped.first(where: { $0.id == cardId })
                     self.footerView.cardFromField.model = card
                     
                 } else if let accountId = self.template?.parameterList.first?.payer.accountId {
                     
-                    let card = filterProduct.first(where: { $0.id == accountId })
+                    let card = productsFilterredMapped.first(where: { $0.id == accountId })
                     self.footerView.cardFromField.model = card
                     
                 } else {
                     
-                    self.footerView.cardFromField.model = filterProduct.first
+                    self.footerView.cardFromField.model = productsFilterredMapped.first
                     
                 }
             }

@@ -1,0 +1,14 @@
+{
+    "statusCode":0,
+    "data":{
+        "id": 10001765678,
+        "initialAmount": 100831.0200,
+        "dateOpen": 10000184511,
+        "interestRate": 0.0100,
+        "sumPayInt": 856.4700,
+        "sumCredit": 0.0000,
+        "sumDebit": 100831.0200,
+        "sumAccInt": 0.0000,
+        "balance": 100856.4700,
+        "sumPayPrc": 856.4700
+    }}

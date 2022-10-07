@@ -13,30 +13,139 @@ struct RootView: View {
     
     var body: some View {
         
-        ZStack {
+        ZStack(alignment: .top) {
             
-            MainView(viewModel: .sampleProducts)
-            
-            
-            if let loginViewModel = viewModel.login {
+            TabView(selection: $viewModel.selected) {
                 
                 NavigationView {
                     
-                    AuthLoginView(viewModel: loginViewModel)
-                        .navigationBarTitle("")
-                        .navigationBarHidden(true)
+                    MainView(viewModel: viewModel.mainViewModel)
+                    
                 }
-                .transition(.asymmetric(insertion: .opacity, removal: .move(edge: .leading)))
+                .tabItem {
+                    
+                    tabIcon(type: .main, selected: viewModel.selected)
+                    Text(RootViewModel.TabType.main.name)
+                        .foregroundColor(.black)
+                }
+                .tag(RootViewModel.TabType.main)
+                
+                NavigationView {
+                    
+                    PaymentsTransfersView(viewModel: viewModel.paymentsViewModel)
+                }
+                .tabItem {
+                    
+                    tabIcon(type: .payments, selected: viewModel.selected)
+                    Text(RootViewModel.TabType.payments.name)
+                        .foregroundColor(.black)
+                }
+                .tag(RootViewModel.TabType.payments)
+                
+                ChatView(viewModel: viewModel.chatViewModel)
+                    .tabItem {
+                        
+                        tabIcon(type: .chat, selected: viewModel.selected)
+                        Text(RootViewModel.TabType.chat.name)
+                            .foregroundColor(.black)
+                    }
+                    .tag(RootViewModel.TabType.chat)
+                
+            }.accentColor(.black)
+            
+            if let link = viewModel.link  {
+                
+                switch link {
+                case .messages(let messagesHistoryViewModel):
+                    MessagesHistoryView(viewModel: messagesHistoryViewModel)
+                        .zIndex(.greatestFiniteMagnitude)
+
+                case .me2me(let requestMeToMeModel):
+                    MeToMeRequestView(viewModel: requestMeToMeModel)
+                        .zIndex(.greatestFiniteMagnitude)
+
+                case .c2b(let viewModel):
+                        
+                    C2BDetailsView(viewModel: viewModel)
+                            .zIndex(.greatestFiniteMagnitude)
+
+                case .userAccount(let viewModel):
+   
+                    NavigationView {
+                          
+                          UserAccountView(viewModel: viewModel)
+                      }
+                }
             }
             
-            if let lockViewModel = viewModel.lock {
+        }.alert(item: $viewModel.alert, content: { alertViewModel in
+            Alert(with: alertViewModel)
+        })
+    }
+}
+
+extension RootView {
+    
+    private func tabIcon(type: RootViewModel.TabType, selected: RootViewModel.TabType) -> AnyView {
+        
+        if type == selected {
+            
+            switch type {
+            case .main:
+                return AnyView(
+                    Image.ic24LogoForaColor
+                        .renderingMode(.original)
+                )
                 
-                AuthLockVew(viewModel: lockViewModel)
+            case .payments:
+                return AnyView(
+                    Image.ic24PaymentsActive
+                        .renderingMode(.original)
+                )
+                
+            case .history:
+                return AnyView(
+                    Image.ic24HistoryActive
+                        .renderingMode(.original)
+                )
+                
+            case .chat:
+                return AnyView(
+                    Image.ic24ChatActive
+                        .renderingMode(.original)
+                )
             }
             
-            if let spinnerViewModel = viewModel.spinner {
+        } else {
+            
+            switch type {
+            case .main:
+                return AnyView(
+                    Image.ic24LogoForaLine
+                        .renderingMode(.template)
+                        .foregroundColor(.iconGray)
+                )
                 
-                SpinnerView(viewModel: spinnerViewModel)
+            case .payments:
+                return AnyView(
+                    Image.ic24PaymentsInactive
+                        .renderingMode(.template)
+                        .foregroundColor(.iconGray)
+                )
+                
+            case .history:
+                return AnyView(
+                    Image.ic24HistoryInactive
+                        .renderingMode(.template)
+                        .foregroundColor(.iconGray)
+                )
+                
+            case .chat:
+                return AnyView(
+                    Image.ic24ChatInactive
+                        .renderingMode(.template)
+                        .foregroundColor(.iconGray)
+                )
             }
         }
     }

@@ -38,8 +38,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     
     weak var delegatePaymentVc: ProductViewControllerDelegate?
     
-    var swiftUIView = DetailAccountViewComponent(viewModel: .init(with: .init(), status: .notActivated, isCredit: false, productName: nil, longInt: nil))
-    var detailView = SelfSizingHostingController(rootView: DetailAccountViewComponent(viewModel: .init(with: .init(), status: .notActivated, isCredit: false, productName: nil, longInt: nil)))
+//    var swiftUIView = ProductProfileAccountDetailView(viewModel: .init(with: .init(), status: .notActivated, isCredit: false, productName: nil, longInt: nil))
+//    var detailView = SelfSizingHostingController(rootView: ProductProfileAccountDetailView(viewModel: .init(with: .init(), status: .notActivated, isCredit: false, productName: nil, longInt: nil)))
     
     var emptySpending = UIView()
     
@@ -425,8 +425,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         }
         
         secondStackView.isHidden = true
-        secondStackView.removeArrangedSubview(detailView.view)
-        detailView.view.isHidden = true
         
         statusBarView.isHidden = false
         statusBarView.layer.cornerRadius = 8
@@ -478,6 +476,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             tableView.isHidden = false
             headerView.isHidden = false
             
+            /*
             if product?.productType == ProductType.loan.rawValue || product?.loanBaseParam?.number != "", let loanBase = product?.loanBaseParam {
                 
                 swiftUIView = DetailAccountViewComponent(viewModel: .init(with: loanBase , status: StatusPC(rawValue: product?.statusPC ?? "0") ?? .notActivated, isCredit: false, productName: nil, longInt: nil))
@@ -492,6 +491,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                 secondStackView.isHidden = false
                 
             }
+             */
+            
             button.addTarget(self, action: #selector(showAlert(sender:)), for: .touchUpInside)
             
             if product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту" {
@@ -577,7 +578,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                 personsCredit(id: productId)
             }
             
-            secondStackView.removeArrangedSubview(detailView.view)
+//            secondStackView.removeArrangedSubview(detailView.view)
             
             guard let number = self.product?.settlementAccount else { return }
             
@@ -628,7 +629,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         NetworkManager<PersonsCreditsDecodableModel>.addRequest(.getPersonsCredit, [:], params) { model, error in
             
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
+
             }
             guard let model = model else { return }
             if model.statusCode == 0 {
@@ -638,6 +639,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                         return
                     }
                     
+                    /*
                     self.detailView.view = nil
                     
                     let swiftUIView = DetailAccountViewComponent(viewModel: .init(with: .init(with: .init(loanID: data.loanId ?? 0, clientID: data.clientId, number: data.number ?? "", currencyID: data.currencyId, currencyNumber: data.currencyNumber, currencyCode: data.currencyCode, minimumPayment: data.amountPayment, gracePeriodPayment: nil, overduePayment: data.overduePayment, availableExceedLimit: nil, ownFunds: nil, debtAmount: nil, totalAvailableAmount: data.amountRepaid, totalDebtAmount: data.amountCredit)), status: .active, isCredit: true, productName: self.product?.productName, longInt: data.datePayment))
@@ -651,6 +653,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                     self.detailView.view.anchor(top: self.secondStackView.topAnchor, paddingTop: 20)
                     self.detailView.view.isHidden = false
                     self.secondStackView.isHidden = false
+                     
+                     */
                     
                 }
             } else {
@@ -873,7 +877,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         NetworkManager<DepositInfoGetDepositInfoDecodebleModel>.addRequest(.getDepositInfo, [:], bodyForInfo) { model, error in
             self.dismissActivity()
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
+
             }
             guard let model = model else { return }
             if model.statusCode == 0 {
@@ -905,8 +909,10 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     
     @objc func presentBottomSheet(sender: AnyObject) {
         
-        let bottomSheet = BottomSheetHostingViewController(with: InfoView.ViewModel())
+        /*
+        let bottomSheet = BottomSheetHostingViewController(with: ProductProfileLoanDelayInfoView.ViewModel())
         present(bottomSheet, animated: true)
+         */
     }
     
     func presentRequisitsVc(product: UserAllCardsModel,_ openControlButtons: Bool?) {

@@ -10,7 +10,7 @@
       "comment": "Перевод денежных средств. НДС не облагается.",
       "country": "string",
       "currencyCodeNumeric": 810,
-      "date": "2022-01-31T10:14:01.684Z",
+      "date": 1648512000000,
       "deviceCode": "string",
       "documentAmount": 144.21,
       "documentID": 10230444722,
@@ -21,7 +21,10 @@
         "foreignBankName": "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"",
         "foreignName": "Петров Петр Петрович",
         "foreignPhoneNumber": "70115110217",
-        "opkcid": "A1355084612564010000057CAFC75755"
+        "opkcid": "A1355084612564010000057CAFC75755",
+        "operTypeFP": "string",
+        "tradeName": "string",
+        "guid": "string"
       },
       "groupName": "Прочие операции",
       "isCancellation": false,
@@ -34,7 +37,7 @@
       "paymentDetailType": "BETWEEN_THEIR",
       "svgImage": "string",
       "terminalCode": "41010601",
-      "tranDate": "2022-01-31T10:14:01.685Z",
+      "tranDate": 1648512000000,
       "type": "INSIDE"
     }
   ],

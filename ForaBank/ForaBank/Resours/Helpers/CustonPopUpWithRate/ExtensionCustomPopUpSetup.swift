@@ -50,16 +50,25 @@ extension CustomPopUpWithRateView {
         
         if let depositId = payer?.depositID {
             
-            Model.shared.action.send(ModelAction.Transfers.CreateInterestDepositTransfer.Request(payload: .init(check: false, amount: amount, currencyAmount: payer?.currency, payer: .init(cardId: nil, cardNumber: nil, accountId: payer?.accountID, accountNumber: nil, phoneNumber: nil, inn: nil), comment: nil, payeeInternal: .init(accountId: payeeInternal?.id, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil, productCustomName: nil), payeeExternal: nil, depositId: depositId)))
+            switch cardToField.model?.productType {
+            case "CARD":
+             
+                Model.shared.action.send(ModelAction.Transfers.CreateInterestDepositTransfer.Request(payload: .init(check: false, amount: amount, currencyAmount: payer?.currency, payer: .init(cardId: nil, cardNumber: nil, accountId: payer?.accountID, accountNumber: nil, phoneNumber: nil, inn: nil), comment: nil, payeeInternal: .init(accountId: nil, accountNumber: nil, cardId: payeeInternal?.cardID, cardNumber: nil, phoneNumber: nil, productCustomName: nil), payeeExternal: nil, depositId: depositId)))
+                
+            case "ACCOUNT":
+                Model.shared.action.send(ModelAction.Transfers.CreateInterestDepositTransfer.Request(payload: .init(check: false, amount: amount, currencyAmount: payer?.currency, payer: .init(cardId: nil, cardNumber: nil, accountId: payer?.accountID, accountNumber: nil, phoneNumber: nil, inn: nil), comment: nil, payeeInternal: .init(accountId: payeeInternal?.id, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil, productCustomName: nil), payeeExternal: nil, depositId: depositId)))
+                
+            default:
+                Model.shared.action.send(ModelAction.Transfers.CreateInterestDepositTransfer.Request(payload: .init(check: false, amount: amount, currencyAmount: payer?.currency, payer: .init(cardId: nil, cardNumber: nil, accountId: payer?.accountID, accountNumber: nil, phoneNumber: nil, inn: nil), comment: nil, payeeInternal: .init(accountId: payeeInternal?.id, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil, productCustomName: nil), payeeExternal: nil, depositId: depositId)))
+            }
         }
     }
     
     func transferModey(with viewModel: ConfirmViewControllerModel) {
         
         bottomView.doneButtonIsEnabled(true)
-        if self.bottomView.requestModel.to == ""{
-            self.bottomView.requestModel.to = viewModel.cardFromRealm?.currency ?? ""
-        }
+
+        self.bottomView.requestModel.to = viewModel.cardFromRealm?.currency ?? ""
         
         let body = [ "check" : false,
                      "amount" : viewModel.summTransction,
@@ -77,14 +86,12 @@ extension CustomPopUpWithRateView {
                         "accountNumber" : viewModel.cardToAccountNumber,
                         "productCustomName" : viewModel.cardToCastomName
                      ] ] as [String : AnyObject]
-        print("DEBUG: ", #function, body)
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { [weak self] model, error in
             DispatchQueue.main.async {
                 self?.dismissActivity()
                 self?.bottomView.doneButtonIsEnabled(false)
                 if error != nil {
                     guard let error = error else { return }
-                    print("DEBUG: ", #function, error)
                     self?.showAlert(with: "Ошибка", and: error)
                 } else {
                     guard let model = model else { return }
@@ -94,7 +101,6 @@ extension CustomPopUpWithRateView {
                             if needMake {
                                 viewModel.taxTransction = "\(model.data?.fee ?? 0)"
                                 viewModel.status = .succses
-                                print("DEBUG: cardToCard payment Succses", #function, model)
                                 let vc = ContactConfurmViewController()
                                 vc.modalPresentationStyle = .fullScreen
                                 vc.confurmVCModel?.type = .card2card
@@ -108,6 +114,7 @@ extension CustomPopUpWithRateView {
                                 vc.addCloseButton()
                                 vc.title = "Подтвердите реквизиты"
                                 let navVC = UINavigationController(rootViewController: vc)
+                                navVC.modalPresentationStyle = .fullScreen
                                 self?.present(navVC, animated: true)
                                 
                             } else {
@@ -128,23 +135,19 @@ extension CustomPopUpWithRateView {
                                     }
                                 }
                                 vc.confurmVCModel = viewModel
-                                
-                                let nav = UINavigationController(rootViewController: vc)
-                                nav.modalPresentationStyle = .fullScreen
-                                self?.present(nav, animated: true, completion: nil)
-                                
+                                vc.closeAction = viewModel.closeAction
+                                vc.modalPresentationStyle = .fullScreen
+                                self?.present(vc, animated: true, completion: nil)
                             }
                         } else {
                             viewModel.status = .succses
                             let vc = PaymentsDetailsSuccessViewController()
                             vc.confurmVCModel = viewModel
-                            
-                            let nav = UINavigationController(rootViewController: vc)
-                            nav.modalPresentationStyle = .fullScreen
-                            self?.present(nav, animated: true, completion: nil)
+                            vc.closeAction = viewModel.closeAction
+                            vc.modalPresentationStyle = .fullScreen
+                            self?.present(vc, animated: true, completion: nil)
                         }
                     } else {
-                        print("DEBUG: ", #function, model.errorMessage ?? "nil")
                         self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                     }
                 }

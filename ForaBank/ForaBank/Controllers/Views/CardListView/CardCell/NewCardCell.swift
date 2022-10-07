@@ -44,7 +44,7 @@ class NewCardCell: UICollectionViewCell {
     //MARK: - Selectors
     
     @objc func hendleShareTapped() {
-        print(#function)
+        
     }
     
     //MARK: - Helpers

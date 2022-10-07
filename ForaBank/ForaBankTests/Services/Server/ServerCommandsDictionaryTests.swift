@@ -76,7 +76,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetAnywayOperatorsList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetAnywayOperatorsList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -146,7 +146,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetBanks(serial: serial)
+        let command = ServerCommands.DictionaryController.GetBanks(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -211,7 +211,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetCountries(serial: serial)
+        let command = ServerCommands.DictionaryController.GetCountries(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -232,7 +232,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let currencyData = ServerCommands.DictionaryController.GetCurrencyList.Response.CurrencyListData(currencyList: [.init(code: "USD", codeISO: 840, codeNumeric: 840, cssCode: "\\062F\\002E\\0625", htmlCode: "&#1583;.&#1573;", id: "1", name: "Доллар США", unicode: "U+062F\\U+002E\\U+0625")], serial: "bea36075a58954199a6b8980549f6b69")
+        let currencyData = ServerCommands.DictionaryController.GetCurrencyList.Response.CurrencyListData(currencyList: [.init(code: "USD", codeISO: 840, codeNumeric: 840, cssCode: "\\062F\\002E\\0625", htmlCode: "&#1583;.&#1573;", id: "1", name: "Доллар США", shortName: "Доллар", unicode: "U+062F\\U+002E\\U+0625")], serial: "bea36075a58954199a6b8980549f6b69")
         
         let expected = ServerCommands.DictionaryController.GetCurrencyList.Response(statusCode: .ok, errorMessage: "string", data: currencyData)
         
@@ -252,7 +252,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let currencyData = ServerCommands.DictionaryController.GetCurrencyList.Response.CurrencyListData(currencyList: [.init(code: "USD", codeISO: 840, codeNumeric: 840, cssCode: nil, htmlCode: nil, id: "1", name: "Доллар США", unicode: nil)], serial: "bea36075a58954199a6b8980549f6b69")
+        let currencyData = ServerCommands.DictionaryController.GetCurrencyList.Response.CurrencyListData(currencyList: [.init(code: "USD", codeISO: 840, codeNumeric: 840, cssCode: nil, htmlCode: nil, id: "1", name: "Доллар США", shortName: nil, unicode: nil)], serial: "bea36075a58954199a6b8980549f6b69")
         
         let expected = ServerCommands.DictionaryController.GetCurrencyList.Response(statusCode: .ok, errorMessage: "string", data: currencyData)
         
@@ -281,7 +281,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetCurrencyList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetCurrencyList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -323,7 +323,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetFMSList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetFMSList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -365,7 +365,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetFSSPDebtList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetFSSPDebtList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -407,7 +407,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetFSSPDocumentList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetFSSPDocumentList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -449,7 +449,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetFTSList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetFTSList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -515,7 +515,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetFullBankInfoList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetFullBankInfoList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -565,7 +565,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetMobileList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetMobileList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -631,7 +631,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetMosParkingList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetMosParkingList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -681,7 +681,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetPaymentSystemList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetPaymentSystemList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -720,7 +720,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetProductCatalogList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetProductCatalogList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -738,7 +738,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let imageEndpoint = "dict/getProductCatalogImage?image=1"
         
         // when
-        let command = ServerCommands.DictionaryController.GetProductCatalogImage(endpoint: imageEndpoint)
+        let command = ServerCommands.DictionaryController.GetProductCatalogImage(token: "", endpoint: imageEndpoint)
        
         // then
         XCTAssertEqual(command.endpoint, "/\(imageEndpoint)")
@@ -747,7 +747,6 @@ class ServerCommandsDictionaryTests: XCTestCase {
     //MARK: - GetBannerCatalogList
     
     func testGetBannerCatalogList_Response_Decoding() throws {
-
         
         // given
         guard let url = bundle.url(forResource: "GetBannerCatalogListResponseGeneric", withExtension: "json") else {
@@ -757,11 +756,11 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         let json = try Data(contentsOf: url)
         
-        guard let conditionalLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/") else { return }
+        let conditionalLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/")!
         let imageLink = "dict/getBannerCatalogImage?image=banner_1"
-        guard let orderLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/") else { return }
+        let orderLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/")!
         
-        let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(BannerCatalogList: [.init(conditionLink: conditionalLink, imageLink: imageLink, orderLink: orderLink, productName: "Кэшбек", txtСondition: ["string"])], serial: "bea36075a58954199a6b8980549f6b69"), errorMessage: "string")
+        let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(bannerCatalogList: [.init(productName: "Кэшбек", conditions: ["string"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: nil)], serial: "bea36075a58954199a6b8980549f6b69"), errorMessage: "string")
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetBannerCatalogList.Response.self, from: json)
@@ -770,12 +769,35 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(result, expected)
     }
     
+    func testGetBannerCatalogListFromServer_Response_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetBannerCatalogListResponseGenericFromServer", withExtension: "json") else {
+            XCTFail("testGetBannerCatalogList_Response_Decoding : Missing file: GetBannerCatalogList.json")
+            return
+        }
+        
+        let json = try Data(contentsOf: url)
+        
+        let conditionalLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/")!
+        let imageLink = "dict/getBannerCatalogImage?image=banner_1"
+        let orderLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/")!
+        
+        let migTransferAction = BannerActionMigTransfer(countryId: "AM")
+        let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(bannerCatalogList: [.init(productName: "АКЦИЯ", conditions: ["Нам 30 лет!"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: nil), .init(productName: "Переводы МИГ", conditions: ["Мгновенные переводы в Армению Комиссия 1%"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: migTransferAction), .init(productName: "Переводы Турция", conditions: ["Мгновенные переводы в Турцию Комиссия 0%"], imageEndpoint: imageLink, orderURL: orderLink, conditionURL: conditionalLink, action: nil)], serial: "serial"), errorMessage: "string")
+        
+        // when
+        let result = try decoder.decode(ServerCommands.DictionaryController.GetBannerCatalogList.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
     //MARK: - GetBannerCatalogImage
     
     func testGetBannerCatalogImage_Response_Encoding() throws {
         // given
         
-        let command = ServerCommands.DictionaryController.GetBannerCatalogImage.init(imageEndpoint: "Ic128Icon")
+        let command = ServerCommands.DictionaryController.GetBannerCatalogImage(token: "", imageEndpoint: "Ic128Icon")
         // then
         XCTAssertNotNil(command.parameters)
         XCTAssertEqual(command.parameters?.count, 1)
@@ -785,3 +807,4 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(command.parameters?[0].value, "Ic128Icon")
     }
 }
+    

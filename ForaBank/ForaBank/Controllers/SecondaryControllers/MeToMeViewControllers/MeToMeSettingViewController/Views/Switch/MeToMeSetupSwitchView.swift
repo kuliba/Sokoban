@@ -44,12 +44,6 @@ class MeToMeSetupSwitchView: UIView {
         heightConstraint = self.heightAnchor.constraint(equalToConstant: 104)
         heightConstraint.identifier = "MeToMeSetupSwitchView height constraint"
         heightConstraint.isActive = true
-        
-        bankByPhoneSwitch.set(width: 48, height: 24)
-        bankByPhoneSwitch.increaseThumb()
-        bankByPhoneSwitch.layer.cornerRadius = 15
-        bankByPhoneSwitch.layer.borderWidth = 1
-        bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1)
 
         configViewWithValue(false)
     }
@@ -61,8 +55,8 @@ class MeToMeSetupSwitchView: UIView {
     }
     
     func configViewWithValue(_ status: Bool) {
-        bankByPhoneSwitch.layer.borderColor = status ? #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-        bankByPhoneSwitch.thumbTintColor = status ? #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        
+        self.bankByPhoneSwitch.isOn = status
         self.heightConstraint.constant = status ? 88 : 104
         self.bottomTextLabel.text = status
             ? "В данном разделе можно произвести настройки для входящих и исходящих переводов СБП"

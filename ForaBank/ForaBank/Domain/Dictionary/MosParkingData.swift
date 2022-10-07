@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MosParkingData: Codable, Equatable, Cachable {
+struct MosParkingData: Codable, Equatable {
     
     let `default`: Bool?
     let groupName: String

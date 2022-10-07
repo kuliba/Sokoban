@@ -7,11 +7,11 @@
 
 import UIKit
 import RealmSwift
+import IQKeyboardManagerSwift
 
 class MeToMeViewController: UIViewController {
     
     var meToMeContract: [FastPaymentContractFindListDatum]?
-    lazy var realm = try? Realm()
     var selectedBank: BankFullInfoList? {
         didSet {
             guard let bank = selectedBank else { return }
@@ -44,9 +44,9 @@ class MeToMeViewController: UIViewController {
     var stackView = UIStackView(arrangedSubviews: [])
     
     //MARK: - Viewlifecicle
-    init(card: UserAllCardsModel?) {
+    init(cardFrom: UserAllCardsModel?) {
         super.init(nibName: nil, bundle: nil)
-        cardFromField.model = card
+        cardFromField.model = cardFrom
     }
     
     required init?(coder: NSCoder) {
@@ -59,6 +59,22 @@ class MeToMeViewController: UIViewController {
         hideKeyboardWhenTappedAround()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+    }
+
     func setupUI() {
         view.backgroundColor = .white
         
@@ -142,7 +158,6 @@ class MeToMeViewController: UIViewController {
         cardFromField.layoutIfNeeded()
         
         cardFromField.didChooseButtonTapped = { () in
-            print("cardField didChooseButtonTapped")
             DispatchQueue.main.async {
                 UIView.animate(withDuration: 0.2) {
                     if self.cardListView.isHidden == true {
@@ -168,14 +183,14 @@ class MeToMeViewController: UIViewController {
         bottomView.currencySymbol = "₽"
         bottomView.anchor(
             left: view.leftAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            bottom: view.bottomAnchor,
             right: view.rightAnchor)
         
         let saveAreaView = UIView()
         saveAreaView.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
         view.addSubview(saveAreaView)
         saveAreaView.anchor(
-            top: view.safeAreaLayoutGuide.bottomAnchor,
+            top: view.bottomAnchor,
             left: view.leftAnchor,
             bottom: view.bottomAnchor,
             right: view.rightAnchor)
@@ -247,7 +262,6 @@ class MeToMeViewController: UIViewController {
         }
         
         bankField.didChooseButtonTapped = { () in
-            print("bankField didChooseButtonTapped")
             DispatchQueue.main.async {
                 UIView.animate(withDuration: 0.2) {
                     if self.bankListView.isHidden == true {
@@ -273,7 +287,7 @@ class MeToMeViewController: UIViewController {
         
         cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                let cardList = ReturnAllCardList.cards()
                 cardList.forEach({ card in
                     if card.id == cardId {
                         self.cardFromField.model = card
@@ -333,8 +347,10 @@ class MeToMeViewController: UIViewController {
             
             let cards = ReturnAllCardList.cards()
             var filterProduct: [UserAllCardsModel] = []
+            let clientId = Model.shared.clientInfo.value?.id
+
             cards.forEach({ card in
-                if (card.productType == "CARD" || card.productType == "ACCOUNT") {
+                if (card.productType == "CARD" || card.productType == "ACCOUNT") && card.ownerID == clientId {
                     if (card.productType == "CARD" || card.productType == "ACCOUNT" || card.productType == "DEPOSIT") && card.currency == "RUB" {
                         filterProduct.append(card)
                     }
@@ -378,24 +394,6 @@ class MeToMeViewController: UIViewController {
     
     
     //MARK: - API
-    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
-        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "true", "isLoan": "false"]
-        
-        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
-            if error != nil {
-                completion(nil, error)
-            }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                guard let cardList = model.data else { return }
-                completion(cardList, nil)
-            } else {
-                guard let error = model.errorMessage else { return }
-                completion(nil, error)
-            }
-        }
-    }
-    
     func suggestBank(_ bic: String, completion: @escaping (_ bankList: [BankFullInfoList]?, _ error: String?) -> Void ) {
         showActivity()
         
@@ -408,11 +406,9 @@ class MeToMeViewController: UIViewController {
             self?.dismissActivity()
             if error != nil {
                 guard let error = error else { return }
-                print("DEBUG: Error: ", error)
                 completion(nil, error)
             }
             guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 guard let data  = model.data else { return }
                 var filterBank: [BankFullInfoList] = []
@@ -426,7 +422,6 @@ class MeToMeViewController: UIViewController {
                 completion(list, nil)
             } else {
                 guard let error = model.errorMessage else { return }
-                print("DEBUG: Error: ", error)
 
                 completion(nil, error)
             }
@@ -438,17 +433,14 @@ class MeToMeViewController: UIViewController {
         NetworkManager<AntiFraudDecodableModel>.addRequest(.antiFraud, [:], [:]) { model, error in
             if error != nil {
                 guard let error = error else { return }
-                print("DEBUG: Error: ", error)
                 completion(false, error)
             }
             guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 guard let data  = model.data else { return }
                 completion(data, nil)
             } else {
                 guard let error = model.errorMessage else { return }
-                print("DEBUG: Error: ", error)
 
                 completion(false, error)
             }
@@ -481,16 +473,13 @@ class MeToMeViewController: UIViewController {
         NetworkManager<CreateFastPaymentContractDecodableModel>.addRequest(.createMe2MePullCreditTransfer, [:], body) { model, error in
             if error != nil {
                 guard let error = error else { return }
-                print("DEBUG: Error: ", error)
                 completion(false, error)
             }
             guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 completion(true, nil)
             } else {
                 guard let error = model.errorMessage else { return }
-                print("DEBUG: Error: ", error)
 
                 completion(false, error)
             }

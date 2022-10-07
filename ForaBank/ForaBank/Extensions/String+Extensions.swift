@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CryptoKit
 
 extension String {
     
@@ -124,6 +125,10 @@ extension String {
             partialResult + (value as NSString).substring(with: result.range)
         }
     }
+
+    func filterred() -> String {
+        filter { ("0"..."9").contains($0) }
+    }
     
     func cropped(max: Int) -> String {
         
@@ -135,4 +140,31 @@ extension String {
 
         return String(value.dropLast(value.digits.count - max))
     }
+    
+    func sha256String() throws -> String {
+        
+        guard let data = data(using: .utf8) else {
+            throw StringHelperError.unableCreateDataFromString
+        }
+        
+        let digest = SHA256.hash(data: data)
+        
+        return digest.hexStr
+    }
+    
+    func sha256Base64String() throws -> String {
+        
+        guard let data = data(using: .utf8) else {
+            throw StringHelperError.unableCreateDataFromString
+        }
+        
+        let digest = SHA256.hash(data: data)
+        
+        return digest.data.base64EncodedString(options: .endLineWithCarriageReturn)
+    }
+}
+
+enum StringHelperError: Error {
+    
+    case unableCreateDataFromString
 }

@@ -11,6 +11,9 @@
 import SwiftUI
 
 public extension Image {
+    static var ic12ArrowDown: Image { Image(#function) }
+    static var ic12ArrowUp: Image { Image(#function) }
+    static var ic12Clock: Image { Image(#function) }
     static var ic12LogoForaColor: Image { Image(#function) }
     static var ic16Ball: Image { Image(#function) }
     static var ic1612Circle: Image { Image(#function) }
@@ -33,6 +36,7 @@ public extension Image {
     static var ic16ArrowDown: Image { Image(#function) }
     static var ic16ArrowDownCircle: Image { Image(#function) }
     static var ic16ArrowDownLeft: Image { Image(#function) }
+    static var ic16ArrowDownLine: Image { Image(#function) }
     static var ic16ArrowDownRight: Image { Image(#function) }
     static var ic16ArrowLeft: Image { Image(#function) }
     static var ic16ArrowLeftCircle: Image { Image(#function) }
@@ -47,6 +51,7 @@ public extension Image {
     static var ic16Bank: Image { Image(#function) }
     static var ic16BarChart: Image { Image(#function) }
     static var ic16BarChart2: Image { Image(#function) }
+    static var ic16BarInOrder: Image { Image(#function) }
     static var ic16BarcodeScanner2: Image { Image(#function) }
     static var ic16Battery: Image { Image(#function) }
     static var ic16BatteryCharging: Image { Image(#function) }
@@ -67,6 +72,7 @@ public extension Image {
     static var ic16CameraOff: Image { Image(#function) }
     static var ic16Cash: Image { Image(#function) }
     static var ic16Cashback: Image { Image(#function) }
+    static var ic16Cashterminal: Image { Image(#function) }
     static var ic16Cast: Image { Image(#function) }
     static var ic16Check: Image { Image(#function) }
     static var ic16CheckCircle: Image { Image(#function) }
@@ -132,6 +138,7 @@ public extension Image {
     static var ic16Edit2: Image { Image(#function) }
     static var ic16Edit3: Image { Image(#function) }
     static var ic16Education: Image { Image(#function) }
+    static var ic16Egrn: Image { Image(#function) }
     static var ic16ExternalLink: Image { Image(#function) }
     static var ic16Eye: Image { Image(#function) }
     static var ic16EyeOff: Image { Image(#function) }
@@ -182,6 +189,7 @@ public extension Image {
     static var ic16Layers: Image { Image(#function) }
     static var ic16Layout: Image { Image(#function) }
     static var ic16LifeBuoy: Image { Image(#function) }
+    static var ic16Limits: Image { Image(#function) }
     static var ic16Link: Image { Image(#function) }
     static var ic16Link2: Image { Image(#function) }
     static var ic16Linkedin: Image { Image(#function) }
@@ -203,6 +211,7 @@ public extension Image {
     static var ic16Menu: Image { Image(#function) }
     static var ic16MessageCircle: Image { Image(#function) }
     static var ic16MessageSquare: Image { Image(#function) }
+    static var ic16Metro: Image { Image(#function) }
     static var ic16Mic: Image { Image(#function) }
     static var ic16MicOff: Image { Image(#function) }
     static var ic16Minimize: Image { Image(#function) }
@@ -228,6 +237,7 @@ public extension Image {
     static var ic16PenTool: Image { Image(#function) }
     static var ic16Percent: Image { Image(#function) }
     static var ic16PercentCommission: Image { Image(#function) }
+    static var ic16Permissions: Image { Image(#function) }
     static var ic16Phone: Image { Image(#function) }
     static var ic16PhoneCall: Image { Image(#function) }
     static var ic16PhoneForwarded: Image { Image(#function) }
@@ -275,6 +285,7 @@ public extension Image {
     static var ic16ShoppingCart: Image { Image(#function) }
     static var ic16Shuffle: Image { Image(#function) }
     static var ic16Sidebar: Image { Image(#function) }
+    static var ic16SkanCard: Image { Image(#function) }
     static var ic16SkipBack: Image { Image(#function) }
     static var ic16SkipForward: Image { Image(#function) }
     static var ic16Slack: Image { Image(#function) }
@@ -294,6 +305,7 @@ public extension Image {
     static var ic16Tablet: Image { Image(#function) }
     static var ic16Tag: Image { Image(#function) }
     static var ic16Target: Image { Image(#function) }
+    static var ic16Tax: Image { Image(#function) }
     static var ic16Terminal: Image { Image(#function) }
     static var ic16Thermometer: Image { Image(#function) }
     static var ic16ThumbsDown: Image { Image(#function) }
@@ -351,6 +363,7 @@ public extension Image {
     static var ic24Tariff: Image { Image(#function) }
     static var ic24WheelOfFortune: Image { Image(#function) }
     static var ic24ZKX: Image { Image(#function) }
+    static var ic24ActivatedCreditCard: Image { Image(#function) }
     static var ic24Activity: Image { Image(#function) }
     static var ic24Airplay: Image { Image(#function) }
     static var ic24AlertCircle: Image { Image(#function) }
@@ -387,6 +400,7 @@ public extension Image {
     static var ic24BatteryCharging: Image { Image(#function) }
     static var ic24Bell: Image { Image(#function) }
     static var ic24BellOff: Image { Image(#function) }
+    static var ic24Between: Image { Image(#function) }
     static var ic24BirthdayCake: Image { Image(#function) }
     static var ic24Bluetooth: Image { Image(#function) }
     static var ic24Bold: Image { Image(#function) }
@@ -396,6 +410,7 @@ public extension Image {
     static var ic24Box: Image { Image(#function) }
     static var ic24Briefcase: Image { Image(#function) }
     static var ic24Bulb: Image { Image(#function) }
+    static var ic24Businessman: Image { Image(#function) }
     static var ic24Cafe: Image { Image(#function) }
     static var ic24Calendar: Image { Image(#function) }
     static var ic24CalendarPayment: Image { Image(#function) }
@@ -404,6 +419,7 @@ public extension Image {
     static var ic24Car: Image { Image(#function) }
     static var ic24Cash: Image { Image(#function) }
     static var ic24Cashback: Image { Image(#function) }
+    static var ic24Cashterminal: Image { Image(#function) }
     static var ic24Cast: Image { Image(#function) }
     static var ic24ChatActive: Image { Image(#function) }
     static var ic24ChatInactive: Image { Image(#function) }
@@ -439,6 +455,7 @@ public extension Image {
     static var ic24Columns: Image { Image(#function) }
     static var ic24Command: Image { Image(#function) }
     static var ic24Compass: Image { Image(#function) }
+    static var ic24Contract: Image { Image(#function) }
     static var ic24Copy: Image { Image(#function) }
     static var ic24CornerDownLeft: Image { Image(#function) }
     static var ic24CornerDownRight: Image { Image(#function) }
@@ -455,10 +472,12 @@ public extension Image {
     static var ic24Crop: Image { Image(#function) }
     static var ic24Crosshair: Image { Image(#function) }
     static var ic24Crosshair1: Image { Image(#function) }
+    static var ic24CurrencyExchange: Image { Image(#function) }
     static var ic24Customer: Image { Image(#function) }
     static var ic24Database: Image { Image(#function) }
     static var ic24DeactivatedCreditCard: Image { Image(#function) }
     static var ic24Delete: Image { Image(#function) }
+    static var ic24Department: Image { Image(#function) }
     static var ic24DepositPlusColor: Image { Image(#function) }
     static var ic24Disc: Image { Image(#function) }
     static var ic24Divide: Image { Image(#function) }
@@ -484,6 +503,7 @@ public extension Image {
     static var ic24FastForward: Image { Image(#function) }
     static var ic24Favorites: Image { Image(#function) }
     static var ic24Feather: Image { Image(#function) }
+    static var ic24Female: Image { Image(#function) }
     static var ic24Fence: Image { Image(#function) }
     static var ic24Figma: Image { Image(#function) }
     static var ic24File: Image { Image(#function) }
@@ -548,6 +568,7 @@ public extension Image {
     static var ic24LogoForaLine: Image { Image(#function) }
     static var ic24LogoForaOneColor: Image { Image(#function) }
     static var ic24Mail: Image { Image(#function) }
+    static var ic24Male: Image { Image(#function) }
     static var ic24Map: Image { Image(#function) }
     static var ic24MapPin: Image { Image(#function) }
     static var ic24MathMinus: Image { Image(#function) }
@@ -579,6 +600,7 @@ public extension Image {
     static var ic24NewCard: Image { Image(#function) }
     static var ic24NewCardColor: Image { Image(#function) }
     static var ic24Octagon: Image { Image(#function) }
+    static var ic24OtherCard: Image { Image(#function) }
     static var ic24Package: Image { Image(#function) }
     static var ic24Paperclip: Image { Image(#function) }
     static var ic24Pass: Image { Image(#function) }
@@ -618,6 +640,7 @@ public extension Image {
     static var ic24RefreshCcw: Image { Image(#function) }
     static var ic24RefreshCw: Image { Image(#function) }
     static var ic24Repeat: Image { Image(#function) }
+    static var ic24Requisites: Image { Image(#function) }
     static var ic24Rescheduling: Image { Image(#function) }
     static var ic24ResendCard: Image { Image(#function) }
     static var ic24Rewind: Image { Image(#function) }
@@ -699,6 +722,7 @@ public extension Image {
     static var ic24Volume1: Image { Image(#function) }
     static var ic24Volume2: Image { Image(#function) }
     static var ic24VolumeX: Image { Image(#function) }
+    static var ic24Wallet: Image { Image(#function) }
     static var ic24Watch: Image { Image(#function) }
     static var ic24Water: Image { Image(#function) }
     static var ic24Wifi: Image { Image(#function) }
@@ -713,10 +737,15 @@ public extension Image {
     static var ic24ZoomIn: Image { Image(#function) }
     static var ic24ZoomOut: Image { Image(#function) }
     static var ic32LogoForaLine: Image { Image(#function) }
+    static var ic32Swap: Image { Image(#function) }
+    static var ic40SBP: Image { Image(#function) }
     static var ic40TouchID: Image { Image(#function) }
     static var ic40Card: Image { Image(#function) }
     static var ic40Delete: Image { Image(#function) }
     static var ic40FaceId: Image { Image(#function) }
+    static var ic40FinancialRiskInsurance: Image { Image(#function) }
+    static var ic40Lock: Image { Image(#function) }
+    static var ic40PropertyInsurance: Image { Image(#function) }
     static var ic48Abroad: Image { Image(#function) }
     static var ic48AlertCircle: Image { Image(#function) }
     static var ic48AnotherCard: Image { Image(#function) }
@@ -726,8 +755,8 @@ public extension Image {
     static var ic48Check: Image { Image(#function) }
     static var ic48Clock: Image { Image(#function) }
     static var ic48Close: Image { Image(#function) }
+    static var ic48Info: Image { Image(#function) }
     static var ic48PinATM: Image { Image(#function) }
-    static var ic48PinManyBranches: Image { Image(#function) }
     static var ic48PinManyBranchesBlack: Image { Image(#function) }
     static var ic48PinManyBranchesRed: Image { Image(#function) }
     static var ic48PinOffice: Image { Image(#function) }
@@ -738,6 +767,7 @@ public extension Image {
     static var ic48Telephone: Image { Image(#function) }
     static var ic48Tool: Image { Image(#function) }
     static var ic48UploadToAccount: Image { Image(#function) }
+    static var ic48User: Image { Image(#function) }
     static var ic64TouchID: Image { Image(#function) }
     static var ic64FaceId: Image { Image(#function) }
     static var ic64ForaColor: Image { Image(#function) }

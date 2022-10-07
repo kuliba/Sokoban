@@ -161,10 +161,6 @@ class MainViewController: UIViewController {
             
             self.startUpdate()
         }
-        model.action.send(ModelAction.Deposits.List.Request())
-        model.action.send(ModelAction.Settings.GetClientInfo.Requested())
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(startUpdate), name: .startProductsUpdate, object: nil)
     }
     
     func updateProductsViewModels(with products: Results<UserAllCardsModel>) {
@@ -294,9 +290,9 @@ class MainViewController: UIViewController {
         
         for section in Section.allCases {
             
-            if let isExpanded = settings.sectionsExpanded[section.mainSectionType] {
+            if let isCollapsed = settings.collapsed[section.mainSectionType] {
                 
-                expanded[section] = isExpanded
+                expanded[section] = !isCollapsed
                 
             } else {
                 
@@ -317,8 +313,8 @@ class MainViewController: UIViewController {
         
         // updating settings
         var settings = model.settingsMainSections
-        settings.update(isExpanded: expandedSectionValue, sectionType: section.mainSectionType)
-        model.settingsUpdate(settings)
+        settings.update(sectionType: section.mainSectionType, isCollapsed: !expandedSectionValue)
+        model.settingsMainSectionsUpdate(settings)
     }
     
     private func setupSearchBar() {
@@ -354,8 +350,10 @@ class MainViewController: UIViewController {
         }
         
         searchBar.trailingRightAction = {
-            let pushHistory = PushHistoryViewController.storyboardInstance()!
-            let nc = UINavigationController(rootViewController: pushHistory)
+            let pushModel = MessagesHistoryViewModel(model: self.model, closeAction: {})
+            
+            let pushHistory = MessagesHistoryView(viewModel: pushModel)
+            let nc = UIHostingController(rootView: pushHistory)
             nc.modalPresentationStyle = .fullScreen
             self.present(nc, animated: true)
         }
@@ -391,17 +389,17 @@ class MainViewController: UIViewController {
                         openProductMutable[openDepositIndex] = depositProduct
                         openProductViewModels = openProductMutable
                         
-                    case .failure(let error):
-                        print("loading deposits list error: \(error)")
+                    case .failure(let error): break
                     }
-                    
+                  
+                    /*
                 case let payload as ModelAction.Settings.GetClientInfo.Complete:
                     let userName = UserDefaults.standard.object(forKey: "userName") as? String
                     if userName != nil {
                         searchBar.textField.text = userName
                     } else {
                         searchBar.textField.text = payload.user.firstName
-                    }
+                    }*/
                     
                 default:
                     break
@@ -483,24 +481,6 @@ class MainViewController: UIViewController {
     }
     
     func setupData() {
-        
-        let baners = model.catalogBanners.value
-        var items: [PaymentsModel] = []
-        baners.forEach { baner in
-            #if DEBUG
-            let host = ServerAgent.Environment.test
-            #else
-            let host = ServerAgent.Environment.prod
-            #endif
-            let urlString = host.baseURL + "/" + baner.imageLink
-            print(host.baseURL + "/" + baner.imageLink)
-            let cell = PaymentsModel(name: baner.productName, iconName: urlString, controllerName: baner.orderLink.absoluteString)
-            items.append(cell)
-        }
-        promoViewModels = items
-        exchangeRatesViewModels = MockItems.returnCurrency()
-        paymentsViewModels = MockItems.returnFastPay()
-        openProductViewModels = MockItems.returnOpenProduct()
     }
     
     private func setupCollectionView() {
@@ -572,7 +552,8 @@ class MainViewController: UIViewController {
     
     func createRefreshView() -> UIView {
         
-        UIHostingController(rootView: RefreshView()).view
+//        UIHostingController(rootView: RefreshingIndicatorView()).view
+        UIView()
     }
     
     func reloadData(with searchText: String?) {
@@ -595,7 +576,6 @@ class MainViewController: UIViewController {
         
         NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], body) { model, error in
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else {
                 return
@@ -606,7 +586,6 @@ class MainViewController: UIViewController {
                 }
                 self.dataUSD = lastPaymentsList
             } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
                 
             }
         }
@@ -617,7 +596,6 @@ class MainViewController: UIViewController {
         NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], bodyEURO) { model, error in
             if error != nil {
                 
-                print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else {
                 return
@@ -628,7 +606,6 @@ class MainViewController: UIViewController {
                 }
                 self.dataEuro = lastPaymentsList
             } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
                 
             }
         }
@@ -777,6 +754,7 @@ extension MainViewController.Section {
         case .currencyExchange: self = .currentsExchange
         case .openProduct: self = .openProduct
         case .atm: self = .atm
+        case .currencyMetall: self = .currentsExchange
         }
     }
     

@@ -52,7 +52,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 
                 //FIXME: inject from parent view model after refactoring
                 let model = Model.shared
-                let templatesViewModel = TemplatesListViewModel(model)
+                let templatesViewModel = TemplatesListViewModel(model, dismissAction: {})
                 let templatesViewController = TemplatesListViewHostingViewController(with: templatesViewModel)
                 templatesViewController.delegate = self
                 let navigationViewController = UINavigationController(rootViewController: templatesViewController)
@@ -81,7 +81,6 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 popView.transitioningDelegate = self
                 self.present(popView, animated: true, completion: nil)
             } else {
-                print("DEBUG: " + #function + transfers[indexPath.row].name)
                 if let viewController = transfers[indexPath.row].controllerName.getViewController() {
                     let navController = UINavigationController(rootViewController: viewController)
                     if transfers[indexPath.row].name == "По номеру телефона" {
@@ -271,7 +270,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                     puref.forEach({ (key, value) in
                         value.forEach { purefList in
                             if purefList.puref == purefString {
-                                let bankList = Dict.shared.banks
+                                let bankList = Model.shared.dictionaryBankListLegacy
                                 bankList?.forEach({ bank in
                                     if bank.memberID == key {
                                         bankValue = bank

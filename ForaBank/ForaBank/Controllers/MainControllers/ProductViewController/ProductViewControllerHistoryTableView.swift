@@ -130,9 +130,6 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
             return
         }
         
-        let operationDetailVC = OperationDetailHostingViewController(with: operationDetailViewModel)
-        
-        present(operationDetailVC, animated: true)
     }
     
     private func operationDetailViewModel(for indexPath: IndexPath) -> OperationDetailViewModel? {
@@ -142,27 +139,6 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
         }
         
         switch product.productTypeEnum {
-        case .deposit:
-            let deposit = sortedDeposit[indexPath.section].value[indexPath.row]
-            if let bank = Dict.shared.currencyList?.first(where: {$0.codeNumeric == sortedDeposit[indexPath.section].value[indexPath.row].currencyCodeNumeric}), let currency = bank.code{
-                return OperationDetailViewModel(with: deposit, currency: currency, product: product)
-            }
-            return OperationDetailViewModel(with: deposit, currency: currency, product: product)
-            
-        case .card:
-            let card = sorted[indexPath.section].value[indexPath.row]
-            if let bank = Dict.shared.currencyList?.first(where: {$0.codeNumeric == sorted[indexPath.section].value[indexPath.row].currencyCodeNumeric}), let currency = bank.code{
-                return OperationDetailViewModel(with: card, currency: currency, product: product)
-            }
-            return OperationDetailViewModel(with: card, currency: currency, product: product)
-            
-        case .account:
-            let account = sortedAccount[indexPath.section].value[indexPath.row]
-            if let bank = Dict.shared.currencyList?.first(where: {$0.codeNumeric == sortedAccount[indexPath.section].value[indexPath.row].currencyCodeNumeric}), let currency = bank.code{
-                return OperationDetailViewModel(with: account, currency: currency, product: product)
-            }
-            return OperationDetailViewModel(with: account, currency: currency, product: product)
-            
         default:
             return nil
         }
@@ -248,8 +224,7 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
                 
                 
             }
-        default:
-            print("default")
+        default: break
             
         }
     }

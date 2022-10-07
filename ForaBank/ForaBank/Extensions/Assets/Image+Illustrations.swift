@@ -11,6 +11,7 @@
 import SwiftUI
 
 public extension Image {
+    static var imgDepositForaHit: Image { Image(#function) }
     static var imgMainBanner1: Image { Image(#function) }
     static var imgMainBanner2: Image { Image(#function) }
     static var imgMainBanner3: Image { Image(#function) }

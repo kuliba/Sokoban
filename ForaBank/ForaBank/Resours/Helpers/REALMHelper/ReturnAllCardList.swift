@@ -11,13 +11,17 @@ import RealmSwift
 /// Получаем из  REALM  карты пользователя
 struct ReturnAllCardList {
     
-    static func cards() ->  [UserAllCardsModel]{
-        let realm = try? Realm()
-        let cards = realm?.objects(UserAllCardsModel.self)
-        var cardsArray = [UserAllCardsModel]()
-        cards?.forEach { card in
-            cardsArray.append(card)
+    static func cards() ->  [UserAllCardsModel] {
+
+        var products: [UserAllCardsModel] = []
+        let types: [ProductType] = [.card, .account, .deposit, .loan]
+        let clientId = Model.shared.clientInfo.value?.id
+        types.forEach { type in
+            
+            products.append(contentsOf: Model.shared.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
         }
-        return cardsArray
+        
+        products = products.filter({$0.ownerID == clientId})
+        return products
     }
 }

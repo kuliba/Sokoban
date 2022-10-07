@@ -12,21 +12,18 @@ extension ServerCommands {
     enum UserController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/UserController/blockAccountUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/UserController/blockAccountUsingPOST
          */
         struct BlockAccount: ServerCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/rest/blockAccount"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: EmptyData?
@@ -39,21 +36,18 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/UserController/getUserSettingsUsingGET
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/UserController/getUserSettingsUsingGET
          */
         struct GetUserSettings: ServerCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/rest/getUserSettings"
             let method: ServerCommandMethod = .get
-            let parameters: [ServerCommandParameter]? = nil
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: SettingsData?
@@ -71,16 +65,14 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/UserController/setUserSettingUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/UserController/setUserSettingUsingPOST
          */
         struct SetUserSetting: ServerCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/rest/setUserSetting"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -90,7 +82,7 @@ extension ServerCommands {
             }
             
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: EmptyData?
@@ -101,7 +93,13 @@ extension ServerCommands {
                 self.token = token
                 self.payload = payload
             }
+            
+            init<UserSetting: UserSettingProtocol>(token: String, userSetting: UserSetting) {
+                
+                self.token = token
+                let userSettingData = userSetting.userSettingData
+                self.payload = .init(settingName: userSettingData.name, settingSysName: userSettingData.sysName, settingValue: userSettingData.value)
+            }
         }
     }
-    
 }

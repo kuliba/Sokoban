@@ -6,20 +6,25 @@
 //
 
 import UIKit
+import Combine
 
 class MeToMeSettingViewController: UIViewController {
 
+    var newModel: Model = Model.shared
     var model: [FastPaymentContractFindListDatum]? {
         didSet {
             guard let model = model else { return }
             configure(with: model)
         }
     }
+
+    private var bindings = Set<AnyCancellable>()
     
     var topSwitch = MeToMeSetupSwitchView()
     var cardFromField = CardChooseView()
     var cardListView = CardListView(onlyMy: false)
     var banksView: BanksView = BanksView()
+    var defaultBank = DefaultBankView()
     var stackView = UIStackView(arrangedSubviews: [])
     var logo: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "sfpBig"))
@@ -27,14 +32,19 @@ class MeToMeSettingViewController: UIViewController {
         return imageView
     }()
     
+    var closeAction: () -> Void = {}
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = .white
         setupPaymentsUI()
         setupStackView()
         setupTopSwitch()
         setupCardFromView()
         setupBankField()
+        bind()
+        
         setupCardList { [weak self] error in
             if error != nil {
                 self?.showAlert(with: "Ошибка", and: error!)
@@ -42,6 +52,7 @@ class MeToMeSettingViewController: UIViewController {
                 self?.topSwitch.bankByPhoneSwitch.isEnabled = true
             }
         }
+        
         cardListView.didCardTapped = { card in
             self.cardFromField.cardModel = card
             DispatchQueue.main.async {
@@ -56,6 +67,7 @@ class MeToMeSettingViewController: UIViewController {
             
             guard let contractId = self.model?.first?.fastPaymentContractAttributeList?.first else { return }
             self.showActivity()
+            
             self.updateContract(contractId: contractId.fpcontractID,
                                 cardModel: card,
                                 isOff: true) { success, error in
@@ -74,6 +86,43 @@ class MeToMeSettingViewController: UIViewController {
                 self.banksView.consentList = list
             }
         }
+        
+        let backButton = UIBarButtonItem(image: UIImage(named: "back_button"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                    action: #selector(onTouchBackButton))
+        backButton.tintColor = .black
+        navigationItem.leftBarButtonItem = backButton
+    }
+    
+    @objc func onTouchBackButton() {
+        
+        self.closeAction()
+        dismiss(animated: true)
+        navigationController?.popToRootViewController(animated: true)
+    }
+    
+    func bind() {
+       
+        newModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                switch action {
+                case let payload as ModelAction.FastPaymentSettings.ContractFindList.Response:
+                    
+                    switch payload.result {
+                    case let .success(fastPaymentContractFullInfoType):
+                        self.model = fastPaymentContractFullInfoType.map { $0.getFastPaymentContractFindListDatum() }
+                    default: break
+                    }
+                    
+                    self.dismissActivity()
+                
+                default: break
+                }
+        }.store(in: &bindings)
+        
     }
     
     func configure(with model: [FastPaymentContractFindListDatum]) {
@@ -82,39 +131,67 @@ class MeToMeSettingViewController: UIViewController {
             if contract?.flagClientAgreementIn == "YES"
                 && contract?.flagClientAgreementOut == "YES" {
                 
-                topSwitch.bankByPhoneSwitch.isOn = true
                 topSwitch.configViewWithValue(true)
+                banksView.isHidden = false
                 cardFromField.isHidden = false
+                defaultBank.isHidden = false
             } else {
                 topSwitch.configViewWithValue(false)
+                banksView.isHidden = true
                 cardFromField.isHidden = true
+                defaultBank.isHidden = true
             }
         } else {
+            
+            banksView.isHidden = true
             topSwitch.configViewWithValue(false)
             cardFromField.isHidden = true
+            defaultBank.isHidden = true
         }
     }
     
     func setupStackView() {
-        stackView = UIStackView(arrangedSubviews: [topSwitch, cardFromField, cardListView, banksView])
+        banksView.anchor(height: 150)
+//        DispatchQueue.main.async {
+//            self.banksView.sizeToFit()
+//            self.banksView.content = { [weak self] height in
+//                self?.banksView.anchor(height: height)
+//            }
+//            self.banksView.layoutIfNeeded()
+//            self.banksView.sizeToFit()
+//            self.stackView.layoutIfNeeded()
+//            self.stackView.sizeToFit()
+//            self.topSwitch.layoutIfNeeded()
+//            self.topSwitch.sizeToFit()
+//            self.cardFromField.layoutIfNeeded()
+//            self.cardFromField.sizeToFit()
+//            self.cardListView.layoutIfNeeded()
+//            self.cardListView.sizeToFit()
+//            self.defaultBank.layoutIfNeeded()
+//            self.defaultBank.sizeToFit()
+//
+//        }
+        
+        stackView = UIStackView(arrangedSubviews: [topSwitch, cardFromField, cardListView, banksView, defaultBank])
         stackView.axis = .vertical
         stackView.alignment = .fill
-        stackView.distribution = .equalSpacing
+        stackView.distribution = .fillProportionally
         stackView.spacing = 12
         stackView.isUserInteractionEnabled = true
         view.addSubview(stackView)
         
         stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                         left: view.leftAnchor, right: view.rightAnchor)
+                         left: view.leftAnchor,
+                         right: view.rightAnchor)
     }
-
+   
     func setupPaymentsUI() {
         // настраиваем название контроллера в 2 строки
         self.navigationItem.titleView = setTitle(title: "Настройки СБП", subtitle: "Система быстрых платежей")
         // настраиваем логотип экрана
         view.addSubview(logo)
         logo.centerX(inView: view)
-        logo.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 40)
+        logo.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 10)
     }
     
     func setTitle(title: String, subtitle: String) -> UIView {
@@ -146,7 +223,6 @@ class MeToMeSettingViewController: UIViewController {
         
         // действие по нажатию на поле с текущем счетом
         cardFromField.didChooseButtonTapped = { () in
-            print("cardField didChooseButtonTapped")
             self.openOrHideView(self.cardListView)
             
         }
@@ -155,8 +231,8 @@ class MeToMeSettingViewController: UIViewController {
     private func setupBankField() {
         // действие по нажатию на поле с банком
         banksView.didChooseButtonTapped = { () in
-            print("bankField didChooseButtonTapped")
             let settingVC = MeToMeSearchBanksViewController()
+            settingVC.rootVC = self
             let navVC = UINavigationController(rootViewController: settingVC)
             self.present(navVC, animated: true, completion: nil)
         }
@@ -178,7 +254,9 @@ class MeToMeSettingViewController: UIViewController {
                 }
                 
                 self?.cardListView.cardList = filterProduct
-                guard let contractId = self?.model?.first?.fastPaymentContractAttributeList?.first else { return }
+                guard let contractId = self?.model?.first?.fastPaymentContractAttributeList?.first
+                else { return }
+                
                 if filterProduct.count > 0 {
                     filterProduct.forEach { product in
                         if product.productType == "CARD" {
@@ -199,10 +277,14 @@ class MeToMeSettingViewController: UIViewController {
     
     func setupTopSwitch() {
         topSwitch.bankByPhoneSwitch.isEnabled = false
+        
         topSwitch.switchIsChanged = { (sender) in
             self.showActivity()
             guard let model = self.model else { return }
+            self.banksView.isHidden = !sender.isOn
+            
             if model.isEmpty {
+                
                 self.createContract(cardModel: self.cardFromField.cardModel!) { success, error in
                     
                     DispatchQueue.main.async {
@@ -212,6 +294,9 @@ class MeToMeSettingViewController: UIViewController {
                                 self.hideView(self.cardListView, needHide: true) { }
                             }
                         }
+                        self.newModel.action.send(ModelAction
+                                                 .FastPaymentSettings
+                                                 .ContractFindList.Request())
                     }
                 }
             } else {
@@ -220,6 +305,7 @@ class MeToMeSettingViewController: UIViewController {
                 self.updateContract(contractId: contractId.fpcontractID,
                                     cardModel: self.cardFromField.cardModel!,
                                     isOff: sender.isOn) { success, error in
+                    
                     DispatchQueue.main.async {
                         self.dismissActivity()
                         self.hideView(self.cardFromField, needHide: !sender.isOn) {
@@ -227,6 +313,9 @@ class MeToMeSettingViewController: UIViewController {
                                 self.hideView(self.cardListView, needHide: true) { }
                             }
                         }
+                        self.newModel.action.send(ModelAction
+                                                 .FastPaymentSettings
+                                                 .ContractFindList.Request())
                     }
                 }
             }
@@ -260,25 +349,14 @@ class MeToMeSettingViewController: UIViewController {
         completion()
     }
     
-    
-    
-    //MARK: - API
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
-        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
+       
+        let cardList = newModel.products.value
+            .filter { $0.key == .card || $0.key == .account }
+            .values.flatMap { $0 }
+            .map { $0.getProductListDatum() }
         
-        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
-            if error != nil {
-                completion(nil, error)
-            }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                guard let cardList = model.data else { return }
-                completion(cardList, nil)
-            } else {
-                guard let error = model.errorMessage else { return }
-                completion(nil, error)
-            }
-        }
+        completion(cardList, nil)
     }
     
     func updateContract(contractId: Int?, cardModel: GetProductListDatum, isOff: Bool ,completion: @escaping (_ success: Bool, _ error: String?)->()) {
@@ -340,17 +418,14 @@ class MeToMeSettingViewController: UIViewController {
             self?.dismissActivity()
             if error != nil {
                 guard let error = error else { return }
-                print("DEBUG: Error: ", error)
                 completion(nil, error)
             }
             guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 guard let data  = model.data else { return }
                 completion(data.consentList ?? [], nil)
             } else {
                 guard let error = model.errorMessage else { return }
-                print("DEBUG: Error: ", error)
 
                 completion(nil, error)
             }

@@ -15,6 +15,9 @@ class MeToMeRequestController: UIViewController {
             fillData(model: model)
         }
     }
+    
+    private let model: Model = .shared
+    
     var nextStep = false
     lazy var contentViewSize = CGSize(width: self.view.frame.width, height: self.view.frame.height + 30)
     
@@ -64,7 +67,7 @@ class MeToMeRequestController: UIViewController {
     
     lazy var cardFromField: CardChooseView = {
        let cardField = CardChooseView()
-        cardField.titleLabel.text = "Счет зачисления"
+        cardField.titleLabel.text = "Счет списания"
         cardField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         cardField.imageView.isHidden = false
         cardField.choseButton?.isHidden = true
@@ -138,7 +141,6 @@ class MeToMeRequestController: UIViewController {
         
         checkAuth { error in
             if error != nil {
-                print(error!)
 //                self.goToPinVC(.validate)
             } else {
                 DispatchQueue.main.async {
@@ -157,7 +159,44 @@ class MeToMeRequestController: UIViewController {
         bankField.imageView.image = model.bank?.svgImage?.convertSVGStringToImage()
         labelSubTitle.text = "Денежные средства будут списываться по вашим запросам из \(model.bank?.rusName ?? "bank") без подтверждения?"
         labelSubTitle.isHidden = true
-        cardFromField.model = model.card
+        let cardId = model.userInfo?["cardId"] as? String ?? ""
+        let accountId = model.userInfo?["accountId"] as? String ?? ""
+        if let cardValue = findProduct(with: Int(cardId), with: Int(accountId)) {
+
+            cardFromField.model = cardValue
+        }
+    }
+    
+    func cards() ->  [UserAllCardsModel] {
+
+        var products: [UserAllCardsModel] = []
+        let types: [ProductType] = [.card, .account]
+        types.forEach { type in
+
+            products.append(contentsOf: AppDelegate.shared.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+        }
+
+        return products
+    }
+    
+    private func findProduct(with cardId: Int?, with accountId: Int?) -> UserAllCardsModel? {
+        let cardList = cards()
+        var card: UserAllCardsModel?
+        cardList.forEach { product in
+            if cardId != nil {
+                if product.id == cardId {
+                    card = product
+                }
+            } else {
+                if product.id == accountId {
+                    card = product
+                }
+            }
+        }
+        if card == nil {
+            card = cardList.first
+        }
+        return card
     }
     
     private func setupUI() {
@@ -225,7 +264,7 @@ class MeToMeRequestController: UIViewController {
     
     //MARK: - Actions
     @objc func doneButtonTapped() {
-//        print(#function)
+//        
         if nextStep {
             showActivity()
             createPermanentConsentMe2Me { error in
@@ -233,7 +272,7 @@ class MeToMeRequestController: UIViewController {
                     DispatchQueue.main.async {
                         self.dismissActivity()
                         self.showAlert(with: "Ошибка", and: error!) {
-                            self.dismiss(animated: true)
+                            NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                         }
                     }
                 } else {
@@ -243,11 +282,11 @@ class MeToMeRequestController: UIViewController {
                                 self.dismissActivity()
                                 if error != nil {
                                     self.showAlert(with: "Ошибка", and: error!) {
-                                        self.dismiss(animated: true)
+                                        NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                                     }
                                 } else {
                                     self.showAlert(with: "Удачно", and: "Ваши деньги зачислены") {
-                                        self.dismiss(animated: true)
+                                        NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                                     }
                                 }
                             }
@@ -256,7 +295,7 @@ class MeToMeRequestController: UIViewController {
                         self.dismissActivity()
                         self.showAlert(with: "Готово", and: "") {
                             DispatchQueue.main.async {
-                                self.dismiss(animated: true)
+                                NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                             }
                         }
                     }
@@ -280,7 +319,7 @@ class MeToMeRequestController: UIViewController {
     }
     
     @objc func cancelButtonTapped() {
-        print(#function)
+        
         if nextStep {
             self.showActivity()
             createIsOneTimeConsentMe2Me { error in
@@ -288,7 +327,7 @@ class MeToMeRequestController: UIViewController {
                     if error != nil {
                         self.dismissActivity()
                         self.showAlert(with: "Ошибка", and: error!) {
-                            self.dismiss(animated: true)
+                            NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                         }
                     } else {
                         if self.viewModel?.amount != 0 {
@@ -297,11 +336,11 @@ class MeToMeRequestController: UIViewController {
                                     self.dismissActivity()
                                     if error != nil {
                                         self.showAlert(with: "Ошибка", and: error!){
-                                            self.dismiss(animated: true)
+                                            NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                                         }
                                     } else {
                                         self.showAlert(with: "Удачно", and: "Ваши деньги зачислены") {
-                                            self.dismiss(animated: true, completion: nil)
+                                            NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                                         }
                                     }
                                 }
@@ -310,46 +349,20 @@ class MeToMeRequestController: UIViewController {
                             self.dismissActivity()
                             self.showAlert(with: "Готово", and: "") {
                                 self.dismiss(animated: true, completion: nil)
+                                    NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                             }
                         }
                     }
                 }
             }
         } else {
-            dismiss(animated: true, completion: nil)
+            NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
         }
     }
     
     @objc func tariffButtonTapped() {
-        print(#function)
+        
     }
-    
-    
-//    func goToPinVC(_ mode: ALMode) {
-//        DispatchQueue.main.async { [weak self] in
-//            var options = ALOptions()
-//            options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
-//            options.onSuccessfulDismiss = { (mode: ALMode?) in
-//                self?.nextButton.isEnabled = true
-//                self?.cancelButton.isEnabled = true
-
-//                if let mode = mode {
-//                    DispatchQueue.main.async { [weak self] in
-//                        print("Password \(String(describing: mode)) successfully")
-//                        let vc = MainTabBarViewController()
-//                        vc.modalPresentationStyle = .fullScreen
-//                        self?.present(vc, animated: true, completion: nil)
-//                    }
-//                } else {
-//                    print("User Cancelled")
-//                }
-//            }
-//            options.onFailedAttempt = { (mode: ALMode?) in
-//                print("Failed to \(String(describing: mode))")
-//            }
-//        }
-//    }
-    
     
     //MARK: - API
     private func checkAuth(completion: @escaping (_ error: String?) -> () ) {
@@ -402,15 +415,15 @@ class MeToMeRequestController: UIViewController {
         DispatchQueue.main.async {
             guard let viewModel = self.viewModel else { return }
             guard let bankRecipientID = viewModel.bank?.memberID else { return }
+            guard let card = viewModel.card else { return }
             
-            
-            let body = [
+            var body = [
                 "check" : false,
                 "amount" : viewModel.amount,
                 "currencyAmount" : "RUB",
-                "payer" : ["cardId" : viewModel.card?.productType == "CARD" ? viewModel.card?.id : nil,
+                "payer" : ["cardId" : nil,
                            "cardNumber" : nil,
-                           "accountId" : viewModel.card?.productType == "ACCOUNT" ? viewModel.card?.id : nil ],
+                           "accountId" : nil],
                 "puref" : "iFora||TransferC2CSTEP",
                 "additional" :
                     [["fieldid": 1, "fieldname": "RecipientID",     "fieldvalue": viewModel.RecipientID],
@@ -419,6 +432,19 @@ class MeToMeRequestController: UIViewController {
                      ["fieldid": 4, "fieldname": "RefTrnId",        "fieldvalue": viewModel.RefTrnId]
                     ] ] as [String : AnyObject]
                         
+            if card.productType == "CARD" {
+                
+                body["payer"] = ["cardId": card.cardID,
+                                 "cardNumber" : nil,
+                                 "accountId" : nil] as AnyObject
+                
+            } else if card.productType == "ACCOUNT" {
+                
+                body["payer"] = ["cardId": nil,
+                                 "cardNumber" : nil,
+                                 "accountId" :  card.id] as AnyObject
+            }
+            
             NetworkManager<CreateMe2MePullDebitTransferDecodableModel>.addRequest(.createMe2MePullDebitTransfer, [:], body) { transferModel, error in
                 if error != nil {
                     completion(error)

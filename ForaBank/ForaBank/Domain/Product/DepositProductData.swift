@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DepositProductData: Codable, Equatable, Cachable {
+struct DepositProductData: Codable, Equatable {
     
     let depositProductID: Int
     let detailedСonditions: [DetailedСondition]

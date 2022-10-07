@@ -7,13 +7,13 @@
 
 import Foundation
 
-class PaymentServiceData: PaymentData {
+class PaymentServiceData: LatestPaymentData {
 
 	var additionalList: [AdditionalListData]
 	var amount: Double
 	var puref: String
 	
-	private enum CodingKeys : String, CodingKey {
+	private enum CodingKeys: String, CodingKey {
 		case additionalList, amount, puref
 	}
 	
@@ -34,13 +34,23 @@ class PaymentServiceData: PaymentData {
 
 		try super.init(from: decoder)
 	}
+    
+    override func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(additionalList, forKey: .additionalList)
+        try container.encode(amount, forKey: .amount)
+        try container.encode(puref, forKey: .puref)
+        
+        try super.encode(to: encoder)
+    }
 }
 
 extension PaymentServiceData {
 
 	struct AdditionalListData: Codable, Equatable {
 		
-		let fieldTitle: String
+		let fieldTitle: String?
 		let fieldName: String
 		let fieldValue: String
 		let svgImage: String?

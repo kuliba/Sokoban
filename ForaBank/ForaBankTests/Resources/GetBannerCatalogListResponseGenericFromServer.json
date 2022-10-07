@@ -1,0 +1,32 @@
+{
+    "statusCode": 0,
+    "errorMessage": "string",
+    "data":{
+        "serial": "serial",
+        "BannerCatalogList":[
+            {
+                "productName": "АКЦИЯ",
+                "txtСondition": ["Нам 30 лет!"],
+                "imageLink": "dict/getBannerCatalogImage?image=banner_1",
+                "orderLink": "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/",
+                "conditionLink": "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/",
+                "action": null
+            },
+            {
+                "productName": "Переводы МИГ",
+                "txtСondition": ["Мгновенные переводы в Армению Комиссия 1%"],
+                "imageLink": "dict/getBannerCatalogImage?image=banner_1",
+                "orderLink": "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/",
+                "conditionLink": "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/",
+                "action": {
+                    "type": "MIG_TRANSFER",
+                    "countryId": "AM"
+                }},
+            {
+                "productName": "Переводы Турция",
+                "txtСondition": ["Мгновенные переводы в Турцию Комиссия 0%"],
+                "imageLink": "dict/getBannerCatalogImage?image=banner_1",
+                "orderLink": "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/",
+                "conditionLink": "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/",
+                "action": null}
+        ]}}

@@ -50,7 +50,7 @@ class C2BSuccessViewController: UIViewController {
     }
 
     @objc func doneButtonTapped() {
-        print(#function)
+        
         dismissViewControllers()
     }
 

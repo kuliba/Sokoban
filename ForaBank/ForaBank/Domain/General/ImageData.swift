@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SwiftUI
 
-struct ImageData {
+struct ImageData: Codable {
 
     let data: Data
     
@@ -47,6 +47,11 @@ extension ImageData {
         }
  
         return Image(uiImage: uiImage)
+    }
+    
+    var jpegData: Data? {
+        
+        self.uiImage?.jpegData(compressionQuality: 1.0)
     }
 }
 

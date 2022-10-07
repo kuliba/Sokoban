@@ -16,7 +16,9 @@ class ValetKeychainAgent: KeychainAgentProtocol {
     
     init(valetName: String, encoder: JSONEncoder = .init(), decoder: JSONDecoder = .init()) {
         
-        let identifier = Identifier(nonEmpty: valetName)!
+        guard let identifier = Identifier(nonEmpty: valetName) else {
+            fatalError("unable create keychain valet identifier")
+        }
         self.valet = Valet.valet(with: identifier, accessibility: .whenUnlockedThisDeviceOnly)
         self.encoder = encoder
         self.decoder = decoder
@@ -37,5 +39,22 @@ class ValetKeychainAgent: KeychainAgentProtocol {
     func clear(type: KeychainValueType) throws {
         
         try valet.removeObject(forKey: type.rawValue)
+    }
+    
+    func isStoredString(values: [KeychainValueType]) -> Bool {
+        
+        do {
+            
+            for value in values {
+                
+                let _ :String = try load(type: value)
+            }
+            
+            return true
+            
+        } catch {
+            
+            return false
+        }
     }
 }

@@ -7,14 +7,17 @@
 
 import UIKit
 import ContactsUI
+import IQKeyboardManagerSwift
 
 
 class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFieldText{
     
+    let model: Model = .shared
     let userPhoneView = EPContactSelfDataView()
     let tableView = UITableView(frame: .zero, style: .plain)
     // MARK: - Properties
     
+    var viewModel: TransferByPhoneViewModel?
     open weak var contactDelegate: EPPickerDelegate?
     var contactsStore: CNContactStore?
     var resultSearchController = Bool()
@@ -45,7 +48,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
     var delegate: PassTextFieldText? = nil
     let contactView = UIView()
     var banksList = [BanksList]()
-    
+
     var reserveContacts = [PhoneContact]()
     var numberPhone: String?
     
@@ -82,10 +85,20 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
     }// array of PhoneContact(It is model find it below)
     var filter: ContactsFilter = .none
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        banksList = Dict.shared.banks?.filter({$0.paymentSystemCodeList?.first == "SFP"}) ?? []
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        getFastPaymentContractList()
+        banksList = model.dictionaryBankListLegacy?.filter({$0.paymentSystemCodeList?.first == "SFP"}) ?? []
+
         let viewLine = UIView()
         
         tableView.keyboardDismissMode = .interactive
@@ -141,7 +154,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         lastPaymentsCollectionView.showsHorizontalScrollIndicator = false
         viewLine.anchor(width:  UIScreen.main.bounds.width + 20, height: 1)
         viewLine.backgroundColor = UIColor(red: 0.96, green: 0.96, blue: 0.97, alpha: 1)
-    
+        
         userPhoneView.topLineView.isHidden = true
         switch seeall {
         case true:
@@ -177,7 +190,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
             if phone.first == "7" {
                 let mask = StringMask(mask: "+0 (000) 000-00-00")
                 let maskPhone = mask.mask(string: phone)
-
+                
                 self.selectPhoneNumber = maskPhone
                 
                 self.selectPhoneNumber = maskPhone
@@ -203,6 +216,37 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
             self.tableView.reloadData()
         }
         
+    }
+    
+    func getFastPaymentContractList() {
+        NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
+            if error != nil {
+
+            }
+            guard let model = model else { return }
+            
+            let a = model.data?.first
+            var b = a?.fastPaymentContractAttributeList?.first?.phoneNumber ?? ""
+            let clientID = a?.fastPaymentContractAttributeList?.first?.clientID ?? 0
+            if model.statusCode == 0 {
+                UserDefaults.standard.set(b, forKey: "UserPhone")
+                UserDefaults.standard.set(clientID, forKey: "clientId")
+                
+                if b.first == "7" {
+                    let mask = StringMask(mask: "+0 (000) 000-00-00")
+                    let maskPhone = mask.mask(string: b)
+                    self.userPhoneView.userPhone.text = maskPhone?.description
+                    
+                } else if b.first == "8" {
+                    b.removeFirst()
+                    let mask = StringMask(mask: "+7 (000) 000-00-00")
+                    let maskPhone = mask.mask(string: b)
+                    self.userPhoneView.userPhone.text = maskPhone?.description
+                }
+            } else {
+
+            }
+        }
     }
     
     fileprivate func configureTableView() {
@@ -249,16 +293,20 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
     }
     
     @objc func backButton(){
-        dismiss(animated: true, completion: nil)
+        if let viewModel = viewModel {
+            viewModel.closeAction()
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
     }
     
-        func showSelfPhoneView(_ value: Bool) {
-            if value == true {
-                userPhoneView.isHidden = false
-            } else {
-                userPhoneView.isHidden = true
-            }
+    func showSelfPhoneView(_ value: Bool) {
+        if value == true {
+            userPhoneView.isHidden = false
+        } else {
+            userPhoneView.isHidden = true
         }
+    }
     
     
     func passTextFieldText(textField: UITextField) {
@@ -338,15 +386,12 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
                     
                     if contacts.count == 0 {
                         message = "No contacts were found matching the given phone number."
-                        print(message!)
                     }
                 } catch {
                     message = "Unable to fetch contacts."
                 }
                 if message != nil {
-                    DispatchQueue.main.async {
-                        print(message!)
-                    }
+                    
                 } else {
                     // Success
                     DispatchQueue.main.async {
@@ -373,7 +418,6 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
                                                          keysToFetch: allowedContactKeys())
         }
         catch {
-            print("Error!")
         }
     }
     
@@ -638,10 +682,8 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
         
         NetworkManager<FastPaymentBanksListDecodableModel>.addRequest(.fastPaymentBanksList, [:], [:]) { model, error in
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 self.dismissActivity()
                 guard let data  = model.data else { return }
@@ -654,7 +696,6 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 }
             } else {
                 self.dismissActivity()
-                print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
         
@@ -665,10 +706,9 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
         NetworkManager<GetLatestPaymentsDecodableModel>.addRequest(.getLatestPayments, [:], [:]) { model, error in
             self.dismissActivity()
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
+
             }
             guard let model = model else { return }
-            print("DEBUG: LatestPayment: ", model)
             if model.statusCode == 0 {
                 guard let data  = model.data else { return }
                 DispatchQueue.main.async {
@@ -677,7 +717,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                     self.lastPaymentsCollectionView.reloadData()
                 }
             } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
+
             }
         }
     }
@@ -697,7 +737,6 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
         NetworkManager<GetLatestPhonePaymentsDecodableModel>.addRequest(.getLatestPhonePayments, [:], body) { model, error in
             self.dismissActivity()
             guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 self.dismissActivity()
                 guard let data  = model.data else { return }
@@ -717,7 +756,6 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 }
             } else {
                 self.dismissActivity()
-                print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
         
@@ -805,7 +843,6 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
                         for number in contact.phoneNumbers {
                             let phone: PhoneContact = .init(contact: contact)
                             phone.phoneNumber = phone.phoneNumber.filter({$0 == number.value.stringValue})
-                            print(number.value.stringValue)
                             self.reserveContacts.append(phone)
                         }
                     }
@@ -887,7 +924,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             }
             //Catching exception as enumerateContactsWithFetchRequest can throw errors
             catch let error as NSError {
-                print(error.localizedDescription)
+                
             }
             
         }
@@ -952,7 +989,6 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             return contactsForSection?.count ?? 0
         } else {
             if resultSearchController == true {
-                print(filteredContacts.count)
                 return filteredContacts.count
             }
             if let contactsForSection = orderedContacts[sortedContactKeys[section]] {
@@ -1091,7 +1127,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
         
         tableView.scrollToRow(at: IndexPath(row: 0, section: index), at: UITableView.ScrollPosition.top , animated: false)
         for item in orderedBanks {
-            print(item)
+
         }
         if firstTap{
             orderedBanks.removeAll()

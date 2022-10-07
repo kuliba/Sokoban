@@ -6,19 +6,20 @@
 //
 
 import UIKit
-import RealmSwift
 import SwiftUI
 import Combine
+import IQKeyboardManagerSwift
 
 //TODO: отрефакторить под сетевые запросы, вынести в отдельный файл
 class ConfirmViewControllerModel {
     
+    var operatorsViewModel: OperatorsViewModel?
     static var svgIcon = ""
-    lazy var realm = try? Realm()
     var type: PaymentType
     var paymentSystem: PaymentSystemList?
     var templateButtonViewModel: TemplateButtonViewModel?
     var template: PaymentTemplateData?
+    var closeAction: () -> Void = {}
     
     var cardFromRealm: UserAllCardsModel? {
         didSet {
@@ -28,6 +29,9 @@ class ConfirmViewControllerModel {
                 cardFromAccountId = ""
             } else if cardFrom.productType == "ACCOUNT" {
                 cardFromAccountId = "\(cardFrom.id)"
+                cardFromCardId = ""
+            } else if cardFrom.productType == "DEPOSIT" {
+                cardFromAccountId = "\(cardFrom.accountID)"
                 cardFromCardId = ""
             }
         }
@@ -202,8 +206,8 @@ class ConfirmViewControllerModel {
 
 class ContactConfurmViewController: UIViewController {
     
+    var operatorsViewModel: OperatorsViewModel?
     
-    lazy var realm = try? Realm()
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
@@ -291,6 +295,20 @@ class ContactConfurmViewController: UIViewController {
     var fromTitle = "От куда"
     var toTitle = "Куда"
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -312,13 +330,13 @@ class ContactConfurmViewController: UIViewController {
         NotificationCenter.default.addObserver(forName: NSNotification.Name("dismissSwiftUI"), object: nil, queue: nil) { data in
             
             let vc = PaymentsDetailsSuccessViewController()
-            vc.modalPresentationStyle = .fullScreen
             vc.confurmView.statusImageView.image = UIImage(named: "waiting")
             vc.confurmView.summLabel.text = self.summTransctionField.text
             vc.confurmView.statusLabel.text = "Перевод отменен!"
             vc.confurmView.operatorImageView.image = UIImage(named: "sbp-long")
             vc.confurmView.statusLabel.textColor = .red
             vc.confurmView.detailButtonsStackView.isHidden = true
+            vc.operatorsViewModel = self.operatorsViewModel
             if data.userInfo?.count ?? 0 > 0{
                 vc.confurmView.infoLabel.text = "Время на подтверждение\n перевода вышло"
                 vc.confurmView.infoLabel.isHidden = false
@@ -327,7 +345,7 @@ class ContactConfurmViewController: UIViewController {
                 vc.confurmView.infoLabel.text = ""
             }
 
-            self.present(vc, animated: true, completion: nil)
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
     
@@ -365,7 +383,6 @@ class ContactConfurmViewController: UIViewController {
     
     func setupData(with model: ConfirmViewControllerModel) {
         currTransctionField.isHidden = true
-        
         summTransctionField.text = model.summTransction
         taxTransctionField.text = model.taxTransction
 
@@ -479,15 +496,14 @@ class ContactConfurmViewController: UIViewController {
             if model.type == .phoneNumberSBP{
                 var sbpimage = UIImage()
                 
-                if let paymentSystems = Dict.shared.paymentList{
+                let paymentSystems = Model.shared.paymentSystemList.value.map { $0.getPaymentSystem() }
                 
-                    for system in paymentSystems{
-                        if system.code == "SFP"{
-                            sbpimage = system.svgImage?.convertSVGStringToImage() ?? UIImage()
-                        }
+                for system in paymentSystems {
+                    if system.code == "SFP" {
+                        sbpimage = system.svgImage?.convertSVGStringToImage() ?? UIImage()
                     }
-                    
-                }
+                } 
+                
                 let imageView = UIImageView(image: sbpimage)
                 let item = UIBarButtonItem(customView: imageView)
                 imageView.contentMode = .scaleAspectFit
@@ -560,7 +576,7 @@ class ContactConfurmViewController: UIViewController {
             
             bankField.text = model.bank?.memberNameRus ?? "" //"АйДиБанк"
             bankField.imageView.image = model.bank?.svgImage?.convertSVGStringToImage()
-            
+
             nameField.text =  model.fullName ?? "" //"Колотилин Михаил Алексеевич"
             countryField.text = model.country?.name?.capitalizingFirstLetter() ?? "" // "Армения"
             numberTransctionField.text = model.numberTransction  //"1235634790"
@@ -668,6 +684,18 @@ class ContactConfurmViewController: UIViewController {
             }
         }
         
+        var products: [UserAllCardsModel] = []
+        
+        let data = Model.shared.products.value
+        
+        for i in data {
+            
+            for i in i.value {
+                
+                products.append(i.userAllProducts())
+            }
+        }
+    
         if let cardModelFrom = model.cardFrom {
             cardFromField.cardModel = cardModelFrom
             if cardModelFrom.productType == "CARD" {
@@ -677,9 +705,8 @@ class ContactConfurmViewController: UIViewController {
             }
         } else {
             if model.cardFromCardId != "" || model.cardFromAccountId != "" || model.cardFromCardNumber.digits.count != 0 {
-                let cardList = self.realm?.objects(UserAllCardsModel.self)
-                let cards = cardList?.compactMap { $0 } ?? []
-                cards.forEach({ card in
+                
+                products.forEach({ card in
                     if String(card.id) == model.cardFromCardId || String(card.id) == model.cardFromAccountId || card.number?.suffix(4) == model.cardFromCardNumber.suffix(4) {
                         cardFromField.model = card
                         if card.productType == "CARD" {
@@ -705,9 +732,7 @@ class ContactConfurmViewController: UIViewController {
             toTitle = "На карту"
         } else {
             if model.cardToCardId != "" || model.cardToAccountId != "" || model.cardToCardNumber != ""{
-                let cardList = self.realm?.objects(UserAllCardsModel.self)
-                let cards = cardList?.compactMap { $0 } ?? []
-                cards.forEach({ card in
+                products.forEach({ card in
                     if String(card.id) == model.cardToCardId || String(card.id) == model.cardToAccountId || card.number?.suffix(4) == model.cardToCardNumber.suffix(4){
                         cardToField.model = card
                         if card.productType == "CARD" {
@@ -749,11 +774,30 @@ class ContactConfurmViewController: UIViewController {
         view.addSubview(stackView)
         
         stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                         left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20)
+                         left: view.leftAnchor, right: view.rightAnchor,
+                         paddingTop: 50)
         
         view.addSubview(doneButton)        
         doneButton.anchor(left: stackView.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: stackView.rightAnchor,
                           paddingLeft: 20, paddingBottom: 20, paddingRight: 20, height: 44)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
+    }
+
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if self.view.frame.origin.y != 0 {
+            self.view.frame.origin.y = 0
+        }
     }
     
     func doneButtonIsEnabled(_ isEnabled: Bool) {
@@ -775,12 +819,6 @@ class ContactConfurmViewController: UIViewController {
 
         showActivity()
         
-        self.timeOut() {
-            self.dismissActivity()
-            self.doneButtonIsEnabled(false)
-            return
-        }
-        
         switch confurmVCModel?.type {
         
         case .card2card, .requisites, .phoneNumber, .gkh, .mobilePayment:
@@ -788,7 +826,6 @@ class ContactConfurmViewController: UIViewController {
                 if error != nil {
                     self.dismissActivity()
                     self.doneButtonIsEnabled(false)
-                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                 }
                 
                 guard let model = response else { return }
@@ -802,8 +839,12 @@ class ContactConfurmViewController: UIViewController {
                         case "COMPLETE": self.confurmVCModel?.status = .succses
                         case "IN_PROGRESS": self.confurmVCModel?.status = .inProgress
                         case "REJECTED": self.confurmVCModel?.status = .error
-                        default:
-                            print("Не известный статус документа")
+                        default: break
+                        }
+                        
+                        if let closeAction = self.confurmVCModel?.closeAction {
+                            
+                            vc.closeAction = closeAction
                         }
                         
                         self.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
@@ -862,17 +903,27 @@ class ContactConfurmViewController: UIViewController {
                         }
                         
                         vc.confurmVCModel = self.confurmVCModel
-                        let nav = UINavigationController(rootViewController: vc)
-                        nav.modalPresentationStyle = .fullScreen
-                        self.present(nav, animated: true, completion: nil)
+                        vc.operatorsViewModel = self.operatorsViewModel
+                        self.navigationController?.pushViewController(vc, animated: true)
                         
                     }
+                } else if model.statusCode == 102 {
+                    
+                    self.doneButtonIsEnabled(false)
+
+                    if let errorMessage = model.errorMessage {
+                        
+                        self.showAlert(with: "Ошибка", and: errorMessage)
+                    }
+                    
                 } else {
 
                     self.dismissActivity()
                     self.doneButtonIsEnabled(false)
-                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
-                             
+                    if let errorMessage = model.errorMessage {
+                        
+                        self.showAlert(with: "Ошибка", and: errorMessage)
+                    }
                 }
             }
             
@@ -880,7 +931,6 @@ class ContactConfurmViewController: UIViewController {
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
                 self.dismissActivity()
                 if error != nil {
-                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                     self.doneButtonIsEnabled(false)
                 }
                 guard let model = respons else { return }
@@ -893,8 +943,7 @@ class ContactConfurmViewController: UIViewController {
                         case "COMPLETED": self.confurmVCModel?.status = .succses
                         case "IN_PROGRESS": self.confurmVCModel?.status = .inProgress
                         case "REJECTED": self.confurmVCModel?.status = .error
-                        default:
-                            print("Не известный статус документа")
+                        default: break
                         }
                         self.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
                         switch self.confurmVCModel?.type {
@@ -940,18 +989,23 @@ class ContactConfurmViewController: UIViewController {
                         }
                         
                         vc.confurmVCModel = self.confurmVCModel
-                        let nav = UINavigationController(rootViewController: vc)
-                        nav.modalPresentationStyle = .fullScreen
-                        self.present(nav, animated: true, completion: nil)
+                        vc.operatorsViewModel = self.operatorsViewModel
+                        self.navigationController?.pushViewController(vc, animated: true)
                     }
                 } else if model.statusCode == 102 {
                     self.doneButtonIsEnabled(false)
-                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз") {
-                        self.navigationController?.popViewController(animated: true)
+
+                    if let errorMessage = model.errorMessage {
+                        
+                        self.showAlert(with: "Ошибка", and: errorMessage)
                     }
+                    
                 } else {
                     self.doneButtonIsEnabled(false)
-                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
+                    if let errorMessage = model.errorMessage {
+                        
+                        self.showAlert(with: "Ошибка", and: errorMessage)
+                    }
                 }
             }
         }
@@ -982,46 +1036,6 @@ class ContactConfurmViewController: UIViewController {
                 completion(nil)
             }
         }
-    }
-    
-    private func timeOut(_ complition: @escaping () -> Void) {
-        var runCount = 0
-
-        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
-            runCount += 1
-            if runCount == 60 {
-                timer.invalidate()
-                let vc = PaymentsDetailsSuccessViewController()
-                self.confurmVCModel?.status = .timeOut
-                vc.confurmVCModel = self.confurmVCModel
-                let nav = UINavigationController(rootViewController: vc)
-                nav.modalPresentationStyle = .fullScreen
-                self.present(nav, animated: true, completion: nil)
-                complition()
-            }
-        }
-    }
-
-}
-
-
-extension ConfirmViewControllerModel {
-    
-    convenience init?(operation: OperationDetailDatum) {
-        
-        guard let transferType = operation.transferEnum, let operationType = PaymentType(with: transferType) else {
-            return nil
-        }
-
-        self.init(type: operationType)
-        
-        fullName = operation.payeeFullName
-        phone = operation.payeePhone
-        currancyTransction  =   operation.payerCurrency ?? ""
-        dateOfTransction = operation.transferDate ?? ""
-        taxTransction = String(operation.payerFee ?? 0)
-        summTransction = String(operation.payerAmount ?? 0)
-        cardFromAccountNumber = operation.payerAccountNumber ?? ""
     }
 }
 

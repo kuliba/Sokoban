@@ -21,6 +21,8 @@ class EPContactCell: UITableViewCell {
     var banks: BanksList?
     var needChek = false
 
+    let model: Model = .shared
+    
     override func awakeFromNib() {
         
         super.awakeFromNib()
@@ -48,11 +50,11 @@ class EPContactCell: UITableViewCell {
     
     func updateBankCell(){
         contactContainerView.layer.cornerRadius = 0
-        guard let banksList = Dict.shared.banks else {
+        guard let banksList = model.dictionaryBankListLegacy else {
             return
         }
         for item in banksList {
-            if item.memberID == banks?.memberID{
+            if item.memberID == banks?.memberID {
                 self.contactImageView?.image = item.svgImage?.convertSVGStringToImage()
             self.contactImageView.isHidden = false
             }
@@ -124,10 +126,8 @@ class EPContactCell: UITableViewCell {
         guard let number = number else { return }
         let body = [ "phoneNumber": number.digits ] as [String: AnyObject]
         NetworkManager<GetOwnerPhoneNumberPhoneDecodableModel>.addRequest(.getOwnerPhoneNumber, [:], body) { model, error in
-            print(body)
             if error != nil {
                 completion(false)
-                print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else { return }
             if model.statusCode == 0 {
@@ -138,7 +138,6 @@ class EPContactCell: UITableViewCell {
                 }
             } else {
                 completion(false)
-                    print("DEBUG: Error: ", model.errorMessage ?? "")
             }
         }
         

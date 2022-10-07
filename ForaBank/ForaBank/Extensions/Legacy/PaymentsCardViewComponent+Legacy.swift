@@ -7,18 +7,32 @@
 
 import Foundation
 import SwiftUI
-import RealmSwift
 
 extension PaymentsCardView.ViewModel {
     
-    convenience init(parameterCard: Payments.ParameterCard) {
+    convenience init(parameterCard: Payments.ParameterCard, model: Model) {
         
-        self.init(title: "", cardIcon: Self.cardIconPlaceholder, paymentSystemIcon: nil, name: "", amount: "", captionItems: [], state: .normal, model: .emptyMock, parameterCard: parameterCard)
+        self.init(title: "",
+                  cardIcon: Self.cardIconPlaceholder,
+                  paymentSystemIcon: nil,
+                  name: "",
+                  amount: "",
+                  captionItems: [],
+                  state: .normal,
+                  model: model,
+                  parameterCard: parameterCard)
         
-        if let realm = try? Realm(),
-           let product = productObject(products: realm.objects(UserAllCardsModel.self), value: parameterCard.parameter.value) {
+        if let value = parameterCard.parameter.value,
+           let productId = Int(value),
+           let product = model.paymentsProduct(with: productId)  {
             
-            update(with: product)
+                update(with: product)
+            
+        } else {
+            
+            if let firstProduct = model.productsData.first {
+                update(with: firstProduct)
+            }
         }
         
         bindLegacy()
@@ -38,14 +52,13 @@ extension PaymentsCardView.ViewModel {
                         switch state {
                         case .normal:
                             
-                            guard let realm = try? Realm() else { return }
-                            
-                            let productObjects: [UserAllCardsModel] = realm.objects(UserAllCardsModel.self).map{ $0 }
+                            let productObjects = model.productsData
                             guard productObjects.isEmpty == false else {
                                 return
                             }
                             
-                            let selectorViewModel = PaymentsProductSelectorView.ViewModel(data: productObjects)
+                            let selectorViewModel = PaymentsProductSelectorView.ViewModel.init(productsData: productObjects, model: model)
+                            
                             state = .expanded(selectorViewModel)
                             bindLegacy(selector: selectorViewModel)
                             
@@ -70,7 +83,8 @@ extension PaymentsCardView.ViewModel {
                 switch action {
                 case let payload as PaymentsProductSelectorView.ViewModelAction.SelectedProduct:
                     
-                    guard let realm = try? Realm(), let productObject = realm.objects(UserAllCardsModel.self).first(where: { $0.id == payload.productId })  else { return }
+                    guard let productObject = model.paymentsProduct(with: payload.productId)
+                    else { return }
                     
                     update(with: productObject)
                     withAnimation {
@@ -83,18 +97,19 @@ extension PaymentsCardView.ViewModel {
             }
     }
     
-    func update(with productObject: UserAllCardsModel) {
+    func update(with productObject: ProductData) {
         
-        guard let cardIconImage = productObject.smallDesign?.convertSVGStringToImage(),
-        let name = productObject.customName ?? productObject.mainField,
-        let currency = productObject.currency,
-        let cardNumber = productObject.accountNumber?.suffix(4) else {
-            return
-        }
+        guard let cardIconImage = productObject.smallDesign.uiImage,
+              let cardNumber = productObject.accountNumber?.suffix(4)
+        else { return }
+        
+        let name = productObject.customName ?? productObject.mainField
+        let balance = productObject.balance ?? 0
         
         self.cardIcon = Image(uiImage: cardIconImage)
 
-        if let paymentSystemImage = productObject.paymentSystemImage?.convertSVGStringToImage() {
+        if let productCardData = productObject as? ProductCardData,
+           let paymentSystemImage = productCardData.paymentSystemImage?.uiImage {
             
             self.paymentSystemIcon = Image(uiImage: paymentSystemImage)
             
@@ -104,21 +119,10 @@ extension PaymentsCardView.ViewModel {
         }
         
         self.name = name
-        self.amount = productObject.balance.currencyFormatter(symbol: currency)
+        self.amount = balance.currencyFormatter(symbol: productObject.currency)
         self.captionItems = [.init(title: String(cardNumber))]
         
         update(value: "\(productObject.id)")
     }
     
-    func productObject(products: Results<UserAllCardsModel>, value: String?) -> UserAllCardsModel? {
-        
-        if let value = value, let productId = Int(value) {
-            
-            return products.first(where: { $0.id == productId })
-            
-        } else {
-            
-            return products.first
-        }
-    }
 }

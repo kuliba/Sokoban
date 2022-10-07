@@ -15,7 +15,6 @@ protocol BiometricAgentProtocol {
 
 enum BiometricAgentError: Error {
 
-    case unableUsePolicy
-    case failedCheckPolicyWithError(Error)
+    case unableUsePolicy(Error?)
     case failedEvaluatePolicyWithError(Error)
 }

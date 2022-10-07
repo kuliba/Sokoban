@@ -19,7 +19,7 @@ struct GetProductListByFilterSaved {
         
 //        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, [:], [:]) { model, error in
 //            if error != nil {
-//                print("DEBUG: error", error!)
+//                
 //            } else {
 //                guard let model = model else { return }
 //                guard let additionalListData = model.data else { return }
@@ -54,9 +54,8 @@ struct GetProductListByFilterSaved {
 //                    realm?.delete(operators!)
 //                    realm?.add(additionalList)
 //                    try realm?.commitWrite()
-//                    print("REALM",realm?.configuration.fileURL?.absoluteString ?? "")
 //                } catch {
-//                    print(error.localizedDescription)
+//                    
 //                }
 //            }
 //        }

@@ -154,8 +154,7 @@ class SettingTableViewController: UITableViewController {
                 imagePickerController.sourceType = .photoLibrary
                 imagePickerController.navigationController?.navigationBar.tintColor = .black
                 self?.present(imagePickerController, animated: true, completion: nil)
-            default:
-                print()
+            default: break
             }
             
         }
@@ -250,7 +249,7 @@ class SettingTableViewController: UITableViewController {
         //TODO: - Написать очистку данных после выхода из приложения
         ClearRealm.clear()
         
-        AppDelegate.shared.isAuth = false
+//        AppDelegate.shared.isAuth = false
     }
     
     func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {

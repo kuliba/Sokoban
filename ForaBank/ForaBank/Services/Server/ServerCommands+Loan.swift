@@ -9,21 +9,17 @@ import Foundation
 
 extension ServerCommands {
     
-    //TODO: write tests ASAP
-    
     enum LoanController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/getPersonsCredit
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/getPersonsCredit
          */
         struct GetPersonsCredit: ServerCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/rest/getPersonsCredit"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -31,10 +27,16 @@ extension ServerCommands {
             }
             
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: PersonsCreditItem?
+                let data: ResultData?
+                
+                struct ResultData: Codable, Equatable {
+                    
+                    let original: PersonsCreditData
+                    let customName: String?
+                }
             }
             
             internal init(token: String, payload: Payload) {
@@ -51,7 +53,7 @@ extension ServerCommands {
          */
         struct SaveLoanName: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/saveLoanName"
             let method: ServerCommandMethod = .post
             let payload: BasePayload?
@@ -71,7 +73,7 @@ extension ServerCommands {
         }
         
         struct BasePayload: Encodable {
-
+            
             let endDate: String?
             let id: Int
             let name: String?

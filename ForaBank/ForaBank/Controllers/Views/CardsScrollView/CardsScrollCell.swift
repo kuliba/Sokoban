@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
    
     func configure<U>(with value: U) where U : Hashable {
@@ -16,11 +15,8 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         let viewModel = CardsScrollModel(card: card)
         balanceLabel.text = viewModel.balance
         maskCardLabel.text = viewModel.maskedcardNumber
-        logoImageView.image = viewModel.logoImage
         
     }
-    
-
   
     static var reuseId: String = "CardCell"
     //MARK: - Properties
@@ -28,12 +24,7 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         didSet { configure() }
     }
     
-    private let logoImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
 
-        return imageView
-    }()
     
     public let maskCardLabel: UILabel = {
         let label = UILabel()
@@ -45,7 +36,6 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
     public let balanceLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Inter-Regular", size: 11)
-//        label.font = UIFont.boldSystemFont(ofSize: 11 )
         label.textAlignment = .left
         label.text = ""
         return label
@@ -81,7 +71,7 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
     //MARK: - Selectors
     
     @objc func hendleShareTapped() {
-        print(#function)
+        
     }
     
     //MARK: - Helpers
@@ -97,7 +87,6 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         cardNameLabel.alpha = 0.5
         maskCardLabel.text = viewModel.maskedcardNumber
         maskCardLabel.textColor = viewModel.colorText
-        logoImageView.image = viewModel.logoImage
     }
     
     func setupUI() {
@@ -107,16 +96,13 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         layer.shadowRadius = 6
         layer.shadowOpacity = 0.3
         layer.shadowOffset = CGSize()
-//        0.785
         let shadowPath = UIBezierPath(
             rect: CGRect(x: 15, y: 20,
                          width: self.frame.width * 0.785,
                          height: self.frame.height * 0.785))
         layer.shadowPath = shadowPath.cgPath
         
-        
         addSubview(backgroundImageView)
-        addSubview(logoImageView)
         addSubview(maskCardLabel)
         addSubview(cardNameLabel)
         addSubview(balanceLabel)
@@ -124,10 +110,6 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         backgroundImageView.fillSuperview()
         
         maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingTop: 12, paddingLeft: 37, paddingRight: 12)
-        
-        logoImageView.centerY(inView: maskCardLabel)
-        logoImageView.anchor(left: self.leftAnchor,
-                             paddingLeft: 8, width: 18, height: 18)
         
         
         cardNameLabel.anchor(left: self.leftAnchor, bottom: balanceLabel.topAnchor, right: self.rightAnchor, paddingTop: 25, paddingLeft: 8, paddingRight: 8)

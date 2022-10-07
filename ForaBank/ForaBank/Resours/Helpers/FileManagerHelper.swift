@@ -30,9 +30,8 @@ struct FileManagerHandler {
         let url = self.getDocumentsDirectory().appendingPathComponent(filePath)
         do {
             try fileText.write(to: url, atomically: true, encoding: .utf8)
-//            print("FileText", try String(contentsOf: url) )
         } catch {
-            print(error.localizedDescription)
+            
         }
     }
     
@@ -43,7 +42,7 @@ struct FileManagerHandler {
         do {
             input = try String(contentsOf: url, encoding: .utf8)
         } catch {
-            print(error.localizedDescription)
+            
         }
         return input
     }
@@ -55,7 +54,7 @@ struct FileManagerHandler {
             let url = self.getDocumentsDirectory().appendingPathComponent(filePath)
             try filemgr.removeItem(atPath: url.path)
         } catch let error {
-            print("Error: \(error.localizedDescription)")
+
         }
     }
     

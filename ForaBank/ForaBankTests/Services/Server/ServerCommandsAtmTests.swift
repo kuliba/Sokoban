@@ -54,7 +54,7 @@ class ServerCommandsAtmTests: XCTestCase {
         let version = 123
         
         // when
-        let command = ServerCommands.AtmController.GetAtmList(version: version)
+        let command = ServerCommands.AtmController.GetAtmList(token: "", version: version)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -104,7 +104,7 @@ class ServerCommandsAtmTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.AtmController.GetAtmServiceList(serial: serial)
+        let command = ServerCommands.AtmController.GetAtmServiceList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -155,7 +155,7 @@ class ServerCommandsAtmTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.AtmController.GetAtmTypeList(serial: serial)
+        let command = ServerCommands.AtmController.GetAtmTypeList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -205,7 +205,7 @@ class ServerCommandsAtmTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.AtmController.GetMetroStationList(serial: serial)
+        let command = ServerCommands.AtmController.GetMetroStationList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -255,7 +255,7 @@ class ServerCommandsAtmTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.AtmController.GetCityList(serial: serial)
+        let command = ServerCommands.AtmController.GetCityList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -305,7 +305,7 @@ class ServerCommandsAtmTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.AtmController.GetRegionList(serial: serial)
+        let command = ServerCommands.AtmController.GetRegionList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)

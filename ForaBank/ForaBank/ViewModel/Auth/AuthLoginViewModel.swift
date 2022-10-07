@@ -14,60 +14,65 @@ class AuthLoginViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     
     let header: HeaderViewModel
-    lazy var card: CardViewModel = CardViewModel(scanButton: .init(action: { self.action.send(AuthLoginViewModelAction.Show.Scaner()) }), textField: .init(masks: [.card, .account], regExp: "[0-9]"), nextButton: nil, state: .editing)
+    lazy var card: CardViewModel = CardViewModel(scanButton: .init(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Show.Scaner()) }), textField: .init(masks: [.card, .account], regExp: "[0-9]"), nextButton: nil, state: .editing)
     
-    @Published var productsButton: ProductsButtonViewModel?
+    let products: ProductsViewModel
+
+    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var isLinkActive: Bool = false
     
-    @Published var isConfirmViewPresented: Bool
-    var confirmViewModel: AuthConfirmViewModel?
-    
-    @Published var isProductsViewPresented: Bool
-    var productsViewModel: AuthProductsViewModel?
-    
-    @Published var cardScanner: AuthCardScannerViewModel?
+    @Published var cardScanner: CardScannerViewModel?
     @Published var alert: Alert.ViewModel?
     
-    private let rootActions: RootViewModel.AuthActions
+    private let rootActions: RootViewModel.RootActions
     private let model: Model
     private var bindings = Set<AnyCancellable>()
 
-    init(header: HeaderViewModel = HeaderViewModel(), productsButton: ProductsButtonViewModel? = nil,  isConfirmViewPresented: Bool = false, isProductsViewPresented: Bool = false, rootActions: RootViewModel.AuthActions, model: Model = .emptyMock) {
+    init(header: HeaderViewModel = HeaderViewModel(), products: ProductsViewModel, rootActions: RootViewModel.RootActions, model: Model = .emptyMock) {
 
         self.header = header
-        self.productsButton = productsButton
-        self.isConfirmViewPresented = isConfirmViewPresented
-        self.isProductsViewPresented = isProductsViewPresented
+        self.products = products
         self.rootActions = rootActions
         self.model = model
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "initialized")
     }
     
-    init(_ model: Model, rootActions: RootViewModel.AuthActions) {
+    convenience init(_ model: Model, rootActions: RootViewModel.RootActions) {
         
-        self.model = model
-        self.header = HeaderViewModel()
-        self.isConfirmViewPresented = false
-        self.isProductsViewPresented = false
-        self.rootActions = rootActions
+        self.init(header: HeaderViewModel(), products: .init(button: nil), rootActions: rootActions, model: model)
         
         bind()
     }
     
     private func bind() {
-        
+
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 
                 switch action {
-                case let payload as ModelAction.Auth.Register.Response:
+                case let payload as ModelAction.Auth.CheckClient.Response:
+                    LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.CheckClient.Response")
+                    
                     self.action.send(AuthLoginViewModelAction.Spinner.Hide())
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "sent AuthLoginViewModelAction.Spinner.Hide")
+                    
                     switch payload {
                     case .success(codeLength: let codeLength, phone: let phone, resendCodeDelay: let resendCodeDelay):
-                        confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: codeLength, phoneNumber: phone, resendCodeDelay: resendCodeDelay, backAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Confirm())}, rootActions: rootActions)
-                        isConfirmViewPresented = true
+                        LoggerAgent.shared.log(category: .ui, message: "ModelAction.Auth.CheckClient.Response: success")
                         
+                        let confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: codeLength, phoneNumber: phone, resendCodeDelay: resendCodeDelay, backAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Close.Link())}, rootActions: rootActions)
+                        
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "presented confirm view")
+                        link = .confirm(confirmViewModel)
+     
                     case .failure(message: let message):
+                        LoggerAgent.shared.log(category: .ui, message: "ModelAction.Auth.CheckClient.Response: failure message \(message)")
+                        
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "alert presented")
                         alert = .init(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
+                        
                     }
     
                 default:
@@ -82,40 +87,50 @@ class AuthLoginViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as AuthLoginViewModelAction.Register:
-                    model.action.send(ModelAction.Auth.Register.Request(number: payload.cardNumber))
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Register")
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "send ModelAction.Auth.CheckClient.Request number: ...\(payload.cardNumber.suffix(4))")
+                    model.action.send(ModelAction.Auth.CheckClient.Request(number: payload.cardNumber))
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "dismiss keyboard")
                     card.textField.dismissKeyboard()
+                    
                     self.action.send(AuthLoginViewModelAction.Spinner.Show())
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "sent AuthLoginViewModelAction.Spinner.Show")
                     
                 case _ as AuthLoginViewModelAction.Show.Products:
-                    productsViewModel = AuthProductsViewModel(model, products: model.catalogProducts.value, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Products())})
-                    isProductsViewPresented = true
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Show.Products")
+                    
+                    let productsViewModel = AuthProductsViewModel(model, products: model.catalogProducts.value, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Close.Link())})
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "presented products view")
+                    link = .products(productsViewModel)
                     
                 case _ as AuthLoginViewModelAction.Show.Scaner:
-                    cardScanner = .init(scannedAction: { [weak self] value in
-                        
-                        guard let self = self else {
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Show.Scaner")
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "presented card scanner")
+                    cardScanner = .init(closeAction: { number in
+                        guard let value = number else {
+                            self.cardScanner = nil
                             return
                         }
-                        
                         let filterredValue = (try? value.filterred(regEx: self.card.textField.regExp)) ?? value
                         let maskedValue = filterredValue.masked(masks: self.card.textField.masks)
                         self.card.textField.text = maskedValue
                         self.cardScanner = nil
-                        
-                    }, dismissAction: { [weak self] in self?.cardScanner = nil })
+                    })
                     
-                case _ as AuthLoginViewModelAction.Dismiss.Confirm:
-                    confirmViewModel = nil
-                    isConfirmViewPresented = false
-                    
-                case _ as AuthLoginViewModelAction.Dismiss.Products:
-                    productsViewModel = nil
-                    isProductsViewPresented = false
+                case _ as AuthLoginViewModelAction.Close.Link:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Close.Link")
+                    link = nil
                     
                 case _ as AuthLoginViewModelAction.Spinner.Show:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Spinner.Show")
                     rootActions.spinner.show()
                     
                 case _ as AuthLoginViewModelAction.Spinner.Hide:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Spinner.Hide")
                     rootActions.spinner.hide()
                     
                 default:
@@ -125,6 +140,7 @@ class AuthLoginViewModel: ObservableObject {
             }.store(in: &bindings)
                 
         card.$state
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] cardState in
                 
@@ -133,8 +149,10 @@ class AuthLoginViewModel: ObservableObject {
                     card.nextButton = nil
                     return
                 }
+                LoggerAgent.shared.log(category: .ui, message: "card state: .ready")
                 
-                card.nextButton = CardViewModel.NextButtonViewModel(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Register.init(cardNumber: cardNumber))})
+                LoggerAgent.shared.log(level: .debug, category: .ui, message: "next button presented")
+                card.nextButton = CardViewModel.NextButtonViewModel(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Register(cardNumber: cardNumber))})
                 
             }.store(in: &bindings)
         
@@ -144,14 +162,28 @@ class AuthLoginViewModel: ObservableObject {
                 
                 if catalogProducts.count > 0 {
                     
-                    productsButton = ProductsButtonViewModel(action: { self.action.send(AuthLoginViewModelAction.Show.Products()) })
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "catalog products button presented")
                     
+                    withAnimation {
+                        products.button = .init(action: { self.action.send(AuthLoginViewModelAction.Show.Products()) })
+                    }
+
+
                 } else {
                     
-                    productsButton = nil
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "catalog products button dismissed")
+                    
+                    withAnimation {
+                        products.button = nil
+                    }
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    deinit {
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
 }
 
@@ -226,20 +258,36 @@ extension AuthLoginViewModel {
             let action: () -> Void
         }
         
-        enum State {
+        enum State: Hashable {
             
             case editing
             case ready(String)
         }
     }
 
-    struct ProductsButtonViewModel {
+    class ProductsViewModel: ObservableObject {
+        
+        @Published var button: ButtonViewModel?
+        
+        init(button: ButtonViewModel?) {
+            
+            self.button = button
+        }
 
-        let icon: Image = .ic40Card
-        let title = "Нет карты?"
-        let subTitle = "Доставим в любую точку"
-        let arrowRight: Image = .ic24ArrowRight
-        let action: () -> Void
+        struct ButtonViewModel {
+            
+            let icon: Image = .ic40Card
+            let title = "Нет карты?"
+            let subTitle = "Доставим в любую точку"
+            let arrowRight: Image = .ic24ArrowRight
+            let action: () -> Void
+        }
+    }
+    
+    enum Link {
+        
+        case confirm(AuthConfirmViewModel)
+        case products(AuthProductsViewModel)
     }
 }
 
@@ -259,11 +307,9 @@ enum AuthLoginViewModelAction {
         struct Products: Action { }
     }
     
-    enum Dismiss {
+    enum Close {
         
-        struct Confirm: Action {}
-        
-        struct Products: Action { }
+        struct Link: Action {}
     }
     
     enum Spinner {

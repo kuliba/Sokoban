@@ -7,8 +7,9 @@
 
 import Foundation
 
-struct CatalogProductData: Decodable, Equatable, Cachable {
-
+struct CatalogProductData: Codable, Equatable, Hashable, Identifiable {
+    
+    var id: Int { hashValue }
     let name: String
     let description: [String]
     let imageEndpoint: String

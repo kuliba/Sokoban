@@ -61,18 +61,24 @@
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<string>qr.nspk.ru</string>
+		<string>sbpay</string>
 		<string>maps</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Можно сканировать номер карты, а не заполнять с клавиатуры</string>
+	<string>Разрешите приложению доступ, чтобы сканировать QR-код, номер карты и использовать другие возможности</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Разрешите доступ к контактам</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Доступ к камере позволит использовать FaceId</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Ваше местоположение позволит показать ближайшие банкоматы</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Разрешите доступ к микрофону</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Разрешите приложению доступ, чтобы устанавливать фото профиля и использовать другие возможности</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Inter-Regular.ttf</string>
