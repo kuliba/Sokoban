@@ -208,6 +208,8 @@ extension ProductSelectorView {
 
                                 content = .product(productViewModel)
                                 self.list = nil
+                                
+                                self.action.send(ProductSelectorAction.Selected(id: product.id))
                             }
                             
                         default:

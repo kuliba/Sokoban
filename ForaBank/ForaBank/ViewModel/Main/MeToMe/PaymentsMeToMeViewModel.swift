@@ -21,6 +21,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
     let closeAction: () -> Void
     
     private var bindings = Set<AnyCancellable>()
+    private var bindingsFrom = Set<AnyCancellable>()
     
     init(_ model: Model, swapViewModel: ProductsSwapView.ViewModel, paymentsAmount: PaymentsAmountView.ViewModel, title: String = "Между своими", closeAction: @escaping () -> Void) {
         
@@ -56,27 +57,47 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     switch from.content {
                     case let .product(viewModel):
                         
-                        if let product = model.product(productId: viewModel.id) {
-
-                            let currency = Currency(description: product.currency)
-                            let formatter: NumberFormatter = .currency(with: currency.currencySymbol)
-                            
-                            let value = paymentsAmount.textField.value
-                            
-                            guard let stringValue = formatter.string(from: .init(value: value)) else {
-                                return
-                            }
-                            
-                            paymentsAmount.textField.formatter.currencySymbol = currency.currencySymbol
-                            paymentsAmount.textField.text = stringValue
-                        }
+                        updateTextField(viewModel.id, textField: paymentsAmount.textField)
                         
                     case .placeholder:
                         break
                     }
+                    
+                    bindingsFrom = Set<AnyCancellable>()
+                    
+                    from.action
+                        .receive(on: DispatchQueue.main)
+                        .sink { [unowned self] action in
+                            
+                            switch action {
+                            case let payload as ProductSelectorAction.Selected:
+                                
+                                updateTextField(payload.id, textField: paymentsAmount.textField)
+                                
+                            default:
+                                break
+                            }
+                            
+                        }.store(in: &bindingsFrom)
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    private func updateTextField(_ id: ProductData.ID, textField: TextFieldFormatableView.ViewModel) {
+        
+        if let product = model.product(productId: id) {
+
+            let currency = Currency(description: product.currency)
+            let formatter: NumberFormatter = .currency(with: currency.currencySymbol)
+
+            guard let stringValue = formatter.string(from: .init(value: textField.value)) else {
+                return
+            }
+            
+            textField.formatter.currencySymbol = currency.currencySymbol
+            textField.text = stringValue
+        }
     }
 }
 
