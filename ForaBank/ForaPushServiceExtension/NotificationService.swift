@@ -7,31 +7,32 @@
 
 import UserNotifications
 
-class NotificationService: UNNotificationServiceExtension {
-    
-    var contentHandler: ((UNNotificationContent) -> Void)?
-    var bestAttemptContent: UNMutableNotificationContent?
-    
+final class NotificationService: UNNotificationServiceExtension {
+
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
-        self.contentHandler = contentHandler
-        bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
+       
+        let content = UNMutableNotificationContent()
+        content.body = request.content.body.description
         
-        if let bestAttemptContent = bestAttemptContent {
-            let cloudID = "\(bestAttemptContent.userInfo["cloud_id"] ?? "empty")"
-            let eventID = "\( bestAttemptContent.userInfo["event_id"] ?? "empty")"
-            
-            ApiRequestsForPush.changeNotificationStatus (eventId: eventID, cloudId: cloudID, status: "DELIVERED") { model, error in
-                contentHandler(bestAttemptContent)
-            }
+        if let cloudId = request.content.userInfo[Push.CodingKeys.cloudId.rawValue] as? String, let eventId = request.content.userInfo[Push.CodingKeys.eventId.rawValue] as? String {
+
+            guard let requestUrl = try? RouterUrlList.changeNotificationStatus.returnUrl().get() else { return }
+
+            var request = URLRequest(url: requestUrl)
+            request.httpMethod = "POST"
+
+            request.setValue("application/json", forHTTPHeaderField: "Accept")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+            let notificationStatus = NotificationStatusData(eventId: eventId, cloudId: cloudId, status: .delivered)
+            let jsonData = try? JSONEncoder().encode(notificationStatus)
+
+            request.httpBody = jsonData
+
+            let task = URLSession.shared.dataTask(with: request)
+            task.resume()
         }
+        
+        contentHandler(content)
     }
-    
-    override func serviceExtensionTimeWillExpire() {
-        // Called just before the extension will be terminated by the system.
-        // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
-        if let contentHandler = contentHandler, let bestAttemptContent =  bestAttemptContent {
-            contentHandler(bestAttemptContent)
-        }
-    }
-    
 }

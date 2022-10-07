@@ -377,6 +377,12 @@ class Model {
                 case _ as ModelAction.App.Activated:
                     LoggerAgent.shared.log(category: .model, message: "received ModelAction.App.Activated")
                     
+                    //FIXME: workaround for push notification extension
+                    if auth.value == .registerRequired {
+                        
+                        auth.value = keychainAgent.isStoredString(values: [.pincode, .serverDeviceGUID]) ? .signInRequired : .registerRequired
+                    }
+                    
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.App.Activated")
                     sessionAgent.action.send(SessionAgentAction.App.Activated())
                     
