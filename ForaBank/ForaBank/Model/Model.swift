@@ -157,7 +157,6 @@ class Model {
         self.clientName = .init(nil)
         self.fastPaymentContractFullInfo = .init([])
         self.currentUserLoaction = .init(nil)
-        self.notificationsTransition = .init(userInfo: [:])
         self.notificationsTransition = nil
         self.dictionariesUpdating = .init([])
         self.userSettings = .init([])
@@ -375,6 +374,12 @@ class Model {
 
                 case _ as ModelAction.App.Activated:
                     LoggerAgent.shared.log(category: .model, message: "received ModelAction.App.Activated")
+                    
+                    //FIXME: workaround for push notification extension
+                    if auth.value == .registerRequired {
+                        
+                        auth.value = keychainAgent.isStoredString(values: [.pincode, .serverDeviceGUID]) ? .signInRequired : .registerRequired
+                    }
                     
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.App.Activated")
                     sessionAgent.action.send(SessionAgentAction.App.Activated())
@@ -786,7 +791,7 @@ class Model {
 
                 case let payload as ModelAction.Account.MakeOpenAccount.Response:
                     handleMakeOpenAccountUpdate(payload: payload)
-                
+                    
                 //MARK: - DeepLink
 
                 case let payload as ModelAction.DeepLink.Set:
