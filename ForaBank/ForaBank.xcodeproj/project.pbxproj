@@ -1043,26 +1043,14 @@
 		A55A52DB2746FF1700641DD0 /* InternetTVMainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55A52DA2746FF1700641DD0 /* InternetTVMainController.swift */; };
 		A55E653827F6D7D7005CED37 /* C2BDetailsInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55E653727F6D7D7005CED37 /* C2BDetailsInputView.swift */; };
 		A55E653A27F6D9AD005CED37 /* C2BDetailsInput.xib in Resources */ = {isa = PBXBuildFile; fileRef = A55E653927F6D9AD005CED37 /* C2BDetailsInput.xib */; };
-		A55E87842823F5B000562060 /* ModelAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58E8277237190054D75C /* ModelAction.swift */; };
 		A55E87872823F65A00562060 /* ServerStatusCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DC126C2770F84B00C917B0 /* ServerStatusCode.swift */; };
 		A55E87882823F66100562060 /* EmptyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DC12702771080400C917B0 /* EmptyData.swift */; };
-		A55E87892823F6A000562060 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58EB277237720054D75C /* Action.swift */; };
-		A55E878B2823F88A00562060 /* ApiRequestsForPush.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55E878A2823F88900562060 /* ApiRequestsForPush.swift */; };
-		A55E878C2823F88A00562060 /* ApiRequestsForPush.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55E878A2823F88900562060 /* ApiRequestsForPush.swift */; };
-		A55E878E2823FFA600562060 /* NetworkModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */; };
-		A55E878F2823FFAF00562060 /* RouterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF68209266F9EC800FD5C07 /* RouterManager.swift */; };
-		A55E87902823FFE800562060 /* MakeTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18C426852EFC0007CC75 /* MakeTransferDecodableModel.swift */; };
 		A55E87912824001600562060 /* RouterSassionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF68207266F9EC800FD5C07 /* RouterSassionConfiguration.swift */; };
 		A55E87922824002B00562060 /* CSRFToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48A4267E72130037EA06 /* CSRFToken.swift */; };
-		A55E87942824005300562060 /* GCDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDFE39E2756A99E00F57C71 /* GCDHelper.swift */; };
 		A55E8796282402B100562060 /* RouterUrlList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF6820C266F9EC800FD5C07 /* RouterUrlList.swift */; };
 		A55E87972824043C00562060 /* URLConstruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF68202266F9EC800FD5C07 /* URLConstruct.swift */; };
 		A55E8798282404E800562060 /* RouterBaseUrlList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF6820B266F9EC800FD5C07 /* RouterBaseUrlList.swift */; };
-		A55E87992824050200562060 /* RequestMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681FE266F9EC800FD5C07 /* RequestMethod.swift */; };
-		A55E879A2824051E00562060 /* URLSchemeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF68201266F9EC800FD5C07 /* URLSchemeType.swift */; };
 		A55E879B2824052600562060 /* URLHostType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF68200266F9EC800FD5C07 /* URLHostType.swift */; };
-		A55E879C2824054000562060 /* RouterError.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF68205266F9EC800FD5C07 /* RouterError.swift */; };
-		A55E879D2824055600562060 /* LoginDoCodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F8266F9EC800FD5C07 /* LoginDoCodableModel.swift */; };
 		A5662694275D3CD000FFE31A /* InternetTVSelectDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5662693275D3CD000FFE31A /* InternetTVSelectDialog.swift */; };
 		A5662696275E945A00FFE31A /* InternetTVSelectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5662695275E945A00FFE31A /* InternetTVSelectController.swift */; };
 		A5662698275FDD2400FFE31A /* checkBtn.xib in Resources */ = {isa = PBXBuildFile; fileRef = A5662697275FDD2300FFE31A /* checkBtn.xib */; };
@@ -1093,6 +1081,13 @@
 		A5F15C0F274980CB00DC91DA /* InternetTVLatestOperationRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C0E274980CB00DC91DA /* InternetTVLatestOperationRealm.swift */; };
 		A5F15C11274985C900DC91DA /* InternetTVLatestOperationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C10274985C900DC91DA /* InternetTVLatestOperationsModel.swift */; };
 		C10F481928E4A52F009918EA /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10F481828E4A52F009918EA /* PushNotification.swift */; };
+		C10F481C28E6E335009918EA /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10F481828E4A52F009918EA /* PushNotification.swift */; };
+		C10F482B28E753ED009918EA /* NotificationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774CA5DD287962BA00544C17 /* NotificationStatus.swift */; };
+		C10F482C28E753FD009918EA /* Unknownable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77448C06286E2087009EEEA8 /* Unknownable.swift */; };
+		C10F482D28EB1DB1009918EA /* URLSchemeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF68201266F9EC800FD5C07 /* URLSchemeType.swift */; };
+		C10F482E28EB1DC4009918EA /* RouterError.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF68205266F9EC800FD5C07 /* RouterError.swift */; };
+		C10F482F28EB1E67009918EA /* LoggerAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CB588D28ABCB15003064B0 /* LoggerAgent.swift */; };
+		C10F483028EB1E6C009918EA /* LoggerAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CB588B28ABCA7A003064B0 /* LoggerAgentProtocol.swift */; };
 		C181083928E3535E002FCC3A /* Model+DeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = C181083828E3535E002FCC3A /* Model+DeepLink.swift */; };
 		C1A2CCE328DB7348009436D6 /* DepositCloseNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A2CCE228DB7348009436D6 /* DepositCloseNotification.swift */; };
 		DD9B05FBC9842381D93B344A /* Font+Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70B9838CDF23BDFFAC34257 /* Font+Assets.swift */; };
@@ -2460,7 +2455,6 @@
 		A55A52DA2746FF1700641DD0 /* InternetTVMainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVMainController.swift; sourceTree = "<group>"; };
 		A55E653727F6D7D7005CED37 /* C2BDetailsInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C2BDetailsInputView.swift; sourceTree = "<group>"; };
 		A55E653927F6D9AD005CED37 /* C2BDetailsInput.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = C2BDetailsInput.xib; sourceTree = "<group>"; };
-		A55E878A2823F88900562060 /* ApiRequestsForPush.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequestsForPush.swift; sourceTree = "<group>"; };
 		A5662693275D3CD000FFE31A /* InternetTVSelectDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVSelectDialog.swift; sourceTree = "<group>"; };
 		A5662695275E945A00FFE31A /* InternetTVSelectController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVSelectController.swift; sourceTree = "<group>"; };
 		A5662697275FDD2300FFE31A /* checkBtn.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = checkBtn.xib; sourceTree = "<group>"; };
@@ -5572,7 +5566,6 @@
 				77370907284E01490033B1CA /* ForaPushServiceExtension.entitlements */,
 				A515682E2821B927000D4455 /* NotificationService.swift */,
 				A51568302821B927000D4455 /* Info.plist */,
-				A55E878A2823F88900562060 /* ApiRequestsForPush.swift */,
 			);
 			path = ForaPushServiceExtension;
 			sourceTree = "<group>";
@@ -7757,26 +7750,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A55E878C2823F88A00562060 /* ApiRequestsForPush.swift in Sources */,
-				A55E87842823F5B000562060 /* ModelAction.swift in Sources */,
-				A55E879C2824054000562060 /* RouterError.swift in Sources */,
+				C10F483028EB1E6C009918EA /* LoggerAgentProtocol.swift in Sources */,
+				C10F482F28EB1E67009918EA /* LoggerAgent.swift in Sources */,
+				C10F482E28EB1DC4009918EA /* RouterError.swift in Sources */,
+				C10F482D28EB1DB1009918EA /* URLSchemeType.swift in Sources */,
+				C10F482C28E753FD009918EA /* Unknownable.swift in Sources */,
+				C10F482B28E753ED009918EA /* NotificationStatus.swift in Sources */,
+				C10F481C28E6E335009918EA /* PushNotification.swift in Sources */,
 				A55E87922824002B00562060 /* CSRFToken.swift in Sources */,
-				A55E878F2823FFAF00562060 /* RouterManager.swift in Sources */,
 				A515682F2821B927000D4455 /* NotificationService.swift in Sources */,
-				A55E87942824005300562060 /* GCDHelper.swift in Sources */,
-				A55E87902823FFE800562060 /* MakeTransferDecodableModel.swift in Sources */,
-				A55E878E2823FFA600562060 /* NetworkModelProtocol.swift in Sources */,
-				A55E879A2824051E00562060 /* URLSchemeType.swift in Sources */,
 				A55E879B2824052600562060 /* URLHostType.swift in Sources */,
-				A55E87992824050200562060 /* RequestMethod.swift in Sources */,
 				A55E8796282402B100562060 /* RouterUrlList.swift in Sources */,
 				A55E87912824001600562060 /* RouterSassionConfiguration.swift in Sources */,
 				A55E87872823F65A00562060 /* ServerStatusCode.swift in Sources */,
-				A55E87892823F6A000562060 /* Action.swift in Sources */,
 				A55E87882823F66100562060 /* EmptyData.swift in Sources */,
 				A55E87972824043C00562060 /* URLConstruct.swift in Sources */,
 				A55E8798282404E800562060 /* RouterBaseUrlList.swift in Sources */,
-				A55E879D2824055600562060 /* LoginDoCodableModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8065,7 +8054,6 @@
 				7769F5B727D26DD500F80607 /* CollapsableSectionView.swift in Sources */,
 				7769F5B727D26DD500F80607 /* CollapsableSectionView.swift in Sources */,
 				6820929027AB1004003DCAFD /* FastPaymentContractClAttributeTypeData.swift in Sources */,
-				A55E878B2823F88A00562060 /* ApiRequestsForPush.swift in Sources */,
 				68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */,
 				77333DA3283F75EF00C3036F /* Model+ClientInfo.swift in Sources */,
 				0B66E8DA26CC5F1E00FD735D /* SquareView.swift in Sources */,

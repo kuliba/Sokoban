@@ -50,8 +50,6 @@ class RootViewModel: ObservableObject, Resetable {
         chatViewModel.reset()
     }
     
-
-    
     private func bindAuth() {
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "bind auth")
