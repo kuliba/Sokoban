@@ -61,13 +61,14 @@
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<string>qr.nspk.ru</string>
 		<string>sbpay</string>
 		<string>maps</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Разрешите доступ к камере</string>
+	<string>Разрешите приложению доступ, чтобы сканировать QR-код, номер карты и использовать другие возможности</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Разрешите доступ к контактам</string>
 	<key>NSFaceIDUsageDescription</key>
@@ -77,7 +78,7 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Разрешите доступ к микрофону</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Разрешите доступ к фото</string>
+	<string>Разрешите приложению доступ, чтобы устанавливать фото профиля и использовать другие возможности</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Inter-Regular.ttf</string>

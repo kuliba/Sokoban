@@ -18,7 +18,8 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     var amount = "0.0"
     var modeConsent = "update"
     var contractId = ""
-    
+    var closeAction: () -> Void = {}
+    var operationLimit = 0.0
     
     @IBOutlet weak var viewLimit: UIView!
     
@@ -119,7 +120,8 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
                 self.viewReceiver.isHidden = false
-                let cardList = ReturnAllCardList.cards()
+                let cardList = ReturnAllCardList.cards().uniqueValues(value: {$0.accountID})
+                
                 cardList.forEach({ card in
                     if card.id == cardId {
                         self.cardFromField.model = card
@@ -207,8 +209,20 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
             })
             let clientId = Model.shared.clientInfo.value?.id
             
-            self.cardListView.cardList = filterProduct.filter({$0.ownerID == clientId})
-            self.cardFromField.model = filterProduct.first
+            self.cardListView.cardList = filterProduct.filter({$0.ownerID == clientId}).uniqueValues(value: {$0.accountID})
+            let accountId = self.model.fastPaymentContractFullInfo.value.first?.fastPaymentContractAccountAttributeList?.first?.accountId
+            
+            if filterProduct.filter({$0.id == accountId}).count >= 1 {
+                
+                self.cardFromField.model = filterProduct.filter({$0.id == accountId}).first
+            } else if filterProduct.filter({$0.cardID == accountId}).count >= 1 {
+                
+                self.cardFromField.model = filterProduct.filter({$0.cardID == accountId}).first
+                
+            } else {
+                
+                self.cardFromField.model = filterProduct.first
+            }
         }
     }
     
@@ -228,18 +242,17 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         }
         let amountFound = params?.filter({ $0.type == "AMOUNT" })
         if (amountFound != nil && amountFound?.count ?? 0 > 0) {
-            amount = amountFound?[0].value ?? ""
+            amount = amountFound?.first?.value ?? ""
         }
         let bankRecipientFound = params?.filter({ $0.type == "BANK" })
         if (bankRecipientFound != nil && bankRecipientFound?.count ?? 0 > 0) {
-            bankRecipientCode = bankRecipientFound?[0].value ?? ""
+            bankRecipientCode = bankRecipientFound?.first?.value ?? ""
         }
-        guard let allBanks = Model.shared.dictionaryFullBankInfoList() else { return }
-        let banks = allBanks.map({$0.fullBankInfoList})
-        let foundBank = banks.filter({ $0.memberID == bankRecipientCode })
-        if foundBank.count > 0, let bankRusName = foundBank[0].rusName {
-            let bankIconSvg = foundBank[0].svgImage
-            imgBank.image = bankIconSvg?.convertSVGStringToImage()
+        let allBanks = Model.shared.bankList.value
+        let foundBank = allBanks.filter({ $0.memberId == bankRecipientCode })
+        if foundBank.count > 0, let bankRusName = foundBank.first?.memberNameRus {
+            let bankIconSvg = foundBank.first?.svgImage
+            imgBank.image = bankIconSvg?.uiImage
             labelBank.text = bankRusName
             C2BSuccessView.bankImg = imgBank.image
             C2BSuccessView.bankName = bankRusName
@@ -315,7 +328,11 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         viewModel.createC2BTransfer(body: body) { modelCreateC2BTransfer, error in
             if (error != nil) {
                 self.dismissActivity()
-                self.showLimitInfoView(true)
+                if self.cardFromField.model?.balanceRUB ?? 0.0 < self.operationLimit {
+                    self.showAlert(with: "Ошибка", and: error?.description ?? "")
+                } else {
+                    self.showLimitInfoView(true)
+                }
             } else {
                 self.showLimitInfoView(false)
                 C2BDetailsViewModel.modelCreateC2BTransfer = modelCreateC2BTransfer
@@ -348,6 +365,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
                 case let payload as ModelAction.Transfers.TransferLimit.Response:
                     switch payload {
                     case .limit( let value ):
+                        self.operationLimit = value.limit
                         let limit = NumberFormatter.decimal(value.limit)
                         self.limitAlertContentLable.text = "Сумма операции должна быть меньше \(limit)" + " ₽"
                     case .noLimit:
@@ -576,5 +594,6 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
         let tappedImage = tapGestureRecognizer.view as! UIImageView
         dismiss(animated: true, completion: nil)
+        closeAction()
     }
 }

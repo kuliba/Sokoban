@@ -33,6 +33,12 @@ class RootViewHostingViewController: UIHostingController<RootView> {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        viewModel.action.send(RootViewModelAction.Appear())
+    }
+    
     private func bind() {
         
         viewModel.action
@@ -41,22 +47,43 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                 
                 switch action {
                 case let payload as RootViewModelAction.Cover.ShowLogin:
-                    dismissCover(animated: false)
+                    if let cover = cover {
+                        
+                        guard cover.type != .login else {
+                            return
+                        }
+                        
+                        dismissCover(animated: false)
+                    }
+                    
                     let loginView = AuthLoginView(viewModel: payload.viewModel)
                     let loginViewController = UIHostingController(rootView: loginView)
                     let navigation = UINavigationController(rootViewController: loginViewController)
                     presentCover(navigation, of: .login, animated: false)
+                    LoggerAgent.shared.log(category: .ui, message: "presented cover: .login, animated: false")
                     
                 case let payload as RootViewModelAction.Cover.ShowLock:
-                    dismissCover(animated: false)
+                    if let cover = cover {
+                        
+                        guard cover.type != .lock else {
+                            return
+                        }
+                        
+                        dismissCover(animated: false)
+                    }
+                    
                     let lockView = AuthPinCodeView(viewModel: payload.viewModel)
                     let lockViewController = UIHostingController(rootView: lockView)
                     presentCover(lockViewController, of: .lock, animated: payload.animated)
+                    LoggerAgent.shared.log(category: .ui, message: "presented cover: .lock, animated: \(payload.animated)")
       
                 case _ as RootViewModelAction.Cover.Hide:
-                    if isCoverDismissing == false {
-                        dismissCover(animated: true)
+                    guard isCoverDismissing == false else {
+                        return
                     }
+                    
+                    dismissCover(animated: true)
+                    LoggerAgent.shared.log(category: .ui, message: "dismissed cover, animated: true")
                     
                 case let payload as RootViewModelAction.Spinner.Show:
                     presentSpinner(viewModel: payload.viewModel)
@@ -95,6 +122,8 @@ class RootViewHostingViewController: UIHostingController<RootView> {
         guard let scene = view.window?.windowScene else {
             return
         }
+        
+        viewModel.coverPresented = type
         
         let window = UIWindow(windowScene: scene)
         window.backgroundColor = .clear
@@ -144,6 +173,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                     cover.window.isHidden = true
                     self.cover = nil
                     self.isCoverDismissing = false
+                    self.viewModel.coverPresented = nil
                 }
                 
             case .lock:
@@ -157,6 +187,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                     cover.window.isHidden = true
                     self.cover = nil
                     self.isCoverDismissing = false
+                    self.viewModel.coverPresented = nil
                 }
             }
             
@@ -164,6 +195,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
             
             cover.window.isHidden = true
             self.cover = nil
+            self.viewModel.coverPresented = nil
         }
     }
     

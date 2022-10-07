@@ -43,14 +43,29 @@ struct BannerCatalogListData: Codable, Equatable, Identifiable, Hashable {
         imageEndpoint = try container.decode(String.self, forKey: .imageEndpoint)
         orderURL = try container.decode(URL.self, forKey: .orderURL)
         conditionURL = try container.decode(URL.self, forKey: .conditionURL)
-        
-        if let action = try? container.decodeIfPresent(BannerActionDepositOpen.self, forKey: .action) {
+       
+        if let action = try container.decodeIfPresent(BannerAction.self, forKey: .action) {
             
-            self.action = action
-        } else if let action = try? container.decodeIfPresent(BannerActionMigTransfer.self, forKey: .action) {
+            switch action.type {
+                
+            case .openDeposit:
+                let action = try container.decodeIfPresent(BannerActionDepositOpen.self, forKey: .action)
+                self.action = action
+              
+            case .depositsList:
+                let action = try? container.decodeIfPresent(BannerActionDepositsList.self, forKey: .action)
+                self.action = action
+                
+            case .migTransfer:
+                let action = try? container.decodeIfPresent(BannerActionMigTransfer.self, forKey: .action)
+                self.action = action
+                
+            case .contact:
+                let action = try? container.decodeIfPresent(BannerActionContactTransfer.self, forKey: .action)
+                self.action = action
+            }
             
-            self.action = action
-        } else if let action = try? container.decodeIfPresent(BannerActionDepositsList.self, forKey: .action) {
+        } else {
             
             self.action = action
         } else if let action = try? container.decodeIfPresent(BannerActionContactTransfer.self, forKey: .action) {
@@ -84,7 +99,28 @@ enum BannerActionType: String, Codable, Equatable {
 
 class BannerAction: Codable, Equatable, Hashable {
     
-    var type: BannerActionType { fatalError("Override in subclass") }
+    let type: BannerActionType
+    
+    internal init(type: BannerActionType) {
+        self.type = type
+    }
+    
+    private enum CodingKeys : String, CodingKey, Decodable {
+        
+        case type
+    }
+    
+    required init(from decoder: Decoder) throws {
+    
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        type = try container.decode(BannerActionType.self, forKey: .type)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(type, forKey: .type)
+    }
     
     static func == (lhs: BannerAction, rhs: BannerAction) -> Bool {
         
@@ -98,7 +134,6 @@ class BannerAction: Codable, Equatable, Hashable {
 
 class BannerActionDepositOpen: BannerAction {
     
-    override var type: BannerActionType { .openDeposit }
     let depositProductId: String
     
     private enum CodingKeys: String, CodingKey {
@@ -108,7 +143,7 @@ class BannerActionDepositOpen: BannerAction {
     
     internal init(depositProductId: String) {
         self.depositProductId = depositProductId
-        super.init()
+        super.init(type: .openDeposit)
     }
     
     required init(from decoder: Decoder) throws {
@@ -128,14 +163,10 @@ class BannerActionDepositOpen: BannerAction {
     }
 }
 
-class BannerActionDepositsList: BannerAction {
-    
-    override var type: BannerActionType { .depositsList }
-}
+class BannerActionDepositsList: BannerAction {}
 
 class BannerActionMigTransfer: BannerAction {
     
-    override var type: BannerActionType { .migTransfer }
     let countryId: String
     
     private enum CodingKeys: String, CodingKey {
@@ -145,7 +176,38 @@ class BannerActionMigTransfer: BannerAction {
     
     internal init(countryId: String) {
         self.countryId = countryId
-        super.init()
+        super.init(type: .migTransfer)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        countryId = try container.decode(String.self, forKey: .countryId)
+        
+        try super.init(from: decoder)
+    }
+    
+    override func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(countryId, forKey: .countryId)
+        
+        try super.encode(to: encoder)
+    }
+}
+
+class BannerActionContactTransfer: BannerAction {
+    
+    let countryId: String
+    
+    private enum CodingKeys: String, CodingKey {
+        
+        case countryId
+    }
+    
+    internal init(countryId: String) {
+        self.countryId = countryId
+        super.init(type: .contact)
     }
     
     required init(from decoder: Decoder) throws {

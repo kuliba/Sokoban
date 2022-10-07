@@ -81,45 +81,19 @@ extension SbpPayView {
                 
                 ForEach(viewModel, id: \.self) { condition in
                     
-                    
-                    if #available(iOS 14.0, *) {
+                    Link(destination: condition.link) {
                         
-                        Link(destination: condition.link) {
+                        HStack(alignment: .top, spacing: 24) {
                             
-                            HStack(alignment: .top, spacing: 24) {
-                                
-                                condition.image
-                                    .foregroundColor(.iconGray)
-                                
-                                Text(condition.title)
-                                    .foregroundColor(.mainColorsBlack)
-                                    .multilineTextAlignment(.leading)
-                                    .font(.textBodyMR14200())
-                                
-                                Spacer()
-                            }
-                        }
-                        
-                    } else {
-                        
-                        Button{
+                            condition.image
+                                .foregroundColor(.iconGray)
                             
-                            UIApplication.shared.open(condition.link)
+                            Text(condition.title)
+                                .foregroundColor(.mainColorsBlack)
+                                .multilineTextAlignment(.leading)
+                                .font(.textBodyMR14200())
                             
-                        } label: {
-                            
-                            HStack(alignment: .top, spacing: 24) {
-                                
-                                condition.image
-                                    .foregroundColor(.iconGray)
-                                
-                                Text(condition.title)
-                                    .foregroundColor(.mainColorsBlack)
-                                    .multilineTextAlignment(.leading)
-                                    .font(.textBodyMR14200())
-                                
-                                Spacer()
-                            }
+                            Spacer()
                         }
                     }
                 }
@@ -163,6 +137,6 @@ struct SbpPayView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        SbpPayView(viewModel: .init(.emptyMock, paymentProduct: .init(.emptyMock, currency: .rub, currencyOperation: .buy), conditions: [.init(title: "Условия обслуживания при использовании СБП", link: .init(string: "")!), .init(title: "Соглашения/Договор на использование СБПэй", link: .init(string: "")!)], rootActions: nil))
+        SbpPayView(viewModel: .init(.emptyMock, paymentProduct: .init(.emptyMock, currency: .rub, currencyOperation: .buy, context: .init(isAdditionalProducts: false)), conditions: [.init(title: "Условия обслуживания при использовании СБП", link: .init(string: "")!), .init(title: "Соглашения/Договор на использование СБПэй", link: .init(string: "")!)], rootActions: nil))
     }
 }

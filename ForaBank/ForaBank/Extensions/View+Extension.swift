@@ -11,11 +11,8 @@ extension View {
 
     @ViewBuilder
     func ignoreKeyboard() -> some View {
-        if #available(iOS 14.0, *) {
-            ignoresSafeArea(.keyboard, edges: .bottom)
-        } else {
-            self
-        }
+
+        ignoresSafeArea(.keyboard, edges: .bottom)
     }
     
     @ViewBuilder

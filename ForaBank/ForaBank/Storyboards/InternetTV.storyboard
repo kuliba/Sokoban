@@ -302,84 +302,24 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2mL-b3-EIf">
                                 <rect key="frame" x="16" y="72" width="382" height="31"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UcK-2F-aGf">
-                                        <rect key="frame" x="258" y="3" width="120" height="25"/>
-                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain">
-                                            <attributedString key="attributedTitle">
-                                                <fragment content="Годовая">
-                                                    <attributes>
-                                                        <font key="NSFont" metaFont="menu" size="14"/>
-                                                    </attributes>
-                                                </fragment>
-                                            </attributedString>
-                                        </buttonConfiguration>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <integer key="value" value="6"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="kdN-wP-kcF">
+                                        <rect key="frame" x="0.0" y="0.0" width="382" height="32"/>
+                                        <segments>
+                                            <segment title="Пополнение"/>
+                                            <segment title="Годовая"/>
+                                            <segment title="Месячная"/>
+                                        </segments>
                                         <connections>
-                                            <action selector="btnYear:" destination="ozF-Sv-77P" eventType="touchUpInside" id="7dg-PJ-rOZ"/>
+                                            <action selector="segment:" destination="ozF-Sv-77P" eventType="valueChanged" id="WAa-MZ-ny4"/>
                                         </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WXI-yv-9ju">
-                                        <rect key="frame" x="132" y="3" width="124" height="25"/>
-                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain">
-                                            <attributedString key="attributedTitle">
-                                                <fragment content="Месячная">
-                                                    <attributes>
-                                                        <font key="NSFont" metaFont="menu" size="14"/>
-                                                    </attributes>
-                                                </fragment>
-                                            </attributedString>
-                                        </buttonConfiguration>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <integer key="value" value="6"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="btnMonth:" destination="ozF-Sv-77P" eventType="touchUpInside" id="gtx-CH-FVc"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mmk-hA-Sbo">
-                                        <rect key="frame" x="4" y="3" width="125" height="25"/>
-                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain">
-                                            <attributedString key="attributedTitle">
-                                                <fragment content="Пополнение">
-                                                    <attributes>
-                                                        <font key="NSFont" metaFont="menu" size="14"/>
-                                                    </attributes>
-                                                </fragment>
-                                            </attributedString>
-                                        </buttonConfiguration>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <integer key="value" value="6"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="btnTopUp:" destination="ozF-Sv-77P" eventType="touchUpInside" id="FY1-gk-LwA"/>
-                                        </connections>
-                                    </button>
+                                    </segmentedControl>
                                 </subviews>
                                 <color key="backgroundColor" red="0.91021215919999998" green="0.91178005929999995" blue="0.91873186829999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-                                    <constraint firstItem="UcK-2F-aGf" firstAttribute="top" secondItem="2mL-b3-EIf" secondAttribute="top" constant="2" id="5wO-nA-QXJ"/>
-                                    <constraint firstItem="Mmk-hA-Sbo" firstAttribute="top" secondItem="2mL-b3-EIf" secondAttribute="top" constant="2" id="9fm-Jc-NXn"/>
-                                    <constraint firstItem="Mmk-hA-Sbo" firstAttribute="leading" secondItem="2mL-b3-EIf" secondAttribute="leading" constant="2" id="G7z-xA-Idg"/>
-                                    <constraint firstItem="WXI-yv-9ju" firstAttribute="centerX" secondItem="2mL-b3-EIf" secondAttribute="centerX" id="GTw-8g-RZ0"/>
-                                    <constraint firstAttribute="trailing" secondItem="UcK-2F-aGf" secondAttribute="trailing" constant="2" id="SIG-mY-t1c"/>
-                                    <constraint firstAttribute="bottom" secondItem="WXI-yv-9ju" secondAttribute="bottom" constant="2" id="Ujz-om-h1O"/>
-                                    <constraint firstAttribute="bottom" secondItem="UcK-2F-aGf" secondAttribute="bottom" constant="2" id="bTZ-8y-8n4"/>
-                                    <constraint firstItem="WXI-yv-9ju" firstAttribute="top" secondItem="2mL-b3-EIf" secondAttribute="top" constant="2" id="hvj-Qp-Q5G"/>
-                                    <constraint firstAttribute="bottom" secondItem="Mmk-hA-Sbo" secondAttribute="bottom" constant="2" id="orc-sG-8f2"/>
+                                    <constraint firstItem="kdN-wP-kcF" firstAttribute="leading" secondItem="2mL-b3-EIf" secondAttribute="leading" id="AnZ-mt-7NE"/>
+                                    <constraint firstItem="kdN-wP-kcF" firstAttribute="top" secondItem="2mL-b3-EIf" secondAttribute="top" id="ljv-Ku-sWX"/>
+                                    <constraint firstAttribute="bottom" secondItem="kdN-wP-kcF" secondAttribute="bottom" id="pV5-0l-MF1"/>
+                                    <constraint firstAttribute="trailing" secondItem="kdN-wP-kcF" secondAttribute="trailing" id="vKV-CE-YLf"/>
                                     <constraint firstAttribute="height" constant="31" id="vuy-rg-eYo"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -544,9 +484,6 @@
                     </view>
                     <navigationItem key="navigationItem" id="Zab-ho-eAa"/>
                     <connections>
-                        <outlet property="btnMounthOutlet" destination="WXI-yv-9ju" id="0N2-gx-Oct"/>
-                        <outlet property="btnTopUpOutlet" destination="Mmk-hA-Sbo" id="DrM-iF-6dy"/>
-                        <outlet property="btnYearOutlet" destination="UcK-2F-aGf" id="HYV-5f-a1Z"/>
                         <outlet property="imgCheck1" destination="Sbt-cf-GRV" id="lya-F3-0tb"/>
                         <outlet property="imgCheck2" destination="mZK-v2-lQp" id="ku3-hP-oKR"/>
                         <outlet property="imgCheck3" destination="K33-bi-3HE" id="p72-ZU-SwZ"/>
@@ -554,6 +491,7 @@
                         <outlet property="label1" destination="tmP-Fp-3UZ" id="ElS-xX-Dax"/>
                         <outlet property="label2" destination="Rvu-Ya-HKp" id="I3c-Dd-2Az"/>
                         <outlet property="label3" destination="ltG-bF-krn" id="nb5-1l-hOI"/>
+                        <outlet property="segmentControl" destination="kdN-wP-kcF" id="C88-7h-opA"/>
                         <segue destination="3Y3-LO-L0w" kind="show" identifier="details" id="nsL-RS-rm7"/>
                     </connections>
                 </viewController>
@@ -1042,7 +980,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fvz-6f-kSU">
-                                        <rect key="frame" x="65" y="55.333333333333343" width="11" height="14.333333333333329"/>
+                                        <rect key="frame" x="65" y="55.333333333333343" width="333" height="14.333333333333329"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -1068,6 +1006,7 @@
                                     <constraint firstItem="fvz-6f-kSU" firstAttribute="top" secondItem="mBo-pf-IcA" secondAttribute="bottom" constant="4" id="g91-cu-4je"/>
                                     <constraint firstItem="oE8-Te-Vsr" firstAttribute="top" secondItem="794-7t-DHH" secondAttribute="top" constant="16" id="rNT-gf-Onq"/>
                                     <constraint firstItem="MQZ-Zf-9og" firstAttribute="leading" secondItem="794-7t-DHH" secondAttribute="leading" constant="20" id="v1A-g5-Kc8"/>
+                                    <constraint firstAttribute="trailing" secondItem="fvz-6f-kSU" secondAttribute="trailing" constant="16" id="zE9-D9-ntl"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DGy-Wf-N2a">
@@ -1253,7 +1192,6 @@
         <!--Navigation Controller-->
         <scene sceneID="LrO-70-XGi">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="NfT-f0-tfr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="3Y3-LO-L0w" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="gV4-7H-2BI"/>
@@ -1266,6 +1204,7 @@
                         <segue destination="hxj-Pz-9K3" kind="relationship" relationship="rootViewController" id="Qko-FG-efv"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NfT-f0-tfr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3149" y="122"/>
         </scene>

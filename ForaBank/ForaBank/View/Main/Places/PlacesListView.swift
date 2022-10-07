@@ -22,24 +22,11 @@ struct PlacesListView: View {
                 
                 ScrollView {
                     
-                    if #available(iOS 14, *) {
+                    LazyVStack(spacing: 12) {
                         
-                        LazyVStack(spacing: 12) {
+                        ForEach(viewModel.items) { itemViewModel in
                             
-                            ForEach(viewModel.items) { itemViewModel in
-                                
-                                PlacesListView.ItemView(viewModel: itemViewModel)
-                            }
-                        }
-                        
-                    } else {
-                        
-                        VStack(spacing: 12) {
-                            
-                            ForEach(viewModel.items) { itemViewModel in
-                                
-                                PlacesListView.ItemView(viewModel: itemViewModel)
-                            }
+                            PlacesListView.ItemView(viewModel: itemViewModel)
                         }
                     }
                 }

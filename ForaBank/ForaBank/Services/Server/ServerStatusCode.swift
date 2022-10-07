@@ -17,7 +17,7 @@ enum ServerStatusCode: Decodable, Equatable {
     case serverError
     case incorrectRequest
     case unknownRequest
-    case unknownStatus
+    case unknownStatus(Int)
     
     init(from decoder: Decoder) throws {
         
@@ -31,7 +31,23 @@ enum ServerStatusCode: Decodable, Equatable {
         case 400: self = .incorrectRequest
         case 404: self = .unknownRequest
         default:
-            self = .unknownStatus
+            self = .unknownStatus(statusCode)
+        }
+    }
+}
+
+extension ServerStatusCode: CustomDebugStringConvertible {
+    
+    var debugDescription: String {
+        
+        switch self {
+        case .ok: return "0: Ok"
+        case .error(let code): return "error: \(code)"
+        case .userNotAuthorized: return "101: User Not Authorized"
+        case .serverError: return "102: Server Error"
+        case .incorrectRequest: return "400: Incorrect Request"
+        case .unknownRequest: return "404: Unknown Request"
+        case .unknownStatus(let code): return "Unknown status: \(code)"
         }
     }
 }

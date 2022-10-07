@@ -15,6 +15,13 @@ protocol SessionAgentProtocol {
 }
 
 enum SessionAgentAction {
+    
+    enum App {
+        
+        struct Activated: Action {}
+        
+        struct Inactivated: Action {}
+    }
 
     enum Session {
     
@@ -28,7 +35,7 @@ enum SessionAgentAction {
             }
         }
         
-        enum Extend {
+        enum Timeout {
        
             struct Request: Action {}
             
@@ -38,6 +45,8 @@ enum SessionAgentAction {
             }
         }
         
+        struct Extend: Action {}
+        
         struct Terminate: Action {}
     }
     
@@ -46,12 +55,5 @@ enum SessionAgentAction {
         struct Network: Action {}
         
         struct UserInteraction: Action {}
-    }
-    
-    enum Timer {
-        
-        struct Start: Action {}
-        
-        struct Stop: Action {}
     }
 }

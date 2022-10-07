@@ -129,6 +129,8 @@ class InternetTVDetailsFormViewModel {
             additionalArray.append(item.value)
         }
         firstAdditional = additionalArray
+        
+        guard !additionalArray.isEmpty else { return }
         let request = getRequestBody(amount: amount, additionalArray: additionalArray)
 
         InternetTVApiRequests.createAnywayTransferNew(request: request) { response, error in
@@ -174,6 +176,7 @@ class InternetTVDetailsFormViewModel {
         }
         stepsPayment.append(additionalArray)
         let request = getRequestBody(amount: amount, additionalArray: additionalArray)
+        
         InternetTVApiRequests.createAnywayTransfer(request: request) { response, error in
             guard let controller = self.controller else {
                 return

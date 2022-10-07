@@ -175,7 +175,7 @@ class ProductStatementsStorageTests: XCTestCase {
         let period = Period(start: startDate, end: endDate)
         
         let limitDate = Date.date(year: 2022, month: 4, day: 10, calendar: calendar)!
-        let update = ProductStatementsStorage.Update(period: period, statements: [], direction: .eldest, limitDate: limitDate)
+        let update = ProductStatementsStorage.Update(period: period, statements: [], direction: .eldest, limitDate: limitDate, override: false)
         
         // when
         let result = ProductStatementsStorage(with: update, historyLimitDate: limitDate).isHistoryComplete
@@ -193,7 +193,7 @@ class ProductStatementsStorageTests: XCTestCase {
         let period = Period(start: startDate, end: endDate)
         
         let limitDate = Date.date(year: 2022, month: 3, day: 10, calendar: calendar)!
-        let update = ProductStatementsStorage.Update(period: period, statements: [], direction: .eldest, limitDate: limitDate)
+        let update = ProductStatementsStorage.Update(period: period, statements: [], direction: .eldest, limitDate: limitDate, override: false)
         
         // when
         let result = ProductStatementsStorage(with: update, historyLimitDate: limitDate)
@@ -211,7 +211,7 @@ class ProductStatementsStorageTests: XCTestCase {
         let period = Period(start: startDate, end: endDate)
         
         let limitDate = Date.date(year: 2022, month: 5, day: 10, calendar: calendar)!
-        let update = ProductStatementsStorage.Update(period: period, statements: [], direction: .latest, limitDate: limitDate)
+        let update = ProductStatementsStorage.Update(period: period, statements: [], direction: .latest, limitDate: limitDate, override: false)
         
         // when
         let result = ProductStatementsStorage(with: update, historyLimitDate: limitDate).isHistoryComplete

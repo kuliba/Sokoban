@@ -49,6 +49,7 @@ struct MeToMeView: UIViewControllerRepresentable {
             
         case let .transferDepositRemains(productData, amount):
             let popView = CustomPopUpWithRateView(cardFrom: productData.userAllProducts(), totalAmount: amount)
+            popView.depositClose = true
             popView.viewModel = model
             popView.viewModel.closeAction = viewModel.closeAction
             popView.modalPresentationStyle = .custom

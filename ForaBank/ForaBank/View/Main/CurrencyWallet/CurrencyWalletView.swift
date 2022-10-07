@@ -10,58 +10,14 @@ import SwiftUI
 // MARK: - View
 
 struct CurrencyWalletView: View {
-
+    
     @ObservedObject var viewModel: CurrencyWalletViewModel
-
+    
     var body: some View {
-
+        
         VStack {
             
-            if #available(iOS 14.0, *) {
-                
-                ScrollViewReader { proxy in
-                    
-                    ScrollView(showsIndicators: false) {
-                        
-                        VStack(spacing: 24) {
-                            
-                            ForEach(viewModel.items, id: \.id) { viewModel in
-                                
-                                switch viewModel {
-                                case let listViewModel as CurrencyListView.ViewModel:
-                                    CurrencyListView(viewModel: listViewModel)
-                                    
-                                case let swapViewModel as CurrencySwapView.ViewModel:
-                                    CurrencySwapView(viewModel: swapViewModel)
-                                    
-                                case let selectorViewModel as CurrencySelectorView.ViewModel:
-                                    CurrencySelectorView(viewModel: selectorViewModel)
-                                    
-                                case let confirmationViewModel as CurrencyExchangeConfirmationView.ViewModel:
-                                    CurrencyExchangeConfirmationView(viewModel: confirmationViewModel)
-                                    
-                                case let successViewModel as CurrencyExchangeSuccessView.ViewModel:
-                                    CurrencyExchangeSuccessView(viewModel: successViewModel)
-                                    
-                                default:
-                                    Color.clear
-                                }
-                            }
-                        }
-                        
-                    }.onChange(of: viewModel.scrollToItem) { newValue in
-                        
-                        guard let newValue = newValue else {
-                            return
-                        }
-                        
-                        withAnimation {
-                            proxy.scrollTo(newValue, anchor: .center)
-                        }
-                    }
-                }
-                
-            } else {
+            ScrollViewReader { proxy in
                 
                 ScrollView(showsIndicators: false) {
                     
@@ -89,6 +45,16 @@ struct CurrencyWalletView: View {
                                 Color.clear
                             }
                         }
+                    }
+                    
+                }.onChange(of: viewModel.scrollToItem) { newValue in
+                    
+                    guard let newValue = newValue else {
+                        return
+                    }
+                    
+                    withAnimation {
+                        proxy.scrollTo(newValue, anchor: .center)
                     }
                 }
             }
