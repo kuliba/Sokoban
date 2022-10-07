@@ -50,8 +50,6 @@ class RootViewModel: ObservableObject, Resetable {
         chatViewModel.reset()
     }
     
-
-    
     private func bindAuth() {
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "bind auth")
@@ -126,9 +124,8 @@ class RootViewModel: ObservableObject, Resetable {
         LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.SwitchTab, type: .main")
         action.send(RootViewModelAction.SwitchTab(tabType: .main))
     }
-    
     private func bind() {
-        
+
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in

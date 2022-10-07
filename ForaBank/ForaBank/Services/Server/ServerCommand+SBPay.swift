@@ -7,8 +7,6 @@
 
 import Foundation
 
-import Foundation
-
 extension ServerCommands {
     
     enum SbpPayController {

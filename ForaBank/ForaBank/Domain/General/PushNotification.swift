@@ -17,6 +17,8 @@ struct Push: Decodable {
     let messageId: String
     let notificationQueueId: String
     let code: String?
+    let googleSender: String?
+    let googleFid: String?
     
     struct APS: Decodable {
         
@@ -51,6 +53,8 @@ struct Push: Decodable {
         case messageId = "gcm.message_id"
         case code = "otp"
         case cloudId = "cloud_id"
+        case googleSender = "google.c.sender.id"
+        case googleFid = "google.c.fid"
         case body, notificationQueueId, aps
     }
     
@@ -65,6 +69,8 @@ struct Push: Decodable {
         google = try container.decode(String.self, forKey: .google)
         code = try container.decodeIfPresent(String.self, forKey: .code)
         aps = try container.decode(APS.self, forKey: .aps)
+        googleFid = try container.decodeIfPresent(String.self, forKey: .googleFid)
+        googleSender = try container.decodeIfPresent(String.self, forKey: .googleSender)
     }
     
     init(decoding userInfo: [AnyHashable : Any]) throws {
@@ -74,11 +80,17 @@ struct Push: Decodable {
     }
 }
 
-struct NotificationStatusData {
+struct NotificationStatusData: Encodable {
     
     let eventId: String
     let cloudId: String
     let status: NotificationStatus
+    
+    internal init(eventId: String, cloudId: String, status: NotificationStatus) {
+        self.eventId = eventId
+        self.cloudId = cloudId
+        self.status = status
+    }
     
     init(push: Push) {
         
