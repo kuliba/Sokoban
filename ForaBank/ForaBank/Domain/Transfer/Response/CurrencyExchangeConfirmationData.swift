@@ -13,4 +13,5 @@ struct CurrencyExchangeConfirmationData: Decodable, Equatable {
     let currencyRate: Double?
     let currencyPayer: Currency?
     let currencyPayee: Currency?
+    let needMake: Bool?
 }

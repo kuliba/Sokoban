@@ -179,6 +179,9 @@ struct PaymentsTransfersView: View {
                     .edgesIgnoringSafeArea(.bottom)
                     .fixedSize(horizontal: false, vertical: true)
                 
+            case let .successMeToMe(successMeToMeViewModel):
+                PaymentsSuccessMeToMeView(viewModel: successMeToMeViewModel)
+                
             case .anotherCard(let anotherCardViewModel):
                 AnotherCardView(viewModel: anotherCardViewModel)
                     .edgesIgnoringSafeArea(.bottom)

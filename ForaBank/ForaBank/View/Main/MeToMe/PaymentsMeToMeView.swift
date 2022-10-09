@@ -15,19 +15,32 @@ struct PaymentsMeToMeView: View {
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 0) {
+        ZStack {
             
-            Text(viewModel.title)
-                .font(.textH3SB18240())
-                .foregroundColor(.mainColorsBlack)
-                .padding(.horizontal, 20)
-            
-            VStack {
+            VStack(alignment: .leading, spacing: 0) {
                 
-                ProductsSwapView(viewModel: viewModel.swapViewModel)
-                PaymentsAmountView(viewModel: viewModel.paymentsAmount)
+                Text(viewModel.title)
+                    .font(.textH3SB18240())
+                    .foregroundColor(.mainColorsBlack)
+                    .padding(.horizontal, 20)
+                
+                VStack {
+                    
+                    ProductsSwapView(viewModel: viewModel.swapViewModel)
+                    PaymentsAmountView(viewModel: viewModel.paymentsAmount)
+                }
             }
-        }
+            
+            if viewModel.isShowSpinner == true {
+                
+                Color.mainColorsGrayLightest
+                    .opacity(0.1)
+                
+                SpinnerRefreshView(icon: .init("Logo Fora Bank"))
+                    .padding(.bottom)
+            }
+            
+        }.fixedSize(horizontal: false, vertical: true)
     }
 }
 

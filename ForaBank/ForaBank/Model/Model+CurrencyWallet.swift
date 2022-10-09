@@ -36,7 +36,7 @@ extension ModelAction {
                 
                 enum Response: Action {
                   
-                    case successed(Int)
+                    case successed(TransferResponseBaseData)
                     case failed(ModelError)
                 }
 
@@ -97,7 +97,8 @@ extension Model {
                                                          creditAmount: transferResponse.creditAmount,
                                                          currencyRate: transferResponse.currencyRate,
                                                          currencyPayer: transferResponse.currencyPayer,
-                                                         currencyPayee: transferResponse.currencyPayee))))
+                                                         currencyPayee: transferResponse.currencyPayee,
+                                                         needMake: transferResponse.needMake))))
                     
                 default:
                     self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start
@@ -142,8 +143,7 @@ extension Model {
                         return
                     }
                     
-                    self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve
-                        .Response.successed(data.paymentOperationDetailId))
+                    self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve.Response.successed(data))
                     
                 default:
                     self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve

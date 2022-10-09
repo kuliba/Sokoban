@@ -67,12 +67,12 @@ extension PaymentsAmountView {
             super.init(source: Payments.ParameterMock())
         }
         
-        convenience init(_ value: Double = 0, productData: ProductData, transferAction: @escaping () -> Void, infoAction: @escaping () -> Void) {
+        convenience init(_ value: Double = 0, productData: ProductData) {
             
             let currency = Currency(description: productData.currency)
             let textField: TextFieldFormatableView.ViewModel = .init(value, currencySymbol: currency.currencySymbol)
             
-            self.init("Сумма перевода", textField: textField, transferButton: .active(title: "Перевести", action: transferAction), info: .button(title: "Без комиссии", icon: .ic16Info, action: infoAction))
+            self.init("Сумма перевода", textField: textField, transferButton: .active(title: "Перевести", action: {}))
         }
 
         func bind() {

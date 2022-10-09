@@ -32,6 +32,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     @Published var isTabBarHidden: Bool = false
     @Published var alert: Alert.ViewModel?
     private let model: Model
+    
+    var rootActions: RootViewModel.RootActions?
     private var bindings = Set<AnyCancellable>()
     
     init(model: Model) {
@@ -239,11 +241,48 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                         case .betweenSelf:
 
-                            let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .general) { [weak self] in
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                            let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .general) {
+                                self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
                             }
                             
                             if let viewModel = viewModel {
+                                
+                                viewModel.action
+                                    .receive(on: DispatchQueue.main)
+                                    .sink { [unowned self] action in
+                                        
+                                        switch action {
+                                            
+                                        case let payload as PaymentsMeToMeAction.Response.Success:
+                                            
+                                            payload.viewModel.action
+                                                .receive(on: DispatchQueue.main)
+                                                .sink { action in
+                                                    
+                                                    switch action {
+
+                                                    case _ as PaymentsSuccessMeToMeAction.Button.Close:
+                                                        
+                                                        if let rootActions = self.rootActions {
+                                                            rootActions.switchTab(.main)
+                                                        }
+                                                        
+                                                        self.action.send(PaymentsTransfersViewModelAction.Close.Sheet())
+                                                        
+                                                    default:
+                                                        break
+                                                    }
+                                                    
+                                                }.store(in: &bindings)
+                                            
+                                            sheet = .init(type: .successMeToMe(payload.viewModel))
+                                            
+                                        default:
+                                            break
+                                        }
+                                        
+                                    }.store(in: &bindings)
+                                
                                 bottomSheet = .init(type: .meToMe(viewModel))
                             }
 
@@ -374,6 +413,7 @@ extension PaymentsTransfersViewModel {
         
         enum Kind {
             case meToMe(PaymentsMeToMeViewModel)
+            case successMeToMe(PaymentsSuccessMeToMeViewModel)
             case transferByPhone(TransferByPhoneViewModel)
             case anotherCard(AnotherCardViewModel)
             case qrScanner(QrViewModel)
