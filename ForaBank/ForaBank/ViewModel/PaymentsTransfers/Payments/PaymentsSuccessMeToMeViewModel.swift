@@ -11,6 +11,7 @@ import Combine
 class PaymentsSuccessMeToMeViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
+    @Published var sheet: Sheet?
     
     private let model: Model
     private let state: State
@@ -25,13 +26,24 @@ class PaymentsSuccessMeToMeViewModel: ObservableObject {
         self.confirmationData = confirmationData
         self.successViewModel = .init(model, dismissAction: {})
 
-        self.successViewModel = Self.makeSuccess(model, state: state, data: confirmationData) {
+        self.successViewModel = makeSuccess(model, state: state, data: confirmationData) {
             self.action.send(PaymentsSuccessMeToMeAction.Button.Close())
         }
     }
 }
 
 extension PaymentsSuccessMeToMeViewModel {
+    
+    struct Sheet: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            
+            case printForm(PrintFormView.ViewModel)
+        }
+    }
     
     enum State {
         
@@ -49,29 +61,29 @@ extension PaymentsSuccessMeToMeViewModel {
 
 extension PaymentsSuccessMeToMeViewModel {
 
-    static private func makeSuccess(_ model: Model, state: State, data: CurrencyExchangeConfirmationData, closeAction: @escaping () -> Void) -> PaymentsSuccessViewModel {
+    private func makeSuccess(_ model: Model, state: State, data: CurrencyExchangeConfirmationData, closeAction: @escaping () -> Void) -> PaymentsSuccessViewModel {
         
         let amountFormatted = model.amountFormatted(amount: data.debitAmount ?? 0, currencyCode: data.currencyPayer?.description, style: .fraction)
         
         switch state {
-        case let .success(status, _):
+        case let .success(status, paymentOperationDetailId):
             
             switch status {
             case .complete:
                 
-                return .init(model: model, iconType: .success, title: "Успешный перевод", amount: amountFormatted, optionButtons: [optionButton(.template), optionButton(.document), optionButton(.details)], actionButton: .init(title: "На главную", style: .red) {
+                return .init(model: model, iconType: .success, title: "Успешный перевод", amount: amountFormatted, optionButtons: [optionButton(.template), optionButton(.document, paymentOperationDetailId: paymentOperationDetailId), optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red) {
                     closeAction()
                 })
                 
             case .inProgress:
                 
-                return .init(model: model, iconType: .success, title: "Операция в обработке!", amount: amountFormatted, optionButtons: [optionButton(.template), optionButton(.details)], actionButton: .init(title: "На главную", style: .red) {
+                return .init(model: model, iconType: .success, title: "Операция в обработке!", amount: amountFormatted, optionButtons: [optionButton(.template), optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red) {
                     closeAction()
                 })
                 
             case .rejected, .unknown:
                 
-                return .init(model: model, iconType: .success, title: "Операция неуспешна!", amount: amountFormatted, repeatButton: .init(title: "Повторить", style: .gray, action: {}), optionButtons: [optionButton(.details)], actionButton: .init(title: "На главную", style: .red) {
+                return .init(model: model, iconType: .success, title: "Операция неуспешна!", amount: amountFormatted, repeatButton: .init(title: "Повторить", style: .gray, action: {}), optionButtons: [optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red) {
                     closeAction()
                 })
             }
@@ -81,12 +93,23 @@ extension PaymentsSuccessMeToMeViewModel {
         }
     }
 
-    static private func optionButton(_ type: OptionButtonType) -> PaymentsSuccessOptionButtonView.ViewModel {
+    private func optionButton(_ type: OptionButtonType, paymentOperationDetailId: Int = 0) -> PaymentsSuccessOptionButtonView.ViewModel {
         
         switch type {
-        case .template: return .init(icon: .ic24Star, title: "Шаблон") {}
-        case .document: return .init(icon: .ic24File, title: "Документ") {}
-        case .details: return .init(icon: .ic24Info, title: "Детали") {}
+        case .template:
+            return .init(icon: .ic24Star, title: "Шаблон") {}
+            
+        case .document:
+            
+            return .init(icon: .ic24File, title: "Документ") {
+            
+                let printViewModel: PrintFormView.ViewModel = .init(type: .operation(paymentOperationDetailId: paymentOperationDetailId, printFormType: .internal), model: self.model)
+                
+                self.sheet = .init(type: .printForm(printViewModel))
+        }
+
+        case .details:
+            return .init(icon: .ic24Info, title: "Детали") {}
         }
     }
 }
