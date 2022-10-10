@@ -109,6 +109,7 @@ extension PaymentsAmountView {
             
             case inactive(title: String)
             case active(title: String, action: () -> Void )
+            case loading(icon: Image, iconSize: CGSize)
         }
         
         enum InfoViewModel {
@@ -259,6 +260,9 @@ struct PaymentsAmountView: View {
                             .foregroundColor(Color(hex: "#FFFFFF"))
                     }
                 }
+                
+            case let .loading(icon: icon, iconSize: iconSize):
+                SpinnerRefreshView(icon: icon, iconSize: iconSize)
             }
         }
     }

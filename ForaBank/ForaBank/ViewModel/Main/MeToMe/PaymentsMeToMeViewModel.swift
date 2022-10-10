@@ -13,7 +13,7 @@ import Combine
 class PaymentsMeToMeViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
-    @Published var isShowSpinner: Bool
+    @Published var state: State
     
     private let model: Model
     
@@ -25,14 +25,20 @@ class PaymentsMeToMeViewModel: ObservableObject {
     
     private var bindings = Set<AnyCancellable>()
     private var bindingsFrom = Set<AnyCancellable>()
+    
+    enum State {
+        
+        case normal
+        case loading
+    }
 
-    init(_ model: Model, swapViewModel: ProductsSwapView.ViewModel, paymentsAmount: PaymentsAmountView.ViewModel, title: String = "Между своими", isShowSpinner: Bool = false, closeAction: @escaping () -> Void) {
+    init(_ model: Model, swapViewModel: ProductsSwapView.ViewModel, paymentsAmount: PaymentsAmountView.ViewModel, title: String = "Между своими", state: State = .normal, closeAction: @escaping () -> Void) {
         
         self.model = model
         self.swapViewModel = swapViewModel
         self.paymentsAmount = paymentsAmount
         self.title = title
-        self.isShowSpinner = isShowSpinner
+        self.state = state
         self.closeAction = closeAction
     }
     
@@ -48,7 +54,6 @@ class PaymentsMeToMeViewModel: ObservableObject {
         self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, closeAction: closeAction)
         
         bind()
-        updateAmount()
     }
     
     private func bind() {
@@ -131,7 +136,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     
                     if let productsId = productsId, let product = model.product(productId: productsId.from) {
                         
-                        isShowSpinner = true
+                        state = .loading
                         
                         model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start.Request(
                             amount: value,
@@ -183,17 +188,27 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
-    }
-    
-    private func updateAmount() {
         
-        paymentsAmount.transferButton = .active(title: "Перевести") {
-            self.action.send(PaymentsMeToMeAction.Button.Transfer.Tap())
-        }
-        
-        paymentsAmount.info = .button(title: "Без комиссии", icon: .ic16Info, action: {
-            self.action.send(PaymentsMeToMeAction.Button.Info.Tap())
-        })
+        $state
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] state in
+                
+                switch state {
+                case .normal:
+                    
+                    paymentsAmount.transferButton = .active(title: "Перевести") {
+                        self.action.send(PaymentsMeToMeAction.Button.Transfer.Tap())
+                    }
+                    
+                    paymentsAmount.info = .button(title: "Без комиссии", icon: .ic16Info, action: {
+                        self.action.send(PaymentsMeToMeAction.Button.Info.Tap())
+                    })
+                    
+                case .loading:
+                    paymentsAmount.transferButton = .loading(icon: .init("Logo Fora Bank"), iconSize: .init(width: 40, height: 40))
+                }
+
+            }.store(in: &bindings)
     }
     
     private func updateTextField(_ id: ProductData.ID, textField: TextFieldFormatableView.ViewModel) {
@@ -214,7 +229,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
     
     private func close() {
         
-        isShowSpinner = false
+        state = .normal
         closeAction()
     }
 }

@@ -31,15 +31,13 @@ struct PaymentsMeToMeView: View {
                 }
             }
             
-            if viewModel.isShowSpinner == true {
+            if viewModel.state == .loading {
                 
-                Color.mainColorsGrayLightest
-                    .opacity(0.1)
-                
-                SpinnerRefreshView(icon: .init("Logo Fora Bank"))
-                    .padding(.bottom)
+                Color.mainColorsBlack
+                    .opacity(0.2)
+                    .padding(.top, -29)
             }
-            
+                    
         }.fixedSize(horizontal: false, vertical: true)
     }
 }

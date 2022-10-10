@@ -166,6 +166,13 @@ struct PaymentsTransfersView: View {
                     .frame(height: 494)
             }
         }
+        .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+
+            switch fullCover.type {
+            case let .successMeToMe(successMeToMeViewModel):
+                PaymentsSuccessMeToMeView(viewModel: successMeToMeViewModel)
+            }
+        }
         .sheet(item: $viewModel.sheet, content: { sheet in
             
             switch sheet.type {

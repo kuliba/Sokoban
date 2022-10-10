@@ -27,6 +27,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
     @Published var bottomSheet: BottomSheet?
     @Published var sheet: Sheet?
+    @Published var fullCover: FullCover?
     @Published var link: Link? { didSet { isLinkActive = link != nil; isTabBarHidden = link != nil } }
     @Published var isLinkActive: Bool = false
     @Published var isTabBarHidden: Bool = false
@@ -116,6 +117,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                 case _ as PaymentsTransfersViewModelAction.Close.Sheet:
                     sheet = nil
+                    
+                case _ as PaymentsTransfersViewModelAction.Close.FullCover:
+                    fullCover = nil
                 
                 case _ as PaymentsTransfersViewModelAction.Close.Link:
                     link = nil
@@ -257,7 +261,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                             
                                             payload.viewModel.action
                                                 .receive(on: DispatchQueue.main)
-                                                .sink { action in
+                                                .sink { [unowned self] action in
                                                     
                                                     switch action {
 
@@ -267,7 +271,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                                             rootActions.switchTab(.main)
                                                         }
                                                         
-                                                        self.action.send(PaymentsTransfersViewModelAction.Close.Sheet())
+                                                        self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
                                                         
                                                     default:
                                                         break
@@ -275,7 +279,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                                     
                                                 }.store(in: &bindings)
                                             
-                                            sheet = .init(type: .successMeToMe(payload.viewModel))
+                                            fullCover = .init(type: .successMeToMe(payload.viewModel))
                                             
                                         default:
                                             break
@@ -420,6 +424,16 @@ extension PaymentsTransfersViewModel {
         }
     }
     
+    struct FullCover: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            case successMeToMe(PaymentsSuccessMeToMeViewModel)
+        }
+    }
+    
     enum Link {
         
         case exampleDetail(String)
@@ -459,6 +473,8 @@ enum PaymentsTransfersViewModelAction {
         struct BottomSheet: Action {}
         
         struct Sheet: Action {}
+        
+        struct FullCover: Action {}
         
         struct Link: Action {}
     }
