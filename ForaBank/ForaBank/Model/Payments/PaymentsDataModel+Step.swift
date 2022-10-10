@@ -41,17 +41,14 @@ extension Payments.Operation.Step {
             
         } else {
             
-            if let back = back {
-                
-                let termsParametersIds = back.terms.map{ $0.parameterId }
-                let pendingParameters = parameters.filter({ termsParametersIds.contains($0.id) }).map{ $0.parameter }
-                
-                return .pending(parameters: pendingParameters, stage: back.stage)
-                
-            } else {
-                
+            guard let back = back else {
                 return .complete
             }
+            
+            let termsParametersIds = back.terms.map{ $0.parameterId }
+            let pendingParameters = parameters.filter({ termsParametersIds.contains($0.id) }).map{ $0.parameter }
+            
+            return .pending(parameters: pendingParameters, stage: back.stage)
         }
     }
     
@@ -86,14 +83,11 @@ extension Payments.Operation.Step {
     
     func reseted() -> Payments.Operation.Step {
         
-        if let back = back {
-            
-            return .init(parameters: parameters, front: front, back: .init(stage: back.stage, terms: back.terms, processed: nil) )
-            
-        } else {
-            
+        guard let back = back else {
             return self
         }
+        
+        return .init(parameters: parameters, front: front, back: .init(stage: back.stage, terms: back.terms, processed: nil) )
     }
 
     func processed(parameters: [Parameter]) throws -> Payments.Operation.Step {

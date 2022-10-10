@@ -17,11 +17,10 @@ extension Payments.Operation {
     var visibleParametersIds: [Payments.Parameter.ID] { steps.flatMap({ $0.front.visible }) }
     var visibleParameters: [PaymentsParameterRepresentable] { parameters.filter({ visibleParametersIds.contains($0.id)} ) }
 
-    /// Appends new parameters to operation.
-    /// - Parameters:
-    ///   - parameters: parameters to append
-    ///   - requred: parameters ids requred on next step opf transaction
-    /// - Returns: Updated operation
+    
+    /// Appends new step to operation
+    /// - Parameter step: step to append
+    /// - Returns: updated operation
     func appending(step: Step) throws -> Payments.Operation {
         
         let existingParametersIds = Set(parameters.map({ $0.id }))
@@ -64,8 +63,9 @@ extension Payments.Operation {
         }
     }
 
-    /// Update operation parameters with new values, history doesn't change
-    /// - Parameter updatedParameters: updated parameters
+    
+    /// Updates operation parameters
+    /// - Parameter update: parameters used to update
     /// - Returns: updated operation
     func updated(with update: [Parameter]) -> Payments.Operation {
         
@@ -109,10 +109,11 @@ extension Payments.Operation {
         return .init(service: service, source: source, steps: stepsUpdated)
     }
     
-    /// Updates operation history with processed parameters
+    
+    /// Update operation step data with parameters sent to the server
     /// - Parameters:
-    ///   - parametersIds: parametrs ids processed
-    ///   - isBegining: is it the beggining of transaction or some step?
+    ///   - parameters: processed parameters
+    ///   - stepIndex: step index
     /// - Returns: updated operation
     func processed(parameters: [Parameter], stepIndex: Int) throws -> Payments.Operation {
         
@@ -128,7 +129,9 @@ extension Payments.Operation {
         
         return .init(service: service, source: source, steps: updatedSteps)
     }
-        
+    
+    /// Generates next action for payment process
+    /// - Returns: payments action
     func nextAction() -> Action {
         
         for (index, step) in steps.enumerated() {
@@ -151,96 +154,28 @@ extension Payments.Operation {
             }
         }
         
-        return .backParameters(stepIndex: nextStep)
+        return .parameters(stepIndex: nextStep)
     }
 }
 
 
 
+//TODO: remove
 extension Payments.Operation {
     
     func historyUpdated() -> [[Parameter]] {
         
         //FIXME: refactor
         return [[]]
-        /*
-        var historyUpdated = history
-        let update = Self.history(for: parameters)
-        historyUpdated.append(update)
-        
-        return historyUpdated
-         */
     }
     
-    //TODO: Tests
     func update(with results: [(param: Parameter, affectsHistory: Bool)]) -> Update {
         
         //FIXME: refactor
-        
         return Update(operation: .emptyMock, type: .historyChanged)
 
-        /*
-        if let historyChangedStep = historyChangedStep(history: history, results: results) {
-            
-            let historyStep = history[historyChangedStep]
-            let historyStepParametersIds = historyStep.map{ $0.id }
-            let historyStepParameters = self.parameters.filter{ historyStepParametersIds.contains($0.parameter.id) }
-            
-            var updatedHistoryStepParameters = [PaymentsParameterRepresentable]()
-            
-            for param in historyStepParameters {
-                
-                if let update = results.first(where: { $0.param.id == param.parameter.id })?.param.value {
-                    
-                    updatedHistoryStepParameters.append(param.updated(value: update))
-                    
-                } else {
-                    
-                    updatedHistoryStepParameters.append(param)
-                }
-            }
-            
-            var historyTrimmed = [[Parameter]]()
-            for index in 0..<historyChangedStep {
-                
-                historyTrimmed.append(history[index])
-            }
-  
-            return .init(operation: .init(service: service, parameters: updatedHistoryStepParameters, history: historyTrimmed), type: .historyChanged)
-            
-        } else {
-            
-            var updatedParameters = [PaymentsParameterRepresentable]()
-            
-            for parameter in parameters {
-                
-                if let update = results.first(where: { $0.param.id == parameter.parameter.id }) {
-                    
-                    updatedParameters.append(parameter.updated(value: update.param.value))
-                    
-                } else {
-                    
-                    updatedParameters.append(parameter)
-                }
-            }
-            
-            /*
-            for result in results {
-                
-                guard let index = parameters.firstIndex(where: { $0.parameter.id == result.param.id }) else {
-                    continue
-                }
-                
-                updatedParameters.append(parameters[index].updated(value: result.param.value))
-            }
-             */
-            
-            return .init(operation: .init(service: service, parameters: updatedParameters, history: history), type: .normal)
-        }
-         */
     }
     
-    //TODO: Tests
     static func history(for parameters: [PaymentsParameterRepresentable]) -> [Parameter] {
         
         parameters.map{ $0.parameter }.filter{ $0.value != nil }
@@ -292,12 +227,6 @@ extension Payments.Operation {
         
         //FIXME: - refactor
         return .emptyMock
-        /*
-        var updatedParameters = parameters
-        updatedParameters.append(Payments.ParameterFinal())
-        
-        return Payments.Operation(service: service, parameters: updatedParameters, processed: processed)
-         */
     }
     
     static let emptyMock = Payments.Operation(service: .fms, source: .none, steps: [])

@@ -179,15 +179,15 @@ extension Payments.Operation {
         case final
     }
     
-    enum Action {
-        
-        /// required update on front side
-        case frontUpdate
+    enum Action: Equatable {
         
         /// required parameters for step
-        case backParameters(stepIndex: Int)
+        case parameters(stepIndex: Int)
         
-        /// process parameters with transaction
+        /// required update parameters values in ui by user
+        case frontUpdate
+        
+        /// process parameters on server
         case backProcess(parameters: [Parameter], stepIndex: Int, stage: Stage)
         
         /// restart operation

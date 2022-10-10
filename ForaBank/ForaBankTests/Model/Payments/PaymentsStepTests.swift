@@ -228,6 +228,24 @@ extension PaymentsStepTests {
         XCTAssertEqual(result.back!.terms, step.back!.terms)
         XCTAssertNil(result.back!.processed)
     }
+    
+    func testReseted_No_Back_Correct() throws {
+        
+        // given
+        let paramOne = Payments.ParameterMock(id: "one", value: "100")
+        let paramTwo = Payments.ParameterMock(id: "two", value: "200")
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: nil)
+        
+        // when
+        let result = step.reseted()
+        
+        // then
+        XCTAssertEqual(result.parameters.count, 2)
+        XCTAssertEqual(result.parameters[0].value, "100")
+        XCTAssertEqual(result.parameters[1].value, "200")
+        XCTAssertEqual(result.front, step.front)
+        XCTAssertNil(result.back)
+    }
 }
 
 //MARK: - Processed results
@@ -408,6 +426,23 @@ extension PaymentsStepTests {
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramTwo.id, impact: .restart),.init(parameterId: paramOne.id, impact: .rollback)]
         let paramProcessedOne = Payments.Parameter(id: "1", value: "300")
         let paramProcessedTwo = Payments.Parameter(id: "2", value: "200")
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .initial, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
+        
+        // when
+        let result = step.status(with: [paramOne, paramTwo])
+        
+        // then
+        XCTAssertEqual(result, .invalidated(.rollback))
+    }
+    
+    func testStatus_Multiple_Impacts_Invalidated() throws {
+        
+        // given
+        let paramOne = Payments.ParameterMock(id: "1", value: "100")
+        let paramTwo = Payments.ParameterMock(id: "2", value: "200")
+        let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramTwo.id, impact: .restart),.init(parameterId: paramOne.id, impact: .rollback)]
+        let paramProcessedOne = Payments.Parameter(id: "1", value: "300")
+        let paramProcessedTwo = Payments.Parameter(id: "2", value: "500")
         let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .initial, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
         
         // when
