@@ -16,14 +16,14 @@ class PaymentsSuccessMeToMeViewModel: ObservableObject {
     private let state: State
     private let confirmationData: CurrencyExchangeConfirmationData
     
-    var successViewModel: PaymentsSuccessViewModel?
+    var successViewModel: PaymentsSuccessViewModel
     
     init(_ model: Model, state: State, confirmationData: CurrencyExchangeConfirmationData) {
         
         self.model = model
         self.state = state
         self.confirmationData = confirmationData
-        self.successViewModel = nil
+        self.successViewModel = .init(model, dismissAction: {})
 
         self.successViewModel = Self.makeSuccess(model, state: state, data: confirmationData) {
             self.action.send(PaymentsSuccessMeToMeAction.Button.Close())
@@ -49,7 +49,7 @@ extension PaymentsSuccessMeToMeViewModel {
 
 extension PaymentsSuccessMeToMeViewModel {
 
-    static private func makeSuccess(_ model: Model, state: State, data: CurrencyExchangeConfirmationData, closeAction: @escaping () -> Void) -> PaymentsSuccessViewModel? {
+    static private func makeSuccess(_ model: Model, state: State, data: CurrencyExchangeConfirmationData, closeAction: @escaping () -> Void) -> PaymentsSuccessViewModel {
         
         let amountFormatted = model.amountFormatted(amount: data.debitAmount ?? 0, currencyCode: data.currencyPayer?.description, style: .fraction)
         
@@ -69,14 +69,11 @@ extension PaymentsSuccessMeToMeViewModel {
                     closeAction()
                 })
                 
-            case .rejected:
+            case .rejected, .unknown:
                 
                 return .init(model: model, iconType: .success, title: "Операция неуспешна!", amount: amountFormatted, repeatButton: .init(title: "Повторить", style: .gray, action: {}), optionButtons: [optionButton(.details)], actionButton: .init(title: "На главную", style: .red) {
                     closeAction()
                 })
-
-            case .unknown:
-                return nil
             }
             
         case .failed:

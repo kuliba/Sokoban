@@ -13,12 +13,8 @@ struct PaymentsSuccessMeToMeView: View {
     
     var body: some View {
         
-        if let successViewModel = viewModel.successViewModel {
-            PaymentsSuccessView(viewModel: successViewModel)
-                .background(Color.mainColorsWhite)
-        } else {
-            EmptyView()
-        }
+        PaymentsSuccessView(viewModel: viewModel.successViewModel)
+            .background(Color.mainColorsWhite)
     }
 }
 
