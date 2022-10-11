@@ -245,50 +245,16 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                         case .betweenSelf:
 
-                            let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .general) {
-                                self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                            let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .general) { [weak self] in
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
                             }
                             
-                            if let viewModel = viewModel {
-                                
-                                viewModel.action
-                                    .receive(on: DispatchQueue.main)
-                                    .sink { [unowned self] action in
-                                        
-                                        switch action {
-                                            
-                                        case let payload as PaymentsMeToMeAction.Response.Success:
-                                            
-                                            payload.viewModel.action
-                                                .receive(on: DispatchQueue.main)
-                                                .sink { [unowned self] action in
-                                                    
-                                                    switch action {
-
-                                                    case _ as PaymentsSuccessMeToMeAction.Button.Close:
-                                                        
-                                                        if let rootActions = self.rootActions {
-                                                            rootActions.switchTab(.main)
-                                                        }
-                                                        
-                                                        self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
-                                                        
-                                                    default:
-                                                        break
-                                                    }
-                                                    
-                                                }.store(in: &bindings)
-                                            
-                                            fullCover = .init(type: .successMeToMe(payload.viewModel))
-                                            
-                                        default:
-                                            break
-                                        }
-                                        
-                                    }.store(in: &bindings)
-                                
-                                bottomSheet = .init(type: .meToMe(viewModel))
+                            guard let viewModel = viewModel else {
+                                return
                             }
+                            
+                            bind(viewModel)
+                            bottomSheet = .init(type: .meToMe(viewModel))
 
                     case .byBankDetails:
 
@@ -365,6 +331,50 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                 }.store(in: &bindings)
         }
+    }
+    
+    private func bind(_ viewModel: PaymentsMeToMeViewModel) {
+        
+        viewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                    
+                case let payload as PaymentsMeToMeAction.Response.Success:
+                    
+                    bind(payload.viewModel)
+                    fullCover = .init(type: .successMeToMe(payload.viewModel))
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+        
+    }
+    
+    private func bind(_ viewModel: PaymentsSuccessMeToMeViewModel) {
+        
+        viewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                    
+                case _ as PaymentsSuccessMeToMeAction.Button.Close:
+                    
+                    self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
+
+                    if let rootActions = self.rootActions {
+                        rootActions.switchTab(.main)
+                    }
+ 
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
     
     private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {

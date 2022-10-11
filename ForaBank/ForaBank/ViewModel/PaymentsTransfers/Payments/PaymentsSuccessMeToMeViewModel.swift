@@ -18,6 +18,7 @@ class PaymentsSuccessMeToMeViewModel: ObservableObject {
     private let confirmationData: CurrencyExchangeConfirmationData
     
     var successViewModel: PaymentsSuccessViewModel
+    private var bindings = Set<AnyCancellable>()
     
     init(_ model: Model, state: State, confirmationData: CurrencyExchangeConfirmationData) {
         
@@ -29,6 +30,26 @@ class PaymentsSuccessMeToMeViewModel: ObservableObject {
         self.successViewModel = makeSuccess(model, state: state, data: confirmationData) {
             self.action.send(PaymentsSuccessMeToMeAction.Button.Close())
         }
+        
+        bind()
+    }
+    
+    private func bind() {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                    
+                case let payload as ModelAction.Payment.OperationDetailByPaymentId.Response:
+                    handleDetailResponse(payload)
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
 }
 
@@ -42,6 +63,7 @@ extension PaymentsSuccessMeToMeViewModel {
         enum Kind {
             
             case printForm(PrintFormView.ViewModel)
+            case detailInfo(OperationDetailInfoViewModel)
         }
     }
     
@@ -109,7 +131,28 @@ extension PaymentsSuccessMeToMeViewModel {
         }
 
         case .details:
-            return .init(icon: .ic24Info, title: "Детали") {}
+            return .init(icon: .ic24Info, title: "Детали") {
+                
+                self.model.action.send(ModelAction.Payment.OperationDetailByPaymentId.Request(paymentOperationDetailId: paymentOperationDetailId))
+            }
+        }
+    }
+    
+    private func handleDetailResponse(_ payload: ModelAction.Payment.OperationDetailByPaymentId.Response) {
+        
+        switch payload {
+        case let .success(detailData):
+            
+            let viewModel: OperationDetailInfoViewModel = .init(model: model, operation: detailData) {
+                self.sheet = nil
+            }
+            
+            if sheet == nil {
+                sheet = .init(type: .detailInfo(viewModel))
+            }
+            
+        case .failture:
+            break
         }
     }
 }

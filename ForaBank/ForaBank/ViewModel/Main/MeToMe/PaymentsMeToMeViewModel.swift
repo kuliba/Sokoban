@@ -65,49 +65,16 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 guard let self = self else {
                     return
                 }
-                
+
                 switch action {
                 case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Start.Response:
                     
                     switch payload.result {
-                        
                     case let .success(response):
-                        
+
                         if response.needMake == true {
-                            
-                            self.model.action
-                                .receive(on: DispatchQueue.main)
-                                .sink { action in
-                                    
-                                    switch action {
-                                    case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Approve.Response:
-                                        
-                                        switch payload {
-                                            
-                                        case let .successed(success):
-                                            
-                                            if let documentStatus = success.documentStatus {
-                                                
-                                                let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(self.model, state: .success(documentStatus, success.paymentOperationDetailId), confirmationData: response)
-                                                
-                                                self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
-                                            }
-                                            
-                                        case let .failed(error):
-                                            
-                                            let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(self.model, state: .failed(error), confirmationData: response)
-                                            
-                                            self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
-                                        }
-                                        
-                                        self.close()
-                                        
-                                    default:
-                                        break
-                                    }
-                                    
-                                }.store(in: &self.bindings)
-                            
+
+                            self.bind(response)
                             self.model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve.Request())
                             
                         } else {
@@ -169,6 +136,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         break
                     }
                     
+                    // After swap elements in items
                     bindingsFrom = Set<AnyCancellable>()
                     
                     from.action
@@ -211,13 +179,48 @@ class PaymentsMeToMeViewModel: ObservableObject {
             }.store(in: &bindings)
     }
     
+    private func bind(_ response: CurrencyExchangeConfirmationData) {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Approve.Response:
+                    
+                    switch payload {
+                    case let .successed(success):
+                        
+                        if let documentStatus = success.documentStatus {
+                            
+                            let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(self.model, state: .success(documentStatus, success.paymentOperationDetailId), confirmationData: response)
+                            
+                            self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
+                        }
+                        
+                    case let .failed(error):
+                        
+                        let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(self.model, state: .failed(error), confirmationData: response)
+                        
+                        self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
+                    }
+                    
+                    self.close()
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &self.bindings)
+    }
+    
     private func updateTextField(_ id: ProductData.ID, textField: TextFieldFormatableView.ViewModel) {
         
         if let product = model.product(productId: id) {
-
+            
             let currency = Currency(description: product.currency)
             let formatter: NumberFormatter = .currency(with: currency.currencySymbol)
-
+            
             guard let stringValue = formatter.string(from: .init(value: textField.value)) else {
                 return
             }

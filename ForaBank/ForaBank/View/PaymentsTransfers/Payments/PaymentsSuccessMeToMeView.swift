@@ -20,6 +20,9 @@ struct PaymentsSuccessMeToMeView: View {
                 switch sheet.type {
                 case let .printForm(printViewModel):
                     PrintFormView(viewModel: printViewModel)
+                    
+                case let .detailInfo(detailViewModel):
+                    OperationDetailInfoView(viewModel: detailViewModel)
                 }
             }
     }
