@@ -131,15 +131,15 @@ class MainViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] products in
                 
-                guard model.depositsCloseNotified == nil else { return }
-                
-                let products = products.values.flatMap {$0}
-                
-                let deposits = products.filter({$0.productType == .deposit})
+                guard let deposits = products[.deposit] else { return }
                 
                 for deposit in deposits {
                     
-                    if let deposit = deposit as? ProductDepositData, let endDate = deposit.endDateNf, endDate {
+                    if let deposit = deposit as? ProductDepositData {
+                        
+                        guard !self.model.depositsCloseNotified.contains(.init(depositId: deposit.depositId)), deposit.isClosed else {
+                            continue
+                        }
                         
                         self.alert = .init(title: "Срок действия вклада истек", message: "Переведите деньги со вклада на свою карту/счет в любое время", primary: .init(type: .default, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Ok", action: {
                             
@@ -147,6 +147,8 @@ class MainViewModel: ObservableObject, Resetable {
                         }))
                         
                         self.model.action.send(ModelAction.Deposits.CloseNotified(productId: deposit.id))
+                        
+                        return
                     }
                 }
             }.store(in: &bindings)
