@@ -17,13 +17,14 @@ extension OpenAccountCardView {
         
         let balance: Double
         let currrentAccountTitle: String
-        let currencyType: OpenAccountСurrencyType
         let currencyBalance: String
+        let currencySymbol: String
+        let icon: Image
 
         var numberCardLast: String {
             
             if numberCard.isEmpty == false {
-                return "• \(numberCard.suffix(4))"
+                return "\(numberCard.suffix(4))"
             } else {
                 return ""
             }
@@ -32,14 +33,16 @@ extension OpenAccountCardView {
         init(balance: Double = 0,
              numberCard: String = "",
              currrentAccountTitle: String = "Текущий счет",
-             currencyType: OpenAccountСurrencyType) {
+             currencySymbol: String,
+             icon: Image) {
 
             self.balance = balance
             self.numberCard = numberCard
             self.currrentAccountTitle = currrentAccountTitle
-            self.currencyType = currencyType
+            self.currencySymbol = currencySymbol
+            self.icon = icon
 
-            currencyBalance = "\(balance.currencyDepositFormatter(symbol: currencyType.moneySign))"
+            currencyBalance = "\(balance.currencyDepositFormatter(symbol: currencySymbol))"
         }
     }
 }
@@ -54,25 +57,15 @@ struct OpenAccountCardView: View {
 
         ZStack {
 
-            Color.cardAccount
-
-            HStack {
-
-                Spacer()
-                viewModel.currencyType.icon
-            }
+            viewModel.icon
+                .resizable()
+                .frame(width: 112, height: 72)
 
             HStack {
 
                 VStack(alignment: .leading, spacing: 5) {
 
                     HStack(spacing: 3) {
-
-                        viewModel.currencyType.iconDetail
-                            .renderingMode(.original)
-                            .resizable()
-                            .foregroundColor(.mainColorsWhite)
-                            .frame(width: 20, height: 20)
 
                         Text(viewModel.numberCardLast)
                             .font(.textBodyXSR11140())
@@ -107,7 +100,8 @@ extension OpenAccountCardView.ViewModel {
 
     static let sample = OpenAccountCardView.ViewModel(
         numberCard: "4444555566664345",
-        currencyType: .USD)
+        currencySymbol: "$",
+        icon: .init("USD"))
 }
 
 // MARK: - Previews

@@ -20,33 +20,33 @@ extension OpenAccountItemView {
         @Published var isHidden: Bool = false
 
         let id: String
-        let currencyCode: Int
+        let currencySymbol: String
         let conditionLinkURL: String
         let ratesLinkURL: String?
+        let currencyCode: Int
 
         let header: HeaderViewModel
         let card: OpenAccountCardView.ViewModel
         let options: [OptionViewModel]
-        let currencyType: OpenAccountСurrencyType
 
         init(id: String = UUID().uuidString,
-             currencyCode: Int,
+             currencySymbol: String,
              conditionLinkURL: String,
              ratesLinkURL: String?,
+             currencyCode: Int,
              header: HeaderViewModel,
              card: OpenAccountCardView.ViewModel,
              options: [OptionViewModel],
-             currencyType: OpenAccountСurrencyType,
              isAccountOpen: Bool) {
 
             self.id = id
-            self.currencyCode = currencyCode
+            self.currencySymbol = currencySymbol
             self.conditionLinkURL = conditionLinkURL
             self.ratesLinkURL = ratesLinkURL
+            self.currencyCode = currencyCode
             self.header = header
             self.card = card
             self.options = options
-            self.currencyType = currencyType
             self.isAccountOpen = isAccountOpen
         }
     }
@@ -217,20 +217,21 @@ extension OpenAccountItemView.ViewModel {
 
     static let empty: OpenAccountItemView.ViewModel = .init(
         id: UUID().uuidString,
-        currencyCode: 0,
+        currencySymbol: "₽",
         conditionLinkURL: "",
         ratesLinkURL: nil,
+        currencyCode: 810,
         header: .init(title: "", detailTitle: ""),
-        card: .init(currencyType: .RUB),
+        card: .init(currencySymbol: "₽", icon: .init("RUB")),
         options: .init(),
-        currencyType: .RUB,
         isAccountOpen: false
     )
 
     static let sample = OpenAccountItemViewModel(
-        currencyCode: 810,
+        currencySymbol: "$",
         conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
         ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
+        currencyCode: 840,
         header: .init(
             title: "USD счет",
             detailTitle: "Счет в долларах США"),
@@ -239,7 +240,6 @@ extension OpenAccountItemView.ViewModel {
             .init(title: "Открытие"),
             .init(title: "Обслуживание")
         ],
-        currencyType: .USD,
         isAccountOpen: false)
 }
 
@@ -248,7 +248,6 @@ extension OpenAccountItemView.ViewModel {
 struct OpenAccountItemViewComponent_Previews: PreviewProvider {
 
     static var previews: some View {
-
         OpenAccountItemView(viewModel: .sample)
             .previewLayout(.sizeThatFits)
     }

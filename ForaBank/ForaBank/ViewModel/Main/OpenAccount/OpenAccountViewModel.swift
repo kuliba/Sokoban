@@ -119,14 +119,12 @@ class OpenAccountViewModel: ObservableObject {
                     return
                 }
 
-                let currencyType = currentItem.currencyType
-
-                guard currency.description != currencyType.rawValue else {
+                guard currency.description != currentItem.currencySymbol else {
                     return
                 }
 
                 item = currentItem
-                currency = .init(description: currencyType.rawValue)
+                currency = .init(description: currentItem.currencySymbol)
 
             }.store(in: &bindings)
     }
@@ -162,14 +160,16 @@ extension OpenAccountViewModel: Hashable {
 
 extension OpenAccountViewModel {
 
-    static func reduce(products: [OpenAccountProductData]) -> [OpenAccountItemViewModel] {
+    static func reduce(_ model: Model, products: [OpenAccountProductData]) -> [OpenAccountItemViewModel] {
 
         return products.compactMap { item in
 
-            guard let currencyType: OpenAccountСurrencyType = .init(
-                rawValue: item.currency.rawValue) else {
-                    return nil
-                }
+            guard let currencyData = model.dictionaryCurrency(for: item.currencyCode),
+                  let currencySymbol = currencyData.currencySymbol,
+                  let icon = model.images.value[item.designMd5hash],
+                  let image = icon.image else {
+                return nil
+            }
 
             let options = item.txtConditionList.map { option -> OpenAccountOptionViewModel in
 
@@ -183,61 +183,14 @@ extension OpenAccountViewModel {
 
             return OpenAccountItemViewModel(
                 id: item.designMd5hash,
-                currencyCode: item.currencyCode,
+                currencySymbol: currencySymbol,
                 conditionLinkURL: item.detailedConditionUrl,
                 ratesLinkURL: item.detailedRatesUrl,
+                currencyCode: item.currencyCode,
                 header: .init(title: item.currencyAccount, detailTitle: item.breakdownAccount),
-                card: .init(currrentAccountTitle: item.accountType, currencyType: currencyType),
+                card: .init(currrentAccountTitle: item.accountType, currencySymbol: currencySymbol, icon: image),
                 options: options,
-                currencyType: currencyType,
                 isAccountOpen: item.open)
-        }
-    }
-}
-
-// MARK: - СurrencyType
-
-enum OpenAccountСurrencyType: String {
-
-    case RUB
-    case USD
-    case EUR
-    case GBP
-    case CHF
-
-    var icon: Image {
-
-        switch self {
-
-        case .RUB: return .init("RUB")
-        case .USD: return .init("USD")
-        case .EUR: return .init("EUR")
-        case .GBP: return .init("GBP")
-        case .CHF: return .init("CHF")
-        }
-    }
-
-    var iconDetail: Image {
-
-        switch self {
-
-        case .RUB: return .init("RUB Detail")
-        case .USD: return .init("USD Detail")
-        case .EUR: return .init("EUR Detail")
-        case .GBP: return .init("GBP Detail")
-        case .CHF: return .init("CHF Detail")
-        }
-    }
-
-    var moneySign: String {
-
-        switch self {
-
-        case .RUB: return "₽"
-        case .USD: return "$"
-        case .EUR: return "€"
-        case .GBP: return "£"
-        case .CHF: return "₣"
         }
     }
 }
@@ -250,74 +203,89 @@ extension OpenAccountViewModel {
         model: .productsMock,
         items: [
             .init(
-                currencyCode: 810,
+                currencySymbol: "₽",
                 conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
                 ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
+                currencyCode: 810,
                 header: .init(
                     title: "RUB счет",
                     detailTitle: "Счет в российских рублях"),
-                card: .init(numberCard: "4444555566664345", currencyType: .RUB),
+                card: .init(
+                    numberCard: "4444555566664345",
+                    currencySymbol: "₽",
+                    icon: .init("RUB")),
                 options: [
                     .init(title: "Открытие"),
                     .init(title: "Обслуживание")
                 ],
-                currencyType: .RUB,
                 isAccountOpen: false),
             .init(
-                currencyCode: 840,
+                currencySymbol: "$",
                 conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
                 ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
+                currencyCode: 840,
                 header: .init(
                     title: "USD счет",
                     detailTitle: "Счет в долларах США"),
-                card: .init(numberCard: "4444555566664346", currencyType: .USD),
+                card: .init(
+                    numberCard: "4444555566664346",
+                    currencySymbol: "$",
+                    icon: .init("USD")),
                 options: [
                     .init(title: "Открытие"),
                     .init(title: "Обслуживание")
                 ],
-                currencyType: .USD,
                 isAccountOpen: false),
             .init(
-                currencyCode: 978,
+                currencySymbol: "€",
                 conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
                 ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
+                currencyCode: 978,
                 header: .init(
                     title: "EUR счет",
                     detailTitle: "Счет в евро"),
-                card: .init(numberCard: "4444555566664347", currencyType: .EUR),
+                card: .init(
+                    numberCard: "4444555566664347",
+                    currencySymbol: "€",
+                    icon: .init("EUR")),
                 options: [
                     .init(title: "Открытие"),
                     .init(title: "Обслуживание")
                 ],
-                currencyType: .EUR,
                 isAccountOpen: true),
             .init(
-                currencyCode: 826,
+                currencySymbol: "£",
                 conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
                 ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
+                currencyCode: 826,
                 header: .init(
                     title: "GBP счет",
                     detailTitle: "Счет в Британских фунтах"),
-                card: .init(numberCard: "4444555566664348", currencyType: .GBP),
+                card: .init(
+                    numberCard: "4444555566664348",
+                    currencySymbol: "£",
+                    icon: .init("GBP")),
                 options: [
                     .init(title: "Открытие"),
                     .init(title: "Обслуживание")
                 ],
-                currencyType: .GBP,
                 isAccountOpen: true),
             .init(
-                currencyCode: 756,
+                currencySymbol: "₣",
                 conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
                 ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
+                currencyCode: 756,
                 header: .init(
                     title: "CHF счет",
                     detailTitle: "Счет в Швейцарских франках"),
-                card: .init(numberCard: "4444555566664349", currencyType: .CHF),
+                card: .init(
+                    numberCard: "4444555566664349",
+                    currencySymbol: "₣",
+                    icon: .init("CHF")),
                 options: [
                     .init(title: "Открытие"),
                     .init(title: "Обслуживание")
                 ],
-                currencyType: .CHF,
                 isAccountOpen: false)
         ], currency: .usd)
 }

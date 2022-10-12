@@ -38,6 +38,9 @@ extension Model {
                     }
 
                     self.accountProductsList.value = accountProductsList
+                    let imagesIds = Self.reduce(accountProductsList, images: self.images.value)
+                    
+                    self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: imagesIds))
 
                     do {
                         
@@ -234,6 +237,14 @@ extension Model {
         }
         
         return rawValue
+    }
+    
+    static func reduce(_ productsList: [OpenAccountProductData], images: [String: ImageData]) -> [String] {
+        
+        let filterredList = productsList.filter { images[$0.designMd5hash] == nil }
+        let imagesIds = filterredList.map { $0.designMd5hash }
+        
+        return imagesIds
     }
 }
 
