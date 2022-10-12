@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DepositCloseNotification: Codable {
+struct DepositCloseNotification: Codable, Hashable {
 
      let depositId: ProductData.ID
 }

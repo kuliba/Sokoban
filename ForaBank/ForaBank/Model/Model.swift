@@ -53,7 +53,7 @@ class Model {
     
     //MARK: Deposits
     let deposits: CurrentValueSubject<[DepositProductData], Never>
-    var depositsCloseNotified: DepositCloseNotification?
+    var depositsCloseNotified: Set<DepositCloseNotification>
     
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
@@ -161,7 +161,7 @@ class Model {
         self.dictionariesUpdating = .init([])
         self.userSettings = .init([])
         self.deepLinkType = nil
-        self.depositsCloseNotified = nil
+        self.depositsCloseNotified = .init([])
         
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
@@ -262,7 +262,6 @@ class Model {
                     LoggerAgent.shared.log(category: .model, message: "auth: AUTHORIZED")
                     loadCachedAuthorizedData()
                     loadSettings()
-                    depositsCloseNotified = nil
                     action.send(ModelAction.Products.Update.Total.All())
                     action.send(ModelAction.ClientInfo.Fetch())
                     action.send(ModelAction.ClientPhoto.Load())
@@ -1004,6 +1003,14 @@ private extension Model {
             
             self.depositsInfo.value = depositsInfo
         }
+        
+        if let depositsCloseNotified = localAgent.load(type: Set<DepositCloseNotification>.self) {
+            
+            self.depositsCloseNotified = depositsCloseNotified
+        } else {
+            
+            self.depositsCloseNotified = []
+        }
     }
     
     func loadSettings() {
@@ -1163,6 +1170,14 @@ private extension Model {
         } catch {
             
             //TODO: set logger
+        }
+        do {
+            
+            try localAgent.clear(type: Set<DepositCloseNotification>.self)
+            
+        } catch {
+            
+            LoggerAgent.shared.log(category: .cache, message: "Clear temporary chache error: \(error)")
         }
     }
     
