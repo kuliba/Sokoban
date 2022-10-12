@@ -85,7 +85,7 @@ struct MainView: View {
                         MessagesHistoryView(viewModel: messagesHistoryViewModel)
                         
                     case .openDeposit(let depositListViewModel):
-                        ProductDetailView(viewModel: depositListViewModel)
+                        OpenDepositDetailView(viewModel: depositListViewModel)
                         
                     case .openDepositsList(let openDepositViewModel):
                         OpenDepositView(viewModel: openDepositViewModel)

@@ -7,8 +7,9 @@
 
 import Foundation
 
-struct DepositProductData: Codable, Equatable {
+struct DepositProductData: Codable, Equatable, Identifiable {
     
+    var id: Int { depositProductID }
     let depositProductID: Int
     let detailedСonditions: [DetailedСondition]
     let documentsList: [DocumentsData]
@@ -77,4 +78,23 @@ extension DepositProductData {
             let textColor: [ColorData]
         }
     }
+}
+
+//MARK: - Helpers
+
+extension DepositProductData.TermCurrencyRate {
+    
+    //TODO: this is just woraround, more elegant solution required
+    var currencyShortName: String {
+        
+        switch self.сurrencyCodeTxt {
+        case "RUB": return "руб."
+        default: return self.сurrencyCodeTxt
+        }
+    }
+}
+
+extension DepositProductData.TermCurrencyRate.TermRateSum.TermRate {
+    
+    var monthsValue: String { "\(term / 30) мес." }
 }

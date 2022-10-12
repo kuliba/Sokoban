@@ -272,24 +272,24 @@ class MainViewModel: ObservableObject, Resetable {
                         case let payload as MainSectionViewModelAction.PromoAction.ButtonTapped:
                             switch payload.actionData {
                             case let payload as BannerActionDepositOpen:
-                                
-                                if let openDepositViewModel: OpenProductViewModel = .init(depositId: payload.depositProductId) {
+                                guard let depositId = Int(payload.depositProductId),
+                                      let openDepositViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: model) else {
                                     
-                                    self.link = .openDeposit(openDepositViewModel)
+                                    return
                                 }
-                            case _ as BannerActionDepositsList:
+                                self.link = .openDeposit(openDepositViewModel)
                                 
+                            case _ as BannerActionDepositsList:
                                 self.link = .openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
                                 }))
-                            case let payload as BannerActionMigTransfer:
                                 
+                            case let payload as BannerActionMigTransfer:
                                 self.link = .country(.init(country: payload.countryId, operatorsViewModel: .init(closeAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
                                 }, template: nil), paymentType: .withOutAddress(withOutViewModel: .init(phoneNumber: nil))))
                                 
                             case let payload as BannerActionContactTransfer:
-                                  
                                 self.link = .country(.init(country: payload.countryId, operatorsViewModel: .init(closeAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
                                 }, template: nil), paymentType: .turkeyWithOutAddress(turkeyWithOutAddress: .init(firstName: "", middleName: "", surName: "", phoneNumber: ""))))
@@ -536,7 +536,7 @@ extension MainViewModel {
         case userAccount(UserAccountViewModel)
         case productProfile(ProductProfileViewModel)
         case messages(MessagesHistoryViewModel)
-        case openDeposit(OpenProductViewModel)
+        case openDeposit(OpenDepositDetailViewModel)
         case openDepositsList(OpenDepositViewModel)
         case templates(TemplatesListViewModel)
         case qrScanner(QrViewModel)
