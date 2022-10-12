@@ -15,7 +15,7 @@ class PagerScrollViewModel: ObservableObject {
     @Published var currentIndex: Int
     @Published var isUserInteractionEnabled: Bool
     
-    init(pagesCount: Int, currentIndex: Int = 0, isUserInteractionEnabled: Bool = true) {
+    init(_ pagesCount: Int, currentIndex: Int = 0, isUserInteractionEnabled: Bool = true) {
         
         self.pagesCount = pagesCount
         self.currentIndex = currentIndex

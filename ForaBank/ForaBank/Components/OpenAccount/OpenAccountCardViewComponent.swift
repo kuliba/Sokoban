@@ -14,12 +14,12 @@ extension OpenAccountCardView {
     class ViewModel: ObservableObject {
 
         @Published var numberCard: String
+        @Published var icon: Image?
         
         let balance: Double
         let currrentAccountTitle: String
         let currencyBalance: String
         let currencySymbol: String
-        let icon: Image
 
         var numberCardLast: String {
             
@@ -34,7 +34,7 @@ extension OpenAccountCardView {
              numberCard: String = "",
              currrentAccountTitle: String = "Текущий счет",
              currencySymbol: String,
-             icon: Image) {
+             icon: Image?) {
 
             self.balance = balance
             self.numberCard = numberCard
@@ -57,9 +57,18 @@ struct OpenAccountCardView: View {
 
         ZStack {
 
-            viewModel.icon
-                .resizable()
-                .frame(width: 112, height: 72)
+            if let icon = viewModel.icon {
+                
+                icon
+                    .resizable()
+                    .frame(width: 112, height: 72)
+                
+            } else {
+                
+                Color.cardAccount
+                    .cornerRadius(8)
+                    .frame(width: 112, height: 72)
+            }
 
             HStack {
 
@@ -70,7 +79,8 @@ struct OpenAccountCardView: View {
                         Text(viewModel.numberCardLast)
                             .font(.textBodyXSR11140())
                             .foregroundColor(.mainColorsWhite)
-                    }
+                        
+                    }.padding(.leading, 29)
 
                     VStack(alignment: .leading, spacing: 3) {
 
@@ -88,9 +98,8 @@ struct OpenAccountCardView: View {
 
                 Spacer()
             }
-        }
-        .cornerRadius(8)
-        .frame(width: 112, height: 72)
+            
+        }.frame(width: 112, height: 72)
     }
 }
 
@@ -98,10 +107,7 @@ struct OpenAccountCardView: View {
 
 extension OpenAccountCardView.ViewModel {
 
-    static let sample = OpenAccountCardView.ViewModel(
-        numberCard: "4444555566664345",
-        currencySymbol: "$",
-        icon: .init("USD"))
+    static let sample: OpenAccountCardView.ViewModel = .init(balance: 100, numberCard: "4444555566664345", currencySymbol: "$", icon: .init("Card RUB"))
 }
 
 // MARK: - Previews
@@ -111,8 +117,7 @@ struct OpenAccountCardViewComponent_Previews: PreviewProvider {
     static var previews: some View {
 
         OpenAccountCardView(viewModel: .sample)
-            .padding()
-            .background(Color.mainColorsGrayMedium)
             .previewLayout(.sizeThatFits)
+            .padding(8)
     }
 }

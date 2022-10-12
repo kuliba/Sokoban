@@ -40,7 +40,9 @@ extension Model {
                     self.accountProductsList.value = accountProductsList
                     let imagesIds = Self.reduce(accountProductsList, images: self.images.value)
                     
-                    self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: imagesIds))
+                    if imagesIds.isEmpty == false {
+                        self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: imagesIds))
+                    }
 
                     do {
                         

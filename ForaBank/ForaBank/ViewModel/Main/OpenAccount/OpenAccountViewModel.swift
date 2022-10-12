@@ -15,6 +15,7 @@ class OpenAccountViewModel: ObservableObject {
     @Published var item: OpenAccountItemViewModel
     @Published var items: [OpenAccountItemViewModel]
     @Published var currency: Currency
+    @Published var pagerViewModel: PagerScrollViewModel
 
     let model: Model
     let style: Style
@@ -26,7 +27,6 @@ class OpenAccountViewModel: ObservableObject {
         items[safe: pagerViewModel.currentIndex]
     }
 
-    let pagerViewModel: PagerScrollViewModel
     
     var heightContent: CGFloat {
 
@@ -55,7 +55,7 @@ class OpenAccountViewModel: ObservableObject {
         self.currency = currency
         self.closeAction = closeAction
 
-        pagerViewModel = .init(pagesCount: items.count)
+        pagerViewModel = .init(items.count)
 
         if let currentItem = currentItem {
             self.item = currentItem
@@ -110,6 +110,21 @@ class OpenAccountViewModel: ObservableObject {
                     break
                 }
             }.store(in: &bindings)
+        
+        model.images
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] images in
+                
+                let items = self.items.filter { $0.card.icon == nil }
+                
+                for item in items {
+                    
+                    if let imageData = images[item.id] {
+                        item.card.icon = imageData.image
+                    }
+                }
+                
+            }.store(in: &bindings)
 
         pagerViewModel.$currentIndex
             .receive(on: DispatchQueue.main)
@@ -119,16 +134,16 @@ class OpenAccountViewModel: ObservableObject {
                     return
                 }
 
-                guard currency.description != currentItem.currencySymbol else {
+                guard currency.description != currentItem.currency else {
                     return
                 }
 
                 item = currentItem
-                currency = .init(description: currentItem.currencySymbol)
+                currency = .init(description: currentItem.currency)
 
             }.store(in: &bindings)
     }
-    
+
     private func setItemsHidden(_ isHidden: Bool) {
         
         guard let currentItem = currentItem else {
@@ -161,16 +176,22 @@ extension OpenAccountViewModel: Hashable {
 extension OpenAccountViewModel {
 
     static func reduce(_ model: Model, products: [OpenAccountProductData]) -> [OpenAccountItemViewModel] {
+        
+        let imagesIds = Model.reduce(products, images: model.images.value)
+        
+        if imagesIds.isEmpty == false {
+            model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: imagesIds))
+        }
 
         return products.compactMap { item in
 
             guard let currencyData = model.dictionaryCurrency(for: item.currencyCode),
-                  let currencySymbol = currencyData.currencySymbol,
-                  let icon = model.images.value[item.designMd5hash],
-                  let image = icon.image else {
+                  let currencySymbol = currencyData.currencySymbol else {
                 return nil
             }
 
+            let icon = model.images.value[item.designMd5hash]
+            
             let options = item.txtConditionList.map { option -> OpenAccountOptionViewModel in
 
                 let colorType: OpenAccountOptionViewModel.ColorType = .init(rawValue: option.type.rawValue) ?? .green
@@ -183,12 +204,12 @@ extension OpenAccountViewModel {
 
             return OpenAccountItemViewModel(
                 id: item.designMd5hash,
-                currencySymbol: currencySymbol,
+                currency: item.currency,
                 conditionLinkURL: item.detailedConditionUrl,
                 ratesLinkURL: item.detailedRatesUrl,
                 currencyCode: item.currencyCode,
                 header: .init(title: item.currencyAccount, detailTitle: item.breakdownAccount),
-                card: .init(currrentAccountTitle: item.accountType, currencySymbol: currencySymbol, icon: image),
+                card: .init(currrentAccountTitle: item.accountType, currencySymbol: currencySymbol, icon: icon?.image),
                 options: options,
                 isAccountOpen: item.open)
         }
@@ -203,7 +224,7 @@ extension OpenAccountViewModel {
         model: .productsMock,
         items: [
             .init(
-                currencySymbol: "₽",
+                currency: "RUB",
                 conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
                 ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
                 currencyCode: 810,
@@ -220,7 +241,7 @@ extension OpenAccountViewModel {
                 ],
                 isAccountOpen: false),
             .init(
-                currencySymbol: "$",
+                currency: "USD",
                 conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
                 ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
                 currencyCode: 840,
@@ -237,7 +258,7 @@ extension OpenAccountViewModel {
                 ],
                 isAccountOpen: false),
             .init(
-                currencySymbol: "€",
+                currency: "EUR",
                 conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
                 ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
                 currencyCode: 978,
@@ -254,7 +275,7 @@ extension OpenAccountViewModel {
                 ],
                 isAccountOpen: true),
             .init(
-                currencySymbol: "£",
+                currency: "GBP",
                 conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
                 ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
                 currencyCode: 826,
@@ -271,7 +292,7 @@ extension OpenAccountViewModel {
                 ],
                 isAccountOpen: true),
             .init(
-                currencySymbol: "₣",
+                currency: "CHF",
                 conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
                 ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
                 currencyCode: 756,

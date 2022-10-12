@@ -20,7 +20,7 @@ extension OpenAccountItemView {
         @Published var isHidden: Bool = false
 
         let id: String
-        let currencySymbol: String
+        let currency: String
         let conditionLinkURL: String
         let ratesLinkURL: String?
         let currencyCode: Int
@@ -30,7 +30,7 @@ extension OpenAccountItemView {
         let options: [OptionViewModel]
 
         init(id: String = UUID().uuidString,
-             currencySymbol: String,
+             currency: String,
              conditionLinkURL: String,
              ratesLinkURL: String?,
              currencyCode: Int,
@@ -40,7 +40,7 @@ extension OpenAccountItemView {
              isAccountOpen: Bool) {
 
             self.id = id
-            self.currencySymbol = currencySymbol
+            self.currency = currency
             self.conditionLinkURL = conditionLinkURL
             self.ratesLinkURL = ratesLinkURL
             self.currencyCode = currencyCode
@@ -217,7 +217,7 @@ extension OpenAccountItemView.ViewModel {
 
     static let empty: OpenAccountItemView.ViewModel = .init(
         id: UUID().uuidString,
-        currencySymbol: "₽",
+        currency: "RUB",
         conditionLinkURL: "",
         ratesLinkURL: nil,
         currencyCode: 810,
@@ -228,7 +228,7 @@ extension OpenAccountItemView.ViewModel {
     )
 
     static let sample = OpenAccountItemViewModel(
-        currencySymbol: "$",
+        currency: "USD",
         conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
         ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
         currencyCode: 840,

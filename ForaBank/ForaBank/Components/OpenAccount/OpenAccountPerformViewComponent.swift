@@ -33,7 +33,7 @@ extension OpenAccountPerformView {
 
         var currencyTitle: String {
 
-            if item.currencySymbol == "RUB" {
+            if item.currency == "RUB" {
                 return "счет"
             } else {
                 return "валютный счет"
@@ -51,7 +51,7 @@ extension OpenAccountPerformView {
         }
         
         private var openAccountTitle: String {
-            "\(item.currencySymbol) счет открыт "
+            "\(item.currency) счет открыт "
         }
         
         private var currentOperationType: OpenAccountPerformType {
