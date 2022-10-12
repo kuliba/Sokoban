@@ -128,6 +128,7 @@ class BannerAction: Codable, Equatable, Hashable {
 
 class BannerActionDepositOpen: BannerAction {
     
+    //FIXME: change to Int
     let depositProductId: String
     
     private enum CodingKeys: String, CodingKey {
