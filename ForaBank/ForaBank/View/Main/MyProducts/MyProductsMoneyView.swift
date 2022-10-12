@@ -182,8 +182,10 @@ extension MyProductsMoneyView {
                             
                         }.padding(11) //Scroll
                     }
-                    .frame(width: 240, height: 270)
-                    .offset(x: -100, y: 153)
+                    .frame(width: 240,
+                           height: currencyItemsVM.count < 7 ? CGFloat(currencyItemsVM.count * 54) : 324)
+                    .offset(x: -100,
+                            y: currencyItemsVM.count < 7 ? (CGFloat(currencyItemsVM.count * 54 / 2) + 18 ) : 180 )
                     
                 }
             }
