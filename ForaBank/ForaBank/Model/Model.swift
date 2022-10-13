@@ -461,11 +461,10 @@ class Model {
                 case let payload as ModelAction.Payment.Continue.Request:
                     handlePaymentsContinueRequest(payload)
                     
-                case let payload as ModelAction.Payment.OperationDetail.Request:
-                    handleOperationDetailRequest(payload)
+                    //MARK: - Operation
                     
-                case let payload as ModelAction.Payment.OperationDetailByPaymentId.Request:
-                    handleOperationDetailByPaymentIdRequest(payload)
+                case let payload as ModelAction.Operation.Detail.Request:
+                    handleOperationDetailRequest(payload)
                     
                     //MARK: - Transfers
                     
@@ -524,7 +523,7 @@ class Model {
                 case let payload as ModelAction.Settings.UpdateUserSettingPush:
                     handleUpdateUserSetting(payload)
                     
-                case let _ as ModelAction.Settings.GetUserSettings:
+                case _ as ModelAction.Settings.GetUserSettings:
                     handleGetUserSettings()
                     
                     //MARK: - Settings Actions

@@ -76,34 +76,6 @@ extension ModelAction {
                 }
             }
         }
-        
-        enum OperationDetail {
-            
-            struct Request: Action {
-                
-                let documentId: String
-            }
-            
-            enum Response: Action {
-                //FIXME: Result<OperationDetailData, Error>
-                case success(details: OperationDetailData)
-                case failture
-            }
-        }
-        
-        enum OperationDetailByPaymentId {
-            
-            struct Request: Action {
-                
-                let paymentOperationDetailId: Int
-            }
-            
-            enum Response: Action {
-
-                case success(OperationDetailData)
-                case failture(ModelError)
-            }
-        }
     }
 }
 
@@ -251,81 +223,6 @@ extension Model {
         }
     }
         
-    //TODO: move to Model+OperationDetail
-    func handleOperationDetailRequest(_ payload: ModelAction.Payment.OperationDetail.Request) {
-        
-        guard let token = token else {
-            handledUnauthorizedCommandAttempt()
-            return
-        }
-        
-        let command = ServerCommands.PaymentOperationDetailContoller.GetOperationDetail(token: token, payload: .init(documentId: payload.documentId))
-        
-        serverAgent.executeCommand(command: command) { result in
-            
-            switch result {
-            case .success(let response):
-                switch response.statusCode {
-                case .ok:
-                    
-                    guard let details = response.data else {
-                        self.handleServerCommandEmptyData(command: command)
-                        self.action.send(ModelAction.Payment.OperationDetail.Response.failture)
-                        return
-                    }
-                    
-                    self.action.send(ModelAction.Payment.OperationDetail.Response.success(details: details))
-                    
-                default:
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
-                    self.action.send(ModelAction.Payment.OperationDetail.Response.failture)
-                }
-                
-            case .failure(let error):
-                self.handleServerCommandError(error: error, command: command)
-                self.action.send(ModelAction.Payment.OperationDetail.Response.failture)
-            }
-        }
-    }
-    
-    //TODO: move to Model+OperationDetail
-    func handleOperationDetailByPaymentIdRequest(_ payload: ModelAction.Payment.OperationDetailByPaymentId.Request) {
-        
-        guard let token = token else {
-            handledUnauthorizedCommandAttempt()
-            return
-        }
-        
-        let command = ServerCommands.PaymentOperationDetailContoller.GetOperationDetailByPaymentId(token: token, payload: .init(paymentOperationDetailId: payload.paymentOperationDetailId))
-        let errorMessage = "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."
-        
-        serverAgent.executeCommand(command: command) { result in
-            
-            switch result {
-            case .success(let response):
-                switch response.statusCode {
-                case .ok:
-                    
-                    guard let details = response.data else {
-                        self.handleServerCommandEmptyData(command: command)
-                        self.action.send(ModelAction.Payment.OperationDetailByPaymentId.Response.failture(.statusError(status: response.statusCode, message: response.errorMessage)))
-                        return
-                    }
-                    
-                    self.action.send(ModelAction.Payment.OperationDetailByPaymentId.Response.success(details))
-                    
-                default:
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
-                    self.action.send(ModelAction.Payment.OperationDetailByPaymentId.Response.failture(.statusError(status: response.statusCode, message: response.errorMessage)))
-                }
-                
-            case .failure(let error):
-                self.handleServerCommandError(error: error, command: command)
-                self.action.send(ModelAction.Payment.OperationDetailByPaymentId.Response.failture(.statusError(status: .serverError, message: errorMessage)))
-            }
-        }
-    }
-    
     //MARK: - Operation
     
     func operation(for service: Service) async throws -> Operation {

@@ -61,7 +61,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         
         if let documentId = productStatement.documentId {
             
-            model.action.send(ModelAction.Payment.OperationDetail.Request(documentId: "\(documentId)"))
+            model.action.send(ModelAction.Operation.Detail.Request(type: .documentId(documentId)))
             
             withAnimation {
                 self.isLoading = true
@@ -77,36 +77,29 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                 
                 switch action {
                 case _ as ModelAction.PaymentTemplate.Save.Complete:
-                    guard let statement = model.statement(statementId: id) else {
+                    guard let statement = model.statement(statementId: id),
+                          let documentId = statement.documentId else {
                         return
                     }
                     
-                    if let documentId = statement.documentId {
-                        
-                        model.action.send(ModelAction.Payment.OperationDetail.Request(documentId: "\(documentId)"))
-                        
-                    }
+                    model.action.send(ModelAction.Operation.Detail.Request(type: .documentId(documentId)))
                     
                 case _ as ModelAction.PaymentTemplate.Delete.Complete:
-                    
-                    guard let statement = model.statement(statementId: id) else {
+                    guard let statement = model.statement(statementId: id),
+                          let documentId = statement.documentId else {
                         return
                     }
                     
-                    if let documentId = statement.documentId {
-                        
-                        model.action.send(ModelAction.Payment.OperationDetail.Request(documentId: "\(documentId)"))
-                        
-                    }
+                    model.action.send(ModelAction.Operation.Detail.Request(type: .documentId(documentId)))
                     
-                case let result as ModelAction.Payment.OperationDetail.Response:
+                case let payload as ModelAction.Operation.Detail.Response:
                     withAnimation {
                         self.isLoading = false
                     }
-                    switch result {
+                    switch payload.result {
                     case .success(details: let details):
                         guard let statement = model.statement(statementId: id),
-                                let product = model.product(statementId: id) else {
+                              let product = model.product(statementId: id) else {
                             return
                         }
                         
