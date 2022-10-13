@@ -189,9 +189,10 @@ class MainViewModel: ObservableObject, Resetable {
                             case .account:
                                 
                                 let accountProductsList = model.accountProductsList.value
-                                let items = OpenAccountViewModel.reduce(model, products: accountProductsList)
                                 
-                                let openAccountViewModel: OpenAccountViewModel = .init(model: model, items: items, currency: .rub)
+                                guard let openAccountViewModel: OpenAccountViewModel = .init(model, products: accountProductsList) else {
+                                    return
+                                }
                                 
                                 bottomSheet = .init(type: .openAccount(openAccountViewModel))
 

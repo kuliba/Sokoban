@@ -27,7 +27,6 @@ class OpenAccountViewModel: ObservableObject {
         items[safe: pagerViewModel.currentIndex]
     }
 
-    
     var heightContent: CGFloat {
 
         if items.count > 1 {
@@ -44,24 +43,41 @@ class OpenAccountViewModel: ObservableObject {
     }
 
     init(model: Model,
-         style: Style = .openAccount,
+         item: OpenAccountItemViewModel,
          items: [OpenAccountItemViewModel],
-         currency: Currency, closeAction: @escaping () -> Void = {}) {
+         currency: Currency,
+         pagerViewModel: PagerScrollViewModel,
+         style: Style = .openAccount,
+         closeAction: @escaping () -> Void = {}) {
 
         self.model = model
-        self.style = style
-        self.item = .empty
+        self.item = item
         self.items = items
         self.currency = currency
+        self.pagerViewModel = pagerViewModel
+        self.style = style
         self.closeAction = closeAction
-
-        pagerViewModel = .init(items.count)
+    }
+    
+    convenience init?(_ model: Model, products: [OpenAccountProductData], closeAction: @escaping () -> Void = {}) {
+        
+        let currencyData = model.currencyList.value
+        let imageData = model.images.value
+        
+        let items = Self.reduce(products: products, currencyData: currencyData, images: imageData)
+        
+        guard let item = items.first, let product = products.first else {
+            return nil
+        }
+        
+        self.init(model: model, item: item, items: items, currency: product.currency, pagerViewModel: .init(items.count), closeAction: closeAction)
 
         if let currentItem = currentItem {
             self.item = currentItem
         }
 
         bind()
+        updateImagesIfNeeds(products, images: imageData)
     }
 
     private func bind() {
@@ -143,6 +159,15 @@ class OpenAccountViewModel: ObservableObject {
 
             }.store(in: &bindings)
     }
+    
+    private func updateImagesIfNeeds(_ products: [OpenAccountProductData], images: [String: ImageData]) {
+        
+        let imagesIds = Model.reduce(products, images: images)
+        
+        if imagesIds.isEmpty == false {
+            model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: imagesIds))
+        }
+    }
 
     private func setItemsHidden(_ isHidden: Bool) {
         
@@ -175,22 +200,15 @@ extension OpenAccountViewModel: Hashable {
 
 extension OpenAccountViewModel {
 
-    static func reduce(_ model: Model, products: [OpenAccountProductData]) -> [OpenAccountItemViewModel] {
-        
-        let imagesIds = Model.reduce(products, images: model.images.value)
-        
-        if imagesIds.isEmpty == false {
-            model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: imagesIds))
-        }
+    static func reduce(products: [OpenAccountProductData], currencyData: [CurrencyData], images: [String: ImageData]) -> [OpenAccountItemViewModel] {
 
         return products.compactMap { item in
-
-            guard let currencyData = model.dictionaryCurrency(for: item.currencyCode),
-                  let currencySymbol = currencyData.currencySymbol else {
+            
+            let currencyItem = currencyData.first(where: { $0.code == item.currency.description })
+            
+            guard let currencyItem = currencyItem, let currencySymbol = currencyItem.currencySymbol else {
                 return nil
             }
-
-            let icon = model.images.value[item.designMd5hash]
             
             let options = item.txtConditionList.map { option -> OpenAccountOptionViewModel in
 
@@ -204,12 +222,12 @@ extension OpenAccountViewModel {
 
             return OpenAccountItemViewModel(
                 id: item.designMd5hash,
-                currency: item.currency,
+                currency: item.currency.description,
                 conditionLinkURL: item.detailedConditionUrl,
                 ratesLinkURL: item.detailedRatesUrl,
                 currencyCode: item.currencyCode,
                 header: .init(title: item.currencyAccount, detailTitle: item.breakdownAccount),
-                card: .init(currrentAccountTitle: item.accountType, currencySymbol: currencySymbol, icon: icon?.image),
+                card: .init(currrentAccountTitle: item.accountType, currencySymbol: currencySymbol, icon: images[item.designMd5hash]?.image),
                 options: options,
                 isAccountOpen: item.open)
         }
@@ -222,6 +240,7 @@ extension OpenAccountViewModel {
 
     static let sample = OpenAccountViewModel(
         model: .productsMock,
+        item: .sample,
         items: [
             .init(
                 currency: "RUB",
@@ -308,5 +327,7 @@ extension OpenAccountViewModel {
                     .init(title: "Обслуживание")
                 ],
                 isAccountOpen: false)
-        ], currency: .usd)
+        ],
+        currency: .usd,
+        pagerViewModel: .init(5))
 }

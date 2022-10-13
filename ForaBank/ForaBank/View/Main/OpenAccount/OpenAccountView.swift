@@ -18,23 +18,9 @@ struct OpenAccountView: View {
 
         VStack(spacing: 0) {
 
-            ZStack {
-                
-                if viewModel.items.isEmpty == false {
-                    
-                    PagerScrollView(viewModel: viewModel.pagerViewModel) {
-                        ForEach(viewModel.items) { item in
-                            OpenAccountItemView(viewModel: item)
-                        }
-                    }
-                    
-                } else {
-
-                    Color.mainColorsGrayMedium
-                        .opacity(0.5)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .shimmering(active: true, bounce: true)
-                        .padding(.horizontal, 20)
+            PagerScrollView(viewModel: viewModel.pagerViewModel) {
+                ForEach(viewModel.items) { item in
+                    OpenAccountItemView(viewModel: item)
                 }
             }
             .frame(height: viewModel.heightContent)

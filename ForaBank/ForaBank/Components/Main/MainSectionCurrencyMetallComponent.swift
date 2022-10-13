@@ -139,7 +139,7 @@ extension MainSectionCurrencyMetallView {
                 }
             }
         }
-        
+
 //MARK: Reduce Items
         private func reduce(list: [CurrencyWalletData],
                             dict: [CurrencyData],

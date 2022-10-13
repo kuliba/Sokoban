@@ -16,7 +16,7 @@ struct OpenAccountProductData: Codable, Equatable {
     let breakdownAccount: String
     let accountType: String
     let currencyCode: Int
-    let currency: String
+    let currency: Currency
     let designMd5hash: String
     let designSmallMd5hash: String
     let detailedConditionUrl: String
@@ -106,7 +106,7 @@ struct OpenAccountProductData: Codable, Equatable {
         detailedConditionUrl = try container.decode(String.self, forKey: .detailedConditionUrl)
         detailedRatesUrl = try container.decodeIfPresent(String.self, forKey: .detailedRatesUrl)
         txtConditionList = try container.decode([TxtConditionList].self, forKey: .txtConditionList)
-        currency = try container.decode(String.self, forKey: .currency)
+        currency = try container.decode(Currency.self, forKey: .currency)
     }
 
     func encode(to encoder: Encoder) throws {
