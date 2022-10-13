@@ -64,7 +64,7 @@ class PaymentsViewModel: ObservableObject {
                         
                     case .selected(let service):
                         // single service for category
-                        model.action.send(ModelAction.Payment.Begin.Request(source: .service(service)))
+                        model.action.send(ModelAction.Payment.Begin.Request(base: .service(service)))
                         
                     case .failed(let error):
                         //TODO: set logger
@@ -87,7 +87,9 @@ class PaymentsViewModel: ObservableObject {
                     case .failure(let errorMessage):
                         self.action.send(PaymentsViewModelAction.Alert(message: errorMessage))
                     }
-                    
+                   
+                //TODO: refactor
+                /*
                 case let payload as ModelAction.Payment.Complete.Response:
                     self.action.send(PaymentsViewModelAction.Spinner.Hide())
                     
@@ -98,6 +100,7 @@ class PaymentsViewModel: ObservableObject {
                     case .failure(let errorMessage):
                         self.action.send(PaymentsViewModelAction.Alert(message: errorMessage))
                     }
+                 */
                     
                 default:
                     break

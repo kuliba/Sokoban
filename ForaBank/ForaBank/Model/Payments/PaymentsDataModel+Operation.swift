@@ -109,6 +109,12 @@ extension Payments.Operation {
         return .init(service: service, source: source, steps: stepsUpdated)
     }
     
+    func restarted() -> Payments.Operation {
+        
+        //TODO: implementation required
+        return self
+    }
+    
     
     /// Update operation step data with parameters sent to the server
     /// - Parameters:
@@ -138,7 +144,7 @@ extension Payments.Operation {
             
             switch step.status(with: parameters) {
             case .editing:
-                return .frontUpdate
+                return step.back?.stage == .confirm ? .frontConfirm : .frontUpdate
                 
             case let .invalidated(impact):
                 switch impact {
@@ -149,12 +155,12 @@ extension Payments.Operation {
             case let .pending(parameters: parameters, stage: stage):
                 return .backProcess(parameters: parameters, stepIndex: index, stage: stage)
                 
-            case .complete:
+            default:
                 break
             }
         }
         
-        return .parameters(stepIndex: nextStep)
+        return .step(index: nextStep)
     }
 }
 
@@ -253,6 +259,7 @@ extension Payments.Operation {
         case appendingStepIncorrectParametersTerms
         case rollbackStepIndexOutOfRange
         case processStepIndexOutOfRange
+        case stepMissingParameterForTerm
         case stepMissingTermsForProcessedParameters
         case stepIncorrectParametersProcessed
         case failedLoadServicesForCategory(Payments.Category)

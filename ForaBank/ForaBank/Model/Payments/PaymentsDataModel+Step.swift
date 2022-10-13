@@ -89,6 +89,26 @@ extension Payments.Operation.Step {
         
         return .init(parameters: parameters, front: front, back: .init(stage: back.stage, terms: back.terms, processed: nil) )
     }
+    
+    func processParameters(with parameters: [PaymentsParameterRepresentable]) throws -> [Parameter]? {
+        
+        guard let back = back else {
+            return nil
+        }
+        
+        var result = [Parameter]()
+        
+        for term in back.terms {
+            
+            guard let parameter = parameters.first(where: { $0.id == term.parameterId })?.parameter else {
+                throw Payments.Operation.Error.stepMissingParameterForTerm
+            }
+            
+            result.append(parameter)
+        }
+        
+        return result
+    }
 
     func processed(parameters: [Parameter]) throws -> Payments.Operation.Step {
         

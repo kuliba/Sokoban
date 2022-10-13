@@ -142,10 +142,10 @@ extension Payments.Operation {
         
         enum Impact: Int {
             
-            /// parameter change requires rollback transfer to this step
+            /// parameter change requires rollback operation to this step
             case rollback
             
-            /// parameter change requires restart transfer from the begining
+            /// parameter change requires restart operation from the begining
             case restart
         }
         
@@ -157,7 +157,7 @@ extension Payments.Operation {
             /// pending parameters to back side
             case pending(parameters: [Parameter], stage: Stage)
             
-            /// parematers updated on front side and processed on back side if required
+            /// paramaters updated on front side and processed on back side if required
             case complete
             
             /// parameters changed after procrssing
@@ -174,18 +174,22 @@ extension Payments.Operation {
     
     enum Stage {
         
-        case initial
+        case start
         case next
-        case final
+        case confirm
+        case complete
     }
     
     enum Action: Equatable {
         
-        /// required parameters for step
-        case parameters(stepIndex: Int)
+        /// step required
+        case step(index: Int)
         
         /// required update parameters values in ui by user
         case frontUpdate
+        
+        /// operation confirm required in ui by user
+        case frontConfirm
         
         /// process parameters on server
         case backProcess(parameters: [Parameter], stepIndex: Int, stage: Stage)

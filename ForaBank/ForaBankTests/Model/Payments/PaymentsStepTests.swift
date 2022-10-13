@@ -135,7 +135,7 @@ extension PaymentsStepTests {
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramOne.id, impact: .rollback)]
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .initial, terms: terms, processed: nil))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .start, terms: terms, processed: nil))
         let paramProcessed = Payments.Parameter(id: "one", value: "100")
         
         // when
@@ -160,7 +160,7 @@ extension PaymentsStepTests {
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramOne.id, impact: .rollback)]
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .initial, terms: terms, processed: nil))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .start, terms: terms, processed: nil))
         let paramProcessed = Payments.Parameter(id: "two", value: "200")
         
         // when
@@ -191,7 +191,7 @@ extension PaymentsStepTests {
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramOne.id, impact: .rollback)]
         let paramProcessed = Payments.Parameter(id: "one", value: "100")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .initial, terms: terms, processed: [paramProcessed]))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .start, terms: terms, processed: [paramProcessed]))
         
         // when
         let result = step.reseted()
@@ -213,7 +213,7 @@ extension PaymentsStepTests {
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramOne.id, impact: .rollback)]
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .initial, terms: terms, processed: nil))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .start, terms: terms, processed: nil))
         
         // when
         let result = step.reseted()
@@ -260,7 +260,7 @@ extension PaymentsStepTests {
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramTwo.id, impact: .restart),.init(parameterId: paramOne.id, impact: .rollback)]
         let paramProcessedOne = Payments.Parameter(id: "1", value: "500")
         let paramProcessedTwo = Payments.Parameter(id: "2", value: "700")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .initial, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .start, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
         let paramTree = Payments.ParameterMock(id: "3", value: "300")
         
         // when
@@ -303,7 +303,7 @@ extension PaymentsStepTests {
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramOne.id, impact: .rollback)]
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .initial, terms: terms, processed: nil))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .start, terms: terms, processed: nil))
         
         // when
         let result = step.processedResults(with: [paramOne, paramTwo])
@@ -320,7 +320,7 @@ extension PaymentsStepTests {
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramTwo.id, impact: .restart),.init(parameterId: paramOne.id, impact: .rollback)]
         let paramProcessedOne = Payments.Parameter(id: "1", value: "500")
         let paramProcessedTwo = Payments.Parameter(id: "2", value: "700")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .initial, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .start, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
  
         // when
         let result = step.processedResults(with: [paramOne])
@@ -344,7 +344,7 @@ extension PaymentsStepTests {
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramTwo.id, impact: .restart),.init(parameterId: paramOne.id, impact: .rollback)]
         let paramProcessedOne = Payments.Parameter(id: "1", value: "500")
         let paramProcessedTwo = Payments.Parameter(id: "2", value: "700")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .initial, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .start, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
         let paramTree = Payments.ParameterMock(id: "3", value: "300")
         
         // when
@@ -393,12 +393,12 @@ extension PaymentsStepTests {
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramOne.id, impact: .rollback)]
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .initial, terms: terms, processed: nil))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .start, terms: terms, processed: nil))
 
         // when
         let result = step.status(with: [paramOne, paramTwo])
         
-        XCTAssertEqual(result, .pending(parameters: [.init(id: "one", value: "100")], stage: .initial))
+        XCTAssertEqual(result, .pending(parameters: [.init(id: "one", value: "100")], stage: .start))
     }
     
     func testStatus_Back_Complete() throws {
@@ -409,7 +409,7 @@ extension PaymentsStepTests {
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramTwo.id, impact: .restart),.init(parameterId: paramOne.id, impact: .rollback)]
         let paramProcessedOne = Payments.Parameter(id: "1", value: "100")
         let paramProcessedTwo = Payments.Parameter(id: "2", value: "200")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .initial, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .start, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
         
         // when
         let result = step.status(with: [paramOne, paramTwo])
@@ -426,7 +426,7 @@ extension PaymentsStepTests {
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramTwo.id, impact: .restart),.init(parameterId: paramOne.id, impact: .rollback)]
         let paramProcessedOne = Payments.Parameter(id: "1", value: "300")
         let paramProcessedTwo = Payments.Parameter(id: "2", value: "200")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .initial, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .start, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
         
         // when
         let result = step.status(with: [paramOne, paramTwo])
@@ -443,7 +443,7 @@ extension PaymentsStepTests {
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramTwo.id, impact: .restart),.init(parameterId: paramOne.id, impact: .rollback)]
         let paramProcessedOne = Payments.Parameter(id: "1", value: "300")
         let paramProcessedTwo = Payments.Parameter(id: "2", value: "500")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .initial, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .start, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
         
         // when
         let result = step.status(with: [paramOne, paramTwo])

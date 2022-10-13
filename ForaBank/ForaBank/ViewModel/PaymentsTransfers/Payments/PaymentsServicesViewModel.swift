@@ -84,7 +84,7 @@ class PaymentsServicesViewModel: ObservableObject {
                             let selectedService = selectServiceParameter.options.first(where: { $0.id == payload.itemId})?.service else {
                         return
                     }
-                    model.action.send(ModelAction.Payment.Begin.Request(source: .service(selectedService)))
+                    model.action.send(ModelAction.Payment.Begin.Request(base: .service(selectedService)))
                     
                 case _ as PaymentsServicesViewModelAction.DissmissOperationView:
                     isOperationViewActive = false

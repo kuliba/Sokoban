@@ -106,6 +106,10 @@ class PaymentsOperationViewModel: ObservableObject {
                         isConfirmViewActive = true
                         self.operation = self.operation.finalized()
                         
+                    case .complete(let success):
+                        break
+                        //TODO: show success view
+                        
                     case .failure(let errorMessage):
                         rootActions.alert(errorMessage)
                     }

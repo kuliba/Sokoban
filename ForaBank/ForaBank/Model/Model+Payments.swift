@@ -39,12 +39,12 @@ extension ModelAction {
             
             struct Request: Action {
                 
-                let source: Source
+                let base: Base
                 
-                enum Source {
+                enum Base {
                     
                     case service(Service)
-                    case templateId(PaymentTemplateData.ID)
+                    case source(Operation.Source)
                 }
             }
             
@@ -71,23 +71,9 @@ extension ModelAction {
                     
                     case step(Operation)
                     case confirm(Operation)
+                    case complete(Payments.Success)
                     case failure(String)
                 }
-            }
-        }
-        
-        // complete payment
-        enum Complete {
-            
-            struct Request: Action {
-                
-                let operation: Operation
-            }
-            
-            enum Response: Action {
-                
-                case success(Payments.Success)
-                case failure(String)
             }
         }
         
@@ -168,28 +154,32 @@ extension Model {
     
     func handlePaymentsBeginRequest(_ payload: ModelAction.Payment.Begin.Request) {
         
-        switch payload.source {
-        case .service(let service):
+        Task {
             
-            operation(for: service) { result in
-                switch result {
-                case .success(let operation):
-                    self.action.send(ModelAction.Payment.Begin.Response.success(operation))
+            switch payload.base {
+            case let .service(service):
+                
+                do {
                     
-                case .failure(let error):
+                    let operation = try await operation(for: service)
+                    self.action.send(ModelAction.Payment.Begin.Response.success(operation))
+
+                } catch {
+                    
+                    LoggerAgent.shared.log(level: .error, category: .model, message: "Failed create operation for service: \(service) with error: \(error.localizedDescription)")
                     self.action.send(ModelAction.Payment.Begin.Response.failure(self.paymentsAlertMessage(with: error)))
                 }
-            }
-            
-        case .templateId(let templateId):
-            
-            operation(for: templateId) { result in
+               
+            case let .source(source):
                 
-                switch result {
-                case .success(let operation):
-                    self.action.send(ModelAction.Payment.Begin.Response.success(operation))
+                do {
                     
-                case .failure(let error):
+                    let operation = try await operation(for: source)
+                    self.action.send(ModelAction.Payment.Begin.Response.success(operation))
+
+                } catch {
+                    
+                    LoggerAgent.shared.log(level: .error, category: .model, message: "Failed create operation for source: \(source) with error: \(error.localizedDescription)")
                     self.action.send(ModelAction.Payment.Begin.Response.failure(self.paymentsAlertMessage(with: error)))
                 }
             }
@@ -198,79 +188,70 @@ extension Model {
     
     func handlePaymentsContinueRequest(_ payload: ModelAction.Payment.Continue.Request) {
         
-        let operation = payload.operation
-        
-        //FIXME: refactor
-        
-        /*
-        parameters(for: operation.service, parameters: operation.parameters, history: operation.history) { result in
-            
-            switch result {
-            case .success(let parameters):
-                
-                var historyUpdated = operation.history
-                let historyValues = Operation.history(for: parameters)
-                historyUpdated.append(historyValues)
-                
-                let continueOperation = Operation(service: operation.service, parameters: parameters, history: historyUpdated)
-                
-                if parameters.filter({ $0 is Payments.ParameterFinal }).count > 0 {
-                    
-                    self.action.send(ModelAction.Payment.Continue.Response(result: .confirm(continueOperation)))
-                    
-                } else {
-                    
-                    self.action.send(ModelAction.Payment.Continue.Response(result: .step(continueOperation)))
-                }
-                
-            case .failure(let error):
-                self.action.send(ModelAction.Payment.Continue.Response(result: .failure(self.paymentsAlertMessage(with: error))))
-            }
-        }
-         */
-    }
-    
-    func handlePaymentsCompleteRequest(_ payload: ModelAction.Payment.Complete.Request) {
-        
-        //FIXME: - refactor
-
-        /*
-        guard let codeParameter = payload.operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.code.rawValue })?.parameter, let codeValue = codeParameter.value else {
-            
-            self.action.send(ModelAction.Payment.Complete.Response.failure(self.paymentsAlertMessage(with: Payments.Error.missingCodeParameter)))
-            return
-        }
-        
         Task {
+            
+            var operation = payload.operation
             
             do {
                 
-                let result = try await paymentsTransferComplete(code: codeValue)
-                let success = try Payments.Success(with: result, operation: payload.operation)
-                self.action.send(ModelAction.Payment.Complete.Response.success(success))
+                repeat {
+                    
+                    let nextAction = operation.nextAction()
+                    
+                    switch nextAction {
+                    case let .step(index: stepIndex):
+                        let step = try await step(for: operation, stepIndex: stepIndex)
+                        operation = try operation.appending(step: step)
+                        
+                    case .frontUpdate:
+                        self.action.send(ModelAction.Payment.Continue.Response(result: .step(operation)))
+                        return
+                        
+                    case let .backProcess(parameters: parameters, stepIndex: stepIndex, stage: stage):
+                        switch stage {
+                        case .start:
+                            let nextStep = try await processStart(parameters: parameters, stepIndex: stepIndex, service: operation.service)
+                            operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
+                            operation = try operation.appending(step: nextStep)
+                            
+                        case .next:
+                            let nextStep = try await processNext(parameters: parameters, stepIndex: stepIndex, service: operation.service)
+                            operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
+                            operation = try operation.appending(step: nextStep)
+                            
+                        case .confirm:
+                            let success = try await processConfirm(parameters: parameters, stepIndex: stepIndex, service: operation.service)
+                            self.action.send(ModelAction.Payment.Continue.Response(result: .complete(success)))
+                            return
+                            
+                        case .complete:
+                            let success = try await processComplete(parameters: parameters, stepIndex: stepIndex, service: operation.service)
+                            self.action.send(ModelAction.Payment.Continue.Response(result: .complete(success)))
+                            return
+                        }
+
+                    case .frontConfirm:
+                        self.action.send(ModelAction.Payment.Continue.Response(result: .confirm(operation)))
+                        return
+                        
+                    case let .rollback(stepIndex: stepIndex):
+                        operation = try operation.rollback(to: stepIndex)
+                    
+                    case .restart:
+                        operation = operation.restarted()
+                    }
+                    
+                } while true
                 
             } catch {
                 
-                self.action.send(ModelAction.Payment.Complete.Response.failure(self.paymentsAlertMessage(with: error)))
+                LoggerAgent.shared.log(level: .error, category: .model, message: "Failed continue operation: \(operation) with error: \(error.localizedDescription)")
+                self.action.send(ModelAction.Payment.Continue.Response(result: .failure(self.paymentsAlertMessage(with: error))))
             }
         }
-         */
-        
-        //paymentsTransferComplete mock
-        /*
-         DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(200)) {
-         
-         guard let amountParameter = payload.operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.amount.rawValue}) as? Payments.ParameterAmount else {
-         
-         self.action.send(ModelAction.Payment.Complete.Response.failure(self.paymentsAlertMessage(with: Payments.Error.missingAmountParameter)))
-         return
-         }
-         
-         self.action.send(ModelAction.Payment.Complete.Response.success(.init(status: .complete, amount: amountParameter.amount, currency: amountParameter.currency, icon: nil, operationDetailId: 0)))
-         }
-         */
     }
-    
+        
+    //TODO: move to Model+OperationDetail
     func handleOperationDetailRequest(_ payload: ModelAction.Payment.OperationDetail.Request) {
         
         guard let token = token else {
@@ -307,6 +288,7 @@ extension Model {
         }
     }
     
+    //TODO: move to Model+OperationDetail
     func handleOperationDetailByPaymentIdRequest(_ payload: ModelAction.Payment.OperationDetailByPaymentId.Request) {
         
         guard let token = token else {
@@ -344,83 +326,21 @@ extension Model {
         }
     }
     
-    func paymentsAlertMessage(with error: Error) -> String {
-        
-        if let paymentsError = error as? Payments.Error {
-            
-            switch paymentsError {
-            case .unableLoadFMSCategoryOptions:
-                return "unableLoadFMSCategoryOptions"
-                
-            case .unableLoadFTSCategoryOptions:
-                return "unableLoadFTSCategoryOptions"
-                
-            case .unableLoadFSSPDocumentOptions:
-                return "unableLoadFSSPDocumentOptions"
-                
-            case .unableCreateOperationForService(let service):
-                return "unableCreateOperationForService \(service.name) "
-                
-            case .unexpectedOperatorValue:
-                return "unexpectedOperatorValue"
-                
-            case .missingOperatorParameter:
-                return "missingOperatorParameter"
-                
-            case .missingParameter:
-                return "missingParameter"
-                
-            case .missingPayer:
-                return "missingPayer"
-                
-            case .missingCurrency:
-                return "missingCurrency"
-                
-            case .missingCodeParameter:
-                return "missingCodeParameter"
-                
-            case .missingAmountParameter:
-                return "missingAmountParameter"
-                
-            case .missingAnywayTransferAdditional:
-                return "missingAnywayTransferAdditional"
-                
-            case .failedObtainProductId:
-                return "failedObtainProductId"
-                
-            case .failedTransferWithEmptyDataResponse:
-                return "failedTransferWithEmptyDataResponse"
-                
-            case .failedTransfer(let status, let message):
-                return "failedTransfer status \(status), message: \(String(describing: message))"
-                
-            case .failedMakeTransferWithEmptyDataResponse:
-                return "failedMakeTransferWithEmptyDataResponse"
-                
-            case .failedMakeTransfer(let status, let message):
-                return "failedMakeTransfer status \(status), message: \(String(describing: message))"
-                
-            case .clientInfoEmptyResponse:
-                return "clientInfoEmptyResponse"
-                
-            case .anywayTransferFinalStepExpected:
-                return "anywayTransferFinalStepExpected"
-                
-            case .notAuthorized:
-                return "notAuthorized"
-                
-            case .unsupported:
-                return "unsupported"
-            }
-            
-        } else {
-            
-            return "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."
-        }
-    }
-    
     //MARK: - Operation
     
+    func operation(for service: Service) async throws -> Operation {
+        
+        //TODO: implementation required
+        throw Payments.Error.unsupported
+    }
+    
+    func operation(for source: Operation.Source) async throws -> Operation {
+        
+        //TODO: implementation required
+        throw Payments.Error.unsupported
+    }
+    
+    //TODO: remove
     func operation(for service: Service, completion: @escaping (Result<Operation, Error>) -> Void) {
         
         //FIXME: refactor
@@ -447,19 +367,39 @@ extension Model {
          */
     }
     
-    func operation(for tempaleId: PaymentTemplateData.ID, completion: @escaping (Result<Operation, Error>) -> Void) {
-        
-        completion(.failure(Payments.Error.unsupported))
+    func step(for operation: Operation, stepIndex: Int) async throws -> Operation.Step {
         
         //TODO: implementation required
-        // - find template with id
-        // - extract from template data:
-        //      - payment service
-        //      - create operation
+        throw Payments.Error.unsupported
     }
     
-    //MARK: - Parameters
+    @discardableResult
+    func processStart(parameters: [Parameter], stepIndex: Int, service: Service) async throws -> Operation.Step {
+        
+        //TODO: implementation required
+        throw Payments.Error.unsupported
+    }
     
+    @discardableResult
+    func processNext(parameters: [Parameter], stepIndex: Int, service: Service) async throws -> Operation.Step {
+        
+        //TODO: implementation required
+        throw Payments.Error.unsupported
+    }
+    
+    func processConfirm(parameters: [Parameter], stepIndex: Int, service: Service) async throws -> Payments.Success {
+        
+        //TODO: implementation required
+        throw Payments.Error.unsupported
+    }
+    
+    func processComplete(parameters: [Parameter], stepIndex: Int, service: Service) async throws -> Payments.Success {
+        
+        //TODO: implementation required
+        throw Payments.Error.unsupported
+    }
+    
+    //TODO: remove
     func parameters(for service: Service, parameters: [PaymentsParameterRepresentable], history: [[Parameter]] , completion: @escaping (Result<[PaymentsParameterRepresentable], Error>) -> Void) {
         
         let step = history.count
@@ -849,6 +789,86 @@ extension Model {
             
             guard filter.contains(parameter.parameter.id) == false else { return nil }
             return parameter
+        }
+    }
+}
+
+//MARK: - Error Message
+
+extension Model {
+    
+    func paymentsAlertMessage(with error: Error) -> String {
+        
+        if let paymentsError = error as? Payments.Error {
+            
+            switch paymentsError {
+            case .unableLoadFMSCategoryOptions:
+                return "unableLoadFMSCategoryOptions"
+                
+            case .unableLoadFTSCategoryOptions:
+                return "unableLoadFTSCategoryOptions"
+                
+            case .unableLoadFSSPDocumentOptions:
+                return "unableLoadFSSPDocumentOptions"
+                
+            case .unableCreateOperationForService(let service):
+                return "unableCreateOperationForService \(service.name) "
+                
+            case .unexpectedOperatorValue:
+                return "unexpectedOperatorValue"
+                
+            case .missingOperatorParameter:
+                return "missingOperatorParameter"
+                
+            case .missingParameter:
+                return "missingParameter"
+                
+            case .missingPayer:
+                return "missingPayer"
+                
+            case .missingCurrency:
+                return "missingCurrency"
+                
+            case .missingCodeParameter:
+                return "missingCodeParameter"
+                
+            case .missingAmountParameter:
+                return "missingAmountParameter"
+                
+            case .missingAnywayTransferAdditional:
+                return "missingAnywayTransferAdditional"
+                
+            case .failedObtainProductId:
+                return "failedObtainProductId"
+                
+            case .failedTransferWithEmptyDataResponse:
+                return "failedTransferWithEmptyDataResponse"
+                
+            case .failedTransfer(let status, let message):
+                return "failedTransfer status \(status), message: \(String(describing: message))"
+                
+            case .failedMakeTransferWithEmptyDataResponse:
+                return "failedMakeTransferWithEmptyDataResponse"
+                
+            case .failedMakeTransfer(let status, let message):
+                return "failedMakeTransfer status \(status), message: \(String(describing: message))"
+                
+            case .clientInfoEmptyResponse:
+                return "clientInfoEmptyResponse"
+                
+            case .anywayTransferFinalStepExpected:
+                return "anywayTransferFinalStepExpected"
+                
+            case .notAuthorized:
+                return "notAuthorized"
+                
+            case .unsupported:
+                return "unsupported"
+            }
+            
+        } else {
+            
+            return "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."
         }
     }
 }

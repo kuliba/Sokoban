@@ -461,9 +461,6 @@ class Model {
                 case let payload as ModelAction.Payment.Continue.Request:
                     handlePaymentsContinueRequest(payload)
                     
-                case let payload as ModelAction.Payment.Complete.Request:
-                    handlePaymentsCompleteRequest(payload)
-
                 case let payload as ModelAction.Payment.OperationDetail.Request:
                     handleOperationDetailRequest(payload)
                     
