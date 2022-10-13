@@ -14,7 +14,7 @@ protocol ContactsAgentProtocol {
     
     func fetchContact(by phoneNumber: String) -> AddressBookContact?
     func requestPermission()
-    func fetchContactsList() -> [AddressBookContact]
+    func fetchContactsList() throws -> [AddressBookContact]
 }
 
 enum ContactsAgentStatus {

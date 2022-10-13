@@ -7,7 +7,6 @@
 
 import Contacts
 import Combine
-import PhoneNumberKit
 
 class ContactsAgent: ContactsAgentProtocol {
     
@@ -60,10 +59,9 @@ class ContactsAgent: ContactsAgentProtocol {
                                   avatar: avatar(for: contact))
     }
     
-    func fetchContactsList() -> [AddressBookContact] {
+    func fetchContactsList() throws -> [AddressBookContact] {
         
         var bookContacts = [AddressBookContact]()
-        let phoneNumberKit = PhoneNumberKit()
         var contacts = [CNContact]()
         let keys = [CNContactPhoneNumbersKey,
                     CNContactGivenNameKey,
@@ -72,35 +70,35 @@ class ContactsAgent: ContactsAgentProtocol {
                     CNContactImageDataAvailableKey,
                     CNContactThumbnailImageDataKey
         ] as [CNKeyDescriptor]
-
+        
         let request = CNContactFetchRequest(keysToFetch: keys)
         
         let contactStore = CNContactStore()
-        do {
-            try contactStore.enumerateContacts(with: request) {
-                (contact, stop) in
-                contacts.append(contact)
-            }
-        } catch {
+        
+        try contactStore.enumerateContacts(with: request) { (contact, stop) in
             
-            print("don't try contacts")
+            contacts.append(contact)
         }
         
+        let phoneNumberFormatter = PhoneNumberFormater()
+
         for contact in contacts {
-            
-            if let phoneNumber = (contact.phoneNumbers.first?.value as? CNPhoneNumber)?.value(forKey: "digits") as? String,
-               let phone = try? phoneNumberKit.parse(phoneNumber) {
+
+          guard let phoneNumberData = contact.phoneNumbers.first?.value as? CNPhoneNumber,
+                let phoneNumber = phoneNumberData.value(forKey: "digits") as? String else {
                 
-                let contactPhone = phoneNumberKit.format(phone, toType: .international)
-                
-                bookContacts.append(AddressBookContact(phone: contactPhone,
-                                                       firstName: contact.givenName,
-                                                       middleName: contact.middleName,
-                                                       lastName: contact.familyName,
-                                                       avatar: avatar(for: contact)))
-            }
+                continue
+           }
+
+           let formattedPhoneNumber = phoneNumberFormatter.format(phoneNumber)
+
+           bookContacts.append(AddressBookContact(phone: formattedPhoneNumber,
+                                                               firstName: contact.givenName,
+                                                               middleName: contact.middleName,
+                                                               lastName: contact.familyName,
+                                                               avatar: avatar(for: contact)))
         }
-        
+ 
         return bookContacts
     }
     

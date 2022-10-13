@@ -20,7 +20,7 @@ struct BankData: Codable, Equatable {
 //BankData Helper
 extension BankData {
     
-    var banksType: BanksTypes? {
+    var bankType: BankType? {
         
         if let paymentSystem = self.paymentSystemCodeList.first, paymentSystem == "SFP" {
             
@@ -30,14 +30,27 @@ extension BankData {
             return .direct
         } else {
             
-            return nil
+            return .unknown
+        }
+
+    }
+}
+
+enum BankType: String, CaseIterable {
+    
+    case sfp
+    case direct
+    case unknown
+    
+    var valid: [BankType] { [.sfp, .direct] }
+    
+    var name: String {
+        
+        switch self {
+        case .sfp: return "Российские"
+        case .direct: return "Иностранные"
+        case .unknown: return "Неизвестно"
         }
     }
 }
 
-enum BanksTypes: String, CaseIterable {
-    
-    case sfp = "Российские"
-    case direct = "Иностранные"
-    case all = "Все"
-}

@@ -137,6 +137,7 @@ extension Model {
                     }
                 }
             case .failure(let error):
+                self.action.send(ModelAction.LatestPayments.BanksList.Response(result: .failure(error)))
                 self.handleServerCommandError(error: error, command: command)
             }
         }
