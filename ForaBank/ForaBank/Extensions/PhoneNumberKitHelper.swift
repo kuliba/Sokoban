@@ -24,6 +24,20 @@ struct PhoneNumberFormater: PhoneNumberFormaterProtocol {
         return phoneNumberKit.format(phoneNumberParsed, toType: .international)
     }
     
+    func partialFormatter(_ phoneNumber: String) -> String {
+        
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit)
+        let phoneFormatted = partialFormatter.formatPartial(phoneNumber)
+        
+        return phoneFormatted
+    }
+    
+    func isValidate(_ phoneNumber: String) -> Bool {
+        
+        let phoneNumberParsed = phoneNumberKit.isValidPhoneNumber(phoneNumber)
+        return phoneNumberParsed
+    }
+    
     //TODO: remove afrer refactoring
     func format(_ textField: PhoneNumberTextField) -> String {
         
