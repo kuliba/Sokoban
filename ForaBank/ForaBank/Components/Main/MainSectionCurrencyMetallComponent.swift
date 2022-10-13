@@ -149,19 +149,23 @@ extension MainSectionCurrencyMetallView {
                                                                    (items: [ItemViewModel],
                                                                     imagesMd5ToUpload: [String]) {
                     
-            let items = list.map { item in
-                ItemViewModel(type: .currency,
+            let items = list.map { item -> ItemViewModel in
+                
+                let rateSellDelta = item.rateSellDelta ?? 0
+                let rateBuyDelta = item.rateBuyDelta ?? 0
+                
+                return ItemViewModel(type: .currency,
                               mainImg: (item.md5hash, model.images.value[item.md5hash]?.image),
                               title: item.code,
                               subtitle: dict.first(where: { $0.code == item.code })?.shortName ?? "",
                               action: itemAction(Currency(description: item.code)),
-                              topDashboard: .init(kindImage: item.rateSellDelta > 0 ? .up
-                                                           : item.rateSellDelta == 0 ? .no : .down,
+                              topDashboard: .init(kindImage: rateSellDelta > 0 ? .up
+                                                           : rateSellDelta == 0 ? .no : .down,
                                                   valueText: NumberFormatter.decimal(item.rateSell),
                                                   type: .buy,
                                                   action: buyAction(Currency(description: item.code)) ),
-                              bottomDashboard: .init(kindImage: item.rateBuyDelta > 0 ? .up
-                                                              : item.rateBuyDelta == 0 ? .no : .down,
+                              bottomDashboard: .init(kindImage: rateBuyDelta > 0 ? .up
+                                                              : rateBuyDelta == 0 ? .no : .down,
                                                      valueText: NumberFormatter.decimal(item.rateBuy),
                                                      type: .sell,
                                                      action: sellAction(Currency(description: item.code)) ))

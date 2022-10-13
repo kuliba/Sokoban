@@ -120,16 +120,20 @@ extension CurrencyRatesListView {
                             dict: [CurrencyData]) -> (items: [ItemViewModel],
                                                       imagesMd5ToUpload: [String]) {
                     
-            let items = list.map { item in
-                ItemViewModel(id: item.code,
+            let items = list.map { item -> ItemViewModel in
+                
+                let rateSellDelta = item.rateSellDelta ?? 0
+                let rateBuyDelta = item.rateBuyDelta ?? 0
+                
+                return ItemViewModel(id: item.code,
                               mainImage: (item.md5hash, model.images.value[item.md5hash]?.image),
                               nameCurrency: dict.first(where: { $0.code == item.code })?.shortName ?? "",
-                              buySection: .init(kindImage: item.rateSellDelta > 0 ? .up
-                                                         : item.rateSellDelta == 0 ? nil : .down,
+                              buySection: .init(kindImage: rateSellDelta > 0 ? .up
+                                                         : rateSellDelta == 0 ? nil : .down,
                                                   valueText: String(item.rateSell),
                                                   type: .buy),
-                              sellSection: .init(kindImage: item.rateBuyDelta > 0 ? .up
-                                                          : item.rateBuyDelta == 0 ? nil : .down,
+                              sellSection: .init(kindImage: rateBuyDelta > 0 ? .up
+                                                          : rateBuyDelta == 0 ? nil : .down,
                                                      valueText: String(item.rateBuy),
                                                      type: .sell ))
             }
