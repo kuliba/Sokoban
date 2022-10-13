@@ -37,10 +37,18 @@ struct OpenDepositDetailView: View {
                 .padding(20)
                 .padding(.bottom, 60)
             }
-            
-            Color.white
-                .frame(height: 100)
-                .opacity(0.7)
+            if #available(iOS 15, *){
+                
+                Color.clear
+                    .frame(height: 100)
+                    .background(.ultraThinMaterial)
+            } else {
+               
+                Color.white
+                    .frame(height: 100)
+                    .opacity(0.7)
+            }
+
             
             NavigationLink(destination:
                             ConfirmView(viewModel: viewModel)
