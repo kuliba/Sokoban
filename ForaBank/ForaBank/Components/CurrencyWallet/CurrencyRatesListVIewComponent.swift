@@ -66,9 +66,9 @@ extension CurrencyRatesListView {
                 .sink { [unowned self] data in
                 
                     let list = data.0
-                    let dict = data.1
+                    let currencyData = data.1
                 
-                    let result = reduce(list: list, dict: dict)
+                    let result = Self.reduce(model, list: list, currencyData: currencyData)
                     self.items = result.items
                 
                     if !result.imagesMd5ToUpload.isEmpty {
@@ -116,34 +116,21 @@ extension CurrencyRatesListView {
         }
         
         // reduce Items
-        private func reduce(list: [CurrencyWalletData],
-                            dict: [CurrencyData]) -> (items: [ItemViewModel],
-                                                      imagesMd5ToUpload: [String]) {
+        static func reduce(_ model: Model, list: [CurrencyWalletData], currencyData: [CurrencyData]) -> (items: [ItemViewModel], imagesMd5ToUpload: [String]) {
                     
             let items = list.map { item -> ItemViewModel in
                 
-                let rateSellDelta = item.rateSellDelta ?? 0
-                let rateBuyDelta = item.rateBuyDelta ?? 0
+                let imageData = model.images.value[item.md5hash]
+                let itemViewModel: ItemViewModel = .init(item: item, currencyData: currencyData, imageData: imageData)
                 
-                return ItemViewModel(id: item.code,
-                              mainImage: (item.md5hash, model.images.value[item.md5hash]?.image),
-                              nameCurrency: dict.first(where: { $0.code == item.code })?.shortName ?? "",
-                              buySection: .init(kindImage: rateSellDelta > 0 ? .up
-                                                         : rateSellDelta == 0 ? nil : .down,
-                                                  valueText: String(item.rateSell),
-                                                  type: .buy),
-                              sellSection: .init(kindImage: rateBuyDelta > 0 ? .up
-                                                          : rateBuyDelta == 0 ? nil : .down,
-                                                     valueText: String(item.rateBuy),
-                                                     type: .sell ))
+                return itemViewModel
             }
-                    
-            let imagesMd5ToUpload = items.filter { $0.mainImage.img == nil }
-                                         .map { $0.mainImage.md5 }
+
+            let filterredItems = items.filter { $0.mainImage.img == nil }
+            let imagesMd5ToUpload = filterredItems.map { $0.mainImage.md5 }
                     
             return (items, imagesMd5ToUpload)
         }
-        
     }
 }
 
@@ -171,6 +158,22 @@ extension CurrencyRatesListView.ViewModel {
             self.buySection = buySection
             self.sellSection = sellSection
         }
+
+        convenience init(item: CurrencyWalletData, currencyData: [CurrencyData], imageData: ImageData?) {
+
+            let imageData: (String, Image?) = (item.md5hash, imageData?.image)
+            
+            let rateSellDelta = item.rateSellDelta ?? 0
+            let rateBuyDelta = item.rateBuyDelta ?? 0
+            
+            let nameCurrency = currencyData.first(where: { $0.code == item.code })?.shortName ?? ""
+
+            let buySection: SectionItemViewModel = .init(kindImage: Self.kindImage(rateSellDelta), valueText: String(item.rateSell), type: .buy)
+            
+            let sellSection: SectionItemViewModel = .init(kindImage: Self.kindImage(rateBuyDelta), valueText: String(item.rateBuy), type: .sell)
+            
+            self.init(id: item.code, mainImage: imageData, nameCurrency: nameCurrency, buySection: buySection, sellSection: sellSection)
+        }
         
         struct SectionItemViewModel {
             let kindImage: KindImage?
@@ -188,6 +191,13 @@ extension CurrencyRatesListView.ViewModel {
             case sell = "Продать"
         }
         
+        static private func kindImage(_ rateDelta: Double) -> KindImage? {
+            rateDelta > 0 ? .up : rateDelta == 0 ? nil : .down
+        }
+        
+        static private func formattedText(_ rate: Double) -> String {
+            NumberFormatter.decimal(rate)
+        }
     }
 }
 
