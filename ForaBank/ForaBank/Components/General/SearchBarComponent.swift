@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Combine
-import PhoneNumberKit
 
 extension SearchBarComponent {
     
@@ -17,28 +16,64 @@ extension SearchBarComponent {
         
         let icon: Image?
         @Published var text: String
-        @Published var isEditing = false
         let placeHolder: PlaceHolder
-        let cancelButtonLabel = "Отмена"
+        @Published var additionalButtons: [Button]
         var textColor: Color
-        let phoneNumberKit = PhoneNumberKit()
+        @Published var isValidation: Bool
+        @Published var state: State
         
+        private let phoneNumberFormater = PhoneNumberFormater()
         private var bindings = Set<AnyCancellable>()
         
-        internal init(isEditing: Bool = false, placeHolder: PlaceHolder, icon: Image? = nil, text: String = "", textColor: Color) {
+        internal init(state: State, additionalButtons: [Button], placeHolder: PlaceHolder, icon: Image? = nil, text: String = "", textColor: Color, isValidation: Bool = false) {
             
-            self.isEditing = isEditing
+            self.state = state
+            self.additionalButtons = additionalButtons
             self.placeHolder = placeHolder
             self.icon = icon
             self.text = text
             self.textColor = textColor
+            self.isValidation = isValidation
             
             bind()
         }
         
-        convenience init(_ model: Model, placeHolder: PlaceHolder) {
+        convenience init(placeHolder: PlaceHolder) {
             
-            self.init(placeHolder: placeHolder, textColor: .textPlaceholder)
+            self.init(state: .default, additionalButtons: [], placeHolder: placeHolder, textColor: .textPlaceholder)
+            
+            let cancelButton = Button.init(type: .title("Отмена"), action: {
+                
+                self.action.send(ViewModelAction.ChangeState(state: .hide))
+                
+            })
+            
+            let closeButton = Button.init(type: .icon(.ic24Close), action: {
+                
+                self.action.send(ViewModelAction.ClearTextField())
+            })
+            
+            self.additionalButtons = [closeButton ,cancelButton]
+        }
+        
+        enum State {
+            
+            case `default`
+            case editing
+            case hide
+        }
+        
+        struct Button: Identifiable {
+            
+            let id = UUID()
+            let type: Kind
+            let action: () -> Void
+            
+            enum Kind {
+                
+                case icon(Image)
+                case title(String)
+            }
         }
         
         enum PlaceHolder: String {
@@ -49,28 +84,103 @@ extension SearchBarComponent {
         
         private func bind() {
             
+            action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                        
+                    case let payload as ViewModelAction.ChangeState:
+                        self.state = payload.state
+                    
+                    case _ as ViewModelAction.ClearTextField:
+                        self.text = ""
+                        
+                    default: break
+                    }
+        
+                }.store(in: &bindings)
+            
             $text
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] text in
                     
-//                    self.parseNumber(text)
+                    guard phoneNumberFormater.isValidate(text) else {
+                        isValidation = false
+                        return
+                    }
+                    
+                    withAnimation {
+                        
+                        isValidation = true
+                    }
                     
                 }.store(in: &bindings)
         }
+    }
+}
+
+struct PhoneNumberTextFieldView: UIViewRepresentable {
+    
+    var textField = UITextField()
+    let phoneNumberKit = PhoneNumberFormater()
+
+    @ObservedObject var viewModel: SearchBarComponent.ViewModel
+    
+    func makeUIView(context: Context) -> UITextField {
         
-        func parseNumber(_ number: String) {
-            do {
-                let phoneNumber = try phoneNumberKit.parse(number, ignoreType: true)
-                self.text = self.phoneNumberKit.format(phoneNumber, toType: .international)
-//                self.parsedCountryCodeLabel.text = String(phoneNumber.countryCode)
-                if let regionCode = phoneNumberKit.mainCountry(forCode: phoneNumber.countryCode) {
-                    let country = Locale.current.localizedString(forRegionCode: regionCode)
-//                    self.parsedCountryLabel.text = country
-                }
-            } catch {
-//                self.clearResults()
-                print("Something went wrong")
+        textField.addTarget(context.coordinator, action: #selector(Coordinator.onTextChange), for: .editingChanged)
+        textField.placeholder = viewModel.placeHolder.rawValue
+        textField.keyboardType = .default
+        textField.returnKeyType = .done
+        textField.autocorrectionType = .no
+        textField.shouldHideToolbarPlaceholder = false
+        textField.spellCheckingType = .no
+        
+        return textField
+    }
+    
+    func updateUIView(_ uiView: UITextField, context: Context) {
+        
+        uiView.text = self.viewModel.text
+        
+        if self.viewModel.state == .hide {
+            
+            self.textField.endEditing(false)
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(self)
+    }
+    
+    typealias UIViewType = UITextField
+    
+    class Coordinator:  NSObject, UITextFieldDelegate {
+        var delegate: PhoneNumberTextFieldView
+        
+        init(_ delegate: PhoneNumberTextFieldView) {
+            self.delegate = delegate
+        }
+        
+        @objc func onTextChange(textField: UITextField) {
+            
+            if let text = textField.text {
+                
+                self.delegate.viewModel.state = .editing
+                self.delegate.viewModel.text = text
+                self.delegate.textField.text = self.delegate.phoneNumberKit.partialFormatter(text)
             }
+        }
+        
+        func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+            print("textFieldShouldEndEditing")
+            return true
+        }
+        
+        func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+            print("it's should change Characters \(String(describing: textField.text))")
+            return true
         }
     }
 }
@@ -83,52 +193,69 @@ struct SearchBarComponent: View {
         
         HStack {
             
-            TextField(viewModel.placeHolder.rawValue, text: $viewModel.text)
-                .padding(10)
-                .padding(.leading, 15)
+            if let icon = viewModel.icon {
+                
+                icon
+                    .resizable()
+                    .foregroundColor(.gray)
+                    .frame(width: 16, height: 16)
+            }
+            
+            PhoneNumberTextFieldView(viewModel: viewModel)
+                .frame(height: 44)
                 .cornerRadius(8)
-                .onTapGesture {
-                    self.viewModel.isEditing = true
-                }
                 .foregroundColor(viewModel.textColor)
                 
-            
-            if viewModel.isEditing {
+            if viewModel.state == .editing {
                 
                 HStack(spacing: 20) {
                     
-                    Button(action: {
+                    ForEach(viewModel.additionalButtons) { button in
                         
-                        self.viewModel.isEditing = false
-                        self.viewModel.text = ""
-                    }) {
-                        
-                        Image.ic24Close
-                            .resizable()
-                            .frame(width: 12, height: 12, alignment: .center)
-                            .foregroundColor(.mainColorsGray)
-                        
+                        Button(action: {
+                            
+                            button.action()
+                            
+                        }) {
+                            
+                            switch button.type {
+                             
+                            case let .icon(icon):
+                                icon
+                                    .resizable()
+                                    .frame(width: 12, height: 12, alignment: .center)
+                                    .foregroundColor(.mainColorsGray)
+                                
+                            case let .title(title):
+                                Text(title)
+                                    .foregroundColor(.mainColorsGray)
+                                    .font(Font.system(size: 14))
+                            }
+                            
+                        }
                     }
-                    
-                    Button(action: {
-                        self.viewModel.isEditing = false
-                        self.viewModel.text = ""
-                        
-                    }) {
-                        Text(viewModel.cancelButtonLabel)
-                            .foregroundColor(.mainColorsGray)
-                            .font(Font.system(size: 14))
-                    }
-                    .padding(.trailing, 20)
-                    .transition(.move(edge: .trailing))
-                    .animation(.default)
                 }
             }
         }
+        .padding(.leading, 14)
+        .padding(.trailing, 15)
         .overlay(
             RoundedRectangle(cornerRadius: 8)
                 .stroke(Color.bordersDivider, lineWidth: 1)
         )
+    }
+}
+
+extension SearchBarComponent {
+    
+    struct ViewModelAction {
+        
+        struct ChangeState: Action {
+            
+            let state: ViewModel.State
+        }
+        
+        struct ClearTextField: Action {}
     }
 }
 
@@ -137,10 +264,10 @@ struct SearchBarComponent_Previews: PreviewProvider {
         
         Group {
             
-            SearchBarComponent(viewModel: .init(.emptyMock, placeHolder: .contacts))
+            SearchBarComponent(viewModel: .init(placeHolder: .contacts))
                 .previewLayout(.fixed(width: 375, height: 100))
             
-            SearchBarComponent(viewModel: .init(isEditing: true, placeHolder: .contacts, textColor: .textPlaceholder))
+            SearchBarComponent(viewModel: .init(state: .default, additionalButtons: [], placeHolder: .contacts, textColor: .textPlaceholder))
                 .previewLayout(.fixed(width: 375, height: 100))
         }
     }
