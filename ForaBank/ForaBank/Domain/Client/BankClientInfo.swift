@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BankClientInfo: Codable {
+struct BankClientInfo: Codable, Hashable {
     
     let phone: String
 }

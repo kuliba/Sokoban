@@ -100,8 +100,7 @@ class ContactsAgent: ContactsAgentProtocol {
                                                        avatar: avatar(for: contact)))
             }
         }
-        let phones = bookContacts.map({$0.phone})
-        Model.shared.action.send(ModelAction.OwnerPhone.Request.init(phones: phones))
+        
         return bookContacts
     }
     

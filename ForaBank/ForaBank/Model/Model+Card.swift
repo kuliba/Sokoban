@@ -52,11 +52,11 @@ extension ModelAction {
         }
     }
     
-    enum OwnerPhone {
+    enum BankClient {
         
         struct Request: Action {
             
-            let phones: [String]
+            let phone: String
         }
     }
 }
@@ -137,7 +137,7 @@ extension Model {
         }
     }
     
-    func handleOwnerPhoneRequest(_ payload: ModelAction.OwnerPhone.Request) {
+    func handleOwnerPhoneRequest(_ payload: ModelAction.BankClient.Request) {
         
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
@@ -146,33 +146,31 @@ extension Model {
         
         Task {
             
-            for phone in payload.phones {
-
-                let command = ServerCommands.CardController.GetOwnerPhoneNumber(token: token, payload: .init(phoneNumber: phone))
-
-                do {
+            let command = ServerCommands.CardController.GetOwnerPhoneNumber(token: token, payload: .init(phoneNumber: payload.phone))
+            
+            do {
+                
+                let result = try await ratesFetchWithCommand(command: command)
+                
+                if result.phone != "" {
                     
-                    let result = try await ratesFetchWithCommand(command: command)
-
-                    if result.phone != "" || self.bankClientInfo.value.contains(where: {$0?.phone == result.phone}) {
+                    self.bankClientInfo.value.append(result)
+                    
+                    do {
                         
-                        self.bankClientInfo.value.append(result)
+                        try localAgent.store(self.bankClientInfo.value, serial: nil)
                         
-                        do {
-                            
-                            try localAgent.store(self.bankClientInfo.value, serial: nil)
-                            
-                        } catch(let error) {
-                            
-                            LoggerAgent.shared.log(category: .cache, message: "Chaching Error: \(error)")
-                        }
+                    } catch(let error) {
+                        
+                        LoggerAgent.shared.log(category: .cache, message: "Chaching Error: \(error)")
                     }
-
-                } catch {
-                    
-                    self.handleServerCommandError(error: error, command: command)
                 }
+                
+            } catch {
+                
+                self.handleServerCommandError(error: error, command: command)
             }
+            
         }
     }
     

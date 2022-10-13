@@ -82,7 +82,7 @@ class Model {
     let informer: CurrentValueSubject<InformerData?, Never>
 
     //MARK: Bank Client Info
-    let bankClientInfo: CurrentValueSubject<[BankClientInfo?], Never>
+    let bankClientInfo: CurrentValueSubject<[BankClientInfo], Never>
     
     //MARK: SBPay
     let deepLinkType: CurrentValueSubject<DeepLinkType?, Never>
@@ -564,7 +564,7 @@ class Model {
                     
                     //MARK: - Card
                 
-                case let payload as ModelAction.OwnerPhone.Request:
+                case let payload as ModelAction.BankClient.Request:
                     handleOwnerPhoneRequest(payload)
                     
                     //MARK: - Notifications
@@ -939,7 +939,7 @@ private extension Model {
             self.depositsInfo.value = depositsInfo
         }
         
-        if let bankClientInfo = localAgent.load(type: [BankClientInfo?].self) {
+        if let bankClientInfo = localAgent.load(type: [BankClientInfo].self) {
             
             self.bankClientInfo.value = bankClientInfo
         }
