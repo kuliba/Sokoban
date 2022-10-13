@@ -26,45 +26,54 @@ struct ContactsView: View {
             .padding(.horizontal, 20)
             
             switch viewModel.mode {
-            
+                
             case let .contactsSearch(contacts):
+                
                 if let contacts = contacts {
                     
                     ContactListView(viewModel: contacts)
+                    
                 }
                 
             case let .contacts(latestPayments, contacts):
                 
-                LatestPaymentsViewComponent(viewModel: latestPayments)
+                if let latestPayments {
+                    
+                    LatestPaymentsViewComponent(viewModel: latestPayments)
+                }
                 
                 ContactListView(viewModel: contacts)
                 
             case let .banks(topBanks, banksList):
                 
-                ScrollView(.horizontal, showsIndicators: false) {
+                if let topBanks {
                     
-                    switch topBanks {
-                    case let .banks(topBanks):
-                        TopBankView(viewModel: topBanks)
-
-                    case .placeHolder:
-                        HStack(alignment: .top, spacing: 4) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        
+                        switch topBanks {
+                        case let .banks(topBanks):
                             
-                            ForEach(0..<5) {_ in
+                            TopBankView(viewModel: topBanks)
+                            
+                        case .placeHolder:
+                            HStack(alignment: .top, spacing: 4) {
                                 
-                                LatestPaymentsViewComponent.PlaceholderView(viewModel: .init())
+                                ForEach(0..<5) {_ in
+                                    
+                                    LatestPaymentsViewComponent.PlaceholderView(viewModel: .init())
+                                }
                             }
                         }
                     }
+                    .padding(.leading, 8)
                 }
-                .padding(.leading, 8)
                 
                 Divider()
                     .frame(height: 1)
                     .foregroundColor(Color.mainColorsGrayLightest)
                 
                 VStack(spacing: 32) {
-                 
+                    
                     ForEach(banksList, id: \.self) { item in
                         
                         CollapsebleView(viewModel: item)
@@ -99,7 +108,7 @@ extension ContactsView {
         var body: some View {
             
             HStack(alignment: .top, spacing: 4) {
-             
+                
                 ForEach(viewModel.banks, id: \.self) { bank in
                     
                     Button {
@@ -121,7 +130,7 @@ extension ContactsView {
                                             .frame(width: 56, height: 56, alignment: .center)
                                             .cornerRadius(90)
                                     }
-
+                                    
                                 } else {
                                     ZStack {
                                         
@@ -177,12 +186,12 @@ extension ContactsView {
         var body: some View {
             
             VStack {
-             
+                
                 switch viewModel.mode {
                 case let .normal(collapsedViewModel):
                     
                     HStack(alignment: .center, spacing: 8.5) {
-                    
+                        
                         collapsedViewModel.icon
                             .renderingMode(.original)
                             .resizable()
@@ -193,9 +202,9 @@ extension ContactsView {
                             .font(.textH3SB18240())
                         
                         Spacer()
-                    
+                        
                         if let searchButton = collapsedViewModel.searchButton {
-                         
+                            
                             Button {
                                 
                                 searchButton.action()
@@ -225,30 +234,34 @@ extension ContactsView {
                     }
                     .padding(.horizontal, 20)
                     
-                case let .search(searchViewModel):
-                    SearchBarComponent(viewModel: searchViewModel)
-                        .padding(.horizontal, 20)
+                case .search:
+                    
+                    if let searchBarViewModel = viewModel.searchBar, viewModel.searchBar.state != .hide {
+                        
+                        SearchBarComponent(viewModel: searchBarViewModel)
+                            .padding(.horizontal, 20)
+                    }
                 }
                 
                 if viewModel.isCollapsed {
-
+                    
                     if let viewModel = viewModel.optionViewModel {
-                     
+                        
                         OptionSelectorView(viewModel: viewModel)
                             .padding()
                     }
-
+                    
                     ScrollView(.vertical, showsIndicators: false) {
-
+                        
                         VStack(spacing: 24) {
-
-                            ForEach(viewModel.bank, id: \.self) { bank in
-
+                            
+                            ForEach(viewModel.banks, id: \.self) { bank in
+                                
                                 Button {
-
+                                    
                                     bank.action()
                                 } label: {
-
+                                    
                                     BankView(viewModel: bank)
                                 }
                             }
@@ -291,19 +304,19 @@ extension ContactsView {
                 VStack(spacing: 24) {
                     
                     ForEach(viewModel.contacts, id: \.self) { contact in
-
+                        
                         Button {
-
+                            
                             contact.action()
                         } label: {
-
+                            
                             ContactView(viewModel: contact)
                         }
                     }
                 }
+                .padding(.bottom, 10)
             }
             .padding(.horizontal, 20)
-            .padding(.bottom, 50)
         }
         
         struct ContactView: View {
@@ -314,31 +327,31 @@ extension ContactsView {
                 
                 HStack(alignment: .center, spacing: 20) {
                     
-                        switch viewModel.image {
+                    switch viewModel.image {
                         
-                        case let .image(image):
-                            image
-                                .resizable()
+                    case let .image(image):
+                        image
+                            .resizable()
+                            .frame(width: 40, height: 40, alignment: .center)
+                            .cornerRadius(90)
+                    case let .initials(initials):
+                        
+                        ZStack {
+                            
+                            Color.mainColorsGrayLightest
                                 .frame(width: 40, height: 40, alignment: .center)
                                 .cornerRadius(90)
-                        case let .initials(initials):
                             
-                            ZStack {
-
-                                Color.mainColorsGrayLightest
-                                    .frame(width: 40, height: 40, alignment: .center)
-                                    .cornerRadius(90)
-                                
-                                Text(initials)
-                                    .foregroundColor(.textPlaceholder)
-                                    .font(.textH3M18240())
-                            }
-                        
-                        default:
-                            
-                            IconPlaceholder()
+                            Text(initials)
+                                .foregroundColor(.textPlaceholder)
+                                .font(.textH3M18240())
                         }
                         
+                    default:
+                        
+                        IconPlaceholder()
+                    }
+                    
                     
                     VStack(alignment: .leading, spacing: 8) {
                         
@@ -392,7 +405,7 @@ extension ContactsView {
         let viewModel: ContactsViewModel.BanksListViewModel.Bank
         
         var body: some View {
-           
+            
             HStack(alignment: .center, spacing: 20) {
                 
                 if let avatar = viewModel.image {
@@ -410,11 +423,11 @@ extension ContactsView {
                 }
                 
                 VStack(alignment: .leading, spacing: 8) {
-                        
+                    
                     Text(viewModel.title)
-                            .foregroundColor(Color.textSecondary)
-                            .lineLimit(1)
-                            .font(.system(size: 16))
+                        .foregroundColor(Color.textSecondary)
+                        .lineLimit(1)
+                        .font(.system(size: 16))
                 }
                 
                 Spacer()
@@ -425,15 +438,15 @@ extension ContactsView {
 
 struct ContactsView_Previews: PreviewProvider {
     static var previews: some View {
-
+        
         Group {
             
             ContactsView(viewModel: .sample)
                 .previewDisplayName("Contacts List")
-
+            
             ContactsView(viewModel: .sampleLatestPayment)
                 .previewDisplayName("Contacts List")
-
+            
             ContactsView(viewModel: .sampleBanks)
                 .previewDisplayName("Contact List Banks")
         }
