@@ -520,6 +520,9 @@ class Model {
                 case let payload as ModelAction.Products.DepositConditionsPrintForm.Request:
                     handleProductsDepositConditionPrintFormRequest(payload)
                     
+                case let payload as ModelAction.Products.ContractPrintForm.Request:
+                    handleProductsContractPrintFormRequest(payload)
+                    
                 case let payload as ModelAction.Card.Unblock.Request:
                     handleUnblockCardRequest(payload)
                     
