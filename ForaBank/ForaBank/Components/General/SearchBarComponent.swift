@@ -17,7 +17,8 @@ extension SearchBarComponent {
         let icon: Image?
         @Published var text: String
         let placeHolder: PlaceHolder
-        @Published var additionalButtons: [Button]
+        @Published var clearButton: Button?
+        @Published var cancelButton: Button
         var textColor: Color
         @Published var isValidation: Bool
         @Published var state: State
@@ -25,10 +26,11 @@ extension SearchBarComponent {
         private let phoneNumberFormater = PhoneNumberFormater()
         private var bindings = Set<AnyCancellable>()
         
-        internal init(state: State, additionalButtons: [Button], placeHolder: PlaceHolder, icon: Image? = nil, text: String = "", textColor: Color, isValidation: Bool = false) {
+        internal init(state: State = .default, clearButton: Button?, cancelButton: Button, placeHolder: PlaceHolder, icon: Image? = nil, text: String = "", textColor: Color, isValidation: Bool = false) {
             
             self.state = state
-            self.additionalButtons = additionalButtons
+            self.clearButton = clearButton
+            self.cancelButton = cancelButton
             self.placeHolder = placeHolder
             self.icon = icon
             self.text = text
@@ -40,20 +42,11 @@ extension SearchBarComponent {
         
         convenience init(placeHolder: PlaceHolder) {
             
-            self.init(state: .default, additionalButtons: [], placeHolder: placeHolder, textColor: .textPlaceholder)
+            let cancel = Button.init(type: .title("Отмена"), action: {})
             
-            let cancelButton = Button.init(type: .title("Отмена"), action: {
-                
-                self.action.send(ViewModelAction.ChangeState(state: .hide))
-                
-            })
+            let clear = Button.init(type: .icon(.ic24Close), action: {})
             
-            let closeButton = Button.init(type: .icon(.ic24Close), action: {
-                
-                self.action.send(ViewModelAction.ClearTextField())
-            })
-            
-            self.additionalButtons = [closeButton ,cancelButton]
+            self.init(clearButton: clear, cancelButton: cancel, placeHolder: placeHolder, textColor: .textPlaceholder)
         }
         
         enum State {
@@ -67,7 +60,7 @@ extension SearchBarComponent {
             
             let id = UUID()
             let type: Kind
-            let action: () -> Void
+            var action: () -> Void
             
             enum Kind {
                 
@@ -92,13 +85,13 @@ extension SearchBarComponent {
                         
                     case let payload as ViewModelAction.ChangeState:
                         self.state = payload.state
-                    
+                        
                     case _ as ViewModelAction.ClearTextField:
                         self.text = ""
                         
                     default: break
                     }
-        
+                    
                 }.store(in: &bindings)
             
             $text
@@ -124,7 +117,7 @@ struct PhoneNumberTextFieldView: UIViewRepresentable {
     
     var textField = UITextField()
     let phoneNumberKit = PhoneNumberFormater()
-
+    
     @ObservedObject var viewModel: SearchBarComponent.ViewModel
     
     func makeUIView(context: Context) -> UITextField {
@@ -205,34 +198,19 @@ struct SearchBarComponent: View {
                 .frame(height: 44)
                 .cornerRadius(8)
                 .foregroundColor(viewModel.textColor)
-                
+            
             if viewModel.state == .editing {
                 
                 HStack(spacing: 20) {
                     
-                    ForEach(viewModel.additionalButtons) { button in
+                    if let clearButton = viewModel.clearButton {
                         
-                        Button(action: {
-                            
-                            button.action()
-                            
-                        }) {
-                            
-                            switch button.type {
-                             
-                            case let .icon(icon):
-                                icon
-                                    .resizable()
-                                    .frame(width: 12, height: 12, alignment: .center)
-                                    .foregroundColor(.mainColorsGray)
-                                
-                            case let .title(title):
-                                Text(title)
-                                    .foregroundColor(.mainColorsGray)
-                                    .font(Font.system(size: 14))
-                            }
-                            
-                        }
+                        ButtonView(viewModel: clearButton)
+                    }
+                    
+                    if let cancelButton = viewModel.cancelButton {
+                        
+                        ButtonView(viewModel: cancelButton)
                     }
                 }
             }
@@ -243,6 +221,36 @@ struct SearchBarComponent: View {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(Color.bordersDivider, lineWidth: 1)
         )
+    }
+    
+    struct ButtonView: View {
+        
+        let viewModel: SearchBarComponent.ViewModel.Button
+        
+        var body: some View {
+            
+            Button(action: {
+                
+                viewModel.action()
+                
+            }) {
+                
+                switch viewModel.type {
+                    
+                case let .icon(icon):
+                    icon
+                        .resizable()
+                        .frame(width: 12, height: 12, alignment: .center)
+                        .foregroundColor(.mainColorsGray)
+                    
+                case let .title(title):
+                    Text(title)
+                        .foregroundColor(.mainColorsGray)
+                        .font(Font.system(size: 14))
+                }
+                
+            }
+        }
     }
 }
 
@@ -267,7 +275,7 @@ struct SearchBarComponent_Previews: PreviewProvider {
             SearchBarComponent(viewModel: .init(placeHolder: .contacts))
                 .previewLayout(.fixed(width: 375, height: 100))
             
-            SearchBarComponent(viewModel: .init(state: .default, additionalButtons: [], placeHolder: .contacts, textColor: .textPlaceholder))
+            SearchBarComponent(viewModel: .init(state: .default, clearButton: .init(type: .icon(.ic24Close), action: {}), cancelButton: .init(type: .title("Отмена"), action: {}), placeHolder: .contacts, textColor: .textPlaceholder))
                 .previewLayout(.fixed(width: 375, height: 100))
         }
     }
