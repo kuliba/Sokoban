@@ -33,9 +33,9 @@ extension OpenAccountPerformView {
 
         var currencyTitle: String {
 
-            switch item.currencyType {
-            case .RUB: return "счет"
-            default:
+            if item.currency == "RUB" {
+                return "счет"
+            } else {
                 return "валютный счет"
             }
         }
@@ -51,7 +51,7 @@ extension OpenAccountPerformView {
         }
         
         private var openAccountTitle: String {
-            "\(item.currencyType.rawValue) счет открыт "
+            "\(item.currency) счет открыт "
         }
         
         private var currentOperationType: OpenAccountPerformType {
@@ -158,6 +158,7 @@ extension OpenAccountPerformView {
                     default:
                         break
                     }
+                    
                 }.store(in: &bindings)
 
             // MARK: - ViewModel

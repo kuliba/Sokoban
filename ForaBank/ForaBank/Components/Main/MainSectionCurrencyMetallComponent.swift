@@ -131,7 +131,7 @@ extension MainSectionCurrencyMetallView {
                 }
             }
         }
-        
+
 //MARK: Reduce Items
         
         static func reduce(_ model: Model, list: [CurrencyWalletData], currencyData: [CurrencyData], itemAction: @escaping (Currency) -> () -> Void, buyAction: @escaping (Currency) -> () -> Void, sellAction: @escaping (Currency) -> () -> Void) -> (items: [ItemViewModel], imagesMd5ToUpload: [String]) {

@@ -15,6 +15,7 @@ class OpenAccountViewModel: ObservableObject {
     @Published var item: OpenAccountItemViewModel
     @Published var items: [OpenAccountItemViewModel]
     @Published var currency: Currency
+    @Published var pagerViewModel: PagerScrollViewModel
 
     let model: Model
     let style: Style
@@ -26,8 +27,6 @@ class OpenAccountViewModel: ObservableObject {
         items[safe: pagerViewModel.currentIndex]
     }
 
-    let pagerViewModel: PagerScrollViewModel
-    
     var heightContent: CGFloat {
 
         if items.count > 1 {
@@ -44,24 +43,41 @@ class OpenAccountViewModel: ObservableObject {
     }
 
     init(model: Model,
-         style: Style = .openAccount,
+         item: OpenAccountItemViewModel,
          items: [OpenAccountItemViewModel],
-         currency: Currency, closeAction: @escaping () -> Void = {}) {
+         currency: Currency,
+         pagerViewModel: PagerScrollViewModel,
+         style: Style = .openAccount,
+         closeAction: @escaping () -> Void = {}) {
 
         self.model = model
-        self.style = style
-        self.item = .empty
+        self.item = item
         self.items = items
         self.currency = currency
+        self.pagerViewModel = pagerViewModel
+        self.style = style
         self.closeAction = closeAction
-
-        pagerViewModel = .init(pagesCount: items.count)
+    }
+    
+    convenience init?(_ model: Model, products: [OpenAccountProductData], closeAction: @escaping () -> Void = {}) {
+        
+        let currencyData = model.currencyList.value
+        let imageData = model.images.value
+        
+        let items = Self.reduce(products: products, currencyData: currencyData, images: imageData)
+        
+        guard let item = items.first, let product = products.first else {
+            return nil
+        }
+        
+        self.init(model: model, item: item, items: items, currency: product.currency, pagerViewModel: .init(items.count), closeAction: closeAction)
 
         if let currentItem = currentItem {
             self.item = currentItem
         }
 
         bind()
+        updateImagesIfNeeds(products, images: imageData)
     }
 
     private func bind() {
@@ -110,6 +126,21 @@ class OpenAccountViewModel: ObservableObject {
                     break
                 }
             }.store(in: &bindings)
+        
+        model.images
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] images in
+                
+                let items = self.items.filter { $0.card.icon == nil }
+                
+                for item in items {
+                    
+                    if let imageData = images[item.id] {
+                        item.card.icon = imageData.image
+                    }
+                }
+                
+            }.store(in: &bindings)
 
         pagerViewModel.$currentIndex
             .receive(on: DispatchQueue.main)
@@ -119,18 +150,25 @@ class OpenAccountViewModel: ObservableObject {
                     return
                 }
 
-                let currencyType = currentItem.currencyType
-
-                guard currency.description != currencyType.rawValue else {
+                guard currency.description != currentItem.currency else {
                     return
                 }
 
                 item = currentItem
-                currency = .init(description: currencyType.rawValue)
+                currency = .init(description: currentItem.currency)
 
             }.store(in: &bindings)
     }
     
+    private func updateImagesIfNeeds(_ products: [OpenAccountProductData], images: [String: ImageData]) {
+        
+        let imagesIds = Model.reduce(products, images: images)
+        
+        if imagesIds.isEmpty == false {
+            model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: imagesIds))
+        }
+    }
+
     private func setItemsHidden(_ isHidden: Bool) {
         
         guard let currentItem = currentItem else {
@@ -162,15 +200,16 @@ extension OpenAccountViewModel: Hashable {
 
 extension OpenAccountViewModel {
 
-    static func reduce(products: [OpenAccountProductData]) -> [OpenAccountItemViewModel] {
+    static func reduce(products: [OpenAccountProductData], currencyData: [CurrencyData], images: [String: ImageData]) -> [OpenAccountItemViewModel] {
 
         return products.compactMap { item in
-
-            guard let currencyType: OpenAccountСurrencyType = .init(
-                rawValue: item.currency.rawValue) else {
-                    return nil
-                }
-
+            
+            let currencyItem = currencyData.first(where: { $0.code == item.currency.description })
+            
+            guard let currencyItem = currencyItem, let currencySymbol = currencyItem.currencySymbol else {
+                return nil
+            }
+            
             let options = item.txtConditionList.map { option -> OpenAccountOptionViewModel in
 
                 let colorType: OpenAccountOptionViewModel.ColorType = .init(rawValue: option.type.rawValue) ?? .green
@@ -183,61 +222,14 @@ extension OpenAccountViewModel {
 
             return OpenAccountItemViewModel(
                 id: item.designMd5hash,
-                currencyCode: item.currencyCode,
+                currency: item.currency.description,
                 conditionLinkURL: item.detailedConditionUrl,
                 ratesLinkURL: item.detailedRatesUrl,
+                currencyCode: item.currencyCode,
                 header: .init(title: item.currencyAccount, detailTitle: item.breakdownAccount),
-                card: .init(currrentAccountTitle: item.accountType, currencyType: currencyType),
+                card: .init(currrentAccountTitle: item.accountType, currencySymbol: currencySymbol, icon: images[item.designMd5hash]?.image),
                 options: options,
-                currencyType: currencyType,
                 isAccountOpen: item.open)
-        }
-    }
-}
-
-// MARK: - СurrencyType
-
-enum OpenAccountСurrencyType: String {
-
-    case RUB
-    case USD
-    case EUR
-    case GBP
-    case CHF
-
-    var icon: Image {
-
-        switch self {
-
-        case .RUB: return .init("RUB")
-        case .USD: return .init("USD")
-        case .EUR: return .init("EUR")
-        case .GBP: return .init("GBP")
-        case .CHF: return .init("CHF")
-        }
-    }
-
-    var iconDetail: Image {
-
-        switch self {
-
-        case .RUB: return .init("RUB Detail")
-        case .USD: return .init("USD Detail")
-        case .EUR: return .init("EUR Detail")
-        case .GBP: return .init("GBP Detail")
-        case .CHF: return .init("CHF Detail")
-        }
-    }
-
-    var moneySign: String {
-
-        switch self {
-
-        case .RUB: return "₽"
-        case .USD: return "$"
-        case .EUR: return "€"
-        case .GBP: return "£"
-        case .CHF: return "₣"
         }
     }
 }
@@ -248,76 +240,94 @@ extension OpenAccountViewModel {
 
     static let sample = OpenAccountViewModel(
         model: .productsMock,
+        item: .sample,
         items: [
             .init(
-                currencyCode: 810,
+                currency: "RUB",
                 conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
                 ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
+                currencyCode: 810,
                 header: .init(
                     title: "RUB счет",
                     detailTitle: "Счет в российских рублях"),
-                card: .init(numberCard: "4444555566664345", currencyType: .RUB),
+                card: .init(
+                    numberCard: "4444555566664345",
+                    currencySymbol: "₽",
+                    icon: .init("RUB")),
                 options: [
                     .init(title: "Открытие"),
                     .init(title: "Обслуживание")
                 ],
-                currencyType: .RUB,
                 isAccountOpen: false),
             .init(
-                currencyCode: 840,
+                currency: "USD",
                 conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
                 ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
+                currencyCode: 840,
                 header: .init(
                     title: "USD счет",
                     detailTitle: "Счет в долларах США"),
-                card: .init(numberCard: "4444555566664346", currencyType: .USD),
+                card: .init(
+                    numberCard: "4444555566664346",
+                    currencySymbol: "$",
+                    icon: .init("USD")),
                 options: [
                     .init(title: "Открытие"),
                     .init(title: "Обслуживание")
                 ],
-                currencyType: .USD,
                 isAccountOpen: false),
             .init(
-                currencyCode: 978,
+                currency: "EUR",
                 conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
                 ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
+                currencyCode: 978,
                 header: .init(
                     title: "EUR счет",
                     detailTitle: "Счет в евро"),
-                card: .init(numberCard: "4444555566664347", currencyType: .EUR),
+                card: .init(
+                    numberCard: "4444555566664347",
+                    currencySymbol: "€",
+                    icon: .init("EUR")),
                 options: [
                     .init(title: "Открытие"),
                     .init(title: "Обслуживание")
                 ],
-                currencyType: .EUR,
                 isAccountOpen: true),
             .init(
-                currencyCode: 826,
+                currency: "GBP",
                 conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
                 ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
+                currencyCode: 826,
                 header: .init(
                     title: "GBP счет",
                     detailTitle: "Счет в Британских фунтах"),
-                card: .init(numberCard: "4444555566664348", currencyType: .GBP),
+                card: .init(
+                    numberCard: "4444555566664348",
+                    currencySymbol: "£",
+                    icon: .init("GBP")),
                 options: [
                     .init(title: "Открытие"),
                     .init(title: "Обслуживание")
                 ],
-                currencyType: .GBP,
                 isAccountOpen: true),
             .init(
-                currencyCode: 756,
+                currency: "CHF",
                 conditionLinkURL: "https://www.forabank.ru/dkbo/dkbo.pdf",
                 ratesLinkURL: "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf",
+                currencyCode: 756,
                 header: .init(
                     title: "CHF счет",
                     detailTitle: "Счет в Швейцарских франках"),
-                card: .init(numberCard: "4444555566664349", currencyType: .CHF),
+                card: .init(
+                    numberCard: "4444555566664349",
+                    currencySymbol: "₣",
+                    icon: .init("CHF")),
                 options: [
                     .init(title: "Открытие"),
                     .init(title: "Обслуживание")
                 ],
-                currencyType: .CHF,
                 isAccountOpen: false)
-        ], currency: .usd)
+        ],
+        currency: .usd,
+        pagerViewModel: .init(5))
 }

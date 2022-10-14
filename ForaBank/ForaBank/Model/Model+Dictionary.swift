@@ -301,11 +301,7 @@ extension Model {
     
     func dictionaryCurrencySimbol(for code: String) -> String? {
         
-        guard let unicode = dictionaryCurrency(for: code)?.unicode
-        else { return nil }
-        
-        return unicode.replacingOccurrences(of: "\\", with: "")
-                      .applyingTransform(.init("Hex/Unicode-Any"), reverse: false)
+        dictionaryCurrency(for: code)?.currencySymbol
     }
     
     //MARK: BankList helper
