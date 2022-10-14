@@ -106,6 +106,9 @@ extension ProductProfileOptionsPannelView {
                     return .init(icon: .init(image: .ic24File, background: .circleSmall), title: .init(text: "Условия по счету кредита", style: .bold), orientation: .horizontal, action: action)
                 }
                 
+            case .contract:
+                return .init(icon: .init(image: .ic24Contract, background: .circleSmall), title: .init(text: "Договор", style: .bold), orientation: .horizontal, action: action)
+                
             case .closeDeposit(let isActive):
                 return .init(icon: .init(image: .ic24Close, background: .circleSmall), title: .init(text: "Закрыть вклад", style: .bold), orientation: .horizontal, action: action, isActive: isActive)
                 
@@ -132,6 +135,7 @@ extension ProductProfileOptionsPannelView {
             case statementOpenAccount(Bool)
             case tariffsByAccount
             case termsOfService
+            case contract
         }
     }
 }

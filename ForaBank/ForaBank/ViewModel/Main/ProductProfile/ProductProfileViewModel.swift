@@ -550,7 +550,7 @@ class ProductProfileViewModel: ObservableObject {
                     case .bottomLeft:
                         switch product.productType {
                         case .deposit:
-                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .info, .conditions], productType: product.productType)
+                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .info, .contract], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                             
                         case .account:
@@ -680,6 +680,10 @@ class ProductProfileViewModel: ObservableObject {
                             
                         case .conditions:
                             self.model.action.send(ModelAction.Products.DepositConditionsPrintForm.Request(depositId: productData.id))
+                            
+                        case .contract:
+                            let printFormViewModel = PrintFormView.ViewModel(type: .contract(productId: productData.id), model: self.model)
+                            self.sheet = .init(type: .printForm(printFormViewModel))
                         
                         case .closeDeposit:
                             let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
