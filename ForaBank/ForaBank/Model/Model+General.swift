@@ -64,7 +64,17 @@ extension Model {
             
             switch result {
             case .success(let data):
+                self.images.value[payload.endpoint] = ImageData(data: data)
                 action.send(ModelAction.General.DownloadImage.Response(endpoint: payload.endpoint, result: .success(data)))
+                
+                do {
+                    
+                    try self.localAgent.store(images.value, serial: nil)
+                    
+                } catch {
+                    
+                    handleServerDownloadCommandCachingError(error: error, command: command)
+                }
                 
             case .failure(let error):
                 action.send(ModelAction.General.DownloadImage.Response(endpoint: payload.endpoint, result: .failure(error)))
@@ -99,6 +109,11 @@ extension Model {
     }
     
     func handleServerCommandCachingError<Command: ServerCommand>(error: Error, command: Command, file: String = #file, line: Int = #line) {
+        
+        LoggerAgent.shared.log(level: .error, category: .model, message: "Server command: \(command) caching error: \(error.localizedDescription)", file: file, line: line)
+    }
+    
+    func handleServerDownloadCommandCachingError<Command: ServerDownloadCommand>(error: Error, command: Command, file: String = #file, line: Int = #line) {
         
         LoggerAgent.shared.log(level: .error, category: .model, message: "Server command: \(command) caching error: \(error.localizedDescription)", file: file, line: line)
     }
