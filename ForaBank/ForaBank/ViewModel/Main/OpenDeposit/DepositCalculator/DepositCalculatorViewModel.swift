@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-class DepositCalculatorViewModel: ObservableObject {
+class DepositCalculatorViewModel {
 
     let title = "Рассчитать доход"
     
@@ -17,21 +17,29 @@ class DepositCalculatorViewModel: ObservableObject {
     let capitalization: DepositCapitalizationViewModel?
     let calculateAmount: DepositCalculateAmountViewModel
     let totalAmount: DepositTotalAmountViewModel
-    var bottomSheet: DepositBottomSheetViewModel
+    let bottomSheet: DepositBottomSheetViewModel
 
     private var bindings = Set<AnyCancellable>()
-
-    init(depositModels: DepositInterestRateModel,
-         capitalization: DepositCapitalizationViewModel?,
-         calculateAmount: DepositCalculateAmountViewModel,
-         totalAmount: DepositTotalAmountViewModel = .init(),
-         bottomSheet: DepositBottomSheetViewModel) {
-
+    
+    init(depositModels: DepositInterestRateModel, capitalization: DepositCapitalizationViewModel?, calculateAmount: DepositCalculateAmountViewModel, totalAmount: DepositTotalAmountViewModel, bottomSheet: DepositBottomSheetViewModel) {
         self.depositModels = depositModels
         self.capitalization = capitalization
         self.calculateAmount = calculateAmount
         self.totalAmount = totalAmount
         self.bottomSheet = bottomSheet
+    }
+    
+    convenience init(with deposit: DepositProductData) {
+        
+        if deposit.termRateCapList != nil {
+            
+            self.init(depositModels: .init(points: Self.reduceModels(with: deposit)), capitalization: .sample, calculateAmount: .init(interestRateValue: deposit.termRateList[0].termRateSum[0].termRateList[0].rate, depositValue: "", minSum: deposit.generalСondition.minSum, bounds: deposit.generalСondition.minSum...deposit.generalСondition.maxSum),totalAmount: .init(), bottomSheet: .init(items: .init(Self.reduceBottomSheetItem(with: deposit))))
+            
+        } else {
+            
+            self.init(depositModels: .init(points: Self.reduceModels(with: deposit)), capitalization: nil, calculateAmount: .init(interestRateValue: deposit.termRateList[0].termRateSum[0].termRateList[0].rate, depositValue: "", minSum: deposit.generalСondition.minSum, bounds: deposit.generalСondition.minSum...deposit.generalСondition.maxSum), totalAmount: .init(), bottomSheet: .init(items: .init(Self.reduceBottomSheetItem(with: deposit))))
+
+        }
         
         if let firstPoint = depositModels.points[0].termRateLists.first {
             self.bottomSheet.selectedItem = firstPoint
@@ -161,6 +169,86 @@ class DepositCalculatorViewModel: ObservableObject {
     }
 }
 
+//MARK: - reducers
+
+extension DepositCalculatorViewModel {
+    
+    static func reduceModels(with deposit: DepositProductData) -> [DepositCalculatorViewModel.DepositInterestRatePoint] {
+        
+        var points: [DepositCalculatorViewModel.DepositInterestRatePoint] = []
+        
+        var point: [DepositBottomSheetItemViewModel] = []
+        var capPoint: [DepositBottomSheetItemViewModel] = []
+        var sum: Double = 0.0
+        
+        for termRateList in deposit.termRateList[0].termRateSum {
+            
+            sum = termRateList.sum
+            point = []
+            capPoint = []
+            
+            for i in termRateList.termRateList {
+                
+                point.append(.init(term: i.term, rate: i.rate, termName: i.termName))
+                
+                if let capList = deposit.termRateCapList {
+                    
+                    for capList in capList[0].termRateSum.filter({$0.sum == sum}) {
+                        
+                        for cap in capList.termRateList {
+                            
+                            capPoint.append(.init(term: cap.term, rate: cap.rate, termName: cap.termName))
+                        }
+                        
+                        points.append(.init(minSumm: sum, termRateLists: point, termRateCapLists: capPoint))
+                        
+                    }
+                    
+                } else {
+                    
+                    points.append(.init(minSumm: sum, termRateLists: point, termRateCapLists: capPoint))
+                }
+            }
+        }
+        
+        return points
+    }
+    
+    static func reduceBottomSheetItem(with deposit: DepositProductData) -> [DepositBottomSheetItemViewModel] {
+        
+        var items: [DepositBottomSheetItemViewModel] = []
+        
+        if let termCapList = deposit.termRateCapList {
+            
+            for item in termCapList {
+                
+                if let term = item.termRateSum.last?.termRateList {
+                    
+                    for i in term {
+                        
+                        items.append(.init(term: i.term, rate: i.rate, termName: i.termName))
+                    }
+                }
+            }
+            
+        } else {
+            
+            for item in deposit.termRateList {
+                
+                if let term = item.termRateSum.last?.termRateList {
+                    
+                    for i in term {
+                        
+                        items.append(.init(term: i.term, rate: i.rate, termName: i.termName, isOnCapitalization: false))
+                    }
+                }
+            }
+        }
+        
+        return items
+    }
+}
+
 extension DepositCalculatorViewModel {
 
     private func calculateYourIncome(initialAmount: Double, interestRate: Double, termDay: Int) -> Double {
@@ -255,6 +343,7 @@ extension DepositCalculatorViewModel {
         depositModels: .points1,
         capitalization: .init(title: "С учетом капитализации"),
         calculateAmount: .sample1,
+        totalAmount: .init(),
         bottomSheet: .init(
             title: "Срок вклада",
             items: [
@@ -269,6 +358,7 @@ extension DepositCalculatorViewModel {
         depositModels: .points2,
         capitalization: nil,
         calculateAmount: .sample2,
+        totalAmount: .init(),
         bottomSheet: .init(
             title: "Срок вклада",
             items: [

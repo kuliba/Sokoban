@@ -197,7 +197,16 @@ extension Model {
     
     func handleDidShowCloseAlert(_ payload: ModelAction.Deposits.CloseNotified) {
         
-        self.depositsCloseNotified = .init(depositId: payload.productId)
+        self.depositsCloseNotified.insert(.init(depositId: payload.productId))
+        
+        do {
+            
+            try self.localAgent.store(self.depositsCloseNotified, serial: nil)
+            
+        } catch(let error) {
+            
+            LoggerAgent.shared.log(category: .cache, message: "Caching error: \(error)")
+        }
     }
 }
 

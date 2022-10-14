@@ -18,6 +18,7 @@ extension NumberFormatter {
         return formatter
     }
     
+    @available(*, deprecated, message: "Use Model func amountFormatted(amount: Double, currencyCode: String?, style: AmountFormatStyle) -> String? in Model+Formatter.swift file")
     static func currency(with currencySymbol: String) -> NumberFormatter {
         
         let formatter = NumberFormatter()
@@ -30,6 +31,7 @@ extension NumberFormatter {
         return formatter
     }
     
+    @available(*, deprecated, message: "Use Model func amountFormatted(amount: Double, currencyCode: String?, style: AmountFormatStyle) -> String? in Model+Formatter.swift file")
     static func currency(_ currencySymbol: String) -> NumberFormatter {
         
         let formatter = NumberFormatter()
@@ -42,6 +44,7 @@ extension NumberFormatter {
         return formatter
     }
     
+    //FIXME: refactor to var
     static func decimal() -> NumberFormatter {
         
         let formatter = NumberFormatter()
@@ -53,6 +56,18 @@ extension NumberFormatter {
         return formatter
     }
     
+    static var decimalWithoutFraction: NumberFormatter {
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 0
+        formatter.locale = Locale.current
+        
+        return formatter
+    }
+    
+    @available(*, deprecated, message: "Use func decimal() -> NumberFormatter")
     static func decimal(_ value: Double) -> String {
         
         let currencyFormatter = NumberFormatter()
@@ -67,6 +82,7 @@ extension NumberFormatter {
         return String(value)
     }
     
+    @available(*, deprecated, message: "Use func decimal() -> NumberFormatter")
     static func decimal(_ value: String) -> Double? {
         
         let formatter = NumberFormatter()
@@ -84,7 +100,7 @@ extension NumberFormatter {
         return number
     }
 
-    //FIXME: refactor this
+    @available(*, deprecated, message: "Use func decimal() -> NumberFormatter")
     static func decimal(totalBalance: String) -> String {
 
         let currencyFormatter = NumberFormatter()
@@ -102,7 +118,7 @@ extension NumberFormatter {
         return balance
     }
 
-    //FIXME: refactor this
+    @available(*, deprecated, message: "Use Model func amountFormatted(amount: Double, currencyCode: String?, style: AmountFormatStyle) -> String? in Model+Formatter.swift file")
     static func currency(balance: String) -> String {
 
         let currencySymbol = "₽"

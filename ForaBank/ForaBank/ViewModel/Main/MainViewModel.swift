@@ -131,15 +131,15 @@ class MainViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] products in
                 
-                guard model.depositsCloseNotified == nil else { return }
-                
-                let products = products.values.flatMap {$0}
-                
-                let deposits = products.filter({$0.productType == .deposit})
+                guard let deposits = products[.deposit] else { return }
                 
                 for deposit in deposits {
                     
-                    if let deposit = deposit as? ProductDepositData, let endDate = deposit.endDateNf, endDate {
+                    if let deposit = deposit as? ProductDepositData {
+                        
+                        guard !self.model.depositsCloseNotified.contains(.init(depositId: deposit.depositId)), deposit.isClosed else {
+                            continue
+                        }
                         
                         self.alert = .init(title: "Срок действия вклада истек", message: "Переведите деньги со вклада на свою карту/счет в любое время", primary: .init(type: .default, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Ok", action: {
                             
@@ -147,6 +147,8 @@ class MainViewModel: ObservableObject, Resetable {
                         }))
                         
                         self.model.action.send(ModelAction.Deposits.CloseNotified(productId: deposit.id))
+                        
+                        return
                     }
                 }
             }.store(in: &bindings)
@@ -271,24 +273,24 @@ class MainViewModel: ObservableObject, Resetable {
                         case let payload as MainSectionViewModelAction.PromoAction.ButtonTapped:
                             switch payload.actionData {
                             case let payload as BannerActionDepositOpen:
-                                
-                                if let openDepositViewModel: OpenProductViewModel = .init(depositId: payload.depositProductId) {
+                                guard let depositId = Int(payload.depositProductId),
+                                      let openDepositViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: model) else {
                                     
-                                    self.link = .openDeposit(openDepositViewModel)
+                                    return
                                 }
-                            case _ as BannerActionDepositsList:
+                                self.link = .openDeposit(openDepositViewModel)
                                 
+                            case _ as BannerActionDepositsList:
                                 self.link = .openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
                                 }))
-                            case let payload as BannerActionMigTransfer:
                                 
+                            case let payload as BannerActionMigTransfer:
                                 self.link = .country(.init(country: payload.countryId, operatorsViewModel: .init(closeAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
                                 }, template: nil), paymentType: .withOutAddress(withOutViewModel: .init(phoneNumber: nil))))
                                 
                             case let payload as BannerActionContactTransfer:
-                                  
                                 self.link = .country(.init(country: payload.countryId, operatorsViewModel: .init(closeAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
                                 }, template: nil), paymentType: .turkeyWithOutAddress(turkeyWithOutAddress: .init(firstName: "", middleName: "", surName: "", phoneNumber: ""))))
@@ -535,7 +537,7 @@ extension MainViewModel {
         case userAccount(UserAccountViewModel)
         case productProfile(ProductProfileViewModel)
         case messages(MessagesHistoryViewModel)
-        case openDeposit(OpenProductViewModel)
+        case openDeposit(OpenDepositDetailViewModel)
         case openDepositsList(OpenDepositViewModel)
         case templates(TemplatesListViewModel)
         case qrScanner(QrViewModel)
