@@ -188,9 +188,9 @@ class Model {
         
         // server agent
 #if DEBUG
-        let enviroment = ServerAgent.Environment.test
+        let enviroment = ServerAgentEnvironment.test
 #else
-        let enviroment = ServerAgent.Environment.prod
+        let enviroment = ServerAgentEnvironment.prod
 #endif
         
         let serverAgent = ServerAgent(enviroment: enviroment)
