@@ -44,7 +44,7 @@ struct ContactsView: View {
                 
                 ContactListView(viewModel: contacts)
                 
-            case let .banks(topBanks, banksList):
+            case let .banks(topBanks, collapsable):
                 
                 if let topBanks {
                     
@@ -72,25 +72,26 @@ struct ContactsView: View {
                     .frame(height: 1)
                     .foregroundColor(Color.mainColorsGrayLightest)
                 
-                VStack(spacing: 32) {
+                VStack {
                     
-                    ForEach(banksList, id: \.self) { item in
+                    ForEach(collapsable, id: \.self) { item in
                         
-                        CollapsebleView(viewModel: item)
+                        CollapsableView(viewModel: item)
                         
                     }
                 }
                 
                 Spacer()
-            case .banksSearch(let banksList):
+            case let .banksSearch(collapsable):
                 
                 Divider()
                     .frame(height: 1)
                     .foregroundColor(Color.mainColorsGrayLightest)
                 
-                ForEach(banksList, id: \.self) { item in
+                ForEach(collapsable, id: \.self) { item in
                     
-                    CollapsebleView(viewModel: item)
+                    CollapsableView(viewModel: item)
+                    
                 }
                 
                 Spacer()
@@ -179,97 +180,113 @@ extension ContactsView {
         }
     }
     
-    struct CollapsebleView: View {
+    struct CollapsableView: View {
         
-        @ObservedObject var viewModel: ContactsViewModel.BanksListViewModel
+        @ObservedObject var viewModel: ContactsViewModel.CollapsableViewModel
+        
+        var body: some View {
+            
+            switch viewModel.mode {
+            case .normal:
+                
+                HeaderView(viewModel: viewModel.header)
+                
+            case .search:
+                
+                SearchBarComponent(viewModel: viewModel.searchBar)
+                    .padding(.horizontal, 20)
+            }
+            
+            if viewModel.isCollapsed {
+                
+                if let viewModel = viewModel.options {
+                    
+                    OptionSelectorView(viewModel: viewModel)
+                        .padding()
+                }
+                
+                ListView(viewModel: viewModel.items)
+            }
+        }
+    }
+    
+    struct ListView: View {
+        
+        let viewModel: ContactsViewModel.ItemsListViewModel
         
         var body: some View {
             
             VStack {
                 
-                switch viewModel.mode {
-                case let .normal(collapsedViewModel):
+                ScrollView(.vertical, showsIndicators: false) {
                     
-                    HStack(alignment: .center, spacing: 8.5) {
+                    VStack(spacing: 24) {
                         
-                        collapsedViewModel.icon
-                            .renderingMode(.original)
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                        
-                        Text(collapsedViewModel.title.rawValue)
-                            .foregroundColor(Color.textSecondary)
-                            .font(.textH3SB18240())
-                        
-                        Spacer()
-                        
-                        if let searchButton = collapsedViewModel.searchButton {
+                        ForEach(viewModel.items, id: \.self) { item in
                             
                             Button {
                                 
-                                searchButton.action()
-                                
+                                item.action()
                             } label: {
                                 
-                                searchButton.icon
-                                    .resizable()
-                                    .frame(width: 24, height: 24)
-                                    .foregroundColor(Color.iconGray)
+                                ItemView(viewModel: item)
                             }
                         }
-                        
-                        Button {
-                            
-                            collapsedViewModel.toggleButton.action()
-                            viewModel.isCollapsed.toggle()
-                            
-                        } label: {
-                            
-                            collapsedViewModel.toggleButton.icon
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(Color.iconGray)
-                            
-                        }
                     }
-                    .padding(.horizontal, 20)
+                }
+                .padding(.horizontal, 20)
+            }
+        }
+    }
+    
+    struct HeaderView: View {
+        
+        let viewModel: ContactsViewModel.CollapsableViewModel.HeaderViewModel
+        
+        var body: some View {
+            
+            HStack(alignment: .center, spacing: 8.5) {
+                
+                viewModel.icon
+                    .renderingMode(.original)
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                
+                Text(viewModel.title.rawValue)
+                    .foregroundColor(Color.textSecondary)
+                    .font(.textH3SB18240())
+                
+                Spacer()
+                
+                if let searchButton = viewModel.searchButton {
                     
-                case .search:
-                    
-                    if let searchBarViewModel = viewModel.searchBar, viewModel.searchBar.state != .hide {
+                    Button {
                         
-                        SearchBarComponent(viewModel: searchBarViewModel)
-                            .padding(.horizontal, 20)
+                        searchButton.action()
+                        
+                    } label: {
+                        
+                        searchButton.icon
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(Color.iconGray)
                     }
                 }
                 
-                if viewModel.isCollapsed {
+                Button {
                     
-                    if let viewModel = viewModel.optionViewModel {
-                        
-                        OptionSelectorView(viewModel: viewModel)
-                            .padding()
-                    }
+                    viewModel.toggleButton.action()
                     
-                    ScrollView(.vertical, showsIndicators: false) {
-                        
-                        VStack(spacing: 24) {
-                            
-                            ForEach(viewModel.banks, id: \.self) { bank in
-                                
-                                Button {
-                                    
-                                    bank.action()
-                                } label: {
-                                    
-                                    BankView(viewModel: bank)
-                                }
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 20)
+                } label: {
+                    
+                    viewModel.toggleButton.icon
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(Color.iconGray)
+                    
                 }
             }
+            .padding(.horizontal, 20)
         }
     }
     
@@ -334,6 +351,7 @@ extension ContactsView {
                             .resizable()
                             .frame(width: 40, height: 40, alignment: .center)
                             .cornerRadius(90)
+                        
                     case let .initials(initials):
                         
                         ZStack {
@@ -400,9 +418,9 @@ extension ContactsView {
         }
     }
     
-    struct BankView: View {
+    struct ItemView: View {
         
-        let viewModel: ContactsViewModel.BanksListViewModel.Bank
+        let viewModel: ContactsViewModel.ItemsListViewModel.Item
         
         var body: some View {
             
@@ -446,9 +464,6 @@ struct ContactsView_Previews: PreviewProvider {
             
             ContactsView(viewModel: .sampleLatestPayment)
                 .previewDisplayName("Contacts List")
-            
-            ContactsView(viewModel: .sampleBanks)
-                .previewDisplayName("Contact List Banks")
         }
     }
 }

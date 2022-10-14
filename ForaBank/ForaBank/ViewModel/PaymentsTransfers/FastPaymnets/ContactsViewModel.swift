@@ -18,13 +18,13 @@ class ContactsViewModel: ObservableObject {
     @Published var mode: Mode
     
     private let feedbackGenerator = UINotificationFeedbackGenerator()
-
+    
     enum Mode {
         
         case contacts(LatestPaymentsViewComponent.ViewModel?, ContactsListViewModel)
         case contactsSearch(ContactsListViewModel?)
-        case banks(TopBanksSectionType?, [BanksListViewModel])
-        case banksSearch([BanksListViewModel])
+        case banks(TopBanksSectionType?, [CollapsableViewModel])
+        case banksSearch([CollapsableViewModel])
     }
     
     private let model: Model
@@ -49,31 +49,30 @@ class ContactsViewModel: ObservableObject {
     
     //TODO: bind sections
     
-    func bindCategorySelector(_ sections: [BanksListViewModel]) {
+    func bindCategorySelector(_ sections: [CollapsableViewModel]) {
         
         for section in sections {
             
-            section.optionViewModel?.action
+            section.options?.action
                 .receive(on: DispatchQueue.main)
-                .sink{ [unowned self] action in
+                .sink{[unowned self] action in
                     
                     switch action {
                     case let payload as OptionSelectorAction.OptionDidSelected:
                         
-                        section.optionViewModel?.selected = payload.optionId
-                        section.banks = Self.reduceBanks(model, filterByType: BankType(rawValue: section.optionViewModel?.selected ?? "Российские"))
+                        section.options?.selected = payload.optionId
                         
-                        if section.optionViewModel?.selected == "Российские" {
+                        if payload.optionId != "Российские" {
                             
-                            section.mode = .normal(.init(icon: .ic40SBP, title: .otherBank, searchButton: .init(icon: .ic24Search, action: {
-                                section.mode = .search
-                            }), toggleButton: .init(icon: .ic16ChevronUp, action: {})))
+                            section.items = .init(self.model, type: .banks(.direct))
+                            section.header.icon = .ic24Bank
+                            
                         } else {
                             
-                            section.mode = .normal(.init(icon: .ic24Bank, title: .otherBank, searchButton: .init(icon: .ic24Search, action: {
-                                section.mode = .search
-                            }), toggleButton: .init(icon: .ic16ChevronUp, action: {})))
+                            section.items = .init(self.model, type: .banks(.sfp))
+                            section.header.icon = .ic40SBP
                         }
+                        
                     default: break
                     }
                     
@@ -83,22 +82,10 @@ class ContactsViewModel: ObservableObject {
                 .receive(on: DispatchQueue.main)
                 .sink{ [unowned self] text in
                     
-                    section.banks = Self.reduceBanks(model, filterByName: text)
+                    section.items = .init(self.model, type: .banks(.sfp), filterText: text)
                     
                 }.store(in: &bindings)
             
-            section.searchBar.action
-                .receive(on: DispatchQueue.main)
-                .sink{ [unowned self] action in
-                    
-                    switch action {
-                     
-                    case _ as SearchBarComponent.ViewModelAction.ChangeState:
-                        print("usage SearchBarComponent.ViewModelAction.ChangeState")
-                    default: break
-                    }
-                    
-                }.store(in: &bindings)
         }
     }
     
@@ -129,15 +116,15 @@ class ContactsViewModel: ObservableObject {
                         
                         if let banks = reduce(model: model, banks: banks) {
                             
-                            let bankList = Self.createCollapsebleViewModel(model)
+                            //                            let bankList = Self.createCollapsebleViewModel(model)
                             
-                            bindCategorySelector(bankList)
-                            self.mode = .banks(.banks(banks), bankList)
+                            //                            bindCategorySelector(bankList)
+                            //                            self.mode = .banks(.banks(banks), bankList)
                             
                         }
                         
                     case .failure:
-                      break
+                        break
                     }
                 default: break
                 }
@@ -192,13 +179,14 @@ class ContactsViewModel: ObservableObject {
                     withAnimation {
                         
                         self.feedbackGenerator.notificationOccurred(.success)
-
+                        
                         self.searchBar.textColor = .mainColorsBlack
                         self.model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: self.searchBar.text))
                         
-                        let bankList = Self.createCollapsebleViewModel(model)
-                        bindCategorySelector(bankList)
-                        self.mode = .banks(.placeHolder, bankList)
+                        let collapsable: [CollapsableViewModel] = [.init(model, kind: .banks(.sfp)), .init(model, kind: .country)]
+                        
+                        self.mode = .banks(.placeHolder, collapsable)
+                        bindCategorySelector(collapsable)
                     }
                 }
                 
@@ -324,56 +312,31 @@ class ContactsViewModel: ObservableObject {
         }
     }
     
-    static func createCollapsebleViewModel(_ model: Model) -> [BanksListViewModel] {
-        
-        var banksListViewModel = [BanksListViewModel]()
-        let options = Self.createOptionViewModel()
-        let banks = Self.reduceBanks(model, filterByType: BankType(rawValue: options.selected))
-        let banksListViewModelBanks: BanksListViewModel = .init(banks: banks, optionViewModel: options, mode: .normal(.init(icon: .ic40SBP, title: .otherBank, searchButton: .init(icon: .ic24Search, action: {}), toggleButton: .init(icon: .ic16ChevronUp, action: {}))))
-        banksListViewModel.append(banksListViewModelBanks)
-        
-        let country = Self.reduceCountry(model)
-        let banksListViewModelCountry: BanksListViewModel = .init(banks: country, mode: .normal(.init(icon: .init("abroad"), title: .abroad, toggleButton: .init(icon: .ic16ChevronUp, action: {}))))
-        banksListViewModel.append(banksListViewModelCountry)
-        
-        return banksListViewModel
-    }
-    
-    static func createOptionViewModel() -> OptionSelectorView.ViewModel {
-        
-        let options = BankType.allCases.map({Option(id: $0.name, name: $0.name)})
-        guard let firstOption = options.first?.id else {
-            let optionViewModel: OptionSelectorView.ViewModel = .init(options: options, selected: "", style: .template, mode: .action)
-            return  optionViewModel }
-        
-        let optionViewModel: OptionSelectorView.ViewModel = .init(options: options, selected: firstOption, style: .template, mode: .action)
-        return optionViewModel
-    }
-    
-    class BanksListViewModel: ObservableObject, Hashable, Identifiable {
+    class ItemsListViewModel: ObservableObject, Hashable, Identifiable {
         
         let id = UUID()
-        @Published var banks: [Bank]
-        @Published var optionViewModel: OptionSelectorView.ViewModel?
-        @Published var isCollapsed: Bool
-        @Published var mode: Mode
-        @Published var searchBar: SearchBarComponent.ViewModel = .init(state: .default, additionalButtons: [.init(type: .title("Отмена"), action: {})], placeHolder: .banks, icon: .ic24Search, textColor: .mainColorsGrayLightest)
+        @Published var items: [Item]
         
-        init(banks: [Bank], optionViewModel: OptionSelectorView.ViewModel? = nil, mode: Mode, isCollapsed: Bool = false) {
+        init(items: [Item]) {
             
-            self.banks = banks
-            self.optionViewModel = optionViewModel
-            self.mode = mode
-            self.isCollapsed = isCollapsed
+            self.items = items
         }
         
-        enum Mode {
+        convenience init(_ model: Model, type: Kind, filterText: String? = nil) {
             
-            case normal(CollapsebleViewModel)
-            case search
+            switch type {
+                
+            case let .banks(bankType):
+                let items = Self.reduceBanks(model, filterByType: bankType, filterByName: filterText)
+                self.init(items: items)
+                
+            case .country:
+                let items = Self.reduceCountry(model)
+                self.init(items: items)
+            }
         }
         
-        class Bank: Hashable, Identifiable {
+        class Item: Hashable, Identifiable {
             
             let id = UUID()
             let title: String
@@ -389,7 +352,7 @@ class ContactsViewModel: ObservableObject {
                 self.action = action
             }
             
-            static func == (lhs: Bank, rhs: Bank) -> Bool {
+            static func == (lhs: Item, rhs: Item) -> Bool {
                 lhs.id == rhs.id && lhs.title == rhs.title
             }
             
@@ -399,31 +362,144 @@ class ContactsViewModel: ObservableObject {
             }
         }
         
-        static func == (lhs: ContactsViewModel.BanksListViewModel, rhs: ContactsViewModel.BanksListViewModel) -> Bool {
+        static func == (lhs: ContactsViewModel.ItemsListViewModel, rhs: ContactsViewModel.ItemsListViewModel) -> Bool {
             lhs.hashValue == rhs.hashValue
         }
         
         func hash(into hasher: inout Hasher) {
             
-            hasher.combine(banks)
+            hasher.combine(items)
+        }
+        
+        static func reduceBanks(_ model: Model, filterByType: BankType? = nil, filterByName: String? = nil) -> [ItemsListViewModel.Item] {
+            
+            let bankData = model.bankList.value
+            var banks = [ItemsListViewModel.Item]()
+            
+            banks = bankData.map({ItemsListViewModel.Item.init(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: {})})
+            banks = banks.sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
+            banks = banks.sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
+            
+            if let filter = filterByType {
+                
+                banks = banks.filter({$0.bankType == filter})
+            }
+            
+            if let filter = filterByName, filter != "" {
+                
+                banks = banks.filter({ bank in
+                    
+                    if bank.title.localizedStandardContains(filter) {
+                        return true
+                    } else {
+                        return false
+                    }
+                })
+            }
+            
+            return banks
+        }
+        
+        static func reduceCountry(_ model: Model) -> [ItemsListViewModel.Item] {
+            
+            let countryData = model.countriesList.value.filter({$0.paymentSystemIdList.contains("DIRECT")})
+            var country = [ItemsListViewModel.Item]()
+            
+            country = countryData.map({ItemsListViewModel.Item(title: $0.name, image: $0.svgImage?.image, bankType: nil, action: {})})
+            country = country.sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
+            country = country.sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
+            
+            return country
         }
     }
     
-    struct CollapsebleViewModel {
+    class CollapsableViewModel: ObservableObject, Hashable {
         
-        let action: PassthroughSubject<Action, Never> = .init()
-
-        let icon: Image
-        let title: Title
-        let searchButton: ButtonViewModel?
-        let toggleButton: ButtonViewModel
+        let id = UUID()
+        @Published var header: HeaderViewModel
+        @Published var isCollapsed: Bool
+        @Published var mode: Mode
+        @Published var searchBar: SearchBarComponent.ViewModel = .init(clearButton: nil, cancelButton: .init(type: .title("Отмена"), action: {}), placeHolder: .banks, icon: .ic24Search, textColor: .mainColorsGrayLightest)
+        @Published var items: ItemsListViewModel
+        @Published var options: OptionSelectorView.ViewModel?
         
-        internal init(icon: Image, title: Title, searchButton: ButtonViewModel? = nil, toggleButton: ButtonViewModel) {
+        internal init(header: HeaderViewModel, isCollapsed: Bool, mode: Mode, items: ContactsViewModel.ItemsListViewModel, options: OptionSelectorView.ViewModel? = nil) {
+            self.header = header
+            self.isCollapsed = isCollapsed
+            self.mode = mode
+            self.items = items
+            self.options = options
+        }
+        
+        convenience init(_ model: Model, kind: Kind) {
             
-            self.icon = icon
-            self.title = title
-            self.searchButton = searchButton
-            self.toggleButton = .init(icon: <#T##Image#>, action: <#T##() -> Void#>)
+            let header: HeaderViewModel = .init(type: kind)
+            let items: ItemsListViewModel = .init(model, type: kind)
+            
+            if kind != .country {
+                
+                let options: OptionSelectorView.ViewModel = Self.createOptionViewModel()
+                self.init(header: header, isCollapsed: false, mode: .normal, items: items, options: options)
+                
+                self.header.searchButton?.action = {
+                    
+                    withAnimation {
+                        
+                        self.mode = self.mode == .normal ? .search : .normal
+                    }
+                }
+                
+                self.header.toggleButton.action = {
+                    
+                    withAnimation {
+                        
+                        self.isCollapsed.toggle()
+                        self.header.toggleButton.icon = self.isCollapsed ? .ic24ChevronDown : .ic24ChevronUp
+                    }
+                }
+                
+                self.searchBar.cancelButton.action = {
+                    
+                    self.mode = .normal
+                }
+                
+            } else {
+                
+                self.init(header: header, isCollapsed: false, mode: .normal, items: items)
+            }
+        }
+        
+        class HeaderViewModel: ObservableObject {
+            
+            @Published var icon: Image
+            let title: Title
+            @Published var searchButton: ButtonViewModel?
+            @Published var toggleButton: ButtonViewModel
+            
+            init(type: Kind) {
+                
+                switch type {
+                case .banks:
+                    
+                    self.icon = .ic40SBP
+                    self.title = .otherBank
+                    self.toggleButton = .init(icon: .ic24ChevronUp, action: {})
+                    self.searchButton = .init(icon: .ic24Search, action: {})
+                    
+                case .country:
+                    
+                    self.icon = .ic48Abroad
+                    self.title = .abroad
+                    self.toggleButton = .init(icon: .ic24ChevronUp, action: {})
+                    self.searchButton = nil
+                }
+            }
+        }
+        
+        enum Mode {
+            
+            case normal
+            case search
         }
         
         enum Title: String {
@@ -434,8 +510,28 @@ class ContactsViewModel: ObservableObject {
         
         struct ButtonViewModel {
             
-            let icon: Image
-            let action: () -> Void
+            var icon: Image
+            var action: () -> Void
+        }
+        
+        static func createOptionViewModel() -> OptionSelectorView.ViewModel {
+            
+            let options = BankType.allCases.map({Option(id: $0.name, name: $0.name)})
+            guard let firstOption = options.first?.id else {
+                let optionViewModel: OptionSelectorView.ViewModel = .init(options: options, selected: "", style: .template, mode: .action)
+                return  optionViewModel }
+            
+            let optionViewModel: OptionSelectorView.ViewModel = .init(options: options, selected: firstOption, style: .template, mode: .action)
+            return optionViewModel
+        }
+        
+        static func == (lhs: ContactsViewModel.CollapsableViewModel, rhs: ContactsViewModel.CollapsableViewModel) -> Bool {
+            lhs.id == rhs.id
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            
+            hasher.combine(id)
         }
     }
     
@@ -543,47 +639,6 @@ class ContactsViewModel: ObservableObject {
         return contactsViewModel
     }
     
-    static func reduceBanks(_ model: Model, filterByType: BankType? = nil, filterByName: String? = nil) -> [BanksListViewModel.Bank] {
-        
-        let bankData = model.bankList.value
-        var banks = [BanksListViewModel.Bank]()
-        
-        banks = bankData.map({BanksListViewModel.Bank.init(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: {})})
-        banks = banks.sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
-        banks = banks.sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
-        
-        if let filter = filterByType, filter != .unknown {
-            
-            banks = banks.filter({$0.bankType == filter})
-        }
-        
-        if let filter = filterByName {
-            
-            banks = banks.filter({ bank in
-                
-                if bank.title.localizedStandardContains(filter) {
-                    return true
-                } else {
-                    return false
-                }
-            })
-        }
-        
-        return banks
-    }
-    
-    static func reduceCountry(_ model: Model) -> [BanksListViewModel.Bank] {
-        
-        let countryData = model.countriesList.value.filter({$0.paymentSystemIdList.contains("DIRECT")})
-        var country = [BanksListViewModel.Bank]()
-        
-        country = countryData.map({BanksListViewModel.Bank.init(title: $0.name, image: $0.svgImage?.image, bankType: nil, action: {})})
-        country = country.sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
-        country = country.sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
-        
-        return country
-    }
-    
     func reduce(model: Model, banks: [PaymentPhoneData]) -> TopBanksViewModel? {
         
         let topBanksViewModel: TopBanksViewModel = .init(banks: [])
@@ -625,6 +680,15 @@ class ContactsViewModel: ObservableObject {
     }
 }
 
+extension ContactsViewModel {
+    
+    enum Kind: Equatable {
+        
+        case banks(BankType)
+        case country
+    }
+}
+
 enum ContactsViewModelAction {
     
     struct SetupPhoneNumber: Action {
@@ -638,6 +702,4 @@ extension ContactsViewModel {
     static let sample: ContactsViewModel = .init(.emptyMock, searchBar: .init(placeHolder: .contacts), mode: .contactsSearch(.init(selfContact: .init(fullName: "Себе", image: nil, phone: "8 (925) 279 96-13", icon: nil, action: {}), contacts: [.init(fullName: "Андрей Андропов", image: nil, phone: "+7 (903) 333-67-32", icon: nil, action: {})])))
     
     static let sampleLatestPayment: ContactsViewModel = .init(.emptyMock, searchBar: .init(placeHolder: .contacts), mode: .contacts(.init(titleHidden: true, items: [.latestPayment(.init(id: 5, avatar: .icon(Image("ic24Smartphone"), .iconGray), topIcon: Image("azerFlag"), description: "+994 12 493 23 87", action: {}))], model: .emptyMock), .init(selfContact: .init(fullName: "Себе", image: nil, phone: "8 (925) 279 96-13", icon: nil, action: {}), contacts: [.init(fullName: "Андрей Андропов", image: nil, phone: "+7 (903) 333-67-32", icon: nil, action: {})])))
-    
-    static let sampleBanks: ContactsViewModel = .init(.emptyMock, searchBar: .init(placeHolder: .contacts), mode: .banks(.banks(.init(banks: [.init(image: nil, defaultBank: false, name: "Юрка Б.", bankName: "ЛокоБанк", action: {}), .init(image: nil, defaultBank: true, name: "Юрка Б.", bankName: "Сбербанк", action: {}), .init(image: nil, defaultBank: false, name: nil, bankName: "Тинькофф", action: {})])), [.init(banks: [.init(title: "Эвокабанк", image: nil, bankType: nil, action: {}), .init(title: "Ардшидбанк", image: nil, bankType: nil, action: {}), .init(title: "IDBank", image: nil, bankType: nil, action: {})], optionViewModel: .init(options: [.init(id: "Российские", name: "Российские"), .init(id: "Иностранные", name: "Иностранные"), .init(id: "Все", name: "Все")], selected: "Иностранные", style: .template), mode: .normal(.init(icon: .ic24Bank, title: .otherBank, searchButton: nil, toggleButton: .init(icon: .ic24ChevronDown, action: {}))), isCollapsed: true)]))
 }
