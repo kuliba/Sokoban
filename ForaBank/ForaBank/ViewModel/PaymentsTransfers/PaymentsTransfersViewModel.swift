@@ -342,9 +342,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 switch action {
                     
                 case let payload as PaymentsMeToMeAction.Response.Success:
-                    
                     bind(payload.viewModel)
-                    fullCover = .init(type: .successMeToMe(payload.viewModel))
                     
                 default:
                     break
@@ -372,6 +370,16 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
  
                 default:
                     break
+                }
+                
+            }.store(in: &bindings)
+        
+        $bottomSheet
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] bottomSheet in
+                
+                if bottomSheet == nil {
+                    fullCover = .init(type: .successMeToMe(viewModel))
                 }
                 
             }.store(in: &bindings)

@@ -60,11 +60,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
         
         model.action
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] action in
-                
-                guard let self = self else {
-                    return
-                }
+            .sink { [unowned self] action in
 
                 switch action {
                 case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Start.Response:
@@ -74,15 +70,15 @@ class PaymentsMeToMeViewModel: ObservableObject {
 
                         if response.needMake == true {
 
-                            self.bind(response)
-                            self.model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve.Request())
+                            bind(response)
+                            model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve.Request())
                             
                         } else {
-                            self.close()
+                            close()
                         }
                         
                     case .failure:
-                        self.close()
+                        close()
                     }
                     
                 default:
