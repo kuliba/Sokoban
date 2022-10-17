@@ -88,11 +88,16 @@ extension ProductProfileButtonsView {
                         return true
                     }
                     
+                // TODO: DBSNEW-6553
+
+                case _ as ProductAccountData:
+                    return false
+
                 default: return true
                 }
             }
         }
-        
+
         func buttonName(for buttonType: ButtonType, for product: ProductData) -> String {
             
             switch buttonType {
@@ -100,7 +105,15 @@ extension ProductProfileButtonsView {
                 
             case .bottomLeft:
                 switch product.productType {
+                    
+                // TODO: DBSNEW-6553
+                    
+                /*
                 case .account, .deposit: return "Детали"
+                 */
+                    
+                case .deposit: return "Детали"
+                    
                 default: return "Реквизиты и выписки"
                 }
                 
@@ -129,7 +142,15 @@ extension ProductProfileButtonsView {
                 
             case .bottomLeft:
                 switch product.productType {
+                    
+                // TODO: DBSNEW-6553
+                    
+                /*
                 case .account, .deposit: return .ic24Info
+                 */
+                    
+                case .deposit: return .ic24Info
+                    
                 default: return .ic24FileText
                 }
                 
@@ -144,7 +165,13 @@ extension ProductProfileButtonsView {
                 case let cardProduct as ProductCardData:
                     return cardProduct.isBlocked ? .ic24Unlock : .ic24Lock
                     
+                // TODO: DBSNEW-6553
+                    
+                /*
                 case _ as ProductAccountData: return .ic24Close
+                 */
+                    
+                case _ as ProductAccountData: return .ic24Lock
                 case _ as ProductDepositData: return .ic24Server
                 default: return .ic24Clock
                 }
