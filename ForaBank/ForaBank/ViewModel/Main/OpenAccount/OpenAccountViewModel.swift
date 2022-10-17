@@ -59,7 +59,7 @@ class OpenAccountViewModel: ObservableObject {
         self.closeAction = closeAction
     }
     
-    convenience init?(_ model: Model, products: [OpenAccountProductData], closeAction: @escaping () -> Void = {}) {
+    convenience init?(_ model: Model, products: [OpenAccountProductData], style: Style = .openAccount, closeAction: @escaping () -> Void = {}) {
         
         let currencyData = model.currencyList.value
         let imageData = model.images.value
@@ -70,7 +70,7 @@ class OpenAccountViewModel: ObservableObject {
             return nil
         }
         
-        self.init(model: model, item: item, items: items, currency: product.currency, pagerViewModel: .init(items.count), closeAction: closeAction)
+        self.init(model: model, item: item, items: items, currency: product.currency, pagerViewModel: .init(items.count), style: style, closeAction: closeAction)
 
         if let currentItem = currentItem {
             self.item = currentItem
