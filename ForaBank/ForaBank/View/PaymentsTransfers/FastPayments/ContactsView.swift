@@ -38,7 +38,7 @@ struct ContactsView: View {
             case let .contacts(latestPayments, contacts):
                 
                 if let latestPayments {
-                    
+
                     LatestPaymentsViewComponent(viewModel: latestPayments)
                 }
                 

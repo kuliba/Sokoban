@@ -143,7 +143,7 @@ class ContactsViewModel: ObservableObject {
                     
                     let contacts = reduce(model: self.model)
                     let items = itemsReduce(model: self.model, latest: latestPaymentsFilterred)
-                    self.mode = .contacts(.init(titleHidden: true, items: items, model: model), contacts)
+                    self.mode = .contacts(.init(model, items: items), contacts)
                 }
                 
             }.store(in: &bindings)
@@ -163,7 +163,7 @@ class ContactsViewModel: ObservableObject {
                     
                     let contacts = reduce(model: self.model)
                     let items = itemsReduce(model: self.model, latest: latestPaymentsFilterred)
-                    self.mode = .contacts(.init(titleHidden: true, items: items, model: model), contacts)
+                    self.mode = .contacts(.init(model, items: items), contacts)
                 }
                 
             }.store(in: &bindings)
@@ -213,7 +213,7 @@ class ContactsViewModel: ObservableObject {
                         
                         let contacts = reduce(model: self.model)
                         let items = itemsReduce(model: self.model, latest: latestPaymentsFilterred)
-                        self.mode = .contacts(.init(titleHidden: true, items: items, model: model), contacts)
+                        self.mode = .contacts(.init(model, items: items), contacts)
                     }
                 }
                 
@@ -701,5 +701,5 @@ extension ContactsViewModel {
     
     static let sample: ContactsViewModel = .init(.emptyMock, searchBar: .init(placeHolder: .contacts), mode: .contactsSearch(.init(selfContact: .init(fullName: "Себе", image: nil, phone: "8 (925) 279 96-13", icon: nil, action: {}), contacts: [.init(fullName: "Андрей Андропов", image: nil, phone: "+7 (903) 333-67-32", icon: nil, action: {})])))
     
-    static let sampleLatestPayment: ContactsViewModel = .init(.emptyMock, searchBar: .init(placeHolder: .contacts), mode: .contacts(.init(titleHidden: true, items: [.latestPayment(.init(id: 5, avatar: .icon(Image("ic24Smartphone"), .iconGray), topIcon: Image("azerFlag"), description: "+994 12 493 23 87", action: {}))], model: .emptyMock), .init(selfContact: .init(fullName: "Себе", image: nil, phone: "8 (925) 279 96-13", icon: nil, action: {}), contacts: [.init(fullName: "Андрей Андропов", image: nil, phone: "+7 (903) 333-67-32", icon: nil, action: {})])))
+    static let sampleLatestPayment: ContactsViewModel = .init(.emptyMock, searchBar: .init(placeHolder: .contacts), mode: .contacts(.init(.emptyMock, items: [.latestPayment(.init(id: 5, avatar: .icon(Image("ic24Smartphone"), .iconGray), topIcon: Image("azerFlag"), description: "+994 12 493 23 87", action: {}))]), .init(selfContact: .init(fullName: "Себе", image: nil, phone: "8 (925) 279 96-13", icon: nil, action: {}), contacts: [.init(fullName: "Андрей Андропов", image: nil, phone: "+7 (903) 333-67-32", icon: nil, action: {})])))
 }

@@ -1,0 +1,174 @@
+//
+//  PTSectionLatestPaymentsViewComponent.swift
+//  ForaBank
+//
+//  Created by Dmitry Martynov on 19.05.2022.
+//
+
+import SwiftUI
+import Combine
+import Shimmer
+
+//MARK: Section ViewModel
+
+extension PaymentsViewComponent {
+    
+    class ViewModel: PaymentsTransfersSectionViewModel {
+        
+        @Published var latestPayments: LatestPaymentsViewComponent.ViewModel
+        
+        override var type: PaymentsTransfersSectionType { .latestPayments }
+        private let model: Model
+        
+        private var bindings = Set<AnyCancellable>()
+        
+        init(latestsPayments: LatestPaymentsViewComponent.ViewModel, model: Model) {
+            
+            self.latestPayments = latestsPayments
+            self.model = model
+            super.init()
+        }
+        
+        init(model: Model) {
+            
+            self.latestPayments = .init(model, items: [])
+            self.model = model
+            super.init()
+            bind()
+        }
+        
+        func bind() {
+            
+            model.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                
+                    case let payload as ModelAction.Contacts.PermissionStatus.Update:
+                    
+                        switch payload.status {
+                        case .available:
+                       
+                            if !model.latestPayments.value.isEmpty {
+                                
+                                // temporally removed taxAndStateService from list
+                                let latestPaymentsFilterred = model.latestPayments.value.filter({ $0.type != .taxAndStateService })
+                            
+                                withAnimation(.easeInOut(duration: 1)) {
+                                    
+                                    self.latestPayments = .init(model, latest: latestPaymentsFilterred)
+                                }
+                            }
+                        
+                        default: break
+                        }
+                    default: break
+                    }
+                    
+            }.store(in: &bindings)
+            
+            model.latestPayments
+                .combineLatest(model.latestPaymentsUpdating)
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] data in
+                    
+                    let latestPayments = data.0
+                    let isLatestPaymentsUpdating = data.1
+                    
+                    // temporally removed taxAndStateService from list
+                    let latestPaymentsFilterred = latestPayments.filter({ $0.type != .taxAndStateService })
+                    
+                    withAnimation(.easeInOut(duration: 1)) {
+                        
+                        self.latestPayments = .init(model, latest: latestPaymentsFilterred, isUpdating: isLatestPaymentsUpdating)
+                    }
+                
+            }.store(in: &bindings)
+            
+        }
+    }
+}
+
+//MARK: - Action PTSectionLatestPaymentsViewAction
+
+enum PTSectionLatestPaymentsViewAction {
+
+    enum ButtonTapped {
+
+        struct Templates: Action {}
+        
+        struct CurrencyWallet: Action {}
+
+        struct LatestPayment: Action {
+
+            let latestPayment: LatestPaymentData
+        }
+    }
+}
+
+//MARK: Section View
+
+struct PaymentsViewComponent: View {
+    
+    @ObservedObject
+    var viewModel: ViewModel
+    
+    var body: some View {
+        
+        Text(viewModel.title)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .font(.textH1SB24322())
+            .foregroundColor(.textSecondary)
+            .padding(.vertical, 16)
+            .padding(.leading, 20)
+
+        LatestPaymentsViewComponent(viewModel: viewModel.latestPayments)
+        
+    }
+}
+
+//MARK: default LatestPaymentButton by type
+
+extension LatestPaymentData.Kind {
+    
+    var defaultName: String {
+        
+        switch self {
+        case .country: return "За рубеж"
+        case .phone: return "По телефону"
+        case .service: return "Услуги ЖКХ"
+        case .mobile: return "Услуги связи"
+        case .internet: return "Услуги интернет"
+        case .transport: return "Услуги Транспорта"
+        case .taxAndStateService: return  "Госуслуги"
+        case .unknown: return "Неизвестно"
+        }
+    }
+    
+    var defaultIcon: Image {
+        
+        switch self {
+        case .country: return .ic24Globe
+        case .phone: return .ic24Smartphone
+        case .service: return .ic24ZKX
+        case .mobile: return .ic24Smartphone
+        case .internet: return .ic24Tv
+        case .transport: return .ic24Car
+        case .taxAndStateService: return .ic24Emblem
+        case .unknown: return .ic24AlertTriangle
+        }
+    }
+}
+
+//MARK: - Preview
+
+struct PTSectionLatestPaymentsView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        PaymentsViewComponent(viewModel: .init(model: .emptyMock))
+            .previewLayout(.fixed(width: 350, height: 150))
+            .previewDisplayName("Section LatestPayments")
+    }
+}
