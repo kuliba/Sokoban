@@ -28,12 +28,8 @@ struct ContactsView: View {
             switch viewModel.mode {
                 
             case let .contactsSearch(contacts):
-                
-                if let contacts = contacts {
                     
                     ContactListView(viewModel: contacts)
-                    
-                }
                 
             case let .contacts(latestPayments, contacts):
                 
@@ -182,66 +178,49 @@ extension ContactsView {
     
     struct CollapsableView: View {
         
-        @ObservedObject var viewModel: ContactsViewModel.CollapsableViewModel
+        @ObservedObject var viewModel: ContactsViewModel.CollapsableSectionViewModel
         
         var body: some View {
             
-            switch viewModel.mode {
-            case .normal:
-                
-                HeaderView(viewModel: viewModel.header)
-                
-            case .search:
-                
-                SearchBarComponent(viewModel: viewModel.searchBar)
-                    .padding(.horizontal, 20)
-            }
+//            switch $viewModel.mode {
+//            case .normal:
+//
+//                HeaderView(viewModel: viewModel.header)
+//
+//            case let .search(searchViewModel):
+//
+//                SearchBarComponent(viewModel: searchViewModel)
+//                    .padding(.horizontal, 20)
+//            }
             
             if viewModel.isCollapsed {
                 
-                if let viewModel = viewModel.options {
-                    
-                    OptionSelectorView(viewModel: viewModel)
-                        .padding()
-                }
+//                switch viewModel {
+//                case let payload as BanksCollapsableViewModel: break
+//                    if let viewModel = payload.options {
+//
+//                        OptionSelectorView(viewModel: viewModel)
+//                            .padding()
+//                    }
+//                }
                 
-                ListView(viewModel: viewModel.items)
-            }
-        }
-    }
-    
-    struct ListView: View {
-        
-        let viewModel: ContactsViewModel.ItemsListViewModel
-        
-        var body: some View {
-            
-            VStack {
-                
-                ScrollView(.vertical, showsIndicators: false) {
+                ForEach(viewModel.items, id: \.self) { item in
                     
-                    VStack(spacing: 24) {
+                    Button {
                         
-                        ForEach(viewModel.items, id: \.self) { item in
-                            
-                            Button {
-                                
-                                item.action()
-                            } label: {
-                                
-                                ItemView(viewModel: item)
-                            }
-                        }
+                        item.action()
+                    } label: {
+                        
+                        ItemView(viewModel: item)
                     }
                 }
-                .padding(.horizontal, 20)
             }
         }
     }
     
     struct HeaderView: View {
         
-        let viewModel: ContactsViewModel.CollapsableViewModel.HeaderViewModel
+        let viewModel: ContactsViewModel.CollapsableSectionViewModel.HeaderViewModel
         
         var body: some View {
             
@@ -252,26 +231,27 @@ extension ContactsView {
                     .resizable()
                     .frame(width: 24, height: 24)
                 
-                Text(viewModel.title.rawValue)
+                Text(viewModel.title)
                     .foregroundColor(Color.textSecondary)
                     .font(.textH3SB18240())
                 
                 Spacer()
+
                 
-                if let searchButton = viewModel.searchButton {
-                    
-                    Button {
-                        
-                        searchButton.action()
-                        
-                    } label: {
-                        
-                        searchButton.icon
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .foregroundColor(Color.iconGray)
-                    }
-                }
+//                if let searchButton = viewModel.searchButton {
+//
+//                    Button {
+//
+//                        searchButton.action()
+//
+//                    } label: {
+//
+//                        searchButton.icon
+//                            .resizable()
+//                            .frame(width: 24, height: 24)
+//                            .foregroundColor(Color.iconGray)
+//                    }
+//                }
                 
                 Button {
                     
@@ -420,7 +400,7 @@ extension ContactsView {
     
     struct ItemView: View {
         
-        let viewModel: ContactsViewModel.ItemsListViewModel.Item
+        let viewModel: ContactsViewModel.CollapsableSectionViewModel.ItemViewModel
         
         var body: some View {
             

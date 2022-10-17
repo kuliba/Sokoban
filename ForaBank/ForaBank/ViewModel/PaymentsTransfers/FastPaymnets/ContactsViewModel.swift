@@ -22,9 +22,9 @@ class ContactsViewModel: ObservableObject {
     enum Mode {
         
         case contacts(LatestPaymentsViewComponent.ViewModel?, ContactsListViewModel)
-        case contactsSearch(ContactsListViewModel?)
-        case banks(TopBanksSectionType?, [CollapsableViewModel])
-        case banksSearch([CollapsableViewModel])
+        case contactsSearch(ContactsListViewModel)
+        case banks(TopBanksSectionType?, [CollapsableSectionViewModel])
+        case banksSearch([CollapsableSectionViewModel])
     }
     
     private let model: Model
@@ -49,42 +49,48 @@ class ContactsViewModel: ObservableObject {
     
     //TODO: bind sections
     
-    func bindCategorySelector(_ sections: [CollapsableViewModel]) {
+    func bindCategorySelector(_ sections: [CollapsableSectionViewModel]) {
         
         for section in sections {
             
-            section.options?.action
-                .receive(on: DispatchQueue.main)
-                .sink{[unowned self] action in
-                    
-                    switch action {
-                    case let payload as OptionSelectorAction.OptionDidSelected:
+            switch section {
+            case let section as BanksCollapsableViewModel:
+                
+                section.options?.action
+                    .receive(on: DispatchQueue.main)
+                    .sink{[unowned self] action in
                         
-                        section.options?.selected = payload.optionId
-                        
-                        if payload.optionId != "Российские" {
+                        switch action {
+                        case let payload as OptionSelectorAction.OptionDidSelected:
                             
-                            section.items = .init(self.model, type: .banks(.direct))
-                            section.header.icon = .ic24Bank
+                            section.options?.selected = payload.optionId
                             
-                        } else {
+                            if payload.optionId != "Российские" {
+                                
+//                                section.items = .init(self.model, type: .banks(.direct))
+                                section.header.icon = .ic24Bank
+                                
+                            } else {
+                                
+//                                section.items = .init(self.model, type: .banks(.sfp))
+                                section.header.icon = .ic40SBP
+                            }
                             
-                            section.items = .init(self.model, type: .banks(.sfp))
-                            section.header.icon = .ic40SBP
+                        default: break
                         }
                         
-                    default: break
-                    }
-                    
-                }.store(in: &bindings)
+                    }.store(in: &bindings)
+                
+            default: break
+            }
             
-            section.searchBar.$text
-                .receive(on: DispatchQueue.main)
-                .sink{ [unowned self] text in
-                    
-                    section.items = .init(self.model, type: .banks(.sfp), filterText: text)
-                    
-                }.store(in: &bindings)
+            //            section.searchBar.$text
+            //                .receive(on: DispatchQueue.main)
+            //                .sink{ [unowned self] text in
+            //
+            //                    section.items = .init(self.model, type: .banks(.sfp), filterText: text)
+            //
+            //                }.store(in: &bindings)
             
         }
     }
@@ -183,7 +189,7 @@ class ContactsViewModel: ObservableObject {
                         self.searchBar.textColor = .mainColorsBlack
                         self.model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: self.searchBar.text))
                         
-                        let collapsable: [CollapsableViewModel] = [.init(model, kind: .banks(.sfp)), .init(model, kind: .country)]
+                        let collapsable: [CollapsableSectionViewModel] = [.init(kind: .banks), .init(kind: .country)]
                         
                         self.mode = .banks(.placeHolder, collapsable)
                         bindCategorySelector(collapsable)
@@ -312,200 +318,53 @@ class ContactsViewModel: ObservableObject {
         }
     }
     
-    class ItemsListViewModel: ObservableObject, Hashable, Identifiable {
+    class CollapsableSectionViewModel: ObservableObject, Hashable {
         
-        let id = UUID()
-        @Published var items: [Item]
-        
-        init(items: [Item]) {
-            
-            self.items = items
-        }
-        
-        convenience init(_ model: Model, type: Kind, filterText: String? = nil) {
-            
-            switch type {
-                
-            case let .banks(bankType):
-                let items = Self.reduceBanks(model, filterByType: bankType, filterByName: filterText)
-                self.init(items: items)
-                
-            case .country:
-                let items = Self.reduceCountry(model)
-                self.init(items: items)
-            }
-        }
-        
-        class Item: Hashable, Identifiable {
-            
-            let id = UUID()
-            let title: String
-            let image: Image?
-            let bankType: BankType?
-            let action: () -> Void
-            
-            internal init(title: String, image: Image?, bankType: BankType?, action: @escaping () -> Void) {
-                
-                self.title = title
-                self.image = image
-                self.bankType = bankType
-                self.action = action
-            }
-            
-            static func == (lhs: Item, rhs: Item) -> Bool {
-                lhs.id == rhs.id && lhs.title == rhs.title
-            }
-            
-            func hash(into hasher: inout Hasher) {
-                
-                hasher.combine(title)
-            }
-        }
-        
-        static func == (lhs: ContactsViewModel.ItemsListViewModel, rhs: ContactsViewModel.ItemsListViewModel) -> Bool {
-            lhs.hashValue == rhs.hashValue
-        }
-        
-        func hash(into hasher: inout Hasher) {
-            
-            hasher.combine(items)
-        }
-        
-        static func reduceBanks(_ model: Model, filterByType: BankType? = nil, filterByName: String? = nil) -> [ItemsListViewModel.Item] {
-            
-            let bankData = model.bankList.value
-            var banks = [ItemsListViewModel.Item]()
-            
-            banks = bankData.map({ItemsListViewModel.Item.init(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: {})})
-            banks = banks.sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
-            banks = banks.sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
-            
-            if let filter = filterByType {
-                
-                banks = banks.filter({$0.bankType == filter})
-            }
-            
-            if let filter = filterByName, filter != "" {
-                
-                banks = banks.filter({ bank in
-                    
-                    if bank.title.localizedStandardContains(filter) {
-                        return true
-                    } else {
-                        return false
-                    }
-                })
-            }
-            
-            return banks
-        }
-        
-        static func reduceCountry(_ model: Model) -> [ItemsListViewModel.Item] {
-            
-            let countryData = model.countriesList.value.filter({$0.paymentSystemIdList.contains("DIRECT")})
-            var country = [ItemsListViewModel.Item]()
-            
-            country = countryData.map({ItemsListViewModel.Item(title: $0.name, image: $0.svgImage?.image, bankType: nil, action: {})})
-            country = country.sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
-            country = country.sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
-            
-            return country
-        }
-    }
-    
-    class CollapsableViewModel: ObservableObject, Hashable {
-        
-        let id = UUID()
         @Published var header: HeaderViewModel
-        @Published var isCollapsed: Bool
-        @Published var mode: Mode
-        @Published var searchBar: SearchBarComponent.ViewModel = .init(clearButton: nil, cancelButton: .init(type: .title("Отмена"), action: {}), placeHolder: .banks, icon: .ic24Search, textColor: .mainColorsGrayLightest)
-        @Published var items: ItemsListViewModel
-        @Published var options: OptionSelectorView.ViewModel?
+        var isCollapsed: Bool
+        @Published var items: [ItemViewModel]
         
-        internal init(header: HeaderViewModel, isCollapsed: Bool, mode: Mode, items: ContactsViewModel.ItemsListViewModel, options: OptionSelectorView.ViewModel? = nil) {
+        internal init(header: HeaderViewModel, isCollapsed: Bool, items: [ItemViewModel]) {
+            
             self.header = header
             self.isCollapsed = isCollapsed
-            self.mode = mode
             self.items = items
-            self.options = options
         }
         
-        convenience init(_ model: Model, kind: Kind) {
+        convenience init(kind: Kind) {
             
-            let header: HeaderViewModel = .init(type: kind)
-            let items: ItemsListViewModel = .init(model, type: kind)
-            
-            if kind != .country {
+            switch kind {
                 
-                let options: OptionSelectorView.ViewModel = Self.createOptionViewModel()
-                self.init(header: header, isCollapsed: false, mode: .normal, items: items, options: options)
+            case .banks:
+                let header = HeaderViewModel(icon: .ic40SBP, title: "В другой банк", toggleButton: .init(icon: .ic24ChevronUp, action: {}))
+                let items = [ItemViewModel]()
                 
-                self.header.searchButton?.action = {
-                    
-                    withAnimation {
-                        
-                        self.mode = self.mode == .normal ? .search : .normal
-                    }
-                }
+                self.init(header: header, isCollapsed: false, items: items)
                 
-                self.header.toggleButton.action = {
-                    
-                    withAnimation {
-                        
-                        self.isCollapsed.toggle()
-                        self.header.toggleButton.icon = self.isCollapsed ? .ic24ChevronDown : .ic24ChevronUp
-                    }
-                }
+            case .country:
+                let header = HeaderViewModel(icon: .ic48Abroad, title: "За рубеж", toggleButton: .init(icon: .ic24ChevronUp, action: {}))
+                let items = [ItemViewModel]()
                 
-                self.searchBar.cancelButton.action = {
-                    
-                    self.mode = .normal
-                }
-                
-            } else {
-                
-                self.init(header: header, isCollapsed: false, mode: .normal, items: items)
+                self.init(header: header, isCollapsed: false, items: items)
             }
         }
         
-        class HeaderViewModel: ObservableObject {
+        enum Kind {
+            case banks, country
+        }
+        
+        class HeaderViewModel {
             
             @Published var icon: Image
-            let title: Title
-            @Published var searchButton: ButtonViewModel?
+            let title: String
             @Published var toggleButton: ButtonViewModel
             
-            init(type: Kind) {
+            internal init(icon: Image, title: String, toggleButton: ButtonViewModel) {
                 
-                switch type {
-                case .banks:
-                    
-                    self.icon = .ic40SBP
-                    self.title = .otherBank
-                    self.toggleButton = .init(icon: .ic24ChevronUp, action: {})
-                    self.searchButton = .init(icon: .ic24Search, action: {})
-                    
-                case .country:
-                    
-                    self.icon = .ic48Abroad
-                    self.title = .abroad
-                    self.toggleButton = .init(icon: .ic24ChevronUp, action: {})
-                    self.searchButton = nil
-                }
+                self.icon = icon
+                self.title = title
+                self.toggleButton = toggleButton
             }
-        }
-        
-        enum Mode {
-            
-            case normal
-            case search
-        }
-        
-        enum Title: String {
-            
-            case otherBank = "В другой банк"
-            case abroad = "Переводы за рубеж"
         }
         
         struct ButtonViewModel {
@@ -514,26 +373,56 @@ class ContactsViewModel: ObservableObject {
             var action: () -> Void
         }
         
-        static func createOptionViewModel() -> OptionSelectorView.ViewModel {
+        class ItemViewModel: Identifiable, Hashable {
             
-            let options = BankType.allCases.map({Option(id: $0.name, name: $0.name)})
-            guard let firstOption = options.first?.id else {
-                let optionViewModel: OptionSelectorView.ViewModel = .init(options: options, selected: "", style: .template, mode: .action)
-                return  optionViewModel }
+            let id = UUID()
+            let title: String
+            let image: Image?
+            let bankType: BankType?
+            let action: () -> Void
+            let kind: Kind
             
-            let optionViewModel: OptionSelectorView.ViewModel = .init(options: options, selected: firstOption, style: .template, mode: .action)
-            return optionViewModel
-        }
-        
-        static func == (lhs: ContactsViewModel.CollapsableViewModel, rhs: ContactsViewModel.CollapsableViewModel) -> Bool {
-            lhs.id == rhs.id
-        }
-        
-        func hash(into hasher: inout Hasher) {
+            internal init(title: String, image: Image?, bankType: BankType?, kind: Kind, action: @escaping () -> Void) {
+                
+                self.title = title
+                self.image = image
+                self.bankType = bankType
+                self.action = action
+                self.kind = kind
+            }
             
-            hasher.combine(id)
+            static func == (lhs: ItemViewModel, rhs: ItemViewModel) -> Bool {
+                lhs.id == rhs.id && lhs.title == rhs.title
+            }
+            
+            func hash(into hasher: inout Hasher) {
+                
+                hasher.combine(id)
+                hasher.combine(title)
+            }
         }
     }
+    
+    class BanksCollapsableViewModel: CollapsableSectionViewModel {
+        
+        @Published var mode: Mode
+        @Published var options: OptionSelectorView.ViewModel?
+        
+        internal init(header: CollapsableSectionViewModel.HeaderViewModel, isCollapsed: Bool, items: [CollapsableSectionViewModel.ItemViewModel], mode: Mode, options: OptionSelectorView.ViewModel? = nil) {
+            
+            self.mode = mode
+            self.options = options
+            super.init(header: header, isCollapsed: isCollapsed, items: items)
+        }
+        
+        enum Mode {
+            
+            case normal
+            case search(SearchBarComponent.ViewModel)
+        }
+    }
+    
+    class CountryCollapsableViewModel: CollapsableSectionViewModel {}
     
     func itemsReduce(model: Model, latest: [LatestPaymentData]) -> [LatestPaymentsViewComponent.ViewModel.ItemViewModel] {
         
@@ -571,8 +460,8 @@ class ContactsViewModel: ObservableObject {
             }
             
             if contact.localizedCaseInsensitiveCompare(secondContact) == .orderedAscending {
-                
                 return contact < secondContact
+                
             } else {
                 return false
             }
@@ -677,6 +566,19 @@ class ContactsViewModel: ObservableObject {
         }
         
         return topBanksViewModel
+    }
+}
+
+extension ContactsViewModel.CollapsableSectionViewModel {
+    
+    static func == (lhs: ContactsViewModel.CollapsableSectionViewModel, rhs: ContactsViewModel.CollapsableSectionViewModel) -> Bool {
+        lhs.isCollapsed == rhs.isCollapsed
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        
+        hasher.combine(isCollapsed)
+        hasher.combine(header.title.hashValue)
     }
 }
 
