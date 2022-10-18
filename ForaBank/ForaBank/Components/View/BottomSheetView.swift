@@ -86,18 +86,43 @@ struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModi
     
     func body(content: Content) -> some View {
         
-        content
-            .transaction({ transaction in
-                transaction.disablesAnimations = false
-            })
-            .fullScreenCover(item: $item, content: { item in
+        if #available(iOS 14.5, *) {
+            
+            content
+                .transaction({ transaction in
+                    transaction.disablesAnimations = false
+                })
+                .fullScreenCover(item: $item, content: { item in
+                    
+                    BottomSheetView(isPresented: isPresented, keyboardOfssetMultiplier: keyboardOfssetMultiplier, content: sheetContent(item))
+                    
+                })
+                .transaction({ transaction in
+                    transaction.disablesAnimations = true
+                })
+            
+        } else {
+            
+            if item != nil {
                 
-                BottomSheetView(isPresented: isPresented, keyboardOfssetMultiplier: keyboardOfssetMultiplier, content: sheetContent(item))
+                content
+                    .transaction({ transaction in
+                        transaction.disablesAnimations = false
+                    })
+                    .fullScreenCover(item: $item, content: { item in
+                        
+                        BottomSheetView(isPresented: isPresented, keyboardOfssetMultiplier: keyboardOfssetMultiplier, content: sheetContent(item))
+                        
+                    })
+                    .transaction({ transaction in
+                        transaction.disablesAnimations = true
+                    })
                 
-            })
-            .transaction({ transaction in
-                transaction.disablesAnimations = true
-            })
+            } else {
+                
+                content
+            }
+        }
     }
 }
 
