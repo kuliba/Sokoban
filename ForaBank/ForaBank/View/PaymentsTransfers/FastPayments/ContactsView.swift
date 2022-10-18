@@ -28,13 +28,13 @@ struct ContactsView: View {
             switch viewModel.mode {
                 
             case let .contactsSearch(contacts):
-                    
-                    ContactListView(viewModel: contacts)
+                
+                ContactListView(viewModel: contacts)
                 
             case let .contacts(latestPayments, contacts):
                 
                 if let latestPayments {
-
+                    
                     LatestPaymentsViewComponent(viewModel: latestPayments)
                 }
                 
@@ -182,91 +182,109 @@ extension ContactsView {
         
         var body: some View {
             
-//            switch $viewModel.mode {
-//            case .normal:
-//
-//                HeaderView(viewModel: viewModel.header)
-//
-//            case let .search(searchViewModel):
-//
-//                SearchBarComponent(viewModel: searchViewModel)
-//                    .padding(.horizontal, 20)
-//            }
+            if let viewModel = viewModel as? ContactsViewModel.BanksSectionCollapsableViewModel {
+                
+                switch viewModel.mode {
+                case .normal:
+                    HeaderView(viewModel: viewModel)
+                    
+                case let .search(searchViewModel):
+                    SearchBarComponent(viewModel: searchViewModel)
+                        .padding(.horizontal, 20)
+                }
+                
+            } else {
+                
+                HeaderView(viewModel: viewModel)
+            }
             
             if viewModel.isCollapsed {
                 
-//                switch viewModel {
-//                case let payload as BanksCollapsableViewModel: break
-//                    if let viewModel = payload.options {
-//
-//                        OptionSelectorView(viewModel: viewModel)
-//                            .padding()
-//                    }
-//                }
+                if let viewModel = viewModel as? ContactsViewModel.BanksSectionCollapsableViewModel {
+                    OptionSelectorView(viewModel: viewModel.options)
+                        .padding()
+                }
                 
-                ForEach(viewModel.items, id: \.self) { item in
+                VStack {
                     
-                    Button {
+                    ScrollView(.vertical, showsIndicators: false) {
                         
-                        item.action()
-                    } label: {
-                        
-                        ItemView(viewModel: item)
+                        VStack(spacing: 24) {
+                            
+                            ForEach(viewModel.items, id: \.self) { item in
+                                
+                                Button {
+                                    
+                                    item.action()
+                                } label: {
+                                    
+                                    ItemView(viewModel: item)
+                                }
+                            }
+                        }
                     }
+                    .padding(.horizontal, 20)
                 }
             }
         }
-    }
-    
-    struct HeaderView: View {
         
-        let viewModel: ContactsViewModel.CollapsableSectionViewModel.HeaderViewModel
-        
-        var body: some View {
+        struct HeaderView: View {
             
-            HStack(alignment: .center, spacing: 8.5) {
+            @ObservedObject var viewModel: ContactsViewModel.CollapsableSectionViewModel
+            
+            var body: some View {
                 
-                viewModel.icon
-                    .renderingMode(.original)
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                
-                Text(viewModel.title)
-                    .foregroundColor(Color.textSecondary)
-                    .font(.textH3SB18240())
-                
-                Spacer()
-
-                
-//                if let searchButton = viewModel.searchButton {
-//
-//                    Button {
-//
-//                        searchButton.action()
-//
-//                    } label: {
-//
-//                        searchButton.icon
-//                            .resizable()
-//                            .frame(width: 24, height: 24)
-//                            .foregroundColor(Color.iconGray)
-//                    }
-//                }
-                
-                Button {
+                HStack(alignment: .center, spacing: 8.5) {
                     
-                    viewModel.toggleButton.action()
-                    
-                } label: {
-                    
-                    viewModel.toggleButton.icon
+                    viewModel.header.icon
+                        .renderingMode(.original)
                         .resizable()
                         .frame(width: 24, height: 24)
-                        .foregroundColor(Color.iconGray)
                     
+                    Text(viewModel.header.title)
+                        .foregroundColor(Color.textSecondary)
+                        .font(.textH3SB18240())
+                    
+                    Spacer()
+                    
+                    if let search = viewModel.header.searchButton {
+                        
+                        Button {
+                            
+                            if let viewModel = viewModel as? ContactsViewModel.BanksSectionCollapsableViewModel {
+                                
+                                viewModel.mode = .search(.init(placeHolder: .banks))
+                            }
+                            
+                        } label: {
+                            
+                            search.icon
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(Color.iconGray)
+                            
+                        }
+                    }
+                    
+                    Button {
+                        
+                        withAnimation {
+                            
+                            viewModel.header.isCollapsed.toggle()
+                            viewModel.header.toggleButton.icon = viewModel.header.toggleButton.icon == .ic24ChevronUp ? Image.ic24ChevronDown : .ic24ChevronUp
+                        }
+                        
+                    } label: {
+                        
+                        viewModel.header.toggleButton.icon
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(Color.iconGray)
+                        
+                    }
                 }
+                .padding(.horizontal, 20)
             }
-            .padding(.horizontal, 20)
         }
     }
     
@@ -397,47 +415,56 @@ extension ContactsView {
             }
         }
     }
+}
+
+struct ItemView: View {
     
-    struct ItemView: View {
+    let viewModel: ContactsViewModel.CollapsableSectionViewModel.ItemViewModel
+    
+    var body: some View {
         
-        let viewModel: ContactsViewModel.CollapsableSectionViewModel.ItemViewModel
-        
-        var body: some View {
+        HStack(alignment: .center, spacing: 20) {
             
-            HStack(alignment: .center, spacing: 20) {
+            if let avatar = viewModel.image {
                 
-                if let avatar = viewModel.image {
-                    
-                    avatar
-                        .resizable()
-                        .frame(width: 40, height: 40, alignment: .center)
-                        .cornerRadius(90)
-                    
-                } else {
-                    
-                    Color.mainColorsGrayLightest
-                        .frame(width: 40, height: 40, alignment: .center)
-                        .cornerRadius(90)
-                }
+                avatar
+                    .resizable()
+                    .frame(width: 40, height: 40, alignment: .center)
+                    .cornerRadius(90)
                 
-                VStack(alignment: .leading, spacing: 8) {
-                    
-                    Text(viewModel.title)
-                        .foregroundColor(Color.textSecondary)
-                        .lineLimit(1)
-                        .font(.system(size: 16))
-                }
+            } else {
                 
-                Spacer()
+                Color.mainColorsGrayLightest
+                    .frame(width: 40, height: 40, alignment: .center)
+                    .cornerRadius(90)
             }
+            
+            VStack(alignment: .leading, spacing: 8) {
+                
+                Text(viewModel.title)
+                    .foregroundColor(Color.textSecondary)
+                    .lineLimit(1)
+                    .font(.system(size: 16))
+            }
+            
+            Spacer()
         }
     }
 }
 
 struct ContactsView_Previews: PreviewProvider {
+    
     static var previews: some View {
         
         Group {
+            
+            ContactsView.CollapsableView.HeaderView(viewModel: .init(header: .init(icon: .ic40SBP, title: "В другой банк", toggleButton: ContactsViewModel.CollapsableSectionViewModel.ButtonViewModel(icon: .ic24ChevronUp, action: {})), items: [.sampleItem]))
+                .previewLayout(.fixed(width: 375, height: 100))
+                .previewDisplayName("HeaderView")
+            
+            ContactsView.CollapsableView(viewModel: ContactsViewModel.BanksSectionCollapsableViewModel(header: .sampleHeader, items: [.sampleItem], mode: .normal, options: .sample))
+                .previewLayout(.fixed(width: 375, height: 100))
+                .previewDisplayName("CollapsableView")
             
             ContactsView(viewModel: .sample)
                 .previewDisplayName("Contacts List")
