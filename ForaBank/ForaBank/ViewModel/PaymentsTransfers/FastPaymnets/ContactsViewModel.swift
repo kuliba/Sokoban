@@ -65,17 +65,36 @@ class ContactsViewModel: ObservableObject {
                             
                             section.options.selected = payload.optionId
                             
-                            if payload.optionId != "Российские" {
+                            if payload.optionId == "Иностранные" {
                                 
-                                let banksData = model.bankList.value
-                                section.items = section.items.filter({$0.bankType == .direct})
+                                let banksData = model.bankList.value.filter({$0.bankType == .direct})
+                                
+                                section.items = banksData
+                                    .map({CollapsableSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: {})})
+                                    .sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
+                                    .sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
+                                
                                 section.header.icon = .ic24Bank
+                                
+                            } else if payload.optionId == "Российские" {
+                                
+                                let banksData = model.bankList.value.filter({$0.bankType == .sfp})
+                                section.items = banksData
+                                    .map({CollapsableSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: {})})
+                                    .sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
+                                    .sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
+                                
+                                section.header.icon = .ic40SBP
                                 
                             } else {
                                 
                                 let banksData = model.bankList.value
-                                section.items = section.items.filter({$0.bankType == .sfp})
-                                section.header.icon = .ic40SBP
+                                section.items = banksData
+                                    .map({CollapsableSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: {})})
+                                    .sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
+                                    .sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
+                                
+                                section.header.icon = .ic24Bank
                             }
                             
                         default: break
@@ -83,17 +102,61 @@ class ContactsViewModel: ObservableObject {
                         
                     }.store(in: &bindings)
                 
+                section.$mode
+                    .receive(on: DispatchQueue.main)
+                    .sink{ [unowned self] mode in
+                        switch mode {
+                        case .search(let search):
+                            
+                            section.isCollapsed = true
+                            
+                            search.action
+                                .receive(on: DispatchQueue.main)
+                                .sink { action in
+                                    
+                                    switch action {
+                                    case _ as SearchBarComponent.ViewModelAction.ChangeState:
+                                        
+                                        section.mode = .normal
+                                        
+                                    default: break
+                                    }
+                                    
+                                }.store(in: &bindings)
+                            
+                            search.$text
+                                .receive(on: DispatchQueue.main)
+                                .sink { text in
+                                    
+                                    if text != "" {
+                                        
+                                        let filteredBanks = self.model.bankList.value.filter({ bank in
+                                            if bank.memberNameRus.localizedStandardContains(text) {
+                                                
+                                                return true
+                                            }
+                                            return false
+                                        })
+                                        
+                                        section.items = filteredBanks
+                                            .map({CollapsableSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: {})})
+                                            .sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
+                                            .sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
+                                        
+                                    } else {
+                                        
+                                        section.options.selected = section.options.selected
+                                    }
+                                    
+                                }.store(in: &bindings)
+                            
+                            
+                        default: break
+                        }
+                    }.store(in: &bindings)
+                
             default: break
             }
-            
-            //            section.searchBar.$text
-            //                .receive(on: DispatchQueue.main)
-            //                .sink{ [unowned self] text in
-            //
-            //                    section.items = .init(self.model, type: .banks(.sfp), filterText: text)
-            //
-            //                }.store(in: &bindings)
-            
         }
     }
     
@@ -125,8 +188,8 @@ class ContactsViewModel: ObservableObject {
                         let banksData = model.bankList.value
                         let bankSection = BanksSectionCollapsableViewModel(bankData: banksData)
                         
-                        let countiesdata = model.countriesList.value
-                        let countriesSection = CountrySectionCollapsableViewModel(countriesList: countiesdata)
+                        let countiesData = model.countriesList.value.filter({$0.paymentSystemIdList.contains({"DIRECT"}())})
+                        let countriesSection = CountrySectionCollapsableViewModel(countriesList: countiesData)
                         
                         let collapsable: [CollapsableSectionViewModel] = [bankSection, countriesSection]
                         
@@ -201,14 +264,46 @@ class ContactsViewModel: ObservableObject {
                         let banksData = model.bankList.value
                         let bankSection = BanksSectionCollapsableViewModel(bankData: banksData)
                         
-                        let countiesdata = model.countriesList.value
-                        let countriesSection = CountrySectionCollapsableViewModel(countriesList: countiesdata)
+                        let countiesData = model.countriesList.value.filter({$0.paymentSystemIdList.contains({"DIRECT"}())})
+                        let countriesSection = CountrySectionCollapsableViewModel(countriesList: countiesData)
                         
                         let collapsable: [CollapsableSectionViewModel] = [bankSection, countriesSection]
                         
                         self.mode = .banks(.placeHolder, collapsable)
                         bindCategorySelector(collapsable)
                     }
+                }
+                
+            }.store(in: &bindings)
+        
+        searchBar.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as SearchBarComponent.ViewModelAction.ChangeState:
+                    
+                    if !searchBar.isValidation {
+                        
+                        withAnimation {
+                            
+                            let latestPaymentsFilterred = model.latestPayments.value.filter({$0.type == .phone})
+                            let items = itemsReduce(model: self.model, latest: latestPaymentsFilterred)
+                            
+                            if searchBar.text == "" {
+                                
+                                let contacts = reduce(model: self.model)
+                                self.mode = .contacts(.init(model, items: items), contacts)
+                                
+                            } else {
+                                
+                                let contacts = reduce(model: self.model, filter: searchBar.text)
+                                self.mode = .contacts(.init(model, items: items), contacts)
+                            }
+                        }
+                    }
+                    
+                default: break
                 }
                 
             }.store(in: &bindings)
@@ -386,8 +481,9 @@ class ContactsViewModel: ObservableObject {
                     let icon: Image = .ic40SBP
                     let title = "В другой банк"
                     let toggleButton = ButtonViewModel(icon: .ic24ChevronUp, action: {})
+                    let searchButton = ButtonViewModel(icon: .ic24Search, action: {})
                     
-                    self.init(icon: icon, title: title, searchButton: .init(icon: <#T##Image#>, action: <#T##() -> Void#>) ,toggleButton: toggleButton)
+                    self.init(icon: icon, title: title, searchButton: searchButton, toggleButton: toggleButton)
                     
                 case .country:
                     let icon: Image = .ic48Abroad
@@ -464,7 +560,16 @@ class ContactsViewModel: ObservableObject {
         
         static func createOptionViewModel() -> OptionSelectorView.ViewModel {
             
-            let options = BankType.allCases.map({Option(id: $0.name, name: $0.name)})
+            let options = BankType.allCases.map { bankType in
+                
+                if bankType.name == "Неизвестно" {
+                    
+                    return Option(id: "all", name: "Все")
+                } else {
+                    
+                    return Option(id: bankType.name, name: bankType.name)
+                }
+            }
             guard let firstOption = options.first?.id else {
                 let optionViewModel: OptionSelectorView.ViewModel = .init(options: options, selected: "", style: .template, mode: .action)
                 return  optionViewModel }
@@ -504,9 +609,7 @@ class ContactsViewModel: ObservableObject {
         
         override init(header: CollapsableSectionViewModel.HeaderViewModel, isCollapsed: Bool = false, items: [CollapsableSectionViewModel.ItemViewModel]) {
             
-            self.header = header
-            self.isCollapsed = isCollapsed
-            self.items = items
+            super.init(header: header, items: items)
         }
         
         convenience init(countriesList: [CountryData]) {

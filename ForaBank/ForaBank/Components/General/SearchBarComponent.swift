@@ -37,14 +37,25 @@ extension SearchBarComponent {
             self.textColor = textColor
             self.isValidation = isValidation
             
+            self.cancelButton = Button(type: .title("Отмена"), action: {
+                self.action.send(ViewModelAction.ChangeState.init(state: .hide))
+            })
+            
+            self.clearButton = Button(type: .icon(.ic24Close), action: {
+                
+                self.action.send(ViewModelAction.ClearTextField())
+            })
+            
             bind()
         }
         
         convenience init(placeHolder: PlaceHolder) {
             
-            let cancel = Button.init(type: .title("Отмена"), action: {})
+            let cancel = Button(type: .title("Отмена"), action: {
+//                action.send(ViewModelAction.ChangeState)
+            })
             
-            let clear = Button.init(type: .icon(.ic24Close), action: {})
+            let clear = Button(type: .icon(.ic24Close), action: {})
             
             self.init(clearButton: clear, cancelButton: cancel, placeHolder: placeHolder, textColor: .textPlaceholder)
         }
@@ -83,8 +94,8 @@ extension SearchBarComponent {
                     
                     switch action {
                         
-                    case let payload as ViewModelAction.ChangeState:
-                        self.state = payload.state
+                    case let _ as ViewModelAction.ChangeState:
+                        self.state = .hide
                         
                     case _ as ViewModelAction.ClearTextField:
                         self.text = ""
@@ -140,6 +151,8 @@ struct PhoneNumberTextFieldView: UIViewRepresentable {
         if self.viewModel.state == .hide {
             
             self.textField.endEditing(false)
+            uiView.resignFirstResponder()
+            
         }
     }
     
