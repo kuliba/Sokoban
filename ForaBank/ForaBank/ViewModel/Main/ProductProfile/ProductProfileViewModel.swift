@@ -690,7 +690,11 @@ class ProductProfileViewModel: ObservableObject {
                             self.model.action.send(ModelAction.Products.DepositConditionsPrintForm.Request(depositId: productData.id))
                             
                         case .contract:
-                            let printFormViewModel = PrintFormView.ViewModel(type: .contract(productId: productData.id), model: self.model)
+                            let printFormViewModel = PrintFormView.ViewModel(type: .contract(productId: productData.id), model: self.model, dismissAction: {
+                                
+                                self.action.send(ProductProfileViewModelAction.Close.Sheet())
+                                self.action.send(ProductProfileViewModelAction.Show.PlacesMap())
+                            })
                             self.sheet = .init(type: .printForm(printFormViewModel))
                         
                         case .closeDeposit:

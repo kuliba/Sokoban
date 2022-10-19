@@ -17,10 +17,11 @@ extension PrintFormView {
         
         @Published var state: State
         @Published var sheet: Sheet?
-
+        @Published var alert: Alert.ViewModel?
+        let dismissAction: (() -> Void)?
+        
         private let model: Model
         private var bindings = Set<AnyCancellable>()
-        
         
         enum Kind {
             
@@ -50,16 +51,18 @@ extension PrintFormView {
             }
         }
         
-        init(state: State, model: Model = .emptyMock) {
+        init(state: State, model: Model = .emptyMock, dismissAction: (() -> Void)? = nil) {
             
             self.state = state
             self.model = model
+            self.dismissAction = dismissAction
         }
         
-        init(type: Kind, model: Model) {
+        init(type: Kind, model: Model, dismissAction: (() -> Void)? = nil) {
             
             self.state = .loading
             self.model = model
+            self.dismissAction = dismissAction
             
             bind()
             
@@ -75,11 +78,11 @@ extension PrintFormView {
             }
         }
         
-        convenience init(pdfDocument: PDFDocument) {
+        convenience init(pdfDocument: PDFDocument, dismissAction: (() -> Void)? = nil) {
             
             let activityViewModel = ActivityView.ViewModel(activityItems: [pdfDocument.dataRepresentation() as Any])
             let state: State = .loading
-            self.init(state: state)
+            self.init(state: state, dismissAction: dismissAction)
             let button = ButtonSimpleView.ViewModel(title: "Сохранить или отправить", style: .red, action: {[weak self] in self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))})
             self.state = .document(pdfDocument, button)
         }
@@ -130,13 +133,22 @@ extension PrintFormView {
                             } else {
                                 
                                 withAnimation {
+                                    
                                     self.state = .failed
+                                    let alertViewModel = Alert.ViewModel(title: "Ошибка",
+                                                                         message: "Для получения Договора по вкладу обратитесь в отделение банка",
+                                                                         primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in
+                                                                            self?.dismissAction?()}),
+                                                                         secondary: .init(type: .default, title: "ОК", action: {}))
+                                    self.alert = .init(alertViewModel)
                                 }
                             }
                             
                         case .failure(let error):
                             withAnimation {
+                                
                                 self.state = .failed
+
                             }
                         }
                         
@@ -202,29 +214,36 @@ struct PrintFormView: View {
     
     var body: some View {
         
-        switch viewModel.state {
-        case .document(let document, let button):
-            VStack {
-                
-                PDFDocumentView(document: document)
-                ButtonSimpleView(viewModel: button)
-                    .frame(height: 48)
-                    .padding()
-            }
-            .sheet(item: $viewModel.sheet) { item in
-                
-                switch item.type {
-                case .activity(let activityViewModel):
-                    ActivityView(viewModel: activityViewModel)
+        Group {
+         
+            switch viewModel.state {
+            case .document(let document, let button):
+                VStack {
+                    
+                    PDFDocumentView(document: document)
+                    ButtonSimpleView(viewModel: button)
+                        .frame(height: 48)
+                        .padding()
                 }
+                .sheet(item: $viewModel.sheet) { item in
+                    
+                    switch item.type {
+                    case .activity(let activityViewModel):
+                        ActivityView(viewModel: activityViewModel)
+                    }
+                }
+                
+            case .loading:
+                SpinnerRefreshView(icon: .init("Logo Fora Bank"))
+                
+            case .failed:
+                Text("Не удалось загрузить документ")
             }
             
-        case .loading:
-            SpinnerRefreshView(icon: .init("Logo Fora Bank"))
+        }.alert(item: $viewModel.alert, content: { alertViewModel in
             
-        case .failed:
-            Text("Failed")
-        }
+            Alert(with: alertViewModel)
+        })
     }
 }
 
