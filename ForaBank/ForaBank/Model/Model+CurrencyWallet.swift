@@ -25,7 +25,7 @@ extension ModelAction {
                 
                 struct Response: Action {
                     
-                    let result: Result<CurrencyExchangeConfirmationData,
+                    let result: Result<TransferResponseData,
                                        ModelError>
                 }
             }
@@ -92,13 +92,7 @@ extension Model {
                     }
                     
                     self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start
-                        .Response(result: .success(.init(debitAmount: transferResponse.debitAmount,
-                                                         fee: transferResponse.fee,
-                                                         creditAmount: transferResponse.creditAmount,
-                                                         currencyRate: transferResponse.currencyRate,
-                                                         currencyPayer: transferResponse.currencyPayer,
-                                                         currencyPayee: transferResponse.currencyPayee,
-                                                         needMake: transferResponse.needMake))))
+                        .Response(result: .success(transferResponse)))
                     
                 default:
                     self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start

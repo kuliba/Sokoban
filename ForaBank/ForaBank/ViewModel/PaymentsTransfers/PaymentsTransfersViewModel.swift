@@ -349,7 +349,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 }
                 
             }.store(in: &bindings)
-        
     }
     
     private func bind(_ viewModel: PaymentsSuccessMeToMeViewModel) {

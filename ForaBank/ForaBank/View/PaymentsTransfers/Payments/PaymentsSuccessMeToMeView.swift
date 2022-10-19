@@ -29,18 +29,25 @@ struct PaymentsSuccessMeToMeView: View {
 }
 
 struct PaymentsSuccessMeToMeView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        
+
         PaymentsSuccessMeToMeView(viewModel: .init(
             .emptyMock,
             state: .success(.complete, 0),
-            confirmationData: .init(
+            responseData: .init(
+                amount: nil,
+                creditAmount: nil,
+                currencyAmount: nil,
+                currencyPayee: .init(description: "RUB"),
+                currencyPayer: nil,
+                currencyRate: nil,
                 debitAmount: 1000,
                 fee: nil,
-                creditAmount: nil,
-                currencyRate: nil,
-                currencyPayer: .init(description: "RUB"),
-                currencyPayee: nil,
-                needMake: true)))
+                needMake: true,
+                needOTP: false,
+                payeeName: nil,
+                documentStatus: .complete,
+                paymentOperationDetailId: 0)))
     }
 }

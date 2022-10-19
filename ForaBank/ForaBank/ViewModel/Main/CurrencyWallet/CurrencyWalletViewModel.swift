@@ -327,7 +327,7 @@ class CurrencyWalletViewModel: ObservableObject {
         return productSelectorViewModel
     }
     
-    private func makeConfirmationViewModel(data: CurrencyExchangeConfirmationData) {
+    private func makeConfirmationViewModel(data: TransferResponseData) {
         
         if confirmationViewModel == nil, let responseCurrencyRate = data.currencyRate {
             

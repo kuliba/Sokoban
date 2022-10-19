@@ -15,19 +15,19 @@ class PaymentsSuccessMeToMeViewModel: ObservableObject {
     
     private let model: Model
     private let state: State
-    private let confirmationData: CurrencyExchangeConfirmationData
+    private let responseData: TransferResponseData
     
     var successViewModel: PaymentsSuccessViewModel
     private var bindings = Set<AnyCancellable>()
     
-    init(_ model: Model, state: State, confirmationData: CurrencyExchangeConfirmationData) {
+    init(_ model: Model, state: State, responseData: TransferResponseData) {
         
         self.model = model
         self.state = state
-        self.confirmationData = confirmationData
+        self.responseData = responseData
         self.successViewModel = .init(model, dismissAction: {})
 
-        self.successViewModel = makeSuccess(model, state: state, data: confirmationData) {
+        self.successViewModel = makeSuccess(model, state: state, data: responseData) {
             self.action.send(PaymentsSuccessMeToMeAction.Button.Close())
         }
         
@@ -83,7 +83,7 @@ extension PaymentsSuccessMeToMeViewModel {
 
 extension PaymentsSuccessMeToMeViewModel {
 
-    private func makeSuccess(_ model: Model, state: State, data: CurrencyExchangeConfirmationData, closeAction: @escaping () -> Void) -> PaymentsSuccessViewModel {
+    private func makeSuccess(_ model: Model, state: State, data: TransferResponseData, closeAction: @escaping () -> Void) -> PaymentsSuccessViewModel {
         
         let amountFormatted = model.amountFormatted(amount: data.debitAmount ?? 0, currencyCode: data.currencyPayer?.description, style: .fraction)
         

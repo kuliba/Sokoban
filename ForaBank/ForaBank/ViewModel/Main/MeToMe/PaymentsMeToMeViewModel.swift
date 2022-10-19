@@ -175,7 +175,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
             }.store(in: &bindings)
     }
     
-    private func bind(_ response: CurrencyExchangeConfirmationData) {
+    private func bind(_ response: TransferResponseData) {
         
         model.action
             .receive(on: DispatchQueue.main)
@@ -189,14 +189,14 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         
                         if let documentStatus = success.documentStatus {
                             
-                            let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(self.model, state: .success(documentStatus, success.paymentOperationDetailId), confirmationData: response)
+                            let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(self.model, state: .success(documentStatus, success.paymentOperationDetailId), responseData: response)
                             
                             self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
                         }
                         
                     case let .failed(error):
                         
-                        let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(self.model, state: .failed(error), confirmationData: response)
+                        let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(self.model, state: .failed(error), responseData: response)
                         
                         self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
                     }
