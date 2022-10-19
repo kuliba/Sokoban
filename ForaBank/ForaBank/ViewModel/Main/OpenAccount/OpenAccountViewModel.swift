@@ -59,7 +59,7 @@ class OpenAccountViewModel: ObservableObject {
         self.closeAction = closeAction
     }
     
-    convenience init?(_ model: Model, products: [OpenAccountProductData], style: Style = .openAccount, closeAction: @escaping () -> Void = {}) {
+    convenience init?(_ model: Model, products: [OpenAccountProductData], closeAction: @escaping () -> Void = {}) {
         
         let currencyData = model.currencyList.value
         let imageData = model.images.value
@@ -70,7 +70,7 @@ class OpenAccountViewModel: ObservableObject {
             return nil
         }
         
-        self.init(model: model, item: item, items: items, currency: product.currency, pagerViewModel: .init(items.count), style: style, closeAction: closeAction)
+        self.init(model: model, item: item, items: items, currency: product.currency, pagerViewModel: .init(items.count), style: .openAccount, closeAction: closeAction)
 
         if let currentItem = currentItem {
             self.item = currentItem
@@ -78,6 +78,31 @@ class OpenAccountViewModel: ObservableObject {
 
         bind()
         updateImagesIfNeeds(products, images: imageData)
+    }
+    
+    convenience init?(_ model: Model, product: OpenAccountProductData?, closeAction: @escaping () -> Void = {}) {
+        
+        guard let product = product, product.open == false else {
+            return nil
+        }
+        
+        let currencyData = model.currencyList.value
+        let imageData = model.images.value
+        
+        let items = Self.reduce(products: [product], currencyData: currencyData, images: imageData)
+        
+        guard let item = items.first else {
+            return nil
+        }
+        
+        self.init(model: model, item: item, items: items, currency: product.currency, pagerViewModel: .init(items.count), style: .openAccount, closeAction: closeAction)
+
+        if let currentItem = currentItem {
+            self.item = currentItem
+        }
+
+        bind()
+        updateImagesIfNeeds([product], images: imageData)
     }
 
     private func bind() {

@@ -101,8 +101,8 @@ extension CurrencySelectorView {
 
                         let productsList = model.accountProductsList.value.filter { $0.currency.description == currency.description }
                         
-                        let viewModel = OpenAccountViewModel(model, products: productsList, style: .currencyWallet) {
-                            self.bottomSheet = nil
+                        let viewModel = OpenAccountViewModel(model, product: productsList.first) { [weak self] in
+                            self?.bottomSheet = nil
                         }
                         
                         if let viewModel = viewModel {
