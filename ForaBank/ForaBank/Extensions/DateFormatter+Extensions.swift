@@ -94,6 +94,17 @@ extension DateFormatter {
         return formatter
     }()
     
+    static let historyDateAndTimeFormatter: DateFormatter = {
+        
+        let formatter = DateFormatter()
+        formatter.dateStyle = .full
+        formatter.timeStyle = .medium
+        formatter.timeZone = .current
+        formatter.locale = Locale(identifier: "ru_RU")
+        
+        return formatter
+    }()
+    
     static let detailFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat =  "d MMMM yyyy"

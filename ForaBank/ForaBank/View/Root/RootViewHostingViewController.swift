@@ -13,6 +13,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
     
     private let viewModel: RootViewModel
     private var cover: Cover?
+    private var informer: Informer?
     private var isCoverDismissing: Bool
     private var spinner: UIViewController?
     private var bindings = Set<AnyCancellable>()
@@ -21,6 +22,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
         
         self.viewModel = viewModel
         self.cover = nil
+        self.informer = nil
         self.isCoverDismissing = false
         super.init(rootView: RootView(viewModel: viewModel))
         
@@ -31,6 +33,12 @@ class RootViewHostingViewController: UIHostingController<RootView> {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        viewModel.action.send(RootViewModelAction.Appear())
+    }
+    
     private func bind() {
         
         viewModel.action
@@ -39,22 +47,43 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                 
                 switch action {
                 case let payload as RootViewModelAction.Cover.ShowLogin:
-                    dismissCover(animated: false)
+                    if let cover = cover {
+                        
+                        guard cover.type != .login else {
+                            return
+                        }
+                        
+                        dismissCover(animated: false)
+                    }
+                    
                     let loginView = AuthLoginView(viewModel: payload.viewModel)
                     let loginViewController = UIHostingController(rootView: loginView)
                     let navigation = UINavigationController(rootViewController: loginViewController)
                     presentCover(navigation, of: .login, animated: false)
+                    LoggerAgent.shared.log(category: .ui, message: "presented cover: .login, animated: false")
                     
                 case let payload as RootViewModelAction.Cover.ShowLock:
-                    dismissCover(animated: false)
+                    if let cover = cover {
+                        
+                        guard cover.type != .lock else {
+                            return
+                        }
+                        
+                        dismissCover(animated: false)
+                    }
+                    
                     let lockView = AuthPinCodeView(viewModel: payload.viewModel)
                     let lockViewController = UIHostingController(rootView: lockView)
                     presentCover(lockViewController, of: .lock, animated: payload.animated)
+                    LoggerAgent.shared.log(category: .ui, message: "presented cover: .lock, animated: \(payload.animated)")
       
                 case _ as RootViewModelAction.Cover.Hide:
-                    if isCoverDismissing == false {
-                        dismissCover(animated: true)
+                    guard isCoverDismissing == false else {
+                        return
                     }
+                    
+                    dismissCover(animated: true)
+                    LoggerAgent.shared.log(category: .ui, message: "dismissed cover, animated: true")
                     
                 case let payload as RootViewModelAction.Spinner.Show:
                     presentSpinner(viewModel: payload.viewModel)
@@ -68,6 +97,24 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                 }
                 
             }.store(in: &bindings)
+        
+        viewModel.informerViewModel.$informerItemViewModel
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] informerItemViewModel in
+                
+                if let informerItemViewModel = informerItemViewModel {
+                    
+                    let rootView = InformerView(viewModel: informerItemViewModel)
+                    let informerViewController = UIHostingController(rootView: rootView)
+                    
+                    presentInformer(informerViewController, animated: true)
+                    
+                } else {
+                    
+                    dismissInformer(animated: true)
+                }
+                
+            }.store(in: &bindings)
     }
     
     private func presentCover(_ viewController: UIViewController, of type: Cover.Kind, animated: Bool) {
@@ -75,6 +122,8 @@ class RootViewHostingViewController: UIHostingController<RootView> {
         guard let scene = view.window?.windowScene else {
             return
         }
+        
+        viewModel.coverPresented = type
         
         let window = UIWindow(windowScene: scene)
         window.backgroundColor = .clear
@@ -124,6 +173,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                     cover.window.isHidden = true
                     self.cover = nil
                     self.isCoverDismissing = false
+                    self.viewModel.coverPresented = nil
                 }
                 
             case .lock:
@@ -137,6 +187,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                     cover.window.isHidden = true
                     self.cover = nil
                     self.isCoverDismissing = false
+                    self.viewModel.coverPresented = nil
                 }
             }
             
@@ -144,6 +195,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
             
             cover.window.isHidden = true
             self.cover = nil
+            self.viewModel.coverPresented = nil
         }
     }
     
@@ -205,6 +257,45 @@ class RootViewHostingViewController: UIHostingController<RootView> {
             self.spinner = nil
         }
     }
+    
+    private func presentInformer(_ viewController: UIViewController, animated: Bool) {
+        
+        guard let scene = view.window?.windowScene else {
+            return
+        }
+        
+        let rootViewController = UIViewController()
+        rootViewController.view.backgroundColor = .clear
+        
+        rootViewController.view.addSubview(viewController.view)
+        rootViewController.addChild(viewController)
+        viewController.didMove(toParent: rootViewController)
+        
+        let window = InformerWindow(windowScene: scene)
+        window.backgroundColor = .clear
+        window.windowLevel = .normal + 1
+        window.rootViewController = rootViewController
+        window.makeKeyAndVisible()
+        
+        viewController.view.backgroundColor = .clear
+        viewController.view.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            viewController.view.leadingAnchor.constraint(equalTo: rootViewController.view.leadingAnchor, constant: 20),
+            viewController.view.trailingAnchor.constraint(equalTo: rootViewController.view.trailingAnchor, constant: -20),
+            viewController.view.topAnchor.constraint(equalTo: rootViewController.view.topAnchor, constant: UIApplication.safeAreaInsets.top + 80),
+            viewController.view.heightAnchor.constraint(equalToConstant: viewController.view.frame.height)
+        ])
+        
+        informer = .init(controller: viewController, window: window)
+    }
+    
+    private func dismissInformer(animated: Bool) {
+        
+        withAnimation {
+            informer = nil
+        }
+    }
 }
 
 extension RootViewHostingViewController {
@@ -219,6 +310,25 @@ extension RootViewHostingViewController {
             
             case login
             case lock
+        }
+    }
+    
+    struct Informer {
+        
+        let controller: UIViewController
+        let window: UIWindow
+    }
+    
+    class InformerWindow: UIWindow {
+        
+        override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+            
+            guard let hitTest = super.hitTest(point, with: event),
+                  let rootViewController = rootViewController else {
+                return nil
+            }
+            
+            return rootViewController.view == hitTest ? nil : hitTest
         }
     }
     

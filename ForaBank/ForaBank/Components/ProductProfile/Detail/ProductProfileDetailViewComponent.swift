@@ -269,7 +269,6 @@ enum ProductProfileDetailViewModelAction {
 struct ProductProfileDetailView: View {
     
     @ObservedObject var viewModel: ProductProfileDetailView.ViewModel
-
     @Namespace var namespace
     
     var body: some View {

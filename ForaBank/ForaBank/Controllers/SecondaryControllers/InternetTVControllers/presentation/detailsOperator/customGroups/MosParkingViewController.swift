@@ -22,17 +22,9 @@ class MosParkingViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
             updateRegionUI()
         }
     }
-    var selectedPeriod = "" {
-        didSet {
-            updatePeriodUI()
-        }
-    }
+    var selectedPeriod = ""
     
-    @IBOutlet weak var btnYearOutlet: UIButton!
-    
-    @IBOutlet weak var btnMounthOutlet: UIButton!
-    
-    @IBOutlet weak var btnTopUpOutlet: UIButton!
+    @IBOutlet weak var segmentControl: UISegmentedControl!
     
     @IBOutlet weak var imgCheck1: UIImageView!
     
@@ -48,17 +40,20 @@ class MosParkingViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     
     @IBOutlet weak var imgMapMoscow: UIImageView!
     
-    @IBAction func btnYear(_ sender: Any) {
-        selectedPeriod = "Годовая"
-    }
-    
-    @IBAction func btnMonth(_ sender: Any) {
-        selectedPeriod = "Месячная"
-    }
-    
-    @IBAction func btnTopUp(_ sender: Any) {
-        selectedPeriod = "Пополнение"
-        performSegue(withIdentifier: "details", sender: self)
+    @IBAction func segment(_ sender: UISegmentedControl) {
+        
+        switch segmentControl.selectedSegmentIndex {
+        case 0:
+            selectedPeriod = "Пополнение"
+            performSegue(withIdentifier: "details", sender: self)
+        case 1:
+            selectedPeriod = "Годовая"
+        case 2:
+            selectedPeriod = "Месячная"
+        default:
+            selectedPeriod = "Пополнение"
+            performSegue(withIdentifier: "details", sender: self)
+        }
     }
     
     @IBAction func btnRange1(_ sender: Any) {
@@ -92,6 +87,7 @@ class MosParkingViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         view.backgroundColor = .white
         setupToolbar()
         handleMsg(what: -1)
+        self.segmentControl.selectedSegmentIndex = 2
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -149,7 +145,9 @@ class MosParkingViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let dc = segue.destination as? InternetTVDetailsFormController {
+        
+        if let dc = segue.destination as? UINavigationController,
+           let targetController = dc.topViewController as? InternetTVDetailsFormController {
             var value = "-1"
             if let list = MosParkingViewController.mosParkingList?.mosParkingList {
                 for item in list {
@@ -161,9 +159,9 @@ class MosParkingViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
                     }
                 }
             }
-            dc.operatorData = operatorData
-            dc.selectedValue = value
-            dc.operatorsViewModel = operatorsViewModel
+            targetController.operatorData = operatorData
+            targetController.selectedValue = value
+            targetController.operatorsViewModel = operatorsViewModel
         }
     }
     
@@ -192,31 +190,6 @@ class MosParkingViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
             imgCheck2.image = UIImage(named: "radio_unchecked")
             imgCheck3.image = UIImage(named: "radio_unchecked")
             imgMapMoscow.image = dicMosGroups["0"]?["img"]?.convertSVGStringToImage()
-            break
-        }
-    }
-
-    func updatePeriodUI() {
-        switch (selectedPeriod) {
-        case "Месячная":
-            btnMounthOutlet.backgroundColor = UIColor.white
-            btnYearOutlet.backgroundColor = UIColor.clear
-            btnTopUpOutlet.backgroundColor = UIColor.clear
-            break
-        case "Годовая":
-            btnMounthOutlet.backgroundColor = UIColor.clear
-            btnYearOutlet.backgroundColor = UIColor.white
-            btnTopUpOutlet.backgroundColor = UIColor.clear
-            break
-        case "Пополнение":
-            btnMounthOutlet.backgroundColor = UIColor.clear
-            btnYearOutlet.backgroundColor = UIColor.clear
-            btnTopUpOutlet.backgroundColor = UIColor.white
-            break
-        default:
-            btnMounthOutlet.backgroundColor = UIColor.clear
-            btnYearOutlet.backgroundColor = UIColor.clear
-            btnTopUpOutlet.backgroundColor = UIColor.clear
             break
         }
     }

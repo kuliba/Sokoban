@@ -18,5 +18,8 @@ enum PrintFormType: String, Codable, Unknownable {
     case transport
     case taxAndStateService
     case contactAddressless
+    case housingAndCommunalService
+    case c2b
+    case closeDeposit
     case unknown
 }

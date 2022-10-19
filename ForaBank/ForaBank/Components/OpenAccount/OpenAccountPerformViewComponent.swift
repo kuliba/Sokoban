@@ -134,15 +134,11 @@ extension OpenAccountPerformView {
                             
                             let rawValue = model.accountRawResponse(error: error)
                             
-                            switch rawValue {
-                            case .exhaust:
+                            if rawValue == .exhaust {
                                 
                                 confirm.confirmCode = ""
                                 confirm.enterCode = ""
                                 confirm.textFieldToolbar.text = ""
-                                
-                            default:
-                                break
                             }
                             
                             confirm.isResendCode = true
@@ -361,14 +357,15 @@ extension OpenAccountPerformView {
             
             let rawValue = model.accountRawResponse(error: error)
             
-            switch rawValue {
-            case .incorrect:
-                operationType = .edit
-            case .exhaust:
-                operationType = currentOperationType
-                self.action.send(OpenAccountPerformAction.ResetData())
-            case .none:
-                break
+            if let rawValue = rawValue {
+                
+                switch rawValue {
+                case .incorrect, .expired:
+                    operationType = .edit
+                case .exhaust:
+                    operationType = currentOperationType
+                    self.action.send(OpenAccountPerformAction.ResetData())
+                }
             }
         }
     }
@@ -405,28 +402,36 @@ extension OpenAccountPrepareViewModel {
 enum OpenAccountRawResponse: RawRepresentable {
     
     case incorrect
+    case expired
     case exhaust
-    case none
     
     var rawValue: String {
+        
         switch self {
-        case .incorrect:
-            return "Вы исчерпали все попытки"
-        case .exhaust:
-            return "Введен некорректный код. Попробуйте еще раз"
-        case .none:
-            return ""
+        case .incorrect: return "Введен некорректный код. Попробуйте еще раз"
+        case .expired: return "Время для ввода истекло. Запросите код повторно"
+        case .exhaust: return "Вы исчерпали все попытки"
         }
     }
     
     init?(rawValue: String) {
+        
+        if rawValue.contains("некорректный") {
+            self = .incorrect
+            return
+        }
+        
+        if rawValue.contains("истекло") {
+            self = .expired
+            return
+        }
         
         if rawValue.contains("исчерпали") {
             self = .exhaust
             return
         }
         
-        self = .incorrect
+        return nil
     }
 }
 

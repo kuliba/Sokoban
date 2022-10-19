@@ -61,3 +61,16 @@ extension SettingType {
         }
     }
 }
+
+extension SettingType: CustomDebugStringConvertible {
+    
+    var debugDescription: String {
+        
+        switch self {
+        case .general(let value): return "general : \(value.rawValue)"
+        case .transfers(let value): return "transfers : \(value.rawValue)"
+        case .security(let value): return "security : \(value.rawValue)"
+        case .interface(let value): return "interface : \(value.rawValue)"
+        }
+    }
+}

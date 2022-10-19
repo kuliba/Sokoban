@@ -12,7 +12,7 @@ import SwiftUI
 
 extension MainSectionCurrencyView {
 
-    class ViewModel: MainSectionCollapsableViewModel {
+    class ViewModel: MainSectionCollapsableViewModel, ObservableObject {
         
         override var type: MainSectionType { .currencyExchange }
         let currencyExchange: CurrencyExchangeView.ViewModel

@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import SwiftUI
 
-class MainSectionViewModel: ObservableObject, Identifiable {
+class MainSectionViewModel: Identifiable {
 
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -70,6 +70,8 @@ enum MainSectionViewModelAction {
             
             let groupId: MainSectionProductsGroupView.ViewModel.ID
         }
+        
+        struct ScrollToFirstGroup: Action {}
         
         struct MoreButtonTapped: Action {}
         

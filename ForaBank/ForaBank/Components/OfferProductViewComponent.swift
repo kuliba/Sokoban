@@ -321,31 +321,14 @@ struct OfferProductView: View {
         
         var body: some View {
             
-            if #available(iOS 14.0, *) {
+            if let id = viewModel.id, let openViewModel: OpenProductViewModel = .init(depositId: String(id)) {
                 
-                if let id = viewModel.id, let openViewModel: OpenProductViewModel = .init(depositId: String(id)){
-                    NavigationLink(destination: ProductDetailView(viewModel: openViewModel)) {
-                        Text(viewModel.orderButton.title)
-                            .foregroundColor(.textWhite)
-                            .padding(.vertical, 12)
-                            .padding(.horizontal, 17)
-                            .background(Color.buttonPrimary)
-                            .cornerRadius(8)
-                    }
-                }
-                
-            } else {
-                
-                Button{
+                NavigationLink(destination: ProductDetailView(viewModel: openViewModel)) {
                     
-                    UIApplication.shared.open(viewModel.orderButton.url)
-                    
-                } label: {
-                    
-                    Text(viewModel.title)
+                    Text(viewModel.orderButton.title)
                         .foregroundColor(.textWhite)
                         .padding(.vertical, 12)
-                        .frame(width: 166)
+                        .padding(.horizontal, 17)
                         .background(Color.buttonPrimary)
                         .cornerRadius(8)
                 }

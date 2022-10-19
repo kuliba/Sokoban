@@ -71,7 +71,7 @@ extension Model {
             return
         }
         
-        switch self.deepLinkType.value {
+        switch self.deepLinkType {
             
         case let .sbpPay(tokenIntentId):
             let command = ServerCommands.SbpPayController.ProcessToken(token: token, payload: .init(tokenIntentId: tokenIntentId, accountId: payload.accountId, status: payload.status))

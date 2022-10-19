@@ -90,10 +90,10 @@ extension CountryPaymentView {
             self.bank = nil
         }
         
-        init(country: String, operatorsViewModel: OperatorsViewModel) {
+        init(country: String, operatorsViewModel: OperatorsViewModel, paymentType: PaymentType) {
             
             self.paymentTemplate = nil
-            self.paymentType = .withOutAddress(withOutViewModel: .init(phoneNumber: nil))
+            self.paymentType = paymentType
             self.puref = nil
             self.country = Self.getCountry(code: country)
             self.bank = nil

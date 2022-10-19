@@ -10,7 +10,7 @@ import OSLog
 
 protocol LoggerAgentProtocol {
     
-    func log(level: LoggerAgentLevel, category: LoggerAgentCategory, file: String, line: Int, message: String)
+    func log(level: LoggerAgentLevel, category: LoggerAgentCategory, message: String, file: String, line: Int)
 }
 
 enum LoggerAgentLevel {
@@ -22,10 +22,11 @@ enum LoggerAgentLevel {
     case fault
 }
 
-enum LoggerAgentCategory: String {
+enum LoggerAgentCategory: String, CaseIterable {
     
     case model
     case ui
     case network
     case cache
+    case session
 }

@@ -99,13 +99,10 @@ class OpenAccountViewModel: ObservableObject {
                         
                         let rawValue = model.accountRawResponse(error: error)
                         
-                        switch rawValue {
-                        case .exhaust:
+                        if rawValue == .exhaust {
+                         
                             setItemsHidden(false)
                             pagerViewModel.isUserInteractionEnabled = true
-                            
-                        default:
-                            break
                         }
                     }
 

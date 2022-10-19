@@ -53,10 +53,6 @@ struct RootView: View {
                 
             }.accentColor(.black)
             
-            InformerView(viewModel: viewModel.informerViewModel)
-                .zIndex(1)
-                .padding(.top, 64)
-            
             if let link = viewModel.link  {
                 
                 switch link {
@@ -68,9 +64,10 @@ struct RootView: View {
                     MeToMeRequestView(viewModel: requestMeToMeModel)
                         .zIndex(.greatestFiniteMagnitude)
 
-                case .c2b:
-                    C2BDetailsView()
-                        .zIndex(.greatestFiniteMagnitude)
+                case .c2b(let viewModel):
+                        
+                    C2BDetailsView(viewModel: viewModel)
+                            .zIndex(.greatestFiniteMagnitude)
 
                 case .userAccount(let viewModel):
    

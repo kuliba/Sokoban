@@ -22,11 +22,6 @@ extension ModelAction {
                 let productId: ProductData.ID
                 let direction: Period.Direction
             }
-            
-            struct Response: Action {
-                
-                let result: Result<[ProductStatementData], Error>
-            }
         }
     }
 }
@@ -34,6 +29,10 @@ extension ModelAction {
 //MARK: - Helpers
 
 extension Model {
+    
+    static let statementsSerial = "version 2"
+    var statementsRequestDays: Int { 30 }
+    var statementslatestDaysOffset: Int { 7 }
     
     func statement(statementId: ProductStatementData.ID) -> ProductStatementData? {
         
@@ -76,81 +75,174 @@ extension Model {
             return
         }
         
-        guard let product = products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }),
-              let requestProperties = statementsRequestParameters(for: product, direction: payload.direction) else {
+        guard let product = products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }) else {
             return
         }
         
-        statementsUpdating.value[payload.productId] = .downloading(payload.direction)
+        Task {
+            
+            statementsUpdating.value[product.id] = .downloading(payload.direction)
+            var storage = statements.value[product.id]
+            
+            do {
 
+                var continueRequests = true
+                var currentDirection = payload.direction
+                let currentDate = Date()
+  
+                repeat {
+                    
+                    guard let requestProperties = Self.statementsRequestParameters(storage: storage, product: product, direction: currentDirection, days: statementsRequestDays, currentDate: currentDate, latestDaysOffset: statementslatestDaysOffset) else {
+                        
+                        break
+                    }
+
+                    let resultStatements = try await statementsFetch(token: token, product: product, period: requestProperties.period)
+     
+                    switch currentDirection {
+                    case .latest:
+                        // check if it was first statements request and nothing found
+                        if storage == nil, resultStatements.isEmpty {
+                            
+                            // swich direction to history
+                            currentDirection = .eldest
+                        }
+                        
+                    case .eldest:
+                        // chack if we found some statements
+                        if resultStatements.isEmpty == false {
+                            
+                            // stop requesting eldest periods
+                            continueRequests = false
+                        }
+                    }
+
+                    let update = ProductStatementsStorage.Update(period: requestProperties.period, statements: resultStatements, direction: requestProperties.direction, limitDate: requestProperties.limitDate, override: requestProperties.override)
+
+                    storage = Self.reduce(storage: storage, update: update, product: product)
+
+                } while continueRequests
+                
+                statementsUpdating.value[product.id] = .idle
+                
+            } catch {
+
+                LoggerAgent.shared.log(level: .error, category: .model, message: "Failed downloading statements for productId: \(payload.productId) direction: \(payload.direction), with error: \(error)")
+                statementsUpdating.value[product.id] = .failed
+            }
+            
+            self.statements.value[product.id] = storage
+
+            do {
+                
+                try self.localAgent.store(self.statements.value, serial: Self.statementsSerial)
+                
+            } catch {
+                
+                LoggerAgent.shared.log(level: .error, category: .model, message: "Failed caching statements with error: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func statementsFetch(token: String, product: ProductData, period: Period) async throws -> [ProductStatementData] {
+        
         switch product.productType {
         case .card:
-            let command = ServerCommands.CardController.GetCardStatementForPeriod(token: token, productId: payload.productId, period: requestProperties.period)
-            executeCommand(command: command, product: product)
+            let command = ServerCommands.CardController.GetCardStatementForPeriod(token: token, productId: product.id, period: period)
+            
+            return try await cardStatementsFetch(command: command)
             
         case .account:
-            let command = ServerCommands.AccountController.GetAccountStatementForPeriod(token: token, productId: payload.productId, period: requestProperties.period)
-            executeCommand(command: command, product: product)
+            let command = ServerCommands.AccountController.GetAccountStatementForPeriod(token: token, productId: product.id, period: period)
+            
+            return try await accountStatementsFetch(command: command)
             
         case .deposit:
-            let command = ServerCommands.DepositController.GetDepositStatementForPeriod(token: token, productId: payload.productId, period: requestProperties.period)
-            executeCommand(command: command, product: product)
+            let command = ServerCommands.DepositController.GetDepositStatementForPeriod(token: token, productId: product.id, period: period)
+            
+            return try await depositStatementsFetch(command: command)
             
         case .loan:
-            statementsUpdating.value[payload.productId] = .idle
-            return
+            throw ModelStatementsError.unsupportedProductType(.loan)
         }
+    }
+    
+    func cardStatementsFetch(command: ServerCommands.CardController.GetCardStatementForPeriod) async throws -> [ProductStatementData] {
         
-        func executeCommand<Command: ServerCommand>(command: Command, product: ProductData) {
+        try await withCheckedThrowingContinuation { continuation in
             
             serverAgent.executeCommand(command: command) { result in
-                
-                switch result {
+                switch result{
                 case .success(let response):
                     switch response.statusCode {
                     case .ok:
                         
-                        self.statementsUpdating.value[product.id] = .idle
-                        
-                        guard let statementsList = response.data as? [ProductStatementData] else {
-                            
-                            self.action.send(ModelAction.Statement.List.Response(result: .failure(ModelStatementsError.emptyData(message: response.errorMessage))))
-     
+                        guard let data = response.data else {
+                            continuation.resume(with: .failure(ModelProductsError.emptyData(message: response.errorMessage)))
                             return
                         }
                         
-                        let update = ProductStatementsStorage.Update(period: requestProperties.period, statements: statementsList, direction: requestProperties.direction, limitDate: requestProperties.limitDate)
-                        
-                        self.statements.value = Self.reduce(statements: self.statements.value , with: update, for: product)
+                        continuation.resume(returning: data)
 
-                        do {
-                            
-                            try self.localAgent.store(self.statements.value, serial: nil)
-                            
-                        } catch {
-                            
-                            self.handleServerCommandCachingError(error: error, command: command)
-                        }
-                        
-                        self.action.send(ModelAction.Statement.List.Response(result: .success(statementsList)))
-                        
-                        // if we failed download statements because next statements earlier than requested period
-                        if statementsList.isEmpty == true,
-                           self.statements.value[product.id]?.isHistoryComplete == false {
-                            
-                            self.action.send(ModelAction.Statement.List.Request(productId: product.id, direction: .eldest))
-                        }
-                        
                     default:
-                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
-                        self.action.send(ModelAction.Statement.List.Response(result: .failure(ModelStatementsError.statusError(status: response.statusCode, message: response.errorMessage))))
-                        self.statementsUpdating.value[product.id] = .failed
+                        continuation.resume(with: .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage)))
                     }
-                    
                 case .failure(let error):
-                    self.handleServerCommandError(error: error, command: command)
-                    self.action.send(ModelAction.Statement.List.Response(result: .failure(ModelStatementsError.serverCommandError(error: error))))
-                    self.statementsUpdating.value[product.id] = .failed
+                    continuation.resume(with: .failure(ModelProductsError.serverCommandError(error: error.localizedDescription)))
+                }
+            }
+        }
+    }
+    
+    func accountStatementsFetch(command: ServerCommands.AccountController.GetAccountStatementForPeriod) async throws -> [ProductStatementData] {
+        
+        try await withCheckedThrowingContinuation { continuation in
+            
+            serverAgent.executeCommand(command: command) { result in
+                switch result{
+                case .success(let response):
+                    switch response.statusCode {
+                    case .ok:
+                        
+                        guard let data = response.data else {
+                            continuation.resume(with: .failure(ModelProductsError.emptyData(message: response.errorMessage)))
+                            return
+                        }
+                        
+                        continuation.resume(returning: data)
+
+                    default:
+                        continuation.resume(with: .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage)))
+                    }
+                case .failure(let error):
+                    continuation.resume(with: .failure(ModelProductsError.serverCommandError(error: error.localizedDescription)))
+                }
+            }
+        }
+    }
+    
+    func depositStatementsFetch(command: ServerCommands.DepositController.GetDepositStatementForPeriod) async throws -> [ProductStatementData] {
+        
+        try await withCheckedThrowingContinuation { continuation in
+            
+            serverAgent.executeCommand(command: command) { result in
+                switch result{
+                case .success(let response):
+                    switch response.statusCode {
+                    case .ok:
+                        
+                        guard let data = response.data else {
+                            continuation.resume(with: .failure(ModelProductsError.emptyData(message: response.errorMessage)))
+                            return
+                        }
+                        
+                        continuation.resume(returning: data)
+
+                    default:
+                        continuation.resume(with: .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage)))
+                    }
+                case .failure(let error):
+                    continuation.resume(with: .failure(ModelProductsError.serverCommandError(error: error.localizedDescription)))
                 }
             }
         }
@@ -171,30 +263,38 @@ extension Model {
     }
     
     //TODO: tests
-    func statementsRequestParameters(for product: ProductData, direction: Period.Direction) -> ProductStatementsStorage.Request? {
-        
-        let days = 30
+    static func statementsRequestParameters(storage: ProductStatementsStorage?, product: ProductData, direction: Period.Direction, days: Int, currentDate: Date, latestDaysOffset: Int) -> ProductStatementsStorage.Request? {
         
         switch direction {
         case .latest:
-            let now = Date()
-            
-            if let storage = statements.value[product.id] {
+            if let storage = storage {
                 
-                guard let period = storage.latestPeriod(days: days, limitDate: now) else {
+                guard let period = storage.latestPeriod(days: days, limitDate: currentDate) else {
                    return nil
                 }
                 
-                return .init(period: period, direction: direction, limitDate: now)
+                if period.end < currentDate {
+                    
+                    return .init(period: period, direction: direction, limitDate: currentDate)
+                    
+                } else {
+                    
+                    let startDate = period.start.advanced(by: -TimeInterval.value(days: latestDaysOffset))
+                    let endDate = period.end
+                    
+                    let adjustedPeriod = Period(start: startDate, end: endDate)
+                    
+                    return .init(period: adjustedPeriod, direction: direction, limitDate: currentDate, override: true)
+                }
                 
             } else {
                 
-                let period = Period(daysBack: days, from: now)
-                return .init(period: period, direction: direction, limitDate: now)
+                let period = Period(daysBack: days, from: currentDate)
+                return .init(period: period, direction: direction, limitDate: currentDate)
             }
             
         case .eldest:
-            guard let storage = statements.value[product.id],
+            guard let storage = storage,
                   let limitDate = ProductStatementsStorage.historyLimitDate(for: product),
                   let period = storage.eldestPeriod(days: days, limitDate: limitDate) else { return nil }
             
@@ -207,21 +307,17 @@ extension Model {
 
 extension Model {
     
-    static func reduce(statements: StatementsData, with update: ProductStatementsStorage.Update, for product: ProductData) -> StatementsData {
-        
-        var updated = statements
+    static func reduce(storage: ProductStatementsStorage?, update: ProductStatementsStorage.Update, product: ProductData ) -> ProductStatementsStorage {
         
         let historyLimitDate = ProductStatementsStorage.historyLimitDate(for: product)
-        if let storage = statements[product.id] {
+        if let storage = storage {
             
-            updated[product.id] = storage.updated(with: update, historyLimitDate: historyLimitDate)
+            return storage.updated(with: update, historyLimitDate: historyLimitDate)
             
         } else {
             
-            updated[product.id] = ProductStatementsStorage(with: update, historyLimitDate: historyLimitDate)
+            return ProductStatementsStorage(with: update, historyLimitDate: historyLimitDate)
         }
-        
-        return updated
     }
 }
 
@@ -232,4 +328,5 @@ enum ModelStatementsError: Swift.Error {
     case emptyData(message: String?)
     case statusError(status: ServerStatusCode, message: String?)
     case serverCommandError(error: Error)
+    case unsupportedProductType(ProductType)
 }

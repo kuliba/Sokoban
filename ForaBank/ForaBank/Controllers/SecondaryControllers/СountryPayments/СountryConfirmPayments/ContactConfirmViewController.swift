@@ -907,6 +907,15 @@ class ContactConfurmViewController: UIViewController {
                         self.navigationController?.pushViewController(vc, animated: true)
                         
                     }
+                } else if model.statusCode == 102 {
+                    
+                    self.doneButtonIsEnabled(false)
+
+                    if let errorMessage = model.errorMessage {
+                        
+                        self.showAlert(with: "Ошибка", and: errorMessage)
+                    }
+                    
                 } else {
 
                     self.dismissActivity()

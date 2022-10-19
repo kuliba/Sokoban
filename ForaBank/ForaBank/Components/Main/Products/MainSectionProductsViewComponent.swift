@@ -15,13 +15,14 @@ import Shimmer
 
 extension MainSectionProductsView {
     
-    class ViewModel: MainSectionCollapsableViewModel {
-
+    class ViewModel: MainSectionCollapsableViewModel, ObservableObject {
+        
         override var type: MainSectionType { .products }
         
         @Published var content: Content
         @Published var selector: OptionSelectorView.ViewModel?
         @Published var moreButton: MoreButtonViewModel?
+        var isScrollChangeSelectorEnable = true
         
         enum Content {
             
@@ -31,7 +32,7 @@ extension MainSectionProductsView {
         
         private var products: CurrentValueSubject<[ProductType: [ProductView.ViewModel]], Never> = .init([:])
         private var groups: [MainSectionProductsGroupView.ViewModel] = []
-
+        
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
@@ -64,12 +65,13 @@ extension MainSectionProductsView {
                     // all existing products view models list
                     let currentProductsViewModels = products.value.values.flatMap{ $0 }
                     
+                    var productsUpdated = [ProductType: [ProductView.ViewModel]]()
                     for productType in ProductType.allCases {
                         
-                        if let productForType = productsUpdate[productType], productForType.count > 0 {
+                        if let productsForType = productsUpdate[productType], productsForType.count > 0 {
                             
                             var productsViewModelsUpdated = [ProductView.ViewModel]()
-                            for product in productForType {
+                            for product in productsForType {
                                 
                                 // check if we alredy have view model for product data
                                 if let currentProductViewModel = currentProductsViewModels.first(where: { $0.id == product.id }) {
@@ -87,13 +89,11 @@ extension MainSectionProductsView {
                                 }
                             }
                             
-                            self.products.value[productType] = productsViewModelsUpdated
-                            
-                        } else {
-                            
-                            self.products.value[productType] = nil
+                            productsUpdated[productType] = productsViewModelsUpdated
                         }
                     }
+                    
+                    self.products.value = productsUpdated
                     
                 }.store(in: &bindings)
             
@@ -106,10 +106,10 @@ extension MainSectionProductsView {
                     let productsUpdating = data.1
                     
                     var groupsUpdated = [MainSectionProductsGroupView.ViewModel]()
-                
+                    
                     for productType in ProductType.allCases {
                         
-                        guard let productsForType = productsViewModels(from: products, for: productType) else {
+                        guard let productsForType = products[productType] else {
                             continue
                         }
                         
@@ -162,7 +162,7 @@ extension MainSectionProductsView {
                                 
                                 selector = OptionSelectorView.ViewModel(options: options, selected: options[0].id, style: .products, mode: .action)
                             }
-  
+                            
                             bind(selector)
                         }
                         
@@ -183,6 +183,13 @@ extension MainSectionProductsView {
                     switch action {
                     case let payload as MainSectionViewModelAction.Products.HorizontalOffsetDidChanged:
                         updateSelector(with: payload.offset)
+                        
+                    case _ as MainSectionViewModelAction.Products.ScrollToFirstGroup:
+                        guard case .groups(let groups) = content,
+                              let firstGroup = groups.first else {
+                            return
+                        }
+                        selector?.selected = firstGroup.id
                         
                     default:
                         break
@@ -205,9 +212,29 @@ extension MainSectionProductsView {
                             moreButton = MoreButtonViewModel(icon: .ic24MoreHorizontal, action: {[weak self] in self?.action.send(MainSectionViewModelAction.Products.MoreButtonTapped())})
                         }
                     }
-                 
+                    
                 }.store(in: &bindings)
             
+            model.accountOpening
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] accountOpening in
+                    
+                    switch content {
+                    case let .groups(groups):
+                        
+                        guard let accountsGroup = groups.first(where: { $0.productType == .account }) else {
+                            return
+                        }
+                        
+                        withAnimation {
+                            accountsGroup.isOpeningProduct = accountOpening
+                        }
+                        
+                    default:
+                        break
+                    }
+                    
+                }.store(in: &bindings)
         }
         
         private func bind(_ product: ProductView.ViewModel) {
@@ -271,7 +298,7 @@ extension MainSectionProductsView {
                     }.store(in: &bindings)
             }
         }
-
+        
         private func updateSelector(with offset: CGFloat) {
             
             guard let selector = selector, let productType = productType(with: offset) else {
@@ -287,18 +314,6 @@ extension MainSectionProductsView {
             }
         }
         
-        private func productsViewModels(from data: [ProductType: [ProductView.ViewModel]], for type: ProductType) -> [ProductView.ViewModel]? {
-            
-            if type == .card {
-                
-                return data[type] ?? []
-                
-            } else {
-                
-                return data[type]
-            }
-        }
-        
         private func content(with groups: [MainSectionProductsGroupView.ViewModel]) -> Content {
             
             if groups.isEmpty {
@@ -306,7 +321,7 @@ extension MainSectionProductsView {
                 return .placeholders
                 
             } else {
-
+                
                 if groups.count == 1, groups[0].productType == .card, groups[0].visible.isEmpty {
                     
                     return .placeholders
@@ -352,7 +367,7 @@ struct MainSectionProductsView: View {
     
     @ObservedObject var viewModel: ViewModel
     @State private var scrollView: UIScrollView? = nil
-
+    
     var body: some View {
         
         CollapsableSectionView(title: viewModel.title, edges: .horizontal, padding: 20, isCollapsed: $viewModel.isCollapsed) {
@@ -394,13 +409,19 @@ struct MainSectionProductsView: View {
                                 case let payload as MainSectionViewModelAction.Products.ScrollToGroup:
                                     scrollToGroup(groupId: payload.groupId)
                                     
+                                case _ as MainSectionViewModelAction.Products.ScrollToFirstGroup:
+                                    scrollToFirstGroup()
+                                    
                                 default:
                                     break
                                 }
                             }
                             .onReceive(proxy.offset) { offset in
                                 
-                                viewModel.action.send( MainSectionViewModelAction.Products.HorizontalOffsetDidChanged(offset: offset.x))
+                                if viewModel.isScrollChangeSelectorEnable == true {
+                                    
+                                    viewModel.action.send( MainSectionViewModelAction.Products.HorizontalOffsetDidChanged(offset: offset.x))
+                                }
                             }
                         }
                     }
@@ -416,6 +437,8 @@ struct MainSectionProductsView: View {
             return
         }
         
+        viewModel.isScrollChangeSelectorEnable = false
+        
         var offset: CGFloat = 0
         for group in groups {
             
@@ -429,6 +452,19 @@ struct MainSectionProductsView: View {
         
         let targetRect = CGRect(x: offset, y: 0, width: scrollView.bounds.width , height: scrollView.bounds.height)
         scrollView.scrollRectToVisible(targetRect, animated: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+            viewModel.isScrollChangeSelectorEnable = true
+        }
+    }
+    
+    func scrollToFirstGroup() {
+        
+        guard let scrollView = scrollView else {
+            return
+        }
+        
+        let targetRect = CGRect(x: 0, y: 0, width: scrollView.bounds.width , height: scrollView.bounds.height)
+        scrollView.scrollRectToVisible(targetRect, animated: false)
     }
 }
 
@@ -502,7 +538,7 @@ struct MainSectionProductsView_Previews: PreviewProvider {
             
             MainSectionProductsView(viewModel: .sample)
                 .previewLayout(.fixed(width: 375, height: 300))
-    
+            
             MainSectionProductsView.PlaceholdersView()
                 .previewLayout(.fixed(width: 375, height: 300))
         }

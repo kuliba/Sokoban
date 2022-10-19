@@ -37,7 +37,7 @@ extension Model {
            let json = try? Data(contentsOf: url),
            let statements = try? JSONDecoder.serverDate.decode([ProductStatementData].self, from: json)  {
             
-            let update = ProductStatementsStorage.Update(period: Period(daysBack: 1, from: Date()), statements: statements, direction: .eldest, limitDate: Date())
+            let update = ProductStatementsStorage.Update(period: Period(daysBack: 1, from: Date()), statements: statements, direction: .eldest, limitDate: Date(), override: false)
         }
         
         return model

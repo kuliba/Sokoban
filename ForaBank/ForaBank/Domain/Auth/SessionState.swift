@@ -10,6 +10,7 @@ import Foundation
 enum SessionState {
     
     case inactive
+    case activating
     case active(start: TimeInterval, credentials: SessionCredentials)
     case expired
     case failed(Error)
@@ -21,9 +22,10 @@ extension SessionState: CustomDebugStringConvertible {
         
         switch self {
         case .inactive: return "INACTIVE"
+        case .activating: return "ACTIVATING"
         case .active: return "ACTIVE"
         case .expired: return "EXPIRED"
-        case .failed: return "FAILED"
+        case .failed(let error): return "FAILED: \(error.localizedDescription)"
         }
     }
 }

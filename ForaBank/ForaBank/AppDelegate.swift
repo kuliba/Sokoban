@@ -40,6 +40,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         model.action.send(ModelAction.App.Launched())
         
+        if let launchOptions = launchOptions {
+            
+            model.action.send(ModelAction.Notification.Transition.Set(transition: .init(userInfo: launchOptions)))
+        }
+        
         return true
     }
 
@@ -80,57 +85,25 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         
         let userInfo = notification.request.content.userInfo
-        if (userInfo["aps"]) != nil  || (userInfo["otp"] as? String) != nil {
-
+        
+        guard let push = try? Push(decoding: userInfo) else { return }
+        
+        if let code = push.code, let _ = push.aps {
+            
+            model.action.send(ModelAction.Auth.VerificationCode.PushRecieved(code: code))
             NotificationCenter.default.post(name: Notification.Name("otpCode"), object: nil, userInfo: userInfo)
         }
-
-        if let eventId = userInfo["event_id"] as? String, let cloudId = userInfo["cloud_id"] as? String {
-
-            model.action.send(ModelAction.Notification.ChangeNotificationStatus.Request(eventId: eventId,
-                                                                                          cloudId: cloudId,
-                                                                                          status: .delivered))
-        }
         
-        if let otpCode = otpCode(with: userInfo) {
-            
-            Model.shared.action.send(ModelAction.Auth.VerificationCode.PushRecieved(code: otpCode))
-        }
-        
-        func otpCode(with info: [AnyHashable : Any]) -> String? {
-            
-            if let code = info["otp"] as? String  {
-                
-                return code.filter { "0"..."9" ~= $0 }
-                
-            } else if let code = info["aps.alert.body"] as? String {
-                
-                return code.filter { "0"..."9" ~= $0 }
-                
-            } else {
-                
-                return nil
-            }
-        }
-
-        completionHandler([[.alert, .sound]])
+        model.action.send(ModelAction.Notification.ChangeNotificationStatus.Request(statusData: .init(push: push)))
+        completionHandler([[.list, .banner, .sound]])
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter,didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
         let userInfo = response.notification.request.content.userInfo
         
-        //FIX: to do switch
-        
-        if let type = userInfo["type"] as? String, type == "сonsentMe2MePull" {
-                
-                let requestMeToMeModel: RequestMeToMeModel = .init(userInfo: userInfo)
-                model.action.send(ModelAction.Notification.Transition.Set(transition: .me2me(requestMeToMeModel)))
+        model.action.send(ModelAction.Notification.Transition.Set(transition: .init(userInfo: userInfo)))
 
-        } else {
-            
-               model.action.send(ModelAction.Notification.Transition.Set(transition: .history))
-        }
         completionHandler()
     }
 }

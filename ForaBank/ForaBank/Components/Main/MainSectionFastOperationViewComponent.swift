@@ -12,7 +12,7 @@ import SwiftUI
 
 extension MainSectionFastOperationView {
     
-    class ViewModel: MainSectionCollapsableViewModel {
+    class ViewModel: MainSectionCollapsableViewModel, ObservableObject {
         
         override var type: MainSectionType { .fastOperations }
         @Published var items: [ButtonIconTextView.ViewModel]
@@ -94,7 +94,7 @@ struct MainSectionFastOperationView: View {
                             .frame(width: 80)
                     }
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, 8)
             }
         }
     }
