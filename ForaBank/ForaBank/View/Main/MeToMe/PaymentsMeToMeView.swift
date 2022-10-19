@@ -37,8 +37,11 @@ struct PaymentsMeToMeView: View {
                     .opacity(0.2)
                     .padding(.top, -29)
             }
-                    
-        }.fixedSize(horizontal: false, vertical: true)
+        }
+        .fixedSize(horizontal: false, vertical: true)
+        .alert(item: $viewModel.alert) { alert in
+            Alert(with: alert)
+        }
     }
 }
 

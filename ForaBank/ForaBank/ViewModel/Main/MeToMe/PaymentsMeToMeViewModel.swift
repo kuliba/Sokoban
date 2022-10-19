@@ -13,7 +13,9 @@ import Combine
 class PaymentsMeToMeViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
+    
     @Published var state: State
+    @Published var alert: Alert.ViewModel?
     
     private let model: Model
     
@@ -87,8 +89,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             close()
                         }
                         
-                    case .failure:
-                        close()
+                    case let .failure(error):
+                        makeAlert(error)
                     }
                     
                 default:
@@ -105,17 +107,23 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 case _ as PaymentsMeToMeAction.Button.Transfer.Tap:
                     
                     let productsId = Self.productsId(model, swapViewModel: swapViewModel)
-                    let value = paymentsAmount.textField.value
                     
                     if let productsId = productsId, let product = model.product(productId: productsId.from) {
                         
-                        state = .loading
-                        
-                        model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start.Request(
-                            amount: value,
-                            currency: product.currency,
-                            productFrom: productsId.from,
-                            productTo: productsId.to))
+                        if productsId.from == productsId.to {
+                            
+                            makeAlert(.emptyData(message: "Счет списания совпадает со счетом зачисления. Выберите другой продукт"))
+
+                        } else {
+                            
+                            state = .loading
+                            
+                            model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start.Request(
+                                amount: paymentsAmount.textField.value,
+                                currency: product.currency,
+                                productFrom: productsId.from,
+                                productTo: productsId.to))
+                        }
                     }
 
                 case _ as PaymentsMeToMeAction.Button.Info.Tap:
@@ -183,21 +191,17 @@ class PaymentsMeToMeViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] state in
                 
-                switch state {
-                case .normal:
-                    
-                    paymentsAmount.transferButton = .active(title: "Перевести") {
-                        self.action.send(PaymentsMeToMeAction.Button.Transfer.Tap())
-                    }
-                    
-                    paymentsAmount.info = .button(title: "Без комиссии", icon: .ic16Info, action: {
-                        self.action.send(PaymentsMeToMeAction.Button.Info.Tap())
-                    })
-                    
-                case .loading:
-                    paymentsAmount.transferButton = .loading(icon: .init("Logo Fora Bank"), iconSize: .init(width: 40, height: 40))
-                }
+                updateTransferButton(state)
+                updateInfoButton(state)
 
+            }.store(in: &bindings)
+        
+        paymentsAmount.textField.$text
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] _ in
+                
+                updateTransferButton(.normal)
+                
             }.store(in: &bindings)
     }
     
@@ -266,17 +270,16 @@ class PaymentsMeToMeViewModel: ObservableObject {
     
     private func updateAmountSwitch(from: ProductData.ID, to: ProductData.ID) {
         
-        let from = model.product(productId: from)
-        let to = model.product(productId: to)
+        let products = Self.products(model, from: from, to: to)
         
-        guard let from = from, let to = to else {
+        guard let products = products else {
             return
         }
-        
+
         let currencyData = model.currencyList.value
         
-        let fromItem = currencyData.first(where: { $0.code == from.currency.description })
-        let toItem = currencyData.first(where: { $0.code == to.currency.description })
+        let fromItem = currencyData.first(where: { $0.code == products.from.currency })
+        let toItem = currencyData.first(where: { $0.code == products.to.currency })
         
         guard let fromItem = fromItem,
               let toItem = toItem,
@@ -285,23 +288,49 @@ class PaymentsMeToMeViewModel: ObservableObject {
             return
         }
         
-        paymentsAmount.currencySwitch = .init(
-            from: fromCurrencySymbol,
-            to: toCurrencySymbol,
-            icon: .init("Payments Refresh CW")) {
+        if fromCurrencySymbol == toCurrencySymbol {
+            
+            paymentsAmount.currencySwitch = nil
+            
+        } else {
+            
+            paymentsAmount.currencySwitch = .init(from: fromCurrencySymbol, to: toCurrencySymbol, icon: .init("Payments Refresh CW")) {
                 self.swapViewModel.action.send(ProductsSwapAction.Button.Tap())
             }
+        }
+    }
+
+    private func updateTransferButton(_ state: State) {
+        
+        switch state {
+        case .normal:
+            
+            let value = paymentsAmount.textField.value
+            
+            let transferButton = PaymentsAmountView.ViewModel.makeTransferButton(value) {
+                self.action.send(PaymentsMeToMeAction.Button.Transfer.Tap())
+            }
+            
+            paymentsAmount.transferButton = transferButton
+            
+        case .loading:
+            
+            paymentsAmount.transferButton = .loading(icon: .init("Logo Fora Bank"), iconSize: .init(width: 40, height: 40))
+        }
     }
     
-    private func updateTransferButton() {
+    private func updateInfoButton(_ state: State) {
         
-        let value = paymentsAmount.textField.value
-        
-        let transferButton = PaymentsAmountView.ViewModel.makeTransferButton(value) {
-            self.action.send(PaymentsMeToMeAction.Button.Transfer.Tap())
+        switch state {
+        case .normal:
+            
+            paymentsAmount.info = .button(title: "Без комиссии", icon: .ic16Info) {
+                self.action.send(PaymentsMeToMeAction.Button.Info.Tap())
+            }
+            
+        case .loading:
+            paymentsAmount.info = nil
         }
-        
-        paymentsAmount.transferButton = transferButton
     }
 
     private func updateTextField(_ id: ProductData.ID, textField: TextFieldFormatableView.ViewModel) {
@@ -318,6 +347,34 @@ class PaymentsMeToMeViewModel: ObservableObject {
             textField.formatter.currencySymbol = currency.currencySymbol
             textField.text = stringValue
         }
+    }
+    
+    private func makeAlert(_ error: ModelError) {
+
+        var messageError: String?
+        
+        switch error {
+        case let .emptyData(message):
+            messageError = message
+        case let .statusError(_, message):
+            messageError = message
+        case let .serverCommandError(error):
+            messageError = error
+            
+        default:
+            messageError = nil
+        }
+
+        guard let messageError = messageError else {
+            return
+        }
+
+        alert = .init(
+            title: "Ошибка",
+            message: messageError,
+            primary: .init(type: .default, title: "Ok") { [weak self] in
+                self?.alert = nil
+            })
     }
     
     private func close() {
@@ -357,6 +414,18 @@ extension PaymentsMeToMeViewModel {
         }
         
         return productsId
+    }
+    
+    static private func products(_ model: Model, from: ProductData.ID, to: ProductData.ID) -> (from: ProductData, to: ProductData)? {
+        
+        let from = model.product(productId: from)
+        let to = model.product(productId: to)
+        
+        guard let from = from, let to = to else {
+            return nil
+        }
+        
+        return (from, to)
     }
 }
 
