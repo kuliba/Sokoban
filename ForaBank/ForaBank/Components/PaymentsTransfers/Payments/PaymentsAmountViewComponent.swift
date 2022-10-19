@@ -67,12 +67,14 @@ extension PaymentsAmountView {
             super.init(source: Payments.ParameterMock())
         }
         
-        convenience init(_ value: Double = 0, productData: ProductData) {
+        convenience init(_ value: Double = 0, productData: ProductData, action: @escaping () -> Void = {}) {
             
             let currency = Currency(description: productData.currency)
             let textField: TextFieldFormatableView.ViewModel = .init(value, currencySymbol: currency.currencySymbol)
             
-            self.init("Сумма перевода", textField: textField, transferButton: .active(title: "Перевести", action: {}))
+            let transferButton: TransferButtonViewModel = Self.makeTransferButton(value, action: action)
+            
+            self.init("Сумма перевода", textField: textField, transferButton: transferButton)
         }
 
         func bind() {
@@ -93,6 +95,15 @@ extension PaymentsAmountView {
             return parameterAmount.validator.isValid(value: textField.value)
         }
         
+        static func makeTransferButton(_ value: Double = 0, action: @escaping () -> Void) -> TransferButtonViewModel {
+            
+            if value == 0 {
+                return .inactive(title: "Перевести")
+            } else {
+                return .active(title: "Перевести", action: action)
+            }
+        }
+
         func updateTranferButton(isEnabled: Bool) {
             
             if isEnabled {
