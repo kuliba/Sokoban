@@ -478,7 +478,7 @@ class ContactsViewModel: ObservableObject {
                 switch kind {
                     
                 case .banks:
-                    let icon: Image = .ic40SBP
+                    let icon: Image = .ic24SBP
                     let title = "В другой банк"
                     let toggleButton = ButtonViewModel(icon: .ic24ChevronUp, action: {})
                     let searchButton = ButtonViewModel(icon: .ic24Search, action: {})
@@ -486,7 +486,7 @@ class ContactsViewModel: ObservableObject {
                     self.init(icon: icon, title: title, searchButton: searchButton, toggleButton: toggleButton)
                     
                 case .country:
-                    let icon: Image = .ic48Abroad
+                    let icon: Image = .ic24Abroad
                     let title = "Переводы за рубеж"
                     let button = ButtonViewModel(icon: .ic24ChevronUp, action: {})
                     

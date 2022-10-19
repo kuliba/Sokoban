@@ -190,6 +190,9 @@ struct PaymentsTransfersView: View {
                     .edgesIgnoringSafeArea(.bottom)
                     .navigationBarTitle("", displayMode: .inline)
                     .frame(height: 494)
+            
+            case .fastPayment(let viewModel):
+                ContactsView(viewModel: viewModel)
             }
         }
         .alert(item: $viewModel.alert, content: { alertViewModel in

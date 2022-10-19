@@ -266,7 +266,7 @@ class Model {
                     loadSettings()
                     depositsCloseNotified = nil
                     action.send(ModelAction.Products.Update.Total.All())
-                    action.send(ModelAction.ClientInfo.Fetch())
+                    action.send(ModelAction.ClientInfo.Fetch.Request())
                     action.send(ModelAction.ClientPhoto.Load())
                     action.send(ModelAction.Rates.Update.All())
                     action.send(ModelAction.Deposits.List.Request())
@@ -319,7 +319,7 @@ class Model {
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "received SessionAgentAction.Session.Extend")
                     
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "sent ModelAction.ClientInfo.Fetch")
-                    self.action.send(ModelAction.ClientInfo.Fetch())
+                    self.action.send(ModelAction.ClientInfo.Fetch.Request())
                     
                 case _ as SessionAgentAction.Session.Timeout.Request:
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "received SessionAgentAction.Session.Timeout.Request")
@@ -585,8 +585,8 @@ class Model {
                     
                     //MARK: - Client Info
                     
-                case _ as ModelAction.ClientInfo.Fetch:
-                    handleClientInfoFetch()
+                case _ as ModelAction.ClientInfo.Fetch.Request:
+                    handleClientInfoFetchRequest()
                     
                 case let payload as ModelAction.ClientPhoto.Save:
                     handleClientPhotoSave(payload)
