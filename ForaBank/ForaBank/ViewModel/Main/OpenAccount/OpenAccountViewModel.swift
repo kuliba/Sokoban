@@ -95,7 +95,7 @@ class OpenAccountViewModel: ObservableObject {
             return nil
         }
         
-        self.init(model: model, item: item, items: items, currency: product.currency, pagerViewModel: .init(items.count), style: .openAccount, closeAction: closeAction)
+        self.init(model: model, item: item, items: items, currency: product.currency, pagerViewModel: .init(items.count), style: .currencyWallet, closeAction: closeAction)
 
         if let currentItem = currentItem {
             self.item = currentItem

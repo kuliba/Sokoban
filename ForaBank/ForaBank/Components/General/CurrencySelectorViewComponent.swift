@@ -101,13 +101,11 @@ extension CurrencySelectorView {
 
                         let productsList = model.accountProductsList.value.filter { $0.currency.description == currency.description }
                         
-                        let viewModel = OpenAccountViewModel(model, product: productsList.first) { [weak self] in
-                            self?.bottomSheet = nil
+                        guard let viewModel = OpenAccountViewModel(model, product: productsList.first, closeAction: { [weak self] in self?.bottomSheet = nil }) else {
+                            return
                         }
                         
-                        if let viewModel = viewModel {
-                            bottomSheet = .init(type: .openAccount(viewModel))
-                        }
+                        bottomSheet = .init(type: .openAccount(viewModel))
 
                     default:
                         break
