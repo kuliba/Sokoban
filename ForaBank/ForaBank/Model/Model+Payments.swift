@@ -528,7 +528,7 @@ extension Model {
         
         if let parameterCard = parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.product.rawValue }), let productIdValue = parameterCard.parameter.value,
            let productId = Int(productIdValue),
-           let productType = paymentsProductType(for: productId) {
+           let productType = productType(for: productId) {
             
             switch productType {
             case .card:
@@ -541,11 +541,11 @@ extension Model {
             
         } else {
             
-            if let cardId = paymentsFirstProductId(of: .card, currency: currency) {
+            if let cardId = firstProductId(of: .card, currency: currency) {
                 
                 return .init(inn: nil, accountId: nil, accountNumber: nil, cardId: cardId, cardNumber: nil, phoneNumber: nil)
                 
-            } else if let accountId = paymentsFirstProductId(of: .account, currency: currency) {
+            } else if let accountId = firstProductId(of: .account, currency: currency) {
                 
                 return .init(inn: nil, accountId: accountId, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
                 
@@ -556,19 +556,7 @@ extension Model {
         }
     }
     
-    var productsData: [ProductData] { products.value.values.flatMap { $0 } }
     
-    func paymentsProductType(for productId: Int) -> ProductType? {
-        productsData.first(where: { $0.id == productId })?.productType
-    }
-    
-    func paymentsFirstProductId(of type: ProductType, currency: Currency) -> Int? {
-        productsData.first(where: { $0.productType == type && $0.currency == currency.description })?.id
-    }
-    
-    func paymentsProduct(with id: Int) -> ProductData? {
-        productsData.first(where: { $0.id == id })
-    }
     
     func paymentsTransferAmount(with parameters: [PaymentsParameterRepresentable]) -> Double? {
         

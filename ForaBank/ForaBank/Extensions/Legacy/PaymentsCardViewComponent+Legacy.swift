@@ -24,13 +24,13 @@ extension PaymentsProductView.ViewModel {
         
         if let value = parameterProduct.parameter.value,
            let productId = Int(value),
-           let product = model.paymentsProduct(with: productId)  {
+           let product = model.product(productId: productId)  {
             
                 update(with: product)
             
         } else {
             
-            if let firstProduct = model.productsData.first {
+            if let firstProduct = model.allProducts.first {
                 update(with: firstProduct)
             }
         }
@@ -52,7 +52,7 @@ extension PaymentsProductView.ViewModel {
                         switch state {
                         case .normal:
                             
-                            let productObjects = model.productsData
+                            let productObjects = model.allProducts
                             guard productObjects.isEmpty == false else {
                                 return
                             }
@@ -83,7 +83,7 @@ extension PaymentsProductView.ViewModel {
                 switch action {
                 case let payload as PaymentsProductSelectorView.ViewModelAction.SelectedProduct:
                     
-                    guard let productObject = model.paymentsProduct(with: payload.productId)
+                    guard let productObject = model.product(productId: payload.productId)
                     else { return }
                     
                     update(with: productObject)

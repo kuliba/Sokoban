@@ -258,6 +258,8 @@ extension Model {
             switch operatorSelected {
             case .fns:
                 
+                //TODO: refactor
+                /*
                 if paymentsParametersContains(parameters, id: Payments.Parameter.Identifier.final.rawValue) {
 
                     // repeat all transfer steps from the begining
@@ -300,6 +302,8 @@ extension Model {
                         }
                     }
                 }
+                 */
+                break
                 
 
             default:

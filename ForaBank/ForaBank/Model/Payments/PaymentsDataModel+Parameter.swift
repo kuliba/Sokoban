@@ -53,10 +53,9 @@ extension Payments.Parameter {
         case category       = "ru.forabank.sense.category"
         case service        = "ru.forabank.sense.service"
         case `operator`     = "ru.forabank.sense.operator"
-        case template       = "ru.forabank.sense.template"
         case product        = "ru.forabank.sense.product"
+        case currency       = "ru.forabank.sense.currency"
         case amount         = "ru.forabank.sense.amount"
-        case final          = "ru.forabank.sense.final"
         case code           = "ru.forabank.sense.code"
         case mock           = "ru.forabank.sense.mock"
     }
@@ -95,26 +94,7 @@ extension Payments {
             let icon: ImageData
         }
     }
-    
-    struct ParameterTemplate: PaymentsParameterRepresentable {
         
-        let parameter: Parameter
-        let present: Payments.ParameterPresentType = .none
-        var templateId: PaymentTemplateData.ID? {
-            
-            guard let value = parameter.value else {
-                return nil
-            }
-            
-            return PaymentTemplateData.ID(value)
-        }
-        
-        init(templateId: PaymentTemplateData.ID) {
-            
-            self.parameter = Parameter(id: Payments.Parameter.Identifier.template.rawValue, value: String(templateId))
-        }
-    }
-    
     struct ParameterOperator: PaymentsParameterRepresentable {
         
         let parameter: Parameter
@@ -468,17 +448,6 @@ extension Payments {
         func updated(present: Payments.ParameterPresentType) -> PaymentsParameterRepresentable {
             
             ParameterProduct(parameter, isEditable: isEditable, present: present)
-        }
-    }
-    
-    struct ParameterFinal: PaymentsParameterRepresentable {
-        
-        let parameter: Parameter
-        let present: Payments.ParameterPresentType = .none
-
-        internal init() {
-            
-            self.parameter = Parameter(id: Payments.Parameter.Identifier.final.rawValue, value: nil)
         }
     }
     

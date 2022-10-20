@@ -65,19 +65,19 @@ extension Model {
         
         func productId() -> Int? {
             
-            if let cardId = paymentsFirstProductId(of: .card, currency: .rub) {
+            if let cardId = firstProductId(of: .card, currency: .rub) {
                 
                 return cardId
                 
             } else {
                 
-                return paymentsFirstProductId(of: .account, currency: .rub)
+                return firstProductId(of: .account, currency: .rub)
             }
         }
         
         if transferData.needSum == true {
             
-            guard let productId = productId(), let product = paymentsProduct(with: productId) else {
+            guard let productId = productId(), let product = product(productId: productId) else {
                 throw Payments.Error.failedObtainProductId
             }
             
@@ -99,7 +99,8 @@ extension Model {
                 title: "Введите код из СМС", validator: .init(minLength: 6, maxLength: 6, regEx: nil))
             parameters.append(codeParameter)
             
-            parameters.append(Payments.ParameterFinal())
+            //TODO: refactor
+//            parameters.append(Payments.ParameterFinal())
         }
         
         return parameters

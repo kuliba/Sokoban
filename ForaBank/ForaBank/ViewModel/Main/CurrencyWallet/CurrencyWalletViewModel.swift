@@ -311,7 +311,7 @@ class CurrencyWalletViewModel: ObservableObject {
         if let productAccountSelector = productSelectorViewModel.productAccountSelector,
            let productViewModel = productAccountSelector.productViewModel {
             
-            if let productId = model.product(currency: currency) {
+            if let productId = model.firstProductId(currency: currency) {
                 productAccountSelector.setProductSelectorData(productId: productId)
             }
             
@@ -453,7 +453,7 @@ class CurrencyWalletViewModel: ObservableObject {
         if let selectorViewModel = selectorViewModel,
            let productAccountSelector = selectorViewModel.productAccountSelector {
             
-            if let productId = model.product(currency: currency) {
+            if let productId = model.firstProductId(currency: currency) {
                 productAccountSelector.setProductSelectorData(productId: productId)
             }
         }

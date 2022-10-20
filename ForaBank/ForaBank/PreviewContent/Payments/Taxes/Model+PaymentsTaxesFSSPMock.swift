@@ -226,9 +226,10 @@ extension Model {
                     icon: .parameterSMS,
                     title: "Введите код из СМС", validator: .init(minLength: 6, maxLength: 6, regEx: nil))
                 
-                let finalParameter = Payments.ParameterFinal()
+                //TODO: refactor
+//                let finalParameter = Payments.ParameterFinal()
                 
-                completion(.success(updatedParameters + [codeParameter, finalParameter]))
+//                completion(.success(updatedParameters + [codeParameter, finalParameter]))
             
             default:
                 completion(.failure(Payments.Error.unexpectedOperatorValue))
@@ -256,9 +257,10 @@ extension Model {
                     icon: .parameterSMS,
                     title: "Введите код из СМС", validator: .init(minLength: 6, maxLength: 6, regEx: nil))
                 
-                let finalParameter = Payments.ParameterFinal()
+                //TODO: refactor
+//                let finalParameter = Payments.ParameterFinal()
                 
-                completion(.success(updatedParameters + [codeParameter, finalParameter]))
+//                completion(.success(updatedParameters + [codeParameter, finalParameter]))
             
             default:
                 completion(.failure(Payments.Error.unexpectedOperatorValue))

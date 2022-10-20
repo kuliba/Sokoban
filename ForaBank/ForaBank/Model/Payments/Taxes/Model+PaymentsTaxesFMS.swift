@@ -139,6 +139,8 @@ extension Model {
             
         case 3:
             
+            //TODO: refactor
+            /*
             if paymentsParametersContains(parameters, id: Payments.Parameter.Identifier.final.rawValue) {
 
                 // repeat all transfer steps from the begining
@@ -181,6 +183,8 @@ extension Model {
                     }
                 }
             }
+             */
+            break
             
         default:
             completion(.failure(Payments.Error.unsupported))
