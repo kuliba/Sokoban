@@ -103,6 +103,9 @@ class ProductProfileViewModel: ObservableObject {
                     bind(optionsPannel: payload.viewModel)
                     bottomSheet = .init(type: .optionsPannel(payload.viewModel))
                     
+                case let payload as ProductProfileViewModelAction.Show.AlertShow:
+                    self.alert = payload.viewModel
+                    
                 case _ as ProductProfileViewModelAction.Product.Activate:
                     alert = .init(title: "Активировать карту?", message: "После активации карта будет готова к использованию", primary: .init(type: .default, title: "Отмена", action: { [weak self] in
                         self?.alert = nil
@@ -690,11 +693,23 @@ class ProductProfileViewModel: ObservableObject {
                             self.model.action.send(ModelAction.Products.DepositConditionsPrintForm.Request(depositId: productData.id))
                             
                         case .contract:
-                            let printFormViewModel = PrintFormView.ViewModel(type: .contract(productId: productData.id), model: self.model, dismissAction: {
+                            
+                            let printFormViewModel = PrintFormView.ViewModel(type: .contract(productId: productData.id), model: self.model, dismissAction: { [weak self]  in
+                               
+                                self?.action.send(ProductProfileViewModelAction.Close.BottomSheet())
+                                self?.action.send(ProductProfileViewModelAction.Close.Sheet())
                                 
-                                self.action.send(ProductProfileViewModelAction.Close.Sheet())
-                                self.action.send(ProductProfileViewModelAction.Show.PlacesMap())
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
+                                    
+                                    let alertViewModel = Alert.ViewModel(title: "Форма временно недоступна",
+                                                                         message: "Для получения Договора по вкладу обратитесь в отделение банка",
+                                                                         primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())}),
+                                                                         secondary: .init(type: .default, title: "ОК", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}))
+                                    
+                                    self?.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
+                                }
                             })
+                            
                             self.sheet = .init(type: .printForm(printFormViewModel))
                         
                         case .closeDeposit:
@@ -1042,6 +1057,11 @@ enum ProductProfileViewModelAction {
         }
         
         struct PlacesMap: Action {}
+        
+        struct AlertShow: Action {
+            
+            let viewModel: Alert.ViewModel
+        }
     }
     
     enum Close {

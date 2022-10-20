@@ -135,12 +135,7 @@ extension PrintFormView {
                                 withAnimation {
                                     
                                     self.state = .failed
-                                    let alertViewModel = Alert.ViewModel(title: "Ошибка",
-                                                                         message: "Для получения Договора по вкладу обратитесь в отделение банка",
-                                                                         primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in
-                                                                            self?.dismissAction?()}),
-                                                                         secondary: .init(type: .default, title: "ОК", action: {}))
-                                    self.alert = .init(alertViewModel)
+                                    self.dismissAction?()
                                 }
                             }
                             
@@ -238,12 +233,9 @@ struct PrintFormView: View {
                 
             case .failed:
                 Text("Не удалось загрузить документ")
+                
             }
-            
-        }.alert(item: $viewModel.alert, content: { alertViewModel in
-            
-            Alert(with: alertViewModel)
-        })
+        }
     }
 }
 
@@ -258,5 +250,5 @@ struct PrintFormViewComponent_Previews: PreviewProvider {
 
 extension PrintFormView.ViewModel {
     
-    static let sample = PrintFormView.ViewModel(state: .document(.sample, .init(title: "Сохранить или отправить", style: .red, action: {})))
+    static let sample = PrintFormView.ViewModel(state: .document(.sample, .init(title: "Сохранить или отправить", style: .red, action: {})), dismissAction: {})
 }
