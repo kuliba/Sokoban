@@ -355,7 +355,7 @@ extension PaymentsOperationTests {
         let result = operation.nextAction()
         
         // then
-        XCTAssertEqual(result, .step(stepIndex: 0))
+        XCTAssertEqual(result, .step(index: 0))
     }
     
     func testNextAction_Front_Update() throws {
@@ -441,4 +441,33 @@ extension PaymentsOperationTests {
         // then
         XCTAssertEqual(result, .restart)
     } 
+}
+
+//MARK: - Restsrt
+
+extension PaymentsOperationTests {
+    
+    func testRestart() throws {
+        
+        // given
+        let paramOne = Payments.ParameterMock(id: "one", value: "100")
+        let paramTwo = Payments.ParameterMock(id: "two", value: "200")
+        let termsOne: [Payments.Operation.Step.Term] = [.init(parameterId: paramTwo.id, impact: .rollback)]
+        let paramProcessed = Payments.Parameter(id: "two", value: "300")
+        let stepOne = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .start, terms: termsOne, processed: [paramProcessed]))
+        
+        let paramThree = Payments.ParameterMock(id: "three", value: "100")
+        let termsTwo: [Payments.Operation.Step.Term] = [.init(parameterId: paramThree.id, impact: .rollback)]
+        let stepTwo = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: [], isCompleted: true), back: .init(stage: .start, terms: termsTwo, processed: nil))
+        
+        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne, stepTwo])
+        
+        // when
+        let result = operation.restarted()
+        
+        // then
+        XCTAssertEqual(result.steps.count, 2)
+        XCTAssertNil(result.steps[0].back?.processed)
+        XCTAssertNil(result.steps[1].back?.processed)
+    }
 }

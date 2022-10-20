@@ -11,8 +11,12 @@ extension Payments.Operation.Step {
     
     typealias Parameter = Payments.Parameter
     
+    /// Step's parameters identifiers
     var parametersIds: [Parameter.ID] { parameters.map({ $0.id }) }
     
+    /// Current step status based on list of parameters from operation
+    /// - Parameter parameters: list of parameters
+    /// - Returns: step status
     func status(with parameters: [PaymentsParameterRepresentable]) -> Status {
         
         guard front.isCompleted == true else {
@@ -52,6 +56,9 @@ extension Payments.Operation.Step {
         }
     }
     
+    /// Results for parameters processed on server. Result contains parameter value sent on server, current parameter value and impact caused if current parameter value changed
+    /// - Parameter parameters: list of parameters from operation
+    /// - Returns: optional list of results
     func processedResults(with parameters: [PaymentsParameterRepresentable]) -> [ProcessedData]? {
         
         guard let back = back, let processed = back.processed else {
@@ -81,6 +88,8 @@ extension Payments.Operation.Step {
         return result
     }
     
+    /// Removes data about parameters processed on server
+    /// - Returns: resetted step
     func reseted() -> Payments.Operation.Step {
         
         guard let back = back else {
@@ -90,6 +99,9 @@ extension Payments.Operation.Step {
         return .init(parameters: parameters, front: front, back: .init(stage: back.stage, terms: back.terms, processed: nil) )
     }
     
+    /// Creates list of parameters that should be processed on server side
+    /// - Parameter parameters: list of parameters from operation
+    /// - Returns: optional parameters list
     func processParameters(with parameters: [PaymentsParameterRepresentable]) throws -> [Parameter]? {
         
         guard let back = back else {
@@ -109,7 +121,10 @@ extension Payments.Operation.Step {
         
         return result
     }
-
+    
+    /// Updates step with parameters processed on server
+    /// - Parameter parameters: list of processed parameters
+    /// - Returns: updated step
     func processed(parameters: [Parameter]) throws -> Payments.Operation.Step {
         
         guard let back = back else {
@@ -127,6 +142,9 @@ extension Payments.Operation.Step {
         return .init(parameters: self.parameters, front: front, back: .init(stage: back.stage, terms: back.terms, processed: parameters))
     }
     
+    /// Updates state with parameter. If all parameters have value step becomes complete for front part.
+    /// - Parameter parameter: updated parameter
+    /// - Returns: updated set
     func updated(parameter: Parameter) -> Payments.Operation.Step {
         
         var updatedParameters = [PaymentsParameterRepresentable]()
@@ -149,6 +167,39 @@ extension Payments.Operation.Step {
         return .init(parameters: updatedParameters, front: .init(visible: front.visible, isCompleted: isComplete), back: back)
     }
     
+    /// Updates step parameters values with source (template, qr-code, etc.) If there is no source, step remains unchanged.
+    /// - Parameters:
+    ///   - service: operation service
+    ///   - source: optional operation source
+    ///   - reducer: reducer that might return value from source for parameter
+    /// - Returns: updated step
+    func updated(service: Payments.Service, source: Payments.Operation.Source?, reducer: (Payments.Service, Payments.Operation.Source, Parameter.ID) -> Parameter.Value?) -> Payments.Operation.Step {
+        
+        guard let source = source else {
+            return self
+        }
+        
+        var updatedParameters = [PaymentsParameterRepresentable]()
+        
+        for parameter in parameters {
+            
+            if let newValue = reducer(service, source, parameter.id) {
+                
+                let updatedParameter = parameter.updated(value: newValue)
+                updatedParameters.append(updatedParameter)
+                
+            } else {
+                
+                updatedParameters.append(parameter)
+            }
+        }
+        
+        return .init(parameters: updatedParameters, front: front, back: back)
+    }
+    
+    /// Checks if step contains parameter with id
+    /// - Parameter parameterId: parameter id to check
+    /// - Returns: true if contains
     func contains(parameterId: Parameter.ID) -> Bool {
         
         parametersIds.contains(parameterId)

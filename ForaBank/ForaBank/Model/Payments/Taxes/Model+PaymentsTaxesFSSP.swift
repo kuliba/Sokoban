@@ -9,6 +9,12 @@ import Foundation
 
 extension Model {
     
+    func paymentsStepFSSP(for stepIndex: Int) async throws -> Operation.Step {
+        
+        //TODO: implementation required
+        throw Payments.Error.unsupported
+    }
+    
     func parametersFSSP(_ parameters: [PaymentsParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[PaymentsParameterRepresentable], Error>) -> Void) {
         
         switch step {

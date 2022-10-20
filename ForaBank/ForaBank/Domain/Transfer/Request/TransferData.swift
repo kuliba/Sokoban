@@ -90,7 +90,7 @@ extension TransferData {
         case check
         
         var isNewPayment: Bool { self == .initial }
-        var check: Bool { self == .check }
+        var isCheck: Bool { self == .check }
     }
 }
 

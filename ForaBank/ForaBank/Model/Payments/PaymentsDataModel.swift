@@ -82,10 +82,27 @@ extension Payments {
 extension Payments {
     
     struct Operation {
-        
+
         let service: Service
         let source: Source?
         let steps: [Step]
+        
+        init(service: Service, source: Source?, steps: [Step]) {
+            
+            self.service = service
+            self.source = source
+            self.steps = steps
+        }
+        
+        init(service: Service) {
+            
+            self.init(service: service, source: nil, steps: [])
+        }
+        
+        init(service: Service, source: Source) {
+            
+            self.init(service: service, source: source, steps: [])
+        }
     }
 }
 

@@ -9,6 +9,12 @@ import Foundation
 
 extension Model {
     
+    func paymentsStepFMS(for stepIndex: Int) async throws -> Operation.Step {
+        
+        //TODO: implementation required
+        throw Payments.Error.unsupported
+    }
+    
     func parametersFMS(_ parameters: [PaymentsParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[PaymentsParameterRepresentable], Error>) -> Void) {
         
         let paramOperator = Payments.Parameter.Identifier.operator.rawValue

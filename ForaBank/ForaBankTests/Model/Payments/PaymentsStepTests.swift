@@ -451,5 +451,74 @@ extension PaymentsStepTests {
         // then
         XCTAssertEqual(result, .invalidated(.rollback))
     }
+}
+
+//MARK: - Updated With Source
+
+extension PaymentsStepTests {
+    
+    func testUpdated_No_Source_Unchanged() throws {
         
+        // given
+        let paramOne = Payments.ParameterMock(id: "one", value: "100")
+        let paramTwo = Payments.ParameterMock(id: "two", value: nil)
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: nil)
+
+        // when
+        let result = step.updated(service: .fssp, source: nil, reducer: parameterSourceValue(service:source:parameterId:))
+        
+        // then
+        XCTAssertEqual(result.parameters.count, 2)
+        XCTAssertEqual(result.parameters[0].value, "100")
+        XCTAssertNil(result.parameters[1].value)
+        XCTAssertEqual(result.front.visible, step.front.visible)
+        XCTAssertEqual(result.front.isCompleted, false)
+        XCTAssertEqual(result.back, step.back)
+    }
+    
+    func testUpdated_Source_Unchanged() throws {
+        
+        // given
+        let paramOne = Payments.ParameterMock(id: "one", value: "100")
+        let paramTwo = Payments.ParameterMock(id: "two", value: nil)
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: nil)
+
+        // when
+        let result = step.updated(service: .fssp, source: .qr, reducer: parameterSourceValue(service:source:parameterId:))
+        
+        // then
+        XCTAssertEqual(result.parameters.count, 2)
+        XCTAssertEqual(result.parameters[0].value, "100")
+        XCTAssertNil(result.parameters[1].value)
+        XCTAssertEqual(result.front.visible, step.front.visible)
+        XCTAssertEqual(result.front.isCompleted, false)
+        XCTAssertEqual(result.back, step.back)
+    }
+    
+    func testUpdated_Source_Updated() throws {
+        
+        // given
+        let paramOne = Payments.ParameterMock(id: "one", value: "100")
+        let paramTwo = Payments.ParameterMock(id: "source", value: nil)
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: nil)
+
+        // when
+        let result = step.updated(service: .fssp, source: .qr, reducer: parameterSourceValue(service:source:parameterId:))
+        
+        // then
+        XCTAssertEqual(result.parameters.count, 2)
+        XCTAssertEqual(result.parameters[0].value, "100")
+        XCTAssertEqual(result.parameters[1].value, "source")
+        XCTAssertEqual(result.front.visible, step.front.visible)
+        XCTAssertEqual(result.front.isCompleted, false)
+        XCTAssertEqual(result.back, step.back)
+    }
+    
+    func parameterSourceValue(service: Payments.Service, source: Payments.Operation.Source, parameterId: Payments.Parameter.ID) -> Payments.Parameter.Value? {
+        
+        switch parameterId {
+        case "source": return "source"
+        default: return nil
+        }
+    }
 }

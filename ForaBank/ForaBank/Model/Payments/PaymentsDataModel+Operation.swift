@@ -109,12 +109,12 @@ extension Payments.Operation {
         return .init(service: service, source: source, steps: stepsUpdated)
     }
     
+    /// Restarts the operation
+    /// - Returns: restarted operation
     func restarted() -> Payments.Operation {
         
-        //TODO: implementation required
-        return self
+        .init(service: service, source: source, steps: steps.map({ $0.reseted() }))
     }
-    
     
     /// Update operation step data with parameters sent to the server
     /// - Parameters:
@@ -132,6 +132,36 @@ extension Payments.Operation {
         
         var updatedSteps = steps
         updatedSteps.replaceSubrange(stepIndex...stepIndex, with: [updatedStep])
+        
+        return .init(service: service, source: source, steps: updatedSteps)
+    }
+    
+    
+    /// Updates depended parameters. For example parameter `amount` or `currency` depends on parameter `product` value
+    /// - Parameter reducer: optional returns updated parameter if it depends on other
+    /// - Returns: updated operation
+    func updated(reducer: (Parameter.ID, [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable?) -> Payments.Operation {
+        
+        var updatedSteps = [Payments.Operation.Step]()
+        
+        for step in steps {
+            
+            var updatedParameters = [PaymentsParameterRepresentable]()
+            for parameter in step.parameters {
+                
+                if let updatedParameter = reducer(parameter.id, parameters) {
+                    
+                    updatedParameters.append(updatedParameter)
+                    
+                } else {
+                    
+                    updatedParameters.append(parameter)
+                }
+            }
+            
+            let updatedStep = Payments.Operation.Step(parameters: updatedParameters, front: step.front, back: step.back)
+            updatedSteps.append(updatedStep)
+        }
         
         return .init(service: service, source: source, steps: updatedSteps)
     }
@@ -164,93 +194,9 @@ extension Payments.Operation {
     }
 }
 
-
-
-//TODO: remove
-extension Payments.Operation {
-    
-    func historyUpdated() -> [[Parameter]] {
-        
-        //FIXME: refactor
-        return [[]]
-    }
-    
-    func update(with results: [(param: Parameter, affectsHistory: Bool)]) -> Update {
-        
-        //FIXME: refactor
-        return Update(operation: .emptyMock, type: .historyChanged)
-
-    }
-    
-    static func history(for parameters: [PaymentsParameterRepresentable]) -> [Parameter] {
-        
-        parameters.map{ $0.parameter }.filter{ $0.value != nil }
-    }
-        
-    func historyChangedStep(history: [[Parameter]], result: (param: Parameter, affectsHistory: Bool)) -> Int? {
-        
-        guard result.affectsHistory == true else {
-            return nil
-        }
-        
-        guard history.count > 0 else {
-            return nil
-        }
-        
-        let historyForParameter = history.reduce([Parameter]()) { partialResult, historyStep in
-            
-            var updated = partialResult
-            
-            if let historyValue = historyStep.first(where: { $0.id == result.param.id }) {
-                
-                updated.append(historyValue)
-            }
-     
-            return updated
-        }
-        
-        guard historyForParameter.count > 0 else {
-            return nil
-        }
-        
-        let lastHistoryParameter = historyForParameter[historyForParameter.count - 1]
-        
-        guard lastHistoryParameter.value != result.param.value else {
-            return nil
-        }
-        
-        let historyForParameterDepth = historyForParameter.compactMap{ $0 }.count
-        
-        return history.count - historyForParameterDepth
-    }
-    
-    func historyChangedStep(history: [[Parameter]], results: [(param: Parameter, affectsHistory: Bool)]) -> Int? {
-        
-        return results.compactMap{ historyChangedStep(history: history, result: $0)}.min()
-    }
-    
-    func finalized() -> Payments.Operation {
-        
-        //FIXME: - refactor
-        return .emptyMock
-    }
-    
-    static let emptyMock = Payments.Operation(service: .fms, source: .none, steps: [])
-}
+//MARK: - Error
 
 extension Payments.Operation {
-    
-    struct Update {
-        
-        let operation: Payments.Operation
-        let type: Kind
-        
-        enum Kind {
-            
-            case normal
-            case historyChanged
-        }
-    }
     
     enum Error: Swift.Error {
         
@@ -266,4 +212,11 @@ extension Payments.Operation {
         case unableSelectServiceForCategory(Payments.Category)
         case operatorNotSelectedForService(Payments.Service)
     }
+}
+
+//MARK: - Mock
+
+extension Payments.Operation {
+    
+    static let emptyMock = Payments.Operation(service: .fms, source: nil, steps: [])
 }

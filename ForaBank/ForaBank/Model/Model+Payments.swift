@@ -19,6 +19,7 @@ extension ModelAction {
         typealias Parameter = Payments.Parameter
         typealias Operation = Payments.Operation
         
+        // service(s) for payments category
         enum Services {
             
             struct Request: Action {
@@ -89,8 +90,6 @@ extension Model {
     typealias Parameter = Payments.Parameter
     typealias Operation = Payments.Operation
     
-    //MARK: - Handlers
-    
     func handlePaymentsServicesRequest(_ payload: ModelAction.Payment.Services.Request) {
         
         let category = payload.category
@@ -109,7 +108,7 @@ extension Model {
                 let operatorsCodes = services.compactMap{ $0.operators.first?.rawValue }
                 let anywayOperators = anywayGroup.operators.filter{ operatorsCodes.contains($0.code)}
                 
-                let selectServiceParameter = Payments.ParameterSelectService(category: payload.category, options: payload.category.services.compactMap { paymentsAnywayOperatorOption(for: $0, with: anywayOperators)})
+                let selectServiceParameter = Payments.ParameterSelectService(category: payload.category, options: payload.category.services.compactMap { paymentsParameterSelectServiceOption(for: $0, with: anywayOperators)})
                 
                 action.send(ModelAction.Payment.Services.Response.select(selectServiceParameter))
                 
@@ -133,8 +132,19 @@ extension Model {
                 
                 do {
                     
-                    let operation = try await operation(for: service)
-                    self.action.send(ModelAction.Payment.Begin.Response.success(operation))
+                    // create empty operation
+                    let operation = Operation(service: service)
+                    
+                    // try to create first step
+                    let step = try await paymentsStep(for: service, stepIndex: 0)
+                    
+                    // append first step to operation
+                    let operationWithFirstStep = try operation.appending(step: step)
+                    
+                    // update depended parameters
+                    let operationUpdatedDependedParameters = operationWithFirstStep.updated(reducer: paymentsDependedParameterUpdate(parameterId:parameters:))
+                    
+                    self.action.send(ModelAction.Payment.Begin.Response.success(operationUpdatedDependedParameters))
 
                 } catch {
                     
@@ -146,8 +156,25 @@ extension Model {
                 
                 do {
                     
-                    let operation = try await operation(for: source)
-                    self.action.send(ModelAction.Payment.Begin.Response.success(operation))
+                    // try get service with source
+                    let service = try await paymentsService(for: source)
+                    
+                    // create empty operation
+                    let operation = Operation(service: service, source: source)
+                    
+                    // try to create first step
+                    let step = try await paymentsStep(for: service, stepIndex: 0)
+                    
+                    // update step parameters values with data in source
+                    let stepUpdatedWithSource = step.updated(service: service, source: source, reducer: paymentsParameterSourceValue(service:source:parameterId:))
+                    
+                    // append first step to operation
+                    let operationWithFirstStep = try operation.appending(step: stepUpdatedWithSource)
+                    
+                    // update depended parameters
+                    let operationUpdatedDependedParameters = operationWithFirstStep.updated(reducer: paymentsDependedParameterUpdate(parameterId:parameters:))
+                    
+                    self.action.send(ModelAction.Payment.Begin.Response.success(operationUpdatedDependedParameters))
 
                 } catch {
                     
@@ -162,7 +189,8 @@ extension Model {
         
         Task {
             
-            var operation = payload.operation
+            /// operation from continue action payload updated depended parameters
+            var operation = payload.operation.updated(reducer: paymentsDependedParameterUpdate(parameterId:parameters:))
             
             do {
                 
@@ -172,8 +200,14 @@ extension Model {
                     
                     switch nextAction {
                     case let .step(index: stepIndex):
-                        let step = try await step(for: operation, stepIndex: stepIndex)
-                        operation = try operation.appending(step: step)
+                        // try to create step for the index
+                        let step = try await paymentsStep(for: operation.service, stepIndex: stepIndex)
+                        
+                        // update step parameters values with data in source
+                        let stepUpdatedWithSource = step.updated(service: operation.service, source: operation.source, reducer: paymentsParameterSourceValue(service:source:parameterId:))
+                        
+                        // try to append step to operation
+                        operation = try operation.appending(step: stepUpdatedWithSource)
                         
                     case .frontUpdate:
                         self.action.send(ModelAction.Payment.Continue.Response(result: .step(operation)))
@@ -182,22 +216,40 @@ extension Model {
                     case let .backProcess(parameters: parameters, stepIndex: stepIndex, stage: stage):
                         switch stage {
                         case .start:
-                            let nextStep = try await processStart(parameters: parameters, stepIndex: stepIndex, service: operation.service)
+                            // try to create next step
+                            let nextStep = try await paymentsProcessStart(parameters: parameters, stepIndex: stepIndex, operation: operation)
+                            
+                            // update step parameters values with data in source
+                            let nextStepUpdatedWithSource = nextStep.updated(service: operation.service, source: operation.source, reducer: paymentsParameterSourceValue(service:source:parameterId:))
+                            
+                            // try to update operation with processed values
                             operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
-                            operation = try operation.appending(step: nextStep)
+                            
+                            // try to append next step to operation
+                            operation = try operation.appending(step: nextStepUpdatedWithSource)
                             
                         case .next:
-                            let nextStep = try await processNext(parameters: parameters, stepIndex: stepIndex, service: operation.service)
+                            // try to create next step
+                            let nextStep = try await paymentsProcessNext(parameters: parameters, stepIndex: stepIndex, operation: operation)
+                            
+                            // update step parameters values with data in source
+                            let nextStepUpdatedWithSource = nextStep.updated(service: operation.service, source: operation.source, reducer: paymentsParameterSourceValue(service:source:parameterId:))
+                            
+                            // try to update operation with processed values
                             operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
-                            operation = try operation.appending(step: nextStep)
+                            
+                            // try to append next step to operation
+                            operation = try operation.appending(step: nextStepUpdatedWithSource)
                             
                         case .confirm:
-                            let success = try await processConfirm(parameters: parameters, stepIndex: stepIndex, service: operation.service)
+                            // try to confirm operation and receive success data
+                            let success = try await paymentsProcessConfirm(parameters: parameters, stepIndex: stepIndex, operation: operation)
                             self.action.send(ModelAction.Payment.Continue.Response(result: .complete(success)))
                             return
                             
                         case .complete:
-                            let success = try await processComplete(parameters: parameters, stepIndex: stepIndex, service: operation.service)
+                            // try to complete operation and receive success data
+                            let success = try await paymentsProcessComplete(parameters: parameters, stepIndex: stepIndex, operation: operation)
                             self.action.send(ModelAction.Payment.Continue.Response(result: .complete(success)))
                             return
                         }
@@ -222,98 +274,55 @@ extension Model {
             }
         }
     }
+}
+
+//MARK: - Service
+
+extension Model {
         
-    //MARK: - Operation
-    
-    func operation(for service: Service) async throws -> Operation {
-        
-        //TODO: implementation required
-        throw Payments.Error.unsupported
-    }
-    
-    func operation(for source: Operation.Source) async throws -> Operation {
+    func paymentsService(for source: Operation.Source) async throws -> Service {
         
         //TODO: implementation required
         throw Payments.Error.unsupported
     }
+}
+
+//MARK: - Step
+
+extension Model {
     
-    //TODO: remove
-    func operation(for service: Service, completion: @escaping (Result<Operation, Error>) -> Void) {
-        
-        //FIXME: refactor
-        /*
-        parameters(for: service, parameters: [], history: []) { result in
-            
-            switch result {
-            case .success(let parameters):
-                
-                // selected operator required
-                guard parameters.contains(where: { $0.parameter.id == Parameter.Identifier.operator.rawValue}) else {
-                    completion(.failure(Payments.Operation.Error.operatorNotSelectedForService(service)))
-                    return
-                }
-                
-                let historyValues = Operation.history(for: parameters)
-                let operation = Operation(service: service, parameters: parameters, history: [historyValues])
-                completion(.success(operation))
-                
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-         */
-    }
-    
-    func step(for operation: Operation, stepIndex: Int) async throws -> Operation.Step {
-        
-        //TODO: implementation required
-        throw Payments.Error.unsupported
-    }
-    
-    @discardableResult
-    func processStart(parameters: [Parameter], stepIndex: Int, service: Service) async throws -> Operation.Step {
-        
-        //TODO: implementation required
-        throw Payments.Error.unsupported
-    }
-    
-    @discardableResult
-    func processNext(parameters: [Parameter], stepIndex: Int, service: Service) async throws -> Operation.Step {
-        
-        //TODO: implementation required
-        throw Payments.Error.unsupported
-    }
-    
-    func processConfirm(parameters: [Parameter], stepIndex: Int, service: Service) async throws -> Payments.Success {
-        
-        //TODO: implementation required
-        throw Payments.Error.unsupported
-    }
-    
-    func processComplete(parameters: [Parameter], stepIndex: Int, service: Service) async throws -> Payments.Success {
-        
-        //TODO: implementation required
-        throw Payments.Error.unsupported
-    }
-    
-    //TODO: remove
-    func parameters(for service: Service, parameters: [PaymentsParameterRepresentable], history: [[Parameter]] , completion: @escaping (Result<[PaymentsParameterRepresentable], Error>) -> Void) {
-        
-        let step = history.count
+    func paymentsStep(for service: Service, stepIndex: Int) async throws -> Operation.Step {
         
         switch service {
         case .fns:
-            parametersFNS(parameters, step, completion)
+            return try await paymentsStepFNS(for: stepIndex)
             
         case .fms:
-            parametersFMS(parameters, step, completion)
+            return try await paymentsStepFMS(for: stepIndex)
             
         case .fssp:
-            parametersFSSP(parameters, step, completion)
+            return try await paymentsStepFSSP(for: stepIndex)
         }
     }
+}
+
+//MARK: - Parameter
+
+extension Model {
     
-    func paymentsAnywayOperatorOption(for service: Service, with operators: [OperatorGroupData.OperatorData]) -> Payments.ParameterSelectService.Option? {
+    func paymentsParameterSourceValue(service: Service, source: Operation.Source, parameterId: Parameter.ID) -> Parameter.Value? {
+        
+        //TODO: implementation required
+        return nil
+    }
+    
+    func paymentsDependedParameterUpdate(parameterId: Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
+        
+        //TODO: implementation required
+        return nil
+    }
+    
+    func paymentsParameterSelectServiceOption(for service: Service, with operators: [OperatorGroupData.OperatorData]) -> Payments.ParameterSelectService.Option? {
         
         switch service {
         case .fns:
@@ -355,6 +364,44 @@ extension Model {
     }
 }
 
+//MARK: - Process
+
+extension Model {
+    
+    @discardableResult
+    func paymentsProcessStart(parameters: [Parameter], stepIndex: Int, operation: Operation) async throws -> Operation.Step {
+        
+        //TODO: implementation required
+        throw Payments.Error.unsupported
+    }
+    
+    @discardableResult
+    func paymentsProcessNext(parameters: [Parameter], stepIndex: Int, operation: Operation) async throws -> Operation.Step {
+        
+        //TODO: implementation required
+        throw Payments.Error.unsupported
+    }
+    
+    func paymentsProcessConfirm(parameters: [Parameter], stepIndex: Int, operation: Operation) async throws -> Payments.Success {
+        
+        //TODO: implementation required
+        throw Payments.Error.unsupported
+    }
+    
+    func paymentsProcessComplete(parameters: [Parameter], stepIndex: Int, operation: Operation) async throws -> Payments.Success {
+        
+        //TODO: implementation required
+        throw Payments.Error.unsupported
+    }
+}
+
+// MARK: - Service
+
+extension Model {
+    
+    
+}
+
 // MARK: - Transfer
 
 extension Model {
@@ -384,7 +431,7 @@ extension Model {
             throw Payments.Error.missingAnywayTransferAdditional
         }
         
-        let command = ServerCommands.TransferController.CreateAnywayTransfer(token: token, isNewPayment: step.isNewPayment, payload: .init(amount: amount, check: step.check, comment: nil, currencyAmount: currency, payer: payer, additional: additional, puref: puref))
+        let command = ServerCommands.TransferController.CreateAnywayTransfer(token: token, isNewPayment: step.isNewPayment, payload: .init(amount: amount, check: step.isCheck, comment: nil, currencyAmount: currency, payer: payer, additional: additional, puref: puref))
         
         return try await withCheckedThrowingContinuation({ continuation in
             
