@@ -31,9 +31,13 @@ extension LatestPaymentsViewComponent {
             self.items = self.itemsReduce(latest: latest, isUpdating: isUpdating)
         }
         
-        struct PlaceholderViewModel: Identifiable {
+        struct PlaceholderViewModel: Identifiable, Hashable {
             
             let id = UUID()
+            
+            func hash(into hasher: inout Hasher) {
+                hasher.combine(id)
+            }
         }
         
         struct LatestPaymentButtonVM: Identifiable {
