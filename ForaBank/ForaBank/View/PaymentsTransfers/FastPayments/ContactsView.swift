@@ -51,12 +51,13 @@ struct ContactsView: View {
                             
                             TopBankView(viewModel: topBanks)
                             
-                        case .placeHolder:
+                        case let .placeHolder(placeholder):
+                            
                             HStack(alignment: .top, spacing: 4) {
                                 
-                                ForEach(0..<5) {_ in
+                                ForEach(placeholder.placeHolderViewModel, id: \.self) { placeholder in
                                     
-                                    LatestPaymentsViewComponent.PlaceholderView(viewModel: .init())
+                                    LatestPaymentsViewComponent.PlaceholderView(viewModel: placeholder)
                                 }
                             }
                         }

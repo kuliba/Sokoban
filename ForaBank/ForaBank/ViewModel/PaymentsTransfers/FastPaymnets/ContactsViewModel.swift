@@ -271,7 +271,7 @@ class ContactsViewModel: ObservableObject {
                         
                         let collapsable: [CollapsableSectionViewModel] = [bankSection, countriesSection]
                         
-                        self.mode = .banks(.placeHolder, collapsable)
+                        self.mode = .banks(.placeHolder(.init(placeHolderViewModel: Array(repeating: LatestPaymentsViewComponent.ViewModel.PlaceholderViewModel.init(), count: 6))), collapsable)
                         bindCategorySelector(collapsable)
                     }
                 }
@@ -389,7 +389,12 @@ class ContactsViewModel: ObservableObject {
     enum TopBanksSectionType {
         
         case banks(TopBanksViewModel)
-        case placeHolder
+        case placeHolder(PlaceHolderViewModel)
+    }
+    
+    struct PlaceHolderViewModel {
+        
+        let placeHolderViewModel: [LatestPaymentsViewComponent.ViewModel.PlaceholderViewModel]
     }
     
     class TopBanksViewModel {
@@ -679,7 +684,7 @@ class ContactsViewModel: ObservableObject {
         
         contacts = adressBookSorted.map({ contact in
             
-            let icon = self.model.bankClientInfo.value.contains(where: {$0.phone == contact.phone}) ? Image("foraContactImage") : nil
+            let icon = self.model.bankClientInfo.value.contains([BankClientInfo(phone: contact.phone)]) ? Image("foraContactImage") : nil
             
             if let image = contact.avatar?.image {
                 
