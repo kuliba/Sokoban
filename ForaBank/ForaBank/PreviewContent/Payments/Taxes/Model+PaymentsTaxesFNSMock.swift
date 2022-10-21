@@ -194,7 +194,8 @@ extension Model {
                     
                     switch parameter.parameter.id {
                     case "a3_BillNumber_1_1":
-                        updatedParameters.append(parameter.updated(isEditable: false))
+//                        updatedParameters.append(parameter.updated(isEditable: false))
+                        break
                         
                     default:
                         updatedParameters.append( parameter)
@@ -221,7 +222,7 @@ extension Model {
                     icon: .parameterDocument,
                     title: "ИНН Получателя",
                     validator: .init(minLength: 1, maxLength: nil, regEx: nil),
-                    present: .spoiler)
+                    placement: .spoiler)
                 
                 let oktmoParameter = Payments.ParameterInput(
                     .init(id: UUID().uuidString,
@@ -229,12 +230,12 @@ extension Model {
                     icon: .parameterHash,
                     title: "ОКТМО (ОКАТО)",
                     validator: .init(minLength: 1, maxLength: nil, regEx: nil),
-                    present: .spoiler)
+                    placement: .spoiler)
                 
                 let adressParameter = Payments.ParameterInfo(
                     .init(id: "a3_address_2_2", value: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 432011, Ульяновская обл, Ульяновск г, Радищева ул ,  д. 124,  кв. 28"),
                     icon: .parameterLocation,
-                    title: "Адрес проживания", present: .spoiler)
+                    title: "Адрес проживания", placement: .spoiler)
                 
                 let amountParameter = Payments.ParameterAmount(
                     .init(id: Payments.Parameter.Identifier.amount.rawValue, value: "1234"),
@@ -269,7 +270,7 @@ extension Model {
                     options: [.init(id: "0", name: "Транспортный налог с физических лиц (сумма платежа перерасчеты недоимка и задолженность по соответствующему платежу том числе по отмененному)"),
                               .init(id: "1", name: "Транспортный налог с физических лиц (пени по соответствующему платежу)"),
                               .init(id: "2", name: "Транспортный налог с физических лиц (проценты по соответствующему платежу)"),
-                              .init(id: "3", name: "Транспортный налог с физических лиц (суммы денежных взысканий (штрафов) по соответствующему платежу согласно законодательству РФ)")], onChange: .none)
+                              .init(id: "3", name: "Транспортный налог с физических лиц (суммы денежных взысканий (штрафов) по соответствующему платежу согласно законодательству РФ)")])
                 
                 completion(.success( parameters + [serviceParameter]))
                 
@@ -279,7 +280,7 @@ extension Model {
                 var updatedParameters = [PaymentsParameterRepresentable]()
                 for parameter in parameters {
                     
-                    updatedParameters.append(parameter.updated(isEditable: false))
+//                    updatedParameters.append(parameter.updated(isEditable: false))
                 }
                 
                 let codeParameter = Payments.ParameterInput(
@@ -314,7 +315,8 @@ extension Model {
                     
                     switch parameter.parameter.id {
                     case "a3_categorySelect_3_1", "a3_INN_4_1", "a3_OKTMO_5_1":
-                        updatedParameters.append(parameter.updated(isEditable: false))
+//                        updatedParameters.append(parameter.updated(isEditable: false))
+                        break
                         
                     default:
                         updatedParameters.append( parameter)
@@ -356,32 +358,32 @@ extension Model {
                 let division0Parameter = Payments.ParameterInfo(
                     .init(id: "a3_iRecipientName_6_1", value: "Управление Федерального казначейства по г. Москве (Инспекция ФНС России № 23 по г.Москве)"),
                     icon: .parameterDocument,
-                    title: "Получатель платежа:", present: .spoiler)
+                    title: "Получатель платежа:", placement: .spoiler)
                 
                 let division1Parameter = Payments.ParameterInfo(
                     .init(id: "a3_iRecipientKPP_8_1", value: "772301001"),
                     icon: .parameterHash,
-                    title: "КПП:", present: .spoiler)
+                    title: "КПП:", placement: .spoiler)
                 
                 let division2Parameter = Payments.ParameterInfo(
                     .init(id: "a3_iRecipientAccount_9_1", value: "03100643000000017300"),
                     icon: .parameterHash,
-                    title: "Расчетный счет:", present: .spoiler)
+                    title: "Расчетный счет:", placement: .spoiler)
                 
                 let division3Parameter = Payments.ParameterInfo(
                     .init(id: "a3_iRecipientBankName_10_1", value: "ГУ БАНКА РОССИИ ПО ЦФО//УФК ПО Г. МОСКВЕ г. Москва"),
                     icon: .parameterSample,
-                    title: "Банк получателя:", present: .spoiler)
+                    title: "Банк получателя:", placement: .spoiler)
                 
                 let division4Parameter = Payments.ParameterInfo(
                     .init(id: "a3_iRecipientBIC_11_1", value: "004525988"),
                     icon: .parameterDocument,
-                    title: "БИК:", present: .spoiler)
+                    title: "БИК:", placement: .spoiler)
                 
                 let division5Parameter = Payments.ParameterInfo(
                     .init(id: "a3_iRecipientKBK_13_1", value: "18210606041031000110"),
                     icon: .parameterDocument,
-                    title: "КБК:", present: .spoiler)
+                    title: "КБК:", placement: .spoiler)
                 
                 let amountParameter = Payments.ParameterAmount(
                     .init(id: Payments.Parameter.Identifier.amount.rawValue, value: "1234"),
@@ -410,7 +412,7 @@ extension Model {
                 var updatedParameters = [PaymentsParameterRepresentable]()
                 for parameter in parameters {
                     
-                    updatedParameters.append(parameter.updated(isEditable: false))
+//                    updatedParameters.append(parameter.updated(isEditable: false))
                 }
                 
                 let codeParameter = Payments.ParameterInput(

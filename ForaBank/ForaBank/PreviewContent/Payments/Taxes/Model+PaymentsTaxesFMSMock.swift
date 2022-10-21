@@ -113,7 +113,8 @@ extension Model {
                 
                 switch parameter.parameter.id {
                 case "a3_INN_4_1", "a3_OKTMO_5_1", "a3_NUMBER_4_1":
-                    updatedParameters.append(parameter.updated(isEditable: false))
+                    break
+//                    updatedParameters.append(parameter.updated(isEditable: false))
                     
                 default:
                     updatedParameters.append( parameter)
@@ -132,7 +133,7 @@ extension Model {
                     .init(id: "2", name: "В возрасте до 14 лет"),
                     .init(id: "3", name: "В возрасте до 14 лет (новый образец)"),
                     .init(id: "4", name: "Содержащего электронный носитель информации (паспорта нового поколения)"),
-                    .init(id: "4", name: "За внесение изменений в паспорт")], onChange: .none)
+                    .init(id: "4", name: "За внесение изменений в паспорт")])
             
             completion(.success( updatedParameters + [serviceParameter]))
             
@@ -153,7 +154,7 @@ extension Model {
             var updatedParameters = [PaymentsParameterRepresentable]()
             for parameter in parameters {
                 
-                updatedParameters.append(parameter.updated(isEditable: false))
+//                updatedParameters.append(parameter.updated(isEditable: false))
             }
             
             let codeParameter = Payments.ParameterInput(

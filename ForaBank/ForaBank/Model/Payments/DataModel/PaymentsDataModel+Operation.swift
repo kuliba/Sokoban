@@ -14,10 +14,15 @@ extension Payments.Operation {
     var nextStep: Int { steps.count }
     
     var parameters: [PaymentsParameterRepresentable] { steps.flatMap({ $0.parameters }) }
+   
     var visibleParametersIds: [Payments.Parameter.ID] { steps.flatMap({ $0.front.visible }) }
     var visibleParameters: [PaymentsParameterRepresentable] { parameters.filter({ visibleParametersIds.contains($0.id)} ) }
-
     
+    var transferType: Payments.Operation.TransferType {
+
+        return .anyway
+    }
+
     /// Appends new step to operation
     /// - Parameter step: step to append
     /// - Returns: updated operation

@@ -15,6 +15,7 @@ extension Model {
         throw Payments.Error.unsupported
     }
     
+    /*
     func parametersFNS(_ parameters: [PaymentsParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[PaymentsParameterRepresentable], Error>) -> Void) {
         
         let paramOperator = Payments.Parameter.Identifier.operator.rawValue
@@ -22,6 +23,7 @@ extension Model {
         switch step {
         case 0:
             
+            /*
             if let operatorParameterValue = paymentsParameterValue(parameters, id: paramOperator),
                 let operatorSelected = Operator(rawValue: operatorParameterValue) {
                 
@@ -89,8 +91,11 @@ extension Model {
                 
                 completion(.success( parameters + [operatorParameter, categoryParameter]))
             }
+             */
+            break
             
         case 1:
+
             guard let operatorParameterValue = paymentsParameterValue(parameters, id: paramOperator),
                 let operatorSelected = Operator(rawValue: operatorParameterValue),
                 let anywayOperator = dictionaryAnywayOperator(for: operatorParameterValue) else {
@@ -98,6 +103,7 @@ extension Model {
                     completion(.failure(Payments.Error.missingOperatorParameter))
                     return
                 }
+
             
             switch operatorSelected {
             case .fns:
@@ -109,6 +115,8 @@ extension Model {
                     
                     // user updated division parameter value
                     
+                    //TODO: refactor
+                    /*
                     Task {
                         
                         // remove all division depended parameters
@@ -132,6 +140,7 @@ extension Model {
                             completion(.failure(error))
                         }
                     }
+                     */
                     
                 } else {
                     
@@ -152,6 +161,8 @@ extension Model {
                         selectionTitle: "Выберете услугу",
                         options: divisionAnywayParameterOptions)
                     
+                    //TODO: refactor
+                    /*
                     Task {
                         
                         do {
@@ -174,9 +185,13 @@ extension Model {
                             completion(.failure(error))
                         }
                     }
+                     */
                 }
 
             case .fnsUin:
+                
+                //TODO: refactor
+                /*
                 Task {
                     
                     do {
@@ -192,6 +207,8 @@ extension Model {
                         completion(.failure(error))
                     }
                 }
+                 */
+                break
  
             default:
                 completion(.failure(Payments.Error.unexpectedOperatorValue))
@@ -204,10 +221,13 @@ extension Model {
                     completion(.failure(Payments.Error.missingOperatorParameter))
                     return
                 }
-            
+            //TODO: refactor
+            /*
             switch operatorSelected {
             case .fns:
                 
+                //TODO: refactor
+                /*
                 Task {
                     
                     let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1"])
@@ -225,8 +245,11 @@ extension Model {
                         completion(.failure(error))
                     }
                 }
+                 */
                 
             case .fnsUin:
+                //TODO: refactor
+                /*
                 Task {
                     
                     do {
@@ -241,10 +264,12 @@ extension Model {
                         completion(.failure(error))
                     }
                 }
+                 */
                 
             default:
                 completion(.failure(Payments.Error.unexpectedOperatorValue))
             }
+             */
             
             
         case 3:
@@ -314,4 +339,5 @@ extension Model {
             completion(.failure(Payments.Error.unsupported))
         }        
     }
+     */
 }

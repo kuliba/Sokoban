@@ -665,6 +665,8 @@
 		770DCE9327BBF93B004099C1 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770DCE9227BBF93B004099C1 /* RootView.swift */; };
 		770DCE9627BBFA6D004099C1 /* RootViewHostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770DCE9527BBFA6D004099C1 /* RootViewHostingViewController.swift */; };
 		770DCE9827BC0475004099C1 /* AuthPinCodeViewModel+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770DCE9727BC0475004099C1 /* AuthPinCodeViewModel+Preview.swift */; };
+		770E68B02902B03000586FC4 /* Model+PaymentsTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770E68AF2902B03000586FC4 /* Model+PaymentsTransfer.swift */; };
+		770E68B22902B04300586FC4 /* Model+PaymentsTransferAnyway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770E68B12902B04300586FC4 /* Model+PaymentsTransferAnyway.swift */; };
 		77178A6F27C1F07F0095CF8C /* PaymentsDataModel+Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77178A6E27C1F07F0095CF8C /* PaymentsDataModel+Service.swift */; };
 		77178A7127C1F32E0095CF8C /* PaymentsDataModel+Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77178A7027C1F32E0095CF8C /* PaymentsDataModel+Operator.swift */; };
 		7720277E2891B7AC0098C4F8 /* ClientPhotoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7720277D2891B7AC0098C4F8 /* ClientPhotoData.swift */; };
@@ -2077,6 +2079,8 @@
 		770DCE9227BBF93B004099C1 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		770DCE9527BBFA6D004099C1 /* RootViewHostingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewHostingViewController.swift; sourceTree = "<group>"; };
 		770DCE9727BC0475004099C1 /* AuthPinCodeViewModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthPinCodeViewModel+Preview.swift"; sourceTree = "<group>"; };
+		770E68AF2902B03000586FC4 /* Model+PaymentsTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransfer.swift"; sourceTree = "<group>"; };
+		770E68B12902B04300586FC4 /* Model+PaymentsTransferAnyway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransferAnyway.swift"; sourceTree = "<group>"; };
 		77178A6E27C1F07F0095CF8C /* PaymentsDataModel+Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsDataModel+Service.swift"; sourceTree = "<group>"; };
 		77178A7027C1F32E0095CF8C /* PaymentsDataModel+Operator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsDataModel+Operator.swift"; sourceTree = "<group>"; };
 		7720277D2891B7AC0098C4F8 /* ClientPhotoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientPhotoData.swift; sourceTree = "<group>"; };
@@ -4478,6 +4482,19 @@
 			path = Products;
 			sourceTree = "<group>";
 		};
+		77429FAC290306ED00CBFD3D /* DataModel */ = {
+			isa = PBXGroup;
+			children = (
+				77583FFF27B13C3A00251969 /* PaymentsDataModel.swift */,
+				77178A6E27C1F07F0095CF8C /* PaymentsDataModel+Service.swift */,
+				77178A7027C1F32E0095CF8C /* PaymentsDataModel+Operator.swift */,
+				77FF670427B4B07B009FEA09 /* PaymentsDataModel+Parameter.swift */,
+				7758401627B1BD6000251969 /* PaymentsDataModel+Operation.swift */,
+				7709F12328EDDC22008B5EC4 /* PaymentsDataModel+Step.swift */,
+			);
+			path = DataModel;
+			sourceTree = "<group>";
+		};
 		77448C01286DF273009EEEA8 /* OperationDetail */ = {
 			isa = PBXGroup;
 			children = (
@@ -4686,12 +4703,10 @@
 		77583FFE27B13C1600251969 /* Payments */ = {
 			isa = PBXGroup;
 			children = (
-				77583FFF27B13C3A00251969 /* PaymentsDataModel.swift */,
-				77178A6E27C1F07F0095CF8C /* PaymentsDataModel+Service.swift */,
-				77178A7027C1F32E0095CF8C /* PaymentsDataModel+Operator.swift */,
-				77FF670427B4B07B009FEA09 /* PaymentsDataModel+Parameter.swift */,
-				7758401627B1BD6000251969 /* PaymentsDataModel+Operation.swift */,
-				7709F12328EDDC22008B5EC4 /* PaymentsDataModel+Step.swift */,
+				7758400C27B1442F00251969 /* Model+Payments.swift */,
+				770E68AF2902B03000586FC4 /* Model+PaymentsTransfer.swift */,
+				770E68B12902B04300586FC4 /* Model+PaymentsTransferAnyway.swift */,
+				77429FAC290306ED00CBFD3D /* DataModel */,
 				77FF66CB27B42DAF009FEA09 /* Taxes */,
 			);
 			path = Payments;
@@ -4984,7 +4999,6 @@
 				77CCEA6B28F83DA200C62215 /* Model+Operation.swift */,
 				77333DA0283E9CEA00C3036F /* Model+Rates.swift */,
 				77583FF827AED4E700251969 /* Model+Dictionary.swift */,
-				7758400C27B1442F00251969 /* Model+Payments.swift */,
 				77EC58ED27723A5A0054D75C /* Model+Templates.swift */,
 				77A411E827EC456800D36E46 /* Model+Settings.swift */,
 				77333DA2283F75EF00C3036F /* Model+ClientInfo.swift */,
@@ -8074,6 +8088,7 @@
 				775875472798C87B0080115D /* Option.swift in Sources */,
 				77448C0F2872FC05009EEEA8 /* PrintFormViewComponent.swift in Sources */,
 				68ECC2BA285C580900A95CE8 /* PhonePaymentView+Legacy.swift in Sources */,
+				770E68B02902B03000586FC4 /* Model+PaymentsTransfer.swift in Sources */,
 				77517F9927A858C2005CFB77 /* TransferResponseData.swift in Sources */,
 				77F4C8BD27E077D70095820E /* Model+PaymentsTaxesFSSP.swift in Sources */,
 				77517FEC27A99279005CFB77 /* ServerCommands+Rates.swift in Sources */,
@@ -8697,6 +8712,7 @@
 				0B01073827CD4D4B006462E6 /* ButtonSimpleViewComponent.swift in Sources */,
 				0BF3485D26931254005138A8 /* SuggestBankDecodableModel.swift in Sources */,
 				0BAD4D3B274417E700FDF9B6 /*  ExtensionPushHistoryNav.swift in Sources */,
+				770E68B22902B04300586FC4 /* Model+PaymentsTransferAnyway.swift in Sources */,
 				0B95C40A26B6D88000AA57E6 /* BottomLableModel.swift in Sources */,
 				ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */,
 				774A8B3A2865FCDD00B81140 /* UserAccountPaymentsView.swift in Sources */,

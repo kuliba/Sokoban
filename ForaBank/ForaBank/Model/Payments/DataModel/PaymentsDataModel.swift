@@ -60,20 +60,24 @@ extension Payments {
         
         var debugDescription: String { "id: \(id), value: \(value != nil ? value! : "empty")" }
     }
-    
-    enum ParameterOnChangeAction {
-        
-        case none
-        case autoContinue
-        case updateParameters
-    }
+}
 
-    enum ParameterPresentType {
+extension Payments.Parameter {
+    
+    enum Placement {
         
-        case none
+        case top
         case feed
         case spoiler
         case bottom
+    }
+    
+    enum View {
+        
+        case select
+        case selectSwitch
+        case input
+        case info
     }
 }
 
@@ -195,6 +199,11 @@ extension Payments.Operation {
         case next
         case confirm
         case complete
+    }
+    
+    enum TransferType {
+        
+        case anyway
     }
     
     enum Action: Equatable {
@@ -338,13 +347,20 @@ extension Payments {
         case unableLoadFSSPDocumentOptions
         case unableCreateOperationForService(Service)
         case unexpectedOperatorValue
+        case unexpectedProductType
+        
         case missingOperatorParameter
         case missingParameter
-        case missingPayer
+        case missingProduct
         case missingCurrency
+        case missingAmount
         case missingCodeParameter
         case missingAmountParameter
         case missingAnywayTransferAdditional
+        
+        case missingOptions(ParameterData)
+        case missingValue(ParameterData)
+        
         case failedObtainProductId
         case failedTransferWithEmptyDataResponse
         case failedTransfer(status: ServerStatusCode, message: String?)

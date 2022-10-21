@@ -81,6 +81,7 @@ extension TransferData: Equatable {
     }
 }
 
+/*
 extension TransferData {
     
     enum Step {
@@ -93,6 +94,7 @@ extension TransferData {
         var isCheck: Bool { self == .check }
     }
 }
+ */
 
 extension TransferData: CustomDebugStringConvertible {
     

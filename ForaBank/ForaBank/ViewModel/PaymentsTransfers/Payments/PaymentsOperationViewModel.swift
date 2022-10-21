@@ -399,11 +399,15 @@ extension PaymentsOperationViewModel {
     
     func isAutoContinueRequired(for parameterId: Payments.Parameter.ID) -> Bool {
         
+        return false
+        //TODO: refactor
+        /*
         guard let parameterViewModel = items.value.first(where: { $0.id == parameterId}) else {
             return false
         }
  
         return parameterViewModel.source.onChange == .autoContinue
+         */
     }
 }
 

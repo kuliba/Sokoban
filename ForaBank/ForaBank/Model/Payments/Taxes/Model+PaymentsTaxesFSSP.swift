@@ -15,6 +15,7 @@ extension Model {
         throw Payments.Error.unsupported
     }
     
+    /*
     func parametersFSSP(_ parameters: [PaymentsParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[PaymentsParameterRepresentable], Error>) -> Void) {
         
         switch step {
@@ -52,6 +53,8 @@ extension Model {
                          УИН 32227009220006631003
                          */
                         
+                        //TODO: refactor
+                        /*
                         do {
                             
                             let transferStepData = try await paymentsTransferAnywayStep(with: parameters, include: ["a3_SearchType_1_1"], step: .initial)
@@ -70,6 +73,7 @@ extension Model {
                             
                             completion(.failure(error))
                         }
+                         */
                     }
                     
                 case "40":
@@ -83,6 +87,8 @@ extension Model {
                          ИП 6631/22/27009-ИП
                          */
                         
+                        //TODO: refactor
+                        /*
                         do {
                             
                             let transferStepData = try await paymentsTransferAnywayStep(with: parameters, include: ["a3_SearchType_1_1"], step: .initial)
@@ -100,6 +106,7 @@ extension Model {
                             
                             completion(.failure(error))
                         }
+                         */
                     }
      
                 default:
@@ -154,6 +161,8 @@ extension Model {
                      a3_docNumber_2_2 7816218222
                      */
                     
+                    //TODO: refactor
+                    /*
                     do {
                         
                         let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_SearchType_1_1"], step: .next)
@@ -173,6 +182,7 @@ extension Model {
                         
                         completion(.failure(error))
                     }
+                     */
                 }
                 
             case "30":
@@ -181,6 +191,8 @@ extension Model {
                     
                     let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_BillNumber_1_1"])
                     
+                    //TODO: refactor
+                    /*
                     do {
                         
                         let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_BillNumber_1_1"], step: .next)
@@ -194,6 +206,7 @@ extension Model {
                         
                         completion(.failure(error))
                     }
+                     */
                 }
                 
             case "40":
@@ -201,6 +214,8 @@ extension Model {
                     
                     let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_IPnumber_1_1"])
                     
+                    //TODO: refactor
+                    /*
                     do {
                         
                         let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_IPnumber_1_1"], step: .next)
@@ -214,6 +229,7 @@ extension Model {
                         
                         completion(.failure(error))
                     }
+                     */
                 }
                 
                 
@@ -236,6 +252,8 @@ extension Model {
                     
                     let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_docName_1_2", "a3_docNumber_2_2"])
                     
+                    //TODO: refactor
+                    /*
                     do {
                         
                         let transferStepData = try await paymentsTransferAnywayStep(with: parameters, include: ["a3_docName_1_2", "a3_docNumber_2_2"], step: .next)
@@ -250,10 +268,13 @@ extension Model {
                         
                         completion(.failure(error))
                     }
+                     */
                 }
                 
             case "30":
                 
+                //TODO: refactor
+                /*
                 Task {
                     
                     let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_lastName_1_3", "a3_firstName_2_3", "a3_middleName_3_3", "a3_address_4_3"])
@@ -272,8 +293,12 @@ extension Model {
                         completion(.failure(error))
                     }
                 }
+                 */
+                break
                 
             case "40":
+                //TODO: refactor
+                /*
                 Task {
                     // a3_lastName_1_2, a3_firstName_2_2, a3_middleName_3_2, a3_address_4_2
                     let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_lastName_1_2", "a3_firstName_2_2", "a3_middleName_3_2", "a3_address_4_2"])
@@ -291,6 +316,8 @@ extension Model {
                         completion(.failure(error))
                     }
                 }
+                 */
+                break
                 
                 
             default:
@@ -308,6 +335,8 @@ extension Model {
             
             switch searchTypeParameter {
             case "20":
+                //TODO: refactor
+                /*
                 Task {
      
                     let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_lastName_1_2", "a3_firstName_2_2", "a3_middleName_3_2", "a3_address_4_2"])
@@ -325,6 +354,8 @@ extension Model {
                         completion(.failure(error))
                     }
                 }
+                 */
+                return
                 
             default:
                 completion(.failure(Payments.Error.unsupported))
@@ -335,4 +366,5 @@ extension Model {
             completion(.failure(Payments.Error.unsupported))
         }
     }
+     */
 }

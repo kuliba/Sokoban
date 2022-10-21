@@ -49,10 +49,13 @@ extension Model {
                   }
             
             let divisionParameterId = "a3_divisionSelect_2_1"
+            /*
             if paymentsParametersContains(parameters, id: divisionParameterId) {
                 
                 // user did update division parameter value
                 
+                //TODO: refactor
+                /*
                 Task {
                     
                     // remove all division depended parameters
@@ -74,6 +77,7 @@ extension Model {
                         completion(.failure(error))
                     }
                 }
+                 */
                 
             } else {
                 
@@ -94,6 +98,8 @@ extension Model {
                     selectionTitle: "Выберете подразделение",
                     options: divisionAnywayParameterOptions)
                 
+                //TODO: refactor
+                /*
                 Task {
                     
                     do {
@@ -114,10 +120,15 @@ extension Model {
                         completion(.failure(error))
                     }
                 }
+                 */
             }
+            
+             */
             
         case 2:
             
+            //TODO: refactor
+            /*
             Task {
                 
                 let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1"])
@@ -136,6 +147,8 @@ extension Model {
                     completion(.failure(error))
                 }
             }
+             */
+            break
             
         case 3:
             
