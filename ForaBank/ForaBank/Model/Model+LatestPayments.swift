@@ -105,7 +105,7 @@ extension Model {
         }
     }
     
-    func handleGetBanksListByPhoneRequest(_ payload: ModelAction.LatestPayments.BanksList.Request) {
+    func handleLatestPaymentsBankListRequest(_ payload: ModelAction.LatestPayments.BanksList.Request) {
         
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
@@ -121,6 +121,7 @@ extension Model {
                 switch response.statusCode {
                 case .ok:
                     guard let data = response.data else {
+                        self.action.send(ModelAction.LatestPayments.BanksList.Response(result: .failure(ModelError.emptyData(message: response.errorMessage))))
                         self.handleServerCommandEmptyData(command: command)
                         return
                     }
@@ -128,14 +129,11 @@ extension Model {
                     self.action.send(ModelAction.LatestPayments.BanksList.Response(result: .success(data)))
                     
                 default:
-                    if let errorMessage = response.errorMessage {
-
-                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: errorMessage)
-                    } else {
-                        
-                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: nil)
-                    }
+                    
+                    self.action.send(ModelAction.LatestPayments.BanksList.Response(result: .failure(ModelError.statusError(status: response.statusCode, message: response.errorMessage))))
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
+                
             case .failure(let error):
                 self.action.send(ModelAction.LatestPayments.BanksList.Response(result: .failure(error)))
                 self.handleServerCommandError(error: error, command: command)

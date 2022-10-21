@@ -72,7 +72,7 @@ class ContactsAgent: ContactsAgentProtocol {
         ] as [CNKeyDescriptor]
         
         let request = CNContactFetchRequest(keysToFetch: keys)
-        
+        let phoneNumberFormatter = PhoneNumberFormater()
         let contactStore = CNContactStore()
         
         try contactStore.enumerateContacts(with: request) { (contact, stop) in
@@ -80,8 +80,6 @@ class ContactsAgent: ContactsAgentProtocol {
             contacts.append(contact)
         }
         
-        let phoneNumberFormatter = PhoneNumberFormater()
-
         for contact in contacts {
 
           guard let phoneNumberData = contact.phoneNumbers.first?.value as? CNPhoneNumber,

@@ -81,7 +81,8 @@ class Model {
     let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
 
     //MARK: Bank Client Info
-    let bankClientInfo: CurrentValueSubject<[BankClientInfo], Never>
+    let bankClientInfo: CurrentValueSubject<Set<[BankClientInfo]>, Never>
+    
     //MARK: DeepLink
     var deepLinkType: DeepLinkType?
     
@@ -637,7 +638,7 @@ class Model {
                     //MARK: - Card
                 
                 case let payload as ModelAction.BankClient.Request:
-                    handleOwnerPhoneRequest(payload)
+                    handleBankClientRequest(payload)
                     
                     //MARK: - Notifications
                        
@@ -662,7 +663,7 @@ class Model {
                     handleLatestPaymentsListRequest()
                     
                 case let payload as ModelAction.LatestPayments.BanksList.Request:
-                    handleGetBanksListByPhoneRequest(payload)
+                    handleLatestPaymentsBankListRequest(payload)
                     
                     //MARK: - Templates Actions
                     
@@ -1015,7 +1016,7 @@ private extension Model {
             self.depositsInfo.value = depositsInfo
         }
         
-        if let bankClientInfo = localAgent.load(type: [BankClientInfo].self) {
+        if let bankClientInfo = localAgent.load(type: Set<[BankClientInfo]>.self) {
             
             self.bankClientInfo.value = bankClientInfo
         }

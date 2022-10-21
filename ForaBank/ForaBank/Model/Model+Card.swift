@@ -137,7 +137,7 @@ extension Model {
         }
     }
     
-    func handleOwnerPhoneRequest(_ payload: ModelAction.BankClient.Request) {
+    func handleBankClientRequest(_ payload: ModelAction.BankClient.Request) {
         
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
@@ -150,11 +150,11 @@ extension Model {
             
             do {
                 
-                let result = try await ratesFetchWithCommand(command: command)
+                let result = try await getBankClientWithCommand(command: command)
                 
                 if result.phone != "" {
                     
-                    self.bankClientInfo.value.append(result)
+                    self.bankClientInfo.value.insert([result])
                     
                     do {
                         
@@ -174,7 +174,7 @@ extension Model {
         }
     }
     
-    func ratesFetchWithCommand(command: ServerCommands.CardController.GetOwnerPhoneNumber) async throws -> BankClientInfo {
+    func getBankClientWithCommand(command: ServerCommands.CardController.GetOwnerPhoneNumber) async throws -> BankClientInfo {
         
         try await withCheckedThrowingContinuation { continuation in
             
@@ -186,23 +186,24 @@ extension Model {
                     case .ok:
                         guard let data = response.data else {
                             self.handleServerCommandEmptyData(command: command)
+                            continuation.resume(with: .failure(ModelRatesError.emptyData(message: response.errorMessage)))
                             return
                         }
                         
                         if data != "", let phone = command.payload?.phoneNumber {
-                            
-                            continuation.resume(returning: .init(phone: phone))
+                            continuation.resume(returning: BankClientInfo(phone: phone))
+
                         } else {
-                            
-                            continuation.resume(returning: .init(phone: ""))
+                            continuation.resume(returning: BankClientInfo(phone: ""))
                         }
                         
                     default:
-
+                        continuation.resume(with: .failure(ModelRatesError.statusError(status: response.statusCode, message: response.errorMessage)))
                         self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                         
                     }
                 case .failure(let error):
+                    continuation.resume(with: .failure(ModelRatesError.serverCommandError(error: error.localizedDescription)))
                     self.handleServerCommandError(error: error, command: command)
                     
                 }
