@@ -84,7 +84,7 @@ class ContactsViewModel: ObservableObject {
                                     .sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
                                     .sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
                                 
-                                section.header.icon = .ic40SBP
+                                section.header.icon = Image.init("ic24sbp")
                                 
                             } else {
                                 
@@ -169,7 +169,9 @@ class ContactsViewModel: ObservableObject {
                 switch action {
                     
                 case let payload as ContactsViewModelAction.SetupPhoneNumber:
-                    self.searchBar.text = payload.phone
+                    let phoneNumberKit = PhoneNumberFormater()
+                    let phone = phoneNumberKit.format(payload.phone)
+                    self.searchBar.text = phone
                     
                 default: break
                 }
@@ -449,10 +451,12 @@ class ContactsViewModel: ObservableObject {
         func bind() {
             
             header.$isCollapsed
+                .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink { isCollapsed in
                     
                     self.isCollapsed.toggle()
+                    
                 }.store(in: &bindings)
         }
         

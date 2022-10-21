@@ -174,7 +174,25 @@ struct PhoneNumberTextFieldView: UIViewRepresentable {
             if let text = textField.text {
                 
                 self.delegate.viewModel.state = .editing
-                self.delegate.viewModel.text = text
+                
+                if text.first != "8", text.first?.isNumber == true || text.first == "+" && text != "+" {
+                 
+                    
+                    let phoneNumberKit = self.delegate.phoneNumberKit
+                    let phone = phoneNumberKit.partialFormatter("+\(text)")
+                    self.delegate.viewModel.text = phone
+
+                } else if text.first == "8" {
+                    
+                    let phoneNumberKit = self.delegate.phoneNumberKit
+                    let phone = phoneNumberKit.partialFormatter(text)
+                    self.delegate.viewModel.text = phone
+                    
+                } else {
+                    
+                    self.delegate.viewModel.text = text
+                }
+                
                 self.delegate.textField.text = self.delegate.phoneNumberKit.partialFormatter(text)
             }
         }

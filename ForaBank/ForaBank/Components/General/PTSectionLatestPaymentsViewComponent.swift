@@ -11,7 +11,7 @@ import Shimmer
 
 //MARK: Section ViewModel
 
-extension PaymentsViewComponent {
+extension PTSectionLatestPaymentsViewComponent {
     
     class ViewModel: PaymentsTransfersSectionViewModel {
         
@@ -109,7 +109,7 @@ enum PTSectionLatestPaymentsViewAction {
 
 //MARK: Section View
 
-struct PaymentsViewComponent: View {
+struct PTSectionLatestPaymentsViewComponent: View {
     
     @ObservedObject
     var viewModel: ViewModel
@@ -167,7 +167,7 @@ struct PTSectionLatestPaymentsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PaymentsViewComponent(viewModel: .init(model: .emptyMock))
+        PTSectionLatestPaymentsViewComponent(viewModel: .init(model: .emptyMock))
             .previewLayout(.fixed(width: 350, height: 150))
             .previewDisplayName("Section LatestPayments")
     }
