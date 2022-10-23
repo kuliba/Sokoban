@@ -58,6 +58,10 @@ class PaymentsMeToMeViewModel: ObservableObject {
         bind()
     }
     
+    deinit {
+        close()
+    }
+    
     private func bind() {
         
         model.action
@@ -307,8 +311,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
             
             let value = paymentsAmount.textField.value
             
-            let transferButton = PaymentsAmountView.ViewModel.makeTransferButton(value) {
-                self.action.send(PaymentsMeToMeAction.Button.Transfer.Tap())
+            let transferButton = PaymentsAmountView.ViewModel.makeTransferButton(value) { [weak self] in
+                self?.action.send(PaymentsMeToMeAction.Button.Transfer.Tap())
             }
             
             paymentsAmount.transferButton = transferButton
@@ -324,8 +328,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
         switch state {
         case .normal:
             
-            paymentsAmount.info = .button(title: "Без комиссии", icon: .ic16Info) {
-                self.action.send(PaymentsMeToMeAction.Button.Info.Tap())
+            paymentsAmount.info = .button(title: "Без комиссии", icon: .ic16Info) { [weak self] in
+                self?.action.send(PaymentsMeToMeAction.Button.Info.Tap())
             }
             
         case .loading:

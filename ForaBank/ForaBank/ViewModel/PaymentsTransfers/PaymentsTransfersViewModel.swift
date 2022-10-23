@@ -35,7 +35,10 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     private let model: Model
     
     var rootActions: RootViewModel.RootActions?
+    
     private var bindings = Set<AnyCancellable>()
+    private var paymentsBindings = Set<AnyCancellable>()
+    private var fullCoverBindings = Set<AnyCancellable>()
     
     init(model: Model) {
         self.navButtonsRight = []
@@ -63,6 +66,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     func reset() {
         
         bottomSheet = nil
+        fullCover = nil
         sheet = nil
         link = nil
         isTabBarHidden = false
@@ -113,13 +117,17 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     }
                    
                 case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
+                    
                     bottomSheet = nil
+                    paymentsBindings = Set<AnyCancellable>()
                     
                 case _ as PaymentsTransfersViewModelAction.Close.Sheet:
                     sheet = nil
                     
                 case _ as PaymentsTransfersViewModelAction.Close.FullCover:
+                    
                     fullCover = nil
+                    fullCoverBindings = Set<AnyCancellable>()
                 
                 case _ as PaymentsTransfersViewModelAction.Close.Link:
                     link = nil
@@ -348,7 +356,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     break
                 }
                 
-            }.store(in: &bindings)
+            }.store(in: &paymentsBindings)
     }
     
     private func bind(_ viewModel: PaymentsSuccessMeToMeViewModel) {
@@ -371,7 +379,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     break
                 }
                 
-            }.store(in: &bindings)
+            }.store(in: &fullCoverBindings)
         
         $bottomSheet
             .receive(on: DispatchQueue.main)
@@ -381,7 +389,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     fullCover = .init(type: .successMeToMe(viewModel))
                 }
                 
-            }.store(in: &bindings)
+            }.store(in: &fullCoverBindings)
     }
     
     private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
