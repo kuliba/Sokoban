@@ -18,7 +18,8 @@ extension OfferProductView {
         let action: PassthroughSubject<Action, Never> = .init()
         private var bindings = Set<AnyCancellable>()
         
-        let id: Int?
+        //FIXME: not optional
+        let id: DepositProductData.ID?
         let title: String
         let subtitle: [String]
         @Published var image: ImageData
@@ -321,9 +322,11 @@ struct OfferProductView: View {
         
         var body: some View {
             
-            if let id = viewModel.id, let openViewModel: OpenProductViewModel = .init(depositId: String(id)) {
+            //FIXME: move all this to view model !!!!
+            if let depositId = viewModel.id,
+               let openViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: Model.shared) {
                 
-                NavigationLink(destination: ProductDetailView(viewModel: openViewModel)) {
+                NavigationLink(destination: OpenDepositDetailView(viewModel: openViewModel)) {
                     
                     Text(viewModel.orderButton.title)
                         .foregroundColor(.textWhite)
@@ -394,10 +397,10 @@ struct OfferProductView_Previews: PreviewProvider {
         Group {
             
             OfferProductView(viewModel: .catalogSample)
-                .previewLayout(.fixed(width: 400, height: 800))
+                .previewLayout(.fixed(width: 375, height: 800))
             
             OfferProductView(viewModel: .depositSample)
-                .previewLayout(.fixed(width: 400, height: 800))
+                .previewLayout(.fixed(width: 375, height: 800))
         }
     }
 }

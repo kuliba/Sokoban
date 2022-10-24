@@ -13,7 +13,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
     let action: PassthroughSubject<Action, Never> = .init()
     
     private var baseURL: String { enviroment.baseURL }
-    private let enviroment: Environment
+    private let enviroment: ServerAgentEnvironment
   
     private lazy var session: URLSession = {
         
@@ -39,7 +39,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
     private let decoder: JSONDecoder
     var cookies: [HTTPCookie]?
 
-    internal init(enviroment: Environment) {
+    internal init(enviroment: ServerAgentEnvironment) {
         
         self.enviroment = enviroment
         self.encoder = JSONEncoder.serverDate
@@ -439,28 +439,6 @@ internal extension ServerAgent {
         }
         
         return url
-    }
-}
-
-//MARK: - Types
-
-extension ServerAgent {
-    
-    enum Environment {
-        
-        case test
-        case prod
-        
-        var baseURL: String {
-            
-            switch self {
-            case .test:
-                return "https://pl.forabank.ru/dbo/api/v3"
-                
-            case .prod:
-                return "https://bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
-            }
-        }
     }
 }
 

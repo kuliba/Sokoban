@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Shimmer
 
 // MARK: - View
 

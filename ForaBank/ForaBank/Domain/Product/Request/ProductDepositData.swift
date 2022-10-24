@@ -185,6 +185,15 @@ extension ProductDepositData {
         }
     }
     
+    var isClosed: Bool {
+        
+        guard let endDate = self.endDateNf else {
+            return false
+        }
+        
+        return endDate
+    }
+    
     enum TransferType {
         
         case remains

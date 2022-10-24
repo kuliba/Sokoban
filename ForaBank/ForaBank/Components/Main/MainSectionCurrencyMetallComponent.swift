@@ -72,36 +72,28 @@ extension MainSectionCurrencyMetallView {
                 .sink { [unowned self] data in
                 
                     let list = data.0
-                    let dict = data.1
+                    let currencyData = data.1
                 
-                    let result = reduce(list: list,
-                                        dict: dict,
-                                        itemAction: { [weak self] currency in
-                                            return { self?.action.send(
-                                                            MainSectionViewModelAction
-                                                            .CurrencyMetall
-                                                            .DidTapped
-                                                            .Item(code: currency))} },
-                                        buyAction: { [weak self] currency in
-                                            return { self?.action.send(
-                                                            MainSectionViewModelAction
-                                                            .CurrencyMetall
-                                                            .DidTapped
-                                                            .Buy(code: currency)) } },
-                                        sellAction: { [weak self] currency in
-                                            return  { self?.action.send(
-                                                            MainSectionViewModelAction
-                                                            .CurrencyMetall
-                                                            .DidTapped
-                                                            .Sell(code: currency)) }})
+                    let result = Self.reduce(model,
+                                             list: list,
+                                             currencyData: currencyData,
+                                             itemAction: { [weak self] currency in
+                                                return { self?.action.send(
+                                                    MainSectionViewModelAction.CurrencyMetall.DidTapped.Item(code: currency))} },
+                                            buyAction: { [weak self] currency in
+                                                return { self?.action.send(
+                                                    MainSectionViewModelAction.CurrencyMetall.DidTapped.Buy(code: currency)) } },
+                                            sellAction: { [weak self] currency in
+                                                return  { self?.action.send(
+                                                    MainSectionViewModelAction.CurrencyMetall.DidTapped.Sell(code: currency)) }})
                     self.items = result.items
                 
                     if !result.imagesMd5ToUpload.isEmpty {
                         model.action.send(ModelAction.Dictionary.DownloadImages
                                         .Request(imagesIds: result.imagesMd5ToUpload))
                     }
-            }
-            .store(in: &bindings)
+                    
+            }.store(in: &bindings)
         
             $items
                 .receive(on: DispatchQueue.main)
@@ -139,40 +131,24 @@ extension MainSectionCurrencyMetallView {
                 }
             }
         }
-        
+
 //MARK: Reduce Items
-        private func reduce(list: [CurrencyWalletData],
-                            dict: [CurrencyData],
-                            itemAction: @escaping (Currency) -> (() -> Void),
-                            buyAction: @escaping (Currency) -> (() -> Void),
-                            sellAction: @escaping (Currency) -> (() -> Void)) ->
-                                                                   (items: [ItemViewModel],
-                                                                    imagesMd5ToUpload: [String]) {
+        
+        static func reduce(_ model: Model, list: [CurrencyWalletData], currencyData: [CurrencyData], itemAction: @escaping (Currency) -> () -> Void, buyAction: @escaping (Currency) -> () -> Void, sellAction: @escaping (Currency) -> () -> Void) -> (items: [ItemViewModel], imagesMd5ToUpload: [String]) {
                     
-            let items = list.map { item in
-                ItemViewModel(type: .currency,
-                              mainImg: (item.md5hash, model.images.value[item.md5hash]?.image),
-                              title: item.code,
-                              subtitle: dict.first(where: { $0.code == item.code })?.shortName ?? "",
-                              action: itemAction(Currency(description: item.code)),
-                              topDashboard: .init(kindImage: item.rateSellDelta > 0 ? .up
-                                                           : item.rateSellDelta == 0 ? .no : .down,
-                                                  valueText: NumberFormatter.decimal(item.rateSell),
-                                                  type: .buy,
-                                                  action: buyAction(Currency(description: item.code)) ),
-                              bottomDashboard: .init(kindImage: item.rateBuyDelta > 0 ? .up
-                                                              : item.rateBuyDelta == 0 ? .no : .down,
-                                                     valueText: NumberFormatter.decimal(item.rateBuy),
-                                                     type: .sell,
-                                                     action: sellAction(Currency(description: item.code)) ))
+            let items = list.map { item -> ItemViewModel in
+                
+                let imageData = model.images.value[item.md5hash]
+                let itemViewModel: ItemViewModel = .init(currencyData: currencyData, item: item, imageData: imageData, itemAction: itemAction, buyAction: buyAction, sellAction: sellAction)
+                
+                return itemViewModel
             }
             
-            let imagesMd5ToUpload = items.filter { $0.mainImg.img == nil }
-                                         .map { $0.mainImg.md5 }
+            let filterredItems = items.filter { $0.mainImg.img == nil }
+            let imagesMd5ToUpload = filterredItems.map { $0.mainImg.md5 }
                     
             return (items, imagesMd5ToUpload)
         }
-        
     }
 }
 
@@ -236,7 +212,7 @@ extension MainSectionCurrencyMetallView.ViewModel {
         let topDashboard: DashboardViewModel
         let bottomDashboard: DashboardViewModel
         
-        init(type: ItemType,
+        init(type: ItemType = .currency,
              mainImg: (md5: String, img: Image?),
              title: String, subtitle: String,
              action: @escaping () -> Void,
@@ -251,6 +227,34 @@ extension MainSectionCurrencyMetallView.ViewModel {
             self.topDashboard = topDashboard
             self.bottomDashboard = bottomDashboard
             
+        }
+
+        convenience init(currencyData: [CurrencyData], item: CurrencyWalletData, imageData: ImageData?, itemAction: @escaping (Currency) -> () -> Void, buyAction: @escaping (Currency) -> () -> Void, sellAction: @escaping (Currency) -> () -> Void) {
+            
+            let imageData: (String, Image?) = (item.md5hash, imageData?.image)
+            let currency: Currency = .init(description: item.code)
+            
+            let topText = Self.formattedText(item.rateSell)
+            let bottomText = Self.formattedText(item.rateBuy)
+            
+            let rateSellDelta = item.rateSellDelta ?? 0
+            let rateBuyDelta = item.rateBuyDelta ?? 0
+            
+            let subtitle = currencyData.first(where: { $0.code == item.code })?.shortName ?? ""
+            
+            let topDashboard: DashboardViewModel = .init(
+                kindImage: Self.kindImage(rateSellDelta),
+                valueText: topText,
+                type: .buy,
+                action: buyAction(currency) )
+            
+            let bottomDashboard: DashboardViewModel = .init(
+                kindImage: Self.kindImage(rateBuyDelta),
+                valueText: bottomText,
+                type: .sell,
+                action: sellAction(currency) )
+            
+            self.init(mainImg: imageData, title: item.code, subtitle: subtitle, action: itemAction(currency), topDashboard: topDashboard, bottomDashboard: bottomDashboard)
         }
         
         enum ItemType: String {
@@ -276,6 +280,13 @@ extension MainSectionCurrencyMetallView.ViewModel {
             case sell = "Продать"
         }
         
+        static private func kindImage(_ rateDelta: Double) -> KindImage {
+            rateDelta > 0 ? .up : rateDelta == 0 ? .no : .down
+        }
+        
+        static private func formattedText(_ rate: Double) -> String {
+            NumberFormatter.decimal(rate)
+        }
     }
 }
 
