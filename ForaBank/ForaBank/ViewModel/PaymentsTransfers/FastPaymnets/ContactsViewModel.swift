@@ -570,7 +570,7 @@ class ContactsViewModel: ObservableObject {
         
         static func createOptionViewModel() -> OptionSelectorView.ViewModel {
             
-            let options = BankType.allCases.map { bankType in
+            let options = BankType.allCases.map { bankType -> Option in
                 
                 if bankType.name == "Неизвестно" {
                     

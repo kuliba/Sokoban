@@ -33,7 +33,7 @@ struct ContactsView: View {
                 
             case let .contacts(latestPayments, contacts):
                 
-                if let latestPayments {
+                if let latestPayments = latestPayments {
                     
                     LatestPaymentsViewComponent(viewModel: latestPayments)
                 }
@@ -42,7 +42,7 @@ struct ContactsView: View {
                 
             case let .banks(topBanks, collapsable):
                 
-                if let topBanks {
+                if let topBanks = topBanks {
                     
                     ScrollView(.horizontal, showsIndicators: false) {
                         
