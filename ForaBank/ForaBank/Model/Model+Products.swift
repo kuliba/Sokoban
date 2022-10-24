@@ -35,6 +35,11 @@ extension Model {
         products.value.values.flatMap({ $0 }).first(where: { $0.id == productId })
     }
     
+    func allProducts() -> [ProductData]? {
+        
+        products.value.values.flatMap {$0}.sorted { $0.productType.order < $1.productType.order }
+    }
+    
     func products(_ productType: ProductType) -> [ProductData]? {
         
         products.value[productType]

@@ -46,7 +46,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
     
     convenience init?(_ model: Model, mode: Mode, closeAction: @escaping () -> Void) {
 
-        guard let productData = model.product() else {
+        guard let products = model.allProducts(),
+              let productData = Self.reduce(products: products) else {
             return nil
         }
         
@@ -392,7 +393,36 @@ class PaymentsMeToMeViewModel: ObservableObject {
 
 extension PaymentsMeToMeViewModel {
     
-    static private func productsId(_ model: Model, swapViewModel: ProductsSwapView.ViewModel) -> (from: ProductData.ID, to: ProductData.ID)? {
+    static func reduce(products: [ProductData]) -> ProductData? {
+        
+        let filterredProducts = products.filter { product in
+            
+            switch product.productType {
+            case .card:
+                
+                guard let product = product as? ProductCardData else {
+                    return false
+                }
+
+                return product.status == .blockedByClient ? false : true
+
+            case .account:
+                
+                guard let product = product as? ProductAccountData else {
+                    return false
+                }
+                
+                return product.status == .blockedByClient ? false : true
+
+            default:
+                return true
+            }
+        }
+        
+        return filterredProducts.first
+    }
+    
+    static func productsId(_ model: Model, swapViewModel: ProductsSwapView.ViewModel) -> (from: ProductData.ID, to: ProductData.ID)? {
         
         var productsId: (from: ProductData.ID, to: ProductData.ID) = (0, 0)
         
@@ -420,7 +450,7 @@ extension PaymentsMeToMeViewModel {
         return productsId
     }
     
-    static private func products(_ model: Model, from: ProductData.ID, to: ProductData.ID) -> (from: ProductData, to: ProductData)? {
+    static func products(_ model: Model, from: ProductData.ID, to: ProductData.ID) -> (from: ProductData, to: ProductData)? {
         
         let from = model.product(productId: from)
         let to = model.product(productId: to)
