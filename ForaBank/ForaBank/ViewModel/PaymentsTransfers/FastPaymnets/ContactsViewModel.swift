@@ -84,7 +84,7 @@ class ContactsViewModel: ObservableObject {
                                     .sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
                                     .sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
                                 
-                                section.header.icon = Image.init("ic24sbp")
+                                section.header.icon = .ic24SBP
                                 
                             } else {
                                 
@@ -397,7 +397,7 @@ class ContactsViewModel: ObservableObject {
         let placeHolderViewModel: [LatestPaymentsViewComponent.ViewModel.PlaceholderViewModel]
     }
     
-    class TopBanksViewModel {
+    class TopBanksViewModel: Equatable {
         
         @Published var banks: [Bank]
         
@@ -405,9 +405,8 @@ class ContactsViewModel: ObservableObject {
             self.banks = banks
         }
         
-        struct Bank: Identifiable, Hashable {
+        struct Bank: Hashable {
             
-            let id = UUID()
             let image: Image?
             let defaultBank: Bool
             let name: String?
@@ -425,13 +424,17 @@ class ContactsViewModel: ObservableObject {
             
             static func == (lhs: Bank, rhs: Bank) -> Bool {
                 
-                lhs.name == rhs.name && lhs.id == rhs.id
+                lhs.name == rhs.name
             }
             
             func hash(into hasher: inout Hasher) {
                 
                 hasher.combine(name)
             }
+        }
+        
+        static func == (lhs: ContactsViewModel.TopBanksViewModel, rhs: ContactsViewModel.TopBanksViewModel) -> Bool {
+            lhs.banks == rhs.banks
         }
     }
     
@@ -510,9 +513,8 @@ class ContactsViewModel: ObservableObject {
             }
         }
         
-        class ItemViewModel: Identifiable, Hashable {
+        class ItemViewModel: Hashable {
             
-            let id = UUID()
             let title: String
             let image: Image?
             let bankType: BankType?
@@ -527,12 +529,11 @@ class ContactsViewModel: ObservableObject {
             }
             
             static func == (lhs: ItemViewModel, rhs: ItemViewModel) -> Bool {
-                lhs.id == rhs.id && lhs.title == rhs.title
+                lhs.title == rhs.title
             }
             
             func hash(into hasher: inout Hasher) {
                 
-                hasher.combine(id)
                 hasher.combine(title)
             }
         }
