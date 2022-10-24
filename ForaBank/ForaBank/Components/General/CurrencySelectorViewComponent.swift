@@ -98,18 +98,15 @@ extension CurrencySelectorView {
                     
                     switch action {
                     case _ as CurrencyWalletAccountView.ProductAction.Toggle:
+
+                        let productsList = model.accountProductsList.value.filter { $0.currency.description == currency.description }
                         
-                        let productsList = model.accountProductsList.value.filter { $0.currency.rawValue == currency.description }
-                        
-                        if productsList.isEmpty == false {
-                            
-                            let viewModel: OpenAccountViewModel = .init(model: model, style: .currencyWallet, items: OpenAccountViewModel.reduce(products: productsList), currency: currency) {
-                                self.bottomSheet = nil
-                            }
-                            
-                            bottomSheet = .init(type: .openAccount(viewModel))
+                        guard let viewModel = OpenAccountViewModel(model, product: productsList.first, closeAction: { [weak self] in self?.bottomSheet = nil }) else {
+                            return
                         }
                         
+                        bottomSheet = .init(type: .openAccount(viewModel))
+
                     default:
                         break
                     }

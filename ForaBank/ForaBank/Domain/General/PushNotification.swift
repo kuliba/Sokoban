@@ -12,10 +12,10 @@ struct Push: Decodable {
     let eventId: String
     let cloudId: String
     let aps: APS?
-    let body: String
+    let body: String?
     let google: String
     let messageId: String
-    let notificationQueueId: String
+    let notificationQueueId: String?
     let code: String?
     let googleSender: String?
     let googleFid: String?
@@ -63,9 +63,9 @@ struct Push: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         eventId = try container.decode(String.self, forKey: .eventId)
         cloudId = try container.decode(String.self, forKey: .cloudId)
-        body = try container.decode(String.self, forKey: .body)
+        body = try container.decodeIfPresent(String.self, forKey: .body)
         messageId = try container.decode(String.self, forKey: .messageId)
-        notificationQueueId = try container.decode(String.self, forKey: .notificationQueueId)
+        notificationQueueId = try container.decodeIfPresent(String.self, forKey: .notificationQueueId)
         google = try container.decode(String.self, forKey: .google)
         code = try container.decodeIfPresent(String.self, forKey: .code)
         aps = try container.decode(APS.self, forKey: .aps)

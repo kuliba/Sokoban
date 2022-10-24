@@ -106,17 +106,24 @@ extension ProductProfileOptionsPannelView {
                     return .init(icon: .init(image: .ic24File, background: .circleSmall), title: .init(text: "Условия по счету кредита", style: .bold), orientation: .horizontal, action: action)
                 }
                 
+            case .contract:
+                return .init(icon: .init(image: .ic24Contract, background: .circleSmall), title: .init(text: "Договор", style: .bold), orientation: .horizontal, action: action)
+                
             case .closeDeposit(let isActive):
                 return .init(icon: .init(image: .ic24Close, background: .circleSmall), title: .init(text: "Закрыть вклад", style: .bold), orientation: .horizontal, action: action, isActive: isActive)
                 
+            // TODO: DBSNEW-6553
+                
+            /*
             case .statementOpenAccount(let isActive):
                 return .init(icon: .init(image: .ic24FileText, background: .circleSmall), title: .init(text: "Заявление-анкета на открытие счета", style: .bold), orientation: .horizontal, action: action, isActive: isActive)
-                
+
             case .tariffsByAccount:
                 return .init(icon: .init(image: .ic24FileText, background: .circleSmall), title: .init(text: "Тарифы по счету", style: .bold), orientation: .horizontal, action: action)
-                
+
             case .termsOfService:
                 return .init(icon: .init(image: .ic24FileText, background: .circleSmall), title: .init(text: "Условия комплексного банковского обслуживания", style: .bold), orientation: .horizontal, action: action)
+             */
             }
         }
         
@@ -129,9 +136,16 @@ extension ProductProfileOptionsPannelView {
             case info
             case conditions
             case closeDeposit(Bool)
+            
+            // TODO: DBSNEW-6553
+            
+            /*
             case statementOpenAccount(Bool)
             case tariffsByAccount
             case termsOfService
+             */
+            
+            case contract
         }
     }
 }

@@ -139,12 +139,12 @@ extension ServerCommands {
         }
         
         /*
-         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/dict/getCurrencyWalletList
+         http://10.1.206.21:8080/swagger-ui/index.html#/DictionaryController/getCurrencyWalletList_v2
         */
         struct GetCurrencyWalletList: ServerCommand {
             
             let token: String
-            let endpoint = "/dict/getCurrencyWalletList"
+            let endpoint = "/dict/getCurrencyWalletList_V2"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             

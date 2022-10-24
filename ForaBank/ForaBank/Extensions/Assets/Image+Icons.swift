@@ -18,7 +18,12 @@ public extension Image {
     static var ic12ArrowDown: Image { Image(#function) }
     static var ic12ArrowUp: Image { Image(#function) }
     static var ic12Clock: Image { Image(#function) }
+    static var ic12Coins: Image { Image(#function) }
+    static var ic12EyeOff: Image { Image(#function) }
+    static var ic12Lock: Image { Image(#function) }
+    static var ic12Lockandeyeoff: Image { Image(#function) }
     static var ic12LogoForaColor: Image { Image(#function) }
+    static var ic12Star: Image { Image(#function) }
     static var ic16Ball: Image { Image(#function) }
     static var ic1612Circle: Image { Image(#function) }
     static var ic16Apple: Image { Image(#function) }
@@ -363,10 +368,12 @@ public extension Image {
     static var ic24Ball: Image { Image(#function) }
     static var ic2412Circle: Image { Image(#function) }
     static var ic24Apple: Image { Image(#function) }
-    static var ic24Sts: Image { Image(#function) }
+    static var ic24SBP: Image { Image(#function) }
+    static var ic24STS: Image { Image(#function) }
     static var ic24Tariff: Image { Image(#function) }
     static var ic24WheelOfFortune: Image { Image(#function) }
-    static var ic24Zkx: Image { Image(#function) }
+    static var ic24ZKX: Image { Image(#function) }
+    static var ic24Abroad: Image { Image(#function) }
     static var ic24ActivatedCreditCard: Image { Image(#function) }
     static var ic24Activity: Image { Image(#function) }
     static var ic24Airplay: Image { Image(#function) }
@@ -488,6 +495,7 @@ public extension Image {
     static var ic24DivideCircle: Image { Image(#function) }
     static var ic24DivideSquare: Image { Image(#function) }
     static var ic24DollarSign: Image { Image(#function) }
+    static var ic24Donate: Image { Image(#function) }
     static var ic24Download: Image { Image(#function) }
     static var ic24DownloadCloud: Image { Image(#function) }
     static var ic24Dribbble: Image { Image(#function) }
@@ -597,6 +605,7 @@ public extension Image {
     static var ic24MoreHorizontal: Image { Image(#function) }
     static var ic24MoreHorizontalColor: Image { Image(#function) }
     static var ic24MoreVertical: Image { Image(#function) }
+    static var ic24Mortgage: Image { Image(#function) }
     static var ic24MousePointer: Image { Image(#function) }
     static var ic24Move: Image { Image(#function) }
     static var ic24Music: Image { Image(#function) }

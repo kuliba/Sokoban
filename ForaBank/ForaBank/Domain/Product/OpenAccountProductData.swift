@@ -16,22 +16,12 @@ struct OpenAccountProductData: Codable, Equatable {
     let breakdownAccount: String
     let accountType: String
     let currencyCode: Int
-    let currency: СurrencyType
+    let currency: Currency
     let designMd5hash: String
+    let designSmallMd5hash: String
     let detailedConditionUrl: String
     let detailedRatesUrl: String?
     let txtConditionList: [TxtConditionList]
-
-    enum СurrencyType: String, Codable, Unknownable {
-
-        case rub = "RUB"
-        case usd = "USD"
-        case eur = "EUR"
-        case gbp = "GBP"
-        case chf = "CHF"
-        case cny = "CNY"
-        case unknown
-    }
 
     // MARK: - TxtConditionList
 
@@ -96,6 +86,7 @@ struct OpenAccountProductData: Codable, Equatable {
         case currencyCode
         case currency
         case designMd5hash
+        case designSmallMd5hash
         case detailedConditionUrl
         case detailedRatesUrl
         case txtConditionList
@@ -111,12 +102,11 @@ struct OpenAccountProductData: Codable, Equatable {
         accountType = try container.decode(String.self, forKey: .accountType)
         currencyCode = try container.decode(Int.self, forKey: .currencyCode)
         designMd5hash = try container.decode(String.self, forKey: .designMd5hash)
+        designSmallMd5hash = try container.decode(String.self, forKey: .designSmallMd5hash)
         detailedConditionUrl = try container.decode(String.self, forKey: .detailedConditionUrl)
         detailedRatesUrl = try container.decodeIfPresent(String.self, forKey: .detailedRatesUrl)
         txtConditionList = try container.decode([TxtConditionList].self, forKey: .txtConditionList)
-
-        let currencyType = try container.decode(СurrencyType.self, forKey: .currency)
-        currency = СurrencyType(rawValue: currencyType.rawValue) ?? .unknown
+        currency = try container.decode(Currency.self, forKey: .currency)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -127,8 +117,9 @@ struct OpenAccountProductData: Codable, Equatable {
         try container.encode(breakdownAccount, forKey: .breakdownAccount)
         try container.encode(accountType, forKey: .accountType)
         try container.encode(currencyCode, forKey: .currencyCode)
-        try container.encode(currency.rawValue, forKey: .currency)
+        try container.encode(currency, forKey: .currency)
         try container.encode(designMd5hash, forKey: .designMd5hash)
+        try container.encode(designSmallMd5hash, forKey: .designSmallMd5hash)
         try container.encode(detailedConditionUrl, forKey: .detailedConditionUrl)
         try container.encode(detailedRatesUrl, forKey: .detailedRatesUrl)
         try container.encode(txtConditionList, forKey: .txtConditionList)
@@ -144,6 +135,7 @@ struct OpenAccountProductData: Codable, Equatable {
             lhs.currencyCode == rhs.currencyCode,
             lhs.currency == rhs.currency,
             lhs.designMd5hash == rhs.designMd5hash,
+            lhs.designSmallMd5hash == rhs.designSmallMd5hash,
             lhs.detailedConditionUrl == rhs.detailedConditionUrl,
             lhs.detailedRatesUrl == rhs.detailedRatesUrl,
             lhs.txtConditionList == rhs.txtConditionList

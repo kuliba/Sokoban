@@ -103,6 +103,9 @@ class ProductProfileViewModel: ObservableObject {
                     bind(optionsPannel: payload.viewModel)
                     bottomSheet = .init(type: .optionsPannel(payload.viewModel))
                     
+                case let payload as ProductProfileViewModelAction.Show.AlertShow:
+                    self.alert = payload.viewModel
+                    
                 case _ as ProductProfileViewModelAction.Product.Activate:
                     alert = .init(title: "Активировать карту?", message: "После активации карта будет готова к использованию", primary: .init(type: .default, title: "Отмена", action: { [weak self] in
                         self?.alert = nil
@@ -550,11 +553,19 @@ class ProductProfileViewModel: ObservableObject {
                     case .bottomLeft:
                         switch product.productType {
                         case .deposit:
-                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .info, .conditions], productType: product.productType)
+                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .info, .contract], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                             
+                        // TODO: DBSNEW-6553
+                            
+                        /*
                         case .account:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .statementOpenAccount(false), .tariffsByAccount, .termsOfService], productType: product.productType)
+                            self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
+                        */
+                            
+                        case .account:
+                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                             
                         default:
@@ -680,6 +691,26 @@ class ProductProfileViewModel: ObservableObject {
                             
                         case .conditions:
                             self.model.action.send(ModelAction.Products.DepositConditionsPrintForm.Request(depositId: productData.id))
+                            
+                        case .contract:
+                            
+                            let printFormViewModel = PrintFormView.ViewModel(type: .contract(productId: productData.id), model: self.model, dismissAction: { [weak self]  in
+                               
+                                self?.action.send(ProductProfileViewModelAction.Close.BottomSheet())
+                                self?.action.send(ProductProfileViewModelAction.Close.Sheet())
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
+                                    
+                                    let alertViewModel = Alert.ViewModel(title: "Форма временно недоступна",
+                                                                         message: "Для получения Договора по вкладу обратитесь в отделение банка",
+                                                                         primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())}),
+                                                                         secondary: .init(type: .default, title: "ОК", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}))
+                                    
+                                    self?.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
+                                }
+                            })
+                            
+                            self.sheet = .init(type: .printForm(printFormViewModel))
                         
                         case .closeDeposit:
                             let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
@@ -688,18 +719,22 @@ class ProductProfileViewModel: ObservableObject {
                                                                  secondary: .init(type: .default, title: "ОК", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}))
                             self.alert = .init(alertViewModel)
                             
+                        // TODO: DBSNEW-6553
+
+                            /*
                         case .statementOpenAccount:
                             break
-                            
+
                         case .tariffsByAccount:
-                            
+
                             let linkURL = "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf"
                             self.openLinkURL(linkURL)
-                            
+
                         case .termsOfService:
-                            
+
                             let linkURL = "https://www.forabank.ru/dkbo/dkbo.pdf"
                             self.openLinkURL(linkURL)
+                             */
                         }
                         
                     default:
@@ -1022,6 +1057,11 @@ enum ProductProfileViewModelAction {
         }
         
         struct PlacesMap: Action {}
+        
+        struct AlertShow: Action {
+            
+            let viewModel: Alert.ViewModel
+        }
     }
     
     enum Close {
