@@ -127,7 +127,7 @@ struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModi
                     })
                     .fullScreenCover(item: $item, content: { item in
                         
-                        BottomSheetView(isPresented: isPresented, keyboardOfssetMultiplier: keyboardOfssetMultiplier, content: sheetContent(item))
+                        BottomSheetView(isPresented: isPresented, keyboardOfssetMultiplier: keyboardOfssetMultiplier, animationSpeed: animationSpeed, content: sheetContent(item))
                         
                     })
                     .transaction({ transaction in
