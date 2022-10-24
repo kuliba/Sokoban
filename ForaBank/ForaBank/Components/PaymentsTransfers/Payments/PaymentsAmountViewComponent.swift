@@ -53,6 +53,30 @@ extension PaymentsAmountView {
             bind()
         }
         
+        init(_ title: String, textField: TextFieldFormatableView.ViewModel, currencySwitch: CurrencySwitchViewModel? = nil, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil,  alert: AlertViewModel? = nil, actionTitle: String = "", action: @escaping () -> Void = {}) {
+            
+            self.title = title
+            self.textField = textField
+            self.transferButton = transferButton
+            self.info = info
+            self.currencySwitch = currencySwitch
+            self.alert = alert
+            self.actionTitle = actionTitle
+            self.action = action
+            
+            super.init(source: Payments.ParameterMock())
+        }
+        
+        convenience init(_ value: Double = 0, productData: ProductData, action: @escaping () -> Void = {}) {
+            
+            let currency = Currency(description: productData.currency)
+            let textField: TextFieldFormatableView.ViewModel = .init(value, currencySymbol: currency.currencySymbol)
+            
+            let transferButton: TransferButtonViewModel = Self.makeTransferButton(value, action: action)
+            
+            self.init("Сумма перевода", textField: textField, transferButton: transferButton)
+        }
+
         func bind() {
             
             textField.$text
@@ -71,6 +95,15 @@ extension PaymentsAmountView {
             return parameterAmount.validator.isValid(value: textField.value)
         }
         
+        static func makeTransferButton(_ value: Double = 0, action: @escaping () -> Void) -> TransferButtonViewModel {
+            
+            if value == 0 {
+                return .inactive(title: "Перевести")
+            } else {
+                return .active(title: "Перевести", action: action)
+            }
+        }
+
         func updateTranferButton(isEnabled: Bool) {
             
             if isEnabled {
@@ -87,6 +120,7 @@ extension PaymentsAmountView {
             
             case inactive(title: String)
             case active(title: String, action: () -> Void )
+            case loading(icon: Image, iconSize: CGSize)
         }
         
         enum InfoViewModel {
@@ -169,6 +203,7 @@ struct PaymentsAmountView: View {
                     
                     InfoView(viewModel: infoViewModel)
                         .frame(height: 32)
+                        .padding(.bottom)
                     
                 } else {
                     
@@ -236,6 +271,9 @@ struct PaymentsAmountView: View {
                             .foregroundColor(Color(hex: "#FFFFFF"))
                     }
                 }
+                
+            case let .loading(icon: icon, iconSize: iconSize):
+                SpinnerRefreshView(icon: icon, iconSize: iconSize)
             }
         }
     }

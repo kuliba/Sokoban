@@ -1,227 +1,150 @@
 //
-//  ProductsListViewComponent.swift
+//  ProductsListView.swift
 //  ForaBank
 //
-//  Created by Pavel Samsonov on 11.07.2022.
+//  Created by Pavel Samsonov on 25.09.2022.
 //
 
 import SwiftUI
 import Combine
 
+// MARK: - ViewModel
+
 extension ProductsListView {
-    
-    // MARK: - ViewModel
     
     class ViewModel: ObservableObject {
         
         let action: PassthroughSubject<Action, Never> = .init()
         
-        @Published var optionSelector: OptionSelectorView.ViewModel?
         @Published var products: [ProductView.ViewModel]
-        @Published var productType: ProductType
-        @Published var currencyOperation: CurrencyOperation
-        @Published var currency: Currency
+        @Published var typeSelector: OptionSelectorView.ViewModel?
         @Published var context: ProductSelectorView.ViewModel.Context
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(_ model: Model, currencyOperation: CurrencyOperation, currency: Currency, productType: ProductType, products: [ProductView.ViewModel], context: ProductSelectorView.ViewModel.Context) {
+        init(model: Model, products: [ProductView.ViewModel], typeSelector: OptionSelectorView.ViewModel?, context: ProductSelectorView.ViewModel.Context) {
             
             self.model = model
-            self.currencyOperation = currencyOperation
-            self.currency = currency
-            self.productType = productType
             self.products = products
+            self.typeSelector = typeSelector
             self.context = context
+        }
+        
+        convenience init?(model: Model, context: ProductSelectorView.ViewModel.Context) {
             
-            let products = model.products(currency: currency, currencyOperation: currencyOperation)
-            optionSelector = Self.makeOptionSelector(products: products, selected: productType.rawValue)
+            guard let productsData = Self.reduce(model.products.value) else {
+                return nil
+            }
+            
+            let filterred = Self.filterred(products: productsData.products, context: context)
+            let products = Self.reduce(model, products: filterred)
+            let typeSelector = Self.makeTypeSelector(model, selected: productsData.productType.rawValue)
+            
+            self.init(model: model, products: products, typeSelector: typeSelector, context: context)
             
             bind()
-            bindOption(productsData: model.products.value, currencyOperation: currencyOperation)
         }
         
         private func bind() {
             
-            model.products
-                .combineLatest($currencyOperation)
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] data in
-                    
-                    let productsData = data.0
-                    let currencyOperation = data.1
-                    
-                    bindOption(productsData: productsData, currencyOperation: currencyOperation)
-                    
-                }.store(in: &bindings)
-            
-            if let optionSelector = optionSelector {
+            if let typeSelector = typeSelector {
                 
-                optionSelector.$selected
-                    .combineLatest($currency)
+                typeSelector.$selected
+                    .combineLatest($context)
                     .receive(on: DispatchQueue.main)
                     .sink { [unowned self] data in
                         
-                        let selected = data.0
-                        let currency = data.1
+                        let option = data.0
+                        let context = data.1
                         
-                        if let productType = ProductType(rawValue: selected) {
+                        if let productType = ProductType(rawValue: option),
+                           let products = model.products(productType) {
                             
-                            products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType, context: context)
-                            bind(products)
-                            
-                            if products.isEmpty == true {
-                                
-                                if let option = optionSelector.options.first {
-                                    optionSelector.selected = option.id
-                                }
-                            }
-                            
-                        } else {
-                            
-                            products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation)
-                            bind(products)
+                            let filterred = Self.filterred(products: products, context: context)
+                            self.products = Self.reduce(model, products: filterred)
                         }
                         
-                    }.store(in: &bindings)
-                
-            } else {
-                
-                $currency
-                    .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] currency in
-                        
-                        products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation)
-                        bind(products)
+                        action.send(ProductsListAction.Option.Selected())
                         
                     }.store(in: &bindings)
-            }
-        }
-        
-        func bind(_ products: [ProductView.ViewModel]) {
-            
-            for product in products {
-                
-                product.action
-                    .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] action in
-                        
-                        switch action {
-                        case _ as ProductViewModelAction.ProductDidTapped:
-                            self.action.send(ProductSelectorView.ProductAction.Selected(productId: product.id))
-                            
-                        default:
-                            break
-                        }
-                        
-                    }.store(in: &bindings)
-            }
-        }
-        
-        private func bindOption(productsData: ProductsData, currencyOperation: CurrencyOperation) {
-            
-            let products = model.products(currency: currency, currencyOperation: currencyOperation, products: productsData)
-            
-            if optionSelector == nil {
-                
-                optionSelector = Self.makeOptionSelector(products: products, selected: productType.rawValue)
-                
-                if let optionSelector = optionSelector {
-                    
-                    optionSelector.$selected
-                        .combineLatest($currency)
-                        .receive(on: DispatchQueue.main)
-                        .sink { [unowned self] data in
-                            
-                            let selected = data.0
-                            let currency = data.1
-                            
-                            if let productType = ProductType(rawValue: selected) {
-                                
-                                self.products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType, context: context)
-                                bind(self.products)
-                                
-                                if products.isEmpty == true {
-                                    
-                                    if let option = optionSelector.options.first {
-                                        optionSelector.selected = option.id
-                                    }
-                                }
-                                
-                            } else {
-                                
-                                self.products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation)
-                                bind(self.products)
-                            }
-                            
-                        }.store(in: &bindings)
-                }
-                
-            } else {
-                
-                guard let optionSelector = optionSelector else {
-                    return
-                }
-                
-                let options = Self.makeOptions(products: products)
-                optionSelector.update(options: options, selected: optionSelector.selected)
             }
         }
     }
 }
 
-// MARK: - Reduce
-
 extension ProductsListView.ViewModel {
     
-    static func makeOptionSelector(products: [ProductData], selected: Option.ID) -> OptionSelectorView.ViewModel? {
+    static func reduce(_ products: ProductsData) -> (productType: ProductType, products: [ProductData])? {
         
-        let options = makeOptions(products: products)
+        let sortedTypes = ProductType.allCases.filter { $0 != .loan }.sorted { $0.order < $1.order }
         
-        if 0...1 ~= options.count {
-            return nil
-        }
-        
-        return .init(options: options, selected: selected, style: .productsSmall)
-    }
-    
-    static func makeOptions(products: [ProductData]) -> [Option] {
-        
-        let productTypes = products.reduce(into: [ProductType]()) { result, productData in
-            
-            if result.contains(where: { $0 == productData.productType }) == false  {
-                result.append(productData.productType)
+        for productType in sortedTypes {
+            if let products = products[productType], let product = products.first {
+                return (product.productType, products)
             }
         }
         
-        let sortedProductTypes = productTypes.sorted { $0.order < $1.order }
-        let options = sortedProductTypes.map { Option(id: $0.rawValue, name: $0.pluralName) }
-        
-        return options
+        return nil
     }
-    
-    static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType, context: ProductSelectorView.ViewModel.Context) -> [ProductView.ViewModel] {
 
-        var filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
-
-        if !context.isAdditionalProducts {
+    static func filterred(products: [ProductData], context: ProductSelectorView.ViewModel.Context) -> [ProductData] {
+        
+        let filterredProducts = products.filter { product in
             
-            filterredProducts = filterredProducts.filter({ $0.ownerProduct }).uniqueValues(value: { $0.additionalAccountId })
+            switch product.productType {
+            case .card:
+                
+                guard let product = product as? ProductCardData else {
+                    return false
+                }
+                
+                if let loanBaseParam = product.loanBaseParam, product.isMain == false {
+                    
+                    return product.status == .active && product.statusPc == .active && loanBaseParam.clientId == product.ownerId
+                    
+                } else {
+                    
+                    return product.status == .active && product.statusPc == .active
+                }
+
+            case .account:
+                
+                guard let product = product as? ProductAccountData else {
+                    return false
+                }
+                
+                return product.status == .notBlocked
+
+            default:
+                return true
+            }
         }
         
-        let products = filterredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model) }
-
+        switch context.direction {
+        case .from: return filterredProducts.filter { $0.allowDebit == true }
+        case .to: return filterredProducts.filter { $0.allowCredit == true }
+        }
+    }
+  
+    static func reduce(_ model: Model, products: [ProductData]) -> [ProductView.ViewModel] {
+        
+        let sortedProducts = products.sorted { $0.productType.order < $1.productType.order }
+        let products = sortedProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model) }
+        
         return products
     }
-
-    static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation) -> [ProductView.ViewModel] {
-
-        let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
-
-        let products = filterredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model) }
-
-        return products
+    
+    static func makeTypeSelector(_ model: Model, selected: Option.ID) -> OptionSelectorView.ViewModel {
+        
+        let sortedTypes = model.productsTypes.filter { $0 != .loan }.sorted { $0.order < $1.order }
+        var options = sortedTypes.map { Option(id: $0.rawValue, name: $0.pluralName) }
+        
+        if 0...1 ~= options.count {
+            options.removeAll()
+        }
+        
+        return .init(options: options, selected: selected, style: .productsSmall)
     }
 }
 
@@ -235,10 +158,8 @@ struct ProductsListView: View {
         
         VStack(spacing: 8) {
             
-            if let optionSelector = viewModel.optionSelector {
-                
-                OptionSelectorView(viewModel: optionSelector)
-                    .padding(.horizontal, 20)
+            if let typeSelector = viewModel.typeSelector {
+                OptionSelectorView(viewModel: typeSelector)
             }
             
             ScrollView(.horizontal, showsIndicators: false) {
@@ -246,42 +167,54 @@ struct ProductsListView: View {
                 HStack(spacing: 8) {
                     
                     ForEach(viewModel.products) { product in
-                        ProductView(viewModel: product)
-                            .frame(width: 112, height: 72)
-                            .onTapGesture {
-                                
-                                viewModel.action.send(
-                                    ProductsListAction.SelectedProduct(
-                                        productId: product.id))
-                            }
+                        
+                        ZStack {
+    
+                            RoundedRectangle(cornerRadius: 12)
+                                .frame(width: 62, height: 64)
+                                .foregroundColor(.mainColorsBlack)
+                                .opacity(0.15)
+                                .offset(x: 0, y: 13)
+                                .blur(radius: 8)
+                            
+                            ProductView(viewModel: product)
+                                .frame(width: 112, height: 72)
+                            
+                        }.padding(.bottom, 20)
                     }
-                }.padding(.horizontal, 20)
+                }
             }
         }
     }
 }
 
+// MARK: - Action
+
 enum ProductsListAction {
     
-    struct SelectedProduct: Action {
+    enum Option {
         
-        let productId: Int
+        struct Selected: Action {}
     }
-}
-
-// MARK: - Preview Content
-
-extension ProductsListView.ViewModel {
-    
-    static let sample = ProductsListView.ViewModel(.emptyMock, currencyOperation: .buy, currency: .rub, productType: .card, products: [.classicSmall, .accountSmall, .accountSmall], context: .init(isAdditionalProducts: false))
 }
 
 // MARK: - Previews
 
-struct ProductsListViewComponent_Previews: PreviewProvider {
+struct ProductsListView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductsListView(viewModel: .sample)
-            .previewLayout(.sizeThatFits)
-            .padding(.vertical)
+        
+        ProductsListView(viewModel: .init(
+            model: .emptyMock,
+            products: [.classicSmall, .accountSmall, .accountSmall],
+            typeSelector: .init(
+                options: [
+                    .init(id: "CARD", name: ProductType.card.pluralName),
+                    .init(id: "ACCOUNT", name: ProductType.account.pluralName)
+                ],
+                selected: "CARD", style: .productsSmall),
+            context: .init(title: "Откуда", direction: .from)))
+        .previewLayout(.sizeThatFits)
+        .padding(.vertical, 8)
+        .padding(.horizontal)
     }
 }

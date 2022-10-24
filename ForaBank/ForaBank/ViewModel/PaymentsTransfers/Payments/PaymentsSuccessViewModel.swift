@@ -52,6 +52,10 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         self.actionButton = actionButton
     }
     
+    convenience init(_ model: Model, dismissAction: @escaping () -> Void) {
+        self.init(model: model, iconType: .success, optionButtons: [], actionButton: .init(title: "На главную", style: .red, action: dismissAction))
+    }
+    
     convenience init(_ model: Model, iconType: IconTypeViewModel, paymentSuccess: Payments.Success, dismissAction: @escaping () -> Void) {
         
         let amount = model.amountFormatted(amount: paymentSuccess.amount, currencyCode: nil, style: .normal)

@@ -20,9 +20,24 @@ extension Model {
     
     var productsOpenAccountURL: URL { URL(string: "https://promo.forabank.ru/")! }
     
+    var productsTypes: [ProductType] {
+        
+        products.value.keys.map {$0}
+    }
+    
+    func product() -> ProductData? {
+        
+        products.value.values.flatMap {$0}.sorted { $0.productType.order < $1.productType.order }.first
+    }
+    
     func product(productId: ProductData.ID) -> ProductData? {
         
         products.value.values.flatMap({ $0 }).first(where: { $0.id == productId })
+    }
+    
+    func products(_ productType: ProductType) -> [ProductData]? {
+        
+        products.value[productType]
     }
     
     func product(currency: Currency) -> ProductData.ID? {

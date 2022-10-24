@@ -150,6 +150,29 @@ struct PaymentsTransfersView: View {
                 }
             }
         }
+        .bottomSheet(item: $viewModel.bottomSheet) { sheet in
+            
+            switch sheet.type {
+            case let .exampleDetail(title):
+                ExampleDetailMock(title: title)
+            
+            case let .meToMe(viewModel):
+                PaymentsMeToMeView(viewModel: viewModel)
+                
+            case .anotherCard(let model):
+                AnotherCardView(viewModel: model)
+                    .edgesIgnoringSafeArea(.bottom)
+                    .navigationBarTitle("", displayMode: .inline)
+                    .frame(height: 494)
+            }
+        }
+        .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+
+            switch fullCover.type {
+            case let .successMeToMe(successMeToMeViewModel):
+                PaymentsSuccessMeToMeView(viewModel: successMeToMeViewModel)
+            }
+        }
         .sheet(item: $viewModel.sheet, content: { sheet in
             
             switch sheet.type {
@@ -159,8 +182,12 @@ struct PaymentsTransfersView: View {
                     .edgesIgnoringSafeArea(.all)
                 
             case let .meToMe(viewModel):
-                MeToMeView(viewModel: viewModel)
+                PaymentsMeToMeView(viewModel: viewModel)
                     .edgesIgnoringSafeArea(.bottom)
+                    .fixedSize(horizontal: false, vertical: true)
+                
+            case let .successMeToMe(successMeToMeViewModel):
+                PaymentsSuccessMeToMeView(viewModel: successMeToMeViewModel)
                 
             case .anotherCard(let anotherCardViewModel):
                 AnotherCardView(viewModel: anotherCardViewModel)
@@ -174,24 +201,6 @@ struct PaymentsTransfersView: View {
             }
             
         })
-        .bottomSheet(item: $viewModel.bottomSheet) { sheet in
-            
-            switch sheet.type {
-            case let .exampleDetail(title):
-                ExampleDetailMock(title: title)
-            
-            case let .meToMe(viewModel):
-                MeToMeView(viewModel: viewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .frame(height: 474)
-                
-            case .anotherCard(let model):
-                AnotherCardView(viewModel: model)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .navigationBarTitle("", displayMode: .inline)
-                    .frame(height: 494)
-            }
-        }
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
