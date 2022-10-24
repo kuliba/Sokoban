@@ -71,6 +71,10 @@
 		0B66E8E626CC658A00FD735D /* GKHStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B66E8E526CC658A00FD735D /* GKHStoryboard.storyboard */; };
 		0B67728A277CCD7500DCCECD /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B677289277CCD7500DCCECD /* PhoneNumberKit */; };
 		0B67728E277CCD7500DCCECD /* PhoneNumberKit-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 0B67728D277CCD7500DCCECD /* PhoneNumberKit-Static */; };
+		0B71D7A228FD834D00AA1970 /* QRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B71D7A128FD834D00AA1970 /* QRCode.swift */; };
+		0B71D7A428FD837300AA1970 /* QRParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B71D7A328FD837300AA1970 /* QRParameter.swift */; };
+		0B71D7A628FD839300AA1970 /* QRMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B71D7A528FD839300AA1970 /* QRMapping.swift */; };
+		0B71D7A828FD84F800AA1970 /* QRMapping.json in Resources */ = {isa = PBXBuildFile; fileRef = 0B71D7A728FD84F800AA1970 /* QRMapping.json */; };
 		0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */; };
 		0B797C9226E6ABC100589DBF /* GetBankList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B797C9126E6ABC100589DBF /* GetBankList.swift */; };
 		0B797C9426E6AD0700589DBF /* BanksListSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B797C9326E6AD0700589DBF /* BanksListSaved.swift */; };
@@ -1491,6 +1495,10 @@
 		0B66E8DB26CC5F4D00FD735D /* QRScannerCodeDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerCodeDelegate.swift; sourceTree = "<group>"; };
 		0B66E8DD26CC5F8900FD735D /* QRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRViewController.swift; sourceTree = "<group>"; };
 		0B66E8E526CC658A00FD735D /* GKHStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = GKHStoryboard.storyboard; sourceTree = "<group>"; };
+		0B71D7A128FD834D00AA1970 /* QRCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCode.swift; sourceTree = "<group>"; };
+		0B71D7A328FD837300AA1970 /* QRParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRParameter.swift; sourceTree = "<group>"; };
+		0B71D7A528FD839300AA1970 /* QRMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRMapping.swift; sourceTree = "<group>"; };
+		0B71D7A728FD84F800AA1970 /* QRMapping.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = QRMapping.json; sourceTree = "<group>"; };
 		0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyExchangeDecodebleModel.swift; sourceTree = "<group>"; };
 		0B797C9126E6ABC100589DBF /* GetBankList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetBankList.swift; sourceTree = "<group>"; };
 		0B797C9326E6AD0700589DBF /* BanksListSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksListSaved.swift; sourceTree = "<group>"; };
@@ -3042,6 +3050,16 @@
 				A55A52D82746FC3B00641DD0 /* InternetTV.storyboard */,
 			);
 			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		0B71D7A028FD832900AA1970 /* QR */ = {
+			isa = PBXGroup;
+			children = (
+				0B71D7A128FD834D00AA1970 /* QRCode.swift */,
+				0B71D7A328FD837300AA1970 /* QRParameter.swift */,
+				0B71D7A528FD839300AA1970 /* QRMapping.swift */,
+			);
+			path = QR;
 			sourceTree = "<group>";
 		};
 		0B797C9026E6ABA000589DBF /* GetBanks */ = {
@@ -4666,6 +4684,7 @@
 				770DCE9727BC0475004099C1 /* AuthPinCodeViewModel+Preview.swift */,
 				778E26A32875AF4D00D0ED60 /* RootViewModel+Preview.swift */,
 				77448C0C2872F7E0009EEEA8 /* sample_pdf.pdf */,
+				0B71D7A728FD84F800AA1970 /* QRMapping.json */,
 				0BE6960A27F5C10A007F30D1 /* PlacesSampleData.json */,
 				7769F5BD27D7C9ED00F80607 /* ProductsListSample.json */,
 				68DF16CD2804F97E005D8D3E /* StatementSample.json */,
@@ -4977,6 +4996,7 @@
 				774CA5DF287962C400544C17 /* Notification */,
 				77A76A7427FAF89000A271B3 /* Atm */,
 				7720277C2891B7920098C4F8 /* Client */,
+				0B71D7A028FD832900AA1970 /* QR */,
 				682092BA27AC170B003DCAFD /* DaDataPhoneData.swift */,
 				68FE398C286C17920026CBD7 /* AppInfo.swift */,
 			);
@@ -7495,6 +7515,7 @@
 				A55E653A27F6D9AD005CED37 /* C2BDetailsInput.xib in Resources */,
 				ED2BE18126A04A4300647CB1 /* CastomCardXIB.xib in Resources */,
 				ED684CF32763955E00AA7A33 /* DocDepositTableViewCell.xib in Resources */,
+				0B71D7A828FD84F800AA1970 /* QRMapping.json in Resources */,
 				0BA09E2E26ADEBF50065D623 /* GHKCell.xib in Resources */,
 				68FFA55C268586D3002DADFA /* HeaderBanksCollectionReusableView.xib in Resources */,
 				EDCF8A1626CED86100DC9F54 /* BankTableViewCell.xib in Resources */,
@@ -7970,6 +7991,7 @@
 				0BF0BF4C2767E337006AE967 /* NetMonitor.swift in Sources */,
 				ED0FE46B281AE391000CF73F /* DetailCapitView.swift in Sources */,
 				68EACA5128906D6100B27B50 /* Consent+Legacy.swift in Sources */,
+				0B71D7A628FD839300AA1970 /* QRMapping.swift in Sources */,
 				77517FCB27A97095005CFB77 /* ServerCommands+Product.swift in Sources */,
 				6841930C279AC36100B4E184 /* StatementFormat.swift in Sources */,
 				ED2D89F1286C72950000B391 /* CameraAgentProtocol.swift in Sources */,
@@ -8606,6 +8628,7 @@
 				0B931B1C26DCD69900CA8017 /* GKHHistoryModel.swift in Sources */,
 				777167D427CE759200655D60 /* KeychainAgentMock.swift in Sources */,
 				68F5E11A28509FD2003018E5 /* BankData+Legacy.swift in Sources */,
+				0B71D7A228FD834D00AA1970 /* QRCode.swift in Sources */,
 				EDB165782668C76A007E6030 /* SelfConfiguringCell.swift in Sources */,
 				EDB165622667A571007E6030 /* ForaInputModel.swift in Sources */,
 				77EC58EE27723A5A0054D75C /* Model+Templates.swift in Sources */,
@@ -8719,6 +8742,7 @@
 				77A76A7C27FAFDCB00A271B3 /* AtmMetroStationData.swift in Sources */,
 				0B931B2226DCDA1800CA8017 /* GetLatestServicePaymentsDecodableModel.swift in Sources */,
 				68FFA561268DD2CF002DADFA /* CountriesCodeButton.swift in Sources */,
+				0B71D7A428FD837300AA1970 /* QRParameter.swift in Sources */,
 				EDFFCACD2681F975004EE095 /* CardListView.swift in Sources */,
 				0B01073827CD4D4B006462E6 /* ButtonSimpleViewComponent.swift in Sources */,
 				0BF3485D26931254005138A8 /* SuggestBankDecodableModel.swift in Sources */,
