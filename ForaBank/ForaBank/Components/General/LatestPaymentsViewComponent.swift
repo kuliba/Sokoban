@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-extension LatestPaymentsViewComponent {
+extension LatestPaymentsView {
     
     class ViewModel: ObservableObject {
         
@@ -18,26 +18,21 @@ extension LatestPaymentsViewComponent {
         
         private let model: Model
         
-        init(_ model: Model, items: [LatestPaymentsViewComponent.ViewModel.ItemViewModel]) {
+        init(_ model: Model, items: [LatestPaymentsView.ViewModel.ItemViewModel]) {
             
             self.model = model
             self.items = items
         }
         
-        init(_ model: Model, latest: [LatestPaymentData], isUpdating: Bool = false) {
+        convenience init(_ model: Model, latest: [LatestPaymentData], isUpdating: Bool = false) {
             
-            self.model = model
-            self.items = []
-            self.items = self.itemsReduce(latest: latest, isUpdating: isUpdating)
+            let items = Self.itemsReduce(latest: latest, isUpdating: isUpdating)
+            self.init(model, items: items)
         }
         
-        struct PlaceholderViewModel: Identifiable, Hashable {
+        struct PlaceholderViewModel: Identifiable {
             
             let id = UUID()
-            
-            func hash(into hasher: inout Hasher) {
-                hasher.combine(id)
-            }
         }
         
         struct LatestPaymentButtonVM: Identifiable {
@@ -73,7 +68,7 @@ extension LatestPaymentsViewComponent {
             }
         }
         
-        func itemsReduce(latest: [LatestPaymentData],
+        static func itemsReduce(latest: [LatestPaymentData],
                          isUpdating: Bool = false) -> [ItemViewModel] {
             
             var updatedItems = [ItemViewModel]()
@@ -137,9 +132,9 @@ extension LatestPaymentsViewComponent {
     }
 }
 
-struct LatestPaymentsViewComponent: View {
+struct LatestPaymentsView: View {
     
-    @ObservedObject var viewModel: LatestPaymentsViewComponent.ViewModel
+    @ObservedObject var viewModel: LatestPaymentsView.ViewModel
     
     var body: some View {
         
@@ -170,7 +165,7 @@ struct LatestPaymentsViewComponent: View {
 
 //MARK: - PlaceholderView
 
-extension LatestPaymentsViewComponent {
+extension LatestPaymentsView {
     
     struct PlaceholderView: View {
         
@@ -202,7 +197,7 @@ extension LatestPaymentsViewComponent {
 
 //MARK: - LatestPaymentButtonView
 
-extension LatestPaymentsViewComponent {
+extension LatestPaymentsView {
     
     struct LatestPaymentButtonView: View {
         
@@ -266,7 +261,7 @@ extension LatestPaymentsViewComponent {
 
 //MARK: LatestPaymentButtonVM init
 
-extension LatestPaymentsViewComponent.ViewModel.LatestPaymentButtonVM {
+extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
     
     init(data: LatestPaymentData, model: Model, action: @escaping () -> Void) {
         
@@ -418,6 +413,6 @@ extension LatestPaymentsViewComponent.ViewModel.LatestPaymentButtonVM {
 
 struct LatestPaymentsViewComponent_Previews: PreviewProvider {
     static var previews: some View {
-        LatestPaymentsViewComponent(viewModel: .init(.emptyMock, items: []))
+        LatestPaymentsView(viewModel: .init(.emptyMock, items: []))
     }
 }

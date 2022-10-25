@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-extension SearchBarComponent {
+extension SearchBarView {
     
     class ViewModel: ObservableObject {
         
@@ -16,13 +16,14 @@ extension SearchBarComponent {
         
         let icon: Image?
         @Published var text: String
+        var isValidation: Bool { phoneNumberFormater.isValidate(text) }
+        @Published var state: State
+        
+        
         let placeHolder: PlaceHolder
         @Published var clearButton: Button?
         @Published var cancelButton: Button
         var textColor: Color
-        @Published var isValidation: Bool
-        @Published var state: State
-        
         private let phoneNumberFormater = PhoneNumberFormater()
         private var bindings = Set<AnyCancellable>()
         
@@ -62,8 +63,9 @@ extension SearchBarComponent {
         
         enum State {
             
-            case `default`
-            case editing
+            case idle
+            case selected(cancel)
+            case editing(clear, cancel)
             case hide
         }
         
@@ -109,109 +111,16 @@ extension SearchBarComponent {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] text in
                     
-                    guard phoneNumberFormater.isValidate(text) else {
-                        isValidation = false
-                        return
-                    }
-                    
-                    withAnimation {
-                        
-                        isValidation = true
-                    }
+                    action.send(SearchBarViewModelAction.Number.isValidation(text, isValidation: isValidation))
                     
                 }.store(in: &bindings)
         }
     }
 }
 
-struct PhoneNumberTextFieldView: UIViewRepresentable {
+struct SearchBarView: View {
     
-    var textField = UITextField()
-    let phoneNumberKit = PhoneNumberFormater()
-    
-    @ObservedObject var viewModel: SearchBarComponent.ViewModel
-    
-    func makeUIView(context: Context) -> UITextField {
-        
-        textField.addTarget(context.coordinator, action: #selector(Coordinator.onTextChange), for: .editingChanged)
-        textField.placeholder = viewModel.placeHolder.rawValue
-        textField.keyboardType = .default
-        textField.returnKeyType = .done
-        textField.autocorrectionType = .no
-        textField.shouldHideToolbarPlaceholder = false
-        textField.spellCheckingType = .no
-        
-        return textField
-    }
-    
-    func updateUIView(_ uiView: UITextField, context: Context) {
-        
-        uiView.text = self.viewModel.text
-        
-        if self.viewModel.state == .hide {
-            
-            self.textField.endEditing(false)
-            uiView.resignFirstResponder()
-            
-        }
-    }
-    
-    func makeCoordinator() -> Coordinator {
-        return Coordinator(self)
-    }
-    
-    typealias UIViewType = UITextField
-    
-    class Coordinator:  NSObject, UITextFieldDelegate {
-        var delegate: PhoneNumberTextFieldView
-        
-        init(_ delegate: PhoneNumberTextFieldView) {
-            self.delegate = delegate
-        }
-        
-        @objc func onTextChange(textField: UITextField) {
-            
-            if let text = textField.text {
-                
-                self.delegate.viewModel.state = .editing
-                
-                if text.first != "8", text.first?.isNumber == true || text.first == "+" && text != "+" {
-                 
-                    
-                    let phoneNumberKit = self.delegate.phoneNumberKit
-                    let phone = phoneNumberKit.partialFormatter("+\(text)")
-                    self.delegate.viewModel.text = phone
-
-                } else if text.first == "8" {
-                    
-                    let phoneNumberKit = self.delegate.phoneNumberKit
-                    let phone = phoneNumberKit.partialFormatter(text)
-                    self.delegate.viewModel.text = phone
-                    
-                } else {
-                    
-                    self.delegate.viewModel.text = text
-                }
-                
-                self.delegate.textField.text = self.delegate.phoneNumberKit.partialFormatter(text)
-            }
-        }
-        
-        func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-            print("textFieldShouldEndEditing")
-            return true
-        }
-        
-        func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-            print("it's should change Characters \(String(describing: textField.text))")
-            return true
-        }
-    }
-}
-
-struct SearchBarComponent: View {
-    
-    @ObservedObject var viewModel: SearchBarComponent.ViewModel
+    @ObservedObject var viewModel: SearchBarView.ViewModel
     
     var body: some View {
         
@@ -256,7 +165,7 @@ struct SearchBarComponent: View {
     
     struct ButtonView: View {
         
-        let viewModel: SearchBarComponent.ViewModel.Button
+        let viewModel: SearchBarView.ViewModel.Button
         
         var body: some View {
             
@@ -285,7 +194,7 @@ struct SearchBarComponent: View {
     }
 }
 
-extension SearchBarComponent {
+extension SearchBarView {
     
     struct ViewModelAction {
         
