@@ -558,6 +558,12 @@ class Model {
                 case let payload as ModelAction.Payment.OperationDetailByPaymentId.Request:
                     handleOperationDetailByPaymentIdRequest(payload)
                     
+                case let payload as ModelAction.Payment.MeToMe.Start.Request:
+                    handlerPaymentMeToMeStartRequest(payload)
+                    
+                case let payload as ModelAction.Payment.MeToMe.Approve.Request:
+                    handlerPaymentMeToMeApproveRequest(payload)
+                    
                     //MARK: - Transfers
                     
                 case let payload as ModelAction.Transfers.CreateInterestDepositTransfer.Request:

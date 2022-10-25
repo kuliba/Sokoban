@@ -17,16 +17,14 @@ class PaymentsMeToMeViewModel: ObservableObject {
     @Published var state: State
     @Published var alert: Alert.ViewModel?
     
-    private let model: Model
-    
     let swapViewModel: ProductsSwapView.ViewModel
     let paymentsAmount: PaymentsAmountView.ViewModel
         
     let title: String
     let closeAction: () -> Void
     
+    private let model: Model
     private var bindings = Set<AnyCancellable>()
-    private var bindingsSwap = Set<AnyCancellable>()
     
     enum State {
         
@@ -34,7 +32,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
         case loading
     }
 
-    init(_ model: Model, swapViewModel: ProductsSwapView.ViewModel, paymentsAmount: PaymentsAmountView.ViewModel, title: String = "Между своими", state: State = .normal, closeAction: @escaping () -> Void) {
+    init(_ model: Model, swapViewModel: ProductsSwapView.ViewModel, paymentsAmount: PaymentsAmountView.ViewModel, title: String, state: State = .normal, closeAction: @escaping () -> Void) {
         
         self.model = model
         self.swapViewModel = swapViewModel
@@ -54,13 +52,9 @@ class PaymentsMeToMeViewModel: ObservableObject {
         let swapViewModel: ProductsSwapView.ViewModel = .init(model, productData: productData, mode: mode)
         let amountViewModel: PaymentsAmountView.ViewModel = .init(productData: productData)
         
-        self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, closeAction: closeAction)
+        self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, title: "Между своими", state: .normal, closeAction: closeAction)
         
         bind()
-    }
-    
-    deinit {
-        close()
     }
     
     private func bind() {
@@ -70,7 +64,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
             .sink { [unowned self] action in
 
                 switch action {
-                case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Start.Response:
+                case let payload as ModelAction.Payment.MeToMe.Start.Response:
                     
                     switch payload.result {
                     case let .success(response):
@@ -78,8 +72,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         // For currency transfers
                         if response.needMake == true {
 
-                            bind(response)
-                            model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve.Request())
+                            model.action.send(ModelAction.Payment.MeToMe.Approve.Request(transferResponse: response))
                             
                         } else {
                             
@@ -89,13 +82,34 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(model, state: .success(documentStatus, response.paymentOperationDetailId), responseData: response)
                                 
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
+                                
+                            } else {
+                                
+                                self.action.send(PaymentsMeToMeAction.Response.Failed())
                             }
-                            
-                            close()
                         }
                         
                     case let .failure(error):
                         makeAlert(error)
+                    }
+                    
+                case let payload as ModelAction.Payment.MeToMe.Approve.Response:
+                    
+                    switch payload.result {
+                    case let .success(success):
+                        
+                        if let documentStatus = success.documentStatus {
+                            
+                            let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(model, state: .success(documentStatus, success.paymentOperationDetailId), responseData: payload.transferResponse)
+                            
+                            self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
+                        }
+                        
+                    case let .failure(error):
+                        
+                        let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(model, state: .failed(error), responseData: payload.transferResponse)
+                        
+                        self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
                     }
                     
                 default:
@@ -123,7 +137,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             
                             state = .loading
                             
-                            model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start.Request(
+                            model.action.send(ModelAction.Payment.MeToMe.Start.Request(
                                 amount: paymentsAmount.textField.value,
                                 currency: product.currency,
                                 productFrom: productsId.from,
@@ -140,54 +154,28 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 
             }.store(in: &bindings)
         
-        swapViewModel.$items
+        swapViewModel.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] items in
+            .sink { [unowned self] action in
                 
-                if let from = items.first, let to = items.last {
+                switch action {
+                case _ as ProductsSwapAction.ItemsDidSwapped:
                     
-                    switch from.content {
-                    case let .product(viewModel):
-                        
-                        updateAmountSwitch(from: viewModel.id)
-                        updateTextField(viewModel.id, textField: paymentsAmount.textField)
-                        
-                    case .placeholder:
-                        break
+                    guard let fromPoductId = swapViewModel.from?.productViewModel?.id else {
+                        return
                     }
+                    updateAmountSwitch(from: fromPoductId)
+                    updateTextField(fromPoductId, textField: paymentsAmount.textField)
                     
-                    // After swap elements in items
-                    bindingsSwap = Set<AnyCancellable>()
+                case let payload as ProductsSwapAction.ItemSelected.From:
+                    updateAmountSwitch(from: payload.productId)
+                    updateTextField(payload.productId, textField: paymentsAmount.textField)
                     
-                    from.action
-                        .receive(on: DispatchQueue.main)
-                        .sink { [unowned self] action in
-                            
-                            switch action {
-                            case let payload as ProductSelectorAction.Selected:
-                                
-                                updateAmountSwitch(from: payload.id)
-                                updateTextField(payload.id, textField: paymentsAmount.textField)
-                                
-                            default:
-                                break
-                            }
-                            
-                        }.store(in: &bindingsSwap)
+                case let payload as ProductsSwapAction.ItemSelected.To:
+                    updateAmountSwitch(to: payload.productId)
                     
-                    to.action
-                        .receive(on: DispatchQueue.main)
-                        .sink { [unowned self] action in
-                            
-                            switch action {
-                            case let payload as ProductSelectorAction.Selected:
-                                updateAmountSwitch(to: payload.id)
-                                
-                            default:
-                                break
-                            }
-                            
-                        }.store(in: &bindingsSwap)
+                default:
+                    break
                 }
                 
             }.store(in: &bindings)
@@ -210,74 +198,27 @@ class PaymentsMeToMeViewModel: ObservableObject {
             }.store(in: &bindings)
     }
     
-    private func bind(_ response: TransferResponseData) {
-        
-        model.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Approve.Response:
-                    
-                    switch payload {
-                    case let .successed(success):
-                        
-                        if let documentStatus = success.documentStatus {
-                            
-                            let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(model, state: .success(documentStatus, success.paymentOperationDetailId), responseData: response)
-                            
-                            self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
-                        }
-                        
-                    case let .failed(error):
-                        
-                        let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(model, state: .failed(error), responseData: response)
-                        
-                        self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
-                    }
-                    
-                    self.close()
-                    
-                default:
-                    break
-                }
-                
-            }.store(in: &self.bindings)
-    }
-    
     private func updateAmountSwitch(from id: ProductData.ID) {
         
-        if let to = swapViewModel.to {
-            
-            switch to.content {
-            case let .product(viewModel):
-                updateAmountSwitch(from: id, to: viewModel.id)
-                
-            case .placeholder:
-                break
-            }
+        guard let toProductId = swapViewModel.toProductId else {
+            return
         }
+        
+        updateAmountSwitch(from: id, to: toProductId)
     }
     
     private func updateAmountSwitch(to id: ProductData.ID) {
         
-        if let from = swapViewModel.from {
-            
-            switch from.content {
-            case let .product(viewModel):
-                updateAmountSwitch(from: viewModel.id, to: id)
-                
-            case .placeholder:
-                break
-            }
+        guard let fromProductId = swapViewModel.fromProductId else {
+            return
         }
+        
+        updateAmountSwitch(from: fromProductId, to: id)
     }
     
     private func updateAmountSwitch(from: ProductData.ID, to: ProductData.ID) {
         
-        let products = Self.products(model, from: from, to: to)
-        
-        guard let products = products else {
+        guard let products = Self.products(model, from: from, to: to) else {
             return
         }
 
@@ -381,14 +322,6 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 self?.alert = nil
             })
     }
-    
-    private func close() {
-        
-        state = .normal
-        closeAction()
-        
-        bindings.removeAll()
-    }
 }
 
 extension PaymentsMeToMeViewModel {
@@ -486,6 +419,8 @@ enum PaymentsMeToMeAction {
             
             let viewModel: PaymentsSuccessMeToMeViewModel
         }
+        
+        struct Failed: Action {}
     }
 }
 

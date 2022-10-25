@@ -941,6 +941,7 @@
 		77D2D9AF275AB90A0097234D /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9AD275AB90A0097234D /* Array+Extensions.swift */; };
 		77D2D9B2275AB9280097234D /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9B0275AB9280097234D /* Item.swift */; };
 		77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9B1275AB9280097234D /* RealmObjectsDiffTests.swift */; };
+		77D73EE22908290C00A956A3 /* Model+MeToMe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D73EE12908290C00A956A3 /* Model+MeToMe.swift */; };
 		77DA2060284539BC00D7E005 /* ProductData+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DA205F284539BC00D7E005 /* ProductData+Legacy.swift */; };
 		77DA206428453ADB00D7E005 /* MeToMeView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DA206328453ADB00D7E005 /* MeToMeView+Legacy.swift */; };
 		77DC125F27709DAF00C917B0 /* PaymentTemplateData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DC125E27709DAF00C917B0 /* PaymentTemplateData.swift */; };
@@ -2355,6 +2356,7 @@
 		77D2D9AD275AB90A0097234D /* Array+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		77D2D9B0275AB9280097234D /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		77D2D9B1275AB9280097234D /* RealmObjectsDiffTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmObjectsDiffTests.swift; sourceTree = "<group>"; };
+		77D73EE12908290C00A956A3 /* Model+MeToMe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+MeToMe.swift"; sourceTree = "<group>"; };
 		77DA205F284539BC00D7E005 /* ProductData+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductData+Legacy.swift"; sourceTree = "<group>"; };
 		77DA206328453ADB00D7E005 /* MeToMeView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MeToMeView+Legacy.swift"; sourceTree = "<group>"; };
 		77DC125E27709DAF00C917B0 /* PaymentTemplateData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTemplateData.swift; sourceTree = "<group>"; };
@@ -5060,6 +5062,7 @@
 				77333DA0283E9CEA00C3036F /* Model+Rates.swift */,
 				77583FF827AED4E700251969 /* Model+Dictionary.swift */,
 				7758400C27B1442F00251969 /* Model+Payments.swift */,
+				77D73EE12908290C00A956A3 /* Model+MeToMe.swift */,
 				77EC58ED27723A5A0054D75C /* Model+Templates.swift */,
 				77A411E827EC456800D36E46 /* Model+Settings.swift */,
 				77333DA2283F75EF00C3036F /* Model+ClientInfo.swift */,
@@ -8671,6 +8674,7 @@
 				ED75CE0726E2BA600074F5D5 /* TarifView.swift in Sources */,
 				0BB24AB726F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift in Sources */,
 				0BB24AA626F0024B00DDA4F6 /* GetLatestPayments.swift in Sources */,
+				77D73EE22908290C00A956A3 /* Model+MeToMe.swift in Sources */,
 				EDB1453E2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift in Sources */,
 				50833F662874260F006E8530 /* CurrencyWalletViewModel.swift in Sources */,
 				0B931B1E26DCD83B00CA8017 /* GKHAdditionalListModel.swift in Sources */,

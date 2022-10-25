@@ -37,8 +37,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     var rootActions: RootViewModel.RootActions?
     
     private var bindings = Set<AnyCancellable>()
-    private var paymentsBindings = Set<AnyCancellable>()
-    private var fullCoverBindings = Set<AnyCancellable>()
     
     init(model: Model) {
         self.navButtonsRight = []
@@ -117,17 +115,13 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     }
                    
                 case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
-                    
                     bottomSheet = nil
-                    paymentsBindings = Set<AnyCancellable>()
                     
                 case _ as PaymentsTransfersViewModelAction.Close.Sheet:
                     sheet = nil
                     
                 case _ as PaymentsTransfersViewModelAction.Close.FullCover:
-                    
                     fullCover = nil
-                    fullCoverBindings = Set<AnyCancellable>()
                 
                 case _ as PaymentsTransfersViewModelAction.Close.Link:
                     link = nil
@@ -348,15 +342,24 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             .sink { [unowned self] action in
                 
                 switch action {
-                    
                 case let payload as PaymentsMeToMeAction.Response.Success:
-                    bind(payload.viewModel)
                     
+                    self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                        
+                        self.fullCover = .init(type: .successMeToMe(payload.viewModel))
+                        self.bind(payload.viewModel)
+                    }
+                    
+                case _ as PaymentsMeToMeAction.Response.Failed:
+                    self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+    
                 default:
                     break
                 }
                 
-            }.store(in: &paymentsBindings)
+            }.store(in: &bindings)
     }
     
     private func bind(_ viewModel: PaymentsSuccessMeToMeViewModel) {
@@ -366,30 +369,16 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             .sink { [unowned self] action in
                 
                 switch action {
-                    
                 case _ as PaymentsSuccessMeToMeAction.Button.Close:
                     
                     self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
+                    self.rootActions?.switchTab(.main)
 
-                    if let rootActions = self.rootActions {
-                        rootActions.switchTab(.main)
-                    }
- 
                 default:
                     break
                 }
                 
-            }.store(in: &fullCoverBindings)
-        
-        $bottomSheet
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] bottomSheet in
-                
-                if bottomSheet == nil {
-                    fullCover = .init(type: .successMeToMe(viewModel))
-                }
-                
-            }.store(in: &fullCoverBindings)
+            }.store(in: &bindings)
     }
     
     private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {

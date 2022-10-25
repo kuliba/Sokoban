@@ -34,6 +34,9 @@ extension ProductsSwapView {
         var from: ProductSelectorView.ViewModel? { items.first }
         var to: ProductSelectorView.ViewModel? { items.last }
         
+        var fromProductId: ProductData.ID? { from?.productViewModel?.id }
+        var toProductId: ProductData.ID? { to?.productViewModel?.id }
+        
         init(model: Model, items: [ProductSelectorView.ViewModel]) {
             
             self.model = model
@@ -55,6 +58,7 @@ extension ProductsSwapView {
             }
             
             bind()
+            bind(items: items)
         }
         
         private func bind() {
@@ -72,6 +76,7 @@ extension ProductsSwapView {
                             items = items.reversed()
                             divider.isToogleButton.toggle()
                         }
+                        self.action.send(ProductsSwapAction.ItemsDidSwapped())
                         
                     case _ as ProductsSwapAction.Button.Reset:
                         break
@@ -103,6 +108,34 @@ extension ProductsSwapView {
                     to.context.send(contextTo)
                     
                 }.store(in: &bindings)
+        }
+        
+        func bind(items: [ProductSelectorView.ViewModel]) {
+            
+            for item in items {
+                
+                item.action
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] action in
+                        
+                        switch action {
+                        case let payload as ProductSelectorAction.Selected:
+                            
+                            if item.id == from?.id {
+                                
+                                self.action.send(ProductsSwapAction.ItemSelected.From(productId: payload.id))
+                                
+                            } else {
+                                
+                                self.action.send(ProductsSwapAction.ItemSelected.To(productId: payload.id))
+                            }
+  
+                        default:
+                            break
+                        }
+
+                    }.store(in: &bindings)
+            }
         }
     }
 }
@@ -304,6 +337,21 @@ enum ProductsSwapAction {
         struct Tap: Action {}
         struct Reset: Action {}
         struct Close: Action {}
+    }
+    
+    struct ItemsDidSwapped: Action {}
+    
+    enum ItemSelected {
+        
+        struct From: Action {
+            
+            let productId: ProductData.ID
+        }
+        
+        struct To: Action {
+            
+            let productId: ProductData.ID
+        }
     }
 }
 

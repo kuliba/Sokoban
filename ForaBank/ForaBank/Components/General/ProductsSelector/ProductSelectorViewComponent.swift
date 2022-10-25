@@ -31,6 +31,15 @@ extension ProductSelectorView {
             case placeholder(PlaceholderViewModel)
         }
         
+        var productViewModel: ProductViewModel? {
+            
+            guard case .product(let productViewModel) = content else {
+                return nil
+            }
+            
+            return productViewModel
+        }
+        
         init(_ model: Model, content: Content, listViewModel: ProductsListView.ViewModel?, context: Context) {
             
             self.model = model
@@ -258,7 +267,7 @@ extension ProductSelectorView.ViewModel {
         
         let action: PassthroughSubject<Action, Never> = .init()
         
-        @Published var id: Int
+        @Published var id: ProductData.ID
         @Published var title: String
         @Published var cardIcon: Image?
         @Published var paymentIcon: Image?
