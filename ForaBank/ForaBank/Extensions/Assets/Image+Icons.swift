@@ -368,11 +368,11 @@ public extension Image {
     static var ic24Ball: Image { Image(#function) }
     static var ic2412Circle: Image { Image(#function) }
     static var ic24Apple: Image { Image(#function) }
-    static var ic24SBP: Image { Image(#function) }
-    static var ic24STS: Image { Image(#function) }
+    static var ic24Sbp: Image { Image(#function) }
+    static var ic24Sts: Image { Image(#function) }
     static var ic24Tariff: Image { Image(#function) }
     static var ic24WheelOfFortune: Image { Image(#function) }
-    static var ic24ZKX: Image { Image(#function) }
+    static var ic24Zkx: Image { Image(#function) }
     static var ic24Abroad: Image { Image(#function) }
     static var ic24ActivatedCreditCard: Image { Image(#function) }
     static var ic24Activity: Image { Image(#function) }
