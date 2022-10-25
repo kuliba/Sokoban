@@ -56,23 +56,16 @@ struct BottomSheetModifier<SheetContent: View>: ViewModifier {
     @ViewBuilder
     func body(content: Content) -> some View {
         
-        if #available(iOS 14.0, *) {
-            
-            content
-                .transaction({ transaction in
-                    transaction.disablesAnimations = false
-                })
-                .fullScreenCover(isPresented: isPresented) {
-                    BottomSheetView(isPresented: isPresented, animationSpeed: animationSpeed, content: sheetContent())
-                }
-                .transaction({ transaction in
-                    transaction.disablesAnimations = true
-                })
-            
-        } else {
-            
-            content.sheet(isPresented: isPresented, content: sheetContent)
-        }
+        content
+            .transaction({ transaction in
+                transaction.disablesAnimations = false
+            })
+            .fullScreenCover(isPresented: isPresented) {
+                BottomSheetView(isPresented: isPresented, animationSpeed: animationSpeed, content: sheetContent())
+            }
+            .transaction({ transaction in
+                transaction.disablesAnimations = true
+            })
     }
 }
 
@@ -168,28 +161,28 @@ struct BottomSheetView<Content: View>: View {
             if isShutterPresented {
                 
                 BottomSheetShutterView(isShutterPresented: $isShutterPresented, content: content)
-                .zIndex(1)
-                .background(
-                    GeometryReader { proxy in
-                        Color.clear.preference(key: BottomSheetPreferenceKey.self, value: proxy.size)
-                    }
-                )
-                .onPreferenceChange(BottomSheetPreferenceKey.self, perform: { self.contentSize = $0 })
-                .transition(.move(edge: .bottom))
-                .animation(.interactiveSpring().speed(animationSpeed))
-                .offset(y: max(translation, 0))
-                .gesture(
-                    DragGesture().updating(self.$translation) { value, state, _ in
-                        state = value.translation.height
-                        
-                    }.onEnded { value in
-                        
-                        if value.translation.height > contentSize.height / 3 {
-                            
-                            isShutterPresented = false
+                    .zIndex(1)
+                    .background(
+                        GeometryReader { proxy in
+                            Color.clear.preference(key: BottomSheetPreferenceKey.self, value: proxy.size)
                         }
-                    }
-                )
+                    )
+                    .onPreferenceChange(BottomSheetPreferenceKey.self, perform: { self.contentSize = $0 })
+                    .transition(.move(edge: .bottom))
+                    .animation(.interactiveSpring().speed(animationSpeed))
+                    .offset(y: max(translation, 0))
+                    .gesture(
+                        DragGesture().updating(self.$translation) { value, state, _ in
+                            state = value.translation.height
+                            
+                        }.onEnded { value in
+                            
+                            if value.translation.height > contentSize.height / 3 {
+                                
+                                isShutterPresented = false
+                            }
+                        }
+                    )
                 
             } else {
                 
@@ -241,7 +234,7 @@ extension BottomSheetView {
             
             Color.black
                 .opacity(0.3 * progress)
-                .edgesIgnoringSafeArea(.all)
+                .ignoresSafeArea(.all, edges: .all)
                 .onTapGesture {
                     isShutterPresented = false
                 }
@@ -255,7 +248,7 @@ extension BottomSheetView {
             let controller = UIViewController(nibName: nil, bundle: nil)
             
             context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
-               
+                
                 vc.parent?.view.backgroundColor = .clear
             })
             
@@ -339,18 +332,15 @@ struct BottomSheetPreferenceKey: PreferenceKey {
 
 struct BottomSheetView_Previews: PreviewProvider {
     static var previews: some View {
-
+        
         Group {
-
-            if #available(iOS 14.0, *) {
-
-                BottomSheetView(isPresented: .constant(true), animationSpeed: 0.5, content: Rectangle().fill(Color.red)
-                    .frame(height: 500))
-            }
-
+            
+            BottomSheetView(isPresented: .constant(true), animationSpeed: 0.5, content: Rectangle().fill(Color.red)
+                .frame(height: 500))
+            
             ZStack(alignment: .bottom) {
                 Color.gray
-                    .edgesIgnoringSafeArea(.all)
+                    .ignoresSafeArea(.all, edges: .all)
                 BottomSheetShutterView(isShutterPresented: .constant(true), content: Text("Hello, World").frame(height: 300))
             }
         }
