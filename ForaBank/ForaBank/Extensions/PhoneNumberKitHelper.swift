@@ -9,7 +9,10 @@ import Foundation
 import PhoneNumberKit
 
 protocol PhoneNumberFormaterProtocol {
+    
     func format(_ phoneNumber: String) -> String
+    func partialFormatter(_ phoneNumber: String) -> String
+    func isValidate(_ phoneNumber: String) -> Bool
 }
 
 struct PhoneNumberFormater: PhoneNumberFormaterProtocol {

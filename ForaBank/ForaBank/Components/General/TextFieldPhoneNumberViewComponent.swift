@@ -20,7 +20,9 @@ extension TextFieldPhoneNumberView {
         
         let placeHolder: PlaceHolder
         var bindings = Set<AnyCancellable>()
-
+        
+        let phoneNumberFormatter = PhoneNumberFormater()
+        
         internal init(text: String? = nil, placeHolder: PlaceHolder, isEditing: Bool = false, toolbar: ToolbarViewModel? = nil) {
             
             self.text = text
@@ -40,9 +42,9 @@ extension TextFieldPhoneNumberView {
 
 struct TextFieldPhoneNumberView: UIViewRepresentable {
     
-    var textField = UITextField()
-    
     @ObservedObject var viewModel: TextFieldPhoneNumberView.ViewModel
+    
+    private let textField = UITextField()
     
     func makeUIView(context: Context) -> UITextField {
         
@@ -65,28 +67,26 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
     
     func updateUIView(_ uiView: UITextField, context: Context) {
         
-        uiView.text = viewModel.text
-        
-        if viewModel.isEditing {
+        if let text = viewModel.text {
             
-            uiView.resignFirstResponder()
+            let textRange = NSRange(location: 0, length: text.count)
+            let phoneNumberFirstDigitReplaceList: [PhoneNumberFirstDigitReplace] = [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")]
+            uiView.text = TextFieldPhoneNumberView.updateMasked(value: text, inRange: textRange, update: text, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter)
         }
     }
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(self, viewModel: viewModel, text: $viewModel.text)
+        return Coordinator(viewModel: viewModel, text: $viewModel.text)
     }
     
     class Coordinator: NSObject, UITextFieldDelegate {
-
+        
         var text: Binding<String?>
-        var delegate: TextFieldPhoneNumberView        
         @ObservedObject var viewModel: ViewModel
-
-        init(_ delegate: TextFieldPhoneNumberView, viewModel: ViewModel, text: Binding<String?>) {
+        
+        init(viewModel: ViewModel, text: Binding<String?>) {
             
             self.viewModel = viewModel
-            self.delegate = delegate
             self.text = text
         }
         
@@ -98,101 +98,13 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
             viewModel.isEditing = false
         }
         
-        struct PhoneNumberFirstDigitReplace {
-            
-            let from: Character
-            let to: String
-        }
-        
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
             
-            // 1. added to textFiel property phoneNumberFirstDigitReplaceList
-            // 2. updateMasked change scoup
-            // 3. updatedMasked added in arg Formmater phone protocol
-            
-            let phoneNumberFirstDigitReplaceList: [PhoneNumberFirstDigitReplace] = [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9"), .init(from: "+", to: "+")]
-//            textField.text = TextFieldPhoneNumberView.Coordinator.updateMasked(value: textField.text, inRange: range, update: string, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: <#PhoneNumberFormaterProtocol#>)
+            let phoneNumberFirstDigitReplaceList: [PhoneNumberFirstDigitReplace] = [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")]
+            textField.text = TextFieldPhoneNumberView.updateMasked(value: textField.text, inRange: range, update: string, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter)
             text.wrappedValue = textField.text
             
             return false
-        }
-        
-        static func updateMasked(value: String?, inRange: NSRange, update: String, firstDigitReplace: [PhoneNumberFirstDigitReplace], phoneFormatter: PhoneNumberFormaterProtocol) -> String? {
-            
-            var filteredUpdate = update
-
-            if let value = value {
-                
-                // +7 925
-                var updatedValue = value
-                let rangeStart = value.index(value.startIndex, offsetBy: inRange.lowerBound)
-                let rangeEnd = value.index(value.startIndex, offsetBy: inRange.upperBound)
-                updatedValue.replaceSubrange(rangeStart..<rangeEnd, with: filteredUpdate)
-                // +7 9255
-                // 79255
-                // try formmated number
-                // +7 925 5
-                // throw +7 9255 // return updatedValue
-                guard updatedValue.first?.isHexDigit == true || updatedValue.hasPrefix("+") == true else {
-                    return updatedValue
-                }
-                
-                var filterredValue = updatedValue.digits
-                
-                for replace in firstDigitReplace {
-                    
-                    if filterredValue.digits.first == replace.from {
-                        
-                        filterredValue.replaceSubrange(...filterredValue.startIndex, with: replace.to)
-                    }
-                }
-                
-                let partialFormatted = PhoneNumberFormater().partialFormatter("+\(filterredValue)")
-                
-                return partialFormatted
-                
-            } else {
-                // guard update isEmpty == false { return nil }
-                if update.count > 1 {
-                    
-                    // if true remove not digits
-                    // try formatted phone
-                    // else throw -> update
-                } else {
-                    // if update.count == 1
-                    if let replaced = // try replace phoneNumberFirstDigitReplaceList  {
-                        return replaced
-                } else {
-                    if //try phone formatter {
-                    // return
-                    //}
-                    //else {
-                    //return update
-                    //}
-                    }
-                }
-                
-                for replace in firstDigitReplace {
-                    
-                    if filteredUpdate.digits.first == replace.from {
-                        
-                        filteredUpdate.replaceSubrange(...filteredUpdate.startIndex, with: replace.to)
-                    }
-                }
-
-                let partialFormatted = PhoneNumberFormater().partialFormatter(filteredUpdate)
-
-                return "+\(partialFormatted)"
-            }
-        }
-        
-        func updateCursorPosition(_ textField: UITextField) {
-            
-            let arbitraryValue: Int = 2
-            if let newPosition = textField.position(from: textField.endOfDocument, offset: -arbitraryValue) {
-                
-                textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
-            }
         }
         
         @objc func handleDoneAction() {
@@ -201,6 +113,46 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         
         @objc func handleCloseAction() {
             viewModel.toolbar?.closeButton?.action()
+        }
+    }
+    
+    static func updateMasked(value: String?, inRange: NSRange, update: String, firstDigitReplace: [PhoneNumberFirstDigitReplace], phoneFormatter: PhoneNumberFormaterProtocol) -> String? {
+        
+        let filteredUpdate = update
+        
+        if let value = value {
+            
+            var updatedValue = value
+            let rangeStart = value.index(value.startIndex, offsetBy: inRange.lowerBound)
+            let rangeEnd = value.index(value.startIndex, offsetBy: inRange.upperBound)
+            updatedValue.replaceSubrange(rangeStart..<rangeEnd, with: filteredUpdate)
+            
+            //if user enter letters
+            guard updatedValue.digits.count >= 1 else {
+                return updatedValue
+            }
+            
+            // need map first digit replace all time update.count > 1 || update.count == 1, because user can past phone type 8 925...
+            var phone = updatedValue.digits
+            
+            for replace in firstDigitReplace {
+                
+                if phone.digits.first == replace.from {
+                    
+                    phone.replaceSubrange(...phone.startIndex, with: replace.to)
+                }
+            }
+            
+            let phoneFormatted = phoneFormatter.partialFormatter("+\(phone)")
+            return phoneFormatted
+            
+        } else {
+            
+            guard update.isEmpty == false else {
+                return nil
+            }
+            
+            return update
         }
     }
     
