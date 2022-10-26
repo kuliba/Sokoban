@@ -136,7 +136,7 @@ extension Model {
                     let operation = Operation(service: service)
                     
                     // try to create first step
-                    let step = try await paymentsStep(for: service, stepIndex: 0)
+                    let step = try await paymentsStep(for: service, stepIndex: 0, operation: operation)
                     
                     // append first step to operation
                     let operationWithFirstStep = try operation.appending(step: step)
@@ -163,7 +163,7 @@ extension Model {
                     let operation = Operation(service: service, source: source)
                     
                     // try to create first step
-                    let step = try await paymentsStep(for: service, stepIndex: 0)
+                    let step = try await paymentsStep(for: service, stepIndex: 0, operation: operation)
                     
                     // update step parameters values with data in source
                     let stepUpdatedWithSource = step.updated(service: service, source: source, reducer: paymentsReduceParameterSourceValue(service:source:parameterId:))
@@ -201,7 +201,7 @@ extension Model {
                     switch nextAction {
                     case let .step(index: stepIndex):
                         // try to create step for the index
-                        let step = try await paymentsStep(for: operation.service, stepIndex: stepIndex)
+                        let step = try await paymentsStep(for: operation.service, stepIndex: stepIndex, operation: operation)
                         
                         // update step parameters values with data in source
                         let stepUpdatedWithSource = step.updated(service: operation.service, source: operation.source, reducer: paymentsReduceParameterSourceValue(service:source:parameterId:))
@@ -328,7 +328,7 @@ extension Model {
 
 extension Model {
     
-    func paymentsStep(for service: Service, stepIndex: Int) async throws -> Operation.Step {
+    func paymentsStep(for service: Service, stepIndex: Int, operation: Operation) async throws -> Operation.Step {
         
         switch service {
         case .fns:

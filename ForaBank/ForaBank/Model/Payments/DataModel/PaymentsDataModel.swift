@@ -342,6 +342,18 @@ extension Payments {
     }
 }
 
+//MARK: - Process
+
+extension Payments {
+    
+    enum ProcessResult {
+        
+        case step(Operation)
+        case confirm(Operation)
+        case complete(Payments.Success)
+    }
+}
+
 //MARK: - Error
 
 extension Payments {
