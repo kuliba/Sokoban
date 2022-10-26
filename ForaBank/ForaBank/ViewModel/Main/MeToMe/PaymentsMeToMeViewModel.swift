@@ -64,7 +64,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
             .sink { [unowned self] action in
 
                 switch action {
-                case let payload as ModelAction.Payment.MeToMe.Start.Response:
+                case let payload as ModelAction.Payment.MeToMe.CreateTransfer.Response:
                     
                     switch payload.result {
                     case let .success(response):
@@ -72,8 +72,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         // For currency transfers
                         if response.needMake == true {
 
-                            model.action.send(ModelAction.Payment.MeToMe.Approve.Request(transferResponse: response))
-                            
+                            model.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Request(transferResponse: response))
+
                         } else {
                             
                             // For ruble transfers
@@ -93,7 +93,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         makeAlert(error)
                     }
                     
-                case let payload as ModelAction.Payment.MeToMe.Approve.Response:
+                case let payload as ModelAction.Payment.MeToMe.MakeTransfer.Response:
                     
                     switch payload.result {
                     case let .success(success):
@@ -137,7 +137,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             
                             state = .loading
                             
-                            model.action.send(ModelAction.Payment.MeToMe.Start.Request(
+                            model.action.send(ModelAction.Payment.MeToMe.CreateTransfer.Request(
                                 amount: paymentsAmount.textField.value,
                                 currency: product.currency,
                                 productFrom: productsId.from,
@@ -159,19 +159,21 @@ class PaymentsMeToMeViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
-                case _ as ProductsSwapAction.ItemsDidSwapped:
+                case _ as ProductsSwapAction.Swapped:
                     
-                    guard let fromPoductId = swapViewModel.from?.productViewModel?.id else {
+                    guard let productIdFrom = swapViewModel.productIdFrom else {
                         return
                     }
-                    updateAmountSwitch(from: fromPoductId)
-                    updateTextField(fromPoductId, textField: paymentsAmount.textField)
                     
-                case let payload as ProductsSwapAction.ItemSelected.From:
+                    updateAmountSwitch(from: productIdFrom)
+                    updateTextField(productIdFrom, textField: paymentsAmount.textField)
+                    
+                case let payload as ProductsSwapAction.Selected.From:
+                    
                     updateAmountSwitch(from: payload.productId)
                     updateTextField(payload.productId, textField: paymentsAmount.textField)
                     
-                case let payload as ProductsSwapAction.ItemSelected.To:
+                case let payload as ProductsSwapAction.Selected.To:
                     updateAmountSwitch(to: payload.productId)
                     
                 default:
@@ -200,20 +202,20 @@ class PaymentsMeToMeViewModel: ObservableObject {
     
     private func updateAmountSwitch(from id: ProductData.ID) {
         
-        guard let toProductId = swapViewModel.toProductId else {
+        guard let productIdTo = swapViewModel.productIdTo else {
             return
         }
         
-        updateAmountSwitch(from: id, to: toProductId)
+        updateAmountSwitch(from: id, to: productIdTo)
     }
     
     private func updateAmountSwitch(to id: ProductData.ID) {
         
-        guard let fromProductId = swapViewModel.fromProductId else {
+        guard let productIdFrom = swapViewModel.productIdFrom else {
             return
         }
         
-        updateAmountSwitch(from: fromProductId, to: id)
+        updateAmountSwitch(from: productIdFrom, to: id)
     }
     
     private func updateAmountSwitch(from: ProductData.ID, to: ProductData.ID) {

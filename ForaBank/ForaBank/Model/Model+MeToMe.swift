@@ -9,7 +9,7 @@ extension ModelAction.Payment {
     
     enum MeToMe {
         
-        enum Start {
+        enum CreateTransfer {
             
             struct Request: Action {
                 
@@ -25,7 +25,7 @@ extension ModelAction.Payment {
             }
         }
         
-        enum Approve {
+        enum MakeTransfer {
             
             struct Request: Action {
                 
@@ -45,7 +45,7 @@ extension ModelAction.Payment {
 
 extension Model {
 
-    func handlerPaymentMeToMeStartRequest(_ payload: ModelAction.Payment.MeToMe.Start.Request) {
+    func handlerCreateTransferRequest(_ payload: ModelAction.Payment.MeToMe.CreateTransfer.Request) {
         
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
@@ -71,27 +71,27 @@ extension Model {
                     
                     guard let transferResponse = response.data else {
                         
-                        self.action.send(ModelAction.Payment.MeToMe.Start.Response(result: .failure(.emptyData(message: response.errorMessage))))
+                        self.action.send(ModelAction.Payment.MeToMe.CreateTransfer.Response(result: .failure(.emptyData(message: response.errorMessage))))
                         self.handleServerCommandEmptyData(command: command)
                         return
                     }
                     
-                    self.action.send(ModelAction.Payment.MeToMe.Start.Response(result: .success(transferResponse)))
+                    self.action.send(ModelAction.Payment.MeToMe.CreateTransfer.Response(result: .success(transferResponse)))
                     
                 default:
-                    self.action.send(ModelAction.Payment.MeToMe.Start.Response(result: .failure(.statusError(status: response.statusCode, message: response.errorMessage))))
+                    self.action.send(ModelAction.Payment.MeToMe.CreateTransfer.Response(result: .failure(.statusError(status: response.statusCode, message: response.errorMessage))))
                     
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
             
             case let .failure(error):
-                self.action.send(ModelAction.Payment.MeToMe.Start.Response(result: .failure(.serverCommandError(error: error.localizedDescription))))
+                self.action.send(ModelAction.Payment.MeToMe.CreateTransfer.Response(result: .failure(.serverCommandError(error: error.localizedDescription))))
                 self.handleServerCommandError(error: error, command: command)
             }
         }
     }
     
-    func handlerPaymentMeToMeApproveRequest(_ payload: ModelAction.Payment.MeToMe.Approve.Request) {
+    func handlerMakeTransferRequest(_ payload: ModelAction.Payment.MeToMe.MakeTransfer.Request) {
         
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
@@ -110,22 +110,22 @@ extension Model {
                 case .ok:
                     
                     guard let data = response.data else {
-                        self.action.send(ModelAction.Payment.MeToMe.Approve.Response(transferResponse: payload.transferResponse, result: .failure(.emptyData(message: response.errorMessage))))
+                        self.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Response(transferResponse: payload.transferResponse, result: .failure(.emptyData(message: response.errorMessage))))
                         self.handleServerCommandEmptyData(command: command)
                         return
                     }
                     
-                    self.action.send(ModelAction.Payment.MeToMe.Approve.Response(transferResponse: payload.transferResponse, result: .success(data)))
+                    self.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Response(transferResponse: payload.transferResponse, result: .success(data)))
                     
                 default:
-                    self.action.send(ModelAction.Payment.MeToMe.Approve.Response(transferResponse: payload.transferResponse, result: .failure(.statusError(status: response.statusCode, message: response.errorMessage))))
+                    self.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Response(transferResponse: payload.transferResponse, result: .failure(.statusError(status: response.statusCode, message: response.errorMessage))))
                     self.handleServerCommandStatus(command: command,
                                                    serverStatusCode: response.statusCode,
                                                    errorMessage: response.errorMessage)
                 }
             
             case let .failure(error):
-                self.action.send(ModelAction.Payment.MeToMe.Approve.Response(transferResponse: payload.transferResponse, result: .failure(.serverCommandError(error: error.localizedDescription))))
+                self.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Response(transferResponse: payload.transferResponse, result: .failure(.serverCommandError(error: error.localizedDescription))))
                 self.handleServerCommandError(error: error, command: command)
             }
         }

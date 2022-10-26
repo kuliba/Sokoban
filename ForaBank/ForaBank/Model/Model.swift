@@ -558,11 +558,11 @@ class Model {
                 case let payload as ModelAction.Payment.OperationDetailByPaymentId.Request:
                     handleOperationDetailByPaymentIdRequest(payload)
                     
-                case let payload as ModelAction.Payment.MeToMe.Start.Request:
-                    handlerPaymentMeToMeStartRequest(payload)
+                case let payload as ModelAction.Payment.MeToMe.CreateTransfer.Request:
+                    handlerCreateTransferRequest(payload)
                     
-                case let payload as ModelAction.Payment.MeToMe.Approve.Request:
-                    handlerPaymentMeToMeApproveRequest(payload)
+                case let payload as ModelAction.Payment.MeToMe.MakeTransfer.Request:
+                    handlerMakeTransferRequest(payload)
                     
                     //MARK: - Transfers
                     

@@ -33,7 +33,7 @@ extension ProductSelectorView {
         
         var productViewModel: ProductViewModel? {
             
-            guard case .product(let productViewModel) = content else {
+            guard case let .product(productViewModel) = content else {
                 return nil
             }
             

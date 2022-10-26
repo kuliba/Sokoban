@@ -34,8 +34,23 @@ extension ProductsSwapView {
         var from: ProductSelectorView.ViewModel? { items.first }
         var to: ProductSelectorView.ViewModel? { items.last }
         
-        var fromProductId: ProductData.ID? { from?.productViewModel?.id }
-        var toProductId: ProductData.ID? { to?.productViewModel?.id }
+        var productIdFrom: ProductData.ID? {
+            
+            guard let from = from, let productViewModel = from.productViewModel else {
+                return nil
+            }
+            
+            return productViewModel.id
+        }
+        
+        var productIdTo: ProductData.ID? {
+            
+            guard let to = to, let productViewModel = to.productViewModel else {
+                return nil
+            }
+            
+            return productViewModel.id
+        }
         
         init(model: Model, items: [ProductSelectorView.ViewModel]) {
             
@@ -76,7 +91,7 @@ extension ProductsSwapView {
                             items = items.reversed()
                             divider.isToogleButton.toggle()
                         }
-                        self.action.send(ProductsSwapAction.ItemsDidSwapped())
+                        self.action.send(ProductsSwapAction.Swapped())
                         
                     case _ as ProductsSwapAction.Button.Reset:
                         break
@@ -121,15 +136,12 @@ extension ProductsSwapView {
                         switch action {
                         case let payload as ProductSelectorAction.Selected:
                             
-                            if item.id == from?.id {
-                                
-                                self.action.send(ProductsSwapAction.ItemSelected.From(productId: payload.id))
-                                
+                            if let from = from, item.id == from.id {
+                                self.action.send(ProductsSwapAction.Selected.From(productId: payload.id))
                             } else {
-                                
-                                self.action.send(ProductsSwapAction.ItemSelected.To(productId: payload.id))
+                                self.action.send(ProductsSwapAction.Selected.To(productId: payload.id))
                             }
-  
+
                         default:
                             break
                         }
@@ -339,9 +351,9 @@ enum ProductsSwapAction {
         struct Close: Action {}
     }
     
-    struct ItemsDidSwapped: Action {}
+    struct Swapped: Action {}
     
-    enum ItemSelected {
+    enum Selected {
         
         struct From: Action {
             
