@@ -933,6 +933,7 @@
 		77D2D9B2275AB9280097234D /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9B0275AB9280097234D /* Item.swift */; };
 		77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9B1275AB9280097234D /* RealmObjectsDiffTests.swift */; };
 		77D73EE42909481500A956A3 /* Model+PaymentsProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D73EE32909481500A956A3 /* Model+PaymentsProcess.swift */; };
+		77D73EE629094D7A00A956A3 /* PaymentsProcessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D73EE529094D7A00A956A3 /* PaymentsProcessTests.swift */; };
 		77DA2060284539BC00D7E005 /* ProductData+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DA205F284539BC00D7E005 /* ProductData+Legacy.swift */; };
 		77DA206428453ADB00D7E005 /* MeToMeView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DA206328453ADB00D7E005 /* MeToMeView+Legacy.swift */; };
 		77DC125F27709DAF00C917B0 /* PaymentTemplateData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DC125E27709DAF00C917B0 /* PaymentTemplateData.swift */; };
@@ -2346,6 +2347,7 @@
 		77D2D9B0275AB9280097234D /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		77D2D9B1275AB9280097234D /* RealmObjectsDiffTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmObjectsDiffTests.swift; sourceTree = "<group>"; };
 		77D73EE32909481500A956A3 /* Model+PaymentsProcess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsProcess.swift"; sourceTree = "<group>"; };
+		77D73EE529094D7A00A956A3 /* PaymentsProcessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsProcessTests.swift; sourceTree = "<group>"; };
 		77DA205F284539BC00D7E005 /* ProductData+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductData+Legacy.swift"; sourceTree = "<group>"; };
 		77DA206328453ADB00D7E005 /* MeToMeView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MeToMeView+Legacy.swift"; sourceTree = "<group>"; };
 		77DC125E27709DAF00C917B0 /* PaymentTemplateData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTemplateData.swift; sourceTree = "<group>"; };
@@ -4731,8 +4733,9 @@
 		7758401927B2A0B000251969 /* Payments */ = {
 			isa = PBXGroup;
 			children = (
-				7758401A27B2A0CB00251969 /* PaymentsOperationTests.swift */,
 				77CCEA6528EF034000C62215 /* PaymentsStepTests.swift */,
+				7758401A27B2A0CB00251969 /* PaymentsOperationTests.swift */,
+				77D73EE529094D7A00A956A3 /* PaymentsProcessTests.swift */,
 				77504C8C28C8B07C00A2F444 /* PaymentsParameterHelpersTests.swift */,
 			);
 			path = Payments;
@@ -8826,6 +8829,7 @@
 				687F9B1127FED202007A38A5 /* ServerCommandsLoanTests.swift in Sources */,
 				7758401B27B2A0CB00251969 /* PaymentsOperationTests.swift in Sources */,
 				77B6B3612852318500E3001B /* PeriodTests.swift in Sources */,
+				77D73EE629094D7A00A956A3 /* PaymentsProcessTests.swift in Sources */,
 				77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */,
 				77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */,
 				68DF16D72808A741005D8D3E /* ProductModelTests.swift in Sources */,

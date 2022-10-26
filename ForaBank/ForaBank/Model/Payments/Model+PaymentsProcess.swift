@@ -9,7 +9,7 @@ import Foundation
 
 extension Model {
     
-    func paymentsProcess(operation: Payments.Operation,
+    static func paymentsProcess(operation: Payments.Operation,
                          localStep: (Payments.Service, Int, Payments.Operation) async throws -> Payments.Operation.Step,
                          remoteStep: (Payments.Operation, TransferResponseData) async throws -> Payments.Operation.Step,
                          remoteStart: ([Payments.Parameter], Payments.Operation) async throws -> TransferResponseData,
@@ -44,10 +44,13 @@ extension Model {
                 switch stage {
                 case .local:
                     // try to create step for the index
-                    let step = try await localStep(operation.service, stepIndex, operation)
+                    let step = try await localStep(operation.service, stepIndex + 1, operation)
                     
                     // update step parameters values with data in source
                     let stepUpdatedWithSource = step.updated(service: operation.service, source: operation.source, reducer: sourceReducer)
+                    
+                    // try to update operation with processed values
+                    operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
                     
                     // try to append step to operation
                     operation = try operation.appending(step: stepUpdatedWithSource)
