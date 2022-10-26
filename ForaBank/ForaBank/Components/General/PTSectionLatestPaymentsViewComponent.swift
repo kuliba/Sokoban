@@ -15,14 +15,14 @@ extension PTSectionLatestPaymentsViewComponent {
     
     class ViewModel: PaymentsTransfersSectionViewModel {
         
-        @Published var latestPayments: LatestPaymentsViewComponent.ViewModel
+        @Published var latestPayments: LatestPaymentsView.ViewModel
         
         override var type: PaymentsTransfersSectionType { .latestPayments }
         private let model: Model
         
         private var bindings = Set<AnyCancellable>()
         
-        init(latestsPayments: LatestPaymentsViewComponent.ViewModel, model: Model) {
+        init(latestsPayments: LatestPaymentsView.ViewModel, model: Model) {
             
             self.latestPayments = latestsPayments
             self.model = model
@@ -90,23 +90,6 @@ extension PTSectionLatestPaymentsViewComponent {
     }
 }
 
-//MARK: - Action PTSectionLatestPaymentsViewAction
-
-enum PTSectionLatestPaymentsViewAction {
-
-    enum ButtonTapped {
-
-        struct Templates: Action {}
-        
-        struct CurrencyWallet: Action {}
-
-        struct LatestPayment: Action {
-
-            let latestPayment: LatestPaymentData
-        }
-    }
-}
-
 //MARK: Section View
 
 struct PTSectionLatestPaymentsViewComponent: View {
@@ -123,7 +106,7 @@ struct PTSectionLatestPaymentsViewComponent: View {
             .padding(.vertical, 16)
             .padding(.leading, 20)
 
-        LatestPaymentsViewComponent(viewModel: viewModel.latestPayments)
+        LatestPaymentsView(viewModel: viewModel.latestPayments)
         
     }
 }

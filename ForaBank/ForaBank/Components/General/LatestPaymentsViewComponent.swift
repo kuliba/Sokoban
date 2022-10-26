@@ -26,8 +26,9 @@ extension LatestPaymentsView {
         
         convenience init(_ model: Model, latest: [LatestPaymentData], isUpdating: Bool = false) {
             
-            let items = Self.itemsReduce(latest: latest, isUpdating: isUpdating)
+            let items: [LatestPaymentsView.ViewModel.ItemViewModel] = []
             self.init(model, items: items)
+            self.items = self.itemsReduce(latest: latest)
         }
         
         struct PlaceholderViewModel: Identifiable {
@@ -68,7 +69,7 @@ extension LatestPaymentsView {
             }
         }
         
-        static func itemsReduce(latest: [LatestPaymentData],
+        func itemsReduce(latest: [LatestPaymentData],
                          isUpdating: Bool = false) -> [ItemViewModel] {
             
             var updatedItems = [ItemViewModel]()
@@ -81,7 +82,7 @@ extension LatestPaymentsView {
                         .init(data: item,
                               model: self.model,
                               action: { [weak self] in
-                                  self?.action.send(PTSectionLatestPaymentsViewAction
+                                  self?.action.send(LatestPaymentsViewModelAction
                                     .ButtonTapped
                                     .LatestPayment(latestPayment: item)) } ))
             }
@@ -118,17 +119,34 @@ extension LatestPaymentsView {
                       topIcon: nil,
                       description: "Шаблоны",
                       action: { [weak self] in
-                            self?.action.send(PTSectionLatestPaymentsViewAction.ButtonTapped.Templates())
+                            self?.action.send(LatestPaymentsViewModelAction.ButtonTapped.Templates())
                       }),
                 .init(id: -1,
                       avatar: .icon(.ic24CurrencyExchange, .iconBlack),
                       topIcon: nil,
                       description: "Обмен валют",
                       action: { [weak self] in
-                            self?.action.send(PTSectionLatestPaymentsViewAction.ButtonTapped.CurrencyWallet())
+                            self?.action.send(LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet())
                       })
             ]
         }()
+    }
+}
+
+//MARK: - Action PTSectionLatestPaymentsViewAction
+
+enum LatestPaymentsViewModelAction {
+
+    enum ButtonTapped {
+
+        struct Templates: Action {}
+        
+        struct CurrencyWallet: Action {}
+
+        struct LatestPayment: Action {
+
+            let latestPayment: LatestPaymentData
+        }
     }
 }
 

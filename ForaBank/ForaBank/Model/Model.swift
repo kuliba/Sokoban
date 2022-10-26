@@ -635,7 +635,7 @@ class Model {
                 case let payload as ModelAction.Settings.UpdateProductsHidden:
                     handleUpdateProductsHidden(payload.productID)
                     
-                    //MARK: - Card
+                    //MARK: - BankClients
                 
                 case let payload as ModelAction.BankClient.Request:
                     handleBankClientRequest(payload)

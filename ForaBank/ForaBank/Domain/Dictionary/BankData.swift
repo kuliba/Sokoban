@@ -42,7 +42,7 @@ enum BankType: String, CaseIterable {
     case direct
     case unknown
     
-    var valid: [BankType] { [.sfp, .direct] }
+    static var valid: [BankType] { [.sfp, .direct] }
     
     var name: String {
         

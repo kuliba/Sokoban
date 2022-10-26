@@ -161,7 +161,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     switch action {
                         
                     //LatestPayments Section Buttons
-                    case let payload as PTSectionLatestPaymentsViewAction.ButtonTapped.LatestPayment:
+                    case let payload as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
                         
                         switch (payload.latestPayment.type, payload.latestPayment) {
                         case (.phone, let paymentData as PaymentGeneralData):
@@ -202,12 +202,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         }
                     
                     //LatestPayment Section TemplateButton
-                    case _ as PTSectionLatestPaymentsViewAction.ButtonTapped.Templates:
+                    case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
                         let viewModel = TemplatesListViewModel(model, dismissAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                         })
                         link = .template(viewModel)
                         
-                    case _ as PTSectionLatestPaymentsViewAction.ButtonTapped.CurrencyWallet:
+                    case _ as LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet:
                         guard let firstCurrencyWalletData = model.currencyWalletList.value.first else {
                             return
                         }

@@ -107,7 +107,7 @@ extension Model {
                         self.action.send(ModelAction.ClientInfo.Fetch.Response(result: .failure(ModelClientInfoError.emptyData(message: response.errorMessage))))
                         return
                     }
-
+                    
                     self.clientInfo.value = clientInfo
                     self.clientName.value = .init(name: clientInfo.customName ?? clientInfo.firstName)
                     self.action.send(ModelAction.ClientInfo.Fetch.Response(result: .success(clientInfo)))
@@ -124,12 +124,8 @@ extension Model {
                     
                 default:
                     self.action.send(ModelAction.ClientInfo.Fetch.Response(result: .failure(ModelClientInfoError.statusError(status: response.statusCode, message: response.errorMessage))))
-                    if let errorMessage = response.errorMessage {
-
-                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: errorMessage)
-                    } else {
-                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: nil)
-                    }
+                    
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage )
                 }
                 
             case .failure(let error):

@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-extension LatestPaymentsViewComponent.ViewModel {
+extension LatestPaymentsView.ViewModel {
     
-    static let sample: LatestPaymentsViewComponent.ViewModel = {
+    static let sample: LatestPaymentsView.ViewModel = {
         
-        typealias ViewModel = LatestPaymentsViewComponent.ViewModel
+        typealias ViewModel = LatestPaymentsView.ViewModel
         
         let latestPaymentsButtons: [LatestPaymentButtonVM] =
             

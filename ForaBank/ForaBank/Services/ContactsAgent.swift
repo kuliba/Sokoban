@@ -10,6 +10,7 @@ import Combine
 
 class ContactsAgent: ContactsAgentProtocol {
     
+    private let phoneNumberFormatter = PhoneNumberFormater()
     let status: CurrentValueSubject<ContactsAgentStatus, Never>
     private let store: CNContactStore
     
@@ -72,7 +73,7 @@ class ContactsAgent: ContactsAgentProtocol {
         ] as [CNKeyDescriptor]
         
         let request = CNContactFetchRequest(keysToFetch: keys)
-        let phoneNumberFormatter = PhoneNumberFormater()
+        
         let contactStore = CNContactStore()
         
         try contactStore.enumerateContacts(with: request) { (contact, stop) in
