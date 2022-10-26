@@ -72,7 +72,8 @@ extension Model {
                 case let .remote(remoteStage):
                     switch remoteStage {
                     case .start:
-                        if stepIndex < operation.steps.count {
+                        // check if it restart or regular flow
+                        if stepIndex + 1 < operation.steps.count {
                             
                             // process parameters on server
                             let _ = try await remoteStart(parameters, operation)
@@ -99,7 +100,8 @@ extension Model {
                         }
                         
                     case .next:
-                        if stepIndex < operation.steps.count {
+                        // check if it restart or regular flow
+                        if stepIndex + 1 < operation.steps.count {
                             
                             // process parameters on server
                             let _ = try await remoteNext(parameters, operation)

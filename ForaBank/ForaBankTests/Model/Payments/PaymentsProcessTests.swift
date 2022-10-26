@@ -43,14 +43,16 @@ extension PaymentsProcessTests {
     func testLocalMultistep_FirstStep_Rollback() async throws {
         
         // given
+        
+        /// MODEL
         let service: Payments.Service = .fns
         let operation = Payments.Operation(service: service)
-        let resultSecondStep = try await process(operation)
-        guard case .step(let operationSecondStep) = resultSecondStep else {
+        let peocessResult = try await process(operation)
+        guard case .step(let operationSecondStep) = peocessResult else {
             XCTFail()
             return
         }
-        // user in UI changed operator
+        /// UI
         let operationSecondStepUpdated = operationSecondStep.updated(with: [.init(id: "operator", value: "fnsUin")])
         
         // when
@@ -72,6 +74,80 @@ extension PaymentsProcessTests {
         XCTAssertEqual(secondStepResult.parameters.count, 1)
         XCTAssertEqual(secondStepResult.parameters[0].id, "uin")
         XCTAssertNil(secondStepResult.parameters[0].value)
+    }
+}
+
+extension PaymentsProcessTests {
+    
+    func testRemoteMultistep() async throws {
+ 
+        /// MODEL
+        let service: Payments.Service = .fns
+        let operation = Payments.Operation(service: service)
+        let processResultOne = try await process(operation)
+        guard case .step(let operationStepOne) = processResultOne else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertEqual(operationStepOne.steps[0].parameters[0].parameter, .init(id: "operator", value: "fns"))
+        XCTAssertEqual(operationStepOne.steps[1].parameters[0].parameter, .init(id: "service", value: nil))
+        
+        /// UI
+        let operationStepOneUpdated = operationStepOne.updated(with: [.init(id: "service", value: "1")])
+        
+        XCTAssertEqual(operationStepOneUpdated.steps[0].parameters[0].parameter, .init(id: "operator", value: "fns"))
+        XCTAssertEqual(operationStepOneUpdated.steps[1].parameters[0].parameter, .init(id: "service", value: "1"))
+        
+        /// MODEL
+        let processResultTwo = try await process(operationStepOneUpdated)
+        guard case .step(let operationStepTwo) = processResultTwo else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertEqual(operationStepTwo.steps[0].parameters[0].parameter, .init(id: "operator", value: "fns"))
+        XCTAssertEqual(operationStepTwo.steps[1].parameters[0].parameter, .init(id: "service", value: "1"))
+        XCTAssertEqual(operationStepTwo.steps[2].parameters[0].parameter, .init(id: "inn", value: nil))
+        
+        /// UI
+        let operationStepTwoUpdated = operationStepTwo.updated(with: [.init(id: "inn", value: "234")])
+        
+        XCTAssertEqual(operationStepTwoUpdated.steps[0].parameters[0].parameter, .init(id: "operator", value: "fns"))
+        XCTAssertEqual(operationStepTwoUpdated.steps[1].parameters[0].parameter, .init(id: "service", value: "1"))
+        XCTAssertEqual(operationStepTwoUpdated.steps[2].parameters[0].parameter, .init(id: "inn", value: "234"))
+        
+        /// MODEL
+        let processResultThree = try await process(operationStepTwoUpdated)
+        guard case .confirm(let operationStepThree) = processResultThree else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertEqual(operationStepThree.steps[0].parameters[0].parameter, .init(id: "operator", value: "fns"))
+        XCTAssertEqual(operationStepThree.steps[1].parameters[0].parameter, .init(id: "service", value: "1"))
+        XCTAssertEqual(operationStepThree.steps[2].parameters[0].parameter, .init(id: "inn", value: "234"))
+        XCTAssertEqual(operationStepThree.steps[3].parameters[0].parameter, .init(id: "amount", value: "0"))
+        XCTAssertEqual(operationStepThree.steps[3].parameters[1].parameter, .init(id: "code", value: nil))
+        
+        /// UI
+        let operationStepThreeUpdated = operationStepThree.updated(with: [.init(id: "code", value: "789"), .init(id: "amount", value: "100")])
+        
+        XCTAssertEqual(operationStepThreeUpdated.steps[0].parameters[0].parameter, .init(id: "operator", value: "fns"))
+        XCTAssertEqual(operationStepThreeUpdated.steps[1].parameters[0].parameter, .init(id: "service", value: "1"))
+        XCTAssertEqual(operationStepThreeUpdated.steps[2].parameters[0].parameter, .init(id: "inn", value: "234"))
+        XCTAssertEqual(operationStepThreeUpdated.steps[3].parameters[0].parameter, .init(id: "amount", value: "100"))
+        XCTAssertEqual(operationStepThreeUpdated.steps[3].parameters[1].parameter, .init(id: "code", value: "789"))
+        
+        /// MODEL
+        let processResultFour = try await process(operationStepThreeUpdated)
+        guard case .complete(let success) = processResultFour else {
+            XCTFail()
+            return
+        }
+        
+        /// UI
+        XCTAssertEqual(success.status, .complete)
     }
 }
 
@@ -106,7 +182,7 @@ private func localStep(operation: Payments.Operation, stepIndex: Int) async thro
             }
             switch paramOperatorValue {
             case "fns":
-                let paramService = Payments.ParameterMock(id: "service", value: "1")
+                let paramService = Payments.ParameterMock(id: "service", value: nil)
                 return .init(parameters: [paramService], front: .init(visible: [paramService.id], isCompleted: false), back: .init(stage: .remote(.start), terms: [.init(parameterId: "service", impact: .rollback)], processed: nil))
                 
             case "fnsUin":
@@ -129,22 +205,138 @@ private func localStep(operation: Payments.Operation, stepIndex: Int) async thro
 
 private func remoteStep(operation: Payments.Operation, response: TransferResponseData) async throws -> Payments.Operation.Step {
     
-    throw Payments.Error.unsupported
+    switch operation.service {
+    case .fns:
+        guard let responseAnyway = response as? TransferAnywayResponseData else {
+            throw Payments.Error.unsupported
+        }
+        var stage = Payments.Operation.Stage.remote(.next)
+        var parameters = responseAnyway.parameterListForNextStep.map{ Payments.ParameterMock(id: $0.id, value: $0.content) }
+        var terms = parameters.map{ Payments.Operation.Step.Term(parameterId: $0.id, impact: .rollback) }
+        
+        if responseAnyway.needSum == true {
+            
+            parameters.append(Payments.ParameterMock(id: "amount", value: "0"))
+            terms.append(.init(parameterId: "amount", impact: .restart))
+        }
+        let visible = parameters.map{ $0.id }
+        
+        if responseAnyway.finalStep == true {
+            parameters.append(Payments.ParameterMock(id: "code", value: nil))
+            terms.append(.init(parameterId: "code", impact: .restart))
+            stage = .remote(.confirm)
+            
+        }
+        return .init(parameters: parameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stage, terms: terms, processed: nil))
+        
+    default:
+        throw Payments.Error.unsupported
+    }
 }
 
 private func remoteStart(parameters: [Payments.Parameter], operation: Payments.Operation) async throws -> TransferResponseData {
     
-    throw Payments.Error.unsupported
+    let currentStep = operation.steps.count
+    switch operation.service {
+    case .fns:
+        switch currentStep {
+        case 2:
+            guard let paramOperatorValue = operation.parameters.first(where: { $0.id == "operator" })?.value else {
+                throw Payments.Error.missingParameter
+            }
+            switch paramOperatorValue {
+            case "fns":
+                guard parameters.first(where: { $0.id == "service" })?.value == "1" else {
+                    throw Payments.Error.missingParameter
+                }
+                let parameterInn = ParameterData(id: "inn", value: nil)
+                return TransferAnywayResponseData(parameters: [parameterInn], needSum: false, finalStep: false)
+                
+            case "fnsUin":
+                guard parameters.first(where: { $0.id == "uin" })?.value == "123" else {
+                    throw Payments.Error.missingParameter
+                }
+                let parameterInn = ParameterData(id: "bic", value: nil)
+                return TransferAnywayResponseData(parameters: [parameterInn], needSum: false, finalStep: false)
+                
+            default:
+                throw Payments.Error.unexpectedOperatorValue
+            }
+            
+        default:
+            throw Payments.Error.unsupported
+        }
+        
+    default:
+        throw Payments.Error.unsupported
+    }
 }
 
 private func remoteNext(parameters: [Payments.Parameter], operation: Payments.Operation) async throws -> TransferResponseData {
     
-    throw Payments.Error.unsupported
+    let currentStep = operation.steps.count
+    switch operation.service {
+    case .fns:
+        switch currentStep {
+        case 3:
+            guard let paramOperatorValue = operation.parameters.first(where: { $0.id == "operator" })?.value else {
+                throw Payments.Error.missingParameter
+            }
+            switch paramOperatorValue {
+            case "fns":
+                guard parameters.first(where: { $0.id == "inn" })?.value == "234" else {
+                    throw Payments.Error.missingParameter
+                }
+                return TransferAnywayResponseData(parameters: [], needSum: true, finalStep: true)
+                
+            case "fnsUin":
+                throw Payments.Error.unexpectedOperatorValue
+                
+            default:
+                throw Payments.Error.unexpectedOperatorValue
+            }
+            
+        default:
+            throw Payments.Error.unsupported
+        }
+        
+    default:
+        throw Payments.Error.unsupported
+    }
 }
 
 private func remoteConfirm(parameters: [Payments.Parameter], operation: Payments.Operation) async throws -> Payments.Success {
     
-    throw Payments.Error.unsupported
+    let currentStep = operation.steps.count
+    switch operation.service {
+    case .fns:
+        switch currentStep {
+        case 4:
+            guard let paramOperatorValue = operation.parameters.first(where: { $0.id == "operator" })?.value else {
+                throw Payments.Error.missingParameter
+            }
+            switch paramOperatorValue {
+            case "fns":
+                guard parameters.first(where: { $0.id == "code" })?.value == "789",
+                      parameters.first(where: { $0.id == "amount" })?.value == "100" else {
+                    throw Payments.Error.missingParameter
+                }
+                return Payments.Success(status: .complete, amount: 100, currency: .init(description: "RUB"), icon: nil, operationDetailId: 1)
+                
+            case "fnsUin":
+                throw Payments.Error.unexpectedOperatorValue
+                
+            default:
+                throw Payments.Error.unexpectedOperatorValue
+            }
+            
+        default:
+            throw Payments.Error.unsupported
+        }
+        
+    default:
+        throw Payments.Error.unsupported
+    }
 }
 
 private func remoteComplete(parameters: [Payments.Parameter], operation: Payments.Operation) async throws -> Payments.Success {
@@ -160,4 +352,22 @@ private func sourceReducer(service: Payments.Service, source: Payments.Operation
 private func dependenceReducer(parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
     
     return nil
+}
+
+//MARK: - Convenience Inits
+
+private extension TransferAnywayResponseData {
+    
+    convenience init(parameters: [ParameterData], needSum: Bool, finalStep: Bool) {
+        
+        self.init(amount: nil, creditAmount: nil, currencyAmount: nil, currencyPayee: nil, currencyPayer: nil, currencyRate: nil, debitAmount: nil, fee: nil, needMake: nil, needOTP: nil, payeeName: nil, documentStatus: .inProgress, paymentOperationDetailId: 1, additionalList: [], finalStep: finalStep, infoMessage: nil, needSum: needSum, parameterListForNextStep: parameters)
+    }
+}
+
+private extension ParameterData {
+    
+    init(id: String, value: String?) {
+        
+        self.init(content: value, dataType: nil, id: id, isPrint: nil, isRequired: nil, mask: nil, maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: nil, regExp: nil, subTitle: nil, title: "", type: "", svgImage: nil, viewType: .constant)
+    }
 }
