@@ -43,29 +43,19 @@ extension Payments.Operation {
         guard existingVisibleParametersIds.intersection(appendingVisibleParametersIds).count == 0 else {
             throw Payments.Operation.Error.appendingStepDuplicateVisibleParameters
         }
-
-        if let terms = step.back?.terms {
-            
-            let allParametersIds = existingParametersIds.union(appendingParametersIds)
-            let requiredParametersIds = Set(terms.map({ $0.parameterId }))
-            
-            // check if terms contains in parameters
-            guard requiredParametersIds.isSubset(of: allParametersIds) else {
-                throw Payments.Operation.Error.appendingStepIncorrectParametersTerms
-            }
-            
-            var stepsUpdated = steps
-            stepsUpdated.append(step)
-
-            return .init(service: service, source: source, steps: stepsUpdated)
-            
-        } else {
-
-            var stepsUpdated = steps
-            stepsUpdated.append(step)
-
-            return .init(service: service, source: source, steps: stepsUpdated)
+        
+        let allParametersIds = existingParametersIds.union(appendingParametersIds)
+        let requiredParametersIds = Set(step.back.terms.map({ $0.parameterId }))
+        
+        // check if terms contains in parameters
+        guard requiredParametersIds.isSubset(of: allParametersIds) else {
+            throw Payments.Operation.Error.appendingStepIncorrectParametersTerms
         }
+        
+        var stepsUpdated = steps
+        stepsUpdated.append(step)
+
+        return .init(service: service, source: source, steps: stepsUpdated)
     }
 
     
@@ -141,7 +131,6 @@ extension Payments.Operation {
         return .init(service: service, source: source, steps: updatedSteps)
     }
     
-    
     /// Updates depended parameters. For example parameter `amount` or `currency` depends on parameter `product` value
     /// - Parameter reducer: optional returns updated parameter if it depends on other
     /// - Returns: updated operation
@@ -179,7 +168,7 @@ extension Payments.Operation {
             
             switch step.status(with: parameters) {
             case .editing:
-                return step.back?.stage == .confirm ? .frontConfirm : .frontUpdate
+                return step.back.stage == .remote(.confirm) ? .frontConfirm : .frontUpdate
                 
             case let .invalidated(impact):
                 switch impact {
@@ -211,7 +200,6 @@ extension Payments.Operation {
         case rollbackStepIndexOutOfRange
         case processStepIndexOutOfRange
         case stepMissingParameterForTerm
-        case stepMissingTermsForProcessedParameters
         case stepIncorrectParametersProcessed
         case failedLoadServicesForCategory(Payments.Category)
         case unableSelectServiceForCategory(Payments.Category)

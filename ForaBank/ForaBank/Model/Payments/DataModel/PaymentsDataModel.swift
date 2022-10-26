@@ -130,7 +130,7 @@ extension Payments.Operation {
         
         let parameters: [PaymentsParameterRepresentable]
         let front: Front
-        let back: Back?
+        let back: Back
         
         struct Front: Equatable {
             
@@ -193,12 +193,18 @@ extension Payments.Operation {
         }
     }
     
-    enum Stage {
+    enum Stage: Equatable {
         
-        case start
-        case next
-        case confirm
-        case complete
+        case local
+        case remote(Remote)
+
+        enum Remote {
+            
+            case start
+            case next
+            case confirm
+            case complete
+        }
     }
     
     enum TransferType {

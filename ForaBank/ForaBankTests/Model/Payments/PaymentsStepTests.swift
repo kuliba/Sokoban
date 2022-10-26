@@ -21,7 +21,7 @@ extension PaymentsStepTests {
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         
         // when
-        let result = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: nil)
+        let result = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .local, terms: [.init(parameterId: "one", impact: .rollback)], processed: nil))
         
         // then
         XCTAssertEqual(result.parametersIds, ["one", "two"])
@@ -37,7 +37,7 @@ extension PaymentsStepTests {
         // given
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: nil)
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .local, terms: [.init(parameterId: "one", impact: .rollback)], processed: nil))
         
         // when
         let result = step.contains(parameterId: "two")
@@ -51,7 +51,7 @@ extension PaymentsStepTests {
         // given
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: nil)
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .local, terms: [.init(parameterId: "one", impact: .rollback)], processed: nil))
         
         // when
         let result = step.contains(parameterId: "unexpected")
@@ -70,7 +70,7 @@ extension PaymentsStepTests {
         // given
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: nil)
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: nil)
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .local, terms: [.init(parameterId: "one", impact: .rollback)], processed: nil))
         let update = Payments.Parameter(id: "two", value: "500")
         
         // when
@@ -90,7 +90,7 @@ extension PaymentsStepTests {
         // given
         let paramOne = Payments.ParameterMock(id: "one", value: nil)
         let paramTwo = Payments.ParameterMock(id: "two", value: nil)
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: nil)
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .local, terms: [.init(parameterId: "one", impact: .rollback)], processed: nil))
         let update = Payments.Parameter(id: "two", value: "500")
         
         // when
@@ -110,7 +110,7 @@ extension PaymentsStepTests {
         // given
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: nil)
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .local, terms: [.init(parameterId: "one", impact: .rollback)], processed: nil))
         let update = Payments.Parameter(id: "four", value: "500")
         
         // when
@@ -135,7 +135,7 @@ extension PaymentsStepTests {
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramOne.id, impact: .rollback)]
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .start, terms: terms, processed: nil))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .remote(.start), terms: terms, processed: nil))
         let paramProcessed = Payments.Parameter(id: "one", value: "100")
         
         // when
@@ -146,12 +146,11 @@ extension PaymentsStepTests {
         XCTAssertEqual(result.parameters[0].value, "100")
         XCTAssertEqual(result.parameters[1].value, "200")
         XCTAssertEqual(result.front, step.front)
-        XCTAssertNotNil(result.back)
-        XCTAssertEqual(result.back!.stage, step.back!.stage)
-        XCTAssertEqual(result.back!.terms, step.back!.terms)
-        XCTAssertNotNil(result.back!.processed)
-        XCTAssertEqual(result.back!.processed!.count, 1)
-        XCTAssertEqual(result.back!.processed![0], paramProcessed)
+        XCTAssertEqual(result.back.stage, step.back.stage)
+        XCTAssertEqual(result.back.terms, step.back.terms)
+        XCTAssertNotNil(result.back.processed)
+        XCTAssertEqual(result.back.processed!.count, 1)
+        XCTAssertEqual(result.back.processed![0], paramProcessed)
     }
     
     func testProcessed_Incorrect_Parameter() throws {
@@ -160,7 +159,7 @@ extension PaymentsStepTests {
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramOne.id, impact: .rollback)]
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .start, terms: terms, processed: nil))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .remote(.start), terms: terms, processed: nil))
         let paramProcessed = Payments.Parameter(id: "two", value: "200")
         
         // when
@@ -172,7 +171,7 @@ extension PaymentsStepTests {
         // given
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: nil)
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .local, terms: [.init(parameterId: "one", impact: .rollback)], processed: nil))
         let paramProcessed = Payments.Parameter(id: "two", value: "200")
         
         // when
@@ -191,7 +190,7 @@ extension PaymentsStepTests {
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramOne.id, impact: .rollback)]
         let paramProcessed = Payments.Parameter(id: "one", value: "100")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .start, terms: terms, processed: [paramProcessed]))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .remote(.start), terms: terms, processed: [paramProcessed]))
         
         // when
         let result = step.reseted()
@@ -201,10 +200,9 @@ extension PaymentsStepTests {
         XCTAssertEqual(result.parameters[0].value, "100")
         XCTAssertEqual(result.parameters[1].value, "200")
         XCTAssertEqual(result.front, step.front)
-        XCTAssertNotNil(result.back)
-        XCTAssertEqual(result.back!.stage, step.back!.stage)
-        XCTAssertEqual(result.back!.terms, step.back!.terms)
-        XCTAssertNil(result.back!.processed)
+        XCTAssertEqual(result.back.stage, step.back.stage)
+        XCTAssertEqual(result.back.terms, step.back.terms)
+        XCTAssertNil(result.back.processed)
     }
     
     func testReseted_No_Processed_Correct() throws {
@@ -213,7 +211,7 @@ extension PaymentsStepTests {
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramOne.id, impact: .rollback)]
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .start, terms: terms, processed: nil))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .remote(.start), terms: terms, processed: nil))
         
         // when
         let result = step.reseted()
@@ -223,28 +221,9 @@ extension PaymentsStepTests {
         XCTAssertEqual(result.parameters[0].value, "100")
         XCTAssertEqual(result.parameters[1].value, "200")
         XCTAssertEqual(result.front, step.front)
-        XCTAssertNotNil(result.back)
-        XCTAssertEqual(result.back!.stage, step.back!.stage)
-        XCTAssertEqual(result.back!.terms, step.back!.terms)
-        XCTAssertNil(result.back!.processed)
-    }
-    
-    func testReseted_No_Back_Correct() throws {
-        
-        // given
-        let paramOne = Payments.ParameterMock(id: "one", value: "100")
-        let paramTwo = Payments.ParameterMock(id: "two", value: "200")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: nil)
-        
-        // when
-        let result = step.reseted()
-        
-        // then
-        XCTAssertEqual(result.parameters.count, 2)
-        XCTAssertEqual(result.parameters[0].value, "100")
-        XCTAssertEqual(result.parameters[1].value, "200")
-        XCTAssertEqual(result.front, step.front)
-        XCTAssertNil(result.back)
+        XCTAssertEqual(result.back.stage, step.back.stage)
+        XCTAssertEqual(result.back.terms, step.back.terms)
+        XCTAssertNil(result.back.processed)
     }
 }
 
@@ -260,7 +239,7 @@ extension PaymentsStepTests {
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramTwo.id, impact: .restart),.init(parameterId: paramOne.id, impact: .rollback)]
         let paramProcessedOne = Payments.Parameter(id: "1", value: "500")
         let paramProcessedTwo = Payments.Parameter(id: "2", value: "700")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .start, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .remote(.start), terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
         let paramTree = Payments.ParameterMock(id: "3", value: "300")
         
         // when
@@ -283,27 +262,13 @@ extension PaymentsStepTests {
         XCTAssertEqual(result![1].impact, .restart)
     }
     
-    func testProcessedResuts_No_Back() throws {
-        
-        // given
-        let paramOne = Payments.ParameterMock(id: "one", value: "100")
-        let paramTwo = Payments.ParameterMock(id: "two", value: "200")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: nil)
-        
-        // when
-        let result = step.processedResults(with: [paramOne, paramTwo])
-        
-        // then
-        XCTAssertNil(result)
-    }
-    
     func testProcessedResuts_No_Processed() throws {
         
         // given
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramOne.id, impact: .rollback)]
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .start, terms: terms, processed: nil))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .remote(.start), terms: terms, processed: nil))
         
         // when
         let result = step.processedResults(with: [paramOne, paramTwo])
@@ -320,7 +285,7 @@ extension PaymentsStepTests {
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramTwo.id, impact: .restart),.init(parameterId: paramOne.id, impact: .rollback)]
         let paramProcessedOne = Payments.Parameter(id: "1", value: "500")
         let paramProcessedTwo = Payments.Parameter(id: "2", value: "700")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .start, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .remote(.start), terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
  
         // when
         let result = step.processedResults(with: [paramOne])
@@ -344,7 +309,7 @@ extension PaymentsStepTests {
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramTwo.id, impact: .restart),.init(parameterId: paramOne.id, impact: .rollback)]
         let paramProcessedOne = Payments.Parameter(id: "1", value: "500")
         let paramProcessedTwo = Payments.Parameter(id: "2", value: "700")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .start, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .remote(.start), terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
         let paramTree = Payments.ParameterMock(id: "3", value: "300")
         
         // when
@@ -364,7 +329,7 @@ extension PaymentsStepTests {
         // given
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: nil)
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: nil)
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .local, terms: [.init(parameterId: "one", impact: .rollback)], processed: nil))
         
         // when
         let result = step.status(with: [paramOne, paramTwo])
@@ -373,32 +338,18 @@ extension PaymentsStepTests {
         XCTAssertEqual(result, .editing)
     }
     
-    func testStatus_No_Back_Complete() throws {
-        
-        // given
-        let paramOne = Payments.ParameterMock(id: "one", value: "100")
-        let paramTwo = Payments.ParameterMock(id: "two", value: "300")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: nil)
-        
-        // when
-        let result = step.status(with: [paramOne, paramTwo])
-        
-        // then
-        XCTAssertEqual(result, .complete)
-    }
-    
     func testStatus_Pending() throws {
         
         // given
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramOne.id, impact: .rollback)]
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .start, terms: terms, processed: nil))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.start), terms: terms, processed: nil))
 
         // when
         let result = step.status(with: [paramOne, paramTwo])
         
-        XCTAssertEqual(result, .pending(parameters: [.init(id: "one", value: "100")], stage: .start))
+        XCTAssertEqual(result, .pending(parameters: [.init(id: "one", value: "100")], stage: .remote(.start)))
     }
     
     func testStatus_Back_Complete() throws {
@@ -409,7 +360,7 @@ extension PaymentsStepTests {
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramTwo.id, impact: .restart),.init(parameterId: paramOne.id, impact: .rollback)]
         let paramProcessedOne = Payments.Parameter(id: "1", value: "100")
         let paramProcessedTwo = Payments.Parameter(id: "2", value: "200")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .start, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.start), terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
         
         // when
         let result = step.status(with: [paramOne, paramTwo])
@@ -426,7 +377,7 @@ extension PaymentsStepTests {
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramTwo.id, impact: .restart),.init(parameterId: paramOne.id, impact: .rollback)]
         let paramProcessedOne = Payments.Parameter(id: "1", value: "300")
         let paramProcessedTwo = Payments.Parameter(id: "2", value: "200")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .start, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.start), terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
         
         // when
         let result = step.status(with: [paramOne, paramTwo])
@@ -443,7 +394,7 @@ extension PaymentsStepTests {
         let terms: [Payments.Operation.Step.Term] = [.init(parameterId: paramTwo.id, impact: .restart),.init(parameterId: paramOne.id, impact: .rollback)]
         let paramProcessedOne = Payments.Parameter(id: "1", value: "300")
         let paramProcessedTwo = Payments.Parameter(id: "2", value: "500")
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .start, terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.start), terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
         
         // when
         let result = step.status(with: [paramOne, paramTwo])
@@ -462,7 +413,7 @@ extension PaymentsStepTests {
         // given
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: nil)
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: nil)
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .local, terms: [.init(parameterId: "one", impact: .rollback)], processed: nil))
 
         // when
         let result = step.updated(service: .fssp, source: nil, reducer: parameterSourceValue(service:source:parameterId:))
@@ -481,7 +432,7 @@ extension PaymentsStepTests {
         // given
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: nil)
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: nil)
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back:  .init(stage: .local, terms: [.init(parameterId: "one", impact: .rollback)], processed: nil))
 
         // when
         let result = step.updated(service: .fssp, source: .qr, reducer: parameterSourceValue(service:source:parameterId:))
@@ -500,7 +451,7 @@ extension PaymentsStepTests {
         // given
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "source", value: nil)
-        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: nil)
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back:  .init(stage: .local, terms: [.init(parameterId: "one", impact: .rollback)], processed: nil))
 
         // when
         let result = step.updated(service: .fssp, source: .qr, reducer: parameterSourceValue(service:source:parameterId:))

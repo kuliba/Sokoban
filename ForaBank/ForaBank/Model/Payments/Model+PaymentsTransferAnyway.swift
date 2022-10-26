@@ -145,18 +145,18 @@ extension Model {
         
         if response.finalStep == true {
             
-            return .confirm
+            return .remote(.confirm)
             
         } else {
             
-            let operationStepsStages = operation.steps.compactMap{ $0.back?.stage }
+            let operationStepsStages = operation.steps.map{ $0.back.stage }
             if operationStepsStages.count > 0 {
                 
-                return .next
+                return .remote(.next)
                 
             } else {
                 
-                return .start
+                return .remote(.start)
             }
         }
     }

@@ -25,19 +25,9 @@ extension Payments.Operation.Step {
         
         if let processedResults = processedResults(with: parameters) {
 
-            var impacts = [Impact]()
-            
-            for statedata in processedResults {
-                
-                if statedata.processed != statedata.current {
-                    
-                    impacts.append(statedata.impact)
-                }
-            }
-            
-            let sortedImpacts = impacts.sorted(by: { $0.rawValue < $1.rawValue })
-            
-            guard let firstImpact = sortedImpacts.first else {
+            let impacts = impacts(for: processedResults)
+
+            guard let firstImpact = impacts.first else {
                 return .complete
             }
             
@@ -45,14 +35,7 @@ extension Payments.Operation.Step {
             
         } else {
             
-            guard let back = back else {
-                return .complete
-            }
-            
-            let termsParametersIds = back.terms.map{ $0.parameterId }
-            let pendingParameters = parameters.filter({ termsParametersIds.contains($0.id) }).map{ $0.parameter }
-            
-            return .pending(parameters: pendingParameters, stage: back.stage)
+            return .pending(parameters: pendingParameters(with: parameters), stage: back.stage)
         }
     }
     
@@ -61,7 +44,7 @@ extension Payments.Operation.Step {
     /// - Returns: optional list of results
     func processedResults(with parameters: [PaymentsParameterRepresentable]) -> [ProcessedData]? {
         
-        guard let back = back, let processed = back.processed else {
+        guard let processed = back.processed else {
             return nil
         }
         
@@ -88,38 +71,36 @@ extension Payments.Operation.Step {
         return result
     }
     
+    func impacts(for processedResults: [ProcessedData]) -> [Impact] {
+        
+        var impacts = [Impact]()
+        
+        for statedata in processedResults {
+            
+            if statedata.processed != statedata.current {
+                
+                impacts.append(statedata.impact)
+            }
+        }
+        
+        return impacts.sorted(by: { $0.rawValue < $1.rawValue })
+    }
+    
     /// Removes data about parameters processed on server
     /// - Returns: resetted step
     func reseted() -> Payments.Operation.Step {
-        
-        guard let back = back else {
-            return self
-        }
         
         return .init(parameters: parameters, front: front, back: .init(stage: back.stage, terms: back.terms, processed: nil) )
     }
     
     /// Creates list of parameters that should be processed on server side
     /// - Parameter parameters: list of parameters from operation
-    /// - Returns: optional parameters list
-    func processParameters(with parameters: [PaymentsParameterRepresentable]) throws -> [Parameter]? {
+    /// - Returns: parameters list
+    func pendingParameters(with parameters: [PaymentsParameterRepresentable]) -> [Parameter] {
+
+        let termsParametersIds = back.terms.map{ $0.parameterId }
         
-        guard let back = back else {
-            return nil
-        }
-        
-        var result = [Parameter]()
-        
-        for term in back.terms {
-            
-            guard let parameter = parameters.first(where: { $0.id == term.parameterId })?.parameter else {
-                throw Payments.Operation.Error.stepMissingParameterForTerm
-            }
-            
-            result.append(parameter)
-        }
-        
-        return result
+        return parameters.filter({ termsParametersIds.contains($0.id) }).map{ $0.parameter }
     }
     
     /// Updates step with parameters processed on server
@@ -127,10 +108,6 @@ extension Payments.Operation.Step {
     /// - Returns: updated step
     func processed(parameters: [Parameter]) throws -> Payments.Operation.Step {
         
-        guard let back = back else {
-            throw Payments.Operation.Error.stepMissingTermsForProcessedParameters
-        }
- 
         let requiredParametersIds = Set(back.terms.map({ $0.parameterId }))
         let processedParametersIds = Set(parameters.map({ $0.id }))
         

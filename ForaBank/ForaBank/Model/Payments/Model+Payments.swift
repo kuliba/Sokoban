@@ -215,71 +215,80 @@ extension Model {
                         
                     case let .backProcess(parameters: parameters, stepIndex: stepIndex, stage: stage):
                         switch stage {
-                        case .start:
-                            if stepIndex < operation.steps.count {
-                                
-                                // process parameters on server
-                                try await paymentsProcessStart(parameters, operation)
-                                
-                                // try to update operation with processed values
-                                operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
-                                
-                            } else {
-                                
-                                // process parameters on server
-                                let response = try await paymentsProcessStart(parameters, operation)
-                                
-                                // try to create next step
-                                let nextStep = try await paymentsStep(operation: operation, response: response)
-                                
-                                // update step parameters values with data in source
-                                let nextStepUpdatedWithSource = nextStep.updated(service: operation.service, source: operation.source, reducer: paymentsReduceParameterSourceValue(service:source:parameterId:))
-                                
-                                // try to update operation with processed values
-                                operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
-                                
-                                // try to append next step to operation
-                                operation = try operation.appending(step: nextStepUpdatedWithSource)
-                            }
-                           
-                        case .next:
-                            if stepIndex < operation.steps.count {
-                                
-                                // process parameters on server
-                                try await paymentsProcessNext(parameters, operation)
-                                
-                                // try to update operation with processed values
-                                operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
-                                
-                            } else {
-                                
-                                // try to create next step
-                                let response = try await paymentsProcessNext(parameters, operation)
-                                
-                                // try to create next step
-                                let nextStep = try await paymentsStep(operation: operation, response: response)
-                                
-                                // update step parameters values with data in source
-                                let nextStepUpdatedWithSource = nextStep.updated(service: operation.service, source: operation.source, reducer: paymentsReduceParameterSourceValue(service:source:parameterId:))
-                                
-                                // try to update operation with processed values
-                                operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
-                                
-                                // try to append next step to operation
-                                operation = try operation.appending(step: nextStepUpdatedWithSource)
-                            }
+                        case .local:
+                            //TODO: local stage
+                            break
                             
-                        case .confirm:
-                            // try to confirm operation and receive success data
-                            let success = try await paymentsProcessConfirm(parameters, operation)
-                            self.action.send(ModelAction.Payment.Continue.Response(result: .complete(success)))
-                            return
-                            
-                        case .complete:
-                            // try to complete operation and receive success data
-                            let success = try await paymentsProcessComplete(parameters, operation)
-                            self.action.send(ModelAction.Payment.Continue.Response(result: .complete(success)))
-                            return
+                        case let .remote(remoteStage):
+                            switch remoteStage {
+                            case .start:
+                                if stepIndex < operation.steps.count {
+                                    
+                                    // process parameters on server
+                                    try await paymentsProcessStart(parameters, operation)
+                                    
+                                    // try to update operation with processed values
+                                    operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
+                                    
+                                } else {
+                                    
+                                    // process parameters on server
+                                    let response = try await paymentsProcessStart(parameters, operation)
+                                    
+                                    // try to create next step
+                                    let nextStep = try await paymentsStep(operation: operation, response: response)
+                                    
+                                    // update step parameters values with data in source
+                                    let nextStepUpdatedWithSource = nextStep.updated(service: operation.service, source: operation.source, reducer: paymentsReduceParameterSourceValue(service:source:parameterId:))
+                                    
+                                    // try to update operation with processed values
+                                    operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
+                                    
+                                    // try to append next step to operation
+                                    operation = try operation.appending(step: nextStepUpdatedWithSource)
+                                }
+                               
+                            case .next:
+                                if stepIndex < operation.steps.count {
+                                    
+                                    // process parameters on server
+                                    try await paymentsProcessNext(parameters, operation)
+                                    
+                                    // try to update operation with processed values
+                                    operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
+                                    
+                                } else {
+                                    
+                                    // try to create next step
+                                    let response = try await paymentsProcessNext(parameters, operation)
+                                    
+                                    // try to create next step
+                                    let nextStep = try await paymentsStep(operation: operation, response: response)
+                                    
+                                    // update step parameters values with data in source
+                                    let nextStepUpdatedWithSource = nextStep.updated(service: operation.service, source: operation.source, reducer: paymentsReduceParameterSourceValue(service:source:parameterId:))
+                                    
+                                    // try to update operation with processed values
+                                    operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
+                                    
+                                    // try to append next step to operation
+                                    operation = try operation.appending(step: nextStepUpdatedWithSource)
+                                }
+                                
+                            case .confirm:
+                                // try to confirm operation and receive success data
+                                let success = try await paymentsProcessConfirm(parameters, operation)
+                                self.action.send(ModelAction.Payment.Continue.Response(result: .complete(success)))
+                                return
+                                
+                            case .complete:
+                                // try to complete operation and receive success data
+                                let success = try await paymentsProcessComplete(parameters, operation)
+                                self.action.send(ModelAction.Payment.Continue.Response(result: .complete(success)))
+                                return
+                                
+                            }
+                        
                         }
 
                     case .frontConfirm:
