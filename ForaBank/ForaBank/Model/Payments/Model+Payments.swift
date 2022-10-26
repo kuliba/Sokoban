@@ -142,7 +142,7 @@ extension Model {
                     let operationWithFirstStep = try operation.appending(step: step)
                     
                     // update depended parameters
-                    let operationUpdatedDependedParameters = operationWithFirstStep.updated(reducer: paymentsReduceDependedParameter(parameterId:parameters:))
+                    let operationUpdatedDependedParameters = operationWithFirstStep.updatedDepended(reducer: paymentsReduceDependedParameter(parameterId:parameters:))
                     
                     self.action.send(ModelAction.Payment.Begin.Response.success(operationUpdatedDependedParameters))
 
@@ -172,7 +172,7 @@ extension Model {
                     let operationWithFirstStep = try operation.appending(step: stepUpdatedWithSource)
                     
                     // update depended parameters
-                    let operationUpdatedDependedParameters = operationWithFirstStep.updated(reducer: paymentsReduceDependedParameter(parameterId:parameters:))
+                    let operationUpdatedDependedParameters = operationWithFirstStep.updatedDepended(reducer: paymentsReduceDependedParameter(parameterId:parameters:))
                     
                     self.action.send(ModelAction.Payment.Begin.Response.success(operationUpdatedDependedParameters))
 
@@ -190,7 +190,7 @@ extension Model {
         Task {
             
             /// operation from continue action payload updated depended parameters
-            var operation = payload.operation.updated(reducer: paymentsReduceDependedParameter(parameterId:parameters:))
+            var operation = payload.operation.updatedDepended(reducer: paymentsReduceDependedParameter(parameterId:parameters:))
             
             do {
                 

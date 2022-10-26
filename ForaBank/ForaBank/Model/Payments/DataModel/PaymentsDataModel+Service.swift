@@ -29,4 +29,11 @@ extension Payments.Service {
         case .fssp: return "ФССП"
         }
     }
+    
+    var transferType: Payments.Operation.TransferType {
+        
+        switch self {
+        case .fms, .fns, .fssp : return .anyway
+        }
+    }
 }

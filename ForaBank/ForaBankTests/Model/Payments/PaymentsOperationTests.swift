@@ -338,6 +338,80 @@ extension PaymentsOperationTests {
     }
 }
 
+//MARK: - Updated Depended
+
+extension PaymentsOperationTests {
+    
+    func testUpdatedDepended_Changed() throws {
+        
+        // given
+        let paramOne = Payments.ParameterMock(id: "one", value: "100")
+        let stepOne = Payments.Operation.Step(parameters: [paramOne], front: .init(visible: ["one"], isCompleted: true), back: .init(stage: .remote(.start), terms: [.init(parameterId: paramOne.id, impact: .rollback)], processed: [paramOne.parameter]))
+
+        let paramTwo = Payments.ParameterMock(id: "two", value: "200")
+        let stepTwo = Payments.Operation.Step(parameters: [paramTwo], front: .init(visible: ["two"], isCompleted: true), back: .init(stage: .remote(.next), terms:[.init(parameterId: paramTwo.id, impact: .restart)], processed: [paramTwo.parameter]))
+        
+        let paramThree = Payments.ParameterMock(id: "three", value: "300")
+        let stepThree = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.complete), terms: [.init(parameterId: paramThree.id, impact: .rollback)], processed: nil))
+
+        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne, stepTwo, stepThree])
+        
+        // when
+        let result = operation.updatedDepended(reducer: mockReducer(parameterId:parameters:))
+        
+        // then
+        XCTAssertEqual(result.parameters[0].value, "100")
+        XCTAssertEqual(result.parameters[1].value, "changed")
+        XCTAssertEqual(result.parameters[2].value, "300")
+    }
+    
+    func testUpdatedDepended_No_Change() throws {
+        
+        // given
+        let paramOne = Payments.ParameterMock(id: "one", value: "100")
+        let stepOne = Payments.Operation.Step(parameters: [paramOne], front: .init(visible: ["one"], isCompleted: true), back: .init(stage: .remote(.start), terms: [.init(parameterId: paramOne.id, impact: .rollback)], processed: [paramOne.parameter]))
+
+        let paramTwo = Payments.ParameterMock(id: "two", value: "200")
+        let stepTwo = Payments.Operation.Step(parameters: [paramTwo], front: .init(visible: ["two"], isCompleted: true), back: .init(stage: .remote(.next), terms:[.init(parameterId: paramTwo.id, impact: .restart)], processed: [paramTwo.parameter]))
+        
+        let paramThree = Payments.ParameterMock(id: "three", value: "100")
+        let stepThree = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.complete), terms: [.init(parameterId: paramThree.id, impact: .rollback)], processed: nil))
+
+        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne, stepTwo, stepThree])
+        
+        // when
+        let result = operation.updatedDepended(reducer: mockReducer(parameterId:parameters:))
+        
+        // then
+        XCTAssertEqual(result.parameters[0].value, "100")
+        XCTAssertEqual(result.parameters[1].value, "200")
+        XCTAssertEqual(result.parameters[2].value, "100")
+    }
+    
+    func mockReducer(parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
+        
+        switch parameterId {
+        case "two":
+            guard let paramTwo = parameters.first(where: { $0.id == "two" }),
+                  let paramThree = parameters.first(where: { $0.id == "three" }) else {
+                return nil
+            }
+            
+            // check some condition
+            guard paramThree.value == "300" else {
+                // no change
+                return nil
+            }
+            
+            let paramTwoUpdated = paramTwo.updated(value: "changed")
+            return paramTwoUpdated
+            
+        default:
+            return nil
+        }
+    }
+}
+
 //MARK: - Next Action
 
 extension PaymentsOperationTests {

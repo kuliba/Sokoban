@@ -20,7 +20,7 @@ extension Payments.Operation {
     
     var transferType: Payments.Operation.TransferType {
 
-        return .anyway
+        return service.transferType
     }
 
     /// Appends new step to operation
@@ -134,7 +134,7 @@ extension Payments.Operation {
     /// Updates depended parameters. For example parameter `amount` or `currency` depends on parameter `product` value
     /// - Parameter reducer: optional returns updated parameter if it depends on other
     /// - Returns: updated operation
-    func updated(reducer: (Parameter.ID, [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable?) -> Payments.Operation {
+    func updatedDepended(reducer: (Parameter.ID, [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable?) -> Payments.Operation {
         
         var updatedSteps = [Payments.Operation.Step]()
         
