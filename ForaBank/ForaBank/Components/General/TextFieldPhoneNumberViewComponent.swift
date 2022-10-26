@@ -20,15 +20,17 @@ extension TextFieldPhoneNumberView {
         
         let placeHolder: PlaceHolder
         var bindings = Set<AnyCancellable>()
+        let filtersSymbols: [Character]?
         
         let phoneNumberFormatter = PhoneNumberFormater()
         
-        internal init(text: String? = nil, placeHolder: PlaceHolder, isEditing: Bool = false, toolbar: ToolbarViewModel? = nil) {
+        internal init(text: String? = nil, placeHolder: PlaceHolder, isEditing: Bool = false, toolbar: ToolbarViewModel? = nil, filtersSymbols: [Character]? = nil) {
             
             self.text = text
             self.placeHolder = placeHolder
             self.isEditing = isEditing
             self.toolbar = toolbar
+            self.filtersSymbols = filtersSymbols
             self.dismissKeyboard = {}
         }
         
@@ -71,7 +73,7 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
             
             let textRange = NSRange(location: 0, length: text.count)
             let phoneNumberFirstDigitReplaceList: [PhoneNumberFirstDigitReplace] = [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")]
-            uiView.text = TextFieldPhoneNumberView.updateMasked(value: text, inRange: textRange, update: text, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter)
+            uiView.text = TextFieldPhoneNumberView.updateMasked(value: text, inRange: textRange, update: text, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filtersSymbols)
         }
     }
     
@@ -101,7 +103,7 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
             
             let phoneNumberFirstDigitReplaceList: [PhoneNumberFirstDigitReplace] = [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")]
-            textField.text = TextFieldPhoneNumberView.updateMasked(value: textField.text, inRange: range, update: string, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter)
+            textField.text = TextFieldPhoneNumberView.updateMasked(value: textField.text, inRange: range, update: string, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filtersSymbols)
             text.wrappedValue = textField.text
             
             return false
@@ -116,23 +118,35 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         }
     }
     
-    static func updateMasked(value: String?, inRange: NSRange, update: String, firstDigitReplace: [PhoneNumberFirstDigitReplace], phoneFormatter: PhoneNumberFormaterProtocol) -> String? {
-        
-        let filteredUpdate = update
+    static func updateMasked(value: String?, inRange: NSRange, update: String, firstDigitReplace: [PhoneNumberFirstDigitReplace], phoneFormatter: PhoneNumberFormaterProtocol, filterSymbols: [Character]?) -> String? {
         
         if let value = value {
             
             var updatedValue = value
             let rangeStart = value.index(value.startIndex, offsetBy: inRange.lowerBound)
             let rangeEnd = value.index(value.startIndex, offsetBy: inRange.upperBound)
-            updatedValue.replaceSubrange(rangeStart..<rangeEnd, with: filteredUpdate)
+            updatedValue.replaceSubrange(rangeStart..<rangeEnd, with: update)
             
-            //if user enter letters
-            guard updatedValue.digits.count >= 1 else {
+            let filterdValue = updatedValue.replacingOccurrences(of: " ", with: "").filter { char in
+                
+                if let filterSymbols = filterSymbols {
+                 
+                    for symbol in filterSymbols {
+                        
+                        if symbol == char {
+                            
+                            return false
+                        }
+                    }
+                }
+                
+                return true
+            }
+            
+            guard filterdValue.isNumeric else {
                 return updatedValue
             }
             
-            // need map first digit replace all time update.count > 1 || update.count == 1, because user can past phone type 8 925...
             var phone = updatedValue.digits
             
             for replace in firstDigitReplace {
