@@ -15,7 +15,7 @@ class PaymentsProcessTests: XCTestCase {
 
 extension PaymentsProcessTests {
     
-    func testInitial_Second_Step() async throws {
+    func testLocalMultistep_FirstStep_AutoComplete() async throws {
         
         // given
         let service: Payments.Service = .fns
@@ -40,7 +40,7 @@ extension PaymentsProcessTests {
         XCTAssertEqual(secondStepResult.parameters[0].id, "service")
     }
     
-    func testFirstStep_Rollback() async throws {
+    func testLocalMultistep_FirstStep_Rollback() async throws {
         
         // given
         let service: Payments.Service = .fns
@@ -80,7 +80,7 @@ extension PaymentsProcessTests {
     func process(_ operation: Payments.Operation) async throws -> Payments.ProcessResult {
         
         try await Model.paymentsProcess(operation: operation,
-                              localStep: localStep(service:stepIndex:operation:),
+                              localStep: localStep(operation:stepIndex:),
                               remoteStep: remoteStep(operation:response:),
                               remoteStart: remoteStart(parameters:operation:),
                               remoteNext: remoteNext(parameters:operation:),
@@ -92,9 +92,9 @@ extension PaymentsProcessTests {
 }
 
 
-private func localStep(service: Payments.Service, stepIndex: Int, operation: Payments.Operation) async throws -> Payments.Operation.Step {
+private func localStep(operation: Payments.Operation, stepIndex: Int) async throws -> Payments.Operation.Step {
     
-    switch service {
+    switch operation.service {
     case .fns:
         switch stepIndex {
         case 0:

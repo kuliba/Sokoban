@@ -366,6 +366,7 @@ extension Payments {
         case unableCreateOperationForService(Service)
         case unexpectedOperatorValue
         case unexpectedProductType
+        case unexpectedProcessResult
         
         case missingOperatorParameter
         case missingParameter

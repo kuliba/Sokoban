@@ -135,17 +135,17 @@ extension Model {
                     // create empty operation
                     let operation = Operation(service: service)
                     
-                    // try to create first step
-                    let step = try await paymentsStep(for: service, stepIndex: 0, operation: operation)
+                    // process operation
+                    let result = try await paymentsProcess(operation: operation)
                     
-                    // append first step to operation
-                    let operationWithFirstStep = try operation.appending(step: step)
-                    
-                    // update depended parameters
-                    let operationUpdatedDependedParameters = operationWithFirstStep.updatedDepended(reducer: paymentsReduceDependedParameter(parameterId:parameters:))
-                    
-                    self.action.send(ModelAction.Payment.Begin.Response.success(operationUpdatedDependedParameters))
-
+                    switch result {
+                    case let .step(operation):
+                        self.action.send(ModelAction.Payment.Begin.Response.success(operation))
+                        
+                    default:
+                        throw Payments.Error.unexpectedProcessResult
+                    }
+  
                 } catch {
                     
                     LoggerAgent.shared.log(level: .error, category: .model, message: "Failed create operation for service: \(service) with error: \(error.localizedDescription)")
@@ -162,19 +162,16 @@ extension Model {
                     // create empty operation
                     let operation = Operation(service: service, source: source)
                     
-                    // try to create first step
-                    let step = try await paymentsStep(for: service, stepIndex: 0, operation: operation)
+                    // process operation
+                    let result = try await paymentsProcess(operation: operation)
                     
-                    // update step parameters values with data in source
-                    let stepUpdatedWithSource = step.updated(service: service, source: source, reducer: paymentsReduceParameterSourceValue(service:source:parameterId:))
-                    
-                    // append first step to operation
-                    let operationWithFirstStep = try operation.appending(step: stepUpdatedWithSource)
-                    
-                    // update depended parameters
-                    let operationUpdatedDependedParameters = operationWithFirstStep.updatedDepended(reducer: paymentsReduceDependedParameter(parameterId:parameters:))
-                    
-                    self.action.send(ModelAction.Payment.Begin.Response.success(operationUpdatedDependedParameters))
+                    switch result {
+                    case let .step(operation):
+                        self.action.send(ModelAction.Payment.Begin.Response.success(operation))
+                        
+                    default:
+                        throw Payments.Error.unexpectedProcessResult
+                    }
 
                 } catch {
                     
@@ -188,125 +185,25 @@ extension Model {
     func handlePaymentsContinueRequest(_ payload: ModelAction.Payment.Continue.Request) {
         
         Task {
-            
-            /// operation from continue action payload updated depended parameters
-            var operation = payload.operation.updatedDepended(reducer: paymentsReduceDependedParameter(parameterId:parameters:))
-            
-            do {
-                
-                repeat {
-                    
-                    let nextAction = operation.nextAction()
-                    
-                    switch nextAction {
-                    case let .step(index: stepIndex):
-                        // try to create step for the index
-                        let step = try await paymentsStep(for: operation.service, stepIndex: stepIndex, operation: operation)
-                        
-                        // update step parameters values with data in source
-                        let stepUpdatedWithSource = step.updated(service: operation.service, source: operation.source, reducer: paymentsReduceParameterSourceValue(service:source:parameterId:))
-                        
-                        // try to append step to operation
-                        operation = try operation.appending(step: stepUpdatedWithSource)
-                        
-                    case .frontUpdate:
-                        self.action.send(ModelAction.Payment.Continue.Response(result: .step(operation)))
-                        return
-                        
-                    case let .backProcess(parameters: parameters, stepIndex: stepIndex, stage: stage):
-                        switch stage {
-                        case .local:
-                            //TODO: local stage
-                            break
-                            
-                        case let .remote(remoteStage):
-                            switch remoteStage {
-                            case .start:
-                                if stepIndex < operation.steps.count {
-                                    
-                                    // process parameters on server
-                                    try await paymentsProcessStart(parameters, operation)
-                                    
-                                    // try to update operation with processed values
-                                    operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
-                                    
-                                } else {
-                                    
-                                    // process parameters on server
-                                    let response = try await paymentsProcessStart(parameters, operation)
-                                    
-                                    // try to create next step
-                                    let nextStep = try await paymentsStep(operation: operation, response: response)
-                                    
-                                    // update step parameters values with data in source
-                                    let nextStepUpdatedWithSource = nextStep.updated(service: operation.service, source: operation.source, reducer: paymentsReduceParameterSourceValue(service:source:parameterId:))
-                                    
-                                    // try to update operation with processed values
-                                    operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
-                                    
-                                    // try to append next step to operation
-                                    operation = try operation.appending(step: nextStepUpdatedWithSource)
-                                }
-                               
-                            case .next:
-                                if stepIndex < operation.steps.count {
-                                    
-                                    // process parameters on server
-                                    try await paymentsProcessNext(parameters, operation)
-                                    
-                                    // try to update operation with processed values
-                                    operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
-                                    
-                                } else {
-                                    
-                                    // try to create next step
-                                    let response = try await paymentsProcessNext(parameters, operation)
-                                    
-                                    // try to create next step
-                                    let nextStep = try await paymentsStep(operation: operation, response: response)
-                                    
-                                    // update step parameters values with data in source
-                                    let nextStepUpdatedWithSource = nextStep.updated(service: operation.service, source: operation.source, reducer: paymentsReduceParameterSourceValue(service:source:parameterId:))
-                                    
-                                    // try to update operation with processed values
-                                    operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
-                                    
-                                    // try to append next step to operation
-                                    operation = try operation.appending(step: nextStepUpdatedWithSource)
-                                }
-                                
-                            case .confirm:
-                                // try to confirm operation and receive success data
-                                let success = try await paymentsProcessConfirm(parameters, operation)
-                                self.action.send(ModelAction.Payment.Continue.Response(result: .complete(success)))
-                                return
-                                
-                            case .complete:
-                                // try to complete operation and receive success data
-                                let success = try await paymentsProcessComplete(parameters, operation)
-                                self.action.send(ModelAction.Payment.Continue.Response(result: .complete(success)))
-                                return
-                                
-                            }
-                        
-                        }
 
-                    case .frontConfirm:
-                        self.action.send(ModelAction.Payment.Continue.Response(result: .confirm(operation)))
-                        return
-                        
-                    case let .rollback(stepIndex: stepIndex):
-                        operation = try operation.rollback(to: stepIndex)
+            do {
+
+                let result = try await paymentsProcess(operation: payload.operation)
+                
+                switch result {
+                case let .step(operation):
+                    self.action.send(ModelAction.Payment.Continue.Response(result: .step(operation)))
                     
-                    case .restart:
-                        operation = operation.restarted()
-                    }
+                case let .confirm(operation):
+                    self.action.send(ModelAction.Payment.Continue.Response(result: .confirm(operation)))
                     
-                } while true
+                case let .complete(success):
+                    self.action.send(ModelAction.Payment.Continue.Response(result: .complete(success)))
+                }
                 
             } catch {
                 
-                LoggerAgent.shared.log(level: .error, category: .model, message: "Failed continue operation: \(operation) with error: \(error.localizedDescription)")
+                LoggerAgent.shared.log(level: .error, category: .model, message: "Failed continue operation: \(payload.operation) with error: \(error.localizedDescription)")
                 self.action.send(ModelAction.Payment.Continue.Response(result: .failure(self.paymentsAlertMessage(with: error))))
             }
         }
@@ -328,9 +225,9 @@ extension Model {
 
 extension Model {
     
-    func paymentsStep(for service: Service, stepIndex: Int, operation: Operation) async throws -> Operation.Step {
+    func paymentsProcessLocalStep(operation: Operation, stepIndex: Int) async throws -> Operation.Step {
         
-        switch service {
+        switch operation.service {
         case .fns:
             return try await paymentsStepFNS(for: stepIndex)
             
@@ -342,7 +239,7 @@ extension Model {
         }
     }
     
-    func paymentsStep(operation: Operation, response: TransferResponseData) async throws -> Operation.Step {
+    func paymentsProcessRemoteStep(operation: Operation, response: TransferResponseData) async throws -> Operation.Step {
         
         if let anywayResponse = response as? TransferAnywayResponseData {
             
@@ -365,25 +262,25 @@ extension Model {
 
 extension Model {
     
-    func paymentsReduceParameterSourceValue(service: Service, source: Operation.Source, parameterId: Parameter.ID) -> Parameter.Value? {
+    func paymentsProcessSourceReducer(service: Service, source: Operation.Source, parameterId: Parameter.ID) -> Parameter.Value? {
 
         //TODO: implementation required
         return nil
     }
     
-    func paymentsReduceDependedParameter(parameterId: Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
+    func paymentsProcessDependencyReducer(parameterId: Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
         
         //TODO: implementation required
         return nil
     }
 }
 
-//MARK: - Process
+//MARK: - Remote Process
 
 extension Model {
     
     @discardableResult
-    func paymentsProcessStart(_ process: [Parameter], _ operation: Operation) async throws -> TransferResponseData {
+    func paymentsProcessRemoteStart(_ process: [Parameter], _ operation: Operation) async throws -> TransferResponseData {
         
         switch operation.transferType {
         case .anyway:
@@ -392,7 +289,7 @@ extension Model {
     }
     
     @discardableResult
-    func paymentsProcessNext(_ process: [Parameter], _ operation: Operation) async throws -> TransferResponseData {
+    func paymentsProcessRemoteNext(_ process: [Parameter], _ operation: Operation) async throws -> TransferResponseData {
         
         switch operation.transferType {
         case .anyway:
@@ -400,7 +297,7 @@ extension Model {
         }
     }
     
-    func paymentsProcessConfirm(_ process: [Parameter], _ operation: Operation) async throws -> Payments.Success {
+    func paymentsProcessRemoteConfirm(_ process: [Parameter], _ operation: Operation) async throws -> Payments.Success {
         
         guard let codeValue = operation.parameters.first(where: { $0.id == Parameter.Identifier.code.rawValue })?.value else {
             throw Payments.Error.missingCodeParameter
@@ -412,7 +309,7 @@ extension Model {
         return success
     }
     
-    func paymentsProcessComplete(_ process: [Parameter], _ operation: Operation) async throws -> Payments.Success {
+    func paymentsProcessRemoteComplete(_ process: [Parameter], _ operation: Operation) async throws -> Payments.Success {
         
         //FIXME: optional code value?
         let response = try await paymentsTransferComplete(code: "")

@@ -9,8 +9,22 @@ import Foundation
 
 extension Model {
     
+    func paymentsProcess(operation: Payments.Operation) async throws -> Payments.ProcessResult {
+        
+        try await Self.paymentsProcess(
+            operation: operation,
+            localStep: paymentsProcessLocalStep(operation:stepIndex:),
+            remoteStep: paymentsProcessRemoteStep(operation:response:),
+            remoteStart: paymentsProcessRemoteStart(_:_:),
+            remoteNext: paymentsProcessRemoteNext(_:_:),
+            remoteConfirm: paymentsProcessRemoteConfirm(_:_:),
+            remoteComplete: paymentsProcessRemoteComplete(_:_:),
+            sourceReducer: paymentsProcessSourceReducer(service:source:parameterId:),
+            dependenceReducer: paymentsProcessDependencyReducer(parameterId:parameters:))
+    }
+    
     static func paymentsProcess(operation: Payments.Operation,
-                         localStep: (Payments.Service, Int, Payments.Operation) async throws -> Payments.Operation.Step,
+                         localStep: (Payments.Operation, Int) async throws -> Payments.Operation.Step,
                          remoteStep: (Payments.Operation, TransferResponseData) async throws -> Payments.Operation.Step,
                          remoteStart: ([Payments.Parameter], Payments.Operation) async throws -> TransferResponseData,
                          remoteNext: ([Payments.Parameter], Payments.Operation) async throws -> TransferResponseData,
@@ -29,7 +43,7 @@ extension Model {
             switch nextAction {
             case let .step(index: stepIndex):
                 // try to create step for the index
-                let step = try await localStep(operation.service, stepIndex, operation)
+                let step = try await localStep(operation, stepIndex)
                 
                 // update step parameters values with data in source
                 let stepUpdatedWithSource = step.updated(service: operation.service, source: operation.source, reducer: sourceReducer)
@@ -44,7 +58,7 @@ extension Model {
                 switch stage {
                 case .local:
                     // try to create step for the index
-                    let step = try await localStep(operation.service, stepIndex + 1, operation)
+                    let step = try await localStep(operation, stepIndex + 1)
                     
                     // update step parameters values with data in source
                     let stepUpdatedWithSource = step.updated(service: operation.service, source: operation.source, reducer: sourceReducer)
