@@ -18,20 +18,25 @@ struct PaymentsServiceView: View {
             
             ScrollView {
                 
-                if let selectViewModel = viewModel.select {
+                ForEach(viewModel.content) { itemViewModel in
                     
-                    PaymentsSelectServiceView(viewModel: selectViewModel)
+                    switch itemViewModel {
+                    case let selectServiceViewModel as PaymentsSelectServiceView.ViewModel:
+                        PaymentsSelectServiceView(viewModel: selectServiceViewModel)
+                     
+                    default:
+                        Color.clear
+                    }
                 }
-                
-                NavigationLink("", isActive: $viewModel.isOperationViewActive) {
+
+                NavigationLink("", isActive: $viewModel.isLinkActive) {
                     
-                    if let operationViewModel = viewModel.operationViewModel {
+                    if let link = viewModel.link  {
                         
-                        PaymentsOperationView(viewModel: operationViewModel)
-                        
-                    } else {
-                        
-                        EmptyView()
+                        switch link {
+                        case let .operation(operationViewModel):
+                            PaymentsOperationView(viewModel: operationViewModel)
+                        }
                     }
                 }
             }
@@ -42,6 +47,7 @@ struct PaymentsServiceView: View {
     }
 }
 
+/*
 //MARK: - Preview
 
 struct PaymentsServicesView_Previews: PreviewProvider {
@@ -59,3 +65,4 @@ extension PaymentsServiceViewModel {
     
     static let sample = PaymentsServiceViewModel(header: .init(title: "Налоги и услуги"), parameter: .init(category: .taxes, options: []))
 }
+ */

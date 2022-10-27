@@ -12,78 +12,66 @@ class PaymentsServiceViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
-    @Published var header: HeaderViewModel
-    lazy var select: PaymentsSelectServiceView.ViewModel = PaymentsSelectServiceView.ViewModel(with: parameter, action: { [weak self] id in self?.action.send(PaymentsServiceViewModelAction.ItemTapped(itemId: id)) })
-    @Published var isOperationViewActive: Bool
-    var operationViewModel: PaymentsOperationViewModel?
+    let header: HeaderViewModel
+    @Published var content: [PaymentsParameterViewModel]
+    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var isLinkActive: Bool = false
     
-    private let parameter: Payments.ParameterSelectService
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    internal init(header: HeaderViewModel,
-                  parameter: Payments.ParameterSelectService,
-                  isOperationViewActive: Bool = false,
-                  model: Model = .emptyMock) {
+    init(header: HeaderViewModel, content: [PaymentsParameterViewModel], link: Link?, model: Model) {
         
         self.header = header
-        self.parameter = parameter
-        self.isOperationViewActive = isOperationViewActive
+        self.content = content
+        self.link = link
         self.model = model
     }
     
-    internal init(_ model: Model, category: Payments.Category, parameter: Payments.ParameterSelectService) {
+    convenience init(category: Payments.Category, parameters: [PaymentsParameterRepresentable], model: Model) {
         
-        self.header = HeaderViewModel(title: category.name)
-        self.parameter = parameter
-        self.isOperationViewActive = false
-        self.model = model
+        let header = HeaderViewModel(title: category.name)
+        self.init(header: header, content: [], link: nil, model: model)
+        
+        content = Self.reduce(parameters: parameters, action: { [weak self] in
+            
+            { service in self?.action.send(PaymentsServiceViewModelAction.ServiceSelected(service: service)) }
+        })
         
         bind()
     }
-    
-    struct HeaderViewModel {
-        
-        let title: String
-    }
-    
-    func bind() {
-        
-        model.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                switch action {
-                case let payload as ModelAction.Payment.Begin.Response:
-                    switch payload {
-                    case .success(let operation):
-                        operationViewModel = PaymentsOperationViewModel(model, operation: operation)
-                        isOperationViewActive = true
-                        
-                    case .failure(let errorMessage):
-                        self.action.send(PaymentsServiceViewModelAction.Alert(message: errorMessage))
-                    }
 
-                default:
-                    break
-                }
-                
-            }.store(in: &bindings)
+    private func bind() {
         
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 
                 switch action {
-                case let payload as PaymentsServiceViewModelAction.ItemTapped:
-                    guard let selectServiceParameter = select.source as? Payments.ParameterSelectService,
-                            let selectedService = selectServiceParameter.options.first(where: { $0.id == payload.itemId})?.service else {
-                        return
+                case let payload as PaymentsServiceViewModelAction.ServiceSelected:
+                    Task {
+                        
+                        do {
+                            
+                            let operation = try await model.paymentsOperation(with: payload.service)
+                            
+                            await MainActor.run {
+                                
+                                let operationViewModel = PaymentsOperationViewModel(model, operation: operation)
+                                link = .operation(operationViewModel)
+                            }
+                            
+                        } catch {
+                            
+                            await MainActor.run {
+                                
+                                self.action.send(PaymentsServiceViewModelAction.Alert(message: error.localizedDescription))
+                            }
+                        }
                     }
-                    model.action.send(ModelAction.Payment.Begin.Request(base: .service(selectedService)))
                     
-                case _ as PaymentsServiceViewModelAction.DissmissOperationView:
-                    isOperationViewActive = false
-                    operationViewModel = nil
+                case _ as PaymentsServiceViewModelAction.DissmissLink:
+                    link = nil
                     
                 default:
                     break
@@ -93,16 +81,55 @@ class PaymentsServiceViewModel: ObservableObject {
     }
 }
 
+//MARK: - Reducers
+
+extension PaymentsServiceViewModel {
+    
+    static func reduce(parameters: [PaymentsParameterRepresentable], action: @escaping () -> (Payments.Service) -> Void) -> [PaymentsParameterViewModel] {
+        
+        var result = [PaymentsParameterViewModel]()
+        
+        for parameter in parameters {
+            
+            switch parameter {
+            case let serviceSelectParameter as Payments.ParameterSelectService:
+                let serviceSelectParameterViewModel = PaymentsSelectServiceView.ViewModel(with: serviceSelectParameter, action: action())
+                result.append(serviceSelectParameterViewModel)
+
+            default:
+                continue
+            }
+        }
+        
+        return result
+    }
+}
+
+//MARK: - Types
+
+extension PaymentsServiceViewModel {
+    
+    struct HeaderViewModel {
+        
+        let title: String
+    }
+    
+    enum Link {
+        
+        case operation(PaymentsOperationViewModel)
+    }
+}
+
 //MARK: - Action
 
 enum PaymentsServiceViewModelAction {
     
-    struct ItemTapped: Action {
+    struct ServiceSelected: Action {
         
-        let itemId: PaymentsSelectServiceView.ViewModel.ID
+        let service: Payments.Service
     }
     
-    struct DissmissOperationView: Action {}
+    struct DissmissLink: Action {}
     
     struct Dismiss: Action {}
     

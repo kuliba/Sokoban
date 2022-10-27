@@ -44,7 +44,7 @@ class PaymentsViewModel: ObservableObject {
         switch result {
         case let .select(selectServiceParameter):
             // multiple services for category
-            let serviceViewModel = PaymentsServiceViewModel(model, category: category, parameter: selectServiceParameter)
+            let serviceViewModel = PaymentsServiceViewModel(category: category, parameters: [selectServiceParameter], model: model)
             self.init(content: .service(serviceViewModel), category: category, model: model, closeAction: closeAction)
             bind(serviceViewModel: serviceViewModel)
 

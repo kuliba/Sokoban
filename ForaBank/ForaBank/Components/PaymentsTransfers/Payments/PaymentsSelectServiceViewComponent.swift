@@ -15,46 +15,42 @@ extension PaymentsSelectServiceView {
 
         @Published var items: [ItemViewModel]
         
-        internal init(items: [ItemViewModel]) {
+        init(items: [ItemViewModel]) {
             
             self.items = items
             super.init(source: Payments.ParameterMock())
         }
         
-        init(with parameter: Payments.ParameterSelectService, action: @escaping (Payments.Parameter.ID) -> Void) {
-            
-            self.items = []
-            super.init(source: parameter)
+        init(with parameter: Payments.ParameterSelectService, action: @escaping (Payments.Service) -> Void) {
             
             self.items = parameter.options.map { ItemViewModel(with: $0, action: { itemId in action(itemId) })}
+            super.init(source: parameter)
         }
-        
+                
         struct ItemViewModel: Identifiable {
            
             let id: Payments.ParameterSelectService.Option.ID
             let icon: Image
             let title: String
             let subTitle: String
-            let action: (Payments.ParameterSelectService.Option.ID) -> Void
+            let service: Payments.Service
+            let action: (Payments.Service) -> Void
             
             static let iconPlaceholder = Image("Payments Icon Placeholder")
             
-            internal init(id: Payments.ParameterSelectService.Option.ID, icon: Image, title: String, subTitle: String, action: @escaping (Payments.ParameterSelectService.Option.ID) -> Void) {
+            init(id: Payments.ParameterSelectService.Option.ID, icon: Image, title: String, subTitle: String, service: Payments.Service, action: @escaping (Payments.Service) -> Void) {
                 
                 self.id = id
                 self.icon = icon
                 self.title = title
                 self.subTitle = subTitle
+                self.service = service
                 self.action = action
             }
             
-            internal init(with option: Payments.ParameterSelectService.Option, action: @escaping (Payments.ParameterSelectService.Option.ID) -> Void) {
+            init(with option: Payments.ParameterSelectService.Option, action: @escaping (Payments.Service) -> Void) {
                 
-                self.id = option.id
-                self.icon = option.icon.image ?? Self.iconPlaceholder
-                self.title = option.title
-                self.subTitle = option.description
-                self.action = action
+                self.init(id: option.id, icon: option.icon.image ?? Self.iconPlaceholder, title: option.title, subTitle: option.description, service: option.service, action: action)
             }
         }
     }
@@ -86,7 +82,7 @@ struct PaymentsSelectServiceView: View {
             
             Button {
                 
-                viewModel.action(viewModel.id)
+                viewModel.action(viewModel.service)
                 
             } label: {
                 
