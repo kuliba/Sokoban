@@ -26,8 +26,7 @@ class PaymentsViewModel: ObservableObject {
     
     enum ContentType {
         
-        case idle
-        case services(PaymentsServicesViewModel)
+        case service(PaymentsServiceViewModel)
         case operation(PaymentsOperationViewModel)
     }
     
@@ -39,13 +38,25 @@ class PaymentsViewModel: ObservableObject {
         self.closeAction = closeAction
     }
     
-    convenience init(category: Payments.Category, model: Model, closeAction: @escaping () -> Void) {
+    convenience init(category: Payments.Category, model: Model, closeAction: @escaping () -> Void) async throws {
         
-        self.init(content: .idle, category: category, model: model, closeAction: closeAction)
+        let result = try await model.paymentsService(for: category)
+        switch result {
+        case let .select(selectServiceParameter):
+            // multiple services for category
+            let serviceViewModel = PaymentsServiceViewModel(model, category: category, parameter: selectServiceParameter)
+            self.init(content: .service(serviceViewModel), category: category, model: model, closeAction: closeAction)
+            bind(serviceViewModel: serviceViewModel)
+
+        case let .selected(service):
+            // single service for category
+            let operation = try await model.paymentsOperation(with: service)
+            let operationViewModel = PaymentsOperationViewModel(model, operation: operation)
+            self.init(content: .operation(operationViewModel), category: category, model: model, closeAction: closeAction)
+            bind(operationViewModel: operationViewModel)
+        }
         
         bind()
-        model.action.send(ModelAction.Payment.Services.Request(category: category))
-        action.send(PaymentsViewModelAction.Spinner.Show())
     }
     
     private func bind() {
@@ -54,40 +65,6 @@ class PaymentsViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
-                case let payload as ModelAction.Payment.Services.Response:
-                    self.action.send(PaymentsViewModelAction.Spinner.Hide())
-                    
-                    switch payload {
-                    case .select(let selectServiceParameter):
-                        // multiple services for category
-                        let servicesViewModel = PaymentsServicesViewModel(model, category: category, parameter: selectServiceParameter, rootActions: rootActions)
-                        content = .services(servicesViewModel)
-                        
-                    case .selected(let service):
-                        // single service for category
-                        model.action.send(ModelAction.Payment.Begin.Request(base: .service(service)))
-                        
-                    case .failed(let error):
-                        self.action.send(PaymentsViewModelAction.Alert(message: error.localizedDescription))
-                    }
-                    
-                case let payload as ModelAction.Payment.Begin.Response:
-                    self.action.send(PaymentsViewModelAction.Spinner.Hide())
-                    
-                    switch payload {
-                    case .success(let operation):
-                        
-                        guard case .idle = content else {
-                            return
-                        }
-                        
-                        let operationViewModel = PaymentsOperationViewModel(model, operation: operation, rootActions: rootActions)
-                        content = .operation(operationViewModel)
-
-                    case .failure(let errorMessage):
-                        self.action.send(PaymentsViewModelAction.Alert(message: errorMessage))
-                    }
-                   
                 case let payload as ModelAction.Payment.Continue.Response:
                     self.action.send(PaymentsViewModelAction.Spinner.Hide())
                     
@@ -138,31 +115,57 @@ class PaymentsViewModel: ObservableObject {
                 
             }.store(in: &bindings)
     }
-}
-
-//MARK: - Types
-
-extension PaymentsViewModel {
     
-    struct RootActions {
+    private func bind(serviceViewModel: PaymentsServiceViewModel) {
         
-        let dismiss: () -> Void
-        let spinner: Spinner
-        let alert: (String) -> Void
-        
-        struct Spinner {
-            
-            let show: () -> Void
-            let hide: () -> Void
-        }
+        serviceViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as PaymentsServiceViewModelAction.Dismiss:
+                    self.action.send(PaymentsViewModelAction.Dismiss())
+                    
+                case _ as PaymentsServiceViewModelAction.Spinner.Show:
+                    self.action.send(PaymentsViewModelAction.Spinner.Show())
+                    
+                case _ as PaymentsServiceViewModelAction.Spinner.Hide:
+                    self.action.send(PaymentsViewModelAction.Spinner.Hide())
+                    
+                case let payload as PaymentsServiceViewModelAction.Alert:
+                    self.action.send(PaymentsViewModelAction.Alert(message: payload.message))
+   
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
     
-    var rootActions: RootActions {
+    private func bind(operationViewModel: PaymentsOperationViewModel) {
         
-        .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())},
-              spinner: .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show())},
-                             hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide())}),
-              alert: {[weak self] message in self?.action.send(PaymentsViewModelAction.Alert(message: message)) })
+        operationViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as PaymentsOperationViewModelAction.Dismiss:
+                    self.action.send(PaymentsViewModelAction.Dismiss())
+                    
+                case _ as PaymentsOperationViewModelAction.Spinner.Show:
+                    self.action.send(PaymentsViewModelAction.Spinner.Show())
+                    
+                case _ as PaymentsOperationViewModelAction.Spinner.Hide:
+                    self.action.send(PaymentsViewModelAction.Spinner.Hide())
+                    
+                case let payload as PaymentsOperationViewModelAction.Alert:
+                    self.action.send(PaymentsViewModelAction.Alert(message: payload.message))
+   
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
 }
 

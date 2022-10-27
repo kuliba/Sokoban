@@ -19,22 +19,6 @@ extension ModelAction {
         typealias Parameter = Payments.Parameter
         typealias Operation = Payments.Operation
         
-        // service(s) for payments category
-        enum Services {
-            
-            struct Request: Action {
-                
-                let category: Category
-            }
-            
-            enum Response: Action {
-                
-                case select(Payments.ParameterSelectService)
-                case selected(Service)
-                case failed(Error)
-            }
-        }
-        
         // begin payment process
         enum Begin {
             
@@ -89,99 +73,7 @@ extension Model {
     typealias Operator = Payments.Operator
     typealias Parameter = Payments.Parameter
     typealias Operation = Payments.Operation
-    
-    func handlePaymentsServicesRequest(_ payload: ModelAction.Payment.Services.Request) {
-        
-        let category = payload.category
-        
-        switch category {
-        case .taxes:
-            let services = category.services
-            if services.count > 1 {
-                
-                guard let anywayGroup = dictionaryAnywayOperatorGroup(for: category.rawValue) else {
-                    
-                    action.send(ModelAction.Payment.Services.Response.failed(Payments.Operation.Error.failedLoadServicesForCategory(category)))
-                    return
-                }
-                
-                let operatorsCodes = services.compactMap{ $0.operators.first?.rawValue }
-                let anywayOperators = anywayGroup.operators.filter{ operatorsCodes.contains($0.code)}
-                
-                let selectServiceParameter = Payments.ParameterSelectService(category: payload.category, options: payload.category.services.compactMap { paymentsParameterRepresentableSelectServiceOption(for: $0, with: anywayOperators)})
-                
-                action.send(ModelAction.Payment.Services.Response.select(selectServiceParameter))
-                
-            } else if let service = payload.category.services.first {
-                
-                action.send(ModelAction.Payment.Services.Response.selected(service))
-                
-            } else {
-                
-                action.send(ModelAction.Payment.Services.Response.failed(Payments.Operation.Error.unableSelectServiceForCategory(payload.category)))
-            }
-        }
-    }
-    
-    func handlePaymentsBeginRequest(_ payload: ModelAction.Payment.Begin.Request) {
-        
-        Task {
-            
-            switch payload.base {
-            case let .service(service):
-                
-                do {
-                    
-                    // create empty operation
-                    let operation = Operation(service: service)
-                    
-                    // process operation
-                    let result = try await paymentsProcess(operation: operation)
-                    
-                    switch result {
-                    case let .step(operation):
-                        self.action.send(ModelAction.Payment.Begin.Response.success(operation))
-                        
-                    default:
-                        throw Payments.Error.unexpectedProcessResult
-                    }
-  
-                } catch {
-                    
-                    LoggerAgent.shared.log(level: .error, category: .model, message: "Failed create operation for service: \(service) with error: \(error.localizedDescription)")
-                    self.action.send(ModelAction.Payment.Begin.Response.failure(self.paymentsAlertMessage(with: error)))
-                }
-               
-            case let .source(source):
-                
-                do {
-                    
-                    // try get service with source
-                    let service = try await paymentsService(for: source)
-                    
-                    // create empty operation
-                    let operation = Operation(service: service, source: source)
-                    
-                    // process operation
-                    let result = try await paymentsProcess(operation: operation)
-                    
-                    switch result {
-                    case let .step(operation):
-                        self.action.send(ModelAction.Payment.Begin.Response.success(operation))
-                        
-                    default:
-                        throw Payments.Error.unexpectedProcessResult
-                    }
 
-                } catch {
-                    
-                    LoggerAgent.shared.log(level: .error, category: .model, message: "Failed create operation for source: \(source) with error: \(error.localizedDescription)")
-                    self.action.send(ModelAction.Payment.Begin.Response.failure(self.paymentsAlertMessage(with: error)))
-                }
-            }
-        }
-    }
-    
     func handlePaymentsContinueRequest(_ payload: ModelAction.Payment.Continue.Request) {
         
         Task {
@@ -213,12 +105,86 @@ extension Model {
 //MARK: - Service
 
 extension Model {
+    
+    enum PaymentsServiceResult {
+        
+        case select(Payments.ParameterSelectService)
+        case selected(Service)
+    }
+    
+    func paymentsService(for category: Category) async throws -> PaymentsServiceResult {
+        
+        switch category {
+        case .taxes:
+            if category.services.count > 1 {
+                
+                guard let anywayGroup = dictionaryAnywayOperatorGroup(for: category.rawValue) else {
+                    throw Payments.Operation.Error.failedLoadServicesForCategory(category)
+                }
+                
+                let operatorsCodes = category.services.compactMap{ $0.operators.first?.rawValue }
+                let anywayOperators = anywayGroup.operators.filter{ operatorsCodes.contains($0.code)}
+                let options = category.services.compactMap { paymentsParameterRepresentableSelectServiceOption(for: $0, with: anywayOperators)}
+                
+                let selectServiceParameter = Payments.ParameterSelectService(category: category, options: options)
+                
+                return .select(selectServiceParameter)
+                
+            } else {
+                
+                guard let service = category.services.first else {
+                    throw Payments.Operation.Error.unableSelectServiceForCategory(category)
+                }
+                
+                return .selected(service)
+            }
+        }
+    }
         
     func paymentsService(for source: Operation.Source) async throws -> Service {
         
         //TODO: implementation required
         throw Payments.Error.unsupported
     }
+}
+
+//MARK: - Operation
+
+extension Model {
+    
+    func paymentsOperation(with service: Service) async throws -> Operation {
+        
+        // create empty operation
+        let operation = Operation(service: service)
+        
+        // process operation
+        let result = try await paymentsProcess(operation: operation)
+        
+        guard case .step(let operation) = result else {
+            throw Payments.Error.unexpectedProcessResult
+        }
+        
+        return operation
+    }
+    
+    func paymentsOperation(with source: Operation.Source) async throws -> Operation {
+        
+        // try get service with source
+        let service = try await paymentsService(for: source)
+        
+        // create empty operation
+        let operation = Operation(service: service, source: source)
+        
+        // process operation
+        let result = try await paymentsProcess(operation: operation)
+        
+        guard case .step(let operation) = result else {
+            throw Payments.Error.unexpectedProcessResult
+        }
+        
+        return operation
+    }
+    
 }
 
 //MARK: - Step

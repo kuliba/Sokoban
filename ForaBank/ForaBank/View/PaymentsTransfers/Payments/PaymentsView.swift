@@ -18,16 +18,13 @@ struct PaymentsView: View {
             NavigationView {
                 
                 switch viewModel.content {
-                case .services(let servicesViewModel):
-                    PaymentsServicesView(viewModel: servicesViewModel)
+                case let .service(serviceViewModel):
+                    PaymentsServiceView(viewModel: serviceViewModel)
                         .navigationBarItems(leading: Button(action: { viewModel.action.send(PaymentsViewModelAction.Dismiss())}, label: {
                             Image("Payments Icon Close") }))
                     
-                case .operation(let operationViewModel):
+                case let .operation(operationViewModel):
                     PaymentsOperationView(viewModel: operationViewModel)
-                    
-                case .idle:
-                    Text("Loading..")
                 }
             }
             .fullScreenCoverLegacy(viewModel: $viewModel.successViewModel) { successViewModel in
@@ -45,6 +42,8 @@ struct PaymentsView: View {
     }
 }
 
+//TODO: refactor
+/*
 struct PaymentsView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -55,5 +54,6 @@ struct PaymentsView_Previews: PreviewProvider {
 
 extension PaymentsViewModel {
     
-    static let sample = PaymentsViewModel(category: .taxes, model: .emptyMock, closeAction: {})
+    static let sample = PaymentsViewModel(content: .idle, category: .taxes, model: .emptyMock, closeAction: {})
 }
+ */

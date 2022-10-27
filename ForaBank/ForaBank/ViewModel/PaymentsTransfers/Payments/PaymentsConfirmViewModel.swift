@@ -11,9 +11,9 @@ import Combine
 
 class PaymentsConfirmViewModel: PaymentsOperationViewModel {
     
-    override init(_ model: Model, operation: Payments.Operation, rootActions: PaymentsViewModel.RootActions) {
+    override init(_ model: Model, operation: Payments.Operation) {
         
-        super.init(model, operation: operation, rootActions: rootActions)
+        super.init(model, operation: operation)
         
     }
     

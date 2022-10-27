@@ -23,7 +23,6 @@ class PaymentsOperationViewModel: ObservableObject {
     internal var operation: Payments.Operation
     internal var items: CurrentValueSubject<[PaymentsParameterViewModel], Never> = .init([])
     internal var isAdditionalItemsCollapsed: CurrentValueSubject<Bool, Never> = .init(true)
-    internal let rootActions: PaymentsViewModel.RootActions
     internal let model: Model
     internal var bindings = Set<AnyCancellable>()
     internal var itemsBindings = Set<AnyCancellable>()
@@ -47,7 +46,6 @@ class PaymentsOperationViewModel: ObservableObject {
                   isConfirmViewActive: Bool = false,
                   confirmViewModel: PaymentsConfirmViewModel? = nil,
                   operation: Payments.Operation = .emptyMock,
-                  rootActions: PaymentsViewModel.RootActions,
                   model: Model = .emptyMock) {
         
         self.header = header
@@ -57,18 +55,16 @@ class PaymentsOperationViewModel: ObservableObject {
         self.isConfirmViewActive = isConfirmViewActive
         self.confirmViewModel = confirmViewModel
         self.operation = operation
-        self.rootActions = rootActions
         self.model = model
     }
     
-    internal init(_ model: Model, operation: Payments.Operation, rootActions: PaymentsViewModel.RootActions) {
+    internal init(_ model: Model, operation: Payments.Operation) {
         
         self.model = model
-        self.header = .init(title: operation.service.name, action: rootActions.dismiss)
+        self.header = .init(title: operation.service.name)
         self.itemsVisible = []
         self.isConfirmViewActive = false
         self.operation = operation
-        self.rootActions = rootActions
         
         createItemsAndFooter(from: operation.parameters)
         bind()
@@ -93,16 +89,14 @@ class PaymentsOperationViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as ModelAction.Payment.Continue.Response:
-                    rootActions.spinner.hide()
+                    self.action.send(PaymentsOperationViewModelAction.Spinner.Hide())
                     switch payload.result {
                     case .step(let operation):
                         createItemsAndFooter(from: operation.parameters)
                         self.operation = operation
                         
                     case .confirm(let operation):
-                        confirmViewModel = PaymentsConfirmViewModel(model, operation: operation, rootActions: .init(dismiss: {[weak self] in
-                            self?.action.send(PaymentsOperationViewModelAction.DismissConfirm())
-                        }, spinner: rootActions.spinner, alert: rootActions.alert))
+                        confirmViewModel = PaymentsConfirmViewModel(model, operation: operation)
                         isConfirmViewActive = true
                         //TODO: refactor
 //                        self.operation = self.operation.finalized()
@@ -112,7 +106,7 @@ class PaymentsOperationViewModel: ObservableObject {
                         //TODO: show success view
                         
                     case .failure(let errorMessage):
-                        rootActions.alert(errorMessage)
+                        self.action.send(PaymentsOperationViewModelAction.Alert(message: errorMessage))
                     }
                     
                 case let payload as ModelAction.Auth.VerificationCode.PushRecieved:
@@ -506,7 +500,6 @@ extension PaymentsOperationViewModel {
         
         let title: String
         let backButtonIcon = Image("back_button")
-        let action: () -> Void
     }
     
     enum FooterViewModel {
@@ -548,4 +541,17 @@ enum PaymentsOperationViewModelAction {
     }
     
     struct DismissConfirm: Action {}
+    
+    struct Dismiss: Action {}
+    
+    enum Spinner {
+        
+        struct Show: Action {}
+        struct Hide: Action {}
+    }
+    
+    struct Alert: Action {
+        
+        let message: String
+    }
 }

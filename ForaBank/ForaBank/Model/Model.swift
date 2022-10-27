@@ -452,12 +452,6 @@ class Model {
                     
                     //MARK: - Payments
                     
-                case let payload as ModelAction.Payment.Services.Request:
-                    handlePaymentsServicesRequest(payload)
-                    
-                case let payload as ModelAction.Payment.Begin.Request:
-                    handlePaymentsBeginRequest(payload)
-                    
                 case let payload as ModelAction.Payment.Continue.Request:
                     handlePaymentsContinueRequest(payload)
                     

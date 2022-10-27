@@ -128,6 +128,6 @@ extension PaymentsOperationViewModel {
         
         let items: [PaymentsParameterViewModel] = [PaymentsSwitchView.ViewModel.sample, PaymentsSelectView.ViewModel.selectedMock, PaymentsInfoView.ViewModel.sample, PaymentsNameView.ViewModel.normal, PaymentsNameView.ViewModel.edit, PaymentsProductView.ViewModel.sample]
         
-        return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги", action: {}), items: items, footer: .amount(PaymentsAmountView.ViewModel.amountCurrencyInfoAlert), rootActions: .init(dismiss: {}, spinner: .init(show: {}, hide: {}), alert: { _ in }))
+        return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги"), items: items, footer: .amount(PaymentsAmountView.ViewModel.amountCurrencyInfoAlert))
     }()
 }

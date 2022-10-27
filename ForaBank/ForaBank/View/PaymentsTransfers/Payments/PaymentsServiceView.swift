@@ -1,5 +1,5 @@
 //
-//  PaymentsServicesView.swift
+//  PaymentsServiceView.swift
 //  ForaBank
 //
 //  Created by Константин Савялов on 15.02.2022.
@@ -8,9 +8,9 @@
 import SwiftUI
 import Combine
 
-struct PaymentsServicesView: View {
+struct PaymentsServiceView: View {
     
-    @ObservedObject var viewModel: PaymentsServicesViewModel
+    @ObservedObject var viewModel: PaymentsServiceViewModel
     
     var body: some View {
         
@@ -48,14 +48,14 @@ struct PaymentsServicesView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PaymentsServicesView(viewModel: .sample)
+        PaymentsServiceView(viewModel: .sample)
             .previewLayout(.fixed(width: 375, height: 200))
     }
 }
 
 //MARK: - Preview Content
 
-extension PaymentsServicesViewModel {
+extension PaymentsServiceViewModel {
     
-    static let sample = PaymentsServicesViewModel(header: .init(title: "Налоги и услуги", dismissAction: {}), parameter: .init(category: .taxes, options: []), rootActions: .init(dismiss: {}, spinner: .init(show: {}, hide: {}), alert: {_ in}))
+    static let sample = PaymentsServiceViewModel(header: .init(title: "Налоги и услуги"), parameter: .init(category: .taxes, options: []))
 }

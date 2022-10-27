@@ -309,10 +309,23 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             InternetTVMainViewModel.filter = GlobalModule.PAYMENT_TRANSPORT
                        
                         case .taxAndStateService:
-                            let taxAndStateServiceVM = PaymentsViewModel(category: Payments.Category.taxes, model: model) { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            Task.detached(priority: .high) { [self] in
+                                
+                                do {
+                                    let taxAndStateServiceVM = try await PaymentsViewModel(category: Payments.Category.taxes, model: model) { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                    }
+                                    
+                                    await MainActor.run {
+                                        
+                                        link = .init(.taxAndStateService(taxAndStateServiceVM))
+                                    }
+                                    
+                                } catch {
+                                    
+                                    //TODO: show alert
+                                    LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for  taxes category with error: \(error.localizedDescription) ")
+                                }
                             }
-
-                            link = .init(.taxAndStateService(taxAndStateServiceVM))
                             
                         case .socialAndGame: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                         case .security: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
