@@ -87,25 +87,25 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     if model.cameraAgent.isCameraAvailable {
                         model.cameraAgent.requestPermissions(completion: { available in
                             
-                            if available {
-                                self.link = .qrScanner(.init(closeAction: { [weak self] value  in
-                                    
-                                    if !value {
-                                    self?.action.send(PaymentsTransfersViewModelAction
-                                                      .Close.Link() )
-                                } else {
-                                    let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                    }, template: nil)
-                                    self?.link = .serviceOperators(serviceOperators)
-                                    InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
-                                }}))
-                            } else {
-                                self.alert = .init(
-                                    title: "Внимание",
-                                    message: "Для сканирования QR кода, необходим доступ к камере",
-                                    primary: .init(type: .cancel, title: "Понятно", action: {
-                                    }))
-                            }
+//                            if available {
+//                                self.link = .qrScanner(.init(closeAction: { [weak self] value  in
+//
+//                                    if !value {
+//                                    self?.action.send(PaymentsTransfersViewModelAction
+//                                                      .Close.Link() )
+//                                } else {
+//                                    let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+//                                    }, template: nil)
+//                                    self?.link = .serviceOperators(serviceOperators)
+//                                    InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
+//                                }}))
+//                            } else {
+//                                self.alert = .init(
+//                                    title: "Внимание",
+//                                    message: "Для сканирования QR кода, необходим доступ к камере",
+//                                    primary: .init(type: .cancel, title: "Понятно", action: {
+//                                    }))
+//                            }
                         })
                     }
                    
@@ -119,17 +119,19 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     link = nil
                     
                 case _ as PaymentsTransfersViewModelAction.OpenQr:
-                    link = .qrScanner(.init(closeAction:  { [weak self] value  in
-                        
-                        if !value {
-                        self?.action.send(PaymentsTransfersViewModelAction
-                                          .Close.Link() )
-                    } else {
-                        let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                        }, template: nil)
-                        self?.link = .serviceOperators(serviceOperators)
-                        InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
-                    }}))
+//                    link = .qrScanner(.init(closeAction:  { [weak self] value  in
+//
+//                        if !value {
+//                        self?.action.send(PaymentsTransfersViewModelAction
+//                                          .Close.Link() )
+//                    } else {
+//                        let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+//                        }, template: nil)
+//                        self?.link = .serviceOperators(serviceOperators)
+//                        InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
+//                    }}))
+                    
+                    print()
                   
                 case _ as PaymentsTransfersViewModelAction.ViewDidApear:
                     
@@ -263,10 +265,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                     
                                     if available {
                                         if #available(iOS 14, *) {
-                                            self.link = .qrScanner(.init(closeAction: { [weak self] _ in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                            self.link = .qrScanner(.init(closeAction: {
+                                                self.action.send(PaymentsTransfersViewModelAction.Close.Link())
                                             }))
                                         } else {
-                                            self.sheet = .init(type: .qrScanner(.init(closeAction: { [weak self] _ in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                            self.sheet = .init(type: .qrScanner(.init(closeAction: { self.action.send(PaymentsTransfersViewModelAction.Close.Link())
                                             })))
                                         }
                                     } else {

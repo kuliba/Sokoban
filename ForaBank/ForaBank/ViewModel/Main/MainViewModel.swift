@@ -232,17 +232,20 @@ class MainViewModel: ObservableObject, Resetable {
                                     model.cameraAgent.requestPermissions(completion: { available in
                                         
                                         if available {
-                                            self.link = .qrScanner(.init(closeAction: { [weak self] value  in
+                                            
+                                            self.link = .qrScanner(.init( closeAction: {
                                                 
-                                                if value == false {
-                                                self?.action.send(MainViewModelAction.Close.Link())
-                                                self?.action.send(PaymentsTransfersViewModelAction
+ //                                               if value == false {
+                                                self.action.send(MainViewModelAction.Close.Link())
+                                                self.action.send(PaymentsTransfersViewModelAction
                                                                   .Close.Link() )
-                                            } else {
-                                                self?.action.send(PaymentsTransfersViewModelAction
-                                                                  .Close.Link() )
-                                                self?.action.send(PTSectionPaymentsViewAction.ButtonTapped.Payment(type: .service))
-                                            }}))
+//                                            } else {
+//                                                self?.action.send(PaymentsTransfersViewModelAction
+//                                                                  .Close.Link() )
+//                                                self?.action.send(PTSectionPaymentsViewAction.ButtonTapped.Payment(type: .service))
+//                                            }
+                                                
+                                            }))
                                         } else {
                                             self.alert = .init(
                                                 title: "Внимание",
