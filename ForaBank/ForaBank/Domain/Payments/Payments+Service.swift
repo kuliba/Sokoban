@@ -1,5 +1,5 @@
 //
-//  PaymentsDataModel+Service.swift
+//  Payments+Service.swift
 //  ForaBank
 //
 //  Created by Max Gribov on 20.02.2022.
