@@ -149,6 +149,133 @@ extension PaymentsProcessTests {
         /// UI
         XCTAssertEqual(success.status, .complete)
     }
+    
+    func testRemoteMultistep_Rollback() async throws {
+ 
+        /// MODEL
+        let service: Payments.Service = .fns
+        let operation = Payments.Operation(service: service)
+        let processResultOne = try await process(operation)
+        guard case .step(let operationStepOne) = processResultOne else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertEqual(operationStepOne.steps[0].parameters[0].parameter, .init(id: "operator", value: "fns"))
+        XCTAssertEqual(operationStepOne.steps[1].parameters[0].parameter, .init(id: "service", value: nil))
+        
+        /// UI
+        let operationStepOneUpdated = operationStepOne.updated(with: [.init(id: "service", value: "1")])
+        
+        XCTAssertEqual(operationStepOneUpdated.steps[0].parameters[0].parameter, .init(id: "operator", value: "fns"))
+        XCTAssertEqual(operationStepOneUpdated.steps[1].parameters[0].parameter, .init(id: "service", value: "1"))
+        
+        /// MODEL
+        let processResultTwo = try await process(operationStepOneUpdated)
+        guard case .step(let operationStepTwo) = processResultTwo else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertEqual(operationStepTwo.steps[0].parameters[0].parameter, .init(id: "operator", value: "fns"))
+        XCTAssertEqual(operationStepTwo.steps[1].parameters[0].parameter, .init(id: "service", value: "1"))
+        XCTAssertEqual(operationStepTwo.steps[2].parameters[0].parameter, .init(id: "inn", value: nil))
+        
+        /// UI
+        let operationStepTwoUpdated = operationStepTwo.updated(with: [.init(id: "inn", value: "234")])
+        
+        XCTAssertEqual(operationStepTwoUpdated.steps[0].parameters[0].parameter, .init(id: "operator", value: "fns"))
+        XCTAssertEqual(operationStepTwoUpdated.steps[1].parameters[0].parameter, .init(id: "service", value: "1"))
+        XCTAssertEqual(operationStepTwoUpdated.steps[2].parameters[0].parameter, .init(id: "inn", value: "234"))
+        
+        /// MODEL
+        let processResultThree = try await process(operationStepTwoUpdated)
+        guard case .confirm(let operationStepThree) = processResultThree else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertEqual(operationStepThree.steps[0].parameters[0].parameter, .init(id: "operator", value: "fns"))
+        XCTAssertEqual(operationStepThree.steps[1].parameters[0].parameter, .init(id: "service", value: "1"))
+        XCTAssertEqual(operationStepThree.steps[2].parameters[0].parameter, .init(id: "inn", value: "234"))
+        XCTAssertEqual(operationStepThree.steps[3].parameters[0].parameter, .init(id: "amount", value: "0"))
+        XCTAssertEqual(operationStepThree.steps[3].parameters[1].parameter, .init(id: "code", value: nil))
+        
+        /// UI ROLLBACK
+        let operationStepThreeUpdated = operationStepThree.updated(with: [.init(id: "operator", value: "fnsUin")])
+        
+        XCTAssertEqual(operationStepThreeUpdated.steps[0].parameters[0].parameter, .init(id: "operator", value: "fnsUin"))
+        XCTAssertEqual(operationStepThreeUpdated.steps[1].parameters[0].parameter, .init(id: "service", value: "1"))
+        XCTAssertEqual(operationStepThreeUpdated.steps[2].parameters[0].parameter, .init(id: "inn", value: "234"))
+        XCTAssertEqual(operationStepThreeUpdated.steps[3].parameters[0].parameter, .init(id: "amount", value: "0"))
+        XCTAssertEqual(operationStepThreeUpdated.steps[3].parameters[1].parameter, .init(id: "code", value: nil))
+        
+        /// MODEL
+        let processResultFour = try await process(operationStepThreeUpdated)
+        guard case .step(let operationStepFour) = processResultFour else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertEqual(operationStepFour.steps[0].parameters[0].parameter, .init(id: "operator", value: "fnsUin"))
+        XCTAssertEqual(operationStepFour.steps[1].parameters[0].parameter, .init(id: "uin", value: nil))
+        
+        /// UI
+        let operationStepFourUpdated = operationStepFour.updated(with: [.init(id: "uin", value: "123")])
+        
+        XCTAssertEqual(operationStepFourUpdated.steps[0].parameters[0].parameter, .init(id: "operator", value: "fnsUin"))
+        XCTAssertEqual(operationStepFourUpdated.steps[1].parameters[0].parameter, .init(id: "uin", value: "123"))
+        
+        /// MODEL
+        let processResultFive = try await process(operationStepFourUpdated)
+        guard case .step(let operationStepFive) = processResultFive else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertEqual(operationStepFive.steps[0].parameters[0].parameter, .init(id: "operator", value: "fnsUin"))
+        XCTAssertEqual(operationStepFive.steps[1].parameters[0].parameter, .init(id: "uin", value: "123"))
+        XCTAssertEqual(operationStepFive.steps[2].parameters[0].parameter, .init(id: "bic", value: nil))
+        
+        /// UI
+        let operationStepFiveUpdated = operationStepFive.updated(with: [.init(id: "bic", value: "123")])
+        
+        XCTAssertEqual(operationStepFiveUpdated.steps[0].parameters[0].parameter, .init(id: "operator", value: "fnsUin"))
+        XCTAssertEqual(operationStepFiveUpdated.steps[1].parameters[0].parameter, .init(id: "uin", value: "123"))
+        XCTAssertEqual(operationStepFiveUpdated.steps[2].parameters[0].parameter, .init(id: "bic", value: "123"))
+        
+        /// MODEL
+        let processResultSix = try await process(operationStepFiveUpdated)
+        guard case .confirm(let operationStepSix) = processResultSix else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertEqual(operationStepSix.steps[0].parameters[0].parameter, .init(id: "operator", value: "fnsUin"))
+        XCTAssertEqual(operationStepSix.steps[1].parameters[0].parameter, .init(id: "uin", value: "123"))
+        XCTAssertEqual(operationStepSix.steps[2].parameters[0].parameter, .init(id: "bic", value: "123"))
+        XCTAssertEqual(operationStepSix.steps[3].parameters[0].parameter, .init(id: "amount", value: "0"))
+        XCTAssertEqual(operationStepSix.steps[3].parameters[1].parameter, .init(id: "code", value: nil))
+        
+        /// UI
+        let operationStepSixUpdated = operationStepSix.updated(with: [.init(id: "code", value: "555"), .init(id: "amount", value: "200")])
+        
+        XCTAssertEqual(operationStepSixUpdated.steps[0].parameters[0].parameter, .init(id: "operator", value: "fnsUin"))
+        XCTAssertEqual(operationStepSixUpdated.steps[1].parameters[0].parameter, .init(id: "uin", value: "123"))
+        XCTAssertEqual(operationStepSixUpdated.steps[2].parameters[0].parameter, .init(id: "bic", value: "123"))
+        XCTAssertEqual(operationStepSixUpdated.steps[3].parameters[0].parameter, .init(id: "amount", value: "200"))
+        XCTAssertEqual(operationStepSixUpdated.steps[3].parameters[1].parameter, .init(id: "code", value: "555"))
+        
+        /// MODEL
+        let processResultSeven = try await process(operationStepSixUpdated)
+        guard case .complete(let success) = processResultSeven else {
+            XCTFail()
+            return
+        }
+        
+        /// UI
+        XCTAssertEqual(success.status, .complete)
+    }
 }
 
 extension PaymentsProcessTests {
@@ -290,7 +417,10 @@ private func remoteNext(parameters: [Payments.Parameter], operation: Payments.Op
                 return TransferAnywayResponseData(parameters: [], needSum: true, finalStep: true)
                 
             case "fnsUin":
-                throw Payments.Error.unexpectedOperatorValue
+                guard parameters.first(where: { $0.id == "bic" })?.value == "123" else {
+                    throw Payments.Error.missingParameter
+                }
+                return TransferAnywayResponseData(parameters: [], needSum: true, finalStep: true)
                 
             default:
                 throw Payments.Error.unexpectedOperatorValue
@@ -324,7 +454,11 @@ private func remoteConfirm(parameters: [Payments.Parameter], operation: Payments
                 return Payments.Success(status: .complete, amount: 100, currency: .init(description: "RUB"), icon: nil, operationDetailId: 1)
                 
             case "fnsUin":
-                throw Payments.Error.unexpectedOperatorValue
+                guard parameters.first(where: { $0.id == "code" })?.value == "555",
+                      parameters.first(where: { $0.id == "amount" })?.value == "200" else {
+                    throw Payments.Error.missingParameter
+                }
+                return Payments.Success(status: .complete, amount: 100, currency: .init(description: "RUB"), icon: nil, operationDetailId: 1)
                 
             default:
                 throw Payments.Error.unexpectedOperatorValue
