@@ -12,12 +12,13 @@ import Combine
 class PaymentsViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
-    var closeAction: (() -> Void )? = nil
-    
+
     @Published var content: ContentType
     @Published var successViewModel: PaymentsSuccessViewModel?
     @Published var spinner: SpinnerView.ViewModel?
     @Published var alert: Alert.ViewModel?
+    
+    let closeAction: () -> Void
     
     private let category: Payments.Category
     private let model: Model
@@ -30,21 +31,21 @@ class PaymentsViewModel: ObservableObject {
         case operation(PaymentsOperationViewModel)
     }
     
-    init(content: ContentType, category: Payments.Category = .taxes, model: Model = .emptyMock) {
+    init(content: ContentType, category: Payments.Category, model: Model, closeAction: @escaping () -> Void) {
         
         self.content = content
         self.category = category
         self.model = model
+        self.closeAction = closeAction
     }
     
-    internal init(_ model: Model, category: Payments.Category) {
+    convenience init(category: Payments.Category, model: Model, closeAction: @escaping () -> Void) {
         
-        self.content = .idle
-        self.category = category
-        self.model = model
+        self.init(content: .idle, category: category, model: model, closeAction: closeAction)
         
         bind()
         model.action.send(ModelAction.Payment.Services.Request(category: category))
+        action.send(PaymentsViewModelAction.Spinner.Show())
     }
     
     private func bind() {
@@ -59,7 +60,7 @@ class PaymentsViewModel: ObservableObject {
                     switch payload {
                     case .select(let selectServiceParameter):
                         // multiple services for category
-                        let servicesViewModel = PaymentsServicesViewModel(model, category: category, parameter: selectServiceParameter, rootActions: .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}, spinner: .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show())}, hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide())}), alert: {[weak self] message in self?.action.send(PaymentsViewModelAction.Alert(message: message))}))
+                        let servicesViewModel = PaymentsServicesViewModel(model, category: category, parameter: selectServiceParameter, rootActions: rootActions)
                         content = .services(servicesViewModel)
                         
                     case .selected(let service):
@@ -67,8 +68,7 @@ class PaymentsViewModel: ObservableObject {
                         model.action.send(ModelAction.Payment.Begin.Request(base: .service(service)))
                         
                     case .failed(let error):
-                        //TODO: set logger
-                        break
+                        self.action.send(PaymentsViewModelAction.Alert(message: error.localizedDescription))
                     }
                     
                 case let payload as ModelAction.Payment.Begin.Response:
@@ -81,26 +81,26 @@ class PaymentsViewModel: ObservableObject {
                             return
                         }
                         
-                        let operationViewModel = PaymentsOperationViewModel(model, operation: operation, rootActions: .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}, spinner: .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show())}, hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide())}), alert: {[weak self] message in self?.action.send(PaymentsViewModelAction.Alert(message: message)) }))
+                        let operationViewModel = PaymentsOperationViewModel(model, operation: operation, rootActions: rootActions)
                         content = .operation(operationViewModel)
 
                     case .failure(let errorMessage):
                         self.action.send(PaymentsViewModelAction.Alert(message: errorMessage))
                     }
                    
-                //TODO: refactor
-                /*
-                case let payload as ModelAction.Payment.Complete.Response:
+                case let payload as ModelAction.Payment.Continue.Response:
                     self.action.send(PaymentsViewModelAction.Spinner.Hide())
                     
-                    switch payload {
-                    case .success(let paymentSuccess):
+                    switch payload.result {
+                    case let .complete(paymentSuccess):
                         successViewModel = PaymentsSuccessViewModel(model, paymentSuccess: paymentSuccess, dismissAction: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())})
                         
                     case .failure(let errorMessage):
                         self.action.send(PaymentsViewModelAction.Alert(message: errorMessage))
+                        
+                    default:
+                        break
                     }
-                 */
                     
                 default:
                     break
@@ -140,6 +140,8 @@ class PaymentsViewModel: ObservableObject {
     }
 }
 
+//MARK: - Types
+
 extension PaymentsViewModel {
     
     struct RootActions {
@@ -154,7 +156,17 @@ extension PaymentsViewModel {
             let hide: () -> Void
         }
     }
+    
+    var rootActions: RootActions {
+        
+        .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())},
+              spinner: .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show())},
+                             hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide())}),
+              alert: {[weak self] message in self?.action.send(PaymentsViewModelAction.Alert(message: message)) })
+    }
 }
+
+//MARK: - Action
 
 enum PaymentsViewModelAction {
     

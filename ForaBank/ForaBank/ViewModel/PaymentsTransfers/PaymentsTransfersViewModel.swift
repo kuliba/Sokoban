@@ -309,9 +309,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             InternetTVMainViewModel.filter = GlobalModule.PAYMENT_TRANSPORT
                        
                         case .taxAndStateService:
-                            let taxAndStateServiceVM = PaymentsViewModel(model, category: Payments.Category.taxes)
-                            taxAndStateServiceVM.closeAction = { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            let taxAndStateServiceVM = PaymentsViewModel(category: Payments.Category.taxes, model: model) { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }
+
                             link = .init(.taxAndStateService(taxAndStateServiceVM))
                             
                         case .socialAndGame: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:

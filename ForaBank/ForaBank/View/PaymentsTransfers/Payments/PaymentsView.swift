@@ -55,5 +55,5 @@ struct PaymentsView_Previews: PreviewProvider {
 
 extension PaymentsViewModel {
     
-    static let sample = PaymentsViewModel(.emptyMock, category: .taxes)
+    static let sample = PaymentsViewModel(category: .taxes, model: .emptyMock, closeAction: {})
 }
