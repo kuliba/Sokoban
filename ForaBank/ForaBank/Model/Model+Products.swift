@@ -35,6 +35,22 @@ extension Model {
         products.value.values.flatMap({ $0 }).first(where: { $0.id == productId })
     }
     
+    func allProductsCurrency() -> [Currency] {
+        
+        var uniqueCurrency: [Currency] = []
+        
+        guard let allProducts = allProducts() else {
+            return uniqueCurrency
+        }
+        
+        let allProductsCurrency = allProducts.compactMap { $0.currency }
+        let uniqueProductsCurrency = Set(allProductsCurrency)
+        
+        uniqueCurrency = uniqueProductsCurrency.map(Currency.init)
+        
+        return uniqueCurrency
+    }
+    
     func allProducts() -> [ProductData]? {
         
         products.value.values.flatMap {$0}.sorted { $0.productType.order < $1.productType.order }

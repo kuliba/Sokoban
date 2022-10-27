@@ -37,7 +37,6 @@ class Model {
     //MARK: Currency rates
     let rates: CurrentValueSubject<[ExchangeRateData], Never>
     let ratesUpdating: CurrentValueSubject<[Currency], Never>
-    var ratesAllowed: Set<Currency> { [.usd, .eur] }
     
     //MARK: Dictionaries
     let dictionariesUpdating: CurrentValueSubject<Set<DictionaryType>, Never>
@@ -536,7 +535,10 @@ class Model {
                     //MARK: - Rates
                     
                 case _ as ModelAction.Rates.Update.All:
-                    handleRatesUpdateAll()
+                    handleRatesUpdate(allProductsCurrency())
+                    
+                case let payload as ModelAction.Rates.Update.Single:
+                    handleRateUpdate(payload.currency)
                     
                     //MARK: - Payments
                     

@@ -118,6 +118,14 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 
             }.store(in: &bindings)
         
+        model.rates
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] rates in
+                
+                updateInfoButton(rates)
+                
+            }.store(in: &bindings)
+        
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
@@ -167,14 +175,21 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     
                     updateAmountSwitch(from: productIdFrom)
                     updateTextField(productIdFrom, textField: paymentsAmount.textField)
+                    updateInfoButton(model.rates.value)
+                    sendUpdateRates()
                     
                 case let payload as ProductsSwapAction.Selected.From:
                     
                     updateAmountSwitch(from: payload.productId)
                     updateTextField(payload.productId, textField: paymentsAmount.textField)
+                    updateInfoButton(model.rates.value)
+                    sendUpdateRates()
                     
                 case let payload as ProductsSwapAction.Selected.To:
+                    
                     updateAmountSwitch(to: payload.productId)
+                    updateInfoButton(model.rates.value)
+                    sendUpdateRates()
                     
                 default:
                     break
@@ -187,7 +202,6 @@ class PaymentsMeToMeViewModel: ObservableObject {
             .sink { [unowned self] state in
                 
                 updateTransferButton(state)
-                updateInfoButton(state)
 
             }.store(in: &bindings)
         
@@ -196,6 +210,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
             .sink { [unowned self] _ in
                 
                 updateTransferButton(.normal)
+                updateInfoButton(model.rates.value)
                 
             }.store(in: &bindings)
     }
@@ -266,20 +281,6 @@ class PaymentsMeToMeViewModel: ObservableObject {
             paymentsAmount.transferButton = .loading(icon: .init("Logo Fora Bank"), iconSize: .init(width: 40, height: 40))
         }
     }
-    
-    private func updateInfoButton(_ state: State) {
-        
-        switch state {
-        case .normal:
-            
-            paymentsAmount.info = .button(title: "Без комиссии", icon: .ic16Info) { [weak self] in
-                self?.action.send(PaymentsMeToMeAction.Button.Info.Tap())
-            }
-            
-        case .loading:
-            paymentsAmount.info = nil
-        }
-    }
 
     private func updateTextField(_ id: ProductData.ID, textField: TextFieldFormatableView.ViewModel) {
         
@@ -295,6 +296,143 @@ class PaymentsMeToMeViewModel: ObservableObject {
             textField.formatter.currencySymbol = currency.currencySymbol
             textField.text = stringValue
         }
+    }
+    
+    private func sendUpdateRates() {
+        
+        guard let productIdFrom = swapViewModel.productIdFrom,
+              let productIdTo = swapViewModel.productIdTo,
+              let products = Self.products(model, from: productIdFrom, to: productIdTo) else {
+            return
+        }
+
+        let currencyFrom: Currency = .init(description: products.from.currency)
+        let currencyTo: Currency = .init(description: products.to.currency)
+        
+        if currencyFrom == Currency.rub {
+            
+            model.action.send(ModelAction.Rates.Update.Single(currency: currencyTo))
+            
+        } else if currencyTo == Currency.rub {
+            
+            model.action.send(ModelAction.Rates.Update.Single(currency: currencyFrom))
+            
+        } else {
+            
+            model.action.send(ModelAction.Rates.Update.List(currencyList: [currencyTo, currencyFrom]))
+        }
+    }
+    
+    private func updateInfoButton(_ rates: [ExchangeRateData]) {
+        
+        guard let productIdFrom = swapViewModel.productIdFrom,
+              let productIdTo = swapViewModel.productIdTo,
+              let products = Self.products(model, from: productIdFrom, to: productIdTo) else {
+            
+            defaultInfoButton()
+            return
+        }
+        
+        if productIdFrom == productIdTo,
+           products.from.currency == products.to.currency {
+            
+            defaultInfoButton()
+            return
+        }
+        
+        let currencyData = model.currencyList.value
+        let amount = paymentsAmount.textField.value
+        
+        let currencyFrom: Currency = .init(description: products.from.currency)
+        let currencyTo: Currency = .init(description: products.to.currency)
+        
+        let rateDataFrom = rates.first(where: { $0.currency == currencyFrom })
+        let rateDataTo = rates.first(where: { $0.currency == currencyTo })
+        
+        let currencyDataFrom = currencyData.first(where: { $0.code == currencyFrom.description })
+        let currencyDataTo = currencyData.first(where: { $0.code == currencyTo.description })
+        
+        guard let currencyDataFrom = currencyDataFrom,
+              let currencyDataTo = currencyDataTo,
+              let currencySymbolFrom = currencyDataFrom.currencySymbol,
+              let currencySymbolTo = currencyDataTo.currencySymbol else {
+            
+            defaultInfoButton()
+            return
+        }
+        
+        if currencyFrom == Currency.rub {
+            
+            if let rateDataTo = rateDataTo {
+                
+                let rateSell = rateDataTo.rateSell.currencyFormatter(currencySymbolFrom)
+                let text = "1 \(currencySymbolTo)  -  \(rateSell)"
+                
+                if amount == 0 {
+                    
+                    paymentsAmount.info = .text(text)
+                                    
+                } else {
+                    
+                    let rateSellCurrency = amount / rateDataTo.rateSell
+                    let currencyAmount = rateSellCurrency.currencyFormatter(currencySymbolTo)
+                    
+                    let text = "\(currencyAmount)   |   \(text)"
+                    
+                    paymentsAmount.info = .text(text)
+                }
+            }
+            
+        } else if currencyTo == Currency.rub {
+         
+            if let rateDataFrom = rateDataFrom {
+                
+                let rateBuy = rateDataFrom.rateBuy.currencyFormatter(currencySymbolTo)
+                let text = "1 \(currencySymbolFrom)  -  \(rateBuy)"
+                
+                if amount == 0 {
+                    
+                    paymentsAmount.info = .text(text)
+                    
+                } else {
+                    
+                    let rateBuyCurrency = amount * rateDataFrom.rateBuy
+                    let currencyAmount = rateBuyCurrency.currencyFormatter(currencySymbolTo)
+                    
+                    let text = "\(currencyAmount)   |   \(text)"
+                    
+                    paymentsAmount.info = .text(text)
+                }
+            }
+            
+        } else {
+
+            if let rateDataFrom = rateDataFrom, let rateDataTo = rateDataTo {
+                
+                let rateBuy = rateDataTo.rateBuy / rateDataFrom.rateBuy
+                let rateBuyCurrency = rateBuy.currencyFormatter(currencySymbolFrom)
+                
+                let text = "1 \(currencySymbolTo)  -  \(rateBuyCurrency)"
+                
+                if amount == 0 {
+                    
+                    paymentsAmount.info = .text(text)
+                    
+                } else {
+                    
+                    let rateBuyCurrency = (amount * rateDataFrom.rateBuy) / rateDataTo.rateBuy
+                    let currencyAmount = rateBuyCurrency.currencyFormatter(currencySymbolTo)
+
+                    let text = "\(currencyAmount)   |   \(text)"
+
+                    paymentsAmount.info = .text(text)
+                }
+            }
+        }
+    }
+    
+    private func defaultInfoButton() {
+        paymentsAmount.info = .button(title: "Без комиссии", icon: .ic16Info, action: {})
     }
     
     private func makeAlert(_ error: ModelError) {

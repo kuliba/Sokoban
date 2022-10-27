@@ -16,6 +16,16 @@ extension ModelAction {
         enum Update {
             
             struct All: Action {}
+            
+            struct Single: Action {
+                
+                let currency: Currency
+            }
+            
+            struct List: Action {
+                
+                let currencyList: [Currency]
+            }
         }
     }
 }
@@ -24,7 +34,12 @@ extension ModelAction {
 
 extension Model {
     
-    func handleRatesUpdateAll() {
+    func handleRateUpdate(_ productCurrency: Currency) {
+        
+        handleRatesUpdate([productCurrency])
+    }
+    
+    func handleRatesUpdate(_ productsCurrency: [Currency]) {
         
         guard self.ratesUpdating.value.isEmpty == true else {
             return
@@ -37,9 +52,9 @@ extension Model {
         
         Task {
             
-            self.ratesUpdating.value = Array(ratesAllowed)
+            self.ratesUpdating.value = productsCurrency
             
-            for currency in ratesAllowed {
+            for currency in productsCurrency {
                 
                 let command = ServerCommands.RatesController.GetExchangeCurrencyRates(token: token, currency: currency)
                              
