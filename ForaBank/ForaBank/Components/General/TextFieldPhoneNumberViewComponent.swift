@@ -15,20 +15,22 @@ extension TextFieldPhoneNumberView {
         
         @Published var text: String?
         @Published var isEditing: Bool
+        @Published var isSelected: Bool
         var dismissKeyboard: () -> Void
         let toolbar: ToolbarViewModel?
         
         let placeHolder: PlaceHolder
-        var bindings = Set<AnyCancellable>()
         let filtersSymbols: [Character]?
         
         let phoneNumberFormatter = PhoneNumberFormater()
+        var bindings = Set<AnyCancellable>()
         
-        internal init(text: String? = nil, placeHolder: PlaceHolder, isEditing: Bool = false, toolbar: ToolbarViewModel? = nil, filtersSymbols: [Character]? = nil) {
+        init(text: String? = nil, placeHolder: PlaceHolder, isEditing: Bool = false, isSelected: Bool = false, toolbar: ToolbarViewModel? = nil, filtersSymbols: [Character]? = nil) {
             
             self.text = text
             self.placeHolder = placeHolder
             self.isEditing = isEditing
+            self.isSelected = isSelected
             self.toolbar = toolbar
             self.filtersSymbols = filtersSymbols
             self.dismissKeyboard = {}
@@ -74,6 +76,9 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
             let textRange = NSRange(location: 0, length: text.count)
             let phoneNumberFirstDigitReplaceList: [PhoneNumberFirstDigitReplace] = [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")]
             uiView.text = TextFieldPhoneNumberView.updateMasked(value: text, inRange: textRange, update: text, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filtersSymbols)
+        } else {
+            
+            uiView.text = viewModel.text
         }
     }
     
@@ -93,11 +98,8 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         }
         
         func textFieldDidBeginEditing(_ textField: UITextField) {
-            viewModel.isEditing = false
-        }
-        
-        func textFieldDidEndEditing(_ textField: UITextField) {
-            viewModel.isEditing = false
+            
+            viewModel.isSelected = true
         }
         
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -111,10 +113,12 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         
         @objc func handleDoneAction() {
             viewModel.toolbar?.doneButton.action()
+            viewModel.isSelected = false
         }
         
         @objc func handleCloseAction() {
             viewModel.toolbar?.closeButton?.action()
+            viewModel.isSelected = false
         }
     }
     

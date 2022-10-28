@@ -5758,11 +5758,11 @@
 			isa = PBXGroup;
 			children = (
 				C113225528CFA84300F90072 /* ContactsViewModel.swift */,
+				C154986D2907DB6900D00670 /* ContactsListViewModel.swift */,
 				C1549865290756AD00D00670 /* ContactsCollapsableSectionViewModel.swift */,
 				C1549867290756DC00D00670 /* ContactsBanksSectionCollapsableViewModel.swift */,
 				C15498692907570C00D00670 /* ContactsCountrySectionCollapsableViewModel.swift */,
 				C154986B29075D5200D00670 /* ContactsTopBanksSectionViewModel.swift */,
-				C154986D2907DB6900D00670 /* ContactsListViewModel.swift */,
 			);
 			path = FastPayments;
 			sourceTree = "<group>";

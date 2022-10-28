@@ -15,77 +15,27 @@ extension SearchBarView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         let icon: Image?
-        @Published var text: String
-        var isValidation: Bool { phoneNumberFormater.isValidate(text) }
+        @Published var textFieldPhoneNumberView: TextFieldPhoneNumberView.ViewModel
+        var text: String? { textFieldPhoneNumberView.text }
+        var isValidation: Bool {
+            if let text = text {
+                return phoneNumberFormater.isValidate(text)
+            }
+            return false
+        }
+        
         @Published var state: State
         
-        
-        let placeHolder: PlaceHolder
-        @Published var clearButton: Button?
-        @Published var cancelButton: Button
-        var textColor: Color
         private let phoneNumberFormater = PhoneNumberFormater()
         private var bindings = Set<AnyCancellable>()
         
-        internal init(state: State = .default, clearButton: Button?, cancelButton: Button, placeHolder: PlaceHolder, icon: Image? = nil, text: String = "", textColor: Color, isValidation: Bool = false) {
+        init(textFieldPhoneNumberView: TextFieldPhoneNumberView.ViewModel, state: State = .idle, icon: Image? = nil, isValidation: Bool = false) {
             
+            self.textFieldPhoneNumberView = textFieldPhoneNumberView
             self.state = state
-            self.clearButton = clearButton
-            self.cancelButton = cancelButton
-            self.placeHolder = placeHolder
             self.icon = icon
-            self.text = text
-            self.textColor = textColor
-            self.isValidation = isValidation
-            
-            self.cancelButton = Button(type: .title("Отмена"), action: {
-                self.action.send(ViewModelAction.ChangeState.init(state: .hide))
-            })
-            
-            self.clearButton = Button(type: .icon(.ic24Close), action: {
-                
-                self.action.send(ViewModelAction.ClearTextField())
-            })
             
             bind()
-        }
-        
-        convenience init(placeHolder: PlaceHolder) {
-            
-            let cancel = Button(type: .title("Отмена"), action: {
-//                action.send(ViewModelAction.ChangeState)
-            })
-            
-            let clear = Button(type: .icon(.ic24Close), action: {})
-            
-            self.init(clearButton: clear, cancelButton: cancel, placeHolder: placeHolder, textColor: .textPlaceholder)
-        }
-        
-        enum State {
-            
-            case idle
-            case selected(cancel)
-            case editing(clear, cancel)
-            case hide
-        }
-        
-        struct Button: Identifiable {
-            
-            let id = UUID()
-            let type: Kind
-            var action: () -> Void
-            
-            enum Kind {
-                
-                case icon(Image)
-                case title(String)
-            }
-        }
-        
-        enum PlaceHolder: String {
-            
-            case contacts = "Номер телефона или имя"
-            case banks = "Введите название банка"
         }
         
         private func bind() {
@@ -96,24 +46,103 @@ extension SearchBarView {
                     
                     switch action {
                         
-                    case let _ as ViewModelAction.ChangeState:
-                        self.state = .hide
+                    case _ as SearchBarViewModelAction.ChangeState:
+                        self.state = .idle
                         
-                    case _ as ViewModelAction.ClearTextField:
-                        self.text = ""
+                    case _ as SearchBarViewModelAction.ClearTextField:
+                        self.textFieldPhoneNumberView.text = nil
                         
                     default: break
                     }
                     
                 }.store(in: &bindings)
             
-            $text
+            textFieldPhoneNumberView.$isSelected
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isSelected in
+            
+                    if isSelected && (text != "" && text != nil) {
+                        
+                        state = .editing(.init(type: .icon(.ic24Close), action: {
+                            
+                            self.action.send(SearchBarViewModelAction.ClearTextField())
+                        }), .init(type: .title("Отмена"), action: {
+
+                            self.action.send(SearchBarViewModelAction.ChangeState(state: .idle))
+                        }))
+                        
+                    } else if isSelected {
+                        
+                        state = .selected(.init(type: .title("Отмена"), action: {
+                            
+                            self.action.send(SearchBarViewModelAction.ChangeState(state: .idle))
+                        }))
+                        
+                    } else {
+                        state = .idle
+                    }
+                    
+                }.store(in: &bindings)
+            
+            textFieldPhoneNumberView.$text
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] text in
                     
-                    action.send(SearchBarViewModelAction.Number.isValidation(text, isValidation: isValidation))
+                    if text != nil && text != "" {
+
+                        self.state = .editing(.init(type: .icon(.ic24Close), action: {
+
+                            self.action.send(SearchBarViewModelAction.ClearTextField())
+                        }), .init(type: .title("Отмена"), action: {
+
+                            self.action.send(SearchBarViewModelAction.ChangeState(state: .idle))
+                        }))
+
+                    } else if textFieldPhoneNumberView.isSelected {
+                        
+                        state = .selected(.init(type: .title("Отмена"), action: {
+                            
+                            self.action.send(SearchBarViewModelAction.ChangeState(state: .idle))
+                        }))
+                    }
+                    
+                    action.send(SearchBarViewModelAction.Number.isValidation(isValidation: isValidation))
                     
                 }.store(in: &bindings)
+            
+            $state
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] state in
+                    
+                    switch state {
+                        
+                    case .idle:
+                        self.textFieldPhoneNumberView.dismissKeyboard()
+                    
+                    default: break
+                    }
+                    
+                }.store(in: &bindings)
+        }
+        
+        enum State {
+            
+            case idle
+            case selected(Button)
+            case editing(Button, Button)
+        }
+        
+        struct Button: Identifiable {
+            
+            let id = UUID()
+            let type: Kind
+            let action: () -> Void
+            
+            enum Kind {
+                
+                case icon(Image)
+                case title(String)
+            }
         }
     }
 }
@@ -134,25 +163,26 @@ struct SearchBarView: View {
                     .frame(width: 16, height: 16)
             }
             
-            PhoneNumberTextFieldView(viewModel: viewModel)
+            TextFieldPhoneNumberView(viewModel: viewModel.textFieldPhoneNumberView)
                 .frame(height: 44)
                 .cornerRadius(8)
-                .foregroundColor(viewModel.textColor)
             
-            if viewModel.state == .editing {
+            switch viewModel.state {
                 
+            case .idle:
+                EmptyView()
+                
+            case let .editing(clearButton, cancelButton):
                 HStack(spacing: 20) {
                     
-                    if let clearButton = viewModel.clearButton {
-                        
-                        ButtonView(viewModel: clearButton)
-                    }
+                    ButtonView(viewModel: clearButton)
                     
-                    if let cancelButton = viewModel.cancelButton {
-                        
-                        ButtonView(viewModel: cancelButton)
-                    }
+                    ButtonView(viewModel: cancelButton)
                 }
+                
+            case let .selected(cancelButton):
+                ButtonView(viewModel: cancelButton)
+                
             }
         }
         .padding(.leading, 14)
@@ -194,28 +224,33 @@ struct SearchBarView: View {
     }
 }
 
-extension SearchBarView {
+struct SearchBarViewModelAction {
     
-    struct ViewModelAction {
+    struct ChangeState: Action {
         
-        struct ChangeState: Action {
+        let state: SearchBarView.ViewModel.State
+    }
+    
+    struct ClearTextField: Action {}
+    
+    struct Number {
+        
+        struct isValidation: Action {
             
-            let state: ViewModel.State
+            let isValidation: Bool
         }
-        
-        struct ClearTextField: Action {}
     }
 }
 
 struct SearchBarComponent_Previews: PreviewProvider {
     static var previews: some View {
-        
+
         Group {
-            
-            SearchBarComponent(viewModel: .init(placeHolder: .contacts))
+
+            SearchBarView(viewModel: .init(textFieldPhoneNumberView: .init(placeHolder: .contacts)))
                 .previewLayout(.fixed(width: 375, height: 100))
-            
-            SearchBarComponent(viewModel: .init(state: .default, clearButton: .init(type: .icon(.ic24Close), action: {}), cancelButton: .init(type: .title("Отмена"), action: {}), placeHolder: .contacts, textColor: .textPlaceholder))
+
+            SearchBarView(viewModel: .init(textFieldPhoneNumberView: .init(placeHolder: .banks)))
                 .previewLayout(.fixed(width: 375, height: 100))
         }
     }
