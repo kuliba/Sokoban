@@ -83,13 +83,17 @@ extension ProductSelectorView {
                     
                     switch action {
                     case _ as ProductSelectorAction.Product.Tap:
+                        
                         if list == nil {
                             
-                            guard let list = ProductsListView.ViewModel(model: model, context: context.value) else {
+                            let list = ProductsListView.ViewModel(model: model, context: context.value)
+                            
+                            guard let list = list else {
                                 return
                             }
                             
                             withAnimation {
+                                
                                 self.list = list
                             }
                             
@@ -98,6 +102,7 @@ extension ProductSelectorView {
                         } else {
                             
                             withAnimation {
+                                
                                 list = nil
                             }
                         }
