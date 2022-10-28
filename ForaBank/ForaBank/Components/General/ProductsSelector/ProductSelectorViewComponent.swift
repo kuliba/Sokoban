@@ -77,70 +77,33 @@ extension ProductSelectorView {
         
         private func bind() {
             
-            $content
+            action
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] content in
+                .sink { [unowned self] action in
                     
-                    switch content {
-                    case let .product(productViewModel):
+                    switch action {
+                    case _ as ProductSelectorAction.Product.Tap:
+                        if list == nil {
+                            
+                            guard let list = ProductsListView.ViewModel(model: model, context: context.value) else {
+                                return
+                            }
+                            
+                            withAnimation {
+                                self.list = list
+                            }
+                            
+                            bind(list: list)
+                            
+                        } else {
+                            
+                            withAnimation {
+                                list = nil
+                            }
+                        }
                         
-                        productViewModel.action
-                            .receive(on: DispatchQueue.main)
-                            .sink { [unowned self] action in
-                                
-                                switch action {
-                                case _ as ProductSelectorAction.Collapsed.Product:
-                                    
-                                    withAnimation {
-                                        
-                                        switch list == nil {
-                                        case true:
-                                            
-                                            list = .init(model: model, context: context.value)
-                                            
-                                            if let list = list {
-                                                bind(list: list)
-                                            }
-                                            
-                                        case false: list = nil
-                                        }
-                                    }
-                                    
-                                default:
-                                    break
-                                }
-                                
-                            }.store(in: &bindings)
-                        
-                    case let .placeholder(placeholderViewModel):
-                        
-                        placeholderViewModel.action
-                            .receive(on: DispatchQueue.main)
-                            .sink { [unowned self] action in
-                                
-                                switch action {
-                                case _ as ProductSelectorAction.Collapsed.Placeholder:
-                                    
-                                    withAnimation {
-                                        
-                                        switch list == nil {
-                                        case true:
-                                            
-                                            list = .init(model: model, context: context.value)
-                                            
-                                            if let list = list {
-                                                bind(list: list)
-                                            }
-                                            
-                                        case false: list = nil
-                                        }
-                                    }
-                                    
-                                default:
-                                    break
-                                }
-                                
-                            }.store(in: &bindings)
+                    default:
+                        break
                     }
                     
                 }.store(in: &bindings)
@@ -181,7 +144,10 @@ extension ProductSelectorView {
                                 context: context.value)
 
                             content = .product(productViewModel)
-                            self.list = nil
+                            
+                            withAnimation {
+                                self.list = nil
+                            }
                             
                             self.action.send(ProductSelectorAction.Selected(id: product.id))
                         }
@@ -317,6 +283,8 @@ extension ProductSelectorView.ViewModel {
     }
 }
 
+
+
 // MARK: - View
 
 struct ProductSelectorView: View {
@@ -330,8 +298,15 @@ struct ProductSelectorView: View {
             switch viewModel.content {
             case let .product(productViewModel):
                 ProductView(viewModel: productViewModel)
+                    .onTapGesture {
+                        viewModel.action.send(ProductSelectorAction.Product.Tap())
+                    }
+                
             case let .placeholder(placeholderViewModel):
                 ProductPlaceholderView(viewModel: placeholderViewModel)
+                    .onTapGesture {
+                        viewModel.action.send(ProductSelectorAction.Product.Tap())
+                    }
             }
             
             if let listViewModel = viewModel.list {
@@ -420,13 +395,6 @@ extension ProductSelectorView {
                                     .foregroundColor(.mainColorsGray)
                             }
                         }
-                        
-                    }.onTapGesture {
-                        
-                        withAnimation {
-                            
-                            viewModel.action.send(ProductSelectorAction.Collapsed.Product())
-                        }
                     }
                 }
             }
@@ -461,13 +429,6 @@ extension ProductSelectorView {
                         .frame(width: 24, height: 24)
                         .foregroundColor(.mainColorsGray)
                         .rotationEffect(viewModel.isCollapsed == false ? .degrees(0) : .degrees(-90))
-                    
-                }.onTapGesture {
-                    
-                    withAnimation {
-                        
-                        viewModel.action.send(ProductSelectorAction.Collapsed.Placeholder())
-                    }
                 }
             }
         }
@@ -482,11 +443,10 @@ enum ProductSelectorAction {
         
         let id: ProductData.ID
     }
-    
-    enum Collapsed {
 
-        struct Product: Action {}
-        struct Placeholder: Action {}
+    enum Product {
+
+        struct Tap: Action {}
     }
 }
 
