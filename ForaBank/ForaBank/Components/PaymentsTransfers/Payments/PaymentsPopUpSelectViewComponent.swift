@@ -32,18 +32,16 @@ extension PaymentsPopUpSelectView {
             self.action = action
         }
         
-        init(title: String, description: String?, options: [Option],
+        convenience init(title: String, description: String?, options: [Option],
              selected: Option.ID? = nil,
              action: @escaping (Option.ID) -> Void) {
             
-            self.title = title
-            self.description = description
-            self.selected = selected
-            self.items = []
-            self.action = action
+            self.init(title: title, description: description, items: [], selected: selected, action: action)
+            
             self.items = options.map { ItemViewModel(id: $0.id, name: $0.name, isSelected: false, action: {[weak self] itemId in
                 self?.selected = itemId
             }) }
+            
             self.bind()
         }
         

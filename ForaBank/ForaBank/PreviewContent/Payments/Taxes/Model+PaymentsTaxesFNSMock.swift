@@ -18,14 +18,14 @@ extension Model {
             
             if let operatorParameter = parameters.first(where: { $0.parameter.id == paramOperator }),
                let operatorValue = operatorParameter.parameter.value,
-               let operatorSelected = Operator(rawValue: operatorValue) {
+               let operatorSelected = Payments.Operator(rawValue: operatorValue) {
                 
                 switch operatorSelected {
                 case .fns:
                     
                     // category
                     let categoryParameter = Payments.ParameterSelect(
-                        Parameter(id: "a3_dutyCategory_1_1", value: nil),
+                        Payments.Parameter(id: "a3_dutyCategory_1_1", value: nil),
                         title: "Категория платежа",
                         options: [
                             .init(id: "1", name: "Имущественный налог", icon: .parameterSample),
@@ -54,7 +54,7 @@ extension Model {
                     
                     // category
                     let categoryParameter = Payments.ParameterInput(
-                        Parameter(id: "a3_BillNumber_1_1", value: nil),
+                        Payments.Parameter(id: "a3_BillNumber_1_1", value: nil),
                         icon: .parameterDocument,
                         title: "УИН",
                         validator: .init(minLength: 1, maxLength: nil, regEx: nil))
@@ -69,15 +69,15 @@ extension Model {
                 
                 // operator
                 let operatorParameter = Payments.ParameterSelectSwitch(
-                    .init(id: paramOperator, value: Operator.fns.rawValue),
+                    .init(id: paramOperator, value: Payments.Operator.fns.rawValue),
                     options: [
-                        .init(id: Operator.fns.rawValue, name: Operator.fns.name),
-                        .init(id: Operator.fnsUin.rawValue, name: Operator.fnsUin.name)
+                        .init(id: Payments.Operator.fns.rawValue, name: Payments.Operator.fns.name),
+                        .init(id: Payments.Operator.fnsUin.rawValue, name: Payments.Operator.fnsUin.name)
                     ])
                 
                 // category
                 let categoryParameter = Payments.ParameterSelect(
-                    Parameter(id: "a3_dutyCategory_1_1", value: nil),
+                    Payments.Parameter(id: "a3_dutyCategory_1_1", value: nil),
                     title: "Категория платежа",
                     options: [
                         .init(id: "1", name: "Имущественный налог", icon: .parameterSample),
@@ -106,7 +106,7 @@ extension Model {
         case 1:
             guard let operatorParameter = parameters.first(where: { $0.parameter.id == paramOperator }),
                   let operatorValue = operatorParameter.parameter.value,
-                  let operatorSelected = Operator(rawValue: operatorValue) else {
+                  let operatorSelected = Payments.Operator(rawValue: operatorValue) else {
                       
                       completion(.failure(Payments.Error.missingOperatorParameter))
                       return
@@ -253,7 +253,7 @@ extension Model {
             
             guard let operatorParameter = parameters.first(where: { $0.parameter.id == paramOperator }),
                   let operatorValue = operatorParameter.parameter.value,
-                  let operatorSelected = Operator(rawValue: operatorValue) else {
+                  let operatorSelected = Payments.Operator(rawValue: operatorValue) else {
                       
                       completion(.failure(Payments.Error.missingOperatorParameter))
                       return
@@ -301,7 +301,7 @@ extension Model {
             
             guard let operatorParameter = parameters.first(where: { $0.parameter.id == paramOperator }),
                   let operatorValue = operatorParameter.parameter.value,
-                  let operatorSelected = Operator(rawValue: operatorValue) else {
+                  let operatorSelected = Payments.Operator(rawValue: operatorValue) else {
                       
                       completion(.failure(Payments.Error.missingOperatorParameter))
                       return
@@ -400,7 +400,7 @@ extension Model {
         case 4:
             guard let operatorParameter = parameters.first(where: { $0.parameter.id == paramOperator }),
                   let operatorValue = operatorParameter.parameter.value,
-                  let operatorSelected = Operator(rawValue: operatorValue) else {
+                  let operatorSelected = Payments.Operator(rawValue: operatorValue) else {
                       
                       completion(.failure(Payments.Error.missingOperatorParameter))
                       return

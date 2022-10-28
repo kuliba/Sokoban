@@ -14,8 +14,6 @@ extension PaymentsProductView {
     
     class ViewModel: PaymentsParameterViewModel {
         
-        let action: PassthroughSubject<Action, Never> = .init()
-        
         let title: String
         @Published var cardIcon: Image
         @Published var paymentSystemIcon: Image?

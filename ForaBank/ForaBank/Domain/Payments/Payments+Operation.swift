@@ -186,6 +186,18 @@ extension Payments.Operation {
         
         return .step(index: nextStep)
     }
+    
+    var isAutoContinueRequired: Bool {
+        
+        let nextAction = nextAction()
+        switch nextAction {
+        case .rollback:
+            return true
+            
+        default:
+            return false
+        }
+    }
 }
 
 //MARK: - Error

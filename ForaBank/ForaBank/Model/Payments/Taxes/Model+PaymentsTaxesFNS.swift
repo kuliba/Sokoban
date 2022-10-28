@@ -9,7 +9,7 @@ import Foundation
 
 extension Model {
     
-    func paymentsStepFNS(for stepIndex: Int) async throws -> Operation.Step {
+    func paymentsStepFNS(for stepIndex: Int) async throws -> Payments.Operation.Step {
         
         //TODO: implementation required
         throw Payments.Error.unsupported

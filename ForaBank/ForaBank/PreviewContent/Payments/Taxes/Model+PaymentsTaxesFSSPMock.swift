@@ -32,7 +32,7 @@ extension Model {
                 switch searchTypeParameterValue {
                 case "document":
                     let documentParameter = Payments.ParameterSelect(
-                        Parameter(id: "a3_dutyCategory_1_1_document", value: nil),
+                        Payments.Parameter(id: "a3_dutyCategory_1_1_document", value: nil),
                         title: "Тип документа",
                         options: [
                             .init(id: "1", name: "Паспорт РФ", icon: .parameterSample),
@@ -81,7 +81,7 @@ extension Model {
                     ])
                 
                 let documentParameter = Payments.ParameterSelect(
-                    Parameter(id: "a3_dutyCategory_1_1_document", value: nil),
+                    Payments.Parameter(id: "a3_dutyCategory_1_1_document", value: nil),
                     title: "Тип документа",
                     options: [
                         .init(id: "1", name: "Паспорт РФ", icon: .parameterSample),

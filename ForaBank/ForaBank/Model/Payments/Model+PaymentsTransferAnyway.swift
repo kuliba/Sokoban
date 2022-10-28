@@ -11,7 +11,7 @@ import Foundation
 
 extension Model {
     
-    func paymentsTransferAnywayProcess(parameters: [PaymentsParameterRepresentable], process: [Parameter], isNewPayment: Bool) async throws -> TransferAnywayResponseData {
+    func paymentsTransferAnywayProcess(parameters: [PaymentsParameterRepresentable], process: [Payments.Parameter], isNewPayment: Bool) async throws -> TransferAnywayResponseData {
         
         guard let token = token else {
             throw Payments.Error.notAuthorized
@@ -59,7 +59,7 @@ extension Model {
         try paymentsTransferComment(parameters)
     }
     
-    func paymentsTransferAnywayAdditional(_ parameters: [Parameter]) throws -> [TransferAnywayData.Additional] {
+    func paymentsTransferAnywayAdditional(_ parameters: [Payments.Parameter]) throws -> [TransferAnywayData.Additional] {
         
         var additional = [TransferAnywayData.Additional]()
         for (index, parameter) in parameters.enumerated() {
@@ -78,7 +78,7 @@ extension Model {
 
 extension Model {
     
-    func paymentsTransferAnywayStepParameters(service: Service, response: TransferAnywayResponseData) throws -> [PaymentsParameterRepresentable] {
+    func paymentsTransferAnywayStepParameters(service: Payments.Service, response: TransferAnywayResponseData) throws -> [PaymentsParameterRepresentable] {
         
         var result = [PaymentsParameterRepresentable]()
         
@@ -113,7 +113,7 @@ extension Model {
         return result
     }
     
-    func paymentsTransferAnywayStepVisible(service: Service, nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], response: TransferAnywayResponseData) throws -> [Payments.Parameter.ID] {
+    func paymentsTransferAnywayStepVisible(service: Payments.Service, nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], response: TransferAnywayResponseData) throws -> [Payments.Parameter.ID] {
         
         var result = [Payments.Parameter.ID]()
         
@@ -125,23 +125,23 @@ extension Model {
             let operationParametersIds = operationParameters.map{ $0.id }
             let allParametersIds = operationParametersIds + nexStepParametersIds
             
-            guard allParametersIds.contains(Parameter.Identifier.product.rawValue) else {
+            guard allParametersIds.contains(Payments.Parameter.Identifier.product.rawValue) else {
                 throw Payments.Error.missingProduct
             }
             
-            result.append(Parameter.Identifier.product.rawValue)
+            result.append(Payments.Parameter.Identifier.product.rawValue)
             
-            guard allParametersIds.contains(Parameter.Identifier.amount.rawValue) else {
+            guard allParametersIds.contains(Payments.Parameter.Identifier.amount.rawValue) else {
                 throw Payments.Error.missingAmount
             }
             
-            result.append(Parameter.Identifier.amount.rawValue)
+            result.append(Payments.Parameter.Identifier.amount.rawValue)
         }
 
         return result
     }
     
-    func paymentsTransferAnywayStepStage(service: Service, operation: Operation, response: TransferAnywayResponseData) throws -> Operation.Stage {
+    func paymentsTransferAnywayStepStage(service: Payments.Service, operation: Payments.Operation, response: TransferAnywayResponseData) throws -> Payments.Operation.Stage {
         
         if response.finalStep == true {
             
@@ -161,7 +161,7 @@ extension Model {
         }
     }
     
-    func paymentsTransferAnywayStepTerms(service: Service, visible: [Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable]) throws -> [Operation.Step.Term] {
+    func paymentsTransferAnywayStepTerms(service: Payments.Service, visible: [Payments.Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable]) throws -> [Payments.Operation.Step.Term] {
         
         try paymentsTransferStepTerms(service: service, visible: visible, nextStepParameters: nextStepParameters, operationParameters: operationParameters)
     }

@@ -19,7 +19,7 @@ extension Model {
             
             // category
             let categoryParameter = Payments.ParameterSelect(
-                Parameter(id: "a3_dutyCategory_1_1", value: nil),
+                Payments.Parameter(id: "a3_dutyCategory_1_1", value: nil),
                 title: "Категория платежа",
                 options: [
                     .init(id: "1", name: "Российский паспорт", icon: .parameterSample),
@@ -83,7 +83,7 @@ extension Model {
                 
                 // division
                 let divisionParameter = Payments.ParameterSelectSimple(
-                    Parameter(id: "a3_divisionSelect_2_1", value: "inn_oktmo"),
+                    Payments.Parameter(id: "a3_divisionSelect_2_1", value: "inn_oktmo"),
                     icon: .parameterSample,
                     title: "Данные о подразделении ФНС",
                     selectionTitle: "Выберете услугу",
@@ -123,7 +123,7 @@ extension Model {
             
             //  service
             let serviceParameter = Payments.ParameterSelectSimple(
-                Parameter(id: "a3_categorySelect_3_1", value: nil),
+                Payments.Parameter(id: "a3_categorySelect_3_1", value: nil),
                 icon: .parameterSample,
                 title: "Тип услуги",
                 selectionTitle: "Выберете услугу",

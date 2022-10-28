@@ -15,6 +15,9 @@ struct PaymentsOperationView: View {
     
     var body: some View {
         
+        Color.clear
+        
+        /*
         ZStack {
             
             ScrollView(showsIndicators: false) {
@@ -91,7 +94,7 @@ struct PaymentsOperationView: View {
                     }
                 }
             }
-                    
+               
             NavigationLink("", isActive: $viewModel.isConfirmViewActive) {
                 
                 if let confirmViewModel = viewModel.confirmViewModel {
@@ -111,9 +114,10 @@ struct PaymentsOperationView: View {
         .fullScreenCoverLegacy(viewModel: $viewModel.popUpSelector, coverBackgroundColor: .clear) { popUpSelectViewModel in
             PaymentsPopUpSelectView(viewModel: popUpSelectViewModel)
         }
+         */
     }
 }
-
+/*
 struct PaymentsOperationView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -131,3 +135,4 @@ extension PaymentsOperationViewModel {
         return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги"), items: items, footer: .amount(PaymentsAmountView.ViewModel.amountCurrencyInfoAlert))
     }()
 }
+*/

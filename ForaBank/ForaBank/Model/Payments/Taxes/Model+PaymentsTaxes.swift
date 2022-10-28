@@ -9,7 +9,7 @@ import Foundation
 
 extension Model {
     
-    func paymentsParameterRepresentableTaxes(service: Service, parameterData: ParameterData) throws -> PaymentsParameterRepresentable? {
+    func paymentsParameterRepresentableTaxes(service: Payments.Service, parameterData: ParameterData) throws -> PaymentsParameterRepresentable? {
         
         switch parameterData.id {
         case "a3_categorySelect_3_1":
@@ -37,7 +37,7 @@ extension Model {
                 throw Payments.Error.missingOptions(parameterData)
             }
             return Payments.ParameterSelectSimple(
-                Parameter(id: parameterData.id, value: parameterData.value),
+                Payments.Parameter(id: parameterData.id, value: parameterData.value),
                 icon: parameterData.iconData ?? .parameterSample,
                 title: parameterData.title,
                 selectionTitle: "Выберете тип документа",

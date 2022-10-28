@@ -11,12 +11,13 @@ import Combine
 
 class PaymentsConfirmViewModel: PaymentsOperationViewModel {
     
+    /*
     override init(_ model: Model, operation: Payments.Operation) {
         
         super.init(model, operation: operation)
         
     }
-    
+    */
     override func createFooter(from parameters: [PaymentsParameterRepresentable]) -> PaymentsOperationViewModel.FooterViewModel? {
         
         return .button(.init(title: "Оплатить", isEnabled: false, action: { [weak self] in
@@ -28,7 +29,6 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
         
         bind(model: model)
         bindAction()
-        bindItems()
     }
     
     override func bind(model: Model) {
@@ -39,11 +39,14 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
                 
                 switch action {
                 case let payload as ModelAction.Auth.VerificationCode.PushRecieved:
+                    /*
                     guard let codeParameter = items.value.first(where: { $0.id == Payments.Parameter.Identifier.code.rawValue }) as? PaymentsInputView.ViewModel else {
                         return
                     }
                     
                     codeParameter.content = payload.code
+                     */
+                    break
 
                 default:
                     break

@@ -13,14 +13,13 @@ import Combine
 extension PaymentsSelectSimpleView {
     
     class ViewModel: PaymentsParameterViewModel {
-        
-        let action: PassthroughSubject<Action, Never> = .init()
-        
+                
         let icon: Image
         let title: String
         
         @Published var content: String
         @Published var description: String?
+        //FIXME: remove, use value
         @Published var selectedOptionId: Option.ID?
         
         override var isValid: Bool { value.current != nil }
@@ -56,11 +55,38 @@ extension PaymentsSelectSimpleView {
         
         func bind() {
             
+            action
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] action in
+                    
+                    switch action {
+                    case _ as PaymentsParameterViewModelAction.SelectSimple.DidTapped:
+                        guard let popUpViewModel = popUpViewModel else {
+                            return
+                        }
+                        self.action.send(PaymentsParameterViewModelAction.SelectSimple.OptionExternal(viewModel: popUpViewModel))
+                        
+                    default:
+                        break
+                    }
+            
+                }.store(in: &bindings)
+            
+            $value
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] value in
+                    
+                    selectedOptionId = value.current
+                }
+                .store(in: &bindings)
+            
             $selectedOptionId
                 .receive(on: DispatchQueue.main)
                 .sink {[unowned self] selectedOptionId in
                     
-                    if let parameterSelect = source as? Payments.ParameterSelectSimple, let selectedOptionId = selectedOptionId, let selectedOption = parameterSelect.options.first(where: { $0.id == selectedOptionId })  {
+                    if let parameterSelect = source as? Payments.ParameterSelectSimple,
+                        let selectedOptionId = selectedOptionId,
+                        let selectedOption = parameterSelect.options.first(where: { $0.id == selectedOptionId })  {
                         
                         self.content = selectedOption.name
                         self.description = parameterSelect.description
@@ -72,20 +98,34 @@ extension PaymentsSelectSimpleView {
                     }
                 }
                 .store(in: &bindings)
+        }
+        
+        var popUpViewModel: PaymentsPopUpSelectView.ViewModel? {
             
-            $value
-                .receive(on: DispatchQueue.main)
-                .sink {[unowned self] value in
-                    
-                    selectedOptionId = value.current
-                }
-                .store(in: &bindings)
+            guard let parameterSelect = source as? Payments.ParameterSelectSimple else {
+                return nil
+            }
+
+            return PaymentsPopUpSelectView.ViewModel(title: title, description: description, options: parameterSelect.options, selected: value.current) { [weak self] optionId in
+                
+                self?.update(value: optionId)
+            }
         }
     }
+}
+
+//MARK: - Action
+
+extension PaymentsParameterViewModelAction {
+
+    enum SelectSimple {
     
-    enum ViewModelAction {
+        struct DidTapped: Action {}
         
-        struct SelectOptionExternal: Action {}
+        struct OptionExternal: Action {
+            
+            let viewModel: PaymentsPopUpSelectView.ViewModel
+        }
     }
 }
 
@@ -141,7 +181,7 @@ struct PaymentsSelectSimpleView: View {
             }
             .onTapGesture {
                 
-                viewModel.action.send(ViewModelAction.SelectOptionExternal())
+                viewModel.action.send(PaymentsParameterViewModelAction.SelectSimple.DidTapped())
             }
             
         } else {

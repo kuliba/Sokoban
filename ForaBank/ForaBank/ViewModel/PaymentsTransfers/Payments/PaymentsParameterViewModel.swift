@@ -6,8 +6,11 @@
 //
 
 import Foundation
+import Combine
 
 class PaymentsParameterViewModel: Identifiable, ObservableObject {
+    
+    let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var value: Value
     
@@ -59,3 +62,5 @@ class PaymentsParameterViewModel: Identifiable, ObservableObject {
         }
     }
 }
+
+enum PaymentsParameterViewModelAction {}

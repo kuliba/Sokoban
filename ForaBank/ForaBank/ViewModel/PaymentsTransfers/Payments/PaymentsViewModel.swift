@@ -51,7 +51,7 @@ class PaymentsViewModel: ObservableObject {
         case let .selected(service):
             // single service for category
             let operation = try await model.paymentsOperation(with: service)
-            let operationViewModel = PaymentsOperationViewModel(model, operation: operation)
+            let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model)
             self.init(content: .operation(operationViewModel), category: category, model: model, closeAction: closeAction)
             bind(operationViewModel: operationViewModel)
         }
@@ -65,7 +65,7 @@ class PaymentsViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
-                case let payload as ModelAction.Payment.Continue.Response:
+                case let payload as ModelAction.Payment.Process.Response:
                     self.action.send(PaymentsViewModelAction.Spinner.Hide())
                     
                     switch payload.result {

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 //MARK: - ViewModel
 
@@ -16,12 +17,40 @@ extension PaymentsButtonAdditionalView {
         let title: String
         @Published var isSelected: Bool
         let icon = Image("Payments Icon Chevron Down")
+        
+        private var bindings = Set<AnyCancellable>()
    
-        internal init(title: String, isSelected: Bool) {
+        init(title: String, isSelected: Bool) {
             
             self.title = title
             self.isSelected = isSelected
             super.init(source: Payments.ParameterMock())
+            
+            bind()
+        }
+        
+        private func bind() {
+            
+            $isSelected
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] isSelected in
+                    
+                    action.send(PaymentsParameterViewModelAction.SpoilerButton.DidUpdated(isCollapsed: isSelected))
+                    
+                }.store(in: &bindings)
+        }
+    }
+}
+
+//MARK: - Action
+
+extension PaymentsParameterViewModelAction {
+
+    enum SpoilerButton {
+    
+        struct DidUpdated: Action {
+            
+            let isCollapsed: Bool
         }
     }
 }

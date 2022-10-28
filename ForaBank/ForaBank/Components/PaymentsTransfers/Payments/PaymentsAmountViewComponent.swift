@@ -22,10 +22,9 @@ extension PaymentsAmountView {
         @Published var alert: AlertViewModel?
         
         private let actionTitle: String
-        private let action: () -> Void
         private var bindings = Set<AnyCancellable>()
         
-        init(title: String, amount: Double, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil, currencySwitch: CurrencySwitchViewModel? = nil, alert: AlertViewModel? = nil, formatter: NumberFormatter = .currency(with: "₽"), actionTitle: String = "", action: @escaping () -> Void = {}) {
+        init(title: String, amount: Double, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil, currencySwitch: CurrencySwitchViewModel? = nil, alert: AlertViewModel? = nil, formatter: NumberFormatter = .currency(with: "₽"), actionTitle: String = "") {
             
             self.title = title
             self.textField = .init(value: amount, formatter: formatter, limit: 10)
@@ -34,11 +33,10 @@ extension PaymentsAmountView {
             self.currencySwitch = currencySwitch
             self.alert = alert
             self.actionTitle = actionTitle
-            self.action = action
             super.init(source: Payments.ParameterMock())
         }
         
-        init(with parameterAmount: Payments.ParameterAmount, actionTitle: String, action: @escaping () -> Void) {
+        init(with parameterAmount: Payments.ParameterAmount, actionTitle: String) {
             
             self.title = parameterAmount.title
             self.textField = .init(type: .general, value: parameterAmount.amount, formatter: .currency(with: "₽"), limit: 10)
@@ -47,7 +45,6 @@ extension PaymentsAmountView {
             self.currencySwitch = nil
             self.alert = nil
             self.actionTitle = actionTitle
-            self.action = action
             
             super.init(source: parameterAmount)
             bind()
@@ -75,7 +72,10 @@ extension PaymentsAmountView {
             
             if isEnabled {
                 
-                transferButton = .active(title: actionTitle, action: action)
+                transferButton = .active(title: actionTitle, action: { [weak self] in
+                    
+                    self?.action.send(PaymentsParameterViewModelAction.Amount.ContinueDidTapped())
+                })
                 
             } else {
                 
@@ -107,6 +107,16 @@ extension PaymentsAmountView {
             
             let title: String
         }
+    }
+}
+
+//MARK: - Action
+
+extension PaymentsParameterViewModelAction {
+
+    enum Amount {
+    
+        struct ContinueDidTapped: Action {}
     }
 }
 
@@ -376,7 +386,7 @@ extension PaymentsAmountView.ViewModel {
     
     static let amountParameter: PaymentsAmountView.ViewModel = {
         
-        let viewModel = PaymentsAmountView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "100"), title: "Сумма перевода", currency: .init(description: "RUB"), validator: .init(minAmount: 1, maxAmount: 1000)), actionTitle: "Перевести", action: {})
+        let viewModel = PaymentsAmountView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "100"), title: "Сумма перевода", currency: .init(description: "RUB"), validator: .init(minAmount: 1, maxAmount: 1000)), actionTitle: "Перевести")
         
         viewModel.updateTranferButton(isEnabled: true)
         

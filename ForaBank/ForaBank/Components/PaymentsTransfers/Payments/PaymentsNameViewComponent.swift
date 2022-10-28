@@ -19,7 +19,7 @@ extension PaymentsNameView {
         @Published var person: PersonViewModel
         @Published var isEditing: Bool
         
-        lazy var action: () -> Void = { withAnimation{ self.isEditing.toggle() }}
+        lazy var buttonAction: () -> Void = { [weak self] in withAnimation{ self?.isEditing.toggle() }}
         
         var fullName: String {
             
@@ -99,13 +99,13 @@ struct PaymentsNameView: View {
                 
                 if viewModel.isEditing == false {
                     
-                    FieldView(icon: viewModel.icon, title: viewModel.title, value: .constant(viewModel.fullName), button: (viewModel.buttonIcon, viewModel.action))
+                    FieldView(icon: viewModel.icon, title: viewModel.title, value: .constant(viewModel.fullName), button: (viewModel.buttonIcon, viewModel.buttonAction))
                     
                 } else {
                     
                     VStack(spacing: 8) {
                         
-                        FieldView(icon: viewModel.icon, title: viewModel.person.lastName.title, value: $viewModel.person.lastName.value, isEditing: true, button: (viewModel.buttonIcon, viewModel.action))
+                        FieldView(icon: viewModel.icon, title: viewModel.person.lastName.title, value: $viewModel.person.lastName.value, isEditing: true, button: (viewModel.buttonIcon, viewModel.buttonAction))
                         
                         FieldView(title: viewModel.person.firstName.title, value: $viewModel.person.firstName.value, isEditing: true)
                         

@@ -64,7 +64,7 @@ extension Payments {
 
 extension Payments.Parameter {
     
-    enum Placement {
+    enum Placement: CaseIterable {
         
         case top
         case feed

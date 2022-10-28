@@ -14,8 +14,6 @@ extension PaymentsSelectView {
     
     class ViewModel: PaymentsParameterViewModel {
         
-        let action: PassthroughSubject<Action, Never> = .init()
-        
         @Published var state: State
     
         private var bindings: Set<AnyCancellable> = []
@@ -68,7 +66,7 @@ extension PaymentsSelectView {
                 .sink { [unowned self] action in
                     
                     switch action {
-                    case let payload as PaymentsSelectView.ViewModelAction.OptionSelected:
+                    case let payload as PaymentsParameterViewModelAction.Select.DidSelected:
                         guard let parameterSelect = source as? Payments.ParameterSelect,
                         let selectedViewModel = selected(options: parameterSelect.options, selectedId: payload.itemId, title: parameterSelect.title) else {
                             return
@@ -102,7 +100,7 @@ extension PaymentsSelectView {
             return options.map { option in
                 
                 let icon = option.icon.image ?? Self.itemIconPlaceholder
-                let action: (ItemViewModel.ID) -> Void = { [weak self] itemId in self?.action.send(PaymentsSelectView.ViewModelAction.OptionSelected(itemId: itemId)) }
+                let action: (ItemViewModel.ID) -> Void = { [weak self] itemId in self?.action.send(PaymentsParameterViewModelAction.Select.DidSelected(itemId: itemId)) }
                 
                 return ItemViewModel(id: option.id, icon: icon, name: option.name, action: action)
             }
@@ -115,7 +113,14 @@ extension PaymentsSelectView {
             }
             
             let icon = selectedOption.icon.image ?? Self.itemIconPlaceholder
-            return SelectedItemViewModel(id: selectedOption.id, icon: icon, title: title, name: selectedOption.name, action: { [weak self] in self?.action.send(PaymentsSelectView.ViewModelAction.SelectOptionExternal()) })
+            
+            let options = options.map{ Option(id: $0.id, name: $0.name)}
+            let popUpViewModel = PaymentsPopUpSelectView.ViewModel(title: title, description: nil, options: options, selected: selectedId, action: { [weak self] optionId in
+                
+                self?.update(value: optionId)
+            })
+
+            return SelectedItemViewModel(id: selectedOption.id, icon: icon, title: title, name: selectedOption.name, action: { [weak self] in self?.action.send(PaymentsParameterViewModelAction.Select.OptionExternal(viewModel: popUpViewModel)) })
         }
         
         //MARK: ViewModel Types
@@ -161,15 +166,23 @@ extension PaymentsSelectView {
             }
         }
     }
+}
+
+//MARK: - Action
+
+extension PaymentsParameterViewModelAction {
+
+    enum Select {
     
-    enum ViewModelAction {
+        struct OptionExternal: Action {
+            
+            let viewModel: PaymentsPopUpSelectView.ViewModel
+        }
         
-        struct OptionSelected: Action {
+        struct DidSelected: Action {
             
             let itemId: Payments.ParameterSelect.Option.ID
         }
-        
-        struct SelectOptionExternal: Action {}
     }
 }
 

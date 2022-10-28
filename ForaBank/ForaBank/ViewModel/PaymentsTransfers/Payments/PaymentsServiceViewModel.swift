@@ -57,7 +57,7 @@ class PaymentsServiceViewModel: ObservableObject {
                             
                             await MainActor.run {
                                 
-                                let operationViewModel = PaymentsOperationViewModel(model, operation: operation)
+                                let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model)
                                 link = .operation(operationViewModel)
                             }
                             

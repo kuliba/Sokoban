@@ -13,39 +13,11 @@ extension ModelAction {
     
     enum Payment {
         
-        typealias Category = Payments.Category
-        typealias Service = Payments.Service
-        typealias Operator = Payments.Operator
-        typealias Parameter = Payments.Parameter
-        typealias Operation = Payments.Operation
-        
-        // begin payment process
-        enum Begin {
+        enum Process {
             
             struct Request: Action {
                 
-                let base: Base
-                
-                enum Base {
-                    
-                    case service(Service)
-                    case source(Operation.Source)
-                }
-            }
-            
-            enum Response: Action {
-                
-                case success(Operation)
-                case failure(String)
-            }
-        }
-        
-        // continue payment process
-        enum Continue {
-            
-            struct Request: Action {
-                
-                let operation: Operation
+                let operation: Payments.Operation
             }
             
             struct Response: Action {
@@ -54,8 +26,8 @@ extension ModelAction {
                 
                 enum Result {
                     
-                    case step(Operation)
-                    case confirm(Operation)
+                    case step(Payments.Operation)
+                    case confirm(Payments.Operation)
                     case complete(Payments.Success)
                     case failure(String)
                 }
@@ -67,14 +39,8 @@ extension ModelAction {
 //MARK: - Handlers
 
 extension Model {
-    
-    typealias Category = Payments.Category
-    typealias Service = Payments.Service
-    typealias Operator = Payments.Operator
-    typealias Parameter = Payments.Parameter
-    typealias Operation = Payments.Operation
 
-    func handlePaymentsContinueRequest(_ payload: ModelAction.Payment.Continue.Request) {
+    func handlePaymentsProcessRequest(_ payload: ModelAction.Payment.Process.Request) {
         
         Task {
 
@@ -84,19 +50,19 @@ extension Model {
                 
                 switch result {
                 case let .step(operation):
-                    self.action.send(ModelAction.Payment.Continue.Response(result: .step(operation)))
+                    self.action.send(ModelAction.Payment.Process.Response(result: .step(operation)))
                     
                 case let .confirm(operation):
-                    self.action.send(ModelAction.Payment.Continue.Response(result: .confirm(operation)))
+                    self.action.send(ModelAction.Payment.Process.Response(result: .confirm(operation)))
                     
                 case let .complete(success):
-                    self.action.send(ModelAction.Payment.Continue.Response(result: .complete(success)))
+                    self.action.send(ModelAction.Payment.Process.Response(result: .complete(success)))
                 }
                 
             } catch {
                 
                 LoggerAgent.shared.log(level: .error, category: .model, message: "Failed continue operation: \(payload.operation) with error: \(error.localizedDescription)")
-                self.action.send(ModelAction.Payment.Continue.Response(result: .failure(self.paymentsAlertMessage(with: error))))
+                self.action.send(ModelAction.Payment.Process.Response(result: .failure(self.paymentsAlertMessage(with: error))))
             }
         }
     }
@@ -109,10 +75,10 @@ extension Model {
     enum PaymentsServiceResult {
         
         case select(Payments.ParameterSelectService)
-        case selected(Service)
+        case selected(Payments.Service)
     }
     
-    func paymentsService(for category: Category) async throws -> PaymentsServiceResult {
+    func paymentsService(for category: Payments.Category) async throws -> PaymentsServiceResult {
         
         switch category {
         case .taxes:
@@ -141,7 +107,7 @@ extension Model {
         }
     }
         
-    func paymentsService(for source: Operation.Source) async throws -> Service {
+    func paymentsService(for source: Payments.Operation.Source) async throws -> Payments.Service {
         
         //TODO: implementation required
         throw Payments.Error.unsupported
@@ -152,10 +118,10 @@ extension Model {
 
 extension Model {
     
-    func paymentsOperation(with service: Service) async throws -> Operation {
+    func paymentsOperation(with service: Payments.Service) async throws -> Payments.Operation {
         
         // create empty operation
-        let operation = Operation(service: service)
+        let operation = Payments.Operation(service: service)
         
         // process operation
         let result = try await paymentsProcess(operation: operation)
@@ -167,13 +133,13 @@ extension Model {
         return operation
     }
     
-    func paymentsOperation(with source: Operation.Source) async throws -> Operation {
+    func paymentsOperation(with source: Payments.Operation.Source) async throws -> Payments.Operation {
         
         // try get service with source
         let service = try await paymentsService(for: source)
         
         // create empty operation
-        let operation = Operation(service: service, source: source)
+        let operation = Payments.Operation(service: service, source: source)
         
         // process operation
         let result = try await paymentsProcess(operation: operation)
@@ -191,7 +157,7 @@ extension Model {
 
 extension Model {
     
-    func paymentsProcessLocalStep(operation: Operation, stepIndex: Int) async throws -> Operation.Step {
+    func paymentsProcessLocalStep(operation: Payments.Operation, stepIndex: Int) async throws -> Payments.Operation.Step {
         
         switch operation.service {
         case .fns:
@@ -205,7 +171,7 @@ extension Model {
         }
     }
     
-    func paymentsProcessRemoteStep(operation: Operation, response: TransferResponseData) async throws -> Operation.Step {
+    func paymentsProcessRemoteStep(operation: Payments.Operation, response: TransferResponseData) async throws -> Payments.Operation.Step {
         
         if let anywayResponse = response as? TransferAnywayResponseData {
             
@@ -214,7 +180,7 @@ extension Model {
             let stepStage = try paymentsTransferAnywayStepStage(service: operation.service, operation: operation, response: anywayResponse)
             let stepTerms = try paymentsTransferAnywayStepTerms(service: operation.service, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters)
             
-            return Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, terms: stepTerms, processed: nil))
+            return Payments.Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, terms: stepTerms, processed: nil))
             
         } else {
             
@@ -228,13 +194,13 @@ extension Model {
 
 extension Model {
     
-    func paymentsProcessSourceReducer(service: Service, source: Operation.Source, parameterId: Parameter.ID) -> Parameter.Value? {
+    func paymentsProcessSourceReducer(service: Payments.Service, source: Payments.Operation.Source, parameterId: Payments.Parameter.ID) -> Payments.Parameter.Value? {
 
         //TODO: implementation required
         return nil
     }
     
-    func paymentsProcessDependencyReducer(parameterId: Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
+    func paymentsProcessDependencyReducer(parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
         
         //TODO: implementation required
         return nil
@@ -246,7 +212,7 @@ extension Model {
 extension Model {
     
     @discardableResult
-    func paymentsProcessRemoteStart(_ process: [Parameter], _ operation: Operation) async throws -> TransferResponseData {
+    func paymentsProcessRemoteStart(_ process: [Payments.Parameter], _ operation: Payments.Operation) async throws -> TransferResponseData {
         
         switch operation.transferType {
         case .anyway:
@@ -255,7 +221,7 @@ extension Model {
     }
     
     @discardableResult
-    func paymentsProcessRemoteNext(_ process: [Parameter], _ operation: Operation) async throws -> TransferResponseData {
+    func paymentsProcessRemoteNext(_ process: [Payments.Parameter], _ operation: Payments.Operation) async throws -> TransferResponseData {
         
         switch operation.transferType {
         case .anyway:
@@ -263,9 +229,9 @@ extension Model {
         }
     }
     
-    func paymentsProcessRemoteConfirm(_ process: [Parameter], _ operation: Operation) async throws -> Payments.Success {
+    func paymentsProcessRemoteConfirm(_ process: [Payments.Parameter], _ operation: Payments.Operation) async throws -> Payments.Success {
         
-        guard let codeValue = operation.parameters.first(where: { $0.id == Parameter.Identifier.code.rawValue })?.value else {
+        guard let codeValue = operation.parameters.first(where: { $0.id == Payments.Parameter.Identifier.code.rawValue })?.value else {
             throw Payments.Error.missingCodeParameter
         }
         
@@ -275,7 +241,7 @@ extension Model {
         return success
     }
     
-    func paymentsProcessRemoteComplete(_ process: [Parameter], _ operation: Operation) async throws -> Payments.Success {
+    func paymentsProcessRemoteComplete(_ process: [Payments.Parameter], _ operation: Payments.Operation) async throws -> Payments.Success {
         
         //FIXME: optional code value?
         let response = try await paymentsTransferComplete(code: "")
@@ -289,7 +255,7 @@ extension Model {
 
 extension Model {
 
-    func paymentsParameterRepresentable(service: Service, parameterData: ParameterData) throws -> PaymentsParameterRepresentable? {
+    func paymentsParameterRepresentable(service: Payments.Service, parameterData: ParameterData) throws -> PaymentsParameterRepresentable? {
         
         switch service {
         case .fns, .fms, .fssp:
@@ -338,7 +304,7 @@ extension Model {
         }
     }
     
-    func paymentsParameterRepresentable(service: Service, adittionalData: TransferAnywayResponseData.AdditionalData) throws -> PaymentsParameterRepresentable {
+    func paymentsParameterRepresentable(service: Payments.Service, adittionalData: TransferAnywayResponseData.AdditionalData) throws -> PaymentsParameterRepresentable {
         
         Payments.ParameterInfo(
             .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
@@ -346,7 +312,7 @@ extension Model {
             title: adittionalData.fieldTitle, placement: .spoiler)
     }
     
-    func paymentsParameterRepresentableSelectServiceOption(for service: Service, with operators: [OperatorGroupData.OperatorData]) -> Payments.ParameterSelectService.Option? {
+    func paymentsParameterRepresentableSelectServiceOption(for service: Payments.Service, with operators: [OperatorGroupData.OperatorData]) -> Payments.ParameterSelectService.Option? {
         
         switch service {
         case .fns:

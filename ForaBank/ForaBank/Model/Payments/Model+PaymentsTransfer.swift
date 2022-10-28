@@ -11,7 +11,7 @@ import Foundation
 
 extension Model {
     
-    func paymentsTransferProcess(parameters: [PaymentsParameterRepresentable], process: [Parameter], isNewPayment: Bool) async throws -> TransferAnywayResponseData {
+    func paymentsTransferProcess(parameters: [PaymentsParameterRepresentable], process: [Payments.Parameter], isNewPayment: Bool) async throws -> TransferAnywayResponseData {
         
         //TODO: implementation required
         throw Payments.Error.unsupported
@@ -83,12 +83,12 @@ extension Model {
 
 extension Model {
     
-    func paymentsTransferStepParameters(service: Service, response: TransferResponseData) throws -> [PaymentsParameterRepresentable] {
+    func paymentsTransferStepParameters(service: Payments.Service, response: TransferResponseData) throws -> [PaymentsParameterRepresentable] {
         
         return []
     }
     
-    func paymentsTransferStepVisible(service: Service, nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], response: TransferResponseData) throws -> [Payments.Parameter.ID] {
+    func paymentsTransferStepVisible(service: Payments.Service, nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], response: TransferResponseData) throws -> [Payments.Parameter.ID] {
         
         var result = [Payments.Parameter.ID]()
         
@@ -98,7 +98,7 @@ extension Model {
         return result
     }
     
-    func paymentsTransferStepStage(service: Service, operation: Operation, response: TransferResponseData) throws -> Operation.Stage {
+    func paymentsTransferStepStage(service: Payments.Service, operation: Payments.Operation, response: TransferResponseData) throws -> Payments.Operation.Stage {
         
         if response.needOTP == true {
             
@@ -125,9 +125,9 @@ extension Model {
         }
     }
     
-    func paymentsTransferStepTerms(service: Service, visible: [Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable]) throws -> [Operation.Step.Term] {
+    func paymentsTransferStepTerms(service: Payments.Service, visible: [Payments.Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable]) throws -> [Payments.Operation.Step.Term] {
         
-        var result = [Operation.Step.Term]()
+        var result = [Payments.Operation.Step.Term]()
         
         let parameters = operationParameters + nextStepParameters
         
