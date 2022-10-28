@@ -24,7 +24,9 @@ class CountrySectionCollapsableViewModel: CollapsableSectionViewModel {
         
         var country = [CollapsableSectionViewModel.ItemViewModel]()
         
-        country = countriesList.map({CollapsableSectionViewModel.ItemViewModel(title: $0.name, image: $0.svgImage?.image, bankType: nil, action: {})})
+        country = countriesList.map({CollapsableSectionViewModel.ItemViewModel(title: $0.name, image: $0.svgImage?.image, bankType: nil, action: {
+            
+        })})
         country = country.sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
         country = country.sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
         

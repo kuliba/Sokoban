@@ -23,7 +23,7 @@ class ContactsViewModel: ObservableObject {
         
         case contacts(LatestPaymentsView.ViewModel?, ContactsListViewModel)
         case contactsSearch(ContactsListViewModel)
-        case banks(TopBanksSectionType?, [CollapsableSectionViewModel])
+        case banks(ContactsTopBanksSectionViewModel?, [CollapsableSectionViewModel])
         case banksSearch([CollapsableSectionViewModel])
     }
     
@@ -31,7 +31,7 @@ class ContactsViewModel: ObservableObject {
     private var bindings = Set<AnyCancellable>()
     
     init(_ model: Model, searchBar: SearchBarView.ViewModel, mode: Mode) {
-
+        
         self.model = model
         self.searchBar = searchBar
         self.mode = mode
@@ -39,7 +39,10 @@ class ContactsViewModel: ObservableObject {
     
     convenience init(_ model: Model) {
         
-        let searchBar: SearchBarView.ViewModel = .init(textFieldPhoneNumberView: .init(placeHolder: .contacts))
+        let searchBar: SearchBarView.ViewModel = .init(textFieldPhoneNumberView: .init(placeHolder: .contacts,
+                                                                                       toolbar: .init(doneButton: .init(isEnabled: true) { UIApplication.shared.endEditing() },
+                                                                                                      closeButton: .init(isEnabled: true, action: { UIApplication.shared.endEditing() })), filtersSymbols: [Character("-"), Character("("), Character(")"), Character("+")]))
+        
         self.init(model, searchBar: searchBar, mode: .contacts(nil, .init(model)))
         
         bind()
@@ -52,51 +55,15 @@ class ContactsViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
+                case let payload as ContactsViewModelAction.SetupPhoneNumber:
+                    self.searchBar.textFieldPhoneNumberView.text = payload.phone
                     
                 case let payload as ContactsListViewModelAction.ContactSelect:
                     self.searchBar.textFieldPhoneNumberView.text = payload.phone
-                
-                case let payload as ContactsViewModelAction.SetupPhoneNumber:
-                    self.searchBar.textFieldPhoneNumberView.text = payload.phone
-
-                default: break
-                }
-            }.store(in: &bindings)
-        
-        model.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case let payload as ModelAction.LatestPayments.BanksList.Response:
                     
-                    switch payload.result {
-                    case .success(let banks):
-                        
-                        guard case .banks(_, _) = mode else {
-                            return
-                        }
-                        
-                        let banksData = model.bankList.value
-                        let bankSection = BanksSectionCollapsableViewModel(model, bankData: banksData)
-                        
-                        let countiesData = model.countriesList.value.filter({$0.paymentSystemIdList.contains({"DIRECT"}())})
-                        let countriesSection = CountrySectionCollapsableViewModel(countriesList: countiesData)
-                        
-                        let collapsable: [CollapsableSectionViewModel] = [bankSection, countriesSection]
-                        
-                        let banks = reduce(model: model, banks: banks)
-                        
-                        if let banks = banks {
-                            
-                            self.mode = .banks(.banks(banks), collapsable)
-                        }
-                        
-                    case .failure:
-                        break
-                    }
                 default: break
                 }
+                
             }.store(in: &bindings)
         
         model.latestPayments
@@ -107,7 +74,7 @@ class ContactsViewModel: ObservableObject {
                 guard case .contacts(_, let contacts) = mode else {
                     return
                 }
-
+                
                 let latestPayments = data.0
                 
                 let latestPaymentsFilterred = latestPayments.filter({ $0.type == .phone })
@@ -116,20 +83,6 @@ class ContactsViewModel: ObservableObject {
                     
                     let items = itemsReduce(model: self.model, latest: latestPaymentsFilterred)
                     self.mode = .contacts(.init(model, items: items), contacts)
-                    contacts.action
-                        .receive(on: DispatchQueue.main)
-                        .sink { [unowned self] action in
-                            
-                            switch action {
-                            case let payload as ContactsListViewModelAction.ContactSelect:
-                                self.searchBar.textFieldPhoneNumberView.text = payload.phone
-                                
-                            default:
-                                print("\(action)")
-                                break
-                            }
-                            
-                        }.store(in: &bindings)
                 }
                 
             }.store(in: &bindings)
@@ -139,30 +92,11 @@ class ContactsViewModel: ObservableObject {
             .sink { [unowned self] data in
                 
                 guard case .contacts(let latestPayments, let contacts) = mode else {
-                  return
+                    return
                 }
-                
-                guard let clientInfoData = data else {
-                     self.model.action.send(ModelAction.ClientInfo.Fetch.Request())
-                     return
-                 }
                 
                 mode = .contacts(latestPayments, contacts)
                 
-                contacts.action
-                    .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] action in
-                        
-                        switch action {
-                        case let payload as ContactsListViewModelAction.ContactSelect:
-                            self.searchBar.textFieldPhoneNumberView.text = payload.phone
-                            
-                        default:
-                            print("\(action)")
-                            break
-                        }
-                        
-                    }.store(in: &bindings)
             }.store(in: &bindings)
         
         //MARK: Mode
@@ -170,70 +104,32 @@ class ContactsViewModel: ObservableObject {
         $mode
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] mode in
-        
-                guard case .contacts(let latestPayments, let contacts) = mode else {
-                  return
-                }
                 
-                contacts.action
-                    .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] action in
-                        
-                        switch action {
-                        case let payload as ContactsListViewModelAction.ContactSelect:
-                            self.searchBar.textFieldPhoneNumberView.text = payload.phone
-                            
-                        default:
-                            print("\(action)")
-                            break
-                        }
-                        
-                    }.store(in: &bindings)
-                
-                switch mode {
-                case .contacts(let selfContact, let contacts):
-                    
-                    selfContact?.action
-                        .receive(on: DispatchQueue.main)
-                        .sink { [unowned self] action in
-                            
-                            switch action {
-                            case let payload as ContactsViewModelAction.SetupPhoneNumber:
-                                self.searchBar.textFieldPhoneNumberView.text = payload.phone
-                            
-                            default: break
-                            }
-                            
-                        }.store(in: &bindings)
-                    
-                    contacts.action
-                        .receive(on: DispatchQueue.main)
-                        .sink { [unowned self] action in
-                            
-                            switch action {
-                            case let payload as ContactsListViewModelAction.ContactSelect:
-                                self.searchBar.textFieldPhoneNumberView.text = payload.phone
-                                
-                            default:
-                                print("\(action)")
-                                break
-                            }
-                            
-                        }.store(in: &bindings)
-                        
-                case .contactsSearch(_):
-                    break
-                    
-                case .banks(_, _):
-                    break
-                    
-                case .banksSearch(_):
-                    break
-                }
+                bindMode(mode: mode)
                 
             }.store(in: &bindings)
         
         //MARK: SearchViewModel
+        
+        searchBar.textFieldPhoneNumberView.$text
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] text in
+                
+                if text != nil, text != "" {
+                    
+                    mode = .contactsSearch(.init(model, filterText: text))
+                } else {
+                    
+                    let latestPaymentsFilterred = model.latestPayments.value.filter({$0.type == .phone})
+                    
+                    withAnimation(.easeInOut(duration: 1)) {
+                        
+                        let items = itemsReduce(model: self.model, latest: latestPaymentsFilterred)
+                        self.mode = .contacts(.init(model, items: items), .init(model))
+                    }
+                }
+                
+            }.store(in: &bindings)
         
         searchBar.action
             .receive(on: DispatchQueue.main)
@@ -241,13 +137,17 @@ class ContactsViewModel: ObservableObject {
                 
                 switch action {
                     
+                case _ as SearchBarViewModelAction.ClearTextField:
+                    self.searchBar.textFieldPhoneNumberView.text = nil
+                    
                 case let payload as SearchBarViewModelAction.Number.isValidation:
-                 
+                    
                     if payload.isValidation {
                         
                         withAnimation {
                             
                             self.feedbackGenerator.notificationOccurred(.success)
+                            self.searchBar.state = .idle
                             
                             if let text = searchBar.textFieldPhoneNumberView.text {
                                 
@@ -263,7 +163,7 @@ class ContactsViewModel: ObservableObject {
                             
                             let collapsable: [CollapsableSectionViewModel] = [bankSection, countriesSection]
                             
-                            self.mode = .banks(.placeHolder(.init(placeHolderViewModel: Array(repeating: LatestPaymentsView.ViewModel.PlaceholderViewModel.init(), count: 6))), collapsable)
+                            self.mode = .banks(.init(model), collapsable)
                         }
                     } else {
                         
@@ -284,17 +184,90 @@ class ContactsViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
+        
+        //MARK: TopBanks
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ModelAction.LatestPayments.BanksList.Response:
+                    
+                    switch payload.result {
+                    case .success(let banks):
+                        
+                        let banks = self.reduce(model: model, banks: banks)
+                        
+                        let banksData = model.bankList.value
+                        let bankSection = BanksSectionCollapsableViewModel(model, bankData: banksData)
+                        
+                        let countiesData = model.countriesList.value.filter({$0.paymentSystemIdList.contains({"DIRECT"}())})
+                        let countriesSection = CountrySectionCollapsableViewModel(countriesList: countiesData)
+                        
+                        let collapsable: [CollapsableSectionViewModel] = [bankSection, countriesSection]
+                        
+                        
+                        if let banks = banks {
+                            
+                            self.mode = .banks(.init(model, content: .banks(banks)), collapsable)
+                        }
+                        
+                    case .failure:
+                        break
+                    }
+                default: break
+                }
+            }.store(in: &bindings)
     }
     
-    enum TopBanksSectionType {
+    private func bindMode(mode: Mode) {
         
-        case banks(TopBanksViewModel)
-        case placeHolder(PlaceHolderViewModel)
-    }
-    
-    struct PlaceHolderViewModel {
-        
-        let placeHolderViewModel: [LatestPaymentsView.ViewModel.PlaceholderViewModel]
+        switch mode {
+        case .contacts(_, let contacts):
+            
+            contacts.$selfContact
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] contact in
+                    
+                    contact?.actionContact = { [unowned self] in
+                        
+                        if let phone = contact?.phone {
+                            
+                            action.send(ContactsListViewModelAction.ContactSelect(phone: phone))
+                        }
+                    }
+                    
+                }.store(in: &bindings)
+            
+            contacts.$contacts
+                .receive(on: DispatchQueue.main)
+                .sink { contacts in
+                    
+                    for contact in contacts {
+                        contact.actionContact = { [unowned self] in
+                            
+                            action.send(ContactsListViewModelAction.ContactSelect(phone: contact.phone))
+                        }
+                    }
+                }.store(in: &bindings)
+            
+        case .contactsSearch(let contacts):
+            
+            contacts.$contacts
+                .receive(on: DispatchQueue.main)
+                .sink { contacts in
+                    
+                    for contact in contacts {
+                        contact.actionContact = { [unowned self] in
+                            
+                            action.send(ContactsListViewModelAction.ContactSelect(phone: contact.phone))
+                        }
+                    }
+                }.store(in: &bindings)
+            
+        default: break
+        }
     }
     
     func itemsReduce(model: Model, latest: [LatestPaymentData]) -> [LatestPaymentsView.ViewModel.ItemViewModel] {
@@ -323,11 +296,11 @@ class ContactsViewModel: ObservableObject {
         
         var banksList: [TopBanksViewModel.Bank] = []
         
-        let banksListMapped = banks.map({
+        banks.map({
             
             if let bankName = $0.bankName, let defaultBank = $0.defaultBank, let payment = $0.payment {
                 
-                let contact = payment ? model.contact(for: self.searchBar.text) : nil
+                let contact = payment ? model.contact(for: self.searchBar.text ?? "") : nil
                 banksList.append(TopBanksViewModel.Bank(image: getImageBank(model: model, paymentBank: $0), defaultBank: defaultBank, name: contact?.fullName, bankName: bankName, action: {
                     
                 }))
@@ -360,10 +333,9 @@ class ContactsViewModel: ObservableObject {
 
 extension ContactsViewModel {
     
-    enum Kind: Equatable {
+    enum Link {
         
-        case banks(BankType)
-        case country
+        case country(CountryPaymentView.ViewModel)
     }
 }
 
@@ -375,28 +347,28 @@ enum ContactsViewModelAction {
     }
 }
 
-//extension ContactsViewModel {
-//
-//    static let sample: ContactsViewModel = .init(.emptyMock, searchBar: .init(textColor: .white), mode: .contactsSearch(.init(selfContact: .init(fullName: "Себе", image: nil, phone: "8 (925) 279 96-13", icon: nil, action: {}), contacts: [.init(fullName: "Андрей Андропов", image: nil, phone: "+7 (903) 333-67-32", icon: nil, action: {})])))
-//
-//    static let sampleLatestPayment: ContactsViewModel = .init(.emptyMock, searchBar: .init(textColor: .gray), mode: .contacts(.init(.emptyMock, items: [.latestPayment(.init(id: 5, avatar: .icon(Image("ic24Smartphone"), .iconGray), topIcon: Image("azerFlag"), description: "+994 12 493 23 87", action: {}))]), .init(selfContact: .init(fullName: "Себе", image: nil, phone: "8 (925) 279 96-13", icon: nil, action: {}), contacts: [.init(fullName: "Андрей Андропов", image: nil, phone: "+7 (903) 333-67-32", icon: nil, action: {})])))
-//
-//    static let sampleBanks = BanksSectionCollapsableViewModel(header: .init(kind: .banks), items: [.sampleItem], mode: .normal, options: .sample)
-//
-//    static let sampleHeader = ContactsViewModel.CollapsableSectionViewModel.HeaderViewModel(kind: .country)
-//}
-//
-//extension ContactsViewModel.CollapsableSectionViewModel.ItemViewModel {
-//
-//    static let sampleItem = ContactsViewModel.CollapsableSectionViewModel.ItemViewModel(title: "Банк", image: .ic24Bank, bankType: .sfp, action: {})
-//}
-//
-//extension ContactsViewModel.CollapsableSectionViewModel {
-//
-//    static let sampleHeader = ContactsViewModel.CollapsableSectionViewModel.HeaderViewModel(kind: .country)
-//}
-//
-//extension ContactsViewModel.CollapsableSectionViewModel.HeaderViewModel {
-//
-//    static let sampleHeader = ContactsViewModel.CollapsableSectionViewModel.HeaderViewModel(kind: .banks)
-//}
+extension ContactsViewModel {
+    
+    static let sample: ContactsViewModel = .init(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(placeHolder: .banks)), mode: .contactsSearch(.init(selfContact: .init(fullName: "name", image: nil, phone: "phone", icon: nil, actionContact: {}), contacts: [])))
+    
+    static let sampleLatestPayment: ContactsViewModel = .init(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(placeHolder: .banks)), mode: .contacts(.init(.emptyMock, items: [.latestPayment(.init(id: 5, avatar: .icon(Image("ic24Smartphone"), .iconGray), topIcon: Image("azerFlag"), description: "+994 12 493 23 87", action: {}))]), .init(selfContact: .init(fullName: "Себе", image: nil, phone: "8 (925) 279 96-13", icon: nil, actionContact: {}), contacts: [.init(fullName: "Андрей Андропов", image: nil, phone: "+7 (903) 333-67-32", icon: nil, actionContact: {})])))
+    
+    static let sampleBanks = BanksSectionCollapsableViewModel(.emptyMock, header: .init(kind: .banks), items: [.sampleItem], mode: .normal, options: .sample)
+    
+    static let sampleHeader = CollapsableSectionViewModel.HeaderViewModel(kind: .country)
+}
+
+extension CollapsableSectionViewModel.ItemViewModel {
+    
+    static let sampleItem = CollapsableSectionViewModel.ItemViewModel(title: "Банк", image: .ic24Bank, bankType: .sfp, action: {})
+}
+
+extension CollapsableSectionViewModel {
+    
+    static let sampleHeader = CollapsableSectionViewModel.HeaderViewModel(kind: .country)
+}
+
+extension CollapsableSectionViewModel.HeaderViewModel {
+    
+    static let sampleHeader = CollapsableSectionViewModel.HeaderViewModel(kind: .banks)
+}

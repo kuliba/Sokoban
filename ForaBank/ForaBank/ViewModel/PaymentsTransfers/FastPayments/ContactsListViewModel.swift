@@ -15,33 +15,12 @@ class ContactsListViewModel: ObservableObject {
     
     @Published var selfContact: ContactViewModel?
     @Published var contacts: [ContactViewModel]
-    
     private var bindings = Set<AnyCancellable>()
     
     init(selfContact: ContactViewModel?, contacts: [ContactViewModel]) {
         
         self.selfContact = selfContact
         self.contacts = contacts
-        bind()
-    }
-    
-    func bind() {
-        
-        action
-            .receive(on: DispatchQueue.main)
-            .sink { action in
-                
-                switch action {
-                    
-                case let payload as ContactsListViewModelAction.ContactSelect:
-                    print("ContactsListViewModelAction.ContactSelect")
-                    self.action.send(ContactsViewModelAction.SetupPhoneNumber(phone: payload.phone))
-                    
-                default:
-                    print("defaul ContactsListView")
-                }
-                
-            }.store(in: &bindings)
     }
     
     convenience init(_ model: Model, filterText: String? = nil) {
@@ -70,24 +49,18 @@ class ContactsListViewModel: ObservableObject {
             }
         })
         
-        contacts = adressBookSorted.map({ contact in
+        contacts = adressBookSorted.map({ [unowned self] contact in
             
             let icon = model.bankClientInfo.value.contains([BankClientInfo(phone: contact.phone)]) ? Image("foraContactImage") : nil
             
             if let image = contact.avatar?.image {
-                return ContactViewModel(fullName: contact.fullName, image: .image(image), phone: contact.phone, icon: icon, action: {
-                    self.action.send(ContactsListViewModelAction.ContactSelect(phone: contact.phone))
-                })
+                return ContactViewModel(fullName: contact.fullName, image: .image(image), phone: contact.phone, icon: icon, actionContact: { [weak self] in self?.action.send(ContactsViewModelAction.SetupPhoneNumber(phone: contact.phone))})
                 
             } else if let initials = model.contact(for: contact.phone)?.initials {
-                return ContactViewModel(fullName: contact.fullName, image: .initials(initials), phone: contact.phone, icon: icon, action: {
-                    self.action.send(ContactsListViewModelAction.ContactSelect(phone: contact.phone))
-                })
+                return ContactViewModel(fullName: contact.fullName, image: .initials(initials), phone: contact.phone, icon: icon, actionContact: { [weak self] in self?.action.send(ContactsViewModelAction.SetupPhoneNumber(phone: contact.phone))})
                 
             } else {
-                return ContactViewModel(fullName: contact.fullName, image: nil, phone: contact.phone, icon: icon, action: {
-                    self.action.send(ContactsListViewModelAction.ContactSelect(phone: contact.phone))
-                })
+                return ContactViewModel(fullName: contact.fullName, image: nil, phone: contact.phone, icon: icon, actionContact: { [weak self] in self?.action.send(ContactsViewModelAction.SetupPhoneNumber(phone: contact.phone))})
             }
         })
         
@@ -128,7 +101,8 @@ class ContactsListViewModel: ObservableObject {
         let phoneFormatter = PhoneNumberFormater()
         let formattedPhone = phoneFormatter.format(phone)
         
-        let selfContact: ContactViewModel = .init(fullName: "Себе", image: nil, phone: formattedPhone, icon: nil, action: { [weak self] in self?.action.send(ContactsViewModelAction.SetupPhoneNumber(phone: phone))})
+        let selfContact: ContactViewModel = .init(fullName: "Себе", image: nil, phone: formattedPhone, icon: nil, actionContact: { [weak self] in self?.action.send(ContactsViewModelAction.SetupPhoneNumber(phone: phone))   
+        })
         
         return selfContact
     }
@@ -140,15 +114,15 @@ class ContactsListViewModel: ObservableObject {
         let phone: String
         var image: IconImage?
         @Published var icon: Image?
-        let action: () -> Void
+        var actionContact: () -> Void
         
-        init(fullName: String?, image: IconImage?, phone: String, icon: Image?, action: @escaping () -> Void) {
+        init(fullName: String?, image: IconImage?, phone: String, icon: Image?, actionContact: @escaping () -> Void) {
             
             self.phone = phone
             self.fullName = fullName
             self.image = image
             self.icon = icon
-            self.action = action
+            self.actionContact = actionContact
         }
         
         enum IconImage {

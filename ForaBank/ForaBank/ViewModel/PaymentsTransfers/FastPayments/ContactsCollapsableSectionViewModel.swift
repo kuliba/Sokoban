@@ -9,7 +9,9 @@ import Foundation
 import Combine
 import SwiftUI
 
-class CollapsableSectionViewModel: ObservableObject, Hashable, Equatable {
+class CollapsableSectionViewModel: ObservableObject, Hashable, Equatable, Identifiable {
+    
+    let action: PassthroughSubject<Action, Never> = .init()
     
     let id = UUID()
     @Published var header: HeaderViewModel
@@ -32,9 +34,9 @@ class CollapsableSectionViewModel: ObservableObject, Hashable, Equatable {
         header.$isCollapsed
             .dropFirst()
             .receive(on: DispatchQueue.main)
-            .sink { isCollapsed in
+            .sink { [weak self] isCollapsed in
                 
-                self.isCollapsed.toggle()
+                self?.isCollapsed.toggle()
                 
             }.store(in: &bindings)
     }

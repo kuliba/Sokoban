@@ -7,16 +7,40 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
-class TopBanksViewModel: Equatable {
+class ContactsTopBanksSectionViewModel: ObservableObject {
     
-//    @Published var content: ContentType
-//
-//    enum ContentType {
-//        
-//        case banks(TopBanksViewModel)
-//        case placeHolder(PlaceHolderViewModel)
-//    }
+    @Published var content: ContentType
+    
+    private let model: Model
+    var bindings = Set<AnyCancellable>()
+    
+    init(_ model: Model, content: ContentType) {
+        
+        self.model = model
+        self.content = content
+    }
+    
+    convenience init(_ model: Model) {
+        
+        let content: ContentType = .placeHolder(.init())
+        self.init(model, content: content)
+    }
+    
+    enum ContentType {
+        
+        case banks(TopBanksViewModel)
+        case placeHolder(PlaceHolderViewModel)
+    }
+}
+
+struct PlaceHolderViewModel {
+    
+    let count = 6
+}
+
+class TopBanksViewModel: ObservableObject, Equatable {
 
     @Published var banks: [Bank]
     
@@ -25,12 +49,9 @@ class TopBanksViewModel: Equatable {
         self.banks = banks
     }
     
-    struct PlaceHolderViewModel {
+    struct Bank: Hashable, Identifiable {
         
-    }
-    
-    struct Bank: Hashable {
-        
+        let id = UUID()
         let image: Image?
         let defaultBank: Bool
         let name: String?

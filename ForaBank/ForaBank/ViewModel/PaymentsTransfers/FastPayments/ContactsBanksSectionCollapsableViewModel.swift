@@ -34,6 +34,7 @@ class BanksSectionCollapsableViewModel: CollapsableSectionViewModel {
     }
     
     override func bind() {
+        super.bind()
         
         options?.action
             .receive(on: DispatchQueue.main)
@@ -42,7 +43,13 @@ class BanksSectionCollapsableViewModel: CollapsableSectionViewModel {
                 switch action {
                 case let payload as OptionSelectorAction.OptionDidSelected:
                     
+                    options?.selected = payload.optionId
+                    
                     guard let selected = options?.selected, let bankType = BankType(rawValue: selected) else {
+                        
+                        let banksData = model.bankList.value
+                        items = Self.reduceItems(bankList: banksData)
+                        header.icon = .ic24Bank
                         return
                     }
                     
@@ -57,18 +64,8 @@ class BanksSectionCollapsableViewModel: CollapsableSectionViewModel {
                         items = Self.reduceItems(bankList: banksData)
                         header.icon = .ic24Bank
                         
-                    case .unknown: break
-                    }
-                    
-                    if payload.optionId != "Российские" || payload.optionId != "Иностранные" {
-                        
-                        let banksData = model.bankList.value
-                        items = banksData
-                            .map({CollapsableSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: {})})
-                            .sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
-                            .sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
-                        
-                        header.icon = .ic24Bank
+                    case .unknown:
+                        break
                     }
                     
                 default: break
@@ -82,7 +79,7 @@ class BanksSectionCollapsableViewModel: CollapsableSectionViewModel {
                 switch mode {
                 case .search(let search):
                     
-                    isCollapsed = true
+                    self.header.isCollapsed = true
                     
                     search.action
                         .receive(on: DispatchQueue.main)
@@ -102,7 +99,7 @@ class BanksSectionCollapsableViewModel: CollapsableSectionViewModel {
                         .receive(on: DispatchQueue.main)
                         .sink { text in
                             
-                            if let text = text {
+                            if let text = text, text != "" {
                                 
                                 let filteredBanks = self.model.bankList.value.filter({ bank in
                                     if bank.memberNameRus.localizedStandardContains(text) {
@@ -112,20 +109,21 @@ class BanksSectionCollapsableViewModel: CollapsableSectionViewModel {
                                     return false
                                 })
                                 
-                                self.items = filteredBanks
-                                    .map({CollapsableSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: {})})
-                                    .sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
-                                    .sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
+                                self.items = Self.reduceBanks(banksData: filteredBanks)
                                 
                             } else {
                                 
-                                //                                        section.options?.selected = section.options?.selected
+                                if let selected = self.options?.selected {
+                                    
+                                    self.options?.selected = selected
+                                }
                             }
                             
                         }.store(in: &bindings)
                     
+                case .normal:
+                    break
                     
-                default: break
                 }
             }.store(in: &bindings)
     }
@@ -157,7 +155,9 @@ class BanksSectionCollapsableViewModel: CollapsableSectionViewModel {
         
         var banks = [CollapsableSectionViewModel.ItemViewModel]()
         
-        banks = banksData.map({CollapsableSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: {})})
+        banks = banksData.map({CollapsableSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: {
+            print("action")
+        })})
         banks = banks.sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
         banks = banks.sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
         
