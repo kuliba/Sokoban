@@ -346,10 +346,10 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                     self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) { [weak self] in
                         
-                        self.fullCover = .init(type: .successMeToMe(payload.viewModel))
-                        self.bind(payload.viewModel)
+                        self?.fullCover = .init(type: .successMeToMe(payload.viewModel))
+                        self?.bind(payload.viewModel)
                     }
                     
                 case _ as PaymentsMeToMeAction.Response.Failed:

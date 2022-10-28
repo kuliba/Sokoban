@@ -22,19 +22,21 @@ extension ProductView {
         @Published var name: String
         @Published var footer: FooterViewModel
         @Published var statusAction: StatusActionViewModel?
+        @Published var isChecked: Bool
         let appearance: Appearance
         @Published var isUpdating: Bool
         let productType: ProductType
         
         private var bindings = Set<AnyCancellable>()
         
-        internal init(id: ProductData.ID, header: HeaderViewModel, name: String, footer: FooterViewModel, statusAction: StatusActionViewModel?, appearance: Appearance, isUpdating: Bool, productType: ProductType) {
+        internal init(id: ProductData.ID, header: HeaderViewModel, name: String, footer: FooterViewModel, statusAction: StatusActionViewModel?, isChecked: Bool = false, appearance: Appearance, isUpdating: Bool, productType: ProductType) {
             
             self.id = id
             self.header = header
             self.name = name
             self.footer = footer
             self.statusAction = statusAction
+            self.isChecked = isChecked
             self.appearance = appearance
             self.isUpdating = isUpdating
             self.productType = productType

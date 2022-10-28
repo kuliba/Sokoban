@@ -381,6 +381,10 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     
                     paymentsAmount.info = .text(text)
                 }
+                
+            } else {
+                
+                defaultInfoButton()
             }
             
         } else if currencyTo == Currency.rub {
@@ -403,6 +407,10 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     
                     paymentsAmount.info = .text(text)
                 }
+                
+            } else {
+                
+                defaultInfoButton()
             }
             
         } else {

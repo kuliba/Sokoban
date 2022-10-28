@@ -27,8 +27,8 @@ class PaymentsSuccessMeToMeViewModel: ObservableObject {
         self.responseData = responseData
         self.successViewModel = .init(model, dismissAction: {})
 
-        self.successViewModel = makeSuccess(model, state: state, data: responseData) {
-            self.action.send(PaymentsSuccessMeToMeAction.Button.Close())
+        self.successViewModel = makeSuccess(model, state: state, data: responseData) { [weak self] in
+            self?.action.send(PaymentsSuccessMeToMeAction.Button.Close())
         }
         
         bind()
@@ -93,21 +93,15 @@ extension PaymentsSuccessMeToMeViewModel {
             switch status {
             case .complete:
                 
-                return .init(model: model, iconType: .success, title: "Успешный перевод", amount: amountFormatted, optionButtons: [optionButton(.template), optionButton(.document, paymentOperationDetailId: paymentOperationDetailId), optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red) {
-                    closeAction()
-                })
+                return .init(model: model, iconType: .success, title: "Успешный перевод", amount: amountFormatted, optionButtons: [optionButton(.template), optionButton(.document, paymentOperationDetailId: paymentOperationDetailId), optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red, action: closeAction))
                 
             case .inProgress:
                 
-                return .init(model: model, iconType: .success, title: "Операция в обработке!", amount: amountFormatted, optionButtons: [optionButton(.template), optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red) {
-                    closeAction()
-                })
+                return .init(model: model, iconType: .success, title: "Операция в обработке!", amount: amountFormatted, optionButtons: [optionButton(.template), optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red, action: closeAction))
                 
             case .rejected, .unknown:
                 
-                return .init(model: model, iconType: .success, title: "Операция неуспешна!", amount: amountFormatted, repeatButton: .init(title: "Повторить", style: .gray, action: {}), optionButtons: [optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red) {
-                    closeAction()
-                })
+                return .init(model: model, iconType: .success, title: "Операция неуспешна!", amount: amountFormatted, repeatButton: .init(title: "Повторить", style: .gray, action: {}), optionButtons: [optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red, action: closeAction))
             }
             
         case .failed:
@@ -123,7 +117,11 @@ extension PaymentsSuccessMeToMeViewModel {
             
         case .document:
             
-            return .init(icon: .ic24File, title: "Документ") {
+            return .init(icon: .ic24File, title: "Документ") { [weak self] in
+                
+                guard let self = self else {
+                    return
+                }
             
                 let printViewModel: PrintFormView.ViewModel = .init(type: .operation(paymentOperationDetailId: paymentOperationDetailId, printFormType: .internal), model: self.model)
                 
@@ -131,7 +129,11 @@ extension PaymentsSuccessMeToMeViewModel {
         }
 
         case .details:
-            return .init(icon: .ic24Info, title: "Детали") {
+            return .init(icon: .ic24Info, title: "Детали") { [weak self] in
+                
+                guard let self = self else {
+                    return
+                }
                 
                 self.model.action.send(ModelAction.Payment.OperationDetailByPaymentId.Request(paymentOperationDetailId: paymentOperationDetailId))
             }
@@ -143,7 +145,12 @@ extension PaymentsSuccessMeToMeViewModel {
         switch payload {
         case let .success(detailData):
             
-            let viewModel: OperationDetailInfoViewModel = .init(model: model, operation: detailData) {
+            let viewModel: OperationDetailInfoViewModel = .init(model: model, operation: detailData) { [weak self] in
+                
+                guard let self = self else {
+                    return
+                }
+                
                 self.sheet = nil
             }
             

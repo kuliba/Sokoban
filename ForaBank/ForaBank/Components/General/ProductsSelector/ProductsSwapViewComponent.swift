@@ -21,7 +21,9 @@ extension ProductsSwapView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        lazy var divider: DividerViewModel = .init(swapButton: .init() {
+        lazy var divider: DividerViewModel = .init(swapButton: .init() { [weak self] in
+            
+            guard let self = self else { return }
             
             switch self.divider.swapButton.state {
             case .normal:
@@ -91,6 +93,7 @@ extension ProductsSwapView {
                             items = items.reversed()
                             divider.isToogleButton.toggle()
                         }
+                        
                         self.action.send(ProductsSwapAction.Swapped())
                         
                     case _ as ProductsSwapAction.Button.Reset:

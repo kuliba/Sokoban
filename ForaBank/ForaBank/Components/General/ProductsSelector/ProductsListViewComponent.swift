@@ -44,6 +44,7 @@ extension ProductsListView {
             self.init(model: model, products: products, typeSelector: typeSelector, context: context)
             
             bind()
+            bindProducts()
         }
         
         private func bind() {
@@ -65,7 +66,27 @@ extension ProductsListView {
                             self.products = Self.reduce(model, products: filterred)
                         }
                         
-                        action.send(ProductsListAction.Option.Selected())
+                        bindProducts()
+                        
+                    }.store(in: &bindings)
+            }
+        }
+        
+        private func bindProducts() {
+            
+            for product in products {
+                
+                product.action
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] action in
+                        
+                        switch action {
+                        case _ as ProductViewModelAction.ProductDidTapped:
+                            self.action.send(ProductsListAction.Product.Tap(id: product.id))
+                            
+                        default:
+                            break
+                        }
                         
                     }.store(in: &bindings)
             }
@@ -180,9 +201,46 @@ struct ProductsListView: View {
                             ProductView(viewModel: product)
                                 .frame(width: 112, height: 72)
                             
-                        }.padding(.bottom, 20)
+                            VStack {
+                                
+                                HStack {
+                                    
+                                    Spacer()
+                                    CheckView()
+                                }
+                                
+                                Spacer()
+                                
+                            }.padding(8)
+                        }
+                        .frame(height: 72)
+                        .padding(.bottom, 20)
                     }
                 }
+            }
+        }
+    }
+}
+
+extension ProductsListView {
+    
+    // MARK: - Check
+    
+    struct CheckView: View {
+        
+        var body: some View {
+            
+            ZStack {
+
+                Circle()
+                    .frame(width: 16, height: 16)
+                    .foregroundColor(.mainColorsBlack.opacity(0.12))
+                
+                Image.ic16Check
+                    .resizable()
+                    .foregroundColor(.mainColorsWhite)
+                    .background(Color.clear)
+                    .frame(width: 10, height: 10)
             }
         }
     }
@@ -192,9 +250,12 @@ struct ProductsListView: View {
 
 enum ProductsListAction {
     
-    enum Option {
+    enum Product {
         
-        struct Selected: Action {}
+        struct Tap: Action {
+            
+            let id: ProductData.ID
+        }
     }
 }
 
