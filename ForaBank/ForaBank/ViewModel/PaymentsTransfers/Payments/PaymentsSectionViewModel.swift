@@ -151,7 +151,7 @@ extension PaymentsSectionViewModel {
         
         for placement in Payments.Parameter.Placement.allCases {
             
-            let items = Self.reduce(parameters: operation.parameters, placement: placement, model: model)
+            let items = Self.reduce(parameters: operation.parameters, placement: placement, visible: operation.visibleParametersIds, model: model)
             
             switch placement {
             case .top:
@@ -162,13 +162,12 @@ extension PaymentsSectionViewModel {
                 
             case .spoiler:
                 if items.isEmpty == false,
-                   let firstSpoilerItem = items.first, let lastSpoilerItem = items.last,
-                   let firstIndex = operation.parameters.firstIndex(where: { $0.id == firstSpoilerItem.id }),
+                   let lastSpoilerItem = items.last,
                    let lastIndex = operation.parameters.firstIndex(where: { $0.id == lastSpoilerItem.id }) {
                     
                     // feed section before spoiler
-                    let prevParameters = Array(operation.parameters.prefix(firstIndex))
-                    let prevFeedItems = Self.reduce(parameters: prevParameters, placement: .feed, model: model)
+                    let prevParameters = Array(operation.parameters.prefix(lastIndex))
+                    let prevFeedItems = Self.reduce(parameters: prevParameters, placement: .feed, visible: operation.visibleParametersIds, model: model)
                     if prevFeedItems.isEmpty == false {
                         
                         result.append(PaymentsFeedSectionViewModel(items: prevFeedItems))
@@ -179,7 +178,7 @@ extension PaymentsSectionViewModel {
                     
                     // feed section after spoiler
                     let postParameters = Array(operation.parameters.suffix(operation.parameters.count - lastIndex))
-                    let postFeedItems = Self.reduce(parameters: postParameters, placement: .feed, model: model)
+                    let postFeedItems = Self.reduce(parameters: postParameters, placement: .feed, visible: operation.visibleParametersIds, model: model)
                     if postFeedItems.isEmpty == false {
                         
                         result.append(PaymentsFeedSectionViewModel(items: postFeedItems))
@@ -188,7 +187,7 @@ extension PaymentsSectionViewModel {
                 } else {
                     
                     // feed section
-                    let feedItems = Self.reduce(parameters: operation.parameters, placement: .feed, model: model)
+                    let feedItems = Self.reduce(parameters: operation.parameters, placement: .feed, visible: operation.visibleParametersIds, model: model)
                     result.append(PaymentsFeedSectionViewModel(items: feedItems))
                 }
                 
@@ -211,13 +210,14 @@ extension PaymentsSectionViewModel {
         return result
     }
     
-    static func reduce(parameters: [PaymentsParameterRepresentable], placement: Payments.Parameter.Placement, model: Model) -> [PaymentsParameterViewModel] {
+    static func reduce(parameters: [PaymentsParameterRepresentable], placement: Payments.Parameter.Placement, visible: [Payments.Parameter.ID], model: Model) -> [PaymentsParameterViewModel] {
         
         var result = [PaymentsParameterViewModel]()
         
         for parameter in parameters {
             
             guard parameter.placement == placement,
+                  visible.contains(parameter.id),
                   let parameterViewModel = Self.reduce(parameter: parameter, model: model) else {
                 
                 continue
@@ -255,6 +255,10 @@ extension PaymentsSectionViewModel {
             
         case let parameterAmount as Payments.ParameterAmount:
             return PaymentsAmountView.ViewModel(with: parameterAmount, actionTitle: "Продолжить")
+        
+            // for tests only
+        case let parameterMock as Payments.ParameterMock:
+            return PaymentsParameterViewModel(source: parameterMock)
             
         default:
             return nil

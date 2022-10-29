@@ -408,10 +408,12 @@ extension Payments {
     struct ParameterMock: PaymentsParameterRepresentable {
         
         let parameter: Parameter
+        let placement: Payments.Parameter.Placement
 
-        internal init(id: Payments.Parameter.ID = Payments.Parameter.Identifier.mock.rawValue, value: Payments.Parameter.Value = nil) {
+        internal init(id: Payments.Parameter.ID = Payments.Parameter.Identifier.mock.rawValue, value: Payments.Parameter.Value = nil, placement: Payments.Parameter.Placement = .feed) {
             
             self.parameter = Parameter(id: id, value: value)
+            self.placement = placement
         }
         
         func updated(value: String?) -> PaymentsParameterRepresentable {

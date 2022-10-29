@@ -918,6 +918,7 @@
 		77B6B3612852318500E3001B /* PeriodTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B6B3602852318500E3001B /* PeriodTests.swift */; };
 		77BE9A33290AC231006046B1 /* PaymentsSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77BE9A32290AC231006046B1 /* PaymentsSectionViewModel.swift */; };
 		77BE9A35290AD4A7006046B1 /* PaymentsContinueViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77BE9A34290AD4A7006046B1 /* PaymentsContinueViewComponent.swift */; };
+		77BE9A39290C20D7006046B1 /* PaymentsSectionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77BE9A38290C20D7006046B1 /* PaymentsSectionViewModelTests.swift */; };
 		77BF27AF284651D4009624BB /* Model+Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77BF27AE284651D4009624BB /* Model+Formatters.swift */; };
 		77BF27B128467AE6009624BB /* ButtonIconTextRectViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77BF27B028467AE6009624BB /* ButtonIconTextRectViewComponent.swift */; };
 		77BF27B5284783C9009624BB /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77BF27B4284783C9009624BB /* Date+Extensions.swift */; };
@@ -2335,6 +2336,7 @@
 		77B6B3602852318500E3001B /* PeriodTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeriodTests.swift; sourceTree = "<group>"; };
 		77BE9A32290AC231006046B1 /* PaymentsSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSectionViewModel.swift; sourceTree = "<group>"; };
 		77BE9A34290AD4A7006046B1 /* PaymentsContinueViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsContinueViewComponent.swift; sourceTree = "<group>"; };
+		77BE9A38290C20D7006046B1 /* PaymentsSectionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSectionViewModelTests.swift; sourceTree = "<group>"; };
 		77BF27AE284651D4009624BB /* Model+Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Formatters.swift"; sourceTree = "<group>"; };
 		77BF27B028467AE6009624BB /* ButtonIconTextRectViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonIconTextRectViewComponent.swift; sourceTree = "<group>"; };
 		77BF27B4284783C9009624BB /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
@@ -4883,6 +4885,22 @@
 			path = Statement;
 			sourceTree = "<group>";
 		};
+		77BE9A36290C2097006046B1 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				77BE9A37290C20AC006046B1 /* Payments */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		77BE9A37290C20AC006046B1 /* Payments */ = {
+			isa = PBXGroup;
+			children = (
+				77BE9A38290C20D7006046B1 /* PaymentsSectionViewModelTests.swift */,
+			);
+			path = Payments;
+			sourceTree = "<group>";
+		};
 		77C026E9275E62E4002BE1F6 /* Realm */ = {
 			isa = PBXGroup;
 			children = (
@@ -6501,6 +6519,7 @@
 				77EC58AF277121A30054D75C /* Domain */,
 				7758401827B2A0A300251969 /* Model */,
 				77EC58CE2771D4440054D75C /* Services */,
+				77BE9A36290C2097006046B1 /* ViewModel */,
 				7772978A27C3B7480099EF91 /* Components */,
 				77067CD7275FBB40000C442B /* Extensions */,
 				77C026E9275E62E4002BE1F6 /* Realm */,
@@ -8805,6 +8824,7 @@
 				77EC58C127712E570054D75C /* TransferMe2MeTests.swift in Sources */,
 				774A82CF27BAF76000E5A5E9 /* ValetKeychainAgentTests.swift in Sources */,
 				0CBA6AF0284E525F00FDF10A /* ContactsAgentTests.swift in Sources */,
+				77BE9A39290C20D7006046B1 /* PaymentsSectionViewModelTests.swift in Sources */,
 				77C3829E27E3351B00B5246E /* TextFieldFormatableViewComponentTests.swift in Sources */,
 				77D2D9B2275AB9280097234D /* Item.swift in Sources */,
 				77E24F1B28B7BE05005899BA /* SessionAgentTests.swift in Sources */,
