@@ -143,12 +143,16 @@ extension ProductSelectorView {
                         
                         if let product = model.product(productId: payload.id) {
                             
+                            var context = context.value
+                            context.checkProductId = product.id
+                            
                             let productViewModel: ProductViewModel = .init(
                                 model,
                                 productData: product,
-                                context: context.value)
+                                context: context)
 
                             content = .product(productViewModel)
+                            self.context.value = context
                             
                             withAnimation {
                                 self.list = nil
@@ -197,6 +201,7 @@ extension ProductSelectorView.ViewModel {
         // ProductsList
         var excludeTypes: [ProductType]?
         var excludeProductId: ProductData.ID?
+        var checkProductId: ProductData.ID?
         var isAdditionalProducts: Bool = false
         
         enum Direction {

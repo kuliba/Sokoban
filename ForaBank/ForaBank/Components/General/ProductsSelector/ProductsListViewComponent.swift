@@ -38,7 +38,7 @@ extension ProductsListView {
             }
             
             let filterred = Self.filterred(products: productsData.products, context: context)
-            let products = Self.reduce(model, products: filterred)
+            let products = Self.reduce(model, checkProductId: context.checkProductId, products: filterred)
             let typeSelector = Self.makeTypeSelector(model, selected: productsData.productType.rawValue)
             
             self.init(model: model, products: products, typeSelector: typeSelector, context: context)
@@ -63,7 +63,7 @@ extension ProductsListView {
                            let products = model.products(productType) {
                             
                             let filterred = Self.filterred(products: products, context: context)
-                            self.products = Self.reduce(model, products: filterred)
+                            self.products = Self.reduce(model, checkProductId: context.checkProductId, products: filterred)
                         }
                         
                         bindProducts()
@@ -148,10 +148,10 @@ extension ProductsListView.ViewModel {
         }
     }
   
-    static func reduce(_ model: Model, products: [ProductData]) -> [ProductView.ViewModel] {
+    static func reduce(_ model: Model, checkProductId: ProductData.ID?, products: [ProductData]) -> [ProductView.ViewModel] {
         
         let sortedProducts = products.sorted { $0.productType.order < $1.productType.order }
-        let products = sortedProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model) }
+        let products = sortedProducts.map { ProductView.ViewModel(with: $0, isChecked: $0.id == checkProductId, size: .small, style: .main, model: model) }
         
         return products
     }
@@ -200,47 +200,11 @@ struct ProductsListView: View {
                             
                             ProductView(viewModel: product)
                                 .frame(width: 112, height: 72)
-                            
-                            VStack {
-                                
-                                HStack {
-                                    
-                                    Spacer()
-                                    CheckView()
-                                }
-                                
-                                Spacer()
-                                
-                            }.padding(8)
                         }
                         .frame(height: 72)
                         .padding(.bottom, 20)
                     }
                 }
-            }
-        }
-    }
-}
-
-extension ProductsListView {
-    
-    // MARK: - Check
-    
-    struct CheckView: View {
-        
-        var body: some View {
-            
-            ZStack {
-
-                Circle()
-                    .frame(width: 16, height: 16)
-                    .foregroundColor(.mainColorsBlack.opacity(0.12))
-                
-                Image.ic16Check
-                    .resizable()
-                    .foregroundColor(.mainColorsWhite)
-                    .background(Color.clear)
-                    .frame(width: 10, height: 10)
             }
         }
     }

@@ -65,7 +65,7 @@ extension ProductsSwapView {
             switch mode {
             case .general:
                 
-                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from)
+                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, checkProductId: productData.id)
                 let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to)
                 
                 let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)

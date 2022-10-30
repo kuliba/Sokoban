@@ -257,8 +257,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
             
         } else {
             
-            paymentsAmount.currencySwitch = .init(from: fromCurrencySymbol, to: toCurrencySymbol, icon: .init("Payments Refresh CW")) {
-                self.swapViewModel.action.send(ProductsSwapAction.Button.Tap())
+            paymentsAmount.currencySwitch = .init(from: fromCurrencySymbol, to: toCurrencySymbol, icon: .init("Payments Refresh CW")) { [weak self] in
+                self?.swapViewModel.action.send(ProductsSwapAction.Button.Tap())
             }
         }
     }
