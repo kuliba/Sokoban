@@ -27,13 +27,15 @@ class PaymentsSuccessMeToMeViewModel: ObservableObject {
         self.responseData = responseData
         self.successViewModel = .init(model, dismissAction: {})
 
-        self.successViewModel = makeSuccess(model, state: state, data: responseData) { [weak self] in
+        self.successViewModel = makeSuccess(model, state: state, data: responseData, repeatAction: { [weak self] in
+            self?.action.send(PaymentsSuccessMeToMeAction.Button.Repeat())
+        }, closeAction: { [weak self] in
             self?.action.send(PaymentsSuccessMeToMeAction.Button.Close())
-        }
+        })
         
         bind()
     }
-    
+
     private func bind() {
         
         model.action
@@ -51,25 +53,25 @@ class PaymentsSuccessMeToMeViewModel: ObservableObject {
 
                         self?.model.action.send(ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: [payload.paymentTemplateId]))
                     }
-                    
+
                     successViewModel.optionButtons[0] = templateButton
-                    
+
                 case _ as ModelAction.PaymentTemplate.Delete.Complete:
-                    
+
                     let templateButton: PaymentsSuccessOptionButtonView.ViewModel = .init(icon: .ic24Star, title: "Шаблон") { [weak self] in
-                        
+
                         guard let self = self else { return }
-                        
+
                         switch self.state {
                         case let .success(_, paymentOperationDetailId):
-                            
+
                             self.model.action.send(ModelAction.PaymentTemplate.Save.Requested(name: "Перевод между счетами", paymentOperationDetailId: paymentOperationDetailId))
-                            
+
                         case .failed:
                             break
                         }
                     }
-                    
+
                     successViewModel.optionButtons[0] = templateButton
                     
                 default:
@@ -110,7 +112,7 @@ extension PaymentsSuccessMeToMeViewModel {
 
 extension PaymentsSuccessMeToMeViewModel {
 
-    private func makeSuccess(_ model: Model, state: State, data: TransferResponseData, closeAction: @escaping () -> Void) -> PaymentsSuccessViewModel {
+    private func makeSuccess(_ model: Model, state: State, data: TransferResponseData, repeatAction: @escaping () -> Void, closeAction: @escaping () -> Void) -> PaymentsSuccessViewModel {
         
         let amountFormatted = model.amountFormatted(amount: data.debitAmount ?? 0, currencyCode: data.currencyPayer?.description, style: .fraction)
         
@@ -124,15 +126,16 @@ extension PaymentsSuccessMeToMeViewModel {
                 
             case .inProgress:
                 
-                return .init(model: model, iconType: .success, title: "Операция в обработке!", amount: amountFormatted, optionButtons: [optionButton(.template, paymentOperationDetailId: paymentOperationDetailId), optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red, action: closeAction))
+                return .init(model: model, iconType: .accepted, title: "Операция в обработке!", amount: amountFormatted, optionButtons: [optionButton(.template, paymentOperationDetailId: paymentOperationDetailId), optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red, action: closeAction))
                 
             case .rejected, .unknown:
                 
-                return .init(model: model, iconType: .success, title: "Операция неуспешна!", amount: amountFormatted, repeatButton: .init(title: "Повторить", style: .gray, action: {}), optionButtons: [optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red, action: closeAction))
+                return .init(model: model, iconType: .error, title: "Операция неуспешна!", amount: amountFormatted, repeatButton: .init(title: "Повторить", style: .gray, action: repeatAction), optionButtons: [optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red, action: closeAction))
             }
             
         case .failed:
-            return .sample1
+            
+            return .init(model: model, iconType: .error, title: "Операция неуспешна!", amount: amountFormatted, repeatButton: .init(title: "Повторить", style: .gray, action: repeatAction), optionButtons: [optionButton(.details, paymentOperationDetailId: data.paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red, action: closeAction))
         }
     }
 
@@ -202,6 +205,7 @@ enum PaymentsSuccessMeToMeAction {
     enum Button {
         
         struct Close: Action {}
+        struct Repeat: Action {}
     }
     
     enum OptionButton {
