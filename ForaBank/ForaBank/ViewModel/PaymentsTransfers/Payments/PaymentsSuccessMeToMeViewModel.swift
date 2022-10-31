@@ -45,6 +45,33 @@ class PaymentsSuccessMeToMeViewModel: ObservableObject {
                 case let payload as ModelAction.Payment.OperationDetailByPaymentId.Response:
                     handleDetailResponse(payload)
                     
+                case let payload as ModelAction.PaymentTemplate.Save.Complete:
+
+                    let templateButton: PaymentsSuccessOptionButtonView.ViewModel = .init(icon: .ic24Star, title: "Шаблон", isSelected: true) { [weak self] in
+
+                        self?.model.action.send(ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: [payload.paymentTemplateId]))
+                    }
+                    
+                    successViewModel.optionButtons[0] = templateButton
+                    
+                case _ as ModelAction.PaymentTemplate.Delete.Complete:
+                    
+                    let templateButton: PaymentsSuccessOptionButtonView.ViewModel = .init(icon: .ic24Star, title: "Шаблон") { [weak self] in
+                        
+                        guard let self = self else { return }
+                        
+                        switch self.state {
+                        case let .success(_, paymentOperationDetailId):
+                            
+                            self.model.action.send(ModelAction.PaymentTemplate.Save.Requested(name: "Перевод между счетами", paymentOperationDetailId: paymentOperationDetailId))
+                            
+                        case .failed:
+                            break
+                        }
+                    }
+                    
+                    successViewModel.optionButtons[0] = templateButton
+                    
                 default:
                     break
                 }
@@ -93,11 +120,11 @@ extension PaymentsSuccessMeToMeViewModel {
             switch status {
             case .complete:
                 
-                return .init(model: model, iconType: .success, title: "Успешный перевод", amount: amountFormatted, optionButtons: [optionButton(.template), optionButton(.document, paymentOperationDetailId: paymentOperationDetailId), optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red, action: closeAction))
+                return .init(model: model, iconType: .success, title: "Успешный перевод", amount: amountFormatted, optionButtons: [optionButton(.template, paymentOperationDetailId: paymentOperationDetailId), optionButton(.document, paymentOperationDetailId: paymentOperationDetailId), optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red, action: closeAction))
                 
             case .inProgress:
                 
-                return .init(model: model, iconType: .success, title: "Операция в обработке!", amount: amountFormatted, optionButtons: [optionButton(.template), optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red, action: closeAction))
+                return .init(model: model, iconType: .success, title: "Операция в обработке!", amount: amountFormatted, optionButtons: [optionButton(.template, paymentOperationDetailId: paymentOperationDetailId), optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red, action: closeAction))
                 
             case .rejected, .unknown:
                 
@@ -113,7 +140,11 @@ extension PaymentsSuccessMeToMeViewModel {
         
         switch type {
         case .template:
-            return .init(icon: .ic24Star, title: "Шаблон") {}
+            
+            return .init(icon: .ic24Star, title: "Шаблон") { [weak self] in
+                
+                self?.model.action.send(ModelAction.PaymentTemplate.Save.Requested(name: "Перевод между счетами", paymentOperationDetailId: paymentOperationDetailId))
+            }
             
         case .document:
             
@@ -171,5 +202,23 @@ enum PaymentsSuccessMeToMeAction {
     enum Button {
         
         struct Close: Action {}
+    }
+    
+    enum OptionButton {
+        
+        enum Template {
+            
+            struct Tap: Action {}
+        }
+        
+        enum Document {
+            
+            struct Tap: Action {}
+        }
+        
+        enum details {
+            
+            struct Tap: Action {}
+        }
     }
 }

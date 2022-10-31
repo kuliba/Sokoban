@@ -11,7 +11,7 @@ import SwiftUI
 
 struct PaymentsSuccessView: View {
     
-    let viewModel: PaymentsSuccessViewModel
+    @ObservedObject var viewModel: PaymentsSuccessViewModel
     
     var body: some View {
         

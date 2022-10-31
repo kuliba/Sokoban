@@ -30,12 +30,13 @@ struct PaymentsSuccessOptionButtonView: View {
                 ZStack {
                     
                     Circle()
-                        .foregroundColor(Color(hex: "#F6F6F7"))
+                        .foregroundColor(viewModel.color)
                         .frame(width: 56, height: 56)
                     
                     viewModel.icon
                         .resizable()
-                        .foregroundColor(.mainColorsBlack)
+                        .renderingMode(.template)
+                        .foregroundColor(viewModel.iconColor)
                         .frame(width: 24, height: 24)
                 }
             }

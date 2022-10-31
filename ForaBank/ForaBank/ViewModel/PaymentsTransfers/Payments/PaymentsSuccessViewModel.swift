@@ -127,12 +127,30 @@ class PaymentsSuccessOptionButtonViewModel: Identifiable {
     let id: UUID = .init()
     let icon: Image
     let title: String
+    let isSelected: Bool
     let action: () -> Void
     
-    init(icon: Image, title: String, action: @escaping () -> Void) {
+    var color: Color {
+        
+        switch isSelected {
+        case true: return Color(hex: "#22C184")
+        case false: return Color(hex: "#F6F6F7")
+        }
+    }
+    
+    var iconColor: Color {
+        
+        switch isSelected {
+        case true: return .mainColorsWhite
+        case false: return .mainColorsBlack
+        }
+    }
+    
+    init(icon: Image, title: String, isSelected: Bool = false, action: @escaping () -> Void) {
         
         self.icon = icon
         self.title = title
+        self.isSelected = isSelected
         self.action = action
     }
 }
