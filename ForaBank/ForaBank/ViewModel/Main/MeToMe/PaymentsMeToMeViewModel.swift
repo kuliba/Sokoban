@@ -90,6 +90,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         }
                         
                     case let .failure(error):
+                        
+                        state = .normal
                         makeAlert(error)
                     }
                     
