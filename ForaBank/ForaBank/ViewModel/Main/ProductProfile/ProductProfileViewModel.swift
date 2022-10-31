@@ -556,13 +556,9 @@ class ProductProfileViewModel: ObservableObject {
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .info, .contract], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                             
-                        // TODO: DBSNEW-6553
-                            
-                        /*
                         case .account:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .statementOpenAccount(false), .tariffsByAccount, .termsOfService], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
-                        */
                             
                         case .account:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement], productType: product.productType)
@@ -719,22 +715,19 @@ class ProductProfileViewModel: ObservableObject {
                                                                  secondary: .init(type: .default, title: "ОК", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}))
                             self.alert = .init(alertViewModel)
                             
-                        // TODO: DBSNEW-6553
-
-                            /*
                         case .statementOpenAccount:
                             break
-
+                            
                         case .tariffsByAccount:
-
+                            
                             let linkURL = "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf"
                             self.openLinkURL(linkURL)
-
+                            
                         case .termsOfService:
-
+                            
                             let linkURL = "https://www.forabank.ru/dkbo/dkbo.pdf"
                             self.openLinkURL(linkURL)
-                             */
+
                         }
                         
                     default:
