@@ -251,11 +251,11 @@ struct PaymentsAmountView: View {
                 ZStack {
                     
                     RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(Color(hex: "#D3D3D3"))
+                        .foregroundColor(.mainColorsGrayMedium.opacity(0.1))
                     
                     Text(title)
                         .font(Font.custom("Inter-Regular", size: 16))
-                        .foregroundColor(Color(hex: "#FFFFFF"))
+                        .foregroundColor(.mainColorsWhite.opacity(0.5))
                 }
                 
             case .active(title: let title, action: let action):
