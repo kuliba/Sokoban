@@ -152,7 +152,7 @@ extension Model {
                 
                 let result = try await getBankClientWithCommand(command: command)
                 
-                if result.phone != "" {
+                if let result = result, result.phone != "" {
                     
                     self.bankClientInfo.value.insert([result])
                     
@@ -174,7 +174,7 @@ extension Model {
         }
     }
     
-    func getBankClientWithCommand(command: ServerCommands.CardController.GetOwnerPhoneNumber) async throws -> BankClientInfo {
+    func getBankClientWithCommand(command: ServerCommands.CardController.GetOwnerPhoneNumber) async throws -> BankClientInfo? {
         
         try await withCheckedThrowingContinuation { continuation in
             
@@ -185,26 +185,23 @@ extension Model {
                     switch response.statusCode {
                     case .ok:
                         guard let data = response.data else {
-                            self.handleServerCommandEmptyData(command: command)
                             continuation.resume(with: .failure(ModelRatesError.emptyData(message: response.errorMessage)))
                             return
                         }
                         
                         if data != "", let phone = command.payload?.phoneNumber {
-                            continuation.resume(returning: BankClientInfo(phone: phone))
+                            continuation.resume(returning: BankClientInfo(name: data, phone: phone))
 
                         } else {
-                            continuation.resume(returning: BankClientInfo(phone: ""))
+                            continuation.resume(returning: nil)
                         }
                         
                     default:
                         continuation.resume(with: .failure(ModelRatesError.statusError(status: response.statusCode, message: response.errorMessage)))
-                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                         
                     }
                 case .failure(let error):
                     continuation.resume(with: .failure(ModelRatesError.serverCommandError(error: error.localizedDescription)))
-                    self.handleServerCommandError(error: error, command: command)
                     
                 }
             }

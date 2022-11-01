@@ -9,5 +9,6 @@ import Foundation
 
 struct BankClientInfo: Codable, Hashable {
     
+    let name: String
     let phone: String
 }

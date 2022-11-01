@@ -22,10 +22,12 @@ extension TextFieldPhoneNumberView {
         let placeHolder: PlaceHolder
         let filtersSymbols: [Character]?
         
-        let phoneNumberFormatter = PhoneNumberFormater()
+        let phoneNumberFormatter: PhoneNumberFormaterProtocol
+        let phoneNumberFirstDigitReplaceList: [PhoneNumberFirstDigitReplace]
+
         var bindings = Set<AnyCancellable>()
         
-        init(text: String? = nil, placeHolder: PlaceHolder, isEditing: Bool = false, isSelected: Bool = false, toolbar: ToolbarViewModel? = nil, filtersSymbols: [Character]? = nil) {
+        init(text: String? = nil, placeHolder: PlaceHolder, isEditing: Bool = false, isSelected: Bool = false, toolbar: ToolbarViewModel? = nil, filtersSymbols: [Character]? = nil, phoneNumberFirstDigitReplaceList: [PhoneNumberFirstDigitReplace], phoneNumberFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater()) {
             
             self.text = text
             self.placeHolder = placeHolder
@@ -33,6 +35,8 @@ extension TextFieldPhoneNumberView {
             self.isSelected = isSelected
             self.toolbar = toolbar
             self.filtersSymbols = filtersSymbols
+            self.phoneNumberFirstDigitReplaceList = phoneNumberFirstDigitReplaceList
+            self.phoneNumberFormatter = phoneNumberFormatter
             self.dismissKeyboard = {}
         }
         
@@ -74,8 +78,7 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         if let text = viewModel.text {
             
             let textRange = NSRange(location: 0, length: text.count)
-            let phoneNumberFirstDigitReplaceList: [PhoneNumberFirstDigitReplace] = [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")]
-            uiView.text = TextFieldPhoneNumberView.updateMasked(value: text, inRange: textRange, update: text, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filtersSymbols)
+            uiView.text = TextFieldPhoneNumberView.updateMasked(value: text, inRange: textRange, update: text, firstDigitReplace: viewModel.phoneNumberFirstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filtersSymbols)
         } else {
             
             uiView.text = viewModel.text
@@ -104,8 +107,7 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
             
-            let phoneNumberFirstDigitReplaceList: [PhoneNumberFirstDigitReplace] = [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")]
-            textField.text = TextFieldPhoneNumberView.updateMasked(value: textField.text, inRange: range, update: string, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filtersSymbols)
+            textField.text = TextFieldPhoneNumberView.updateMasked(value: textField.text, inRange: range, update: string, firstDigitReplace: viewModel.phoneNumberFirstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filtersSymbols)
             text.wrappedValue = textField.text
             
             return false
