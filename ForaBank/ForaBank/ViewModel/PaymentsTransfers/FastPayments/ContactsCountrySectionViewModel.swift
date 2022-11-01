@@ -33,3 +33,8 @@ class ContactsCountrySectionViewModel: CollapsableSectionViewModel {
         return country
     }
 }
+
+struct ContactsCountrySectionViewModelAction {
+    
+    struct CountryDidTapped: Action {}
+}

@@ -25,11 +25,12 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
     }
     
     convenience init(_ model: Model, bankData: [BankData]) {
-        
-        let items = Self.reduceBanks(banksData: bankData)
+
         let options = Self.createOptionViewModel()
         
-        self.init(model, header: .init(kind: .banks), items: items, mode: .normal, options: options)
+        self.init(model, header: .init(kind: .banks), items: [], mode: .normal, options: options)
+        self.items = self.reduceBanks(banksData: bankData)
+        
         bind()
         
         if let options = options {
@@ -77,7 +78,7 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
                                     return false
                                 })
                                 
-                                self.items = Self.reduceBanks(banksData: filteredBanks)
+                                self.items = self.reduceBanks(banksData: filteredBanks)
                                 
                             } else {
                                 
@@ -163,8 +164,8 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
         
         var banks = [CollapsableSectionViewModel.ItemViewModel]()
         
-        banks = banksData.map({CollapsableSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: {
-            print("action")
+        banks = banksData.map({CollapsableSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: { [weak self] in
+            self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped())
         })})
         banks = banks.sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
         banks = banks.sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
@@ -198,4 +199,9 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
         
         return items
     }
+}
+
+struct ContactsBanksSectionViewModelAction {
+    
+    struct BankDidTapped: Action {}
 }

@@ -48,15 +48,14 @@ struct ContactsView: View {
                         
                         switch topBanks.content {
                         case .banks(let topBanks):
-                            
                             TopBankView(viewModel: topBanks)
                             
                         case .placeHolder(let placeholders):
                             HStack(alignment: .top, spacing: 4) {
                                 
-                                ForEach(0...placeholders.count, id: \.self) { placeholder in
+                                ForEach(placeholders) { placeholder in
                                     
-                                    LatestPaymentsView.PlaceholderView(viewModel: .init())
+                                    LatestPaymentsView.PlaceholderView(viewModel: placeholder)
                                 }
                             }
                         }
@@ -183,7 +182,7 @@ extension ContactsView {
         
         var body: some View {
             
-            if let viewModel = viewModel as? BanksSectionCollapsableViewModel {
+            if let viewModel = viewModel as? ContactsBanksSectionViewModel {
                 
                 switch viewModel.mode {
                 case .normal:
@@ -200,7 +199,7 @@ extension ContactsView {
             
             if viewModel.header.isCollapsed {
                 
-                if let viewModel = viewModel as? BanksSectionCollapsableViewModel, let options = viewModel.options {
+                if let viewModel = viewModel as? ContactsBanksSectionViewModel, let options = viewModel.options {
                     
                     OptionSelectorView(viewModel: options)
                         .padding()
@@ -319,13 +318,10 @@ extension ContactsView {
                 
                 VStack(spacing: 24) {
                     
-                    ForEach(viewModel.contacts, id: \.self) { contact in
+                    ForEach(viewModel.contacts) { contact in
                         
-                        Button {
-                            
-                            contact.actionContact()
-                        } label: {
-                            
+                        Button(action: contact.actionContact) {
+
                             ContactView(viewModel: contact)
                         }
                     }
@@ -463,7 +459,7 @@ struct ContactsView_Previews: PreviewProvider {
                 .previewLayout(.fixed(width: 375, height: 100))
                 .previewDisplayName("HeaderView")
 
-            ContactsView.CollapsableView(viewModel: BanksSectionCollapsableViewModel(.emptyMock, header: .sampleHeader, items: [.sampleItem], mode: .normal, options: .sample))
+            ContactsView.CollapsableView(viewModel: ContactsBanksSectionViewModel(.emptyMock, header: .sampleHeader, items: [.sampleItem], mode: .normal, options: .sample))
                 .previewLayout(.fixed(width: 375, height: 100))
                 .previewDisplayName("CollapsableView")
 
