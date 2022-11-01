@@ -9,7 +9,7 @@ import SwiftUI
 
 extension PaymentsContinueButtonView {
     
-    class ViewModel: PaymentsParameterViewModel {
+    class ViewModel: PaymentsParameterViewModel, PaymentsParameterViewModelContinuable {
 
         let title: String
         
@@ -17,6 +17,11 @@ extension PaymentsContinueButtonView {
             
             self.title = title
             super.init(source: Payments.ParameterMock(id: "", value: nil))
+        }
+        
+        func update(isContinueEnabled: Bool) {
+            
+            //TODO: implementation required
         }
     }
 }

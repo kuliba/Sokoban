@@ -13,7 +13,9 @@ class PaymentsSectionViewModel {
     let action: PassthroughSubject<Action, Never> = .init()
     
     var placement: Payments.Parameter.Placement { fatalError("Implement in subclass") }
-    @Published var items: [PaymentsParameterViewModel]
+    var items: [PaymentsParameterViewModel]
+    var visibleItems: [PaymentsParameterViewModel] { items }
+    var fullScreenItem: PaymentsParameterViewModel? { nil }
     
     internal var bindings = Set<AnyCancellable>()
     
@@ -39,14 +41,19 @@ class PaymentsSectionViewModel {
     }
 }
 
-class PaymentsTopSectionViewModel: PaymentsSectionViewModel, ObservableObject {
+class PaymentsTopSectionViewModel: PaymentsSectionViewModel {
     
     override var placement: Payments.Parameter.Placement { .top }
 }
 
-class PaymentsFeedSectionViewModel: PaymentsSectionViewModel, ObservableObject {
+class PaymentsFeedSectionViewModel: PaymentsSectionViewModel {
     
     override var placement: Payments.Parameter.Placement { .feed }
+        
+    override var fullScreenItem: PaymentsParameterViewModel? {
+        
+        items.first(where: { $0.isFullContent == true })
+    }
     
     override func bind() {
         
@@ -74,10 +81,25 @@ class PaymentsFeedSectionViewModel: PaymentsSectionViewModel, ObservableObject {
     }
 }
 
-class PaymentsSpoilerSectionViewModel: PaymentsSectionViewModel, ObservableObject {
+class PaymentsSpoilerSectionViewModel: PaymentsSectionViewModel {
     
     override var placement: Payments.Parameter.Placement { .spoiler }
-    @Published var isCollapsed: Bool
+    var isCollapsed: Bool
+    override var visibleItems: [PaymentsParameterViewModel] {
+        
+        if isCollapsed == true {
+            
+            guard let buttonItem = items.first(where: { $0 is PaymentsButtonAdditionalView.ViewModel }) else {
+                return []
+            }
+            
+            return [buttonItem]
+            
+        } else {
+            
+            return items
+        }
+    }
     
     init(items: [PaymentsParameterViewModel], isCollapsed: Bool) {
         
@@ -114,10 +136,27 @@ class PaymentsSpoilerSectionViewModel: PaymentsSectionViewModel, ObservableObjec
 class PaymentsBottomSectionViewModel: PaymentsSectionViewModel, ObservableObject {
     
     override var placement: Payments.Parameter.Placement { .bottom }
-    
+    let isContinueEnabled: CurrentValueSubject<Bool, Never> = .init(false)
+
     override func bind() {
         
         super.bind()
+        
+        isContinueEnabled
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] isContinueEnabled in
+                
+                for item in items {
+                    
+                    switch item {
+                    case let continuableItem as PaymentsParameterViewModelContinuable:
+                        continuableItem.update(isContinueEnabled: isContinueEnabled)
+                        
+                    default:
+                        continue
+                    }
+                }
+            }.store(in: &bindings)
         
         for item in items {
             

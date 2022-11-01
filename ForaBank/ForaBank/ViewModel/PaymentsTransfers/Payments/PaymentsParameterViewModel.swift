@@ -16,12 +16,12 @@ class PaymentsParameterViewModel: Identifiable, ObservableObject {
     
     var isValid: Bool { true }
     var isEditable: Bool { source.isEditable }
-    var isCollapsable: Bool { source.placement == .spoiler }
+    var isFullContent: Bool { false }
     
     var id: Payments.Parameter.ID { source.parameter.id }
-    var result: Payments.Parameter { .init(id: id, value: value.current)}
+    var result: Payments.Parameter { .init(id: id, value: value.current) }
     
-    internal let source: PaymentsParameterRepresentable
+    private(set) var source: PaymentsParameterRepresentable
     
     init(source: PaymentsParameterRepresentable) {
         
@@ -33,6 +33,16 @@ class PaymentsParameterViewModel: Identifiable, ObservableObject {
         
         self.value = self.value.updated(with: value)
     }
+    
+    func update(source: PaymentsParameterRepresentable) {
+        
+        self.source = source
+    }
+}
+
+//MARK: - Types
+
+extension PaymentsParameterViewModel {
     
     struct Value {
  
@@ -63,4 +73,13 @@ class PaymentsParameterViewModel: Identifiable, ObservableObject {
     }
 }
 
+//MARK: - Action
+
 enum PaymentsParameterViewModelAction {}
+
+//MARK: - Protocols
+
+protocol PaymentsParameterViewModelContinuable {
+    
+    func update(isContinueEnabled: Bool)
+}

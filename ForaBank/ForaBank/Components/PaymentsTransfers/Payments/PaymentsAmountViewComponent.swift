@@ -12,7 +12,7 @@ import Combine
 
 extension PaymentsAmountView {
     
-    class ViewModel: PaymentsParameterViewModel {
+    class ViewModel: PaymentsParameterViewModel, PaymentsParameterViewModelContinuable {
         
         @Published var title: String
         var textField: TextFieldFormatableView.ViewModel
@@ -68,9 +68,9 @@ extension PaymentsAmountView {
             return parameterAmount.validator.isValid(value: textField.value)
         }
         
-        func updateTranferButton(isEnabled: Bool) {
+        func update(isContinueEnabled: Bool) {
             
-            if isEnabled {
+            if isContinueEnabled == true {
                 
                 transferButton = .active(title: actionTitle, action: { [weak self] in
                     
@@ -388,7 +388,7 @@ extension PaymentsAmountView.ViewModel {
         
         let viewModel = PaymentsAmountView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "100"), title: "Сумма перевода", currency: .init(description: "RUB"), validator: .init(minAmount: 1, maxAmount: 1000)), actionTitle: "Перевести")
         
-        viewModel.updateTranferButton(isEnabled: true)
+        viewModel.update(isContinueEnabled: true)
         
         return viewModel
     }()
