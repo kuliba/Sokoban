@@ -140,17 +140,6 @@ struct PaymentsTransfersView: View {
                         
                     case .qrScanner(let qrViewModel):
                         QRView(viewModel: qrViewModel)
-//                            .navigationBarTitle("", displayMode: .inline)
-//                            .navigationBarBackButtonHidden(true)
-//                            .edgesIgnoringSafeArea(.all)
-//                        let buttons = [
-//                            QROptionButtonView.ViewModel(id: UUID(), icon: .ic24Image, title: "Из файла", action: {}),
-//                            QROptionButtonView.ViewModel(id: UUID(), icon: .ic24ZapOff ,title: "Фонарик", action: {}),
-//                            QROptionButtonView.ViewModel(id: UUID(), icon: .ic24AlertCircle,title: "Инфо", action: {})]
-//
-//                        let clouseButton = ButtonSimpleView(viewModel: .init(title: "Отменить", style: .gray, action: {} ))
-                        
-//                        QRView(viewModel: .init( closeAction: { _ in}))
                             .navigationBarHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         

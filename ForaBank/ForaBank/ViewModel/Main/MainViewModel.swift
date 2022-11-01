@@ -540,7 +540,7 @@ extension MainViewModel {
         case openDeposit(OpenProductViewModel)
         case openDepositsList(OpenDepositViewModel)
         case templates(TemplatesListViewModel)
-        case qrScanner(QrViewModel)
+        case qrScanner(QRViewModel)
         case currencyWallet(CurrencyWalletViewModel)
         case myProducts(MyProductsViewModel)
         case country(CountryPaymentView.ViewModel)

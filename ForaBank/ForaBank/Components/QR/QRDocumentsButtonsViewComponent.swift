@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension QRDocumentsButtonsViewComponent {
+extension QRActionButtonsView {
     
     struct ViewModel {
         
@@ -16,7 +16,7 @@ extension QRDocumentsButtonsViewComponent {
     
 }
 
-struct QRDocumentsButtonsViewComponent: View {
+struct QRActionButtonsView: View {
     
     let viewModel: ViewModel
     
@@ -40,9 +40,9 @@ struct QRDocumentsButtonsViewComponent: View {
     }
 }
 
-struct QRDocumentsButtonsViewComponent_Previews: PreviewProvider {
+struct QRActionButtonsView_Previews: PreviewProvider {
     static var previews: some View {
-        QRDocumentsButtonsViewComponent(viewModel: .init(buttons: [.init(icon: .init(image: .ic40SBP, style: .original, background: .circleSmall), title: .init(text: "Из документов", style: .bold), orientation: .horizontal, action: {})]))
+        QRActionButtonsView(viewModel: .init(buttons: [.init(icon: .init(image: .ic40SBP, style: .original, background: .circleSmall), title: .init(text: "Из документов", style: .bold), orientation: .horizontal, action: {})]))
     }
 }
 

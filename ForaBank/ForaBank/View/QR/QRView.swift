@@ -8,11 +8,11 @@ import SwiftUI
 
 struct QRView: View {
     
-    @ObservedObject var viewModel: QrViewModel
+    @ObservedObject var viewModel: QRViewModel
     
     var body: some View {
         ZStack {
-            QRScannerViewController()
+            QRScannerView(viewModel: .init())
             
             ZStack {
                 
@@ -35,7 +35,7 @@ struct QRView: View {
                         HStack(spacing: 60) {
                             
                             ForEach(viewModel.buttons) { buttons in
-                                QROptionButtonView(viewModel: buttons)
+                                ButtonIconTextView(viewModel: buttons)
                                     .previewLayout(.fixed(width: 100, height: 100))
                             } 
                         }
@@ -214,9 +214,9 @@ struct QRView_Previews: PreviewProvider {
 extension QRView_Previews {
     
     static let buttons = [
-        QROptionButtonView.ViewModel(id: UUID(), icon: .ic24Image, title: "Из файла", action: {}),
-        QROptionButtonView.ViewModel(id: UUID(), icon: .ic24ZapOff ,title: "Фонарик", action: {}),
-        QROptionButtonView.ViewModel(id: UUID(), icon: .ic24AlertCircle,title: "Инфо", action: {})]
+        ButtonIconTextView.ViewModel(icon: .init(image: .ic24AlertCircle, background: .circle), title: .init(text: "Из документов"), orientation: .horizontal, action: {}),
+               ButtonIconTextView.ViewModel(icon: .init(image: .ic24AlertCircle, background: .circle), title: .init(text: "Фонарик"), orientation: .horizontal, action: {}),
+    ButtonIconTextView.ViewModel(icon: .init(image: .ic24AlertCircle, background: .circle), title: .init(text: "Инфо"), orientation: .horizontal, action: {})]
     
     static let clouseButton = ButtonSimpleView(viewModel: .init(title: "Отменить", style: .gray, action: {} ))
 }

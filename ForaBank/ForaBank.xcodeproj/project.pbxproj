@@ -216,10 +216,9 @@
 		0BDE453826E53AEF00B64A0A /* AddAllUserCardtList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE453726E53AEE00B64A0A /* AddAllUserCardtList.swift */; };
 		0BDE453D26E5442500B64A0A /* GetPaymentSystemSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE453C26E5442500B64A0A /* GetPaymentSystemSaved.swift */; };
 		0BE0BDF62905D2340064549E /* QRDocumentsButtonsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE0BDF52905D2340064549E /* QRDocumentsButtonsViewComponent.swift */; };
-		0BE0BDF82905E1BB0064549E /* QROptionButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE0BDF72905E1BB0064549E /* QROptionButtonView.swift */; };
-		0BE0BDFB2906F8DA0064549E /* QROptionButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE0BDFA2906F8DA0064549E /* QROptionButtonViewModel.swift */; };
 		0BE0BDFD29071BE10064549E /* QRButtonsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE0BDFC29071BE10064549E /* QRButtonsViewComponent.swift */; };
 		0BE0BDFF2907315D0064549E /* QRInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE0BDFE2907315D0064549E /* QRInfoView.swift */; };
+		0BE0BE052910760B0064549E /* QRViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE0BE042910760B0064549E /* QRViewModel.swift */; };
 		0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */; };
 		0BE270B326B9959900FA958C /* ExtensionBottomLableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */; };
 		0BE270B626B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B526B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift */; };
@@ -1644,10 +1643,9 @@
 		0BDE453726E53AEE00B64A0A /* AddAllUserCardtList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAllUserCardtList.swift; sourceTree = "<group>"; };
 		0BDE453C26E5442500B64A0A /* GetPaymentSystemSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPaymentSystemSaved.swift; sourceTree = "<group>"; };
 		0BE0BDF52905D2340064549E /* QRDocumentsButtonsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRDocumentsButtonsViewComponent.swift; sourceTree = "<group>"; };
-		0BE0BDF72905E1BB0064549E /* QROptionButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QROptionButtonView.swift; sourceTree = "<group>"; };
-		0BE0BDFA2906F8DA0064549E /* QROptionButtonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QROptionButtonViewModel.swift; sourceTree = "<group>"; };
 		0BE0BDFC29071BE10064549E /* QRButtonsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRButtonsViewComponent.swift; sourceTree = "<group>"; };
 		0BE0BDFE2907315D0064549E /* QRInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRInfoView.swift; sourceTree = "<group>"; };
+		0BE0BE042910760B0064549E /* QRViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRViewModel.swift; sourceTree = "<group>"; };
 		0BE270AF26B76B9700FA958C /* ExtensionCustomPopUpSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionCustomPopUpSetup.swift; sourceTree = "<group>"; };
 		0BE270B226B9959900FA958C /* ExtensionBottomLableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomLableModel.swift; sourceTree = "<group>"; };
 		0BE270B526B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomInputViewRevers.swift; sourceTree = "<group>"; };
@@ -3446,7 +3444,6 @@
 			isa = PBXGroup;
 			children = (
 				0BE0BDF52905D2340064549E /* QRDocumentsButtonsViewComponent.swift */,
-				0BE0BDF72905E1BB0064549E /* QROptionButtonView.swift */,
 				0BE0BDFE2907315D0064549E /* QRInfoView.swift */,
 			);
 			path = QR;
@@ -3455,8 +3452,8 @@
 		0BE0BDF92906F8BA0064549E /* QR */ = {
 			isa = PBXGroup;
 			children = (
-				0BE0BDFA2906F8DA0064549E /* QROptionButtonViewModel.swift */,
 				0BE0BDFC29071BE10064549E /* QRButtonsViewComponent.swift */,
+				0BE0BE042910760B0064549E /* QRViewModel.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -8202,7 +8199,6 @@
 				77067CDD275FCBA5000C442B /* DownloadQueueSerialsStorage.swift in Sources */,
 				0B283FBD26FBC9F100B5E925 /* Presentable.swift in Sources */,
 				68FE398D286C17920026CBD7 /* AppInfo.swift in Sources */,
-				0BE0BDF82905E1BB0064549E /* QROptionButtonView.swift in Sources */,
 				0B8C1C58273C599A00BA5CAC /* GKHNavigationController.swift in Sources */,
 				774A8B802865FF3600B81140 /* RefreshingIndicatorViewComponent.swift in Sources */,
 				509EE0E4285F8599002281BF /* Publishers+Extension.swift in Sources */,
@@ -8370,7 +8366,6 @@
 				0BA40B3E286F9AFF009C9B0D /* NotificationTransition.swift in Sources */,
 				68FE398F286EBED80026CBD7 /* QrScannerView+Legacy.swift in Sources */,
 				682092A427AC0653003DCAFD /* ServerCommands+Person.swift in Sources */,
-				0BE0BDFB2906F8DA0064549E /* QROptionButtonViewModel.swift in Sources */,
 				774A8B722865FEC000B81140 /* ContextMenuViewComponent.swift in Sources */,
 				ED9D4D922750F937001AF471 /* OpenNewDepositViewController.swift in Sources */,
 				77F1582F28194DCD00CA5E4E /* MainSectionAtmViewComponent.swift in Sources */,
@@ -8706,6 +8701,7 @@
 				ED733D5E2858960C00F22D42 /* CurrencyData+Legacy.swift in Sources */,
 				770DCE9627BBFA6D004099C1 /* RootViewHostingViewController.swift in Sources */,
 				0B3FE8E12704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift in Sources */,
+				0BE0BE052910760B0064549E /* QRViewModel.swift in Sources */,
 				686A1C9827ED5867002972F0 /* ServerCommands+Loan.swift in Sources */,
 				5A5ABF8C27AAF55800D548AA /* PaymentCountryData.swift in Sources */,
 				0B8C1C51273B2E1C00BA5CAC /* QRErrorCoordinator.swift in Sources */,

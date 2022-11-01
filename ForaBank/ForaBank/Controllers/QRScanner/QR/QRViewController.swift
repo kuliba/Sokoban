@@ -25,7 +25,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
             return storyboard.instantiateViewController(withIdentifier: "qr") as? QRViewController
         }
     
-    var viewModel: QrViewModel?
+    var viewModel: QRViewModel?
     weak var delegate: QRProtocol?
     var qrCodeLayer = AVCaptureVideoPreviewLayer()
     let qrCodesession = AVCaptureSession()

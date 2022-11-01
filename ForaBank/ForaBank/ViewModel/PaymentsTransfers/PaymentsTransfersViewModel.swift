@@ -358,7 +358,7 @@ extension PaymentsTransfersViewModel {
             case meToMe(MeToMeViewModel)
             case transferByPhone(TransferByPhoneViewModel)
             case anotherCard(AnotherCardViewModel)
-            case qrScanner(QrViewModel)
+            case qrScanner(QRViewModel)
         }
     }
     
@@ -378,7 +378,7 @@ extension PaymentsTransfersViewModel {
         case internet(OperatorsViewModel)
         case transport(OperatorsViewModel)
         case template(TemplatesListViewModel)
-        case qrScanner(QrViewModel)
+        case qrScanner(QRViewModel)
         case country(CountryPaymentView.ViewModel)
         case currencyWallet(CurrencyWalletViewModel)
     }

@@ -1,5 +1,5 @@
 //
-//  QRInfoView.swift
+//  QRInfoViewComponent.swift
 //  ForaBank
 //
 //  Created by Константин Савялов on 24.10.2022.
@@ -9,24 +9,29 @@ import SwiftUI
 
 struct QRInfoViewModel {
     
-    let icon: Image
-    let title: String
-    let content: String
-    
-    internal init(icon: Image, title: String, content: String) {
-        self.icon = icon
-        self.title = title
-        self.content = content
+    struct ViewModel: Identifiable {
+        
+        var id = UUID()
+        let icon: Image
+        let title: String
+        let content: [String]
+        
+        internal init(icon: Image, title: String, content: String) {
+            self.icon = icon
+            self.title = title
+            let contentArray = content.components(separatedBy: ".")
+            self.content = contentArray
+        }
     }
 }
 
-struct QRInfoView: View {
+struct QRInfoViewComponent: View {
     
-    let viewModel: QRInfoViewModel
+    let viewModel: QRInfoViewModel.ViewModel
     
     var body: some View {
         
-        VStack(spacing: 30) {
+        VStack {
             
             viewModel.icon
                 .frame(width: 88, height: 88)
@@ -35,24 +40,28 @@ struct QRInfoView: View {
                 .foregroundColor(Color.textSecondary)
                 .font(Font.textH4SB16240())
             
-            Text(viewModel.content)
-                .foregroundColor(Color.textSecondary)
-                .font(Font.buttonSmallM14160())
-            
-            Spacer()
+            VStack {
+                ForEach(viewModel.content, id: \.self) { content in
+                    Text(content)
+                        .foregroundColor(Color.textSecondary)
+                        .font(Font.buttonSmallM14160())
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.vertical, 5)
+                }
+            }.padding(20)
         }
     }
 }
 
 //MARK: - Preview
 
-struct QRInfoView_Previews: PreviewProvider {
+struct QRInfoViewComponent_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        QRInfoView(viewModel: .init(icon: .ic24AlertCircle,
+        QRInfoViewComponent(viewModel: .init(icon: .ic24AlertCircle,
                                     title: "Сканировать QR-код",
-                                    content: "Наведите камеру телефона на QR-код, и приложение автоматически его считает.\n\n Перед оплатой проверьте, что все поля заполнены правильно.\n\n Чтобы оплатить квитанцию, сохраненнуюв телефоне, откройте ее с помощью кнопки \"Из файла\", и отсканируйте QR-код."))
+                                    content: "Наведите камеру телефона на QR-код, и приложение автоматически его считает. Перед оплатой проверьте, что все поля заполнены правильно. Чтобы оплатить квитанцию, сохраненнуюв телефоне, откройте ее с помощью кнопки \"Из файла\", и отсканируйте QR-код."))
             .previewLayout(.fixed(width: 100, height: 100))
     }
 }

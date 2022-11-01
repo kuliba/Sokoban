@@ -178,17 +178,6 @@ class Model {
         LoggerAgent.shared.log(level: .debug, category: .model, message: "initialized")
 
         bind()
-        
-        let s = """
- ST00012|Name=ПАО "Калужская сбытовая компания"|PersonalAcc=40702810600180000156|BankName=Тульский филиал АБ "РОССИЯ"|BIC=047003764|CorrespAcc=30101810600000000764|PersAcc=110110581|Sum=66671|Purpose= лс 110110581 ЭЭ|PayeeINN=4029030252|KPP=402801001|TechCode=02|Category=1|KSK_PeriodPok=202208|KSK_Type=1|Amount=6835
-"""
-        
-        let qrCode = QRCode.init(string: s)
-        
-        let qrMapping = QRMapping.operators
-        
-        let q: Double? = try? qrCode?.value(type: .amount, mapping: qrMapping)
-        print()
     }
     
     //FIXME: remove after refactoring
