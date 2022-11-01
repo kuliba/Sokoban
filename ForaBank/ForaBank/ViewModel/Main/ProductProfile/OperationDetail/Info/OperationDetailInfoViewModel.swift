@@ -124,7 +124,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Номер карты получателя", iconType: .bank, value: payeeCardNumber))
                 
             } else if let payeePhone = operation?.payeePhone {
-                let phoneFormatter = PhoneNumberFormater()
+                let phoneFormatter = PhoneNumberKitFormater()
                 let formattedPhone = phoneFormatter.format(payeePhone)
                 cells.append(PropertyCellViewModel(title: "Номер телефона получателя", iconType: .phone, value: formattedPhone))
             }
@@ -194,7 +194,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             logo = directLogoImage
             
             if let foreignPhoneNumber = operation?.payeePhone {
-                let phoneFormatter = PhoneNumberFormater()
+                let phoneFormatter = PhoneNumberKitFormater()
                 let formattedPhone = phoneFormatter.format(foreignPhoneNumber)
                 cells.append(PropertyCellViewModel(title: "Номер телефона получателя", iconType: .phone, value: formattedPhone))
                 
@@ -347,7 +347,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             }
             
             if let payeePhone = operation?.payeePhone {
-                let phoneFormatter = PhoneNumberFormater()
+                let phoneFormatter = PhoneNumberKitFormater()
                 let formattedPhone = phoneFormatter.format(payeePhone)
                 cells.append(PropertyCellViewModel(title: "Номер телефона", iconType: .phone, value: formattedPhone))
                 
@@ -496,7 +496,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             logo = sfpLogoImage
             
             if let foreignPhoneNumber = statement.fastPayment?.foreignPhoneNumber {
-                let phoneFormatter = PhoneNumberFormater()
+                let phoneFormatter = PhoneNumberKitFormater()
                 let formattedPhone = phoneFormatter.format(foreignPhoneNumber)
                 cells.append(PropertyCellViewModel(title: "Номер телефона получателя", iconType: .phone, value: formattedPhone))
                 

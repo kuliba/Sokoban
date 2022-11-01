@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CountrySectionCollapsableViewModel: CollapsableSectionViewModel {
+class ContactsCountrySectionViewModel: CollapsableSectionViewModel {
     
     override init(header: CollapsableSectionViewModel.HeaderViewModel, isCollapsed: Bool = false, items: [CollapsableSectionViewModel.ItemViewModel]) {
         

@@ -31,7 +31,7 @@ class PaymentsViewController: UIViewController {
     
     lazy var searchContact: NavigationBarUIView = UIView.fromNib()
     
-    let phoneFormatter = PhoneNumberFormater()
+    let phoneFormatter = PhoneNumberKitFormater()
 
     enum Section: Int, CaseIterable {
         case payments, transfers, pay

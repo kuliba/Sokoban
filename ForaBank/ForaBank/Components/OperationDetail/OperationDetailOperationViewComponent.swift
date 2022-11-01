@@ -99,7 +99,7 @@ extension OperationDetailViewModel {
                 
                 if let foreignPhoneNumber = productStatement.fastPayment?.foreignPhoneNumber.replacingOccurrences(of: " ", with: "") {
                     
-                    let phoneFormatter = PhoneNumberFormater()
+                    let phoneFormatter = PhoneNumberKitFormater()
                     let formattedPhone = phoneFormatter.format(foreignPhoneNumber)
                     payeeViewModel = .doubleRow(productStatement.merchant, formattedPhone)
                     
@@ -193,7 +193,7 @@ extension OperationDetailViewModel {
                 }
                 
                 if let payeePhone = operation.payeePhone {
-                    let phoneFormatter = PhoneNumberFormater()
+                    let phoneFormatter = PhoneNumberKitFormater()
                     let formattedPhone = phoneFormatter.format(payeePhone)
                     operationViewModel = operationViewModel.updated(with: .doubleRow(productStatement.merchant, formattedPhone))
                 }
@@ -232,7 +232,7 @@ extension OperationDetailViewModel {
                 
             case .mobile:
                 if let payeePhone = operation.payeePhone {
-                    let phoneFormatter = PhoneNumberFormater()
+                    let phoneFormatter = PhoneNumberKitFormater()
                     let formattedPhone = phoneFormatter.format(payeePhone)
                     
                     operationViewModel = operationViewModel.updated(with: .singleRow(formattedPhone))

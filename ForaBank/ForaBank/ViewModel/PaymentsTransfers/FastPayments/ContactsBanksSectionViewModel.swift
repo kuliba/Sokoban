@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class BanksSectionCollapsableViewModel: CollapsableSectionViewModel {
+class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
     
     @Published var mode: Mode
     @Published var options: OptionSelectorView.ViewModel?
@@ -31,47 +31,15 @@ class BanksSectionCollapsableViewModel: CollapsableSectionViewModel {
         
         self.init(model, header: .init(kind: .banks), items: items, mode: .normal, options: options)
         bind()
+        
+        if let options = options {
+            
+            bind(options: options)
+        }
     }
     
     override func bind() {
         super.bind()
-        
-        options?.action
-            .receive(on: DispatchQueue.main)
-            .sink{[unowned self] action in
-                
-                switch action {
-                case let payload as OptionSelectorAction.OptionDidSelected:
-                    
-                    options?.selected = payload.optionId
-                    
-                    guard let selected = options?.selected, let bankType = BankType(rawValue: selected) else {
-                        
-                        let banksData = model.bankList.value
-                        items = Self.reduceItems(bankList: banksData)
-                        header.icon = .ic24Bank
-                        return
-                    }
-                    
-                    switch bankType {
-                    case .sfp:
-                        let banksData = model.bankList.value.filter({$0.bankType == .sfp})
-                        items = Self.reduceItems(bankList: banksData)
-                        header.icon = .ic24SBP
-                        
-                    case .direct:
-                        let banksData = model.bankList.value.filter({$0.bankType == .direct})
-                        items = Self.reduceItems(bankList: banksData)
-                        header.icon = .ic24Bank
-                        
-                    case .unknown:
-                        break
-                    }
-                    
-                default: break
-                }
-                
-            }.store(in: &bindings)
         
         $mode
             .receive(on: DispatchQueue.main)
@@ -125,6 +93,46 @@ class BanksSectionCollapsableViewModel: CollapsableSectionViewModel {
                     break
                     
                 }
+            }.store(in: &bindings)
+    }
+    
+    func bind(options: OptionSelectorView.ViewModel) {
+        
+        options.action
+            .receive(on: DispatchQueue.main)
+            .sink{[unowned self] action in
+                
+                switch action {
+                case let payload as OptionSelectorAction.OptionDidSelected:
+                    
+                    options.selected = payload.optionId
+                    
+                    guard let bankType = BankType(rawValue: options.selected) else {
+                        
+                        let banksData = model.bankList.value
+                        items = Self.reduceItems(bankList: banksData)
+                        header.icon = .ic24Bank
+                        return
+                    }
+                    
+                    switch bankType {
+                    case .sfp:
+                        let banksData = model.bankList.value.filter({$0.bankType == .sfp})
+                        items = Self.reduceItems(bankList: banksData)
+                        header.icon = .ic24SBP
+                        
+                    case .direct:
+                        let banksData = model.bankList.value.filter({$0.bankType == .direct})
+                        items = Self.reduceItems(bankList: banksData)
+                        header.icon = .ic24Bank
+                        
+                    case .unknown:
+                        break
+                    }
+                    
+                default: break
+                }
+                
             }.store(in: &bindings)
     }
     

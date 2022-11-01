@@ -15,7 +15,7 @@ protocol PhoneNumberFormaterProtocol {
     func isValidate(_ phoneNumber: String) -> Bool
 }
 
-struct PhoneNumberFormater: PhoneNumberFormaterProtocol {
+struct PhoneNumberKitFormater: PhoneNumberFormaterProtocol {
     
     private let phoneNumberKit = PhoneNumberKit()
     

@@ -26,7 +26,7 @@ extension SearchBarView {
         
         @Published var state: State
         
-        private let phoneNumberFormater = PhoneNumberFormater()
+        private let phoneNumberFormater = PhoneNumberKitFormater()
         private var bindings = Set<AnyCancellable>()
         
         init(textFieldPhoneNumberView: TextFieldPhoneNumberView.ViewModel, state: State = .idle, icon: Image? = nil, isValidation: Bool = false) {
@@ -247,10 +247,10 @@ struct SearchBarComponent_Previews: PreviewProvider {
 
         Group {
 
-            SearchBarView(viewModel: .init(textFieldPhoneNumberView: .init(placeHolder: .contacts)))
+            SearchBarView(viewModel: .init(textFieldPhoneNumberView: .init(placeHolder: .contacts, phoneNumberFirstDigitReplaceList: [])))
                 .previewLayout(.fixed(width: 375, height: 100))
 
-            SearchBarView(viewModel: .init(textFieldPhoneNumberView: .init(placeHolder: .banks)))
+            SearchBarView(viewModel: .init(textFieldPhoneNumberView: .init(placeHolder: .banks, phoneNumberFirstDigitReplaceList: [])))
                 .previewLayout(.fixed(width: 375, height: 100))
         }
     }

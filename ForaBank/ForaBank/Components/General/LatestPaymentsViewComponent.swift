@@ -319,7 +319,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
         case (.phone, let paymentData as PaymentGeneralData):
             
             let phoneNumberRu = "+7" + paymentData.phoneNumber
-            let phoneFormatter = PhoneNumberFormater()
+            let phoneFormatter = PhoneNumberKitFormater()
             
             self.avatar = avatar(for: phoneNumberRu) ?? .icon(data.type.defaultIcon, .iconGray)
             self.topIcon = model.dictionaryBank(for: paymentData.bankId)?.svgImage.image
@@ -333,7 +333,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
                !phoneNumber.isEmpty {
             
                 let phoneNumberInt = "+" + phoneNumber
-                let phoneFormatter = PhoneNumberFormater()
+                let phoneFormatter = PhoneNumberKitFormater()
             
                 self.avatar = avatar(for: phoneNumberInt)
                                 ?? (!paymentData.shortName.isEmpty
@@ -393,7 +393,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
                !phoneNumber.isEmpty {
                 
                 let phoneNumberRu = "+7" + phoneNumber
-                let phoneFormatter = PhoneNumberFormater()
+                let phoneFormatter = PhoneNumberKitFormater()
                 
                 self.avatar = avatar(for: phoneNumberRu) ?? .icon(data.type.defaultIcon, .iconGray)
                 self.description = fullName(for: phoneNumberRu) ?? phoneFormatter.format(phoneNumberRu)
