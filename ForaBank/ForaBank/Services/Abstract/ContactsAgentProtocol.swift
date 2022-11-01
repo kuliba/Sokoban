@@ -10,6 +10,7 @@ import Contacts
 
 protocol ContactsAgentProtocol {
     
+    var phoneNumberFormatter: PhoneNumberFormaterProtocol { get }
     var status: CurrentValueSubject<ContactsAgentStatus, Never> { get }
     
     func fetchContact(by phoneNumber: String) -> AddressBookContact?

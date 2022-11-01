@@ -215,7 +215,7 @@ class Model {
         let locationAgent = LocationAgent()
         
         // contacts agent
-        let contactsAgent = ContactsAgent()
+        let contactsAgent = ContactsAgent(phoneNumberFormatter: PhoneNumberKitFormater())
         
         // camera agent
         let cameraAgent = CameraAgent()

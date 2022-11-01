@@ -10,12 +10,14 @@ import Combine
 
 class ContactsAgent: ContactsAgentProtocol {
     
-    private let phoneNumberFormatter = PhoneNumberFormater()
+    var phoneNumberFormatter: PhoneNumberFormaterProtocol
     let status: CurrentValueSubject<ContactsAgentStatus, Never>
     private let store: CNContactStore
     
-    init() {
+    init(phoneNumberFormatter: PhoneNumberFormaterProtocol) {
+        
         self.store = CNContactStore()
+        self.phoneNumberFormatter = phoneNumberFormatter
         self.status = .init(.init(with: CNContactStore.authorizationStatus(for: .contacts)))
     }
     
