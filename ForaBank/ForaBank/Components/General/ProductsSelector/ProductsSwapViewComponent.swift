@@ -257,7 +257,6 @@ extension ProductsSwapView.ViewModel {
 
 struct ProductsSwapView: View {
     
-    @Namespace private var namespace
     @ObservedObject var viewModel: ViewModel
     
     var body: some View {
@@ -266,7 +265,6 @@ struct ProductsSwapView: View {
             
             ForEach(viewModel.items) { item in
                 ProductSelectorView(viewModel: item)
-                    .matchedGeometryEffect(id: item.id, in: namespace)
                     .padding(.vertical, 4)
                 
                 if let from = viewModel.from, item.id == from.id {
