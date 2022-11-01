@@ -720,14 +720,15 @@ class ProductProfileViewModel: ObservableObject {
                             
                         case .tariffsByAccount:
                             
-                            let linkURL = "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf"
-                            self.openLinkURL(linkURL)
+                            if let productData = productData as? ProductAccountData {
+                                self.openLinkURL(productData.detailedRatesUrl)
+                            }
                             
                         case .termsOfService:
                             
-                            let linkURL = "https://www.forabank.ru/dkbo/dkbo.pdf"
-                            self.openLinkURL(linkURL)
-
+                            if let productData = productData as? ProductAccountData {
+                                self.openLinkURL(productData.detailedConditionUrl)
+                            }
                         }
                         
                     default:
