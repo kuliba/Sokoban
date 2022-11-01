@@ -61,8 +61,8 @@ struct PaymentsOperationView: View {
                         case let selectViewModels as PaymentsSelectSimpleView.ViewModel:
                             PaymentsSelectSimpleView(viewModel: selectViewModels)
                             
-                        case let additionButtonViewModel as PaymentsButtonAdditionalView.ViewModel:
-                            PaymentsButtonAdditionalView(viewModel: additionButtonViewModel)
+                        case let additionButtonViewModel as PaymentsSpoilerButtonView.ViewModel:
+                            PaymentsSpoilerButtonView(viewModel: additionButtonViewModel)
                             
                         default:
                             Color.clear
@@ -70,25 +70,33 @@ struct PaymentsOperationView: View {
                         }
                     }
                 }
-            }
+                
+            }.padding(.horizontal, 20)
             
             // bottom
-            if let topItems = viewModel.top {
+            if let bottomItems = viewModel.bottom {
                 
                 VStack {
                     
                     Spacer()
                     
-                    ForEach(topItems) { item in
-                        
-                        //TODO: render top items
-                        Color.clear
-                    }
+                        ForEach(bottomItems) { item in
+                            
+                            switch item {
+                            case let continueViewModel as PaymentsContinueButtonView.ViewModel:
+                                PaymentsContinueButtonView(viewModel: continueViewModel)
+                                
+                            case let amountViewModel as PaymentsAmountView.ViewModel:
+                                PaymentsAmountView(viewModel: amountViewModel)
+                                
+                            default:
+                                Color.clear
+                            }
+                            
+                        }.modifier(BottomBackgroundModifier())
                 }
             }
-            
         }
-        .padding(.horizontal, 20)
         .navigationBarTitle(Text(viewModel.header.title), displayMode: .inline)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: { self.presentationMode.wrappedValue.dismiss() }, label: {
@@ -96,21 +104,59 @@ struct PaymentsOperationView: View {
     }
 }
 
+extension PaymentsOperationView {
+    
+    struct BottomBackgroundModifier: ViewModifier {
+        
+        func body(content: Content) -> some View {
+            
+            if #available(iOS 15.0, *) {
+                
+                content
+                    .background(.ultraThinMaterial, ignoresSafeAreaEdges: .bottom)
+                
+            } else {
+                
+                content
+                    .background(Color.white.opacity(0.95).ignoresSafeArea(.container, edges: .bottom))
+            }
+        }
+    }
+}
+
 struct PaymentsOperationView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PaymentsOperationView(viewModel: .sample)
+        Group {
+            
+            NavigationView {
+                PaymentsOperationView(viewModel: .sampleContinue)
+            }
+            
+            NavigationView {
+                PaymentsOperationView(viewModel: .sampleAmount)
+            }
+        }
     }
 }
 
 extension PaymentsOperationViewModel {
     
-    static let sample: PaymentsOperationViewModel = {
+    static let sampleContinue: PaymentsOperationViewModel = {
         
-        let items: [PaymentsParameterViewModel] = [PaymentsSwitchView.ViewModel.sample, PaymentsSelectView.ViewModel.selectedMock, PaymentsInfoView.ViewModel.sample, PaymentsNameView.ViewModel.normal, PaymentsNameView.ViewModel.edit, PaymentsProductView.ViewModel.sample]
+        let contentItems = [PaymentsSwitchView.ViewModel.sample, PaymentsSelectView.ViewModel.selectedMock, PaymentsInfoView.ViewModel.sample, PaymentsNameView.ViewModel.normal, PaymentsNameView.ViewModel.edit, PaymentsProductView.ViewModel.sample, PaymentsInfoView.ViewModel.sample]
+        let bottomItems = [PaymentsContinueButtonView.ViewModel.sample]
         
-        return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги"), top: nil, content: items, bottom: nil, link: nil, bottomSheet: nil, operation: .emptyMock, model: .emptyMock)
+        return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги"), top: nil, content: contentItems, bottom: bottomItems, link: nil, bottomSheet: nil, operation: .emptyMock, model: .emptyMock)
+    }()
+    
+    static let sampleAmount: PaymentsOperationViewModel = {
+        
+        let contentItems = [PaymentsSwitchView.ViewModel.sample, PaymentsSelectView.ViewModel.selectedMock, PaymentsInfoView.ViewModel.sample, PaymentsNameView.ViewModel.normal, PaymentsNameView.ViewModel.edit, PaymentsProductView.ViewModel.sample]
+        let bottomItems = [PaymentsAmountView.ViewModel.amount]
+        
+        return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги"), top: nil, content: contentItems, bottom: bottomItems, link: nil, bottomSheet: nil, operation: .emptyMock, model: .emptyMock)
     }()
 }
 

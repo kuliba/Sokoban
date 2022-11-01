@@ -1,5 +1,5 @@
 //
-//  PaymentsContinueButtonView.swift
+//  PaymentsContinueButtonViewComponent.swift
 //  ForaBank
 //
 //  Created by Max Gribov on 27.10.2022.
@@ -14,10 +14,10 @@ extension PaymentsContinueButtonView {
         let title: String
         @Published var button: ButtonSimpleView.ViewModel
         
-        init(title: String, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
+        init(title: String, button: ButtonSimpleView.ViewModel = .init(title: "", style: .inactive, action: {}), source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.title = title
-            self.button = .init(title: title, style: .inactive, action: {})
+            self.button = button
             super.init(source: source)
         }
         
@@ -59,6 +59,7 @@ struct PaymentsContinueButtonView: View {
         ButtonSimpleView(viewModel: viewModel.button)
             .frame(height: 56)
             .padding(.vertical, 16)
+            .padding(.horizontal, 20)
     }
 }
 
@@ -76,6 +77,6 @@ struct PaymentsContinueViewComponent_Previews: PreviewProvider {
 
 extension PaymentsContinueButtonView.ViewModel {
     
-    static let sample = PaymentsContinueButtonView.ViewModel(title: "Продолжить")
+    static let sample = PaymentsContinueButtonView.ViewModel(title: "Продолжить", button: .init(title: "Продолжить", style: .red, action: {}))
 }
 

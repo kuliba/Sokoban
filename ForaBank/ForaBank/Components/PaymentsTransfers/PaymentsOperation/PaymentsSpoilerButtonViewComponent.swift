@@ -1,5 +1,5 @@
 //
-//  PaymentsButtonAdditionalViewComponent.swift
+//  PaymentsSpoilerButtonViewComponent.swift
 //  ForaBank
 //
 //  Created by Константин Савялов on 28.02.2022.
@@ -10,7 +10,7 @@ import Combine
 
 //MARK: - ViewModel
 
-extension PaymentsButtonAdditionalView {
+extension PaymentsSpoilerButtonView {
     
     class ViewModel: PaymentsParameterViewModel {
         
@@ -57,9 +57,9 @@ extension PaymentsParameterViewModelAction {
 
 //MARK: - View
 
-struct PaymentsButtonAdditionalView: View {
+struct PaymentsSpoilerButtonView: View {
     
-    @ObservedObject var viewModel: PaymentsButtonAdditionalView.ViewModel
+    @ObservedObject var viewModel: PaymentsSpoilerButtonView.ViewModel
     
     var body: some View {
         
@@ -99,10 +99,10 @@ struct PaymentsButtonAdditionalView_Preview: PreviewProvider {
         
         Group {
             
-            PaymentsButtonAdditionalView(viewModel: .init(title: "Дополнительные данные", isSelected: false))
+            PaymentsSpoilerButtonView(viewModel: .init(title: "Дополнительные данные", isSelected: false))
                 .previewLayout(.fixed(width: 375, height: 60))
             
-            PaymentsButtonAdditionalView(viewModel: .init(title: "Дополнительные данные", isSelected: true))
+            PaymentsSpoilerButtonView(viewModel: .init(title: "Дополнительные данные", isSelected: true))
                 .previewLayout(.fixed(width: 375, height: 60))
         }
     }

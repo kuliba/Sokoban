@@ -152,13 +152,6 @@ struct PaymentsAmountView: View {
                             TextFieldFormatableView(viewModel: viewModel.textField, font: .systemFont(ofSize: 24, weight: .semibold), textColor: .white, keyboardType: .decimalPad)
                                 .frame(height: 24, alignment: .center)
                             
-                            /*
-                            TextField("", value: $viewModel.amount, formatter: viewModel.formatter)
-                                .keyboardType(.decimalPad)
-                                .font(Font.custom("Inter-SemiBold", size: 24))
-                                .foregroundColor(Color(hex: "#FFFFFF"))
-                             */
-                            
                             if let currencySwitchViewModel = viewModel.currencySwitch {
                                 
                                 CurrencySwitchView(viewModel: currencySwitchViewModel)
@@ -191,7 +184,7 @@ struct PaymentsAmountView: View {
         }
         .background(
             Color(hex: "#3D3D45")
-                .edgesIgnoringSafeArea(.bottom))
+                .ignoresSafeArea(.container, edges: .bottom))
     }
     
     struct TitleView: View {

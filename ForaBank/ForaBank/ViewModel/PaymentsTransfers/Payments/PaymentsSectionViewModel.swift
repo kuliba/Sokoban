@@ -89,7 +89,7 @@ class PaymentsSpoilerSectionViewModel: PaymentsSectionViewModel {
         
         if isCollapsed == true {
             
-            guard let buttonItem = items.first(where: { $0 is PaymentsButtonAdditionalView.ViewModel }) else {
+            guard let buttonItem = items.first(where: { $0 is PaymentsSpoilerButtonView.ViewModel }) else {
                 return []
             }
             
@@ -106,7 +106,7 @@ class PaymentsSpoilerSectionViewModel: PaymentsSectionViewModel {
         self.isCollapsed = isCollapsed
         
         var itemsUpdated = items
-        itemsUpdated.append(PaymentsButtonAdditionalView.ViewModel(title: "Дополнительные данные", isSelected: isCollapsed))
+        itemsUpdated.append(PaymentsSpoilerButtonView.ViewModel(title: "Дополнительные данные", isSelected: isCollapsed))
         super.init(items: itemsUpdated)
     }
     
