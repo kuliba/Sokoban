@@ -24,21 +24,22 @@ extension PaymentsInputView {
         private static let iconPlaceholder = Image("Payments Icon Placeholder")
         
         override var isValid: Bool {
-            guard let inputParemeter = source as? Payments.ParameterInput else { return false }
+            
+            guard let inputParemeter = source as? Payments.ParameterInput else {
+                return false
+            }
             
             return inputParemeter.validator.isValid(value: content)
         }
         
-        internal init(logo: Image, description: String, content: String? = nil) {
+        init(logo: Image, description: String, content: String, validator: Payments.ParameterInput.Validator = .init(minLength: 0, maxLength: 50, regEx: nil), source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.logo = logo
             self.description = description
-            self.content = content ?? ""
-            self.validator = .init(minLength: 0, maxLength: 50, regEx: nil)
+            self.content = content
+            self.validator = validator
             
-            super.init(source: Payments.ParameterMock())
-            
-            bind()
+            super.init(source: source)
         }
         
         init(with parameterInput: Payments.ParameterInput) {

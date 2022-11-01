@@ -35,13 +35,13 @@ extension PaymentsNameView {
         private static let iconPlaceholder = Image("Payments Icon Person")
         private var bindings = Set<AnyCancellable>()
         
-        init(icon: Image, title: String, person: PersonViewModel, isEditing: Bool) {
+        init(icon: Image, title: String, person: PersonViewModel, isEditing: Bool, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.icon = icon
             self.title = title
             self.person = person
             self.isEditing = isEditing
-            super.init(source: Payments.ParameterMock())
+            super.init(source: source)
         }
         
         init(with parameterName: Payments.ParameterName) {

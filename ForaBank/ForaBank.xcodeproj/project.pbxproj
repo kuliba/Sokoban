@@ -3527,7 +3527,10 @@
 		0CF3D713283686AC001A1BEA /* PaymentsTransfers */ = {
 			isa = PBXGroup;
 			children = (
-				774A8B4E2865FDAF00B81140 /* Payments */,
+				774A8B512865FDAF00B81140 /* PaymentsProductSelectorViewComponet.swift */,
+				774A8B532865FDAF00B81140 /* PaymentsSuccessOptionButtonViewComponent.swift */,
+				774A8B572865FDAF00B81140 /* PaymentsPopUpSelectViewComponent.swift */,
+				774A8B4E2865FDAF00B81140 /* PaymentsOperation */,
 				0CF3D71428368753001A1BEA /* PTSectionLatestPaymentsViewComponent.swift */,
 				0CF3D7162836D203001A1BEA /* PTSectionTransfersViewComponent.swift */,
 				0CF3D7182836E141001A1BEA /* PTSectionPaymentsViewComponent.swift */,
@@ -4617,25 +4620,21 @@
 			path = MyProducts;
 			sourceTree = "<group>";
 		};
-		774A8B4E2865FDAF00B81140 /* Payments */ = {
+		774A8B4E2865FDAF00B81140 /* PaymentsOperation */ = {
 			isa = PBXGroup;
 			children = (
 				774A8B4F2865FDAF00B81140 /* PaymentsSelectViewComponent.swift */,
 				774A8B5A2865FDAF00B81140 /* PaymentsSelectSimpleViewComponent.swift */,
 				774A8B502865FDAF00B81140 /* PaymentsSwitchViewComponent.swift */,
-				774A8B512865FDAF00B81140 /* PaymentsProductSelectorViewComponet.swift */,
 				774A8B522865FDAF00B81140 /* PaymentsInputViewComponent.swift */,
-				774A8B532865FDAF00B81140 /* PaymentsSuccessOptionButtonViewComponent.swift */,
-				774A8B542865FDAF00B81140 /* PaymentsAmountViewComponent.swift */,
 				774A8B552865FDAF00B81140 /* PaymentsProductViewComponent.swift */,
 				774A8B562865FDAF00B81140 /* PaymentsSelectServiceViewComponent.swift */,
-				774A8B572865FDAF00B81140 /* PaymentsPopUpSelectViewComponent.swift */,
-				774A8B582865FDAF00B81140 /* PaymentsButtonAdditionalViewComponent.swift */,
 				774A8B592865FDAF00B81140 /* PaymentsInfoViewComponent.swift */,
 				774A8B5B2865FDAF00B81140 /* PaymentsNameViewComponent.swift */,
-				77BE9A34290AD4A7006046B1 /* PaymentsContinueViewComponent.swift */,
+				774A8B582865FDAF00B81140 /* PaymentsButtonAdditionalViewComponent.swift */,
+				77E0DC42291163D90053CCCA /* Bottom */,
 			);
-			path = Payments;
+			path = PaymentsOperation;
 			sourceTree = "<group>";
 		};
 		774CA5DF287962C400544C17 /* Notification */ = {
@@ -5144,6 +5143,15 @@
 				6845336B279843DF00104A8B /* ServerCommands+Utility.swift */,
 			);
 			path = Server;
+			sourceTree = "<group>";
+		};
+		77E0DC42291163D90053CCCA /* Bottom */ = {
+			isa = PBXGroup;
+			children = (
+				77BE9A34290AD4A7006046B1 /* PaymentsContinueViewComponent.swift */,
+				774A8B542865FDAF00B81140 /* PaymentsAmountViewComponent.swift */,
+			);
+			path = Bottom;
 			sourceTree = "<group>";
 		};
 		77E1805027AC6B790006ACC9 /* General */ = {

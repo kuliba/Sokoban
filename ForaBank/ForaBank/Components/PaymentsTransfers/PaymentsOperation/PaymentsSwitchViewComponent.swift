@@ -19,11 +19,11 @@ extension PaymentsSwitchView {
         
         private var bindings = Set<AnyCancellable>()
         
-        internal init(options: [OptionViewModel], selected: OptionViewModel.ID) {
+        init(options: [OptionViewModel], selected: OptionViewModel.ID, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.options = options
             self.selected = selected
-            super.init(source: Payments.ParameterMock())
+            super.init(source: source)
         }
         
         init(with parameterSwitch: Payments.ParameterSelectSwitch) {
@@ -112,7 +112,7 @@ extension PaymentsSwitchView.ViewModel {
     static let sampleParameter: PaymentsSwitchView.ViewModel = {
         
         let parameter = Payments.ParameterSelectSwitch( .init(id: UUID().uuidString, value: "2"), options: [.init(id: "1", name: "Документ"), .init(id: "2", name: "УИН"), .init(id: "3", name: "ИП")])
-        return try! PaymentsSwitchView.ViewModel(with: parameter)
+        return PaymentsSwitchView.ViewModel(with: parameter)
     }()
 }
 

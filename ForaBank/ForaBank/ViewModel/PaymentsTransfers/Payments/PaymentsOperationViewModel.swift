@@ -29,7 +29,7 @@ class PaymentsOperationViewModel: ObservableObject {
     var items: [PaymentsParameterViewModel] { sections.value.flatMap{ $0.items } }
     var isItemsValuesValid: Bool { items.filter({ $0.isValid == false }).isEmpty }
     
-    init(header: HeaderViewModel, top: [PaymentsParameterViewModel]?, content: [PaymentsParameterViewModel], bottom: [PaymentsParameterViewModel], link: Link?, bottomSheet: BottomSheet?, operation: Payments.Operation, model: Model) {
+    init(header: HeaderViewModel, top: [PaymentsParameterViewModel]?, content: [PaymentsParameterViewModel], bottom: [PaymentsParameterViewModel]?, link: Link?, bottomSheet: BottomSheet?, operation: Payments.Operation, model: Model) {
         
         self.header = header
         self.top = top
@@ -71,6 +71,9 @@ class PaymentsOperationViewModel: ObservableObject {
                 content = Self.reduceContentItems(sections: sections)
                 bottom = Self.reduceBottomItems(sections: sections)
                 
+                // update bottom section continue button
+                updateBottomSection(isContinueEnabled: isItemsValuesValid)
+                
             }.store(in: &bindings)
         
         model.action
@@ -94,11 +97,7 @@ class PaymentsOperationViewModel: ObservableObject {
                     }
                     
                 case let payload as ModelAction.Auth.VerificationCode.PushRecieved:
-                    guard let codeParameter = items.first(where: { $0.id == Payments.Parameter.Identifier.code.rawValue }) as? PaymentsInputView.ViewModel else {
-                        return
-                    }
-                    
-                    codeParameter.content = payload.code
+                    updateFeedSection(code: payload.code)
 
                 default:
                     break
@@ -264,6 +263,15 @@ extension PaymentsOperationViewModel {
 
 extension PaymentsOperationViewModel {
     
+    func updateFeedSection(code: String) {
+        
+        guard let codeParameter = items.first(where: { $0.id == Payments.Parameter.Identifier.code.rawValue }) as? PaymentsInputView.ViewModel else {
+            return
+        }
+        
+        codeParameter.content = code
+    }
+    
     func updateBottomSection(isContinueEnabled: Bool) {
         
         guard let bottomSection = sections.value.first(where: { $0.placement == .bottom }) as? PaymentsBottomSectionViewModel else {
@@ -283,27 +291,7 @@ extension PaymentsOperationViewModel {
         let title: String
         let backButtonIcon = Image("back_button")
     }
-    
-    enum FooterViewModel {
         
-        case button(ContinueButtonViewModel)
-        case amount(PaymentsAmountView.ViewModel)
-    }
-    
-    class ContinueButtonViewModel: ObservableObject {
-
-        let title: String
-        @Published var isEnabled: Bool
-        let action: () -> Void
-        
-        internal init(title: String, isEnabled: Bool, action: @escaping () -> Void) {
-            
-            self.title = title
-            self.action = action
-            self.isEnabled = isEnabled
-        }
-    }
-    
     enum Link {
         
         case confirm(PaymentsConfirmViewModel)

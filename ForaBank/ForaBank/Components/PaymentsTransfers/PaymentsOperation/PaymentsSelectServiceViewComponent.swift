@@ -15,10 +15,10 @@ extension PaymentsSelectServiceView {
 
         @Published var items: [ItemViewModel]
         
-        init(items: [ItemViewModel]) {
+        init(items: [ItemViewModel], source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.items = items
-            super.init(source: Payments.ParameterMock())
+            super.init(source: source)
         }
         
         init(with parameter: Payments.ParameterSelectService, action: @escaping (Payments.Service) -> Void) {

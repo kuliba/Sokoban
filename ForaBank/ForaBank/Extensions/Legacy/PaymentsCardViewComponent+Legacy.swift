@@ -20,7 +20,7 @@ extension PaymentsProductView.ViewModel {
                   captionItems: [],
                   state: .normal,
                   model: model,
-                  parameterProduct: parameterProduct)
+                  source: parameterProduct)
         
         if let value = parameterProduct.parameter.value,
            let productId = Int(value),

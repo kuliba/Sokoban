@@ -28,18 +28,14 @@ extension PaymentsSelectSimpleView {
         private static let iconPlaceholder = Image("Payments Icon Placeholder")
         private var bindings: Set<AnyCancellable> = []
         
-        internal init(icon: Image,
-                      title: String,
-                      content: String,
-                      description: String?,
-                      selectedOptionId: Option.ID? = nil) {
+        init(icon: Image, title: String, content: String, description: String?, selectedOptionId: Option.ID? = nil, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.icon = icon
             self.title = title
             self.content = content
             self.description = description
             self.selectedOptionId = selectedOptionId
-            super.init(source: Payments.ParameterMock())
+            super.init(source: source)
         }
         
         init(with parameterSelect: Payments.ParameterSelectSimple) {
@@ -50,6 +46,7 @@ extension PaymentsSelectSimpleView {
             self.description = parameterSelect.description
             self.selectedOptionId = parameterSelect.parameter.value
             super.init(source: parameterSelect)
+            
             bind()
         }
         

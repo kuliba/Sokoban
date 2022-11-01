@@ -24,16 +24,16 @@ extension PaymentsAmountView {
         private let actionTitle: String
         private var bindings = Set<AnyCancellable>()
         
-        init(title: String, amount: Double, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil, currencySwitch: CurrencySwitchViewModel? = nil, alert: AlertViewModel? = nil, formatter: NumberFormatter = .currency(with: "₽"), actionTitle: String = "") {
+        init(title: String, textField: TextFieldFormatableView.ViewModel = .init(value: 0, formatter: .currency("₽"), limit: 10), currencySwitch: CurrencySwitchViewModel? = nil, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil, alert: AlertViewModel? = nil, actionTitle: String = "", source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.title = title
-            self.textField = .init(value: amount, formatter: formatter, limit: 10)
+            self.textField = textField
             self.transferButton = transferButton
             self.info = info
             self.currencySwitch = currencySwitch
             self.alert = alert
             self.actionTitle = actionTitle
-            super.init(source: Payments.ParameterMock())
+            super.init(source: source)
         }
         
         init(with parameterAmount: Payments.ParameterAmount, actionTitle: String) {
@@ -372,17 +372,17 @@ struct PaymentsAmountView_Previews: PreviewProvider {
 
 extension PaymentsAmountView.ViewModel {
     
-    static let empty = PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 0, transferButton: .inactive(title: "Перевести"))
+    static let empty = PaymentsAmountView.ViewModel(title: "Сумма перевода", textField: .init(value: 0, formatter: .currency("₽")), transferButton: .inactive(title: "Перевести"))
     
-    static let emptyInfo =  PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 0, transferButton: .inactive(title: "Перевести"), info: .button(title: "Возможна комиссия", icon: Image("infoBlack"), action: {}))
+    static let emptyInfo =  PaymentsAmountView.ViewModel(title: "Сумма перевода", textField: .init(value: 0, formatter: .currency("₽")), transferButton: .inactive(title: "Перевести"), info: .button(title: "Возможна комиссия", icon: Image("infoBlack"), action: {}))
     
-    static let amount = PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 1000, transferButton: .active(title: "Перевести", action: {}))
+    static let amount = PaymentsAmountView.ViewModel(title: "Сумма перевода", textField: .init(value: 1000, formatter: .currency("₽")), transferButton: .active(title: "Перевести", action: {}))
     
-    static let amountZeroCurrencyInfo = PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 0, transferButton: .active(title: "Перевести", action: {}), info: .text("1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}))
+    static let amountZeroCurrencyInfo = PaymentsAmountView.ViewModel(title: "Сумма перевода", textField: .init(value: 0, formatter: .currency("₽")), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}), transferButton: .active(title: "Перевести", action: {}), info: .text("1$ - 72.72 ₽"))
     
-    static let amountCurrencyInfo = PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 10000.20, transferButton: .active(title: "Перевести", action: {}), info: .text("13.75 $   |   1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}))
+    static let amountCurrencyInfo = PaymentsAmountView.ViewModel(title: "Сумма перевода", textField: .init(value: 10000.20, formatter: .currency("₽")), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}), transferButton: .active(title: "Перевести", action: {}), info: .text("13.75 $   |   1$ - 72.72 ₽"))
     
-    static let amountCurrencyInfoAlert = PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 214.45, transferButton: .active(title: "Перевести", action: {}), info: .text("13.75 $   |   1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}), alert: .init(title: "Недостаточно средств"))
+    static let amountCurrencyInfoAlert = PaymentsAmountView.ViewModel(title: "Сумма перевода", textField: .init(value: 214.45, formatter: .currency("₽")), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}), transferButton: .active(title: "Перевести", action: {}), info: .text("13.75 $   |   1$ - 72.72 ₽"), alert: .init(title: "Недостаточно средств"))
     
     static let amountParameter: PaymentsAmountView.ViewModel = {
         

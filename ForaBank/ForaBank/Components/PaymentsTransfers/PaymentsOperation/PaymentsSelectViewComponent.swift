@@ -21,7 +21,7 @@ extension PaymentsSelectView {
         //TODO: real placeholder required
         private static let itemIconPlaceholder = Image("Payments Icon Placeholder")
         
-        internal init(items: [ItemViewModel], description: String, selected: (item: ItemViewModel, action: () -> Void)? = nil) {
+        init(items: [ItemViewModel], description: String, selected: (item: ItemViewModel, action: () -> Void)? = nil, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             if let selected = selected {
                 
@@ -32,7 +32,7 @@ extension PaymentsSelectView {
                 self.state = .list(items)
             }
 
-            super.init(source: Payments.ParameterMock())
+            super.init(source: source)
         }
         
         init(with parameterSelect: Payments.ParameterSelect) {

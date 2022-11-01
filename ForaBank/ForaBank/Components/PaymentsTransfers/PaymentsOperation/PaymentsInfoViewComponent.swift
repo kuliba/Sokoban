@@ -21,13 +21,13 @@ extension PaymentsInfoView {
         //TODO: real placeholder required
         private static let iconPlaceholder = Image("Payments Icon Placeholder")
 
-        internal init(icon: Image, title: String, content: String, iconStyle: IconStyle) {
+        init(icon: Image, title: String, content: String, iconStyle: IconStyle, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.icon = icon
             self.title = title
             self.content = content
             self.iconStyle = iconStyle
-            super.init(source: Payments.ParameterMock())
+            super.init(source: source)
         }
         
         init(with parameterInfo: Payments.ParameterInfo) {

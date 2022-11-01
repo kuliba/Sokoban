@@ -37,7 +37,7 @@ extension PaymentsProductView {
         
         static let cardIconPlaceholder = Image("Placeholder Card Small")
         
-        init(title: String, cardIcon: Image, paymentSystemIcon: Image?, name: String, amount: String, captionItems: [CaptionItemViewModel], state: State, model: Model = .emptyMock, parameterProduct: Payments.ParameterProduct = .init()) {
+        init(title: String, cardIcon: Image, paymentSystemIcon: Image?, name: String, amount: String, captionItems: [CaptionItemViewModel], state: State, model: Model = .emptyMock, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.title = title
             self.cardIcon = cardIcon
@@ -48,7 +48,7 @@ extension PaymentsProductView {
             self.state = state
             self.model = model
             
-            super.init(source: parameterProduct)
+            super.init(source: source)
         }
 
         init(_ model: Model, parameterProduct: Payments.ParameterProduct) {

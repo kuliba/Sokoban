@@ -20,11 +20,11 @@ extension PaymentsButtonAdditionalView {
         
         private var bindings = Set<AnyCancellable>()
    
-        init(title: String, isSelected: Bool) {
+        init(title: String, isSelected: Bool, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.title = title
             self.isSelected = isSelected
-            super.init(source: Payments.ParameterMock())
+            super.init(source: source)
             
             bind()
         }
