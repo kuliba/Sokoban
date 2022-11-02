@@ -72,18 +72,15 @@ class ContactsTopBanksSectionViewModel: ObservableObject {
         
         var banksList: [TopBanksViewModel.Bank] = []
         
-        banksList = banks.map({
+        for bank in banks {
             
-            if let bankName = $0.bankName, let defaultBank = $0.defaultBank, let payment = $0.payment {
-                
+            if let bankName = bank.bankName, let defaultBank = bank.defaultBank, let payment = bank.payment {
+
                 let contact = payment ? model.contact(for: selectPhone) : nil
-                banksList.append(TopBanksViewModel.Bank(image: getImageBank(model: model, paymentBank: $0), defaultBank: defaultBank, name: contact?.fullName, bankName: bankName, action: action($0.hashValue)))
-                
-            } else {
-                
-                return
+                banksList.append(TopBanksViewModel.Bank(image: getImageBank(model: model, paymentBank: bank), defaultBank: defaultBank, name: contact?.fullName, bankName: bankName, action: action(bank.id)))
+
             }
-        })
+        }
         
         func getImageBank(model: Model, paymentBank: PaymentPhoneData) -> Image? {
             
