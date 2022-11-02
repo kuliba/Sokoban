@@ -15,20 +15,77 @@ extension LatestPaymentsView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var items: [ItemViewModel]
+        let filterType: Set<LatestPaymentData.Kind>?
         
         private let model: Model
+        private var bindings = Set<AnyCancellable>()
         
-        init(_ model: Model, items: [LatestPaymentsView.ViewModel.ItemViewModel]) {
+        init(_ model: Model, items: [LatestPaymentsView.ViewModel.ItemViewModel], filterType: Set<LatestPaymentData.Kind>? = nil) {
             
             self.model = model
             self.items = items
+            self.filterType = filterType
         }
         
-        convenience init(_ model: Model, latest: [LatestPaymentData], isUpdating: Bool = false) {
+        convenience init(_ model: Model, latest: [LatestPaymentData], isUpdating: Bool = false, filterType: Set<LatestPaymentData.Kind>? = nil) {
             
             let items: [LatestPaymentsView.ViewModel.ItemViewModel] = []
-            self.init(model, items: items)
-            self.items = self.itemsReduce(latest: latest)
+            self.init(model, items: items, filterType: filterType)
+            
+            self.items = Self.itemsReduce(model: model, latest: latest) { [weak self] itemId in
+                
+                if let item = latest.first(where: {$0.id == itemId}) {
+                    
+                    return  { self?.action.send(LatestPaymentsViewModelAction.ButtonTapped.LatestPayment(latestPayment: item)) }
+                }
+                
+                return {}
+            }
+            
+            bind()
+        }
+        
+        func bind() {
+            
+            model.latestPayments
+                .combineLatest(model.latestPaymentsUpdating)
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] data in
+                    
+                    var latestPayments = data.0
+                    
+                    if let filterType = filterType {
+                        
+                        for type in filterType {
+                            
+                            latestPayments = latestPayments.filter({ $0.type == type })
+                        }
+                    }
+                    
+                    var items = Self.itemsReduce(model: model, latest: latestPayments, action: { [weak self] itemId in
+                        
+                        if let item = latestPayments.first(where: {$0.id == itemId}) {
+                            
+                            return { self?.action.send(LatestPaymentsViewModelAction.ButtonTapped.LatestPayment(latestPayment: item))}
+                        }
+                        
+                        return {}
+                    })
+                    
+                    let baseButton = Self.createBaseButton { [weak self] in
+                        
+                        self?.action.send(LatestPaymentsViewModelAction.ButtonTapped.Templates())
+                    }
+                    
+                    if filterType == nil {
+                        
+                        items.insert(contentsOf: baseButton, at: 0)
+                    }
+                    
+                    self.items = items
+                    
+                }.store(in: &bindings)
+            
         }
         
         struct PlaceholderViewModel: Identifiable {
@@ -69,34 +126,31 @@ extension LatestPaymentsView {
             }
         }
         
-        func itemsReduce(latest: [LatestPaymentData],
-                         isUpdating: Bool = false) -> [ItemViewModel] {
+        static func itemsReduce(model: Model, latest: [LatestPaymentData],
+                                isUpdating: Bool = false,
+                                action: (LatestPaymentData.ID) -> () -> Void) -> [ItemViewModel] {
             
             var updatedItems = [ItemViewModel]()
-            let baseButtons = self.baseButtons.map { ItemViewModel.templates($0) }
             
             let latestPaymentsItems = latest.map { item in
                 
                 ItemViewModel
                     .latestPayment(
                         .init(data: item,
-                              model: self.model,
-                              action: { [weak self] in
-                                  self?.action.send(LatestPaymentsViewModelAction
-                                    .ButtonTapped
-                                    .LatestPayment(latestPayment: item)) } ))
+                              model: model,
+                              action: action(item.id)))
             }
+            
+            
             
             if isUpdating {
                 
                 if latest.isEmpty {
                     
-                    updatedItems.append(contentsOf: baseButtons)
                     updatedItems.append(contentsOf: Array(repeating: .placeholder(.init()), count: 4))
                     
                 } else {
                     
-                    updatedItems.append(contentsOf: baseButtons)
                     updatedItems.append(.placeholder(.init()))
                     updatedItems.append(contentsOf:  latestPaymentsItems)
                     
@@ -104,7 +158,6 @@ extension LatestPaymentsView {
                 
             } else {
                 
-                updatedItems.append(contentsOf: baseButtons)
                 updatedItems.append(contentsOf: latestPaymentsItems)
             }
             
@@ -112,39 +165,38 @@ extension LatestPaymentsView {
             
         }
         
-        lazy var baseButtons: [LatestPaymentButtonVM] = {
-            [
+        static func createBaseButton(action: @escaping () -> Void) -> [ItemViewModel] {
+            
+            let baseButtons: [LatestPaymentButtonVM] = [
                 .init(id: 0,
                       avatar: .icon(.ic24Star, .iconBlack),
                       topIcon: nil,
                       description: "Шаблоны",
-                      action: { [weak self] in
-                            self?.action.send(LatestPaymentsViewModelAction.ButtonTapped.Templates())
-                      }),
+                      action: action),
                 .init(id: -1,
                       avatar: .icon(.ic24CurrencyExchange, .iconBlack),
                       topIcon: nil,
                       description: "Обмен валют",
-                      action: { [weak self] in
-                            self?.action.send(LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet())
-                      })
+                      action: action)
             ]
-        }()
+            
+            return baseButtons.map { ItemViewModel.templates($0) }
+        }
     }
 }
 
 //MARK: - Action PTSectionLatestPaymentsViewAction
 
 enum LatestPaymentsViewModelAction {
-
+    
     enum ButtonTapped {
-
+        
         struct Templates: Action {}
         
         struct CurrencyWallet: Action {}
-
+        
         struct LatestPayment: Action {
-
+            
             let latestPayment: LatestPaymentData
         }
     }
@@ -292,7 +344,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             
             return contact.fullName
         }
-                
+        
         func avatar(for phoneNumber: String?) -> Self.Avatar? {
             
             guard case .available = model.contactsPermissionStatus,
@@ -324,35 +376,35 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             self.avatar = avatar(for: phoneNumberRu) ?? .icon(data.type.defaultIcon, .iconGray)
             self.topIcon = model.dictionaryBank(for: paymentData.bankId)?.svgImage.image
             self.description = fullName(for: phoneNumberRu)
-                ?? (paymentData.phoneNumber.isEmpty
-                    ? data.type.defaultName : phoneFormatter.format(phoneNumberRu))
+            ?? (paymentData.phoneNumber.isEmpty
+                ? data.type.defaultName : phoneFormatter.format(phoneNumberRu))
             
         case (.country, let paymentData as PaymentCountryData):
-
+            
             if let phoneNumber = paymentData.phoneNumber,
                !phoneNumber.isEmpty {
-            
+                
                 let phoneNumberInt = "+" + phoneNumber
                 let phoneFormatter = PhoneNumberKitFormater()
-            
+                
                 self.avatar = avatar(for: phoneNumberInt)
-                                ?? (!paymentData.shortName.isEmpty
-                                    ? .text(String(paymentData.shortName.first!).uppercased())
-                                    : .icon(data.type.defaultIcon, .iconGray))
+                ?? (!paymentData.shortName.isEmpty
+                    ? .text(String(paymentData.shortName.first!).uppercased())
+                    : .icon(data.type.defaultIcon, .iconGray))
                 self.description = fullName(for: phoneNumberInt)
-                    ?? (paymentData.shortName.isEmpty
-                        ? phoneFormatter.format(phoneNumberInt) : paymentData.shortName)
+                ?? (paymentData.shortName.isEmpty
+                    ? phoneFormatter.format(phoneNumberInt) : paymentData.shortName)
             } else {
                 self.avatar = !paymentData.shortName.isEmpty
-                                ? .text(String(paymentData.shortName.first!).uppercased())
-                                : .icon(data.type.defaultIcon, .iconGray)
+                ? .text(String(paymentData.shortName.first!).uppercased())
+                : .icon(data.type.defaultIcon, .iconGray)
                 self.description = paymentData.shortName.isEmpty
-                                ? paymentData.type.defaultName : paymentData.shortName
+                ? paymentData.type.defaultName : paymentData.shortName
             }
             self.topIcon = model.dictionaryCountry(for: paymentData.countryCode)?.svgImage?.image
-                    
+            
         case (.service, let paymentData as PaymentServiceData):
-     
+            
             if let image = model.dictionaryAnywayOperator(for: paymentData.puref)?
                 .logotypeList.first?.svgImage?.image {
                 self.avatar = .image(image)
@@ -360,9 +412,9 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
                 self.avatar = .icon(data.type.defaultIcon, .iconGray)
             }
             self.description = model.dictionaryAnywayOperator(for: paymentData.puref)?.name
-                                ?? data.type.defaultName
+            ?? data.type.defaultName
             self.topIcon = nil
-                    
+            
         case (.transport, let paymentData as PaymentServiceData):
             
             if let image = model.dictionaryAnywayOperator(for: paymentData.puref)?
@@ -372,9 +424,9 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
                 self.avatar = .icon(data.type.defaultIcon, .iconGray)
             }
             self.description = model.dictionaryAnywayOperator(for: paymentData.puref)?.name
-                                ?? data.type.defaultName
+            ?? data.type.defaultName
             self.topIcon = nil
-                    
+            
         case (.internet, let paymentData as PaymentServiceData):
             
             if let image = model.dictionaryAnywayOperator(for: paymentData.puref)?
@@ -384,11 +436,11 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
                 self.avatar = .icon(data.type.defaultIcon, .iconGray)
             }
             self.description = model.dictionaryAnywayOperator(for: paymentData.puref)?.name
-                                ?? data.type.defaultName
+            ?? data.type.defaultName
             self.topIcon = nil
             
         case (.mobile, let paymentData as PaymentServiceData):
-                
+            
             if let phoneNumber = paymentData.additionalList.first?.fieldValue,
                !phoneNumber.isEmpty {
                 
@@ -402,11 +454,11 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
                 self.description = data.type.defaultName
             }
             self.topIcon = model.dictionaryAnywayOperator(for: paymentData.puref)?
-                            .logotypeList.first?.svgImage?.image
-
-                
+                .logotypeList.first?.svgImage?.image
+            
+            
         case (.taxAndStateService, let paymentData as PaymentServiceData):
-           
+            
             if let image = model.dictionaryAnywayOperator(for: paymentData.puref)?
                 .logotypeList.first?.svgImage?.image {
                 self.avatar = .image(image)
@@ -414,7 +466,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
                 self.avatar = .icon(data.type.defaultIcon, .iconGray)
             }
             self.description = model.dictionaryAnywayOperator(for: paymentData.puref)?.name
-                                ?? data.type.defaultName
+            ?? data.type.defaultName
             self.topIcon = nil
             
         default: //error matching, init default
@@ -426,11 +478,11 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
         self.action = action
         self.id = data.id
     }
-            
+    
 }
 
 struct LatestPaymentsViewComponent_Previews: PreviewProvider {
     static var previews: some View {
-        LatestPaymentsView(viewModel: .init(.emptyMock, items: []))
+        LatestPaymentsView(viewModel: .init(.emptyMock, items: [], filterType: nil))
     }
 }
