@@ -37,7 +37,7 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
         
         self.items = Self.reduceBanks(banksData: bankData, action: {[weak self] bankId in
             
-            { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped()) }
+            { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped(bankId: bankId)) }
         })
         
         bind()
@@ -98,7 +98,7 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
                                 })
                                 
                                 self.items = Self.reduceBanks(banksData: filteredBanks, action: { [weak self] bankId in
-                                    { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped()) }
+                                    { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped(bankId: bankId)) }
                                 })
                                 
                             } else {
@@ -136,7 +136,11 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
                     guard let bankType = BankType(rawValue: options.selected) else {
                         
                         let banksData = model.bankList.value
-                        items = Self.reduceItems(bankList: banksData)
+                        self.items = Self.reduceItems(bankList: banksData, action: { [weak self] bankId in
+                            
+                            { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped(bankId: bankId))}
+                        })
+                        
                         header.icon = .ic24Bank
                         return
                     }
@@ -144,12 +148,20 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
                     switch bankType {
                     case .sfp:
                         let banksData = model.bankList.value.filter({$0.bankType == .sfp})
-                        items = Self.reduceItems(bankList: banksData)
+                        self.items = Self.reduceItems(bankList: banksData, action: { [weak self] bankId in
+                            
+                            { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped(bankId: bankId))}
+                        })
+                        
                         header.icon = .ic24SBP
                         
                     case .direct:
                         let banksData = model.bankList.value.filter({$0.bankType == .direct})
-                        items = Self.reduceItems(bankList: banksData)
+                        self.items = Self.reduceItems(bankList: banksData, action: { [weak self] bankId in
+                            
+                            { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped(bankId: bankId))}
+                        })
+                        
                         header.icon = .ic24Bank
                         
                     case .unknown:
@@ -210,12 +222,12 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
         return banks
     }
     
-    static func reduceItems(bankList: [BankData]) -> [CollapsableSectionViewModel.ItemViewModel] {
+    static func reduceItems(bankList: [BankData], action: @escaping (BankData.ID) -> () -> Void) -> [CollapsableSectionViewModel.ItemViewModel] {
         
         var items = [CollapsableSectionViewModel.ItemViewModel]()
         
         items = bankList
-            .map({CollapsableSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: {})})
+            .map({CollapsableSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: action($0.id))})
             .sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
             .sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
         
@@ -225,5 +237,8 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
 
 struct ContactsBanksSectionViewModelAction {
     
-    struct BankDidTapped: Action {}
+    struct BankDidTapped: Action {
+        
+        let bankId: Int
+    }
 }

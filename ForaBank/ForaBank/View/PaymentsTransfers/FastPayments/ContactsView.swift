@@ -56,7 +56,7 @@ struct ContactsView: View {
                     .frame(height: 1)
                     .foregroundColor(Color.mainColorsGrayLightest)
                 
-                VStack(spacing: 20) {
+                VStack(spacing: 30) {
                     
                     ForEach(collapsable) { item in
                         
@@ -87,9 +87,12 @@ struct ContactsView: View {
             switch item.type {
             case .country(let countryViewModel):
                 
-                CountryPaymentView(viewModel: countryViewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .navigationBarBackButtonHidden(true)
+                NavigationView {
+                    
+                    CountryPaymentView(viewModel: countryViewModel)
+                        .edgesIgnoringSafeArea(.bottom)
+                        .navigationBarBackButtonHidden(true)
+                }
             }
         })
     }
@@ -207,45 +210,48 @@ extension ContactsView {
         
         var body: some View {
             
-            if let viewModel = viewModel as? ContactsBanksSectionViewModel {
+            VStack {
                 
-                switch viewModel.mode {
-                case .normal:
-                    HeaderView(viewModel: viewModel)
+                if let viewModel = viewModel as? ContactsBanksSectionViewModel {
                     
-                case let .search(searchViewModel):
-                    SearchBarView(viewModel: searchViewModel)
-                        .padding(.horizontal, 20)
-                }
-            } else {
-                
-                HeaderView(viewModel: viewModel)
-            }
-            
-            if viewModel.header.isCollapsed {
-                
-                if let viewModel = viewModel as? ContactsBanksSectionViewModel, let options = viewModel.options {
-                    
-                    OptionSelectorView(viewModel: options)
-                        .padding()
-                }
-                
-                VStack {
-                    
-                    ScrollView(.vertical, showsIndicators: false) {
+                    switch viewModel.mode {
+                    case .normal:
+                        HeaderView(viewModel: viewModel)
                         
-                        VStack(spacing: 24) {
+                    case let .search(searchViewModel):
+                        SearchBarView(viewModel: searchViewModel)
+                            .padding(.horizontal, 20)
+                    }
+                } else {
+                    
+                    HeaderView(viewModel: viewModel)
+                }
+                
+                if viewModel.header.isCollapsed {
+                    
+                    if let viewModel = viewModel as? ContactsBanksSectionViewModel, let options = viewModel.options {
+                        
+                        OptionSelectorView(viewModel: options)
+                            .padding()
+                    }
+                    
+                    VStack {
+                        
+                        ScrollView(.vertical, showsIndicators: false) {
                             
-                            ForEach(viewModel.items) { item in
+                            VStack(spacing: 24) {
                                 
-                                Button(action: item.action) {
+                                ForEach(viewModel.items) { item in
                                     
-                                    ItemView(viewModel: item)
+                                    Button(action: item.action) {
+                                        
+                                        ItemView(viewModel: item)
+                                    }
                                 }
                             }
                         }
+                        .padding(.horizontal, 20)
                     }
-                    .padding(.horizontal, 20)
                 }
             }
         }

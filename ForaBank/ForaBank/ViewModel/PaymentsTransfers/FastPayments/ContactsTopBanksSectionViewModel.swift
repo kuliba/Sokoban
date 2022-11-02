@@ -50,9 +50,10 @@ class ContactsTopBanksSectionViewModel: ObservableObject {
                     switch payload.result {
                     case .success(let banks):
 
-                        let banks = Self.reduce(model: model, selectPhone: selectPhone, banks: banks, action: { [weak self] phoneId in
+                        let banks = Self.reduce(model: model, selectPhone: selectPhone, banks: banks, action: { [weak self] bankId in
 
-                            { self?.action.send(ContactsTopBanksSectionViewModelAction.TopBanksDidTapped()) }
+                            
+                            { self?.action.send(ContactsTopBanksSectionViewModelAction.TopBanksDidTapped(bankId: bankId)) }
                         })
 
                         if let banks = banks {
@@ -68,16 +69,16 @@ class ContactsTopBanksSectionViewModel: ObservableObject {
             }.store(in: &bindings)
     }
     
-    static func reduce(model: Model, selectPhone: String, banks: [PaymentPhoneData], action: @escaping ((PaymentPhoneData.ID) -> () -> Void)) -> TopBanksViewModel? {
+    static func reduce(model: Model, selectPhone: String, banks: [PaymentPhoneData], action: @escaping ((String) -> () -> Void)) -> TopBanksViewModel? {
         
         var banksList: [TopBanksViewModel.Bank] = []
         
         for bank in banks {
             
-            if let bankName = bank.bankName, let defaultBank = bank.defaultBank, let payment = bank.payment {
+            if let bankName = bank.bankName, let defaultBank = bank.defaultBank, let payment = bank.payment, let bankId = bank.bankId  {
 
                 let contact = payment ? model.contact(for: selectPhone) : nil
-                banksList.append(TopBanksViewModel.Bank(image: getImageBank(model: model, paymentBank: bank), defaultBank: defaultBank, name: contact?.fullName, bankName: bankName, action: action(bank.id)))
+                banksList.append(TopBanksViewModel.Bank(image: getImageBank(model: model, paymentBank: bank), defaultBank: defaultBank, name: contact?.fullName, bankName: bankName, action: action(bankId)))
 
             }
         }
@@ -146,5 +147,8 @@ class TopBanksViewModel: ObservableObject, Equatable {
 
 struct ContactsTopBanksSectionViewModelAction {
     
-    struct TopBanksDidTapped: Action {}
+    struct TopBanksDidTapped: Action {
+        
+        let bankId: String
+    }
 }

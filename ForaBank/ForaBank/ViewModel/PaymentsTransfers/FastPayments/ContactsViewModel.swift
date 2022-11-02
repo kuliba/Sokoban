@@ -210,9 +210,16 @@ class ContactsViewModel: ObservableObject {
                         
                         switch action {
                             
-                        case _ as ContactsTopBanksSectionViewModelAction.TopBanksDidTapped:
-                            //TODO: setup action link to paymentView
-                            break
+                        case let payload as ContactsTopBanksSectionViewModelAction.TopBanksDidTapped:
+                            
+                            if let bank = model.bankList.value.first(where: {$0.memberId == payload.bankId}), bank.bankType == .direct, let phone = searchBar.textFieldPhoneNumberView.text, let country = model.countriesList.value.first(where: {$0.code == "AM" }) {
+                                
+                                self.link = .init(type: .country(.init(phone: phone, country: country, bank: bank, operatorsViewModel: .init(closeAction: { [weak self] in
+                                    self?.link = nil
+                                    
+                                }, template: nil))))
+
+                            }
                             
                         default: break
                         }
@@ -226,16 +233,22 @@ class ContactsViewModel: ObservableObject {
                     .sink { [unowned self] action in
                         
                         switch action {
-                        case _ as ContactsBanksSectionViewModelAction.BankDidTapped:
-                            //TODO: setup action link to paymentView
-                            break
+                        case let payload as ContactsBanksSectionViewModelAction.BankDidTapped:
+                            
+                            if let bank = model.bankList.value.first(where: {$0.id == payload.bankId}), bank.bankType == .direct, let phone = searchBar.textFieldPhoneNumberView.text, let country = model.countriesList.value.first(where: {$0.code == "AM" }) {
+                                
+                                self.link = .init(type: .country(.init(phone: phone, country: country, bank: bank, operatorsViewModel: .init(closeAction: { [weak self] in
+                                    self?.link = nil
+                                }, template: nil))))
+                            }
                             
                         case let payload as ContactsCountrySectionViewModelAction.CountryDidTapped:
                             
                             if let country = model.countriesList.value.first(where: {$0.id == payload.countryId}), let phone = searchBar.textFieldPhoneNumberView.text {
-                                self.link = .init(type: .country( .init(country: country.name, operatorsViewModel: .init(closeAction: {}, template: nil), paymentType: .withOutAddress(withOutViewModel: .init(phoneNumber: phone)))))
+                                self.link = .init(type: .country(.init(phone: phone, country: country, bank: nil, operatorsViewModel: .init(closeAction: { [weak self] in
+                                    self?.link = nil
+                                }, template: nil))))
                             }
-                            
                         default: break
                         }
                         

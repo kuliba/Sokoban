@@ -47,6 +47,16 @@ extension CountryPaymentView {
             case template(templateViewModel: PaymentTemplateData)
         }
         
+        init(phone: String, country: CountryData, bank: BankData?, operatorsViewModel: OperatorsViewModel) {
+            
+            self.puref = nil
+            self.country = country.getCountriesList()
+            self.paymentType = .withOutAddress(withOutViewModel: .init(phoneNumber: phone))
+            self.bank = bank?.getBanksList()
+            self.operatorsViewModel = operatorsViewModel
+            
+        }
+        
         init(countryData: PaymentCountryData, operatorsViewModel: OperatorsViewModel) {
             self.operatorsViewModel = operatorsViewModel
             
@@ -210,8 +220,10 @@ struct CountryPaymentView: UIViewControllerRepresentable {
             vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
             vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
             vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
+            vc.parent?.navigationController?.navigationBar.isHidden = false
         })
         
+        vc.navigationController?.navigationBar.isHidden = false
         vc.modalPresentationStyle = .fullScreen
         
         return vc
