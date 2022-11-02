@@ -59,6 +59,8 @@ class PaymentsServiceViewModel: ObservableObject {
                                 
                                 let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model)
                                 link = .operation(operationViewModel)
+                                
+                                bind(operationViewModel: operationViewModel)
                             }
                             
                         } catch {
@@ -73,6 +75,32 @@ class PaymentsServiceViewModel: ObservableObject {
                 case _ as PaymentsServiceViewModelAction.DissmissLink:
                     link = nil
                     
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func bind(operationViewModel: PaymentsOperationViewModel) {
+        
+        operationViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as PaymentsOperationViewModelAction.Dismiss:
+                    self.action.send(PaymentsServiceViewModelAction.Dismiss())
+                    
+                case _ as PaymentsOperationViewModelAction.Spinner.Show:
+                    self.action.send(PaymentsServiceViewModelAction.Spinner.Show())
+                    
+                case _ as PaymentsOperationViewModelAction.Spinner.Hide:
+                    self.action.send(PaymentsServiceViewModelAction.Spinner.Hide())
+                    
+                case let payload as PaymentsOperationViewModelAction.Alert:
+                    self.action.send(PaymentsServiceViewModelAction.Alert(message: payload.message))
+   
                 default:
                     break
                 }

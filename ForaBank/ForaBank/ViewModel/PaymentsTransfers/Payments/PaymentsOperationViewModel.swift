@@ -119,6 +119,7 @@ class PaymentsOperationViewModel: ObservableObject {
                         
                         // auto continue operation
                         model.action.send(ModelAction.Payment.Process.Request(operation: updatedOperation))
+                        self.action.send(PaymentsOperationViewModelAction.Spinner.Show())
                         
                     } else {
                         
@@ -139,6 +140,7 @@ class PaymentsOperationViewModel: ObservableObject {
                     
                     // continue operation
                     model.action.send(ModelAction.Payment.Process.Request(operation: updatedOperation))
+                    self.action.send(PaymentsOperationViewModelAction.Spinner.Show())
                     
                 case _ as PaymentsOperationViewModelAction.CloseLink:
                     link = nil
