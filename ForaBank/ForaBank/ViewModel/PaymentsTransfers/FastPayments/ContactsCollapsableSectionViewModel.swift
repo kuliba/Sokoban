@@ -43,11 +43,18 @@ class CollapsableSectionViewModel: ObservableObject, Hashable, Equatable, Identi
     
     class HeaderViewModel: ObservableObject {
         
+        let action: PassthroughSubject<Action, Never> = .init()
+
         @Published var icon: Image
         var title: String
         @Published var isCollapsed: Bool
         @Published var searchButton: ButtonViewModel?
         @Published var toggleButton: ButtonViewModel
+        
+        enum Kind {
+            
+            case banks, country
+        }
         
         init(icon: Image, isCollapsed: Bool = false, title: String, searchButton: ButtonViewModel? = nil, toggleButton: ButtonViewModel) {
             
@@ -66,9 +73,12 @@ class CollapsableSectionViewModel: ObservableObject, Hashable, Equatable, Identi
                 let icon: Image = .ic24SBP
                 let title = "В другой банк"
                 let toggleButton = ButtonViewModel(icon: .ic24ChevronUp, action: {})
-                let searchButton = ButtonViewModel(icon: .ic24Search, action: {})
                 
-                self.init(icon: icon, title: title, searchButton: searchButton, toggleButton: toggleButton)
+                self.init(icon: icon, title: title, searchButton: nil, toggleButton: toggleButton)
+                self.searchButton = ButtonViewModel(icon: .ic24Search, action: { [weak self] in
+                    
+                    self?.action.send(HeaderViewModelAction.SearchDidTapped())
+                })
                 
             case .country:
                 let icon: Image = .ic24Abroad
@@ -86,8 +96,9 @@ class CollapsableSectionViewModel: ObservableObject, Hashable, Equatable, Identi
         }
     }
     
-    class ItemViewModel: Hashable {
+    class ItemViewModel: Hashable, Identifiable {
         
+        let id = UUID()
         let title: String
         let image: Image?
         let bankType: BankType?
@@ -102,17 +113,14 @@ class CollapsableSectionViewModel: ObservableObject, Hashable, Equatable, Identi
         }
         
         static func == (lhs: ItemViewModel, rhs: ItemViewModel) -> Bool {
-            lhs.title == rhs.title
+            lhs.id == rhs.id && lhs.title == rhs.title
         }
         
         func hash(into hasher: inout Hasher) {
             
+            hasher.combine(id)
             hasher.combine(title)
         }
-    }
-    
-    enum Kind {
-        case banks, country
     }
 }
 
@@ -126,4 +134,9 @@ extension CollapsableSectionViewModel {
         
         hasher.combine(id)
     }
+}
+
+struct HeaderViewModelAction {
+    
+    struct SearchDidTapped: Action {}
 }

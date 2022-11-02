@@ -18,7 +18,7 @@ class ContactsListViewModel: ObservableObject {
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
-        
+    
     init(_ model: Model, selfContact: ContactViewModel?, contacts: [ContactViewModel]) {
         
         self.model = model
@@ -32,12 +32,24 @@ class ContactsListViewModel: ObservableObject {
         
         if let addressBookContact = try? model.contactsAgent.fetchContactsList() {
             
-            self.contacts = self.reduce(addressBookContact: addressBookContact, filterText: filterText)
+            self.contacts = Self.reduce(model: model, addressBookContact: addressBookContact, filterText: filterText, action: { [weak self] contactId in
+                
+                if let contact = addressBookContact.first(where: {$0.id == contactId}) { 
+                    
+                    return { self?.action.send(ContactsListViewModelAction.ContactSelect(phone: contact.phone))}
+                    
+                } else {
+                    
+                    return {}
+                }
+            })
         }
         
         if let phone = model.clientInfo.value?.phone {
             
-            let selfContact = self.reduceClientInfo(phone: phone)
+            let selfContact = Self.reduceClientInfo(phone: phone, action: { [weak self] in
+                self?.action.send(ContactsListViewModelAction.ContactSelect(phone: phone))
+            })
             
             self.selfContact = selfContact
         }
@@ -45,7 +57,7 @@ class ContactsListViewModel: ObservableObject {
         bind()
     }
     
-    func bind() {
+    private func bind() {
         
         model.clientInfo
             .receive(on: DispatchQueue.main)
@@ -55,12 +67,15 @@ class ContactsListViewModel: ObservableObject {
                     return
                 }
                 
-                self.selfContact = reduceClientInfo(phone: phone)
+                self.selfContact = Self.reduceClientInfo(phone: phone, action: { [weak self] in
+                    
+                    self?.action.send(ContactsListViewModelAction.ContactSelect(phone: phone))
+                })
                 
             }.store(in: &bindings)
     }
     
-    func reduce(addressBookContact: [AddressBookContact], filterText: String?) -> [ContactViewModel] {
+    static func reduce(model: Model, addressBookContact: [AddressBookContact], filterText: String?, action: @escaping (AddressBookContact.ID) -> () -> Void ) -> [ContactViewModel] {
         
         var contacts = [ContactViewModel]()
         var adressBookSorted = addressBookContact
@@ -79,22 +94,23 @@ class ContactsListViewModel: ObservableObject {
             }
         })
         
-        contacts = adressBookSorted.map({ [unowned self] contact in
+        contacts = adressBookSorted.map({ contact in
             
-            let icon = self.model.bankClientInfo.value.contains([BankClientInfo(name: "", phone: contact.phone)]) ? Image("foraContactImage") : nil
+            let icon = model.bankClientInfo.value.contains(where: {$0.contains(where: {$0.phone == contact.phone})}) ? Image("foraContactImage") : nil
             
             if let image = contact.avatar?.image {
-                return ContactViewModel(fullName: contact.fullName, image: .image(image), phone: contact.phone, icon: icon, actionContact: { [weak self] in self?.action.send(ContactsListViewModelAction.ContactSelect(phone: contact.phone))})
+                return ContactViewModel(fullName: contact.fullName, image: .image(image), phone: contact.phone, icon: icon, action: action(contact.id))
                 
-            } else if let initials = self.model.contact(for: contact.phone)?.initials {
-                return ContactViewModel(fullName: contact.fullName, image: .initials(initials), phone: contact.phone, icon: icon, actionContact: { [weak self] in self?.action.send(ContactsListViewModelAction.ContactSelect(phone: contact.phone))})
+            } else if let initials = model.contact(for: contact.phone)?.initials {
+                return ContactViewModel(fullName: contact.fullName, image: .initials(initials), phone: contact.phone, icon: icon, action: action(contact.id))
                 
             } else {
-                return ContactViewModel(fullName: contact.fullName, image: nil, phone: contact.phone, icon: icon, actionContact: { [weak self] in self?.action.send(ContactsListViewModelAction.ContactSelect(phone: contact.phone))})
+                return ContactViewModel(fullName: contact.fullName, image: nil, phone: contact.phone, icon: icon, action: action(contact.id))
             }
         })
         
         contacts = contacts.sorted(by: { firstContact, secondContact in
+            
             guard let firstFullName = firstContact.fullName, let secondFullName = secondContact.fullName else {
                 return true
             }
@@ -119,13 +135,12 @@ class ContactsListViewModel: ObservableObject {
         return contacts
     }
     
-    func reduceClientInfo(phone: String) -> ContactViewModel {
+    static func reduceClientInfo(phone: String, action: @escaping () -> Void) -> ContactViewModel {
         
         let phoneFormatter = PhoneNumberKitFormater()
         let formattedPhone = phoneFormatter.format(phone)
         
-        let selfContact: ContactViewModel = .init(fullName: "Себе", image: nil, phone: formattedPhone, icon: nil, actionContact: { [weak self] in self?.action.send(ContactsViewModelAction.SetupPhoneNumber(phone: phone))   
-        })
+        let selfContact: ContactViewModel = .init(fullName: "Себе", image: nil, phone: formattedPhone, icon: nil, action: action)
         
         return selfContact
     }
@@ -137,15 +152,15 @@ class ContactsListViewModel: ObservableObject {
         let phone: String
         var image: IconImage?
         @Published var icon: Image?
-        let actionContact: () -> Void
+        let action: () -> Void
         
-        init(fullName: String?, image: IconImage?, phone: String, icon: Image?, actionContact: @escaping () -> Void) {
+        init(fullName: String?, image: IconImage?, phone: String, icon: Image?, action: @escaping () -> Void) {
             
             self.phone = phone
             self.fullName = fullName
             self.image = image
             self.icon = icon
-            self.actionContact = actionContact
+            self.action = action
         }
         
         enum IconImage {
@@ -156,11 +171,12 @@ class ContactsListViewModel: ObservableObject {
         
         static func == (lhs: ContactViewModel, rhs: ContactViewModel) -> Bool {
             
-            lhs.fullName == rhs.fullName && lhs.phone == rhs.phone
+            lhs.id == rhs.id && lhs.fullName == rhs.fullName && lhs.phone == rhs.phone
         }
         
         func hash(into hasher: inout Hasher) {
             
+            hasher.combine(id)
             hasher.combine(phone)
             hasher.combine(fullName)
         }

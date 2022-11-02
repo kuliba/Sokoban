@@ -18,20 +18,27 @@ class ContactsTopBanksSectionViewModel: ObservableObject {
     private let model: Model
     var bindings = Set<AnyCancellable>()
     
+    enum ContentType {
+        
+        case banks(TopBanksViewModel?)
+        case placeHolder([LatestPaymentsView.ViewModel.PlaceholderViewModel])
+    }
+    
     init(_ model: Model, content: ContentType) {
         
         self.model = model
         self.content = content
     }
     
-    convenience init(_ model: Model) {
+    convenience init(_ model: Model, selectPhone: String) {
         
-        let content: ContentType = .placeHolder(.init())
+        let content: ContentType = .placeHolder(.init(repeating: .init(), count: 6))
         self.init(model, content: content)
-        bind()
+
+        bind(with: selectPhone)
     }
     
-    func bind() {
+    private func bind(with selectPhone: String) {
         
         model.action
             .receive(on: DispatchQueue.main)
@@ -42,45 +49,41 @@ class ContactsTopBanksSectionViewModel: ObservableObject {
                     
                     switch payload.result {
                     case .success(let banks):
-                        
-                        let banks = self.reduce(model: model, banks: banks)
-                        
+
+                        let banks = Self.reduce(model: model, selectPhone: selectPhone, banks: banks, action: { [weak self] phoneId in
+
+                            { self?.action.send(ContactsTopBanksSectionViewModelAction.TopBanksDidTapped()) }
+                        })
+
                         if let banks = banks {
                             
                             self.content = .banks(banks)
                         }
                         
                     case .failure:
-                        break
+                        self.content = .banks(nil)
                     }
                 default: break
                 }
             }.store(in: &bindings)
     }
     
-    func reduce(model: Model, banks: [PaymentPhoneData]) -> TopBanksViewModel? {
-        
-        let topBanksViewModel: TopBanksViewModel = .init(banks: [])
+    static func reduce(model: Model, selectPhone: String, banks: [PaymentPhoneData], action: @escaping ((PaymentPhoneData.ID) -> () -> Void)) -> TopBanksViewModel? {
         
         var banksList: [TopBanksViewModel.Bank] = []
         
-        banks.map({
+        banksList = banks.map({
             
             if let bankName = $0.bankName, let defaultBank = $0.defaultBank, let payment = $0.payment {
                 
-//                let contact = payment ? model.contact(for: self.searchBar.text ?? "") : nil
-                banksList.append(TopBanksViewModel.Bank(image: getImageBank(model: model, paymentBank: $0), defaultBank: defaultBank, name: "contact?.fullName", bankName: bankName, action: { [weak self] in
-                    
-                    self?.action.send(ContactsTopBanksSectionViewModelAction.TopBanksDidTapped())
-                }))
+                let contact = payment ? model.contact(for: selectPhone) : nil
+                banksList.append(TopBanksViewModel.Bank(image: getImageBank(model: model, paymentBank: $0), defaultBank: defaultBank, name: contact?.fullName, bankName: bankName, action: action($0.hashValue)))
                 
             } else {
                 
                 return
             }
         })
-        
-        topBanksViewModel.banks = banksList
         
         func getImageBank(model: Model, paymentBank: PaymentPhoneData) -> Image? {
             
@@ -96,18 +99,12 @@ class ContactsTopBanksSectionViewModel: ObservableObject {
             return nil
         }
         
-        return topBanksViewModel
-    }
-    
-    enum ContentType {
-        
-        case banks(TopBanksViewModel)
-        case placeHolder([LatestPaymentsView.ViewModel.PlaceholderViewModel])
+        return TopBanksViewModel(banks: banksList)
     }
 }
 
 class TopBanksViewModel: ObservableObject, Equatable {
-
+    
     @Published var banks: [Bank]
     
     init(banks: [Bank]) {
@@ -135,11 +132,12 @@ class TopBanksViewModel: ObservableObject, Equatable {
         
         static func == (lhs: Bank, rhs: Bank) -> Bool {
             
-            lhs.name == rhs.name
+            lhs.id == rhs.id && lhs.name == rhs.name
         }
         
         func hash(into hasher: inout Hasher) {
             
+            hasher.combine(id)
             hasher.combine(name)
         }
     }

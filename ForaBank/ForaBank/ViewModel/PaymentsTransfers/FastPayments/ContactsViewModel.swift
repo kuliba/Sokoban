@@ -16,8 +16,11 @@ class ContactsViewModel: ObservableObject {
     let title = "Выберите контакт"
     @Published var searchBar: SearchBarView.ViewModel
     @Published var mode: Mode
+    @Published var link: Link?
     
     private let feedbackGenerator = UINotificationFeedbackGenerator()
+    private let model: Model
+    private var bindings = Set<AnyCancellable>()
     
     enum Mode {
         
@@ -27,9 +30,6 @@ class ContactsViewModel: ObservableObject {
         case banksSearch([CollapsableSectionViewModel])
     }
     
-    private let model: Model
-    private var bindings = Set<AnyCancellable>()
-    
     init(_ model: Model, searchBar: SearchBarView.ViewModel, mode: Mode) {
         
         self.model = model
@@ -38,38 +38,18 @@ class ContactsViewModel: ObservableObject {
     }
     
     convenience init(_ model: Model) {
-        
-        let searchBar: SearchBarView.ViewModel = .init(textFieldPhoneNumberView: .init(placeHolder: .contacts,
-                                                                                       toolbar: .init(doneButton: .init(isEnabled: true) { UIApplication.shared.endEditing() },
-                                                                                                      closeButton: .init(isEnabled: true, action: { UIApplication.shared.endEditing() })), filtersSymbols: [Character("-"), Character("("), Character(")"), Character("+")], phoneNumberFirstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")]))
+ 
+        let filterSymbols: [Character] = [Character("-"), Character("("), Character(")"), Character("+")]
+        let toolBar: TextFieldPhoneNumberView.ToolbarViewModel = .init(doneButton: .init(isEnabled: true) { UIApplication.shared.endEditing() },
+                                                                  closeButton: .init(isEnabled: true, action: { UIApplication.shared.endEditing() }))
+        let textFieldViewModel: TextFieldPhoneNumberView.ViewModel = .init(placeHolder: .contacts, toolbar: toolBar, filterSymbols: filterSymbols, phoneNumberFirstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")])
+        let searchBar: SearchBarView.ViewModel = .init(textFieldPhoneNumberView: textFieldViewModel)
         
         self.init(model, searchBar: searchBar, mode: .contacts(nil, .init(model)))
-        
         bind()
     }
     
     private func bind() {
-        
-        model.latestPayments
-            .combineLatest(model.latestPaymentsUpdating)
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] data in
-                
-                guard case .contacts(_, let contacts) = mode else {
-                    return
-                }
-                
-                let latestPayments = data.0
-                
-                let latestPaymentsFilterred = latestPayments.filter({ $0.type == .phone })
-                
-                withAnimation(.easeInOut(duration: 1)) {
-                    
-                    let items = itemsReduce(model: self.model, latest: latestPaymentsFilterred)
-                    self.mode = .contacts(.init(model, items: items), contacts)
-                }
-                
-            }.store(in: &bindings)
         
         //MARK: Mode
         
@@ -88,16 +68,15 @@ class ContactsViewModel: ObservableObject {
             .sink { [unowned self] text in
                 
                 if text != nil, text != "" {
-                    
                     mode = .contactsSearch(.init(model, filterText: text))
+                    
                 } else {
                     
                     let latestPaymentsFilterred = model.latestPayments.value.filter({$0.type == .phone})
                     
                     withAnimation(.easeInOut(duration: 1)) {
                         
-                        let items = itemsReduce(model: self.model, latest: latestPaymentsFilterred)
-                        self.mode = .contacts(.init(model, items: items), .init(model))
+                        self.mode = .contacts(.init(model, latest: latestPaymentsFilterred, filterType: [.phone]), .init(model))
                     }
                 }
                 
@@ -116,15 +95,19 @@ class ContactsViewModel: ObservableObject {
                     
                     if payload.isValidation {
                         
+                        guard let phone = searchBar.textFieldPhoneNumberView.text else {
+                            return
+                        }
+                        
                         withAnimation {
                             
                             self.feedbackGenerator.notificationOccurred(.success)
                             self.searchBar.state = .idle
                             
-                            if let text = searchBar.textFieldPhoneNumberView.text {
+                            if let phone = searchBar.textFieldPhoneNumberView.text {
                                 
-                                self.model.action.send(ModelAction.BankClient.Request(phone: text))
-                                self.model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: text))
+                                self.model.action.send(ModelAction.BankClient.Request(phone: phone))
+                                self.model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: phone))
                             }
                             
                             let banksData = model.bankList.value
@@ -135,20 +118,20 @@ class ContactsViewModel: ObservableObject {
                             
                             let collapsable: [CollapsableSectionViewModel] = [bankSection, countriesSection]
                             
-                            self.mode = .banks(.init(model), collapsable)
+                            self.mode = .banks(.init(model, selectPhone: phone), collapsable)
                         }
+                        
                     } else {
                         
                         guard case .banks(_, _) = mode else {
                             return
                         }
                         
-                        let latestPaymentsFilterred = model.latestPayments.value.filter({$0.type == .phone})
+                        let latestPayments = model.latestPayments.value
                         
                         withAnimation(.easeInOut(duration: 1)) {
                             
-                            let items = itemsReduce(model: self.model, latest: latestPaymentsFilterred)
-                            self.mode = .contacts(.init(model, items: items), .init(model))
+                            self.mode = .contacts(.init(model, latest: latestPayments, filterType: [.phone]), .init(model))
                         }
                     }
                     
@@ -165,7 +148,7 @@ class ContactsViewModel: ObservableObject {
             
             contacts.action
                 .receive(on: DispatchQueue.main)
-                .sink { action in
+                .sink { [unowned self] action in
                     
                     switch action {
                         
@@ -182,9 +165,13 @@ class ContactsViewModel: ObservableObject {
                 
                 latestPayments.action
                     .receive(on: DispatchQueue.main)
-                    .sink { action in
+                    .sink { [unowned self] action in
                         
                         switch action {
+                            
+                        case let item as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
+                            //TODO: setup action link to paymentView
+                            break
                             
                         case let payload as ContactsListViewModelAction.ContactSelect:
                             self.searchBar.textFieldPhoneNumberView.text = payload.phone
@@ -194,30 +181,29 @@ class ContactsViewModel: ObservableObject {
                         }
                         
                     }.store(in: &bindings)
-                
             }
             
         case .contactsSearch(let contacts):
             
             contacts.action
-                    .receive(on: DispatchQueue.main)
-                    .sink { action in
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
                         
-                        switch action {
-                            
-                        case let payload as ContactsListViewModelAction.ContactSelect:
-                            self.searchBar.textFieldPhoneNumberView.text = payload.phone
-                            
-                        default: break
-                            
-                        }
+                    case let payload as ContactsListViewModelAction.ContactSelect:
+                        self.searchBar.textFieldPhoneNumberView.text = payload.phone
                         
-                    }.store(in: &bindings)
+                    default: break
+                        
+                    }
+                    
+                }.store(in: &bindings)
             
         case .banks(let topBanks, let collapsableSection):
             
             if let topBanks = topBanks {
-             
+                
                 topBanks.action
                     .receive(on: DispatchQueue.main)
                     .sink { [unowned self] action in
@@ -225,11 +211,11 @@ class ContactsViewModel: ObservableObject {
                         switch action {
                             
                         case _ as ContactsTopBanksSectionViewModelAction.TopBanksDidTapped:
-                             break
+                            //TODO: setup action link to paymentView
+                            break
                             
                         default: break
                         }
-                        
                     }.store(in: &bindings)
             }
             
@@ -241,64 +227,50 @@ class ContactsViewModel: ObservableObject {
                         
                         switch action {
                         case _ as ContactsBanksSectionViewModelAction.BankDidTapped:
-                            print("bankTapped")
-                            
-                        case _ as ContactsCountrySectionViewModelAction.CountryDidTapped:
+                            //TODO: setup action link to paymentView
                             break
+                            
+                        case let payload as ContactsCountrySectionViewModelAction.CountryDidTapped:
+                            
+                            if let country = model.countriesList.value.first(where: {$0.id == payload.countryId}), let phone = searchBar.textFieldPhoneNumberView.text {
+                                self.link = .init(type: .country( .init(country: country.name, operatorsViewModel: .init(closeAction: {}, template: nil), paymentType: .withOutAddress(withOutViewModel: .init(phoneNumber: phone)))))
+                            }
                             
                         default: break
                         }
                         
                     }.store(in: &bindings)
             }
-            break
             
         default: break
         }
     }
+}
+
+extension ContactsViewModel {
     
-    func itemsReduce(model: Model, latest: [LatestPaymentData]) -> [LatestPaymentsView.ViewModel.ItemViewModel] {
+    struct Link: Identifiable, Equatable {
         
-        var itemViewModel = [LatestPaymentsView.ViewModel.ItemViewModel]()
+        let id = UUID()
+        let type: Kind
         
-        itemViewModel = latest.map({ latestPayment in
+        enum Kind {
             
-            if let latestPhone = latestPayment as? PaymentGeneralData {
-                
-                return LatestPaymentsView.ViewModel.ItemViewModel.latestPayment(.init(data: latestPayment, model: model, action: { [weak self] in
-                    
-                    self?.action.send(ContactsViewModelAction.SetupPhoneNumber(phone: latestPhone.phoneNumber))
-                }))
-            }
-            
-            return LatestPaymentsView.ViewModel.ItemViewModel.latestPayment(.init(data: latestPayment, model: model, action: {}))
-        })
+            case country(CountryPaymentView.ViewModel)
+        }
         
-        return itemViewModel
+        static func == (lhs: ContactsViewModel.Link, rhs: ContactsViewModel.Link) -> Bool {
+            lhs.id == rhs.id
+            
+        }
     }
 }
 
 extension ContactsViewModel {
     
-    enum Link {
-        
-        case country(CountryPaymentView.ViewModel)
-    }
-}
-
-enum ContactsViewModelAction {
+    static let sample: ContactsViewModel = .init(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(placeHolder: .banks, phoneNumberFirstDigitReplaceList: [])), mode: .contactsSearch(.init(.emptyMock, selfContact: .init(fullName: "name", image: nil, phone: "phone", icon: nil, action: {}), contacts: [])))
     
-    struct SetupPhoneNumber: Action {
-        
-        let phone: String
-    }
-}
-
-extension ContactsViewModel {
-    
-    static let sample: ContactsViewModel = .init(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(placeHolder: .banks, phoneNumberFirstDigitReplaceList: [])), mode: .contactsSearch(.init(.emptyMock, selfContact: .init(fullName: "name", image: nil, phone: "phone", icon: nil, actionContact: {}), contacts: [])))
-    
-    static let sampleLatestPayment: ContactsViewModel = .init(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(placeHolder: .banks, phoneNumberFirstDigitReplaceList: [])), mode: .contacts(.init(.emptyMock, items: [.latestPayment(.init(id: 5, avatar: .icon(Image("ic24Smartphone"), .iconGray), topIcon: Image("azerFlag"), description: "+994 12 493 23 87", action: {}))]), .init(.emptyMock, selfContact: .init(fullName: "Себе", image: nil, phone: "8 (925) 279 96-13", icon: nil, actionContact: {}), contacts: [.init(fullName: "Андрей Андропов", image: nil, phone: "+7 (903) 333-67-32", icon: nil, actionContact: {})])))
+    static let sampleLatestPayment: ContactsViewModel = .init(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(placeHolder: .banks, phoneNumberFirstDigitReplaceList: [])), mode: .contacts(.init(.emptyMock, items: [.latestPayment(.init(id: 5, avatar: .icon(Image("ic24Smartphone"), .iconGray), topIcon: Image("azerFlag"), description: "+994 12 493 23 87", action: {}))]), .init(.emptyMock, selfContact: .init(fullName: "Себе", image: nil, phone: "8 (925) 279 96-13", icon: nil, action: {}), contacts: [.init(fullName: "Андрей Андропов", image: nil, phone: "+7 (903) 333-67-32", icon: nil, action: {})])))
     
     static let sampleBanks = ContactsBanksSectionViewModel(.emptyMock, header: .init(kind: .banks), items: [.sampleItem], mode: .normal, options: .sample)
     

@@ -16,6 +16,12 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
+    enum Mode {
+        
+        case normal
+        case search(SearchBarView.ViewModel)
+    }
+    
     init(_ model: Model, header: CollapsableSectionViewModel.HeaderViewModel, items: [CollapsableSectionViewModel.ItemViewModel], mode: Mode, options: OptionSelectorView.ViewModel?) {
         
         self.model = model
@@ -25,22 +31,34 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
     }
     
     convenience init(_ model: Model, bankData: [BankData]) {
-
-        let options = Self.createOptionViewModel()
         
+        let options = Self.createOptionViewModel()
         self.init(model, header: .init(kind: .banks), items: [], mode: .normal, options: options)
-        self.items = self.reduceBanks(banksData: bankData)
+        
+        self.items = Self.reduceBanks(banksData: bankData, action: {[weak self] bankId in
+            
+            { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped()) }
+        })
         
         bind()
-        
-        if let options = options {
-            
-            bind(options: options)
-        }
+        bind(options: options)
     }
     
     override func bind() {
         super.bind()
+        
+        header.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as HeaderViewModelAction.SearchDidTapped:
+                    self.mode = .search(.init(textFieldPhoneNumberView: .init(placeHolder: .banks, phoneNumberFirstDigitReplaceList: [])))
+                    
+                default: break
+                }
+                
+            }.store(in: &bindings)
         
         $mode
             .receive(on: DispatchQueue.main)
@@ -71,14 +89,17 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
                             if let text = text, text != "" {
                                 
                                 let filteredBanks = self.model.bankList.value.filter({ bank in
+                                    
                                     if bank.memberNameRus.localizedStandardContains(text) {
-                                        
                                         return true
                                     }
+                                    
                                     return false
                                 })
                                 
-                                self.items = self.reduceBanks(banksData: filteredBanks)
+                                self.items = Self.reduceBanks(banksData: filteredBanks, action: { [weak self] bankId in
+                                    { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped()) }
+                                })
                                 
                             } else {
                                 
@@ -97,7 +118,11 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
             }.store(in: &bindings)
     }
     
-    func bind(options: OptionSelectorView.ViewModel) {
+    func bind(options: OptionSelectorView.ViewModel?) {
+        
+        guard let options = options else {
+            return
+        }
         
         options.action
             .receive(on: DispatchQueue.main)
@@ -137,12 +162,6 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
             }.store(in: &bindings)
     }
     
-    enum Mode {
-        
-        case normal
-        case search(SearchBarView.ViewModel)
-    }
-    
     static func createOptionViewModel() -> OptionSelectorView.ViewModel? {
         
         var options = BankType.valid.map { bankType in
@@ -152,21 +171,22 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
         
         options.append(Option(id: "all", name: "Все"))
         
-        guard let firstOption = options.first?.id else {
+        if let firstOption = options.first?.id  {
+            
+            let optionViewModel: OptionSelectorView.ViewModel = .init(options: options, selected: firstOption, style: .template, mode: .action)
+            return optionViewModel
+            
+        } else {
+            
             return nil
         }
-        
-        let optionViewModel: OptionSelectorView.ViewModel = .init(options: options, selected: firstOption, style: .template, mode: .action)
-        return optionViewModel
     }
     
-    static func reduceBanks(banksData: [BankData], filterByType: BankType? = nil, filterByName: String? = nil) -> [CollapsableSectionViewModel.ItemViewModel] {
+    static func reduceBanks(banksData: [BankData], filterByType: BankType? = nil, filterByName: String? = nil, action: (BankData.ID) -> () -> Void) -> [CollapsableSectionViewModel.ItemViewModel] {
         
         var banks = [CollapsableSectionViewModel.ItemViewModel]()
         
-        banks = banksData.map({CollapsableSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: { [weak self] in
-            self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped())
-        })})
+        banks = banksData.map({CollapsableSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: action($0.id))})
         banks = banks.sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
         banks = banks.sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
         
@@ -176,11 +196,13 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
         }
         
         if let filter = filterByName, filter != "" {
+            
             banks = banks.filter({ bank in
+                
                 if bank.title.localizedStandardContains(filter) {
-                    
                     return true
                 }
+                
                 return false
             })
         }
