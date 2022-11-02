@@ -21,17 +21,7 @@ extension ProductsSwapView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        lazy var divider: DividerViewModel = .init(swapButton: .init() { [weak self] in
-            
-            guard let self = self else { return }
-            
-            switch self.divider.swapButton.state {
-            case .normal:
-                self.action.send(ProductsSwapAction.Button.Tap())
-            case .reset:
-                self.action.send(ProductsSwapAction.Button.Reset())
-            }
-        })
+        let divider: DividerViewModel
         
         var from: ProductSelectorView.ViewModel? { items.first }
         var to: ProductSelectorView.ViewModel? { items.last }
@@ -54,10 +44,11 @@ extension ProductsSwapView {
             return productViewModel.id
         }
         
-        init(model: Model, items: [ProductSelectorView.ViewModel]) {
+        init(model: Model, items: [ProductSelectorView.ViewModel], divider: DividerViewModel) {
             
             self.model = model
             self.items = items
+            self.divider = divider
         }
         
         convenience init(_ model: Model, productData: ProductData, mode: PaymentsMeToMeViewModel.Mode) {
@@ -71,7 +62,19 @@ extension ProductsSwapView {
                 let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
                 let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
                 
-                self.init(model: model, items: [from, to])
+                self.init(model: model, items: [from, to], divider: .init())
+                
+                updateDivider()
+                
+            case let .closeAccount(productData, _):
+                
+                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, isUserInteractionEnabled: false, checkProductId: productData.id)
+                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to)
+                
+                let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
+                let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
+                
+                self.init(model: model, items: [from, to], divider: .init())
             }
             
             bind()
@@ -152,6 +155,24 @@ extension ProductsSwapView {
                     }.store(in: &bindings)
             }
         }
+        
+        private func updateDivider() {
+            
+            divider.swapButton = .init() { [weak self] in
+                
+                guard let self = self else { return }
+                
+                if let swapButton = self.divider.swapButton {
+                    
+                    switch swapButton.state {
+                    case .normal:
+                        self.action.send(ProductsSwapAction.Button.Tap())
+                    case .reset:
+                        self.action.send(ProductsSwapAction.Button.Reset())
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -165,10 +186,10 @@ extension ProductsSwapView.ViewModel {
         @Published var pathInset: Double
         
         let id: UUID = .init()
-        let swapButton: SwapButtonViewModel
+        var swapButton: SwapButtonViewModel?
         private var bindings = Set<AnyCancellable>()
         
-        init(isToogleButton: Bool = false, swapButton: SwapButtonViewModel, pathInset: Double = 5) {
+        init(isToogleButton: Bool = false, swapButton: SwapButtonViewModel? = nil, pathInset: Double = 5) {
             
             self.isToogleButton = isToogleButton
             self.swapButton = swapButton
@@ -183,8 +204,11 @@ extension ProductsSwapView.ViewModel {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] isToogleButton in
                     
-                    withAnimation {
-                        swapButton.isSwap = isToogleButton
+                    if let swapButton = swapButton {
+                        
+                        withAnimation {
+                            swapButton.isSwap = isToogleButton
+                        }
                     }
 
                 }.store(in: &bindings)
@@ -306,7 +330,9 @@ extension ProductsSwapView {
                         .foregroundColor(.mainColorsGrayMedium)
                     }
                     
-                    ProductsSwapView.SwapButtonView(viewModel: viewModel.swapButton)
+                    if let swapButton = viewModel.swapButton {
+                        ProductsSwapView.SwapButtonView(viewModel: swapButton)
+                    }
                 }
         }
     }
@@ -368,6 +394,14 @@ enum ProductsSwapAction {
     }
 }
 
+
+//MARK: - Preview Content
+
+extension ProductsSwapView.ViewModel.DividerViewModel {
+    
+    static var sample: ProductsSwapView.ViewModel.DividerViewModel = .init(swapButton: .init(action: {}))
+}
+
 // MARK: - Previews
 
 struct ProductsSwapViewComponent_Previews: PreviewProvider {
@@ -376,8 +410,8 @@ struct ProductsSwapViewComponent_Previews: PreviewProvider {
         
         Group {
             
-            ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sample1, .sample2]))
-            ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sample1, .sample3]))
+            ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sample1, .sample2], divider: .sample))
+            ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sample1, .sample3], divider: .sample))
             
         }.previewLayout(.sizeThatFits)
     }

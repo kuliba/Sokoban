@@ -150,11 +150,16 @@ struct ProductProfileView: View {
                     .frame(height: 474)
                 
             case let .closeAccount(viewModel):
-                MeToMeView(viewModel: viewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .frame(height: 474)
+                PaymentsMeToMeView(viewModel: viewModel)
             }
         })
+        .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+
+            switch fullCover.type {
+            case let .successMeToMe(successMeToMeViewModel):
+                PaymentsSuccessMeToMeView(viewModel: successMeToMeViewModel)
+            }
+        }
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })

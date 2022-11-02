@@ -214,5 +214,51 @@ extension ServerCommands {
                 self.payload = payload
             }
         }
+        
+        /*
+         http://10.1.206.21:8080/swagger-ui/index.html#/DepositController/closeAccount
+         */
+        
+        struct CloseAccount: ServerCommand {
+            
+            let token: String
+            let endpoint = "/rest/closeAccount"
+            let method: ServerCommandMethod = .post
+            let payload: Payload?
+            
+            struct Payload: Encodable {
+                
+                let id: Int
+                let name: String?
+                let startDate: String?
+                let endDate: String?
+                let statementFormat: StatementFormat?
+                let accountId: Int?
+                let cardId: Int?
+            }
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let data: TransferData?
+                let errorMessage: String?
+                
+                struct TransferData: Codable, Equatable {
+                    
+                    let paymentOperationDetailId: Int?
+                    let documentStatus: String
+                    let accountNumber: String?
+                    let closeDate: Int?
+                    let comment: String?
+                    let category: String?
+                }
+            }
+            
+            internal init(token: String, payload: Payload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+        }
     }
 }

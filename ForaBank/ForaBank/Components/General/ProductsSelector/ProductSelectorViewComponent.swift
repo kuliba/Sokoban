@@ -232,8 +232,9 @@ extension ProductSelectorView.ViewModel {
         @Published var numberCard: String?
         @Published var description: String?
         @Published var isCollapsed: Bool
+        @Published var isUserInteractionEnabled: Bool
         
-        init(id: Int, title: String = "", cardIcon: Image? = nil, paymentIcon: Image? = nil, name: String, balance: String, numberCard: String? = nil, description: String? = nil, isCollapsed: Bool = true) {
+        init(id: Int, title: String = "", cardIcon: Image? = nil, paymentIcon: Image? = nil, name: String, balance: String, numberCard: String? = nil, description: String? = nil, isCollapsed: Bool = true, isUserInteractionEnabled: Bool = true) {
             
             self.id = id
             self.title = title
@@ -244,6 +245,7 @@ extension ProductSelectorView.ViewModel {
             self.numberCard = numberCard
             self.description = description
             self.isCollapsed = isCollapsed
+            self.isUserInteractionEnabled = isUserInteractionEnabled
         }
         
         convenience init(_ model: Model, productData: ProductData, context: Context) {
@@ -257,7 +259,7 @@ extension ProductSelectorView.ViewModel {
                 paymentSystemImage = product.paymentSystemImage
             }
             
-            self.init(id: productData.id, title: context.title, cardIcon: productData.smallDesign.image, paymentIcon: paymentSystemImage?.image, name: name, balance: balance, numberCard: productData.displayNumber, description: productData.additionalField)
+            self.init(id: productData.id, title: context.title, cardIcon: productData.smallDesign.image, paymentIcon: paymentSystemImage?.image, name: name, balance: balance, numberCard: productData.displayNumber, description: productData.additionalField, isUserInteractionEnabled: context.isUserInteractionEnabled)
         }
         
         func update(context: ProductSelectorView.ViewModel.Context) {
@@ -309,7 +311,9 @@ struct ProductSelectorView: View {
             case let .product(productViewModel):
                 ProductView(viewModel: productViewModel)
                     .onTapGesture {
-                        viewModel.action.send(ProductSelectorAction.Product.Tap())
+                        if productViewModel.isUserInteractionEnabled == true {
+                            viewModel.action.send(ProductSelectorAction.Product.Tap())
+                        }
                     }
                 
             case let .placeholder(placeholderViewModel):
@@ -373,12 +377,15 @@ extension ProductSelectorView {
                                 .font(.textBodyMM14200())
                                 .foregroundColor(.textSecondary)
                             
-                            Image.ic24ChevronDown
-                                .renderingMode(.template)
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(.mainColorsGray)
-                                .rotationEffect(viewModel.isCollapsed == false ? .degrees(0) : .degrees(-90))
+                            if viewModel.isUserInteractionEnabled == true {
+                                
+                                Image.ic24ChevronDown
+                                    .renderingMode(.template)
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                                    .foregroundColor(.mainColorsGray)
+                                    .rotationEffect(viewModel.isCollapsed == false ? .degrees(0) : .degrees(-90))
+                            }
                         }
                         
                         HStack {

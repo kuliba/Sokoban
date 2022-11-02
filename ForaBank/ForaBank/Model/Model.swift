@@ -801,6 +801,9 @@ class Model {
                 case let payload as ModelAction.Account.MakeOpenAccount.Response:
                     handleMakeOpenAccountUpdate(payload: payload)
                     
+                case let payload as ModelAction.Account.Close.Request:
+                    handleCloseAccountRequest(payload)
+                    
                 //MARK: - DeepLink
 
                 case let payload as ModelAction.DeepLink.Set:

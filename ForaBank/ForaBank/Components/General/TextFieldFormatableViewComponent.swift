@@ -56,9 +56,9 @@ extension TextFieldFormatableView {
             self.dismissKeyboard = {}
         }
         
-        convenience init(_ value: Double, currencySymbol: String) {
+        convenience init(_ value: Double, isEnabled: Bool = true, currencySymbol: String) {
             
-            self.init(value: value, formatter: .currency(with: currencySymbol), isEnabled: true, limit: 9, toolbar: .init(doneButton: .init(isEnabled: true) {
+            self.init(value: value, formatter: .currency(with: currencySymbol), isEnabled: isEnabled, limit: 9, toolbar: .init(doneButton: .init(isEnabled: true) {
                     UIApplication.shared.endEditing()
             }))
         }

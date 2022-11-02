@@ -26,6 +26,7 @@ class ProductProfileViewModel: ObservableObject {
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
     @Published var sheet: Sheet?
+    @Published var fullCover: FullCover?
     @Published var textFieldAlert: AlertTextFieldView.ViewModel?
 
     var rootActions: RootViewModel.RootActions?
@@ -140,9 +141,19 @@ class ProductProfileViewModel: ObservableObject {
                     textFieldAlert = customNameAlert(for: payload.productType, alertTitle: payload.alertTitle)
                     
                 case let payload as ProductProfileViewModelAction.Product.CloseAccount:
+
+                    let from = payload.productFrom
+                    let balance = payload.productFrom.balanceValue
                     
-                    let viewModel: MeToMeViewModel = .init(type: .closeAccount(payload.productFrom, payload.productFrom.balanceValue)) {}
+                    let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .closeAccount(from, balance)) { [weak self] in
+                        self?.action.send(ProductProfileViewModelAction.Close.BottomSheet())
+                    }
                     
+                    guard let viewModel = viewModel else {
+                        return
+                    }
+                    
+                    bind(viewModel)
                     bottomSheet = .init(type: .closeAccount(viewModel))
                     
                 case _ as ProductProfileViewModelAction.Close.Link:
@@ -150,6 +161,9 @@ class ProductProfileViewModel: ObservableObject {
                     
                 case _ as ProductProfileViewModelAction.Close.Sheet:
                     sheet = nil
+                    
+                case _ as ProductProfileViewModelAction.Close.FullCover:
+                    fullCover = nil
                     
                 case _ as ProductProfileViewModelAction.Close.BottomSheet:
                     bottomSheet = nil
@@ -608,7 +622,7 @@ class ProductProfileViewModel: ObservableObject {
                                     guard let self = self else { return }
                                     self.alert = nil
                                 },
-                                secondary: .init(type: .default, title: "Закрыть") { [weak self] in
+                                secondary: .init(type: .default, title: "Продолжить") { [weak self] in
                                     
                                     guard let self = self else { return }
                                     self.action.send(ProductProfileViewModelAction.Product.CloseAccount(productFrom: productFrom))
@@ -735,6 +749,57 @@ class ProductProfileViewModel: ObservableObject {
                         break
                     }
                     
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func bind(_ viewModel: PaymentsMeToMeViewModel) {
+        
+        viewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as PaymentsMeToMeAction.Response.Success:
+                    
+                    self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) { [weak self] in
+                        
+                        self?.fullCover = .init(type: .successMeToMe(payload.viewModel))
+                        self?.bind(payload.viewModel)
+                    }
+                    
+                case _ as PaymentsMeToMeAction.Response.Failed:
+                    self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
+    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func bind(_ viewModel: PaymentsSuccessMeToMeViewModel) {
+        
+        viewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as PaymentsSuccessMeToMeAction.Button.Close:
+                    
+                    self.action.send(ProductProfileViewModelAction.Close.FullCover())
+                    self.rootActions?.switchTab(.main)
+                    
+                case _ as PaymentsSuccessMeToMeAction.Button.Repeat:
+                    
+                    self.action.send(ProductProfileViewModelAction.Close.FullCover())
+                    self.rootActions?.switchTab(.payments)
+
+                default:
+                    break
                 }
                 
             }.store(in: &bindings)
@@ -980,7 +1045,7 @@ extension ProductProfileViewModel {
             case operationDetail(OperationDetailViewModel)
             case optionsPannel(ProductProfileOptionsPannelView.ViewModel)
             case meToMe(MeToMeViewModel)
-            case closeAccount(MeToMeViewModel)
+            case closeAccount(PaymentsMeToMeViewModel)
         }
     }
     
@@ -1002,6 +1067,16 @@ extension ProductProfileViewModel {
             case printForm(PrintFormView.ViewModel)
             case placesMap(PlacesViewModel)
             case info(OperationDetailInfoViewModel)
+        }
+    }
+    
+    struct FullCover: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            case successMeToMe(PaymentsSuccessMeToMeViewModel)
         }
     }
 }
@@ -1062,6 +1137,7 @@ enum ProductProfileViewModelAction {
         
         struct Link: Action {}
         struct Sheet: Action {}
+        struct FullCover: Action {}
         struct BottomSheet: Action {}
         struct Alert: Action {}
         struct TextFieldAlert: Action {}
