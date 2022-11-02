@@ -61,7 +61,7 @@ extension PaymentsSelectSimpleView {
                         guard let popUpViewModel = popUpViewModel else {
                             return
                         }
-                        self.action.send(PaymentsParameterViewModelAction.SelectSimple.OptionExternal(viewModel: popUpViewModel))
+                        self.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Show(viewModel: popUpViewModel))
                         
                     default:
                         break
@@ -106,6 +106,7 @@ extension PaymentsSelectSimpleView {
             return PaymentsPopUpSelectView.ViewModel(title: title, description: description, options: parameterSelect.options, selected: value.current) { [weak self] optionId in
                 
                 self?.update(value: optionId)
+                self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close())
             }
         }
     }
@@ -119,9 +120,14 @@ extension PaymentsParameterViewModelAction {
     
         struct DidTapped: Action {}
         
-        struct OptionExternal: Action {
+        enum PopUpSelector {
             
-            let viewModel: PaymentsPopUpSelectView.ViewModel
+            struct Show: Action {
+                
+                let viewModel: PaymentsPopUpSelectView.ViewModel
+            }
+            
+            struct Close: Action {}
         }
     }
 }

@@ -66,11 +66,17 @@ class PaymentsFeedSectionViewModel: PaymentsSectionViewModel {
                 .sink { [unowned self] action in
                     
                     switch action {
-                    case let payload as PaymentsParameterViewModelAction.Select.OptionExternal:
-                        self.action.send(PaymentsSectionViewModelAction.ShowPopUpSelectView(viewModel: payload.viewModel))
+                    case let payload as PaymentsParameterViewModelAction.Select.PopUpSelector.Show:
+                        self.action.send(PaymentsSectionViewModelAction.PopUpSelector.Show(viewModel: payload.viewModel))
                         
-                    case let payload as PaymentsParameterViewModelAction.SelectSimple.OptionExternal:
-                        self.action.send(PaymentsSectionViewModelAction.ShowPopUpSelectView(viewModel: payload.viewModel))
+                    case _ as PaymentsParameterViewModelAction.Select.PopUpSelector.Close:
+                        self.action.send(PaymentsSectionViewModelAction.PopUpSelector.Close())
+                        
+                    case let payload as PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Show:
+                        self.action.send(PaymentsSectionViewModelAction.PopUpSelector.Show(viewModel: payload.viewModel))
+                        
+                    case _ as PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close:
+                        self.action.send(PaymentsSectionViewModelAction.PopUpSelector.Close())
                         
                     default:
                         break
@@ -316,8 +322,13 @@ enum PaymentsSectionViewModelAction {
     
     struct Continue: Action {}
     
-    struct ShowPopUpSelectView: Action {
+    enum PopUpSelector  {
         
-        let viewModel: PaymentsPopUpSelectView.ViewModel
+        struct Show: Action {
+            
+            let viewModel: PaymentsPopUpSelectView.ViewModel
+        }
+        
+        struct Close: Action {}
     }
 }

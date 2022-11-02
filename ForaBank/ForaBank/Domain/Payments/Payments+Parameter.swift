@@ -164,17 +164,19 @@ extension Payments {
         let parameter: Parameter
         let options: [Option]
         let isEditable: Bool
+        let placement: Payments.Parameter.Placement
         
-        init(_ parameter: Parameter, options: [Option], isEditable: Bool = true) {
+        init(_ parameter: Parameter, options: [Option], isEditable: Bool = true, placement: Payments.Parameter.Placement = .feed) {
             
             self.parameter = parameter
             self.options = options
             self.isEditable = isEditable
+            self.placement = placement
         }
         
         func updated(value: String?) -> PaymentsParameterRepresentable {
             
-            ParameterSelectSwitch(.init(id: parameter.id, value: value), options: options, isEditable: isEditable)
+            ParameterSelectSwitch(.init(id: parameter.id, value: value), options: options, isEditable: isEditable, placement: placement)
         }
         
         struct Option: Identifiable {

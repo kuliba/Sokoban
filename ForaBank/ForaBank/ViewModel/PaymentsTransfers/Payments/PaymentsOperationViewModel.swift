@@ -170,8 +170,14 @@ class PaymentsOperationViewModel: ObservableObject {
                     case _ as PaymentsSectionViewModelAction.Continue:
                         self.action.send(PaymentsOperationViewModelAction.Continue())
  
-                    case let payload as PaymentsSectionViewModelAction.ShowPopUpSelectView:
+                    case let payload as PaymentsSectionViewModelAction.PopUpSelector.Show:
                         bottomSheet = .init(type: .popUp(payload.viewModel))
+                        
+                    case _ as PaymentsSectionViewModelAction.PopUpSelector.Close:
+                        withAnimation {
+                            bottomSheet = nil
+                        }
+                        
                        
                     default:
                         break
@@ -189,7 +195,7 @@ extension PaymentsOperationViewModel {
     static func reduceTopItems(sections: [PaymentsSectionViewModel]) -> [PaymentsParameterViewModel]? {
         
         guard let topSection = sections.first(where: { $0.placement == .top }) else {
-            return []
+            return nil
         }
         
         return topSection.visibleItems

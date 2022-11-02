@@ -161,7 +161,7 @@ extension Model {
         
         switch operation.service {
         case .fns:
-            return try await paymentsStepFNS(for: stepIndex)
+            return try await paymentsStepFNS(operation, for: stepIndex)
             
         case .fms:
             return try await paymentsStepFMS(for: stepIndex)
@@ -367,6 +367,16 @@ extension Model {
         let command = ServerCommands.TransferController.MakeTransfer(token: token, payload: .init(verificationCode: code))
         
         return try await serverAgent.executeCommand(command: command)
+    }
+}
+
+//MARK: - Helpers
+
+extension Model {
+    
+    func paymentsParameterValue(_ parameters: [PaymentsParameterRepresentable], id: Payments.Parameter.ID) -> Payments.Parameter.Value {
+        
+        return parameters.first(where: { $0.id == id })?.value
     }
 }
 

@@ -21,6 +21,8 @@ extension PaymentsSelectView {
         //TODO: real placeholder required
         private static let itemIconPlaceholder = Image("Payments Icon Placeholder")
         
+        override var isFullContent: Bool { value.current == nil }
+        
         init(items: [ItemViewModel], description: String, selected: (item: ItemViewModel, action: () -> Void)? = nil, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             if let selected = selected {
@@ -117,10 +119,11 @@ extension PaymentsSelectView {
             let options = options.map{ Option(id: $0.id, name: $0.name)}
             let popUpViewModel = PaymentsPopUpSelectView.ViewModel(title: title, description: nil, options: options, selected: selectedId, action: { [weak self] optionId in
                 
-                self?.update(value: optionId)
+                self?.action.send(PaymentsParameterViewModelAction.Select.DidSelected(itemId: optionId))
+                self?.action.send(PaymentsParameterViewModelAction.Select.PopUpSelector.Close())
             })
 
-            return SelectedItemViewModel(id: selectedOption.id, icon: icon, title: title, name: selectedOption.name, action: { [weak self] in self?.action.send(PaymentsParameterViewModelAction.Select.OptionExternal(viewModel: popUpViewModel)) })
+            return SelectedItemViewModel(id: selectedOption.id, icon: icon, title: title, name: selectedOption.name, action: { [weak self] in self?.action.send(PaymentsParameterViewModelAction.Select.PopUpSelector.Show(viewModel: popUpViewModel)) })
         }
         
         //MARK: ViewModel Types
@@ -174,9 +177,14 @@ extension PaymentsParameterViewModelAction {
 
     enum Select {
     
-        struct OptionExternal: Action {
+        enum PopUpSelector {
             
-            let viewModel: PaymentsPopUpSelectView.ViewModel
+            struct Show: Action {
+                
+                let viewModel: PaymentsPopUpSelectView.ViewModel
+            }
+            
+            struct Close: Action {}
         }
         
         struct DidSelected: Action {

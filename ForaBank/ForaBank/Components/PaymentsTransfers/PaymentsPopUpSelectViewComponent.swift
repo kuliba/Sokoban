@@ -92,59 +92,54 @@ extension PaymentsPopUpSelectView {
 struct PaymentsPopUpSelectView: View {
     
     var viewModel: PaymentsPopUpSelectView.ViewModel
+    var isCompact: Bool { viewModel.items.count < 8 }
     
     var body: some View {
                 
-        ZStack {
+        VStack(alignment: .leading, spacing: 16) {
             
-            Color.clear
+            Text(viewModel.title)
+                .foregroundColor(Color(hex: "#1C1C1C"))
+                .font(Font.custom("Inter-SemiBold", size: 18))
             
-            VStack {
+            if let description = viewModel.description {
                 
-                Spacer(minLength: 240)
+                Text(description)
+                    .foregroundColor(Color(hex: "#999999"))
+                    .font(Font.custom("Inter-Regular", size: 14))
+            }
+            
+            if isCompact == true {
                 
-                VStack(spacing: 0) {
+                VStack(spacing: 24) {
                     
-                    Capsule()
-                        .frame(width: 32, height: 4)
-                        .foregroundColor(Color(hex: "#EAEBEB"))
-                        .padding(.top,8)
-                        .padding(.bottom, 16)
-           
-                    VStack(alignment: .leading, spacing: 16) {
+                    ForEach(viewModel.items) { item in
                         
-                        Text(viewModel.title)
-                            .foregroundColor(Color(hex: "#1C1C1C"))
-                            .font(Font.custom("Inter-SemiBold", size: 18))
-                        
-                        if let description = viewModel.description {
-                            
-                            Text(description)
-                                .foregroundColor(Color(hex: "#999999"))
-                                .font(Font.custom("Inter-Regular", size: 14))
-                        }
-                        
-                        ScrollView {
-                        
-                            VStack(spacing: 24) {
-                                
-                                ForEach(viewModel.items) { item in
-                                    
-                                    ItemView(viewModel: item)
-                                }
-                            }
-                        }
+                        ItemView(viewModel: item)
                     }
-                    .padding(.horizontal, 20)
+                    
+                    Color.clear
+                        .frame(height: 60)
                 }
-                .background(RoundedCorner(radius: 16,
-                                          corners: [.topLeft, .topRight])
-                                .foregroundColor(.white)
-                                .shadow(color: .black.opacity(0.1),
-                                        radius: 1, x: 0, y: -2))
                 
+            } else {
+                
+                ScrollView {
+                    
+                    VStack(spacing: 24) {
+                        
+                        ForEach(viewModel.items) { item in
+                            
+                            ItemView(viewModel: item)
+                        }
+                        
+                        Color.clear
+                            .frame(height: 60)
+                    }
+                }
             }
         }
+        .padding(.horizontal, 20)
     }
     
     struct ItemView: View {
@@ -187,7 +182,6 @@ struct PaymentsPopUpSelectView: View {
             }
         }
     }
-    
 }
 
 //MARK: - Preview
