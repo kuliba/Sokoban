@@ -125,14 +125,16 @@ extension Model {
             let operationParametersIds = operationParameters.map{ $0.id }
             let allParametersIds = operationParametersIds + nexStepParametersIds
             
-            guard allParametersIds.contains(Payments.Parameter.Identifier.product.rawValue) else {
-                throw Payments.Error.missingProduct
+            let productParameterId = Payments.Parameter.Identifier.product.rawValue
+            guard allParametersIds.contains(productParameterId) else {
+                throw Payments.Error.missingParameter(productParameterId)
             }
             
             result.append(Payments.Parameter.Identifier.product.rawValue)
             
-            guard allParametersIds.contains(Payments.Parameter.Identifier.amount.rawValue) else {
-                throw Payments.Error.missingAmount
+            let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
+            guard allParametersIds.contains(amountParameterId) else {
+                throw Payments.Error.missingParameter(amountParameterId)
             }
             
             result.append(Payments.Parameter.Identifier.amount.rawValue)

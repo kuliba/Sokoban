@@ -29,33 +29,30 @@ extension Model {
         case 1:
             guard let operatorParameterValue = paymentsParameterValue(operation.parameters, id: operatorParameterId),
                   let operatorSelected = Payments.Operator(rawValue: operatorParameterValue) else {
-                throw Payments.Error.missingParameter
+                throw Payments.Error.missingParameter(operatorParameterId)
             }
             
             switch operatorSelected {
             case .fns:
-                guard let fnsCategoriesList = dictionaryFTSList() else {
-                    throw Payments.Error.unableLoadFTSCategoryOptions
-                }
-                
                 let categoryParameterId = "a3_dutyCategory_1_1"
+                guard let fnsCategoriesList = dictionaryFTSList() else {
+                    throw Payments.Error.unableCreateRepresentable(categoryParameterId)
+                }
+
                 let categoryParameter = Payments.ParameterSelect(
                     Payments.Parameter(id: categoryParameterId, value: nil),
                     title: "Категория платежа",
                     options: fnsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample)})
                 
-                guard let anywayOperator = dictionaryAnywayOperator(for: operatorParameterValue) else {
-                    
-                    throw Payments.Error.missingParameter
-                }
                 
                 let divisionParameterId = "a3_divisionSelect_2_1"
-                guard let divisionAnywayParameter = anywayOperator.parameterList.first(where: { $0.id == divisionParameterId }),
+                guard let anywayOperator = dictionaryAnywayOperator(for: operatorParameterValue),
+                      let divisionAnywayParameter = anywayOperator.parameterList.first(where: { $0.id == divisionParameterId }),
                       let divisionAnywayParameterOptions = divisionAnywayParameter.options,
                       let divisionAnywayParameterValue = divisionAnywayParameter.value else {
-                          
-                        throw Payments.Error.missingParameter
-                      }
+                    
+                    throw Payments.Error.unableCreateRepresentable(divisionParameterId)
+                }
                 
                 // division
                 let divisionParameter = Payments.ParameterSelectSimple(

@@ -24,9 +24,10 @@ extension Model {
     
     func paymentsTransferPuref(_ parameters: [PaymentsParameterRepresentable]) throws -> String {
         
-        guard let operatorParameterValue = parameters.first(where: { $0.parameter.id ==  Payments.Parameter.Identifier.operator.rawValue})?.value else {
+        let operatorParameterId = Payments.Parameter.Identifier.operator.rawValue
+        guard let operatorParameterValue = parameters.first(where: { $0.parameter.id ==  operatorParameterId})?.value else {
             
-            throw Payments.Error.missingOperatorParameter
+            throw Payments.Error.missingParameter(operatorParameterId)
         }
         
         return operatorParameterValue
@@ -34,11 +35,12 @@ extension Model {
     
     func paymentsTransferPayer(_ parameters: [PaymentsParameterRepresentable]) throws -> TransferData.Payer {
         
-        guard let productParameter = parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.product.rawValue }) as? Payments.ParameterProduct,
+        let productParameterId = Payments.Parameter.Identifier.product.rawValue
+        guard let productParameter = parameters.first(where: { $0.parameter.id == productParameterId}) as? Payments.ParameterProduct,
               let productId = productParameter.productId,
               let productType = productType(for: productId) else {
             
-            throw Payments.Error.missingProduct
+            throw Payments.Error.missingParameter(productParameterId)
         }
         
         switch productType {
@@ -47,15 +49,16 @@ extension Model {
         case .account:
             return .init(inn: nil, accountId: productId, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
         default:
-            throw Payments.Error.unexpectedProductType
+            throw Payments.Error.unexpectedProductType(productType)
         }
     }
     
     func paymentsTransferAmount(_ parameters: [PaymentsParameterRepresentable]) throws -> Double {
         
-        guard let amountParameter = parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.amount.rawValue}) as? Payments.ParameterAmount else {
+        let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
+        guard let amountParameter = parameters.first(where: { $0.parameter.id == amountParameterId }) as? Payments.ParameterAmount else {
             
-            throw Payments.Error.missingAmount
+            throw Payments.Error.missingParameter(amountParameterId)
         }
         
         return amountParameter.amount
@@ -63,11 +66,12 @@ extension Model {
     
     func paymentsTransferCurrency(_ parameters: [PaymentsParameterRepresentable]) throws -> String {
         
-        guard let productParameter = parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.product.rawValue }) as? Payments.ParameterProduct,
+        let productParameterId = Payments.Parameter.Identifier.product.rawValue
+        guard let productParameter = parameters.first(where: { $0.parameter.id ==  productParameterId}) as? Payments.ParameterProduct,
               let productId = productParameter.productId,
               let product = product(productId: productId) else {
             
-            throw Payments.Error.missingProduct
+            throw Payments.Error.missingParameter(productParameterId)
         }
         
         return product.currency
@@ -134,7 +138,7 @@ extension Model {
         for parameterId in visible {
             
             guard let parameter = parameters.first(where: { $0.id == parameterId }) else {
-                throw Payments.Error.missingParameter
+                throw Payments.Error.missingParameter(parameterId)
             }
             
             switch parameter {

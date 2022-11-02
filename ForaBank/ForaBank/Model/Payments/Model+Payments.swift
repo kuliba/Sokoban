@@ -62,7 +62,7 @@ extension Model {
             } catch {
                 
                 LoggerAgent.shared.log(level: .error, category: .model, message: "Failed continue operation: \(payload.operation) with error: \(error.localizedDescription)")
-                self.action.send(ModelAction.Payment.Process.Response(result: .failure(self.paymentsAlertMessage(with: error))))
+                self.action.send(ModelAction.Payment.Process.Response(result: .failure(error.localizedDescription)))
             }
         }
     }
@@ -127,7 +127,7 @@ extension Model {
         let result = try await paymentsProcess(operation: operation)
         
         guard case .step(let operation) = result else {
-            throw Payments.Error.unexpectedProcessResult
+            throw Payments.Error.unexpectedProcessResult(result)
         }
         
         return operation
@@ -145,7 +145,7 @@ extension Model {
         let result = try await paymentsProcess(operation: operation)
         
         guard case .step(let operation) = result else {
-            throw Payments.Error.unexpectedProcessResult
+            throw Payments.Error.unexpectedProcessResult(result)
         }
         
         return operation
@@ -231,8 +231,9 @@ extension Model {
     
     func paymentsProcessRemoteConfirm(_ process: [Payments.Parameter], _ operation: Payments.Operation) async throws -> Payments.Success {
         
-        guard let codeValue = operation.parameters.first(where: { $0.id == Payments.Parameter.Identifier.code.rawValue })?.value else {
-            throw Payments.Error.missingCodeParameter
+        let codeParameterId = Payments.Parameter.Identifier.code.rawValue
+        guard let codeValue = operation.parameters.first(where: { $0.id == codeParameterId })?.value else {
+            throw Payments.Error.missingParameter(codeParameterId)
         }
         
         let response = try await paymentsTransferComplete(code: codeValue)
@@ -377,89 +378,5 @@ extension Model {
     func paymentsParameterValue(_ parameters: [PaymentsParameterRepresentable], id: Payments.Parameter.ID) -> Payments.Parameter.Value {
         
         return parameters.first(where: { $0.id == id })?.value
-    }
-}
-
-//MARK: - Error Message
-
-extension Model {
-    
-    func paymentsAlertMessage(with error: Error) -> String {
-        
-        return "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."
-        //TODO: refactor
-        /*
-        if let paymentsError = error as? Payments.Error {
-            
-            switch paymentsError {
-            case .unableLoadFMSCategoryOptions:
-                return "unableLoadFMSCategoryOptions"
-                
-            case .unableLoadFTSCategoryOptions:
-                return "unableLoadFTSCategoryOptions"
-                
-            case .unableLoadFSSPDocumentOptions:
-                return "unableLoadFSSPDocumentOptions"
-                
-            case .unableCreateOperationForService(let service):
-                return "unableCreateOperationForService \(service.name) "
-                
-            case .unexpectedOperatorValue:
-                return "unexpectedOperatorValue"
-                
-            case .missingOperatorParameter:
-                return "missingOperatorParameter"
-                
-            case .missingParameter:
-                return "missingParameter"
-                
-            case .missingPayer:
-                return "missingPayer"
-                
-            case .missingCurrency:
-                return "missingCurrency"
-                
-            case .missingCodeParameter:
-                return "missingCodeParameter"
-                
-            case .missingAmountParameter:
-                return "missingAmountParameter"
-                
-            case .missingAnywayTransferAdditional:
-                return "missingAnywayTransferAdditional"
-                
-            case .failedObtainProductId:
-                return "failedObtainProductId"
-                
-            case .failedTransferWithEmptyDataResponse:
-                return "failedTransferWithEmptyDataResponse"
-                
-            case .failedTransfer(let status, let message):
-                return "failedTransfer status \(status), message: \(String(describing: message))"
-                
-            case .failedMakeTransferWithEmptyDataResponse:
-                return "failedMakeTransferWithEmptyDataResponse"
-                
-            case .failedMakeTransfer(let status, let message):
-                return "failedMakeTransfer status \(status), message: \(String(describing: message))"
-                
-            case .clientInfoEmptyResponse:
-                return "clientInfoEmptyResponse"
-                
-            case .anywayTransferFinalStepExpected:
-                return "anywayTransferFinalStepExpected"
-                
-            case .notAuthorized:
-                return "notAuthorized"
-                
-            case .unsupported:
-                return "unsupported"
-            }
-            
-        } else {
-            
-            return "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."
-        }
-         */
     }
 }

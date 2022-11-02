@@ -9,6 +9,7 @@ import Foundation
 
 extension Model {
     
+    /*
     func parametersFSSPMock(_ parameters: [PaymentsParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[PaymentsParameterRepresentable], Error>) -> Void) {
         
         switch step {
@@ -270,4 +271,5 @@ extension Model {
             completion(.failure(Payments.Error.unsupported))
         }
     }
+     */
 }

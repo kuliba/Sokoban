@@ -58,7 +58,7 @@ extension Payments {
         let id: ID
         let value: Value
         
-        var debugDescription: String { "id: \(id), value: \(value != nil ? value! : "empty")" }
+        var debugDescription: String { "\(id)[\(value != nil ? value! : "empty")]" }
     }
 }
 
@@ -193,17 +193,25 @@ extension Payments.Operation {
         }
     }
     
-    enum Stage: Equatable {
+    enum Stage: Equatable, CustomDebugStringConvertible {
         
         case local
         case remote(Remote)
 
-        enum Remote {
+        enum Remote: String {
             
             case start
             case next
             case confirm
             case complete
+        }
+        
+        var debugDescription: String {
+            
+            switch self {
+            case .local: return "local"
+            case let .remote(remote): return "remote: \(remote)"
+            }
         }
     }
     
@@ -346,11 +354,20 @@ extension Payments {
 
 extension Payments {
     
-    enum ProcessResult {
+    enum ProcessResult: CustomDebugStringConvertible {
         
         case step(Operation)
         case confirm(Operation)
         case complete(Payments.Success)
+        
+        var debugDescription: String {
+            
+            switch self {
+            case .step: return "step"
+            case .confirm: return "confirm"
+            case .complete: return "complete"
+            }
+        }
     }
 }
 
@@ -358,36 +375,50 @@ extension Payments {
 
 extension Payments {
     
-    enum Error: Swift.Error {
+    enum Error: LocalizedError {
         
-        case unableLoadFMSCategoryOptions
-        case unableLoadFTSCategoryOptions
-        case unableLoadFSSPDocumentOptions
         case unableCreateOperationForService(Service)
-        case unexpectedOperatorValue
-        case unexpectedProductType
-        case unexpectedProcessResult
+        case unableCreateRepresentable(Payments.Parameter.ID)
+        case unexpectedProductType(ProductType)
+        case unexpectedProcessResult(Payments.ProcessResult)
         
-        case missingOperatorParameter
-        case missingParameter
-        case missingProduct
-        case missingCurrency
-        case missingAmount
-        case missingCodeParameter
-        case missingAmountParameter
-        case missingAnywayTransferAdditional
-        
+        case missingParameter(Payments.Parameter.ID)
         case missingOptions(ParameterData)
         case missingValue(ParameterData)
-        
-        case failedObtainProductId
-        case failedTransferWithEmptyDataResponse
-        case failedTransfer(status: ServerStatusCode, message: String?)
-        case failedMakeTransferWithEmptyDataResponse
-        case failedMakeTransfer(status: ServerStatusCode, message: String?)
-        case clientInfoEmptyResponse
-        case anywayTransferFinalStepExpected
+
         case notAuthorized
         case unsupported
+        
+        var errorDescription: String? {
+            
+            switch self {
+            case let .unableCreateOperationForService(service):
+                return "Unable create operation for service: \(service)"
+                
+            case let .unableCreateRepresentable(parameterId):
+                return "Unable create representable parameter for parameter id: \(parameterId)"
+                
+            case let .unexpectedProductType(productType):
+                return "Unexpected product type: \(productType)"
+                
+            case let .unexpectedProcessResult(result):
+                return "Unexpected operation processing result: \(result)"
+                
+            case let .missingParameter(parameterId):
+                return "Missing parameter with id: \(parameterId)"
+                
+            case let .missingOptions(parameterData):
+                return "Missing options in parameter data: \(parameterData)"
+                
+            case let .missingValue(parameterData):
+                return "Missing value in parameter data: \(parameterData)"
+                
+            case .notAuthorized:
+                return "Not authorized request attempt"
+                
+            case .unsupported:
+                return "Unsupported"
+            }
+        }
     }
 }

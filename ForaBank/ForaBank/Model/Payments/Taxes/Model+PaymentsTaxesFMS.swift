@@ -15,6 +15,8 @@ extension Model {
         throw Payments.Error.unsupported
     }
     
+    
+    /*
     func parametersFMS(_ parameters: [PaymentsParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[PaymentsParameterRepresentable], Error>) -> Void) {
         
         let paramOperator = Payments.Parameter.Identifier.operator.rawValue
@@ -203,4 +205,5 @@ extension Model {
             completion(.failure(Payments.Error.unsupported))
         }
     }
+     */
 }

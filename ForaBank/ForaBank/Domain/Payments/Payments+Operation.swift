@@ -219,6 +219,27 @@ extension Payments.Operation {
     }
 }
 
+//MARK: - Debug Description
+
+extension Payments.Operation: CustomDebugStringConvertible {
+    
+    var debugDescription: String {
+        
+        var result = "\n=========== OPERATION ===========\n"
+        result += "\nservice: \(service)\n"
+        let stepsDescriptions = steps.map{ $0.debugDescription }
+        for (index, stepDescription) in stepsDescriptions.enumerated() {
+            
+            result += "step \(index):\n\t"
+            result += stepDescription
+            result += "\n"
+        }
+        result += "=================================\n"
+        
+        return result
+    }
+}
+
 //MARK: - Mock
 
 extension Payments.Operation {

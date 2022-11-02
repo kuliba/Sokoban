@@ -182,3 +182,52 @@ extension Payments.Operation.Step {
         parametersIds.contains(parameterId)
     }
 }
+
+//MARK: - Debug Description
+
+extension Payments.Operation.Step: CustomDebugStringConvertible {
+    
+    var debugDescription: String {
+
+        var result = ""
+        
+        let paramsDescriptions = parameters.map{ $0.parameter.debugDescription }
+        result += "parameters: "
+        for paramDescription in paramsDescriptions {
+            
+            result += paramDescription
+            result += " "
+        }
+        result += "\n\tfront:"
+        result += "\n\t\tvisible: "
+        for item in front.visible {
+            
+            result += "\(item) "
+        }
+        
+        result += "\n\t\tcomplete: \(front.isCompleted)"
+        
+        result += "\n\tback:"
+        result += "\n\t\tstage: \(back.stage)"
+        
+        //TODO: add terms
+        
+        if let processed = back.processed {
+            
+            let processedParamsDescriptions = processed.map{ $0.debugDescription }
+            result += "\n\t\tprocessed: "
+            
+            for paramDescription in processedParamsDescriptions {
+                
+                result += paramDescription
+                result += " "
+            }
+
+        } else {
+            
+            result += "\n\t\tprocessed: no"
+        }
+
+        return result
+    }
+}
