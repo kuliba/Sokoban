@@ -150,7 +150,7 @@ struct CountryPaymentView: UIViewControllerRepresentable {
         
         var vc = ContactInputViewController()
         vc.country = viewModel.country
-        
+
         //MARK: PaymentsViewController openCountryPaymentVC(206)
         switch viewModel.paymentType {
             
@@ -177,7 +177,7 @@ struct CountryPaymentView: UIViewControllerRepresentable {
             vc.surnameField.text = adressViewModel.surName
             vc.secondNameField.text = adressViewModel.middleName
             vc.operatorsViewModel = viewModel.operatorsViewModel
-            
+
         case let .withOutAddress(withOutViewModel):
             
             vc.typeOfPay = .mig

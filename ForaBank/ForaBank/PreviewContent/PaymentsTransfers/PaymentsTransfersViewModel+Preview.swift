@@ -46,7 +46,7 @@ extension LatestPaymentsView.ViewModel {
         let items = latestPaymentsButtons.map { ItemViewModel.latestPayment($0) }
         
         let latestPaymentsVM = ViewModel(.emptyMock, items: items)
-        let baseButtons = latestPaymentsVM.baseButtons.map { ItemViewModel.templates($0) }
+        let baseButtons = LatestPaymentsView.ViewModel.createBaseButton(action: {})
         latestPaymentsVM.items = baseButtons + latestPaymentsVM.items
         return latestPaymentsVM
         
