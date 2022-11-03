@@ -186,7 +186,9 @@ class PaymentsOperationViewModel: ObservableObject {
                             bottomSheet = nil
                         }
                         
-                       
+                    case _ as PaymentsSectionViewModelAction.SpoilerDidUpdated:
+                        content = Self.reduceContentItems(sections: sections)
+                        
                     default:
                         break
                     }

@@ -16,7 +16,22 @@ extension Payments.Operation {
     var parameters: [PaymentsParameterRepresentable] { steps.flatMap({ $0.parameters }) }
    
     var visibleParametersIds: [Payments.Parameter.ID] { steps.flatMap({ $0.front.visible }) }
-    var visibleParameters: [PaymentsParameterRepresentable] { parameters.filter({ visibleParametersIds.contains($0.id)} ) }
+    var visibleParameters: [PaymentsParameterRepresentable] {
+        
+        var result = [PaymentsParameterRepresentable]()
+        
+        for parameterId in visibleParametersIds {
+            
+            guard let parameter = parameters.first(where: { $0.id == parameterId }) else {
+                continue
+            }
+            
+            result.append(parameter)
+        }
+        
+        return result
+        
+    }
     
     var transferType: Payments.Operation.TransferType {
 

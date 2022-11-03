@@ -129,6 +129,7 @@ class PaymentsSpoilerSectionViewModel: PaymentsSectionViewModel {
                     switch action {
                     case let payload as PaymentsParameterViewModelAction.SpoilerButton.DidUpdated:
                         isCollapsed = payload.isCollapsed
+                        self.action.send(PaymentsSectionViewModelAction.SpoilerDidUpdated())
                         
                     default:
                         break
@@ -193,10 +194,11 @@ extension PaymentsSectionViewModel {
     static func reduce(operation: Payments.Operation, model: Model) -> [PaymentsSectionViewModel] {
         
         var result = [PaymentsSectionViewModel]()
+        let visibleParameters = operation.visibleParameters
         
         for placement in Payments.Parameter.Placement.allCases {
             
-            let items = Self.reduce(parameters: operation.parameters, placement: placement, visible: operation.visibleParametersIds, model: model)
+            let items = Self.reduce(parameters: visibleParameters, placement: placement, model: model)
             
             switch placement {
             case .top:
@@ -208,11 +210,11 @@ extension PaymentsSectionViewModel {
             case .spoiler:
                 if items.isEmpty == false,
                    let lastSpoilerItem = items.last,
-                   let lastIndex = operation.parameters.firstIndex(where: { $0.id == lastSpoilerItem.id }) {
+                   let lastIndex = visibleParameters.firstIndex(where: { $0.id == lastSpoilerItem.id }) {
                     
                     // feed section before spoiler
-                    let prevParameters = Array(operation.parameters.prefix(lastIndex))
-                    let prevFeedItems = Self.reduce(parameters: prevParameters, placement: .feed, visible: operation.visibleParametersIds, model: model)
+                    let prevParameters = Array(visibleParameters.prefix(lastIndex))
+                    let prevFeedItems = Self.reduce(parameters: prevParameters, placement: .feed, model: model)
                     if prevFeedItems.isEmpty == false {
                         
                         result.append(PaymentsFeedSectionViewModel(items: prevFeedItems))
@@ -222,8 +224,8 @@ extension PaymentsSectionViewModel {
                     result.append(PaymentsSpoilerSectionViewModel(items: items, isCollapsed: true))
                     
                     // feed section after spoiler
-                    let postParameters = Array(operation.parameters.suffix(operation.parameters.count - lastIndex))
-                    let postFeedItems = Self.reduce(parameters: postParameters, placement: .feed, visible: operation.visibleParametersIds, model: model)
+                    let postParameters = Array(visibleParameters.suffix(visibleParameters.count - lastIndex))
+                    let postFeedItems = Self.reduce(parameters: postParameters, placement: .feed, model: model)
                     if postFeedItems.isEmpty == false {
                         
                         result.append(PaymentsFeedSectionViewModel(items: postFeedItems))
@@ -232,7 +234,7 @@ extension PaymentsSectionViewModel {
                 } else {
                     
                     // feed section
-                    let feedItems = Self.reduce(parameters: operation.parameters, placement: .feed, visible: operation.visibleParametersIds, model: model)
+                    let feedItems = Self.reduce(parameters: visibleParameters, placement: .feed, model: model)
                     result.append(PaymentsFeedSectionViewModel(items: feedItems))
                 }
                 
@@ -255,14 +257,13 @@ extension PaymentsSectionViewModel {
         return result
     }
     
-    static func reduce(parameters: [PaymentsParameterRepresentable], placement: Payments.Parameter.Placement, visible: [Payments.Parameter.ID], model: Model) -> [PaymentsParameterViewModel] {
+    static func reduce(parameters: [PaymentsParameterRepresentable], placement: Payments.Parameter.Placement, model: Model) -> [PaymentsParameterViewModel] {
         
         var result = [PaymentsParameterViewModel]()
         
         for parameter in parameters {
             
             guard parameter.placement == placement,
-                  visible.contains(parameter.id),
                   let parameterViewModel = Self.reduce(parameter: parameter, model: model) else {
                 
                 continue
@@ -331,4 +332,6 @@ enum PaymentsSectionViewModelAction {
         
         struct Close: Action {}
     }
+    
+    struct SpoilerDidUpdated: Action {}
 }
