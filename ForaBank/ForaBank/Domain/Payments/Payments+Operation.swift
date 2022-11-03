@@ -100,11 +100,18 @@ extension Payments.Operation {
         var stepsUpdated = [Step]()
         for (index, step) in steps.enumerated() {
             
-            guard index <= stepIndex else {
+            if index < stepIndex {
+                
+                stepsUpdated.append(step)
+                
+            } else if index == stepIndex {
+                
+                stepsUpdated.append(step.reseted())
+                
+            } else {
+                
                 break
             }
-            
-            stepsUpdated.append(step.reseted())
         }
 
         return .init(service: service, source: source, steps: stepsUpdated)

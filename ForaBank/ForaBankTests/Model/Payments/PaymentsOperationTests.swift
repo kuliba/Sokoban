@@ -265,7 +265,7 @@ extension PaymentsOperationTests {
         XCTAssertEqual(result.steps[0].front, stepOne.front)
         XCTAssertEqual(result.steps[0].back.stage, .remote(.start))
         XCTAssertEqual(result.steps[0].back.terms, stepOne.back.terms)
-        XCTAssertNil(result.steps[0].back.processed)
+        XCTAssertEqual(result.steps[0].back.processed, stepOne.back.processed)
         
         // step two
         XCTAssertEqual(result.steps[1].parameters.count, 1)

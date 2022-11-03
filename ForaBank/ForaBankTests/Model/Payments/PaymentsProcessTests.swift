@@ -305,7 +305,7 @@ private func localStep(operation: Payments.Operation, stepIndex: Int) async thro
             return .init(parameters: [paramOperator], front: .init(visible: [paramOperator.id], isCompleted: true), back: .init(stage: .local, terms: [.init(parameterId: "operator", impact: .rollback)], processed: nil))
         case 1:
             guard let paramOperatorValue = operation.parameters.first(where: { $0.id == "operator" })?.value else {
-                throw Payments.Error.missingParameter
+                throw Payments.Error.missingParameter("operator")
             }
             switch paramOperatorValue {
             case "fns":
@@ -317,7 +317,7 @@ private func localStep(operation: Payments.Operation, stepIndex: Int) async thro
                 return .init(parameters: [paramUin], front: .init(visible: [paramUin.id], isCompleted: false), back: .init(stage: .remote(.start), terms: [.init(parameterId: "uin", impact: .rollback)], processed: nil))
                 
             default:
-                throw Payments.Error.unexpectedOperatorValue
+                throw Payments.Error.unsupported
             }
             
         default:
@@ -369,25 +369,25 @@ private func remoteStart(parameters: [Payments.Parameter], operation: Payments.O
         switch currentStep {
         case 2:
             guard let paramOperatorValue = operation.parameters.first(where: { $0.id == "operator" })?.value else {
-                throw Payments.Error.missingParameter
+                throw Payments.Error.missingParameter("operator")
             }
             switch paramOperatorValue {
             case "fns":
                 guard parameters.first(where: { $0.id == "service" })?.value == "1" else {
-                    throw Payments.Error.missingParameter
+                    throw Payments.Error.missingParameter("service")
                 }
                 let parameterInn = ParameterData(id: "inn", value: nil)
                 return TransferAnywayResponseData(parameters: [parameterInn], needSum: false, finalStep: false)
                 
             case "fnsUin":
                 guard parameters.first(where: { $0.id == "uin" })?.value == "123" else {
-                    throw Payments.Error.missingParameter
+                    throw Payments.Error.missingParameter("uin")
                 }
                 let parameterInn = ParameterData(id: "bic", value: nil)
                 return TransferAnywayResponseData(parameters: [parameterInn], needSum: false, finalStep: false)
                 
             default:
-                throw Payments.Error.unexpectedOperatorValue
+                throw Payments.Error.unsupported
             }
             
         default:
@@ -407,23 +407,23 @@ private func remoteNext(parameters: [Payments.Parameter], operation: Payments.Op
         switch currentStep {
         case 3:
             guard let paramOperatorValue = operation.parameters.first(where: { $0.id == "operator" })?.value else {
-                throw Payments.Error.missingParameter
+                throw Payments.Error.missingParameter("operator")
             }
             switch paramOperatorValue {
             case "fns":
                 guard parameters.first(where: { $0.id == "inn" })?.value == "234" else {
-                    throw Payments.Error.missingParameter
+                    throw Payments.Error.missingParameter("inn")
                 }
                 return TransferAnywayResponseData(parameters: [], needSum: true, finalStep: true)
                 
             case "fnsUin":
                 guard parameters.first(where: { $0.id == "bic" })?.value == "123" else {
-                    throw Payments.Error.missingParameter
+                    throw Payments.Error.missingParameter("bic")
                 }
                 return TransferAnywayResponseData(parameters: [], needSum: true, finalStep: true)
                 
             default:
-                throw Payments.Error.unexpectedOperatorValue
+                throw Payments.Error.unsupported
             }
             
         default:
@@ -443,25 +443,25 @@ private func remoteConfirm(parameters: [Payments.Parameter], operation: Payments
         switch currentStep {
         case 4:
             guard let paramOperatorValue = operation.parameters.first(where: { $0.id == "operator" })?.value else {
-                throw Payments.Error.missingParameter
+                throw Payments.Error.missingParameter("operator")
             }
             switch paramOperatorValue {
             case "fns":
                 guard parameters.first(where: { $0.id == "code" })?.value == "789",
                       parameters.first(where: { $0.id == "amount" })?.value == "100" else {
-                    throw Payments.Error.missingParameter
+                    throw Payments.Error.missingParameter("code")
                 }
                 return Payments.Success(status: .complete, amount: 100, currency: .init(description: "RUB"), icon: nil, operationDetailId: 1)
                 
             case "fnsUin":
                 guard parameters.first(where: { $0.id == "code" })?.value == "555",
                       parameters.first(where: { $0.id == "amount" })?.value == "200" else {
-                    throw Payments.Error.missingParameter
+                    throw Payments.Error.missingParameter("code")
                 }
                 return Payments.Success(status: .complete, amount: 100, currency: .init(description: "RUB"), icon: nil, operationDetailId: 1)
                 
             default:
-                throw Payments.Error.unexpectedOperatorValue
+                throw Payments.Error.unsupported
             }
             
         default:
