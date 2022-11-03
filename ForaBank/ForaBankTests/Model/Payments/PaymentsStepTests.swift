@@ -243,7 +243,7 @@ extension PaymentsStepTests {
         let paramTree = Payments.ParameterMock(id: "3", value: "300")
         
         // when
-        let result = step.processedResults(with: [paramOne, paramTwo, paramTree])
+        let result = try step.processedResults(with: [paramOne, paramTwo, paramTree])
         
         // then
         XCTAssertNotNil(result)
@@ -271,7 +271,7 @@ extension PaymentsStepTests {
         let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .remote(.start), terms: terms, processed: nil))
         
         // when
-        let result = step.processedResults(with: [paramOne, paramTwo])
+        let result = try step.processedResults(with: [paramOne, paramTwo])
         
         // then
         XCTAssertNil(result)
@@ -288,17 +288,8 @@ extension PaymentsStepTests {
         let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .remote(.start), terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
  
         // when
-        let result = step.processedResults(with: [paramOne])
+        XCTAssertThrowsError(try step.processedResults(with: [paramOne]))
         
-        // then
-        XCTAssertNotNil(result)
-        XCTAssertEqual(result!.count, 1)
-        
-        XCTAssertEqual(result![0].current.id, "1")
-        XCTAssertEqual(result![0].current.value, "100")
-        XCTAssertEqual(result![0].processed.id, "1")
-        XCTAssertEqual(result![0].processed.value, "500")
-        XCTAssertEqual(result![0].impact, .rollback)
     }
     
     func testProcessedResuts_Not_Existing_Param() throws {
@@ -313,10 +304,7 @@ extension PaymentsStepTests {
         let paramTree = Payments.ParameterMock(id: "3", value: "300")
         
         // when
-        let result = step.processedResults(with: [paramTree])
-        
-        // then
-        XCTAssertNil(result)
+        XCTAssertThrowsError(try step.processedResults(with: [paramTree]))
     }
 }
 
@@ -332,7 +320,7 @@ extension PaymentsStepTests {
         let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .local, terms: [.init(parameterId: "one", impact: .rollback)], processed: nil))
         
         // when
-        let result = step.status(with: [paramOne, paramTwo])
+        let result = try step.status(with: [paramOne, paramTwo])
         
         // then
         XCTAssertEqual(result, .editing)
@@ -347,7 +335,7 @@ extension PaymentsStepTests {
         let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.start), terms: terms, processed: nil))
 
         // when
-        let result = step.status(with: [paramOne, paramTwo])
+        let result = try step.status(with: [paramOne, paramTwo])
         
         XCTAssertEqual(result, .pending(parameters: [.init(id: "one", value: "100")], stage: .remote(.start)))
     }
@@ -363,7 +351,7 @@ extension PaymentsStepTests {
         let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.start), terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
         
         // when
-        let result = step.status(with: [paramOne, paramTwo])
+        let result = try step.status(with: [paramOne, paramTwo])
         
         // then
         XCTAssertEqual(result, .complete)
@@ -380,7 +368,7 @@ extension PaymentsStepTests {
         let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.start), terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
         
         // when
-        let result = step.status(with: [paramOne, paramTwo])
+        let result = try step.status(with: [paramOne, paramTwo])
         
         // then
         XCTAssertEqual(result, .invalidated(.rollback))
@@ -397,7 +385,7 @@ extension PaymentsStepTests {
         let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.start), terms: terms, processed: [paramProcessedOne, paramProcessedTwo]))
         
         // when
-        let result = step.status(with: [paramOne, paramTwo])
+        let result = try step.status(with: [paramOne, paramTwo])
         
         // then
         XCTAssertEqual(result, .invalidated(.rollback))

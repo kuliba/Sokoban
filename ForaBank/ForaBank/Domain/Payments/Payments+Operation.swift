@@ -179,11 +179,11 @@ extension Payments.Operation {
     
     /// Generates next action for payment process
     /// - Returns: payments action
-    func nextAction() -> Action {
+    func nextAction() throws -> Action {
         
         for (index, step) in steps.enumerated() {
             
-            switch step.status(with: parameters) {
+            switch try step.status(with: parameters) {
             case .editing:
                 return step.back.stage == .remote(.confirm) ? .frontConfirm : .frontUpdate
                 
@@ -206,7 +206,10 @@ extension Payments.Operation {
     
     var isAutoContinueRequired: Bool {
         
-        let nextAction = nextAction()
+        guard let nextAction = try? nextAction() else {
+            return false
+        }
+        
         switch nextAction {
         case .rollback:
             return true

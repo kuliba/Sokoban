@@ -422,7 +422,7 @@ extension PaymentsOperationTests {
         let operation = Payments.Operation(service: .fms, source: .none, steps: [])
         
         // when
-        let result = operation.nextAction()
+        let result = try operation.nextAction()
         
         // then
         XCTAssertEqual(result, .step(index: 0))
@@ -437,7 +437,7 @@ extension PaymentsOperationTests {
         let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne])
         
         // when
-        let result = operation.nextAction()
+        let result = try operation.nextAction()
         
         // then
         XCTAssertEqual(result, .frontUpdate)
@@ -452,7 +452,7 @@ extension PaymentsOperationTests {
         let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne])
         
         // when
-        let result = operation.nextAction()
+        let result = try operation.nextAction()
         
         // then
         XCTAssertEqual(result, .backProcess(parameters: [paramOne.parameter], stepIndex: 0, stage: .remote(.start)))
@@ -470,7 +470,7 @@ extension PaymentsOperationTests {
         let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne, stepTwo])
         
         // when
-        let result = operation.nextAction()
+        let result = try operation.nextAction()
         
         // then
         XCTAssertEqual(result, .frontUpdate)
@@ -488,7 +488,7 @@ extension PaymentsOperationTests {
         let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne, stepTwo])
         
         // when
-        let result = operation.nextAction()
+        let result = try operation.nextAction()
         
         // then
         XCTAssertEqual(result, .rollback(stepIndex: 0))
@@ -506,7 +506,7 @@ extension PaymentsOperationTests {
         let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne, stepTwo])
         
         // when
-        let result = operation.nextAction()
+        let result = try operation.nextAction()
         
         // then
         XCTAssertEqual(result, .restart)

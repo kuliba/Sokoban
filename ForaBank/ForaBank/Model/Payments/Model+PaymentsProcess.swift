@@ -38,7 +38,7 @@ extension Model {
         
         repeat {
             
-            let nextAction = operation.nextAction()
+            let nextAction = try operation.nextAction()
             
             switch nextAction {
             case let .step(index: stepIndex):

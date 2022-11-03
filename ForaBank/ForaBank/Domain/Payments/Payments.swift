@@ -149,7 +149,7 @@ extension Payments.Operation {
             let terms: [Term]
             
             /// Parameters processed on this step
-            let processed: [Parameter]?
+            let processed: [Payments.Parameter]?
         }
 
         struct Term: Equatable, CustomDebugStringConvertible {
@@ -200,8 +200,8 @@ extension Payments.Operation {
         
         struct ProcessedData {
             
-            let current: Parameter
-            let processed: Parameter
+            let current: Payments.Parameter
+            let processed: Payments.Parameter
             let impact: Impact
         }
     }

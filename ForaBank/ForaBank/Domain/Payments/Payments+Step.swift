@@ -17,13 +17,13 @@ extension Payments.Operation.Step {
     /// Current step status based on list of parameters from operation
     /// - Parameter parameters: list of parameters
     /// - Returns: step status
-    func status(with parameters: [PaymentsParameterRepresentable]) -> Status {
+    func status(with parameters: [PaymentsParameterRepresentable]) throws -> Status {
         
         guard front.isCompleted == true else {
             return .editing
         }
         
-        if let processedResults = processedResults(with: parameters) {
+        if let processedResults = try processedResults(with: parameters) {
 
             let impacts = impacts(for: processedResults)
 
@@ -42,33 +42,28 @@ extension Payments.Operation.Step {
     /// Results for parameters processed on server. Result contains parameter value sent on server, current parameter value and impact caused if current parameter value changed
     /// - Parameter parameters: list of parameters from operation
     /// - Returns: optional list of results
-    func processedResults(with parameters: [PaymentsParameterRepresentable]) -> [ProcessedData]? {
+    func processedResults(with parameters: [PaymentsParameterRepresentable]) throws -> [ProcessedData]? {
         
         guard let processed = back.processed else {
             return nil
         }
         
-        let termsSorted = back.terms.sorted(by: { $0.parameterId < $1.parameterId })
-        
-        let termsParametersIds = termsSorted.map{ $0.parameterId }
-        let currentParameters = parameters.filter({ termsParametersIds.contains($0.id) }).map{ $0.parameter }
-        
-        // check if we have parameters for terms
-        guard currentParameters.count > 0 else {
-            return nil
-        }
-        
-        let processedParametersSorted = processed.sorted(by: { $0.id < $1.id })
-        let impacts = termsSorted.map{ $0.impact }
-        
         var result = [ProcessedData]()
         
-        for (processed, (current, impact)) in zip(processedParametersSorted, zip(currentParameters, impacts)) {
+        for term in back.terms {
             
-            result.append(.init(current: current, processed: processed, impact: impact))
+            guard let currentParameter = parameters.first(where: { $0.id == term.parameterId })?.parameter else {
+                throw Payments.Error.missingParameter(term.parameterId)
+            }
+            
+            guard let processedParameter = processed.first(where: { $0.id == term.parameterId }) else {
+                throw Payments.Error.missingParameter(term.parameterId)
+            }
+
+            result.append(.init(current: currentParameter, processed: processedParameter, impact: term.impact))
         }
         
-        return result
+        return result.sorted(by: { $0.impact.rawValue < $1.impact.rawValue })
     }
     
     func impacts(for processedResults: [ProcessedData]) -> [Impact] {
