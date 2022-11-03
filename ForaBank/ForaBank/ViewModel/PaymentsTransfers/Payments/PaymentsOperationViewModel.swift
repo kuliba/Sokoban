@@ -46,6 +46,8 @@ class PaymentsOperationViewModel: ObservableObject {
         let header = HeaderViewModel(title: operation.service.name)
 
         self.init(header: header, top: [], content: [], bottom: [], link: nil, bottomSheet: nil, operation: operation, model: model)
+        
+        LoggerAgent.shared.log(category: .ui, message: "Operation started for service: \(operation.service)")
 
         bind()
     }
@@ -117,6 +119,8 @@ class PaymentsOperationViewModel: ObservableObject {
                     // check if auto continue required
                     if updatedOperation.isAutoContinueRequired == true {
                         
+                        LoggerAgent.shared.log(category: .ui, message: "Continue operation: \(updatedOperation)")
+                        
                         // auto continue operation
                         model.action.send(ModelAction.Payment.Process.Request(operation: updatedOperation))
                         self.action.send(PaymentsOperationViewModelAction.Spinner.Show())
@@ -137,6 +141,8 @@ class PaymentsOperationViewModel: ObservableObject {
                 case _ as PaymentsOperationViewModelAction.Continue:
                     // update operation with parameters
                     let updatedOperation = Self.reduce(operation: operation.value, items: items)
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "Continue operation: \(updatedOperation)")
                     
                     // continue operation
                     model.action.send(ModelAction.Payment.Process.Request(operation: updatedOperation))

@@ -16,6 +16,7 @@ class LoggerAgent: LoggerAgentProtocol {
     private let uiLogger = OSLog(subsystem: "ru.forabank.sense", category: LoggerAgentCategory.ui.rawValue)
     private let networkLogger = OSLog(subsystem: "ru.forabank.sense", category: LoggerAgentCategory.network.rawValue)
     private let cacheLogger = OSLog(subsystem: "ru.forabank.sense", category: LoggerAgentCategory.cache.rawValue)
+    private let paymentsLogger = OSLog(subsystem: "ru.forabank.sense", category: LoggerAgentCategory.payments.rawValue)
     
     func log(level: LoggerAgentLevel = .default, category: LoggerAgentCategory, file: String = #file, line: Int = #line, message: String) {
         
@@ -33,6 +34,9 @@ class LoggerAgent: LoggerAgentProtocol {
             
         case .cache:
             os_log("%@", log: cacheLogger, type: level.osLogType, logMessage)
+            
+        case .payments:
+            os_log("%@", log: paymentsLogger, type: level.osLogType, logMessage)
         }
     }
     

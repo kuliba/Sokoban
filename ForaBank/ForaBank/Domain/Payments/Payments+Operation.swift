@@ -28,6 +28,8 @@ extension Payments.Operation {
     /// - Returns: updated operation
     func appending(step: Step) throws -> Payments.Operation {
         
+        LoggerAgent.shared.log(category: .payments, message: "Appending step: \(step) to operation: \(self))")
+        
         let existingParametersIds = Set(parameters.map({ $0.id }))
         let appendingParametersIds = Set(step.parameters.map({ $0.id }))
         
@@ -64,6 +66,8 @@ extension Payments.Operation {
     /// - Returns: updated operation
     func updated(with update: [Parameter]) -> Payments.Operation {
         
+        LoggerAgent.shared.log(category: .payments, message: "Updating operation: \(self) with parameters: \(update)")
+        
         var updatedSteps = [Payments.Operation.Step]()
         for step in steps {
             
@@ -87,6 +91,8 @@ extension Payments.Operation {
     /// - Returns: updated operation
     func rollback(to stepIndex: Int) throws -> Payments.Operation {
         
+        LoggerAgent.shared.log(category: .payments, message: "Rollback operation: \(self) with to step: \(stepIndex)")
+        
         guard stepIndex >= 0, stepIndex < steps.count else {
             throw Payments.Operation.Error.rollbackStepIndexOutOfRange
         }
@@ -108,7 +114,9 @@ extension Payments.Operation {
     /// - Returns: restarted operation
     func restarted() -> Payments.Operation {
         
-        .init(service: service, source: source, steps: steps.map({ $0.reseted() }))
+        LoggerAgent.shared.log(category: .payments, message: "Restarting operation: \(self)")
+        
+        return .init(service: service, source: source, steps: steps.map({ $0.reseted() }))
     }
     
     /// Update operation step data with parameters sent to the server
@@ -117,6 +125,8 @@ extension Payments.Operation {
     ///   - stepIndex: step index
     /// - Returns: updated operation
     func processed(parameters: [Parameter], stepIndex: Int) throws -> Payments.Operation {
+        
+        LoggerAgent.shared.log(category: .payments, message: "Updating processed parameters: \(parameters) for step: \(stepIndex) for operation: \(self)")
         
         guard stepIndex >= 0, stepIndex < steps.count else {
             throw Payments.Operation.Error.processStepIndexOutOfRange
@@ -204,7 +214,7 @@ extension Payments.Operation {
 
 extension Payments.Operation {
     
-    enum Error: Swift.Error {
+    enum Error: LocalizedError {
         
         case appendingStepDuplicateParameters
         case appendingStepDuplicateVisibleParameters
@@ -216,6 +226,41 @@ extension Payments.Operation {
         case failedLoadServicesForCategory(Payments.Category)
         case unableSelectServiceForCategory(Payments.Category)
         case operatorNotSelectedForService(Payments.Service)
+        
+        var errorDescription: String? {
+            
+            switch self {
+            case .appendingStepDuplicateParameters:
+                return "Operation appending step: duplicate parameters "
+                
+            case .appendingStepDuplicateVisibleParameters:
+                return "Operation appending step: duplicate visible parameters"
+                
+            case .appendingStepIncorrectParametersTerms:
+                return "Operation appending step: incorrect parameters terms"
+                
+            case .rollbackStepIndexOutOfRange:
+                return "Operation rollback: step index out of range"
+                
+            case .processStepIndexOutOfRange:
+                return "Operation processing: step index out of range"
+                
+            case .stepMissingParameterForTerm:
+                return "Step updating: missing parameter for term"
+                
+            case .stepIncorrectParametersProcessed:
+                return "Step updating: processed incorrect parameter"
+                
+            case .failedLoadServicesForCategory(let category):
+                return "Failed loading service for category: \(category)"
+                
+            case .unableSelectServiceForCategory(let category):
+                return "Unable select service for category: \(category)"
+                
+            case .operatorNotSelectedForService(let service):
+                return "Not selected operator for service: \(service)"
+            }
+        }
     }
 }
 

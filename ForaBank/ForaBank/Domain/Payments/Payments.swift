@@ -152,22 +152,35 @@ extension Payments.Operation {
             let processed: [Parameter]?
         }
 
-        struct Term: Equatable {
+        struct Term: Equatable, CustomDebugStringConvertible {
             
             /// parameter id required to process
             let parameterId: Parameter.ID
             
             /// the impact produced by changing the value of this parameter
             let impact: Impact
+            
+            var debugDescription: String {
+                
+                return "\(parameterId)[\(impact)]"
+            }
         }
         
-        enum Impact: Int {
+        enum Impact: Int, CustomDebugStringConvertible {
             
             /// parameter change requires rollback operation to this step
             case rollback
             
             /// parameter change requires restart operation from the begining
             case restart
+            
+            var debugDescription: String {
+                
+                switch self {
+                case .rollback: return "rollback"
+                case .restart: return "restart"
+                }
+            }
         }
         
         enum Status: Equatable {

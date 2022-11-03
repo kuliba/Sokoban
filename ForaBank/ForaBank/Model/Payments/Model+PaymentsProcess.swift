@@ -42,6 +42,8 @@ extension Model {
             
             switch nextAction {
             case let .step(index: stepIndex):
+                LoggerAgent.shared.log(category: .payments, message: "Process action: LOCAL STEP: \(stepIndex)")
+                
                 // try to create step for the index
                 let step = try await localStep(operation, stepIndex)
                 
@@ -52,11 +54,13 @@ extension Model {
                 operation = try operation.appending(step: stepUpdatedWithSource)
                 
             case .frontUpdate:
+                LoggerAgent.shared.log(category: .payments, message: "Process action: FRONT UPDATE")
                 return .step(operation)
                 
             case let .backProcess(parameters: parameters, stepIndex: stepIndex, stage: stage):
                 switch stage {
                 case .local:
+                    LoggerAgent.shared.log(category: .payments, message: "Process action: BACK : LOCAL step: \(stepIndex + 1)")
                     // try to create step for the index
                     let step = try await localStep(operation, stepIndex + 1)
                     
@@ -75,6 +79,8 @@ extension Model {
                         // check if it restart or regular flow
                         if stepIndex + 1 < operation.steps.count {
                             
+                            LoggerAgent.shared.log(category: .payments, message: "Process action: BACK: REMOTE START (restart)")
+                            
                             // process parameters on server
                             let _ = try await remoteStart(parameters, operation)
                             
@@ -82,6 +88,8 @@ extension Model {
                             operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
                             
                         } else {
+                            
+                            LoggerAgent.shared.log(category: .payments, message: "Process action: BACK: REMOTE START")
                             
                             // process parameters on server
                             let response = try await remoteStart(parameters, operation)
@@ -103,6 +111,8 @@ extension Model {
                         // check if it restart or regular flow
                         if stepIndex + 1 < operation.steps.count {
                             
+                            LoggerAgent.shared.log(category: .payments, message: "Process action: BACK: REMOTE NEXT (restart)")
+                            
                             // process parameters on server
                             let _ = try await remoteNext(parameters, operation)
                             
@@ -110,6 +120,8 @@ extension Model {
                             operation = try operation.processed(parameters: parameters, stepIndex: stepIndex)
                             
                         } else {
+                            
+                            LoggerAgent.shared.log(category: .payments, message: "Process action: BACK: REMOTE NEXT")
                             
                             // try to create next step
                             let response = try await remoteNext(parameters, operation)
@@ -128,11 +140,13 @@ extension Model {
                         }
                         
                     case .confirm:
+                        LoggerAgent.shared.log(category: .payments, message: "Process action: BACK: REMOTE CONFIRM")
                         // try to confirm operation and receive success data
                         let success = try await remoteConfirm(parameters, operation)
                         return .complete(success)
                         
                     case .complete:
+                        LoggerAgent.shared.log(category: .payments, message: "Process action: BACK: REMOTE COMPLETE")
                         // try to complete operation and receive success data
                         let success = try await remoteComplete(parameters, operation)
                         return .complete(success)
@@ -140,12 +154,16 @@ extension Model {
                 }
                 
             case .frontConfirm:
+                LoggerAgent.shared.log(category: .payments, message: "Process action: FRONT: CONFIRM")
                 return .confirm(operation)
                 
             case let .rollback(stepIndex: stepIndex):
+                LoggerAgent.shared.log(category: .payments, message: "Process action: ROLLBACK to step: \(stepIndex)")
                 operation = try operation.rollback(to: stepIndex)
+                LoggerAgent.shared.log(category: .payments, message: "Rolled back operation: \(operation)")
                 
             case .restart:
+                LoggerAgent.shared.log(category: .payments, message: "Process action: RESTART")
                 operation = operation.restarted()
             }
             

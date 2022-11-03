@@ -38,6 +38,8 @@ class PaymentsServiceViewModel: ObservableObject {
             { service in self?.action.send(PaymentsServiceViewModelAction.ServiceSelected(service: service)) }
         })
         
+        LoggerAgent.shared.log(category: .ui, message: "Service selection started for category: \(category)")
+        
         bind()
     }
 

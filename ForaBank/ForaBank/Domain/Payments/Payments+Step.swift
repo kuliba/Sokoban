@@ -210,7 +210,12 @@ extension Payments.Operation.Step: CustomDebugStringConvertible {
         result += "\n\tback:"
         result += "\n\t\tstage: \(back.stage)"
         
-        //TODO: add terms
+        result += "\n\t\tterms:"
+        
+        for term in back.terms {
+            
+            result += "\(term) "
+        }
         
         if let processed = back.processed {
             

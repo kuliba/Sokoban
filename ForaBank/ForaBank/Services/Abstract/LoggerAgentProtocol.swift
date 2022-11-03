@@ -28,4 +28,5 @@ enum LoggerAgentCategory: String {
     case ui
     case network
     case cache
+    case payments
 }
