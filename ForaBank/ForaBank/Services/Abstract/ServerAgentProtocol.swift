@@ -85,7 +85,7 @@ protocol ServerResponse: Decodable, Equatable {
 }
 
 /// ServerAgent's error
-enum ServerAgentError: Error {
+enum ServerAgentError: LocalizedError {
     
     case requestCreationError(Error)
     case sessionError(Error)
@@ -94,33 +94,33 @@ enum ServerAgentError: Error {
     case curruptedData(Error)
     case serverStatus(ServerStatusCode, errorMessage: String?)
     
-    var localizedDescription: String {
+    var errorDescription: String? {
         
         switch self {
         case .requestCreationError(let error):
-                
-            return "Request Creation Error: \(error.localizedDescription))"
+            return "Server: request creation failed with error: \(error.localizedDescription))"
             
         case .sessionError(let error):
-            return "Session Error: \(error.localizedDescription)"
+            return "Server: session error: \(error.localizedDescription)"
 
         case .emptyResponse:
-            return "Empty Response"
+            return "Server: unexpected empty response"
 
         case .emptyResponseData:
-            return "Empty Response Data"
+            return "Server: unexpected empty response data"
 
         case .curruptedData(let error):
-            return "Currupted Data: \(error.localizedDescription)"
+            return "Server: data corrupted: \(error.localizedDescription)"
 
         case .serverStatus(let serverStatusCode, let errorMessage):
             
             if let errorMessage = errorMessage {
                 
-                return "Server Status: \(serverStatusCode) \(errorMessage)"
+                return "Server: status: \(serverStatusCode) \(errorMessage)"
+                
             } else {
                 
-                return "Server Status: \(serverStatusCode)"
+                return "Server: status: \(serverStatusCode)"
             }
         }
     }
