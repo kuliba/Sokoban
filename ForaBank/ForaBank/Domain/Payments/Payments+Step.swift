@@ -155,7 +155,7 @@ extension Payments.Operation.Step {
         
         for parameter in parameters {
             
-            if let newValue = reducer(service, source, parameter.id) {
+            if parameter.value == nil, let newValue = reducer(service, source, parameter.id) {
                 
                 let updatedParameter = parameter.updated(value: newValue)
                 updatedParameters.append(updatedParameter)

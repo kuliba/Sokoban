@@ -50,7 +50,62 @@ class PaymentsServiceViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
-                case let payload as PaymentsServiceViewModelAction.ServiceSelected:
+                case let payload as PaymentsServiceViewModelAction.ServiceSelected:     
+                    
+#if DEBUG
+                    
+                    if let mock = model.paymentsMock(for: payload.service) {
+                        
+                        Task {
+                            
+                            do {
+                                
+                                let operation = try await model.paymentsOperation(with: .mock(mock))
+                                
+                                await MainActor.run {
+                                    
+                                    let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model)
+                                    link = .operation(operationViewModel)
+                                    
+                                    bind(operationViewModel: operationViewModel)
+                                }
+                                
+                            } catch {
+                                
+                                await MainActor.run {
+                                    
+                                    self.action.send(PaymentsServiceViewModelAction.Alert(message: error.localizedDescription))
+                                }
+                            }
+                        }
+                        
+                    } else {
+                        
+                        Task {
+                            
+                            do {
+                                
+                                let operation = try await model.paymentsOperation(with: payload.service)
+                                
+                                await MainActor.run {
+                                    
+                                    let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model)
+                                    link = .operation(operationViewModel)
+                                    
+                                    bind(operationViewModel: operationViewModel)
+                                }
+                                
+                            } catch {
+                                
+                                await MainActor.run {
+                                    
+                                    self.action.send(PaymentsServiceViewModelAction.Alert(message: error.localizedDescription))
+                                }
+                            }
+                        }
+                    }
+                    
+#else
                     Task {
                         
                         do {
@@ -73,6 +128,9 @@ class PaymentsServiceViewModel: ObservableObject {
                             }
                         }
                     }
+#endif
+                    
+                    
                     
                 case _ as PaymentsServiceViewModelAction.DissmissLink:
                     link = nil

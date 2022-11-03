@@ -113,8 +113,13 @@ extension Model {
         
     func paymentsService(for source: Payments.Operation.Source) async throws -> Payments.Service {
         
-        //TODO: implementation required
-        throw Payments.Error.unsupported
+        switch source {
+        case let .mock(mock):
+            return mock.service
+            
+        default:
+            throw Payments.Error.unsupported
+        }
     }
 }
 
@@ -208,8 +213,13 @@ extension Model {
     
     func paymentsProcessSourceReducer(service: Payments.Service, source: Payments.Operation.Source, parameterId: Payments.Parameter.ID) -> Payments.Parameter.Value? {
 
-        //TODO: implementation required
-        return nil
+        switch source {
+        case let .mock(mock):
+            return mock.parameters.first(where: { $0.id == parameterId })?.value
+            
+        default:
+            return nil
+        }
     }
     
     func paymentsProcessDependencyReducer(parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
@@ -398,5 +408,19 @@ extension Model {
     func paymentsParameterValue(_ parameters: [PaymentsParameterRepresentable], id: Payments.Parameter.ID) -> Payments.Parameter.Value {
         
         return parameters.first(where: { $0.id == id })?.value
+    }
+    
+    func paymentsMock(for service: Payments.Service) -> Payments.Mock? {
+        
+        switch service {
+        case .fns:
+            return .init(service: service,
+                         parameters: [.init(id: "a3_BillNumber_1_1", value: "18204437200029004095"),
+                                      .init(id: "a3_INN_4_1", value: "7723013452"),
+                                      .init(id: "a3_OKTMO_5_1", value: "45390000")])
+            
+        default:
+            return nil
+        }
     }
 }

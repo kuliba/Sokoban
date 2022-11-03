@@ -23,6 +23,7 @@ extension Model {
             }
             let productParameter = Payments.ParameterProduct(value: String(productId), isEditable: true)
             
+            // amount
             let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
             let amountParameter = Payments.ParameterAmount(.init(id: amountParameterId, value: "0"), title: "Сумма", currency: .rub, validator: .init(minAmount: 0, maxAmount: 100000))
             

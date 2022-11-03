@@ -122,7 +122,8 @@ extension Payments.Operation {
         case latestPayment(LatestPaymentData.ID)
         
         case qr
-        //....
+        
+        case mock(Payments.Mock)
     }
     
     /// Operation step
@@ -381,6 +382,17 @@ extension Payments {
             case .complete: return "complete"
             }
         }
+    }
+}
+
+//MARK: - Mock
+
+extension Payments {
+    
+    struct Mock {
+        
+        let service: Payments.Service
+        let parameters: [Payments.Parameter]
     }
 }
 
