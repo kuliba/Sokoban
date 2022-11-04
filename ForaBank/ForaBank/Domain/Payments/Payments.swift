@@ -146,43 +146,13 @@ extension Payments.Operation {
             
             let stage: Stage
             
-            /// Terms requred to process on this step
-            let terms: [Term]
+            /// Parameters requred to process
+            let required: [Payments.Parameter.ID]
             
-            /// Parameters processed on this step
+            /// Parameters processed
             let processed: [Payments.Parameter]?
         }
 
-        struct Term: Equatable, CustomDebugStringConvertible {
-            
-            /// parameter id required to process
-            let parameterId: Parameter.ID
-            
-            /// the impact produced by changing the value of this parameter
-            let impact: Impact
-            
-            var debugDescription: String {
-                
-                return "\(parameterId)[\(impact)]"
-            }
-        }
-        
-        enum Impact: Int, CustomDebugStringConvertible {
-            
-            /// parameter change requires rollback operation to this step
-            case rollback
-            
-            /// parameter change requires restart operation from the begining
-            case restart
-            
-            var debugDescription: String {
-                
-                switch self {
-                case .rollback: return "rollback"
-                case .restart: return "restart"
-                }
-            }
-        }
         
         enum Status: Equatable {
             
@@ -196,14 +166,13 @@ extension Payments.Operation {
             case complete
             
             /// parameters changed after procrssing
-            case invalidated(Impact)
+            case invalidated
         }
         
         struct ProcessedData {
             
             let current: Payments.Parameter
             let processed: Payments.Parameter
-            let impact: Impact
         }
     }
     
@@ -247,9 +216,6 @@ extension Payments.Operation {
         
         /// process parameters on server
         case backProcess(parameters: [Parameter], stepIndex: Int, stage: Stage)
-        
-        /// restart operation
-        case restart
         
         /// rollback operation to step
         case rollback(stepIndex: Int)

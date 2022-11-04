@@ -166,8 +166,8 @@ extension Model {
         }
     }
     
-    func paymentsTransferAnywayStepTerms(service: Payments.Service, visible: [Payments.Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable]) throws -> [Payments.Operation.Step.Term] {
+    func paymentsTransferAnywayStepRequired(service: Payments.Service, visible: [Payments.Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable]) throws -> [Payments.Parameter.ID] {
         
-        try paymentsTransferStepTerms(service: service, visible: visible, nextStepParameters: nextStepParameters, operationParameters: operationParameters)
+        try paymentsTransferStepRequired(service: service, visible: visible, nextStepParameters: nextStepParameters, operationParameters: operationParameters)
     }
 }

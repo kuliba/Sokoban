@@ -302,7 +302,7 @@ private func localStep(operation: Payments.Operation, stepIndex: Int) async thro
         switch stepIndex {
         case 0:
             let paramOperator = Payments.ParameterMock(id: "operator", value: "fns")
-            return .init(parameters: [paramOperator], front: .init(visible: [paramOperator.id], isCompleted: true), back: .init(stage: .local, terms: [.init(parameterId: "operator", impact: .rollback)], processed: nil))
+            return .init(parameters: [paramOperator], front: .init(visible: [paramOperator.id], isCompleted: true), back: .init(stage: .local, required: ["operator"], processed: nil))
         case 1:
             guard let paramOperatorValue = operation.parameters.first(where: { $0.id == "operator" })?.value else {
                 throw Payments.Error.missingParameter("operator")
@@ -310,11 +310,11 @@ private func localStep(operation: Payments.Operation, stepIndex: Int) async thro
             switch paramOperatorValue {
             case "fns":
                 let paramService = Payments.ParameterMock(id: "service", value: nil)
-                return .init(parameters: [paramService], front: .init(visible: [paramService.id], isCompleted: false), back: .init(stage: .remote(.start), terms: [.init(parameterId: "service", impact: .rollback)], processed: nil))
+                return .init(parameters: [paramService], front: .init(visible: [paramService.id], isCompleted: false), back: .init(stage: .remote(.start), required: ["service"], processed: nil))
                 
             case "fnsUin":
                 let paramUin = Payments.ParameterMock(id: "uin", value: nil)
-                return .init(parameters: [paramUin], front: .init(visible: [paramUin.id], isCompleted: false), back: .init(stage: .remote(.start), terms: [.init(parameterId: "uin", impact: .rollback)], processed: nil))
+                return .init(parameters: [paramUin], front: .init(visible: [paramUin.id], isCompleted: false), back: .init(stage: .remote(.start), required: ["uin"], processed: nil))
                 
             default:
                 throw Payments.Error.unsupported
@@ -339,22 +339,22 @@ private func remoteStep(operation: Payments.Operation, response: TransferRespons
         }
         var stage = Payments.Operation.Stage.remote(.next)
         var parameters = responseAnyway.parameterListForNextStep.map{ Payments.ParameterMock(id: $0.id, value: $0.content) }
-        var terms = parameters.map{ Payments.Operation.Step.Term(parameterId: $0.id, impact: .rollback) }
+        var required = parameters.map{ $0.id }
         
         if responseAnyway.needSum == true {
             
             parameters.append(Payments.ParameterMock(id: "amount", value: "0"))
-            terms.append(.init(parameterId: "amount", impact: .restart))
+            required.append("amount")
         }
         let visible = parameters.map{ $0.id }
         
         if responseAnyway.finalStep == true {
             parameters.append(Payments.ParameterMock(id: "code", value: nil))
-            terms.append(.init(parameterId: "code", impact: .restart))
+            required.append("code")
             stage = .remote(.confirm)
             
         }
-        return .init(parameters: parameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stage, terms: terms, processed: nil))
+        return .init(parameters: parameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stage, required: required, processed: nil))
         
     default:
         throw Payments.Error.unsupported

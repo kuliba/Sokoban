@@ -129,46 +129,8 @@ extension Model {
         }
     }
     
-    func paymentsTransferStepTerms(service: Payments.Service, visible: [Payments.Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable]) throws -> [Payments.Operation.Step.Term] {
+    func paymentsTransferStepRequired(service: Payments.Service, visible: [Payments.Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable]) throws -> [Payments.Parameter.ID] {
         
-        var result = [Payments.Operation.Step.Term]()
-        
-        let parameters = operationParameters + nextStepParameters
-        
-        for parameterId in visible {
-            
-            guard let parameter = parameters.first(where: { $0.id == parameterId }) else {
-                throw Payments.Error.missingParameter(parameterId)
-            }
-            
-            switch parameter {
-            case _ as Payments.ParameterSelect:
-                result.append(.init(parameterId: parameterId, impact: .rollback))
-                
-            case _ as Payments.ParameterSelectSimple:
-                result.append(.init(parameterId: parameterId, impact: .rollback))
-                
-            case _ as Payments.ParameterSelectSwitch:
-                result.append(.init(parameterId: parameterId, impact: .rollback))
-                
-            case _ as Payments.ParameterInput:
-                result.append(.init(parameterId: parameterId, impact: .restart))
-                
-            case _ as Payments.ParameterName:
-                result.append(.init(parameterId: parameterId, impact: .restart))
-                
-            case _ as Payments.ParameterProduct:
-                result.append(.init(parameterId: parameterId, impact: .restart))
-                
-            case _ as Payments.ParameterAmount:
-                result.append(.init(parameterId: parameterId, impact: .restart))
-            
-            default:
-                continue
-                
-            }
-        }
-        
-        return result
+        nextStepParameters.filter({ visible.contains($0.id) }).map({ $0.id })
     }
 }

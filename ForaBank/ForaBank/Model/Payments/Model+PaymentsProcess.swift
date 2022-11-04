@@ -161,10 +161,6 @@ extension Model {
                 LoggerAgent.shared.log(category: .payments, message: "Process action: ROLLBACK to step: \(stepIndex)")
                 operation = try operation.rollback(to: stepIndex)
                 LoggerAgent.shared.log(category: .payments, message: "Rolled back operation: \(operation)")
-                
-            case .restart:
-                LoggerAgent.shared.log(category: .payments, message: "Process action: RESTART")
-                operation = operation.restarted()
             }
             
         } while true

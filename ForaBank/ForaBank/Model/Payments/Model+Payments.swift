@@ -190,18 +190,26 @@ extension Model {
         
         LoggerAgent.shared.log(category: .payments, message: "Remote step with response: \(response) requested for operation: \(operation)")
         
-        if let anywayResponse = response as? TransferAnywayResponseData {
+        switch response {
+        case let anywayResponse as TransferAnywayResponseData:
             
-            let nextParameters = try paymentsTransferAnywayStepParameters(service: operation.service, response: anywayResponse)
+            let next = try paymentsTransferAnywayStepParameters(service: operation.service, response: anywayResponse)
+            
+            let duplicates = next.map({ $0.parameter }).filter({ operation.parametersIds.contains($0.id) })
+            if duplicates.count > 0 {
+                LoggerAgent.shared.log(level: .error, category: .payments, message: "In anyway transfer response duplicates detected end removed: \(duplicates)")
+            }
+            
+            // next parameters without duplicates
+            let nextParameters = next.filter({ operation.parametersIds.contains($0.id) == false })
+            
             let visible = try paymentsTransferAnywayStepVisible(service: operation.service, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
             let stepStage = try paymentsTransferAnywayStepStage(service: operation.service, operation: operation, response: anywayResponse)
-            let stepTerms = try paymentsTransferAnywayStepTerms(service: operation.service, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters)
+            let required = try paymentsTransferAnywayStepRequired(service: operation.service, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters)
             
-            return Payments.Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, terms: stepTerms, processed: nil))
+            return Payments.Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, required: required, processed: nil))
             
-        } else {
-            
-            //TODO: implementation required
+        default:
             throw Payments.Error.unsupported
         }
     }

@@ -14,6 +14,7 @@ extension Payments.Operation {
     var nextStep: Int { steps.count }
     
     var parameters: [PaymentsParameterRepresentable] { steps.flatMap({ $0.parameters }) }
+    var parametersIds: [Payments.Parameter.ID] { parameters.map({ $0.id })}
    
     var visibleParametersIds: [Payments.Parameter.ID] { steps.flatMap({ $0.front.visible }) }
     var visibleParameters: [PaymentsParameterRepresentable] {
@@ -62,7 +63,7 @@ extension Payments.Operation {
         }
         
         let allParametersIds = existingParametersIds.union(appendingParametersIds)
-        let requiredParametersIds = Set(step.back.terms.map({ $0.parameterId }))
+        let requiredParametersIds = Set(step.back.required)
         
         // check if terms contains in parameters
         guard requiredParametersIds.isSubset(of: allParametersIds) else {
@@ -117,7 +118,13 @@ extension Payments.Operation {
             
             if index < stepIndex {
                 
-                stepsUpdated.append(step)
+                switch step.back.stage {
+                case .local:
+                    stepsUpdated.append(step)
+                    
+                case .remote:
+                    stepsUpdated.append(step.reseted())
+                }
                 
             } else if index == stepIndex {
                 
@@ -202,17 +209,14 @@ extension Payments.Operation {
             case .editing:
                 return step.back.stage == .remote(.confirm) ? .frontConfirm : .frontUpdate
                 
-            case let .invalidated(impact):
-                switch impact {
-                case .rollback: return .rollback(stepIndex: index)
-                case .restart: return .restart
-                }
+            case .invalidated:
+                return .rollback(stepIndex: index)
                 
             case let .pending(parameters: parameters, stage: stage):
                 return .backProcess(parameters: parameters, stepIndex: index, stage: stage)
                 
             default:
-                break
+                continue
             }
         }
         

@@ -24,14 +24,16 @@ extension Payments.Operation.Step {
         }
         
         if let processedResults = try processedResults(with: parameters) {
-
-            let impacts = impacts(for: processedResults)
-
-            guard let firstImpact = impacts.first else {
-                return .complete
-            }
             
-            return .invalidated(firstImpact)
+            for result in processedResults {
+                
+                if result.current != result.processed {
+                    
+                    return .invalidated
+                }
+            }
+
+            return .complete
             
         } else {
             
@@ -50,42 +52,27 @@ extension Payments.Operation.Step {
         
         var result = [ProcessedData]()
         
-        for term in back.terms {
+        for parameterId in back.required {
             
-            guard let currentParameter = parameters.first(where: { $0.id == term.parameterId })?.parameter else {
-                throw Payments.Error.missingParameter(term.parameterId)
+            guard let currentParameter = parameters.first(where: { $0.id == parameterId })?.parameter else {
+                throw Payments.Error.missingParameter(parameterId)
             }
             
-            guard let processedParameter = processed.first(where: { $0.id == term.parameterId }) else {
-                throw Payments.Error.missingParameter(term.parameterId)
+            guard let processedParameter = processed.first(where: { $0.id == parameterId }) else {
+                throw Payments.Error.missingParameter(parameterId)
             }
 
-            result.append(.init(current: currentParameter, processed: processedParameter, impact: term.impact))
+            result.append(.init(current: currentParameter, processed: processedParameter))
         }
         
-        return result.sorted(by: { $0.impact.rawValue < $1.impact.rawValue })
-    }
-    
-    func impacts(for processedResults: [ProcessedData]) -> [Impact] {
-        
-        var impacts = [Impact]()
-        
-        for statedata in processedResults {
-            
-            if statedata.processed != statedata.current {
-                
-                impacts.append(statedata.impact)
-            }
-        }
-        
-        return impacts.sorted(by: { $0.rawValue < $1.rawValue })
+        return result
     }
     
     /// Removes data about parameters processed on server
     /// - Returns: resetted step
     func reseted() -> Payments.Operation.Step {
         
-        return .init(parameters: parameters, front: front, back: .init(stage: back.stage, terms: back.terms, processed: nil) )
+        return .init(parameters: parameters, front: front, back: .init(stage: back.stage, required: back.required, processed: nil) )
     }
     
     /// Creates list of parameters that should be processed on server side
@@ -93,9 +80,7 @@ extension Payments.Operation.Step {
     /// - Returns: parameters list
     func pendingParameters(with parameters: [PaymentsParameterRepresentable]) -> [Parameter] {
 
-        let termsParametersIds = back.terms.map{ $0.parameterId }
-        
-        return parameters.filter({ termsParametersIds.contains($0.id) }).map{ $0.parameter }
+        parameters.filter({ back.required.contains($0.id) }).map{ $0.parameter }
     }
     
     /// Updates step with parameters processed on server
@@ -103,7 +88,7 @@ extension Payments.Operation.Step {
     /// - Returns: updated step
     func processed(parameters: [Parameter]) throws -> Payments.Operation.Step {
         
-        let requiredParametersIds = Set(back.terms.map({ $0.parameterId }))
+        let requiredParametersIds = Set(back.required)
         let processedParametersIds = Set(parameters.map({ $0.id }))
         
         //caheck if correct parameters procrssed
@@ -111,7 +96,7 @@ extension Payments.Operation.Step {
             throw Payments.Operation.Error.stepIncorrectParametersProcessed
         }
         
-        return .init(parameters: self.parameters, front: front, back: .init(stage: back.stage, terms: back.terms, processed: parameters))
+        return .init(parameters: self.parameters, front: front, back: .init(stage: back.stage, required: back.required, processed: parameters))
     }
     
     /// Updates state with parameter. If all parameters have value step becomes complete for front part.
@@ -205,11 +190,11 @@ extension Payments.Operation.Step: CustomDebugStringConvertible {
         result += "\n\tback:"
         result += "\n\t\tstage: \(back.stage)"
         
-        result += "\n\t\tterms:"
+        result += "\n\t\tprocess:"
         
-        for term in back.terms {
+        for parameterId in back.required {
             
-            result += "\(term) "
+            result += "\(parameterId) "
         }
         
         if let processed = back.processed {
