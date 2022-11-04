@@ -160,7 +160,6 @@ extension Model {
             case let .rollback(stepIndex: stepIndex):
                 LoggerAgent.shared.log(category: .payments, message: "Process action: ROLLBACK to step: \(stepIndex)")
                 operation = try operation.rollback(to: stepIndex)
-                LoggerAgent.shared.log(category: .payments, message: "Rolled back operation: \(operation)")
             }
             
         } while true

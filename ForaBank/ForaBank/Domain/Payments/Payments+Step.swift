@@ -190,7 +190,7 @@ extension Payments.Operation.Step: CustomDebugStringConvertible {
         result += "\n\tback:"
         result += "\n\t\tstage: \(back.stage)"
         
-        result += "\n\t\tprocess:"
+        result += "\n\t\trequired: "
         
         for parameterId in back.required {
             

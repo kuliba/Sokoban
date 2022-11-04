@@ -94,7 +94,7 @@ extension Model {
                 
                 let selectServiceParameter = Payments.ParameterSelectService(category: category, options: options)
                 
-                LoggerAgent.shared.log(category: .payments, message: "Select service parameter created with options: \(options))")
+                LoggerAgent.shared.log(level: .debug, category: .payments, message: "Select service parameter created with options: \(options.map({ $0.service })))")
                 
                 return .select(selectServiceParameter)
                 
@@ -104,7 +104,7 @@ extension Model {
                     throw Payments.Operation.Error.unableSelectServiceForCategory(category)
                 }
                 
-                LoggerAgent.shared.log(category: .payments, message: "Selected service: \(service))")
+                LoggerAgent.shared.log(level: .debug, category: .payments, message: "Selected service: \(service))")
                 
                 return .selected(service)
             }
@@ -129,7 +129,7 @@ extension Model {
     
     func paymentsOperation(with service: Payments.Service) async throws -> Payments.Operation {
         
-        LoggerAgent.shared.log(category: .payments, message: "Initial operation requested for service: \(service))")
+        LoggerAgent.shared.log(level: .debug, category: .payments, message: "Initial operation requested for service: \(service))")
         
         // create empty operation
         let operation = Payments.Operation(service: service)
@@ -146,7 +146,7 @@ extension Model {
     
     func paymentsOperation(with source: Payments.Operation.Source) async throws -> Payments.Operation {
         
-        LoggerAgent.shared.log(category: .payments, message: "Initial operation requested for source: \(source))")
+        LoggerAgent.shared.log(level: .debug, category: .payments, message: "Initial operation requested for source: \(source))")
         
         // try get service with source
         let service = try await paymentsService(for: source)
@@ -172,7 +172,7 @@ extension Model {
     
     func paymentsProcessLocalStep(operation: Payments.Operation, stepIndex: Int) async throws -> Payments.Operation.Step {
         
-        LoggerAgent.shared.log(category: .payments, message: "Local step for index: \(stepIndex) requested for operation: \(operation)")
+        LoggerAgent.shared.log(level: .debug, category: .payments, message: "Local step for index: \(stepIndex) requested for operation: \(operation.shortDescription)")
         
         switch operation.service {
         case .fns:
@@ -188,7 +188,7 @@ extension Model {
     
     func paymentsProcessRemoteStep(operation: Payments.Operation, response: TransferResponseData) async throws -> Payments.Operation.Step {
         
-        LoggerAgent.shared.log(category: .payments, message: "Remote step with response: \(response) requested for operation: \(operation)")
+        LoggerAgent.shared.log(level: .debug, category: .payments, message: "Remote step with response: \(response) requested for operation: \(operation.shortDescription)")
         
         switch response {
         case let anywayResponse as TransferAnywayResponseData:
@@ -197,7 +197,7 @@ extension Model {
             
             let duplicates = next.map({ $0.parameter }).filter({ operation.parametersIds.contains($0.id) })
             if duplicates.count > 0 {
-                LoggerAgent.shared.log(level: .error, category: .payments, message: "In anyway transfer response duplicates detected end removed: \(duplicates)")
+                LoggerAgent.shared.log(level: .error, category: .payments, message: "Anyway transfer response duplicates detected end removed: \(duplicates) from operation: \(operation.shortDescription)")
             }
             
             // next parameters without duplicates
@@ -244,7 +244,7 @@ extension Model {
     @discardableResult
     func paymentsProcessRemoteStart(_ process: [Payments.Parameter], _ operation: Payments.Operation) async throws -> TransferResponseData {
         
-        LoggerAgent.shared.log(category: .payments, message: "Remote: START: parameters \(process) requested for operation: \(operation)")
+        LoggerAgent.shared.log(level: .debug, category: .payments, message: "Remote: START: parameters \(process) requested for operation: \(operation.shortDescription)")
         
         switch operation.transferType {
         case .anyway:
@@ -255,7 +255,7 @@ extension Model {
     @discardableResult
     func paymentsProcessRemoteNext(_ process: [Payments.Parameter], _ operation: Payments.Operation) async throws -> TransferResponseData {
         
-        LoggerAgent.shared.log(category: .payments, message: "Remote: NEXT: parameters \(process) requested for operation: \(operation)")
+        LoggerAgent.shared.log(level: .debug, category: .payments, message: "Remote: NEXT: parameters \(process) requested for operation: \(operation.shortDescription)")
         
         switch operation.transferType {
         case .anyway:
@@ -265,7 +265,7 @@ extension Model {
     
     func paymentsProcessRemoteConfirm(_ process: [Payments.Parameter], _ operation: Payments.Operation) async throws -> Payments.Success {
         
-        LoggerAgent.shared.log(category: .payments, message: "Remote: CONFIRM: parameters \(process) requested for operation: \(operation)")
+        LoggerAgent.shared.log(level: .debug, category: .payments, message: "Remote: CONFIRM: parameters \(process) requested for operation: \(operation.shortDescription)")
         
         let codeParameterId = Payments.Parameter.Identifier.code.rawValue
         guard let codeValue = operation.parameters.first(where: { $0.id == codeParameterId })?.value else {
@@ -280,7 +280,7 @@ extension Model {
     
     func paymentsProcessRemoteComplete(_ process: [Payments.Parameter], _ operation: Payments.Operation) async throws -> Payments.Success {
         
-        LoggerAgent.shared.log(category: .payments, message: "Remote: COMPLETE: parameters \(process) requested for operation: \(operation)")
+        LoggerAgent.shared.log(level: .debug, category: .payments, message: "Remote: COMPLETE: parameters \(process) requested for operation: \(operation.shortDescription)")
         
         //FIXME: optional code value?
         let response = try await paymentsTransferComplete(code: "")

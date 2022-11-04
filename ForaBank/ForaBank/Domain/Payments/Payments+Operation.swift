@@ -44,7 +44,7 @@ extension Payments.Operation {
     /// - Returns: updated operation
     func appending(step: Step) throws -> Payments.Operation {
         
-        LoggerAgent.shared.log(category: .payments, message: "Appending step: \(step) to operation: \(self))")
+        LoggerAgent.shared.log(level: .debug, category: .payments, message: "Operation: \(shortDescription) appending step: \n\(step)")
         
         let existingParametersIds = Set(parameters.map({ $0.id }))
         let appendingParametersIds = Set(step.parameters.map({ $0.id }))
@@ -72,8 +72,12 @@ extension Payments.Operation {
         
         var stepsUpdated = steps
         stepsUpdated.append(step)
+        
+        let updatedOperation = Payments.Operation(service: service, source: source, steps: stepsUpdated)
+        
+        LoggerAgent.shared.log(level: .debug, category: .payments, message: "Operation: \(updatedOperation.shortDescription) step appended")
 
-        return .init(service: service, source: source, steps: stepsUpdated)
+        return updatedOperation
     }
 
     
@@ -82,7 +86,7 @@ extension Payments.Operation {
     /// - Returns: updated operation
     func updated(with update: [Parameter]) -> Payments.Operation {
         
-        LoggerAgent.shared.log(category: .payments, message: "Updating operation: \(self) with parameters: \(update)")
+        LoggerAgent.shared.log(level: .debug, category: .payments, message: "Operation: \(shortDescription) updating with parameters: \n\(update)")
         
         var updatedSteps = [Payments.Operation.Step]()
         for step in steps {
@@ -98,8 +102,12 @@ extension Payments.Operation {
             
             updatedSteps.append(updatedStep)
         }
+        
+        let updatedOperation = Payments.Operation(service: service, source: source, steps: updatedSteps)
+        
+        LoggerAgent.shared.log(level: .debug, category: .payments, message: "Operation: \(updatedOperation.shortDescription) updated")
        
-        return .init(service: service, source: source, steps: updatedSteps)
+        return updatedOperation
     }
     
     /// Rolls back operation to some step
@@ -107,7 +115,7 @@ extension Payments.Operation {
     /// - Returns: updated operation
     func rollback(to stepIndex: Int) throws -> Payments.Operation {
         
-        LoggerAgent.shared.log(category: .payments, message: "Rollback operation: \(self) with to step: \(stepIndex)")
+        LoggerAgent.shared.log(level: .debug, category: .payments, message: "Operation: \(shortDescription) rolling back to step: \(stepIndex)")
         
         guard stepIndex >= 0, stepIndex < steps.count else {
             throw Payments.Operation.Error.rollbackStepIndexOutOfRange
@@ -135,17 +143,12 @@ extension Payments.Operation {
                 break
             }
         }
+        
+        let updatedOperation = Payments.Operation(service: service, source: source, steps: stepsUpdated)
+        
+        LoggerAgent.shared.log(level: .debug, category: .payments, message: "Operation: ROLLED BACK \(updatedOperation)")
 
-        return .init(service: service, source: source, steps: stepsUpdated)
-    }
-    
-    /// Restarts the operation
-    /// - Returns: restarted operation
-    func restarted() -> Payments.Operation {
-        
-        LoggerAgent.shared.log(category: .payments, message: "Restarting operation: \(self)")
-        
-        return .init(service: service, source: source, steps: steps.map({ $0.reseted() }))
+        return updatedOperation
     }
     
     /// Update operation step data with parameters sent to the server
@@ -155,7 +158,7 @@ extension Payments.Operation {
     /// - Returns: updated operation
     func processed(parameters: [Parameter], stepIndex: Int) throws -> Payments.Operation {
         
-        LoggerAgent.shared.log(category: .payments, message: "Updating processed parameters: \(parameters) for step: \(stepIndex) for operation: \(self)")
+        LoggerAgent.shared.log(level: .debug, category: .payments, message: "Operation: \(shortDescription) updating processed parameters: \(parameters) for step: \(stepIndex)")
         
         guard stepIndex >= 0, stepIndex < steps.count else {
             throw Payments.Operation.Error.processStepIndexOutOfRange
@@ -167,7 +170,11 @@ extension Payments.Operation {
         var updatedSteps = steps
         updatedSteps.replaceSubrange(stepIndex...stepIndex, with: [updatedStep])
         
-        return .init(service: service, source: source, steps: updatedSteps)
+        let updatedOperation = Payments.Operation(service: service, source: source, steps: updatedSteps)
+        
+        LoggerAgent.shared.log(level: .debug, category: .payments, message: "Operation: UPDATED \(updatedOperation)")
+        
+        return updatedOperation
     }
     
     /// Updates depended parameters. For example parameter `amount` or `currency` depends on parameter `product` value
@@ -296,6 +303,8 @@ extension Payments.Operation {
 //MARK: - Debug Description
 
 extension Payments.Operation: CustomDebugStringConvertible {
+    
+    var shortDescription: String { "\(service)[steps: \(steps.count)]" }
     
     var debugDescription: String {
         

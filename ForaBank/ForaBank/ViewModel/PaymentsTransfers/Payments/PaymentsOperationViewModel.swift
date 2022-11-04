@@ -119,7 +119,7 @@ class PaymentsOperationViewModel: ObservableObject {
                     // check if auto continue required
                     if updatedOperation.isAutoContinueRequired == true {
                         
-                        LoggerAgent.shared.log(category: .ui, message: "Continue operation: \(updatedOperation)")
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "Continue operation: \(updatedOperation)")
                         
                         // auto continue operation
                         model.action.send(ModelAction.Payment.Process.Request(operation: updatedOperation))
@@ -142,7 +142,7 @@ class PaymentsOperationViewModel: ObservableObject {
                     // update operation with parameters
                     let updatedOperation = Self.reduce(operation: operation.value, items: items)
                     
-                    LoggerAgent.shared.log(category: .ui, message: "Continue operation: \(updatedOperation)")
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "Continue operation: \(updatedOperation)")
                     
                     // continue operation
                     model.action.send(ModelAction.Payment.Process.Request(operation: updatedOperation))
