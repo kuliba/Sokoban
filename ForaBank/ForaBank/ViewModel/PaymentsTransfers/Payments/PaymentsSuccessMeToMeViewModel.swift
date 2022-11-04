@@ -14,15 +14,17 @@ class PaymentsSuccessMeToMeViewModel: ObservableObject {
     @Published var sheet: Sheet?
     
     private let model: Model
+    private let mode: Mode
     private let state: State
     private let responseData: TransferResponseData
     
     var successViewModel: PaymentsSuccessViewModel
     private var bindings = Set<AnyCancellable>()
     
-    init(_ model: Model, state: State, responseData: TransferResponseData) {
+    init(_ model: Model, mode: Mode, state: State, responseData: TransferResponseData) {
         
         self.model = model
+        self.mode = mode
         self.state = state
         self.responseData = responseData
         self.successViewModel = .init(model, dismissAction: {})
@@ -96,6 +98,13 @@ extension PaymentsSuccessMeToMeViewModel {
         }
     }
     
+    enum Mode {
+        
+        case meToMe
+        case closeAccount
+        case closeAccountEmpty(ProductData.ID)
+    }
+    
     enum State {
         
         case success(TransferResponseBaseData.DocumentStatus, Int)
@@ -111,30 +120,109 @@ extension PaymentsSuccessMeToMeViewModel {
 }
 
 extension PaymentsSuccessMeToMeViewModel {
+    
+    private func title(documentStatus: TransferResponseBaseData.DocumentStatus) -> String {
+        
+        switch documentStatus {
+        case .complete:
+            
+            switch mode {
+            case .meToMe, .closeAccount: return "Успешный перевод"
+            case .closeAccountEmpty: return "Счет успешно закрыт"
+            }
+            
+        case .inProgress:
+            
+            switch mode {
+            case .meToMe: return "Операция в обработке!"
+            case .closeAccount, .closeAccountEmpty: return .init()
+            }
+            
+        case .rejected, .unknown:
+            
+            switch mode {
+            case .meToMe: return "Операция неуспешна!"
+            case .closeAccount: return .init()
+            case .closeAccountEmpty: return "Отказ"
+            }
+        }
+    }
+    
+    private func makeOptionButtons(_ documentStatus: TransferResponseBaseData.DocumentStatus, paymentOperationDetailId: Int) -> [PaymentsSuccessOptionButtonViewModel] {
+        
+        switch documentStatus {
+        case .complete:
+            
+            switch mode {
+            case .meToMe:
+                
+                return [optionButton(.template, paymentOperationDetailId: paymentOperationDetailId),
+                        optionButton(.document, paymentOperationDetailId: paymentOperationDetailId),
+                        optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)]
+                
+            case .closeAccount:
+                
+                return [optionButton(.document, paymentOperationDetailId: paymentOperationDetailId),
+                        optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)]
+                
+            case .closeAccountEmpty:
+                
+                return [optionButton(.document, paymentOperationDetailId: paymentOperationDetailId)]
+            }
+            
+        case .inProgress:
+            
+            switch mode {
+            case .meToMe:
+                
+                return [optionButton(.template, paymentOperationDetailId: paymentOperationDetailId),
+                        optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)]
+                
+            case .closeAccount, .closeAccountEmpty:
+                return .init()
+            }
+            
+        case .rejected, .unknown:
+            
+            switch mode {
+            case .meToMe:
+                
+                return [optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)]
+                
+            case .closeAccount, .closeAccountEmpty:
+                return .init()
+            }
+        }
+    }
 
     private func makeSuccess(_ model: Model, state: State, data: TransferResponseData, repeatAction: @escaping () -> Void, closeAction: @escaping () -> Void) -> PaymentsSuccessViewModel {
         
         let amountFormatted = model.amountFormatted(amount: data.debitAmount ?? 0, currencyCode: data.currencyPayer?.description, style: .fraction)
         
+        let amount = data.debitAmount == 0 ? nil : amountFormatted
+        
         switch state {
         case let .success(status, paymentOperationDetailId):
+            
+            let title = title(documentStatus: status)
+            let optionButtons = makeOptionButtons(status, paymentOperationDetailId: paymentOperationDetailId)
             
             switch status {
             case .complete:
                 
-                return .init(model: model, iconType: .success, title: "Успешный перевод", amount: amountFormatted, optionButtons: [optionButton(.template, paymentOperationDetailId: paymentOperationDetailId), optionButton(.document, paymentOperationDetailId: paymentOperationDetailId), optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red, action: closeAction))
+                return .init(model: model, iconType: .success, title: title, amount: amount, optionButtons: optionButtons, actionButton: .init(title: "На главную", style: .red, action: closeAction))
                 
             case .inProgress:
                 
-                return .init(model: model, iconType: .accepted, title: "Операция в обработке!", amount: amountFormatted, optionButtons: [optionButton(.template, paymentOperationDetailId: paymentOperationDetailId), optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red, action: closeAction))
+                return .init(model: model, iconType: .accepted, title: title, amount: amount, optionButtons: optionButtons, actionButton: .init(title: "На главную", style: .red, action: closeAction))
                 
             case .rejected, .unknown:
                 
-                return .init(model: model, iconType: .error, title: "Операция неуспешна!", amount: amountFormatted, repeatButton: .init(title: "Повторить", style: .gray, action: repeatAction), optionButtons: [optionButton(.details, paymentOperationDetailId: paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red, action: closeAction))
+                return .init(model: model, iconType: .error, title: title, amount: amount, repeatButton: .init(title: "Повторить", style: .gray, action: repeatAction), optionButtons: optionButtons, actionButton: .init(title: "На главную", style: .red, action: closeAction))
             }
             
         case .failed:
-            
+
             return .init(model: model, iconType: .error, title: "Операция неуспешна!", amount: amountFormatted, repeatButton: .init(title: "Повторить", style: .gray, action: repeatAction), optionButtons: [optionButton(.details, paymentOperationDetailId: data.paymentOperationDetailId)], actionButton: .init(title: "На главную", style: .red, action: closeAction))
         }
     }
@@ -157,9 +245,19 @@ extension PaymentsSuccessMeToMeViewModel {
                     return
                 }
             
-                let printViewModel: PrintFormView.ViewModel = .init(type: .operation(paymentOperationDetailId: paymentOperationDetailId, printFormType: .internal), model: self.model)
-                
-                self.sheet = .init(type: .printForm(printViewModel))
+                switch self.mode {
+                case .meToMe, .closeAccount:
+                    
+                    let printViewModel: PrintFormView.ViewModel = .init(type: .operation(paymentOperationDetailId: paymentOperationDetailId, printFormType: .internal), model: self.model)
+                    
+                    self.sheet = .init(type: .printForm(printViewModel))
+                    
+                case let .closeAccountEmpty(productId):
+                    
+                    let printViewModel: PrintFormView.ViewModel = .init(type: .closeAccount(id: productId), model: self.model)
+                    
+                    self.sheet = .init(type: .printForm(printViewModel))
+                }
         }
 
         case .details:

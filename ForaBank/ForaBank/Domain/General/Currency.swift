@@ -35,6 +35,7 @@ extension Currency {
     static let gbp = Currency(description: "GBP")
     static let chf = Currency(description: "CHF")
     static let cny = Currency(description: "CNY")
+    static let amd = Currency(description: "AMD")
     
     var currencyTitle: String {
         
@@ -45,6 +46,7 @@ extension Currency {
         case .gbp: return "в фунтах стерлингов"
         case .chf: return "в швейцарских франках"
         case .cny: return "в китайских юанях"
+        case .amd: return "в армянских драмах"
         default:
             return ""
         }
@@ -58,6 +60,7 @@ extension Currency {
         case .gbp: return 3
         case .chf: return 4
         case .cny: return 5
+        case .amd: return 6
         default:
             return 0
         }
@@ -73,6 +76,7 @@ extension Currency {
         case .gbp: return "£"
         case .chf: return "₣"
         case .cny: return "¥"
+        case .amd: return "֏"
         default:
             return ""
         }

@@ -348,8 +348,14 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) { [weak self] in
                         
-                        self?.fullCover = .init(type: .successMeToMe(payload.viewModel))
-                        self?.bind(payload.viewModel)
+                        guard let self = self else {
+                            return
+                        }
+                        
+                        self.bind(payload.viewModel)
+                        self.fullCover = .init(type: .successMeToMe(payload.viewModel))
+                        
+                        self.model.action.send(ModelAction.Products.Update.ForProductType(productType: .account))
                     }
                     
                 case _ as PaymentsMeToMeAction.Response.Failed:

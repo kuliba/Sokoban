@@ -34,6 +34,7 @@ struct PaymentsSuccessMeToMeView_Previews: PreviewProvider {
 
         PaymentsSuccessMeToMeView(viewModel: .init(
             .emptyMock,
+            mode: .meToMe,
             state: .success(.complete, 0),
             responseData: .init(
                 amount: nil,

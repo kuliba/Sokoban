@@ -81,7 +81,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             // For ruble transfers
                             if response.needOTP == false, let documentStatus = response.documentStatus {
                                 
-                                let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(model, state: .success(documentStatus, response.paymentOperationDetailId), responseData: response)
+                                let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(model, mode: .meToMe, state: .success(documentStatus, response.paymentOperationDetailId), responseData: response)
                                 
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
                                 
@@ -104,16 +104,15 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         
                         if let documentStatus = success.documentStatus {
                             
-                            let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(model, state: .success(documentStatus, success.paymentOperationDetailId), responseData: payload.transferResponse)
+                            let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(model, mode: .meToMe, state: .success(documentStatus, success.paymentOperationDetailId), responseData: payload.transferResponse)
                             
                             self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
                         }
                         
                     case let .failure(error):
                         
-                        let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(model, state: .failed(error), responseData: payload.transferResponse)
-                        
-                        self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
+                        state = .normal
+                        makeAlert(error)
                     }
 
                 case let payload as ModelAction.Account.Close.Response:
@@ -130,9 +129,10 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 
                                 let responseData: TransferResponseData = .init(amount: balance, creditAmount: nil, currencyAmount: .init(description: productData.currency), currencyPayee: nil, currencyPayer: .init(description: productData.currency), currencyRate: nil, debitAmount: balance, fee: nil, needMake: nil, needOTP: nil, payeeName: nil, documentStatus: documentStatus, paymentOperationDetailId: paymentOperationDetailId)
                                 
-                                let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(model, state: .success(documentStatus, paymentOperationDetailId), responseData: responseData)
+                                let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(model, mode: .closeAccount, state: .success(documentStatus, paymentOperationDetailId), responseData: responseData)
                                 
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
+                                makeInformer(closeAccount: true)
                             }
                             
                         default:
@@ -143,6 +143,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         
                         state = .normal
                         makeAlert(ModelError.serverCommandError(error: message))
+                        makeInformer(closeAccount: false)
                     }
                     
                 default:
@@ -198,9 +199,13 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         switch productTo.productType {
                         case .card:
                             
+                            state = .loading
+                            
                             model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: productTo.id)))
                             
                         case .account:
+                            
+                            state = .loading
                             
                             model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: productTo.id, cardId: nil)))
                             
@@ -269,6 +274,22 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 updateInfoButton(model.rates.value)
                 
             }.store(in: &bindings)
+    }
+    
+    private func makeInformer(closeAccount: Bool) {
+        
+        if let productIdFrom = swapViewModel.productIdFrom,
+           let product = model.product(productId: productIdFrom) {
+            
+            var message: String
+            
+            switch closeAccount {
+            case true: message = "счет закрыт"
+            case false: message = "счет не закрыт"
+            }
+            
+            model.action.send(ModelAction.Informer.Show(informer: .init(message: "\(product.currency) \(message)", icon: .check)))
+        }
     }
     
     private func updateAmountSwitch(from id: ProductData.ID) {

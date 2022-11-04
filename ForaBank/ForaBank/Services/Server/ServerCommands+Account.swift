@@ -95,6 +95,29 @@ extension ServerCommands {
         }
         
         /*
+         http://10.1.206.21:8080/swagger-ui/index.html#/AccountController/getPrintFormForCloseAccount
+         */
+        struct GetPrintFormForCloseAccount: ServerDownloadCommand {
+            
+            let token: String
+            let endpoint = "/rest/getPrintFormForCloseAccount"
+            let method: ServerCommandMethod = .post
+            var payload: BasePayload?
+            let cachePolicy: URLRequest.CachePolicy = .reloadIgnoringCacheData
+            
+            internal init(token: String, payload: BasePayload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+            
+            init(token: String, accountId: ProductData.ID) {
+                
+                self.init(token: token, payload: .init(id: accountId, accountId: "\(accountId)"))
+            }
+        }
+        
+        /*
          http://192.168.50.113:8080/swagger-ui/index.html#/AccountController/saveAccountCustomName
          */
         struct SaveAccountName: ServerCommand {
@@ -131,6 +154,7 @@ extension ServerCommands {
             var endDate: Date? = nil
             var statementFormat: StatementFormat? = nil
             var accountNumber: String? = nil
+            var accountId: String? = nil
         }
         
         /*

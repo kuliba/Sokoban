@@ -273,6 +273,7 @@
 		50087821285348A90033DDD5 /* Collection+Safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50087820285348A90033DDD5 /* Collection+Safe.swift */; };
 		500C09E328D3160A009E8F61 /* PaymentsSuccessMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C09E228D31609009E8F61 /* PaymentsSuccessMock.swift */; };
 		500ECA6228DC4DCD00881710 /* ProductsSwapViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500ECA6128DC4DCD00881710 /* ProductsSwapViewComponent.swift */; };
+		5011B1E8291408EA00F2481A /* CloseAccountSpinnerViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5011B1E7291408EA00F2481A /* CloseAccountSpinnerViewComponent.swift */; };
 		50164F202841009C004239A1 /* ToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50164F1F2841009C004239A1 /* ToggleView.swift */; };
 		502633D928B52BDD00A89940 /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502633D828B52BDD00A89940 /* Double+Extensions.swift */; };
 		5028F76A28DB2A70000DB351 /* CurrencyWalletSelectorViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5028F76828DB2A70000DB351 /* CurrencyWalletSelectorViewComponent.swift */; };
@@ -1694,6 +1695,7 @@
 		50087820285348A90033DDD5 /* Collection+Safe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Safe.swift"; sourceTree = "<group>"; };
 		500C09E228D31609009E8F61 /* PaymentsSuccessMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSuccessMock.swift; sourceTree = "<group>"; };
 		500ECA6128DC4DCD00881710 /* ProductsSwapViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsSwapViewComponent.swift; sourceTree = "<group>"; };
+		5011B1E7291408EA00F2481A /* CloseAccountSpinnerViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseAccountSpinnerViewComponent.swift; sourceTree = "<group>"; };
 		50164F1F2841009C004239A1 /* ToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleView.swift; sourceTree = "<group>"; };
 		502633D828B52BDD00A89940 /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
 		5028F76828DB2A70000DB351 /* CurrencyWalletSelectorViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyWalletSelectorViewComponent.swift; sourceTree = "<group>"; };
@@ -4512,6 +4514,7 @@
 				77448C0E2872FC05009EEEA8 /* PrintFormViewComponent.swift */,
 				774A8B7F2865FF3600B81140 /* RefreshingIndicatorViewComponent.swift */,
 				5043E55128847BDE002C7465 /* CurrencySelectorViewComponent.swift */,
+				5011B1E7291408EA00F2481A /* CloseAccountSpinnerViewComponent.swift */,
 				50AF668E28831070003D6824 /* ProductsSelector */,
 				5088A0862855F411003C39D7 /* Paging */,
 			);
@@ -8807,6 +8810,7 @@
 				ED3A96772690FCD700252857 /* BankViewModel.swift in Sources */,
 				7705ABC927E8846E000E99CA /* Model+PaymentsTaxes.swift in Sources */,
 				68FFA54F26853897002DADFA /* PhoneContacts.swift in Sources */,
+				5011B1E8291408EA00F2481A /* CloseAccountSpinnerViewComponent.swift in Sources */,
 				77C3829A27E2061800B5246E /* PaymentsCardViewComponent+Legacy.swift in Sources */,
 				ED2D89F3286C84950000B391 /* CameraAgent.swift in Sources */,
 				F63D42FC24C643FCB7631F83 /* InternetTVDetailsFormController.swift in Sources */,

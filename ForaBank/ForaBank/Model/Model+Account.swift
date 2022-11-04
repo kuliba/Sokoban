@@ -219,6 +219,30 @@ extension Model {
             }
         }
     }
+    
+    func handleCloseAccountPrintForm(_ payload: ModelAction.Account.CloseAccount.PrintForm.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.AccountController.GetPrintFormForCloseAccount(token: token, accountId: payload.id)
+        serverAgent.executeDownloadCommand(command: command) { [weak self] result in
+            
+            guard let self = self else {
+                return
+            }
+            
+            switch result {
+            case let .success(data):
+                self.action.send(ModelAction.Account.CloseAccount.PrintForm.Response(result: .success(data)))
+                
+            case let .failure(error):
+                self.action.send(ModelAction.Account.CloseAccount.PrintForm.Response(result: .failure(error)))
+            }
+        }
+    }
 }
 
 // MARK: - Update
@@ -378,6 +402,22 @@ extension ModelAction {
                 
                 case success(data: ServerCommands.AccountController.CloseAccount.Response.TransferData)
                 case failure(message: String)
+            }
+        }
+        
+        enum CloseAccount {
+            
+            enum PrintForm {
+                
+                struct Request: Action {
+                    
+                    let id: ProductData.ID
+                }
+                
+                struct Response: Action {
+                    
+                    let result: Result<Data, Error>
+                }
             }
         }
     }

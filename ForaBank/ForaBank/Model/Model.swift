@@ -804,6 +804,9 @@ class Model {
                 case let payload as ModelAction.Account.Close.Request:
                     handleCloseAccountRequest(payload)
                     
+                case let payload as ModelAction.Account.CloseAccount.PrintForm.Request:
+                    handleCloseAccountPrintForm(payload)
+                    
                 //MARK: - DeepLink
 
                 case let payload as ModelAction.DeepLink.Set:
