@@ -26,6 +26,8 @@ extension Model {
         
         let command = ServerCommands.TransferController.CreateAnywayTransfer(token: token, isNewPayment: isNewPayment, payload: .init(amount: amount, check: false, comment: comment, currencyAmount: currency, payer: payer, additional: additional, puref: puref))
         
+        print(command)
+        
         return try await serverAgent.executeCommand(command: command)
     }
 }
@@ -44,7 +46,7 @@ extension Model {
         try paymentsTransferPayer(parameters)
     }
     
-    func paymentsTransferAnywayAmount(_ parameters: [PaymentsParameterRepresentable]) throws -> Double {
+    func paymentsTransferAnywayAmount(_ parameters: [PaymentsParameterRepresentable]) throws -> Double? {
         
         try paymentsTransferAmount(parameters)
     }
@@ -101,6 +103,14 @@ extension Model {
             }
         }
         
+        if response.needSum == true {
+            
+            // amount
+            let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
+            let amountParameter = Payments.ParameterAmount(.init(id: amountParameterId, value: "0"), title: "Сумма", currency: .rub, validator: .init(minAmount: 0, maxAmount: 100000))
+            result.append(amountParameter)
+        }
+        
         if response.finalStep == true {
             
             let codeParameter = Payments.ParameterInput(
@@ -131,13 +141,6 @@ extension Model {
             }
             
             result.append(Payments.Parameter.Identifier.product.rawValue)
-            
-            let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
-            guard allParametersIds.contains(amountParameterId) else {
-                throw Payments.Error.missingParameter(amountParameterId)
-            }
-            
-            result.append(Payments.Parameter.Identifier.amount.rawValue)
         }
 
         return result

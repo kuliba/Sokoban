@@ -53,12 +53,12 @@ extension Model {
         }
     }
     
-    func paymentsTransferAmount(_ parameters: [PaymentsParameterRepresentable]) throws -> Double {
+    func paymentsTransferAmount(_ parameters: [PaymentsParameterRepresentable]) throws -> Double? {
         
         let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
         guard let amountParameter = parameters.first(where: { $0.parameter.id == amountParameterId }) as? Payments.ParameterAmount else {
             
-            throw Payments.Error.missingParameter(amountParameterId)
+            return nil
         }
         
         return amountParameter.amount

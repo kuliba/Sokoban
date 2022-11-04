@@ -65,7 +65,7 @@ extension TransferAnywayResponseData {
         
         let fieldName: String
         let fieldTitle: String
-        let fieldValue: String
+        let fieldValue: String?
         let svgImage: SVGImageData?
         
         var iconData: ImageData? {
