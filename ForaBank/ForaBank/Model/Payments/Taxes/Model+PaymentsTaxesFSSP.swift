@@ -9,10 +9,63 @@ import Foundation
 
 extension Model {
     
-    func paymentsStepFSSP(for stepIndex: Int) async throws -> Payments.Operation.Step {
+    func paymentsStepFSSP(_ operation: Payments.Operation, for stepIndex: Int) async throws -> Payments.Operation.Step {
         
-        //TODO: implementation required
-        throw Payments.Error.unsupported
+        let searchTypeParameterId = "a3_SearchType_1_1"
+        
+        switch stepIndex {
+        case 0:
+            
+            // operator
+            let operatorParameter = Payments.ParameterOperator(operatorType: .fssp)
+            
+            // product
+            let productParameterId = Payments.Parameter.Identifier.product.rawValue
+            guard let productId = firstProductId(of: .card, currency: .rub) else {
+                throw Payments.Error.unableCreateRepresentable(productParameterId)
+            }
+            let productParameter = Payments.ParameterProduct(value: String(productId), isEditable: true)
+
+            // search type
+            let searchTypeParameter = Payments.ParameterSelectSwitch(
+                .init(id: searchTypeParameterId, value: "20"),
+                options: [
+                    .init(id: "20", name: "Документ"),
+                    .init(id: "30", name: "УИН"),
+                    .init(id: "40", name: "ИП")
+                    
+                ], placement: .top)
+            
+            return .init(parameters: [operatorParameter, productParameter, searchTypeParameter], front: .init(visible: [searchTypeParameter.id], isCompleted: true), back: .init(stage: .local, required: [searchTypeParameter.id], processed: [.init(id: searchTypeParameter.id, value: "20")] ))
+            
+        case 1:
+            guard let searchTypeParameterValue = paymentsParameterValue(operation.parameters, id: searchTypeParameterId) else {
+                throw Payments.Error.missingParameter(searchTypeParameterId)
+            }
+            
+            switch searchTypeParameterValue {
+            case "20":
+                guard let fsspDocumentList = dictionaryFSSPDocumentList() else {
+                    throw Payments.Error.missingParameter("a3_docName_1_2")
+                }
+                
+                let documentParameter = Payments.ParameterSelect(
+                    Payments.Parameter(id: "a3_docName_1_2", value: nil),
+                    title: "Тип документа",
+                    options: fsspDocumentList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) })
+                
+                return .init(parameters: [documentParameter], front: .init(visible: [documentParameter.id], isCompleted: false), back: .init(stage: .remote(.start), required: [documentParameter.id], processed: nil))
+                
+            case "30", "40":
+                return  .init(parameters: [], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.start), required: [searchTypeParameterId], processed: nil ))
+
+            default:
+                throw Payments.Error.unsupported
+            }
+
+        default:
+            throw Payments.Error.unsupported
+        }
     }
     
     /*

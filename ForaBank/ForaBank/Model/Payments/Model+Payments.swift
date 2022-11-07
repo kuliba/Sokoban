@@ -182,7 +182,7 @@ extension Model {
             return try await paymentsStepFMS(operation, for: stepIndex)
             
         case .fssp:
-            return try await paymentsStepFSSP(for: stepIndex)
+            return try await paymentsStepFSSP(operation, for: stepIndex)
         }
     }
     
@@ -435,8 +435,13 @@ extension Model {
                                       .init(id: "a3_docType_3_2", value: "2"),
                                       .init(id: "a3_docValue_4_2", value: "7723013452")])
             
-        default:
-            return nil
+        case .fssp:
+            return .init(service: service,
+                         parameters: [.init(id: "a3_BillNumber_1_1", value: "32227009220006631003"),
+                                      .init(id: "a3_IPnumber_1_1", value: "6631/22/27009-ИП"),
+                                      .init(id: "a3_docNumber_2_2", value: "7816218222")])
+                                        //.init(id: "a3_docNumber_2_2", value: "7816218222")
+                                        //.init(id: "a3_docNumber_2_2", value: "13420742521")
         }
     }
     
