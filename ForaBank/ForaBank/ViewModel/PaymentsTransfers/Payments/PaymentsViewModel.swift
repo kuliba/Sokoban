@@ -46,14 +46,14 @@ class PaymentsViewModel: ObservableObject {
             // multiple services for category
             let serviceViewModel = PaymentsServiceViewModel(category: category, parameters: [selectServiceParameter], model: model)
             self.init(content: .service(serviceViewModel), category: category, model: model, closeAction: closeAction)
-            bind(serviceViewModel: serviceViewModel)
+            serviceViewModel.rootActions = rootActions
 
         case let .selected(service):
             // single service for category
             let operation = try await model.paymentsOperation(with: service)
             let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model)
             self.init(content: .operation(operationViewModel), category: category, model: model, closeAction: closeAction)
-            bind(operationViewModel: operationViewModel)
+            operationViewModel.rootActions = rootActions
         }
         
         bind()
@@ -115,57 +115,32 @@ class PaymentsViewModel: ObservableObject {
                 
             }.store(in: &bindings)
     }
+}
+
+//MARK: - Types
+
+extension PaymentsViewModel {
     
-    private func bind(serviceViewModel: PaymentsServiceViewModel) {
+    struct RootActions {
         
-        serviceViewModel.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case _ as PaymentsServiceViewModelAction.Dismiss:
-                    self.action.send(PaymentsViewModelAction.Dismiss())
-                    
-                case _ as PaymentsServiceViewModelAction.Spinner.Show:
-                    self.action.send(PaymentsViewModelAction.Spinner.Show())
-                    
-                case _ as PaymentsServiceViewModelAction.Spinner.Hide:
-                    self.action.send(PaymentsViewModelAction.Spinner.Hide())
-                    
-                case let payload as PaymentsServiceViewModelAction.Alert:
-                    self.action.send(PaymentsViewModelAction.Alert(message: payload.message))
-   
-                default:
-                    break
-                }
-                
-            }.store(in: &bindings)
+        let dismiss: () -> Void
+        let spinner: Spinner
+        let alert: (String) -> Void
+        
+        struct Spinner {
+            
+            let show: () -> Void
+            let hide: () -> Void
+        }
     }
     
-    private func bind(operationViewModel: PaymentsOperationViewModel) {
+    var rootActions: RootActions {
         
-        operationViewModel.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case _ as PaymentsOperationViewModelAction.Dismiss:
-                    self.action.send(PaymentsViewModelAction.Dismiss())
-                    
-                case _ as PaymentsOperationViewModelAction.Spinner.Show:
-                    self.action.send(PaymentsViewModelAction.Spinner.Show())
-                    
-                case _ as PaymentsOperationViewModelAction.Spinner.Hide:
-                    self.action.send(PaymentsViewModelAction.Spinner.Hide())
-                    
-                case let payload as PaymentsOperationViewModelAction.Alert:
-                    self.action.send(PaymentsViewModelAction.Alert(message: payload.message))
-   
-                default:
-                    break
-                }
-                
-            }.store(in: &bindings)
+        return .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss()) },
+                     spinner:
+                .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show()) },
+                      hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide()) }),
+                     alert: { [weak self] message in self?.action.send(PaymentsViewModelAction.Alert(message: message)) })
     }
 }
 

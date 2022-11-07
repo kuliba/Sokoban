@@ -26,6 +26,8 @@ class PaymentsOperationViewModel: ObservableObject {
     internal let model: Model
     internal var bindings = Set<AnyCancellable>()
     
+    var rootActions: PaymentsViewModel.RootActions?
+    
     var items: [PaymentsParameterViewModel] { sections.value.flatMap{ $0.items } }
     var isItemsValuesValid: Bool { items.filter({ $0.isValid == false }).isEmpty }
     
@@ -92,13 +94,14 @@ class PaymentsOperationViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as ModelAction.Payment.Process.Response:
-                    self.action.send(PaymentsOperationViewModelAction.Spinner.Hide())
+                    rootActions?.spinner.hide()
                     switch payload.result {
                     case .step(let operation):
                         self.operation.value = operation
                         
                     case .confirm(let operation):
                         let confirmViewModel = PaymentsConfirmViewModel(operation: operation, model: model)
+                        confirmViewModel.rootActions = rootActions
                         link = .confirm(confirmViewModel)
                         
                         // complete and failed handled on PaymentsViewModel side
@@ -131,7 +134,7 @@ class PaymentsOperationViewModel: ObservableObject {
                         
                         // auto continue operation
                         model.action.send(ModelAction.Payment.Process.Request(operation: updatedOperation))
-                        self.action.send(PaymentsOperationViewModelAction.Spinner.Show())
+                        rootActions?.spinner.show()
                         
                     } else {
                         
@@ -154,7 +157,7 @@ class PaymentsOperationViewModel: ObservableObject {
                     
                     // continue operation
                     model.action.send(ModelAction.Payment.Process.Request(operation: updatedOperation))
-                    self.action.send(PaymentsOperationViewModelAction.Spinner.Show())
+                    rootActions?.spinner.show()
                     
                 case _ as PaymentsOperationViewModelAction.CloseLink:
                     link = nil
@@ -341,17 +344,4 @@ enum PaymentsOperationViewModelAction {
     }
     
     struct CloseLink: Action {}
-    
-    struct Dismiss: Action {}
-    
-    enum Spinner {
-        
-        struct Show: Action {}
-        struct Hide: Action {}
-    }
-    
-    struct Alert: Action {
-        
-        let message: String
-    }
 }

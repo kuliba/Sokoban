@@ -17,6 +17,7 @@ class PaymentsServiceViewModel: ObservableObject {
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
     
+    var rootActions: PaymentsViewModel.RootActions?
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
@@ -65,16 +66,15 @@ class PaymentsServiceViewModel: ObservableObject {
                                 await MainActor.run {
                                     
                                     let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model)
+                                    operationViewModel.rootActions = rootActions
                                     link = .operation(operationViewModel)
-                                    
-                                    bind(operationViewModel: operationViewModel)
                                 }
                                 
                             } catch {
                                 
                                 await MainActor.run {
                                     
-                                    self.action.send(PaymentsServiceViewModelAction.Alert(message: error.localizedDescription))
+                                    self.rootActions?.alert(error.localizedDescription)
                                 }
                             }
                         }
@@ -90,16 +90,15 @@ class PaymentsServiceViewModel: ObservableObject {
                                 await MainActor.run {
                                     
                                     let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model)
+                                    operationViewModel.rootActions = rootActions
                                     link = .operation(operationViewModel)
-                                    
-                                    bind(operationViewModel: operationViewModel)
                                 }
                                 
                             } catch {
                                 
                                 await MainActor.run {
                                     
-                                    self.action.send(PaymentsServiceViewModelAction.Alert(message: error.localizedDescription))
+                                    self.rootActions?.alert(error.localizedDescription)
                                 }
                             }
                         }
@@ -135,32 +134,6 @@ class PaymentsServiceViewModel: ObservableObject {
                 case _ as PaymentsServiceViewModelAction.DissmissLink:
                     link = nil
                     
-                default:
-                    break
-                }
-                
-            }.store(in: &bindings)
-    }
-    
-    private func bind(operationViewModel: PaymentsOperationViewModel) {
-        
-        operationViewModel.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case _ as PaymentsOperationViewModelAction.Dismiss:
-                    self.action.send(PaymentsServiceViewModelAction.Dismiss())
-                    
-                case _ as PaymentsOperationViewModelAction.Spinner.Show:
-                    self.action.send(PaymentsServiceViewModelAction.Spinner.Show())
-                    
-                case _ as PaymentsOperationViewModelAction.Spinner.Hide:
-                    self.action.send(PaymentsServiceViewModelAction.Spinner.Hide())
-                    
-                case let payload as PaymentsOperationViewModelAction.Alert:
-                    self.action.send(PaymentsServiceViewModelAction.Alert(message: payload.message))
-   
                 default:
                     break
                 }
@@ -218,18 +191,5 @@ enum PaymentsServiceViewModelAction {
     }
     
     struct DissmissLink: Action {}
-    
-    struct Dismiss: Action {}
-    
-    enum Spinner {
-        
-        struct Show: Action {}
-        struct Hide: Action {}
-    }
-    
-    struct Alert: Action {
-        
-        let message: String
-    }
 }
 

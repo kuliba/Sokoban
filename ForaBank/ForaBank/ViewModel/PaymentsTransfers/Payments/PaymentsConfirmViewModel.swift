@@ -53,7 +53,7 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
                     
                     // continue operation
                     model.action.send(ModelAction.Payment.Process.Request(operation: updatedOperation))
-                    self.action.send(PaymentsOperationViewModelAction.Spinner.Show())
+                    rootActions?.spinner.show()
      
                 default:
                     break
