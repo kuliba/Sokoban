@@ -13,9 +13,9 @@ class PaymentsParameterViewModel: Identifiable, ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var value: Value
+    @Published var isEditable: Bool
     
     var isValid: Bool { true }
-    var isEditable: Bool { source.isEditable }
     var isFullContent: Bool { false }
     
     var id: Payments.Parameter.ID { source.parameter.id }
@@ -27,6 +27,7 @@ class PaymentsParameterViewModel: Identifiable, ObservableObject {
         
         self.value = .init(with: source)
         self.source = source
+        self.isEditable = source.isEditable
     }
     
     func update(value: String?) {
@@ -37,6 +38,17 @@ class PaymentsParameterViewModel: Identifiable, ObservableObject {
     func update(source: PaymentsParameterRepresentable) {
         
         self.source = source
+    }
+    
+    func updateEditable(update: EditableUpdate) {
+        
+        switch update {
+        case let .value(value):
+            isEditable = value
+            
+        case .source:
+            isEditable = source.isEditable
+        }
     }
 }
 
@@ -70,6 +82,15 @@ extension PaymentsParameterViewModel {
             
             .init(id: id, original: original, current: value)
         }
+    }
+    
+    enum EditableUpdate {
+        
+        /// set concrete value
+        case value(Bool)
+        
+        /// set data from source parameter
+        case source
     }
 }
 

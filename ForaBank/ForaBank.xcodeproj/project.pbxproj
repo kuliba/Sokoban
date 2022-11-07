@@ -2848,8 +2848,8 @@
 			children = (
 				776C846C27DF1D4300F8F7E1 /* PaymentsViewModel.swift */,
 				0BBDFBE127BBF75600A30D6D /* PaymentsServiceViewModel.swift */,
-				0BBDFC3927BE48EE00A30D6D /* PaymentsOperationViewModel.swift */,
 				77BE9A32290AC231006046B1 /* PaymentsSectionViewModel.swift */,
+				0BBDFC3927BE48EE00A30D6D /* PaymentsOperationViewModel.swift */,
 				ED07FA5D27DA063400734E37 /* PaymentsConfirmViewModel.swift */,
 				0B01073B27D1159D006462E6 /* PaymentsSuccessViewModel.swift */,
 				77A1466327C12B52006CC112 /* PaymentsParameterViewModel.swift */,

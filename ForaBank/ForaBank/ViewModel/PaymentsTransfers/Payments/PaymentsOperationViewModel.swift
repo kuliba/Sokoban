@@ -47,14 +47,19 @@ class PaymentsOperationViewModel: ObservableObject {
 
         self.init(header: header, top: [], content: [], bottom: [], link: nil, bottomSheet: nil, operation: operation, model: model)
         
-        LoggerAgent.shared.log(category: .ui, message: "Operation started for service: \(operation.service)")
-
         bind()
     }
 
     //MARK: Bind
     
     internal func bind() {
+        
+        bindOperation()
+        bindModel()
+        bindAction()
+    }
+    
+    internal func bindOperation() {
         
         operation
             .receive(on: DispatchQueue.main)
@@ -77,6 +82,9 @@ class PaymentsOperationViewModel: ObservableObject {
                 updateBottomSection(isContinueEnabled: isItemsValuesValid)
                 
             }.store(in: &bindings)
+    }
+    
+    internal func bindModel() {
         
         model.action
             .receive(on: DispatchQueue.main)
@@ -90,22 +98,22 @@ class PaymentsOperationViewModel: ObservableObject {
                         self.operation.value = operation
                         
                     case .confirm(let operation):
-                        //TODO: confirm view model
-                        break
+                        let confirmViewModel = PaymentsConfirmViewModel(operation: operation, model: model)
+                        link = .confirm(confirmViewModel)
                         
                         // complete and failed handled on PaymentsViewModel side
                     default:
                         break
                     }
-                    
-                case let payload as ModelAction.Auth.VerificationCode.PushRecieved:
-                    updateFeedSection(code: payload.code)
 
                 default:
                     break
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    internal func bindAction() {
         
         action
             .receive(on: DispatchQueue.main)
@@ -278,16 +286,7 @@ extension PaymentsOperationViewModel {
 //MARK: - Helpers
 
 extension PaymentsOperationViewModel {
-    
-    func updateFeedSection(code: String) {
         
-        guard let codeParameter = items.first(where: { $0.id == Payments.Parameter.Identifier.code.rawValue }) as? PaymentsInputView.ViewModel else {
-            return
-        }
-        
-        codeParameter.content = code
-    }
-    
     func updateBottomSection(isContinueEnabled: Bool) {
         
         guard let bottomSection = sections.value.first(where: { $0.placement == .bottom }) as? PaymentsBottomSectionViewModel else {

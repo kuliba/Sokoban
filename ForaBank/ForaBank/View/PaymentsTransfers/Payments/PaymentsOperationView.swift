@@ -125,6 +125,17 @@ struct PaymentsOperationView: View {
                     .onPreferenceChange(PaymentsOperationViewBottomHeightPreferenceKey.self, perform: { self.bottomSize = $0 })
                 }
             }
+            
+            NavigationLink("", isActive: $viewModel.isLinkActive) {
+                
+                if let link = viewModel.link  {
+                    
+                    switch link {
+                    case let .confirm(confirmViewModel):
+                        PaymentsOperationView(viewModel: confirmViewModel)
+                    }
+                }
+            }
         }
         .navigationBarTitle(Text(viewModel.header.title), displayMode: .inline)
         .navigationBarBackButtonHidden(true)

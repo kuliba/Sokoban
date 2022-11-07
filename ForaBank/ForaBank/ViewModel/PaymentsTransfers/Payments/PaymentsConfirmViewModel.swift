@@ -11,23 +11,13 @@ import Combine
 
 class PaymentsConfirmViewModel: PaymentsOperationViewModel {
     
-    /*
-    override init(_ model: Model, operation: Payments.Operation) {
-        
-        super.init(model, operation: operation)
-        
-    }
-    */
-    /*
-    override func createFooter(from parameters: [PaymentsParameterRepresentable]) -> PaymentsOperationViewModel.FooterViewModel? {
-        
-        return .button(.init(title: "Оплатить", isEnabled: false, action: { [weak self] in
-            self?.action.send(PaymentsOperationViewModelAction.Confirm())
-        }))
-    }
-     */
-        
     override func bind() {
+        
+        super.bind()
+        bindItems()
+    }
+    
+    override func bindModel() {
         
         model.action
             .receive(on: DispatchQueue.main)
@@ -35,40 +25,97 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
                 
                 switch action {
                 case let payload as ModelAction.Auth.VerificationCode.PushRecieved:
-                    /*
-                    guard let codeParameter = items.value.first(where: { $0.id == Payments.Parameter.Identifier.code.rawValue }) as? PaymentsInputView.ViewModel else {
-                        return
-                    }
+                    updateFeedSection(code: payload.code)
                     
-                    codeParameter.content = payload.code
-                     */
-                    break
-
                 default:
                     break
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    override func bindAction() {
         
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 
                 switch action {
-//                case _ as PaymentsOperationViewModelAction.Confirm:
-                    //FIXME: refactor
-//                    break
-                    /*
-                    let results = itemsAll.map{ ($0.result, $0.source.affectsHistory) }
-                    let update = operation.update(with: results)
-                    model.action.send(ModelAction.Payment.Complete.Request(operation: update.operation))
-                    rootActions.spinner.show()
-                     */
+                case _ as PaymentsOperationViewModelAction.ItemDidUpdated:
+                    // update bottom section continue button
+                    updateBottomSection(isContinueEnabled: isItemsValuesValid)
+                    
+                case _ as PaymentsOperationViewModelAction.Continue:
+                    // update operation with parameters
+                    let updatedOperation = Self.reduce(operation: operation.value, items: items)
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "Confirm operation: \(updatedOperation)")
+                    
+                    // continue operation
+                    model.action.send(ModelAction.Payment.Process.Request(operation: updatedOperation))
+                    self.action.send(PaymentsOperationViewModelAction.Spinner.Show())
      
                 default:
                     break
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    func bindItems() {
+        
+        $top
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] topItems in
+                
+                guard let topItems = topItems else { return }
+                updateEditable(for: topItems)
+                
+            }.store(in: &bindings)
+        
+        $content
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] contentItems in
+                
+                updateEditable(for: contentItems)
+                
+            }.store(in: &bindings)
+        
+        $bottom
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] bottomItems in
+                
+                guard let bottomItems = bottomItems else { return }
+                updateEditable(for: bottomItems)
+                
+            }.store(in: &bindings)
+    }
+}
+
+//MARK: - Helpers
+
+extension PaymentsConfirmViewModel {
+    
+    func updateFeedSection(code: String) {
+        
+        guard let codeParameter = items.first(where: { $0.id == Payments.Parameter.Identifier.code.rawValue }) as? PaymentsInputView.ViewModel else {
+            return
+        }
+        
+        codeParameter.content = code
+    }
+    
+    func updateEditable(for items: [PaymentsParameterViewModel]) {
+        
+        for item in items {
+            
+            switch item.id {
+            case Payments.Parameter.Identifier.code.rawValue:
+                continue
+                
+            default:
+                item.updateEditable(update: .value(false))
+            }
+        }
     }
 }
