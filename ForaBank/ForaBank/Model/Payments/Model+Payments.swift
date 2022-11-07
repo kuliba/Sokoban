@@ -179,7 +179,7 @@ extension Model {
             return try await paymentsStepFNS(operation, for: stepIndex)
             
         case .fms:
-            return try await paymentsStepFMS(for: stepIndex)
+            return try await paymentsStepFMS(operation, for: stepIndex)
             
         case .fssp:
             return try await paymentsStepFSSP(for: stepIndex)
@@ -426,6 +426,13 @@ extension Model {
                          parameters: [.init(id: "a3_BillNumber_1_1", value: "18204437200029004095"),
                                       .init(id: "a3_INN_4_1", value: "7723013452"),
                                       .init(id: "a3_OKTMO_5_1", value: "45390000"),
+                                      .init(id: "a3_docValue_4_2", value: "7723013452")])
+            
+        case .fms:
+            return .init(service: service,
+                         parameters: [.init(id: "a3_INN_4_1", value: "5503026780"),
+                                      .init(id: "a3_OKTMO_5_1", value: "52643151"),
+                                      .init(id: "a3_docType_3_2", value: "2"),
                                       .init(id: "a3_docValue_4_2", value: "7723013452")])
             
         default:
