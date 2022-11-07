@@ -25,20 +25,32 @@ struct QRView: View {
                 
                 ZStack {
                     
-                    VStack {
-                        Text(viewModel.title)
-                            .foregroundColor(.white)
-                            .frame(width: 246,height: 64, alignment: .center)
-                            .padding(.vertical, 50)
+                    VStack(alignment: .center)  {
+                        
+                        VStack(alignment: .center, spacing: 10) {
+                            
+                            Text(viewModel.title)
+                                .foregroundColor(.white)
+                                .font(Font.textH1SB24322())
+                                .frame(alignment: .center)
+                            
+                            Text(viewModel.subTitle)
+                                .foregroundColor(.white)
+                                .font(Font.textH1SB24322())
+                                .frame(alignment: .center)
+                            
+                        } .padding(.vertical, 100)
+                        
                         Spacer()
                         
-                        HStack(spacing: 60) {
+                        HStack(spacing: 20) {
                             
                             ForEach(viewModel.buttons) { buttons in
                                 ButtonIconTextView(viewModel: buttons)
-                                    .previewLayout(.fixed(width: 100, height: 100))
+                                //    .padding(.leading, 20)
                             } 
-                        }
+                        }//.padding(.horizontal, 20)
+                        
                         ButtonSimpleView(viewModel: viewModel.clouseButton)
                             .frame(height: 48)
                             .padding(.horizontal, 20)

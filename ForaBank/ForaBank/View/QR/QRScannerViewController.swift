@@ -112,8 +112,8 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
         let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         previewLayer.frame = view.layer.bounds
         previewLayer.videoGravity = .resizeAspectFill
-        view.layer.addSublayer(previewLayer)
         view.backgroundColor = UIColor.black
+        view.layer.addSublayer(previewLayer)
         
         self.captureSession = captureSession
         self.previewLayer = previewLayer
