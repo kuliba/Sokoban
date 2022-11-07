@@ -112,12 +112,12 @@ class PaymentsOperationViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
-                case _ as PaymentsOperationViewModelAction.ItemDidUpdated:
+                case let payload as PaymentsOperationViewModelAction.ItemDidUpdated:
                     // update operation with parameters
                     let updatedOperation = Self.reduce(operation: operation.value, items: items)
                     
                     // check if auto continue required
-                    if updatedOperation.isAutoContinueRequired == true {
+                    if model.paymentsIsAutoContinueRequired(operation: updatedOperation, updated: payload.parameterId) == true {
                         
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "Continue operation: \(updatedOperation)")
                         
@@ -173,7 +173,7 @@ class PaymentsOperationViewModel: ObservableObject {
                         guard payload.value.isChanged == true else {
                             return
                         }
-                        self.action.send(PaymentsOperationViewModelAction.ItemDidUpdated())
+                        self.action.send(PaymentsOperationViewModelAction.ItemDidUpdated(parameterId: payload.value.id))
                         
                     case _ as PaymentsSectionViewModelAction.Continue:
                         self.action.send(PaymentsOperationViewModelAction.Continue())
@@ -329,7 +329,10 @@ extension PaymentsOperationViewModel {
 
 enum PaymentsOperationViewModelAction {
     
-    struct ItemDidUpdated: Action {}
+    struct ItemDidUpdated: Action {
+        
+        let parameterId: Payments.Parameter.ID
+    }
     
     struct Continue: Action {}
     

@@ -229,21 +229,6 @@ extension Payments.Operation {
         
         return .step(index: nextStep)
     }
-    
-    var isAutoContinueRequired: Bool {
-        
-        guard let nextAction = try? nextAction() else {
-            return false
-        }
-        
-        switch nextAction {
-        case .rollback:
-            return true
-            
-        default:
-            return false
-        }
-    }
 }
 
 //MARK: - Error

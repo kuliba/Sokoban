@@ -432,4 +432,25 @@ extension Model {
             return nil
         }
     }
+    
+    func paymentsIsAutoContinueRequired(operation: Payments.Operation, updated: Payments.Parameter.ID) -> Bool {
+        
+        guard let nextAction = try? operation.nextAction() else {
+            return false
+        }
+        
+        switch nextAction {
+        case .rollback:
+            switch updated {
+            case Payments.Parameter.Identifier.operator.rawValue, Payments.Parameter.Identifier.amount.rawValue:
+                return false
+                
+            default:
+                return true
+            }
+            
+        default:
+            return false
+        }
+    }
 }
