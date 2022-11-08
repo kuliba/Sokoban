@@ -12,7 +12,7 @@ protocol PhoneNumberFormaterProtocol {
     
     func format(_ phoneNumber: String) -> String
     func partialFormatter(_ phoneNumber: String) -> String
-    func isValidate(_ phoneNumber: String) -> Bool
+    func isValid(_ phoneNumber: String) -> Bool
 }
 
 struct PhoneNumberKitFormater: PhoneNumberFormaterProtocol {
@@ -35,7 +35,7 @@ struct PhoneNumberKitFormater: PhoneNumberFormaterProtocol {
         return phoneFormatted
     }
     
-    func isValidate(_ phoneNumber: String) -> Bool {
+    func isValid(_ phoneNumber: String) -> Bool {
         
         let phoneNumberParsed = phoneNumberKit.isValidPhoneNumber(phoneNumber)
         return phoneNumberParsed

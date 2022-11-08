@@ -15,21 +15,15 @@ extension SearchBarView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         let icon: Image?
-        @Published var textFieldPhoneNumberView: TextFieldPhoneNumberView.ViewModel
+        let textFieldPhoneNumberView: TextFieldPhoneNumberView.ViewModel
         var text: String? { textFieldPhoneNumberView.text }
-        var isValidation: Bool {
-            if let text = text {
-                return phoneNumberFormater.isValidate(text)
-            }
-            return false
-        }
         
         @Published var state: State
         
         private let phoneNumberFormater = PhoneNumberKitFormater()
         private var bindings = Set<AnyCancellable>()
         
-        init(textFieldPhoneNumberView: TextFieldPhoneNumberView.ViewModel, state: State = .idle, icon: Image? = nil, isValidation: Bool = false) {
+        init(textFieldPhoneNumberView: TextFieldPhoneNumberView.ViewModel, state: State = .idle, icon: Image? = nil) {
             
             self.textFieldPhoneNumberView = textFieldPhoneNumberView
             self.state = state
@@ -60,25 +54,27 @@ extension SearchBarView {
             textFieldPhoneNumberView.$isSelected
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] isSelected in
-            
+                    
                     if isSelected && (text != "" && text != nil) {
                         
-                        state = .editing(.init(type: .icon(.ic24Close), action: {
+                        state = .editing(.init(type: .icon(.ic24Close), action: { [weak self] in
                             
-                            self.action.send(SearchBarViewModelAction.ClearTextField())
-                        }), .init(type: .title("Отмена"), action: {
-
-                            self.action.send(SearchBarViewModelAction.ChangeState(state: .idle))
+                            self?.action.send(SearchBarViewModelAction.ClearTextField())
+                            
+                        }), .init(type: .title("Отмена"), action: { [weak self] in
+                            
+                            self?.action.send(SearchBarViewModelAction.ChangeState(state: .idle))
                         }))
                         
                     } else if isSelected {
                         
-                        state = .selected(.init(type: .title("Отмена"), action: {
+                        state = .selected(.init(type: .title("Отмена"), action: { [weak self] in
                             
-                            self.action.send(SearchBarViewModelAction.ChangeState(state: .idle))
+                            self?.action.send(SearchBarViewModelAction.ChangeState(state: .idle))
                         }))
                         
                     } else {
+                        
                         state = .idle
                     }
                     
@@ -89,24 +85,39 @@ extension SearchBarView {
                 .sink { [unowned self] text in
                     
                     if text != nil && text != "" {
-
-                        self.state = .editing(.init(type: .icon(.ic24Close), action: {
-
-                            self.action.send(SearchBarViewModelAction.ClearTextField())
-                        }), .init(type: .title("Отмена"), action: {
-
-                            self.action.send(SearchBarViewModelAction.ChangeState(state: .idle))
+                        
+                        self.state = .editing(.init(type: .icon(.ic24Close), action: { [weak self] in
+                            
+                            self?.action.send(SearchBarViewModelAction.ClearTextField())
+                            
+                        }), .init(type: .title("Отмена"), action: { [weak self] in
+                            
+                            self?.action.send(SearchBarViewModelAction.ChangeState(state: .idle))
                         }))
-
+                        
                     } else if textFieldPhoneNumberView.isSelected {
                         
-                        state = .selected(.init(type: .title("Отмена"), action: {
+                        state = .selected(.init(type: .title("Отмена"), action: { [weak self] in
                             
-                            self.action.send(SearchBarViewModelAction.ChangeState(state: .idle))
+                            self?.action.send(SearchBarViewModelAction.ChangeState(state: .idle))
                         }))
                     }
                     
-                    action.send(SearchBarViewModelAction.Number.isValidation(isValidation: isValidation))
+                    if let text = text {
+                        
+                        if isValidPhone(text) == true {
+                            
+                            action.send(SearchBarViewModelAction.TextUpdated.ValidPhone(phone: text))
+                            
+                        } else {
+                            
+                            action.send(SearchBarViewModelAction.TextUpdated.Text(text: text))
+                        }
+                        
+                    } else {
+                        
+                        action.send(SearchBarViewModelAction.TextUpdated.Text(text: text))
+                    }
                     
                 }.store(in: &bindings)
             
@@ -115,37 +126,48 @@ extension SearchBarView {
                 .sink { [unowned self] state in
                     
                     switch state {
-                        
                     case .idle:
                         self.textFieldPhoneNumberView.dismissKeyboard()
-                    
+                        
                     default: break
                     }
                     
                 }.store(in: &bindings)
         }
         
-        enum State {
+        private func isValidPhone(_ value: String) -> Bool {
             
-            case idle
-            case selected(Button)
-            case editing(Button, Button)
-        }
-        
-        struct Button: Identifiable {
-            
-            let id = UUID()
-            let type: Kind
-            let action: () -> Void
-            
-            enum Kind {
-                
-                case icon(Image)
-                case title(String)
-            }
+            phoneNumberFormater.isValid(value)
         }
     }
 }
+
+//MARK: - Types
+
+extension SearchBarView.ViewModel {
+    
+    enum State {
+        
+        case idle
+        case selected(Button)
+        case editing(Button, Button)
+    }
+    
+    struct Button: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        let action: () -> Void
+        
+        enum Kind {
+            
+            case icon(Image)
+            case title(String)
+        }
+    }
+}
+
+//MARK: - View
 
 struct SearchBarView: View {
     
@@ -233,23 +255,28 @@ struct SearchBarViewModelAction {
     
     struct ClearTextField: Action {}
     
-    struct Number {
+    struct TextUpdated {
         
-        struct isValidation: Action {
+        struct ValidPhone: Action {
             
-            let isValidation: Bool
+            let phone: String
+        }
+        
+        struct Text: Action {
+            
+            let text: String?
         }
     }
 }
 
 struct SearchBarComponent_Previews: PreviewProvider {
     static var previews: some View {
-
+        
         Group {
-
+            
             SearchBarView(viewModel: .init(textFieldPhoneNumberView: .init(placeHolder: .contacts, phoneNumberFirstDigitReplaceList: [])))
                 .previewLayout(.fixed(width: 375, height: 100))
-
+            
             SearchBarView(viewModel: .init(textFieldPhoneNumberView: .init(placeHolder: .banks, phoneNumberFirstDigitReplaceList: [])))
                 .previewLayout(.fixed(width: 375, height: 100))
         }
