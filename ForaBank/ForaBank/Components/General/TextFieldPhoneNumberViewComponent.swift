@@ -20,34 +20,34 @@ extension TextFieldPhoneNumberView {
         
         let placeHolder: PlaceHolder
         let filterSymbols: [Character]?
+        let firstDigitReplaceList: [Replace]?
         
         let phoneNumberFormatter: PhoneNumberFormaterProtocol
-        let phoneNumberFirstDigitReplaceList: [PhoneNumberFirstDigitReplace]
         
         var bindings = Set<AnyCancellable>()
         
-        init(text: String? = nil, placeHolder: PlaceHolder, state: State = .idle, toolbar: ToolbarViewModel? = nil, filterSymbols: [Character]? = nil, phoneNumberFirstDigitReplaceList: [PhoneNumberFirstDigitReplace], phoneNumberFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater()) {
+        init(text: String? = nil, placeHolder: PlaceHolder, state: State = .idle, toolbar: ToolbarViewModel? = nil, filterSymbols: [Character]? = nil, firstDigitReplaceList: [Replace]? = nil, phoneNumberFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater()) {
             
             self.text = text
             self.placeHolder = placeHolder
             self.state = state
             self.toolbar = toolbar
             self.filterSymbols = filterSymbols
-            self.phoneNumberFirstDigitReplaceList = phoneNumberFirstDigitReplaceList
+            self.firstDigitReplaceList = firstDigitReplaceList
             self.phoneNumberFormatter = phoneNumberFormatter
             self.dismissKeyboard = {}
         }
         
-        convenience init(placeHolder: PlaceHolder) {
+        convenience init(_ placeHolder: PlaceHolder) {
             
             switch placeHolder {
             case .contacts:
                 let filterSymbols = [Character("-"), Character("("), Character(")"), Character("+")]
                 
-                self.init(placeHolder: placeHolder, filterSymbols: filterSymbols, phoneNumberFirstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")], phoneNumberFormatter: PhoneNumberKitFormater())
+                self.init(placeHolder: placeHolder, filterSymbols: filterSymbols, firstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")], phoneNumberFormatter: PhoneNumberKitFormater())
                 
             case .banks:
-                self.init(placeHolder: placeHolder, phoneNumberFirstDigitReplaceList: [])
+                self.init(placeHolder: placeHolder)
             }
             
             self.toolbar = .init(doneButton: .init(isEnabled: true, action: { [weak self] in self?.dismissKeyboard() }),
@@ -66,6 +66,39 @@ extension TextFieldPhoneNumberView {
             case contacts = "Номер телефона или имя"
             case banks = "Введите название банка"
         }
+    }
+}
+
+extension TextFieldPhoneNumberView.ViewModel {
+    
+    struct ToolbarViewModel {
+        
+        let doneButton: ButtonViewModel
+        let closeButton: ButtonViewModel?
+        
+        class ButtonViewModel: ObservableObject {
+            
+            @Published var isEnabled: Bool
+            let action: () -> Void
+            
+            init(isEnabled: Bool, action: @escaping () -> Void) {
+                
+                self.isEnabled = isEnabled
+                self.action = action
+            }
+        }
+        
+        init(doneButton: ButtonViewModel, closeButton: ButtonViewModel? = nil) {
+            
+            self.doneButton = doneButton
+            self.closeButton = closeButton
+        }
+    }
+    
+    struct Replace {
+        
+        let from: Character
+        let to: String
     }
 }
 
@@ -93,14 +126,12 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         }
         
         return textField
-        
     }
     
     func updateUIView(_ uiView: UITextField, context: Context) {
         
         let textRange = NSRange(location: 0, length: viewModel.text?.count ?? 0)
-        uiView.text = TextFieldPhoneNumberView.updateMasked(value: viewModel.text, inRange: textRange, update: viewModel.text ?? "", firstDigitReplace: viewModel.phoneNumberFirstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
-        
+        uiView.text = TextFieldPhoneNumberView.updateMasked(value: viewModel.text, inRange: textRange, update: viewModel.text ?? "", firstDigitReplace: viewModel.firstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
     }
     
     func makeCoordinator() -> Coordinator {
@@ -129,8 +160,10 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
             
-            textField.text = TextFieldPhoneNumberView.updateMasked(value: textField.text, inRange: range, update: string, firstDigitReplace: viewModel.phoneNumberFirstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
-            viewModel.text = textField.text
+            let result = TextFieldPhoneNumberView.updateMasked(value: textField.text, inRange: range, update: string, firstDigitReplace: viewModel.firstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
+            
+            textField.text = result
+            viewModel.text = result
             
             if textField.isFirstResponder {
                 
@@ -165,7 +198,7 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         }
     }
     
-    static func updateMasked(value: String?, inRange: NSRange, update: String, firstDigitReplace: [PhoneNumberFirstDigitReplace], phoneFormatter: PhoneNumberFormaterProtocol, filterSymbols: [Character]?) -> String? {
+    static func updateMasked(value: String?, inRange: NSRange, update: String, firstDigitReplace: [TextFieldPhoneNumberView.ViewModel.Replace]?, phoneFormatter: PhoneNumberFormaterProtocol, filterSymbols: [Character]?) -> String? {
         
         if let value = value {
             
@@ -191,19 +224,22 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
             }
             
             guard filterdValue.isNumeric else {
-                return updatedValue
+                return updatedValue.isEmpty ? nil : updatedValue
             }
             
             var phone = updatedValue.digits
             
-            for replace in firstDigitReplace {
+            if let firstDigitReplace = firstDigitReplace {
                 
-                if phone.digits.first == replace.from {
+                for replace in firstDigitReplace {
                     
-                    phone.replaceSubrange(...phone.startIndex, with: replace.to)
+                    if phone.digits.first == replace.from {
+                        
+                        phone.replaceSubrange(...phone.startIndex, with: replace.to)
+                    }
                 }
             }
-            
+
             let phoneFormatted = phoneFormatter.partialFormatter("+\(phone)")
             return phoneFormatted
             
@@ -217,7 +253,7 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         }
     }
     
-    private func makeToolbar(toolbarViewModel: TextFieldPhoneNumberView.ToolbarViewModel, context: Context) -> UIToolbar? {
+    private func makeToolbar(toolbarViewModel: TextFieldPhoneNumberView.ViewModel.ToolbarViewModel, context: Context) -> UIToolbar? {
         
         let coordinator = context.coordinator
         
@@ -258,35 +294,4 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
     }
 }
 
-extension TextFieldPhoneNumberView {
-    
-    struct ToolbarViewModel {
-        
-        let doneButton: ButtonViewModel
-        let closeButton: ButtonViewModel?
-        
-        class ButtonViewModel: ObservableObject {
-            
-            @Published var isEnabled: Bool
-            let action: () -> Void
-            
-            init(isEnabled: Bool, action: @escaping () -> Void) {
-                
-                self.isEnabled = isEnabled
-                self.action = action
-            }
-        }
-        
-        init(doneButton: ButtonViewModel, closeButton: ButtonViewModel? = nil) {
-            
-            self.doneButton = doneButton
-            self.closeButton = closeButton
-        }
-    }
-    
-    struct PhoneNumberFirstDigitReplace {
-        
-        let from: Character
-        let to: String
-    }
-}
+

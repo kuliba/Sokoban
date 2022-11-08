@@ -39,7 +39,7 @@ class ContactsViewModel: ObservableObject {
     
     convenience init(_ model: Model) {
  
-        self.init(model, searchBar: .init(textFieldPhoneNumberView: .init(placeHolder: .contacts)), mode: .contacts(nil, .init(model)))
+        self.init(model, searchBar: .init(textFieldPhoneNumberView: .init(.contacts)), mode: .contacts(nil, .init(model)))
         
         bind()
     }
@@ -58,11 +58,11 @@ class ContactsViewModel: ObservableObject {
         
         //MARK: SearchViewModel
         
-        searchBar.textFieldPhoneNumberView.$text
+        searchBar.textField.$text
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] text in
                 
-                if text != nil, text != "" {
+                if let text = text {
                     
                     mode = .contactsSearch(.init(model, filterText: text))
                     
@@ -83,9 +83,6 @@ class ContactsViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
-                case _ as SearchBarViewModelAction.ClearTextField:
-                    self.searchBar.textFieldPhoneNumberView.text = nil
-                    
                 case let payload as SearchBarViewModelAction.TextUpdated.ValidPhone:
                     
                     withAnimation {
@@ -138,7 +135,7 @@ class ContactsViewModel: ObservableObject {
                     
                     switch action {
                     case let payload as ContactsListViewModelAction.ContactSelect:
-                        self.searchBar.textFieldPhoneNumberView.text = payload.phone
+                        self.searchBar.textField.text = payload.phone
                         
                     default: break
                     }
@@ -157,7 +154,7 @@ class ContactsViewModel: ObservableObject {
                             break
                             
                         case let payload as ContactsListViewModelAction.ContactSelect:
-                            self.searchBar.textFieldPhoneNumberView.text = payload.phone
+                            self.searchBar.textField.text = payload.phone
                             
                         default: break
                         }
@@ -173,7 +170,7 @@ class ContactsViewModel: ObservableObject {
                     
                     switch action {
                     case let payload as ContactsListViewModelAction.ContactSelect:
-                        self.searchBar.textFieldPhoneNumberView.text = payload.phone
+                        self.searchBar.textField.text = payload.phone
                         
                     default: break
                     }
@@ -191,7 +188,7 @@ class ContactsViewModel: ObservableObject {
                         switch action {
                         case let payload as ContactsTopBanksSectionViewModelAction.TopBanksDidTapped:
                             
-                            if let bank = model.bankList.value.first(where: {$0.memberId == payload.bankId}), bank.bankType == .direct, let phone = searchBar.textFieldPhoneNumberView.text, let country = model.countriesList.value.first(where: {$0.code == "AM" }) {
+                            if let bank = model.bankList.value.first(where: {$0.memberId == payload.bankId}), bank.bankType == .direct, let phone = searchBar.textField.text, let country = model.countriesList.value.first(where: {$0.code == "AM" }) {
                                 
                                 self.link = .init(type: .country(.init(phone: phone, country: country, bank: bank, operatorsViewModel: .init(closeAction: { [weak self] in
                                     self?.link = nil
@@ -216,7 +213,7 @@ class ContactsViewModel: ObservableObject {
                         switch action {
                         case let payload as ContactsBanksSectionViewModelAction.BankDidTapped:
                             
-                            if let bank = model.bankList.value.first(where: {$0.id == payload.bankId}), bank.bankType == .direct, let phone = searchBar.textFieldPhoneNumberView.text, let country = model.countriesList.value.first(where: {$0.code == "AM" }) {
+                            if let bank = model.bankList.value.first(where: {$0.id == payload.bankId}), bank.bankType == .direct, let phone = searchBar.textField.text, let country = model.countriesList.value.first(where: {$0.code == "AM" }) {
                                 
                                 self.link = .init(type: .country(.init(phone: phone, country: country, bank: bank, operatorsViewModel: .init(closeAction: { [weak self] in
                                     self?.link = nil
@@ -225,7 +222,7 @@ class ContactsViewModel: ObservableObject {
                             
                         case let payload as ContactsCountrySectionViewModelAction.CountryDidTapped:
                             
-                            if let country = model.countriesList.value.first(where: {$0.id == payload.countryId}), let phone = searchBar.textFieldPhoneNumberView.text {
+                            if let country = model.countriesList.value.first(where: {$0.id == payload.countryId}), let phone = searchBar.textField.text {
                                 self.link = .init(type: .country(.init(phone: phone, country: country, bank: nil, operatorsViewModel: .init(closeAction: { [weak self] in
                                     self?.link = nil
                                 }, template: nil))))
@@ -262,9 +259,9 @@ extension ContactsViewModel {
 
 extension ContactsViewModel {
     
-    static let sample: ContactsViewModel = .init(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(placeHolder: .banks, phoneNumberFirstDigitReplaceList: [])), mode: .contactsSearch(.init(.emptyMock, selfContact: .init(fullName: "name", image: nil, phone: "phone", icon: nil, action: {}), contacts: [])))
+    static let sample: ContactsViewModel = .init(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(placeHolder: .banks)), mode: .contactsSearch(.init(.emptyMock, selfContact: .init(fullName: "name", image: nil, phone: "phone", icon: nil, action: {}), contacts: [])))
     
-    static let sampleLatestPayment: ContactsViewModel = .init(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(placeHolder: .banks, phoneNumberFirstDigitReplaceList: [])), mode: .contacts(.init(.emptyMock, items: [.latestPayment(.init(id: 5, avatar: .icon(Image("ic24Smartphone"), .iconGray), topIcon: Image("azerFlag"), description: "+994 12 493 23 87", action: {}))]), .init(.emptyMock, selfContact: .init(fullName: "Себе", image: nil, phone: "8 (925) 279 96-13", icon: nil, action: {}), contacts: [.init(fullName: "Андрей Андропов", image: nil, phone: "+7 (903) 333-67-32", icon: nil, action: {})])))
+    static let sampleLatestPayment: ContactsViewModel = .init(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(placeHolder: .banks)), mode: .contacts(.init(.emptyMock, items: [.latestPayment(.init(id: 5, avatar: .icon(Image("ic24Smartphone"), .iconGray), topIcon: Image("azerFlag"), description: "+994 12 493 23 87", action: {}))]), .init(.emptyMock, selfContact: .init(fullName: "Себе", image: nil, phone: "8 (925) 279 96-13", icon: nil, action: {}), contacts: [.init(fullName: "Андрей Андропов", image: nil, phone: "+7 (903) 333-67-32", icon: nil, action: {})])))
     
     static let sampleBanks = ContactsBanksSectionViewModel(.emptyMock, header: .init(kind: .banks), items: [.sampleItem], mode: .normal, options: .sample)
     

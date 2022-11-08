@@ -53,7 +53,7 @@ class ContactsBanksSectionViewModel: ContactsSectionViewModel {
                 
                 switch action {
                 case _ as HeaderViewModelAction.SearchDidTapped:
-                    self.mode = .search(.init(textFieldPhoneNumberView: .init(placeHolder: .banks)))
+                    self.mode = .search(.init(textFieldPhoneNumberView: .init(.banks)))
                     
                 default: break
                 }
@@ -83,11 +83,11 @@ class ContactsBanksSectionViewModel: ContactsSectionViewModel {
                             
                         }.store(in: &bindings)
                     
-                    search.textFieldPhoneNumberView.$text
+                    search.textField.$text
                         .receive(on: DispatchQueue.main)
                         .sink { [unowned self] text in
                             
-                            if let text = text, text != "" {
+                            if let text = text {
                                 
                                 let filteredBanks = self.model.bankList.value.filter({ bank in
                                     

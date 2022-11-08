@@ -15,8 +15,8 @@ extension SearchBarView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         let icon: Image?
-        let textFieldPhoneNumberView: TextFieldPhoneNumberView.ViewModel
-        var text: String? { textFieldPhoneNumberView.text }
+        let textField: TextFieldPhoneNumberView.ViewModel
+        var text: String? { textField.text }
         
         @Published private(set) var state: State
         
@@ -25,7 +25,7 @@ extension SearchBarView {
         
         init(textFieldPhoneNumberView: TextFieldPhoneNumberView.ViewModel, state: State = .idle, icon: Image? = nil) {
             
-            self.textFieldPhoneNumberView = textFieldPhoneNumberView
+            self.textField = textFieldPhoneNumberView
             self.state = state
             self.icon = icon
             
@@ -40,14 +40,14 @@ extension SearchBarView {
                     
                     switch action {
                     case _ as SearchBarViewModelAction.DismissKeyboard:
-                        self.textFieldPhoneNumberView.dismissKeyboard()
+                        self.textField.dismissKeyboard()
                         
                     case _ as SearchBarViewModelAction.ClearTextField:
-                        self.textFieldPhoneNumberView.text = nil
+                        self.textField.text = nil
                         
                     case _ as SearchBarViewModelAction.Idle:
                         self.state = .idle
-                        self.textFieldPhoneNumberView.dismissKeyboard()
+                        self.textField.dismissKeyboard()
                         
                     default:
                         break
@@ -55,7 +55,7 @@ extension SearchBarView {
                     
                 }.store(in: &bindings)
             
-            textFieldPhoneNumberView.$state
+            textField.$state
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] state in
                     
@@ -89,7 +89,7 @@ extension SearchBarView {
                     
                 }.store(in: &bindings)
             
-            textFieldPhoneNumberView.$text
+            textField.$text
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] text in
                     
@@ -186,7 +186,7 @@ struct SearchBarView: View {
                     .frame(width: 16, height: 16)
             }
             
-            TextFieldPhoneNumberView(viewModel: viewModel.textFieldPhoneNumberView)
+            TextFieldPhoneNumberView(viewModel: viewModel.textField)
                 .frame(height: 44)
                 .cornerRadius(8)
             
@@ -254,10 +254,10 @@ struct SearchBarComponent_Previews: PreviewProvider {
         
         Group {
             
-            SearchBarView(viewModel: .init(textFieldPhoneNumberView: .init(placeHolder: .contacts, phoneNumberFirstDigitReplaceList: [])))
+            SearchBarView(viewModel: .init(textFieldPhoneNumberView: .init(placeHolder: .contacts)))
                 .previewLayout(.fixed(width: 375, height: 100))
             
-            SearchBarView(viewModel: .init(textFieldPhoneNumberView: .init(placeHolder: .banks, phoneNumberFirstDigitReplaceList: [])))
+            SearchBarView(viewModel: .init(textFieldPhoneNumberView: .init(placeHolder: .banks)))
                 .previewLayout(.fixed(width: 375, height: 100))
         }
     }
