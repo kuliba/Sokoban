@@ -18,7 +18,7 @@ extension SearchBarView {
         let textFieldPhoneNumberView: TextFieldPhoneNumberView.ViewModel
         var text: String? { textFieldPhoneNumberView.text }
         
-        @Published var state: State
+        @Published private(set) var state: State
         
         private let phoneNumberFormater = PhoneNumberKitFormater()
         private var bindings = Set<AnyCancellable>()
@@ -39,43 +39,52 @@ extension SearchBarView {
                 .sink { [unowned self] action in
                     
                     switch action {
-                        
-                    case _ as SearchBarViewModelAction.ChangeState:
-                        self.state = .idle
+                    case _ as SearchBarViewModelAction.DismissKeyboard:
+                        self.textFieldPhoneNumberView.dismissKeyboard()
                         
                     case _ as SearchBarViewModelAction.ClearTextField:
                         self.textFieldPhoneNumberView.text = nil
                         
-                    default: break
+                    case _ as SearchBarViewModelAction.Idle:
+                        self.state = .idle
+                        self.textFieldPhoneNumberView.dismissKeyboard()
+                        
+                    default:
+                        break
                     }
                     
                 }.store(in: &bindings)
             
-            textFieldPhoneNumberView.$isSelected
+            textFieldPhoneNumberView.$state
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] isSelected in
+                .sink { [unowned self] state in
                     
-                    if isSelected && (text != "" && text != nil) {
+                    switch state {
+                    case .idle:
+                        self.state = .idle
                         
-                        state = .editing(.init(type: .icon(.ic24Close), action: { [weak self] in
+                    case .selected:
+                        self.state = .selected(.init(type: .title("Отмена"), action: { [weak self] in
                             
-                            self?.action.send(SearchBarViewModelAction.ClearTextField())
-                            
-                        }), .init(type: .title("Отмена"), action: { [weak self] in
-                            
-                            self?.action.send(SearchBarViewModelAction.ChangeState(state: .idle))
+                            self?.action.send(SearchBarViewModelAction.DismissKeyboard())
                         }))
                         
-                    } else if isSelected {
+                    case .editing:
                         
-                        state = .selected(.init(type: .title("Отмена"), action: { [weak self] in
+                        switch self.state {
+                        case .idle, .selected:
+                            self.state = .editing(.init(type: .icon(.ic24Close), action: { [weak self] in
+                                
+                                self?.action.send(SearchBarViewModelAction.ClearTextField())
+                                
+                            }), .init(type: .title("Отмена"), action: { [weak self] in
+                                
+                                self?.action.send(SearchBarViewModelAction.DismissKeyboard())
+                            }))
                             
-                            self?.action.send(SearchBarViewModelAction.ChangeState(state: .idle))
-                        }))
-                        
-                    } else {
-                        
-                        state = .idle
+                        default:
+                            break
+                        }
                     }
                     
                 }.store(in: &bindings)
@@ -83,25 +92,6 @@ extension SearchBarView {
             textFieldPhoneNumberView.$text
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] text in
-                    
-                    if text != nil && text != "" {
-                        
-                        self.state = .editing(.init(type: .icon(.ic24Close), action: { [weak self] in
-                            
-                            self?.action.send(SearchBarViewModelAction.ClearTextField())
-                            
-                        }), .init(type: .title("Отмена"), action: { [weak self] in
-                            
-                            self?.action.send(SearchBarViewModelAction.ChangeState(state: .idle))
-                        }))
-                        
-                    } else if textFieldPhoneNumberView.isSelected {
-                        
-                        state = .selected(.init(type: .title("Отмена"), action: { [weak self] in
-                            
-                            self?.action.send(SearchBarViewModelAction.ChangeState(state: .idle))
-                        }))
-                    }
                     
                     if let text = text {
                         
@@ -116,20 +106,7 @@ extension SearchBarView {
                         
                     } else {
                         
-                        action.send(SearchBarViewModelAction.TextUpdated.Text(text: text))
-                    }
-                    
-                }.store(in: &bindings)
-            
-            $state
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] state in
-                    
-                    switch state {
-                    case .idle:
-                        self.textFieldPhoneNumberView.dismissKeyboard()
-                        
-                    default: break
+                        action.send(SearchBarViewModelAction.TextUpdated.Text(text: nil))
                     }
                     
                 }.store(in: &bindings)
@@ -165,6 +142,30 @@ extension SearchBarView.ViewModel {
             case title(String)
         }
     }
+}
+
+//MARK: - Action
+
+struct SearchBarViewModelAction {
+    
+    struct DismissKeyboard: Action {}
+    
+    struct ClearTextField: Action {}
+    
+    struct TextUpdated {
+        
+        struct ValidPhone: Action {
+            
+            let phone: String
+        }
+        
+        struct Text: Action {
+            
+            let text: String?
+        }
+    }
+    
+    struct Idle: Action {}
 }
 
 //MARK: - View
@@ -246,28 +247,7 @@ struct SearchBarView: View {
     }
 }
 
-struct SearchBarViewModelAction {
-    
-    struct ChangeState: Action {
-        
-        let state: SearchBarView.ViewModel.State
-    }
-    
-    struct ClearTextField: Action {}
-    
-    struct TextUpdated {
-        
-        struct ValidPhone: Action {
-            
-            let phone: String
-        }
-        
-        struct Text: Action {
-            
-            let text: String?
-        }
-    }
-}
+
 
 struct SearchBarComponent_Previews: PreviewProvider {
     static var previews: some View {

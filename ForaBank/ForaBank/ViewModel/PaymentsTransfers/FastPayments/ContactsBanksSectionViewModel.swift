@@ -68,6 +68,7 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
                     
                     self.header.isCollapsed = true
                     
+                    /*
                     search.action
                         .receive(on: DispatchQueue.main)
                         .sink { action in
@@ -81,6 +82,7 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
                             }
                             
                         }.store(in: &bindings)
+                     */
                     
                     search.textFieldPhoneNumberView.$text
                         .receive(on: DispatchQueue.main)

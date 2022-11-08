@@ -14,8 +14,7 @@ extension TextFieldPhoneNumberView {
     class ViewModel: ObservableObject {
         
         @Published var text: String?
-        @Published var isEditing: Bool
-        @Published var isSelected: Bool
+        @Published var state: State
         var dismissKeyboard: () -> Void
         var toolbar: ToolbarViewModel?
         
@@ -24,15 +23,14 @@ extension TextFieldPhoneNumberView {
         
         let phoneNumberFormatter: PhoneNumberFormaterProtocol
         let phoneNumberFirstDigitReplaceList: [PhoneNumberFirstDigitReplace]
-
+        
         var bindings = Set<AnyCancellable>()
         
-        init(text: String? = nil, placeHolder: PlaceHolder, isEditing: Bool = false, isSelected: Bool = false, toolbar: ToolbarViewModel? = nil, filterSymbols: [Character]? = nil, phoneNumberFirstDigitReplaceList: [PhoneNumberFirstDigitReplace], phoneNumberFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater()) {
+        init(text: String? = nil, placeHolder: PlaceHolder, state: State = .idle, toolbar: ToolbarViewModel? = nil, filterSymbols: [Character]? = nil, phoneNumberFirstDigitReplaceList: [PhoneNumberFirstDigitReplace], phoneNumberFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater()) {
             
             self.text = text
             self.placeHolder = placeHolder
-            self.isEditing = isEditing
-            self.isSelected = isSelected
+            self.state = state
             self.toolbar = toolbar
             self.filterSymbols = filterSymbols
             self.phoneNumberFirstDigitReplaceList = phoneNumberFirstDigitReplaceList
@@ -54,6 +52,13 @@ extension TextFieldPhoneNumberView {
             
             self.toolbar = .init(doneButton: .init(isEnabled: true, action: { [weak self] in self?.dismissKeyboard() }),
                                  closeButton: .init(isEnabled: true, action: { [weak self] in self?.dismissKeyboard() }))
+        }
+        
+        enum State {
+            
+            case idle
+            case selected
+            case editing
         }
         
         enum PlaceHolder: String {
@@ -82,61 +87,81 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         
         viewModel.dismissKeyboard = { textField.resignFirstResponder() }
         
-        if viewModel.toolbar != nil {
-            textField.inputAccessoryView = makeToolbar(context: context)
+        if let toolbarViewModel = viewModel.toolbar {
+            
+            textField.inputAccessoryView = makeToolbar(toolbarViewModel: toolbarViewModel, context: context)
         }
         
         return textField
+        
     }
     
     func updateUIView(_ uiView: UITextField, context: Context) {
         
-        if let text = viewModel.text {
-            
-            let textRange = NSRange(location: 0, length: text.count)
-            uiView.text = TextFieldPhoneNumberView.updateMasked(value: text, inRange: textRange, update: text, firstDigitReplace: viewModel.phoneNumberFirstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
-        } else {
-            
-            uiView.text = viewModel.text
-        }
+        let textRange = NSRange(location: 0, length: viewModel.text?.count ?? 0)
+        uiView.text = TextFieldPhoneNumberView.updateMasked(value: viewModel.text, inRange: textRange, update: viewModel.text ?? "", firstDigitReplace: viewModel.phoneNumberFirstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
+        
     }
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(viewModel: viewModel, text: $viewModel.text)
+        
+        return Coordinator(viewModel: viewModel)
     }
     
     class Coordinator: NSObject, UITextFieldDelegate {
         
-        var text: Binding<String?>
-        @ObservedObject var viewModel: ViewModel
+        let viewModel: ViewModel
         
-        init(viewModel: ViewModel, text: Binding<String?>) {
+        init(viewModel: ViewModel) {
             
             self.viewModel = viewModel
-            self.text = text
         }
         
         func textFieldDidBeginEditing(_ textField: UITextField) {
             
-            viewModel.isSelected = true
+            viewModel.state = state(for: viewModel.text)
+        }
+        
+        func textFieldDidEndEditing(_ textField: UITextField) {
+            
+            viewModel.state = .idle
         }
         
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
             
             textField.text = TextFieldPhoneNumberView.updateMasked(value: textField.text, inRange: range, update: string, firstDigitReplace: viewModel.phoneNumberFirstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
-            text.wrappedValue = textField.text
+            viewModel.text = textField.text
+            
+            if textField.isFirstResponder {
+                
+                viewModel.state = state(for: viewModel.text)
+                
+            } else {
+                
+                viewModel.state = .idle
+            }
             
             return false
         }
         
         @objc func handleDoneAction() {
             viewModel.toolbar?.doneButton.action()
-            viewModel.isSelected = false
         }
         
         @objc func handleCloseAction() {
             viewModel.toolbar?.closeButton?.action()
-            viewModel.isSelected = false
+        }
+        
+        func state(for text: String?) -> TextFieldPhoneNumberView.ViewModel.State {
+            
+            if viewModel.text != nil {
+                
+                return .editing
+                
+            } else {
+                
+                return .selected
+            }
         }
     }
     
@@ -152,7 +177,7 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
             let filterdValue = updatedValue.replacingOccurrences(of: " ", with: "").filter { char in
                 
                 if let filterSymbols = filterSymbols {
-                 
+                    
                     for symbol in filterSymbols {
                         
                         if symbol == char {
@@ -192,13 +217,9 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         }
     }
     
-    private func makeToolbar(context: Context) -> UIToolbar? {
+    private func makeToolbar(toolbarViewModel: TextFieldPhoneNumberView.ToolbarViewModel, context: Context) -> UIToolbar? {
         
         let coordinator = context.coordinator
-        
-        guard let toolbarViewModel = coordinator.viewModel.toolbar else {
-            return nil
-        }
         
         let toolbar = UIToolbar()
         let color: UIColor = .init(hexString: "#1C1C1C")

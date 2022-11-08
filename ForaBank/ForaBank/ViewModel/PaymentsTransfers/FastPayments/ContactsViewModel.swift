@@ -91,7 +91,7 @@ class ContactsViewModel: ObservableObject {
                     withAnimation {
                         
                         self.feedbackGenerator.notificationOccurred(.success)
-                        self.searchBar.state = .idle
+                        self.searchBar.action.send(SearchBarViewModelAction.Idle())
                         
                         self.model.action.send(ModelAction.BankClient.Request(phone: payload.phone))
                         self.model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: payload.phone))
