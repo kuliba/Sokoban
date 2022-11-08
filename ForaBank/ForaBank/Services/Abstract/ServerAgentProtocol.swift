@@ -110,6 +110,9 @@ enum ServerAgentError: LocalizedError {
 
         case .emptyResponseData:
             return "Server: unexpected empty response data"
+            
+        case .unexpectedResponseStatus(let statusCode):
+            return "Server: unexpected response status code: \(statusCode)"
 
         case .curruptedData(let error):
             return "Server: data corrupted: \(error.localizedDescription)"
