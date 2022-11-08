@@ -68,11 +68,9 @@ class ContactsViewModel: ObservableObject {
                     
                 } else {
                     
-                    let latestPaymentsFilterred = model.latestPayments.value.filter({$0.type == .phone})
-                    
                     withAnimation(.easeInOut(duration: 1)) {
                         
-                        self.mode = .contacts(.init(model, latest: latestPaymentsFilterred, filterType: [.phone]), .init(model))
+                        self.mode = .contacts(.init(model, isBaseButtons: false, filter: .including([.phone])), .init(model))
                     }
                 }
                 
@@ -110,11 +108,9 @@ class ContactsViewModel: ObservableObject {
                         return
                     }
                     
-                    let latestPayments = model.latestPayments.value
-                    
                     withAnimation(.easeInOut(duration: 1)) {
                         
-                        self.mode = .contacts(.init(model, latest: latestPayments, filterType: [.phone]), .init(model))
+                        self.mode = .contacts(.init(model, isBaseButtons: false, filter: .including([.phone])), .init(model))
                     }
 
                 default:
@@ -261,7 +257,7 @@ extension ContactsViewModel {
     
     static let sample: ContactsViewModel = .init(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(placeHolder: .banks)), mode: .contactsSearch(.init(.emptyMock, selfContact: .init(fullName: "name", image: nil, phone: "phone", icon: nil, action: {}), contacts: [])))
     
-    static let sampleLatestPayment: ContactsViewModel = .init(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(placeHolder: .banks)), mode: .contacts(.init(.emptyMock, items: [.latestPayment(.init(id: 5, avatar: .icon(Image("ic24Smartphone"), .iconGray), topIcon: Image("azerFlag"), description: "+994 12 493 23 87", action: {}))]), .init(.emptyMock, selfContact: .init(fullName: "Себе", image: nil, phone: "8 (925) 279 96-13", icon: nil, action: {}), contacts: [.init(fullName: "Андрей Андропов", image: nil, phone: "+7 (903) 333-67-32", icon: nil, action: {})])))
+    static let sampleLatestPayment: ContactsViewModel = .init(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(placeHolder: .banks)), mode: .contacts(.init(.emptyMock, items: [.latestPayment(.init(id: 5, avatar: .icon(Image("ic24Smartphone"), .iconGray), topIcon: Image("azerFlag"), description: "+994 12 493 23 87", action: {}))], isBaseButtons: false, filter: nil), .init(.emptyMock, selfContact: .init(fullName: "Себе", image: nil, phone: "8 (925) 279 96-13", icon: nil, action: {}), contacts: [.init(fullName: "Андрей Андропов", image: nil, phone: "+7 (903) 333-67-32", icon: nil, action: {})])))
     
     static let sampleBanks = ContactsBanksSectionViewModel(.emptyMock, header: .init(kind: .banks), items: [.sampleItem], mode: .normal, options: .sample)
     

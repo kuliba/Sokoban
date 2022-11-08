@@ -15,32 +15,23 @@ extension LatestPaymentsView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var items: [ItemViewModel]
-        let filterType: Set<LatestPaymentData.Kind>?
-        
+        let isBaseButtons: Bool
+        let filter: Filter?
+
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(_ model: Model, items: [LatestPaymentsView.ViewModel.ItemViewModel], filterType: Set<LatestPaymentData.Kind>? = nil) {
+        init(_ model: Model, items: [LatestPaymentsView.ViewModel.ItemViewModel], isBaseButtons: Bool, filter: Filter?) {
             
             self.model = model
             self.items = items
-            self.filterType = filterType
+            self.isBaseButtons = isBaseButtons
+            self.filter = filter
         }
         
-        convenience init(_ model: Model, latest: [LatestPaymentData], isUpdating: Bool = false, filterType: Set<LatestPaymentData.Kind>? = nil) {
+        convenience init(_ model: Model, isBaseButtons: Bool = true, filter: Filter? = nil) {
             
-            let items: [LatestPaymentsView.ViewModel.ItemViewModel] = []
-            self.init(model, items: items, filterType: filterType)
-            
-            self.items = Self.itemsReduce(model: model, latest: latest) { [weak self] itemId in
-                
-                if let item = latest.first(where: {$0.id == itemId}) {
-                    
-                    return  { self?.action.send(LatestPaymentsViewModelAction.ButtonTapped.LatestPayment(latestPayment: item)) }
-                }
-                
-                return {}
-            }
+            self.init(model, items: [], isBaseButtons: isBaseButtons, filter: filter)
             
             bind()
         }
@@ -53,16 +44,20 @@ extension LatestPaymentsView {
                 .sink { [unowned self] data in
                     
                     var latestPayments = data.0
+                    let isUpdating = data.1
                     
-                    if let filterType = filterType {
+                    if let filter = filter {
                         
-                        for type in filterType {
+                        switch filter {
+                        case let .including(including):
+                            latestPayments = latestPayments.filter({ including.contains($0.type) })
                             
-                            latestPayments = latestPayments.filter({ $0.type == type })
+                        case let .excluding(excluding):
+                            latestPayments = latestPayments.filter({ excluding.contains($0.type) == false })
                         }
                     }
                     
-                    var items = Self.itemsReduce(model: model, latest: latestPayments, action: { [weak self] itemId in
+                    var items = Self.itemsReduce(model: model, latest: latestPayments, isUpdating: isUpdating, action: { [weak self] itemId in
                         
                         if let item = latestPayments.first(where: {$0.id == itemId}) {
                             
@@ -72,12 +67,12 @@ extension LatestPaymentsView {
                         return {}
                     })
                     
-                    let baseButton = Self.createBaseButton { [weak self] in
+                    if isBaseButtons == true {
                         
-                        self?.action.send(LatestPaymentsViewModelAction.ButtonTapped.Templates())
-                    }
-                    
-                    if filterType == nil {
+                        let baseButton = Self.createBaseButtons { [weak self] in
+                            
+                            self?.action.send(LatestPaymentsViewModelAction.ButtonTapped.Templates())
+                        }
                         
                         items.insert(contentsOf: baseButton, at: 0)
                     }
@@ -85,64 +80,17 @@ extension LatestPaymentsView {
                     self.items = items
                     
                 }.store(in: &bindings)
-            
         }
-        
-        struct PlaceholderViewModel: Identifiable {
-            
-            let id = UUID()
-        }
-        
-        struct LatestPaymentButtonVM: Identifiable {
-            
-            let id: LatestPaymentData.ID
-            let avatar: Avatar
-            let topIcon: Image?
-            let description: String
-            let action: () -> Void
-            
-            enum Avatar {
-                case image(Image)
-                case text(String)
-                case icon(Image, Color)
-            }
-        }
-        
-        enum ItemViewModel: Identifiable {
-            
-            case templates(LatestPaymentButtonVM)
-            case currencyWallet(LatestPaymentButtonVM)
-            case latestPayment(LatestPaymentButtonVM)
-            case placeholder(PlaceholderViewModel)
-            
-            var id: String {
-                
-                switch self {
-                case let .templates(templatesButtonViewModel): return String(templatesButtonViewModel.id)
-                case let .currencyWallet(currencyButtonViewModel): return String(currencyButtonViewModel.id)
-                case let .latestPayment(latestPaymentButtonVM): return String(latestPaymentButtonVM.id)
-                case let .placeholder(placeholderViewModel): return placeholderViewModel.id.uuidString
-                }
-            }
-        }
-        
-        static func itemsReduce(model: Model, latest: [LatestPaymentData],
-                                isUpdating: Bool = false,
-                                action: (LatestPaymentData.ID) -> () -> Void) -> [ItemViewModel] {
+
+        static func itemsReduce(model: Model, latest: [LatestPaymentData], isUpdating: Bool, action: (LatestPaymentData.ID) -> () -> Void) -> [ItemViewModel] {
             
             var updatedItems = [ItemViewModel]()
             
             let latestPaymentsItems = latest.map { item in
                 
-                ItemViewModel
-                    .latestPayment(
-                        .init(data: item,
-                              model: model,
-                              action: action(item.id)))
+                ItemViewModel.latestPayment(.init(data: item, model: model, action: action(item.id)))
             }
-            
-            
-            
+
             if isUpdating {
                 
                 if latest.isEmpty {
@@ -153,7 +101,6 @@ extension LatestPaymentsView {
                     
                     updatedItems.append(.placeholder(.init()))
                     updatedItems.append(contentsOf:  latestPaymentsItems)
-                    
                 }
                 
             } else {
@@ -162,10 +109,9 @@ extension LatestPaymentsView {
             }
             
             return updatedItems
-            
         }
         
-        static func createBaseButton(action: @escaping () -> Void) -> [ItemViewModel] {
+        static func createBaseButtons(action: @escaping () -> Void) -> [ItemViewModel] {
             
             let baseButtons: [LatestPaymentButtonVM] = [
                 .init(id: 0,
@@ -181,6 +127,55 @@ extension LatestPaymentsView {
             ]
             
             return baseButtons.map { ItemViewModel.templates($0) }
+        }
+    }
+}
+
+//MARK: - Types
+
+extension LatestPaymentsView.ViewModel {
+    
+    enum Filter {
+        
+        case including(Set<LatestPaymentData.Kind>)
+        case excluding(Set<LatestPaymentData.Kind>)
+    }
+    
+    struct PlaceholderViewModel: Identifiable {
+        
+        let id = UUID()
+    }
+    
+    struct LatestPaymentButtonVM: Identifiable {
+        
+        let id: LatestPaymentData.ID
+        let avatar: Avatar
+        let topIcon: Image?
+        let description: String
+        let action: () -> Void
+        
+        enum Avatar {
+            case image(Image)
+            case text(String)
+            case icon(Image, Color)
+        }
+    }
+    
+    enum ItemViewModel: Identifiable {
+        
+        case templates(LatestPaymentButtonVM)
+        case currencyWallet(LatestPaymentButtonVM)
+        case latestPayment(LatestPaymentButtonVM)
+        case placeholder(PlaceholderViewModel)
+        
+        var id: String {
+            
+            switch self {
+            case let .templates(templatesButtonViewModel): return String(templatesButtonViewModel.id)
+            case let .currencyWallet(currencyButtonViewModel): return String(currencyButtonViewModel.id)
+            case let .latestPayment(latestPaymentButtonVM): return String(latestPaymentButtonVM.id)
+            case let .placeholder(placeholderViewModel): return placeholderViewModel.id.uuidString
+            }
         }
     }
 }
@@ -483,6 +478,6 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
 
 struct LatestPaymentsViewComponent_Previews: PreviewProvider {
     static var previews: some View {
-        LatestPaymentsView(viewModel: .init(.emptyMock, items: [], filterType: nil))
+        LatestPaymentsView(viewModel: .init(.emptyMock, items: [], isBaseButtons: true, filter: nil))
     }
 }

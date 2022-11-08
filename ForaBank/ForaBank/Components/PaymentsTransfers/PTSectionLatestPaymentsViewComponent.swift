@@ -31,7 +31,7 @@ extension PTSectionLatestPaymentsViewComponent {
         
         init(model: Model) {
             
-            self.latestPayments = .init(model, items: [])
+            self.latestPayments = .init(model)
             self.model = model
             super.init()
             bind()
@@ -52,12 +52,10 @@ extension PTSectionLatestPaymentsViewComponent {
                        
                             if !model.latestPayments.value.isEmpty {
                                 
-                                // temporally removed taxAndStateService from list
-                                let latestPaymentsFilterred = model.latestPayments.value.filter({ $0.type != .taxAndStateService })
-                            
                                 withAnimation(.easeInOut(duration: 1)) {
                                     
-                                    self.latestPayments = .init(model, latest: latestPaymentsFilterred)
+                                    // temporally removed taxAndStateService from list
+                                    self.latestPayments = .init(model, filter: .excluding([.taxAndStateService]))
                                 }
                             }
                         
@@ -67,25 +65,6 @@ extension PTSectionLatestPaymentsViewComponent {
                     }
                     
             }.store(in: &bindings)
-            
-            model.latestPayments
-                .combineLatest(model.latestPaymentsUpdating)
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] data in
-                    
-                    let latestPayments = data.0
-                    let isLatestPaymentsUpdating = data.1
-                    
-                    // temporally removed taxAndStateService from list
-                    let latestPaymentsFilterred = latestPayments.filter({ $0.type != .taxAndStateService })
-                    
-                    withAnimation(.easeInOut(duration: 1)) {
-                        
-                        self.latestPayments = .init(model, latest: latestPaymentsFilterred, isUpdating: isLatestPaymentsUpdating)
-                    }
-                
-            }.store(in: &bindings)
-            
         }
     }
 }
