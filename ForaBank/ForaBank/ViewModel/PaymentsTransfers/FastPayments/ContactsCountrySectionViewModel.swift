@@ -7,9 +7,9 @@
 
 import Foundation
 
-class ContactsCountrySectionViewModel: CollapsableSectionViewModel {
+class ContactsCountrySectionViewModel: ContactsSectionViewModel {
     
-    override init(header: CollapsableSectionViewModel.HeaderViewModel, isCollapsed: Bool = false, items: [CollapsableSectionViewModel.ItemViewModel]) {
+    override init(header: ContactsSectionViewModel.HeaderViewModel, isCollapsed: Bool = false, items: [ContactsSectionViewModel.ItemViewModel]) {
         
         super.init(header: header, items: items)
     }
@@ -26,11 +26,11 @@ class ContactsCountrySectionViewModel: CollapsableSectionViewModel {
         self.items = items
     }
     
-    static func reduceCounry(countriesList: [CountryData], action: @escaping (CountryData.ID) -> () -> Void) -> [CollapsableSectionViewModel.ItemViewModel] {
+    static func reduceCounry(countriesList: [CountryData], action: @escaping (CountryData.ID) -> () -> Void) -> [ContactsSectionViewModel.ItemViewModel] {
         
-        var country = [CollapsableSectionViewModel.ItemViewModel]()
+        var country = [ContactsSectionViewModel.ItemViewModel]()
         
-        country = countriesList.map({CollapsableSectionViewModel.ItemViewModel(title: $0.name, image: $0.svgImage?.image, bankType: nil, action: action($0.id))})
+        country = countriesList.map({ContactsSectionViewModel.ItemViewModel(title: $0.name, image: $0.svgImage?.image, bankType: nil, action: action($0.id))})
         country = country.sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
         country = country.sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
         

@@ -1,5 +1,5 @@
 //
-//  ContactsCollapsableSectionViewModel.swift
+//  ContactsSectionViewModel.swift
 //  ForaBank
 //
 //  Created by Дмитрий Савушкин on 25.10.2022.
@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import SwiftUI
 
-class CollapsableSectionViewModel: ObservableObject, Hashable, Equatable, Identifiable {
+class ContactsSectionViewModel: ObservableObject, Hashable, Equatable, Identifiable {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -124,9 +124,9 @@ class CollapsableSectionViewModel: ObservableObject, Hashable, Equatable, Identi
     }
 }
 
-extension CollapsableSectionViewModel {
+extension ContactsSectionViewModel {
     
-    static func == (lhs: CollapsableSectionViewModel, rhs: CollapsableSectionViewModel) -> Bool {
+    static func == (lhs: ContactsSectionViewModel, rhs: ContactsSectionViewModel) -> Bool {
         lhs.id == rhs.id
     }
     

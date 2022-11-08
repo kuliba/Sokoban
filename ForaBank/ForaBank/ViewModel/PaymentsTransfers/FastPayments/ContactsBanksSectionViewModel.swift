@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
+class ContactsBanksSectionViewModel: ContactsSectionViewModel {
     
     @Published var mode: Mode
     @Published var options: OptionSelectorView.ViewModel?
@@ -22,7 +22,7 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
         case search(SearchBarView.ViewModel)
     }
     
-    init(_ model: Model, header: CollapsableSectionViewModel.HeaderViewModel, items: [CollapsableSectionViewModel.ItemViewModel], mode: Mode, options: OptionSelectorView.ViewModel?) {
+    init(_ model: Model, header: ContactsSectionViewModel.HeaderViewModel, items: [ContactsSectionViewModel.ItemViewModel], mode: Mode, options: OptionSelectorView.ViewModel?) {
         
         self.model = model
         self.mode = mode
@@ -68,35 +68,30 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
                     
                     self.header.isCollapsed = true
                     
-                    /*
-                    search.action
+                    search.$state
+                        .dropFirst()
                         .receive(on: DispatchQueue.main)
-                        .sink { action in
+                        .sink { [unowned self] state in
                             
-                            switch action {
-                            case _ as SearchBarViewModelAction.ChangeState:
-                                
+                            switch state {
+                            case .idle:
                                 self.mode = .normal
                                 
-                            default: break
+                            default:
+                                break
                             }
                             
                         }.store(in: &bindings)
-                     */
                     
                     search.textFieldPhoneNumberView.$text
                         .receive(on: DispatchQueue.main)
-                        .sink { text in
+                        .sink { [unowned self] text in
                             
                             if let text = text, text != "" {
                                 
                                 let filteredBanks = self.model.bankList.value.filter({ bank in
                                     
-                                    if bank.memberNameRus.localizedStandardContains(text) {
-                                        return true
-                                    }
-                                    
-                                    return false
+                                    bank.memberNameRus.localizedStandardContains(text)
                                 })
                                 
                                 self.items = Self.reduceBanks(banksData: filteredBanks, action: { [weak self] bankId in
@@ -196,11 +191,11 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
         }
     }
     
-    static func reduceBanks(banksData: [BankData], filterByType: BankType? = nil, filterByName: String? = nil, action: (BankData.ID) -> () -> Void) -> [CollapsableSectionViewModel.ItemViewModel] {
+    static func reduceBanks(banksData: [BankData], filterByType: BankType? = nil, filterByName: String? = nil, action: (BankData.ID) -> () -> Void) -> [ContactsSectionViewModel.ItemViewModel] {
         
-        var banks = [CollapsableSectionViewModel.ItemViewModel]()
+        var banks = [ContactsSectionViewModel.ItemViewModel]()
         
-        banks = banksData.map({CollapsableSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: action($0.id))})
+        banks = banksData.map({ContactsSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: action($0.id))})
         banks = banks.sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
         banks = banks.sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
         
@@ -224,12 +219,12 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
         return banks
     }
     
-    static func reduceItems(bankList: [BankData], action: @escaping (BankData.ID) -> () -> Void) -> [CollapsableSectionViewModel.ItemViewModel] {
+    static func reduceItems(bankList: [BankData], action: @escaping (BankData.ID) -> () -> Void) -> [ContactsSectionViewModel.ItemViewModel] {
         
-        var items = [CollapsableSectionViewModel.ItemViewModel]()
+        var items = [ContactsSectionViewModel.ItemViewModel]()
         
         items = bankList
-            .map({CollapsableSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: action($0.id))})
+            .map({ContactsSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: action($0.id))})
             .sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
             .sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
         

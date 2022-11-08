@@ -26,8 +26,8 @@ class ContactsViewModel: ObservableObject {
         
         case contacts(LatestPaymentsView.ViewModel?, ContactsListViewModel)
         case contactsSearch(ContactsListViewModel)
-        case banks(ContactsTopBanksSectionViewModel?, [CollapsableSectionViewModel])
-        case banksSearch([CollapsableSectionViewModel])
+        case banks(ContactsTopBanksSectionViewModel?, [ContactsSectionViewModel])
+        case banksSearch([ContactsSectionViewModel])
     }
     
     init(_ model: Model, searchBar: SearchBarView.ViewModel, mode: Mode) {
@@ -102,7 +102,7 @@ class ContactsViewModel: ObservableObject {
                         let countiesData = model.countriesList.value.filter({$0.paymentSystemIdList.contains({"DIRECT"}())})
                         let countriesSection = ContactsCountrySectionViewModel(countriesList: countiesData)
                         
-                        let collapsable: [CollapsableSectionViewModel] = [bankSection, countriesSection]
+                        let collapsable: [ContactsSectionViewModel] = [bankSection, countriesSection]
                         
                         self.mode = .banks(.init(model, selectPhone: payload.phone), collapsable)
                     }
@@ -268,20 +268,20 @@ extension ContactsViewModel {
     
     static let sampleBanks = ContactsBanksSectionViewModel(.emptyMock, header: .init(kind: .banks), items: [.sampleItem], mode: .normal, options: .sample)
     
-    static let sampleHeader = CollapsableSectionViewModel.HeaderViewModel(kind: .country)
+    static let sampleHeader = ContactsSectionViewModel.HeaderViewModel(kind: .country)
 }
 
-extension CollapsableSectionViewModel.ItemViewModel {
+extension ContactsSectionViewModel.ItemViewModel {
     
-    static let sampleItem = CollapsableSectionViewModel.ItemViewModel(title: "Банк", image: .ic24Bank, bankType: .sfp, action: {})
+    static let sampleItem = ContactsSectionViewModel.ItemViewModel(title: "Банк", image: .ic24Bank, bankType: .sfp, action: {})
 }
 
-extension CollapsableSectionViewModel {
+extension ContactsSectionViewModel {
     
-    static let sampleHeader = CollapsableSectionViewModel.HeaderViewModel(kind: .country)
+    static let sampleHeader = ContactsSectionViewModel.HeaderViewModel(kind: .country)
 }
 
-extension CollapsableSectionViewModel.HeaderViewModel {
+extension ContactsSectionViewModel.HeaderViewModel {
     
-    static let sampleHeader = CollapsableSectionViewModel.HeaderViewModel(kind: .banks)
+    static let sampleHeader = ContactsSectionViewModel.HeaderViewModel(kind: .banks)
 }
