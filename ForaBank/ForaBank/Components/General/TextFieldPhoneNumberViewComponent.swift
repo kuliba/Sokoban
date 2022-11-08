@@ -17,7 +17,7 @@ extension TextFieldPhoneNumberView {
         @Published var isEditing: Bool
         @Published var isSelected: Bool
         var dismissKeyboard: () -> Void
-        let toolbar: ToolbarViewModel?
+        var toolbar: ToolbarViewModel?
         
         let placeHolder: PlaceHolder
         let filterSymbols: [Character]?
@@ -38,6 +38,22 @@ extension TextFieldPhoneNumberView {
             self.phoneNumberFirstDigitReplaceList = phoneNumberFirstDigitReplaceList
             self.phoneNumberFormatter = phoneNumberFormatter
             self.dismissKeyboard = {}
+        }
+        
+        convenience init(placeHolder: PlaceHolder) {
+            
+            switch placeHolder {
+            case .contacts:
+                let filterSymbols = [Character("-"), Character("("), Character(")"), Character("+")]
+                
+                self.init(placeHolder: placeHolder, filterSymbols: filterSymbols, phoneNumberFirstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")], phoneNumberFormatter: PhoneNumberKitFormater())
+                
+            case .banks:
+                self.init(placeHolder: placeHolder, phoneNumberFirstDigitReplaceList: [])
+            }
+            
+            self.toolbar = .init(doneButton: .init(isEnabled: true, action: { [weak self] in self?.dismissKeyboard() }),
+                                 closeButton: .init(isEnabled: true, action: { [weak self] in self?.dismissKeyboard() }))
         }
         
         enum PlaceHolder: String {

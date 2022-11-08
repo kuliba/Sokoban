@@ -39,13 +39,8 @@ class ContactsViewModel: ObservableObject {
     
     convenience init(_ model: Model) {
  
-        let filterSymbols: [Character] = [Character("-"), Character("("), Character(")"), Character("+")]
-        let toolBar: TextFieldPhoneNumberView.ToolbarViewModel = .init(doneButton: .init(isEnabled: true) { UIApplication.shared.endEditing() },
-                                                                  closeButton: .init(isEnabled: true, action: { UIApplication.shared.endEditing() }))
-        let textFieldViewModel: TextFieldPhoneNumberView.ViewModel = .init(placeHolder: .contacts, toolbar: toolBar, filterSymbols: filterSymbols, phoneNumberFirstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")])
-        let searchBar: SearchBarView.ViewModel = .init(textFieldPhoneNumberView: textFieldViewModel)
+        self.init(model, searchBar: .init(textFieldPhoneNumberView: .init(placeHolder: .contacts)), mode: .contacts(nil, .init(model)))
         
-        self.init(model, searchBar: searchBar, mode: .contacts(nil, .init(model)))
         bind()
     }
     

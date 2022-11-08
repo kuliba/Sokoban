@@ -53,7 +53,7 @@ class ContactsBanksSectionViewModel: CollapsableSectionViewModel {
                 
                 switch action {
                 case _ as HeaderViewModelAction.SearchDidTapped:
-                    self.mode = .search(.init(textFieldPhoneNumberView: .init(placeHolder: .banks, phoneNumberFirstDigitReplaceList: [])))
+                    self.mode = .search(.init(textFieldPhoneNumberView: .init(placeHolder: .banks)))
                     
                 default: break
                 }
