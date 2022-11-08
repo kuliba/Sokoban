@@ -107,11 +107,11 @@ extension ContactsView {
         var body: some View {
             
             switch viewModel.content {
+            case .empty:
+                EmptyView()
+                
             case .banks(let topBanks):
-                if let topBanks = topBanks {
-
-                    TopBanksView(viewModel: topBanks)
-                }
+                TopBanksView(viewModel: topBanks)
                 
             case .placeHolder(let placeholders):
                 HStack(alignment: .top, spacing: 4) {

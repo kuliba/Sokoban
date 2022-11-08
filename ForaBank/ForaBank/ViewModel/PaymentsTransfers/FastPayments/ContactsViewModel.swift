@@ -83,7 +83,7 @@ class ContactsViewModel: ObservableObject {
                         
                         let collapsable: [ContactsSectionViewModel] = [bankSection, countriesSection]
                         
-                        self.mode = .banks(.init(model, selectPhone: phone), collapsable)
+                        self.mode = .banks(.init(model, phone: phone), collapsable)
                     }
                     
                 } else {

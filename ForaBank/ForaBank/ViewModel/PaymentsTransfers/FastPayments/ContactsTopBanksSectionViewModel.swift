@@ -14,30 +14,33 @@ class ContactsTopBanksSectionViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var content: ContentType
+    let phone: String
     
     private let model: Model
     var bindings = Set<AnyCancellable>()
     
     enum ContentType {
         
-        case banks(TopBanksViewModel?)
+        case empty
+        case banks(TopBanksViewModel)
         case placeHolder([LatestPaymentsView.ViewModel.PlaceholderViewModel])
     }
     
-    init(_ model: Model, content: ContentType) {
+    init(_ model: Model, content: ContentType, phone: String) {
         
         self.model = model
         self.content = content
+        self.phone = phone
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
     }
     
-    convenience init(_ model: Model, selectPhone: String) {
+    convenience init(_ model: Model, phone: String) {
         
         let content: ContentType = .placeHolder(.init(repeating: .init(), count: 6))
-        self.init(model, content: content)
+        self.init(model, content: content, phone: phone)
 
-        bind(with: selectPhone)
+        bind()
     }
     
     deinit {
@@ -45,7 +48,7 @@ class ContactsTopBanksSectionViewModel: ObservableObject {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
-    private func bind(with selectPhone: String) {
+    private func bind() {
         
         model.action
             .receive(on: DispatchQueue.main)
@@ -57,53 +60,38 @@ class ContactsTopBanksSectionViewModel: ObservableObject {
                     switch payload.result {
                     case .success(let banks):
 
-                        let banks = Self.reduce(model: model, selectPhone: selectPhone, banks: banks, action: { [weak self] bankId in
-
-                            
-                            { self?.action.send(ContactsTopBanksSectionViewModelAction.TopBanksDidTapped(bankId: bankId)) }
-                        })
-
-                        if let banks = banks {
+                        if let banks = Self.reduce(contact: model.contact(for: phone), banks: banks, banksData: model.bankList.value, action: { [weak self] bankId in { self?.action.send(ContactsTopBanksSectionViewModelAction.TopBanksDidTapped(bankId: bankId)) } }) {
                             
                             self.content = .banks(banks)
                         }
                         
                     case .failure:
-                        self.content = .banks(nil)
+                        self.content = .empty
                     }
                 default: break
                 }
             }.store(in: &bindings)
     }
     
-    static func reduce(model: Model, selectPhone: String, banks: [PaymentPhoneData], action: @escaping ((String) -> () -> Void)) -> TopBanksViewModel? {
+    static func reduce(contact: AddressBookContact?, banks: [PaymentPhoneData], banksData: [BankData], action: @escaping ((String) -> () -> Void)) -> TopBanksViewModel? {
         
-        var banksList: [TopBanksViewModel.Bank] = []
+        var banksList = [TopBanksViewModel.Bank]()
         
         for bank in banks {
             
-            if let bankName = bank.bankName, let defaultBank = bank.defaultBank, let payment = bank.payment, let bankId = bank.bankId  {
+            if let bankName = bank.bankName,
+                let defaultBank = bank.defaultBank,
+                let payment = bank.payment,
+                let bankId = bank.bankId  {
 
-                let contact = payment ? model.contact(for: selectPhone) : nil
-                banksList.append(TopBanksViewModel.Bank(image: getImageBank(model: model, paymentBank: bank), defaultBank: defaultBank, name: contact?.fullName, bankName: bankName, action: action(bankId)))
-            }
-        }
-        
-        func getImageBank(model: Model, paymentBank: PaymentPhoneData) -> Image? {
-            
-            let banks = model.bankList.value
-            for bank in banks {
+                let contact = payment ? contact : nil
+                let bankImage = banksData.first(where: { $0.memberId == bank.bankId })?.svgImage.image
                 
-                if paymentBank.bankId == bank.memberId {
-                    
-                    return bank.svgImage.image
-                }
+                banksList.append(.init(image: bankImage, defaultBank: defaultBank, name: contact?.fullName, bankName: bankName, action: action(bankId)))
             }
-            
-            return nil
         }
         
-        return TopBanksViewModel(banks: banksList)
+        return .init(banks: banksList)
     }
 }
 
