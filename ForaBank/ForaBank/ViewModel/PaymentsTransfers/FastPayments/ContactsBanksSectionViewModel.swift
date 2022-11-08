@@ -11,7 +11,10 @@ import Combine
 class ContactsBanksSectionViewModel: ContactsSectionViewModel {
     
     @Published var mode: Mode
-    @Published var options: OptionSelectorView.ViewModel?
+    @Published var options: OptionSelectorView.ViewModel
+    var bankType: BankType? { BankType(rawValue: options.selected) }
+    
+    private var allItems: [ContactsSectionViewModel.ItemViewModel]
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -22,11 +25,12 @@ class ContactsBanksSectionViewModel: ContactsSectionViewModel {
         case search(SearchBarView.ViewModel)
     }
     
-    init(_ model: Model, header: ContactsSectionViewModel.HeaderViewModel, items: [ContactsSectionViewModel.ItemViewModel], mode: Mode, options: OptionSelectorView.ViewModel?) {
+    init(_ model: Model, header: ContactsSectionViewModel.HeaderViewModel, items: [ContactsSectionViewModel.ItemViewModel], mode: Mode, options: OptionSelectorView.ViewModel) {
         
         self.model = model
         self.mode = mode
         self.options = options
+        self.allItems = items
         super.init(header: header, items: items)
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
@@ -37,13 +41,19 @@ class ContactsBanksSectionViewModel: ContactsSectionViewModel {
         let options = Self.createOptionViewModel()
         self.init(model, header: .init(kind: .banks), items: [], mode: .normal, options: options)
         
-        self.items = Self.reduceBanks(banksData: bankData, action: {[weak self] bankId in
+        Task {
             
-            { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped(bankId: bankId)) }
-        })
-        
+            self.allItems = await Self.reduce(bankList: model.bankList.value) { [weak self]  bankId in
+                { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped(bankId: bankId)) }
+            }
+            
+            await MainActor.run {
+                
+                self.items = Self.reduce(items: allItems, filterByType: bankType)
+            }
+        }
+  
         bind()
-        bind(options: options)
     }
     
     deinit {
@@ -53,6 +63,23 @@ class ContactsBanksSectionViewModel: ContactsSectionViewModel {
     
     override func bind() {
         super.bind()
+        
+        options.$selected
+            .receive(on: DispatchQueue.main)
+            .sink{[unowned self] selected in
+                
+                self.items = Self.reduce(items: allItems, filterByType: bankType)
+                
+                if bankType == .sfp {
+                    
+                    header.icon = .ic24SBP
+                    
+                } else {
+                    
+                    header.icon = .ic24Bank
+                }
+                
+            }.store(in: &bindings)
         
         header.action
             .receive(on: DispatchQueue.main)
@@ -70,6 +97,7 @@ class ContactsBanksSectionViewModel: ContactsSectionViewModel {
         $mode
             .receive(on: DispatchQueue.main)
             .sink{ [unowned self] mode in
+                
                 switch mode {
                 case .search(let search):
                     
@@ -94,91 +122,53 @@ class ContactsBanksSectionViewModel: ContactsSectionViewModel {
                         .receive(on: DispatchQueue.main)
                         .sink { [unowned self] text in
                             
-                            if let text = text {
-                                
-                                let filteredBanks = self.model.bankList.value.filter({ bank in
-                                    
-                                    bank.memberNameRus.localizedStandardContains(text)
-                                })
-                                
-                                self.items = Self.reduceBanks(banksData: filteredBanks, action: { [weak self] bankId in
-                                    { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped(bankId: bankId)) }
-                                })
-                                
-                            } else {
-                                
-                                if let selected = self.options?.selected {
-                                    
-                                    self.options?.selected = selected
-                                }
-                            }
+                            self.items = Self.reduce(items: allItems, filterByType: bankType, filterByName: text)
                             
                         }.store(in: &bindings)
                     
                 case .normal:
-                    break
+                    self.items = Self.reduce(items: allItems, filterByType: bankType)
                     
                 }
             }.store(in: &bindings)
     }
+}
+
+//MARK: - Reducers
+
+extension ContactsBanksSectionViewModel {
     
-    func bind(options: OptionSelectorView.ViewModel?) {
+    static func reduce(bankList: [BankData], action: @escaping (BankData.ID) -> () -> Void) async ->  [ContactsSectionViewModel.ItemViewModel] {
         
-        guard let options = options else {
-            return
+        return bankList
+            .map({ContactsSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: action($0.id))})
+            .sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
+            .sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
+    }
+    
+    static func reduce(items: [ContactsSectionViewModel.ItemViewModel], filterByType: BankType? = nil, filterByName: String? = nil) -> [ContactsSectionViewModel.ItemViewModel] {
+        
+        var filterredItems = items
+        
+        if let bankType = filterByType {
+            
+            filterredItems = filterredItems.filter({$0.bankType == bankType})
         }
         
-        options.action
-            .receive(on: DispatchQueue.main)
-            .sink{[unowned self] action in
-                
-                switch action {
-                case let payload as OptionSelectorAction.OptionDidSelected:
-                    
-                    options.selected = payload.optionId
-                    
-                    guard let bankType = BankType(rawValue: options.selected) else {
-                        
-                        let banksData = model.bankList.value
-                        self.items = Self.reduceItems(bankList: banksData, action: { [weak self] bankId in
-                            
-                            { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped(bankId: bankId))}
-                        })
-                        
-                        header.icon = .ic24Bank
-                        return
-                    }
-                    
-                    switch bankType {
-                    case .sfp:
-                        let banksData = model.bankList.value.filter({$0.bankType == .sfp})
-                        self.items = Self.reduceItems(bankList: banksData, action: { [weak self] bankId in
-                            
-                            { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped(bankId: bankId))}
-                        })
-                        
-                        header.icon = .ic24SBP
-                        
-                    case .direct:
-                        let banksData = model.bankList.value.filter({$0.bankType == .direct})
-                        self.items = Self.reduceItems(bankList: banksData, action: { [weak self] bankId in
-                            
-                            { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped(bankId: bankId))}
-                        })
-                        
-                        header.icon = .ic24Bank
-                        
-                    case .unknown:
-                        break
-                    }
-                    
-                default: break
-                }
-                
-            }.store(in: &bindings)
+        if let name = filterByName {
+            
+            filterredItems = filterredItems.filter({ $0.title.localizedStandardContains(name) })
+        }
+
+        return filterredItems
     }
+}
+
+//MARK: - Helpers
+
+extension ContactsBanksSectionViewModel {
     
-    static func createOptionViewModel() -> OptionSelectorView.ViewModel? {
+    static func createOptionViewModel() -> OptionSelectorView.ViewModel {
         
         var options = BankType.valid.map { bankType in
             
@@ -187,57 +177,13 @@ class ContactsBanksSectionViewModel: ContactsSectionViewModel {
         
         options.append(Option(id: "all", name: "Все"))
         
-        if let firstOption = options.first?.id  {
-            
-            let optionViewModel: OptionSelectorView.ViewModel = .init(options: options, selected: firstOption, style: .template, mode: .action)
-            return optionViewModel
-            
-        } else {
-            
-            return nil
-        }
-    }
-    
-    static func reduceBanks(banksData: [BankData], filterByType: BankType? = nil, filterByName: String? = nil, action: (BankData.ID) -> () -> Void) -> [ContactsSectionViewModel.ItemViewModel] {
+        let firstOption = options[0].id
         
-        var banks = [ContactsSectionViewModel.ItemViewModel]()
-        
-        banks = banksData.map({ContactsSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: action($0.id))})
-        banks = banks.sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
-        banks = banks.sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
-        
-        if let filter = filterByType {
-            
-            banks = banks.filter({$0.bankType == filter})
-        }
-        
-        if let filter = filterByName, filter != "" {
-            
-            banks = banks.filter({ bank in
-                
-                if bank.title.localizedStandardContains(filter) {
-                    return true
-                }
-                
-                return false
-            })
-        }
-        
-        return banks
-    }
-    
-    static func reduceItems(bankList: [BankData], action: @escaping (BankData.ID) -> () -> Void) -> [ContactsSectionViewModel.ItemViewModel] {
-        
-        var items = [ContactsSectionViewModel.ItemViewModel]()
-        
-        items = bankList
-            .map({ContactsSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: action($0.id))})
-            .sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
-            .sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
-        
-        return items
+        return .init(options: options, selected: firstOption, style: .template, mode: .auto)
     }
 }
+
+//MARK: - Action
 
 struct ContactsBanksSectionViewModelAction {
     
