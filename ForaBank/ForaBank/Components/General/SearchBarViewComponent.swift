@@ -17,6 +17,14 @@ extension SearchBarView {
         let icon: Image?
         let textField: TextFieldPhoneNumberView.ViewModel
         var text: String? { textField.text }
+        var phone: String? {
+            
+            guard let text = text, phoneNumberFormater.isValid(text) else {
+                return nil
+            }
+            
+            return text
+        }
         
         @Published private(set) var state: State
         
@@ -88,33 +96,6 @@ extension SearchBarView {
                     }
                     
                 }.store(in: &bindings)
-            
-            textField.$text
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] text in
-                    
-                    if let text = text {
-                        
-                        if isValidPhone(text) == true {
-                            
-                            action.send(SearchBarViewModelAction.TextUpdated.ValidPhone(phone: text))
-                            
-                        } else {
-                            
-                            action.send(SearchBarViewModelAction.TextUpdated.Text(text: text))
-                        }
-                        
-                    } else {
-                        
-                        action.send(SearchBarViewModelAction.TextUpdated.Text(text: nil))
-                    }
-                    
-                }.store(in: &bindings)
-        }
-        
-        private func isValidPhone(_ value: String) -> Bool {
-            
-            phoneNumberFormater.isValid(value)
         }
     }
 }
@@ -151,20 +132,7 @@ struct SearchBarViewModelAction {
     struct DismissKeyboard: Action {}
     
     struct ClearTextField: Action {}
-    
-    struct TextUpdated {
         
-        struct ValidPhone: Action {
-            
-            let phone: String
-        }
-        
-        struct Text: Action {
-            
-            let text: String?
-        }
-    }
-    
     struct Idle: Action {}
 }
 

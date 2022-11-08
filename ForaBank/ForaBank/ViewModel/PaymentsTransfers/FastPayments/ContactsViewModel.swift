@@ -46,8 +46,6 @@ class ContactsViewModel: ObservableObject {
     
     private func bind() {
         
-        //MARK: Mode
-        
         $mode
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] mode in
@@ -56,40 +54,19 @@ class ContactsViewModel: ObservableObject {
                 
             }.store(in: &bindings)
         
-        //MARK: SearchViewModel
-        
         searchBar.textField.$text
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] text in
                 
-                if let text = text {
-                    
-                    mode = .contactsSearch(.init(model, filterText: text))
-                    
-                } else {
-                    
-                    withAnimation(.easeInOut(duration: 1)) {
-                        
-                        self.mode = .contacts(.init(model, isBaseButtons: false, filter: .including([.phone])), .init(model))
-                    }
-                }
-                
-            }.store(in: &bindings)
-        
-        searchBar.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case let payload as SearchBarViewModelAction.TextUpdated.ValidPhone:
+                if let phone = searchBar.phone {
                     
                     withAnimation {
                         
                         self.feedbackGenerator.notificationOccurred(.success)
                         self.searchBar.action.send(SearchBarViewModelAction.Idle())
                         
-                        self.model.action.send(ModelAction.BankClient.Request(phone: payload.phone))
-                        self.model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: payload.phone))
+                        self.model.action.send(ModelAction.BankClient.Request(phone: phone))
+                        self.model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: phone))
                         
                         let banksData = model.bankList.value
                         let bankSection = ContactsBanksSectionViewModel(model, bankData: banksData)
@@ -99,24 +76,24 @@ class ContactsViewModel: ObservableObject {
                         
                         let collapsable: [ContactsSectionViewModel] = [bankSection, countriesSection]
                         
-                        self.mode = .banks(.init(model, selectPhone: payload.phone), collapsable)
+                        self.mode = .banks(.init(model, selectPhone: phone), collapsable)
                     }
                     
-                case _ as SearchBarViewModelAction.TextUpdated.Text:
-                    
-                    guard case .banks(_, _) = mode else {
-                        return
-                    }
-                    
-                    withAnimation(.easeInOut(duration: 1)) {
+                } else {
+                   
+                    if let text = text {
                         
-                        self.mode = .contacts(.init(model, isBaseButtons: false, filter: .including([.phone])), .init(model))
-                    }
+                        mode = .contactsSearch(.init(model, filterText: text))
 
-                default:
-                    break
+                    } else {
+                        
+                        withAnimation(.easeInOut(duration: 1)) {
+                            
+                            self.mode = .contacts(.init(model, isBaseButtons: false, filter: .including([.phone])), .init(model))
+                        }
+                    }
                 }
-                
+ 
             }.store(in: &bindings)
     }
     
@@ -148,9 +125,6 @@ class ContactsViewModel: ObservableObject {
                         case let item as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
                             //TODO: setup action link to paymentView
                             break
-                            
-                        case let payload as ContactsListViewModelAction.ContactSelect:
-                            self.searchBar.textField.text = payload.phone
                             
                         default: break
                         }

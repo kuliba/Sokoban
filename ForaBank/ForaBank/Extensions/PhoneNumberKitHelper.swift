@@ -37,8 +37,7 @@ struct PhoneNumberKitFormater: PhoneNumberFormaterProtocol {
     
     func isValid(_ phoneNumber: String) -> Bool {
         
-        let phoneNumberParsed = phoneNumberKit.isValidPhoneNumber(phoneNumber)
-        return phoneNumberParsed
+        phoneNumberKit.isValidPhoneNumber(phoneNumber)
     }
     
     //TODO: remove afrer refactoring
