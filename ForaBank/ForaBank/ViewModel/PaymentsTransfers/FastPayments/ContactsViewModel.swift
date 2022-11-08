@@ -35,6 +35,8 @@ class ContactsViewModel: ObservableObject {
         self.model = model
         self.searchBar = searchBar
         self.mode = mode
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
     }
     
     convenience init(_ model: Model) {
@@ -42,6 +44,11 @@ class ContactsViewModel: ObservableObject {
         self.init(model, searchBar: .init(textFieldPhoneNumberView: .init(.contacts)), mode: .contacts(nil, .init(model)))
         
         bind()
+    }
+    
+    deinit {
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
     private func bind() {

@@ -24,6 +24,8 @@ class ContactsListViewModel: ObservableObject {
         self.model = model
         self.selfContact = selfContact
         self.contacts = contacts
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
     }
     
     convenience init(_ model: Model, filterText: String? = nil) {
@@ -55,6 +57,11 @@ class ContactsListViewModel: ObservableObject {
         }
         
         bind()
+    }
+    
+    deinit {
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
     private func bind() {

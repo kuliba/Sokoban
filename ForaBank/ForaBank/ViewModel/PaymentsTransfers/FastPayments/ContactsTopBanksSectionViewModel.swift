@@ -28,6 +28,8 @@ class ContactsTopBanksSectionViewModel: ObservableObject {
         
         self.model = model
         self.content = content
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
     }
     
     convenience init(_ model: Model, selectPhone: String) {
@@ -36,6 +38,11 @@ class ContactsTopBanksSectionViewModel: ObservableObject {
         self.init(model, content: content)
 
         bind(with: selectPhone)
+    }
+    
+    deinit {
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
     private func bind(with selectPhone: String) {
@@ -79,7 +86,6 @@ class ContactsTopBanksSectionViewModel: ObservableObject {
 
                 let contact = payment ? model.contact(for: selectPhone) : nil
                 banksList.append(TopBanksViewModel.Bank(image: getImageBank(model: model, paymentBank: bank), defaultBank: defaultBank, name: contact?.fullName, bankName: bankName, action: action(bankId)))
-
             }
         }
         

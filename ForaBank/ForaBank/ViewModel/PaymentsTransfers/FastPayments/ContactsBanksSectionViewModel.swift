@@ -28,6 +28,8 @@ class ContactsBanksSectionViewModel: ContactsSectionViewModel {
         self.mode = mode
         self.options = options
         super.init(header: header, items: items)
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
     }
     
     convenience init(_ model: Model, bankData: [BankData]) {
@@ -42,6 +44,11 @@ class ContactsBanksSectionViewModel: ContactsSectionViewModel {
         
         bind()
         bind(options: options)
+    }
+    
+    deinit {
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
     override func bind() {

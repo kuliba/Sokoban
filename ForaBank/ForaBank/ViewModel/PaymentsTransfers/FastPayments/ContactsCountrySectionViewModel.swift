@@ -12,6 +12,8 @@ class ContactsCountrySectionViewModel: ContactsSectionViewModel {
     override init(header: ContactsSectionViewModel.HeaderViewModel, isCollapsed: Bool = false, items: [ContactsSectionViewModel.ItemViewModel]) {
         
         super.init(header: header, items: items)
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
     }
     
     convenience init(countriesList: [CountryData]) {
@@ -24,6 +26,11 @@ class ContactsCountrySectionViewModel: ContactsSectionViewModel {
         }
         
         self.items = items
+    }
+    
+    deinit {
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
     static func reduceCounry(countriesList: [CountryData], action: @escaping (CountryData.ID) -> () -> Void) -> [ContactsSectionViewModel.ItemViewModel] {
