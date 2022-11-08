@@ -17,7 +17,7 @@ class MeToMeSettingViewController: UIViewController {
             configure(with: model)
         }
     }
-    
+
     private var bindings = Set<AnyCancellable>()
     
     var topSwitch = MeToMeSetupSwitchView()
@@ -31,6 +31,8 @@ class MeToMeSettingViewController: UIViewController {
 
         return imageView
     }()
+    
+    var closeAction: () -> Void = {}
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,6 +86,21 @@ class MeToMeSettingViewController: UIViewController {
                 self.banksView.consentList = list
             }
         }
+        
+        let backButton = UIBarButtonItem(image: UIImage(named: "back_button"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                    action: #selector(onTouchBackButton))
+        backButton.tintColor = .black
+        navigationItem.leftBarButtonItem = backButton
+    }
+    
+    @objc func onTouchBackButton() {
+        
+        self.closeAction()
+        dismiss(animated: true)
+        navigationController?.popToRootViewController(animated: true)
     }
     
     func bind() {

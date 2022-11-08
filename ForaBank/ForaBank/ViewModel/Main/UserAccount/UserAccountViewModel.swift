@@ -24,7 +24,6 @@ class UserAccountViewModel: ObservableObject {
     @Published var bottomSheet: BottomSheet?
     @Published var sheet: Sheet?
     @Published var alert: Alert.ViewModel?
-    
     @Published var textFieldAlert: AlertTextFieldView.ViewModel?
     
     private let model: Model
@@ -40,7 +39,7 @@ class UserAccountViewModel: ObservableObject {
         self.deleteAccountButton = deleteAccountButton
     }
     
-    init(model: Model, clientInfo: ClientInfoData, dismissAction: @escaping () -> Void) {
+    init(model: Model, clientInfo: ClientInfoData, dismissAction: @escaping () -> Void, action: Action? = nil) {
         
         self.model = model
         sections = []
@@ -61,7 +60,13 @@ class UserAccountViewModel: ObservableObject {
             action: { [weak self] in
                 self?.action.send(UserAccountViewModelAction.DeleteAction())
             })
+        
         bind()
+        
+        if let action = action {
+            
+            self.action.send(action)
+        }
     }
     
     func bind(documentInfoViewModel: UserAccountDocumentInfoView.ViewModel) {
@@ -255,6 +260,16 @@ class UserAccountViewModel: ObservableObject {
                 case _ as UserAccountViewModelAction.DeleteInfoAction:
                     
                     bottomSheet = .init(sheetType: .deleteInfo(.exitInfoViewModel))
+                
+                case let payload as UserAccountViewModelAction.OpenSbpPay:
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) { [weak self] in
+                        
+                        withAnimation {
+                            
+                            self?.bottomSheet = .init(sheetType: .sbpay(payload.sbpPay))
+                        }
+                    }
                     
                 default:
                     break
@@ -447,6 +462,7 @@ extension UserAccountViewModel {
             case camera(UserAccountPhotoSourceView.ViewModel)
             case avatarOptions(OptionsButtonsViewComponent.ViewModel)
             case imageCapture(ImageCaptureViewModel)
+            case sbpay(SbpPayViewModel)
         }
     }
     
@@ -463,7 +479,12 @@ enum UserAccountViewModelAction {
     struct ChangeUserName: Action {}
     
     struct AvatarAction: Action {}
-    
+
+    struct OpenSbpPay: Action {
+        
+        let sbpPay: SbpPayViewModel
+    }
+
     struct ExitAction: Action {}
     
     struct DeleteAction: Action {}

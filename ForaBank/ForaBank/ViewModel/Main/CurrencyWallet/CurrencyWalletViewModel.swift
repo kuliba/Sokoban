@@ -612,7 +612,9 @@ class CurrencyWalletViewModel: ObservableObject {
                 self.sheet = nil
             }
             
-            sheet = .init(type: .detailInfo(viewModel))
+            if sheet == nil {
+                sheet = .init(type: .detailInfo(viewModel))
+            }
             
         case let .failure(error):
             
@@ -631,6 +633,9 @@ class CurrencyWalletViewModel: ObservableObject {
             messageError = message
         case let .serverCommandError(error):
             messageError = error.description
+            
+        default:
+            messageError = nil
         }
 
         guard let messageError = messageError else {

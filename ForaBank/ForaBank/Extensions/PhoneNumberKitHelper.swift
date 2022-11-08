@@ -9,11 +9,13 @@ import Foundation
 import PhoneNumberKit
 
 protocol PhoneNumberFormaterProtocol {
+    
     func format(_ phoneNumber: String) -> String
+    func partialFormatter(_ phoneNumber: String) -> String
+    func isValidate(_ phoneNumber: String) -> Bool
 }
 
-
-struct PhoneNumberFormater: PhoneNumberFormaterProtocol {
+struct PhoneNumberKitFormater: PhoneNumberFormaterProtocol {
     
     private let phoneNumberKit = PhoneNumberKit()
     
@@ -23,6 +25,20 @@ struct PhoneNumberFormater: PhoneNumberFormaterProtocol {
         else { return phoneNumber }
                 
         return phoneNumberKit.format(phoneNumberParsed, toType: .international)
+    }
+    
+    func partialFormatter(_ phoneNumber: String) -> String {
+        
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit)
+        let phoneFormatted = partialFormatter.formatPartial(phoneNumber)
+        
+        return phoneFormatted
+    }
+    
+    func isValidate(_ phoneNumber: String) -> Bool {
+        
+        let phoneNumberParsed = phoneNumberKit.isValidPhoneNumber(phoneNumber)
+        return phoneNumberParsed
     }
     
     //TODO: remove afrer refactoring

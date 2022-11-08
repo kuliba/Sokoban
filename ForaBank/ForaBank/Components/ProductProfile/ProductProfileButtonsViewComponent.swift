@@ -88,7 +88,6 @@ extension ProductProfileButtonsView {
                         return true
                     }
                     
-                case _ as ProductAccountData: return false
                 default: return true
                 }
             }
@@ -101,7 +100,7 @@ extension ProductProfileButtonsView {
                 
             case .bottomLeft:
                 switch product.productType {
-                case .deposit: return "Детали"
+                case .account, .deposit: return "Детали"
                 default: return "Реквизиты и выписки"
                 }
                 
@@ -130,7 +129,7 @@ extension ProductProfileButtonsView {
                 
             case .bottomLeft:
                 switch product.productType {
-                case .deposit: return .ic24Info
+                case .account, .deposit: return .ic24Info
                 default: return .ic24FileText
                 }
                 
@@ -145,7 +144,7 @@ extension ProductProfileButtonsView {
                 case let cardProduct as ProductCardData:
                     return cardProduct.isBlocked ? .ic24Unlock : .ic24Lock
                     
-                case _ as ProductAccountData: return .ic24Lock
+                case _ as ProductAccountData: return .ic24Close
                 case _ as ProductDepositData: return .ic24Server
                 default: return .ic24Clock
                 }

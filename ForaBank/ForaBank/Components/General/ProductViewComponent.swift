@@ -97,7 +97,7 @@ extension ProductView {
 
         func update(with productData: ProductData, model: Model) {
             
-            name = productData.displayName
+            name = Self.name(product: productData, style: appearance.style)
             statusAction = Self.statusAction(product: productData)
             footer.balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
             

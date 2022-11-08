@@ -10,6 +10,8 @@ import Combine
 import Shimmer
 
 typealias ProductSelectorViewModel = ProductSelectorView.ViewModel
+typealias ProductContentViewModel = ProductSelectorViewModel.ProductContentViewModel
+typealias ProductListViewModel = ProductsListView.ViewModel
 
 // MARK: - ViewModel
 
@@ -25,7 +27,11 @@ extension ProductSelectorView {
         @Published var isDividerHiddable: Bool
         @Published var productViewModel: ProductContentViewModel?
         @Published var listViewModel: ProductsListView.ViewModel?
+        @Published var excludeProductId: ProductData.ID?
         @Published var isUserInteractionEnabled: Bool
+        let backgroundColor: BackgroundColor
+        let titleIndent: TitleIndent
+        @Published var context: Context
         
         var bindings = Set<AnyCancellable>()
         
@@ -40,7 +46,10 @@ extension ProductSelectorView {
              productViewModel: ProductContentViewModel? = nil,
              listViewModel: ProductsListView.ViewModel? = nil,
              isUserInteractionEnabled: Bool = true,
-             isDividerHiddable: Bool = false) {
+             isDividerHiddable: Bool = false,
+             backgroundColor: BackgroundColor = .gray,
+             titleIndent: TitleIndent = .normal,
+             context: Context) {
             
             self.model = model
             self.title = title
@@ -50,6 +59,9 @@ extension ProductSelectorView {
             self.listViewModel = listViewModel
             self.isUserInteractionEnabled = isUserInteractionEnabled
             self.isDividerHiddable = isDividerHiddable
+            self.backgroundColor = backgroundColor
+            self.titleIndent = titleIndent
+            self.context = context
             
             bind()
         }
@@ -60,9 +72,32 @@ extension ProductSelectorView {
             currencyOperation: CurrencyOperation,
             productViewModel: ProductContentViewModel? = nil,
             listViewModel: ProductsListView.ViewModel? = nil,
-            isDividerHiddable: Bool = false) {
+            isDividerHiddable: Bool = false,
+            backgroundColor: BackgroundColor = .gray,
+            titleIndent: TitleIndent = .normal,
+            context: Context) {
             
-                self.init(model, title: "", currency: currency, currencyOperation: currencyOperation, productViewModel: productViewModel, listViewModel: listViewModel, isDividerHiddable: isDividerHiddable)
+                self.init(model, title: "", currency: currency, currencyOperation: currencyOperation, productViewModel: productViewModel, listViewModel: listViewModel, isDividerHiddable: isDividerHiddable, backgroundColor: backgroundColor, titleIndent: titleIndent, context: context)
+        }
+        
+        convenience init(_ model: Model, product: ProductData, backgroundColor: BackgroundColor) {
+            
+            let currency: Currency = .init(description: product.currency)
+            let productViewModel: ProductContentViewModel = .init(productId: product.id, productData: product, model: model)
+            
+            self.init(model, currency: currency, currencyOperation: .buy, productViewModel: productViewModel, listViewModel: nil, isDividerHiddable: true, backgroundColor: backgroundColor, titleIndent: .normal, context: .init(isAdditionalProducts: true))
+        }
+        
+        enum BackgroundColor {
+            
+            case white
+            case gray
+        }
+        
+        enum TitleIndent {
+            
+            case normal
+            case left
         }
         
         private func bind() {
@@ -85,14 +120,14 @@ extension ProductSelectorView {
                     
                     switch action {
                         
-                    case _ as ProductSelectorView.ProductAction.Toggle:
+                    case let payload as ProductSelectorView.ProductAction.Toggle:
                         
                         withAnimation {
                             
                             switch listViewModel == nil {
                             case true:
                                 
-                                self.listViewModel = makeProductsList()
+                                self.listViewModel = makeProductsList(with: payload.context)
                                 bindList()
                                 
                                 listViewModel?.$products
@@ -217,7 +252,7 @@ extension ProductSelectorView {
             }
         }
         
-        private func makeProductsList() -> ProductsListView.ViewModel? {
+        private func makeProductsList(with context: Context) -> ProductsListView.ViewModel? {
             
             guard let productViewModel = productViewModel, let productData = model.product(productId: productViewModel.productId) else {
                 return nil
@@ -226,14 +261,14 @@ extension ProductSelectorView {
             let products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productData.productType)
             bind(products)
             
-            let listViewModel: ProductsListView.ViewModel = .init(model, currencyOperation: currencyOperation, currency: currency, productType: productData.productType, products: products)
+            let listViewModel: ProductsListView.ViewModel = .init(model, currencyOperation: currencyOperation, currency: currency, productType: productData.productType, products: products, context: .init(isAdditionalProducts: false))
             
             return listViewModel
         }
         
         static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType) -> [ProductView.ViewModel] {
             
-            let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType)
+            let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
             
             let products = filterredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model)}
             
@@ -304,6 +339,11 @@ extension ProductSelectorView {
 extension ProductSelectorView.ViewModel {
     
     // MARK: - ProductContent
+    
+    struct Context {
+        
+        let isAdditionalProducts: Bool
+    }
     
     class ProductContentViewModel: ObservableObject {
         
@@ -377,6 +417,14 @@ struct ProductSelectorView: View {
     
     @ObservedObject var viewModel: ViewModel
     
+    var background: Color {
+        
+        switch viewModel.backgroundColor {
+        case .gray: return Color.mainColorsGrayLightest
+        case .white: return Color.white
+        }
+    }
+    
     var body: some View {
         
         VStack(alignment: .leading, spacing: 12) {
@@ -397,7 +445,7 @@ struct ProductSelectorView: View {
             }
         }
         .disabled(viewModel.isUserInteractionEnabled == false)
-        .background(Color.mainColorsGrayLightest)
+        .background(background)
     }
 }
 
@@ -407,7 +455,10 @@ extension ProductSelectorView {
     
     enum ProductAction {
     
-        struct Toggle: Action {}
+        struct Toggle: Action {
+            
+            let context: ProductSelectorView.ViewModel.Context
+        }
         
         struct Selected: Action {
             
@@ -425,15 +476,25 @@ extension ProductSelectorView {
             
             Group {
                 
-                Text(viewModel.title)
-                    .font(.textBodySR12160())
-                    .foregroundColor(.textPlaceholder)
+                switch viewModel.titleIndent {
+                case .normal:
+                    Text(viewModel.title)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.textPlaceholder)
+                    
+                case .left:
+                    Text(viewModel.title)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.textPlaceholder)
+                        .padding(.leading, 48)
+                    
+                }
                 
                 if let productViewModel = viewModel.productViewModel {
                     
                     ProductSelectorView.ProductContentView(viewModel: productViewModel)
                         .onTapGesture {
-                            viewModel.action.send(ProductSelectorView.ProductAction.Toggle())
+                            viewModel.action.send(ProductSelectorView.ProductAction.Toggle(context: viewModel.context))
                         }
                     
                 } else {
@@ -568,7 +629,7 @@ extension ProductSelectorView {
 
 extension ProductSelectorView.ViewModel {
     
-    static let sample1 = ProductSelectorView.ViewModel(
+    static let sample1 = ProductSelectorViewModel(
         .emptyMock,
         title: "Откуда",
         currency: .rub,
@@ -580,9 +641,10 @@ extension ProductSelectorView.ViewModel {
             name: "Platinum",
             balance: "2,71 млн ₽",
             numberCard: "2953",
-            description: "Все включено"))
+            description: "Все включено"),
+        context: .init(isAdditionalProducts: false))
     
-    static let sample2 = ProductSelectorView.ViewModel(
+    static let sample2 = ProductSelectorViewModel(
         .emptyMock,
         title: "Откуда",
         currency: .rub,
@@ -595,22 +657,24 @@ extension ProductSelectorView.ViewModel {
             balance: "2,71 млн ₽",
             numberCard: "2953",
             description: "Все включено"),
-        listViewModel: .sample)
+        listViewModel: .sample,
+        context: .init(isAdditionalProducts: false))
     
-    static let sample3 = ProductSelectorView.ViewModel(
+    static let sample3 = ProductSelectorViewModel(
         .emptyMock,
         title: "Куда",
-        currency: .usd,
+        currency: .rub,
         currencyOperation: .sell,
         productViewModel: .init(
             productId: 3,
-            cardIcon: Image("Platinum Card"),
+            cardIcon: Image("RUB Account"),
             paymentSystemIcon: nil,
             name: "Текущий счет",
             balance: "0 $",
             numberCard: "",
             description: "Валютный"),
-        isDividerHiddable: true)
+        isDividerHiddable: true,
+        context: .init(isAdditionalProducts: false))
 }
 
 // MARK: - Previews
@@ -630,7 +694,7 @@ struct ProductSelectorViewComponent_Previews: PreviewProvider {
             ProductSelectorView(viewModel: .sample3)
                 .previewLayout(.sizeThatFits)
         }
-        .background(Color.mainColorsGrayLightest)
         .padding(.vertical)
+        .background(Color.mainColorsGrayLightest)
     }
 }

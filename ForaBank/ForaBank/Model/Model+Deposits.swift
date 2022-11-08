@@ -57,6 +57,10 @@ extension ModelAction {
                 case failure(message: String)
             }
         }
+        struct CloseNotified: Action {
+            
+            let productId: ProductData.ID
+        }
     }
 }
 
@@ -189,6 +193,11 @@ extension Model {
                 self.action.send(ModelAction.Deposits.Info.Single.Response.failure(message: error.localizedDescription))
             }
         }
+    }
+    
+    func handleDidShowCloseAlert(_ payload: ModelAction.Deposits.CloseNotified) {
+        
+        self.depositsCloseNotified = .init(depositId: payload.productId)
     }
 }
 

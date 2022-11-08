@@ -7,8 +7,9 @@
 
 import Foundation
 
-struct CountryData: Codable, Equatable {
+struct CountryData: Codable, Equatable, Hashable, Identifiable {
     
+    var id: Int { hashValue }
     let code: String
     let contactCode: String?
     let md5hash: String?

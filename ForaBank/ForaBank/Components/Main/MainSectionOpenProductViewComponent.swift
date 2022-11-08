@@ -13,7 +13,7 @@ import Combine
 
 extension MainSectionOpenProductView {
 
-    class ViewModel: MainSectionCollapsableViewModel {
+    class ViewModel: MainSectionCollapsableViewModel, ObservableObject {
 
         override var type: MainSectionType { .openProduct }
         @Published var items: [ButtonNewProduct.ViewModel]

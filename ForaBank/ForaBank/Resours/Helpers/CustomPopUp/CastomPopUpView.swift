@@ -130,7 +130,7 @@ class MemeDetailVC: UIViewController {
         view.addSubview(bottomView)
         bottomView.anchor(
             left: view.leftAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            bottom: view.bottomAnchor,
             right: view.rightAnchor)
         
         let saveAreaView = UIView()
@@ -572,6 +572,7 @@ class MemeDetailVC: UIViewController {
                                 vc.addCloseButton()
                                 vc.title = "Подтвердите реквизиты"
                                 let navVC = UINavigationController(rootViewController: vc)
+                                navVC.modalPresentationStyle = .fullScreen
                                 self?.present(navVC, animated: true)
                                 
                             } else {

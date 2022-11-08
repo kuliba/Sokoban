@@ -28,6 +28,7 @@ class Model {
 
     //MARK: Account
     let accountProductsList: CurrentValueSubject<[OpenAccountProductData], Never>
+    let accountOpening: CurrentValueSubject<Bool, Never>
     
     //MARK: Statements
     let statements: CurrentValueSubject<StatementsData, Never>
@@ -52,6 +53,7 @@ class Model {
     
     //MARK: Deposits
     let deposits: CurrentValueSubject<[DepositProductData], Never>
+    var depositsCloseNotified: DepositCloseNotification?
     
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
@@ -64,7 +66,7 @@ class Model {
     
     //MARK: Notifications
     let notifications: CurrentValueSubject<[NotificationData], Never>
-    let notificationsTransition: CurrentValueSubject<NotificationTransition?, Never>
+    var notificationsTransition: NotificationTransition?
     
     //MARK: - Client Info
     let clientInfo: CurrentValueSubject<ClientInfoData?, Never>
@@ -78,9 +80,12 @@ class Model {
     //MARK: Loacation
     let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
 
-    //MARK: Informer
-    let informer: CurrentValueSubject<InformerData?, Never>
-
+    //MARK: Bank Client Info
+    let bankClientInfo: CurrentValueSubject<Set<[BankClientInfo]>, Never>
+    
+    //MARK: DeepLink
+    var deepLinkType: DeepLinkType?
+    
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
     let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
@@ -109,7 +114,7 @@ class Model {
         return credentials.token
     }
     
-    internal var credentials: SessionCredentials? {
+    internal var activeCredentials: SessionCredentials? {
         
         guard case .active(_, let credentials) = sessionAgent.sessionState.value else {
             return nil
@@ -121,10 +126,11 @@ class Model {
     init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol, cameraAgent: CameraAgentProtocol, imageGalleryAgent: ImageGalleryAgentProtocol) {
         
         self.action = .init()
-        self.auth = .init(.registerRequired)
+        self.auth = keychainAgent.isStoredString(values: [.pincode, .serverDeviceGUID]) ? .init(.signInRequired) : .init(.registerRequired)
         self.products = .init([:])
         self.productsUpdating = .init([])
         self.accountProductsList = .init([])
+        self.accountOpening = .init(false)
         self.productsFastUpdating = .init([])
         self.productsHidden = .init([])
         self.loans = .init([])
@@ -154,10 +160,11 @@ class Model {
         self.clientName = .init(nil)
         self.fastPaymentContractFullInfo = .init([])
         self.currentUserLoaction = .init(nil)
-        self.informer = .init(nil)
-        self.notificationsTransition = .init(nil)
+        self.notificationsTransition = nil
         self.dictionariesUpdating = .init([])
         self.userSettings = .init([])
+        self.bankClientInfo = .init([])
+        self.deepLinkType = nil
         
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
@@ -170,6 +177,8 @@ class Model {
         self.cameraAgent = cameraAgent
         self.imageGalleryAgent = imageGalleryAgent
         self.bindings = []
+        
+        LoggerAgent.shared.log(level: .debug, category: .model, message: "initialized")
 
         bind()
     }
@@ -206,7 +215,7 @@ class Model {
         let locationAgent = LocationAgent()
         
         // contacts agent
-        let contactsAgent = ContactsAgent()
+        let contactsAgent = ContactsAgent(phoneNumberFormatter: PhoneNumberKitFormater())
         
         // camera agent
         let cameraAgent = CameraAgent()
@@ -224,19 +233,22 @@ class Model {
             .sink { [unowned self] sessionState in
                 
                 switch sessionState {
+                case .active:
+                    LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Activated")
+                    action.send(ModelAction.Auth.Session.Activated())
+                    
+                    loadCachedPublicData()
+                    LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Dictionary.UpdateCache.All")
+                    action.send(ModelAction.Dictionary.UpdateCache.All())
+                    
                 case .inactive:
                     auth.value = authIsCredentialsStored ? .signInRequired : .registerRequired
-                    action.send(ModelAction.Auth.Session.Start.Request())
                     
-                case .active:
-                    loadCachedPublicData()
-                    action.send(ModelAction.Dictionary.UpdateCache.All())
-
                 case .expired, .failed:
-                    guard auth.value == .authorized else {
-                        return
-                    }
                     auth.value = authIsCredentialsStored ? .unlockRequired : .registerRequired
+                    
+                default:
+                    break
                 }
                 
             }.store(in: &bindings)
@@ -250,8 +262,10 @@ class Model {
                 
                 switch auth {
                 case .authorized:
+                    LoggerAgent.shared.log(category: .model, message: "auth: AUTHORIZED")
                     loadCachedAuthorizedData()
                     loadSettings()
+                    depositsCloseNotified = nil
                     action.send(ModelAction.Products.Update.Total.All())
                     action.send(ModelAction.ClientInfo.Fetch.Request())
                     action.send(ModelAction.ClientPhoto.Load())
@@ -266,8 +280,27 @@ class Model {
                     action.send(ModelAction.Settings.GetUserSettings())
                     action.send(ModelAction.Dictionary.UpdateCache.List(types: [.bannerCatalogList]))
                     
-                default:
-                    break
+                    if let deepLinkType = deepLinkType {
+                        
+                        action.send(ModelAction.DeepLink.Process(type: deepLinkType))
+                    }
+                    
+                    if let notification = notificationsTransition {
+                        
+                        action.send(ModelAction.Notification.Transition.Process(transition: notification))
+                    }
+                    
+                case .registerRequired:
+                    LoggerAgent.shared.log(category: .model, message: "auth: REGISTER REQUIRED")
+                    
+                case .signInRequired:
+                    LoggerAgent.shared.log(category: .model, message: "auth: SIGN IN REQUIRED")
+                    
+                case .unlockRequired:
+                    LoggerAgent.shared.log(category: .model, message: "auth: UNLOCK REQUIRED")
+                    
+                case .unlockRequiredManual:
+                    LoggerAgent.shared.log(category: .model, message: "auth: UNLOCK REQUIRED MANUAL")
                 }
                 
             }.store(in: &bindings)
@@ -277,8 +310,23 @@ class Model {
             .sink { [unowned self] action in
                 
                 switch action {
-                case _ as SessionAgentAction.Session.Extend.Request:
-                    self.action.send(ModelAction.Auth.Session.Extend.Request())
+                case _ as SessionAgentAction.Session.Start.Request:
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received SessionAgentAction.Session.Start.Request")
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent ModelAction.Auth.Session.Start.Request")
+                    self.action.send(ModelAction.Auth.Session.Start.Request())
+                    
+                case _ as SessionAgentAction.Session.Extend:
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received SessionAgentAction.Session.Extend")
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent ModelAction.ClientInfo.Fetch")
+                    self.action.send(ModelAction.ClientInfo.Fetch.Request())
+                    
+                case _ as SessionAgentAction.Session.Timeout.Request:
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received SessionAgentAction.Session.Timeout.Request")
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent ModelAction.Auth.Session.Timeout.Request")
+                    self.action.send(ModelAction.Auth.Session.Timeout.Request())
                     
                 default:
                     break
@@ -293,6 +341,12 @@ class Model {
                 switch action {
                 case _ as ServerAgentAction.NetworkActivityEvent:
                     sessionAgent.action.send(SessionAgentAction.Event.Network())
+                    
+                case _ as ServerAgentAction.NotAuthorized:
+                    LoggerAgent.shared.log(level: .error, category: .model, message: "received ServerAgentAction.NotAuthorized")
+                    
+                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Terminate")
+                    sessionAgent.action.send(SessionAgentAction.Session.Terminate())
                     
                 default:
                     break
@@ -317,14 +371,37 @@ class Model {
                     //MARK: - App
                     
                 case _ as ModelAction.App.Launched:
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.App.Launched")
                     handleAppFirstLaunch()
                     bind(sessionAgent: sessionAgent)
 
                 case _ as ModelAction.App.Activated:
-                    sessionAgent.action.send(SessionAgentAction.Timer.Start())
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.App.Activated")
+                    
+                    //FIXME: workaround for push notification extension
+                    if auth.value == .registerRequired {
+                        
+                        auth.value = keychainAgent.isStoredString(values: [.pincode, .serverDeviceGUID]) ? .signInRequired : .registerRequired
+                    }
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.App.Activated")
+                    sessionAgent.action.send(SessionAgentAction.App.Activated())
+                    
+                    if auth.value == .authorized, let deepLinkType = deepLinkType {
+                        
+                        self.action.send(ModelAction.DeepLink.Process(type: deepLinkType))
+                    }
+                    
+                    if auth.value == .authorized, let notification = notificationsTransition {
+                        
+                        self.action.send(ModelAction.Notification.Transition.Process(transition: notification))
+                    }
                     
                 case _ as ModelAction.App.Inactivated:
-                    sessionAgent.action.send(SessionAgentAction.Timer.Stop())
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.App.Inactivated")
+                    
+                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.App.Inactivated")
+                    sessionAgent.action.send(SessionAgentAction.App.Inactivated())
                     
                     //MARK: - General
                     
@@ -334,18 +411,29 @@ class Model {
                     //MARK: - Auth Actions
                     
                 case _ as ModelAction.Auth.Session.Start.Request:
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Start.Request")
                     handleAuthSessionStartRequest()
                     
                 case let payload as ModelAction.Auth.Session.Start.Response:
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received ModelAction.Auth.Session.Start.Response")
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.Session.Start.Response")
                     sessionAgent.action.send(SessionAgentAction.Session.Start.Response(result: payload.result))
                     
-                case _ as ModelAction.Auth.Session.Extend.Request:
-                    handleAuthSessionExtendRequest()
+                case _ as ModelAction.Auth.Session.Timeout.Request:
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Timeout.Request")
+                    handleAuthSessionTimeoutRequest()
                     
-                case let payload as ModelAction.Auth.Session.Extend.Response:
-                    sessionAgent.action.send(SessionAgentAction.Session.Extend.Response(result: payload.result))
+                case let payload as ModelAction.Auth.Session.Timeout.Response:
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received ModelAction.Auth.Session.Timeout.Response")
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.Session.Timeout.Response")
+                    sessionAgent.action.send(SessionAgentAction.Session.Timeout.Response(result: payload.result))
                  
                 case _ as ModelAction.Auth.Session.Terminate:
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Session.Terminate")
+                    
+                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Terminate")
                     sessionAgent.action.send(SessionAgentAction.Session.Terminate())
                     
                 case let payload as ModelAction.Auth.CheckClient.Request:
@@ -382,15 +470,17 @@ class Model {
                     handleAuthLoginRequest(payload: payload)
                     
                 case let payload as ModelAction.Auth.Login.Response:
+                    LoggerAgent.shared.log(level: .debug, category: .model, message: "received ModelAction.Auth.Login.Response")
                     switch payload {
                     case .success:
                         auth.value = .authorized
                     
                     default:
-                        break
+                        auth.value = authIsCredentialsStored ? .signInRequired : .registerRequired
                     }
                     
                 case _ as ModelAction.Auth.Logout:
+                    LoggerAgent.shared.log(category: .model, message: "received ModelAction.Auth.Logout")
                     clearKeychainData()
                     clearCachedAuthorizedData()
                     clearMemoryData()
@@ -513,6 +603,16 @@ class Model {
                 case _ as ModelAction.ClientInfo.Delete.Request:
                     handleClientInfoDelete()
                     
+                case let payload as ModelAction.GetPersonAgreement.Request:
+                    handleClientAgreement(payload)
+                    
+                    //MARK: - SBPay
+                case let payload as ModelAction.SbpPay.Register.Request:
+                    handleRegisterSbpPay(payload)
+                    
+                case let payload as ModelAction.SbpPay.ProcessTokenIntent.Request:
+                    processTokenIntent(payload)
+                    
                     //MARK: - User Settings
                 case let payload as ModelAction.Settings.UpdateUserSettingPush:
                     handleUpdateUserSetting(payload)
@@ -524,6 +624,11 @@ class Model {
                     
                 case let payload as ModelAction.Settings.UpdateProductsHidden:
                     handleUpdateProductsHidden(payload.productID)
+                    
+                    //MARK: - BankClients
+                
+                case let payload as ModelAction.BankClient.Request:
+                    handleBankClientRequest(payload)
                     
                     //MARK: - Notifications
                        
@@ -546,6 +651,9 @@ class Model {
                     
                 case _ as ModelAction.LatestPayments.List.Requested:
                     handleLatestPaymentsListRequest()
+                    
+                case let payload as ModelAction.LatestPayments.BanksList.Request:
+                    handleLatestPaymentsBankListRequest(payload)
                     
                     //MARK: - Templates Actions
                     
@@ -655,6 +763,9 @@ class Model {
                 case let payload as ModelAction.Deposits.Close.Request:
                     handleCloseDepositRequest(payload)
                     
+                case let payload as ModelAction.Deposits.CloseNotified:
+                    handleDidShowCloseAlert(payload)
+                    
                     //MARK: - Location Actions
                     
                 case _ as ModelAction.Location.Updates.Start:
@@ -682,14 +793,14 @@ class Model {
                 case let payload as ModelAction.Account.MakeOpenAccount.Response:
                     handleMakeOpenAccountUpdate(payload: payload)
 
-                // MARK: - Informer
-
-                case let payload as ModelAction.Account.Informer.Show:
-                    handleInformerShow(payload: payload)
-
-                case let payload as ModelAction.Account.Informer.Dismiss:
-                    handleInformerDismiss(payload: payload)
-
+                //MARK: - DeepLink
+                    
+                case let payload as ModelAction.DeepLink.Set:
+                    handleDeepLinkSet(payload)
+                    
+                case _ as ModelAction.DeepLink.Clear:
+                    handleDeepLinkClear()
+                    
                 //MARK: - AppStore Version
                 case _ as ModelAction.AppVersion.Request:
                     handleVersionAppStore()
@@ -863,14 +974,15 @@ private extension Model {
     
     func loadCachedAuthorizedData() {
         
-        self.products.value = productsCacheLoadData()
+        self.products.value = productsCacheLoad()
         
         if let paymentTemplates = localAgent.load(type: [PaymentTemplateData].self) {
             
             self.paymentTemplates.value = paymentTemplates
         }
         
-        if let statements = localAgent.load(type: StatementsData.self) {
+        if localAgent.serial(for: StatementsData.self) == Self.statementsSerial,
+            let statements = localAgent.load(type: StatementsData.self) {
             
             self.statements.value = statements
         }
@@ -892,6 +1004,11 @@ private extension Model {
         if let depositsInfo = localAgent.load(type: DepositsInfoData.self) {
             
             self.depositsInfo.value = depositsInfo
+        }
+        
+        if let bankClientInfo = localAgent.load(type: Set<[BankClientInfo]>.self) {
+            
+            self.bankClientInfo.value = bankClientInfo
         }
     }
     
@@ -939,7 +1056,7 @@ private extension Model {
         
         do {
             
-            try productsCacheClearData()
+            try productsCacheClear()
             
         } catch {
             
@@ -1021,6 +1138,15 @@ private extension Model {
         do {
             
             try localAgent.clear(type: DepositsInfoData.self)
+            
+        } catch {
+            
+            //TODO: set logger
+        }
+        
+        do {
+            
+            try localAgent.clear(type: [ProductData.ID].self)
             
         } catch {
             

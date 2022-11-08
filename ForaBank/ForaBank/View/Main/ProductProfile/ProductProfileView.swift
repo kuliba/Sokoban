@@ -49,7 +49,7 @@ struct ProductProfileView: View {
                     }
                     .zIndex(0)
                     
-                    VStack(spacing: 0) {
+                    VStack(spacing: 12) {
                         
                         ProductProfileCardView(viewModel: viewModel.product)
                         
@@ -120,6 +120,18 @@ struct ProductProfileView: View {
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
         }
         .navigationBar(with: viewModel.navigationBar)
+        .sheet(item: $viewModel.sheet, content: { sheet in
+            switch sheet.type {
+            case let .printForm(printFormViewModel):
+                PrintFormView(viewModel: printFormViewModel)
+                
+            case let .placesMap(placesViewModel):
+                PlacesView(viewModel: placesViewModel)
+                
+            case let .info(operationDetailInfoViewModel):
+                OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
+            }
+        })
         .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
             
             switch sheet.type {
@@ -136,15 +148,11 @@ struct ProductProfileView: View {
                 MeToMeView(viewModel: meToMeViewModel)
                     .edgesIgnoringSafeArea(.bottom)
                     .frame(height: 474)
-            }
-        })
-        .sheet(item: $viewModel.sheet, content: { sheet in
-            switch sheet.type {
-            case let .printForm(printFormViewModel):
-                PrintFormView(viewModel: printFormViewModel)
                 
-            case .placesMap(let placesViewModel):
-                PlacesView(viewModel: placesViewModel)
+            case let .closeAccount(viewModel):
+                MeToMeView(viewModel: viewModel)
+                    .edgesIgnoringSafeArea(.bottom)
+                    .frame(height: 474)
             }
         })
         .alert(item: $viewModel.alert, content: { alertViewModel in

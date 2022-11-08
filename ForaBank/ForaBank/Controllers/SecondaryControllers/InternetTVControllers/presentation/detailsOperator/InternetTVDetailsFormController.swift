@@ -43,6 +43,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         super.viewWillAppear(true)
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = true
+
     }
     
     override func viewDidLoad() {
@@ -186,7 +187,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             showActivity()
             if viewModel.firstStep {
                 viewModel.firstStep = false
-                viewModel.doFirstStep(amount: "null")
+                viewModel.doFirstStep(amount: "0")
             } else {
                 viewModel.doNextStep(amount: "null")
             }
@@ -280,6 +281,10 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             } else {
                 viewModel.closeAction()
             }
+    }
+    
+    @objc func backAction() {
+        self.operatorsViewModel?.closeAction()
     }
     
     @objc private func updateNameTemplate() {

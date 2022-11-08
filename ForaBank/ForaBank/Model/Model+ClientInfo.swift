@@ -67,6 +67,20 @@ extension ModelAction {
         
         struct Delete: Action {}
     }
+    
+    struct GetPersonAgreement {
+        
+        struct Request: Action {
+            
+            let system: PersonAgreement.System
+            let type: PersonAgreement.TypeDocument?
+        }
+        
+        struct Response: Action {
+            
+            let result: Result<[PersonAgreement], Error>
+        }
+    }
 }
 
 //MARK: - Handlers
@@ -93,7 +107,7 @@ extension Model {
                         self.action.send(ModelAction.ClientInfo.Fetch.Response(result: .failure(ModelClientInfoError.emptyData(message: response.errorMessage))))
                         return
                     }
-
+                    
                     self.clientInfo.value = clientInfo
                     self.clientName.value = .init(name: clientInfo.customName ?? clientInfo.firstName)
                     self.action.send(ModelAction.ClientInfo.Fetch.Response(result: .success(clientInfo)))
@@ -110,12 +124,8 @@ extension Model {
                     
                 default:
                     self.action.send(ModelAction.ClientInfo.Fetch.Response(result: .failure(ModelClientInfoError.statusError(status: response.statusCode, message: response.errorMessage))))
-                    if let errorMessage = response.errorMessage {
-
-                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: errorMessage)
-                    } else {
-                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: nil)
-                    }
+                    
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage )
                 }
                 
             case .failure(let error):
@@ -353,6 +363,33 @@ extension Model {
                 
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    func handleClientAgreement(_ payload: ModelAction.GetPersonAgreement.Request) {
+
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.PersonController.GetPersonAgreement(token: token, system: payload.system, type: payload.type)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                
+                guard let data = response.data else {
+                    self.handleServerCommandEmptyData(command: command)
+                    return
+                }
+                
+                self.action.send(ModelAction.GetPersonAgreement.Response(result: .success(data)))
+                
+            case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
+                self.action.send(ModelAction.GetPersonAgreement.Response(result: .failure(error)))
             }
         }
     }

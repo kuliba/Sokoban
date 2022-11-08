@@ -40,9 +40,7 @@ extension ModelAction {
             
             struct Request: Action {
                 
-                let eventId: String
-                let cloudId: String
-                let status: NotificationStatus
+                let statusData: NotificationStatusData
             }
             
             enum Response: Action {
@@ -56,6 +54,11 @@ extension ModelAction {
             
             struct Set: Action {
                 
+                let transition: NotificationTransition
+            }
+            
+            struct Process: Action {
+               
                 let transition: NotificationTransition
             }
             
@@ -76,12 +79,17 @@ extension Model {
     
     func handleNotificationTransitionSet(payload: ModelAction.Notification.Transition.Set) {
 
-        notificationsTransition.value = payload.transition
+        notificationsTransition = payload.transition
+        
+        if auth.value == .authorized {
+            
+            action.send(ModelAction.Notification.Transition.Process(transition: payload.transition))
+        }
     }
 
     func handleNotificationTransitionClear() {
 
-        notificationsTransition.value = nil
+        notificationsTransition = nil
     }
     
     func handleNotificationsFetchNewRequest() {
@@ -198,7 +206,7 @@ extension Model {
             return
         }
         
-        let command = ServerCommands.NotificationController.ChangeNotificationStatus (token: token, payload: .init(eventId: payload.eventId, cloudId: payload.cloudId, status: payload.status))
+        let command = ServerCommands.NotificationController.ChangeNotificationStatus (token: token, payload: .init(eventId: payload.statusData.eventId, cloudId: payload.statusData.cloudId, status: payload.statusData.status))
         serverAgent.executeCommand(command: command) { result in
             
             switch result {

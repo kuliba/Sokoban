@@ -9,9 +9,15 @@ import Foundation
 
 struct FastPaymentContractAccountAttributeTypeData: Codable, Equatable {
     
-    let accountID: Int?
+    let accountId: Int?
     let accountNumber: String?
     let flagPossibAddAccount: FastPaymentFlag?
     let maxAddAccount: Double?
     let minAddAccount: Double?
+    
+    private enum CodingKeys: String, CodingKey {
+
+        case accountId = "accountID"
+        case accountNumber, flagPossibAddAccount, maxAddAccount, minAddAccount
+    }
 }

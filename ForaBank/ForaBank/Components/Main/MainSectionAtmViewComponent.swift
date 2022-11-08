@@ -13,7 +13,7 @@ import SwiftUI
 
 extension MainSectionAtmView {
 
-    class ViewModel: MainSectionCollapsableViewModel {
+    class ViewModel: MainSectionCollapsableViewModel, ObservableObject {
         
         override var type: MainSectionType { .atm }
         let content: String

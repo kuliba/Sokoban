@@ -131,7 +131,8 @@ extension ContactInputViewController {
         guard let countryName = self.country?.name else { return }
         let subtitle = "Денежные переводы \(system.name ?? "")"
         self.navigationItem.titleView = self.setTitle(title: countryName.capitalizingFirstLetter(), subtitle: subtitle)
-        
+        self.parent?.navigationItem.titleView = self.setTitle(title: countryName.capitalizingFirstLetter(), subtitle: subtitle)
+
         let navImage: UIImage = system.svgImage?.convertSVGStringToImage() ?? UIImage()
         
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
@@ -179,7 +180,7 @@ extension ContactInputViewController {
             left: view.leftAnchor,
             bottom: view.bottomAnchor,
             right: view.rightAnchor,
-            paddingBottom: 30)
+            paddingBottom: 0)
         
         stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
                          left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20)

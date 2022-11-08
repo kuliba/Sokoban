@@ -37,7 +37,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     init(model: Model) {
         self.navButtonsRight = []
         self.sections = [
-            PTSectionLatestPaymentsView.ViewModel(model: model),
+            PTSectionLatestPaymentsViewComponent.ViewModel(model: model),
             PTSectionTransfersView.ViewModel(),
             PTSectionPaymentsView.ViewModel()
         ]
@@ -161,7 +161,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     switch action {
                         
                     //LatestPayments Section Buttons
-                    case let payload as PTSectionLatestPaymentsViewAction.ButtonTapped.LatestPayment:
+                    case let payload as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
                         
                         switch (payload.latestPayment.type, payload.latestPayment) {
                         case (.phone, let paymentData as PaymentGeneralData):
@@ -202,12 +202,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         }
                     
                     //LatestPayment Section TemplateButton
-                    case _ as PTSectionLatestPaymentsViewAction.ButtonTapped.Templates:
+                    case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
                         let viewModel = TemplatesListViewModel(model, dismissAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                         })
                         link = .template(viewModel)
                         
-                    case _ as PTSectionLatestPaymentsViewAction.ButtonTapped.CurrencyWallet:
+                    case _ as LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet:
                         guard let firstCurrencyWalletData = model.currencyWalletList.value.first else {
                             return
                         }
@@ -233,31 +233,21 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }, template: nil))
                             
                         case .anotherCard:
-                            if #available(iOS 14, *) {
-                                bottomSheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
-                                    self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
-                                })))
-                            } else {
-                                sheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
-                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Sheet())
-                                })))
-                            }
+                            bottomSheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                            })))
                             
                         case .betweenSelf:
-                            if #available(iOS 14, *) {
-                                bottomSheet = .init(type: .meToMe(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
-                                })))
-                            } else {
-                                sheet = .init(type: .meToMe(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Sheet())
-                                })))
-                            }
-                        
-                    case .byBankDetails:
+                            bottomSheet = .init(type: .meToMe(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                            })))
+                            
+                        case .byBankDetails:
                             link = .transferByRequisites(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }))
                             
                         case .byPhoneNumber:
-                            sheet = .init(type: .transferByPhone(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Sheet())})))
+                    
+                            bottomSheet = .init(type: .fastPayment(.init(self.model)))
                         }
                         
                     //Payments Section
@@ -367,6 +357,7 @@ extension PaymentsTransfersViewModel {
             case exampleDetail(String)
             case anotherCard(AnotherCardViewModel)
             case meToMe(MeToMeViewModel)
+            case fastPayment(ContactsViewModel)
         }
     }
     

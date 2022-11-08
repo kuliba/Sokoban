@@ -47,6 +47,16 @@ extension CountryPaymentView {
             case template(templateViewModel: PaymentTemplateData)
         }
         
+        init(phone: String, country: CountryData, bank: BankData?, operatorsViewModel: OperatorsViewModel) {
+            
+            self.puref = nil
+            self.country = country.getCountriesList()
+            self.paymentType = .withOutAddress(withOutViewModel: .init(phoneNumber: phone))
+            self.bank = bank?.getBanksList()
+            self.operatorsViewModel = operatorsViewModel
+            
+        }
+        
         init(countryData: PaymentCountryData, operatorsViewModel: OperatorsViewModel) {
             self.operatorsViewModel = operatorsViewModel
             
@@ -90,10 +100,10 @@ extension CountryPaymentView {
             self.bank = nil
         }
         
-        init(country: String, operatorsViewModel: OperatorsViewModel) {
+        init(country: String, operatorsViewModel: OperatorsViewModel, paymentType: PaymentType) {
             
             self.paymentTemplate = nil
-            self.paymentType = .withOutAddress(withOutViewModel: .init(phoneNumber: nil))
+            self.paymentType = paymentType
             self.puref = nil
             self.country = Self.getCountry(code: country)
             self.bank = nil
@@ -150,7 +160,7 @@ struct CountryPaymentView: UIViewControllerRepresentable {
         
         var vc = ContactInputViewController()
         vc.country = viewModel.country
-        
+
         //MARK: PaymentsViewController openCountryPaymentVC(206)
         switch viewModel.paymentType {
             
@@ -177,7 +187,7 @@ struct CountryPaymentView: UIViewControllerRepresentable {
             vc.surnameField.text = adressViewModel.surName
             vc.secondNameField.text = adressViewModel.middleName
             vc.operatorsViewModel = viewModel.operatorsViewModel
-            
+
         case let .withOutAddress(withOutViewModel):
             
             vc.typeOfPay = .mig
@@ -210,8 +220,10 @@ struct CountryPaymentView: UIViewControllerRepresentable {
             vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
             vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
             vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
+            vc.parent?.navigationController?.navigationBar.isHidden = false
         })
         
+        vc.navigationController?.navigationBar.isHidden = false
         vc.modalPresentationStyle = .fullScreen
         
         return vc

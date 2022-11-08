@@ -91,9 +91,11 @@ enum ServerAgentError: LocalizedError {
     case sessionError(Error)
     case emptyResponse
     case emptyResponseData
+    case unexpectedResponseStatus(Int)
     case curruptedData(Error)
     case serverStatus(ServerStatusCode, errorMessage: String?)
-    
+    case notAuthorized
+
     var errorDescription: String? {
         
         switch self {
@@ -122,6 +124,9 @@ enum ServerAgentError: LocalizedError {
                 
                 return "Server: status: \(serverStatusCode)"
             }
+            
+        case .notAuthorized:
+            return "Not Authorized"
         }
     }
 }
@@ -176,6 +181,7 @@ struct ServerCommandMediaParameter {
 enum ServerAgentAction {
     
     struct NetworkActivityEvent: Action {}
+    struct NotAuthorized: Action {}
 }
 
 //MARK: - Default Implementation

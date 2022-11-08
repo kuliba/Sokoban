@@ -51,23 +51,17 @@ struct BottomSheetModifier<SheetContent: View>: ViewModifier {
     @ViewBuilder
     func body(content: Content) -> some View {
         
-        if #available(iOS 14.0, *) {
-            
-            content
-                .transaction({ transaction in
-                    transaction.disablesAnimations = false
-                })
-                .fullScreenCover(isPresented: isPresented) {
-                    BottomSheetView(isPresented: isPresented, keyboardOfssetMultiplier: keyboardOfssetMultiplier, content: sheetContent())
-                }
-                .transaction({ transaction in
-                    transaction.disablesAnimations = true
-                })
-            
-        } else {
-            
-            content.sheet(isPresented: isPresented, content: sheetContent)
-        }
+        content
+            .transaction({ transaction in
+                transaction.disablesAnimations = false
+            })
+            .fullScreenCover(isPresented: isPresented) {
+                BottomSheetView(isPresented: isPresented, keyboardOfssetMultiplier: keyboardOfssetMultiplier, content: sheetContent())
+            }
+            .transaction({ transaction in
+                transaction.disablesAnimations = true
+            })
+        
     }
 }
 
@@ -92,7 +86,7 @@ struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModi
     
     func body(content: Content) -> some View {
         
-        if #available(iOS 14.0, *) {
+        if item != nil {
             
             content
                 .transaction({ transaction in
@@ -109,17 +103,13 @@ struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModi
             
         } else {
             
-            content.sheet(item: $item) { item in
-                
-                sheetContent(item)
-            }
+            content
         }
     }
 }
 
 //MARK: - Bottom Sheet View
 
-@available(iOS 14.0, *)
 struct BottomSheetView<Content: View>: View {
     
     @Binding var isPresented: Bool
@@ -220,7 +210,6 @@ struct BottomSheetView<Content: View>: View {
     }
 }
 
-@available(iOS 14.0, *)
 extension BottomSheetView {
     
     struct DimmView: View {
@@ -332,12 +321,9 @@ struct BottomSheetView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-            
-            if #available(iOS 14.0, *) {
                 
-                BottomSheetView(isPresented: .constant(true), keyboardOfssetMultiplier: 0.5, content: Rectangle().fill(Color.red)
+            BottomSheetView(isPresented: .constant(true), keyboardOfssetMultiplier: 0.5, content: Rectangle().fill(Color.red)
                     .frame(height: 500))
-            }
             
             ZStack(alignment: .bottom) {
                 Color.gray

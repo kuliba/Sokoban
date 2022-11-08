@@ -28,6 +28,9 @@ class AuthPinCodeViewModel: ObservableObject {
     @Published var alert: Alert.ViewModel?
     @Published var mistakes: Int
     
+    private var sensorAutoEvaluationStatus: SensorAutoEvaluationStatus?
+    private var isViewDidAppear: Bool
+    
     private let model: Model
     private let rootActions: RootViewModel.RootActions
     private var bindings = Set<AnyCancellable>()
@@ -35,7 +38,7 @@ class AuthPinCodeViewModel: ObservableObject {
     
     var isPincodeComplete: Bool { pincodeValue.value.count >= model.authPincodeLength }
 
-    init(pincodeValue: CurrentValueSubject<String, Never>, pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, rootActions: RootViewModel.RootActions, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3, auto: false), stage: Stage = .editing, isPermissionsViewPresented: Bool = false, mistakes: Int = 0) {
+    init(pincodeValue: CurrentValueSubject<String, Never>, pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, rootActions: RootViewModel.RootActions, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3, auto: false), stage: Stage = .editing, isPermissionsViewPresented: Bool = false, mistakes: Int = 0, sensorAutoEvaluationStatus: SensorAutoEvaluationStatus? = nil, isViewDidAppear: Bool = false) {
         
         self.pincodeValue = pincodeValue
         self.pinCode = pinCode
@@ -47,40 +50,47 @@ class AuthPinCodeViewModel: ObservableObject {
         self.stage = stage
         self.isPermissionsViewPresented = isPermissionsViewPresented
         self.mistakes = mistakes
+        self.sensorAutoEvaluationStatus = sensorAutoEvaluationStatus
+        self.isViewDidAppear = isViewDidAppear
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "initialized")
     }
     
-    init(_ model: Model, mode: Mode, rootActions: RootViewModel.RootActions) {
+    convenience init(_ model: Model, mode: Mode, rootActions: RootViewModel.RootActions) {
  
-        self.pincodeValue = .init("")
         switch mode {
-        case .unlock:
-            self.pinCode = PinCodeViewModel(title: "Введите код", pincodeLength: model.authPincodeLength)
+        case .unlock(attempt: _, auto: let isAutoSensor):
+            let pinCode = PinCodeViewModel(title: "Введите код", pincodeLength: model.authPincodeLength)
+            let footer = FooterViewModel(continueButton: nil, cancelButton: nil)
             
             if let sensor = model.authAvailableBiometricSensorType, model.authIsBiometricSensorEnabled == true {
                 
-                self.numpad = NumPadViewModel(leftButton: .init(type: .text("Выход"), action: .exit), rightButton: .init(type: .icon(sensor.icon), action: .sensor))
+                let numpad = NumPadViewModel(leftButton: .init(type: .text("Выход"), action: .exit), rightButton: .init(type: .icon(sensor.icon), action: .sensor))
                 
+                if isAutoSensor == true {
+                    
+                    self.init(pincodeValue: .init(""), pinCode: pinCode, numpad: numpad, footer: footer, rootActions: rootActions, model: model, mode: mode, stage: .editing, sensorAutoEvaluationStatus: .required(sensor))
+                    
+                } else {
+                    
+                    self.init(pincodeValue: .init(""), pinCode: pinCode, numpad: numpad, footer: footer, rootActions: rootActions, model: model, mode: mode, stage: .editing)
+                }
+
             } else {
                 
-                self.numpad = NumPadViewModel(leftButton: .init(type: .text("Выход"), action: .exit), rightButton: .init(type: .empty, action: .none))
+                let numpad = NumPadViewModel(leftButton: .init(type: .text("Выход"), action: .exit), rightButton: .init(type: .empty, action: .none))
+                
+                self.init(pincodeValue: .init(""), pinCode: pinCode, numpad: numpad, footer: footer, rootActions: rootActions, model: model, mode: mode, stage: .editing)
             }
-    
-            self.footer = FooterViewModel(continueButton: nil, cancelButton: nil)
-            self.mode = mode
 
         case .create:
-            self.pinCode = PinCodeViewModel(title: "Придумайте код", pincodeLength: model.authPincodeLength)
-            self.numpad = NumPadViewModel(leftButton: .init(type: .empty, action: .none), rightButton: .init(type: .icon(.ic40Delete), action: .delete))
-            self.footer = FooterViewModel(continueButton: nil, cancelButton: nil)
-            self.mode = .create(step: .one)
+            let pinCode = PinCodeViewModel(title: "Придумайте код", pincodeLength: model.authPincodeLength)
+            let numpad = NumPadViewModel(leftButton: .init(type: .empty, action: .none), rightButton: .init(type: .icon(.ic40Delete), action: .delete))
+            let footer = FooterViewModel(continueButton: nil, cancelButton: nil)
+     
+            self.init(pincodeValue: .init(""), pinCode: pinCode, numpad: numpad, footer: footer, rootActions: rootActions, model: model, mode: mode, stage: .editing)
         }
-        
-        self.rootActions = rootActions
-        self.stage = .editing
-        self.isPermissionsViewPresented = false
-        self.mistakes = 0
-        self.model = model
-        
+ 
         bind()
     }
     
@@ -91,9 +101,17 @@ class AuthPinCodeViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
+                case _ as ModelAction.Auth.Session.Activated:
+                    LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.Session.Activated")
+                    if isAutoEvaluateSensorRequired == true {
+                        
+                        tryAutoEvaluateSensor()
+                    }
+
                 case let payload as ModelAction.Auth.Pincode.Check.Response:
                     switch payload {
                     case .correct:
+                        LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.Pincode.Check.Response: correct")
                         withAnimation {
                             // show correct pincode state
                             pinCode.style = .correct
@@ -102,9 +120,12 @@ class AuthPinCodeViewModel: ObservableObject {
                         
                         // taptic feedback
                         feedbackGenerator.notificationOccurred(.success)
-                        self.model.action.send(ModelAction.Auth.Login.Request(type: .pin, isFreshSessionRequired: false))
+                        
+                        LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Login.Request, type: .pin, restartSession: false")
+                        self.model.action.send(ModelAction.Auth.Login.Request(type: .pin, restartSession: false))
                         
                     case .incorrect(remain: let remainAttempts):
+                        LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.Pincode.Check.Response: incorrect, remain attempts: \(remainAttempts)")
                         guard case .unlock(attempt: let lastAttempt, auto: let auto) = mode else {
                             return
                         }
@@ -123,25 +144,40 @@ class AuthPinCodeViewModel: ObservableObject {
                         alert = .init(title: "Введен некорректный пин-код.", message: "Осталось попыток: \(remainAttempts)", primary: .init(type: .default, title: "Ok", action: {[weak self] in
                             
                             self?.alert = nil
-                            self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt()) }))
+                            LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Unlock.Attempt")
+                            self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt())
+                        }))
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                         
                     case .restricted:
+                        LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.Pincode.Check.Response: restricted")
                         withAnimation {
                             // show incorrect pincode state
                             pinCode.style = .incorrect
                             numpad.isEnabled = false
                         }
                         alert = .init(title: "Введен некорректный пин-код.", message: "Все попытки исчерпаны.", primary: .init(type: .default, title: "Ok", action: { [weak self] in
+                            
                             self?.alert = nil
-                            self?.action.send(AuthPinCodeViewModelAction.Unlock.Failed()) }))
+                            LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Unlock.Failed")
+                            self?.action.send(AuthPinCodeViewModelAction.Unlock.Failed())
+                        }))
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                         
                     case .failure(message: let message):
+                        LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.Pincode.Check.Response: failure, message: \(message)")
                         alert = .init(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                     }
                     
                 case let payload as ModelAction.Auth.Sensor.Evaluate.Response:
+                    if sensorAutoEvaluationStatus != nil {
+                        sensorAutoEvaluationStatus = .evaluated
+                    }
+                    
                     switch payload {
                     case .success(let sensorType):
+                        LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.Sensor.Evaluate.Response: success, sensor type: \(sensorType)")
                         
                         // lock numpad
                         numpad.isEnabled = false
@@ -159,35 +195,43 @@ class AuthPinCodeViewModel: ObservableObject {
                         
                         switch sensorType {
                         case .face:
-                            self.model.action.send(ModelAction.Auth.Login.Request(type: .faceId, isFreshSessionRequired: false))
+                            LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Login.Request, type: .faceId, restartSession: false")
+                            self.model.action.send(ModelAction.Auth.Login.Request(type: .faceId, restartSession: false))
                             
                         case .touch:
-                            self.model.action.send(ModelAction.Auth.Login.Request(type: .touchId, isFreshSessionRequired: false))
+                            LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Login.Request, type: .touchId, restartSession: false")
+                            self.model.action.send(ModelAction.Auth.Login.Request(type: .touchId, restartSession: false))
                         }
 
                     case .failure(message: let message):
+                        LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.Sensor.Evaluate.Response: failure, message: \(message)")
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil}))
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                     }
                     
                 case let payload as ModelAction.Auth.Pincode.Set.Response:
                     switch payload {
                     case .success:
+                        LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.Pincode.Set.Response: success")
                         feedbackGenerator.notificationOccurred(.success)
                         if let sensor = model.authAvailableBiometricSensorType {
                             
                             let permissionsViewModel = AuthPermissionsViewModel(model, sensorType: sensor, dismissAction: {})
                             
+                            LoggerAgent.shared.log(category: .ui, message: "show sensor permissions view")
                             self.permissionsViewModel = permissionsViewModel
                             isPermissionsViewPresented = true
                             
-                           bind(permissionsViewModel)
+                            bind(permissionsViewModel)
                             
                         } else {
                             
+                            LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.SetDeviceSettings.Request, sensor: nil")
                             model.action.send(ModelAction.Auth.SetDeviceSettings.Request(sensorType: nil))
                         }
                         
                     case .failure(message: let message):
+                        LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.Pincode.Set.Response: failure, message: \(message)")
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in
                             
                             //TODO: set pincode failed with error. Back to login or try again?
@@ -195,29 +239,47 @@ class AuthPinCodeViewModel: ObservableObject {
                             self?.alert = nil
                             
                         }))
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                     }
                     
                 case let payload as ModelAction.Auth.SetDeviceSettings.Response:
                     switch payload {
                     case .success:
-                        model.action.send(ModelAction.Auth.Login.Request(type: .pin, isFreshSessionRequired: true))
+                        LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.SetDeviceSettings.Response: success")
+                        
+                        LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Login.Request, type: .pin, restartSession: true")
+                        model.action.send(ModelAction.Auth.Login.Request(type: .pin, restartSession: true))
                         
                     case .failure:
+                        LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.SetDeviceSettings.Response: failure")
+                        
                         rootActions.spinner.hide()
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "hide spinner")
                         alert = Alert.ViewModel(title: "Ошибка", message: model.defaultErrorMessage, primary: .init(type: .default, title: "Ok", action: {[weak self] in
+                            
                             self?.alert = nil
+                            LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Unlock.Attempt")
                             self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt())
                         }))
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                     }
                     
                 case let payload as ModelAction.Auth.Login.Response:
+                    LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.Login.Response")
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "hide spinner")
                     rootActions.spinner.hide()
+                    
                     switch payload {
                     case .failure(message: let message):
+                        LoggerAgent.shared.log(category: .ui, message: "ModelAction.Auth.Login.Response: failure, message: \(message)")
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in
+                            
                             self?.alert = nil
-                            self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt()) 
+                            LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Unlock.Attempt")
+                            self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt())
                         }))
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                         
                     default:
                         break
@@ -238,11 +300,13 @@ class AuthPinCodeViewModel: ObservableObject {
                 case let payload as NumPadViewModelAction.Button:
                     switch payload {
                     case .digit(let number):
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "NumPadViewModelAction.Button: digit")
                         pincodeValue.value = pincodeValue.value + String(number)
                         // button click sound
                         AudioServicesPlaySystemSound(1104)
                     
                     case .delete:
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "NumPadViewModelAction.Button: delete")
                         guard pincodeValue.value.count > 0 else {
                             return
                         }
@@ -251,14 +315,17 @@ class AuthPinCodeViewModel: ObservableObject {
                         AudioServicesPlaySystemSound(1155)
                         
                     case .sensor:
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "NumPadViewModelAction.Button: sensor")
                         guard let sensor = model.authAvailableBiometricSensorType, model.authIsBiometricSensorEnabled == true else {
                             return
                         }
+                        LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Sensor.Evaluate.Request")
                         model.action.send(ModelAction.Auth.Sensor.Evaluate.Request(sensor: sensor))
                         // option click sound
                         AudioServicesPlaySystemSound(1156)
       
                     case .back:
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "NumPadViewModelAction.Button: back")
                         self.mode = .create(step: .one)
                         self.pinCode.title = "Придумайте код"
                         self.pincodeValue.value = ""
@@ -267,9 +334,14 @@ class AuthPinCodeViewModel: ObservableObject {
                         AudioServicesPlaySystemSound(1156)
 
                     case .exit:
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "NumPadViewModelAction.Button: exit")
                         alert = .init(title: "Внимание!", message: "Вы действительно хотите выйти из аккаунта?", primary: .init(type: .cancel, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Выйти", action: { [weak self] in
+                            
                             self?.alert = nil
-                            self?.action.send(AuthPinCodeViewModelAction.Exit())}))
+                            LoggerAgent.shared.log(category: .ui, message: "sent AuthPinCodeViewModelAction.Exit")
+                            self?.action.send(AuthPinCodeViewModelAction.Exit())
+                        }))
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                         AudioServicesPlaySystemSound(1156)
                         
                     default:
@@ -352,6 +424,7 @@ class AuthPinCodeViewModel: ObservableObject {
   
                 switch stage {
                 case .mistake:
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "stage: mistake")
                     pinCode.isAnimated = false
                     withAnimation {
                         // show incorrect pincode state
@@ -375,7 +448,7 @@ class AuthPinCodeViewModel: ObservableObject {
                     }
                     
                 case .finished:
-                    
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "stage: finished")
                     // lock numpad
                     numpad.isEnabled = false
                     
@@ -384,6 +457,7 @@ class AuthPinCodeViewModel: ObservableObject {
                         withAnimation {
                             pinCode.isAnimated = true
                         }
+                        LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Pincode.Check.Request")
                         model.action.send(ModelAction.Auth.Pincode.Check.Request(pincode: pincodeValue.value, attempt: attempt))
                         
                     case .create:
@@ -391,6 +465,7 @@ class AuthPinCodeViewModel: ObservableObject {
                         withAnimation {
                             pinCode.isAnimated = true
                         }
+                        LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Pincode.Set.Request")
                         model.action.send(ModelAction.Auth.Pincode.Set.Request(pincode: pincodeValue.value))
                     }
                     
@@ -406,28 +481,35 @@ class AuthPinCodeViewModel: ObservableObject {
                 
                 switch action {
                 case _ as AuthPinCodeViewModelAction.Appear:
-                    guard case .unlock(attempt: _ , auto: let auto) = mode,
-                          auto == true,
-                          let sensor = model.authAvailableBiometricSensorType,
-                          model.authIsBiometricSensorEnabled == true else {
-                        return
-                    }
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "received AuthPinCodeViewModelAction.Appear")
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                    isViewDidAppear = true
+                    if isAutoEvaluateSensorRequired == true {
                         
-                        self.model.action.send(ModelAction.Auth.Sensor.Evaluate.Request(sensor: sensor))
+                        if model.authIsSessionActive == true {
+                            
+                            tryAutoEvaluateSensor()
+                            
+                        } else {
+                            
+                            model.action.send(ModelAction.Auth.Session.Start.Request())
+                        }
                     }
                     
                 case let payload as AuthPinCodeViewModelAction.Continue:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthPinCodeViewModelAction.Continue")
                     guard case .unlock(attempt: let attempt, auto: let auto) = mode else {
                         return
                     }
                     let currentAttempt = attempt + 1
                     mode = .unlock(attempt: currentAttempt, auto: auto)
+                    LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Pincode.Check.Request, pincode, attempt: \(currentAttempt)")
                     model.action.send(ModelAction.Auth.Pincode.Check.Request(pincode: payload.code, attempt: currentAttempt))
                     
                 case _ as AuthPinCodeViewModelAction.Unlock.Attempt:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthPinCodeViewModelAction.Unlock.Attempt")
                     alert = nil
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "hide alert")
                     withAnimation {
                         // back to editing
                         self.stage = .editing
@@ -435,11 +517,18 @@ class AuthPinCodeViewModel: ObservableObject {
                         pincodeValue.value = ""
                         numpad.isEnabled = true
                     }
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "reset pincode")
                     
                 case _ as AuthPinCodeViewModelAction.Unlock.Failed:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthPinCodeViewModelAction.Unlock.Failed")
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Logout")
                     model.action.send(ModelAction.Auth.Logout())
                     
                 case _ as AuthPinCodeViewModelAction.Exit:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthPinCodeViewModelAction.Exit")
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Logout")
                     model.action.send(ModelAction.Auth.Logout())
                 
                 default:
@@ -461,11 +550,21 @@ class AuthPinCodeViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as AuthPermissionsViewModelAction.Confirm:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthPermissionsViewModelAction.Confirm")
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "show spinner")
                     self.rootActions.spinner.show()
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.SetDeviceSettings.Request, sensor: \(payload.sensorType)")
                     self.model.action.send(ModelAction.Auth.SetDeviceSettings.Request(sensorType: payload.sensorType))
                     
                 case _ as AuthPermissionsViewModelAction.Skip:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthPermissionsViewModelAction.Skip")
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "show spinner")
                     self.rootActions.spinner.show()
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.SetDeviceSettings.Request, sensor: nil")
                     self.model.action.send(ModelAction.Auth.SetDeviceSettings.Request(sensorType: nil))
                     
                 default:
@@ -473,6 +572,35 @@ class AuthPinCodeViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    var isAutoEvaluateSensorRequired: Bool {
+        
+        guard case .required(_) = sensorAutoEvaluationStatus else {
+            return false
+        }
+        
+        return true
+    }
+    
+    func tryAutoEvaluateSensor() {
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "Auto evaluate sensor attempt")
+        
+        guard case .required(let sensor) = sensorAutoEvaluationStatus,
+              model.authIsSessionActive == true,
+              isViewDidAppear == true else {
+            
+            return
+        }
+        
+        LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Sensor.Evaluate.Request: sensor: \(sensor)")
+        self.model.action.send(ModelAction.Auth.Sensor.Evaluate.Request(sensor: sensor))
+    }
+    
+    deinit {
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
 }
 
@@ -503,6 +631,13 @@ extension AuthPinCodeViewModel {
         case editing
         case mistake
         case finished
+    }
+    
+    enum SensorAutoEvaluationStatus {
+        
+        case required(BiometricSensorType)
+        case evaluating
+        case evaluated
     }
 }
 
