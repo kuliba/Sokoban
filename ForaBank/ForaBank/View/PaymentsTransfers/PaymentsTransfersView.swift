@@ -170,7 +170,7 @@ struct PaymentsTransfersView: View {
 
             switch fullCover.type {
             case let .successMeToMe(successMeToMeViewModel):
-                PaymentsSuccessMeToMeView(viewModel: successMeToMeViewModel)
+                PaymentsSuccessView(viewModel: successMeToMeViewModel)
             }
         }
         .sheet(item: $viewModel.sheet, content: { sheet in
@@ -187,7 +187,7 @@ struct PaymentsTransfersView: View {
                     .fixedSize(horizontal: false, vertical: true)
                 
             case let .successMeToMe(successMeToMeViewModel):
-                PaymentsSuccessMeToMeView(viewModel: successMeToMeViewModel)
+                PaymentsSuccessView(viewModel: successMeToMeViewModel)
                 
             case .anotherCard(let anotherCardViewModel):
                 AnotherCardView(viewModel: anotherCardViewModel)

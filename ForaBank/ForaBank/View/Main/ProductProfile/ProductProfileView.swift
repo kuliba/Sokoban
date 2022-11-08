@@ -161,7 +161,7 @@ struct ProductProfileView: View {
 
             switch fullCover.type {
             case let .successMeToMe(successMeToMeViewModel):
-                PaymentsSuccessMeToMeView(viewModel: successMeToMeViewModel)
+                PaymentsSuccessView(viewModel: successMeToMeViewModel)
             }
         }
         .alert(item: $viewModel.alert, content: { alertViewModel in

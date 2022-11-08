@@ -54,7 +54,7 @@ extension CloseAccountSpinnerView {
                                 
                                 let responseData: TransferResponseData = .init(amount: balance, creditAmount: nil, currencyAmount: .init(description: productData.currency), currencyPayee: nil, currencyPayer: .init(description: productData.currency), currencyRate: nil, debitAmount: balance, fee: nil, needMake: nil, needOTP: nil, payeeName: nil, documentStatus: documentStatus, paymentOperationDetailId: paymentOperationDetailId)
                                 
-                                let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(model, mode: .closeAccountEmpty(productData.id), state: .success(documentStatus, paymentOperationDetailId), responseData: responseData)
+                                let successMeToMe: PaymentsSuccessViewModel = .init(model, mode: .closeAccountEmpty(productData.id), state: .success(documentStatus, paymentOperationDetailId), responseData: responseData)
 
                                 self.action.send(CloseAccountSpinnerAction.Response.Success(viewModel: successMeToMe))
                             }
@@ -97,7 +97,7 @@ enum CloseAccountSpinnerAction {
     
         struct Success: Action {
             
-            let viewModel: PaymentsSuccessMeToMeViewModel
+            let viewModel: PaymentsSuccessViewModel
         }
         
         struct Failed: Action {

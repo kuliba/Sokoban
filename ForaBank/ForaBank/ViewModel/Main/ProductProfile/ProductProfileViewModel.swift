@@ -148,24 +148,25 @@ class ProductProfileViewModel: ObservableObject {
                     
                     if balance == 0 {
 
-                        let closeAccountSpinner: CloseAccountSpinnerView.ViewModel = .init(model, productData: from)
-                        self.closeAccountSpinner = closeAccountSpinner
+                        closeAccountSpinner = .init(model, productData: from)
                         
-                        bind(closeAccountSpinner)
+                        if let closeAccountSpinner = closeAccountSpinner {
+                            bind(closeAccountSpinner)
+                        }
                         
                         model.action.send(ModelAction.Account.Close.Request(payload: .init(id: from.id, name: from.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: nil)))
                         
                     } else {
                         
-                        let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .closeAccount(from, balance)) { [weak self] in
-                            self?.action.send(ProductProfileViewModelAction.Close.BottomSheet())
-                        }
+                        let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .closeAccount(from, balance))
                         
                         guard let viewModel = viewModel else {
                             return
                         }
                         
-                        bind(viewModel)
+                        let swapViewModel = viewModel.swapViewModel
+                        bind(viewModel, swapViewModel: swapViewModel)
+                        
                         bottomSheet = .init(type: .closeAccount(viewModel))
                     }
                     
@@ -777,7 +778,7 @@ class ProductProfileViewModel: ObservableObject {
     }
     
     /// Сlosing account with balance
-    private func bind(_ viewModel: PaymentsMeToMeViewModel) {
+    private func bind(_ viewModel: PaymentsMeToMeViewModel, swapViewModel: ProductsSwapView.ViewModel) {
         
         viewModel.action
             .receive(on: DispatchQueue.main)
@@ -788,15 +789,12 @@ class ProductProfileViewModel: ObservableObject {
                     
                     self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
                     
-                    let swapViewModel = viewModel.swapViewModel
-                    
-                    guard let productIdFrom = swapViewModel.productIdFrom,
-                          let productIdTo = swapViewModel.productIdTo else {
-                        return
+                    if let productIdFrom = swapViewModel.productIdFrom,
+                       let productIdTo = swapViewModel.productIdTo {
+                        
+                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
+                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
                     }
-                    
-                    model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
-                    model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) { [weak self] in
                         
@@ -828,7 +826,7 @@ class ProductProfileViewModel: ObservableObject {
                 switch action {
                 case let payload as CloseAccountSpinnerAction.Response.Success:
 
-                    bind(payload.viewModel, productId: viewModel.productId)
+                    bind(payload.viewModel)
                     fullCover = .init(type: .successMeToMe(payload.viewModel))
 
                 case let payload as CloseAccountSpinnerAction.Response.Failed:
@@ -849,23 +847,23 @@ class ProductProfileViewModel: ObservableObject {
     }
     
     /// Сlosing success screen
-    private func bind(_ viewModel: PaymentsSuccessMeToMeViewModel, productId: ProductData.ID? = nil) {
+    private func bind(_ viewModel: PaymentsSuccessViewModel) {
         
         viewModel.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 
                 switch action {
-                case _ as PaymentsSuccessMeToMeAction.Button.Close:
+                case _ as PaymentsSuccessAction.Button.Close:
                     
                     self.action.send(ProductProfileViewModelAction.Close.FullCover())
                     self.rootActions?.switchTab(.main)
                     
-                    if let productId = productId {
-                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productId))
+                    if let closeAccountSpinner = closeAccountSpinner {
+                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: closeAccountSpinner.productId))
                     }
                     
-                case _ as PaymentsSuccessMeToMeAction.Button.Repeat:
+                case _ as PaymentsSuccessAction.Button.Repeat:
                     
                     self.action.send(ProductProfileViewModelAction.Close.FullCover())
                     self.rootActions?.switchTab(.payments)
@@ -1150,7 +1148,7 @@ extension ProductProfileViewModel {
         let type: Kind
         
         enum Kind {
-            case successMeToMe(PaymentsSuccessMeToMeViewModel)
+            case successMeToMe(PaymentsSuccessViewModel)
         }
     }
 }

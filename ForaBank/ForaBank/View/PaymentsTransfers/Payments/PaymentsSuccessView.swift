@@ -2,12 +2,10 @@
 //  PaymentsSuccessView.swift
 //  ForaBank
 //
-//  Created by Константин Савялов on 03.03.2022.
+//  Created by Pavel Samsonov on 09.10.2022.
 //
 
 import SwiftUI
-
-//MARK: - View
 
 struct PaymentsSuccessView: View {
     
@@ -105,6 +103,17 @@ struct PaymentsSuccessView: View {
                     .frame(height: 48)
                     .padding(.horizontal, 20)
                     .padding(.bottom, bottomPadding)
+            }
+        }
+        .background(Color.mainColorsWhite)
+        .sheet(item: $viewModel.sheet) { sheet in
+
+            switch sheet.type {
+            case let .printForm(printViewModel):
+                PrintFormView(viewModel: printViewModel)
+
+            case let .detailInfo(detailViewModel):
+                OperationDetailInfoView(viewModel: detailViewModel)
             }
         }
     }
@@ -217,12 +226,10 @@ extension PaymentsSuccessView {
     }
 }
 
-// MARK: - Preview
-
-struct PaymentsSuccessScreenView_Previews: PreviewProvider {
+struct PaymentsSuccessView_Previews: PreviewProvider {
     
     static var previews: some View {
-        
+
         Group {
             
             PaymentsSuccessView(viewModel: .sample1)

@@ -22,7 +22,6 @@ class PaymentsMeToMeViewModel: ObservableObject {
         
     let title: String
     let mode: Mode
-    let closeAction: () -> Void
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -33,7 +32,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
         case loading
     }
 
-    init(_ model: Model, swapViewModel: ProductsSwapView.ViewModel, paymentsAmount: PaymentsAmountView.ViewModel, title: String, mode: Mode = .general, state: State = .normal, closeAction: @escaping () -> Void) {
+    init(_ model: Model, swapViewModel: ProductsSwapView.ViewModel, paymentsAmount: PaymentsAmountView.ViewModel, title: String, mode: Mode = .general, state: State = .normal) {
         
         self.model = model
         self.swapViewModel = swapViewModel
@@ -41,10 +40,9 @@ class PaymentsMeToMeViewModel: ObservableObject {
         self.title = title
         self.mode = mode
         self.state = state
-        self.closeAction = closeAction
     }
     
-    convenience init?(_ model: Model, mode: Mode, closeAction: @escaping () -> Void) {
+    convenience init?(_ model: Model, mode: Mode) {
 
         guard let products = model.allProducts(),
               let productData = Self.reduce(products: products) else {
@@ -54,7 +52,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
         let swapViewModel: ProductsSwapView.ViewModel = .init(model, productData: productData, mode: mode)
         let amountViewModel: PaymentsAmountView.ViewModel = .init(productData: productData, mode: mode)
         
-        self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, title: "Между своими", mode: mode, state: .normal, closeAction: closeAction)
+        self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, title: "Между своими", mode: mode, state: .normal)
         
         bind()
     }
@@ -81,7 +79,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             // For ruble transfers
                             if response.needOTP == false, let documentStatus = response.documentStatus {
                                 
-                                let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(model, mode: .meToMe, state: .success(documentStatus, response.paymentOperationDetailId), responseData: response)
+                                let successMeToMe: PaymentsSuccessViewModel = .init(model, mode: .meToMe, state: .success(documentStatus, response.paymentOperationDetailId), responseData: response)
                                 
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
                                 
@@ -104,7 +102,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         
                         if let documentStatus = success.documentStatus {
                             
-                            let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(model, mode: .meToMe, state: .success(documentStatus, success.paymentOperationDetailId), responseData: payload.transferResponse)
+                            let successMeToMe: PaymentsSuccessViewModel = .init(model, mode: .meToMe, state: .success(documentStatus, success.paymentOperationDetailId), responseData: payload.transferResponse)
                             
                             self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
                         }
@@ -129,7 +127,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 
                                 let responseData: TransferResponseData = .init(amount: balance, creditAmount: nil, currencyAmount: .init(description: productData.currency), currencyPayee: nil, currencyPayer: .init(description: productData.currency), currencyRate: nil, debitAmount: balance, fee: nil, needMake: nil, needOTP: nil, payeeName: nil, documentStatus: documentStatus, paymentOperationDetailId: paymentOperationDetailId)
                                 
-                                let successMeToMe: PaymentsSuccessMeToMeViewModel = .init(model, mode: .closeAccount, state: .success(documentStatus, paymentOperationDetailId), responseData: responseData)
+                                let successMeToMe: PaymentsSuccessViewModel = .init(model, mode: .closeAccount, state: .success(documentStatus, paymentOperationDetailId), responseData: responseData)
                                 
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
                                 makeInformer(closeAccount: true)
@@ -649,7 +647,7 @@ enum PaymentsMeToMeAction {
     
         struct Success: Action {
             
-            let viewModel: PaymentsSuccessMeToMeViewModel
+            let viewModel: PaymentsSuccessViewModel
         }
         
         struct Failed: Action {}

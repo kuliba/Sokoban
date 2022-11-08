@@ -247,9 +247,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                         case .betweenSelf:
 
-                            let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .general) { [weak self] in
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
-                            }
+                            let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .general)
                             
                             guard let viewModel = viewModel else {
                                 return
@@ -368,19 +366,19 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             }.store(in: &bindings)
     }
     
-    private func bind(_ viewModel: PaymentsSuccessMeToMeViewModel) {
+    private func bind(_ viewModel: PaymentsSuccessViewModel) {
         
         viewModel.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 
                 switch action {
-                case _ as PaymentsSuccessMeToMeAction.Button.Close:
+                case _ as PaymentsSuccessAction.Button.Close:
                     
                     self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
                     self.rootActions?.switchTab(.main)
                     
-                case _ as PaymentsSuccessMeToMeAction.Button.Repeat:
+                case _ as PaymentsSuccessAction.Button.Repeat:
                     
                     self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
                     self.rootActions?.switchTab(.payments)
@@ -442,7 +440,7 @@ extension PaymentsTransfersViewModel {
         
         enum Kind {
             case meToMe(PaymentsMeToMeViewModel)
-            case successMeToMe(PaymentsSuccessMeToMeViewModel)
+            case successMeToMe(PaymentsSuccessViewModel)
             case transferByPhone(TransferByPhoneViewModel)
             case anotherCard(AnotherCardViewModel)
             case qrScanner(QrViewModel)
@@ -455,7 +453,7 @@ extension PaymentsTransfersViewModel {
         let type: Kind
         
         enum Kind {
-            case successMeToMe(PaymentsSuccessMeToMeViewModel)
+            case successMeToMe(PaymentsSuccessViewModel)
         }
     }
     
