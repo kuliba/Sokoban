@@ -20,9 +20,9 @@ class ContactsCountrySectionViewModel: ContactsSectionViewModel {
         
         self.init(header: .init(kind: .country), items: [])
         
-        let items = Self.reduceCounry(countriesList: countriesList) { [weak self] countryId in
+        let items = Self.reduceCounry(countriesList: countriesList) { [weak self] country in
             
-            { self?.action.send(ContactsCountrySectionViewModelAction.CountryDidTapped(countryId: countryId)) }
+            { self?.action.send(ContactsCountrySectionViewModelAction.CountryDidTapped(country: country)) }
         }
         
         self.items = items
@@ -33,11 +33,11 @@ class ContactsCountrySectionViewModel: ContactsSectionViewModel {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
-    static func reduceCounry(countriesList: [CountryData], action: @escaping (CountryData.ID) -> () -> Void) -> [ContactsSectionViewModel.ItemViewModel] {
+    static func reduceCounry(countriesList: [CountryData], action: @escaping (CountryData) -> () -> Void) -> [ContactsSectionViewModel.ItemViewModel] {
         
         var country = [ContactsSectionViewModel.ItemViewModel]()
         
-        country = countriesList.map({ContactsSectionViewModel.ItemViewModel(title: $0.name, image: $0.svgImage?.image, bankType: nil, action: action($0.id))})
+        country = countriesList.map({ContactsSectionViewModel.ItemViewModel(title: $0.name, image: $0.svgImage?.image, bankType: nil, action: action($0))})
         country = country.sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
         country = country.sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
         
@@ -49,6 +49,6 @@ struct ContactsCountrySectionViewModelAction {
     
     struct CountryDidTapped: Action {
         
-        let countryId: CountryData.ID
+        let country: CountryData
     }
 }

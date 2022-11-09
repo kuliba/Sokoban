@@ -59,6 +59,19 @@ class PaymentsViewModel: ObservableObject {
         bind()
     }
     
+    convenience init(source: Payments.Operation.Source, model: Model, closeAction: @escaping () -> Void) async throws {
+        
+        let operation = try await model.paymentsOperation(with: source)
+        guard let category = Payments.Category.category(for: operation.service) else {
+            throw Error.unableRecognizeCategoryForService(operation.service)
+        }
+        let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model)
+        self.init(content: .operation(operationViewModel), category: category, model: model, closeAction: closeAction)
+        operationViewModel.rootActions = rootActions
+        
+        bind()
+    }
+    
     private func bind() {
         
         model.action
@@ -159,5 +172,12 @@ enum PaymentsViewModelAction {
     struct Alert: Action {
         
         let message: String
+    }
+}
+
+extension PaymentsViewModel {
+    
+    enum Error: LocalizedError {
+        case unableRecognizeCategoryForService(Payments.Service)
     }
 }

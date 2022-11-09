@@ -11,13 +11,15 @@ import Foundation
 
 enum Payments {
 
-    enum Category: String {
+    enum Category: String, CaseIterable {
         
+        case fast  = "ru.forabank.sense.payments.category.fast"
         case taxes = "iFora||1331001"
         
         var services: [Service] {
             
             switch self {
+            case .fast: return [.sfp, .direct]
             case .taxes: return [.fns, .fms, .fssp]
             }
         }
@@ -25,13 +27,29 @@ enum Payments {
         var name: String {
             
             switch self {
+            case .fast: return "Быстрые платежи"
             case .taxes: return "Налоги и услуги"
             }
+        }
+        
+        static func category(for service: Service) -> Category? {
+            
+            for category in Category.allCases {
+                
+                if category.services.contains(service) {
+                    
+                    return category
+                }
+            }
+            
+            return nil
         }
     }
     
     enum Service: String {
         
+        case sfp
+        case direct
         case fms
         case fns
         case fssp
@@ -39,6 +57,8 @@ enum Payments {
     
     enum Operator : String {
         
+        case sfp        = "iFora||TransferC2CSTEP"
+        case direct     = "REQUIRED!!!!!"
         case fssp       = "iFora||5429"
         case fms        = "iFora||6887"
         case fns        = "iFora||6273"
@@ -113,17 +133,36 @@ extension Payments {
 extension Payments.Operation {
     
     /// Source of operation
-    enum Source {
+    enum Source: CustomDebugStringConvertible {
         
         /// operation started from template
-        case template(PaymentTemplateData.ID)
+        case template(PaymentTemplateData)
         
         /// operation started from latest operation
-        case latestPayment(LatestPaymentData.ID)
+        case latestPayment(LatestPaymentData)
         
         case qr
         
+        case sfp(phone: String, bank: BankData)
+        
+        case direct(phone: String, bank: BankData, country: CountryData)
+        
+        case abroad(phone: String, country: CountryData)
+        
         case mock(Payments.Mock)
+        
+        var debugDescription: String {
+            
+            switch self {
+            case let .template(template): return "template: \(template.id)"
+            case let .latestPayment(latestPayment): return "latest payment: \(latestPayment.id)"
+            case .qr: return "qr"
+            case let .sfp(phone: phone, bank: bank): return "sfp: \(phone), bankId: \(bank.id)"
+            case let .direct(phone: phone, bank: bank, country: country): return "direct: \(phone), bankId: \(bank.id), countryId: \(country.id)"
+            case let .abroad(phone: phone, country: country): return "abroad: \(phone), countryId: \(country.id)"
+            case let .mock(mock): return "mock service: \(mock.service.rawValue)"
+            }
+        }
     }
     
     /// Operation step
@@ -201,6 +240,8 @@ extension Payments.Operation {
     enum TransferType {
         
         case anyway
+        case sfp
+        case direct
     }
     
     enum Action: Equatable {

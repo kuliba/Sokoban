@@ -16,7 +16,6 @@ class ContactsViewModel: ObservableObject {
     let title = "Выберите контакт"
     @Published var searchBar: SearchBarView.ViewModel
     @Published var mode: Mode
-    @Published var link: Link?
     
     private let feedbackGenerator = UINotificationFeedbackGenerator()
     private let model: Model
@@ -109,6 +108,23 @@ class ContactsViewModel: ObservableObject {
         switch mode {
         case .contacts(let latestPayments, let contacts):
             
+            if let latestPayments = latestPayments {
+                
+                latestPayments.action
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] action in
+                        
+                        switch action {
+                        case let payload as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
+                            self.action.send(ContactsViewModelAction.PaymentRequested(source: .latestPayment(payload.latestPayment)))
+                            
+                        default:
+                            break
+                        }
+                        
+                    }.store(in: &bindings)
+            }
+            
             contacts.action
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] action in
@@ -121,24 +137,7 @@ class ContactsViewModel: ObservableObject {
                     }
                     
                 }.store(in: &bindings)
-            
-            if let latestPayments = latestPayments {
-                
-                latestPayments.action
-                    .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] action in
-                        
-                        switch action {
-                        case let item as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
-                            //TODO: setup action link to paymentView
-                            break
-                            
-                        default: break
-                        }
-                        
-                    }.store(in: &bindings)
-            }
-            
+
         case .contactsSearch(let contacts):
             
             contacts.action
@@ -164,15 +163,7 @@ class ContactsViewModel: ObservableObject {
                         
                         switch action {
                         case let payload as ContactsTopBanksSectionViewModelAction.TopBanksDidTapped:
-                            
-                            if let bank = model.bankList.value.first(where: {$0.memberId == payload.bankId}), bank.bankType == .direct, let phone = searchBar.textField.text, let country = model.countriesList.value.first(where: {$0.code == "AM" }) {
-                                
-                                self.link = .init(type: .country(.init(phone: phone, country: country, bank: bank, operatorsViewModel: .init(closeAction: { [weak self] in
-                                    self?.link = nil
-                                    
-                                }, template: nil))))
-
-                            }
+                            handleBankDidTapped(bank: payload.bank)
                             
                         default:
                             break
@@ -189,50 +180,75 @@ class ContactsViewModel: ObservableObject {
                         
                         switch action {
                         case let payload as ContactsBanksSectionViewModelAction.BankDidTapped:
+                            handleBankDidTapped(bank: payload.bank)
                             
-                            if let bank = model.bankList.value.first(where: {$0.id == payload.bankId}), bank.bankType == .direct, let phone = searchBar.textField.text, let country = model.countriesList.value.first(where: {$0.code == "AM" }) {
-                                
-                                self.link = .init(type: .country(.init(phone: phone, country: country, bank: bank, operatorsViewModel: .init(closeAction: { [weak self] in
-                                    self?.link = nil
-                                }, template: nil))))
-                            }
+                            /*
+                             self.link = .init(type: .country(.init(phone: phone, country: country, bank: bank, operatorsViewModel: .init(closeAction: { [weak self] in
+                                 self?.link = nil
+                             }, template: nil))))
+                             */
+                            
                             
                         case let payload as ContactsCountrySectionViewModelAction.CountryDidTapped:
                             
-                            if let country = model.countriesList.value.first(where: {$0.id == payload.countryId}), let phone = searchBar.textField.text {
-                                self.link = .init(type: .country(.init(phone: phone, country: country, bank: nil, operatorsViewModel: .init(closeAction: { [weak self] in
-                                    self?.link = nil
-                                }, template: nil))))
+                            guard let phone = searchBar.phone else  {
+                                return
                             }
-                        default: break
+                            
+                            self.action.send(ContactsViewModelAction.PaymentRequested(source: .abroad(phone: phone, country: payload.country)))
+                            
+                        default:
+                            break
                         }
                         
                     }.store(in: &bindings)
             }
             
-        default: break
+        default:
+            break
         }
     }
 }
 
+//MARK: - Helpers
+
 extension ContactsViewModel {
     
-    struct Link: Identifiable, Equatable {
+    func handleBankDidTapped(bank: BankData) {
         
-        let id = UUID()
-        let type: Kind
-        
-        enum Kind {
+        guard let phone = searchBar.phone else {
             
-            case country(CountryPaymentView.ViewModel)
+            return
         }
         
-        static func == (lhs: ContactsViewModel.Link, rhs: ContactsViewModel.Link) -> Bool {
-            lhs.id == rhs.id
+        switch bank.bankType {
+        case .sfp:
+            self.action.send(ContactsViewModelAction.PaymentRequested(source: .sfp(phone: phone, bank: bank)))
             
+        case .direct:
+            guard let country = self.model.countriesList.value.first(where: { $0.id == bank.bankCountry}) else {
+                return
+            }
+            self.action.send(ContactsViewModelAction.PaymentRequested(source: .direct(phone: phone, bank: bank, country: country)))
+            
+        default:
+            return
         }
     }
 }
+
+//MARK: - Action
+
+enum ContactsViewModelAction {
+
+    struct PaymentRequested: Action {
+        
+        let source: Payments.Operation.Source
+    }
+   
+}
+
+//MARK: - Samples
 
 extension ContactsViewModel {
     

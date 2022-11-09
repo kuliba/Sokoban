@@ -16,6 +16,8 @@ extension Payments.Operator {
         case .fns: return "ФНС"
         case .fnsUin: return "ФНС по УИН"
         case .fssp: return "ФССП"
+        case .sfp: return "Перевод по номеру телефона"
+        default: return "UNKNOWN"
         }
     }
 }

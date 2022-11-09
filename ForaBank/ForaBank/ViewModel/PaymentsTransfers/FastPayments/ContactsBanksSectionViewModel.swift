@@ -43,8 +43,8 @@ class ContactsBanksSectionViewModel: ContactsSectionViewModel {
         
         Task {
             
-            self.allItems = await Self.reduce(bankList: model.bankList.value) { [weak self]  bankId in
-                { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped(bankId: bankId)) }
+            self.allItems = await Self.reduce(bankList: model.bankList.value) { [weak self]  bank in
+                { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped(bank: bank)) }
             }
             
             await MainActor.run {
@@ -138,10 +138,10 @@ class ContactsBanksSectionViewModel: ContactsSectionViewModel {
 
 extension ContactsBanksSectionViewModel {
     
-    static func reduce(bankList: [BankData], action: @escaping (BankData.ID) -> () -> Void) async ->  [ContactsSectionViewModel.ItemViewModel] {
+    static func reduce(bankList: [BankData], action: @escaping (BankData) -> () -> Void) async ->  [ContactsSectionViewModel.ItemViewModel] {
         
         return bankList
-            .map({ContactsSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: action($0.id))})
+            .map({ContactsSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: action($0))})
             .sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
             .sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
     }
@@ -189,6 +189,6 @@ struct ContactsBanksSectionViewModelAction {
     
     struct BankDidTapped: Action {
         
-        let bankId: Int
+        let bank: BankData
     }
 }

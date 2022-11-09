@@ -108,6 +108,9 @@ extension Model {
                 
                 return .selected(service)
             }
+            
+        default:
+            throw Payments.Error.unsupported
         }
     }
         
@@ -183,6 +186,9 @@ extension Model {
             
         case .fssp:
             return try await paymentsStepFSSP(operation, for: stepIndex)
+            
+        default:
+            throw Payments.Error.unsupported
         }
     }
     
@@ -249,6 +255,9 @@ extension Model {
         switch operation.transferType {
         case .anyway:
             return try await paymentsTransferAnywayProcess(parameters: operation.parameters, process: process, isNewPayment: true)
+            
+        default:
+            throw Payments.Error.unsupported
         }
     }
     
@@ -260,6 +269,9 @@ extension Model {
         switch operation.transferType {
         case .anyway:
             return try await paymentsTransferAnywayProcess(parameters: operation.parameters, process: process, isNewPayment: false)
+            
+        default:
+            throw Payments.Error.unsupported
         }
     }
     
@@ -299,6 +311,9 @@ extension Model {
         switch service {
         case .fns, .fms, .fssp:
             return try paymentsParameterRepresentableTaxes(service: service, parameterData: parameterData)
+            
+        default:
+            throw Payments.Error.unsupported
         }
     }
     
@@ -389,6 +404,9 @@ extension Model {
             let icon = anywayOperator.iconImageData ?? .serviceFSSP
             
             return .init(service: service, title: title, description: description, icon: icon)
+            
+        default:
+            return nil
         }
     }
 }
@@ -442,6 +460,9 @@ extension Model {
                                       .init(id: "a3_docNumber_2_2", value: "7816218222")])
                                         //.init(id: "a3_docNumber_2_2", value: "7816218222")
                                         //.init(id: "a3_docNumber_2_2", value: "13420742521")
+            
+        default:
+            return nil
         }
     }
     

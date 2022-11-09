@@ -9,7 +9,7 @@ import Foundation
 
 struct CountryData: Codable, Equatable, Hashable, Identifiable {
     
-    var id: Int { hashValue }
+    var id: String { code }
     let code: String
     let contactCode: String?
     let md5hash: String?

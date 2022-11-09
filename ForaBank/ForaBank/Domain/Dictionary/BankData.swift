@@ -9,31 +9,33 @@ import Foundation
 
 struct BankData: Codable, Equatable, Hashable, Identifiable {
     
-    var id: Int { hashValue }
-    let md5hash: String
-    let memberId: String?
+    var id: String { memberId }
+    let memberId: String
     let memberName: String?
     let memberNameRus: String
     let paymentSystemCodeList: [String]
+    let md5hash: String
     let svgImage: SVGImageData
+    let bankCountry: String
 }
 
 //BankData Helper
 extension BankData {
     
-    var bankType: BankType? {
+    var bankType: BankType {
         
         if let paymentSystem = self.paymentSystemCodeList.first, paymentSystem == "SFP" {
             
             return .sfp
+            
         } else if let paymentSystem = self.paymentSystemCodeList.first, paymentSystem == "DIRECT" {
             
             return .direct
+            
         } else {
             
             return .unknown
         }
-
     }
 }
 

@@ -24,6 +24,7 @@ struct ContactsView: View {
                 
             }
             .padding(.horizontal, 20)
+            .padding(.top, 20)
             
             switch viewModel.mode {
                 
@@ -82,19 +83,6 @@ struct ContactsView: View {
                 Spacer()
             }
         }
-        .fullScreenCoverLegacy(viewModel: $viewModel.link, content: { item in
-            
-            switch item.type {
-            case .country(let countryViewModel):
-                
-                NavigationView {
-                    
-                    CountryPaymentView(viewModel: countryViewModel)
-                        .edgesIgnoringSafeArea(.bottom)
-                        .navigationBarBackButtonHidden(true)
-                }
-            }
-        })
     }
 }
 

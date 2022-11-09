@@ -60,7 +60,7 @@ class ContactsTopBanksSectionViewModel: ObservableObject {
                     switch payload.result {
                     case .success(let banks):
 
-                        if let banks = Self.reduce(contact: model.contact(for: phone), banks: banks, banksData: model.bankList.value, action: { [weak self] bankId in { self?.action.send(ContactsTopBanksSectionViewModelAction.TopBanksDidTapped(bankId: bankId)) } }) {
+                        if let banks = Self.reduce(contact: model.contact(for: phone), banks: banks, banksData: model.bankList.value, action: { [weak self] bank in { self?.action.send(ContactsTopBanksSectionViewModelAction.TopBanksDidTapped(bank: bank)) } }) {
                             
                             self.content = .banks(banks)
                         }
@@ -73,7 +73,7 @@ class ContactsTopBanksSectionViewModel: ObservableObject {
             }.store(in: &bindings)
     }
     
-    static func reduce(contact: AddressBookContact?, banks: [PaymentPhoneData], banksData: [BankData], action: @escaping ((String) -> () -> Void)) -> TopBanksViewModel? {
+    static func reduce(contact: AddressBookContact?, banks: [PaymentPhoneData], banksData: [BankData], action: @escaping ((BankData) -> () -> Void)) -> TopBanksViewModel? {
         
         var banksList = [TopBanksViewModel.Bank]()
         
@@ -82,12 +82,13 @@ class ContactsTopBanksSectionViewModel: ObservableObject {
             if let bankName = bank.bankName,
                 let defaultBank = bank.defaultBank,
                 let payment = bank.payment,
-                let bankId = bank.bankId  {
+                let bankId = bank.bankId,
+                let bankData = banksData.first(where: { $0.memberId == bankId }) {
 
                 let contact = payment ? contact : nil
-                let bankImage = banksData.first(where: { $0.memberId == bank.bankId })?.svgImage.image
+                let bankImage = bankData.svgImage.image
                 
-                banksList.append(.init(image: bankImage, defaultBank: defaultBank, name: contact?.fullName, bankName: bankName, action: action(bankId)))
+                banksList.append(.init(image: bankImage, defaultBank: defaultBank, name: contact?.fullName, bankName: bankName, action: action(bankData)))
             }
         }
         
@@ -143,6 +144,6 @@ struct ContactsTopBanksSectionViewModelAction {
     
     struct TopBanksDidTapped: Action {
         
-        let bankId: String
+        let bank: BankData
     }
 }
