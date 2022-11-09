@@ -83,6 +83,9 @@ class Model {
     //MARK: DeepLink
     var deepLinkType: DeepLinkType?
     
+    //MARK: QR
+    let qrDictionary: CurrentValueSubject<QRMapping?, Never>
+    
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
     let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
@@ -162,6 +165,7 @@ class Model {
         self.userSettings = .init([])
         self.deepLinkType = nil
         self.depositsCloseNotified = nil
+        self.qrDictionary = .init(nil)
         
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent

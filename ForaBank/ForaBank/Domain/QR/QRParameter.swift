@@ -7,43 +7,69 @@
 
 import Foundation
 
-struct QRParameter: Codable {
+struct QRParameter: Codable, Equatable {
     
     let parameter: Kind
     let keys: [String]
     let type: ValueType
     
-    enum Kind: String, Codable {
+    static func == (lhs: QRParameter, rhs: QRParameter) -> Bool {
+        return lhs.type == rhs.type && lhs.parameter == rhs.parameter
+    }
+}
+
+extension QRParameter {
+    
+    enum Kind: Codable, Equatable {
         
-        case inn = "GENERAL_INN"
-        case amount =  "GENERAL_AMOUNT"
-        case account = "GENERAL_ACCOUNT"
-        case bic = "GENERAL_BIC"
-        case name = "GENERAL_NAME"
-        case firstName = "GENERAL_FIRST_NAME"
-        case lastName = "GENERAL_LAST_NAME"
-        case middleName = "GENERAL_MIDDLE_NAME"
-        case kpp = "GENERAL_KPP"
-        case purpose = "GENERAL_PURPOSE"
-//        case value(String)
+        case general(General)
+        case value(String)
         
-//        var name: String {
-//
-//            switch self {
-//            case .inn:        return "GENERAL_INN"
-//            case .amount:     return "GENERAL_AMOUNT"
-//            case .account:    return "GENERAL_ACCOUNT"
-//            case .bic:        return "GENERAL_BIC"
-//            case .name:       return "GENERAL_NAME"
-//            case .firstName:  return "GENERAL_FIRST_NAME"
-//            case .lastName:   return "GENERAL_LAST_NAME"
-//            case .middleName: return "GENERAL_MIDDLE_NAME"
-//            case .kpp:        return "GENERAL_KPP"
-//            case .purpose:    return "GENERAL_PURPOSE"
-//            case let .value(valueName): return valueName
-//
-//            }
-//        }
+        enum General: String, Codable {
+            
+            case inn = "GENERAL_INN"
+            case amount = "GENERAL_AMOUNT"
+            case account = "GENERAL_ACCOUNT"
+            case bic = "GENERAL_BIC"
+            case name = "GENERAL_NAME"
+            case firstName = "GENERAL_FIRST_NAME"
+            case lastName = "GENERAL_LAST_NAME"
+            case middleName = "GENERAL_MIDDLE_NAME"
+            case kpp = "GENERAL_KPP"
+            case purpose = "GENERAL_PURPOSE"
+            case techcode = "GENERAL_TECHCODE"
+        }
+        
+        var name: String {
+            
+            switch self {
+            case let .general(general): return general.rawValue
+            case let .value(valueName): return valueName
+            }
+        }
+        
+        init(from decoder: Decoder) throws {
+            
+            let container = try decoder.singleValueContainer()
+            
+            do {
+                
+                let general = try container.decode(General.self)
+                self = .general(general)
+                
+            } catch {
+                
+                let value = try container.decode(String.self)
+                self = .value(value)
+            }
+        }
+        
+        func encode(to encoder: Encoder) throws {
+            
+            var container = encoder.singleValueContainer()
+            
+            try container.encode(name)
+        }
     }
     
     var swiftType: Any.Type {
@@ -52,6 +78,7 @@ struct QRParameter: Codable {
         case .double:  return Double.self
         case .string:  return String.self
         case .integer: return Int.self
+        case .date: return Date.self
         }
     }
     
@@ -60,5 +87,7 @@ struct QRParameter: Codable {
         case string = "STRING"
         case integer = "INTEGER"
         case double = "DOUBLE"
+        case date = "DATE"
     }
 }
+
