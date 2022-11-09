@@ -136,6 +136,13 @@ struct ProductProfileView: View {
                 OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
             }
         })
+        .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+
+            switch fullCover.type {
+            case let .successMeToMe(successMeToMeViewModel):
+                PaymentsSuccessView(viewModel: successMeToMeViewModel)
+            }
+        }
         .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
             
             switch sheet.type {
@@ -157,13 +164,6 @@ struct ProductProfileView: View {
                 PaymentsMeToMeView(viewModel: viewModel)
             }
         })
-        .fullScreenCover(item: $viewModel.fullCover) { fullCover in
-
-            switch fullCover.type {
-            case let .successMeToMe(successMeToMeViewModel):
-                PaymentsSuccessView(viewModel: successMeToMeViewModel)
-            }
-        }
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })

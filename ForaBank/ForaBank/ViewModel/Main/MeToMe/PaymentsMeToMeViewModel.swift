@@ -87,6 +87,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 
                                 self.action.send(PaymentsMeToMeAction.Response.Failed())
                             }
+                            
+                            state = .normal
                         }
                         
                     case let .failure(error):
@@ -108,10 +110,10 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         }
                         
                     case let .failure(error):
-                        
-                        state = .normal
                         makeAlert(error)
                     }
+                    
+                    state = .normal
 
                 case let payload as ModelAction.Account.Close.Response:
                     
@@ -139,10 +141,11 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         
                     case let .failure(message: message):
                         
-                        state = .normal
                         makeAlert(ModelError.serverCommandError(error: message))
                         makeInformer(closeAccount: false)
                     }
+                    
+                    state = .normal
                     
                 default:
                     break

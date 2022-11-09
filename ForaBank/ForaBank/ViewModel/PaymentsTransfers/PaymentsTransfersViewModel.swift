@@ -253,7 +253,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 return
                             }
                             
-                            bind(viewModel)
+                            let swapViewModel = viewModel.swapViewModel
+                            bind(viewModel, swapViewModel: swapViewModel)
+                            
                             bottomSheet = .init(type: .meToMe(viewModel))
 
                     case .byBankDetails:
@@ -333,7 +335,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         }
     }
     
-    private func bind(_ viewModel: PaymentsMeToMeViewModel) {
+    private func bind(_ viewModel: PaymentsMeToMeViewModel, swapViewModel: ProductsSwapView.ViewModel) {
         
         viewModel.action
             .receive(on: DispatchQueue.main)
@@ -341,22 +343,28 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case let payload as PaymentsMeToMeAction.Response.Success:
+
+                    if payload.viewModel.repeatButton == nil {
+                        self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                    }
                     
-                    self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                    guard let productIdFrom = swapViewModel.productIdFrom,
+                          let productIdTo = swapViewModel.productIdTo else {
+                        return
+                    }
+
+                    model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
+                    model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) { [weak self] in
-                        
-                        guard let self = self else {
-                            return
-                        }
-                        
-                        self.bind(payload.viewModel)
+                    bind(payload.viewModel)
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                         self.fullCover = .init(type: .successMeToMe(payload.viewModel))
-                        
-                        self.model.action.send(ModelAction.Products.Update.ForProductType(productType: .account))
                     }
                     
                 case _ as PaymentsMeToMeAction.Response.Failed:
+                    
+                    makeAlert("Перевод выполнен")
                     self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
     
                 default:
@@ -388,6 +396,15 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    private func makeAlert(_ message: String) {
+        
+        let alertViewModel = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "ОК") { [weak self] in
+            self?.action.send(ProductProfileViewModelAction.Close.Alert())
+        })
+        
+        alert = .init(alertViewModel)
     }
     
     private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {

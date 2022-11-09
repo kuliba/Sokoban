@@ -20,11 +20,7 @@ extension CloseAccountSpinnerView {
         private let productData: ProductData
         
         private var bindings = Set<AnyCancellable>()
-        
-        var productId: ProductData.ID {
-            productData.id
-        }
-        
+
         init(_ model: Model, productData: ProductData) {
             
             self.model = model

@@ -150,29 +150,6 @@ struct PaymentsTransfersView: View {
                 }
             }
         }
-        .bottomSheet(item: $viewModel.bottomSheet) { sheet in
-            
-            switch sheet.type {
-            case let .exampleDetail(title):
-                ExampleDetailMock(title: title)
-            
-            case let .meToMe(viewModel):
-                PaymentsMeToMeView(viewModel: viewModel)
-                
-            case .anotherCard(let model):
-                AnotherCardView(viewModel: model)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .navigationBarTitle("", displayMode: .inline)
-                    .frame(height: 494)
-            }
-        }
-        .fullScreenCover(item: $viewModel.fullCover) { fullCover in
-
-            switch fullCover.type {
-            case let .successMeToMe(successMeToMeViewModel):
-                PaymentsSuccessView(viewModel: successMeToMeViewModel)
-            }
-        }
         .sheet(item: $viewModel.sheet, content: { sheet in
             
             switch sheet.type {
@@ -201,6 +178,29 @@ struct PaymentsTransfersView: View {
             }
             
         })
+        .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+
+            switch fullCover.type {
+            case let .successMeToMe(successMeToMeViewModel):
+                PaymentsSuccessView(viewModel: successMeToMeViewModel)
+            }
+        }
+        .bottomSheet(item: $viewModel.bottomSheet) { sheet in
+            
+            switch sheet.type {
+            case let .exampleDetail(title):
+                ExampleDetailMock(title: title)
+            
+            case let .meToMe(viewModel):
+                PaymentsMeToMeView(viewModel: viewModel)
+                
+            case .anotherCard(let model):
+                AnotherCardView(viewModel: model)
+                    .edgesIgnoringSafeArea(.bottom)
+                    .navigationBarTitle("", displayMode: .inline)
+                    .frame(height: 494)
+            }
+        }
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })

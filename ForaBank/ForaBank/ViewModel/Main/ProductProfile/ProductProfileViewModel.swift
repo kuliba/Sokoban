@@ -179,6 +179,9 @@ class ProductProfileViewModel: ObservableObject {
                 case _ as ProductProfileViewModelAction.Close.FullCover:
                     fullCover = nil
                     
+                case _ as ProductProfileViewModelAction.Close.AccountSpinner:
+                    closeAccountSpinner = nil
+                    
                 case _ as ProductProfileViewModelAction.Close.BottomSheet:
                     bottomSheet = nil
                 
@@ -796,17 +799,15 @@ class ProductProfileViewModel: ObservableObject {
                         model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
                     }
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) { [weak self] in
-                        
-                        guard let self = self else {
-                            return
-                        }
-                        
-                        self.bind(payload.viewModel)
+                    self.bind(payload.viewModel)
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                         self.fullCover = .init(type: .successMeToMe(payload.viewModel))
                     }
                     
                 case _ as PaymentsMeToMeAction.Response.Failed:
+                    
+                    makeAlert("Счет закрыт")
                     self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
     
                 default:
@@ -830,18 +831,13 @@ class ProductProfileViewModel: ObservableObject {
                     fullCover = .init(type: .successMeToMe(payload.viewModel))
 
                 case let payload as CloseAccountSpinnerAction.Response.Failed:
-                    
-                    let alertViewModel = Alert.ViewModel(title: "Ошибка", message: payload.message, primary: .init(type: .default, title: "ОК") { [weak self] in
-                        self?.action.send(ProductProfileViewModelAction.Close.Alert())
-                    })
-                    
-                    alert = .init(alertViewModel)
+                    makeAlert(payload.message)
     
                 default:
                     break
                 }
                 
-                closeAccountSpinner = nil
+                self.action.send(ProductProfileViewModelAction.Close.AccountSpinner())
                 
             }.store(in: &bindings)
     }
@@ -858,11 +854,7 @@ class ProductProfileViewModel: ObservableObject {
                     
                     self.action.send(ProductProfileViewModelAction.Close.FullCover())
                     self.rootActions?.switchTab(.main)
-                    
-                    if let closeAccountSpinner = closeAccountSpinner {
-                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: closeAccountSpinner.productId))
-                    }
-                    
+
                 case _ as PaymentsSuccessAction.Button.Repeat:
                     
                     self.action.send(ProductProfileViewModelAction.Close.FullCover())
@@ -875,6 +867,15 @@ class ProductProfileViewModel: ObservableObject {
                 model.action.send(ModelAction.Products.Update.ForProductType(productType: .account))
                 
             }.store(in: &bindings)
+    }
+    
+    private func makeAlert(_ message: String) {
+        
+        let alertViewModel = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "ОК") { [weak self] in
+            self?.action.send(ProductProfileViewModelAction.Close.Alert())
+        })
+        
+        alert = .init(alertViewModel)
     }
 
     func customNameAlert(for productType: ProductType, alertTitle: String) ->  AlertTextFieldView.ViewModel? {
@@ -1210,6 +1211,7 @@ enum ProductProfileViewModelAction {
         struct Link: Action {}
         struct Sheet: Action {}
         struct FullCover: Action {}
+        struct AccountSpinner: Action {}
         struct BottomSheet: Action {}
         struct Alert: Action {}
         struct TextFieldAlert: Action {}
