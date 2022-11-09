@@ -7,64 +7,64 @@
 
 import Foundation
 
-/*
- ST00012|Name=ПАО "Калужская сбытовая компания"|PersonalAcc=40702810600180000156|BankName=Тульский филиал АБ "РОССИЯ"|BIC=047003764|CorrespAcc=30101810600000000764|PersAcc=110110581|Sum=66671|Purpose= лс 110110581 ЭЭ|PayeeINN=4029030252|KPP=402801001|TechCode=02|Category=1|KSK_PeriodPok=202208|KSK_Type=1|Amount=6835
- */
-
 struct QRCode {
     
-    let type: String //ST00012
+    let original: String
     let rawData: [String: String] // name : ПАО "Калужская сбытовая компания"
     
-    init(type: String, rawData: [String : String]) {
-        self.type = type
+    init(original: String, rawData: [String : String]) {
+        
+        self.original = original
         self.rawData = rawData
     }
     
     init?(string: String) {
         
         let stringData = Self.separatedString(string: string)
-
-        self.rawData = Self.rawDataMapping(qrStringData: stringData)
+        let rawData = Self.rawDataMapping(qrStringData: stringData)
         
-        guard let type = Self.qrCodeType(stringArray: stringData) else { return nil }
-        self.type = type
+        guard rawData.keys.isEmpty == false else {
+            return nil
+        }
         
+        self.init(original: string, rawData: rawData)
     }
+    
     
     func value<Value>(type: QRParameter.Kind, mapping: QRMapping) throws -> Value? {
         
-        var rawDataKey: Value?
-        
-        for map in mapping.allParameters {
-            
-            if map.parameter == type {
-                
-                let keys = map.keys
-                
-                keys.forEach { value in
-
-                    if Value.self == map.swiftType {
-                        
-                        switch map.type {
-                        case .string:
-                            rawDataKey = self.rawData.filter { $0.key == value }.first?.value as? Value
-                            
-                        case .integer:
-                            rawDataKey = self.rawData.filter { $0.key == value }.first?.value as? Value
-                            
-                        case .double:
-                            guard let value = self.rawData.filter({ $0.key == value }).first?.value else { return }
-                            let doubleValue = (value as NSString).doubleValue
-                            rawDataKey = round( doubleValue / 100) as? Value
-                            print()
-                        }
-                    }
-                }
-            }
+        guard let parameter = mapping.allParameters.first(where: { $0.parameter.name == type.name }) else {
+            return nil
         }
         
-        return rawDataKey
+        for key in parameter.keys {
+            
+            guard var value = rawData[key] else {
+                continue
+            }
+            
+            guard parameter.swiftType == Value.self || Value.self == String.self else {
+                throw QRCodeError.typeMissmatch
+            }
+            
+            switch parameter.type {
+                
+            case .string:
+                return value as? Value
+                
+            case .integer:
+                return Int(value) as? Value
+                
+            case .double:
+                value.insert(".", at: value.index(value.endIndex, offsetBy: -2))
+                let doubleValue = NumberFormatter().number(from: value)?.doubleValue
+                return doubleValue as? Value
+                
+            case .date:
+                return value as? Value
+            }
+        }
+        return nil
     }
     
     static func separatedString(string: String) -> [String] {
@@ -72,11 +72,37 @@ struct QRCode {
         return string.components(separatedBy: "|")
     }
     
-    static func qrCodeType(stringArray: [String]) -> String? {
+    func check(mapping: QRMapping) -> QRMapping.FailData? {
         
-        guard let type = stringArray.first else { return nil }
+        let rawDataKays = self.rawData.map{ $0.key }
         
-        return type
+        let parametersKays = mapping.allParameters.flatMap{ $0.keys }
+        
+        let unknownKeys = rawDataKays.difference(from: parametersKays)
+        
+        if unknownKeys.count > 0 {
+            
+            return QRMapping.FailData(rawData: original, parsed: rawData, unknownKeys: unknownKeys)
+        } else {
+            
+            return nil
+        }
+    }
+    
+    func stringValue(type: QRParameter.Kind, mapping: QRMapping) -> String? {
+        
+        guard let parameter = mapping.allParameters.first(where: { $0.parameter.name == type.name }) else {
+            return nil
+        }
+        
+        for key in parameter.keys {
+            
+            guard let value = rawData[key] else { return nil }
+            
+            return value
+        }
+        
+        return nil
     }
     
     static func rawDataMapping(qrStringData: [String]) -> [String: String] {
@@ -92,23 +118,18 @@ struct QRCode {
                 tempRawData[componentKey] = componentValue
             }
         }
-        
         return tempRawData
     }
-
 }
 
 enum QRCodeError: Error {
     case typeMissmatch
 }
 
-
-
-// let qrCode = QRCode(string: qrString)
-//1 инн?
-// if let innParameter: String = qrCode.value(type: .inn, mapinng: qrMapping) {
-
-
-// let amount: Double = qrCode.value(type: .amount, mapinng: qrMapping)
-//let innParameter: Double = qrCode.value(type: .inn, mapinng: qrMapping): ERROR
-
+extension Array where Element: Hashable {
+    func difference(from other: [Element]) -> [Element] {
+        let thisSet = Set(self)
+        let otherSet = Set(other)
+        return Array(thisSet.subtracting(otherSet))
+    }
+}
