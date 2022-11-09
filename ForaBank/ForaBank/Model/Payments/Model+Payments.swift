@@ -120,6 +120,8 @@ extension Model {
         case let .mock(mock):
             return mock.service
             
+        case .sfp: return .sfp
+            
         default:
             throw Payments.Error.unsupported
         }
@@ -187,6 +189,9 @@ extension Model {
         case .fssp:
             return try await paymentsStepFSSP(operation, for: stepIndex)
             
+        case .sfp:
+            return try await paymentsStepSFP(operation, for: stepIndex)
+            
         default:
             throw Payments.Error.unsupported
         }
@@ -230,6 +235,18 @@ extension Model {
         switch source {
         case let .mock(mock):
             return mock.parameters.first(where: { $0.id == parameterId })?.value
+            
+        case let .sfp(phone: phone, bank: bank):
+            switch parameterId {
+            case Payments.Parameter.Identifier.sfpPhone.rawValue:
+                return phone
+                
+            case Payments.Parameter.Identifier.sfpBank.rawValue:
+                return bank.memberId
+                
+            default:
+                return nil
+            }
             
         default:
             return nil

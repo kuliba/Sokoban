@@ -280,7 +280,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                             Task.detached(priority: .high) { [self] in
                                                 
                                                 // 700 milliseconds
-                                                try await Task.sleep(nanoseconds: 700000000)
+                                                try await Task.sleep(nanoseconds: 100000000)
                                                 
                                                 do {
                                                     

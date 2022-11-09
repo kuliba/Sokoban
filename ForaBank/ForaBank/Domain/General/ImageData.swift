@@ -35,6 +35,15 @@ struct ImageData: Codable {
         
         self.init(with: uiImage)
     }
+    
+    init?(named: String) {
+        
+        guard let uiImage = UIImage(named: named) else {
+           return nil
+        }
+        
+        self.init(with: uiImage)
+    }
 }
 
 extension ImageData {

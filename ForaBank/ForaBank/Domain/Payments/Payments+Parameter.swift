@@ -49,6 +49,10 @@ extension Payments.Parameter {
         case amount         = "ru.forabank.sense.amount"
         case code           = "ru.forabank.sense.code"
         case mock           = "ru.forabank.sense.mock"
+        
+        case sfpPhone       = "RecipientID"
+        case sfpBank        = "BankRecipientID"
+        case sfpMessage     = "Ustrd"
     }
     
     static let emptyMock = Payments.Parameter(id: Identifier.mock.rawValue, value: nil)
