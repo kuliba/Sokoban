@@ -26,8 +26,6 @@ extension Model {
         
         let command = ServerCommands.TransferController.CreateAnywayTransfer(token: token, isNewPayment: isNewPayment, payload: .init(amount: amount, check: false, comment: comment, currencyAmount: currency, payer: payer, additional: additional, puref: puref))
         
-        print(command)
-        
         return try await serverAgent.executeCommand(command: command)
     }
 }
@@ -86,7 +84,11 @@ extension Model {
         
         for additionalData in response.additionalList {
             
-            let parameter = try paymentsParameterRepresentable(service: service, adittionalData: additionalData)
+            guard let parameter = try paymentsParameterRepresentable(service: service, adittionalData: additionalData) else {
+                
+                continue
+            }
+            
             result.append(parameter)
         }
         

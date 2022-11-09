@@ -204,22 +204,47 @@ extension Model {
         switch response {
         case let anywayResponse as TransferAnywayResponseData:
             
-            let next = try paymentsTransferAnywayStepParameters(service: operation.service, response: anywayResponse)
-            
-            let duplicates = next.map({ $0.parameter }).filter({ operation.parametersIds.contains($0.id) })
-            if duplicates.count > 0 {
-                LoggerAgent.shared.log(level: .error, category: .payments, message: "Anyway transfer response duplicates detected end removed: \(duplicates) from operation: \(operation.shortDescription)")
+            switch operation.transferType {
+            case .anyway:
+                
+                let next = try paymentsTransferAnywayStepParameters(service: operation.service, response: anywayResponse)
+                
+                let duplicates = next.map({ $0.parameter }).filter({ operation.parametersIds.contains($0.id) })
+                if duplicates.count > 0 {
+                    LoggerAgent.shared.log(level: .error, category: .payments, message: "Anyway transfer response duplicates detected end removed: \(duplicates) from operation: \(operation.shortDescription)")
+                }
+                
+                // next parameters without duplicates
+                let nextParameters = next.filter({ operation.parametersIds.contains($0.id) == false })
+                
+                let visible = try paymentsTransferAnywayStepVisible(service: operation.service, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
+                let stepStage = try paymentsTransferAnywayStepStage(service: operation.service, operation: operation, response: anywayResponse)
+                let required = try paymentsTransferAnywayStepRequired(service: operation.service, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters)
+                
+                return Payments.Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, required: required, processed: nil))
+                
+            case .sfp:
+                let next = try paymentsTransferSFPStepParameters(service: operation.service, response: anywayResponse)
+                
+                let duplicates = next.map({ $0.parameter }).filter({ operation.parametersIds.contains($0.id) })
+                if duplicates.count > 0 {
+                    LoggerAgent.shared.log(level: .error, category: .payments, message: "Anyway transfer response duplicates detected end removed: \(duplicates) from operation: \(operation.shortDescription)")
+                }
+                
+                // next parameters without duplicates
+                let nextParameters = next.filter({ operation.parametersIds.contains($0.id) == false })
+                
+                let visible = try paymentsTransferSFPStepVisible(service: operation.service, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
+                let stepStage = try paymentsTransferSFPStepStage(service: operation.service, operation: operation, response: anywayResponse)
+                let required = try paymentsTransferSFPStepRequired(service: operation.service, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters)
+                
+                return Payments.Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, required: required, processed: nil))
+                
+            default:
+                throw Payments.Error.unsupported
+                
             }
-            
-            // next parameters without duplicates
-            let nextParameters = next.filter({ operation.parametersIds.contains($0.id) == false })
-            
-            let visible = try paymentsTransferAnywayStepVisible(service: operation.service, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
-            let stepStage = try paymentsTransferAnywayStepStage(service: operation.service, operation: operation, response: anywayResponse)
-            let required = try paymentsTransferAnywayStepRequired(service: operation.service, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters)
-            
-            return Payments.Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, required: required, processed: nil))
-            
+
         default:
             throw Payments.Error.unsupported
         }
@@ -272,6 +297,9 @@ extension Model {
         switch operation.transferType {
         case .anyway:
             return try await paymentsTransferAnywayProcess(parameters: operation.parameters, process: process, isNewPayment: true)
+            
+        case .sfp:
+            return try await paymentsTransferSFPProcess(parameters: operation.parameters, process: process)
             
         default:
             throw Payments.Error.unsupported
@@ -375,12 +403,27 @@ extension Model {
         }
     }
     
-    func paymentsParameterRepresentable(service: Payments.Service, adittionalData: TransferAnywayResponseData.AdditionalData) throws -> PaymentsParameterRepresentable {
+    func paymentsParameterRepresentable(service: Payments.Service, adittionalData: TransferAnywayResponseData.AdditionalData) throws -> PaymentsParameterRepresentable? {
         
-        Payments.ParameterInfo(
-            .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
-            icon: adittionalData.iconData ?? .parameterDocument,
-            title: adittionalData.fieldTitle, placement: .spoiler)
+        switch service {
+        case .sfp:
+            switch adittionalData.fieldName {
+            case "RecipientNm", "SumSTrs":
+                return Payments.ParameterInfo(
+                    .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
+                    icon: adittionalData.iconData ?? .parameterDocument,
+                    title: adittionalData.fieldTitle, placement: .feed)
+                
+            default:
+                return nil
+            }
+            
+        default:
+            return Payments.ParameterInfo(
+                .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
+                icon: adittionalData.iconData ?? .parameterDocument,
+                title: adittionalData.fieldTitle, placement: .spoiler)
+        }
     }
     
     func paymentsParameterRepresentableSelectServiceOption(for service: Payments.Service, with operators: [OperatorGroupData.OperatorData]) -> Payments.ParameterSelectService.Option? {

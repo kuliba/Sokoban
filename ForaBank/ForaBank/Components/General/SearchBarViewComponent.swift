@@ -19,11 +19,23 @@ extension SearchBarView {
         var text: String? { textField.text }
         var phone: String? {
             
+#if DEBUG
+            guard let text = text else {
+                return nil
+            }
+            
+            guard phoneNumberFormater.isValid(text) || text == "+7 0115110217" else {
+                return nil
+            }
+            
+            return text
+#else
             guard let text = text, phoneNumberFormater.isValid(text) else {
                 return nil
             }
             
             return text
+#endif
         }
         
         @Published private(set) var state: State

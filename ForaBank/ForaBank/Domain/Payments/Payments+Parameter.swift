@@ -48,6 +48,7 @@ extension Payments.Parameter {
         case product        = "ru.forabank.sense.product"
         case amount         = "ru.forabank.sense.amount"
         case code           = "ru.forabank.sense.code"
+        case fee            = "ru.forabank.sense.fee"
         case mock           = "ru.forabank.sense.mock"
         
         case sfpPhone       = "RecipientID"
