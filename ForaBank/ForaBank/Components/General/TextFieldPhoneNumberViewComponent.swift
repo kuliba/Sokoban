@@ -130,8 +130,7 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
     
     func updateUIView(_ uiView: UITextField, context: Context) {
         
-        let textRange = NSRange(location: 0, length: viewModel.text?.count ?? 0)
-        uiView.text = TextFieldPhoneNumberView.updateMasked(value: viewModel.text, inRange: textRange, update: viewModel.text ?? "", firstDigitReplace: viewModel.firstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
+        uiView.text = viewModel.text
     }
     
     func makeCoordinator() -> Coordinator {

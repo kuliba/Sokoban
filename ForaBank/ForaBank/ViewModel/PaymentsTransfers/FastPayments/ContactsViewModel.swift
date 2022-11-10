@@ -131,7 +131,8 @@ class ContactsViewModel: ObservableObject {
                     
                     switch action {
                     case let payload as ContactsListViewModelAction.ContactSelect:
-                        self.searchBar.textField.text = payload.phone
+                        let formattedPhone = searchBar.textField.phoneNumberFormatter.partialFormatter("+\(payload.phone)")
+                        self.searchBar.textField.text = formattedPhone
                         
                     default: break
                     }
@@ -181,14 +182,7 @@ class ContactsViewModel: ObservableObject {
                         switch action {
                         case let payload as ContactsBanksSectionViewModelAction.BankDidTapped:
                             handleBankDidTapped(bank: payload.bank)
-                            
-                            /*
-                             self.link = .init(type: .country(.init(phone: phone, country: country, bank: bank, operatorsViewModel: .init(closeAction: { [weak self] in
-                                 self?.link = nil
-                             }, template: nil))))
-                             */
-                            
-                            
+  
                         case let payload as ContactsCountrySectionViewModelAction.CountryDidTapped:
                             
                             guard let phone = searchBar.phone else  {
