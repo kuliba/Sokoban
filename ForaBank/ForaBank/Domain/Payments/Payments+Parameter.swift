@@ -197,24 +197,24 @@ extension Payments {
         let icon: ImageData
         let title: String
         let validator: Validator
-        let actionButton: ActionButtonType?
+        let actionButtonType: ActionButtonType?
         let isEditable: Bool
         let placement: Payments.Parameter.Placement
  
-        init(_ parameter: Parameter, icon: ImageData, title: String, validator: Validator, isEditable: Bool = true, placement: Payments.Parameter.Placement = .feed, actionButton: ActionButtonType? = nil) {
+        init(_ parameter: Parameter, icon: ImageData, title: String, validator: Validator, isEditable: Bool = true, placement: Payments.Parameter.Placement = .feed, actionButtonType: ActionButtonType? = nil) {
             
             self.parameter = parameter
             self.icon = icon
             self.title = title
             self.validator = validator
-            self.actionButton = actionButton
+            self.actionButtonType = actionButtonType
             self.isEditable = isEditable
             self.placement = placement
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterInput(.init(id: parameter.id, value: value), icon: icon, title: title, validator: validator,isEditable: isEditable, placement: placement, actionButton: actionButton)
+            ParameterInput(.init(id: parameter.id, value: value), icon: icon, title: title, validator: validator,isEditable: isEditable, placement: placement, actionButtonType: actionButtonType)
         }
         
         struct Validator: ValidatorProtocol {

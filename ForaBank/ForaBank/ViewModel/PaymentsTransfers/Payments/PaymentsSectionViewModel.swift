@@ -41,10 +41,14 @@ class PaymentsSectionViewModel {
     }
 }
 
+//MARK: - Top Section
+
 class PaymentsTopSectionViewModel: PaymentsSectionViewModel {
     
     override var placement: Payments.Parameter.Placement { .top }
 }
+
+//MARK: - Feed Section
 
 class PaymentsFeedSectionViewModel: PaymentsSectionViewModel {
     
@@ -81,6 +85,9 @@ class PaymentsFeedSectionViewModel: PaymentsSectionViewModel {
                     case _ as PaymentsParameterViewModelAction.Code.ResendButtonDidTapped:
                         self.action.send(PaymentsSectionViewModelAction.ResendCode())
                         
+                    case let payload as PaymentsParameterViewModelAction.Input.ActionButtonDidTapped:
+                        self.action.send(PaymentsSectionViewModelAction.InputActionButtonDidTapped(type: payload.type))
+                        
                     default:
                         break
                     }
@@ -89,6 +96,8 @@ class PaymentsFeedSectionViewModel: PaymentsSectionViewModel {
         }
     }
 }
+
+//MARK: - Spoiler Section
 
 class PaymentsSpoilerSectionViewModel: PaymentsSectionViewModel {
     
@@ -142,6 +151,8 @@ class PaymentsSpoilerSectionViewModel: PaymentsSectionViewModel {
         }
     }
 }
+
+//MARK: - Bottom Section
 
 class PaymentsBottomSectionViewModel: PaymentsSectionViewModel, ObservableObject {
     
@@ -342,4 +353,9 @@ enum PaymentsSectionViewModelAction {
     struct SpoilerDidUpdated: Action {}
     
     struct ResendCode: Action {}
+    
+    struct InputActionButtonDidTapped: Action {
+        
+        let type: Payments.ParameterInput.ActionButtonType
+    }
 }

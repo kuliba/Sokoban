@@ -203,6 +203,9 @@ class PaymentsOperationViewModel: ObservableObject {
                     case _ as PaymentsSectionViewModelAction.ResendCode:
                         self.model.action.send(ModelAction.Transfers.ResendCode.Request())
                         
+                    case let payload as PaymentsSectionViewModelAction.InputActionButtonDidTapped:
+                        print("InputActionButtonDidTapped type: \(payload.type)")
+                        
                     default:
                         break
                     }

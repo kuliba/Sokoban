@@ -176,8 +176,9 @@ extension PaymentsParameterViewModelAction {
         struct ResendDelayIsOver: Action {}
         struct ResendButtonDidTapped: Action {}
     }
-    
 }
+
+//MARK: - View
 
 struct PaymentsCodeView: View {
     

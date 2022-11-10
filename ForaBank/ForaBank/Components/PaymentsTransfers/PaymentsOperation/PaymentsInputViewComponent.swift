@@ -14,60 +14,43 @@ extension PaymentsInputView {
     
     class ViewModel: PaymentsParameterViewModel {
         
-        let logo: Image
+        let icon: Image
         let description: String
         @Published var content: String
         @Published var title: String?
         @Published var actionButton: ActionButtonViewModel?
-        let validator: Payments.ParameterInput.Validator
         private var bindings = Set<AnyCancellable>()
         
-        private static let iconPlaceholder = Image("Payments Icon Placeholder")
+        private static let iconPlaceholder = Image.ic24File
         
-        override var isValid: Bool {
-            
-            guard let inputParemeter = source as? Payments.ParameterInput else {
-                return false
-            }
-            
-            return inputParemeter.validator.isValid(value: content)
-        }
+        var parameterInput: Payments.ParameterInput? { source as? Payments.ParameterInput }
+        override var isValid: Bool { parameterInput?.validator.isValid(value: content) ?? false }
         
-        struct ActionButtonViewModel {
+        init(icon: Image, description: String, content: String, actionButton: ActionButtonViewModel? = nil, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
-            let type: Payments.ParameterInput.ActionButtonType
-            var icon: Image {
-                switch type {
-                case .contact: return .ic24User
-                }
-            }
-            let action: () -> Void
-        }
-
-        init(logo: Image, description: String, content: String, validator: Payments.ParameterInput.Validator = .init(minLength: 0, maxLength: 50, regEx: nil), source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString), actionButton: ActionButtonViewModel? = nil) {
-            
-            self.logo = logo
+            self.icon = icon
             self.description = description
             self.content = content
-            self.validator = validator
             self.actionButton = actionButton
             
             super.init(source: source)
         }
         
-        init(with parameterInput: Payments.ParameterInput) {
+        convenience init(with parameterInput: Payments.ParameterInput) {
             
-            self.logo = parameterInput.icon.image ?? Self.iconPlaceholder
-            self.content = parameterInput.parameter.value ?? ""
-            self.description = parameterInput.title
-            self.validator = parameterInput.validator
+            let icon = parameterInput.icon.image ?? Self.iconPlaceholder
+            let description = parameterInput.title
+            let content = parameterInput.parameter.value ?? ""
+
+            self.init(icon: icon, description: description, content: content, actionButton: nil, source: parameterInput)
             
-            if let actionButton = parameterInput.actionButton {
+            if let actionButtonType = parameterInput.actionButtonType {
                 
-                self.actionButton = .init(type: actionButton, action: {})
+                self.actionButton = .init(icon: actionButtonType.icon, action: {[weak self] in
+                    
+                    self?.action.send(PaymentsParameterViewModelAction.Input.ActionButtonDidTapped(type: actionButtonType))
+                })
             }
-            
-            super.init(source: parameterInput)
             
             bind()
         }
@@ -86,6 +69,40 @@ extension PaymentsInputView {
                     }
 
                 }.store(in: &bindings)
+        }
+    }
+}
+
+//MARK: - Types
+
+extension PaymentsInputView.ViewModel {
+    
+    struct ActionButtonViewModel {
+        
+        let icon: Image
+        let action: () -> Void
+    }
+}
+
+extension Payments.ParameterInput.ActionButtonType {
+    
+    var icon: Image {
+        
+        switch self {
+        case .contact: return .ic24User
+        }
+    }
+}
+
+//MARK: - Action
+
+extension PaymentsParameterViewModelAction {
+    
+    enum Input {
+    
+        struct ActionButtonDidTapped: Action {
+            
+            let type: Payments.ParameterInput.ActionButtonType
         }
     }
 }
@@ -113,8 +130,10 @@ struct PaymentsInputView: View {
             
             HStack(spacing: 20) {
                 
-                viewModel.logo
+                viewModel.icon
                     .resizable()
+                    .renderingMode(.template)
+                    .foregroundColor(.mainColorsGray)
                     .frame(width: 24, height: 24)
                     .padding(.leading, 4)
                 
@@ -139,6 +158,9 @@ struct PaymentsInputView: View {
                     Button(action: actionButton.action) {
                         
                         actionButton.icon
+                            .resizable()
+                            .renderingMode(.template)
+                            .foregroundColor(.mainColorsGray)
                             .frame(width: 24, height: 24)
                     }
                 }
@@ -170,6 +192,9 @@ struct PaymentsInputView_Previews: PreviewProvider {
             
             PaymentsInputView(viewModel: .sampleValueNotEditable)
                 .previewLayout(.fixed(width: 375, height: 80))
+            
+            PaymentsInputView(viewModel: .samplePhone)
+                .previewLayout(.fixed(width: 375, height: 80))
         }
     }
 }
@@ -178,10 +203,12 @@ struct PaymentsInputView_Previews: PreviewProvider {
 
 extension PaymentsInputView.ViewModel {
     
-    static let sampleEmpty = try! PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil)))
+    static let sampleEmpty = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil)))
     
-    static let sampleValue = try! PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil)))
+    static let sampleValue = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil)))
     
-    static let sampleValueNotEditable = try! PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil), isEditable: false))
+    static let sampleValueNotEditable = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil), isEditable: false))
+    
+    static let samplePhone = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "+9 925 555-5555"), icon: .init(named: "ic24Smartphone")!, title: "Номер телефона получателя", validator: .init(minLength: 5, maxLength: nil, regEx: nil), isEditable: false, actionButtonType: .contact))
 }
 
