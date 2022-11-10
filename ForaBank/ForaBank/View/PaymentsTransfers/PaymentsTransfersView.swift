@@ -178,21 +178,25 @@ struct PaymentsTransfersView: View {
             }
             
         })
-        .fullScreenCover(item: $viewModel.fullCover) { fullCover in
-
-            switch fullCover.type {
-            case let .successMeToMe(successMeToMeViewModel):
-                PaymentsSuccessView(viewModel: successMeToMeViewModel)
-            }
-        }
         .bottomSheet(item: $viewModel.bottomSheet) { sheet in
             
             switch sheet.type {
             case let .exampleDetail(title):
                 ExampleDetailMock(title: title)
-            
+                
             case let .meToMe(viewModel):
+                
                 PaymentsMeToMeView(viewModel: viewModel)
+                    .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+                        
+                        switch fullCover.type {
+                        case let .successMeToMe(successMeToMeViewModel):
+                            PaymentsSuccessView(viewModel: successMeToMeViewModel)
+                        }
+                        
+                    }.transaction { transaction in
+                        transaction.disablesAnimations = false
+                    }
                 
             case .anotherCard(let model):
                 AnotherCardView(viewModel: model)

@@ -126,6 +126,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 case _ as PaymentsTransfersViewModelAction.Close.Link:
                     link = nil
                     
+                case _ as PaymentsTransfersViewModelAction.Close.DismissAll:
+                    
+                    withAnimation {
+                        NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
+                    }
+
                 case _ as PaymentsTransfersViewModelAction.OpenQr:
                     link = .qrScanner(.init(closeAction:  { [weak self] value  in
                         
@@ -344,10 +350,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 switch action {
                 case let payload as PaymentsMeToMeAction.Response.Success:
 
-                    if payload.viewModel.repeatButton == nil {
-                        self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
-                    }
-                    
                     guard let productIdFrom = swapViewModel.productIdFrom,
                           let productIdTo = swapViewModel.productIdTo else {
                         return
@@ -357,10 +359,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
                     
                     bind(payload.viewModel)
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        self.fullCover = .init(type: .successMeToMe(payload.viewModel))
-                    }
+                    fullCover = .init(type: .successMeToMe(payload.viewModel))
                     
                 case _ as PaymentsMeToMeAction.Response.Failed:
                     
@@ -382,8 +381,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case _ as PaymentsSuccessAction.Button.Close:
-                    
-                    self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
+
+                    self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
                     self.rootActions?.switchTab(.main)
                     
                 case _ as PaymentsSuccessAction.Button.Repeat:
@@ -517,6 +516,8 @@ enum PaymentsTransfersViewModelAction {
         struct FullCover: Action {}
         
         struct Link: Action {}
+        
+        struct DismissAll: Action {}
     }
     
     struct OpenQr: Action {}
