@@ -13,7 +13,7 @@ import AVFoundation
 class QRViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
-    let scanner = QRScannerView(viewModel: .init())
+    let scanner: QRScannerView.ViewModel
     let title: String
     let subTitle: String
     
@@ -25,42 +25,53 @@ class QRViewModel: ObservableObject {
     @Published var bottomSheet: BottomSheet?
     @Published var alert: Alert.ViewModel?
     
-    private let model = Model.shared
+    private let model: Model
     private var bindings = Set<AnyCancellable>()
     
     
-    init(title: String, subTitle: String, buttons: [ButtonIconTextView.ViewModel], clouseButton: ButtonSimpleView.ViewModel) {
+    init(scanner: QRScannerView.ViewModel, title: String, subTitle: String, buttons: [ButtonIconTextView.ViewModel], clouseButton: ButtonSimpleView.ViewModel, model: Model) {
+        self.scanner = scanner
         self.title = title
         self.subTitle = subTitle
         self.buttons = buttons
         self.clouseButton = clouseButton
+        self.model = model
     }
     
     convenience init(closeAction: @escaping () -> Void) {
+        
         let clouseButton = ButtonSimpleView.ViewModel(title: "Отмена", style: .gray, action: closeAction)
-        self.init(title: "Наведите камеру", subTitle: "на QR-код", buttons: [], clouseButton: clouseButton)
+        
+        self.init(scanner: QRScannerView.ViewModel(), title: "Наведите камеру", subTitle: "на QR-код", buttons: [], clouseButton: clouseButton, model: Model.shared)
+        
         self.buttons = createButtons()
+        
         bind()
     }
 
     static func resolve(data: String) -> Result {
         
+        let qrCode = QRCode(string: data)
+        
         if let qrCode = QRCode(string: data) {
             
-            if qrCode.original.contains("qr.nspk.ru") {
-                
-                guard let url = URL(string: data) else {return Result.unknown(qrCode.original)}
-                return Result.c2bURL(url)
-            } else {
-                return Result.qrCode(qrCode)
-            }
-        } else if data.contains("https://") {
+            return .qrCode(qrCode)
             
-            guard let url = URL(string: data) else {return Result.unknown(data)}
-            return Result.url(url)
+            
+        } else if let url = URL(string: data) {
+            
+            if url.absoluteString.contains("qr.nspk.ru") {
+                
+                return .c2bURL(url)
+                
+            } else {
+                
+                return .url(url)
+            }
+            
         } else {
             
-            return Result.unknown(data)
+            return .unknown(data)
         }
     }
     private func createButtons() -> [ButtonIconTextView.ViewModel] {
@@ -139,40 +150,40 @@ class QRViewModel: ObservableObject {
                 
             }.store(in: &bindings)
         
-        scanner.viewModel.action
+        scanner.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 
                 switch action {
-                    
-                case let payload as QRScannerView.Response:
-                    
-                    switch payload {
-                    case .success(let qr):
-                        
-                        let result = Self.resolve(data: qr)
-                        
+
+                case let payload as QRScannerViewAction.Scanned:
+                       
+        
+                    let result = Self.resolve(data: payload.value)
+
                         switch result {
-                        case .qrCode(let qr):
-                            self.alert = .init(title: "QR", message: qr.original, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
                             
+                        case .qrCode(let qr):
+
+                            guard let qrMapping = model.qrDictionary.value else { break }
+
+                            let operatorPuref = model.dictionaryAnywayOperator(with: qr, mapping: qrMapping)
+
+                            self.alert = .init(title: "QR", message: qr.original, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                     
                         case .c2bURL(let qr):
                             self.alert = .init(title: "C2b", message: qr.absoluteString, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
-                            
+
                         case .url(let qr):
                             self.alert = .init(title: "Url", message: qr.absoluteString, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
-                            
+
                         case .unknown(let qr):
                             self.alert = .init(title: "Unknown", message: qr, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
                         }
-                        
-                    case .failure:
-                        self.alert = .init(title: "QR", message: "Не распознан", primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
-                    }
                 default:
                     break
                 }
-            }.store(in: &bindings)
+            } .store(in: &bindings)
     }
     
     struct BottomSheet: Identifiable {

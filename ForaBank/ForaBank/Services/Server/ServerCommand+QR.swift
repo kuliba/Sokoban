@@ -20,6 +20,7 @@ extension ServerCommands {
             let token: String
             let endpoint = "/rest/setQrFailData"
             let method: ServerCommandMethod = .post
+//            let parameters: QRMapping.FailData
             let payload: Payload?
             
             struct Payload: Encodable {
@@ -40,6 +41,7 @@ extension ServerCommands {
                 
                 self.token = token
                 self.payload = payload
+//                var parameters = QRMapping.FailData(rawData: <#String#>, parsed: <#[String : String]#>, unknownKeys: <#[String]#>)
             }
         }
         
@@ -47,36 +49,44 @@ extension ServerCommands {
         http://10.1.206.21:8080/swagger-ui/index.html#/DictionaryController/getPaymentsMapping
          */
         
-//        struct GetPaymentsMapping: ServerCommand {
+        struct GetPaymentsMapping: ServerCommand {
             
-//            let token: String
-//            let endpoint = "/dict/getPaymentsMapping"
-//            let method: ServerCommandMethod = .get
-//            let parameters: QRMapping.FailData
-//            let payload: Payload? = nil
-//
-//            struct Payload: Encodable {}
-//
-//            struct Response: ServerResponse {
-//
-//                let statusCode: ServerStatusCode
-//                let errorMessage: String?
-//                let data: QRMappingData?
-//
-//                struct QRMappingData: Decodable, Equatable {
-//
-//                    let qrMapping: QRMapping
-//                    let serial: String
-//                }
-//            }
-//
-//            init(token: String, serial: String?) {
-//
-//                self.token = token
-//
-//                var parameters = QRMapping.FailData(rawData: <#String#>, parsed: <#[String : String]#>, unknownKeys: <#[String]#>)
-//            }
-//        }
+            let token: String
+            let endpoint = "/dict/getPaymentsMapping"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+            let payload: Payload? = nil
+
+            struct Payload: Encodable {}
+
+            struct Response: ServerResponse {
+
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: QRMappingData?
+
+                struct QRMappingData: Decodable, Equatable {
+
+                    let qrMapping: QRMapping
+                    let serial: String
+                }
+            }
+
+            init(token: String, serial: String?) {
+
+                self.token = token
+                if let serial = serial{
+                    
+                    var parameters = [ServerCommandParameter]()
+                    parameters.append(.init(name: "serial", value: serial))
+                    self.parameters = parameters
+                    
+                } else {
+                    
+                    self.parameters = nil
+                }
+            }
+        }
     }
     
 }

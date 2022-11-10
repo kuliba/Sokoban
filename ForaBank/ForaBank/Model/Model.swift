@@ -747,6 +747,8 @@ class Model {
                         
                     case .centralBanksRates:
                         handleDictionaryCentralBankRates()
+                    case .qr:
+                        handleGetPaymentsMapping(payload.serial)
                     }
                     
                 case let payload as ModelAction.Dictionary.DownloadImages.Request:

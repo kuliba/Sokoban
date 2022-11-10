@@ -61,7 +61,8 @@ extension ModelAction {
             .countries,
             .banks,
             .paymentSystemList,
-            .fullBankInfoList
+            .fullBankInfoList,
+            .qr
         ]
     }
 }
@@ -138,6 +139,8 @@ extension Model {
             
         case .centralBanksRates:
             return localAgent.load(type: [CentralBankRatesData].self) != nil
+        case .qr:
+            return localAgent.load(type: QRMapping.self) != nil
         }
         
     }
@@ -210,6 +213,8 @@ extension Model {
         
         case .centralBanksRates:
             return localAgent.serial(for: [CentralBankRatesData].self)
+        case .qr:
+            return localAgent.serial(for: QRMapping.self)
         }
     }
     
@@ -281,6 +286,8 @@ extension Model {
         
         case .centralBanksRates:
             try? localAgent.clear(type: [CentralBankRatesData].self)
+        case .qr:
+            try? localAgent.clear(type: QRMapping.self)
         }
     }
 }
@@ -1663,6 +1670,15 @@ extension Model {
             }
         }
     }
+    
+    func dictionaryAnywayOperator(with code: QRCode, mapping: QRMapping) -> OperatorGroupData.OperatorData? {
+
+        guard let inn = code.stringValue(type: .general(.inn), mapping: mapping) else { return nil}
+
+        return dictionaryAnywayOperators()?.first(where: { $0.parameterList.description == inn })
+
+    }
+
 }
 
 
