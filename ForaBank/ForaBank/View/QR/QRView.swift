@@ -12,7 +12,7 @@ struct QRView: View {
     
     var body: some View {
         ZStack {
-            QRScannerView(viewModel: .init())
+            viewModel.scanner
             
             ZStack {
                 
@@ -94,7 +94,7 @@ struct QRView: View {
                     .padding(.horizontal, 30)
             }
         })
-    } 
+    }
 }
 
 struct QRCenterRectangleView: View {

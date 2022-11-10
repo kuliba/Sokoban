@@ -25,15 +25,16 @@ extension QRScannerView {
     
     class ViewModel: ObservableObject {
         
-        var state: CurrentValueSubject<State, Never> = .init(.initialising)
+        let action: PassthroughSubject<Action, Never> = .init()
+    }
+}
+
+extension QRScannerView {
+    
+    enum Response: Action {
         
-        enum State {
-            case initialising
-            case ready
-            case scanning
-            case code(QRCode)
-            case failed(QRScannerViewModelError)
-        }
+        case success(String)
+        case failure
     }
 }
 
@@ -64,13 +65,10 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        viewModel.state.value = .initialising
-        
         let captureSession = AVCaptureSession()
         
         guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
-            
-            viewModel.state.value = .failed(.unableCreateVideoCaptureDevice)
+            // unableCreateVideoCaptureDevice
             return
         }
         
@@ -81,8 +79,8 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
             videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
             
         } catch {
+            // unableCreateVideoInput
             
-            viewModel.state.value = .failed(.unableCreateVideoInput)
             return
         }
         
@@ -90,8 +88,8 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
             captureSession.addInput(videoInput)
             
         } else {
-            
-            viewModel.state.value = .failed(.unableAddVideoInputToCaptureSession)
+            // unableAddVideoInputToCaptureSession
+           
             return
         }
         
@@ -101,8 +99,8 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
             captureSession.addOutput(metadataOutput)
             
         } else {
+            // unableAddMetadataOutputToCaptureSession
             
-            viewModel.state.value = .failed(.unableAddMetadataOutputToCaptureSession)
             return
         }
         
@@ -117,38 +115,29 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
         
         self.captureSession = captureSession
         self.previewLayer = previewLayer
-        
-        viewModel.state.value = .ready
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         if (captureSession?.isRunning == false) {
-            DispatchQueue.main.async {
-                self.viewModel.state.value = .scanning
-            }
-        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        if (captureSession?.isRunning == true) {
-            self.viewModel.state.value = .ready
+                self.captureSession?.startRunning()
         }
     }
     
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         
-        self.viewModel.state.value = .ready
+        guard let metadataObject = metadataObjects.first,
+              let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject,
+              let stringValue = readableObject.stringValue
+              else {
+                   self.viewModel.action.send(QRScannerView.Response.failure)
+                   return
+        }
         
-        guard let metadataObject = metadataObjects.first else { return }
-        guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { return }
-        guard let stringValue = readableObject.stringValue else { return }
-        AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
-        guard let qrCode = QRCode(string: stringValue) else { return}
-        self.viewModel.state.value = .code(qrCode)
+        self.viewModel.action.send(QRScannerView.Response.success(stringValue))
+        captureSession?.stopRunning()
+        
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {

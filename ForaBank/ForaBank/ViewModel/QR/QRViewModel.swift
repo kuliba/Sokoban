@@ -13,7 +13,7 @@ import AVFoundation
 class QRViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
-    
+    let scanner = QRScannerView(viewModel: .init())
     let title: String
     let subTitle: String
     
@@ -42,7 +42,27 @@ class QRViewModel: ObservableObject {
         self.buttons = createButtons()
         bind()
     }
-    
+
+    static func resolve(data: String) -> Result {
+        
+        if let qrCode = QRCode(string: data) {
+            
+            if qrCode.original.contains("qr.nspk.ru") {
+                
+                guard let url = URL(string: data) else {return Result.unknown(qrCode.original)}
+                return Result.c2bURL(url)
+            } else {
+                return Result.qrCode(qrCode)
+            }
+        } else if data.contains("https://") {
+            
+            guard let url = URL(string: data) else {return Result.unknown(data)}
+            return Result.url(url)
+        } else {
+            
+            return Result.unknown(data)
+        }
+    }
     private func createButtons() -> [ButtonIconTextView.ViewModel] {
         
         return [
@@ -118,6 +138,41 @@ class QRViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
+        
+        scanner.viewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                    
+                case let payload as QRScannerView.Response:
+                    
+                    switch payload {
+                    case .success(let qr):
+                        
+                        let result = Self.resolve(data: qr)
+                        
+                        switch result {
+                        case .qrCode(let qr):
+                            self.alert = .init(title: "QR", message: qr.original, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                            
+                        case .c2bURL(let qr):
+                            self.alert = .init(title: "C2b", message: qr.absoluteString, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                            
+                        case .url(let qr):
+                            self.alert = .init(title: "Url", message: qr.absoluteString, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                            
+                        case .unknown(let qr):
+                            self.alert = .init(title: "Unknown", message: qr, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                        }
+                        
+                    case .failure:
+                        self.alert = .init(title: "QR", message: "Не распознан", primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                    }
+                default:
+                    break
+                }
+            }.store(in: &bindings)
     }
     
     struct BottomSheet: Identifiable {
@@ -147,6 +202,14 @@ class QRViewModel: ObservableObject {
                 device?.unlockForConfiguration()
             }
         }
+    }
+    
+    enum Result {
+
+       case qrCode(QRCode)
+       case c2bURL(URL)
+       case url(URL)
+       case unknown(String)
     }
 }
 
