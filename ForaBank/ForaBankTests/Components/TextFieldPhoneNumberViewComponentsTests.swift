@@ -12,7 +12,7 @@ class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
     
     let phonePhormatter = PhoneNumberKitFormater()
     let filterSymbols: [Character] = [.init("-"), .init("("), .init(")"), .init("+")]
-    let phoneNumberFirstDigitReplaceList: [TextFieldPhoneNumberView.PhoneNumberFirstDigitReplace] = [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")]
+    let phoneNumberFirstDigitReplaceList: [TextFieldPhoneNumberView.ViewModel.Replace] = [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")]
     
     func testUpdateFormatted_EnterFirstDigit() throws {
         
