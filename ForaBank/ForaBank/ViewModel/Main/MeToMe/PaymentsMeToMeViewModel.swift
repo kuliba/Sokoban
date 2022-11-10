@@ -77,11 +77,11 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         } else {
                             
                             // For ruble transfers
-                            if response.needOTP == false, let documentStatus = response.documentStatus {
+                            if response.needOTP == false {
                                 
-                                let successMeToMe: PaymentsSuccessViewModel = .init(model, mode: .meToMe, state: .success(documentStatus, response.paymentOperationDetailId), responseData: response)
-                                
-                                self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
+                                if let successViewModel = PaymentsSuccessViewModel(model, mode: .meToMe, transferData: response) {
+                                    self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+                                }
                                 
                             } else {
                                 
@@ -100,15 +100,14 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 case let payload as ModelAction.Payment.MeToMe.MakeTransfer.Response:
                     
                     switch payload.result {
-                    case let .success(success):
+                    case let .success(transferData):
                         
-                        if let documentStatus = success.documentStatus {
-                            
-                            let successMeToMe: PaymentsSuccessViewModel = .init(model, mode: .meToMe, state: .success(documentStatus, success.paymentOperationDetailId), responseData: payload.transferResponse)
-                            
-                            self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
+                        let transferData = Model.reduce(payload.transferResponse, transferBaseData: transferData)
+                        
+                        if let successViewModel = PaymentsSuccessViewModel(model, mode: .meToMe, transferData: transferData) {
+                            self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                         }
-                        
+
                     case let .failure(error):
                         makeAlert(error)
                     }
@@ -123,15 +122,9 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         switch mode {
                         case let .closeAccount(productData, balance):
                             
-                            let documentStatus: TransferResponseBaseData.DocumentStatus? = .init(rawValue: transferData.documentStatus)
-                            
-                            if let documentStatus = documentStatus, let paymentOperationDetailId = transferData.paymentOperationDetailId {
+                            if let successViewModel = PaymentsSuccessViewModel(model, mode: .closeAccount, currency: .init(description: productData.currency), balance: balance, transferData: transferData) {
                                 
-                                let responseData: TransferResponseData = .init(amount: balance, creditAmount: nil, currencyAmount: .init(description: productData.currency), currencyPayee: nil, currencyPayer: .init(description: productData.currency), currencyRate: nil, debitAmount: balance, fee: nil, needMake: nil, needOTP: nil, payeeName: nil, documentStatus: documentStatus, paymentOperationDetailId: paymentOperationDetailId)
-                                
-                                let successMeToMe: PaymentsSuccessViewModel = .init(model, mode: .closeAccount, state: .success(documentStatus, paymentOperationDetailId), responseData: responseData)
-                                
-                                self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successMeToMe))
+                                self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                                 makeInformer(closeAccount: true)
                             }
                             

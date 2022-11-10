@@ -7,6 +7,8 @@
 
 import Foundation
 
+typealias ResponseTransferData = ServerCommands.AccountController.CloseAccount.Response.TransferData
+
 extension ServerCommands {
     
     enum AccountController {
