@@ -31,7 +31,7 @@ extension LatestPaymentsView {
         
         convenience init(_ model: Model, isBaseButtons: Bool = true, filter: Filter? = nil) {
             
-            self.init(model, items: [], isBaseButtons: isBaseButtons, filter: filter)
+            self.init(model, items: Array(repeating: .placeholder(.init()), count: 4), isBaseButtons: isBaseButtons, filter: filter)
             
             bind()
         }
@@ -176,150 +176,6 @@ extension LatestPaymentsView.ViewModel {
             case let .latestPayment(latestPaymentButtonVM): return String(latestPaymentButtonVM.id)
             case let .placeholder(placeholderViewModel): return placeholderViewModel.id.uuidString
             }
-        }
-    }
-}
-
-//MARK: - Action PTSectionLatestPaymentsViewAction
-
-enum LatestPaymentsViewModelAction {
-    
-    enum ButtonTapped {
-        
-        struct Templates: Action {}
-        
-        struct CurrencyWallet: Action {}
-        
-        struct LatestPayment: Action {
-            
-            let latestPayment: LatestPaymentData
-        }
-    }
-}
-
-struct LatestPaymentsView: View {
-    
-    @ObservedObject var viewModel: LatestPaymentsView.ViewModel
-    
-    var body: some View {
-        
-        ScrollView(.horizontal,showsIndicators: false) {
-            HStack(spacing: 4) {
-                ForEach(viewModel.items) { item in
-                    
-                    switch item {
-                    case let .templates(templateVM):
-                        LatestPaymentButtonView(viewModel: templateVM)
-                        
-                    case let .currencyWallet(currencyWalletButtonViewModel):
-                        LatestPaymentButtonView(viewModel: currencyWalletButtonViewModel)
-                        
-                    case let .latestPayment(latestPaymentVM):
-                        LatestPaymentButtonView(viewModel: latestPaymentVM)
-                        
-                    case let .placeholder(placeholderVM):
-                        PlaceholderView(viewModel: placeholderVM)
-                            .shimmering(active: true, bounce: true)
-                    }
-                }
-                Spacer()
-            }.padding(.leading, 8)
-        }
-    }
-}
-
-//MARK: - PlaceholderView
-
-extension LatestPaymentsView {
-    
-    struct PlaceholderView: View {
-        
-        let viewModel: ViewModel.PlaceholderViewModel
-        
-        var body: some View {
-            
-            VStack(alignment: .center, spacing: 8) {
-                
-                Circle()
-                    .fill(Color.mainColorsGray.opacity(0.4))
-                    .frame(width: 56, height: 56)
-                
-                VStack(alignment: .center, spacing: 8) {
-                    
-                    RoundedRectangle(cornerRadius: 6)
-                        .frame(width: 65, height: 8, alignment: .center)
-                    
-                    RoundedRectangle(cornerRadius: 6)
-                        .frame(width: 45, height: 8, alignment: .center)
-                }
-                .foregroundColor(.mainColorsGray.opacity(0.4))
-                .frame(width: 80, height: 32)
-            }
-            
-        }
-    }
-}
-
-//MARK: - LatestPaymentButtonView
-
-extension LatestPaymentsView {
-    
-    struct LatestPaymentButtonView: View {
-        
-        let viewModel: ViewModel.LatestPaymentButtonVM
-        
-        var body: some View {
-            
-            Button(action: viewModel.action, label: {
-                VStack(alignment: .center, spacing: 8) {
-                    ZStack {
-                        
-                        Circle()
-                            .fill(Color.mainColorsGrayLightest)
-                            .frame(height: 56)
-                        
-                        switch viewModel.avatar {
-                        case let .image(image):
-                            
-                            image
-                                .renderingMode(.original)
-                                .resizable()
-                                .scaledToFit()
-                                .clipShape(Circle())
-                                .frame(height: 56)
-                            
-                        case let .text(text):
-                            Text(text)
-                                .font(.textH4M16240())
-                                .foregroundColor(.textPlaceholder)
-                            
-                        case let .icon(icon, color):
-                            icon
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(color)
-                        }
-                        
-                        if let topIcon = viewModel.topIcon {
-                            topIcon
-                                .renderingMode(.original)
-                                .resizable()
-                                .clipShape(Circle())
-                                .frame(width: 24, height: 24)
-                                .position(x: 64, y: 12)
-                        }
-                        
-                    }
-                    
-                    Text(viewModel.description)
-                        .font(.textBodySR12160())
-                        .lineLimit(2)
-                        .foregroundColor(.textSecondary)
-                        .frame(width: 80, height: 32, alignment: .top)
-                        .multilineTextAlignment(.center)
-                }
-                .frame(width: 80, height: 96)
-            })
         }
     }
 }
@@ -475,6 +331,158 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
     }
     
 }
+
+//MARK: - Action PTSectionLatestPaymentsViewAction
+
+enum LatestPaymentsViewModelAction {
+    
+    enum ButtonTapped {
+        
+        struct Templates: Action {}
+        
+        struct CurrencyWallet: Action {}
+        
+        struct LatestPayment: Action {
+            
+            let latestPayment: LatestPaymentData
+        }
+    }
+}
+
+//MARK: - View
+
+struct LatestPaymentsView: View {
+    
+    @ObservedObject var viewModel: LatestPaymentsView.ViewModel
+    
+    var body: some View {
+        
+        ScrollView(.horizontal,showsIndicators: false) {
+            HStack(spacing: 4) {
+                ForEach(viewModel.items) { item in
+                    
+                    switch item {
+                    case let .templates(templateVM):
+                        LatestPaymentButtonView(viewModel: templateVM)
+                        
+                    case let .currencyWallet(currencyWalletButtonViewModel):
+                        LatestPaymentButtonView(viewModel: currencyWalletButtonViewModel)
+                        
+                    case let .latestPayment(latestPaymentVM):
+                        LatestPaymentButtonView(viewModel: latestPaymentVM)
+                        
+                    case let .placeholder(placeholderVM):
+                        PlaceholderView(viewModel: placeholderVM)
+                            .shimmering(active: true, bounce: true)
+                    }
+                }
+                
+                Spacer()
+                
+            }
+            .padding(.leading, 8)
+            .frame(height: 96)
+        }
+    }
+}
+
+//MARK: - PlaceholderView
+
+extension LatestPaymentsView {
+    
+    struct PlaceholderView: View {
+        
+        let viewModel: ViewModel.PlaceholderViewModel
+        
+        var body: some View {
+            
+            VStack(alignment: .center, spacing: 8) {
+                
+                Circle()
+                    .fill(Color.mainColorsGray.opacity(0.4))
+                    .frame(width: 56, height: 56)
+                
+                VStack(alignment: .center, spacing: 8) {
+                    
+                    RoundedRectangle(cornerRadius: 6)
+                        .frame(width: 65, height: 8, alignment: .center)
+                    
+                    RoundedRectangle(cornerRadius: 6)
+                        .frame(width: 45, height: 8, alignment: .center)
+                }
+                .foregroundColor(.mainColorsGray.opacity(0.4))
+                .frame(width: 80, height: 32)
+            }
+            
+        }
+    }
+}
+
+//MARK: - LatestPaymentButtonView
+
+extension LatestPaymentsView {
+    
+    struct LatestPaymentButtonView: View {
+        
+        let viewModel: ViewModel.LatestPaymentButtonVM
+        
+        var body: some View {
+            
+            Button(action: viewModel.action, label: {
+                VStack(alignment: .center, spacing: 8) {
+                    ZStack {
+                        
+                        Circle()
+                            .fill(Color.mainColorsGrayLightest)
+                            .frame(height: 56)
+                        
+                        switch viewModel.avatar {
+                        case let .image(image):
+                            
+                            image
+                                .renderingMode(.original)
+                                .resizable()
+                                .scaledToFit()
+                                .clipShape(Circle())
+                                .frame(height: 56)
+                            
+                        case let .text(text):
+                            Text(text)
+                                .font(.textH4M16240())
+                                .foregroundColor(.textPlaceholder)
+                            
+                        case let .icon(icon, color):
+                            icon
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(color)
+                        }
+                        
+                        if let topIcon = viewModel.topIcon {
+                            topIcon
+                                .renderingMode(.original)
+                                .resizable()
+                                .clipShape(Circle())
+                                .frame(width: 24, height: 24)
+                                .position(x: 64, y: 12)
+                        }
+                        
+                    }
+                    
+                    Text(viewModel.description)
+                        .font(.textBodySR12160())
+                        .lineLimit(2)
+                        .foregroundColor(.textSecondary)
+                        .frame(width: 80, height: 32, alignment: .top)
+                        .multilineTextAlignment(.center)
+                }
+                .frame(width: 80, height: 96)
+            })
+        }
+    }
+}
+
+
 
 struct LatestPaymentsViewComponent_Previews: PreviewProvider {
     static var previews: some View {

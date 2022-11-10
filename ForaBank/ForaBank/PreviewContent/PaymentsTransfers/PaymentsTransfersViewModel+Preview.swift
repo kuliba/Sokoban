@@ -90,7 +90,7 @@ extension PaymentsTransfersViewModel {
         
         let sections: [PaymentsTransfersSectionViewModel] =
         [
-            PTSectionLatestPaymentsViewComponent.ViewModel(model: .emptyMock),
+            PTSectionLatestPaymentsView.ViewModel(model: .emptyMock),
           
             PTSectionTransfersView.ViewModel(transfersButtons:
                 PTSectionTransfersView.ViewModel.transfersButtonsExample),

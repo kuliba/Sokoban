@@ -23,8 +23,8 @@ struct PaymentsTransfersView: View {
                     ForEach(viewModel.sections) { section in
                         
                         switch section {
-                        case let latestPaymentsSectionVM as PTSectionLatestPaymentsViewComponent.ViewModel:
-                            PTSectionLatestPaymentsViewComponent(viewModel: latestPaymentsSectionVM)
+                        case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
+                            PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
                             
                         case let transfersSectionVM as PTSectionTransfersView.ViewModel:
                             PTSectionTransfersView(viewModel: transfersSectionVM)
