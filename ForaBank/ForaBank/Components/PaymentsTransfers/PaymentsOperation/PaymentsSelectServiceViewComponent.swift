@@ -95,12 +95,12 @@ struct PaymentsSelectServiceView: View {
                     VStack(alignment: .leading, spacing: 8)  {
                         
                         Text(viewModel.title)
-                            .font(Font.custom("Inter-Medium", size: 16))
-                            .foregroundColor(Color(hex: "#1C1C1C"))
+                            .font(.textH4M16240())
+                            .foregroundColor(.textSecondary)
                         
                         Text(viewModel.subTitle)
-                            .font(Font.custom("Inter-Regular", size: 12))
-                            .foregroundColor(Color(hex: "#999999"))
+                            .font(.textBodySR12160())
+                            .foregroundColor(.textPlaceholder)
                     }
                     
                     Spacer()

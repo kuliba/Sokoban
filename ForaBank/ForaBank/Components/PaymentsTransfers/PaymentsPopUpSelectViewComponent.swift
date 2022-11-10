@@ -99,14 +99,14 @@ struct PaymentsPopUpSelectView: View {
         VStack(alignment: .leading, spacing: 16) {
             
             Text(viewModel.title)
-                .foregroundColor(Color(hex: "#1C1C1C"))
-                .font(Font.custom("Inter-SemiBold", size: 18))
+                .foregroundColor(.textSecondary)
+                .font(.textH3SB18240())
             
             if let description = viewModel.description {
                 
                 Text(description)
-                    .foregroundColor(Color(hex: "#999999"))
-                    .font(Font.custom("Inter-Regular", size: 14))
+                    .foregroundColor(.textPlaceholder)
+                    .font(.textBodyMR14200())
             }
             
             if isCompact == true {
@@ -164,8 +164,8 @@ struct PaymentsPopUpSelectView: View {
                     }
                     
                     Text(viewModel.name)
-                        .foregroundColor(Color(hex: "#1C1C1C"))
-                        .font(Font.custom("Inter-Regular", size: 14))
+                        .foregroundColor(.textSecondary)
+                        .font(.textBodyMR14200())
                         .padding(.top, 3)
                     
                     Spacer()
@@ -173,7 +173,7 @@ struct PaymentsPopUpSelectView: View {
                 
                 Divider()
                     .frame(height: 1)
-                    .foregroundColor(Color(hex: "#EAEBEB"))
+                    .foregroundColor(Color.bordersDivider)
                     .padding(.leading, 44)
             }
             .onTapGesture {

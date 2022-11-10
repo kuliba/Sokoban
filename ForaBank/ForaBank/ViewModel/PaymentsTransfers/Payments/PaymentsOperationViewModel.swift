@@ -200,6 +200,9 @@ class PaymentsOperationViewModel: ObservableObject {
                     case _ as PaymentsSectionViewModelAction.SpoilerDidUpdated:
                         content = Self.reduceContentItems(sections: sections)
                         
+                    case _ as PaymentsSectionViewModelAction.ResendCode:
+                        self.model.action.send(ModelAction.Transfers.ResendCode.Request())
+                        
                     default:
                         break
                     }

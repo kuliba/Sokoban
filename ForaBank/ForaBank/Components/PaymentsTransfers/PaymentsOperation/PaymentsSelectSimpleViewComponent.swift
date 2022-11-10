@@ -152,18 +152,18 @@ struct PaymentsSelectSimpleView: View {
                 VStack(alignment: .leading, spacing: 4) {
                    
                     Text(viewModel.title)
-                        .font(Font.custom("Inter-Regular", size: 12))
-                        .foregroundColor(Color(hex: "#999999"))
+                        .font(.textBodySR12160())
+                        .foregroundColor(.textPlaceholder)
                     
                     HStack(alignment:. top, spacing: 16) {
         
                         Text(viewModel.content)
-                            .font(Font.custom("Inter-Medium", size: 14))
-                            .foregroundColor(Color(hex: "#1C1C1C"))
+                            .font(.textBodyMM14200())
+                            .foregroundColor(.textSecondary)
                         
                         Spacer()
                         
-                        Image("chevron-downnew")
+                        Image.ic24ChevronDown
                             .resizable()
                             .frame(width: 24, height: 24)
                     }
@@ -171,14 +171,14 @@ struct PaymentsSelectSimpleView: View {
                     if let description = viewModel.description {
                         
                         Text(description)
-                            .font(Font.custom("Inter-Medium", size: 14))
-                            .foregroundColor(Color(hex: "#999999"))
+                            .font(.textBodyMM14200())
+                            .foregroundColor(.textPlaceholder)
                             .padding(.trailing, 28)
                     }
                     
                     Divider()
                         .frame(height: 1)
-                        .background(Color(hex: "#EAEBEB"))
+                        .background(Color.bordersDivider)
                         .padding(.top, 8)
                 }
             }
@@ -199,24 +199,24 @@ struct PaymentsSelectSimpleView: View {
                 VStack(alignment: .leading, spacing: 4) {
                    
                     Text(viewModel.title)
-                        .font(Font.custom("Inter-Regular", size: 12))
-                        .foregroundColor(Color(hex: "#999999"))
+                        .font(.textBodySR12160())
+                        .foregroundColor(.textPlaceholder)
                     
                     Text(viewModel.content)
-                        .font(Font.custom("Inter-Medium", size: 14))
-                        .foregroundColor(Color(hex: "#1C1C1C"))
+                        .font(.textBodyMM14200())
+                        .foregroundColor(.textSecondary)
                     
                     if let description = viewModel.description {
                         
                         Text(description)
-                            .font(Font.custom("Inter-Medium", size: 14))
-                            .foregroundColor(Color(hex: "#999999"))
+                            .font(.textBodyMM14200())
+                            .foregroundColor(.textPlaceholder)
                             .padding(.trailing, 28)
                     }
                     
                     Divider()
                         .frame(height: 1)
-                        .background(Color(hex: "#EAEBEB"))
+                        .background(Color.bordersDivider)
                         .padding(.top, 8)
                 }
             }

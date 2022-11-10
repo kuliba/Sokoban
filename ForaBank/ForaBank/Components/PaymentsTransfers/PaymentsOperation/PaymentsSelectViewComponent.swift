@@ -234,8 +234,8 @@ struct PaymentsSelectView: View {
                     .frame(width: 32, height: 32)
                 
                 Text(viewModel.name)
-                    .font(.custom("Inter-Medium", size: 16))
-                    .foregroundColor(Color(hex: "#1C1C1C"))
+                    .font(.textBodyMM14200())
+                    .foregroundColor(.textSecondary)
                 
                 Spacer()
             }
@@ -264,25 +264,25 @@ struct PaymentsSelectView: View {
                     VStack(alignment: .leading, spacing: 0) {
                         
                         Text(viewModel.title)
-                            .font(Font.custom("Inter-Regular", size: 12))
-                            .foregroundColor(Color(hex: "#999999"))
+                            .font(.textBodySR12160())
+                            .foregroundColor(.textPlaceholder)
                             .padding(.bottom, 4)
                         
                         HStack {
                             
                             Text(viewModel.name)
-                                .font(Font.custom("Inter-Medium", size: 14))
-                                .foregroundColor(Color(hex: "#1C1C1C"))
+                                .font(.textBodyMM14200())
+                                .foregroundColor(.textSecondary)
                             
                             Spacer()
                             
-                            Image("chevron-downnew")
+                            Image.ic24ChevronDown
                                 .frame(width: 24, height: 24)
                         }
                         
                         Divider()
                             .frame(height: 1)
-                            .background(Color(hex: "#EAEBEB"))
+                            .background(Color.bordersDivider)
                             .padding(.top, 12)
                     }
                 }
@@ -302,22 +302,22 @@ struct PaymentsSelectView: View {
                     VStack(alignment: .leading, spacing: 0) {
                         
                         Text(viewModel.title)
-                            .font(Font.custom("Inter-Regular", size: 12))
-                            .foregroundColor(Color(hex: "#999999"))
+                            .font(.textBodySR12160())
+                            .foregroundColor(.textPlaceholder)
                             .padding(.bottom, 4)
                         
                         HStack {
                             
                             Text(viewModel.name)
-                                .font(Font.custom("Inter-Medium", size: 14))
-                                .foregroundColor(Color(hex: "#1C1C1C"))
+                                .font(.textBodyMM14200())
+                                .foregroundColor(.textSecondary)
                             
                             Spacer()
                         }
                         
                         Divider()
                             .frame(height: 1)
-                            .background(Color(hex: "#EAEBEB"))
+                            .background(Color.bordersDivider)
                             .opacity(0.2)
                             .padding(.top, 12)
                     }
