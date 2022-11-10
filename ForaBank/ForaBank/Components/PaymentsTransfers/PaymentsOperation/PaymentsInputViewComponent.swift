@@ -18,6 +18,7 @@ extension PaymentsInputView {
         let description: String
         @Published var content: String
         @Published var title: String?
+        @Published var actionButton: ActionButtonViewModel?
         let validator: Payments.ParameterInput.Validator
         private var bindings = Set<AnyCancellable>()
         
@@ -32,12 +33,25 @@ extension PaymentsInputView {
             return inputParemeter.validator.isValid(value: content)
         }
         
-        init(logo: Image, description: String, content: String, validator: Payments.ParameterInput.Validator = .init(minLength: 0, maxLength: 50, regEx: nil), source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
+        struct ActionButtonViewModel {
+            
+            let type: Payments.ParameterInput.ActionButtonType
+            var icon: Image {
+                switch type {
+                case .contact: return .ic24User
+                }
+            }
+            let action: () -> Void
+        }
+
+        
+        init(logo: Image, description: String, content: String, validator: Payments.ParameterInput.Validator = .init(minLength: 0, maxLength: 50, regEx: nil), source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString), actionButton: ActionButtonViewModel? = nil) {
             
             self.logo = logo
             self.description = description
             self.content = content
             self.validator = validator
+            self.actionButton = actionButton
             
             super.init(source: source)
         }
@@ -48,6 +62,11 @@ extension PaymentsInputView {
             self.content = parameterInput.parameter.value ?? ""
             self.description = parameterInput.title
             self.validator = parameterInput.validator
+            
+            if let actionButton = parameterInput.actionButton {
+                
+                self.actionButton = .init(type: actionButton, action: {})
+            }
             
             super.init(source: parameterInput)
             
@@ -85,8 +104,8 @@ struct PaymentsInputView: View {
             if let title = viewModel.title {
                 
                 Text(title)
-                    .font(Font.custom("Inter-Regular", size: 12))
-                    .foregroundColor(Color(hex: "#999999"))
+                    .font(.textBodySR12160())
+                    .foregroundColor(.textPlaceholder)
                     .padding(.bottom, 4)
                     .padding(.leading, 48)
                     .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .opacity))
@@ -103,23 +122,32 @@ struct PaymentsInputView: View {
                 if viewModel.isEditable == true {
                     
                     TextField(viewModel.description, text: $viewModel.content)
-                        .foregroundColor(Color(hex: "#1C1C1C"))
-                        .font(Font.custom("Inter-Medium", size: 14))
+                        .foregroundColor(.textSecondary)
+                        .font(.textBodyMM14200())
                         .textFieldStyle(DefaultTextFieldStyle())
                     
                 } else {
                     
                     Text(viewModel.content)
-                        .foregroundColor(Color(hex: "#1C1C1C"))
-                        .font(Font.custom("Inter-Medium", size: 14))
+                        .foregroundColor(.textSecondary)
+                        .font(.textBodyMM14200())
                 }
                 
                 Spacer()
+                
+                if let actionButton = viewModel.actionButton {
+                 
+                    Button(action: actionButton.action) {
+                        
+                        actionButton.icon
+                            .frame(width: 24, height: 24)
+                    }
+                }
             }
             
             Divider()
                 .frame(height: 1)
-                .background(Color(hex: "#EAEBEB"))
+                .background(Color.bordersDivider)
                 .opacity(viewModel.isEditable ? 1.0 : 0.2)
                 .padding(.top, 12)
                 .padding(.leading, 48)

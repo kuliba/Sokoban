@@ -28,7 +28,7 @@ struct PaymentsSuccessOptionButtonView: View {
                 ZStack {
                     
                     Circle()
-                        .foregroundColor(Color(hex: "#F6F6F7"))
+                        .foregroundColor(Color.secondary)
                         .frame(width: 56, height: 56)
                     
                     viewModel.icon
@@ -38,8 +38,8 @@ struct PaymentsSuccessOptionButtonView: View {
             }
             
             Text(viewModel.title)
-                .font(Font.custom("Inter-Medium", size: 12))
-                .foregroundColor(Color(hex: "#1C1C1C"))
+                .font(.textBodySM12160())
+                .foregroundColor(.textSecondary)
                 .frame(height: 24)
         }
     }

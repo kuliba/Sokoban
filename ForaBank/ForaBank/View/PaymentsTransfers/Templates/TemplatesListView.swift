@@ -219,13 +219,13 @@ extension TemplatesListView {
                 
                 Text(viewModel.title)
                     .font(Font.custom("Inter-SemiBold", size: 20))
-                    .foregroundColor(Color(hex: "#1C1C1C"))
+                    .foregroundColor(.textSecondary)
                     .padding(.top, 20)
                 
                 Text(viewModel.message)
                     .multilineTextAlignment(.center)
                     .font(Font.custom("Inter-Medium", size: 16))
-                    .foregroundColor(Color(hex: "#999999"))
+                    .foregroundColor(.textPlaceholder)
                     .lineSpacing(6)
                     .padding(.top, 16)
                     .padding(.horizontal, 50)
@@ -243,7 +243,7 @@ extension TemplatesListView {
                         
                         Text(viewModel.button.title)
                             .font(Font.custom("Inter-Medium", size: 16))
-                            .foregroundColor(Color(hex: "#1C1C1C"))
+                            .foregroundColor(.textSecondary)
                     }
                 }
                 .frame(height: 48)
@@ -265,7 +265,7 @@ extension TemplatesListView {
                 
                 HStack {
                     Text(viewModel.description)
-                        .font(Font.custom("Inter-Medium", size: 14))
+                        .font(.textBodyMM14200())
                     Spacer()
                     Button {
                         viewModel.button.action()
@@ -276,7 +276,7 @@ extension TemplatesListView {
                                 .renderingMode(.template)
                                 .frame(width: 24, height: 24)
                             Text(viewModel.button.caption)
-                                .font(Font.custom("Inter-Regular", size: 12))
+                                .font(.textBodySR12160())
                         }
                         .foregroundColor(.black)
                     }
@@ -855,13 +855,13 @@ extension TemplatesListView {
             case .list:
                 Text(title)
                     .font(Font.custom("Inter-Medium", size: 16))
-                    .foregroundColor(Color(hex: "#1C1C1C"))
+                    .foregroundColor(.textSecondary)
                     .lineLimit(1)
                 
             case .tiles:
                 Text(title)
-                    .font(Font.custom("Inter-Medium", size: 14))
-                    .foregroundColor(Color(hex: "#1C1C1C"))
+                    .font(.textBodyMM14200())
+                    .foregroundColor(.textSecondary)
                     .lineLimit(1)
                     .truncationMode(.tail)
                     .padding(.horizontal)
@@ -879,14 +879,14 @@ extension TemplatesListView {
             switch style {
             case .list:
                 Text(subtitle)
-                    .font(Font.custom("Inter-Regular", size: 12))
-                    .foregroundColor(Color(hex: "#999999"))
+                    .font(.textBodySR12160())
+                    .foregroundColor(.textPlaceholder)
                     .lineLimit(1)
                 
             case .tiles:
                 Text(subtitle)
-                    .font(Font.custom("Inter-Regular", size: 12))
-                    .foregroundColor(Color(hex: "#999999"))
+                    .font(.textBodySR12160())
+                    .foregroundColor(.textPlaceholder)
                     .lineLimit(1)
                     .truncationMode(.tail)
                     .padding(.horizontal)
@@ -904,7 +904,7 @@ extension TemplatesListView {
             
             Text(amount)
                 .font(Font.custom("Inter-Medium", size: 16))
-                .foregroundColor(Color(hex: "#1C1C1C"))
+                .foregroundColor(.textSecondary)
         }
     }
     
@@ -938,7 +938,7 @@ extension TemplatesListView {
                                 .frame(width: 24, height: 24)
                             
                             Text("Удалить")
-                                .font(Font.custom("Inter-Medium", size: 12))
+                                .font(.textBodySM12160())
                         }
                         .foregroundColor(.white)
                     }
@@ -980,7 +980,7 @@ extension TemplatesListView {
                 
                 Text(title)
                     .font(Font.custom("Inter-Medium", size: 16))
-                    .foregroundColor(Color(hex: "#999999"))
+                    .foregroundColor(.textPlaceholder)
             }
         }
     }
@@ -999,8 +999,8 @@ extension TemplatesListView {
             } label: {
                 
                 Text(title)
-                    .font(Font.custom("Inter-Medium", size: 14))
-                    .foregroundColor(Color(hex: "#1C1C1C"))
+                    .font(.textBodyMM14200())
+                    .foregroundColor(.textSecondary)
             }
         }
     }

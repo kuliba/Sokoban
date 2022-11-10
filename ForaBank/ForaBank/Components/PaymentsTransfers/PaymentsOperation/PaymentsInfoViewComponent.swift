@@ -82,12 +82,12 @@ struct PaymentsInfoView: View {
                     VStack(alignment: .leading, spacing: 4)  {
                         
                         Text(viewModel.title)
-                            .font(Font.custom("Inter-Regular", size: 12))
-                            .foregroundColor(Color(hex: "#999999"))
+                            .font(.textBodySR12160())
+                            .foregroundColor(.textPlaceholder)
                         
                         Text(viewModel.content)
-                            .font(Font.custom("Inter-Medium", size: 14))
-                            .foregroundColor(Color(hex: "#1C1C1C"))
+                            .font(.textBodyMR14200())
+                            .foregroundColor(.textSecondary)
                     }
                     
                     Spacer()
@@ -95,7 +95,7 @@ struct PaymentsInfoView: View {
                 
                 Divider()
                     .frame(height: 1)
-                    .background(Color(hex: "#EAEBEB"))
+                    .background(Color.bordersDivider)
                     .opacity(0.2)
                     .padding(.top, 12)
                     .padding(.leading, 44)
@@ -114,12 +114,12 @@ struct PaymentsInfoView: View {
                     VStack(alignment: .leading, spacing: 4)  {
                         
                         Text(viewModel.title)
-                            .font(Font.custom("Inter-Regular", size: 12))
-                            .foregroundColor(Color(hex: "#999999"))
+                            .font(.textBodySR12160())
+                            .foregroundColor(.textPlaceholder)
                         
                         Text(viewModel.content)
-                            .font(Font.custom("Inter-Medium", size: 14))
-                            .foregroundColor(Color(hex: "#1C1C1C"))
+                            .font(.textBodyMM14200())
+                            .foregroundColor(.textSecondary)
                     }
                     
                     Spacer()
@@ -127,7 +127,7 @@ struct PaymentsInfoView: View {
                 
                 Divider()
                     .frame(height: 1)
-                    .background(Color(hex: "#EAEBEB"))
+                    .background(Color.bordersDivider)
                     .opacity(0.2)
                     .padding(.top, 12)
                     .padding(.leading, 48)

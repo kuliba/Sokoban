@@ -136,15 +136,15 @@ struct PaymentsNameView: View {
         
         private var displayTitle: String { value.count > 0 ? title : "" }
         private var displayValue: String { value.count > 0 ? value : title }
-        private var displayValueColor: Color { value.count > 0 ? Color(hex: "#1C1C1C") : Color(hex: "#999999") }
+        private var displayValueColor: Color { value.count > 0 ? Color.textSecondary : Color.textPlaceholder }
         
         var body: some View {
             
             VStack(alignment: .leading, spacing: 0) {
                 
                 Text(displayTitle)
-                    .font(Font.custom("Inter-Regular", size: 12))
-                    .foregroundColor(Color(hex: "#999999"))
+                    .font(.textBodySR12160())
+                    .foregroundColor(.textPlaceholder)
                     .padding(.leading, 48)
                     .padding(.bottom, 4)
                 
@@ -167,14 +167,14 @@ struct PaymentsNameView: View {
                     if isEditing == true {
                         
                         TextField(title, text: $value)
-                            .foregroundColor(Color(hex: "#1C1C1C"))
-                            .font(Font.custom("Inter-Medium", size: 14))
+                            .foregroundColor(.textSecondary)
+                            .font(.textBodyMM14200())
                             .padding(.leading, 20)
                         
                     } else {
                         
                         Text(displayValue)
-                            .font(Font.custom("Inter-Regular", size: 14))
+                            .font(.textBodyMR14200())
                             .foregroundColor(displayValueColor)
                             .padding(.leading, 20)
                     }
@@ -189,14 +189,14 @@ struct PaymentsNameView: View {
                                 .renderingMode(.template)
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                                .foregroundColor(Color(hex: "#999999"))
+                                .foregroundColor(.textPlaceholder)
                         }
                     }
                 }
                 
                 Divider()
                     .frame(height: 1)
-                    .background(Color(hex: "#EAEBEB"))
+                    .background(Color.bordersDivider)
                     .opacity(isDivider ? 1.0 : 0.2)
                     .padding(.top, 12)
                     .padding(.leading, 48)

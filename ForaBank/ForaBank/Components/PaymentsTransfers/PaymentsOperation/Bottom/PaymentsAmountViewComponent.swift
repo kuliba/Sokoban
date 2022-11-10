@@ -143,8 +143,8 @@ struct PaymentsAmountView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         
                         Text(viewModel.title)
-                            .font(Font.custom("Inter-Regular", size: 12))
-                            .foregroundColor(Color(hex: "#999999"))
+                            .font(.textBodySR12160())
+                            .foregroundColor(.textPlaceholder)
                             .padding(.top, 4)
                         
                         HStack {
@@ -159,7 +159,7 @@ struct PaymentsAmountView: View {
                         }
                         
                         Divider()
-                            .background(Color(hex: "#EAEBEB"))
+                            .background(Color.bordersDivider)
                             .padding(.top, 4)
                         
                     }
@@ -183,7 +183,7 @@ struct PaymentsAmountView: View {
              
         }
         .background(
-            Color(hex: "#3D3D45")
+            Color.mainColorsBlack
                 .ignoresSafeArea(.container, edges: .bottom))
     }
     
@@ -196,14 +196,14 @@ struct PaymentsAmountView: View {
             if let title = title {
                 
                 Text(title)
-                    .font(Font.custom("Inter-Regular", size: 12))
-                    .foregroundColor(Color(hex: "#999999"))
+                    .font(.textBodySR12160())
+                    .foregroundColor(.textPlaceholder)
                 
             } else {
                 
                 Text("")
-                    .font(Font.custom("Inter-Regular", size: 12))
-                    .foregroundColor(Color(hex: "#999999"))
+                    .font(.textBodySR12160())
+                    .foregroundColor(.textPlaceholder)
             }
         }
     }
@@ -219,11 +219,11 @@ struct PaymentsAmountView: View {
                 ZStack {
                     
                     RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(Color(hex: "#D3D3D3"))
+                        .foregroundColor(.textTertiary)
                     
                     Text(title)
-                        .font(Font.custom("Inter-Regular", size: 16))
-                        .foregroundColor(Color(hex: "#FFFFFF"))
+                        .font(.textH4R16240())
+                        .foregroundColor(.textWhite)
                 }
                 
             case .active(title: let title, action: let action):
@@ -232,11 +232,11 @@ struct PaymentsAmountView: View {
                     ZStack {
                         
                         RoundedRectangle(cornerRadius: 8)
-                            .foregroundColor(Color(hex: "#FF3636"))
+                            .foregroundColor(.red)
                         
                         Text(title)
-                            .font(Font.custom("Inter-Regular", size: 16))
-                            .foregroundColor(Color(hex: "#FFFFFF"))
+                            .font(.textH4R16240())
+                            .foregroundColor(.textWhite)
                     }
                 }
             }
@@ -254,15 +254,15 @@ struct PaymentsAmountView: View {
                 HStack(spacing: 8) {
                     
                     Text(title)
-                        .font(Font.custom("Inter-Regular", size: 12))
-                        .foregroundColor(Color(hex: "#999999"))
+                        .font(.textBodySR12160())
+                        .foregroundColor(.textPlaceholder)
                     
                     Button(action: action) {
                         
                         icon
                             .resizable()
                             .renderingMode(.template)
-                            .foregroundColor(Color(hex: "#999999"))
+                            .foregroundColor(.textPlaceholder)
                             .frame(width: 14, height: 14)
                     }
                     
@@ -270,8 +270,8 @@ struct PaymentsAmountView: View {
                 
             case .text(let text):
                 Text(text)
-                    .font(Font.custom("Inter-Regular", size: 12))
-                    .foregroundColor(Color(hex: "#999999"))
+                    .font(.textBodySR12160())
+                    .foregroundColor(.textPlaceholder)
             }
         }
     }
@@ -287,16 +287,16 @@ struct PaymentsAmountView: View {
                 HStack(spacing: 0) {
                     
                     Text(viewModel.from)
-                        .font(Font.custom("Inter-Regular", size: 12))
-                        .foregroundColor(Color(hex: "#1C1C1C"))
+                        .font(.textBodySR12160())
+                        .foregroundColor(.textSecondary)
                         .frame(width: 16, height: 16)
                     
                     viewModel.icon
                         .frame(width: 16, height: 16)
                     
                     Text(viewModel.to)
-                        .font(Font.custom("Inter-Regular", size: 12))
-                        .foregroundColor(Color(hex: "#1C1C1C"))
+                        .font(.textBodySR12160())
+                        .foregroundColor(.textSecondary)
                         .frame(width: 16, height: 16)
                     
                 }
@@ -317,11 +317,11 @@ struct PaymentsAmountView: View {
         var body: some View {
             
             ZStack {
-                
+                //TODO: setup color after update lib
                 Color(hex: "#FF9636")
                 Text(viewModel.title)
-                    .font(Font.custom("Inter-Regular", size: 14))
-                    .foregroundColor(Color(hex: "#FFFFFF"))
+                    .font(.textBodyMR14200())
+                    .foregroundColor(.white)
             }
         }
     }

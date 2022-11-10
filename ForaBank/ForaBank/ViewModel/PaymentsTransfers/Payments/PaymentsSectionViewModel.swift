@@ -131,6 +131,9 @@ class PaymentsSpoilerSectionViewModel: PaymentsSectionViewModel {
                         isCollapsed = payload.isCollapsed
                         self.action.send(PaymentsSectionViewModelAction.SpoilerDidUpdated())
                         
+                    case _ as PaymentsParameterViewModelAction.ResendButton.DidTapped:
+                        self.action.send(PaymentsSectionViewModelAction.ResendCode())
+                        
                     default:
                         break
                     }
@@ -334,4 +337,6 @@ enum PaymentsSectionViewModelAction {
     }
     
     struct SpoilerDidUpdated: Action {}
+    
+    struct ResendCode: Action {}
 }

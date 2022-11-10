@@ -69,7 +69,7 @@
 		0B66E8DC26CC5F4D00FD735D /* QRScannerCodeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8DB26CC5F4D00FD735D /* QRScannerCodeDelegate.swift */; };
 		0B66E8DE26CC5F8900FD735D /* QRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8DD26CC5F8900FD735D /* QRViewController.swift */; };
 		0B66E8E626CC658A00FD735D /* GKHStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B66E8E526CC658A00FD735D /* GKHStoryboard.storyboard */; };
-		0B67728A277CCD7500DCCECD /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B677289277CCD7500DCCECD /* PhoneNumberKit */; };
+		0B67728A277CCD7500DCCECD /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B677289277CCD7500DCCECD /* PhoneNumberKit */; settings = {ATTRIBUTES = (Weak, ); }; };
 		0B67728E277CCD7500DCCECD /* PhoneNumberKit-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 0B67728D277CCD7500DCCECD /* PhoneNumberKit-Static */; };
 		0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */; };
 		0B797C9226E6ABC100589DBF /* GetBankList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B797C9126E6ABC100589DBF /* GetBankList.swift */; };
@@ -1093,6 +1093,8 @@
 		A5F15C0D274972F900DC91DA /* InternetTVLatestOperationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C0C274972F900DC91DA /* InternetTVLatestOperationsView.swift */; };
 		A5F15C0F274980CB00DC91DA /* InternetTVLatestOperationRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C0E274980CB00DC91DA /* InternetTVLatestOperationRealm.swift */; };
 		A5F15C11274985C900DC91DA /* InternetTVLatestOperationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C10274985C900DC91DA /* InternetTVLatestOperationsModel.swift */; };
+		C1DE21132914158600ED0F8D /* PaymentsCodeViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE21122914158600ED0F8D /* PaymentsCodeViewComponent.swift */; };
+		C1DE211D2919377000ED0F8D /* VerificationCodeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE211C2919377000ED0F8D /* VerificationCodeData.swift */; };
 		C10CE65D29070CDF00FC5706 /* TextFieldPhoneNumberViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10CE65C29070CDF00FC5706 /* TextFieldPhoneNumberViewComponent.swift */; };
 		C10F481928E4A52F009918EA /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10F481828E4A52F009918EA /* PushNotification.swift */; };
 		C10F481C28E6E335009918EA /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10F481828E4A52F009918EA /* PushNotification.swift */; };
@@ -1245,7 +1247,6 @@
 		EDA563B026F881D60093F0C8 /* BanksView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDA563AF26F881D60093F0C8 /* BanksView.xib */; };
 		EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */; };
 		EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDAA99B02673ABF200435484 /* ForaSwitchView.xib */; };
-		EDAA99B42674C38900435484 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = EDAA99B32674C38900435484 /* ProgressHUD */; };
 		EDB02AE22816E9C6005F64B5 /* AccountCellDefaultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB02AE12816E9C6005F64B5 /* AccountCellDefaultViewModel.swift */; };
 		EDB02AE42816EB07005F64B5 /* AccountCellFullButtonViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB02AE32816EB07005F64B5 /* AccountCellFullButtonViewComponent.swift */; };
 		EDB02AE62816EDF4005F64B5 /* AccountCellSwitchViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB02AE52816EDF4005F64B5 /* AccountCellSwitchViewComponent.swift */; };
@@ -2522,6 +2523,8 @@
 		A5F15C0C274972F900DC91DA /* InternetTVLatestOperationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationsView.swift; sourceTree = "<group>"; };
 		A5F15C0E274980CB00DC91DA /* InternetTVLatestOperationRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationRealm.swift; sourceTree = "<group>"; };
 		A5F15C10274985C900DC91DA /* InternetTVLatestOperationsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationsModel.swift; sourceTree = "<group>"; };
+		C1DE21122914158600ED0F8D /* PaymentsCodeViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsCodeViewComponent.swift; sourceTree = "<group>"; };
+		C1DE211C2919377000ED0F8D /* VerificationCodeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeData.swift; sourceTree = "<group>"; };
 		C10CE65C29070CDF00FC5706 /* TextFieldPhoneNumberViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldPhoneNumberViewComponent.swift; sourceTree = "<group>"; };
 		C10F481828E4A52F009918EA /* PushNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotification.swift; sourceTree = "<group>"; };
 		C113225528CFA84300F90072 /* ContactsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewModel.swift; sourceTree = "<group>"; };
@@ -2842,7 +2845,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				77AC9159277A518B00E49D5D /* Shimmer in Frameworks */,
-				EDAA99B42674C38900435484 /* ProgressHUD in Frameworks */,
 				68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */,
 				7769F5CB27D8CAD100F80607 /* ScrollViewProxy in Frameworks */,
 				0BA2524926C5DB5600AD087A /* RealmSwift in Frameworks */,
@@ -4697,6 +4699,7 @@
 				774A8B592865FDAF00B81140 /* PaymentsInfoViewComponent.swift */,
 				774A8B5B2865FDAF00B81140 /* PaymentsNameViewComponent.swift */,
 				774A8B582865FDAF00B81140 /* PaymentsSpoilerButtonViewComponent.swift */,
+				C1DE21122914158600ED0F8D /* PaymentsCodeViewComponent.swift */,
 				77E0DC42291163D90053CCCA /* Bottom */,
 			);
 			path = PaymentsOperation;
@@ -4752,6 +4755,7 @@
 				0CEA3202287618CE005B80BA /* CreateTransterResponseData.swift */,
 				77517F9A27A858F8005CFB77 /* TransferAnywayResponseData.swift */,
 				0BD8D56328AFDC17006DC9BA /* TransferLimitData.swift */,
+				C1DE211C2919377000ED0F8D /* VerificationCodeData.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -7412,7 +7416,6 @@
 			packageProductDependencies = (
 				ED4FC620266EA5CD0092B4AB /* Valet */,
 				EDF6821C266FC37F00FD5C07 /* FirebaseMessaging */,
-				EDAA99B32674C38900435484 /* ProgressHUD */,
 				ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */,
 				0B7A18AA2681CED70007CC75 /* SwiftEntryKit */,
 				ED39EC87268B308800158E46 /* SDWebImageSVGCoder */,
@@ -8544,6 +8547,7 @@
 				77B6B3542850961A00E3001B /* Period.swift in Sources */,
 				77448C07286E2087009EEEA8 /* Unknownable.swift in Sources */,
 				6820928527AB0E9D003DCAFD /* MobileData.swift in Sources */,
+				C1DE21132914158600ED0F8D /* PaymentsCodeViewComponent.swift in Sources */,
 				774A8B292865FC6F00B81140 /* MyProductsMoneyViewModel.swift in Sources */,
 				5047486E2856630C0007128F /* ConfirmViewComponent.swift in Sources */,
 				ED39EC93268C9AE900158E46 /* NewCardCell.swift in Sources */,
@@ -8639,6 +8643,7 @@
 				774E318927A0509C005A067B /* ServerAgentEmptyMock.swift in Sources */,
 				7772979527C781420099EF91 /* MainViewSectionViewModel.swift in Sources */,
 				77E1805A27AC8BE20006ACC9 /* main.swift in Sources */,
+				C1DE211D2919377000ED0F8D /* VerificationCodeData.swift in Sources */,
 				6849888227BBB41400E84E6B /* AuthProductsViewModel.swift in Sources */,
 				0BBACF76281F13B5008E983D /* GetPrintFormForCardStatmentModel.swift in Sources */,
 				6820928E27AB0FEF003DCAFD /* FastPaymentContractAccountAttributeTypeData.swift in Sources */,
@@ -9647,11 +9652,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = ED4FC61F266EA5CD0092B4AB /* XCRemoteSwiftPackageReference "Valet" */;
 			productName = Valet;
-		};
-		EDAA99B32674C38900435484 /* ProgressHUD */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */;
-			productName = ProgressHUD;
 		};
 		EDC8BA3326A5AA0E00EDB401 /* SDWebImagePDFCoder */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -79,14 +79,14 @@ struct PaymentsSpoilerButtonView: View {
                         .rotationEffect(viewModel.isSelected ? .degrees(0) : .degrees(180))
 
                     Text(viewModel.title)
-                        .font(Font.custom("Inter-Medium", size: 14))
-                        .foregroundColor(Color(hex: "#1C1C1C"))
+                        .font(.textBodyMM14200())
+                        .foregroundColor(.textSecondary)
                 }
             }
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
-        .background(Color(hex: "#F6F6F7"))
+        .background(Color.textSecondary)
         .cornerRadius(8)
     }
 }
