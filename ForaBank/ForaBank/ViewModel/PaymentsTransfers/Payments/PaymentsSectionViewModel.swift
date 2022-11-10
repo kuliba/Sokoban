@@ -78,6 +78,9 @@ class PaymentsFeedSectionViewModel: PaymentsSectionViewModel {
                     case _ as PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close:
                         self.action.send(PaymentsSectionViewModelAction.PopUpSelector.Close())
                         
+                    case _ as PaymentsParameterViewModelAction.Code.ResendButtonDidTapped:
+                        self.action.send(PaymentsSectionViewModelAction.ResendCode())
+                        
                     default:
                         break
                     }
@@ -130,9 +133,6 @@ class PaymentsSpoilerSectionViewModel: PaymentsSectionViewModel {
                     case let payload as PaymentsParameterViewModelAction.SpoilerButton.DidUpdated:
                         isCollapsed = payload.isCollapsed
                         self.action.send(PaymentsSectionViewModelAction.SpoilerDidUpdated())
-                        
-                    case _ as PaymentsParameterViewModelAction.ResendButton.DidTapped:
-                        self.action.send(PaymentsSectionViewModelAction.ResendCode())
                         
                     default:
                         break
@@ -304,6 +304,9 @@ extension PaymentsSectionViewModel {
             
         case let parameterAmount as Payments.ParameterAmount:
             return PaymentsAmountView.ViewModel(with: parameterAmount, actionTitle: "Продолжить")
+            
+        case let parameterCode as Payments.ParameterCode:
+            return PaymentsCodeView.ViewModel(with: parameterCode)
         
             // for tests only
         case let parameterMock as Payments.ParameterMock:

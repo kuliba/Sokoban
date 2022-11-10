@@ -86,7 +86,7 @@ struct PaymentsSpoilerButtonView: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
-        .background(Color.textSecondary)
+        .background(Color.buttonSecondary)
         .cornerRadius(8)
     }
 }

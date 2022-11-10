@@ -108,11 +108,7 @@ extension Model {
         
         result.append(feeParameter)
         
-        let codeParameter = Payments.ParameterInput(
-            .init(id: Payments.Parameter.Identifier.code.rawValue, value: nil),
-            icon: .parameterSMS,
-            title: "Введите код из СМС", validator: .init(minLength: 6, maxLength: 6, regEx: nil))
-        result.append(codeParameter)
+        result.append(Payments.ParameterCode.regular)
         
         return result
     }

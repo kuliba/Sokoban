@@ -44,7 +44,6 @@ extension PaymentsInputView {
             let action: () -> Void
         }
 
-        
         init(logo: Image, description: String, content: String, validator: Payments.ParameterInput.Validator = .init(minLength: 0, maxLength: 50, regEx: nil), source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString), actionButton: ActionButtonViewModel? = nil) {
             
             self.logo = logo

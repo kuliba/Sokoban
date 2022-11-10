@@ -131,7 +131,7 @@ extension Model {
         }
     }
     
-    func handleResendVerificationCode() {
+    func handleTransfersResendCodeRequest() {
         
         guard let token = token else {
             handledUnauthorizedCommandAttempt()

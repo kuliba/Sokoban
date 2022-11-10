@@ -558,6 +558,9 @@ class Model {
                 case let payload as ModelAction.Transfers.TransferLimit.Request:
                     handleTransferLimitRequest(payload)
                     
+                case _ as ModelAction.Transfers.ResendCode.Request:
+                    handleTransfersResendCodeRequest()
+                    
                     //MARK: - CurrencyWallet
                     
                 case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Start.Request:

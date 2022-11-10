@@ -379,7 +379,7 @@ extension PaymentsAmountView.ViewModel {
     
     static let amountParameter: PaymentsAmountView.ViewModel = {
         
-        let viewModel = PaymentsAmountView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "100"), title: "Сумма перевода", currency: .init(description: "RUB"), validator: .init(minAmount: 1, maxAmount: 1000)), actionTitle: "Перевести")
+        let viewModel = PaymentsAmountView.ViewModel(with: .init(value: "100", title: "Сумма перевода", currency: .init(description: "RUB"), validator: .init(minAmount: 1, maxAmount: 1000)), actionTitle: "Перевести")
         
         viewModel.update(isContinueEnabled: true)
         

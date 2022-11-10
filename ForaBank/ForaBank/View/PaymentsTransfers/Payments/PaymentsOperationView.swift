@@ -34,6 +34,9 @@ struct PaymentsOperationView: View {
                         case let selectViewModel as PaymentsSelectView.ViewModel:
                             PaymentsSelectView(viewModel: selectViewModel)
                             
+                        case let selectViewModels as PaymentsSelectSimpleView.ViewModel:
+                            PaymentsSelectSimpleView(viewModel: selectViewModels)
+                            
                         case let switchViewModel as PaymentsSwitchView.ViewModel:
                             PaymentsSwitchView(viewModel: switchViewModel)
                             
@@ -49,8 +52,8 @@ struct PaymentsOperationView: View {
                         case let cardViewModel as PaymentsProductView.ViewModel:
                             PaymentsProductView(viewModel: cardViewModel)
                             
-                        case let selectViewModels as PaymentsSelectSimpleView.ViewModel:
-                            PaymentsSelectSimpleView(viewModel: selectViewModels)
+                        case let codeViewModel as PaymentsCodeView.ViewModel:
+                            PaymentsCodeView(viewModel: codeViewModel)
                             
                         case let additionButtonViewModel as PaymentsSpoilerButtonView.ViewModel:
                             PaymentsSpoilerButtonView(viewModel: additionButtonViewModel)

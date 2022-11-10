@@ -108,18 +108,13 @@ extension Model {
         if response.needSum == true {
             
             // amount
-            let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
-            let amountParameter = Payments.ParameterAmount(.init(id: amountParameterId, value: "0"), title: "Сумма", currency: .rub, validator: .init(minAmount: 0, maxAmount: 100000))
+            let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма", currency: .rub, validator: .init(minAmount: 0, maxAmount: 100000))
             result.append(amountParameter)
         }
         
         if response.finalStep == true {
             
-            let codeParameter = Payments.ParameterInput(
-                .init(id: Payments.Parameter.Identifier.code.rawValue, value: nil),
-                icon: .parameterSMS,
-                title: "Введите код из СМС", validator: .init(minLength: 6, maxLength: 6, regEx: nil))
-            result.append(codeParameter)
+            result.append(Payments.ParameterCode.regular)
         }
         
         return result
