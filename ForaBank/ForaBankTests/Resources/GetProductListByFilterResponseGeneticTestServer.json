@@ -46,7 +46,9 @@
             "visibility": true,
             "order": 0,
             "smallBackgroundDesignHash": "",
-            "smallDesignMd5hash": ""
+            "smallDesignMd5hash": "",
+            "detailedRatesUrl": "",
+            "detailedConditionUrl": ""
         },
         {
             "number": "1111111111111111",
@@ -92,7 +94,9 @@
             "visibility": true,
             "order": 0,
             "smallBackgroundDesignHash": "",
-            "smallDesignMd5hash": ""
+            "smallDesignMd5hash": "",
+            "detailedRatesUrl": "",
+            "detailedConditionUrl": ""
         },
         {
             "number": "1111111111111111",
@@ -138,7 +142,9 @@
             "visibility": true,
             "order": 0,
             "smallBackgroundDesignHash": "",
-            "smallDesignMd5hash": ""
+            "smallDesignMd5hash": "",
+            "detailedRatesUrl": "",
+            "detailedConditionUrl": ""
         },
         {
             "number": "1111111111111111",
@@ -184,7 +190,9 @@
             "visibility": true,
             "order": 0,
             "smallBackgroundDesignHash": "",
-            "smallDesignMd5hash": ""
+            "smallDesignMd5hash": "",
+            "detailedRatesUrl": "",
+            "detailedConditionUrl": ""
         },
         {
             "number": "1111111111111111",
@@ -221,7 +229,9 @@
             "visibility": true,
             "order": 0,
             "smallBackgroundDesignHash": "",
-            "smallDesignMd5hash": ""
+            "smallDesignMd5hash": "",
+            "detailedRatesUrl": "",
+            "detailedConditionUrl": ""
         },
         {
             "number": "1111111111111111",
@@ -258,7 +268,9 @@
             "visibility": true,
             "order": 0,
             "smallBackgroundDesignHash": "",
-            "smallDesignMd5hash": ""
+            "smallDesignMd5hash": "",
+            "detailedRatesUrl": "",
+            "detailedConditionUrl": ""
         },
         {
             "number": "1111111111111111",
@@ -295,7 +307,9 @@
             "visibility": true,
             "order": 0,
             "smallBackgroundDesignHash": "",
-            "smallDesignMd5hash": ""
+            "smallDesignMd5hash": "",
+            "detailedRatesUrl": "",
+            "detailedConditionUrl": ""
         },
         {
             "number": "1111111111111111",
@@ -332,7 +346,9 @@
             "visibility": true,
             "order": 0,
             "smallBackgroundDesignHash": "",
-            "smallDesignMd5hash": ""
+            "smallDesignMd5hash": "",
+            "detailedRatesUrl": "",
+            "detailedConditionUrl": ""
         },
         {
             "number": null,
@@ -373,7 +389,9 @@
             "visibility": true,
             "order": 0,
             "smallBackgroundDesignHash": "",
-            "smallDesignMd5hash": ""
+            "smallDesignMd5hash": "",
+            "detailedRatesUrl": "",
+            "detailedConditionUrl": ""
         },
         {
             "number": null,
@@ -414,7 +432,9 @@
             "visibility": true,
             "order": 0,
             "smallBackgroundDesignHash": "",
-            "smallDesignMd5hash": ""
+            "smallDesignMd5hash": "",
+            "detailedRatesUrl": "",
+            "detailedConditionUrl": ""
         }
     ]
 }

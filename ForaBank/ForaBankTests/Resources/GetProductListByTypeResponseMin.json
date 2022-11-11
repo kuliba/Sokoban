@@ -34,7 +34,9 @@
                 "visibility": true,
                 "order": 0,
                 "smallBackgroundDesignHash": "",
-                "smallDesignMd5hash": ""
+                "smallDesignMd5hash": "",
+                "detailedRatesUrl": "",
+                "detailedConditionUrl": ""
             },
             {
                 "number": "4444555566661122",
@@ -66,7 +68,9 @@
                 "visibility": true,
                 "order": 0,
                 "smallBackgroundDesignHash": "",
-                "smallDesignMd5hash": ""
+                "smallDesignMd5hash": "",
+                "detailedRatesUrl": "",
+                "detailedConditionUrl": ""
             },
             {
                 "number": "4444555566661122",
@@ -100,7 +104,9 @@
                 "visibility": true,
                 "order": 0,
                 "smallBackgroundDesignHash": "",
-                "smallDesignMd5hash": ""
+                "smallDesignMd5hash": "",
+                "detailedRatesUrl": "",
+                "detailedConditionUrl": ""
             },
             {
                 "currency": "RUB",
@@ -129,7 +135,9 @@
                 "visibility": true,
                 "order": 0,
                 "smallBackgroundDesignHash": "",
-                "smallDesignMd5hash": ""
+                "smallDesignMd5hash": "",
+                "detailedRatesUrl": "",
+                "detailedConditionUrl": ""
             }
         ]
     }
