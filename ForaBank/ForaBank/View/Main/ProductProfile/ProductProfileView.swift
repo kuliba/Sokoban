@@ -118,6 +118,15 @@ struct ProductProfileView: View {
             // workaround to fix mini-cards jumps when product name editing alert presents
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
+            
+            if let spinner = viewModel.spinner {
+                
+                VStack {
+                    
+                    SpinnerView(viewModel: spinner)
+                }
+                .frame(width: .infinity, height: .infinity, alignment: .center)
+            }
         }
         .navigationBar(with: viewModel.navigationBar)
         .sheet(item: $viewModel.sheet, content: { sheet in

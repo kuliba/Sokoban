@@ -19,6 +19,16 @@ extension ModelAction {
 
             let userSetting: UserSettingPush
         }
+        
+        enum ApplicationSettings {
+            
+            struct Request: Action {}
+            
+            struct Response: Action {
+                
+                let result: Result<AppSettings, Error>
+            }
+        }
     }
 }
 
@@ -251,6 +261,43 @@ extension Model {
                 
             case .failure(let error):
                 
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    func handleAppSettingsRequest() {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.SettingsController.GetAppSettings(token: token)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                
+                switch response.statusCode {
+                case .ok:
+                    
+                    guard let settings = response.data else {
+                        self.handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    self.action.send(ModelAction.Settings.ApplicationSettings.Response(result: .success(settings.appSettings)))
+                    
+                default:
+                    
+                    self.action.send(ModelAction.Settings.ApplicationSettings.Response(result: .failure(ModelError.statusError(status: response.statusCode, message: response.errorMessage))))
+                    
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                self.action.send(ModelAction.Settings.ApplicationSettings.Response(result: .failure(error)))
                 self.handleServerCommandError(error: error, command: command)
             }
         }

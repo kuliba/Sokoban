@@ -635,6 +635,11 @@ class Model {
                 case _ as ModelAction.Settings.GetUserSettings:
                     handleGetUserSettings()
                     
+                    //MARK: - Settings Actions
+                    
+                case _ as ModelAction.Settings.ApplicationSettings.Request:
+                    handleAppSettingsRequest()
+                    
                     //MARK: - Notifications
                        
                 case _ as ModelAction.Notification.Fetch.New.Request:
@@ -767,6 +772,9 @@ class Model {
                     
                 case let payload as ModelAction.Deposits.CloseNotified:
                     handleDidShowCloseAlert(payload)
+                    
+                case let payload as ModelAction.Deposits.BeforeClosing.Request:
+                    handleBeforeClosingRequest(payload)
                     
                     //MARK: - Location Actions
                     
