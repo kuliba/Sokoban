@@ -102,8 +102,6 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     switch payload.result {
                     case let .success(transferData):
                         
-                        let transferData = Model.reduce(payload.transferResponse, transferBaseData: transferData)
-                        
                         if let successViewModel = PaymentsSuccessViewModel(model, mode: .meToMe, transferData: transferData) {
                             self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                         }

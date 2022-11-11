@@ -34,8 +34,7 @@ extension ModelAction.Payment {
             
             struct Response: Action {
               
-                let transferResponse: TransferResponseData
-                let result: Result<TransferResponseBaseData, ModelError>
+                let result: Result<TransferResponseData, ModelError>
             }
         }
     }
@@ -110,32 +109,27 @@ extension Model {
                 case .ok:
                     
                     guard let data = response.data else {
-                        self.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Response(transferResponse: payload.transferResponse, result: .failure(.emptyData(message: response.errorMessage))))
+                        self.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Response(result: .failure(.emptyData(message: response.errorMessage))))
                         self.handleServerCommandEmptyData(command: command)
                         return
                     }
                     
-                    self.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Response(transferResponse: payload.transferResponse, result: .success(data)))
+                    let transferResponse = payload.transferResponse
+                    let transferData = transferResponse.update(transferResponse, transferBaseData: data)
+                    
+                    self.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Response(result: .success(transferData)))
                     
                 default:
-                    self.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Response(transferResponse: payload.transferResponse, result: .failure(.statusError(status: response.statusCode, message: response.errorMessage))))
+                    self.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Response(result: .failure(.statusError(status: response.statusCode, message: response.errorMessage))))
                     self.handleServerCommandStatus(command: command,
                                                    serverStatusCode: response.statusCode,
                                                    errorMessage: response.errorMessage)
                 }
             
             case let .failure(error):
-                self.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Response(transferResponse: payload.transferResponse, result: .failure(.serverCommandError(error: error.localizedDescription))))
+                self.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Response(result: .failure(.serverCommandError(error: error.localizedDescription))))
                 self.handleServerCommandError(error: error, command: command)
             }
         }
-    }
-}
-
-extension Model {
-    
-    static func reduce(_ transferData: TransferResponseData, transferBaseData: TransferResponseBaseData) -> TransferResponseData {
-        
-        .init(amount: transferData.amount, creditAmount: transferData.creditAmount, currencyAmount: transferData.currencyAmount, currencyPayee: transferData.currencyPayee, currencyPayer: transferData.currencyPayer, currencyRate: transferData.currencyRate, debitAmount: transferData.debitAmount, fee: transferData.fee, needMake: transferData.needMake, needOTP: transferData.needOTP, payeeName: transferData.payeeName, documentStatus: transferBaseData.documentStatus, paymentOperationDetailId: transferBaseData.paymentOperationDetailId)
     }
 }
