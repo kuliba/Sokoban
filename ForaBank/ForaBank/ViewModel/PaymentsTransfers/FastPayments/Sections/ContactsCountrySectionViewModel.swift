@@ -6,19 +6,13 @@
 //
 
 import Foundation
+import SwiftUI
 
-class ContactsCountrySectionViewModel: ContactsSectionViewModel {
+class ContactsCountrySectionViewModel: ContactsSectionCollapsableViewModel {
     
-    override init(header: ContactsSectionViewModel.HeaderViewModel, isCollapsed: Bool = false, items: [ContactsSectionViewModel.ItemViewModel]) {
+    convenience init(countriesList: [CountryData], model: Model) {
         
-        super.init(header: header, items: items)
-        
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
-    }
-    
-    convenience init(countriesList: [CountryData]) {
-        
-        self.init(header: .init(kind: .country), items: [])
+        self.init(header: .init(kind: .country), items: [], model: model)
         
         let items = Self.reduceCounry(countriesList: countriesList) { [weak self] country in
             
@@ -33,11 +27,11 @@ class ContactsCountrySectionViewModel: ContactsSectionViewModel {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
-    static func reduceCounry(countriesList: [CountryData], action: @escaping (CountryData) -> () -> Void) -> [ContactsSectionViewModel.ItemViewModel] {
+    static func reduceCounry(countriesList: [CountryData], action: @escaping (CountryData) -> () -> Void) -> [ContactsSectionCollapsableViewModel.ItemViewModel] {
         
-        var country = [ContactsSectionViewModel.ItemViewModel]()
+        var country = [ContactsSectionCollapsableViewModel.ItemViewModel]()
         
-        country = countriesList.map({ContactsSectionViewModel.ItemViewModel(title: $0.name, image: $0.svgImage?.image, bankType: nil, action: action($0))})
+        country = countriesList.map({ContactsSectionCollapsableViewModel.ItemViewModel(title: $0.name, image: $0.svgImage?.image, bankType: nil, action: action($0))})
         country = country.sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
         country = country.sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
         

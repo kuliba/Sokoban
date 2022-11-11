@@ -1,5 +1,5 @@
 //
-//  ContactsSectionViewModel.swift
+//  ContactsSectionCollapsableViewModel.swift
 //  ForaBank
 //
 //  Created by Дмитрий Савушкин on 25.10.2022.
@@ -9,22 +9,19 @@ import Foundation
 import Combine
 import SwiftUI
 
-class ContactsSectionViewModel: ObservableObject, Hashable, Equatable, Identifiable {
-    
-    let action: PassthroughSubject<Action, Never> = .init()
-    
-    let id = UUID()
+class ContactsSectionCollapsableViewModel: ContactsSectionViewModel, ObservableObject {
+
     @Published var header: HeaderViewModel
     @Published var isCollapsed: Bool
     @Published var items: [ItemViewModel]
     
-    private var bindings = Set<AnyCancellable>()
-    
-    init(header: HeaderViewModel, isCollapsed: Bool = false, items: [ItemViewModel]) {
+    init(header: HeaderViewModel, isCollapsed: Bool = false, items: [ItemViewModel], model: Model) {
         
         self.isCollapsed = isCollapsed
         self.header = header
         self.items = items
+        
+        super.init(model: model)
         
         bind()
     }
@@ -40,6 +37,13 @@ class ContactsSectionViewModel: ObservableObject, Hashable, Equatable, Identifia
                 
             }.store(in: &bindings)
     }
+    
+
+}
+
+//MARK: - Types
+
+extension ContactsSectionCollapsableViewModel {
     
     class HeaderViewModel: ObservableObject {
         
@@ -124,17 +128,7 @@ class ContactsSectionViewModel: ObservableObject, Hashable, Equatable, Identifia
     }
 }
 
-extension ContactsSectionViewModel {
-    
-    static func == (lhs: ContactsSectionViewModel, rhs: ContactsSectionViewModel) -> Bool {
-        lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        
-        hasher.combine(id)
-    }
-}
+
 
 struct HeaderViewModelAction {
     

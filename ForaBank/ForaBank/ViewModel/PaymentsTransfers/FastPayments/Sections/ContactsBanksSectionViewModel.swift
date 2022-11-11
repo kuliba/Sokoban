@@ -7,31 +7,28 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
-class ContactsBanksSectionViewModel: ContactsSectionViewModel {
+class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
     
     @Published var mode: Mode
     @Published var options: OptionSelectorView.ViewModel
     var bankType: BankType? { BankType(rawValue: options.selected) }
     
-    private var allItems: [ContactsSectionViewModel.ItemViewModel]
-    
-    private let model: Model
-    private var bindings = Set<AnyCancellable>()
-    
+    private var allItems: [ContactsSectionCollapsableViewModel.ItemViewModel]
+
     enum Mode {
         
         case normal
         case search(SearchBarView.ViewModel)
     }
     
-    init(_ model: Model, header: ContactsSectionViewModel.HeaderViewModel, items: [ContactsSectionViewModel.ItemViewModel], mode: Mode, options: OptionSelectorView.ViewModel) {
+    init(_ model: Model, header: ContactsSectionCollapsableViewModel.HeaderViewModel, items: [ContactsSectionCollapsableViewModel.ItemViewModel], mode: Mode, options: OptionSelectorView.ViewModel) {
         
-        self.model = model
         self.mode = mode
         self.options = options
         self.allItems = items
-        super.init(header: header, items: items)
+        super.init(header: header, items: items, model: model)
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
     }
@@ -54,11 +51,6 @@ class ContactsBanksSectionViewModel: ContactsSectionViewModel {
         }
   
         bind()
-    }
-    
-    deinit {
-        
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
     override func bind() {
@@ -138,15 +130,15 @@ class ContactsBanksSectionViewModel: ContactsSectionViewModel {
 
 extension ContactsBanksSectionViewModel {
     
-    static func reduce(bankList: [BankData], action: @escaping (BankData) -> () -> Void) async ->  [ContactsSectionViewModel.ItemViewModel] {
+    static func reduce(bankList: [BankData], action: @escaping (BankData) -> () -> Void) async ->  [ContactsSectionCollapsableViewModel.ItemViewModel] {
         
         return bankList
-            .map({ContactsSectionViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: action($0))})
+            .map({ContactsSectionCollapsableViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: action($0))})
             .sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
             .sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
     }
     
-    static func reduce(items: [ContactsSectionViewModel.ItemViewModel], filterByType: BankType? = nil, filterByName: String? = nil) -> [ContactsSectionViewModel.ItemViewModel] {
+    static func reduce(items: [ContactsSectionCollapsableViewModel.ItemViewModel], filterByType: BankType? = nil, filterByName: String? = nil) -> [ContactsSectionCollapsableViewModel.ItemViewModel] {
         
         var filterredItems = items
         

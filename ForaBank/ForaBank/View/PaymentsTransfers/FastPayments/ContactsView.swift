@@ -194,7 +194,7 @@ extension ContactsView {
     
     struct CollapsableView: View {
         
-        @ObservedObject var viewModel: ContactsSectionViewModel
+        @ObservedObject var viewModel: ContactsSectionCollapsableViewModel
         
         var body: some View {
             
@@ -246,7 +246,7 @@ extension ContactsView {
         
         struct HeaderView: View {
             
-            @ObservedObject var viewModel: ContactsSectionViewModel
+            @ObservedObject var viewModel: ContactsSectionCollapsableViewModel
             
             var body: some View {
                 
@@ -432,7 +432,7 @@ extension ContactsView {
 
 struct ItemView: View {
     
-    let viewModel: ContactsSectionViewModel.ItemViewModel
+    let viewModel: ContactsSectionCollapsableViewModel.ItemViewModel
     
     var body: some View {
         
@@ -471,7 +471,7 @@ struct ContactsView_Previews: PreviewProvider {
 
         Group {
 
-            ContactsView.CollapsableView.HeaderView(viewModel: .init(header: .init(icon: .ic40SBP, title: "В другой банк", toggleButton: ContactsSectionViewModel.HeaderViewModel.ButtonViewModel(icon: .ic24ChevronUp, action: {})), items: [.sampleItem]))
+            ContactsView.CollapsableView.HeaderView(viewModel: .init(header: .init(icon: .ic40SBP, title: "В другой банк", toggleButton: ContactsSectionCollapsableViewModel.HeaderViewModel.ButtonViewModel(icon: .ic24ChevronUp, action: {})), items: [.sampleItem], model: .emptyMock))
                 .previewLayout(.fixed(width: 375, height: 100))
                 .previewDisplayName("HeaderView")
 
