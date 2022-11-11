@@ -79,7 +79,7 @@ struct TextFieldToolbarView: UIViewRepresentable {
 
     class Coordinator: NSObject, UITextFieldDelegate {
 
-        @ObservedObject var viewModel: ViewModel
+        let viewModel: ViewModel
 
         init(viewModel: ViewModel) {
 

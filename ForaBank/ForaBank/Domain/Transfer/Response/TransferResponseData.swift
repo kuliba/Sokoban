@@ -102,3 +102,11 @@ extension TransferResponseData {
         lhs.paymentOperationDetailId == rhs.paymentOperationDetailId
     }
 }
+
+extension TransferResponseData {
+
+    func update(_ transferData: TransferResponseData, transferBaseData: TransferResponseBaseData) -> TransferResponseData {
+        
+        .init(amount: transferData.amount, creditAmount: transferData.creditAmount, currencyAmount: transferData.currencyAmount, currencyPayee: transferData.currencyPayee, currencyPayer: transferData.currencyPayer, currencyRate: transferData.currencyRate, debitAmount: transferData.debitAmount, fee: transferData.fee, needMake: transferData.needMake, needOTP: transferData.needOTP, payeeName: transferData.payeeName, documentStatus: transferBaseData.documentStatus, paymentOperationDetailId: transferBaseData.paymentOperationDetailId)
+    }
+}

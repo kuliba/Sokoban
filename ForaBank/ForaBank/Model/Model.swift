@@ -38,7 +38,6 @@ class Model {
     //MARK: Currency rates
     let rates: CurrentValueSubject<[ExchangeRateData], Never>
     let ratesUpdating: CurrentValueSubject<[Currency], Never>
-    var ratesAllowed: Set<Currency> { [.usd, .eur] }
     
     //MARK: Dictionaries
     let dictionariesUpdating: CurrentValueSubject<Set<DictionaryType>, Never>
@@ -543,7 +542,10 @@ class Model {
                     //MARK: - Rates
                     
                 case _ as ModelAction.Rates.Update.All:
-                    handleRatesUpdateAll()
+                    handleRatesUpdate(allProductsCurrency())
+                    
+                case let payload as ModelAction.Rates.Update.Single:
+                    handleRateUpdate(payload.currency)
                     
                     //MARK: - Payments
                     
@@ -564,6 +566,12 @@ class Model {
                     
                 case let payload as ModelAction.Payment.OperationDetailByPaymentId.Request:
                     handleOperationDetailByPaymentIdRequest(payload)
+                    
+                case let payload as ModelAction.Payment.MeToMe.CreateTransfer.Request:
+                    handlerCreateTransferRequest(payload)
+                    
+                case let payload as ModelAction.Payment.MeToMe.MakeTransfer.Request:
+                    handlerMakeTransferRequest(payload)
                     
                     //MARK: - Transfers
                     
@@ -802,15 +810,21 @@ class Model {
 
                 case let payload as ModelAction.Account.MakeOpenAccount.Response:
                     handleMakeOpenAccountUpdate(payload: payload)
-
-                //MARK: - DeepLink
                     
+                case let payload as ModelAction.Account.Close.Request:
+                    handleCloseAccountRequest(payload)
+                    
+                case let payload as ModelAction.Account.CloseAccount.PrintForm.Request:
+                    handleCloseAccountPrintForm(payload)
+                    
+                //MARK: - DeepLink
+
                 case let payload as ModelAction.DeepLink.Set:
                     handleDeepLinkSet(payload)
                     
                 case _ as ModelAction.DeepLink.Clear:
                     handleDeepLinkClear()
-                    
+
                 //MARK: - AppStore Version
                 case _ as ModelAction.AppVersion.Request:
                     handleVersionAppStore()

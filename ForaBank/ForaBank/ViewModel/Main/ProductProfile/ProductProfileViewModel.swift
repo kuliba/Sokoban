@@ -19,6 +19,7 @@ class ProductProfileViewModel: ObservableObject {
     @Published var buttons: ProductProfileButtonsView.ViewModel
     @Published var detail: ProductProfileDetailView.ViewModel?
     @Published var history: ProductProfileHistoryView.ViewModel?
+    @Published var closeAccountSpinner: CloseAccountSpinnerView.ViewModel?
     @Published var alert: Alert.ViewModel?
     @Published var operationDetail: OperationDetailViewModel?
     @Published var accentColor: Color
@@ -26,6 +27,8 @@ class ProductProfileViewModel: ObservableObject {
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
     @Published var sheet: Sheet?
+    @Published var fullCover: FullCover?
+    @Published var fullCoverSpinner: FullCoverSpinner?
     @Published var textFieldAlert: AlertTextFieldView.ViewModel?
     @Published var spinner: SpinnerView.ViewModel?
 
@@ -141,10 +144,36 @@ class ProductProfileViewModel: ObservableObject {
                     textFieldAlert = customNameAlert(for: payload.productType, alertTitle: payload.alertTitle)
                     
                 case let payload as ProductProfileViewModelAction.Product.CloseAccount:
+
+                    let from = payload.productFrom
+                    let balance = payload.productFrom.balanceValue
                     
-                    let viewModel: MeToMeViewModel = .init(type: .closeAccount(payload.productFrom, payload.productFrom.balanceValue)) {}
-                    
-                    bottomSheet = .init(type: .closeAccount(viewModel))
+                    if balance == 0 {
+
+                        closeAccountSpinner = .init(model, productData: from)
+                        
+                        if let closeAccountSpinner = closeAccountSpinner {
+                            bind(closeAccountSpinner)
+                        }
+                        
+                        if let productFrom = from as? ProductAccountData {
+                            
+                            model.action.send(ModelAction.Account.Close.Request(payload: .init(id: from.id, name: productFrom.name, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: nil)))
+                        }
+                        
+                    } else {
+                        
+                        let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .closeAccount(from, balance))
+                        
+                        guard let viewModel = viewModel else {
+                            return
+                        }
+                        
+                        let swapViewModel = viewModel.swapViewModel
+                        bind(viewModel, swapViewModel: swapViewModel)
+                        
+                        bottomSheet = .init(type: .closeAccount(viewModel))
+                    }
                     
                 case _ as ProductProfileViewModelAction.Close.Link:
                     link = nil
@@ -152,8 +181,23 @@ class ProductProfileViewModel: ObservableObject {
                 case _ as ProductProfileViewModelAction.Close.Sheet:
                     sheet = nil
                     
+                case _ as ProductProfileViewModelAction.Close.FullCover:
+                    fullCover = nil
+                    
+                case _ as ProductProfileViewModelAction.Close.FullCoverSpinner:
+                    fullCoverSpinner = nil
+                    
+                case _ as ProductProfileViewModelAction.Close.AccountSpinner:
+                    closeAccountSpinner = nil
+                    
                 case _ as ProductProfileViewModelAction.Close.BottomSheet:
                     bottomSheet = nil
+                    
+                case _ as PaymentsTransfersViewModelAction.Close.DismissAll:
+                    
+                    withAnimation {
+                        NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
+                    }
                 
                 case _ as ProductProfileViewModelAction.Close.Alert:
                     alert = nil
@@ -238,9 +282,10 @@ class ProductProfileViewModel: ObservableObject {
                         }
                         buttons.update(with: productData, depositInfo: model.depositsInfo.value[productData.id])
                         
-                    default: break
+                    default:
+                        break
                     }
-                    
+
                 case let payload as ModelAction.Settings.ApplicationSettings.Response:
                     
                     switch payload.result {
@@ -299,6 +344,7 @@ class ProductProfileViewModel: ObservableObject {
                     }
                 default: break
                 }
+                
             }.store(in: &bindings)
         
         model.products
@@ -606,13 +652,9 @@ class ProductProfileViewModel: ObservableObject {
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .info, .contract], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                             
-                        // TODO: DBSNEW-6553
-                            
-                        /*
                         case .account:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .statementOpenAccount(false), .tariffsByAccount, .termsOfService], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
-                        */
                             
                         case .account:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement], productType: product.productType)
@@ -652,7 +694,12 @@ class ProductProfileViewModel: ObservableObject {
                             let lastAccountNumber = "*\(accountNumber.suffix(4))"
                             let title = "Закрыть счет"
                             
-                            let message = "Вы действительно хотите закрыть счет \(lastAccountNumber)?\n\nПри закрытии будет предложено перевести остаток денежных средств на другой счет/карту. Счет будет закрыт после совершения перевода."
+                            var message = "Вы действительно хотите закрыть счет \(lastAccountNumber)?"
+                            
+                            if productFrom.balanceValue > 0 {
+                                
+                                message = "\(message)\n\nПри закрытии будет предложено перевести остаток денежных средств на другой счет/карту. Счет будет закрыт после совершения перевода."
+                            }
                             
                             alert = .init(
                                 title: title,
@@ -662,7 +709,7 @@ class ProductProfileViewModel: ObservableObject {
                                     guard let self = self else { return }
                                     self.alert = nil
                                 },
-                                secondary: .init(type: .default, title: "Закрыть") { [weak self] in
+                                secondary: .init(type: .default, title: "Продолжить") { [weak self] in
                                     
                                     guard let self = self else { return }
                                     self.action.send(ProductProfileViewModelAction.Product.CloseAccount(productFrom: productFrom))
@@ -766,22 +813,20 @@ class ProductProfileViewModel: ObservableObject {
                             
                             self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
                             
-                        // TODO: DBSNEW-6553
-
-                            /*
                         case .statementOpenAccount:
                             break
-
+                            
                         case .tariffsByAccount:
-
-                            let linkURL = "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_tarifi.pdf"
-                            self.openLinkURL(linkURL)
-
+                            
+                            if let productData = productData as? ProductAccountData {
+                                self.openLinkURL(productData.detailedRatesUrl)
+                            }
+                            
                         case .termsOfService:
-
-                            let linkURL = "https://www.forabank.ru/dkbo/dkbo.pdf"
-                            self.openLinkURL(linkURL)
-                             */
+                            
+                            if let productData = productData as? ProductAccountData {
+                                self.openLinkURL(productData.detailedConditionUrl)
+                            }
                         }
                         
                     default:
@@ -791,6 +836,108 @@ class ProductProfileViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    /// Сlosing account with balance
+    private func bind(_ viewModel: PaymentsMeToMeViewModel, swapViewModel: ProductsSwapView.ViewModel) {
+        
+        viewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as PaymentsMeToMeAction.Response.Success:
+                    
+                    if let productIdFrom = swapViewModel.productIdFrom,
+                       let productIdTo = swapViewModel.productIdTo {
+                        
+                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
+                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
+                    }
+                    
+                    self.bind(payload.viewModel)
+                    self.fullCover = .init(type: .successMeToMe(payload.viewModel))
+                    
+                case _ as PaymentsMeToMeAction.Response.Failed:
+                    
+                    makeAlert("Счет закрыт")
+                    self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
+    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    /// Сlosing account without balance
+    private func bind(_ viewModel: CloseAccountSpinnerView.ViewModel) {
+        
+        viewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as CloseAccountSpinnerAction.Response.Success:
+
+                    bind(payload.viewModel)
+                    fullCoverSpinner = .init(type: .successMeToMe(payload.viewModel))
+
+                case let payload as CloseAccountSpinnerAction.Response.Failed:
+                    makeAlert(payload.message)
+    
+                default:
+                    break
+                }
+                
+                self.action.send(ProductProfileViewModelAction.Close.AccountSpinner())
+                
+            }.store(in: &bindings)
+    }
+    
+    /// Сlosing success screen
+    private func bind(_ viewModel: PaymentsSuccessViewModel) {
+        
+        viewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as PaymentsSuccessAction.Button.Close:
+                    
+                    if fullCover == nil {
+                        
+                        self.action.send(ProductProfileViewModelAction.Close.FullCoverSpinner())
+                        
+                    } else {
+                        
+                        self.action.send(ProductProfileViewModelAction.Close.FullCover())
+                    }
+                    
+                    self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
+                    self.rootActions?.switchTab(.main)
+
+                case _ as PaymentsSuccessAction.Button.Repeat:
+                    
+                    self.action.send(ProductProfileViewModelAction.Close.FullCover())
+                    self.rootActions?.switchTab(.payments)
+
+                default:
+                    break
+                }
+                
+                model.action.send(ModelAction.Products.Update.ForProductType(productType: .account))
+                
+            }.store(in: &bindings)
+    }
+    
+    private func makeAlert(_ message: String) {
+        
+        let alertViewModel = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "ОК") { [weak self] in
+            self?.action.send(ProductProfileViewModelAction.Close.Alert())
+        })
+        
+        alert = .init(alertViewModel)
     }
 
     func customNameAlert(for productType: ProductType, alertTitle: String) ->  AlertTextFieldView.ViewModel? {
@@ -1033,7 +1180,7 @@ extension ProductProfileViewModel {
             case operationDetail(OperationDetailViewModel)
             case optionsPannel(ProductProfileOptionsPannelView.ViewModel)
             case meToMe(MeToMeViewModel)
-            case closeAccount(MeToMeViewModel)
+            case closeAccount(PaymentsMeToMeViewModel)
         }
     }
     
@@ -1055,6 +1202,26 @@ extension ProductProfileViewModel {
             case printForm(PrintFormView.ViewModel)
             case placesMap(PlacesViewModel)
             case info(OperationDetailInfoViewModel)
+        }
+    }
+    
+    struct FullCover: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            case successMeToMe(PaymentsSuccessViewModel)
+        }
+    }
+    
+    struct FullCoverSpinner: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            case successMeToMe(PaymentsSuccessViewModel)
         }
     }
 }
@@ -1115,7 +1282,11 @@ enum ProductProfileViewModelAction {
         
         struct Link: Action {}
         struct Sheet: Action {}
+        struct FullCover: Action {}
+        struct FullCoverSpinner: Action {}
+        struct AccountSpinner: Action {}
         struct BottomSheet: Action {}
+        struct DismissAll: Action {}
         struct Alert: Action {}
         struct TextFieldAlert: Action {}
     }

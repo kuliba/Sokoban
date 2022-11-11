@@ -249,5 +249,5 @@ extension ButtonIconTextView.ViewModel {
     
     static let horizontalCircleBold = ButtonIconTextView.ViewModel(icon: .init(image: .ic24BarcodeScanner2, background: .circle), title: .init(text: "Оплата по QR", style: .bold), orientation: .horizontal, action: {})
     
-    static let horizontalCircleBoldOriginal = ButtonIconTextView.ViewModel(icon: .init(image: .ic40SBP, style: .original, background: .circle), title: .init(text: "С моего счета в другом банке", style: .bold), orientation: .horizontal, action: {})
+    static let horizontalCircleBoldOriginal = ButtonIconTextView.ViewModel(icon: .init(image: .ic40Sbp, style: .original, background: .circle), title: .init(text: "С моего счета в другом банке", style: .bold), orientation: .horizontal, action: {})
 }

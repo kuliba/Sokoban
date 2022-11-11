@@ -30,11 +30,13 @@ struct PaymentsSuccessOptionButtonView: View {
                 ZStack {
                     
                     Circle()
-                        .foregroundColor(Color(hex: "#F6F6F7"))
+                        .foregroundColor(viewModel.color)
                         .frame(width: 56, height: 56)
                     
                     viewModel.icon
                         .resizable()
+                        .renderingMode(.template)
+                        .foregroundColor(viewModel.iconColor)
                         .frame(width: 24, height: 24)
                 }
             }
@@ -52,7 +54,7 @@ struct PaymentsSuccessOptionButtonView: View {
 struct PaymentsSuccessOptionButtonView_Previews: PreviewProvider {
     
     static var previews: some View {
-        PaymentsSuccessOptionButtonView(viewModel: .init(id: UUID(), icon: Image("Payments Icon Success File"), title: "Детали", action: {}))
+        PaymentsSuccessOptionButtonView(viewModel: .init(icon: Image("Payments Icon Success File"), title: "Детали", action: {}))
             .previewLayout(.fixed(width: 100, height: 100))
     }
 }

@@ -120,7 +120,7 @@ struct MyProductsView: View {
             }
         }
         .navigationBar(with: viewModel.navigationBar)
-        .bottomSheet(item: $viewModel.bottomSheet, keyboardOfssetMultiplier: 0.7) { bottomSheet in
+        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
 
             switch bottomSheet.type {
                 

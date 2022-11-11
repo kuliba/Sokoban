@@ -137,6 +137,6 @@ struct SbpPayView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        SbpPayView(viewModel: .init(.emptyMock, paymentProduct: .init(.emptyMock, currency: .rub, currencyOperation: .buy, context: .init(isAdditionalProducts: false)), conditions: [.init(title: "Условия обслуживания при использовании СБП", link: .init(string: "")!), .init(title: "Соглашения/Договор на использование СБПэй", link: .init(string: "")!)], rootActions: nil))
+        SbpPayView(viewModel: .init(.emptyMock, paymentProduct: .sample1, conditions: [.init(title: "Условия обслуживания при использовании СБП", link: .init(string: "")!), .init(title: "Соглашения/Договор на использование СБПэй", link: .init(string: "")!)], rootActions: nil))
     }
 }

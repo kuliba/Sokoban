@@ -118,14 +118,9 @@ struct ProductProfileView: View {
             // workaround to fix mini-cards jumps when product name editing alert presents
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
-            
-            if let spinner = viewModel.spinner {
-                
-                VStack {
-                    
-                    SpinnerView(viewModel: spinner)
-                }
-                .frame(width: .infinity, height: .infinity, alignment: .center)
+
+            if let closeAccountSpinner = viewModel.closeAccountSpinner {
+                CloseAccountSpinnerView(viewModel: closeAccountSpinner)
             }
         }
         .navigationBar(with: viewModel.navigationBar)
@@ -141,6 +136,13 @@ struct ProductProfileView: View {
                 OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
             }
         })
+        .fullScreenCover(item: $viewModel.fullCoverSpinner) { fullCoverSpinner in
+
+            switch fullCoverSpinner.type {
+            case let .successMeToMe(successMeToMeViewModel):
+                PaymentsSuccessView(viewModel: successMeToMeViewModel)
+            }
+        }
         .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
             
             switch sheet.type {
@@ -159,9 +161,18 @@ struct ProductProfileView: View {
                     .frame(height: 474)
                 
             case let .closeAccount(viewModel):
-                MeToMeView(viewModel: viewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .frame(height: 474)
+                
+                PaymentsMeToMeView(viewModel: viewModel)
+                    .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+
+                        switch fullCover.type {
+                        case let .successMeToMe(successMeToMeViewModel):
+                            PaymentsSuccessView(viewModel: successMeToMeViewModel)
+                        }
+                        
+                    }.transaction { transaction in
+                        transaction.disablesAnimations = false
+                    }
             }
         })
         .alert(item: $viewModel.alert, content: { alertViewModel in

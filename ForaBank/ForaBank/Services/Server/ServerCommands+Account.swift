@@ -7,6 +7,8 @@
 
 import Foundation
 
+typealias ResponseTransferData = ServerCommands.AccountController.CloseAccount.Response.TransferData
+
 extension ServerCommands {
     
     enum AccountController {
@@ -95,6 +97,29 @@ extension ServerCommands {
         }
         
         /*
+         http://10.1.206.21:8080/swagger-ui/index.html#/AccountController/getPrintFormForCloseAccount
+         */
+        struct GetPrintFormForCloseAccount: ServerDownloadCommand {
+            
+            let token: String
+            let endpoint = "/rest/getPrintFormForCloseAccount"
+            let method: ServerCommandMethod = .post
+            var payload: BasePayload?
+            let cachePolicy: URLRequest.CachePolicy = .reloadIgnoringCacheData
+            
+            internal init(token: String, payload: BasePayload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+            
+            init(token: String, accountId: ProductData.ID) {
+                
+                self.init(token: token, payload: .init(id: accountId, accountId: "\(accountId)"))
+            }
+        }
+        
+        /*
          http://192.168.50.113:8080/swagger-ui/index.html#/AccountController/saveAccountCustomName
          */
         struct SaveAccountName: ServerCommand {
@@ -131,6 +156,7 @@ extension ServerCommands {
             var endDate: Date? = nil
             var statementFormat: StatementFormat? = nil
             var accountNumber: String? = nil
+            var accountId: String? = nil
         }
         
         /*
@@ -209,6 +235,52 @@ extension ServerCommands {
             }
             
             init(token: String, payload: Payload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+        }
+        
+        /*
+         http://10.1.206.21:8080/swagger-ui/index.html#/DepositController/closeAccount
+         */
+        
+        struct CloseAccount: ServerCommand {
+            
+            let token: String
+            let endpoint = "/rest/closeAccount"
+            let method: ServerCommandMethod = .post
+            let payload: Payload?
+            
+            struct Payload: Encodable {
+                
+                let id: Int
+                let name: String?
+                let startDate: String?
+                let endDate: String?
+                let statementFormat: StatementFormat?
+                let accountId: Int?
+                let cardId: Int?
+            }
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let data: TransferData?
+                let errorMessage: String?
+                
+                struct TransferData: Codable, Equatable {
+                    
+                    let paymentOperationDetailId: Int?
+                    let documentStatus: String
+                    let accountNumber: String?
+                    let closeDate: Int?
+                    let comment: String?
+                    let category: String?
+                }
+            }
+            
+            internal init(token: String, payload: Payload) {
                 
                 self.token = token
                 self.payload = payload

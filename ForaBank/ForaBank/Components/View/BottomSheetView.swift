@@ -10,32 +10,37 @@ import Combine
 
 protocol BottomSheetCustomizable: Identifiable {
     
-    var keyboardOfssetMultiplier: CGFloat { get }
+    var animationSpeed: Double { get }
+}
+
+extension BottomSheetCustomizable {
+    
+    var animationSpeed: Double { 0.5 }
 }
 
 // MARK: - View Extensions
 
 extension View {
     
-    func bottomSheet<Content>(isPresented: Binding<Bool>, keyboardOfssetMultiplier: CGFloat = 0.6, @ViewBuilder content: @escaping () -> Content) -> some View where Content: View {
+    func bottomSheet<Content>(isPresented: Binding<Bool>, animationSpeed: Double = 0.5, @ViewBuilder content: @escaping () -> Content) -> some View where Content: View {
         
-        modifier(BottomSheetModifier(isPresented: isPresented, keyboardOfssetMultiplier: keyboardOfssetMultiplier, sheetContent: content))
+        modifier(BottomSheetModifier(isPresented: isPresented, animationSpeed: animationSpeed, sheetContent: content))
     }
     
-    func bottomSheet<Item, Content>(item: Binding<Item?>, keyboardOfssetMultiplier: CGFloat = 0.6, @ViewBuilder content: @escaping (Item) -> Content) -> some View where Item : Identifiable, Content : View {
+    func bottomSheet<Item, Content>(item: Binding<Item?>, animationSpeed: Double = 0.5, @ViewBuilder content: @escaping (Item) -> Content) -> some View where Item : Identifiable, Content : View {
         
-        modifier(BottomSheetItemModifier(item: item, keyboardOfssetMultiplier: keyboardOfssetMultiplier, sheetContent: content))
+        modifier(BottomSheetItemModifier(item: item, animationSpeed: animationSpeed, sheetContent: content))
     }
     
-    func bottomSheet<Item, Content>(item: Binding<Item?>, keyboardOfssetMultiplier: CGFloat = 0.6, @ViewBuilder content: @escaping (Item) -> Content) -> some View where Item : BottomSheetCustomizable, Content : View {
+    func bottomSheet<Item, Content>(item: Binding<Item?>, animationSpeed: Double = 0.5, @ViewBuilder content: @escaping (Item) -> Content) -> some View where Item : BottomSheetCustomizable, Content : View {
         
         if let itemWrappedValue = item.wrappedValue {
             
-            return modifier(BottomSheetItemModifier(item: item, keyboardOfssetMultiplier: itemWrappedValue.keyboardOfssetMultiplier, sheetContent: content))
+            return modifier(BottomSheetItemModifier(item: item, animationSpeed: itemWrappedValue.animationSpeed, sheetContent: content))
             
         } else {
             
-            return modifier(BottomSheetItemModifier(item: item, keyboardOfssetMultiplier: keyboardOfssetMultiplier, sheetContent: content))
+            return modifier(BottomSheetItemModifier(item: item, animationSpeed: animationSpeed, sheetContent: content))
         }
     }
 }
@@ -45,7 +50,7 @@ extension View {
 struct BottomSheetModifier<SheetContent: View>: ViewModifier {
     
     let isPresented: Binding<Bool>
-    let keyboardOfssetMultiplier: CGFloat
+    let animationSpeed: Double
     let sheetContent: () -> SheetContent
     
     @ViewBuilder
@@ -56,12 +61,11 @@ struct BottomSheetModifier<SheetContent: View>: ViewModifier {
                 transaction.disablesAnimations = false
             })
             .fullScreenCover(isPresented: isPresented) {
-                BottomSheetView(isPresented: isPresented, keyboardOfssetMultiplier: keyboardOfssetMultiplier, content: sheetContent())
+                BottomSheetView(isPresented: isPresented, animationSpeed: animationSpeed, content: sheetContent())
             }
             .transaction({ transaction in
                 transaction.disablesAnimations = true
             })
-        
     }
 }
 
@@ -69,13 +73,13 @@ struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModi
     
     @Binding var item: Item?
     var isPresented: Binding<Bool>
-    let keyboardOfssetMultiplier: CGFloat
+    let animationSpeed: Double
     let sheetContent: (Item) -> SheetContent
     
-    init(item: Binding<Item?>, keyboardOfssetMultiplier: CGFloat, @ViewBuilder sheetContent: @escaping (Item) -> SheetContent) {
+    init(item: Binding<Item?>, animationSpeed: Double, @ViewBuilder sheetContent: @escaping (Item) -> SheetContent) {
         
         self._item = item
-        self.keyboardOfssetMultiplier = keyboardOfssetMultiplier
+        self.animationSpeed = animationSpeed
         self.sheetContent = sheetContent
         self.isPresented = Binding(get: { item.wrappedValue != nil }, set: { newValue in
             if newValue == false {
@@ -94,7 +98,7 @@ struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModi
                 })
                 .fullScreenCover(item: $item, content: { item in
                     
-                    BottomSheetView(isPresented: isPresented, keyboardOfssetMultiplier: keyboardOfssetMultiplier, content: sheetContent(item))
+                    BottomSheetView(isPresented: isPresented, animationSpeed: animationSpeed, content: sheetContent(item))
                     
                 })
                 .transaction({ transaction in
@@ -111,7 +115,7 @@ struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModi
                     })
                     .fullScreenCover(item: $item, content: { item in
                         
-                        BottomSheetView(isPresented: isPresented, keyboardOfssetMultiplier: keyboardOfssetMultiplier, content: sheetContent(item))
+                        BottomSheetView(isPresented: isPresented, animationSpeed: animationSpeed, content: sheetContent(item))
                         
                     })
                     .transaction({ transaction in
@@ -131,7 +135,7 @@ struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModi
 struct BottomSheetView<Content: View>: View {
     
     @Binding var isPresented: Bool
-    let keyboardOfssetMultiplier: CGFloat
+    let animationSpeed: Double
     let content: Content
     
     @State private var isShutterPresented = false
@@ -139,12 +143,11 @@ struct BottomSheetView<Content: View>: View {
     @State private var contentSize: CGSize = .zero
     @State private var bottomPadding: CGFloat = 0
     @GestureState private var translation: CGFloat = 0
-    @ObservedObject private var keyboardPublisher = KeyboardPublisher.shared
     
-    init(isPresented: Binding<Bool>, keyboardOfssetMultiplier: CGFloat, content: Content) {
+    init(isPresented: Binding<Bool>, animationSpeed: Double, content: Content) {
         
         self._isPresented = isPresented
-        self.keyboardOfssetMultiplier = keyboardOfssetMultiplier
+        self.animationSpeed = animationSpeed
         self.content = content
     }
     
@@ -157,36 +160,29 @@ struct BottomSheetView<Content: View>: View {
             
             if isShutterPresented {
                 
-                VStack(spacing: 0) {
-                    
-                    BottomSheetShutterView(isShutterPresented: $isShutterPresented, content: content)
-                    
-                    Color.white
-                        .frame(width: UIScreen.main.bounds.width, height: max(keyboardPublisher.keyboardHeight * keyboardOfssetMultiplier, 0))
-                    
-                }
-                .zIndex(1)
-                .background(
-                    GeometryReader { proxy in
-                        Color.clear.preference(key: BottomSheetPreferenceKey.self, value: proxy.size)
-                    }
-                )
-                .onPreferenceChange(BottomSheetPreferenceKey.self, perform: { self.contentSize = $0 })
-                .transition(.move(edge: .bottom))
-                .animation(.interactiveSpring().speed(0.5))
-                .offset(y: max(translation, 0))
-                .gesture(
-                    DragGesture().updating(self.$translation) { value, state, _ in
-                        state = value.translation.height
-                        
-                    }.onEnded { value in
-                        
-                        if value.translation.height > contentSize.height / 3 {
-                            
-                            isShutterPresented = false
+                BottomSheetShutterView(isShutterPresented: $isShutterPresented, content: content)
+                    .zIndex(1)
+                    .background(
+                        GeometryReader { proxy in
+                            Color.clear.preference(key: BottomSheetPreferenceKey.self, value: proxy.size)
                         }
-                    }
-                )
+                    )
+                    .onPreferenceChange(BottomSheetPreferenceKey.self, perform: { self.contentSize = $0 })
+                    .transition(.move(edge: .bottom))
+                    .animation(.interactiveSpring().speed(animationSpeed))
+                    .offset(y: max(translation, 0))
+                    .gesture(
+                        DragGesture().updating(self.$translation) { value, state, _ in
+                            state = value.translation.height
+                            
+                        }.onEnded { value in
+                            
+                            if value.translation.height > contentSize.height / 3 {
+                                
+                                isShutterPresented = false
+                            }
+                        }
+                    )
                 
             } else {
                 
@@ -194,8 +190,7 @@ struct BottomSheetView<Content: View>: View {
             }
         }
         .background(ClearBackgroundView())
-        .ignoresSafeArea(.all, edges: .bottom)
-        .ignoresSafeArea(.keyboard)
+        .ignoresSafeArea(.container, edges: .bottom)
         .onAppear{
             withAnimation(.interactiveSpring().speed(0.5)) {
                 isShutterPresented = true
@@ -239,7 +234,7 @@ extension BottomSheetView {
             
             Color.black
                 .opacity(0.3 * progress)
-                .edgesIgnoringSafeArea(.all)
+                .ignoresSafeArea(.all, edges: .all)
                 .onTapGesture {
                     isShutterPresented = false
                 }
@@ -253,7 +248,7 @@ extension BottomSheetView {
             let controller = UIViewController(nibName: nil, bundle: nil)
             
             context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
-               
+                
                 vc.parent?.view.backgroundColor = .clear
             })
             
@@ -339,16 +334,15 @@ struct BottomSheetView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-                
-            BottomSheetView(isPresented: .constant(true), keyboardOfssetMultiplier: 0.5, content: Rectangle().fill(Color.red)
-                    .frame(height: 500))
+            
+            BottomSheetView(isPresented: .constant(true), animationSpeed: 0.5, content: Rectangle().fill(Color.red)
+                .frame(height: 500))
             
             ZStack(alignment: .bottom) {
                 Color.gray
-                    .edgesIgnoringSafeArea(.all)
+                    .ignoresSafeArea(.all, edges: .all)
                 BottomSheetShutterView(isShutterPresented: .constant(true), content: Text("Hello, World").frame(height: 300))
             }
         }
     }
 }
-

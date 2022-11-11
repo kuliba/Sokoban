@@ -10,6 +10,10 @@
 
 import SwiftUI
 
+private class BundleProvider {
+    static let bundle = Bundle(for: BundleProvider.self)
+}
+
 public extension Image {
     static var ic12ArrowDown: Image { Image(#function) }
     static var ic12ArrowUp: Image { Image(#function) }
@@ -25,7 +29,7 @@ public extension Image {
     static var ic16Apple: Image { Image(#function) }
     static var ic16Tariff: Image { Image(#function) }
     static var ic16WheelOfFortune: Image { Image(#function) }
-    static var ic16ZKX: Image { Image(#function) }
+    static var ic16Zkx: Image { Image(#function) }
     static var ic16Activity: Image { Image(#function) }
     static var ic16Airplay: Image { Image(#function) }
     static var ic16AlertCircle: Image { Image(#function) }
@@ -364,11 +368,11 @@ public extension Image {
     static var ic24Ball: Image { Image(#function) }
     static var ic2412Circle: Image { Image(#function) }
     static var ic24Apple: Image { Image(#function) }
-    static var ic24SBP: Image { Image(#function) }
-    static var ic24STS: Image { Image(#function) }
+    static var ic24Sbp: Image { Image(#function) }
+    static var ic24Sts: Image { Image(#function) }
     static var ic24Tariff: Image { Image(#function) }
     static var ic24WheelOfFortune: Image { Image(#function) }
-    static var ic24ZKX: Image { Image(#function) }
+    static var ic24Zkx: Image { Image(#function) }
     static var ic24Abroad: Image { Image(#function) }
     static var ic24ActivatedCreditCard: Image { Image(#function) }
     static var ic24Activity: Image { Image(#function) }
@@ -747,8 +751,8 @@ public extension Image {
     static var ic24ZoomOut: Image { Image(#function) }
     static var ic32LogoForaLine: Image { Image(#function) }
     static var ic32Swap: Image { Image(#function) }
-    static var ic40SBP: Image { Image(#function) }
-    static var ic40TouchID: Image { Image(#function) }
+    static var ic40Sbp: Image { Image(#function) }
+    static var ic40TouchId: Image { Image(#function) }
     static var ic40Card: Image { Image(#function) }
     static var ic40Delete: Image { Image(#function) }
     static var ic40FaceId: Image { Image(#function) }
@@ -765,7 +769,7 @@ public extension Image {
     static var ic48Clock: Image { Image(#function) }
     static var ic48Close: Image { Image(#function) }
     static var ic48Info: Image { Image(#function) }
-    static var ic48PinATM: Image { Image(#function) }
+    static var ic48PinAtm: Image { Image(#function) }
     static var ic48PinManyBranchesBlack: Image { Image(#function) }
     static var ic48PinManyBranchesRed: Image { Image(#function) }
     static var ic48PinOffice: Image { Image(#function) }
@@ -777,7 +781,7 @@ public extension Image {
     static var ic48Tool: Image { Image(#function) }
     static var ic48UploadToAccount: Image { Image(#function) }
     static var ic48User: Image { Image(#function) }
-    static var ic64TouchID: Image { Image(#function) }
+    static var ic64TouchId: Image { Image(#function) }
     static var ic64FaceId: Image { Image(#function) }
     static var ic64ForaColor: Image { Image(#function) }
 }

@@ -327,7 +327,7 @@ class CurrencyWalletViewModel: ObservableObject {
         return productSelectorViewModel
     }
     
-    private func makeConfirmationViewModel(data: CurrencyExchangeConfirmationData) {
+    private func makeConfirmationViewModel(data: TransferResponseData) {
         
         if confirmationViewModel == nil, let responseCurrencyRate = data.currencyRate {
             
@@ -570,7 +570,7 @@ class CurrencyWalletViewModel: ObservableObject {
     private func handleExchangeApproveResponse(_ payload: ModelAction.CurrencyWallet.ExchangeOperations.Approve.Response) {
         
         switch payload {
-        case let .successed(paymentOperationDetailId):
+        case let .successed(response):
             
             guard let selectorViewModel = selectorViewModel,
                   let productCardSelector = selectorViewModel.productCardSelector,
@@ -582,7 +582,7 @@ class CurrencyWalletViewModel: ObservableObject {
                 return
             }
             
-            makeSuccessViewModel(paymentOperationDetailId, amount: confirmationViewModel.debitAmount, currency: confirmationViewModel.currencyPayer, state: .success)
+            makeSuccessViewModel(response.paymentOperationDetailId, amount: confirmationViewModel.debitAmount, currency: confirmationViewModel.currencyPayer, state: .success)
             
             scrollToItem = lastItem.id
             

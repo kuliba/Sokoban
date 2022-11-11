@@ -136,7 +136,7 @@ struct MainView: View {
                 OpenAccountView(viewModel: openAccountViewModel)      
             }
         })
-        .bottomSheet(item: $viewModel.bottomSheet, keyboardOfssetMultiplier: 0.7) { bottomSheet in
+        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
 
             switch bottomSheet.type {
             case let .openAccount(openAccountViewModel):

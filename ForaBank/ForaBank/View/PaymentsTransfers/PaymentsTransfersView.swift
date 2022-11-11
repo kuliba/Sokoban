@@ -159,8 +159,12 @@ struct PaymentsTransfersView: View {
                     .edgesIgnoringSafeArea(.all)
                 
             case let .meToMe(viewModel):
-                MeToMeView(viewModel: viewModel)
+                PaymentsMeToMeView(viewModel: viewModel)
                     .edgesIgnoringSafeArea(.bottom)
+                    .fixedSize(horizontal: false, vertical: true)
+                
+            case let .successMeToMe(successMeToMeViewModel):
+                PaymentsSuccessView(viewModel: successMeToMeViewModel)
                 
             case .anotherCard(let anotherCardViewModel):
                 AnotherCardView(viewModel: anotherCardViewModel)
@@ -179,11 +183,20 @@ struct PaymentsTransfersView: View {
             switch sheet.type {
             case let .exampleDetail(title):
                 ExampleDetailMock(title: title)
-            
+                
             case let .meToMe(viewModel):
-                MeToMeView(viewModel: viewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .frame(height: 474)
+                
+                PaymentsMeToMeView(viewModel: viewModel)
+                    .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+                        
+                        switch fullCover.type {
+                        case let .successMeToMe(successMeToMeViewModel):
+                            PaymentsSuccessView(viewModel: successMeToMeViewModel)
+                        }
+                        
+                    }.transaction { transaction in
+                        transaction.disablesAnimations = false
+                    }
                 
             case .anotherCard(let model):
                 AnotherCardView(viewModel: model)

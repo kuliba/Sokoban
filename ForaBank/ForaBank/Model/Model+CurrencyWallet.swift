@@ -25,7 +25,7 @@ extension ModelAction {
                 
                 struct Response: Action {
                     
-                    let result: Result<CurrencyExchangeConfirmationData,
+                    let result: Result<TransferResponseData,
                                        ModelError>
                 }
             }
@@ -36,7 +36,7 @@ extension ModelAction {
                 
                 enum Response: Action {
                   
-                    case successed(Int)
+                    case successed(TransferResponseBaseData)
                     case failed(ModelError)
                 }
 
@@ -92,12 +92,7 @@ extension Model {
                     }
                     
                     self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start
-                        .Response(result: .success(.init(debitAmount: transferResponse.debitAmount,
-                                                         fee: transferResponse.fee,
-                                                         creditAmount: transferResponse.creditAmount,
-                                                         currencyRate: transferResponse.currencyRate,
-                                                         currencyPayer: transferResponse.currencyPayer,
-                                                         currencyPayee: transferResponse.currencyPayee))))
+                        .Response(result: .success(transferResponse)))
                     
                 default:
                     self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start
@@ -142,8 +137,7 @@ extension Model {
                         return
                     }
                     
-                    self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve
-                        .Response.successed(data.paymentOperationDetailId))
+                    self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve.Response.successed(data))
                     
                 default:
                     self.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Approve

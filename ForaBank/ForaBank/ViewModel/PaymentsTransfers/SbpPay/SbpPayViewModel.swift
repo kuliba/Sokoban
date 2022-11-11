@@ -25,7 +25,7 @@ class SbpPayViewModel: ObservableObject {
     struct HeaderViewModel {
         
         let title = "Подключение счета к СБПэй"
-        let image: Image = Image.ic40SBP
+        let image: Image = Image.ic40Sbp
     }
     
     struct FooterViewModel {
@@ -80,17 +80,25 @@ class SbpPayViewModel: ObservableObject {
             
             self?.footer = .init(state: .spinner)
             
-            guard let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == paymentProduct?.productViewModel?.productId }) else {
-                return
-            }
-            
-            if let product = product as? ProductCardData, let accountId = product.accountId?.description {
+            switch paymentProduct?.content {
+            case let .product(productViewModel):
                 
-                self?.model.action.send(ModelAction.SbpPay.ProcessTokenIntent.Request(accountId: accountId, status: .success))
+                guard let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == productViewModel.id }) else {
+                    return
+                }
                 
-            } else if let accountId = paymentProduct?.productViewModel?.productId.description {
+                if let product = product as? ProductCardData, let accountId = product.accountId?.description {
+                    
+                    self?.model.action.send(ModelAction.SbpPay.ProcessTokenIntent.Request(accountId: accountId, status: .success))
+                    
+                } else {
+                    
+                    let accountId = productViewModel.id.description
+                    self?.model.action.send(ModelAction.SbpPay.ProcessTokenIntent.Request(accountId: accountId, status: .success))
+                }
                 
-                self?.model.action.send(ModelAction.SbpPay.ProcessTokenIntent.Request(accountId: accountId, status: .success))
+            default:
+                break
             }
         })))
     }
@@ -150,22 +158,25 @@ class SbpPayViewModel: ObservableObject {
         guard let productData = products.first else {
             return nil
         }
-        
+
         if let accountId = model.fastPaymentContractFullInfo.value.first?.fastPaymentContractAccountAttributeList?.first?.accountId {
          
             if let product = products.filter({($0 as? ProductCardData)?.accountId == accountId}).first {
                 
-                let selectorViewModel: ProductSelectorView.ViewModel = .init(model, title: title, currency: .rub, currencyOperation: .buy, productViewModel: .init(productId: product.id, productData: product, model: model), isDividerHiddable: true, backgroundColor: .white, titleIndent: .left, context: .init(isAdditionalProducts: false))
-                return selectorViewModel
+                let productSelectorViewModel: ProductSelectorView.ViewModel = .init(model, productData: product, context: .init(title: title, direction: .from, titleIndent: .left))
+                
+                return productSelectorViewModel
                 
             } else if let product = products.filter({$0.id == accountId}).first {
                 
-                let selectorViewModel: ProductSelectorView.ViewModel = .init(model, title: title, currency: .rub, currencyOperation: .buy, productViewModel: .init(productId: product.id, productData: product, model: model), isDividerHiddable: true, backgroundColor: .white, titleIndent: .left, context: .init(isAdditionalProducts: false))
-                return selectorViewModel
+                let productSelectorViewModel: ProductSelectorView.ViewModel = .init(model, productData: product, context: .init(title: title, direction: .from, titleIndent: .left))
+                
+                return productSelectorViewModel
             }
         }
         
-        let selectorViewModel: ProductSelectorView.ViewModel = .init(model, title: title, currency: .rub, currencyOperation: .buy, productViewModel: .init(productId: productData.id, productData: productData, model: model), isDividerHiddable: true, backgroundColor: .white, titleIndent: .left, context: .init(isAdditionalProducts: false))
-        return selectorViewModel
+        let productSelectorViewModel: ProductSelectorView.ViewModel = .init(model, productData: productData, context: .init(title: title, direction: .from, titleIndent: .left))
+        
+        return productSelectorViewModel
     }
 }

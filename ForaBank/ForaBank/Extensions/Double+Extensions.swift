@@ -21,4 +21,19 @@ extension Double {
         
         return decimalNumber.doubleValue
     }
+    
+    func currencyFormatter(_ currencySymbol: String) -> String {
+        
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.numberStyle = .currency
+        currencyFormatter.currencySymbol = currencySymbol
+        currencyFormatter.usesGroupingSeparator = true
+        currencyFormatter.locale = Locale(identifier: "ru_RU")
+        
+        if let value = currencyFormatter.string(from: NSNumber(value: self)) {
+            return value
+        }
+        
+        return String(self)
+    }
 }
