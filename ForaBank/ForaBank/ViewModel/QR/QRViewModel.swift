@@ -53,12 +53,8 @@ class QRViewModel: ObservableObject {
         
         let qrCode = QRCode(string: data)
         
-        if let qrCode = QRCode(string: data) {
-            
-            return .qrCode(qrCode)
-            
-            
-        } else if let url = URL(string: data) {
+        
+        if let url = URL(string: data) {
             
             if url.absoluteString.contains("qr.nspk.ru") {
                 
@@ -69,10 +65,34 @@ class QRViewModel: ObservableObject {
                 return .url(url)
             }
             
+        } else if let qrCode = QRCode(string: data) {
+            return .qrCode(qrCode)
         } else {
-            
             return .unknown(data)
         }
+        
+        
+        
+//        if let qrCode = QRCode(string: data) {
+//
+//            return .qrCode(qrCode)
+//
+//
+//        } else if let url = URL(string: data) {
+//
+//            if url.absoluteString.contains("qr.nspk.ru") {
+//
+//                return .c2bURL(url)
+//
+//            } else {
+//
+//                return .url(url)
+//            }
+//
+//        } else {
+//
+//            return .unknown(data)
+//        }
     }
     private func createButtons() -> [ButtonIconTextView.ViewModel] {
         
@@ -168,8 +188,18 @@ class QRViewModel: ObservableObject {
                             guard let qrMapping = model.qrDictionary.value else { break }
 
                             let operatorPuref = model.dictionaryAnywayOperator(with: qr, mapping: qrMapping)
+                            
+                            let puref = operatorPuref?.code
+                            
+                            var operatorDescription = ""
+                            
+                            if puref != nil {
+                                operatorDescription = puref!
+                            } else {
+                                operatorDescription = "Оператор не найден"
+                            }
 
-                            self.alert = .init(title: "QR", message: qr.original, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                            self.alert = .init(title: "QR: operator: \(operatorDescription))", message: qr.original, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
                      
                         case .c2bURL(let qr):
                             self.alert = .init(title: "C2b", message: qr.absoluteString, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))

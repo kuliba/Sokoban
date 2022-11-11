@@ -97,7 +97,7 @@ struct QRCode {
         
         for key in parameter.keys {
             
-            guard let value = rawData[key] else { return nil }
+            guard let value = rawData[key.lowercased()] else { return nil }
             
             return value
         }

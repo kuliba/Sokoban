@@ -47,7 +47,7 @@ extension Model {
             return
         }
         
-        let command = ServerCommands.QRController.GetPaymentsMapping(token: token, serial: serial)
+        let command = ServerCommands.QRController.GetPaymentsMapping(token: token, serial: nil)
 
         serverAgent.executeCommand(command: command) { result in
 
