@@ -117,6 +117,7 @@ extension ProductSelectorView {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] context in
                     
+                    // Update content
                     switch content {
                     case let .product(productViewModel):
                         productViewModel.update(context: context)
@@ -125,9 +126,8 @@ extension ProductSelectorView {
                         placeholderViewModel.update(context: context)
                     }
                     
-                    if let list = list {
-                        list.context = context
-                    }
+                    updateProduct(context: context)
+                    updateList(context: context)
                     
                 }.store(in: &bindings)
         }
@@ -182,6 +182,36 @@ extension ProductSelectorView {
                     }
 
                 }.store(in: &bindings)
+        }
+        
+        private func updateProduct(context: Context) {
+            
+            // Exclude deposit
+            if let productViewModel = productViewModel {
+                
+                let product = model.product(productId: productViewModel.id)
+                
+                guard let product = product,
+                      product.productType == .deposit,
+                      context.direction == .from else {
+                    return
+                }
+                
+                if let productsData = ProductsListView.ViewModel.reduce(model.products.value), let productData = productsData.products.first {
+                    
+                    let productViewModel: ProductViewModel = .init(model, productData: productData, context: context)
+                    
+                    content = .product(productViewModel)
+                }
+            }
+        }
+        
+        private func updateList(context: Context) {
+            
+            // Update list
+            if let list = list {
+                list.context = context
+            }
         }
     }
 }

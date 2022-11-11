@@ -76,17 +76,20 @@ extension ProductsListView {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] context in
                     
+                    // Exclude deposit
                     guard let productsData = Self.reduce(model.products.value) else {
                         return
                     }
                     
-                    let filterred = Self.filterred(products: productsData.products, context: context)
-                    self.products = Self.reduce(model, checkProductId: context.checkProductId, products: filterred)
-                    
                     let options = Self.makeOptions(model, context: context)
                     
                     if let typeSelector = typeSelector {
-                        typeSelector.update(options: options, selected: typeSelector.selected)
+                        
+                        if typeSelector.selected == ProductType.deposit.rawValue {
+                            typeSelector.update(options: options, selected: productsData.productType.rawValue)
+                        } else {
+                            typeSelector.update(options: options, selected: typeSelector.selected)
+                        }
                     }
                     
                 }.store(in: &bindings)
