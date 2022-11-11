@@ -382,7 +382,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 switch action {
                 case _ as PaymentsSuccessAction.Button.Close:
 
+                    self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
                     self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
+                    
                     self.rootActions?.switchTab(.main)
                     
                 case _ as PaymentsSuccessAction.Button.Repeat:
