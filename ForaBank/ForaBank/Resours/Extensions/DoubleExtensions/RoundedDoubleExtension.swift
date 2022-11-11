@@ -94,6 +94,7 @@ extension Double {
         
     }
     
+    @available(*, deprecated, message: "Use Model func amountFormatted(amount: Double, currencyCode: String?, style: AmountFormatStyle) -> String? in Model+Formatter.swift file")
     func currencyFormatter(symbol: String = "") -> String {
         
         var resultString = ""
