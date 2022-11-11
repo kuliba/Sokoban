@@ -18,7 +18,7 @@ class ProductAccountData: ProductData {
     let detailedRatesUrl: String
     let detailedConditionUrl: String
     
-    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], externalId: Int, name: String, dateOpen: Date, status: Status, branchName: String?, miniStatement: [PaymentData], order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
+    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], externalId: Int, name: String, dateOpen: Date, status: Status, branchName: String?, miniStatement: [PaymentData], order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String, detailedRatesUrl: String, detailedConditionUrl: String) {
         
         self.externalId = externalId
         self.name = name

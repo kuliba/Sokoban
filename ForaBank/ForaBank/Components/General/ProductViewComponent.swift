@@ -23,7 +23,6 @@ extension ProductView {
         @Published var footer: FooterViewModel
         @Published var statusAction: StatusActionViewModel?
         @Published var isChecked: Bool
-        let appearance: Appearance
         @Published var isUpdating: Bool
         var appearance: Appearance
         let productType: ProductType
