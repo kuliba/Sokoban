@@ -136,6 +136,13 @@ struct ProductProfileView: View {
                 OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
             }
         })
+        .fullScreenCover(item: $viewModel.fullCoverSpinner) { fullCoverSpinner in
+
+            switch fullCoverSpinner.type {
+            case let .successMeToMe(successMeToMeViewModel):
+                PaymentsSuccessView(viewModel: successMeToMeViewModel)
+            }
+        }
         .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
             
             switch sheet.type {

@@ -28,6 +28,7 @@ class ProductProfileViewModel: ObservableObject {
     @Published var isLinkActive: Bool = false
     @Published var sheet: Sheet?
     @Published var fullCover: FullCover?
+    @Published var fullCoverSpinner: FullCoverSpinner?
     @Published var textFieldAlert: AlertTextFieldView.ViewModel?
 
     var rootActions: RootViewModel.RootActions?
@@ -181,6 +182,9 @@ class ProductProfileViewModel: ObservableObject {
                     
                 case _ as ProductProfileViewModelAction.Close.FullCover:
                     fullCover = nil
+                    
+                case _ as ProductProfileViewModelAction.Close.FullCoverSpinner:
+                    fullCoverSpinner = nil
                     
                 case _ as ProductProfileViewModelAction.Close.AccountSpinner:
                     closeAccountSpinner = nil
@@ -832,7 +836,7 @@ class ProductProfileViewModel: ObservableObject {
                 case let payload as CloseAccountSpinnerAction.Response.Success:
 
                     bind(payload.viewModel)
-                    fullCover = .init(type: .successMeToMe(payload.viewModel))
+                    fullCoverSpinner = .init(type: .successMeToMe(payload.viewModel))
 
                 case let payload as CloseAccountSpinnerAction.Response.Failed:
                     makeAlert(payload.message)
@@ -856,9 +860,16 @@ class ProductProfileViewModel: ObservableObject {
                 switch action {
                 case _ as PaymentsSuccessAction.Button.Close:
                     
-                    self.action.send(ProductProfileViewModelAction.Close.FullCover())
-                    self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
+                    if fullCover == nil {
+                        
+                        self.action.send(ProductProfileViewModelAction.Close.FullCoverSpinner())
+                        
+                    } else {
+                        
+                        self.action.send(ProductProfileViewModelAction.Close.FullCover())
+                    }
                     
+                    self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
                     self.rootActions?.switchTab(.main)
 
                 case _ as PaymentsSuccessAction.Button.Repeat:
@@ -1158,6 +1169,16 @@ extension ProductProfileViewModel {
             case successMeToMe(PaymentsSuccessViewModel)
         }
     }
+    
+    struct FullCoverSpinner: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            case successMeToMe(PaymentsSuccessViewModel)
+        }
+    }
 }
 
 //MARK: - Action
@@ -1217,6 +1238,7 @@ enum ProductProfileViewModelAction {
         struct Link: Action {}
         struct Sheet: Action {}
         struct FullCover: Action {}
+        struct FullCoverSpinner: Action {}
         struct AccountSpinner: Action {}
         struct BottomSheet: Action {}
         struct DismissAll: Action {}
