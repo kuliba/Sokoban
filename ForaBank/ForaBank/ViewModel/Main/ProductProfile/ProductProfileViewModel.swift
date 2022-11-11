@@ -414,15 +414,7 @@ class ProductProfileViewModel: ObservableObject {
                         }
                     }
 
-                case _ as MyProductsViewModelAction.Tapped.OpenDeposit:
-                    self.action.send(ProductProfileViewModelAction.Close.Sheet())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                        
-                        self.action.send(ProductProfileViewModelAction.MyProductsTapped.OpenDeposit())
-                    }
-
-                default:
-                    break
+                default: break
                 }
                 
             }.store(in: &bindings)

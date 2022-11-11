@@ -20,15 +20,16 @@ class Model {
     let products: CurrentValueSubject<ProductsData, Never>
     let productsUpdating: CurrentValueSubject<[ProductType], Never>
     let productsFastUpdating: CurrentValueSubject<Set<ProductData.ID>, Never>
-    let productsHidden: CurrentValueSubject<[ProductData.ID], Never>
+    let productsVisibilityUpdating: CurrentValueSubject<Set<ProductData.ID>, Never>
+    let productsOrdersUpdating: CurrentValueSubject<Bool, Never>
     var productsAllowed: Set<ProductType> { [.card, .account, .deposit, .loan] }
     let loans: CurrentValueSubject<LoansData, Never>
     let loansUpdating: CurrentValueSubject<Set<ProductData.ID>, Never>
     let depositsInfo: CurrentValueSubject<DepositsInfoData, Never>
-
+    let productsOpening: CurrentValueSubject<Set<ProductType>, Never>
+    
     //MARK: Account
     let accountProductsList: CurrentValueSubject<[OpenAccountProductData], Never>
-    let accountOpening: CurrentValueSubject<Bool, Never>
     
     //MARK: Statements
     let statements: CurrentValueSubject<StatementsData, Never>
@@ -127,9 +128,9 @@ class Model {
         self.products = .init([:])
         self.productsUpdating = .init([])
         self.accountProductsList = .init([])
-        self.accountOpening = .init(false)
         self.productsFastUpdating = .init([])
-        self.productsHidden = .init([])
+        self.productsVisibilityUpdating = .init([])
+        self.productsOrdersUpdating = .init(false)
         self.loans = .init([])
         self.loansUpdating = .init([])
         self.depositsInfo = .init(DepositsInfoData())
@@ -161,8 +162,8 @@ class Model {
         self.dictionariesUpdating = .init([])
         self.userSettings = .init([])
         self.deepLinkType = nil
+        self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
-        
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
         self.localAgent = localAgent
@@ -481,7 +482,7 @@ class Model {
                     clearMemoryData()
                     sessionAgent.action.send(SessionAgentAction.Session.Terminate())
                     
-                    //MARK: - Products Actions
+        //MARK: - Products Actions
                     
                 case _ as ModelAction.Products.Update.Fast.All:
                     handleProductsUpdateFastAll()
@@ -491,6 +492,12 @@ class Model {
                     
                 case _ as ModelAction.Products.Update.Total.All:
                     handleProductsUpdateTotalAll()
+                
+                case let payload as ModelAction.Products.UpdateVisibility:
+                    handleProductsUpdateVisibility(payload)
+                    
+                case let payload as ModelAction.Products.UpdateOrders :
+                    handleProductsUpdateOrders(payload)
 
                 case let payload as ModelAction.Products.UpdateCustomName.Request:
                     handleProductsUpdateCustomName(payload)
@@ -627,11 +634,6 @@ class Model {
                     
                 case _ as ModelAction.Settings.GetUserSettings:
                     handleGetUserSettings()
-                    
-                    //MARK: - Settings Actions
-                    
-                case let payload as ModelAction.Settings.UpdateProductsHidden:
-                    handleUpdateProductsHidden(payload.productID)
                     
                     //MARK: - Notifications
                        
@@ -1017,16 +1019,6 @@ private extension Model {
     
     func loadSettings() {
         
-        do {
-            
-            let productsHidden: [ProductData.ID] = try settingsAgent.load(type: .interface(.productsHidden))
-            self.productsHidden.value = productsHidden
-            
-        } catch {
-            
-            handleSettingsCachingError(error: error)
-        }
-        
         if let userSettings = localAgent.load(type: [UserSettingData].self) {
             
             self.userSettings.value = userSettings
@@ -1187,7 +1179,7 @@ private extension Model {
         
         products.value = [:]
         productsUpdating.value = []
-        productsHidden.value = []
+        productsVisibilityUpdating.value = []
         loans.value = []
         loansUpdating.value = []
         statements.value = [:]
@@ -1204,6 +1196,7 @@ private extension Model {
         dictionariesUpdating.value = []
         currencyWalletList.value = []
         userSettings.value = []
+        productsOpening.value = []
         
         print("Model: memory data cleaned")
     }

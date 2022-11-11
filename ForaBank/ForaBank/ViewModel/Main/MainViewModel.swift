@@ -201,6 +201,15 @@ class MainViewModel: ObservableObject, Resetable {
                             case .deposit:
                                 self.action.send(MainViewModelAction.Show.OpenDeposit())
                                 
+                            case .card:
+                                
+                                let authProductsViewModel = AuthProductsViewModel(self.model,
+                                                                                      products: self.model.catalogProducts.value,
+                                                                                      dismissAction: { [weak self] in
+                                        self?.action.send(MainViewModelAction.Close.Link()) })
+                                    
+                                    self.link = .openCard(authProductsViewModel)
+                                
                             default:
                                 break
                             }
@@ -425,14 +434,6 @@ class MainViewModel: ObservableObject, Resetable {
                         self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
                     }
                     
-                case _ as MyProductsViewModelAction.Tapped.OpenDeposit:
-                    
-                    self.action.send(MainViewModelAction.Close.Link())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                        
-                        self.action.send(MainViewModelAction.Show.OpenDeposit())
-                    }
-                    
                 default:
                     break
                 }
@@ -544,6 +545,7 @@ extension MainViewModel {
         case currencyWallet(CurrencyWalletViewModel)
         case myProducts(MyProductsViewModel)
         case country(CountryPaymentView.ViewModel)
+        case openCard(AuthProductsViewModel)
 
     }
 

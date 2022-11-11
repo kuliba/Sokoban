@@ -22,7 +22,11 @@
       "ownerID": 10001639855,
       "productName": "VISA REWARDS R-5",
       "productType": "CARD",
-      "smallDesign": "string"
+      "smallDesign": "string",
+      "visibility": true,
+      "order": 0,
+      "smallBackgroundDesignHash": "f8513ccd6cf65bbc9d91a233eeac0e06",
+      "smallDesignMd5hash": "75f3ee3b2d44e5808f41777c613f23c9"
     }
   ],
   "errorMessage": "string",

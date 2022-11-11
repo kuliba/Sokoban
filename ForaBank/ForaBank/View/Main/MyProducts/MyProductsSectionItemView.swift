@@ -3,20 +3,26 @@
 //  ForaBank
 //
 //  Created by Pavel Samsonov on 17.04.2022.
+//  Full refactored by Dmitry Martynov on 18.09.2022
 //
 
 import SwiftUI
+import Shimmer
 
 struct MyProductsSectionItemView: View {
     
-    @ObservedObject var viewModel: MyProductsSectionProductItemViewModel
+    @ObservedObject var viewModel: MyProductsSectionItemViewModel
+    @Binding var editMode: EditMode
     
-    var contentOffset: CGFloat {
+    private var contentOffset: CGFloat {
         
-        switch viewModel.state {
-        case .rightButton: return -120
-        case .leftButton: return 120
-        default: return 0
+        guard let sideButton = viewModel.sideButton else {
+            return 0
+        }
+        
+        switch sideButton {
+        case .right: return 146
+        case .left: return -146
         }
     }
     
@@ -24,122 +30,176 @@ struct MyProductsSectionItemView: View {
         
         ZStack {
             
-            HStack {
-                
-                switch viewModel.state {
-                case let .leftButton(viewModel):
-                    ActionButtonView(viewModel: viewModel)
-                    Spacer()
-                case let .rightButton(viewModel):
-                    Spacer()
-                    ActionButtonView(viewModel: viewModel)
-                default:
-                    EmptyView()
-                }
+            if let sideButtonViewModel = viewModel.sideButton {
+
+                SideButtonView(viewModel: sideButtonViewModel)
             }
+            
+            BaseItemView(viewModel: viewModel, editMode: $editMode)
+                .offset(x: contentOffset)
+        }
+    }
+
+}
+
+extension MyProductsSectionItemView {
+    
+    struct BaseItemView: View {
+        
+        @ObservedObject var viewModel: MyProductsSectionItemViewModel
+        @Binding var editMode: EditMode
+        
+        var body: some View {
             
             ZStack {
                 
-                HStack(spacing: 16) {
+                Color.barsTabbar
+                
+                HStack(alignment: .center ,spacing: 16) {
                     
-                    VStack {
-                        if let icon = viewModel.icon {
-                            icon
-                                .renderingMode(.original)
-                                .resizable()
-                                .frame(width: 32, height: 22)
-                        } else {
-                            EmptyView()
-                                .frame(width: 32, height: 22)
-                            //TODO: Placeholder Image
-                        }
-                        Spacer()
-                        
-                    }
-                    .padding(.top, 8)
-                    .padding(.leading, 20)
-
+                    MyProductsSectionItemView.IconView(viewModel: viewModel.icon)
+                    
                     VStack(spacing: 0) {
                         
                         HStack {
-
+                            
                             if let paymentSystemIcon = viewModel.paymentSystemIcon {
                                 paymentSystemIcon
                                     .renderingMode(.original)
                             }
                             
-                            Text(viewModel.title)
-                                .font(.textBodyMM14200())
+                            Text(viewModel.name)
+                                .lineLimit(1)
+                                .font(.textH4M16240())
                                 .foregroundColor(.mainColorsBlack)
                             
                             Spacer()
                             
-                            Text(viewModel.currencyBalance)
-                                .font(.textBodyMM14200())
+                            Text(viewModel.balance)
+                                .font(.textH4M16240())
                                 .foregroundColor(.mainColorsBlack)
                                 .frame(alignment: .trailing)
-                        } .padding(.bottom, 4)
-                        
-                        HStack {
+                            
+                        }.padding(.bottom, 4)
 
-                            Text(viewModel.numberCard)
-                                .font(.textBodySR12160())
+                        HStack {
+                            
+                            Text(viewModel.description)
+                                .font(.textBodyMR14180())
                                 .foregroundColor(.mainColorsGray)
                             
-                            if let subtitle = viewModel.subtitle {
-                                Text(subtitle)
-                                    .font(.textBodySR12160())
-                                    .foregroundColor(.mainColorsGray)
-                            }
-                            
-                            if let dateLong = viewModel.dateLong {
-                                Text(dateLong)
-                                    .font(.textBodySR12160())
-                                    .foregroundColor(.mainColorsGray)
-                            }
                             Spacer()
+                            
                         }.padding(.bottom, 12)
                         
-                        Divider()
-                            .background(Color.mainColorsGrayLightest)
-                            .opacity(0.5)
-                    }
-                    .padding(.trailing, 20)
+                    }.padding(.trailing, 12)
                 }
             }
-            .background(Color.mainColorsWhite)
-            .offset(x: contentOffset)
+            .frame(height: 72)
+            .padding(.leading, editMode == .active ? viewModel.orderModePadding : 12)
+            .background(Color.barsTabbar)
             .onTapGesture {
-                
-                viewModel.action.send(MyProductsSectionItemAction.Tap(productId: viewModel.id))
+                viewModel.action.send(MyProductsSectionItemAction.ItemTapped())
             }
         }
-        .frame(height: 60)
-        .modifier(SwipeSidesModifier(leftAction: {
-
-            viewModel.action.send(MyProductsSectionItemAction.SwipeDirection.Left())
-
-        }, rightAction: {
-
-            switch viewModel.state {
-            case .normal:
-                guard viewModel.isNeedsActivated else {
-                    return
-                }
-            default:
-                break
-            }
-
-            viewModel.action.send(MyProductsSectionItemAction.SwipeDirection.Right())
-        }))
     }
-}
-
-extension MyProductsSectionItemView {
+    
+    struct IconView: View {
+        
+        @ObservedObject var viewModel: MyProductsSectionItemViewModel.IconViewModel
+        
+        var body: some View {
+            
+            ZStack(alignment: .trailing) {
+                
+                switch viewModel.background {
+                case let .image(baseImage):
+                    baseImage.renderingMode(.original)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 32)
+                    
+                case let .color(baseColor):
+                    RoundedRectangle(cornerRadius: 3)
+                        .foregroundColor(baseColor)
+                        .frame(width: 32, height: 22)
+                }
+                
+                if let overlay = viewModel.overlay {
+                    
+                    overlay.image
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundColor(overlay.imageColor)
+                        .frame(width: 32, height: 12)
+                }
+            }
+            .shimmering(active: viewModel.isUpdating, bounce: true)
+        }
+    }
+    
+    struct PlaceholderItemView: View {
+        
+        @Binding var editMode: EditMode
+        var body: some View {
+            
+            ZStack {
+                
+                Color.barsTabbar
+                
+                HStack(alignment: .center ,spacing: 16) {
+                
+                    RoundedRectangle(cornerRadius: 3)
+                        .foregroundColor(.mainColorsGrayMedium)
+                        .frame(width: 32, height: 22)
+                
+                    VStack(spacing: 4) {
+                
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(.mainColorsGrayMedium)
+                            .frame(height: 12)
+                            .padding(.trailing, 12)
+                    
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(.mainColorsGrayMedium)
+                            .frame(height: 12)
+                            .padding(.trailing, 130)
+                    }
+                }
+                .shimmering(active: true, bounce: true)
+            }
+            .frame(height: 72)
+            .padding(.leading, editMode == .active ? 0 : 12)
+            .background(Color.barsTabbar)
+        }
+    }
+    
+    struct SideButtonView: View {
+        
+        let viewModel: MyProductsSectionItemViewModel.SideButtonViewModel
+        
+        var body: some View {
+            
+            HStack {
+                
+                switch viewModel {
+                case let .left(viewModel):
+                    Spacer()
+                    MyProductsSectionItemView.ActionButtonView(viewModel: viewModel)
+                    
+                    
+                case let .right(viewModel):
+                    MyProductsSectionItemView.ActionButtonView(viewModel: viewModel)
+                    Spacer()
+                }
+            }
+        }
+    }
     
     struct ActionButtonView: View {
         
-        var viewModel: MyProductsSectionProductItemViewModel.ActionButtonViewModel
+        var viewModel: MyProductsSectionItemViewModel.ActionButtonViewModel
         
         var body: some View {
             
@@ -149,82 +209,20 @@ extension MyProductsSectionItemView {
                     
                     viewModel.type.color
                     
-                    VStack {
+                    HStack {
                         
-                        if let icon = viewModel.type.icon {
-                            Image(icon)
-                        }
+                        viewModel.type.icon
+                            .renderingMode(.template)
+                            .foregroundColor(.mainColorsWhite)
                         
                         Text(viewModel.type.title)
                             .foregroundColor(.mainColorsWhite)
-                            .font(.textBodySM12160())
+                            .font(.textBodyMR14200())
                     }
                 }
-                .frame(width: 120, height: 60)
+                .frame(width: 146, height: 72)
             }
         }
-    }
-}
-
-struct MyProductsSectionButtonItemView: View {
-    
-    @ObservedObject var viewModel: MyProductsSectionButtonItemViewModel
-    
-    var body: some View {
-        
-        ZStack {
-            
-            HStack(spacing: 16) {
-                
-                VStack {
-                    
-                    viewModel.icon
-                        .renderingMode(.original)
-                    
-                    Spacer()
-                    
-                }
-                .padding(.top, 8)
-                .padding(.leading, 20)
-                
-                VStack(spacing: 0) {
-                    
-                    HStack {
-                        
-                        Text(viewModel.title)
-                            .font(.textBodyMM14200())
-                            .foregroundColor(.mainColorsBlack)
-                        
-                        Spacer()
-                        
-                    } .padding(.bottom, 4)
-                    
-                    HStack {
-                        
-                        if let subtitle = viewModel.subtitle {
-                            Text(subtitle)
-                                .font(.textBodySR12160())
-                                .foregroundColor(.mainColorsGray)
-                        }
-                        
-                        Spacer()
-                    } .padding(.bottom, 12)
-                    
-                    Divider()
-                        .background(Color.mainColorsGrayLightest)
-                        .opacity(0.5)
-                }
-                .padding(.trailing, 20)
-                
-            }
-            .background(Color.mainColorsWhite)
-            .onTapGesture {
-                
-                viewModel.action.send(MyProductsSectionItemAction.PlaceholderTap(type: viewModel.type))
-            }
-        }
-        .frame(height: 60)
-        
     }
 }
 
@@ -233,17 +231,21 @@ struct MyProductsSectionItemView_Previews: PreviewProvider {
         
         Group {
             
-            MyProductsSectionItemView(viewModel: .sample7)
+            MyProductsSectionItemView
+                .BaseItemView(viewModel: .sample7, editMode: .constant(.inactive))
+                .previewDisplayName("BaseItem")
                 .previewLayout(.sizeThatFits)
             
-            MyProductsSectionItemView(viewModel: .sample8)
+            MyProductsSectionItemView(viewModel: .sample7, editMode: .constant(.inactive))
                 .previewLayout(.sizeThatFits)
             
-            MyProductsSectionItemView(viewModel: .sample9)
+            MyProductsSectionItemView(viewModel: .sample8, editMode: .constant(.inactive))
                 .previewLayout(.sizeThatFits)
             
-            MyProductsSectionButtonItemView(viewModel: .sample10)
+            MyProductsSectionItemView(viewModel: .sample9, editMode: .constant(.inactive))
                 .previewLayout(.sizeThatFits)
+            
         }
     }
 }
+

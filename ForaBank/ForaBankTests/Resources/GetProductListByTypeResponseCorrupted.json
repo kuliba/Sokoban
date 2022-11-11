@@ -46,7 +46,11 @@
                 ],
                 "id": 10002585800,
                 "balanceRUB": 1000123,
-                "XLDesign": "string"
+                "XLDesign": "string",
+                "visibility": true,
+                "order": 0,
+                "smallBackgroundDesignHash": "",
+                "smallDesignMd5hash": ""
             },
             {
                 "number": "4444555566661122",
@@ -88,7 +92,11 @@
                 ],
                 "id": 10002585800,
                 "balanceRUB": 1000123,
-                "XLDesign": "string"
+                "XLDesign": "string",
+                "visibility": true,
+                "order": 0,
+                "smallBackgroundDesignHash": "",
+                "smallDesignMd5hash": ""
             },
             {
                 "productType": "CARD",
@@ -131,7 +139,11 @@
                 ],
                 "id": 10002585800,
                 "balanceRUB": 1000123,
-                "XLDesign": "string"
+                "XLDesign": "string",
+                "visibility": true,
+                "order": 0,
+                "smallBackgroundDesignHash": "",
+                "smallDesignMd5hash": ""
             },
             {
                 "number": "4444555566661122",
@@ -170,7 +182,11 @@
                 ],
                 "id": 10002585800,
                 "balanceRUB": 1000123,
-                "XLDesign": "string"
+                "XLDesign": "string",
+                "visibility": true,
+                "order": 0,
+                "smallBackgroundDesignHash": "",
+                "smallDesignMd5hash": ""
             },
             {
                 "productType": "ACCOUNT",
@@ -204,7 +220,11 @@
                 "minimumBalance": 2000,
                 "id": 10002585800,
                 "balanceRUB": 1000123,
-                "XLDesign": "string"
+                "XLDesign": "string",
+                "visibility": true,
+                "order": 0,
+                "smallBackgroundDesignHash": "",
+                "smallDesignMd5hash": ""
             },
             {
                 "number": "4444555566661122",
@@ -234,7 +254,11 @@
                 "minimumBalance": 2000,
                 "id": 10002585800,
                 "balanceRUB": 1000123,
-                "XLDesign": "string"
+                "XLDesign": "string",
+                "visibility": true,
+                "order": 0,
+                "smallBackgroundDesignHash": "",
+                "smallDesignMd5hash": ""
             },
             {
                 "productType": "DEPOSIT",
@@ -275,7 +299,11 @@
                 "strDateLong": "12/27",
                 "id": 10002585800,
                 "balanceRUB": 1000123,
-                "XLDesign": "string"
+                "XLDesign": "string",
+                "visibility": true,
+                "order": 0,
+                "smallBackgroundDesignHash": "",
+                "smallDesignMd5hash": ""
             },
             {
                 "number": "4444555566661122",
@@ -312,7 +340,11 @@
                 "strDateLong": "12/27",
                 "id": 10002585800,
                 "balanceRUB": 1000123,
-                "XLDesign": "string"
+                "XLDesign": "string",
+                "visibility": true,
+                "order": 0,
+                "smallBackgroundDesignHash": "",
+                "smallDesignMd5hash": ""
             },
             {
                 "productType": "LOAN",

@@ -1615,7 +1615,10 @@ extension Model {
             return
         }
         
-        let command = ServerCommands.DictionaryController.GetSvgImageList(token: token, payload: .init(md5HashList: payload.imagesIds))
+        let command = ServerCommands.DictionaryController
+                        .GetSvgImageList(token: token,
+                                         payload: .init(md5HashList: payload.imagesIds))
+        
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {

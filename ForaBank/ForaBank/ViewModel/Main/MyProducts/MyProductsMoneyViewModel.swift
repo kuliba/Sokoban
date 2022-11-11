@@ -339,6 +339,7 @@ extension MyProductsMoneyViewModel {
         .init(id: "USD", symbol: "\u{0024}", name: "Доллар США", rate: 60.54, isSelected: false, action: {}),
         .init(id: "EUR", symbol: "\u{20AC}", name: "Евро", rate: 61.22, isSelected: false, action: {}),
         .init(id: "GBP", symbol: "\u{00A3}", name: "Фунты стерлингов", rate: 71.7, isSelected: false, action: {}),
+        .init(id: "CHF", symbol: "\u{20A3}", name: "Швейцарские франки", rate: 68.8, isSelected: false, action: {}),
         .init(id: "CHF", symbol: "\u{20A3}", name: "Швейцарские франки", rate: 68.8, isSelected: false, action: {})
     ]
 }
