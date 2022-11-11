@@ -337,6 +337,25 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         // then
         XCTAssertEqual(result, expected)
     }
+    
+    func testBeforeClosing_Response_Decoding() throws {
+
+        // given
+        guard let url = bundle.url(forResource: "BeforeClosingResponseGeneric", withExtension: "json") else {
+            XCTFail("testBeforeClosing_Response_Decoding : Missing file: BeforeClosingResponseGeneric.json")
+            return
+        }
+        
+        let json = try Data(contentsOf: url)
+
+        let expected = ServerCommands.DepositController.GetDepositRestBeforeClosing.Response(statusCode: .ok, errorMessage: "string", data: 0)
+
+        // when
+        let result = try decoder.decode(ServerCommands.DepositController.GetDepositRestBeforeClosing.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
 }
 
 
