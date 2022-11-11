@@ -21,13 +21,23 @@ extension MainSectionProductsView {
         
         @Published var content: Content
         @Published var selector: OptionSelectorView.ViewModel?
-        @Published var moreButton: MoreButtonViewModel?
+        
         var isScrollChangeSelectorEnable = true
+        
+        var moreButton: MoreButtonViewModel {
+            .init(icon: .ic24MoreHorizontal, action: {[weak self] in self?.action.send(MainSectionViewModelAction.Products.MoreButtonTapped())})
+        }
         
         enum Content {
             
+            case empty
             case placeholders
             case groups([MainSectionProductsGroupView.ViewModel])
+            
+            var isEmpty: Bool {
+                if case .empty = self { return true }
+                else { return false }
+            }
         }
         
         private var products: CurrentValueSubject<[ProductType: [ProductView.ViewModel]], Never> = .init([:])
@@ -36,11 +46,11 @@ extension MainSectionProductsView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        internal init(content: Content, selector: OptionSelectorView.ViewModel?, moreButton: MoreButtonViewModel?, model: Model = .emptyMock, isCollapsed: Bool) {
+        internal init(content: Content, selector: OptionSelectorView.ViewModel?,
+                      model: Model = .emptyMock, isCollapsed: Bool) {
             
             self.content = content
             self.selector = selector
-            self.moreButton = moreButton
             self.model = model
             super.init(isCollapsed: isCollapsed)
         }
@@ -49,7 +59,6 @@ extension MainSectionProductsView {
             
             self.content = .placeholders
             self.selector = nil
-            self.moreButton = nil
             self.model = model
             super.init(isCollapsed: false)
             
@@ -68,7 +77,8 @@ extension MainSectionProductsView {
                     var productsUpdated = [ProductType: [ProductView.ViewModel]]()
                     for productType in ProductType.allCases {
                         
-                        if let productsForType = productsUpdate[productType], productsForType.count > 0 {
+                        if let productsForType = productsUpdate[productType]?.filter({ $0.visibility }),
+                           productsForType.count > 0 {
                             
                             var productsViewModelsUpdated = [ProductView.ViewModel]()
                             for product in productsForType {
@@ -102,77 +112,86 @@ extension MainSectionProductsView {
                 .receive(on: DispatchQueue.main)
                 .sink {[unowned self] data in
                     
-                    let products = data.0
-                    let productsUpdating = data.1
-                    
-                    var groupsUpdated = [MainSectionProductsGroupView.ViewModel]()
-                    
-                    for productType in ProductType.allCases {
+                    if model.isAllProductsHidden {
                         
-                        guard let productsForType = products[productType] else {
-                            continue
-                        }
+                        withAnimation {
                         
-                        let isGroupUpdating = productsUpdating.contains(productType) ? true : false
-                        
-                        if let groupForType = groups.first(where: { $0.productType == productType}) {
-                            
-                            groupForType.update(with: productsForType)
-                            groupForType.isSeparator = true
-                            groupForType.isUpdating = isGroupUpdating
-                            groupsUpdated.append(groupForType)
-                            
-                        } else {
-                            
-                            let group = MainSectionProductsGroupView.ViewModel(productType: productType, products: productsForType, model: model)
-                            group.isSeparator = true
-                            group.isUpdating = isGroupUpdating
-                            groupsUpdated.append(group)
-                        }
-                    }
-                    
-                    groupsUpdated.last?.isSeparator = false
-                    groups = groupsUpdated
-                    
-                    withAnimation {
-                        
-                        content = content(with: groups)
-                    }
-                    
-                    bind(groups)
-                    
-                    // create product type selector
-                    if groups.count > 1 {
-                        
-                        let options = groups.map{ Option(id: $0.id, name: $0.productType.pluralName)}
-                        
-                        if let currentSelector = selector {
-                            
-                            let optionsIds = options.map{ $0.id }
-                            let selected = optionsIds.contains(currentSelector.selected) ? currentSelector.selected : options[0].id
-                            
-                            withAnimation {
-                                
-                                currentSelector.update(options: options, selected: selected)
-                            }
-                            
-                        } else {
-                            
-                            withAnimation {
-                                
-                                selector = OptionSelectorView.ViewModel(options: options, selected: options[0].id, style: .products, mode: .action)
-                            }
-                            
-                            bind(selector)
+                            content = .empty
                         }
                         
                     } else {
+                    
+                        let products = data.0
+                        let productsUpdating = data.1
+                    
+                        var groupsUpdated = [MainSectionProductsGroupView.ViewModel]()
+                    
+                        for productType in ProductType.allCases {
                         
-                        withAnimation {
+                            guard let productsForType = products[productType]
+                            else { continue }
+                        
+                            let isGroupUpdating = productsUpdating.contains(productType) ? true : false
+                        
+                            if let groupForType = groups.first(where: { $0.productType == productType}) {
                             
-                            selector = nil
+                                groupForType.update(with: productsForType)
+                                groupForType.isSeparator = true
+                                groupForType.isUpdating = isGroupUpdating
+                                groupsUpdated.append(groupForType)
+                            
+                            } else {
+                            
+                                let group = MainSectionProductsGroupView.ViewModel(productType: productType, products: productsForType, model: model)
+                                group.isSeparator = true
+                                group.isUpdating = isGroupUpdating
+                                groupsUpdated.append(group)
+                            }
+                        } //for
+                    
+                        groupsUpdated.last?.isSeparator = false
+                        groups = groupsUpdated
+                    
+                        withAnimation {
+                        
+                            content = content(with: groups)
                         }
-                    }
+                    
+                        bind(groups)
+                    
+                        // create product type selector
+                        if groups.count > 1 {
+                        
+                            let options = groups.map{ Option(id: $0.id, name: $0.productType.pluralName)}
+                        
+                            if let currentSelector = selector {
+                            
+                                let optionsIds = options.map{ $0.id }
+                                let selected = optionsIds.contains(currentSelector.selected) ? currentSelector.selected : options[0].id
+                            
+                                withAnimation {
+                                
+                                    currentSelector.update(options: options, selected: selected)
+                                }
+                            
+                            } else {
+                            
+                                withAnimation {
+                                
+                                    selector = OptionSelectorView.ViewModel(options: options, selected: options[0].id, style: .products, mode: .action)
+                                }
+                            
+                                bind(selector)
+                            }
+                        
+                        } else {
+                        
+                            withAnimation {
+                            
+                                selector = nil
+                            }
+                        }
+                    } //if visibility empty
                     
                 }.store(in: &bindings)
             
@@ -197,28 +216,12 @@ extension MainSectionProductsView {
                     
                 }.store(in: &bindings)
             
-            $isCollapsed
+            model.productsOpening
                 .receive(on: DispatchQueue.main)
-                .sink {[unowned self] isCollapsed in
+                .sink { [unowned self] productsOpening in
                     
-                    withAnimation {
-                        
-                        if isCollapsed == true {
+                    let accountOpening = productsOpening.contains(.account)
                             
-                            moreButton = nil
-                            
-                        } else {
-                            
-                            moreButton = MoreButtonViewModel(icon: .ic24MoreHorizontal, action: {[weak self] in self?.action.send(MainSectionViewModelAction.Products.MoreButtonTapped())})
-                        }
-                    }
-                    
-                }.store(in: &bindings)
-            
-            model.accountOpening
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] accountOpening in
-                    
                     switch content {
                     case let .groups(groups):
                         
@@ -322,14 +325,7 @@ extension MainSectionProductsView {
                 
             } else {
                 
-                if groups.count == 1, groups[0].productType == .card, groups[0].visible.isEmpty {
-                    
-                    return .placeholders
-                    
-                } else {
-                    
-                    return .groups(groups)
-                }
+                return .groups(groups)
             }
         }
         
@@ -370,7 +366,12 @@ struct MainSectionProductsView: View {
     
     var body: some View {
         
-        CollapsableSectionView(title: viewModel.title, edges: .horizontal, padding: 20, isCollapsed: $viewModel.isCollapsed) {
+        CollapsableSectionView(title: viewModel.title,
+                               edges: .horizontal,
+                               padding: 20,
+                               isShevronVisible: !viewModel.content.isEmpty,
+                               isCollapsed: viewModel.content.isEmpty
+                                            ? .constant(true) : $viewModel.isCollapsed) {
             
             VStack(spacing: 16) {
                 
@@ -384,6 +385,10 @@ struct MainSectionProductsView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     
                     switch viewModel.content {
+                        
+                    case .empty:
+                        EmptyView()
+                        
                     case .placeholders:
                         MainSectionProductsView.PlaceholdersView()
                             .padding(.horizontal, 20)
@@ -428,7 +433,9 @@ struct MainSectionProductsView: View {
                 }.frame(height: 104, alignment: .top)
             }
         }
-        .overlay(MoreButtonView(viewModel: viewModel.moreButton).padding(.trailing, 20))
+        .overlay13(alignment: .top) {
+            MoreButtonView(viewModel: viewModel.moreButton).padding(.trailing, 20)
+        }
     }
     
     func scrollToGroup(groupId: MainSectionProductsGroupView.ViewModel.ID) {
@@ -474,39 +481,28 @@ extension MainSectionProductsView {
     
     struct MoreButtonView: View {
         
-        let viewModel: ViewModel.MoreButtonViewModel?
+        let viewModel: ViewModel.MoreButtonViewModel
         
         var body: some View {
             
-            if let viewModel = viewModel {
+            HStack {
                 
-                VStack {
+                Spacer()
+                
+                Button(action: viewModel.action) {
                     
-                    HStack {
+                    ZStack {
                         
-                        Spacer()
+                        Circle()
+                            .frame(width: 32, height: 32, alignment: .center)
+                            .foregroundColor(.mainColorsGrayLightest)
                         
-                        Button(action: viewModel.action){
-                            
-                            ZStack{
-                                
-                                Circle()
-                                    .frame(width: 32, height: 32, alignment: .center)
-                                    .foregroundColor(.mainColorsGrayLightest)
-                                
-                                viewModel.icon
-                                    .renderingMode(.original)
-                            }
-                        }
+                        viewModel.icon
+                            .renderingMode(.original)
                     }
-                    
-                    Spacer()
                 }
-                
-            } else {
-                
-                Color.clear
             }
+            
         }
     }
     
@@ -526,6 +522,7 @@ extension MainSectionProductsView {
             }
         }
     }
+    
 }
 
 //MARK: - Preview
@@ -549,7 +546,7 @@ struct MainSectionProductsView_Previews: PreviewProvider {
 
 extension MainSectionProductsView.ViewModel {
     
-    static let sample = MainSectionProductsView.ViewModel(content: .groups([.sampleWant]), selector: nil, moreButton: nil, isCollapsed: false)
+    static let sample = MainSectionProductsView.ViewModel(content: .groups([.sampleWant]), selector: nil, isCollapsed: false)
 }
 
 

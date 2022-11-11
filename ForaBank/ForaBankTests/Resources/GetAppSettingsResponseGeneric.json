@@ -1,0 +1,9 @@
+{
+  "statusCode": 0,
+  "errorMessage": "string",
+  "data": {
+    "appSettings": {
+      "allowCloseDeposit": true,
+    }
+  }
+}

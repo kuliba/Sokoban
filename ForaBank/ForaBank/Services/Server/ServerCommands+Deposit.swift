@@ -229,6 +229,43 @@ extension ServerCommands {
         }
         
         /*
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/dict//rest/getDepositRestBeforeClosing
+         */
+        
+        struct GetDepositRestBeforeClosing: ServerCommand {
+            
+            let token: String
+            let endpoint = "/rest/getDepositRestBeforeClosing"
+            let method: ServerCommandMethod = .post
+            let payload: Payload?
+            
+            struct Payload: Encodable {
+                
+                let depositId: Int
+                let operDate: String
+            }
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: Double?
+            }
+            
+            internal init(token: String, payload: Payload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+            
+            init(token: String, dateFormatter: DateFormatter, depositId: Int, operDate: Date) {
+                
+                self.token = token
+                self.payload = .init(depositId: depositId, operDate: dateFormatter.string(from: operDate))
+            }
+        }
+        
+        /*
          http://10.1.206.21:8080/swagger-ui/index.html#/DepositController/getPrintFormForDepositConditions
          */
         struct GetPrintFormForDepositConditions: ServerDownloadCommand {

@@ -107,10 +107,9 @@ struct CardViewModelFromRealm {
     
     var dateEnd: String? {
         if card.productType == ProductType.deposit.rawValue || card.productType == ProductType.loan.rawValue {
-            let date = Date(timeIntervalSince1970: TimeInterval(card.dateLong/1000))
+            let date = Date.dateUTC(with: card.dateLong)
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MM/dd"
-            dateFormatter.timeZone = .current
             dateFormatter.locale = Locale(identifier: "ru_RU")
             let localDate = dateFormatter.string(from: date)
             return localDate

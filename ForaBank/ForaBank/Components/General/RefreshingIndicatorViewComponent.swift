@@ -69,8 +69,11 @@ extension RefreshingIndicatorView {
                     .foregroundColor(color)
                     .opacity(opacity)
                     .frame(width: width)
-                    .offset(.init(width: isAnimate ? proxy.frame(in: .local).width + width : -width, height: 0))
-                    .animation(.easeInOut(duration: duration).repeatForever(autoreverses: false).delay(delay))
+                    .offset(.init(width: isAnimate ? proxy.frame(in: .local).width + width
+                                                   : -width, height: 0))
+                    .animation(.easeInOut(duration: duration)
+                        .repeatForever(autoreverses: false).delay(delay))
+                    .animation(nil)
             }
             .onAppear {
                 

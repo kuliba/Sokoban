@@ -46,6 +46,7 @@ extension ModelAction {
 extension Model {
     
     var defaultErrorMessage: String { "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения." }
+    var emptyDataErrorMessage: String { "Не удалось получить данные.  Свяжитесь с технической поддержкой банка для уточнения." }
 }
 
 //MARK: - Handlers

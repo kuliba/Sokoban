@@ -22,7 +22,7 @@ class ProductLoanData: ProductData {
     let dateLong: Date
     let strDateLong: String
     
-    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], currencyNumber: Int?, bankProductId: Int, amount: Double, currentInterestRate: Double, principalDebt: Double?, defaultPrincipalDebt: Double?, totalAmountDebt: Double?, principalDebtAccount: String, settlementAccount: String, settlementAccountId: Int, dateLong: Date, strDateLong: String) {
+    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], currencyNumber: Int?, bankProductId: Int, amount: Double, currentInterestRate: Double, principalDebt: Double?, defaultPrincipalDebt: Double?, totalAmountDebt: Double?, principalDebtAccount: String, settlementAccount: String, settlementAccountId: Int, dateLong: Date, strDateLong: String, order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
         
         self.currencyNumber = currencyNumber
         self.bankProductId = bankProductId
@@ -37,7 +37,7 @@ class ProductLoanData: ProductData {
         self.dateLong = dateLong
         self.strDateLong = strDateLong
         
-        super.init(id: id, productType: productType, number: number, numberMasked: numberMasked, accountNumber: accountNumber, balance: balance, balanceRub: balanceRub, currency: currency, mainField: mainField, additionalField: additionalField, customName: customName, productName: productName, openDate: openDate, ownerId: ownerId, branchId: branchId, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: extraLargeDesign, largeDesign: largeDesign, mediumDesign: mediumDesign, smallDesign: smallDesign, fontDesignColor: fontDesignColor, background: background)
+        super.init(id: id, productType: productType, number: number, numberMasked: numberMasked, accountNumber: accountNumber, balance: balance, balanceRub: balanceRub, currency: currency, mainField: mainField, additionalField: additionalField, customName: customName, productName: productName, openDate: openDate, ownerId: ownerId, branchId: branchId, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: extraLargeDesign, largeDesign: largeDesign, mediumDesign: mediumDesign, smallDesign: smallDesign, fontDesignColor: fontDesignColor, background: background, order: order, visibility: visibility, smallDesignMd5hash: smallDesignMd5hash, smallBackgroundDesignHash: smallBackgroundDesignHash)
     }
     
     private enum CodingKeys : String, CodingKey {
@@ -58,7 +58,7 @@ class ProductLoanData: ProductData {
         settlementAccount = try container.decode(String.self, forKey: .settlementAccount)
         settlementAccountId = try container.decode(Int.self, forKey: .settlementAccountId)
         let dateLongValue = try container.decode(Int.self, forKey: .dateLong)
-        dateLong = Date(timeIntervalSince1970: TimeInterval(dateLongValue / 1000))
+        dateLong = Date.dateUTC(with: dateLongValue)
         strDateLong = try container.decode(String.self, forKey: .strDateLong)
 
         try super.init(from: decoder)
@@ -77,7 +77,7 @@ class ProductLoanData: ProductData {
         try container.encode(principalDebtAccount, forKey: .principalDebtAccount)
         try container.encode(settlementAccount, forKey: .settlementAccount)
         try container.encode(settlementAccountId, forKey: .settlementAccountId)
-        try container.encode(Int(dateLong.timeIntervalSince1970) * 1000, forKey: .dateLong)
+        try container.encode(dateLong.secondsSince1970UTC, forKey: .dateLong)
         try container.encode(strDateLong, forKey: .strDateLong)
 
         try super.encode(to: encoder)

@@ -118,7 +118,7 @@ struct ProductProfileView: View {
             // workaround to fix mini-cards jumps when product name editing alert presents
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
-            
+
             if let closeAccountSpinner = viewModel.closeAccountSpinner {
                 CloseAccountSpinnerView(viewModel: closeAccountSpinner)
             }

@@ -26,7 +26,7 @@ class ProductCardData: ProductData {
     let isMain: Bool?
     let externalId: Int?
     
-    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], accountId: Int?, cardId: Int, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: ProductData.StatusPC?, isMain: Bool?, externalId: Int?) {
+    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], accountId: Int?, cardId: Int, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: ProductData.StatusPC?, isMain: Bool?, externalId: Int?, order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
 
         self.accountId = accountId
         self.cardId = cardId
@@ -45,7 +45,7 @@ class ProductCardData: ProductData {
         self.isMain = isMain
         self.externalId = externalId
         
-        super.init(id: id, productType: productType, number: number, numberMasked: numberMasked, accountNumber: accountNumber, balance: balance, balanceRub: balanceRub, currency: currency, mainField: mainField, additionalField: additionalField, customName: customName, productName: productName, openDate: openDate, ownerId: ownerId, branchId: branchId, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: extraLargeDesign, largeDesign: largeDesign, mediumDesign: mediumDesign, smallDesign: smallDesign, fontDesignColor: fontDesignColor, background: background)
+        super.init(id: id, productType: productType, number: number, numberMasked: numberMasked, accountNumber: accountNumber, balance: balance, balanceRub: balanceRub, currency: currency, mainField: mainField, additionalField: additionalField, customName: customName, productName: productName, openDate: openDate, ownerId: ownerId, branchId: branchId, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: extraLargeDesign, largeDesign: largeDesign, mediumDesign: mediumDesign, smallDesign: smallDesign, fontDesignColor: fontDesignColor, background: background, order: order, visibility: visibility, smallDesignMd5hash: smallDesignMd5hash, smallBackgroundDesignHash: smallBackgroundDesignHash)
     }
     
     private enum CodingKeys : String, CodingKey {
@@ -64,7 +64,7 @@ class ProductCardData: ProductData {
         cardId = try container.decode(Int.self, forKey: .cardId)
         name = try container.decode(String.self, forKey: .name)
         let validThruValue = try container.decode(Int.self, forKey: .validThru)
-        validThru = Date(timeIntervalSince1970: TimeInterval(validThruValue / 1000))
+        validThru = Date.dateUTC(with: validThruValue)
         status = try container.decode(Status.self, forKey: .status)
         expireDate = try container.decodeIfPresent(String.self, forKey: .expireDate)
         holderName = try container.decodeIfPresent(String.self, forKey: .holderName)
@@ -87,7 +87,7 @@ class ProductCardData: ProductData {
         try container.encodeIfPresent(accountId, forKey: .accountId)
         try container.encode(cardId, forKey: .cardId)
         try container.encode(name, forKey: .name)
-        try container.encode(Int(validThru.timeIntervalSince1970) * 1000, forKey: .validThru)
+        try container.encode(validThru.secondsSince1970UTC, forKey: .validThru)
         try container.encode(status, forKey: .status)
         try container.encodeIfPresent(expireDate, forKey: .expireDate)
         try container.encodeIfPresent(holderName, forKey: .holderName)
@@ -158,7 +158,7 @@ extension ProductCardData {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             account = try container.decodeIfPresent(String.self, forKey: .account)
             let dateValue = try container.decode(Int.self, forKey: .date)
-            date = Date(timeIntervalSince1970: TimeInterval(dateValue / 1000))
+            date = Date.dateUTC(with: dateValue)
             amount = try container.decodeIfPresent(Double.self, forKey: .amount)
             currency = try container.decodeIfPresent(String.self, forKey: .currency)
             purpose = try container.decodeIfPresent(String.self, forKey: .purpose)

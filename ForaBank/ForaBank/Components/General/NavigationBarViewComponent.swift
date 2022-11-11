@@ -21,7 +21,7 @@ extension NavigationBarView {
         @Published var foreground: Color
         @Published var backgroundDimm: BackgroundColorDimm?
         
-        internal init(title: String,
+        internal init(title: String = "",
                       subtitle: String? = nil,
                       leftButtons: [BaseButtonViewModel] = [],
                       rightButtons: [ButtonViewModel] = [],
@@ -44,15 +44,29 @@ extension NavigationBarView {
         }
         
         class ButtonViewModel: BaseButtonViewModel {
-            
-            let icon: Image
+                    
+            @Published var isDisabled: Bool
+            @Published var markedDot: MarkedDotViewModel?
+                    
+            var icon: Image
             let action: () -> Void
-            
-            init(icon: Image, action: @escaping () -> Void) {
-                
+
+            init(icon: Image,
+                 isDisabled: Bool = false,
+                 markedDot: MarkedDotViewModel? = nil,
+                 action: @escaping () -> Void) {
+                        
                 self.icon = icon
+                self.isDisabled = isDisabled
+                self.markedDot = markedDot
                 self.action = action
                 super.init()
+            }
+
+            struct MarkedDotViewModel {
+
+                var color: Color = .red
+                let isBlinking: Bool
             }
         }
         
@@ -125,13 +139,14 @@ struct NavigationBarView: View {
                         }
                         
                     case let buttonViewModel as NavigationBarView.ViewModel.ButtonViewModel:
-                        Button(action: buttonViewModel.action){
+                        Button(action: buttonViewModel.action) {
                             
                             buttonViewModel.icon
                                 .resizable()
                                 .frame(width: 24, height: 24)
                                 .foregroundColor(viewModel.foreground)
                         }
+                        
                     default:
                         EmptyView()
                     }
@@ -170,13 +185,9 @@ struct NavigationBarView: View {
                 
                 ForEach(viewModel.rightButtons) { button in
                     
-                    Button(action: button.action) {
-                        
-                        button.icon
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .foregroundColor(viewModel.foreground)
-                    }
+                    RightButtonView(viewModel: button,
+                                    foreground: viewModel.foreground,
+                                    background: viewModel.background)
                 }
             }
         }
@@ -185,6 +196,61 @@ struct NavigationBarView: View {
         .background(backgroundColor.edgesIgnoringSafeArea(.top))
     }
 }
+extension NavigationBarView {
+    
+    struct RightButtonView: View {
+        
+        @State var blinking: Bool = false
+        var viewModel: ViewModel.ButtonViewModel
+        let foreground: Color
+        let background: Color
+        
+        var body: some View {
+            
+            Button(action: viewModel.action) {
+            
+                ZStack(alignment: .leading) {
+                
+                    viewModel.icon
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(viewModel.isDisabled ? .mainColorsGrayMedium
+                                                              : foreground)
+                
+                    if let markedDot = viewModel.markedDot {
+                    
+                        if markedDot.isBlinking {
+                        
+                            Circle()
+                                .fill(blinking ? background : Color.red)
+                                .background(Circle().stroke(background, lineWidth: 3))
+                                .frame(width: 7)
+                                .offset(x: 0, y: -6)
+                                .animation(Animation.easeInOut(duration: 1.2)
+                                    .repeatForever(autoreverses: true), value: blinking)
+                                .onAppear {
+                                    DispatchQueue.main.asyncAfter(
+                                        deadline: .now() + .milliseconds(50)) {
+                                            blinking = true
+                                    }
+                                }
+                        } else {
+                        
+                            Circle()
+                                .fill(Color.red)
+                                .background(Circle().stroke(background, lineWidth: 3))
+                                .frame(width: 7)
+                                .offset(x: 0, y: -6)
+                                .animation(nil)
+                        }
+                    }
+                } //zstack
+            } //button
+            .disabled(viewModel.isDisabled)
+        }
+    }
+}
+
 
 struct NavigationBarViewModifier: ViewModifier {
     
@@ -231,10 +297,10 @@ struct NavigationBarView_Previews: PreviewProvider {
         ],
         rightButtons: [
             .init(icon: .ic24Share, action: { }),
-            .init(icon: .ic24Settings, action: { })
+            .init(icon: .ic24BarInOrder, markedDot: .init(isBlinking: true), action: { })
         ],
-        background: .bGIconDeepPurpleMedium,    //Optional
-        foreground: .textWhite                  //Optional
+        background:  .barsTabbar                  //Optional
+        //foreground: .textWhite                  //Optional
     )
     
     static var previews: some View {

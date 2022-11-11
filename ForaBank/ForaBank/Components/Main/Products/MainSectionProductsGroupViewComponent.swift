@@ -476,5 +476,5 @@ extension MainSectionProductsGroupView.ViewModel {
 
 extension ButtonNewProduct.ViewModel {
     
-    static let sampleWantCard = ButtonNewProduct.ViewModel(icon: .ic24NewCardColor, title: "Хочу карту", subTitle: "Бесплатно", action: {})
+    static let sampleWantCard = ButtonNewProduct.ViewModel(id: "CARD", icon: .ic24NewCardColor, title: "Хочу карту", subTitle: "Бесплатно", action: {})
 }

@@ -30,6 +30,7 @@ class ProductProfileViewModel: ObservableObject {
     @Published var fullCover: FullCover?
     @Published var fullCoverSpinner: FullCoverSpinner?
     @Published var textFieldAlert: AlertTextFieldView.ViewModel?
+    @Published var spinner: SpinnerView.ViewModel?
 
     var rootActions: RootViewModel.RootActions?
     
@@ -41,7 +42,7 @@ class ProductProfileViewModel: ObservableObject {
         model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
     }
     
-    init(navigationBar: NavigationBarView.ViewModel,product: ProductProfileCardView.ViewModel, buttons: ProductProfileButtonsView.ViewModel, detail: ProductProfileDetailView.ViewModel?, history: ProductProfileHistoryView.ViewModel?, alert: Alert.ViewModel? = nil, operationDetail: OperationDetailViewModel? = nil, accentColor: Color = .purple, historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:] , model: Model = .emptyMock) {
+    init(navigationBar: NavigationBarView.ViewModel,product: ProductProfileCardView.ViewModel, buttons: ProductProfileButtonsView.ViewModel, detail: ProductProfileDetailView.ViewModel?, history: ProductProfileHistoryView.ViewModel?, alert: Alert.ViewModel? = nil, operationDetail: OperationDetailViewModel? = nil, accentColor: Color = .purple, historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:] , model: Model = .emptyMock, spinner: SpinnerView.ViewModel? = nil) {
         
         self.navigationBar = navigationBar
         self.product = product
@@ -284,9 +285,64 @@ class ProductProfileViewModel: ObservableObject {
                     default:
                         break
                     }
+
+                case let payload as ModelAction.Settings.ApplicationSettings.Response:
                     
-                default:
-                    break
+                    switch payload.result {
+                        
+                    case .success(let settings):
+                        if settings.allowCloseDeposit, let product = productData as? ProductDepositData, let openDate = product.openDate, let number = product.number  {
+                            
+                            let dateFormatter = DateFormatter.historyFullDateFormatter
+                            let bottomString = "Подробнее в договоре \"Условия срочного банковского вклада \n№\(number)\nот \(dateFormatter.string(from: openDate))\""
+                            let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                 message: "Срок вашего вклада еще не истек.\n\nПри досрочном закрытии вклада возможна потеря или перерасчет начисленных процентов.\n\n\(bottomString)",
+                                                                 primary: .init(type: .default, title: "Отмена", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}),
+                                                                 secondary: .init(type: .default, title: "Продолжить", action: { [weak self] in
+                                if let id = self?.product.activeProductId {
+                                    
+                                    self?.model.action.send(ModelAction.Deposits.BeforeClosing.Request(depositId: id, operDate: Date()))
+                                    self?.spinner = .init()
+                                }
+                            }))
+                            self.alert = .init(alertViewModel)
+                            
+                        } else {
+                            
+                            let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                 message: "Срок вашего вклада еще не истек. Для досрочного закрытия обратитесь в ближайший офис",
+                                                                 primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())}),
+                                                                 secondary: .init(type: .default, title: "ОК", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}))
+                            self.alert = .init(alertViewModel)
+                        }
+                        
+                    case .failure(let error):
+                        let alertViewModel = Alert.ViewModel(title: "Ошибка",
+                                                             message: error.localizedDescription,
+                                                             primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())}),
+                                                             secondary: .init(type: .default, title: "ОК", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}))
+                        self.alert = .init(alertViewModel)
+                        
+                    }
+                    
+                case let payload as ModelAction.Deposits.BeforeClosing.Response:
+
+                    self.spinner = nil
+                    
+                    switch payload {
+                    case .success(data: let amount):
+                        guard let depositProduct = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) as? ProductDepositData else {
+                            return
+                        }
+                        
+                        let meToMeViewModel = MeToMeViewModel(type: .transferBeforeCloseDeposit(depositProduct, amount), closeAction: {})
+                        self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
+                    
+                    case .failure(message: let errorMessage):
+                        self.alert = .init(title: "Ошибка", message: errorMessage, primary: .init(type: .default, title: "Ок", action: {}))
+                        
+                    }
+                default: break
                 }
                 
             }.store(in: &bindings)
@@ -462,15 +518,7 @@ class ProductProfileViewModel: ObservableObject {
                         }
                     }
 
-                case _ as MyProductsViewModelAction.Tapped.OpenDeposit:
-                    self.action.send(ProductProfileViewModelAction.Close.Sheet())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                        
-                        self.action.send(ProductProfileViewModelAction.MyProductsTapped.OpenDeposit())
-                    }
-
-                default:
-                    break
+                default: break
                 }
                 
             }.store(in: &bindings)
@@ -762,11 +810,8 @@ class ProductProfileViewModel: ObservableObject {
                             self.sheet = .init(type: .printForm(printFormViewModel))
                         
                         case .closeDeposit:
-                            let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
-                                                                 message: "Срок вашего вклада еще не истек. Для досрочного закрытия обратитесь в ближайший офис",
-                                                                 primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())}),
-                                                                 secondary: .init(type: .default, title: "ОК", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}))
-                            self.alert = .init(alertViewModel)
+                            
+                            self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
                             
                         case .statementOpenAccount:
                             break
