@@ -193,13 +193,19 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             
                             state = .loading
                             
-                            model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: productTo.id)))
+                            if let productFrom = productFrom as? ProductAccountData {
+                                
+                                model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.name, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: productTo.id)))
+                            }
                             
                         case .account:
                             
                             state = .loading
                             
-                            model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: productTo.id, cardId: nil)))
+                            if let productFrom = productFrom as? ProductAccountData {
+                                
+                                model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.name, startDate: nil, endDate: nil, statementFormat: nil, accountId: productTo.id, cardId: nil)))
+                            }
                             
                         default:
                             break

@@ -39,7 +39,7 @@ extension ProductsListView {
             
             let filterred = Self.filterred(products: productsData.products, context: context)
             let products = Self.reduce(model, checkProductId: context.checkProductId, products: filterred)
-            let typeSelector = Self.makeTypeSelector(model, selected: productsData.productType.rawValue)
+            let typeSelector = Self.makeTypeSelector(model, selected: productsData.productType.rawValue, context: context)
             
             self.init(model: model, products: products, typeSelector: typeSelector, context: context)
             
@@ -63,6 +63,7 @@ extension ProductsListView {
                            let products = model.products(productType) {
                             
                             let filterred = Self.filterred(products: products, context: context)
+                            
                             self.products = Self.reduce(model, checkProductId: context.checkProductId, products: filterred)
                         }
                         
@@ -70,6 +71,25 @@ extension ProductsListView {
                         
                     }.store(in: &bindings)
             }
+            
+            $context
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] context in
+                    
+                    guard let productsData = Self.reduce(model.products.value) else {
+                        return
+                    }
+                    
+                    let filterred = Self.filterred(products: productsData.products, context: context)
+                    self.products = Self.reduce(model, checkProductId: context.checkProductId, products: filterred)
+                    
+                    let options = Self.makeOptions(model, context: context)
+                    
+                    if let typeSelector = typeSelector {
+                        typeSelector.update(options: options, selected: typeSelector.selected)
+                    }
+                    
+                }.store(in: &bindings)
         }
         
         private func bindProducts() {
@@ -136,6 +156,10 @@ extension ProductsListView.ViewModel {
                 }
                 
                 return product.status == .notBlocked
+                
+            case .deposit:
+                
+                return context.direction == .to
 
             default:
                 return true
@@ -156,16 +180,36 @@ extension ProductsListView.ViewModel {
         return products
     }
     
-    static func makeTypeSelector(_ model: Model, selected: Option.ID) -> OptionSelectorView.ViewModel {
+    static func makeTypeSelector(_ model: Model, selected: Option.ID, context: ProductSelectorView.ViewModel.Context) -> OptionSelectorView.ViewModel {
         
-        let sortedTypes = model.productsTypes.filter { $0 != .loan }.sorted { $0.order < $1.order }
+        let options = Self.makeOptions(model, context: context)
+        return .init(options: options, selected: selected, style: .productsSmall)
+    }
+    
+    static func makeOptions(_ model: Model, context: ProductSelectorView.ViewModel.Context) -> [Option] {
+        
+        let isDirectionFrom = context.direction == .from
+        
+        let sortedTypes = model.productsTypes.filter {
+            
+            if isDirectionFrom == true {
+                
+               return $0 == .card || $0 == .account
+                
+            } else {
+                
+                return $0 != .loan
+            }
+            
+        }.sorted { $0.order < $1.order }
+        
         var options = sortedTypes.map { Option(id: $0.rawValue, name: $0.pluralName) }
         
         if 0...1 ~= options.count {
             options.removeAll()
         }
         
-        return .init(options: options, selected: selected, style: .productsSmall)
+        return options
     }
 }
 

@@ -154,7 +154,10 @@ class ProductProfileViewModel: ObservableObject {
                             bind(closeAccountSpinner)
                         }
                         
-                        model.action.send(ModelAction.Account.Close.Request(payload: .init(id: from.id, name: from.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: nil)))
+                        if let productFrom = from as? ProductAccountData {
+                            
+                            model.action.send(ModelAction.Account.Close.Request(payload: .init(id: from.id, name: productFrom.name, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: nil)))
+                        }
                         
                     } else {
                         
@@ -184,6 +187,12 @@ class ProductProfileViewModel: ObservableObject {
                     
                 case _ as ProductProfileViewModelAction.Close.BottomSheet:
                     bottomSheet = nil
+                    
+                case _ as PaymentsTransfersViewModelAction.Close.DismissAll:
+                    
+                    withAnimation {
+                        NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
+                    }
                 
                 case _ as ProductProfileViewModelAction.Close.Alert:
                     alert = nil
@@ -790,8 +799,6 @@ class ProductProfileViewModel: ObservableObject {
                 switch action {
                 case let payload as PaymentsMeToMeAction.Response.Success:
                     
-                    self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
-                    
                     if let productIdFrom = swapViewModel.productIdFrom,
                        let productIdTo = swapViewModel.productIdTo {
                         
@@ -800,10 +807,7 @@ class ProductProfileViewModel: ObservableObject {
                     }
                     
                     self.bind(payload.viewModel)
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        self.fullCover = .init(type: .successMeToMe(payload.viewModel))
-                    }
+                    self.fullCover = .init(type: .successMeToMe(payload.viewModel))
                     
                 case _ as PaymentsMeToMeAction.Response.Failed:
                     
@@ -853,6 +857,8 @@ class ProductProfileViewModel: ObservableObject {
                 case _ as PaymentsSuccessAction.Button.Close:
                     
                     self.action.send(ProductProfileViewModelAction.Close.FullCover())
+                    self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
+                    
                     self.rootActions?.switchTab(.main)
 
                 case _ as PaymentsSuccessAction.Button.Repeat:
@@ -1213,6 +1219,7 @@ enum ProductProfileViewModelAction {
         struct FullCover: Action {}
         struct AccountSpinner: Action {}
         struct BottomSheet: Action {}
+        struct DismissAll: Action {}
         struct Alert: Action {}
         struct TextFieldAlert: Action {}
     }
