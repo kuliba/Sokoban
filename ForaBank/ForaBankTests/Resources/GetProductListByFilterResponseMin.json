@@ -25,7 +25,11 @@
       "name": "name",
       "validThru": 1630530000000,
       "branch": "branch",
-      "status": "Действует"
+      "status": "Действует",
+      "visibility": true,
+      "order": 0,
+      "smallBackgroundDesignHash": "",
+      "smallDesignMd5hash": ""
     }
   ],
   "errorMessage": "string",

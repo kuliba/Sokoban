@@ -14,12 +14,16 @@ class ProductData: Identifiable, Codable {
     
     let productType: ProductType
     
+    private(set) var order: Int
+    private(set) var visibility: Bool
+    
     let number: String? // 4444555566661122
     let numberMasked: String? //4444-XXXX-XXXX-1122
     let accountNumber: String? // 40817810000000000001
     
     private(set) var balance: Double?
     private(set) var balanceRub: Double?
+    
     //TODO: Currency type??
     let currency: String // example: RUB
     
@@ -42,7 +46,12 @@ class ProductData: Identifiable, Codable {
     let fontDesignColor: ColorData
     let background: [ColorData]
     
-    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData]) {
+    //image md5Hash
+    let smallDesignMd5hash: String
+    let smallBackgroundDesignHash: String
+    
+    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
+        
         self.id = id
         self.productType = productType
         self.number = number
@@ -66,7 +75,10 @@ class ProductData: Identifiable, Codable {
         self.smallDesign = smallDesign
         self.fontDesignColor = fontDesignColor
         self.background = background
-        
+        self.order = order
+        self.visibility = visibility
+        self.smallDesignMd5hash = smallDesignMd5hash
+        self.smallBackgroundDesignHash = smallBackgroundDesignHash
     }
     
     private enum CodingKeys: String, CodingKey {
@@ -74,7 +86,7 @@ class ProductData: Identifiable, Codable {
         case extraLargeDesign = "XLDesign"
         case balanceRub = "balanceRUB"
         case ownerId = "ownerID"
-        case accountNumber, additionalField, allowCredit, allowDebit, background, balance, branchId, currency, customName, fontDesignColor, id, largeDesign, mainField, mediumDesign, number, numberMasked, openDate, productName, productType, smallDesign
+        case accountNumber, additionalField, allowCredit, allowDebit, background, balance, branchId, currency, customName, fontDesignColor, id, largeDesign, mainField, mediumDesign, number, numberMasked, openDate, productName, productType, smallDesign, order, visibility, smallDesignMd5hash, smallBackgroundDesignHash
     }
     
     required init(from decoder: Decoder) throws {
@@ -109,6 +121,10 @@ class ProductData: Identifiable, Codable {
         smallDesign = try container.decode(SVGImageData.self, forKey: .smallDesign)
         fontDesignColor = try container.decode(ColorData.self, forKey: .fontDesignColor)
         background = try container.decode([ColorData].self, forKey: .background)
+        order = try container.decode(Int.self, forKey: .order)
+        visibility = try container.decode(Bool.self, forKey: .visibility)
+        smallDesignMd5hash = try container.decode(String.self, forKey: .smallDesignMd5hash)
+        smallBackgroundDesignHash = try container.decode(String.self, forKey: .smallBackgroundDesignHash)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -139,6 +155,10 @@ class ProductData: Identifiable, Codable {
         try container.encode(smallDesign, forKey: .smallDesign)
         try container.encode(fontDesignColor, forKey: .fontDesignColor)
         try container.encode(background, forKey: .background)
+        try container.encode(visibility, forKey: .visibility)
+        try container.encode(order, forKey: .order)
+        try container.encode(smallDesignMd5hash, forKey: .smallDesignMd5hash)
+        try container.encode(smallBackgroundDesignHash, forKey: .smallBackgroundDesignHash)
     }
 }
 
@@ -150,8 +170,18 @@ extension ProductData {
         self.customName = params.customName
         self.balanceRub = params.balanceRub
     }
+    
+    func update(visibility: Bool) {
+        
+        self.visibility = visibility
+    }
+    
+    func update(order: Int) {
+        
+        self.order = order
+    }
+    
 }
-
 
 extension ProductData {
     
@@ -198,6 +228,70 @@ extension ProductData {
     var displayName: String { customName ?? mainField }
     var balanceValue: Double { balance ?? 0 }
     var backgroundColor: Color { background.first?.color ?? .mainColorsBlackMedium }
+    var overlayImageColor: Color {
+        
+        if background.first?.description == "F6F6F7" {
+            return .iconGray
+        } else {
+            return .iconWhite
+        }
+    }
+    
+    var productStatus: ProductStatus {
+        
+        if let cardProduct = self as? ProductCardData {
+            
+            // only card product can be active
+            if cardProduct.isActivated {
+                
+                // only active card product can be blocked
+                if cardProduct.isBlocked {
+                    
+                    if visibility == true {
+                        
+                        return [.active, .blocked, .visible]
+                        
+                    } else {
+                        
+                        return [.active, .blocked]
+                    }
+                    
+                } else {
+                    
+                    if visibility == true {
+                        
+                        return [.active, .visible]
+                        
+                    } else {
+                        
+                        return .active
+                    }
+                }
+
+            } else {
+                
+                if visibility == true {
+                    
+                    return [.active, .visible]
+                    
+                } else {
+                    
+                    return .active
+                }
+            }
+            
+        } else {
+            
+            if visibility == true {
+                
+                return [.active, .visible]
+                
+            } else {
+                
+                return .active
+            }
+        }
+    }
 }
 
 extension ProductData: Equatable {
@@ -226,7 +320,9 @@ extension ProductData: Equatable {
         lhs.mediumDesign == rhs.mediumDesign &&
         lhs.smallDesign == rhs.smallDesign &&
         lhs.fontDesignColor == rhs.fontDesignColor &&
-        lhs.background == rhs.background
+        lhs.background == rhs.background &&
+        lhs.visibility == rhs.visibility &&
+        lhs.order == rhs.order
     }
 }
 

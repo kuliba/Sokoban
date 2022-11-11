@@ -11,6 +11,7 @@ import Combine
 struct AuthProductsView: View {
     
     @ObservedObject var viewModel: AuthProductsViewModel
+    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     
     var body: some View {
         
@@ -35,7 +36,11 @@ struct AuthProductsView: View {
 extension AuthProductsView {
     
     var btnBack : some View {
-        Button(action: viewModel.navigationBar.backButton.action) {
+        Button {
+                mode.wrappedValue.dismiss()
+                viewModel.navigationBar.backButton.action()
+        } label: {
+            
             HStack {
                 viewModel.navigationBar.backButton.icon
                     .foregroundColor(.black)

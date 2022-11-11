@@ -42,7 +42,11 @@
             "balanceRUB": -9566.1800,
             "XLDesign": "image",
             "statusPC": "0",
-            "isMain": true
+            "isMain": true,
+            "visibility": true,
+            "order": 0,
+            "smallBackgroundDesignHash": "",
+            "smallDesignMd5hash": ""
         },
         {
             "number": "1111111111111111",
@@ -84,7 +88,11 @@
             "balanceRUB": 0.0000,
             "XLDesign": "image",
             "statusPC": "0",
-            "isMain": true
+            "isMain": true,
+            "visibility": true,
+            "order": 0,
+            "smallBackgroundDesignHash": "",
+            "smallDesignMd5hash": ""
         },
         {
             "number": "1111111111111111",
@@ -126,7 +134,11 @@
             "balanceRUB": -200772.3200,
             "XLDesign": "image",
             "statusPC": "0",
-            "isMain": true
+            "isMain": true,
+            "visibility": true,
+            "order": 0,
+            "smallBackgroundDesignHash": "",
+            "smallDesignMd5hash": ""
         },
         {
             "number": "1111111111111111",
@@ -168,7 +180,11 @@
             "balanceRUB": 1004.0300,
             "XLDesign": "image",
             "statusPC": "0",
-            "isMain": true
+            "isMain": true,
+            "visibility": true,
+            "order": 0,
+            "smallBackgroundDesignHash": "",
+            "smallDesignMd5hash": ""
         },
         {
             "number": "1111111111111111",
@@ -201,7 +217,11 @@
             "miniStatement": [],
             "id": 10004467103,
             "balanceRUB": 1000000000.0000,
-            "XLDesign": "image"
+            "XLDesign": "image",
+            "visibility": true,
+            "order": 0,
+            "smallBackgroundDesignHash": "",
+            "smallDesignMd5hash": ""
         },
         {
             "number": "1111111111111111",
@@ -234,7 +254,11 @@
             "miniStatement": [],
             "id": 10004467104,
             "balanceRUB": 1169624444444.3300,
-            "XLDesign": "image"
+            "XLDesign": "image",
+            "visibility": true,
+            "order": 0,
+            "smallBackgroundDesignHash": "",
+            "smallDesignMd5hash": ""
         },
         {
             "number": "1111111111111111",
@@ -267,7 +291,11 @@
             "miniStatement": [],
             "id": 10004467106,
             "balanceRUB": 5555555555555.5500,
-            "XLDesign": "image"
+            "XLDesign": "image",
+            "visibility": true,
+            "order": 0,
+            "smallBackgroundDesignHash": "",
+            "smallDesignMd5hash": ""
         },
         {
             "number": "1111111111111111",
@@ -300,7 +328,11 @@
             "minimumBalance": 5000.0000,
             "id": 10002650833,
             "balanceRUB": 5000.2200,
-            "XLDesign": "image"
+            "XLDesign": "image",
+            "visibility": true,
+            "order": 0,
+            "smallBackgroundDesignHash": "",
+            "smallDesignMd5hash": ""
         },
         {
             "number": null,
@@ -337,7 +369,11 @@
             "strDateLong": "07/42",
             "id": 10002455395,
             "balanceRUB": null,
-            "XLDesign": "image"
+            "XLDesign": "image",
+            "visibility": true,
+            "order": 0,
+            "smallBackgroundDesignHash": "",
+            "smallDesignMd5hash": ""
         },
         {
             "number": null,
@@ -374,7 +410,11 @@
             "strDateLong": "05/23",
             "id": 10002513930,
             "balanceRUB": null,
-            "XLDesign":"image"
+            "XLDesign":"image",
+            "visibility": true,
+            "order": 0,
+            "smallBackgroundDesignHash": "",
+            "smallDesignMd5hash": ""
         }
     ]
 }

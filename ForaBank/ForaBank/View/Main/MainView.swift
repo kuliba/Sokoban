@@ -86,6 +86,9 @@ struct MainView: View {
                         
                     case .openDeposit(let depositListViewModel):
                         OpenDepositDetailView(viewModel: depositListViewModel)
+                    
+                    case .openCard( let authProductsViewModel):
+                        AuthProductsView(viewModel: authProductsViewModel)
                         
                     case .openDepositsList(let openDepositViewModel):
                         OpenDepositView(viewModel: openDepositViewModel)

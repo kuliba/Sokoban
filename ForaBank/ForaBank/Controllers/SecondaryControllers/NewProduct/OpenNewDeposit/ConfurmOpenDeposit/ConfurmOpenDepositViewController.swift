@@ -451,7 +451,12 @@
             }
             showActivity()
             
+            Model.shared.productsOpening.value.insert(.deposit)
+            
             NetworkManager<MakeDepositDecodableModel>.addRequest(.makeDepositPayment, [:], body) { respons, error in
+                
+                Model.shared.productsOpening.value.remove(.deposit)
+                
                 DispatchQueue.main.async {
                     self.dismissActivity()
                     if error != nil {

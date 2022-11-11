@@ -129,7 +129,8 @@ extension Model {
                 currencyCode: payload.currencyCode))
         let productsListError = ProductsListError.emptyData(message: ProductsListError.errorMessage)
 
-        accountOpening.value = true
+        productsOpening.value.insert(.account)
+        
         action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет открывается", icon: .refresh, type: .openAccount)))
         
         serverAgent.executeCommand(command: command) { result in
@@ -147,7 +148,8 @@ extension Model {
                         return
                     }
 
-                    self.accountOpening.value = false
+                    self.productsOpening.value.remove(.account)
+                    
                     self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет открыт", icon: .check)))
                     
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.complete(data))
@@ -159,7 +161,7 @@ extension Model {
                     
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .statusError(status: response.statusCode, message: errorMessage)))
                     
-                    self.accountOpening.value = false
+                    self.productsOpening.value.remove(.account)
                     
                     if let errorMessage = errorMessage, OpenAccountRawResponse(rawValue: errorMessage) == nil {
                         
@@ -176,7 +178,7 @@ extension Model {
                 self.handleServerCommandError(error: error, command: command)
                 self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .serverCommandError(error: error.localizedDescription)))
                 
-                self.accountOpening.value = false
+                self.productsOpening.value.remove(.account)
                 self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет не открыт", icon: .close)))
             }
         }

@@ -30,7 +30,11 @@
                 "dateOpen": 1648512000000,
                 "status": "NOT_BLOCKED",
                 "id": 10002585800,
-                "XLDesign": "string"
+                "XLDesign": "string",
+                "visibility": true,
+                "order": 0,
+                "smallBackgroundDesignHash": "",
+                "smallDesignMd5hash": ""
             },
             {
                 "number": "4444555566661122",
@@ -58,7 +62,11 @@
                 "status": "NOT_BLOCKED",
                 "miniStatement": [],
                 "id": 10002585800,
-                "XLDesign": "string"
+                "XLDesign": "string",
+                "visibility": true,
+                "order": 0,
+                "smallBackgroundDesignHash": "",
+                "smallDesignMd5hash": ""
             },
             {
                 "number": "4444555566661122",
@@ -88,7 +96,11 @@
                 "creditMinimumAmount": 2000,
                 "minimumBalance": 2000,
                 "id": 10002585800,
-                "XLDesign": "string"
+                "XLDesign": "string",
+                "visibility": true,
+                "order": 0,
+                "smallBackgroundDesignHash": "",
+                "smallDesignMd5hash": ""
             },
             {
                 "currency": "RUB",
@@ -113,7 +125,11 @@
                 "dateLong": 1648512000000,
                 "strDateLong": "12/27",
                 "id": 10002585800,
-                "XLDesign": "string"
+                "XLDesign": "string",
+                "visibility": true,
+                "order": 0,
+                "smallBackgroundDesignHash": "",
+                "smallDesignMd5hash": ""
             }
         ]
     }
