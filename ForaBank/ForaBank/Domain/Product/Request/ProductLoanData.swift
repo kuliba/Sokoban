@@ -58,7 +58,7 @@ class ProductLoanData: ProductData {
         settlementAccount = try container.decode(String.self, forKey: .settlementAccount)
         settlementAccountId = try container.decode(Int.self, forKey: .settlementAccountId)
         let dateLongValue = try container.decode(Int.self, forKey: .dateLong)
-        dateLong = Date(timeIntervalSince1970: TimeInterval(dateLongValue / 1000))
+        dateLong = Date.dateUTC(with: dateLongValue)
         strDateLong = try container.decode(String.self, forKey: .strDateLong)
 
         try super.init(from: decoder)
@@ -77,7 +77,7 @@ class ProductLoanData: ProductData {
         try container.encode(principalDebtAccount, forKey: .principalDebtAccount)
         try container.encode(settlementAccount, forKey: .settlementAccount)
         try container.encode(settlementAccountId, forKey: .settlementAccountId)
-        try container.encode(Int(dateLong.timeIntervalSince1970) * 1000, forKey: .dateLong)
+        try container.encode(dateLong.secondsSince1970UTC, forKey: .dateLong)
         try container.encode(strDateLong, forKey: .strDateLong)
 
         try super.encode(to: encoder)

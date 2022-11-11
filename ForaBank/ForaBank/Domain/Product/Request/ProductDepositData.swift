@@ -53,7 +53,7 @@ class ProductDepositData: ProductData {
         minimumBalance = try container.decodeIfPresent(Double.self, forKey: .minimumBalance)
         if let endDateValue = try container.decodeIfPresent(Int.self, forKey: .endDate) {
             
-            endDate = Date(timeIntervalSince1970: TimeInterval(endDateValue / 1000))
+            endDate = Date.dateUTC(with: endDateValue)
             
         } else {
             
@@ -74,7 +74,7 @@ class ProductDepositData: ProductData {
         try container.encodeIfPresent(minimumBalance, forKey: .minimumBalance)
         if let endDate = endDate {
             
-            try container.encode(Int(endDate.timeIntervalSince1970) * 1000, forKey: .endDate)
+            try container.encode(endDate.secondsSince1970UTC, forKey: .endDate)
         }
         try container.encodeIfPresent(endDateNf, forKey: .endDateNf)
 

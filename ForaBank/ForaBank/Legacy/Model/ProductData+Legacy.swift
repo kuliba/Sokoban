@@ -177,7 +177,7 @@ extension ProductData {
                                      statusPC: nil,
                                      interestRate: Float(deposit.interestRate),
                                      openDate: nil,
-                                     endDate: deposit.endDate != nil ? Int(deposit.endDate!.timeIntervalSince1970) * 1000 : nil,
+                                     endDate: deposit.endDate != nil ? deposit.endDate!.secondsSince1970UTC : nil,
                                      endDate_nf: deposit.endDateNf,
                                      branchId: branchId,
                                      expireDate: nil,

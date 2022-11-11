@@ -86,8 +86,7 @@ extension SegmentedBarView {
         
         private static func getTitleLabel(productType: ProductType) -> String {
             
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "LLLL"
+            let dateFormatter = DateFormatter.monthFormatter
             let currentMonth = dateFormatter.string(from: Date())
             
             return productType == .deposit ? "Мой доход за \(currentMonth)" : "Tраты за \(currentMonth)"
