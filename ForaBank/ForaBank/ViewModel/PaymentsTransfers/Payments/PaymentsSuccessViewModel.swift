@@ -54,7 +54,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
     
     convenience init(_ model: Model, closeAction: @escaping () -> Void) {
         
-        self.init(model, iconType: .success, actionButton: .init(title: "На главную", style: .red, action: closeAction), optionButtons: [])
+        self.init(model, iconType: .success, actionButton: .init(title: "На главный", style: .red, action: closeAction), optionButtons: [])
     }
     
     convenience init(_ model: Model, iconType: IconTypeViewModel, paymentSuccess: Payments.Success, dismissAction: @escaping () -> Void) {
@@ -62,7 +62,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         let amount = model.amountFormatted(amount: paymentSuccess.amount, currencyCode: nil, style: .normal)
         let image = paymentSuccess.icon?.image ?? .ic40Sbp
         
-        self.init(model, title: paymentSuccess.status.description, amount: amount, iconType: .success, logo: .init(title: "сбп", image: image), actionButton: .init(title: "На главную", style: .red, action: dismissAction), optionButtons: [])
+        self.init(model, title: paymentSuccess.status.description, amount: amount, iconType: .success, logo: .init(title: "сбп", image: image), actionButton: .init(title: "На главный", style: .red, action: dismissAction), optionButtons: [])
     }
 
     convenience init?(_ model: Model, mode: Mode = .normal, transferData: TransferResponseData) {
@@ -73,7 +73,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         
         let amount = Self.amountFormatted(model, amount: transferData.debitAmount ?? 0, currencyCode: transferData.currencyPayer?.description)
         
-        self.init(model, documentStatus: documentStatus, mode: mode, amount: amount, actionButton: .init(title: "На главную", style: .red, action: {}), optionButtons: [])
+        self.init(model, documentStatus: documentStatus, mode: mode, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [])
 
         updateButtons(
             mode,
@@ -97,7 +97,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             amount: balance,
             currencyCode: currency.description)
         
-        self.init(model, documentStatus: documentStatus, mode: mode, amount: amount, actionButton: .init(title: "На главную", style: .red, action: {}), optionButtons: [])
+        self.init(model, documentStatus: documentStatus, mode: mode, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [])
         
         updateButtons(
             mode,
@@ -167,7 +167,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
     
     private func updateButtons(_ mode: Mode, documentStatus: TransferResponseBaseData.DocumentStatus, paymentOperationDetailId: Int) {
         
-        actionButton = .init(title: "На главную", style: .red, action: closeAction)
+        actionButton = .init(title: "На главный", style: .red, action: closeAction)
         optionButtons = makeOptionButtons(mode, documentStatus: documentStatus, paymentOperationDetailId: paymentOperationDetailId)
     }
 }
