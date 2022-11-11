@@ -30,7 +30,7 @@ class LatestPaymentData: Codable, Identifiable {
 
 		let container = try decoder.container(keyedBy: CodingKeys.self)
         let dateValue = try container.decode(Int.self, forKey: .date)
-        date = Date(timeIntervalSince1970: TimeInterval(dateValue / 1000))
+        date = Date.dateUTC(with: dateValue)
 		paymentDate = try container.decode(String.self, forKey: .paymentDate)
 		type = try container.decode(Kind.self, forKey: .type)
 	}
@@ -39,7 +39,7 @@ class LatestPaymentData: Codable, Identifiable {
         
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(type, forKey: .type)
-        try container.encode(Int(date.timeIntervalSince1970) * 1000, forKey: .date)
+        try container.encode(date.secondsSince1970UTC, forKey: .date)
         try container.encode(paymentDate, forKey: .paymentDate)
     }
 }

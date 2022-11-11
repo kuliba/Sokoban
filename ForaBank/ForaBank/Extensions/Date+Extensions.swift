@@ -9,6 +9,26 @@ import Foundation
 
 extension Date {
     
+    static func dateUTC(with milliseconds: Int) -> Date {
+
+        let adjustment = TimeZone.current.secondsFromGMT()
+        let seconds = milliseconds / 1000
+        let value = TimeInterval(seconds - adjustment)
+        
+        return Date(timeIntervalSince1970: value)
+    }
+    
+    var secondsSince1970UTC: Int {
+        
+        let seconds = Int(timeIntervalSince1970)
+        let adjustment = TimeZone.current.secondsFromGMT()
+        
+        return (seconds + adjustment) * 1000
+    }
+}
+
+extension Date {
+    
     var groupDayIndex: Int {
         
         let calendar = Calendar.current

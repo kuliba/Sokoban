@@ -16,7 +16,6 @@ extension DateFormatter {
         formatter.dateStyle = DateFormatter.Style.long //Set date style
         
 //        formatter.dateFormat =  "d MMMM, E"
-        formatter.timeZone = .current
         formatter.locale = Locale(identifier: "ru_RU")
   
         return formatter
@@ -30,7 +29,6 @@ extension DateFormatter {
         dateFormatter.dateStyle = DateFormatter.Style.long
 
         dateFormatter.dateFormat =  "dd.MM.yy"
-        dateFormatter.timeZone = .current
         dateFormatter.locale = Locale(identifier: "ru_RU")
 
         return dateFormatter
@@ -50,7 +48,6 @@ extension DateFormatter {
     static let dateAndTime: DateFormatter = {
         
         let formatter = DateFormatter()
-        formatter.timeZone = TimeZone(identifier: "UTC")
         formatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
         
         return formatter
@@ -58,7 +55,6 @@ extension DateFormatter {
     
     static let dateAndMonth: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.timeZone = TimeZone(identifier: "UTC")
         formatter.locale = Locale(identifier: "ru_RU")
         formatter.dateFormat = "d MMMM"
         
@@ -67,7 +63,6 @@ extension DateFormatter {
     
     static let timeAndSecond: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.timeZone = TimeZone(identifier: "UTC")
         formatter.locale = Locale(identifier: "ru_RU")
         formatter.dateFormat = "HH:mm"
         
@@ -78,7 +73,6 @@ extension DateFormatter {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "d MMMM, E"
-        formatter.timeZone = .current
         formatter.locale = Locale(identifier: "ru_RU")
         
         return formatter
@@ -88,7 +82,6 @@ extension DateFormatter {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "d MMMM yyyy"
-        formatter.timeZone = .current
         formatter.locale = Locale(identifier: "ru_RU")
         
         return formatter
@@ -99,7 +92,6 @@ extension DateFormatter {
         let formatter = DateFormatter()
         formatter.dateStyle = .full
         formatter.timeStyle = .medium
-        formatter.timeZone = .current
         formatter.locale = Locale(identifier: "ru_RU")
         
         return formatter
@@ -117,7 +109,15 @@ extension DateFormatter {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "d/MM"
-        formatter.timeZone = .current
+        formatter.locale = Locale(identifier: "ru_RU")
+        
+        return formatter
+    }()
+    
+    static let monthFormatter: DateFormatter = {
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "LLLL"
         formatter.locale = Locale(identifier: "ru_RU")
         
         return formatter

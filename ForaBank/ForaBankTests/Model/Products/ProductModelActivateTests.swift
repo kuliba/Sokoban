@@ -14,7 +14,7 @@ class ProductModelActivateTests: XCTestCase {
 
         // given
 
-        let date = Date(timeIntervalSince1970: TimeInterval(1648512000000 / 1000))
+        let date = Date.dateUTC(with: 1648512000000)
         let background: [ColorData] = [.init(description: "FFBB36")]
         let cardID = 10002585802
 

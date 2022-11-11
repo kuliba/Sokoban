@@ -918,6 +918,8 @@
 		77A76A9627FC475600A271B3 /* PlacesDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A76A9527FC475600A271B3 /* PlacesDetailViewModel.swift */; };
 		77A76A9827FC4BA400A271B3 /* PlacesDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A76A9727FC4BA400A271B3 /* PlacesDetailView.swift */; };
 		77AC9159277A518B00E49D5D /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 77AC9158277A518B00E49D5D /* Shimmer */; };
+		77AEE67F28FDCD7F001E892B /* ModelStatementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77AEE67E28FDCD7F001E892B /* ModelStatementTests.swift */; };
+		77AEE68128FDCF31001E892B /* HelpersExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77AEE68028FDCF31001E892B /* HelpersExtensions.swift */; };
 		77B6B3542850961A00E3001B /* Period.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B6B3532850961A00E3001B /* Period.swift */; };
 		77B6B3562850976B00E3001B /* ProductStatementsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B6B3552850976B00E3001B /* ProductStatementsStorage.swift */; };
 		77B6B35928509A0300E3001B /* ProductStatementsUpdateState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B6B35828509A0300E3001B /* ProductStatementsUpdateState.swift */; };
@@ -2337,6 +2339,8 @@
 		77A76A9327FB69D200A271B3 /* AtmCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtmCollectionViewCell.swift; sourceTree = "<group>"; };
 		77A76A9527FC475600A271B3 /* PlacesDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesDetailViewModel.swift; sourceTree = "<group>"; };
 		77A76A9727FC4BA400A271B3 /* PlacesDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesDetailView.swift; sourceTree = "<group>"; };
+		77AEE67E28FDCD7F001E892B /* ModelStatementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelStatementTests.swift; sourceTree = "<group>"; };
+		77AEE68028FDCF31001E892B /* HelpersExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpersExtensions.swift; sourceTree = "<group>"; };
 		77B6B3532850961A00E3001B /* Period.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Period.swift; sourceTree = "<group>"; };
 		77B6B3552850976B00E3001B /* ProductStatementsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductStatementsStorage.swift; sourceTree = "<group>"; };
 		77B6B35828509A0300E3001B /* ProductStatementsUpdateState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductStatementsUpdateState.swift; sourceTree = "<group>"; };
@@ -4779,6 +4783,7 @@
 				77FF670227B446D7009FEA09 /* AsyncAwaitTests.swift */,
 				0BCFBE022817F77D003F2F36 /* ModelNotificationsTests.swift */,
 				77F15826281682D400CA5E4E /* ModelDictionaryAtmTests.swift */,
+				77AEE67E28FDCD7F001E892B /* ModelStatementTests.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -5339,6 +5344,7 @@
 		77EC58B3277122100054D75C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				77AEE68028FDCF31001E892B /* HelpersExtensions.swift */,
 				5A5ABFB427ABCD0400D548AA /* DepositController */,
 				5A5ABF9527AAF7DD00D548AA /* PaymentOperationDetailContoller */,
 				5ADDC85527997CF800488139 /* AccountStatement */,
@@ -8855,7 +8861,9 @@
 				682C62BD28B38CCC00C9A00D /* SettingsModelTests.swift in Sources */,
 				684192EC2799C0D000B4E184 /* ServerCommandsConsentTests.swift in Sources */,
 				682092BD27AC17D2003DCAFD /* ServerCommandsDaDataTests.swift in Sources */,
+				77AEE67F28FDCD7F001E892B /* ModelStatementTests.swift in Sources */,
 				77517FEA27A98F2D005CFB77 /* ServerCommandsUserTests.swift in Sources */,
+				77AEE68128FDCF31001E892B /* HelpersExtensions.swift in Sources */,
 				77517FF827A999D5005CFB77 /* ServerCommandsDefaultTests.swift in Sources */,
 				77EC58E1277214D60054D75C /* ServerStatusCodeTests.swift in Sources */,
 				77067CD9275FBB70000C442B /* StringExtensionsTests.swift in Sources */,

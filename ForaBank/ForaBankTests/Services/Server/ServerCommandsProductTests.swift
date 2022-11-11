@@ -38,7 +38,7 @@ class ServerCommandsProductTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "GetProductListResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let date = Date(timeIntervalSince1970: TimeInterval(1630530000000 / 1000))
+        let date = Date.dateUTC(with: 1630530000000)
         
         let productData = ProductData(id: 10002585800, productType: .card, number: "4444555566661122", numberMasked: "4444-XXXX-XXXX-1122", accountNumber: "40817810000000000001", balance: 1000123, balanceRub: nil, currency: "RUB", mainField: "Gold", additionalField: "Зарплатная", customName: "Моя карта", productName: "VISA REWARDS R-5", openDate: date, ownerId: 10001639855, branchId: 2000, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: "string"), largeDesign: .init(description: "string"), mediumDesign: .init(description: "string"), smallDesign: .init(description: "string"), fontDesignColor: .init(description: "FFFFFF"), background: [.init(description: "FFBB36")], order: 0, visibility: true, smallDesignMd5hash: "75f3ee3b2d44e5808f41777c613f23c9", smallBackgroundDesignHash: "f8513ccd6cf65bbc9d91a233eeac0e06")
         
@@ -56,7 +56,7 @@ class ServerCommandsProductTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "GetProductListResponseMin", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let date = Date(timeIntervalSince1970: TimeInterval(1630530000000 / 1000))
+        let date = Date.dateUTC(with: 1630530000000)
         let productData = ProductData(id: 10002585800, productType: .card, number: "4444555566661122", numberMasked: "4444-XXXX-XXXX-1122", accountNumber: "40817810000000000001", balance: 1000123, balanceRub: nil, currency: "RUB", mainField: "Gold", additionalField: nil, customName: nil, productName: "VISA REWARDS R-5", openDate: date, ownerId: 10001639855, branchId: 2000, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: "string"), largeDesign: .init(description: "string"), mediumDesign: .init(description: "string"), smallDesign: .init(description: "string"), fontDesignColor: .init(description: "FFFFFF"), background: [.init(description: "FFBB36")], order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
         
         let expected =  ServerCommands.ProductController.GetProductList.Response(statusCode: .ok, errorMessage: "string", data: [productData])
@@ -75,7 +75,7 @@ class ServerCommandsProductTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "GetProductListByFilterResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let date = Date(timeIntervalSince1970: TimeInterval(1648512000000 / 1000))
+        let date = Date.dateUTC(with: 1648512000000)
         let background: [ColorData] = [.init(description: "FFBB36")]
 
         let productCard = ProductCardData(id: 10002585800, productType: ProductType.card, number: "4444555566661122", numberMasked: "4444-XXXX-XXXX-1122", accountNumber: "40817810000000000001", balance: 1000123, balanceRub: 1000123, currency: "RUB", mainField: "Gold", additionalField: "Зарплатная", customName: "Моя карта", productName: "VISA REWARDS R-5", openDate: date, ownerId: 10001639855, branchId: 2000, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: "string"), largeDesign: .init(description: "string"), mediumDesign: .init(description: "string"), smallDesign: .init(description: "string"), fontDesignColor: .init(description: "FFFFFF"), background: background, accountId: nil, cardId: 10001639855, name: "ВСФ", validThru: date, status: ProductData.Status.notBlocked, expireDate: nil, holderName: nil, product: nil, branch: "АКБ \"ФОРА-БАНК\" (АО)", miniStatement: [.init(account: "string", date: date, amount: 0, currency: "string", purpose: "string")], paymentSystemName: nil, paymentSystemImage: nil, loanBaseParam: nil, statusPc: nil, isMain: nil, externalId: 10000788533, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
@@ -107,7 +107,7 @@ class ServerCommandsProductTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "GetProductListByFilterResponseMin", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let date = Date(timeIntervalSince1970: TimeInterval(1630530000000 / 1000))
+        let date = Date.dateUTC(with: 1630530000000)
         
         let productCard = ProductCardData(id: 10002585800, productType: .card, number: "4444555566661122", numberMasked: "4444-XXXX-XXXX-1122", accountNumber: "40817810000000000001", balance: 1000123, balanceRub: nil, currency: "RUB", mainField: "Gold", additionalField: nil, customName: nil, productName: "VISA REWARDS R-5", openDate: date, ownerId: 10001639855, branchId: 2000, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: "string"), largeDesign: .init(description: "string"), mediumDesign: .init(description: "string"), smallDesign: .init(description: "string"), fontDesignColor: .init(description: "FFFFFF"), background: [.init(description: "FFBB36")], accountId: nil, cardId: 10001639855, name: "name", validThru: date, status: .active, expireDate: nil, holderName: nil, product: nil, branch: "branch", miniStatement: nil, paymentSystemName: nil, paymentSystemImage: nil, loanBaseParam: nil, statusPc: nil, isMain: nil, externalId: nil, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
         
@@ -127,7 +127,7 @@ class ServerCommandsProductTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "GetProductListByTypeResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let date = Date(timeIntervalSince1970: TimeInterval(1648512000000 / 1000))
+        let date = Date.dateUTC(with: 1648512000000)
         let background: [ColorData] = [.init(description: "FFBB36")]
 
         let productCard = ProductCardData(id: 10002585800, productType: ProductType.card, number: "4444555566661122", numberMasked: "4444-XXXX-XXXX-1122", accountNumber: "40817810000000000001", balance: 1000123, balanceRub: 1000123, currency: "RUB", mainField: "Gold", additionalField: "Зарплатная", customName: "Моя карта", productName: "VISA REWARDS R-5", openDate: date, ownerId: 10001639855, branchId: 2000, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: "string"), largeDesign: .init(description: "string"), mediumDesign: .init(description: "string"), smallDesign: .init(description: "string"), fontDesignColor: .init(description: "FFFFFF"), background: background, accountId: nil, cardId: 10001639855, name: "ВСФ", validThru: date, status: ProductData.Status.notBlocked, expireDate: nil, holderName: nil, product: nil, branch: "АКБ \"ФОРА-БАНК\" (АО)", miniStatement: [.init(account: "string", date: date, amount: 0, currency: "string", purpose: "string")], paymentSystemName: nil, paymentSystemImage: nil, loanBaseParam: nil, statusPc: nil, isMain: nil, externalId: 10000788533, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
@@ -161,7 +161,7 @@ class ServerCommandsProductTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "GetProductListByTypeResponseMin", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let date = Date(timeIntervalSince1970: TimeInterval(1648512000000 / 1000))
+        let date = Date.dateUTC(with: 1648512000000)
         let background: [ColorData] = [.init(description: "FFBB36")]
 
         let productCard = ProductCardData(id: 10002585800, productType: ProductType.card, number: "4444555566661122", numberMasked: "4444-XXXX-XXXX-1122", accountNumber: "40817810000000000001", balance: 1000123, balanceRub: nil, currency: "RUB", mainField: "Gold", additionalField: nil, customName: nil, productName: "VISA REWARDS R-5", openDate: date, ownerId: 10001639855, branchId: 2000, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: "string"), largeDesign: .init(description: "string"), mediumDesign: .init(description: "string"), smallDesign: .init(description: "string"), fontDesignColor: .init(description: "FFFFFF"), background: background, accountId: nil, cardId: 10001639855, name: "ВСФ", validThru: date, status: ProductData.Status.notBlocked, expireDate: nil, holderName: nil, product: nil, branch: "АКБ \"ФОРА-БАНК\" (АО)", miniStatement: nil, paymentSystemName: nil, paymentSystemImage: nil, loanBaseParam: nil, statusPc: nil, isMain: nil, externalId: nil, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
@@ -230,7 +230,7 @@ class ServerCommandsProductTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "GetProductListByTypeResponseCorrupted", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let date = Date(timeIntervalSince1970: TimeInterval(1648512000000 / 1000))
+        let date = Date.dateUTC(with: 1648512000000)
         let background: [ColorData] = [.init(description: "FFBB36")]
 
         let productCard = ProductCardData(id: 10002585800, productType: ProductType.card, number: "4444555566661122", numberMasked: "4444-XXXX-XXXX-1122", accountNumber: "40817810000000000001", balance: 1000123, balanceRub: 1000123, currency: "RUB", mainField: "Gold", additionalField: "Зарплатная", customName: "Моя карта", productName: "VISA REWARDS R-5", openDate: date, ownerId: 10001639855, branchId: 2000, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: "string"), largeDesign: .init(description: "string"), mediumDesign: .init(description: "string"), smallDesign: .init(description: "string"), fontDesignColor: .init(description: "FFFFFF"), background: background, accountId: nil, cardId: 10001639855, name: "ВСФ", validThru: date, status: ProductData.Status.notBlocked, expireDate: nil, holderName: nil, product: nil, branch: "АКБ \"ФОРА-БАНК\" (АО)", miniStatement: [.init(account: "string", date: date, amount: 0, currency: "string", purpose: "string")], paymentSystemName: nil, paymentSystemImage: nil, loanBaseParam: nil, statusPc: nil, isMain: nil, externalId: 10000788533, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")

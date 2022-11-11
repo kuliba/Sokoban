@@ -475,7 +475,7 @@
                         confurmVCModel.summInCurrency = self.rateField.text
                         confurmVCModel.numberTransction = model.data?.accountNumber ?? ""
                         let formatter = Date.dateFormatterSimpleDateConvenient()
-                        let date = Date(timeIntervalSince1970: TimeInterval((model.data?.closeDate ?? 0)/1000))
+                        let date = Date.dateUTC(with: model.data?.closeDate ?? 0)
                         confurmVCModel.dateOfTransction = formatter.string(from: date)
                         let vc: DepositSuccessViewController = DepositSuccessViewController.loadFromNib()
                         vc.confurmVCModel = confurmVCModel

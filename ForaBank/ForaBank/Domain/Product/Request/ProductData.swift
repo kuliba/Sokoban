@@ -106,7 +106,7 @@ class ProductData: Identifiable, Codable {
         productName = try container.decode(String.self, forKey: .productName)
         if let openDateValue = try container.decodeIfPresent(Int.self, forKey: .openDate) {
             
-            openDate = Date(timeIntervalSince1970: TimeInterval(openDateValue / 1000))
+            openDate = Date.dateUTC(with: openDateValue)
         } else {
             
             openDate = nil
@@ -143,7 +143,7 @@ class ProductData: Identifiable, Codable {
         try container.encodeIfPresent(customName, forKey: .customName)
         try container.encode(productName, forKey: .productName)
         if let openDate = openDate {
-            try container.encodeIfPresent(Int(openDate.timeIntervalSince1970) * 1000, forKey: .openDate)
+            try container.encodeIfPresent(openDate.secondsSince1970UTC, forKey: .openDate)
         }
         try container.encode(ownerId, forKey: .ownerId)
         try container.encodeIfPresent(branchId, forKey: .branchId)

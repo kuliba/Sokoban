@@ -102,6 +102,6 @@ extension GetDepositStatementDatum {
     
     var transactionDate: Date {
         
-        Date(timeIntervalSince1970: TimeInterval((date ?? 0) / 1000))
+        Date.dateUTC(with: date ?? 0)
     }
 }

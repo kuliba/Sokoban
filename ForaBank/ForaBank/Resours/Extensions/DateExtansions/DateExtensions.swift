@@ -84,19 +84,16 @@ extension Date {
     
     fileprivate static let _calendar: Calendar = {
         var calendar = Calendar.autoupdatingCurrent
-        calendar.timeZone = TimeZone(identifier: TimeZone.current.identifier)!
         return calendar
     }()
     
     fileprivate static let _dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.timeZone = TimeZone(identifier: TimeZone.current.identifier)!
         return formatter
     }()
     
     fileprivate static let _dateLondonFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.timeZone = TimeZone(identifier: "Europe/London")!
         return formatter
     }()
     
@@ -135,7 +132,6 @@ extension Date {
     
     static func dateFormatterSimpleDate() -> DateFormatter {
         _dateFormatter.locale = _locale
-        _dateFormatter.timeZone = TimeZone(identifier: "Europe/London")!
         _dateFormatter.dateFormat = kDefaultDateFormatSimpleDate
         return _dateFormatter
     }
