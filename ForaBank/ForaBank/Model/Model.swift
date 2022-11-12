@@ -1220,6 +1220,6 @@ private extension Model {
         userSettings.value = []
         productsOpening.value = []
         
-        print("Model: memory data cleaned")
+        LoggerAgent.shared.log(category: .model, message: "Memory data cleaned")
     }
 }

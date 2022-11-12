@@ -113,7 +113,7 @@ extension Model {
             
         } catch {
             
-            //TODO: set logger
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Updating MainSectionsSettings failed with error: \(error.localizedDescription)")
         }
     }
     
@@ -125,7 +125,7 @@ extension Model {
             
         } catch {
             
-            //TODO: set logger
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Updating ProductsSectionsSettings failed with error: \(error.localizedDescription)")
         }
     }
     
@@ -137,8 +137,7 @@ extension Model {
             
         } catch {
             
-            //TODO: log
-            print(error.localizedDescription)
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Updating MyProductsOnboardingSettings failed with error: \(error.localizedDescription)")
         }
     }
     
@@ -150,8 +149,7 @@ extension Model {
             
         } catch {
             
-            //TODO: log
-            print(error.localizedDescription)
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Updating ProductsMoneySettings failed with error: \(error.localizedDescription)")
         }
     }
     
