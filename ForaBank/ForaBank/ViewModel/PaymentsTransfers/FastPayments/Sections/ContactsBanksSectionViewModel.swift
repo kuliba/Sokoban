@@ -30,8 +30,6 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
         self.filter = .init(filter)
 
         super.init(header: header, isCollapsed: isCollapsed, mode: mode, model: model)
-        
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
     }
     
     convenience init(_ model: Model, mode: Mode) {

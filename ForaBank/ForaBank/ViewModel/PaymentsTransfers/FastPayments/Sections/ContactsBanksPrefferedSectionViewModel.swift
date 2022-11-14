@@ -21,8 +21,6 @@ class ContactsBanksPrefferedSectionViewModel: ContactsSectionViewModel, Observab
         self.items = items
         self.phone = .init(phone)
         super.init(model: model, mode: mode)
-        
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
     }
     
     convenience init(_ model: Model, phone: String?) {
@@ -31,11 +29,6 @@ class ContactsBanksPrefferedSectionViewModel: ContactsSectionViewModel, Observab
         self.init(items: placeholders, phone: phone, mode: .fastPayment, model: model)
 
         bind()
-    }
-    
-    deinit {
-        
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
     private func bind() {

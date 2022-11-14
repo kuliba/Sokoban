@@ -28,8 +28,6 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
         self.contacts = contacts
         self.phoneFormatter = phoneFormatter
         super.init(model: model, mode: mode)
-        
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
     }
     
     convenience init(_ model: Model, mode: Mode) {
@@ -60,11 +58,6 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
         }
 
         bind()
-    }
-
-    deinit {
-        
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
     private func bind() {

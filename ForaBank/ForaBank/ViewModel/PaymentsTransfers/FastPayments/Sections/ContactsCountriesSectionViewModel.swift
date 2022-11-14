@@ -40,11 +40,6 @@ class ContactsCountriesSectionViewModel: ContactsSectionCollapsableViewModel {
         }
     }
     
-    deinit {
-        
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
-    }
-    
     static func reduceCounry(countriesList: [CountryData], action: @escaping (CountryData) -> () -> Void) -> [ContactsItemViewModel] {
         
         countriesList
