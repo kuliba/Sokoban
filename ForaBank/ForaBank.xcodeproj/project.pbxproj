@@ -16,6 +16,8 @@
 		0B05163126A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */; };
 		0B11A7782919875500C9BDD0 /* Model+QR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11A7772919875500C9BDD0 /* Model+QR.swift */; };
 		0B11A77A291C3A8A00C9BDD0 /* QRMappingJSON.json in Resources */ = {isa = PBXBuildFile; fileRef = 0B11A779291C3A8A00C9BDD0 /* QRMappingJSON.json */; };
+		0B11A7882922A71E00C9BDD0 /* QRFailedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11A7872922A71E00C9BDD0 /* QRFailedViewModel.swift */; };
+		0B11A78A2922C8B400C9BDD0 /* QRFailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11A7892922C8B400C9BDD0 /* QRFailedView.swift */; };
 		0B1DBA9C26D4032F009F3E98 /* CreateContactAddresslessTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1DBA9B26D4032F009F3E98 /* CreateContactAddresslessTransferDecodableModel.swift */; };
 		0B216FBC26D15BAA0023C878 /* GKHInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0B216FBB26D15BAA0023C878 /* GKHInputCell.xib */; };
 		0B216FBE26D15BDF0023C878 /* GKHInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B216FBD26D15BDF0023C878 /* GKHInputCell.swift */; };
@@ -1452,6 +1454,8 @@
 		0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPaymentCountriesDecodableModel.swift; sourceTree = "<group>"; };
 		0B11A7772919875500C9BDD0 /* Model+QR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+QR.swift"; sourceTree = "<group>"; };
 		0B11A779291C3A8A00C9BDD0 /* QRMappingJSON.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = QRMappingJSON.json; sourceTree = "<group>"; };
+		0B11A7872922A71E00C9BDD0 /* QRFailedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRFailedViewModel.swift; sourceTree = "<group>"; };
+		0B11A7892922C8B400C9BDD0 /* QRFailedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRFailedView.swift; sourceTree = "<group>"; };
 		0B1DBA9B26D4032F009F3E98 /* CreateContactAddresslessTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateContactAddresslessTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0B216FBB26D15BAA0023C878 /* GKHInputCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GKHInputCell.xib; sourceTree = "<group>"; };
 		0B216FBD26D15BDF0023C878 /* GKHInputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHInputCell.swift; sourceTree = "<group>"; };
@@ -3114,6 +3118,7 @@
 			isa = PBXGroup;
 			children = (
 				0B8BC0402901EF110022DDE4 /* QRView.swift */,
+				0B11A7892922C8B400C9BDD0 /* QRFailedView.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -3471,6 +3476,7 @@
 			children = (
 				0BE0BDFC29071BE10064549E /* QRButtonsViewComponent.swift */,
 				0BE0BE042910760B0064549E /* QRViewModel.swift */,
+				0B11A7872922A71E00C9BDD0 /* QRFailedViewModel.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -7931,6 +7937,7 @@
 				ED4603A62746B69300FE89B0 /* ResultAccountStatementModel.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
 				68CB588E28ABCB15003064B0 /* LoggerAgent.swift in Sources */,
+				0B11A78A2922C8B400C9BDD0 /* QRFailedView.swift in Sources */,
 				77A76A7A27FAFD3E00A271B3 /* AtmTypeData.swift in Sources */,
 				0B283FBF26FBCA0A00B5E925 /* Router.swift in Sources */,
 				0C8CF960282179E80047DDAE /* SendMailView.swift in Sources */,
@@ -8370,6 +8377,7 @@
 				EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */,
 				F81EF91527D212990096DC70 /* MainSectionOpenProductViewComponent.swift in Sources */,
 				0BDE453526E5385900B64A0A /* GetPaymentSystemList.swift in Sources */,
+				0B11A7882922A71E00C9BDD0 /* QRFailedViewModel.swift in Sources */,
 				774CA5DC28789E6E00544C17 /* LegacyKeychainAgent.swift in Sources */,
 				681142DD27C7D729008D3D67 /* MainSectionProductsViewComponent.swift in Sources */,
 				77499C3A27738F6200F6C079 /* ProductType.swift in Sources */,
@@ -8974,7 +8982,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -9003,7 +9011,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -9160,7 +9168,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -9194,7 +9202,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;

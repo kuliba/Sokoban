@@ -51,9 +51,6 @@ class QRViewModel: ObservableObject {
 
     static func resolve(data: String) -> Result {
         
-        let qrCode = QRCode(string: data)
-        
-        
         if let url = URL(string: data) {
             
             if url.absoluteString.contains("qr.nspk.ru") {
@@ -70,29 +67,6 @@ class QRViewModel: ObservableObject {
         } else {
             return .unknown(data)
         }
-        
-        
-        
-//        if let qrCode = QRCode(string: data) {
-//
-//            return .qrCode(qrCode)
-//
-//
-//        } else if let url = URL(string: data) {
-//
-//            if url.absoluteString.contains("qr.nspk.ru") {
-//
-//                return .c2bURL(url)
-//
-//            } else {
-//
-//                return .url(url)
-//            }
-//
-//        } else {
-//
-//            return .unknown(data)
-//        }
     }
     private func createButtons() -> [ButtonIconTextView.ViewModel] {
         
