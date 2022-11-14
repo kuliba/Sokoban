@@ -11,6 +11,8 @@ import Combine
 
 class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
     
+    override var type: ContactsSectionViewModel.Kind { .contacts }
+    
     @Published var selfContact: ContactsItemViewModel?
     @Published var visible: [ContactsItemViewModel]
     let filter: CurrentValueSubject<String?, Never>
@@ -42,7 +44,7 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
                 let addressBookContacts = try await model.contactsFetchAll()
                 contacts = await Self.reduce(addressBookContacts: addressBookContacts, bankClientInfo: model.bankClientInfo.value, phoneFormatter: phoneFormatter, action: {[weak self] contactId in
                     
-                    { self?.action.send(ContactsListViewModelAction.ContactSelected(addressBookContactId: contactId)) }
+                    { self?.action.send(ContactsSectionViewModelAction.Contacts.ItemDidTapped(phone: contactId)) }
 
                 })
                 
@@ -79,7 +81,7 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
                     
                     selfContact = Self.reduceClientInfo(phone: selfPhone, phoneFormatter: phoneFormatter, action: { [weak self] phone in
                         
-                        { self?.action.send(ContactsListViewModelAction.SelfContactSelected(phone: phone)) }
+                        { self?.action.send(ContactsSectionViewModelAction.Contacts.ItemDidTapped(phone: phone)) }
                     })
                 }
                 
@@ -172,15 +174,13 @@ extension ContactsListSectionViewModel {
 
 //MARK: - Action
 
-struct ContactsListViewModelAction {
+extension ContactsSectionViewModelAction {
     
-    struct ContactSelected: Action {
+    enum Contacts {
         
-        let addressBookContactId: AddressBookContact.ID
-    }
-    
-    struct SelfContactSelected: Action {
-        
-        let phone: String
+        struct ItemDidTapped: Action {
+            
+            let phone: String
+        }
     }
 }

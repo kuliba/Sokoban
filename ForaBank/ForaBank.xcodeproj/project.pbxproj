@@ -882,6 +882,7 @@
 		777460ED291E5BE900D3FF46 /* ContactsPersonItemViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777460EC291E5BE900D3FF46 /* ContactsPersonItemViewComponent.swift */; };
 		777460EF291E5E0900D3FF46 /* ContactsPlaceholderItemViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777460EE291E5E0900D3FF46 /* ContactsPlaceholderItemViewComponent.swift */; };
 		777460F12922C29D00D3FF46 /* ContactsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777460F02922C29D00D3FF46 /* ContactsListView.swift */; };
+		777460F32922C5BA00D3FF46 /* ContactsLatestPaymentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777460F22922C5BA00D3FF46 /* ContactsLatestPaymentsViewModel.swift */; };
 		7784D2A8285B73F600E81005 /* LineProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7784D2A7285B73F600E81005 /* LineProgressView.swift */; };
 		7784D2AA285B7BA300E81005 /* ProductProfileDetaiHeaderViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7784D2A9285B7BA300E81005 /* ProductProfileDetaiHeaderViewComponent.swift */; };
 		7788BE03285B849C00EAF14D /* ProductProfileDetailAmountViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7788BE02285B849C00EAF14D /* ProductProfileDetailAmountViewComponent.swift */; };
@@ -1113,8 +1114,8 @@
 		C113225E28D2169300F90072 /* BankClientInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C113225D28D2169300F90072 /* BankClientInfo.swift */; };
 		C1549866290756AD00D00670 /* ContactsSectionCollapsableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1549865290756AD00D00670 /* ContactsSectionCollapsableViewModel.swift */; };
 		C1549868290756DC00D00670 /* ContactsBanksSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1549867290756DC00D00670 /* ContactsBanksSectionViewModel.swift */; };
-		C154986A2907570C00D00670 /* ContactsCountrySectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15498692907570C00D00670 /* ContactsCountrySectionViewModel.swift */; };
-		C154986C29075D5200D00670 /* ContactsTopBanksSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C154986B29075D5200D00670 /* ContactsTopBanksSectionViewModel.swift */; };
+		C154986A2907570C00D00670 /* ContactsCountriesSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15498692907570C00D00670 /* ContactsCountriesSectionViewModel.swift */; };
+		C154986C29075D5200D00670 /* ContactsBanksPrefferedSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C154986B29075D5200D00670 /* ContactsBanksPrefferedSectionViewModel.swift */; };
 		C154986E2907DB6900D00670 /* ContactsListSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C154986D2907DB6900D00670 /* ContactsListSectionViewModel.swift */; };
 		C154987029088C9E00D00670 /* TextFieldPhoneNumberViewComponentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C154986F29088C9E00D00670 /* TextFieldPhoneNumberViewComponentsTests.swift */; };
 		C181083928E3535E002FCC3A /* Model+DeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = C181083828E3535E002FCC3A /* Model+DeepLink.swift */; };
@@ -2325,6 +2326,7 @@
 		777460EC291E5BE900D3FF46 /* ContactsPersonItemViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsPersonItemViewComponent.swift; sourceTree = "<group>"; };
 		777460EE291E5E0900D3FF46 /* ContactsPlaceholderItemViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsPlaceholderItemViewComponent.swift; sourceTree = "<group>"; };
 		777460F02922C29D00D3FF46 /* ContactsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsListView.swift; sourceTree = "<group>"; };
+		777460F22922C5BA00D3FF46 /* ContactsLatestPaymentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsLatestPaymentsViewModel.swift; sourceTree = "<group>"; };
 		7784D2A7285B73F600E81005 /* LineProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineProgressView.swift; sourceTree = "<group>"; };
 		7784D2A9285B7BA300E81005 /* ProductProfileDetaiHeaderViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileDetaiHeaderViewComponent.swift; sourceTree = "<group>"; };
 		7788BE02285B849C00EAF14D /* ProductProfileDetailAmountViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileDetailAmountViewComponent.swift; sourceTree = "<group>"; };
@@ -2541,8 +2543,8 @@
 		C113225D28D2169300F90072 /* BankClientInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankClientInfo.swift; sourceTree = "<group>"; };
 		C1549865290756AD00D00670 /* ContactsSectionCollapsableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsSectionCollapsableViewModel.swift; sourceTree = "<group>"; };
 		C1549867290756DC00D00670 /* ContactsBanksSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsBanksSectionViewModel.swift; sourceTree = "<group>"; };
-		C15498692907570C00D00670 /* ContactsCountrySectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsCountrySectionViewModel.swift; sourceTree = "<group>"; };
-		C154986B29075D5200D00670 /* ContactsTopBanksSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsTopBanksSectionViewModel.swift; sourceTree = "<group>"; };
+		C15498692907570C00D00670 /* ContactsCountriesSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsCountriesSectionViewModel.swift; sourceTree = "<group>"; };
+		C154986B29075D5200D00670 /* ContactsBanksPrefferedSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsBanksPrefferedSectionViewModel.swift; sourceTree = "<group>"; };
 		C154986D2907DB6900D00670 /* ContactsListSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsListSectionViewModel.swift; sourceTree = "<group>"; };
 		C154986F29088C9E00D00670 /* TextFieldPhoneNumberViewComponentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldPhoneNumberViewComponentsTests.swift; sourceTree = "<group>"; };
 		C181083828E3535E002FCC3A /* Model+DeepLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+DeepLink.swift"; sourceTree = "<group>"; };
@@ -4871,10 +4873,11 @@
 			isa = PBXGroup;
 			children = (
 				777460E2291E534200D3FF46 /* Abstract */,
+				777460F22922C5BA00D3FF46 /* ContactsLatestPaymentsViewModel.swift */,
 				C154986D2907DB6900D00670 /* ContactsListSectionViewModel.swift */,
+				C154986B29075D5200D00670 /* ContactsBanksPrefferedSectionViewModel.swift */,
 				C1549867290756DC00D00670 /* ContactsBanksSectionViewModel.swift */,
-				C15498692907570C00D00670 /* ContactsCountrySectionViewModel.swift */,
-				C154986B29075D5200D00670 /* ContactsTopBanksSectionViewModel.swift */,
+				C15498692907570C00D00670 /* ContactsCountriesSectionViewModel.swift */,
 			);
 			path = Sections;
 			sourceTree = "<group>";
@@ -8020,7 +8023,7 @@
 				77CCEA6C28F83DA200C62215 /* Model+Operation.swift in Sources */,
 				ED9C1A032756809200AF9DFF /* OpenNewDepositViewControllerFlowLayout.swift in Sources */,
 				A5156425277CBB7C00F5ED73 /* PermissionHelper.swift in Sources */,
-				C154986A2907570C00D00670 /* ContactsCountrySectionViewModel.swift in Sources */,
+				C154986A2907570C00D00670 /* ContactsCountriesSectionViewModel.swift in Sources */,
 				EDB165602667A569007E6030 /* ForaInput.swift in Sources */,
 				68A07C43281AAE0000797A54 /* DepositProductsHostingViewController.swift in Sources */,
 				68EACA55289142E100B27B50 /* DeepLinkType.swift in Sources */,
@@ -8418,7 +8421,7 @@
 				EDB1453C2666AEB90028EF5A /* AppDelegate UI extension.swift in Sources */,
 				ED4B5444270345D400C87A1A /* CardsScrollCell.swift in Sources */,
 				0B66E8DC26CC5F4D00FD735D /* QRScannerCodeDelegate.swift in Sources */,
-				C154986C29075D5200D00670 /* ContactsTopBanksSectionViewModel.swift in Sources */,
+				C154986C29075D5200D00670 /* ContactsBanksPrefferedSectionViewModel.swift in Sources */,
 				0BD1CAA026E6C3CD00CFE993 /* GetCurrencyList.swift in Sources */,
 				0BDE453126E2A8CB00B64A0A /* ExtensionGKHMainQR.swift in Sources */,
 				68A07C48281B18C900797A54 /* OpenDepositView.swift in Sources */,
@@ -8526,6 +8529,7 @@
 				774A8B3C2865FCDD00B81140 /* UserAccountContactsView.swift in Sources */,
 				EDB14516266526B10028EF5A /* CreditCardEntryView.swift in Sources */,
 				68FB358B2760C1C80097AECE /* AntifraudView.swift in Sources */,
+				777460F32922C5BA00D3FF46 /* ContactsLatestPaymentsViewModel.swift in Sources */,
 				68ECC2BE285C693500A95CE8 /* CountryPaymentView+Legacy.swift in Sources */,
 				0B37F984267A18AC007728FC /* MakeCard2CardDecodableModel.swift in Sources */,
 				77D2D9AF275AB90A0097234D /* Array+Extensions.swift in Sources */,

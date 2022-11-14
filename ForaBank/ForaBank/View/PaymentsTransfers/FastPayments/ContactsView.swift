@@ -92,7 +92,7 @@ extension ContactsView {
     
     struct TopBankSectionView: View {
         
-        @ObservedObject var viewModel: ContactsTopBanksSectionViewModel
+        @ObservedObject var viewModel: ContactsBanksPrefferedSectionViewModel
         
         var body: some View {
             

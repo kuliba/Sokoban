@@ -8,7 +8,9 @@
 import Foundation
 import SwiftUI
 
-class ContactsCountrySectionViewModel: ContactsSectionCollapsableViewModel {
+class ContactsCountriesSectionViewModel: ContactsSectionCollapsableViewModel {
+    
+    override var type: ContactsSectionViewModel.Kind { .countries }
     
     convenience init(countriesList: [CountryData], model: Model) {
         
@@ -16,7 +18,7 @@ class ContactsCountrySectionViewModel: ContactsSectionCollapsableViewModel {
         
         let items = Self.reduceCounry(countriesList: countriesList) { [weak self] country in
             
-            { self?.action.send(ContactsCountrySectionViewModelAction.CountryDidTapped(country: country)) }
+            { self?.action.send(ContactsSectionViewModelAction.Countries.ItemDidTapped(country: country)) }
         }
         
         self.items = items
@@ -39,10 +41,15 @@ class ContactsCountrySectionViewModel: ContactsSectionCollapsableViewModel {
     }
 }
 
-struct ContactsCountrySectionViewModelAction {
+//MARK: - Action
+
+extension ContactsSectionViewModelAction {
     
-    struct CountryDidTapped: Action {
-        
-        let country: CountryData
+    enum Countries {
+    
+        struct ItemDidTapped: Action {
+            
+            let country: CountryData
+        }
     }
 }

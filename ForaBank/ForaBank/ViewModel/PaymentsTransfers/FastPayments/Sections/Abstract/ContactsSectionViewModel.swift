@@ -31,6 +31,8 @@ class ContactsSectionViewModel: Identifiable {
     }
 }
 
+//MARK: - Types
+
 extension ContactsSectionViewModel {
     
     enum Kind: String {
@@ -42,6 +44,10 @@ extension ContactsSectionViewModel {
         case countries
     }
 }
+
+//MARK: - Action
+
+enum ContactsSectionViewModelAction {}
 
 //MARK: - Hashable, Equatable
 

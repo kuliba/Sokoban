@@ -27,7 +27,7 @@ class ContactsViewModel: ObservableObject {
         
         switch mode {
         case .sfp: return "Выберите контакт"
-        case let .select(select):
+        case let .select(select, _):
             switch select {
             case .contacts: return "Выберите контакт"
             case .banks: return "Выберите банк"
@@ -145,88 +145,62 @@ class ContactsViewModel: ObservableObject {
             }.store(in: &bindings)
     }
     
-
-    
     func bind(sections: [ContactsSectionViewModel]) {
         
         for section in sections {
             
-            switch section {
-                
-                //TODO: latest payments section
-                
-            case let contactsSection as ContactsListSectionViewModel:
-                
-                contactsSection.action
-                    .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] action in
+            section.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                    case let payload as ContactsSectionViewModelAction.LatestPayments.ItemDidTapped:
+                        self.action.send(ContactsViewModelAction.PaymentRequested(source: .latestPayment(payload.latestPayment)))
                         
-                        switch action {
-                        case let payload as ContactsListViewModelAction.ContactSelected:
-                            let formattedPhone = searchBar.textField.phoneNumberFormatter.partialFormatter("+\(payload.addressBookContactId)")
+                    case let payload as ContactsSectionViewModelAction.Contacts.ItemDidTapped:
+                        switch mode {
+                        case .sfp:
+                            let formattedPhone = searchBar.textField.phoneNumberFormatter.partialFormatter("+\(payload.phone)")
                             self.searchBar.textField.text = formattedPhone
                             
-                        default: break
+                        case let .select(_, parameterId):
+                            self.action.send(ContactsViewModelAction.ContactPhoneSelected(phone: payload.phone, parameterId: parameterId))
                         }
                         
-                    }.store(in: &bindings)
-                
-            case let prefferedBanksSection as ContactsTopBanksSectionViewModel:
-                
-                prefferedBanksSection.action
-                    .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] action in
+                    case let payload as ContactsSectionViewModelAction.BanksPreffered.ItemDidTapped:
+                        handleBankDidTapped(bank: payload.bank)
                         
-                        switch action {
-                        case let payload as ContactsTopBanksSectionViewModelAction.TopBanksDidTapped:
+                    case let payload as ContactsSectionViewModelAction.Banks.ItemDidTapped:
+                        switch mode {
+                        case .sfp:
                             handleBankDidTapped(bank: payload.bank)
                             
-                        default:
-                            break
+                        case let .select(_, parameterId):
+                            self.action.send(ContactsViewModelAction.BankSelected(bank: payload.bank, parameterId: parameterId))
                         }
                         
-                    }.store(in: &bindings)
-                
-            case let banksSection as ContactsBanksSectionViewModel:
-                
-                banksSection.action
-                    .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] action in
                         
-                        switch action {
-                        case let payload as ContactsBanksSectionViewModelAction.BankDidTapped:
-                            handleBankDidTapped(bank: payload.bank)
-                            
-                        default:
-                            break
-                        }
+                    case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
                         
-                    }.store(in: &bindings)
-                
-            case let countriesSection as ContactsCountrySectionViewModel:
-                
-                countriesSection.action
-                    .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] action in
-                        
-                        switch action {
-                        case let payload as ContactsCountrySectionViewModelAction.CountryDidTapped:
-                            
-                            guard let phone = searchBar.phone else  {
-                                return
+                        switch mode {
+                        case let .sfp(phase):
+                            switch phase {
+                            case .banksAndCountries(phone: let phone):
+                                self.action.send(ContactsViewModelAction.PaymentRequested(source: .abroad(phone: phone, country: payload.country)))
+                                
+                            default:
+                                break
                             }
                             
-                            self.action.send(ContactsViewModelAction.PaymentRequested(source: .abroad(phone: phone, country: payload.country)))
-                            
-                        default:
-                            break
+                        case let .select(_, parameterId):
+                            self.action.send(ContactsViewModelAction.CountrySelected(country: payload.country, parameterId: parameterId))
                         }
                         
-                    }.store(in: &bindings)
-                
-            default:
-                break
-            }
+                    default:
+                        break
+                    }
+                    
+                }.store(in: &bindings)
         }
     }
 }
@@ -238,7 +212,7 @@ extension ContactsViewModel {
     enum Mode {
         
         case sfp(Phase)
-        case select(Select)
+        case select(Select, Payments.Parameter.ID)
         
         enum Phase {
             
@@ -265,7 +239,7 @@ extension ContactsViewModel {
                     return [.banksPreferred, .banks, .countries]
                 }
                 
-            case let .select(select):
+            case let .select(select, _):
                 switch select {
                 case .contacts: return [.contacts]
                 case .banks: return [.banks]
@@ -288,11 +262,11 @@ extension ContactsViewModel {
         case .sfp:
             //TODO: latest payments section
             result.append(ContactsListSectionViewModel(model))
-            result.append(ContactsTopBanksSectionViewModel(model, content: .empty, phone: ""))
+            result.append(ContactsBanksPrefferedSectionViewModel(model, content: .empty, phone: ""))
             result.append(ContactsBanksSectionViewModel(model, bankData: []))
-            result.append(ContactsCountrySectionViewModel(countriesList: [], model: model))
+            result.append(ContactsCountriesSectionViewModel(countriesList: [], model: model))
 
-        case let .select(select):
+        case let .select(select, _):
             switch select {
             case .contacts:
                 result.append(ContactsListSectionViewModel(model))
@@ -301,7 +275,7 @@ extension ContactsViewModel {
                 result.append(ContactsBanksSectionViewModel(model, bankData: []))
                 
             case .counties:
-                result.append(ContactsCountrySectionViewModel(countriesList: [], model: model))
+                result.append(ContactsCountriesSectionViewModel(countriesList: [], model: model))
             }
         }
         
@@ -357,6 +331,24 @@ enum ContactsViewModelAction {
     struct PaymentRequested: Action {
         
         let source: Payments.Operation.Source
+    }
+    
+    struct ContactPhoneSelected: Action {
+        
+        let phone: String
+        let parameterId: Payments.Parameter.ID
+    }
+    
+    struct BankSelected: Action {
+        
+        let bank: BankData
+        let parameterId: Payments.Parameter.ID
+    }
+    
+    struct CountrySelected: Action {
+        
+        let country: CountryData
+        let parameterId: Payments.Parameter.ID
     }
    
 }

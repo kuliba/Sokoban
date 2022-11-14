@@ -11,6 +11,8 @@ import SwiftUI
 
 class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
     
+    override var type: ContactsSectionViewModel.Kind { .banks }
+    
     @Published var mode: Mode
     @Published var options: OptionSelectorView.ViewModel
     var bankType: BankType? { BankType(rawValue: options.selected) }
@@ -41,7 +43,7 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
         Task {
             
             self.allItems = await Self.reduce(bankList: model.bankList.value) { [weak self]  bank in
-                { self?.action.send(ContactsBanksSectionViewModelAction.BankDidTapped(bank: bank)) }
+                { self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bank: bank)) }
             }
             
             await MainActor.run {
@@ -177,10 +179,13 @@ extension ContactsBanksSectionViewModel {
 
 //MARK: - Action
 
-struct ContactsBanksSectionViewModelAction {
+extension ContactsSectionViewModelAction {
     
-    struct BankDidTapped: Action {
-        
-        let bank: BankData
+    enum Banks {
+    
+        struct ItemDidTapped: Action {
+            
+            let bank: BankData
+        }
     }
 }

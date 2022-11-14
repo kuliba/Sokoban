@@ -1,5 +1,5 @@
 //
-//  ContactsTopBanksSectionViewModel.swift
+//  ContactsBanksPrefferedSectionViewModel.swift
 //  ForaBank
 //
 //  Created by Дмитрий Савушкин on 25.10.2022.
@@ -9,7 +9,9 @@ import Foundation
 import SwiftUI
 import Combine
 
-class ContactsTopBanksSectionViewModel: ContactsSectionViewModel, ObservableObject {
+class ContactsBanksPrefferedSectionViewModel: ContactsSectionViewModel, ObservableObject {
+    
+    override var type: ContactsSectionViewModel.Kind { .banksPreferred }
     
     @Published var content: ContentType
     let phone: String
@@ -55,7 +57,7 @@ class ContactsTopBanksSectionViewModel: ContactsSectionViewModel, ObservableObje
                     switch payload.result {
                     case .success(let banks):
 
-                        if let banks = Self.reduce(contact: model.contact(for: phone), banks: banks, banksData: model.bankList.value, action: { [weak self] bank in { self?.action.send(ContactsTopBanksSectionViewModelAction.TopBanksDidTapped(bank: bank)) } }) {
+                        if let banks = Self.reduce(contact: model.contact(for: phone), banks: banks, banksData: model.bankList.value, action: { [weak self] bank in { self?.action.send(ContactsSectionViewModelAction.BanksPreffered.ItemDidTapped(bank: bank)) } }) {
                             
                             self.content = .banks(banks)
                         }
@@ -135,10 +137,15 @@ class TopBanksViewModel: ObservableObject, Equatable {
     }
 }
 
-struct ContactsTopBanksSectionViewModelAction {
+//MARK: - Action
+
+extension ContactsSectionViewModelAction {
     
-    struct TopBanksDidTapped: Action {
-        
-        let bank: BankData
+    enum BanksPreffered {
+    
+        struct ItemDidTapped: Action {
+            
+            let bank: BankData
+        }
     }
 }
