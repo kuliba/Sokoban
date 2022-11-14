@@ -54,6 +54,7 @@ class ContactsViewModel: ObservableObject {
         sections = sections(for: mode, model: model)
 
         bind()
+        bind(sections: sections)
     }
     
     deinit {
@@ -260,9 +261,9 @@ extension ContactsViewModel {
         
         switch mode {
         case .sfp:
-            //TODO: latest payments section
+            result.append(ContactsLatestPaymentsSectionViewModel(model: model, including: [.phone]))
             result.append(ContactsListSectionViewModel(model))
-            result.append(ContactsBanksPrefferedSectionViewModel(model, content: .empty, phone: ""))
+            result.append(ContactsBanksPrefferedSectionViewModel(model, phone: nil))
             result.append(ContactsBanksSectionViewModel(model, bankData: []))
             result.append(ContactsCountriesSectionViewModel(countriesList: [], model: model))
 

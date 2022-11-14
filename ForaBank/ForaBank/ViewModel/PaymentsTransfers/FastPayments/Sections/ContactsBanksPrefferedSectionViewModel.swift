@@ -13,29 +13,22 @@ class ContactsBanksPrefferedSectionViewModel: ContactsSectionViewModel, Observab
     
     override var type: ContactsSectionViewModel.Kind { .banksPreferred }
     
-    @Published var content: ContentType
-    let phone: String
+    @Published var items: [ContactsItemViewModel]
+    let phone: CurrentValueSubject<String?, Never>
     
-    enum ContentType {
+    init(_ model: Model, items: [ContactsItemViewModel], phone: String?) {
         
-        case empty
-        case banks(TopBanksViewModel)
-        case placeHolder([LatestPaymentsView.ViewModel.PlaceholderViewModel])
-    }
-    
-    init(_ model: Model, content: ContentType, phone: String) {
-        
-        self.content = content
-        self.phone = phone
+        self.items = items
+        self.phone = .init(phone)
         super.init(model: model)
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
     }
     
-    convenience init(_ model: Model, phone: String) {
+    convenience init(_ model: Model, phone: String?) {
         
-        let content: ContentType = .placeHolder(.init(repeating: .init(), count: 6))
-        self.init(model, content: content, phone: phone)
+        let placeholders = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .bankPreffered), count: 8)
+        self.init(model, items: placeholders, phone: phone)
 
         bind()
     }
@@ -56,84 +49,58 @@ class ContactsBanksPrefferedSectionViewModel: ContactsSectionViewModel, Observab
                     
                     switch payload.result {
                     case .success(let banks):
-
-                        if let banks = Self.reduce(contact: model.contact(for: phone), banks: banks, banksData: model.bankList.value, action: { [weak self] bank in { self?.action.send(ContactsSectionViewModelAction.BanksPreffered.ItemDidTapped(bank: bank)) } }) {
-                            
-                            self.content = .banks(banks)
-                        }
                         
+                        if let phone = phone.value, let contact = model.contact(for: phone) {
+                            
+                            withAnimation {
+                                
+                                items = Self.reduce(contact: contact, banks: banks, banksData: model.bankList.value, action: { [weak self] bank in { self?.action.send(ContactsSectionViewModelAction.BanksPreffered.ItemDidTapped(bank: bank)) } })
+                            }
+  
+                        } else {
+                            
+                            withAnimation {
+                                
+                                items = []
+                            }
+                        }
+
                     case .failure:
-                        self.content = .empty
+                        
+                        withAnimation {
+                            
+                            items = []
+                        }
                     }
-                default: break
+                    
+                default:
+                    break
                 }
+                
             }.store(in: &bindings)
     }
     
-    static func reduce(contact: AddressBookContact?, banks: [PaymentPhoneData], banksData: [BankData], action: @escaping ((BankData) -> () -> Void)) -> TopBanksViewModel? {
+    static func reduce(contact: AddressBookContact?, banks: [PaymentPhoneData], banksData: [BankData], action: @escaping ((BankData) -> () -> Void)) -> [ContactsItemViewModel] {
         
-        var banksList = [TopBanksViewModel.Bank]()
+        var result = [ContactsBankPrefferedItemView.ViewModel]()
         
         for bank in banks {
             
             if let bankName = bank.bankName,
-                let defaultBank = bank.defaultBank,
-                let payment = bank.payment,
-                let bankId = bank.bankId,
-                let bankData = banksData.first(where: { $0.memberId == bankId }) {
-
+               let defaultBank = bank.defaultBank,
+               let payment = bank.payment,
+               let bankId = bank.bankId,
+               let bankData = banksData.first(where: { $0.memberId == bankId }) {
+                
                 let contact = payment ? contact : nil
                 let bankImage = bankData.svgImage.image
                 
-                banksList.append(.init(image: bankImage, defaultBank: defaultBank, name: contact?.fullName, bankName: bankName, action: action(bankData)))
+                let item = ContactsBankPrefferedItemView.ViewModel(id: bankData.id, icon: bankImage, name: bankName, isFavorite: defaultBank, contactName: contact?.fullName, action: action(bankData))
+                result.append(item)
             }
         }
         
-        return .init(banks: banksList)
-    }
-}
-
-class TopBanksViewModel: ObservableObject, Equatable {
-    
-    @Published var banks: [Bank]
-    
-    init(banks: [Bank]) {
-        
-        self.banks = banks
-    }
-    
-    struct Bank: Hashable, Identifiable {
-        
-        let id = UUID()
-        let image: Image?
-        let defaultBank: Bool
-        let name: String?
-        let bankName: String
-        let action: () -> Void
-        
-        init(image: Image?, defaultBank: Bool, name: String?, bankName: String, action: @escaping () -> Void) {
-            
-            self.image = image
-            self.name = name
-            self.defaultBank = defaultBank
-            self.bankName = bankName
-            self.action = action
-        }
-        
-        static func == (lhs: Bank, rhs: Bank) -> Bool {
-            
-            lhs.id == rhs.id && lhs.name == rhs.name
-        }
-        
-        func hash(into hasher: inout Hasher) {
-            
-            hasher.combine(id)
-            hasher.combine(name)
-        }
-    }
-    
-    static func == (lhs: TopBanksViewModel, rhs: TopBanksViewModel) -> Bool {
-        lhs.banks == rhs.banks
+        return result
     }
 }
 

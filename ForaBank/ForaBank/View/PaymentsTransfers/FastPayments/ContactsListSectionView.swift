@@ -1,5 +1,5 @@
 //
-//  ContactsListView.swift
+//  ContactsListSectionView.swift
 //  ForaBank
 //
 //  Created by Max Gribov on 14.11.2022.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContactsListView: View {
+struct ContactsListSectionView: View {
     
     @ObservedObject var viewModel: ContactsListSectionViewModel
     
@@ -56,7 +56,7 @@ struct ContactsListView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ContactsListView(viewModel: .sample)
+        ContactsListSectionView(viewModel: .sample)
     }
 }
 

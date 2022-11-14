@@ -14,13 +14,13 @@ extension ContactsBankPrefferedItemView {
     class ViewModel: ContactsItemViewModel {
         
         let id: BankData.ID
-        let icon: Image
+        let icon: Image?
         let name: String
         let isFavorite: Bool
         let contactName: String?
-        let action: (BankData.ID) -> Void
+        let action: () -> Void
         
-        init(id: BankData.ID, icon: Image, name: String, isFavorite: Bool, contactName: String?, action: @escaping (BankData.ID) -> Void) {
+        init(id: BankData.ID, icon: Image?, name: String, isFavorite: Bool, contactName: String?, action: @escaping () -> Void) {
             
             self.id = id
             self.icon = icon
@@ -40,19 +40,25 @@ struct ContactsBankPrefferedItemView: View {
     
     var body: some View {
         
-        Button {
-            
-            viewModel.action(viewModel.id)
-            
-        } label: {
+        Button(action: viewModel.action) {
             
             VStack(spacing: 8) {
                 
-                viewModel.icon
-                    .resizable()
-                    .frame(width: 56, height: 56)
-                    .cornerRadius(90)
-                    .overlay(FavoritesIcon(isFavorite: viewModel.isFavorite).offset(x: 20, y: -16))
+                if let icon = viewModel.icon {
+                    
+                    icon
+                        .resizable()
+                        .frame(width: 56, height: 56)
+                        .cornerRadius(90)
+                        .overlay(FavoritesIcon(isFavorite: viewModel.isFavorite).offset(x: 20, y: -16))
+                    
+                } else {
+                    
+                    Circle()
+                        .foregroundColor(.mainColorsGrayLightest)
+                        .frame(width: 56, height: 56)
+                        .overlay(FavoritesIcon(isFavorite: viewModel.isFavorite).offset(x: 20, y: -16))
+                }
                 
                 VStack(spacing: 4) {
                     
@@ -129,9 +135,9 @@ struct ContactsBankPrefferedItemView_Previews: PreviewProvider {
 
 extension ContactsBankPrefferedItemView.ViewModel {
     
-    static let sample = ContactsBankPrefferedItemView.ViewModel(id: UUID().uuidString, icon: Image("Bank Logo Sample"), name: "Сбербанк", isFavorite: false, contactName: nil, action: { _ in})
+    static let sample = ContactsBankPrefferedItemView.ViewModel(id: UUID().uuidString, icon: Image("Bank Logo Sample"), name: "Сбербанк", isFavorite: false, contactName: nil, action: {})
     
-    static let sampleFavorite = ContactsBankPrefferedItemView.ViewModel(id: UUID().uuidString, icon: Image("Bank Logo Sample"), name: "Сбербанк", isFavorite: true, contactName: nil, action: { _ in})
+    static let sampleFavorite = ContactsBankPrefferedItemView.ViewModel(id: UUID().uuidString, icon: Image("Bank Logo Sample"), name: "Сбербанк", isFavorite: true, contactName: nil, action: {})
     
-    static let sampleContact = ContactsBankPrefferedItemView.ViewModel(id: UUID().uuidString, icon: Image("Bank Logo Sample"), name: "Сбербанк", isFavorite: false, contactName: "Иванов И.", action: { _ in})
+    static let sampleContact = ContactsBankPrefferedItemView.ViewModel(id: UUID().uuidString, icon: Image("Bank Logo Sample"), name: "Сбербанк", isFavorite: false, contactName: "Иванов И.", action: {})
 }

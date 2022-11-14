@@ -26,6 +26,23 @@ struct ContactsView: View {
             .padding(.horizontal, 20)
             .padding(.top, 20)
             
+            ForEach(viewModel.visible) { section in
+                
+                switch section {
+                case let latestPayments as ContactsLatestPaymentsSectionViewModel:
+                    ContactsLatestPaymentsSectionView(viewModel: latestPayments)
+                    
+                case let contactsSection as ContactsListSectionViewModel:
+                    ContactsListSectionView(viewModel: contactsSection)
+                    
+                case let banksPreffered as ContactsBanksPrefferedSectionViewModel:
+                    ContactsBanksPrefferedSectionView(viewModel: banksPreffered)
+                    
+                default:
+                    EmptyView()
+                }
+            }
+            
             /*
             switch viewModel.mode {
                 
@@ -89,110 +106,6 @@ struct ContactsView: View {
 }
 
 extension ContactsView {
-    
-    struct TopBankSectionView: View {
-        
-        @ObservedObject var viewModel: ContactsBanksPrefferedSectionViewModel
-        
-        var body: some View {
-            
-            switch viewModel.content {
-            case .empty:
-                EmptyView()
-                
-            case .banks(let topBanks):
-                TopBanksView(viewModel: topBanks)
-                
-            case .placeHolder(let placeholders):
-                HStack(alignment: .top, spacing: 4) {
-                    
-                    ForEach(placeholders) { placeholder in
-                        
-                        LatestPaymentsView.PlaceholderView(viewModel: placeholder)
-                            .shimmering(active: true, bounce: true)
-                    }
-                }
-            }
-        }
-        
-        struct TopBanksView: View {
-            
-            @ObservedObject var viewModel: TopBanksViewModel
-            
-            var body: some View {
-                
-                HStack(alignment: .top, spacing: 4) {
-                    
-                    ForEach(viewModel.banks) { bank in
-                        
-                        Button {
-                            
-                            bank.action()
-                            
-                        } label: {
-                            
-                            ZStack {
-                                
-                                VStack(spacing: 8) {
-                                    
-                                    if let image = bank.image {
-                                        
-                                        ZStack {
-                                            
-                                            image
-                                                .resizable()
-                                                .frame(width: 56, height: 56, alignment: .center)
-                                                .cornerRadius(90)
-                                        }
-                                        
-                                    } else {
-                                        ZStack {
-                                            
-                                            Color.mainColorsGrayLightest
-                                                .frame(width: 56, height: 56, alignment: .center)
-                                                .cornerRadius(90)
-                                            
-                                        }
-                                    }
-                                    
-                                    VStack(spacing: 4) {
-                                        
-                                        if let title = bank.name {
-                                            
-                                            Text(title)
-                                                .font(.textBodyXSSB11140())
-                                                .foregroundColor(Color.textSecondary)
-                                        }
-                                        
-                                        Text(bank.bankName)
-                                            .foregroundColor(Color.textPlaceholder)
-                                            .font(.textBodyXSR11140())
-                                    }
-                                }
-                                
-                                if bank.defaultBank {
-                                    
-                                    ZStack {
-                                        
-                                        Color.mainColorsBlack
-                                            .frame(width: 24, height: 24, alignment: .top)
-                                            .cornerRadius(90)
-                                        
-                                        Image.ic24Star
-                                            .resizable()
-                                            .frame(width: 16, height: 16, alignment: .center)
-                                            .foregroundColor(Color.mainColorsWhite)
-                                    }
-                                    .offset(x: 25, y: -35)
-                                }
-                            }
-                            .frame(width: 80)
-                        }
-                    }
-                }
-            }
-        }
-    }
     
     struct CollapsableView: View {
         
