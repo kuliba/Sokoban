@@ -26,6 +26,7 @@ struct ContactsView: View {
             .padding(.horizontal, 20)
             .padding(.top, 20)
             
+            /*
             switch viewModel.mode {
                 
             case let .contactsSearch(contacts):
@@ -82,6 +83,7 @@ struct ContactsView: View {
                 
                 Spacer()
             }
+             */
         }
     }
 }
@@ -303,131 +305,6 @@ extension ContactsView {
             }
         }
     }
-    
-    struct ContactListView: View {
-        
-        @ObservedObject var viewModel: ContactsListViewModel
-        
-        var body: some View {
-            
-            if let selfContact = viewModel.selfContact {
-                
-                Divider()
-                    .frame(height: 1)
-                    .foregroundColor(Color.mainColorsGrayLightest)
-                
-                Button {
-                    
-                    selfContact.action()
-                } label: {
-                    
-                    ContactListView.ContactView(viewModel: selfContact)
-                        .padding(.horizontal, 20)
-                }
-                
-                Divider()
-                    .frame(height: 1)
-                    .foregroundColor(Color.mainColorsGrayLightest)
-            }
-            
-            ScrollView(.vertical, showsIndicators: false) {
-                
-                VStack(spacing: 24) {
-                    
-                    ForEach(viewModel.contacts) { contact in
-                        
-                        Button(action: contact.action) {
-
-                            ContactView(viewModel: contact)
-                        }
-                    }
-                }
-                .padding(.bottom, 10)
-            }
-            .padding(.horizontal, 20)
-        }
-        
-        struct ContactView: View {
-            
-            @ObservedObject var viewModel: ContactsListViewModel.ContactViewModel
-            
-            var body: some View {
-                
-                HStack(alignment: .center, spacing: 20) {
-                    
-                    switch viewModel.image {
-                        
-                    case let .image(image):
-                        image
-                            .resizable()
-                            .frame(width: 40, height: 40, alignment: .center)
-                            .cornerRadius(90)
-                        
-                    case let .initials(initials):
-                        
-                        ZStack {
-                            
-                            Color.mainColorsGrayLightest
-                                .frame(width: 40, height: 40, alignment: .center)
-                                .cornerRadius(90)
-                            
-                            Text(initials)
-                                .foregroundColor(.textPlaceholder)
-                                .font(.textH3M18240())
-                        }
-                        
-                    default:
-                        
-                        IconPlaceholder()
-                    }
-                    
-                    
-                    VStack(alignment: .leading, spacing: 8) {
-                        
-                        if let fullName = viewModel.fullName {
-                            
-                            Text(fullName)
-                                .foregroundColor(Color.textSecondary)
-                                .lineLimit(1)
-                                .font(.system(size: 16))
-                        }
-                        
-                        if let phone = viewModel.phone {
-                            
-                            Text(phone)
-                                .foregroundColor(Color.textPlaceholder)
-                                .font(.system(size: 12))
-                        }
-                    }
-                    
-                    Spacer()
-                    
-                    if let icon = viewModel.icon {
-                        
-                        icon
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                    }
-                }
-            }
-            
-            struct IconPlaceholder: View {
-                
-                var body: some View {
-                    
-                    ZStack {
-                        
-                        Color.mainColorsGrayLightest
-                            .frame(width: 40, height: 40, alignment: .center)
-                            .cornerRadius(90)
-                        
-                        Image.ic24Smartphone
-                            .foregroundColor(Color.textPlaceholder)
-                    }
-                }
-            }
-        }
-    }
 }
 
 struct ItemView: View {
@@ -479,11 +356,13 @@ struct ContactsView_Previews: PreviewProvider {
                 .previewLayout(.fixed(width: 375, height: 100))
                 .previewDisplayName("CollapsableView")
 
+            /*
             ContactsView(viewModel: .sample)
                 .previewDisplayName("Contacts List")
 
             ContactsView(viewModel: .sampleLatestPayment)
                 .previewDisplayName("Contacts List")
+             */
         }
     }
 }

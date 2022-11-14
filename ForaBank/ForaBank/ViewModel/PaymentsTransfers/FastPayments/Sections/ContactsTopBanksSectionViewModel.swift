@@ -9,15 +9,10 @@ import Foundation
 import SwiftUI
 import Combine
 
-class ContactsTopBanksSectionViewModel: ObservableObject {
-    
-    let action: PassthroughSubject<Action, Never> = .init()
+class ContactsTopBanksSectionViewModel: ContactsSectionViewModel, ObservableObject {
     
     @Published var content: ContentType
     let phone: String
-    
-    private let model: Model
-    var bindings = Set<AnyCancellable>()
     
     enum ContentType {
         
@@ -28,9 +23,9 @@ class ContactsTopBanksSectionViewModel: ObservableObject {
     
     init(_ model: Model, content: ContentType, phone: String) {
         
-        self.model = model
         self.content = content
         self.phone = phone
+        super.init(model: model)
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
     }

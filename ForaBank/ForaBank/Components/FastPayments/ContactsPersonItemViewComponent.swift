@@ -18,7 +18,7 @@ extension ContactsPersonItemView {
         let name: String?
         let phone: String
         let isBankIcon: Bool
-        let action: (AddressBookContact.ID) -> Void
+        let action: () -> Void
         
         enum Icon {
             
@@ -27,7 +27,7 @@ extension ContactsPersonItemView {
             case placeholder
         }
         
-        init(id: AddressBookContact.ID, icon: ContactsPersonItemView.ViewModel.Icon, name: String?, phone: String, isBankIcon: Bool, action: @escaping (AddressBookContact.ID) -> Void) {
+        init(id: AddressBookContact.ID, icon: ContactsPersonItemView.ViewModel.Icon, name: String?, phone: String, isBankIcon: Bool, action: @escaping () -> Void) {
            
             self.id = id
             self.icon = icon
@@ -47,11 +47,7 @@ struct ContactsPersonItemView: View {
     
     var body: some View {
         
-        Button {
-            
-            viewModel.action(viewModel.id)
-            
-        } label: {
+        Button(action: viewModel.action) {
             
             HStack(alignment: .center, spacing: 20) {
                 
@@ -163,10 +159,10 @@ struct ContactsPersonItemView_Previews: PreviewProvider {
 
 extension ContactsPersonItemView.ViewModel {
     
-    static let sampleSelf = ContactsPersonItemView.ViewModel(id: UUID().uuidString, icon: .placeholder, name: "Себе", phone: "+7 925 555-5555", isBankIcon: false, action: { _ in })
+    static let sampleSelf = ContactsPersonItemView.ViewModel(id: UUID().uuidString, icon: .placeholder, name: "Себе", phone: "+7 925 555-5555", isBankIcon: false, action: { })
     
-    static let sampleInitials = ContactsPersonItemView.ViewModel(id: UUID().uuidString, icon: .initials("ИИ"), name: "Иванов Иван Иванович", phone: "+7 925 555-5555", isBankIcon: false, action: { _ in })
+    static let sampleInitials = ContactsPersonItemView.ViewModel(id: UUID().uuidString, icon: .initials("ИИ"), name: "Иванов Иван Иванович", phone: "+7 925 555-5555", isBankIcon: false, action: {})
     
-    static let sampleClient = ContactsPersonItemView.ViewModel(id: UUID().uuidString, icon: .initials("ИИ"), name: "Иванов Иван Иванович", phone: "+7 925 555-5555", isBankIcon: true, action: { _ in })
+    static let sampleClient = ContactsPersonItemView.ViewModel(id: UUID().uuidString, icon: .initials("ИИ"), name: "Иванов Иван Иванович", phone: "+7 925 555-5555", isBankIcon: true, action: {})
 }
 
