@@ -26,12 +26,12 @@ class ContactsViewModel: ObservableObject {
     var title: String {
         
         switch mode {
-        case .sfp: return "Выберите контакт"
+        case .fastPayments: return "Выберите контакт"
         case let .select(select, _):
             switch select {
             case .contacts: return "Выберите контакт"
             case .banks: return "Выберите банк"
-            case .counties: return "Выберите страну"
+            case .countries: return "Выберите страну"
             }
         }
     }
@@ -80,7 +80,7 @@ class ContactsViewModel: ObservableObject {
             .sink { [unowned self] text in
                 
                 switch mode {
-                case let .sfp(phase):
+                case let .fastPayments(phase):
                     switch phase {
                     case .contacts:
                         if let phone = searchBar.phone {
@@ -88,59 +88,55 @@ class ContactsViewModel: ObservableObject {
                             self.feedbackGenerator.notificationOccurred(.success)
                             self.searchBar.action.send(SearchBarViewModelAction.Idle())
                             
+                            //TODO: subscribe to bank clients an update icon
                             self.model.action.send(ModelAction.BankClient.Request(phone: phone))
+                            
+                            //TODO: move to Preffered Banks view model
                             self.model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: phone))
                             
-                            mode = .sfp(.banksAndCountries(phone: phone))
-                            
-                            /*
-                            withAnimation {
-                                
-                                
-                                
-                           
-                                
-                                let banksData = model.bankList.value
-                                let bankSection = ContactsBanksSectionViewModel(model, bankData: banksData)
-                                
-                                let countiesData = model.countriesList.value.filter({$0.paymentSystemIdList.contains({"DIRECT"}())})
-                                let countriesSection = ContactsCountrySectionViewModel(countriesList: countiesData, model: model)
-                                
-                                let collapsable: [ContactsSectionCollapsableViewModel] = [bankSection, countriesSection]
-                                
-                                self.mode = .banks(.init(model, phone: phone), collapsable)
-                            }
-                             */
-                            
+                            mode = .fastPayments(.banksAndCountries(phone: phone))
+                        
                         } else {
                            
-                            if let text = text {
+                            contactsSection?.filter.value = text
+                            
+                            withAnimation {
                                 
-                                contactsSection?.filter.value = text
-                                //TODO: hide latest payments section
+                                if text != nil {
+                 
+                                    // hide latest payments
+                                    visible = visible.filter({ $0.type != .latestPayments })
 
-                            } else {
-                                
-                                contactsSection?.filter.value = nil
-                                //TODO: show latest payments section
-                                
-                                
-                                /*
-                                withAnimation(.easeInOut(duration: 1)) {
+                                } else {
                                     
-                                    self.mode = .contacts(.init(model, isBaseButtons: false, filter: .including([.phone])), .init(model))
+                                    // show latest payments
+                                    visible = visible(sections: sections, mode: mode)
                                 }
-                                 */
                             }
                         }
                         
                     case .banksAndCountries:
-                        mode = .sfp(.contacts)
+                        if let phone = searchBar.phone {
+                            
+                            mode = .fastPayments(.banksAndCountries(phone: phone))
+                            
+                        } else {
+                            
+                            mode = .fastPayments(.contacts)
+                        }
                     }
                     
-                case let .select(select):
-                    //TODO: update filters
-                    break
+                case let .select(select, _):
+                    switch select {
+                    case .contacts:
+                        contactsSection?.filter.value = text
+                        
+                    case .banks:
+                        banksSection?.filter.value = text
+                    
+                    case .countries:
+                        countriesSection?.filter.value = text
+                    }
                 }
 
             }.store(in: &bindings)
@@ -160,7 +156,7 @@ class ContactsViewModel: ObservableObject {
                         
                     case let payload as ContactsSectionViewModelAction.Contacts.ItemDidTapped:
                         switch mode {
-                        case .sfp:
+                        case .fastPayments:
                             let formattedPhone = searchBar.textField.phoneNumberFormatter.partialFormatter("+\(payload.phone)")
                             self.searchBar.textField.text = formattedPhone
                             
@@ -173,18 +169,17 @@ class ContactsViewModel: ObservableObject {
                         
                     case let payload as ContactsSectionViewModelAction.Banks.ItemDidTapped:
                         switch mode {
-                        case .sfp:
+                        case .fastPayments:
                             handleBankDidTapped(bank: payload.bank)
                             
                         case let .select(_, parameterId):
                             self.action.send(ContactsViewModelAction.BankSelected(bank: payload.bank, parameterId: parameterId))
                         }
-                        
-                        
+   
                     case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
                         
                         switch mode {
-                        case let .sfp(phase):
+                        case let .fastPayments(phase):
                             switch phase {
                             case .banksAndCountries(phone: let phone):
                                 self.action.send(ContactsViewModelAction.PaymentRequested(source: .abroad(phone: phone, country: payload.country)))
@@ -212,7 +207,7 @@ extension ContactsViewModel {
     
     enum Mode {
         
-        case sfp(Phase)
+        case fastPayments(Phase)
         case select(Select, Payments.Parameter.ID)
         
         enum Phase {
@@ -225,13 +220,13 @@ extension ContactsViewModel {
             
             case contacts
             case banks
-            case counties
+            case countries
         }
         
         var visibleSectionsTypes: [ContactsSectionViewModel.Kind] {
             
             switch self {
-            case let .sfp(phase):
+            case let .fastPayments(phase):
                 switch phase {
                 case .contacts:
                     return [.latestPayments, .contacts]
@@ -244,7 +239,7 @@ extension ContactsViewModel {
                 switch select {
                 case .contacts: return [.contacts]
                 case .banks: return [.banks]
-                case .counties: return [.countries]
+                case .countries: return [.countries]
                 }
             }
         }
@@ -260,33 +255,32 @@ extension ContactsViewModel {
         var result = [ContactsSectionViewModel]()
         
         switch mode {
-        case .sfp:
+        case .fastPayments:
             result.append(ContactsLatestPaymentsSectionViewModel(model: model, including: [.phone]))
-            result.append(ContactsListSectionViewModel(model))
+            result.append(ContactsListSectionViewModel(model, mode: .fastPayment))
             result.append(ContactsBanksPrefferedSectionViewModel(model, phone: nil))
-            result.append(ContactsBanksSectionViewModel(model, bankData: []))
-            result.append(ContactsCountriesSectionViewModel(countriesList: [], model: model))
+            result.append(ContactsBanksSectionViewModel(model, mode: .fastPayment))
+            result.append(ContactsCountriesSectionViewModel(model, mode: .fastPayment))
 
         case let .select(select, _):
             switch select {
             case .contacts:
-                result.append(ContactsListSectionViewModel(model))
+                result.append(ContactsListSectionViewModel(model, mode: .select))
                 
             case .banks:
-                result.append(ContactsBanksSectionViewModel(model, bankData: []))
+                result.append(ContactsBanksSectionViewModel(model, mode: .select))
                 
-            case .counties:
-                result.append(ContactsCountriesSectionViewModel(countriesList: [], model: model))
+            case .countries:
+                result.append(ContactsCountriesSectionViewModel(model, mode: .select))
             }
         }
         
         return result
-        
     }
     
     func visible(sections: [ContactsSectionViewModel], mode: Mode) -> [ContactsSectionViewModel] {
         
-        sections.filter({ mode.visibleSectionsTypes.contains($0.type )})
+        sections.filter({ mode.visibleSectionsTypes.contains($0.type) })
     }
 }
 
@@ -296,10 +290,26 @@ extension ContactsViewModel {
     
     private var contactsSection: ContactsListSectionViewModel? {
         
-        guard let contactsSection = sections.compactMap({ $0 as? ContactsListSectionViewModel }).first else {
+        guard let section = sections.compactMap({ $0 as? ContactsListSectionViewModel }).first else {
             return nil
         }
-        return contactsSection
+        return section
+    }
+    
+    private var banksSection: ContactsBanksSectionViewModel? {
+        
+        guard let section = sections.compactMap({ $0 as? ContactsBanksSectionViewModel }).first else {
+            return nil
+        }
+        return section
+    }
+    
+    private var countriesSection: ContactsCountriesSectionViewModel? {
+        
+        guard let section = sections.compactMap({ $0 as? ContactsCountriesSectionViewModel }).first else {
+            return nil
+        }
+        return section
     }
     
     func handleBankDidTapped(bank: BankData) {
@@ -351,34 +361,5 @@ enum ContactsViewModelAction {
         let country: CountryData
         let parameterId: Payments.Parameter.ID
     }
-   
 }
 
-//MARK: - Samples
-
-extension ContactsViewModel {
-    /*
-    static let sample: ContactsViewModel = .init(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(placeHolder: .banks)), mode: .contactsSearch(.init(.emptyMock, selfContact: .init(fullName: "name", image: nil, phone: "phone", icon: nil, action: {}), contacts: [])))
-    
-    static let sampleLatestPayment: ContactsViewModel = .init(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(placeHolder: .banks)), mode: .contacts(.init(.emptyMock, items: [.latestPayment(.init(id: 5, avatar: .icon(Image("ic24Smartphone"), .iconGray), topIcon: Image("azerFlag"), description: "+994 12 493 23 87", action: {}))], isBaseButtons: false, filter: nil), .init(.emptyMock, selfContact: .init(fullName: "Себе", image: nil, phone: "8 (925) 279 96-13", icon: nil, action: {}), contacts: [.init(fullName: "Андрей Андропов", image: nil, phone: "+7 (903) 333-67-32", icon: nil, action: {})])))
-     */
-    
-    static let sampleBanks = ContactsBanksSectionViewModel(.emptyMock, header: .init(kind: .banks), items: [.sampleItem], mode: .normal, options: .sample)
-    
-    static let sampleHeader = ContactsSectionCollapsableViewModel.HeaderViewModel(kind: .country)
-}
-
-extension ContactsSectionCollapsableViewModel.ItemViewModel {
-    
-    static let sampleItem = ContactsSectionCollapsableViewModel.ItemViewModel(title: "Банк", image: .ic24Bank, bankType: .sfp, action: {})
-}
-
-extension ContactsSectionCollapsableViewModel {
-    
-    static let sampleHeader = ContactsSectionCollapsableViewModel.HeaderViewModel(kind: .country)
-}
-
-extension ContactsSectionCollapsableViewModel.HeaderViewModel {
-    
-    static let sampleHeader = ContactsSectionCollapsableViewModel.HeaderViewModel(kind: .banks)
-}

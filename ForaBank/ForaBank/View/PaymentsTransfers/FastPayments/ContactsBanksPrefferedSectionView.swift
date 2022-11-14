@@ -49,6 +49,6 @@ struct ContactsBanksPrefferedSectionView_Previews: PreviewProvider {
 
 extension ContactsBanksPrefferedSectionViewModel {
     
-    static let sample = ContactsBanksPrefferedSectionViewModel(.emptyMock, items: [ContactsBankPrefferedItemView.ViewModel.sample], phone: nil)
+    static let sample = ContactsBanksPrefferedSectionViewModel(items: [ContactsBankPrefferedItemView.ViewModel.sample], phone: nil, mode: .fastPayment, model: .emptyMock)
     
 }

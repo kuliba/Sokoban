@@ -885,6 +885,9 @@
 		777460F32922C5BA00D3FF46 /* ContactsLatestPaymentsSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777460F22922C5BA00D3FF46 /* ContactsLatestPaymentsSectionViewModel.swift */; };
 		777460F52922D1C900D3FF46 /* ContactsLatestPaymentsSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777460F42922D1C900D3FF46 /* ContactsLatestPaymentsSectionView.swift */; };
 		777460F72922D2C300D3FF46 /* ContactsBanksPrefferedSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777460F62922D2C300D3FF46 /* ContactsBanksPrefferedSectionView.swift */; };
+		777460F92922EE2300D3FF46 /* ContactsSectionHeaderViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777460F82922EE2300D3FF46 /* ContactsSectionHeaderViewComponent.swift */; };
+		777460FB2922F07600D3FF46 /* ContactsBanksSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777460FA2922F07600D3FF46 /* ContactsBanksSectionView.swift */; };
+		777460FD2922F37C00D3FF46 /* ContactsCountriesSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777460FC2922F37C00D3FF46 /* ContactsCountriesSectionView.swift */; };
 		7784D2A8285B73F600E81005 /* LineProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7784D2A7285B73F600E81005 /* LineProgressView.swift */; };
 		7784D2AA285B7BA300E81005 /* ProductProfileDetaiHeaderViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7784D2A9285B7BA300E81005 /* ProductProfileDetaiHeaderViewComponent.swift */; };
 		7788BE03285B849C00EAF14D /* ProductProfileDetailAmountViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7788BE02285B849C00EAF14D /* ProductProfileDetailAmountViewComponent.swift */; };
@@ -2331,6 +2334,9 @@
 		777460F22922C5BA00D3FF46 /* ContactsLatestPaymentsSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsLatestPaymentsSectionViewModel.swift; sourceTree = "<group>"; };
 		777460F42922D1C900D3FF46 /* ContactsLatestPaymentsSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsLatestPaymentsSectionView.swift; sourceTree = "<group>"; };
 		777460F62922D2C300D3FF46 /* ContactsBanksPrefferedSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsBanksPrefferedSectionView.swift; sourceTree = "<group>"; };
+		777460F82922EE2300D3FF46 /* ContactsSectionHeaderViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsSectionHeaderViewComponent.swift; sourceTree = "<group>"; };
+		777460FA2922F07600D3FF46 /* ContactsBanksSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsBanksSectionView.swift; sourceTree = "<group>"; };
+		777460FC2922F37C00D3FF46 /* ContactsCountriesSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsCountriesSectionView.swift; sourceTree = "<group>"; };
 		7784D2A7285B73F600E81005 /* LineProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineProgressView.swift; sourceTree = "<group>"; };
 		7784D2A9285B7BA300E81005 /* ProductProfileDetaiHeaderViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileDetaiHeaderViewComponent.swift; sourceTree = "<group>"; };
 		7788BE02285B849C00EAF14D /* ProductProfileDetailAmountViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileDetailAmountViewComponent.swift; sourceTree = "<group>"; };
@@ -4904,6 +4910,7 @@
 				777460E8291E5AB700D3FF46 /* ContactsBankPrefferedItemViewComponent.swift */,
 				777460EA291E5B4C00D3FF46 /* ContactsCountryItemViewComponent.swift */,
 				777460EE291E5E0900D3FF46 /* ContactsPlaceholderItemViewComponent.swift */,
+				777460F82922EE2300D3FF46 /* ContactsSectionHeaderViewComponent.swift */,
 			);
 			path = FastPayments;
 			sourceTree = "<group>";
@@ -5875,6 +5882,8 @@
 				777460F42922D1C900D3FF46 /* ContactsLatestPaymentsSectionView.swift */,
 				777460F02922C29D00D3FF46 /* ContactsListSectionView.swift */,
 				777460F62922D2C300D3FF46 /* ContactsBanksPrefferedSectionView.swift */,
+				777460FA2922F07600D3FF46 /* ContactsBanksSectionView.swift */,
+				777460FC2922F37C00D3FF46 /* ContactsCountriesSectionView.swift */,
 			);
 			path = FastPayments;
 			sourceTree = "<group>";
@@ -8491,6 +8500,7 @@
 				ED8AB46226C3EA2E006F0D03 /* MeToMeSettingViewController.swift in Sources */,
 				6822EFD626B935FF00125EEC /* BaseTableViewCell.swift in Sources */,
 				0CEA3206287732FF005B80BA /* CurrencyExchangeConfirmationData.swift in Sources */,
+				777460FD2922F37C00D3FF46 /* ContactsCountriesSectionView.swift in Sources */,
 				774A8B392865FCDD00B81140 /* UserAccountDocumentInfoView.swift in Sources */,
 				77F1582B28183BD900CA5E4E /* CryptoKit+Extensions.swift in Sources */,
 				6820927D27AB0DD9003DCAFD /* OperatorGroupData.swift in Sources */,
@@ -8641,6 +8651,7 @@
 				ED664BB2274512C80050D1E0 /* ResultAccountStatementController.swift in Sources */,
 				77E289A02859221D0048141B /* Calendar+Extensions.swift in Sources */,
 				68FFA551268538CF002DADFA /* PhoneContactModel.swift in Sources */,
+				777460F92922EE2300D3FF46 /* ContactsSectionHeaderViewComponent.swift in Sources */,
 				ED84994E26A85A65005205C6 /* SettingsViewController.swift in Sources */,
 				A50869E2276B9BAE004C5E17 /* QRFoundOrgCell.swift in Sources */,
 				774E319327A06F3D005A067B /* TemplatesListViewHostingViewController.swift in Sources */,
@@ -8841,6 +8852,7 @@
 				77F1582D28191DFE00CA5E4E /* SessionCredentials.swift in Sources */,
 				EDBEEA1A26B1AEA200265683 /* FullBankInfoListViewModel.swift in Sources */,
 				0B7A18C92685BF700007CC75 /* GetPaymentSystemListDecodableModel.swift in Sources */,
+				777460FB2922F07600D3FF46 /* ContactsBanksSectionView.swift in Sources */,
 				0BA14E16270DD1940098E422 /* BackgoundTimerInit.swift in Sources */,
 				A5B55E9627E260FA00C0B695 /* C2BApiRequests.swift in Sources */,
 				77EC58EC277237720054D75C /* Action.swift in Sources */,

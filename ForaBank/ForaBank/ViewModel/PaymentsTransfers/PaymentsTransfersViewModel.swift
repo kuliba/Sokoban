@@ -247,7 +247,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                         case .byPhoneNumber:
                             
-                            let contactsViewModel = ContactsViewModel(model, mode: .sfp(.contacts))
+                            let contactsViewModel = ContactsViewModel(model, mode: .fastPayments(.contacts))
                             sheet = .init(type: .fastPayment(contactsViewModel))
                             
                             contactsViewModel.action

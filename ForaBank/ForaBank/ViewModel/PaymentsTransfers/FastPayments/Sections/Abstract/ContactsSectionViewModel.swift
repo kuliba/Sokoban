@@ -14,13 +14,21 @@ class ContactsSectionViewModel: Identifiable {
     
     var id: String { type.rawValue }
     var type: Kind { fatalError("imlement in subclass") }
+    let mode: Mode
     
     internal let model: Model
     internal var bindings = Set<AnyCancellable>()
     
-    init(model: Model) {
+    enum Mode {
+        
+        case fastPayment
+        case select
+    }
+    
+    init(model: Model, mode: Mode) {
         
         self.model = model
+        self.mode = mode
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "init type: \(type)")
     }
@@ -48,18 +56,3 @@ extension ContactsSectionViewModel {
 //MARK: - Action
 
 enum ContactsSectionViewModelAction {}
-
-//MARK: - Hashable, Equatable
-
-extension ContactsSectionViewModel: Hashable, Equatable {
-    
-    static func == (lhs: ContactsSectionViewModel, rhs: ContactsSectionViewModel) -> Bool {
-        
-        lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        
-        hasher.combine(id)
-    }
-}

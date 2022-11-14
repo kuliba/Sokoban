@@ -6,22 +6,38 @@
 //
 
 import Foundation
+import Combine
 import SwiftUI
 
 class ContactsCountriesSectionViewModel: ContactsSectionCollapsableViewModel {
     
     override var type: ContactsSectionViewModel.Kind { .countries }
+    //TODO: visible
+    let filter: CurrentValueSubject<String?, Never>
+    @Published var items: [ContactsItemViewModel]
     
-    convenience init(countriesList: [CountryData], model: Model) {
-        
-        self.init(header: .init(kind: .country), items: [], model: model)
-        
-        let items = Self.reduceCounry(countriesList: countriesList) { [weak self] country in
-            
-            { self?.action.send(ContactsSectionViewModelAction.Countries.ItemDidTapped(country: country)) }
-        }
+    
+    init(header: ContactsSectionHeaderView.ViewModel, isCollapsed: Bool, mode: Mode, items: [ContactsItemViewModel], filter: String? = nil, model: Model) {
         
         self.items = items
+        self.filter = .init(filter)
+        super.init(header: header, isCollapsed: isCollapsed, mode: mode, model: model)
+    }
+    
+    convenience init(_ model: Model, mode: Mode) {
+        
+        let placeholders = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .country), count: 8)
+        self.init(header: .init(kind: .country), isCollapsed: true, mode: mode, items: placeholders, model: model)
+        
+        let countriesList = model.countriesList.value.filter({$0.paymentSystemIdList.contains({"DIRECT"}())})
+        
+        withAnimation {
+            
+            items = Self.reduceCounry(countriesList: countriesList) { [weak self] country in
+                
+                { self?.action.send(ContactsSectionViewModelAction.Countries.ItemDidTapped(country: country)) }
+            }
+        }
     }
     
     deinit {
@@ -29,15 +45,12 @@ class ContactsCountriesSectionViewModel: ContactsSectionCollapsableViewModel {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
-    static func reduceCounry(countriesList: [CountryData], action: @escaping (CountryData) -> () -> Void) -> [ContactsSectionCollapsableViewModel.ItemViewModel] {
+    static func reduceCounry(countriesList: [CountryData], action: @escaping (CountryData) -> () -> Void) -> [ContactsItemViewModel] {
         
-        var country = [ContactsSectionCollapsableViewModel.ItemViewModel]()
-        
-        country = countriesList.map({ContactsSectionCollapsableViewModel.ItemViewModel(title: $0.name, image: $0.svgImage?.image, bankType: nil, action: action($0))})
-        country = country.sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
-        country = country.sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
-        
-        return country
+        countriesList
+            .map({ ContactsCountryItemView.ViewModel(id: $0.id, icon: $0.svgImage?.image, name: $0.name, action: action($0)) })
+            .sorted(by: {$0.name.lowercased() < $1.name.lowercased()})
+            .sorted(by: {$0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending})
     }
 }
 

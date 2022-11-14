@@ -16,11 +16,11 @@ class ContactsBanksPrefferedSectionViewModel: ContactsSectionViewModel, Observab
     @Published var items: [ContactsItemViewModel]
     let phone: CurrentValueSubject<String?, Never>
     
-    init(_ model: Model, items: [ContactsItemViewModel], phone: String?) {
+    init(items: [ContactsItemViewModel], phone: String?, mode: Mode, model: Model) {
         
         self.items = items
         self.phone = .init(phone)
-        super.init(model: model)
+        super.init(model: model, mode: mode)
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
     }
@@ -28,7 +28,7 @@ class ContactsBanksPrefferedSectionViewModel: ContactsSectionViewModel, Observab
     convenience init(_ model: Model, phone: String?) {
         
         let placeholders = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .bankPreffered), count: 8)
-        self.init(model, items: placeholders, phone: phone)
+        self.init(items: placeholders, phone: phone, mode: .fastPayment, model: model)
 
         bind()
     }

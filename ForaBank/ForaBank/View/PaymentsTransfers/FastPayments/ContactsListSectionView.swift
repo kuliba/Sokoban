@@ -64,5 +64,5 @@ struct ContactsListView_Previews: PreviewProvider {
 
 extension ContactsListSectionViewModel {
     
-    static let sample = ContactsListSectionViewModel(.emptyMock, selfContact: ContactsPersonItemView.ViewModel.sampleSelf, visible: [ContactsPersonItemView.ViewModel.sampleClient, ContactsPersonItemView.ViewModel.sampleInitials], contacts: [], filter: nil)
+    static let sample = ContactsListSectionViewModel(.emptyMock, selfContact: ContactsPersonItemView.ViewModel.sampleSelf, visible: [ContactsPersonItemView.ViewModel.sampleClient, ContactsPersonItemView.ViewModel.sampleInitials], contacts: [], filter: nil, mode: .fastPayment)
 }

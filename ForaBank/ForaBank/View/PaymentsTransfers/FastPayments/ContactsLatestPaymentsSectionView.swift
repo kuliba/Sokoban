@@ -31,5 +31,5 @@ struct ContactsLatestPaymentsView_Previews: PreviewProvider {
 
 extension ContactsLatestPaymentsSectionViewModel {
     
-    static let sample = ContactsLatestPaymentsSectionViewModel(latestPayments: .sample, model: .emptyMock)
+    static let sample = ContactsLatestPaymentsSectionViewModel(latestPayments: .sample, mode: .fastPayment, model: .emptyMock)
 }

@@ -15,16 +15,23 @@ class ContactsLatestPaymentsSectionViewModel: ContactsSectionViewModel, Observab
     
     let latestPayments: LatestPaymentsView.ViewModel
     
-    init(latestPayments: LatestPaymentsView.ViewModel, model: Model) {
+    init(latestPayments: LatestPaymentsView.ViewModel, mode: Mode, model: Model) {
         
         self.latestPayments = latestPayments
-        super.init(model: model)
+        super.init(model: model, mode: mode)
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
     }
     
     convenience init(model: Model, including: Set<LatestPaymentData.Kind>) {
         
         let latestPaymentsViewModel = LatestPaymentsView.ViewModel(model, isBaseButtons: false, filter: .including(including))
-        self.init(latestPayments: latestPaymentsViewModel, model: model)
+        self.init(latestPayments: latestPaymentsViewModel, mode: .fastPayment, model: model)
+    }
+    
+    deinit {
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
     func bind() {

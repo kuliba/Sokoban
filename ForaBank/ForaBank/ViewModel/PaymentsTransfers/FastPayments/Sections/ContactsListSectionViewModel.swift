@@ -20,22 +20,22 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
     private var contacts: [ContactsItemViewModel]
     private let phoneFormatter: PhoneNumberFormaterProtocol
 
-    init(_ model: Model, selfContact: ContactsItemViewModel?, visible: [ContactsItemViewModel], contacts: [ContactsItemViewModel], filter: String?, phoneFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater()) {
+    init(_ model: Model, selfContact: ContactsItemViewModel?, visible: [ContactsItemViewModel], contacts: [ContactsItemViewModel], filter: String?, phoneFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater(), mode: Mode) {
         
         self.selfContact = selfContact
         self.visible = visible
         self.filter = .init(filter)
         self.contacts = contacts
         self.phoneFormatter = phoneFormatter
-        super.init(model: model)
+        super.init(model: model, mode: mode)
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
     }
     
-    convenience init(_ model: Model) {
+    convenience init(_ model: Model, mode: Mode) {
         
         let visiblePlaceholders = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .person), count: 8)
-        self.init(model, selfContact: nil, visible: visiblePlaceholders, contacts: [], filter: nil)
+        self.init(model, selfContact: nil, visible: visiblePlaceholders, contacts: [], filter: nil, mode: mode)
         
         Task {
             

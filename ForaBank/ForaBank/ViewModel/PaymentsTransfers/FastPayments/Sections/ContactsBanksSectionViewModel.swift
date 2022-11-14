@@ -13,42 +13,45 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
     
     override var type: ContactsSectionViewModel.Kind { .banks }
     
-    @Published var mode: Mode
+    @Published var searchBar: SearchBarView.ViewModel?
     @Published var options: OptionSelectorView.ViewModel
-    var bankType: BankType? { BankType(rawValue: options.selected) }
-    
-    private var allItems: [ContactsSectionCollapsableViewModel.ItemViewModel]
+    @Published var visible: [ContactsItemViewModel]
+    let filter: CurrentValueSubject<String?, Never>
 
-    enum Mode {
-        
-        case normal
-        case search(SearchBarView.ViewModel)
-    }
+    private var items: [ContactsItemViewModel]
+    private var bankType: BankType? { BankType(rawValue: options.selected) }
     
-    init(_ model: Model, header: ContactsSectionCollapsableViewModel.HeaderViewModel, items: [ContactsSectionCollapsableViewModel.ItemViewModel], mode: Mode, options: OptionSelectorView.ViewModel) {
+    init(_ model: Model, header: ContactsSectionHeaderView.ViewModel, isCollapsed: Bool, mode: Mode, searchBar: SearchBarView.ViewModel?, options: OptionSelectorView.ViewModel, visible: [ContactsItemViewModel], items: [ContactsItemViewModel], filter: String? = nil) {
         
-        self.mode = mode
+        self.searchBar = searchBar
         self.options = options
-        self.allItems = items
-        super.init(header: header, items: items, model: model)
+        self.visible = visible
+        self.items = items
+        self.filter = .init(filter)
+
+        super.init(header: header, isCollapsed: isCollapsed, mode: mode, model: model)
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
     }
     
-    convenience init(_ model: Model, bankData: [BankData]) {
+    convenience init(_ model: Model, mode: Mode) {
         
         let options = Self.createOptionViewModel()
-        self.init(model, header: .init(kind: .banks), items: [], mode: .normal, options: options)
-        
+        let visiblePlaceholders = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .bank), count: 8)
+        self.init(model, header: .init(kind: .banks), isCollapsed: true, mode: mode, searchBar: nil, options: options, visible: visiblePlaceholders, items: [])
+
         Task {
             
-            self.allItems = await Self.reduce(bankList: model.bankList.value) { [weak self]  bank in
+            items = await Self.reduce(bankList: model.bankList.value) { [weak self]  bank in
                 { self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bank: bank)) }
             }
             
             await MainActor.run {
                 
-                self.items = Self.reduce(items: allItems, filterByType: bankType)
+                withAnimation {
+                    
+                    visible = Self.reduce(items: items, filterByType: bankType)
+                }
             }
         }
   
@@ -62,15 +65,18 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
             .receive(on: DispatchQueue.main)
             .sink{[unowned self] selected in
                 
-                self.items = Self.reduce(items: allItems, filterByType: bankType)
-                
-                if bankType == .sfp {
+                withAnimation {
                     
-                    header.icon = .ic24SBP
+                    visible = Self.reduce(items: items, filterByType: bankType)
                     
-                } else {
-                    
-                    header.icon = .ic24Bank
+                    if bankType == .sfp {
+                        
+                        header.icon = .ic24SBP
+                        
+                    } else {
+                        
+                        header.icon = .ic24Bank
+                    }
                 }
                 
             }.store(in: &bindings)
@@ -80,50 +86,54 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
             .sink { [unowned self] action in
                 
                 switch action {
-                case _ as HeaderViewModelAction.SearchDidTapped:
-                    self.mode = .search(.init(textFieldPhoneNumberView: .init(.banks)))
+                case _ as ContactsSectionViewModelAction.Collapsable.SearchDidTapped:
+                    let searchBarViewModel = SearchBarView.ViewModel(textFieldPhoneNumberView: .init(.banks))
+                    bind(searchBar: searchBarViewModel)
+                    withAnimation {
+                        
+                        searchBar = searchBarViewModel
+                    }
+
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    func bind(searchBar: SearchBarView.ViewModel) {
+        
+        self.header.isCollapsed = true
+        
+        searchBar.$state
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] state in
+                
+                switch state {
+                case .idle:
+                    self.searchBar = nil
                     
-                default: break
+                    withAnimation {
+                        
+                        visible = Self.reduce(items: items, filterByType: bankType)
+                    }
+                    
+                default:
+                    break
                 }
                 
             }.store(in: &bindings)
         
-        $mode
+        searchBar.textField.$text
             .receive(on: DispatchQueue.main)
-            .sink{ [unowned self] mode in
+            .sink { [unowned self] text in
                 
-                switch mode {
-                case .search(let search):
+                withAnimation {
                     
-                    self.header.isCollapsed = true
-                    
-                    search.$state
-                        .dropFirst()
-                        .receive(on: DispatchQueue.main)
-                        .sink { [unowned self] state in
-                            
-                            switch state {
-                            case .idle:
-                                self.mode = .normal
-                                
-                            default:
-                                break
-                            }
-                            
-                        }.store(in: &bindings)
-                    
-                    search.textField.$text
-                        .receive(on: DispatchQueue.main)
-                        .sink { [unowned self] text in
-                            
-                            self.items = Self.reduce(items: allItems, filterByType: bankType, filterByName: text)
-                            
-                        }.store(in: &bindings)
-                    
-                case .normal:
-                    self.items = Self.reduce(items: allItems, filterByType: bankType)
-                    
+                    visible = Self.reduce(items: items, filterByType: bankType, filterByName: text)
                 }
+                
             }.store(in: &bindings)
     }
 }
@@ -132,26 +142,26 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
 
 extension ContactsBanksSectionViewModel {
     
-    static func reduce(bankList: [BankData], action: @escaping (BankData) -> () -> Void) async ->  [ContactsSectionCollapsableViewModel.ItemViewModel] {
+    static func reduce(bankList: [BankData], action: @escaping (BankData) -> () -> Void) async -> [ContactsItemViewModel] {
         
         return bankList
-            .map({ContactsSectionCollapsableViewModel.ItemViewModel(title: $0.memberNameRus, image: $0.svgImage.image, bankType: $0.bankType, action: action($0))})
-            .sorted(by: {$0.title.lowercased() < $1.title.lowercased()})
-            .sorted(by: {$0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending})
+            .map({ ContactsBankItemView.ViewModel(id: $0.id, icon: $0.svgImage.image, name: $0.memberNameRus, type: $0.bankType, action: action($0)) })
+            .sorted(by: {$0.name.lowercased() < $1.name.lowercased()})
+            .sorted(by: {$0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending})
     }
     
-    static func reduce(items: [ContactsSectionCollapsableViewModel.ItemViewModel], filterByType: BankType? = nil, filterByName: String? = nil) -> [ContactsSectionCollapsableViewModel.ItemViewModel] {
+    static func reduce(items: [ContactsItemViewModel], filterByType: BankType? = nil, filterByName: String? = nil) -> [ContactsItemViewModel] {
         
-        var filterredItems = items
+        var filterredItems = items.compactMap({ $0 as? ContactsBankItemView.ViewModel })
         
         if let bankType = filterByType {
             
-            filterredItems = filterredItems.filter({$0.bankType == bankType})
+            filterredItems = filterredItems.filter({$0.type == bankType})
         }
         
         if let name = filterByName {
             
-            filterredItems = filterredItems.filter({ $0.title.localizedStandardContains(name) })
+            filterredItems = filterredItems.filter({ $0.name.localizedStandardContains(name) })
         }
 
         return filterredItems

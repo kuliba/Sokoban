@@ -14,11 +14,11 @@ extension ContactsCountryItemView {
     class ViewModel: ContactsItemViewModel {
 
         let id: CountryData.ID
-        let icon: Image
+        let icon: Image?
         let name: String
-        let action: (CountryData.ID) -> Void
+        let action: () -> Void
         
-        init(id: CountryData.ID, icon: Image, name: String, action: @escaping (CountryData.ID) -> Void) {
+        init(id: CountryData.ID, icon: Image?, name: String, action: @escaping () -> Void) {
             
             self.id = id
             self.icon = icon
@@ -36,19 +36,24 @@ struct ContactsCountryItemView: View {
     
     var body: some View {
         
-        Button {
-            
-            viewModel.action(viewModel.id)
-            
-        } label: {
+        Button(action: viewModel.action) {
             
             HStack(alignment: .center, spacing: 20) {
                 
-                viewModel.icon
-                    .resizable()
-                    .frame(width: 40, height: 40)
-                    .cornerRadius(90)
-                
+                if let icon = viewModel.icon {
+                    
+                    icon
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                        .cornerRadius(90)
+                    
+                } else {
+                    
+                    Circle()
+                        .foregroundColor(.mainColorsGrayLightest)
+                        .frame(width: 40, height: 40)
+                }
+
                 Text(viewModel.name)
                     .foregroundColor(Color.textSecondary)
                     .lineLimit(1)
@@ -77,6 +82,6 @@ struct ContactsCountryItemView_Previews: PreviewProvider {
 
 extension ContactsCountryItemView.ViewModel {
     
-    static let sample = ContactsCountryItemView.ViewModel(id: UUID().uuidString, icon: Image("Bank Logo Sample"), name: "Россия", action: { _ in})
+    static let sample = ContactsCountryItemView.ViewModel(id: UUID().uuidString, icon: Image("Bank Logo Sample"), name: "Россия", action: {})
 }
 
