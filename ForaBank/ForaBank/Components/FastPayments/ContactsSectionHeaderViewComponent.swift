@@ -20,20 +20,18 @@ extension ContactsSectionHeaderView {
         var title: String
         @Published var isCollapsed: Bool
         @Published var searchButton: ButtonViewModel?
-        @Published var toggleButton: ButtonViewModel
         
         enum Kind {
             
             case banks, country
         }
         
-        init(icon: Image, isCollapsed: Bool = false, title: String, searchButton: ButtonViewModel? = nil, toggleButton: ButtonViewModel) {
+        init(icon: Image, isCollapsed: Bool = false, title: String, searchButton: ButtonViewModel? = nil) {
             
             self.icon = icon
             self.isCollapsed = isCollapsed
             self.title = title
             self.searchButton = searchButton
-            self.toggleButton = toggleButton
         }
         
         convenience init(kind: Kind) {
@@ -42,20 +40,18 @@ extension ContactsSectionHeaderView {
             case .banks:
                 let icon: Image = .ic24SBP
                 let title = "В другой банк"
-                let toggleButton = ButtonViewModel(icon: .ic24ChevronUp, action: {})
                 
-                self.init(icon: icon, title: title, searchButton: nil, toggleButton: toggleButton)
+                self.init(icon: icon, title: title, searchButton: nil)
                 self.searchButton = ButtonViewModel(icon: .ic24Search, action: { [weak self] in
                     
                     self?.action.send(ContactsSectionViewModelAction.Collapsable.SearchDidTapped())
                 })
                 
+                
             case .country:
                 let icon: Image = .ic24Abroad
                 let title = "Переводы за рубеж"
-                let button = ButtonViewModel(icon: .ic24ChevronUp, action: {})
-                
-                self.init(icon: icon, title: title, toggleButton: button)
+                self.init(icon: icon, title: title)
             }
         }
         
@@ -96,28 +92,25 @@ struct ContactsSectionHeaderView: View {
                         .resizable()
                         .frame(width: 24, height: 24)
                         .foregroundColor(Color.iconGray)
-                }
+                    
+                }.frame(width: 44, height: 44)
             }
             
-            Button {
-                
-                withAnimation {
-                    
-                    //TODO: refactor
-                    viewModel.isCollapsed.toggle()
-                    viewModel.toggleButton.icon = viewModel.toggleButton.icon == .ic24ChevronUp ? Image.ic24ChevronDown : .ic24ChevronUp
-                }
-                
-            } label: {
-                
-                viewModel.toggleButton.icon
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                    .foregroundColor(Color.iconGray)
-                
-            }
+            Image.ic24ChevronUp
+                .resizable()
+                .frame(width: 24, height: 24)
+                .foregroundColor(Color.iconGray)
+                .rotationEffect(viewModel.isCollapsed ? .degrees(0) : .degrees(180))
+            
         }
         .padding(.horizontal, 20)
+        .onTapGesture {
+            
+            withAnimation {
+                
+                viewModel.isCollapsed.toggle()
+            }
+        }
     }
 }
 

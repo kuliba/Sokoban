@@ -36,7 +36,11 @@ struct ContactsBanksPrefferedSectionView: View {
                 }.padding(.horizontal, 20)
             }
             
-            Divider()
+            if viewModel.items.count > 0 {
+                
+                Divider()
+                    .foregroundColor(Color.mainColorsGrayLightest)
+            }
         }
     }
 }
