@@ -24,7 +24,7 @@ struct ContactsCountriesSectionView: View {
                     
                     VStack(spacing: 24) {
                         
-                        ForEach(viewModel.items) { item in
+                        ForEach(viewModel.visible) { item in
                             
                             switch item {
                             case let countryItemViewModel as ContactsCountryItemView.ViewModel:
@@ -50,7 +50,7 @@ struct ContactsCountriesSectionView: View {
                 
                 VStack(spacing: 24) {
                     
-                    ForEach(viewModel.items) { item in
+                    ForEach(viewModel.visible) { item in
                         
                         switch item {
                         case let countryItemViewModel as ContactsCountryItemView.ViewModel:
@@ -85,5 +85,5 @@ struct ContactsCountriesSectionView_Previews: PreviewProvider {
 
 extension ContactsCountriesSectionViewModel {
     
-    static let sample = ContactsCountriesSectionViewModel(header: .init(kind: .country), isCollapsed: false, mode: .fastPayment, items: [ContactsCountryItemView.ViewModel.sample], model: .emptyMock)
+    static let sample = ContactsCountriesSectionViewModel(header: .init(kind: .country), isCollapsed: false, mode: .fastPayment, visible: [ContactsCountryItemView.ViewModel.sample], items: [], model: .emptyMock)
 }
