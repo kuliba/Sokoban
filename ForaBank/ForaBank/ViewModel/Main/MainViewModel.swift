@@ -83,15 +83,15 @@ class MainViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case let payload as MainViewModelAction.Show.ProductProfile:
-                    guard let prooduct = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }) else {
-                        return
-                    }
+                    guard let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId })
+                    else { return }
                     
-                    guard let productProfileViewModel = ProductProfileViewModel(model, product: prooduct, dismissAction: { [weak self] in
-                              self?.action.send(MainViewModelAction.Close.Link())
-                          }) else {
-                        return
-                    }
+                    guard let productProfileViewModel = ProductProfileViewModel
+                        .init(model,
+                              product: product,
+                              rootView: "\(type(of: self))")
+                    else { return }
+                    
                     productProfileViewModel.rootActions = rootActions
                     bind(productProfileViewModel)
                     link = .productProfile(productProfileViewModel)
@@ -325,8 +325,7 @@ class MainViewModel: ObservableObject, Resetable {
                         self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
     
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
-                        let myProductsViewModel = MyProductsViewModel(model, dismissAction: { [weak self] in self?.action.send(MainViewModelAction.Close.Link()) })
-                        bind(myProductsViewModel)
+                        let myProductsViewModel = MyProductsViewModel(model)
                         link = .myProducts(myProductsViewModel)
                         
                         // CurrencyMetall section
@@ -417,28 +416,6 @@ class MainViewModel: ObservableObject, Resetable {
                 }
                 
             }.store(in: &bindings)
-    }
-    
-    private func bind(_ myProductsViewModel: MyProductsViewModel) {
-        
-        myProductsViewModel.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case let payload as MyProductsViewModelAction.Tapped.Product:
-                    
-                    self.action.send(MainViewModelAction.Close.Link())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                        
-                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
-                    }
-                    
-                default:
-                    break
-                }
-                
-        }.store(in: &bindings)
     }
     
     private func bind(_ templatesListViewModel: TemplatesListViewModel) {

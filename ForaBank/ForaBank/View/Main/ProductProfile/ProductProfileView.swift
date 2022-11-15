@@ -216,7 +216,8 @@ extension ProductProfileViewModel {
         navigationBar: NavigationBarView.ViewModel.sampleNoActionButton,
         product: .sample,
         buttons: .sample, detail: nil,
-        history: .sampleHistory)
+        history: .sampleHistory,
+        rootView: "")
 }
 
 extension NavigationBarView.ViewModel {

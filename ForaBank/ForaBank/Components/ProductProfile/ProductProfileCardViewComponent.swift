@@ -282,8 +282,8 @@ extension ProductProfileCardView {
                             activeProductId = payload.thunmbnailId
                         }
                         
-                    case _ as ProductProfileCardView.ViewModel.SelectorViewModelAction.MoreButtonTapped:
-                        self.action.send(ProductProfileCardViewModelAction.MoreButtonTapped())
+                    case let payload as ProductProfileCardView.ViewModel.SelectorViewModelAction.MoreButtonTapped:
+                        self.action.send(ProductProfileCardViewModelAction.MoreButtonTapped(mode: payload.mode))
     
                     default:
                         break
@@ -296,7 +296,9 @@ extension ProductProfileCardView {
 
 enum ProductProfileCardViewModelAction {
 
-    struct MoreButtonTapped: Action {}
+    struct MoreButtonTapped: Action {
+        let mode: Binding<PresentationMode>
+    }
     
     struct ShowAlert: Action {
         
@@ -313,7 +315,6 @@ extension ProductProfileCardView.ViewModel {
         
         @Published var thumbnails: [ThumbnailViewModel]
         @Published var selected: ThumbnailViewModel.ID
-        lazy var moreButton: MoreButtonViewModel = .init(action: { [weak self] in self?.action.send(SelectorViewModelAction.MoreButtonTapped())})
         
         init(thumbnails: [ThumbnailViewModel], selected: ThumbnailViewModel.ID) {
             
@@ -384,7 +385,9 @@ extension ProductProfileCardView.ViewModel {
             let thunmbnailId: SelectorViewModel.ThumbnailViewModel.ID
         }
         
-        struct MoreButtonTapped: Action {}
+        struct MoreButtonTapped: Action {
+            let mode: Binding<PresentationMode>
+        }
     }
 }
 
@@ -459,7 +462,7 @@ extension ProductProfileCardView {
                             .scrollId(thumbnail.id)
                     }
                     
-                    ProductProfileCardView.MoreButtonView(viewModel: viewModel.moreButton)
+                    ProductProfileCardView.MoreButtonView(viewModel: viewModel)
                 }
                 .padding(.horizontal, UIScreen.main.bounds.size.width / 2 - 48 + 48 / 2)
                 .onReceive(viewModel.$selected) { selected in
@@ -522,12 +525,13 @@ extension ProductProfileCardView {
     
     struct MoreButtonView: View {
         
-        let viewModel: ProductProfileCardView.ViewModel.SelectorViewModel.MoreButtonViewModel
+        let viewModel: ProductProfileCardView.ViewModel.SelectorViewModel
+        @Environment(\.presentationMode) var mode: Binding<PresentationMode>
         
         var body: some View {
             
-            Button(action: viewModel.action) {
-                
+            Button(action: { self.viewModel.action.send(ProductProfileCardView.ViewModel
+                                .SelectorViewModelAction.MoreButtonTapped(mode: mode)) }) {
                 ZStack {
                     
                     Color.white
