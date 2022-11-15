@@ -225,7 +225,10 @@ class MyProductsViewModel: ObservableObject {
                         
                     case let payload as MyProductsSectionViewModelAction.Events.ItemTapped:
                         
-                        guard let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId })
+                        guard self.editModeState != .active,
+                              let product = model.products.value.values
+                                                .flatMap({ $0 })
+                                                .first(where: { $0.id == payload.productId })
                         else { return }
                         
                         guard let productProfileViewModel = ProductProfileViewModel
@@ -368,18 +371,19 @@ class MyProductsViewModel: ObservableObject {
     @MainActor
     private func playHideOnboarding() {
        
-        guard !settingsOnboarding.isHideOnboardingShown && editModeState != .active  else { return }
+        guard !settingsOnboarding.isHideOnboardingShown && editModeState != .active
+        else { return }
         
         Task {
             
             withAnimation { showOnboarding[.hide] = true }
             
+            settingsOnboarding.isHideOnboardingShown = true
+            model.settingsMyProductsOnboardingUpdate(settingsOnboarding)
+            
             try await Task.sleep(nanoseconds: .seconds(5))
             
             withAnimation { showOnboarding[.hide] = false }
-            
-            settingsOnboarding.isHideOnboardingShown = true
-            model.settingsMyProductsOnboardingUpdate(settingsOnboarding)
         }
 
     }
