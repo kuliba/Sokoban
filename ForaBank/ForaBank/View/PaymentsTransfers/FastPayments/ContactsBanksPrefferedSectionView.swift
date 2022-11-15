@@ -13,25 +13,30 @@ struct ContactsBanksPrefferedSectionView: View {
     
     var body: some View {
        
-        ScrollView(.horizontal, showsIndicators: false) {
+        VStack(spacing: 16) {
             
-            HStack(spacing: 8) {
+            ScrollView(.horizontal, showsIndicators: false) {
                 
-                ForEach(viewModel.items) { item in
-                   
-                    switch item {
-                    case let prefferedBank as ContactsBankPrefferedItemView.ViewModel:
-                        ContactsBankPrefferedItemView(viewModel: prefferedBank)
-                        
-                    case let placeholderViewModel as ContactsPlaceholderItemView.ViewModel:
-                        ContactsPlaceholderItemView(viewModel: placeholderViewModel)
+                HStack(spacing: 20) {
                     
-                    default:
-                        EmptyView()
+                    ForEach(viewModel.items) { item in
+                       
+                        switch item {
+                        case let prefferedBank as ContactsBankPrefferedItemView.ViewModel:
+                            ContactsBankPrefferedItemView(viewModel: prefferedBank)
+                            
+                        case let placeholderViewModel as ContactsPlaceholderItemView.ViewModel:
+                            ContactsPlaceholderItemView(viewModel: placeholderViewModel)
+                        
+                        default:
+                            EmptyView()
+                        }
                     }
-                }
-                
-            }.padding(.leading, 8)
+                    
+                }.padding(.horizontal, 20)
+            }
+            
+            Divider()
         }
     }
 }
@@ -50,6 +55,6 @@ struct ContactsBanksPrefferedSectionView_Previews: PreviewProvider {
 
 extension ContactsBanksPrefferedSectionViewModel {
     
-    static let sample = ContactsBanksPrefferedSectionViewModel(items: [ContactsBankPrefferedItemView.ViewModel.sample], phone: nil, mode: .fastPayment, model: .emptyMock)
+    static let sample = ContactsBanksPrefferedSectionViewModel(items: [ContactsBankPrefferedItemView.ViewModel.sample, ContactsBankPrefferedItemView.ViewModel.sampleFavorite], phone: nil, mode: .fastPayment, model: .emptyMock)
     
 }

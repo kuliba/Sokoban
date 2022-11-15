@@ -55,28 +55,26 @@ struct ContactsView: View {
     }
 }
 
+//MARK: - Preview
 
 struct ContactsView_Previews: PreviewProvider {
 
     static var previews: some View {
 
         Group {
-/*
-            ContactsView.CollapsableView.HeaderView(viewModel: .init(header: .init(icon: .ic40SBP, title: "В другой банк", toggleButton: ContactsSectionCollapsableViewModel.HeaderViewModel.ButtonViewModel(icon: .ic24ChevronUp, action: {})), items: [.sampleItem], model: .emptyMock))
-                .previewLayout(.fixed(width: 375, height: 100))
-                .previewDisplayName("HeaderView")
-
-            ContactsView.CollapsableView(viewModel: ContactsBanksSectionViewModel(.emptyMock, header: .sampleHeader, items: [.sampleItem], mode: .normal, options: .sample))
-                .previewLayout(.fixed(width: 375, height: 100))
-                .previewDisplayName("CollapsableView")
-*/
-            /*
-            ContactsView(viewModel: .sample)
-                .previewDisplayName("Contacts List")
-
-            ContactsView(viewModel: .sampleLatestPayment)
-                .previewDisplayName("Contacts List")
-             */
+            
+            ContactsView(viewModel: .sampleFastContacts)
+            
+            ContactsView(viewModel: .sampleFastBanks)
         }
     }
+}
+
+//MARK: - Preview Content
+
+extension ContactsViewModel {
+    
+    static let sampleFastContacts = ContactsViewModel(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(.contacts)), visible: [ContactsLatestPaymentsSectionViewModel.sample, ContactsListSectionViewModel.sample], sections: [], mode: .fastPayments(.contacts))
+    
+    static let sampleFastBanks = ContactsViewModel(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(.contacts)), visible: [ContactsBanksPrefferedSectionViewModel.sample, ContactsBanksSectionViewModel.sample, ContactsCountriesSectionViewModel.sample], sections: [], mode: .fastPayments(.contacts))
 }
