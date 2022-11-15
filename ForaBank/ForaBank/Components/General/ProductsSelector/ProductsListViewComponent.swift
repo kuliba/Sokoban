@@ -37,8 +37,9 @@ extension ProductsListView {
                 return nil
             }
             
-            let filterred = Self.filterred(products: productsData.products, context: context)
-            let products = Self.reduce(model, checkProductId: context.checkProductId, products: filterred)
+            let filterredProducts = Self.products(productsData.products, context: context)
+            let products = Self.reduce(model, checkProductId: context.checkProductId, products: filterredProducts)
+            
             let typeSelector = Self.makeTypeSelector(model, selected: productsData.productType.rawValue, context: context)
             
             self.init(model: model, products: products, typeSelector: typeSelector, context: context)
@@ -62,9 +63,9 @@ extension ProductsListView {
                         if let productType = ProductType(rawValue: option),
                            let products = model.products(productType) {
                             
-                            let filterred = Self.filterred(products: products, context: context)
+                            let filterredProducts = Self.products(products, context: context)
                             
-                            self.products = Self.reduce(model, checkProductId: context.checkProductId, products: filterred)
+                            self.products = Self.reduce(model, checkProductId: context.checkProductId, products: filterredProducts)
                         }
                         
                         bindProducts()
@@ -131,8 +132,38 @@ extension ProductsListView.ViewModel {
         
         return nil
     }
+    
+    static func products(_ products: [ProductData], context: ProductSelectorView.ViewModel.Context) -> [ProductData] {
+        
+        let productsWithContext = productsWithContext(products, currency: context.currency)
+        let filterred = filterred(productsWithContext, direction: context.direction, excludeTypes: context.excludeTypes)
+        
+        return filterred
+    }
+    
+    static func productsWithContext(_ products: [ProductData], currency: Currency?) -> [ProductData] {
+        
+        return products.filter {
+            
+            if let currency = currency {
+                
+                if currency == .rub {
+                    
+                    return true
+                    
+                } else {
+                    
+                    return $0.currency == currency.description || $0.currency == Currency.rub.description
+                }
+                
+            } else {
+                
+                return true
+            }
+        }
+    }
 
-    static func filterred(products: [ProductData], context: ProductSelectorView.ViewModel.Context) -> [ProductData] {
+    static func filterred(_ products: [ProductData], direction: ProductSelectorView.ViewModel.Context.Direction, excludeTypes: [ProductType]?) -> [ProductData] {
         
         let filterredProducts = products.filter { product in
             
@@ -162,14 +193,18 @@ extension ProductsListView.ViewModel {
                 
             case .deposit:
                 
-                return context.direction == .to
+                if let excludeTypes = excludeTypes, excludeTypes.contains(where: { $0 == .deposit }) {
+                    return false
+                } else {
+                    return direction == .to
+                }
 
             default:
                 return true
             }
         }
         
-        switch context.direction {
+        switch direction {
         case .from: return filterredProducts.filter { $0.allowDebit == true }
         case .to: return filterredProducts.filter { $0.allowCredit == true }
         }
@@ -191,17 +226,23 @@ extension ProductsListView.ViewModel {
     
     static func makeOptions(_ model: Model, context: ProductSelectorView.ViewModel.Context) -> [Option] {
         
-        let isDirectionFrom = context.direction == .from
-        
         let sortedTypes = model.productsTypes.filter {
             
-            if isDirectionFrom == true {
+            switch context.direction {
+            case .from:
                 
-               return $0 == .card || $0 == .account
+                return $0 == .card || $0 == .account
                 
-            } else {
+            case .to:
                 
-                return $0 != .loan
+                if let excludeTypes = context.excludeTypes {
+                    
+                    return excludeTypes.contains($0) == false
+                    
+                } else {
+                    
+                    return $0 != .loan
+                }
             }
             
         }.sorted { $0.order < $1.order }
