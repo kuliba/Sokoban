@@ -416,6 +416,7 @@ extension Payments {
         
         case missingParameter(Payments.Parameter.ID)
         case missingOptions(ParameterData)
+        case missingValueForParameter(Payments.Parameter.ID)
         case missingValue(ParameterData)
 
         case notAuthorized
@@ -444,7 +445,10 @@ extension Payments {
                 
             case let .missingValue(parameterData):
                 return "Missing value in parameter data: \(parameterData)"
-                
+            
+            case let .missingValueForParameter(parameterId):
+                return "Missing value for parameter: \(parameterId)"
+
             case .notAuthorized:
                 return "Not authorized request attempt"
                 

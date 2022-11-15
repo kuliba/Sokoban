@@ -115,18 +115,27 @@ extension Payments {
         let title: String
         let options: [Option]
         let isEditable: Bool
+        let type: Kind
         
-        init(_ parameter: Parameter, title: String, options: [Option], isEditable: Bool = true) {
+        init(_ parameter: Parameter, title: String, options: [Option], isEditable: Bool = true, type: Kind = .general) {
             
             self.parameter = parameter
             self.title = title
             self.options = options
             self.isEditable = isEditable
+            self.type = type
+        }
+        
+        enum Kind {
+            
+            case general
+            case banks
+            case country
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterSelect(.init(id: parameter.id, value: value), title: title, options: options, isEditable: isEditable)
+            ParameterSelect(.init(id: parameter.id, value: value), title: title, options: options, isEditable: isEditable, type: type)
         }
         
         struct Option: Identifiable {
@@ -134,6 +143,20 @@ extension Payments {
             let id: String
             let name: String
             let icon: ImageData
+            var overlay: Overlay? = nil
+            var actionType: ActionType = .select
+            
+            enum ActionType {
+                
+                case select
+                case banks
+                case country
+            }
+            
+            enum Overlay {
+                
+                case isFavorite
+            }
         }
     }
     
