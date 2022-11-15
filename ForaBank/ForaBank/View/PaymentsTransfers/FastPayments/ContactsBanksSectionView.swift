@@ -31,7 +31,7 @@ struct ContactsBanksSectionView: View {
                 OptionSelectorView(viewModel: viewModel.options)
                     .padding()
                 
-                ScrollView(.vertical, showsIndicators: false) {
+                ScrollView(.vertical) {
                     
                     VStack(spacing: 24) {
                         
@@ -51,14 +51,15 @@ struct ContactsBanksSectionView: View {
                
                     }
                     .padding(.bottom, 10)
+                    .padding(.horizontal, 20)
                 }
-                .padding(.horizontal, 20)
+                
                
             }
             
         case .select:
             
-            ScrollView(.vertical, showsIndicators: false) {
+            ScrollView(.vertical) {
                 
                 VStack(spacing: 24) {
                     
@@ -78,8 +79,8 @@ struct ContactsBanksSectionView: View {
            
                 }
                 .padding(.bottom, 10)
+                .padding(.horizontal, 20)
             }
-            .padding(.horizontal, 20)
         }
     }
 }

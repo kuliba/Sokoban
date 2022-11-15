@@ -30,7 +30,8 @@ struct ContactsBanksPrefferedSectionView: View {
                         EmptyView()
                     }
                 }
-            }
+                
+            }.padding(.leading, 8)
         }
     }
 }

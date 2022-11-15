@@ -20,7 +20,7 @@ struct ContactsCountriesSectionView: View {
             
             if viewModel.header.isCollapsed {
                 
-                ScrollView(.vertical, showsIndicators: false) {
+                ScrollView(.vertical) {
                     
                     VStack(spacing: 24) {
                         
@@ -39,14 +39,13 @@ struct ContactsCountriesSectionView: View {
                         }
                     }
                     .padding(.bottom, 10)
+                    .padding(.horizontal, 20)
                 }
-                .padding(.horizontal, 20)
-
             }
             
         case .select:
             
-            ScrollView(.vertical, showsIndicators: false) {
+            ScrollView(.vertical) {
                 
                 VStack(spacing: 24) {
                     
@@ -65,8 +64,8 @@ struct ContactsCountriesSectionView: View {
                     }
                 }
                 .padding(.bottom, 10)
+                .padding(.horizontal, 20)
             }
-            .padding(.horizontal, 20)
         }
     }
 }

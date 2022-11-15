@@ -13,14 +13,14 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
     
     override var type: ContactsSectionViewModel.Kind { .contacts }
     
-    @Published var selfContact: ContactsItemViewModel?
+    @Published var selfContact: ContactsPersonItemView.ViewModel?
     @Published var visible: [ContactsItemViewModel]
     let filter: CurrentValueSubject<String?, Never>
     
     private var contacts: [ContactsItemViewModel]
     private let phoneFormatter: PhoneNumberFormaterProtocol
 
-    init(_ model: Model, selfContact: ContactsItemViewModel?, visible: [ContactsItemViewModel], contacts: [ContactsItemViewModel], filter: String?, phoneFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater(), mode: Mode) {
+    init(_ model: Model, selfContact: ContactsPersonItemView.ViewModel?, visible: [ContactsItemViewModel], contacts: [ContactsItemViewModel], filter: String?, phoneFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater(), mode: Mode) {
         
         self.selfContact = selfContact
         self.visible = visible
@@ -157,7 +157,7 @@ extension ContactsListSectionViewModel {
         })
     }
     
-    static func reduceClientInfo(phone: String, phoneFormatter: PhoneNumberFormaterProtocol, action: @escaping (AddressBookContact.ID) -> () -> Void) -> ContactsItemViewModel {
+    static func reduceClientInfo(phone: String, phoneFormatter: PhoneNumberFormaterProtocol, action: @escaping (AddressBookContact.ID) -> () -> Void) -> ContactsPersonItemView.ViewModel {
    
         let formattedPhone = phoneFormatter.format(phone)
         

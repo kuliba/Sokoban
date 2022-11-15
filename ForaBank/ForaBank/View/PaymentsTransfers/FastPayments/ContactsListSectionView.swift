@@ -13,46 +13,67 @@ struct ContactsListSectionView: View {
     
     var body: some View {
         
-        if let selfContact = viewModel.selfContact as? ContactsPersonItemView.ViewModel {
-            
-            Divider()
-                .frame(height: 1)
-                .foregroundColor(Color.mainColorsGrayLightest)
-            
-            ContactsPersonItemView(viewModel: selfContact)
-            
-            Divider()
-                .frame(height: 1)
-                .foregroundColor(Color.mainColorsGrayLightest)
-        }
-        
-        ScrollView(.vertical, showsIndicators: false) {
-            
-            VStack(spacing: 24) {
+        VStack {
+         
+            if let selfContactViewModel = viewModel.selfContact {
                 
-                ForEach(viewModel.visible) { contact in
+                SelfContactView(viewModel: selfContactViewModel)
+            }
+            
+            ScrollView(.vertical) {
+                
+                VStack(spacing: 24) {
                     
-                    switch contact {
-                    case let personViewModel as ContactsPersonItemView.ViewModel:
-                        ContactsPersonItemView(viewModel: personViewModel)
+                    ForEach(viewModel.visible) { contact in
                         
-                    case let placeholderViewModel as ContactsPlaceholderItemView.ViewModel:
-                        ContactsPlaceholderItemView(viewModel: placeholderViewModel)
-                    
-                    default:
-                        EmptyView()
+                        switch contact {
+                        case let personViewModel as ContactsPersonItemView.ViewModel:
+                            ContactsPersonItemView(viewModel: personViewModel)
+                            
+                        case let placeholderViewModel as ContactsPlaceholderItemView.ViewModel:
+                            ContactsPlaceholderItemView(viewModel: placeholderViewModel)
+                        
+                        default:
+                            EmptyView()
+                        }
                     }
                 }
+                .padding(.bottom, 10)
+                .padding(.horizontal, 20)
             }
-            .padding(.bottom, 10)
         }
-        .padding(.horizontal, 20)
     }
 }
 
+//MARK: - Internal Views
+
+extension ContactsListSectionView {
+    
+    struct SelfContactView: View {
+        
+        let viewModel: ContactsPersonItemView.ViewModel
+        
+        var body: some View {
+            
+            VStack(spacing: 8) {
+                
+                Divider()
+                    .foregroundColor(Color.mainColorsGrayLightest)
+                
+                ContactsPersonItemView(viewModel: viewModel)
+                    .padding(.horizontal, 20)
+                
+                Divider()
+                    .foregroundColor(Color.mainColorsGrayLightest)
+            }
+        }
+    }
+}
+
+
 //MARK: - Preview
 
-struct ContactsListView_Previews: PreviewProvider {
+struct ContactsListSectionView_Previews: PreviewProvider {
     
     static var previews: some View {
         
