@@ -70,21 +70,26 @@ class PaymentsFeedSectionViewModel: PaymentsSectionViewModel {
                 .sink { [unowned self] action in
                     
                     switch action {
+                        
+                    //MARK: SelectorComponent
                     case let payload as PaymentsParameterViewModelAction.Select.PopUpSelector.Show:
                         self.action.send(PaymentsSectionViewModelAction.PopUpSelector.Show(viewModel: payload.viewModel))
                         
                     case _ as PaymentsParameterViewModelAction.Select.PopUpSelector.Close:
                         self.action.send(PaymentsSectionViewModelAction.PopUpSelector.Close())
                         
+                    //MARK: SelectSimpleComponent
                     case let payload as PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Show:
                         self.action.send(PaymentsSectionViewModelAction.PopUpSelector.Show(viewModel: payload.viewModel))
                         
                     case _ as PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close:
                         self.action.send(PaymentsSectionViewModelAction.PopUpSelector.Close())
                         
+                    //MARK: CodeComponent
                     case _ as PaymentsParameterViewModelAction.Code.ResendButtonDidTapped:
                         self.action.send(PaymentsSectionViewModelAction.ResendCode())
-                        
+                    
+                    //MARK: InputComponent
                     case let payload as PaymentsParameterViewModelAction.Input.ActionButtonDidTapped:
                         self.action.send(PaymentsSectionViewModelAction.InputActionButtonDidTapped(type: payload.type))
                         
@@ -293,7 +298,16 @@ extension PaymentsSectionViewModel {
         
         switch parameter {
         case let parameterSelect as Payments.ParameterSelect:
-            return PaymentsSelectView.ViewModel(with: parameterSelect)
+            
+            do {
+                
+                let viewModel = try PaymentsSelectView.ViewModel(with: parameterSelect)
+                return viewModel
+                
+            } catch {
+                
+                return nil
+            }
             
         case let parameterSwitch as Payments.ParameterSelectSwitch:
             return PaymentsSwitchView.ViewModel(with: parameterSwitch)
@@ -346,6 +360,13 @@ enum PaymentsSectionViewModelAction {
             
             let viewModel: PaymentsPopUpSelectView.ViewModel
         }
+        
+        struct Close: Action {}
+    }
+    
+    enum PopUpSearchSelector  {
+        
+        struct Show: Action {}
         
         struct Close: Action {}
     }

@@ -100,7 +100,8 @@ extension ContactsBankPrefferedItemView {
                         .frame(width: 16, height: 16, alignment: .center)
                         .foregroundColor(Color.mainColorsWhite)
                     
-                }.frame(width: 24, height: 24)
+                }
+                .frame(width: 24, height: 24)
                 
             } else {
                 

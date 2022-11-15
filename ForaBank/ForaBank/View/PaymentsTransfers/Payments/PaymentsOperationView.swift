@@ -226,7 +226,7 @@ extension PaymentsOperationViewModel {
     static let sampleContinue: PaymentsOperationViewModel = {
         
         let topItems = [PaymentsSwitchView.ViewModel.sample]
-        let contentItems = [PaymentsSelectView.ViewModel.selectedMock, PaymentsInfoView.ViewModel.sample, PaymentsNameView.ViewModel.normal, PaymentsNameView.ViewModel.edit, PaymentsProductView.ViewModel.sample, PaymentsInfoView.ViewModel.sample]
+        let contentItems = [PaymentsSelectView.ViewModel.selectedStateMock, PaymentsInfoView.ViewModel.sample, PaymentsNameView.ViewModel.normal, PaymentsNameView.ViewModel.edit, PaymentsProductView.ViewModel.sample, PaymentsInfoView.ViewModel.sample]
         
         let bottomItems = [PaymentsContinueButtonView.ViewModel.sample]
         
@@ -236,7 +236,7 @@ extension PaymentsOperationViewModel {
     static let sampleAmount: PaymentsOperationViewModel = {
         
         let topItems = [PaymentsSwitchView.ViewModel.sample]
-        let contentItems = [PaymentsSelectView.ViewModel.selectedMock, PaymentsInfoView.ViewModel.sample, PaymentsNameView.ViewModel.normal, PaymentsNameView.ViewModel.edit, PaymentsProductView.ViewModel.sample]
+        let contentItems = [PaymentsSelectView.ViewModel.selectedStateMock, PaymentsInfoView.ViewModel.sample, PaymentsNameView.ViewModel.normal, PaymentsNameView.ViewModel.edit, PaymentsProductView.ViewModel.sample]
         let bottomItems = [PaymentsAmountView.ViewModel.amount]
         
         return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги"), top: topItems, content: contentItems, bottom: bottomItems, link: nil, bottomSheet: nil, operation: .emptyMock, model: .emptyMock)
