@@ -84,11 +84,11 @@ struct ContactsPersonItemView: View {
                         Text(name)
                             .foregroundColor(Color.textSecondary)
                             .lineLimit(1)
-                            .font(.system(size: 16))
+                            .font(.textH4M16240())
                         
                         Text(viewModel.phone)
                             .foregroundColor(Color.textPlaceholder)
-                            .font(.system(size: 12))
+                            .font(.textBodySR12160())
                     }
                     
                 } else {
@@ -96,7 +96,7 @@ struct ContactsPersonItemView: View {
                     Text(viewModel.phone)
                         .foregroundColor(Color.textSecondary)
                         .lineLimit(1)
-                        .font(.system(size: 16))
+                        .font(.textH4M16240())
                 }
 
                 Spacer()

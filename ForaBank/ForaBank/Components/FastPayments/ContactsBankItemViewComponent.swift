@@ -59,7 +59,7 @@ struct ContactsBankItemView: View {
                 Text(viewModel.name)
                     .foregroundColor(Color.textSecondary)
                     .lineLimit(1)
-                    .font(.system(size: 16))
+                    .font(.textH4M16240())
                 
                 Spacer()
             }
