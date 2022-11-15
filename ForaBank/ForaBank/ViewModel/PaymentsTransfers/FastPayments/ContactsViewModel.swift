@@ -192,6 +192,12 @@ class ContactsViewModel: ObservableObject {
                             self.action.send(ContactsViewModelAction.CountrySelected(country: payload.country, parameterId: parameterId))
                         }
                         
+                    case _ as ContactsSectionViewModelAction.Collapsable.HideCountries:
+                        visible = visible.filter({ $0.type != .countries })
+                        
+                    case _ as ContactsSectionViewModelAction.Collapsable.ResetSections:
+                        visible = visible(sections: sections, mode: mode)
+                        
                     default:
                         break
                     }

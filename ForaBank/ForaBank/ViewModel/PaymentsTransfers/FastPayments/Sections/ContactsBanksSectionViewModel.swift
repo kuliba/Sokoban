@@ -52,8 +52,6 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
                 }
             }
         }
-  
-        bind()
     }
     
     override func bind() {
@@ -89,6 +87,7 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
                     bind(searchBar: searchBarViewModel)
                     withAnimation {
                         
+                        self.header.isCollapsed = true
                         searchBar = searchBarViewModel
                     }
 
@@ -101,19 +100,15 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
     
     func bind(searchBar: SearchBarView.ViewModel) {
         
-        self.header.isCollapsed = true
-        
-        searchBar.$state
-            .dropFirst()
+        searchBar.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] state in
+            .sink { [unowned self] action in
                 
-                switch state {
-                case .idle:
-                    self.searchBar = nil
-                    
+                switch action {
+                case _ as SearchBarViewModelAction.DismissKeyboard:
                     withAnimation {
                         
+                        self.searchBar = nil
                         visible = Self.reduce(items: items, filterByType: bankType)
                     }
                     

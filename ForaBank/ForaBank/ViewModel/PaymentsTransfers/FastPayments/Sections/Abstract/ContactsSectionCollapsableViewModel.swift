@@ -28,11 +28,23 @@ class ContactsSectionCollapsableViewModel: ContactsSectionViewModel, ObservableO
         header.$isCollapsed
             .dropFirst()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isCollapsed in
+            .sink { [unowned self] isCollapsed in
                 
                 withAnimation {
                     
-                    self?.isCollapsed.toggle()
+                    self.isCollapsed.toggle()
+                }
+                
+                if self is ContactsBanksSectionViewModel {
+                    
+                    if isCollapsed {
+                        
+                        self.action.send(ContactsSectionViewModelAction.Collapsable.HideCountries())
+                        
+                    } else {
+                        
+                        self.action.send(ContactsSectionViewModelAction.Collapsable.ResetSections())
+                    }
                 }
 
             }.store(in: &bindings)
@@ -46,5 +58,9 @@ extension ContactsSectionViewModelAction {
     enum Collapsable {
         
         struct SearchDidTapped: Action {}
+        
+        struct HideCountries: Action {}
+        
+        struct ResetSections: Action {}
     }
 }
