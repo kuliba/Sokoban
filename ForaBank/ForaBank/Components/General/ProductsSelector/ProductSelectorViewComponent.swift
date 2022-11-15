@@ -229,6 +229,7 @@ extension ProductSelectorView.ViewModel {
         var isUserInteractionEnabled: Bool = true
         
         // ProductsList
+        var currency: Currency?
         var excludeTypes: [ProductType]?
         var excludeProductId: ProductData.ID?
         var checkProductId: ProductData.ID?
