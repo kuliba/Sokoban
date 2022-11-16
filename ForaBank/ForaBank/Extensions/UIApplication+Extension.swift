@@ -21,4 +21,15 @@ extension UIApplication {
     func endEditing() {
         sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
+    
+    func hideKeyboardIfNeeds() {
+        
+        guard let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else {
+            return
+        }
+        
+        if keyWindow.frame.height == 568 {
+            endEditing()
+        }
+    }
 }
