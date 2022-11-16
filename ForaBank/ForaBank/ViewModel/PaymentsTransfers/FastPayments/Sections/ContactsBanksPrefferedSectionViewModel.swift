@@ -49,7 +49,7 @@ class ContactsBanksPrefferedSectionViewModel: ContactsSectionViewModel, Observab
                         
                         withAnimation {
                             
-                            items = Self.reduce(contact: contact, banks: banks, banksData: model.bankList.value, action: { [weak self] bank in { self?.action.send(ContactsSectionViewModelAction.BanksPreffered.ItemDidTapped(bank: bank)) } })
+                            items = Self.reduce(contact: contact, banks: banks, banksData: model.bankList.value, action: { [weak self] bank in { self?.action.send(ContactsSectionViewModelAction.BanksPreffered.ItemDidTapped(bankId: bank.id)) } })
                         }
                     }
                     
@@ -95,7 +95,7 @@ extension ContactsSectionViewModelAction {
         
         struct ItemDidTapped: Action {
             
-            let bank: BankData
+            let bankId: BankData.ID
         }
     }
 }

@@ -17,8 +17,6 @@ extension PaymentsSwitchView {
         let options: [OptionViewModel]
         @Published var selected: OptionViewModel.ID
         
-        private var bindings = Set<AnyCancellable>()
-        
         init(options: [OptionViewModel], selected: OptionViewModel.ID, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.options = options

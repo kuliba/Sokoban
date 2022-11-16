@@ -136,30 +136,30 @@ extension Payments.Operation {
     enum Source: CustomDebugStringConvertible {
         
         /// operation started from template
-        case template(PaymentTemplateData)
+        case template(PaymentTemplateData.ID)
         
         /// operation started from latest operation
-        case latestPayment(LatestPaymentData)
+        case latestPayment(LatestPaymentData.ID)
         
         case qr
         
-        case sfp(phone: String, bank: BankData)
+        case sfp(phone: String, bankId: BankData.ID)
         
-        case direct(phone: String, bank: BankData, country: CountryData)
+        case direct(phone: String, bankId: BankData.ID, countryId: CountryData.ID)
         
-        case abroad(phone: String, country: CountryData)
+        case abroad(phone: String, countryId: CountryData.ID)
         
         case mock(Payments.Mock)
         
         var debugDescription: String {
             
             switch self {
-            case let .template(template): return "template: \(template.id)"
-            case let .latestPayment(latestPayment): return "latest payment: \(latestPayment.id)"
+            case let .template(templateId): return "template: \(templateId)"
+            case let .latestPayment(latestPaymentId): return "latest payment: \(latestPaymentId)"
             case .qr: return "qr"
-            case let .sfp(phone: phone, bank: bank): return "sfp: \(phone), bankId: \(bank.id)"
-            case let .direct(phone: phone, bank: bank, country: country): return "direct: \(phone), bankId: \(bank.id), countryId: \(country.id)"
-            case let .abroad(phone: phone, country: country): return "abroad: \(phone), countryId: \(country.id)"
+            case let .sfp(phone: phone, bankId: bankId): return "sfp: \(phone), bankId: \(bankId)"
+            case let .direct(phone: phone, bankId: bankId, countryId: countryId): return "direct: \(phone), bankId: \(bankId), countryId: \(countryId)"
+            case let .abroad(phone: phone, countryId: countryId): return "abroad: \(phone), countryId: \(countryId)"
             case let .mock(mock): return "mock service: \(mock.service.rawValue)"
             }
         }

@@ -19,7 +19,6 @@ extension PaymentsInputView {
         @Published var content: String
         @Published var title: String?
         @Published var actionButton: ActionButtonViewModel?
-        private var bindings = Set<AnyCancellable>()
         
         private static let iconPlaceholder = Image.ic24File
         

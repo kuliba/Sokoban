@@ -153,7 +153,7 @@ class ContactsViewModel: ObservableObject {
                     
                     switch action {
                     case let payload as ContactsSectionViewModelAction.LatestPayments.ItemDidTapped:
-                        self.action.send(ContactsViewModelAction.PaymentRequested(source: .latestPayment(payload.latestPayment)))
+                        self.action.send(ContactsViewModelAction.PaymentRequested(source: .latestPayment(payload.latestPaymentId)))
                         
                     case let payload as ContactsSectionViewModelAction.Contacts.ItemDidTapped:
                         switch mode {
@@ -166,15 +166,15 @@ class ContactsViewModel: ObservableObject {
                         }
                         
                     case let payload as ContactsSectionViewModelAction.BanksPreffered.ItemDidTapped:
-                        handleBankDidTapped(bank: payload.bank)
+                        handleBankDidTapped(bankId: payload.bankId)
                         
                     case let payload as ContactsSectionViewModelAction.Banks.ItemDidTapped:
                         switch mode {
                         case .fastPayments:
-                            handleBankDidTapped(bank: payload.bank)
+                            handleBankDidTapped(bankId: payload.bankId)
                             
                         case let .select(_, parameterId):
-                            self.action.send(ContactsViewModelAction.BankSelected(bank: payload.bank, parameterId: parameterId))
+                            self.action.send(ContactsViewModelAction.BankSelected(bankId: payload.bankId, parameterId: parameterId))
                         }
    
                     case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
@@ -183,14 +183,14 @@ class ContactsViewModel: ObservableObject {
                         case let .fastPayments(phase):
                             switch phase {
                             case .banksAndCountries(phone: let phone):
-                                self.action.send(ContactsViewModelAction.PaymentRequested(source: .abroad(phone: phone, country: payload.country)))
+                                self.action.send(ContactsViewModelAction.PaymentRequested(source: .abroad(phone: phone, countryId: payload.countryId)))
                                 
                             default:
                                 break
                             }
                             
                         case let .select(_, parameterId):
-                            self.action.send(ContactsViewModelAction.CountrySelected(country: payload.country, parameterId: parameterId))
+                            self.action.send(ContactsViewModelAction.CountrySelected(countryId: payload.countryId, parameterId: parameterId))
                         }
                         
                     case _ as ContactsSectionViewModelAction.Collapsable.HideCountries:
@@ -327,22 +327,23 @@ extension ContactsViewModel {
         return section
     }
     
-    func handleBankDidTapped(bank: BankData) {
+    func handleBankDidTapped(bankId: BankData.ID) {
         
-        guard let phone = searchBar.phone else {
+        guard let phone = searchBar.phone,
+              let bank = model.bankList.value.first(where: { $0.id == bankId }) else {
             
             return
         }
         
         switch bank.bankType {
         case .sfp:
-            self.action.send(ContactsViewModelAction.PaymentRequested(source: .sfp(phone: phone, bank: bank)))
+            self.action.send(ContactsViewModelAction.PaymentRequested(source: .sfp(phone: phone, bankId: bank.id)))
             
         case .direct:
             guard let country = self.model.countriesList.value.first(where: { $0.id == bank.bankCountry}) else {
                 return
             }
-            self.action.send(ContactsViewModelAction.PaymentRequested(source: .direct(phone: phone, bank: bank, country: country)))
+            self.action.send(ContactsViewModelAction.PaymentRequested(source: .direct(phone: phone, bankId: bank.id, countryId: country.id)))
             
         default:
             return
@@ -367,13 +368,13 @@ enum ContactsViewModelAction {
     
     struct BankSelected: Action {
         
-        let bank: BankData
+        let bankId: BankData.ID
         let parameterId: Payments.Parameter.ID
     }
     
     struct CountrySelected: Action {
         
-        let country: CountryData
+        let countryId: CountryData.ID
         let parameterId: Payments.Parameter.ID
     }
 }

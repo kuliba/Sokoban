@@ -32,7 +32,6 @@ extension PaymentsProductView {
         }
         
         internal let model: Model
-        internal var bindings = Set<AnyCancellable>()
         internal var selectorBinding: AnyCancellable?
         
         static let cardIconPlaceholder = Image("Placeholder Card Small")
@@ -141,7 +140,6 @@ extension PaymentsProductView {
 struct PaymentsProductView: View {
     
     @ObservedObject var viewModel: ViewModel
-    
 
     var body: some View {
         

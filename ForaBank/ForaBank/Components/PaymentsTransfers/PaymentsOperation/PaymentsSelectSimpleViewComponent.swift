@@ -26,7 +26,6 @@ extension PaymentsSelectSimpleView {
         
         //TODO: real placeholder required
         private static let iconPlaceholder = Image("Payments Icon Placeholder")
-        private var bindings: Set<AnyCancellable> = []
         
         init(icon: Image, title: String, content: String, description: String?, selectedOptionId: Option.ID? = nil, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             

@@ -22,6 +22,7 @@ class PaymentsParameterViewModel: Identifiable, ObservableObject {
     var result: Payments.Parameter { .init(id: id, value: value.current) }
     
     private(set) var source: PaymentsParameterRepresentable
+    internal var bindings = Set<AnyCancellable>()
     
     init(source: PaymentsParameterRepresentable) {
         

@@ -41,7 +41,7 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
         Task {
             
             items = await Self.reduce(bankList: model.bankList.value) { [weak self]  bank in
-                { self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bank: bank)) }
+                { self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bankId: bank.id)) }
             }
             
             await MainActor.run {
@@ -188,7 +188,7 @@ extension ContactsSectionViewModelAction {
     
         struct ItemDidTapped: Action {
             
-            let bank: BankData
+            let bankId: BankData.ID
         }
     }
 }

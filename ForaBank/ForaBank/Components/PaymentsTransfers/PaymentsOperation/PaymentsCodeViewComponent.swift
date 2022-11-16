@@ -18,20 +18,17 @@ extension PaymentsCodeView {
         @Published var title: String?
         @Published var resendState: ResendState
         @Published var errorLabel: String?
-        
-        private var bindings = Set<AnyCancellable>()
-        
+
         var parameterInput: Payments.ParameterCode? { source as? Payments.ParameterCode }
         override var isValid: Bool { return parameterInput?.validator.isValid(value: content) ?? false }
 
-        init(icon: Image, description: String, content: String, title: String?, resendState: PaymentsCodeView.ViewModel.ResendState, errorLabel: String? = nil, bindings: Set<AnyCancellable> = Set<AnyCancellable>(), source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
+        init(icon: Image, description: String, content: String, title: String?, resendState: PaymentsCodeView.ViewModel.ResendState, errorLabel: String? = nil, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             self.icon = icon
             self.description = description
             self.content = content
             self.title = title
             self.resendState = resendState
             self.errorLabel = errorLabel
-            self.bindings = bindings
             super.init(source: source)
         }
         

@@ -17,8 +17,6 @@ extension PaymentsSpoilerButtonView {
         let title: String
         @Published var isSelected: Bool
         let icon = Image("Payments Icon Chevron Down")
-        
-        private var bindings = Set<AnyCancellable>()
    
         init(title: String, isSelected: Bool, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             

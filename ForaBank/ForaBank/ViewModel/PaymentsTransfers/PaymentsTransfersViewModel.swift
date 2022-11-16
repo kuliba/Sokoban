@@ -259,17 +259,24 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                         self.action.send(PaymentsTransfersViewModelAction.Close.Sheet())
                                         
                                         switch payload.source {
-                                        case let .direct(phone: phone, bank: bank, country: country):
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                        case let .direct(phone: phone, bankId: bankId, countryId: countryId):
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [self] in
                                                 
+                                                guard let country = self.model.countriesList.value.first(where: { $0.id == countryId }),
+                                                      let bank = self.model.bankList.value.first(where: { $0.id == bankId }) else {
+                                                    return
+                                                }
                                                 self.link = .init(.country(.init(phone: phone, country: country, bank: bank, operatorsViewModel: .init(closeAction: { [weak self] in
                                                     self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                                                 }, template: nil))))
                                             }
                                             
-                                        case let .abroad(phone: phone, country: country):
+                                        case let .abroad(phone: phone, countryId: countryId):
                                             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                                                 
+                                                guard let country = self.model.countriesList.value.first(where: { $0.id == countryId }) else {
+                                                    return
+                                                }
                                                 self.link = .init(.country(.init(phone: phone, country: country, bank: nil, operatorsViewModel: .init(closeAction: { [weak self] in
                                                     self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                                                 }, template: nil))))

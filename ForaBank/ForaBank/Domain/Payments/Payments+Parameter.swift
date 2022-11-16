@@ -130,7 +130,7 @@ extension Payments {
             
             case general
             case banks
-            case country
+            case countries
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
@@ -143,20 +143,6 @@ extension Payments {
             let id: String
             let name: String
             let icon: ImageData
-            var overlay: Overlay? = nil
-            var actionType: ActionType = .select
-            
-            enum ActionType {
-                
-                case select
-                case banks
-                case country
-            }
-            
-            enum Overlay {
-                
-                case isFavorite
-            }
         }
     }
     

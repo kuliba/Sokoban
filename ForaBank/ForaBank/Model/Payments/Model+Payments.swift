@@ -261,13 +261,13 @@ extension Model {
         case let .mock(mock):
             return mock.parameters.first(where: { $0.id == parameterId })?.value
             
-        case let .sfp(phone: phone, bank: bank):
+        case let .sfp(phone: phone, bankId: bankId):
             switch parameterId {
             case Payments.Parameter.Identifier.sfpPhone.rawValue:
                 return phone
                 
             case Payments.Parameter.Identifier.sfpBank.rawValue:
-                return bank.memberId
+                return bankId
                 
             default:
                 return nil

@@ -35,7 +35,7 @@ class ContactsLatestPaymentsSectionViewModel: ContactsSectionViewModel, Observab
                 
                 switch action {
                 case let payload as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
-                    self.action.send(ContactsSectionViewModelAction.LatestPayments.ItemDidTapped(latestPayment: payload.latestPayment))
+                    self.action.send(ContactsSectionViewModelAction.LatestPayments.ItemDidTapped(latestPaymentId: payload.latestPayment.id))
                     
                 default:
                     break
@@ -54,7 +54,7 @@ extension ContactsSectionViewModelAction {
         
         struct ItemDidTapped: Action {
             
-            let latestPayment: LatestPaymentData
+            let latestPaymentId: LatestPaymentData.ID
         }
     }
 }

@@ -71,7 +71,7 @@ extension PaymentsProductView.ViewModel {
                     break
                 }
                 
-            }.store(in: &bindings)
+            }.store(in: &self.bindings)
     }
     
     func bindLegacy(selector: PaymentsProductSelectorView.ViewModel) {

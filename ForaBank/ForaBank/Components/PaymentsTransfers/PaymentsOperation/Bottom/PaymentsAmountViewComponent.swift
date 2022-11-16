@@ -22,7 +22,6 @@ extension PaymentsAmountView {
         @Published var alert: AlertViewModel?
         
         private let actionTitle: String
-        private var bindings = Set<AnyCancellable>()
         
         init(title: String, textField: TextFieldFormatableView.ViewModel = .init(value: 0, formatter: .currency("₽"), limit: 10), currencySwitch: CurrencySwitchViewModel? = nil, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil, alert: AlertViewModel? = nil, actionTitle: String = "", source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             

@@ -24,16 +24,7 @@ extension Model {
             
             // bank
             let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
-            var bankParameterAllOptions = [Payments.ParameterSelect.Option]()
-            let bankParameterOptions = bankList.value
-                .filter({ $0.bankType == .sfp })
-                .sorted(by: {$0.memberNameRus.lowercased() < $1.memberNameRus.lowercased()})
-                .sorted(by: {$0.memberNameRus.localizedCaseInsensitiveCompare($1.memberNameRus) == .orderedAscending})
-                .map({ Payments.ParameterSelect.Option(id: $0.memberId, name: $0.memberNameRus, icon: .init(with: $0.svgImage) ?? .iconPlaceholder)})
-            let allOption = Payments.ParameterSelect.Option(id: UUID().uuidString, name: "Смотреть все", icon: .iconPlaceholder, actionType: .banks)
-            bankParameterAllOptions.append(allOption)
-            bankParameterAllOptions.append(contentsOf: bankParameterOptions)
-            let bankParameter = Payments.ParameterSelect(.init(id: bankParameterId, value: nil), title: "Банк получателя", options: bankParameterAllOptions, type: .banks)
+            let bankParameter = Payments.ParameterSelect(.init(id: bankParameterId, value: nil), title: "Банк получателя", options: [], type: .banks)
             
             // product
             let productParameterId = Payments.Parameter.Identifier.product.rawValue

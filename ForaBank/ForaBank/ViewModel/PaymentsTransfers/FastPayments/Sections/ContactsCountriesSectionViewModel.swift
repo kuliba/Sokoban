@@ -36,7 +36,7 @@ class ContactsCountriesSectionViewModel: ContactsSectionCollapsableViewModel {
             
             items = Self.reduceCounry(countriesList: countriesList) { [weak self] country in
                 
-                { self?.action.send(ContactsSectionViewModelAction.Countries.ItemDidTapped(country: country)) }
+                { self?.action.send(ContactsSectionViewModelAction.Countries.ItemDidTapped(countryId: country.id)) }
             }
         }
     }
@@ -88,7 +88,7 @@ extension ContactsSectionViewModelAction {
     
         struct ItemDidTapped: Action {
             
-            let country: CountryData
+            let countryId: CountryData.ID
         }
     }
 }
