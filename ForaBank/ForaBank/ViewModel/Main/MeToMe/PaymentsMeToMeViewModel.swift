@@ -16,6 +16,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
     
     @Published var state: State
     @Published var alert: Alert.ViewModel?
+    @Published var bottomSheet: BottomSheet?
     
     let swapViewModel: ProductsSwapView.ViewModel
     let paymentsAmount: PaymentsAmountView.ViewModel
@@ -32,7 +33,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
         case loading
     }
 
-    init(_ model: Model, swapViewModel: ProductsSwapView.ViewModel, paymentsAmount: PaymentsAmountView.ViewModel, title: String, mode: Mode = .general, state: State = .normal) {
+    init(_ model: Model, swapViewModel: ProductsSwapView.ViewModel, paymentsAmount: PaymentsAmountView.ViewModel, title: String, mode: Mode = .general, state: State = .normal, bottomSheet: BottomSheet? = nil) {
         
         self.model = model
         self.swapViewModel = swapViewModel
@@ -40,6 +41,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
         self.title = title
         self.mode = mode
         self.state = state
+        self.bottomSheet = bottomSheet
     }
     
     convenience init?(_ model: Model, mode: Mode) {
@@ -138,6 +140,29 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     
                     state = .normal
                     
+                case let payload as ModelAction.Deposits.Close.Response:
+                    switch payload {
+                    case let .success(data: transferData):
+
+                        switch mode {
+                        case let .closeDeposit(productData, balance):
+                            
+                            if let successViewModel = PaymentsSuccessViewModel(model, mode: .closeAccount, currency: .init(description: productData.currency), balance: balance, transferData: transferData) {
+                                
+                                self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+                            }
+                            
+                        default:
+                            break
+                        }
+                        
+                    case let .failure(message: message):
+                        
+                        makeAlert(ModelError.serverCommandError(error: message))
+                    }
+                    
+                    state = .normal
+                    
                 default:
                     break
                 }
@@ -184,36 +209,79 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         
                     case let .closeAccount(productFrom, _):
                         
-                        guard let to = swapViewModel.to, let productViewModel = to.productViewModel, let productTo = model.product(productId: productViewModel.id) else {
+                        guard let to = swapViewModel.to,
+                              let productViewModel = to.productViewModel,
+                              let productTo = model.product(productId: productViewModel.id) else {
                             return
                         }
-
+                        
                         switch productTo.productType {
                         case .card:
                             
                             state = .loading
                             
-                            if let productFrom = productFrom as? ProductAccountData {
-                                
-                                model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.name, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: productTo.id)))
+                            guard let productFrom = productFrom as? ProductAccountData else {
+                                return
                             }
+                                
+                            model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.name, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: productTo.id)))
                             
                         case .account:
                             
                             state = .loading
                             
-                            if let productFrom = productFrom as? ProductAccountData {
-                                
-                                model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.name, startDate: nil, endDate: nil, statementFormat: nil, accountId: productTo.id, cardId: nil)))
+                            guard let productFrom = productFrom as? ProductAccountData else {
+                                return
                             }
+                                
+                            model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.name, startDate: nil, endDate: nil, statementFormat: nil, accountId: productTo.id, cardId: nil)))
                             
                         default:
                             break
                         }
+                    case let .closeDeposit(productFrom, _):
+                        
+                        guard let to = swapViewModel.to,
+                              let productViewModel = to.productViewModel,
+                              let productTo = model.product(productId: productViewModel.id) else {
+                            return
+                        }
+                        
+                        switch productTo.productType {
+                            
+                        case .card:
+
+                            state = .loading
+
+                            guard let productFrom = productFrom as? ProductDepositData, let productTo = productTo as? ProductCardData else {
+                                return
+                            }
+                             
+                            self.model.action.send(ModelAction.Deposits.Close.Request(payload: .init(id: productFrom.depositId, name: productFrom.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: productTo.cardId)))
+                            
+                        case .account:
+
+                            state = .loading
+
+                            guard let productFrom = productFrom as? ProductDepositData else {
+                                return
+                            }
+                                
+                            self.model.action.send(ModelAction.Deposits.Close.Request(payload: .init(id: productFrom.depositId, name: productFrom.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: productFrom.id, cardId: nil)))
+                            
+                        default: break
+                            
+                        }
                     }
 
                 case _ as PaymentsMeToMeAction.Button.Info.Tap:
-                    break
+                    
+                    switch mode {
+                    case .closeDeposit(_, _):
+                        self.bottomSheet = .init(type: .info(.init(icon: .ic48AlertCircle, title: "Сумма расчитана автоматически с учетом условий по вашему вкладу")))
+
+                    default: break
+                    }
                     
                 default:
                     break
@@ -338,6 +406,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
             switch mode {
             case .general: isUserInteractionEnabled = true
             case .closeAccount: isUserInteractionEnabled = false
+            case .closeDeposit: isUserInteractionEnabled = false
             }
             
             paymentsAmount.currencySwitch = .init(from: fromCurrencySymbol, to: toCurrencySymbol, icon: .init("Payments Refresh CW"), isUserInteractionEnabled: isUserInteractionEnabled) { [weak self] in
@@ -527,7 +596,9 @@ class PaymentsMeToMeViewModel: ObservableObject {
     }
     
     private func defaultInfoButton() {
-        paymentsAmount.info = .button(title: "Без комиссии", icon: .ic16Info, action: {})
+        paymentsAmount.info = .button(title: "Без комиссии", icon: .ic16Info, action: { [weak self] in
+            self?.action.send(PaymentsMeToMeAction.Button.Info.Tap())
+        })
     }
     
     private func makeAlert(_ error: ModelError) {
@@ -667,5 +738,17 @@ extension PaymentsMeToMeViewModel {
         
         case general
         case closeAccount(ProductData, Double)
+        case closeDeposit(ProductData, Double)
+    }
+    
+    struct BottomSheet: Identifiable {
+
+        let id = UUID()
+        let type: BottomSheetType
+
+        enum BottomSheetType {
+
+            case info(InfoView.ViewModel)
+        }
     }
 }

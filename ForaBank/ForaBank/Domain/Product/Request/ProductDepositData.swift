@@ -16,9 +16,9 @@ class ProductDepositData: ProductData {
     let creditMinimumAmount: Double?
     let minimumBalance: Double?
     let endDate: Date?
-    let endDateNf: Bool?
+    let endDateNf: Bool
     
-    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], depositProductId: Int, depositId: Int, interestRate: Double, accountId: Int, creditMinimumAmount: Double, minimumBalance: Double, endDate: Date?, endDateNf: Bool?, order: Int, visibility: Bool,
+    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], depositProductId: Int, depositId: Int, interestRate: Double, accountId: Int, creditMinimumAmount: Double, minimumBalance: Double, endDate: Date?, endDateNf: Bool, order: Int, visibility: Bool,
          smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
         
         self.depositProductId = depositProductId
@@ -59,7 +59,7 @@ class ProductDepositData: ProductData {
             
             endDate = nil
         }
-        endDateNf = try container.decodeIfPresent(Bool.self, forKey: .endDateNf)
+        endDateNf = try container.decode(Bool.self, forKey: .endDateNf)
 
         try super.init(from: decoder)
     }
@@ -76,7 +76,7 @@ class ProductDepositData: ProductData {
             
             try container.encode(endDate.secondsSince1970UTC, forKey: .endDate)
         }
-        try container.encodeIfPresent(endDateNf, forKey: .endDateNf)
+        try container.encode(endDateNf, forKey: .endDateNf)
 
         try super.encode(to: encoder)
     }
@@ -165,10 +165,16 @@ extension ProductDepositData {
     }
     
     static let foraHitProductId = 10000003792
+    static let birjevoyProductId = 10000003655
     
     var isForaHitProduct: Bool {
         
         depositProductId == Self.foraHitProductId
+    }
+    
+    var isBirjevoyProduct: Bool {
+        
+        depositProductId == Self.birjevoyProductId
     }
     
     var isCanClosedDeposit: Bool {
@@ -184,15 +190,6 @@ extension ProductDepositData {
             
            return true
         }
-    }
-    
-    var isClosed: Bool {
-        
-        guard let endDate = self.endDateNf else {
-            return false
-        }
-        
-        return endDate
     }
     
     enum TransferType {

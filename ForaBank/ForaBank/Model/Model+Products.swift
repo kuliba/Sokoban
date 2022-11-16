@@ -39,7 +39,12 @@ extension Model {
     
     func product(productId: ProductData.ID) -> ProductData? {
         
-        products.value.values.flatMap({ $0 }).first(where: { $0.id == productId })
+         products.value.values.flatMap({ $0 }).first(where: { $0.id == productId })
+    }
+    
+    func product(additionalId: ProductData.ID) -> ProductData? {
+        
+        products.value.values.flatMap({ $0 }).first(where: { $0.additionalAccountId == additionalId })
     }
     
     func allProductsCurrency() -> [Currency] {

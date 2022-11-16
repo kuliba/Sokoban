@@ -1099,6 +1099,8 @@
 		C10F482C28E753FD009918EA /* Unknownable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77448C06286E2087009EEEA8 /* Unknownable.swift */; };
 		C10F482F28EB1E67009918EA /* LoggerAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CB588D28ABCB15003064B0 /* LoggerAgent.swift */; };
 		C10F483028EB1E6C009918EA /* LoggerAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CB588B28ABCA7A003064B0 /* LoggerAgentProtocol.swift */; };
+		C12C18CD2924AC7E00A9C4F1 /* InfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */; };
+		C14F6E252924175C00D46C37 /* CloseProductTransferData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14F6E242924175C00D46C37 /* CloseProductTransferData.swift */; };
 		C169920E28F486F20035CF15 /* ServerAgentEnviroment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C169920D28F486F20035CF15 /* ServerAgentEnviroment.swift */; };
 		C169920F28F487CB0035CF15 /* ServerAgentEnviroment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C169920D28F486F20035CF15 /* ServerAgentEnviroment.swift */; };
 		C1750D4A290F800800122D2B /* ServerCommands+Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1750D49290F800800122D2B /* ServerCommands+Settings.swift */; };
@@ -2521,6 +2523,8 @@
 		A5F15C0E274980CB00DC91DA /* InternetTVLatestOperationRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationRealm.swift; sourceTree = "<group>"; };
 		A5F15C10274985C900DC91DA /* InternetTVLatestOperationsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationsModel.swift; sourceTree = "<group>"; };
 		C10F481828E4A52F009918EA /* PushNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotification.swift; sourceTree = "<group>"; };
+		C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewComponent.swift; sourceTree = "<group>"; };
+		C14F6E242924175C00D46C37 /* CloseProductTransferData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseProductTransferData.swift; sourceTree = "<group>"; };
 		C169920D28F486F20035CF15 /* ServerAgentEnviroment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentEnviroment.swift; sourceTree = "<group>"; };
 		C1750D49290F800800122D2B /* ServerCommands+Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+Settings.swift"; sourceTree = "<group>"; };
 		C1750D4B290FFBBF00122D2B /* ServerCommandsSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsSettingsTests.swift; sourceTree = "<group>"; };
@@ -4567,6 +4571,7 @@
 				50AF668E28831070003D6824 /* ProductsSelector */,
 				5088A0862855F411003C39D7 /* Paging */,
 				0CD7CE9628DE5AD500B52CF9 /* SwipeActionView.swift */,
+				C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -4788,6 +4793,7 @@
 				0CEA3202287618CE005B80BA /* CreateTransterResponseData.swift */,
 				77517F9A27A858F8005CFB77 /* TransferAnywayResponseData.swift */,
 				0BD8D56328AFDC17006DC9BA /* TransferLimitData.swift */,
+				C14F6E242924175C00D46C37 /* CloseProductTransferData.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -8009,6 +8015,7 @@
 				68E803E327D9202600B75D41 /* ProductProfileView.swift in Sources */,
 				0B2A8D2E26E8DA3400651BCB /* GetLatestPhonePaymentsSaved.swift in Sources */,
 				0B22AEAA26CE77F100B11E7F /* GKHDataCase.swift in Sources */,
+				C12C18CD2924AC7E00A9C4F1 /* InfoViewComponent.swift in Sources */,
 				EDF68216266F9EC800FD5C07 /* RouterError.swift in Sources */,
 				686D4F552834BA49007C747F /* InfoViewController.swift in Sources */,
 				0B216FC626D1E9EB0023C878 /* ExtensionNotificationName.swift in Sources */,
@@ -8081,6 +8088,7 @@
 				0C78331C287DC201003ADC73 /* MainSectionCurrencyMetalComponentMock.swift in Sources */,
 				7720277E2891B7AC0098C4F8 /* ClientPhotoData.swift in Sources */,
 				6820928727AB0EC3003DCAFD /* MosParkingData.swift in Sources */,
+				C14F6E252924175C00D46C37 /* CloseProductTransferData.swift in Sources */,
 				687FB23026E8D41A004A479F /* OfferCard.swift in Sources */,
 				EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */,
 				0CA1CDE12840720200021671 /* AddressBookContact.swift in Sources */,

@@ -75,6 +75,17 @@ extension ProductsSwapView {
                 let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
                 
                 self.init(model: model, items: [from, to], divider: .init())
+                
+            case let .closeDeposit(productData, _):
+                
+                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, isUserInteractionEnabled: false, checkProductId: productData.id, isAdditionalProducts: true)
+                
+                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, currency: .init(description: productData.currency), excludeTypes: [.deposit, .loan])
+                
+                let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
+                let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
+                
+                self.init(model: model, items: [from, to], divider: .init())
             }
             
             bind()

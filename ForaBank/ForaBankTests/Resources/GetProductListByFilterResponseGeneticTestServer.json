@@ -345,6 +345,7 @@
             "XLDesign": "image",
             "visibility": true,
             "order": 0,
+            "endDate_nf": true,
             "smallBackgroundDesignHash": "",
             "smallDesignMd5hash": "",
             "detailedRatesUrl": "",

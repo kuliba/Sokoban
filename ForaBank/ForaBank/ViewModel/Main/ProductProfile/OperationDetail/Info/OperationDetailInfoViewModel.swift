@@ -811,18 +811,36 @@ extension OperationDetailInfoViewModel {
             operation: operation,
             iconType: .date)
         
-        return [
-            payerViewModel,
-            balanceViewModel,
-            commissionViewModel,
-            payeeViewModel,
-            dateViewModel].compactMap {$0}
+        let purposeViewModel = makePropertyViewModel(
+            productId: payerProductId,
+            operation: operation,
+            iconType: .purpose)
+        
+        switch operation.transferEnum {
+        case .depositClose:
+            return [
+                payeeViewModel,
+                payerViewModel,
+                balanceViewModel,
+                commissionViewModel,
+                purposeViewModel,
+                dateViewModel,
+            ].compactMap {$0}
+            
+        default:
+            return [
+                payeeViewModel,
+                balanceViewModel,
+                commissionViewModel,
+                payerViewModel,
+                dateViewModel].compactMap {$0}
+        }
     }
     
     func makePropertyViewModel(productId: Int?, operation: OperationDetailData, iconType: PropertyIconType) -> PropertyCellViewModel? {
         
         guard let productId = productId,
-              let productData = model.product(productId: productId) else {
+              let productData = model.product(productId: productId) ?? model.product(additionalId: productId) else {
             return nil
         }
         
@@ -846,10 +864,22 @@ extension OperationDetailInfoViewModel {
             }
             
             return .init(title: "Комиссия", iconType: .commission, value: payerFee)
+
+        case .purpose:
+            guard let comment = operation.comment else {
+                return nil
+            }
             
+            return .init(title: "Назначение платежа", iconType: .purpose, value: comment)
+
         case .date:
-            return .init(title: "Дата и время операции (МСК)", iconType: .date, value: operation.responseDate)
-            
+            switch operation.transferEnum {
+            case .depositClose:
+                return .init(title: "Тип платежа", iconType: .date, value: "Закрытие вклада")
+            default:
+                return .init(title: "Дата и время операции (МСК)", iconType: .date, value: operation.responseDate)
+            }
+
         default:
             return nil
         }
@@ -858,7 +888,7 @@ extension OperationDetailInfoViewModel {
     private func makeProductViewModel(title: String, productId: Int?, productNumber: String?) -> ProductCellViewModel? {
         
         guard let productId = productId,
-              let productData = model.product(productId: productId),
+              let productData = model.product(productId: productId) ?? model.product(additionalId: productId),
               let icon = productData.smallDesign.image,
               let balance = productData.balance,
               let formattedBalance = model.amountFormatted(amount: balance, currencyCode: productData.currency, style: .fraction) else {

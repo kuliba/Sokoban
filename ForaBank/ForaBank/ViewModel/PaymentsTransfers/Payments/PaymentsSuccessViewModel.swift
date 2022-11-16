@@ -83,7 +83,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         bind(transferData.paymentOperationDetailId)
     }
 
-    convenience init?(_ model: Model, mode: Mode = .normal, currency: Currency, balance: Double, transferData: ResponseTransferData) {
+    convenience init?(_ model: Model, mode: Mode = .normal, currency: Currency, balance: Double, transferData: CloseProductTransferData) {
         
         let documentStatus: TransferResponseBaseData.DocumentStatus? = .init(rawValue: transferData.documentStatus)
         

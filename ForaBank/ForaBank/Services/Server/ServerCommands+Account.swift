@@ -7,8 +7,6 @@
 
 import Foundation
 
-typealias ResponseTransferData = ServerCommands.AccountController.CloseAccount.Response.TransferData
-
 extension ServerCommands {
     
     enum AccountController {
@@ -266,18 +264,8 @@ extension ServerCommands {
             struct Response: ServerResponse {
                 
                 let statusCode: ServerStatusCode
-                let data: TransferData?
+                let data: CloseProductTransferData?
                 let errorMessage: String?
-                
-                struct TransferData: Codable, Equatable {
-                    
-                    let paymentOperationDetailId: Int?
-                    let documentStatus: String
-                    let accountNumber: String?
-                    let closeDate: Int?
-                    let comment: String?
-                    let category: String?
-                }
             }
             
             internal init(token: String, payload: Payload) {

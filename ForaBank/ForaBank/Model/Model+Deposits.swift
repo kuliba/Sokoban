@@ -54,7 +54,7 @@ extension ModelAction {
             
             enum Response: Action {
                 
-                case success(data: ServerCommands.DepositController.CloseDeposit.Response.TransferData)
+                case success(data: CloseProductTransferData)
                 case failure(message: String)
             }
         }
@@ -287,6 +287,8 @@ extension Model {
 //MARK: - Reducers
 
 extension Model {
+    
+    var depositCloseBirjevoyURL: String { "https://finuslugi.ru/" }
     
     static func reduce(depositsInfoData: DepositsInfoData, productId: ProductData.ID, info: DepositInfoDataItem) -> DepositsInfoData {
         

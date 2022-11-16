@@ -340,7 +340,6 @@ class ProductProfileViewModel: ObservableObject {
                     }
                     
                 case let payload as ModelAction.Deposits.BeforeClosing.Response:
-
                     self.spinner = nil
                     
                     switch payload {
@@ -349,8 +348,16 @@ class ProductProfileViewModel: ObservableObject {
                             return
                         }
                         
-                        let meToMeViewModel = MeToMeViewModel(type: .transferBeforeCloseDeposit(depositProduct, amount), closeAction: {})
-                        self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
+                        let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .closeDeposit(depositProduct, amount))
+                        
+                        guard let viewModel = viewModel else {
+                            return
+                        }
+                        
+                        let swapViewModel = viewModel.swapViewModel
+                        bind(viewModel, swapViewModel: swapViewModel)
+                        
+                        bottomSheet = .init(type: .closeDeposit(viewModel))
                     
                     case .failure(message: let errorMessage):
                         self.alert = .init(title: "Ошибка", message: errorMessage, primary: .init(type: .default, title: "Ок", action: {}))
@@ -700,7 +707,7 @@ class ProductProfileViewModel: ObservableObject {
                             
                             if let deposit = productData as? ProductDepositData {
                                 
-                                let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.closeDeposit(deposit.isCanClosedDeposit)], productType: product.productType)
+                                let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.closeDeposit(deposit.endDateNf == false)], productType: product.productType)
                                 self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                             }
                             
@@ -792,8 +799,31 @@ class ProductProfileViewModel: ObservableObject {
                         
                         case .closeDeposit:
                             
-                            self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
-                            
+                            if let product = productData as? ProductDepositData, product.isBirjevoyProduct {
+                                
+                                self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
+                                self.action.send(ProductProfileViewModelAction.Close.Sheet())
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
+                                    
+                                    let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                         message: "Операции по вкладу «Биржевой» вы можете осуществить в вашем личном кабинете на финансовой платформе «Финуслуги» ПАО «Московская Биржа ММВБ-РТС»",
+                                                                         primary: .init(type: .default, title: "Отмена", action: {}),
+                                                                         secondary: .init(type: .default, title: "Перейти", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                                        
+                                        if let depositCloseBirjevoyURL = self?.model.depositCloseBirjevoyURL {
+                                            
+                                            self?.openLinkURL(depositCloseBirjevoyURL)
+                                        }
+                                    }))
+                                    
+                                    self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
+                                }
+                            } else {
+                                
+                                self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
+                            }
+                                                    
                         case .statementOpenAccount:
                             break
                             
@@ -1162,6 +1192,7 @@ extension ProductProfileViewModel {
             case optionsPannel(ProductProfileOptionsPannelView.ViewModel)
             case meToMe(MeToMeViewModel)
             case closeAccount(PaymentsMeToMeViewModel)
+            case closeDeposit(PaymentsMeToMeViewModel)
         }
     }
     
