@@ -27,7 +27,7 @@ class ContactsViewModel: ObservableObject {
         
         switch mode {
         case .fastPayments: return "Выберите контакт"
-        case let .select(select, _):
+        case let .select(select):
             switch select {
             case .contacts: return "Выберите контакт"
             case .banks: return "Выберите банк"
@@ -127,7 +127,7 @@ class ContactsViewModel: ObservableObject {
                         }
                     }
                     
-                case let .select(select, _):
+                case let .select(select):
                     switch select {
                     case .contacts:
                         contactsSection?.filter.value = text
@@ -161,8 +161,8 @@ class ContactsViewModel: ObservableObject {
                             let formattedPhone = searchBar.textField.phoneNumberFormatter.partialFormatter("+\(payload.phone)")
                             self.searchBar.textField.text = formattedPhone
                             
-                        case let .select(_, parameterId):
-                            self.action.send(ContactsViewModelAction.ContactPhoneSelected(phone: payload.phone, parameterId: parameterId))
+                        case .select:
+                            self.action.send(ContactsViewModelAction.ContactPhoneSelected(phone: payload.phone))
                         }
                         
                     case let payload as ContactsSectionViewModelAction.BanksPreffered.ItemDidTapped:
@@ -173,8 +173,8 @@ class ContactsViewModel: ObservableObject {
                         case .fastPayments:
                             handleBankDidTapped(bankId: payload.bankId)
                             
-                        case let .select(_, parameterId):
-                            self.action.send(ContactsViewModelAction.BankSelected(bankId: payload.bankId, parameterId: parameterId))
+                        case .select:
+                            self.action.send(ContactsViewModelAction.BankSelected(bankId: payload.bankId))
                         }
    
                     case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
@@ -189,8 +189,8 @@ class ContactsViewModel: ObservableObject {
                                 break
                             }
                             
-                        case let .select(_, parameterId):
-                            self.action.send(ContactsViewModelAction.CountrySelected(countryId: payload.countryId, parameterId: parameterId))
+                        case .select:
+                            self.action.send(ContactsViewModelAction.CountrySelected(countryId: payload.countryId))
                         }
                         
                     case _ as ContactsSectionViewModelAction.Collapsable.HideCountries:
@@ -215,7 +215,7 @@ extension ContactsViewModel {
     enum Mode {
         
         case fastPayments(Phase)
-        case select(Select, Payments.Parameter.ID)
+        case select(Select)
         
         enum Phase {
             
@@ -242,7 +242,7 @@ extension ContactsViewModel {
                     return [.banksPreferred, .banks, .countries]
                 }
                 
-            case let .select(select, _):
+            case let .select(select):
                 switch select {
                 case .contacts: return [.contacts]
                 case .banks: return [.banks]
@@ -269,7 +269,7 @@ extension ContactsViewModel {
             result.append(ContactsBanksSectionViewModel(model, mode: .fastPayment))
             result.append(ContactsCountriesSectionViewModel(model, mode: .fastPayment))
 
-        case let .select(select, _):
+        case let .select(select):
             switch select {
             case .contacts:
                 result.append(ContactsListSectionViewModel(model, mode: .select))
@@ -363,19 +363,16 @@ enum ContactsViewModelAction {
     struct ContactPhoneSelected: Action {
         
         let phone: String
-        let parameterId: Payments.Parameter.ID
     }
     
     struct BankSelected: Action {
         
         let bankId: BankData.ID
-        let parameterId: Payments.Parameter.ID
     }
     
     struct CountrySelected: Action {
         
         let countryId: CountryData.ID
-        let parameterId: Payments.Parameter.ID
     }
 }
 

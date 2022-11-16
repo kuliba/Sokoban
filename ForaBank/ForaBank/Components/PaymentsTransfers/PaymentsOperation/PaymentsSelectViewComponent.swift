@@ -102,7 +102,7 @@ extension PaymentsSelectView {
                                 state = .selected(selectedViewModel)
                                 
                             case .banks:
-                                let contactsViewModel = ContactsViewModel(model, mode: .select(.banks, ""))
+                                let contactsViewModel = ContactsViewModel(model, mode: .select(.banks))
                                 bind(contactsViewModel: contactsViewModel)
                                 self.action.send(PaymentsParameterViewModelAction.Select.BanksSelector.Show(viewModel: contactsViewModel))
                                 
