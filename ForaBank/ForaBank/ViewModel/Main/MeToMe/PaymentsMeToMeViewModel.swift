@@ -248,6 +248,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     
                     updateAmountSwitch(to: payload.productId)
                     updateInfoButton(model.rates.value)
+                    updateTransferButton(.normal)
                     sendUpdateRates()
                     
                 default:
@@ -346,6 +347,10 @@ class PaymentsMeToMeViewModel: ObservableObject {
     }
 
     private func updateTransferButton(_ state: State) {
+        
+        if swapViewModel.productIdTo == nil {
+            return
+        }
         
         switch state {
         case .normal:

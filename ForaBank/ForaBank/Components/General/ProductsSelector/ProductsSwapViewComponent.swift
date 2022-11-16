@@ -147,6 +147,19 @@ extension ProductsSwapView {
                             } else {
                                 self.action.send(ProductsSwapAction.Selected.To(productId: payload.id))
                             }
+                            
+                        case let payload as ProductSelectorAction.Product.Tap:
+                            
+                            guard let from = from, let to = to else {
+                                return
+                            }
+                            
+                            switch from.id == payload.id {
+                            case true: to.collapseList()
+                            case false: from.collapseList()
+                            }
+                            
+                            UIApplication.shared.hideKeyboardIfNeeds()
 
                         default:
                             break
