@@ -488,10 +488,10 @@ class ProductProfileViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
-                case let payload as ProductProfileCardViewModelAction.MoreButtonTapped:
+                case _ as ProductProfileCardViewModelAction.MoreButtonTapped:
                     
                     if self.rootView == "\(MyProductsViewModel.self)" {
-                        payload.mode.wrappedValue.dismiss()
+                        self.action.send(ProductProfileViewModelAction.Close.SelfView())
                         
                     } else {
                         let myProductsViewModel = MyProductsViewModel(model)
@@ -1260,7 +1260,7 @@ enum ProductProfileViewModelAction {
     }
     
     enum Close {
-        
+        struct SelfView: Action {}
         struct Link: Action {}
         struct Sheet: Action {}
         struct FullCover: Action {}
