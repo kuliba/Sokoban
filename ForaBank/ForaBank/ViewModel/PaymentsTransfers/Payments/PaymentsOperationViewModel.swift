@@ -83,6 +83,9 @@ class PaymentsOperationViewModel: ObservableObject {
                 // update bottom section continue button
                 updateBottomSection(isContinueEnabled: isItemsValuesValid)
                 
+                // update parameter value callback for each item
+                updateParameterValueCallback(items: items)
+                
             }.store(in: &bindings)
     }
     
@@ -303,6 +306,18 @@ extension PaymentsOperationViewModel {
         }
         
         bottomSection.isContinueEnabled.value = isContinueEnabled
+    }
+    
+    func updateParameterValueCallback(items: [PaymentsParameterViewModel]) {
+        
+        let results = items.map{ $0.result }
+        for item in items {
+            
+            item.parameterValue = {  parameterId in
+                
+                results.first(where: { $0.id == parameterId })?.value
+            }
+        }
     }
 }
 

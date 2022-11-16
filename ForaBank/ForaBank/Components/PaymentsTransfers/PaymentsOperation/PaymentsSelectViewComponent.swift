@@ -15,6 +15,8 @@ extension PaymentsSelectView {
     class ViewModel: PaymentsParameterViewModel {
         
         @Published var state: State
+        
+        private let model: Model
 
         override var isFullContent: Bool {
             
@@ -24,16 +26,16 @@ extension PaymentsSelectView {
             }
         }
 
-        init(state: PaymentsSelectView.ViewModel.State, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
+        init(state: PaymentsSelectView.ViewModel.State, model: Model, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.state = state
+            self.model = model
             super.init(source: source)
         }
         
-        init(with parameterSelect: Payments.ParameterSelect) throws {
+        convenience init(with parameterSelect: Payments.ParameterSelect, model: Model) throws {
             
-            self.state = .list([])
-            super.init(source: parameterSelect)
+            self.init(state: .list([]), model: model, source: parameterSelect)
             
             switch parameterSelect.type {
                 
@@ -56,14 +58,14 @@ extension PaymentsSelectView {
                 
             case .banks:
                 guard let selectedOptionId = parameterSelect.parameter.value,
-                      let option = parameterSelect.options.first(where: {$0.id == selectedOptionId}) else {
+                      let bankData = model.bankList.value.first(where: { $0.id == selectedOptionId }) else {
                     
                     throw Payments.Error.missingValueForParameter(parameterSelect.parameter.id)
                 }
                 
-                let selectedViewModel = SelectedItemViewModel(option: option, title: parameterSelect.title, action: { [weak self] in
+                let selectedViewModel = SelectedItemViewModel(bankData: bankData, title: parameterSelect.title) { [weak self] in
                     self?.action.send(PaymentsParameterViewModelAction.Select.SelectedItemDidTapped())
-                })
+                }
                 
                 self.state = .selected(selectedViewModel)
                 
@@ -91,11 +93,10 @@ extension PaymentsSelectView {
                             
                             switch item.actionType {
                             case .select:
-                                guard let parameterSelect = parameterSelect,
-                                      let option = parameterSelect.options.first(where: { $0.id == payload.itemId }) else {
+                                guard let parameterSelect = parameterSelect else {
                                     return
                                 }
-                                let selectedViewModel = SelectedItemViewModel(option: option, title: parameterSelect.title, action: { [weak self] in
+                                let selectedViewModel = SelectedItemViewModel(with: item, title: parameterSelect.title, action: { [weak self] in
                                     self?.action.send(PaymentsParameterViewModelAction.Select.SelectedItemDidTapped())
                                 })
                                 state = .selected(selectedViewModel)
@@ -131,8 +132,18 @@ extension PaymentsSelectView {
                                 self.action.send(PaymentsParameterViewModelAction.Select.PopUpSelector.Show(viewModel: popUpViewModel))
                                 
                             case .banks:
-//                                self.state = .unwrapped(selectedViewItem, reduce(options: parameterSelect.options))
-                                break
+                                guard let parameterValueCallback = parameterValue,
+                                    let phone = parameterValueCallback(Payments.Parameter.Identifier.sfpPhone.rawValue) else {
+                                    return
+                                }
+                                let prefferedBanks = model.paymentsByPhone.value[phone.digits]
+                                let banksData = model.bankList.value
+                                let options = reduce(prefferedBanks: prefferedBanks, banksData: banksData) { [weak self] in
+                                    
+                                    { itemId in self?.action.send(PaymentsParameterViewModelAction.Select.DidSelected(itemId: itemId)) }
+
+                                }
+                                self.state = .unwrapped(selectedViewItem, options)
                                 
                             case .countries:
                                 //TODO: create countries options
@@ -220,7 +231,7 @@ extension PaymentsSelectView.ViewModel {
         }
     }
     
-    class SelectedItemViewModel: Identifiable {
+    struct SelectedItemViewModel: Identifiable {
         
         let id: Payments.ParameterSelect.Option.ID
         let icon: IconViewModel
@@ -228,7 +239,7 @@ extension PaymentsSelectView.ViewModel {
         let name: String
         let action: () -> Void
         
-        internal init(id: Payments.ParameterSelect.Option.ID, icon: IconViewModel, title: String, name: String, action: @escaping () -> Void) {
+        init(id: Payments.ParameterSelect.Option.ID, icon: IconViewModel, title: String, name: String, action: @escaping () -> Void) {
             
             self.id = id
             self.icon = icon
@@ -237,16 +248,12 @@ extension PaymentsSelectView.ViewModel {
             self.action = action
         }
         
-        init(with item: ItemViewModel, description: String, action: @escaping () -> Void) {
+        init(with item: ItemViewModel, title: String, action: @escaping () -> Void) {
             
-            self.id = item.id
-            self.icon = item.icon
-            self.name = item.name
-            self.title = description
-            self.action = action
+            self.init(id: item.id, icon: item.icon, title: title, name: item.name, action: action)
         }
         
-        convenience init(option: Payments.ParameterSelect.Option, title: String, action: @escaping () -> Void) {
+        init(option: Payments.ParameterSelect.Option, title: String, action: @escaping () -> Void) {
             
             if let iconImage = option.icon.image {
                 
@@ -255,6 +262,18 @@ extension PaymentsSelectView.ViewModel {
             } else {
                 
                 self.init(id: option.id, icon: .placeholder, title: title, name: option.name, action: action)
+            }
+        }
+        
+        init(bankData: BankData, title: String, action: @escaping () -> Void) {
+            
+            if let bankIcon = bankData.svgImage.image {
+                
+                self.init(id: bankData.id, icon: .image(bankIcon), title: title, name: bankData.memberNameRus, action: action)
+                
+            } else {
+                
+                self.init(id: bankData.id, icon: .placeholder, title: title, name: bankData.memberNameRus, action: action)
             }
         }
     }
@@ -276,7 +295,7 @@ extension PaymentsSelectView.ViewModel {
         options.map { ItemViewModel(option: $0, action: action()) }
     }
 
-    func reduce(selected: BankData, prefferedBanks: [PaymentPhoneData]?, banksData: [BankData], action: @escaping () ->(ItemViewModel.ID) -> Void) -> [ItemViewModel] {
+    func reduce(prefferedBanks: [PaymentPhoneData]?, banksData: [BankData], action: @escaping () ->(ItemViewModel.ID) -> Void) -> [ItemViewModel] {
         
         var items = [ItemViewModel]()
         items.append(.init(id: UUID().uuidString, icon: .circle(.ic24MoreHorizontal), name: "Смотреть все", actionType: .banks, action: action()))
@@ -293,11 +312,11 @@ extension PaymentsSelectView.ViewModel {
                 
                 if let bankIcon = bank.svgImage.image {
                     
-                    updatedPartialResult.append(ItemViewModel(icon: .image(bankIcon) , name: bank.memberNameRus, overlay: preferedBankData.defaultBank ? .isFavorite : nil, action: action()))
+                    updatedPartialResult.append(ItemViewModel(id: bank.id, icon: .image(bankIcon) , name: bank.memberNameRus, overlay: preferedBankData.defaultBank ? .isFavorite : nil, action: action()))
                     
                 } else {
                     
-                    updatedPartialResult.append(ItemViewModel(icon: .placeholder , name: bank.memberNameRus, overlay: preferedBankData.defaultBank ? .isFavorite : nil, action: action()))
+                    updatedPartialResult.append(ItemViewModel(id: bank.id, icon: .placeholder , name: bank.memberNameRus, overlay: preferedBankData.defaultBank ? .isFavorite : nil, action: action()))
                 }
   
                 return updatedPartialResult
@@ -321,11 +340,11 @@ extension PaymentsSelectView.ViewModel {
     
     var items: [ItemViewModel]? {
         
-        guard case .list(let items) = state else {
-            return nil
+        switch state {
+        case let .list(items): return items
+        case let .unwrapped(_, items): return items
+        default: return nil
         }
-        
-        return items
     }
     
     var selectedItem: SelectedItemViewModel? {
@@ -394,12 +413,12 @@ struct PaymentsSelectView: View {
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     
-                    HStack(spacing: 4) {
+                    HStack(alignment: .top, spacing: 4) {
                         
                         ForEach(items) { itemViewModel in
                             
                             ItemViewHorizontal(viewModel: itemViewModel)
-                                .frame(width: 64, alignment: .center)
+                                .frame(width: 70)
                         }
                     }
                 }
@@ -642,7 +661,7 @@ extension PaymentsSelectView.ViewModel {
         var viewModel = PaymentsSelectView.ViewModel(state: .list([
             .init(icon: .image(Image("Payments List Sample")), name: "Имущественный налог", action: { _ in }),
             .init(icon: .image(Image("Payments List Sample")), name: "Транспортный налог", action: { _ in }),
-            .init(icon: .image(Image("Payments List Sample")), name: "Сбор за пользовние объектами водными биологическими ресурсами", action: { _ in })]))
+            .init(icon: .image(Image("Payments List Sample")), name: "Сбор за пользовние объектами водными биологическими ресурсами", action: { _ in })]), model: .emptyMock)
         
         return viewModel
     }()
@@ -652,7 +671,7 @@ extension PaymentsSelectView.ViewModel {
         let icon = ImageData(with: UIImage(named: "Payments List Sample")!)!
         let option: Payments.ParameterSelect.Option = .init(id: "id", name: "Транспортный налог", icon: icon)
         
-        var viewModel = PaymentsSelectView.ViewModel(state: .selected(.init(option: option, title: "Транспортный налог", action: {})))
+        var viewModel = PaymentsSelectView.ViewModel(state: .selected(.init(option: option, title: "Транспортный налог", action: {})), model: .emptyMock)
         
         return viewModel
     }()
@@ -665,7 +684,7 @@ extension PaymentsSelectView.ViewModel {
         var viewModel = PaymentsSelectView.ViewModel.init(state: .unwrapped(.init(option: .init(id: "id", name: "Имущественный налог", icon: icon), title: "Имущественный налог", action: {}), [
             firstItem,
             .init(icon: .image(Image("Payments List Sample")), name: "Транспортный налог", action: { _ in }),
-            .init(icon: .image(Image("Payments List Sample")), name: "Земельный налог", action: { _ in })]))
+            .init(icon: .image(Image("Payments List Sample")), name: "Земельный налог", action: { _ in })]), model: .emptyMock)
         
         return viewModel
     }()
@@ -677,7 +696,7 @@ extension PaymentsSelectView.ViewModel {
         let icon = ImageData(with: UIImage(named: "Payments List Sample")!)!
         let parameter = Payments.ParameterSelect( .init(id: UUID().uuidString, value: nil), title: "Категория платежа", options: [.init(id: "1", name: "Имущественный налог", icon: icon), .init(id: "2", name: "Транспортный налог", icon: icon), .init(id: "3", name: "Сбор за пользовние объектами водными биологическими ресурсами", icon: icon)])
         
-        let viewModel = try! PaymentsSelectView.ViewModel(with: parameter)
+        let viewModel = try! PaymentsSelectView.ViewModel(with: parameter, model: .emptyMock)
         
         return viewModel
     }()
@@ -687,7 +706,7 @@ extension PaymentsSelectView.ViewModel {
         let icon = ImageData(with: UIImage(named: "Payments List Sample")!)!
         let parameter = Payments.ParameterSelect(.init(id: UUID().uuidString, value: "3"), title: "Категория платежа", options: [.init(id: "1", name: "Имущественный налог", icon: icon), .init(id: "2", name: "Транспортный налог", icon: icon), .init(id: "3", name: "Сбор за пользовние объектами водными биологическими ресурсами", icon: icon)])
         
-        var viewModel = try! PaymentsSelectView.ViewModel(with: parameter)
+        var viewModel = try! PaymentsSelectView.ViewModel(with: parameter, model: .emptyMock)
         
         return viewModel
     }()
@@ -697,7 +716,7 @@ extension PaymentsSelectView.ViewModel {
         let icon = ImageData(with: UIImage(named: "Payments List Sample")!)!
         let parameter = Payments.ParameterSelect(.init(id: UUID().uuidString, value: "3"), title: "Категория платежа", options: [.init(id: "1", name: "Имущественный налог", icon: icon), .init(id: "2", name: "Транспортный налог", icon: icon), .init(id: "3", name: "Сбор за пользовние объектами водными биологическими ресурсами", icon: icon)], isEditable: false)
         
-        var viewModel = try! PaymentsSelectView.ViewModel(with: parameter)
+        var viewModel = try! PaymentsSelectView.ViewModel(with: parameter, model: .emptyMock)
         
         return viewModel
     }()

@@ -298,16 +298,7 @@ extension PaymentsSectionViewModel {
         
         switch parameter {
         case let parameterSelect as Payments.ParameterSelect:
-            
-            do {
-                
-                let viewModel = try PaymentsSelectView.ViewModel(with: parameterSelect)
-                return viewModel
-                
-            } catch {
-                
-                return nil
-            }
+            return try? PaymentsSelectView.ViewModel(with: parameterSelect, model: model)
             
         case let parameterSwitch as Payments.ParameterSelectSwitch:
             return PaymentsSwitchView.ViewModel(with: parameterSwitch)
