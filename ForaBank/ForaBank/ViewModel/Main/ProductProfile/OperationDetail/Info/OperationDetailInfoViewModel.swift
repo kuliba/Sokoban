@@ -786,10 +786,10 @@ extension OperationDetailInfoViewModel {
         let payerProductId = [operation.payerCardId, operation.payerAccountId].compactMap {$0}.first
         let payerProductNumber = [operation.payerCardNumber, operation.payerAccountNumber].compactMap {$0}.first
         
-        let payeeViewModel = makeProductViewModel(
-            title: "Счет пополнения",
-            productId: payeeProductId,
-            productNumber: payeeProductNumber)
+        let payerViewModel = makeProductViewModel(
+            title: "Счет списания",
+            productId: payerProductId,
+            productNumber: payerProductNumber)
         
         let balanceViewModel = makePropertyViewModel(
             productId: payerProductId,
@@ -801,10 +801,10 @@ extension OperationDetailInfoViewModel {
             operation: operation,
             iconType: .commission)
         
-        let payerViewModel = makeProductViewModel(
-            title: "Счет списания",
-            productId: payerProductId,
-            productNumber: payerProductNumber)
+        let payeeViewModel = makeProductViewModel(
+            title: "Счет пополнения",
+            productId: payeeProductId,
+            productNumber: payeeProductNumber)
         
         let dateViewModel = makePropertyViewModel(
             productId: payerProductId,
@@ -812,10 +812,10 @@ extension OperationDetailInfoViewModel {
             iconType: .date)
         
         return [
-            payeeViewModel,
+            payerViewModel,
             balanceViewModel,
             commissionViewModel,
-            payerViewModel,
+            payeeViewModel,
             dateViewModel].compactMap {$0}
     }
     

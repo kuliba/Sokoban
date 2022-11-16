@@ -101,10 +101,7 @@ extension ProductSelectorView {
                             
                         } else {
                             
-                            withAnimation {
-                                
-                                list = nil
-                            }
+                            collapseList()
                         }
                         
                     default:
@@ -154,9 +151,7 @@ extension ProductSelectorView {
                             content = .product(productViewModel)
                             self.context.value = context
                             
-                            withAnimation {
-                                self.list = nil
-                            }
+                            collapseList()
                             
                             self.action.send(ProductSelectorAction.Selected(id: product.id))
                         }
@@ -208,9 +203,15 @@ extension ProductSelectorView {
         
         private func updateList(context: Context) {
             
-            // Update list
             if let list = list {
                 list.context = context
+            }
+        }
+        
+        func collapseList() {
+            
+            withAnimation {
+                list = nil
             }
         }
     }
@@ -229,6 +230,7 @@ extension ProductSelectorView.ViewModel {
         var isUserInteractionEnabled: Bool = true
         
         // ProductsList
+        var currency: Currency?
         var excludeTypes: [ProductType]?
         var excludeProductId: ProductData.ID?
         var checkProductId: ProductData.ID?
@@ -342,14 +344,14 @@ struct ProductSelectorView: View {
                 ProductView(viewModel: productViewModel)
                     .onTapGesture {
                         if productViewModel.isUserInteractionEnabled == true {
-                            viewModel.action.send(ProductSelectorAction.Product.Tap())
+                            viewModel.action.send(ProductSelectorAction.Product.Tap(id: viewModel.id))
                         }
                     }
-                
+
             case let .placeholder(placeholderViewModel):
                 ProductPlaceholderView(viewModel: placeholderViewModel)
                     .onTapGesture {
-                        viewModel.action.send(ProductSelectorAction.Product.Tap())
+                        viewModel.action.send(ProductSelectorAction.Product.Tap(id: viewModel.id))
                     }
             }
             
@@ -493,7 +495,10 @@ enum ProductSelectorAction {
 
     enum Product {
 
-        struct Tap: Action {}
+        struct Tap: Action {
+            
+            let id: UUID
+        }
     }
 }
 
