@@ -10,6 +10,7 @@ import SwiftUI
 struct ProductProfileView: View {
     
     @ObservedObject var viewModel: ProductProfileViewModel
+    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     
     var accentColor: some View {
         
@@ -124,6 +125,14 @@ struct ProductProfileView: View {
             }
         }
         .navigationBar(with: viewModel.navigationBar)
+        .onReceive(viewModel.action) { action in
+            switch action {
+            case _ as ProductProfileViewModelAction.Close.SelfView:
+                self.mode.wrappedValue.dismiss()
+                
+            default: break
+            }
+        }
         .sheet(item: $viewModel.sheet, content: { sheet in
             switch sheet.type {
             case let .printForm(printFormViewModel):
@@ -216,7 +225,8 @@ extension ProductProfileViewModel {
         navigationBar: NavigationBarView.ViewModel.sampleNoActionButton,
         product: .sample,
         buttons: .sample, detail: nil,
-        history: .sampleHistory)
+        history: .sampleHistory,
+        rootView: "")
 }
 
 extension NavigationBarView.ViewModel {

@@ -33,6 +33,7 @@ class ProductProfileViewModel: ObservableObject {
     @Published var spinner: SpinnerView.ViewModel?
 
     var rootActions: RootViewModel.RootActions?
+    var rootView: String
     
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
@@ -42,7 +43,18 @@ class ProductProfileViewModel: ObservableObject {
         model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
     }
     
-    init(navigationBar: NavigationBarView.ViewModel,product: ProductProfileCardView.ViewModel, buttons: ProductProfileButtonsView.ViewModel, detail: ProductProfileDetailView.ViewModel?, history: ProductProfileHistoryView.ViewModel?, alert: Alert.ViewModel? = nil, operationDetail: OperationDetailViewModel? = nil, accentColor: Color = .purple, historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:] , model: Model = .emptyMock, spinner: SpinnerView.ViewModel? = nil) {
+    init(navigationBar: NavigationBarView.ViewModel,
+         product: ProductProfileCardView.ViewModel,
+         buttons: ProductProfileButtonsView.ViewModel,
+         detail: ProductProfileDetailView.ViewModel?,
+         history: ProductProfileHistoryView.ViewModel?,
+         alert: Alert.ViewModel? = nil,
+         operationDetail: OperationDetailViewModel? = nil,
+         accentColor: Color = .purple,
+         historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
+         model: Model = .emptyMock,
+         spinner: SpinnerView.ViewModel? = nil,
+         rootView: String) {
         
         self.navigationBar = navigationBar
         self.product = product
@@ -54,21 +66,23 @@ class ProductProfileViewModel: ObservableObject {
         self.accentColor = accentColor
         self.historyPool = historyPool
         self.model = model
+        self.rootView = rootView
     }
     
-    init?(_ model: Model, product: ProductData, dismissAction: @escaping () -> Void) {
+    init?(_ model: Model, product: ProductData, rootView: String) {
         
         guard let productViewModel = ProductProfileCardView.ViewModel(model, productData: product) else {
             return nil
         }
         
         // status bar
-        self.navigationBar = .init(product: product, dismissAction: dismissAction)
+        self.navigationBar = .init(product: product, dismissAction: {})
         self.product = productViewModel
         self.buttons = .init(with: product, depositInfo: model.depositsInfo.value[product.id])
         self.accentColor = Self.accentColor(with: product)
         self.historyPool = [:]
         self.model = model
+        self.rootView = rootView
         
         // detail view model
         self.detail = makeDetailViewModel(with: product)
@@ -475,9 +489,14 @@ class ProductProfileViewModel: ObservableObject {
                 
                 switch action {
                 case _ as ProductProfileCardViewModelAction.MoreButtonTapped:
-                    let myProductsViewModel = MyProductsViewModel(model, dismissAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link()) })
-                    bind(myProductsViewModel)
-                    link = .myProducts(myProductsViewModel)
+                    
+                    if self.rootView == "\(MyProductsViewModel.self)" {
+                        self.action.send(ProductProfileViewModelAction.Close.SelfView())
+                        
+                    } else {
+                        let myProductsViewModel = MyProductsViewModel(model)
+                        link = .myProducts(myProductsViewModel)
+                    }
                     
                 case let payload as ProductProfileCardViewModelAction.ShowAlert:
                     self.alert = Alert.ViewModel(title: payload.title, message: payload.message, primary: .init(type: .default, title: "Ок", action: {}))
@@ -488,40 +507,6 @@ class ProductProfileViewModel: ObservableObject {
                 
             }.store(in: &bindings)
         
-    }
-    
-    private func bind(_ myProductsViewModel: MyProductsViewModel) {
-        
-        myProductsViewModel.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case let payload as MyProductsViewModelAction.Tapped.Product:
-                    
-                    if product.products.contains(where: { $0.id == payload.productId}) {
-                        
-                        self.action.send(ProductProfileViewModelAction.Close.Link())
-                        //product.activeProductId = payload.productId
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                            
-                            self.action.send(ProductProfileViewModelAction.MyProductsTapped.ProductProfile(productId: payload.productId))
-                        }
-                        
-                    } else {
-                        
-                        self.action.send(ProductProfileViewModelAction.Close.Link())
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                            
-                            self.action.send(ProductProfileViewModelAction.MyProductsTapped.ProductProfile(productId: payload.productId))
-                        }
-                    }
-
-                default: break
-                }
-                
-            }.store(in: &bindings)
     }
     
     func bind(history: ProductProfileHistoryView.ViewModel?) {
@@ -651,11 +636,11 @@ class ProductProfileViewModel: ObservableObject {
                         case .deposit:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .info, .contract], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
-                            
+                    
                         case .account:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .statementOpenAccount(false), .tariffsByAccount, .termsOfService], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
-                            
+                    
                         default:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
@@ -1275,7 +1260,7 @@ enum ProductProfileViewModelAction {
     }
     
     enum Close {
-        
+        struct SelfView: Action {}
         struct Link: Action {}
         struct Sheet: Action {}
         struct FullCover: Action {}

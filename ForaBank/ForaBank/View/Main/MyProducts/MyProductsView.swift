@@ -107,6 +107,9 @@ struct MyProductsView: View {
                         
                     case let  .openDeposit(openDepositViewModel):
                         OpenDepositView(viewModel: openDepositViewModel)
+                    
+                    case let .productProfile(productProfileViewModel):
+                        ProductProfileView(viewModel: productProfileViewModel)
                     }
                 }
             }
