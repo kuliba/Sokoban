@@ -27,47 +27,41 @@ class ContactsBanksPrefferedSectionViewModel: ContactsSectionViewModel, Observab
         
         let placeholders = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .bankPreffered), count: 8)
         self.init(items: placeholders, phone: phone, mode: .fastPayment, model: model)
-
+        
         bind()
     }
     
     private func bind() {
         
-        model.action
+        phone
+            .combineLatest(model.paymentsByPhone)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [unowned self] result in
                 
-                switch action {
-                case let payload as ModelAction.LatestPayments.BanksList.Response:
+                let phoneData = result.0
+                let banksData = result.1
+                
+                if let phone = phoneData {
                     
-                    switch payload.result {
-                    case .success(let banks):
+                    if let banks = banksData[phone.digits] {
                         
-                        if let phone = phone.value, let contact = model.contact(for: phone) {
-                            
-                            withAnimation {
-                                
-                                items = Self.reduce(contact: contact, banks: banks, banksData: model.bankList.value, action: { [weak self] bank in { self?.action.send(ContactsSectionViewModelAction.BanksPreffered.ItemDidTapped(bank: bank)) } })
-                            }
-  
-                        } else {
-                            
-                            withAnimation {
-                                
-                                items = []
-                            }
-                        }
-
-                    case .failure:
+                        let contact = model.contact(for: phone)
                         
                         withAnimation {
                             
-                            items = []
+                            items = Self.reduce(contact: contact, banks: banks, banksData: model.bankList.value, action: { [weak self] bank in { self?.action.send(ContactsSectionViewModelAction.BanksPreffered.ItemDidTapped(bank: bank)) } })
                         }
                     }
                     
-                default:
-                    break
+                    // anyway update banks data even if we have it in the cache
+                    model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: phone))
+                    
+                } else {
+                    
+                    withAnimation {
+                        
+                        items = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .bankPreffered), count: 8)
+                    }
                 }
                 
             }.store(in: &bindings)
@@ -79,16 +73,12 @@ class ContactsBanksPrefferedSectionViewModel: ContactsSectionViewModel, Observab
         
         for bank in banks {
             
-            if let bankName = bank.bankName,
-               let defaultBank = bank.defaultBank,
-               let payment = bank.payment,
-               let bankId = bank.bankId,
-               let bankData = banksData.first(where: { $0.memberId == bankId }) {
+            if let bankData = banksData.first(where: { $0.memberId == bank.bankId }) {
                 
-                let contact = payment ? contact : nil
+                let contact = bank.payment ? contact : nil
                 let bankImage = bankData.svgImage.image
                 
-                let item = ContactsBankPrefferedItemView.ViewModel(id: bankData.id, icon: bankImage, name: bankName, isFavorite: defaultBank, contactName: contact?.fullName, action: action(bankData))
+                let item = ContactsBankPrefferedItemView.ViewModel(id: bankData.id, icon: bankImage, name: bank.bankName, isFavorite: bank.defaultBank, contactName: contact?.fullName, action: action(bankData))
                 result.append(item)
             }
         }
@@ -102,7 +92,7 @@ class ContactsBanksPrefferedSectionViewModel: ContactsSectionViewModel, Observab
 extension ContactsSectionViewModelAction {
     
     enum BanksPreffered {
-    
+        
         struct ItemDidTapped: Action {
             
             let bank: BankData

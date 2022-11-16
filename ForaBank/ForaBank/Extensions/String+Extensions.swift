@@ -162,6 +162,8 @@ extension String {
         
         return digest.data.base64EncodedString(options: .endLineWithCarriageReturn)
     }
+    
+    var digits: String { components(separatedBy: CharacterSet.decimalDigits.inverted).joined() }
 }
 
 enum StringHelperError: Error {

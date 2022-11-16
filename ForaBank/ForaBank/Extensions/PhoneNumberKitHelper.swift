@@ -13,6 +13,7 @@ protocol PhoneNumberFormaterProtocol {
     func format(_ phoneNumber: String) -> String
     func partialFormatter(_ phoneNumber: String) -> String
     func isValid(_ phoneNumber: String) -> Bool
+    func unformatted(_ phoneNumber: String) -> String
 }
 
 struct PhoneNumberKitFormater: PhoneNumberFormaterProtocol {
@@ -38,6 +39,11 @@ struct PhoneNumberKitFormater: PhoneNumberFormaterProtocol {
     func isValid(_ phoneNumber: String) -> Bool {
         
         phoneNumberKit.isValidPhoneNumber(phoneNumber)
+    }
+    
+    func unformatted(_ phoneNumber: String) -> String {
+        
+        phoneNumber.digits
     }
     
     //TODO: remove afrer refactoring

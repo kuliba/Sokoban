@@ -81,25 +81,25 @@ class ContactsViewModel: ObservableObject {
                 
                 switch mode {
                 case let .fastPayments(phase):
+                    
+                    contactsSection?.filter.value = text
+                    banksPrefferdSection?.phone.value = text
+                    
                     switch phase {
                     case .contacts:
+
                         if let phone = searchBar.phone {
                             
-                            self.feedbackGenerator.notificationOccurred(.success)
+                            feedbackGenerator.notificationOccurred(.success)
                             self.searchBar.action.send(SearchBarViewModelAction.Idle())
+                            mode = .fastPayments(.banksAndCountries(phone: phone))
                             
+                            //TODO: move to contacts list
                             //TODO: subscribe to bank clients an update icon
                             self.model.action.send(ModelAction.BankClient.Request(phone: phone))
-                            
-                            //TODO: move to Preffered Banks view model
-                            self.model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: phone))
-                            
-                            mode = .fastPayments(.banksAndCountries(phone: phone))
-                        
+
                         } else {
-                           
-                            contactsSection?.filter.value = text
-                            
+ 
                             withAnimation {
                                 
                                 if text != nil {
@@ -116,6 +116,7 @@ class ContactsViewModel: ObservableObject {
                         }
                         
                     case .banksAndCountries:
+                        
                         if let phone = searchBar.phone {
                             
                             mode = .fastPayments(.banksAndCountries(phone: phone))
@@ -313,6 +314,14 @@ extension ContactsViewModel {
     private var countriesSection: ContactsCountriesSectionViewModel? {
         
         guard let section = sections.compactMap({ $0 as? ContactsCountriesSectionViewModel }).first else {
+            return nil
+        }
+        return section
+    }
+    
+    private var banksPrefferdSection: ContactsBanksPrefferedSectionViewModel? {
+        
+        guard let section = sections.compactMap({ $0 as? ContactsBanksPrefferedSectionViewModel }).first else {
             return nil
         }
         return section

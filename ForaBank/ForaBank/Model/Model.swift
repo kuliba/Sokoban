@@ -63,6 +63,8 @@ class Model {
     //MARK: LatestAllPayments
     let latestPayments: CurrentValueSubject<[LatestPaymentData], Never>
     let latestPaymentsUpdating: CurrentValueSubject<Bool, Never>
+    let paymentsByPhone: CurrentValueSubject<[String: [PaymentPhoneData]], Never>
+    let paymentsByPhoneUpdating: CurrentValueSubject<Set<String>, Never>
     
     //MARK: Notifications
     let notifications: CurrentValueSubject<[NotificationData], Never>
@@ -154,6 +156,8 @@ class Model {
         self.paymentTemplatesViewSettings = .init(.initial)
         self.latestPayments = .init([])
         self.latestPaymentsUpdating = .init(false)
+        self.paymentsByPhone = .init([:])
+        self.paymentsByPhoneUpdating = .init([])
         self.notifications = .init([])
         self.clientInfo = .init(nil)
         self.clientPhoto = .init(nil)
@@ -1012,6 +1016,11 @@ private extension Model {
         if let bankClientInfo = localAgent.load(type: Set<[BankClientInfo]>.self) {
             
             self.bankClientInfo.value = bankClientInfo
+        }
+        
+        if let paymentsByPhone = localAgent.load(type: [String: [PaymentPhoneData]].self) {
+            
+            self.paymentsByPhone.value = paymentsByPhone
         }
     }
     
