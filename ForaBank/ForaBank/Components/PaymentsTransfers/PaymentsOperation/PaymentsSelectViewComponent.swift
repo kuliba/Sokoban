@@ -324,22 +324,26 @@ struct PaymentsSelectView: View {
         
         var body: some View {
             
-            HStack(spacing: 16) {
-                
-                viewModel.icon
-                    .resizable()
-                    .frame(width: 32, height: 32)
-                
-                Text(viewModel.name)
-                    .font(.textBodyMM14200())
-                    .foregroundColor(.textSecondary)
-                
-                Spacer()
-            }
-            .onTapGesture {
+            Button {
                 
                 viewModel.action(viewModel.id)
-            }
+                
+            } label: {
+                
+                HStack(spacing: 16) {
+                    
+                    viewModel.icon
+                        .resizable()
+                        .frame(width: 32, height: 32)
+                    
+                    Text(viewModel.name)
+                        .font(.textBodyMM14200())
+                        .foregroundColor(.textSecondary)
+                    
+                    Spacer()
+                }
+                
+            }.buttonStyle(PushButtonStyle())
         }
     }
     
@@ -349,52 +353,55 @@ struct PaymentsSelectView: View {
         
         var body: some View {
             
-            VStack(spacing: 8) {
-                
-                ZStack {
-                    
-                    Circle()
-                        .fill(Color.mainColorsGrayLightest)
-                        .frame(width: 40, height: 40)
-                    
-                    viewModel.icon
-                        .resizable()
-                        .frame(width: 40, height: 40)
-                    
-                    switch viewModel.overlay {
-                    case .isFavorite:
-                        ZStack {
-                            
-                            Circle()
-                                .foregroundColor(.mainColorsBlack)
-                            
-                            Image.ic24Star
-                                .resizable()
-                                .frame(width: 16, height: 16, alignment: .center)
-                                .foregroundColor(Color.mainColorsWhite)
-                            
-                        }
-                        .frame(width: 24, height: 24)
-                        .offset(x: 20, y: -8)
-                        
-                    case .none:
-                        Color.clear
-                            .frame(width: 24, height: 24)
-                    }
-                }
-                
-                Text(viewModel.name)
-                    .font(.textBodyXSR11140())
-                    .foregroundColor(.textSecondary)
-                    .lineLimit(2)
-                    .multilineTextAlignment(.center)
-                
-                Spacer()
-            }
-            .onTapGesture {
+            Button {
                 
                 viewModel.action(viewModel.id)
-            }
+                
+            } label: {
+                
+                VStack(spacing: 8) {
+                    
+                    ZStack {
+                        
+                        Circle()
+                            .fill(Color.mainColorsGrayLightest)
+                            .frame(width: 40, height: 40)
+                        
+                        viewModel.icon
+                            .resizable()
+                            .frame(width: 40, height: 40)
+                        
+                        switch viewModel.overlay {
+                        case .isFavorite:
+                            ZStack {
+                                
+                                Circle()
+                                    .foregroundColor(.mainColorsBlack)
+                                
+                                Image.ic24Star
+                                    .resizable()
+                                    .frame(width: 16, height: 16, alignment: .center)
+                                    .foregroundColor(Color.mainColorsWhite)
+                                
+                            }
+                            .frame(width: 24, height: 24)
+                            .offset(x: 20, y: -8)
+                            
+                        case .none:
+                            Color.clear
+                                .frame(width: 24, height: 24)
+                        }
+                        
+                    }.frame(width: 40, height: 40)
+                    
+                    Text(viewModel.name)
+                        .font(.textBodyXSR11140())
+                        .foregroundColor(.textSecondary)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.center)
+                }
+                
+            }.buttonStyle(PushButtonStyle())
         }
     }
     
