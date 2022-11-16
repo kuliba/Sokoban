@@ -137,7 +137,7 @@ class MainViewModel: ObservableObject, Resetable {
                     
                     if let deposit = deposit as? ProductDepositData {
                         
-                        guard !self.model.depositsCloseNotified.contains(.init(depositId: deposit.depositId)), deposit.isClosed else {
+                        guard !self.model.depositsCloseNotified.contains(.init(depositId: deposit.depositId)), deposit.endDateNf else {
                             continue
                         }
                         

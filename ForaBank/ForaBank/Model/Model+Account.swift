@@ -402,7 +402,7 @@ extension ModelAction {
             
             enum Response: Action {
                 
-                case success(data: ServerCommands.AccountController.CloseAccount.Response.TransferData)
+                case success(data: CloseProductTransferData)
                 case failure(message: String)
             }
         }

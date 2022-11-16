@@ -123,6 +123,15 @@ struct ProductProfileView: View {
             if let closeAccountSpinner = viewModel.closeAccountSpinner {
                 CloseAccountSpinnerView(viewModel: closeAccountSpinner)
             }
+            
+            if let spinner = viewModel.spinner {
+                
+                VStack {
+                    
+                    SpinnerView(viewModel: spinner)
+                }
+                .frame(width: .infinity, height: .infinity, alignment: .center)
+            }
         }
         .navigationBar(with: viewModel.navigationBar)
         .onReceive(viewModel.action) { action in
@@ -171,6 +180,18 @@ struct ProductProfileView: View {
                 
             case let .closeAccount(viewModel):
                 
+                PaymentsMeToMeView(viewModel: viewModel)
+                    .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+
+                        switch fullCover.type {
+                        case let .successMeToMe(successMeToMeViewModel):
+                            PaymentsSuccessView(viewModel: successMeToMeViewModel)
+                        }
+                        
+                    }.transaction { transaction in
+                        transaction.disablesAnimations = false
+                    }
+            case let .closeDeposit(viewModel):
                 PaymentsMeToMeView(viewModel: viewModel)
                     .fullScreenCover(item: $viewModel.fullCover) { fullCover in
 

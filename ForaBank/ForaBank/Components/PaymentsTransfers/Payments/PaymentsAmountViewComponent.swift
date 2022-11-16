@@ -85,6 +85,13 @@ extension PaymentsAmountView {
                 let textField: TextFieldFormatableView.ViewModel = .init(balance, isEnabled: false, currencySymbol: currency.currencySymbol)
                 
                 self.init("Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"))
+                
+            case let .closeDeposit(productData, balance):
+                
+                let currency = Currency(description: productData.currency)
+                let textField: TextFieldFormatableView.ViewModel = .init(balance, isEnabled: false, currencySymbol: currency.currencySymbol)
+                
+                self.init("Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
             }
         }
 

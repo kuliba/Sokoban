@@ -38,6 +38,13 @@ struct PaymentsMeToMeView: View {
                     .padding(.top, -29)
             }
         }
+        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
+
+            switch bottomSheet.type {
+            case let .info(viewModel):
+                InfoView(viewModel: viewModel)
+            }
+        }
         .fixedSize(horizontal: false, vertical: true)
         .alert(item: $viewModel.alert) { alert in
             Alert(with: alert)
