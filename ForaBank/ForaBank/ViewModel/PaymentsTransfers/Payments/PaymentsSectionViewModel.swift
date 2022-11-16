@@ -78,6 +78,12 @@ class PaymentsFeedSectionViewModel: PaymentsSectionViewModel {
                     case _ as PaymentsParameterViewModelAction.Select.PopUpSelector.Close:
                         self.action.send(PaymentsSectionViewModelAction.PopUpSelector.Close())
                         
+                    case let payload as PaymentsParameterViewModelAction.Select.BanksSelector.Show:
+                        self.action.send(PaymentsSectionViewModelAction.BankSelector.Show(viewModel: payload.viewModel))
+                        
+                    case _ as PaymentsParameterViewModelAction.Select.BanksSelector.Close:
+                        self.action.send(PaymentsSectionViewModelAction.BankSelector.Close())
+                        
                     //MARK: SelectSimpleComponent
                     case let payload as PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Show:
                         self.action.send(PaymentsSectionViewModelAction.PopUpSelector.Show(viewModel: payload.viewModel))
@@ -355,9 +361,12 @@ enum PaymentsSectionViewModelAction {
         struct Close: Action {}
     }
     
-    enum PopUpSearchSelector  {
+    enum BankSelector  {
         
-        struct Show: Action {}
+        struct Show: Action {
+            
+            let viewModel: ContactsViewModel
+        }
         
         struct Close: Action {}
     }

@@ -102,8 +102,9 @@ extension PaymentsSelectView {
                                 state = .selected(selectedViewModel)
                                 
                             case .banks:
-                                break
-                                //TODO: setup action for open bottom sheet
+                                let contactsViewModel = ContactsViewModel(model, mode: .select(.banks, ""))
+                                bind(contactsViewModel: contactsViewModel)
+                                self.action.send(PaymentsParameterViewModelAction.Select.BanksSelector.Show(viewModel: contactsViewModel))
                                 
                             case .countries:
                                 break
@@ -172,6 +173,32 @@ extension PaymentsSelectView {
                     }
                 }
                 .store(in: &bindings)
+        }
+        
+        private func bind(contactsViewModel: ContactsViewModel) {
+            
+            contactsViewModel.action
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] action in
+                    
+                    switch action {
+                    case let payload as ContactsViewModelAction.BankSelected:
+                        guard let bankData = self?.model.bankList.value.first(where: { $0.id == payload.bankId }),
+                              let parameterSelect = self?.parameterSelect else {
+                            return
+                        }
+                        
+                        let selectedItem = SelectedItemViewModel(bankData: bankData, title: parameterSelect.title) { [weak self] in
+                            self?.action.send(PaymentsParameterViewModelAction.Select.SelectedItemDidTapped())
+                        }
+                        self?.state = .selected(selectedItem)
+                        self?.action.send(PaymentsParameterViewModelAction.Select.BanksSelector.Close())
+    
+                    default:
+                        break
+                    }
+                    
+                }.store(in: &bindings)
         }
     }
 }
@@ -369,6 +396,16 @@ extension PaymentsParameterViewModelAction {
             struct Show: Action {
                 
                 let viewModel: PaymentsPopUpSelectView.ViewModel
+            }
+            
+            struct Close: Action {}
+        }
+        
+        enum BanksSelector {
+            
+            struct Show: Action {
+                
+                let viewModel: ContactsViewModel
             }
             
             struct Close: Action {}

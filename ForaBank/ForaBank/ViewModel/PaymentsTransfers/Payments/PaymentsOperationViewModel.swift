@@ -20,6 +20,7 @@ class PaymentsOperationViewModel: ObservableObject {
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
     @Published var bottomSheet: BottomSheet?
+    @Published var sheet: Sheet?
         
     internal let operation: CurrentValueSubject<Payments.Operation, Never>
     internal let sections: CurrentValueSubject<[PaymentsSectionViewModel], Never> = .init([])
@@ -200,6 +201,12 @@ class PaymentsOperationViewModel: ObservableObject {
                             bottomSheet = nil
                         }
                         
+                    case let payload as PaymentsSectionViewModelAction.BankSelector.Show:
+                        sheet = .init(type: .contacts(payload.viewModel))
+                        
+                    case _ as PaymentsSectionViewModelAction.BankSelector.Close:
+                        sheet = nil
+                        
                     case _ as PaymentsSectionViewModelAction.SpoilerDidUpdated:
                         content = Self.reduceContentItems(sections: sections)
                         
@@ -344,6 +351,17 @@ extension PaymentsOperationViewModel {
         enum BottomSheetType {
 
             case popUp(PaymentsPopUpSelectView.ViewModel)
+        }
+    }
+    
+    struct Sheet: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            
+            case contacts(ContactsViewModel)
         }
     }
 }

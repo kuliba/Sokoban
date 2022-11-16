@@ -151,6 +151,13 @@ struct PaymentsOperationView: View {
                 PaymentsPopUpSelectView(viewModel: popUpVewModel)
             }
         }
+        .sheet(item: $viewModel.sheet, content: { sheet in
+            
+            switch sheet.type {
+            case let .contacts(contactsViewModel):
+                ContactsView(viewModel: contactsViewModel)
+            }
+        })
     }
 }
 
