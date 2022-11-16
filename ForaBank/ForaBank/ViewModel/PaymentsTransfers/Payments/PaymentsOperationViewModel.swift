@@ -207,6 +207,12 @@ class PaymentsOperationViewModel: ObservableObject {
                     case _ as PaymentsSectionViewModelAction.BankSelector.Close:
                         sheet = nil
                         
+                    case let payload as PaymentsSectionViewModelAction.ContactSelector.Show:
+                        sheet = .init(type: .contacts(payload.viewModel))
+                        
+                    case _ as PaymentsSectionViewModelAction.ContactSelector.Close:
+                        sheet = nil
+                        
                     case _ as PaymentsSectionViewModelAction.SpoilerDidUpdated:
                         content = Self.reduceContentItems(sections: sections)
                         

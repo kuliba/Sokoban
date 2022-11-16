@@ -162,7 +162,8 @@ class ContactsViewModel: ObservableObject {
                             self.searchBar.textField.text = formattedPhone
                             
                         case .select:
-                            self.action.send(ContactsViewModelAction.ContactPhoneSelected(phone: payload.phone))
+                            let formattedPhone = searchBar.textField.phoneNumberFormatter.partialFormatter("+\(payload.phone)")
+                            self.action.send(ContactsViewModelAction.ContactPhoneSelected(phone: formattedPhone))
                         }
                         
                     case let payload as ContactsSectionViewModelAction.BanksPreffered.ItemDidTapped:

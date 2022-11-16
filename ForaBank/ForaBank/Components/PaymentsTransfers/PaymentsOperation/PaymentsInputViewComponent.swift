@@ -20,28 +20,30 @@ extension PaymentsInputView {
         @Published var title: String?
         @Published var actionButton: ActionButtonViewModel?
         
+        private let model: Model
         private static let iconPlaceholder = Image.ic24File
         
         var parameterInput: Payments.ParameterInput? { source as? Payments.ParameterInput }
         override var isValid: Bool { parameterInput?.validator.isValid(value: content) ?? false }
         
-        init(icon: Image, description: String, content: String, actionButton: ActionButtonViewModel? = nil, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
+        init(icon: Image, description: String, content: String, actionButton: ActionButtonViewModel? = nil, model: Model, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.icon = icon
             self.description = description
             self.content = content
             self.actionButton = actionButton
+            self.model = model
             
             super.init(source: source)
         }
         
-        convenience init(with parameterInput: Payments.ParameterInput) {
+        convenience init(with parameterInput: Payments.ParameterInput, model: Model) {
             
             let icon = parameterInput.icon.image ?? Self.iconPlaceholder
             let description = parameterInput.title
             let content = parameterInput.parameter.value ?? ""
 
-            self.init(icon: icon, description: description, content: content, actionButton: nil, source: parameterInput)
+            self.init(icon: icon, description: description, content: content, actionButton: nil, model: model, source: parameterInput)
             
             if let actionButtonType = parameterInput.actionButtonType {
                 
@@ -67,6 +69,43 @@ extension PaymentsInputView {
                         title = content.count > 0 ? description : nil
                     }
 
+                }.store(in: &bindings)
+            
+            action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                    case let payload as PaymentsParameterViewModelAction.Input.ActionButtonDidTapped:
+                        switch payload.type {
+                        case .contact:
+                            let contactViewModel = ContactsViewModel(model, mode: .select(.contacts))
+                            bind(contactsViewModel: contactViewModel)
+                            self.action.send(PaymentsParameterViewModelAction.Input.ContactSelector.Show(viewModel: contactViewModel))
+                        }
+                        
+                    default:
+                        break
+                    }
+                    
+                }.store(in: &bindings)
+        }
+        
+        private func bind(contactsViewModel: ContactsViewModel) {
+            
+            contactsViewModel.action
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] action in
+                    
+                    switch action {
+                    case let payload as ContactsViewModelAction.ContactPhoneSelected:
+                        self?.content = payload.phone
+                        self?.action.send(PaymentsParameterViewModelAction.Input.ContactSelector.Close())
+    
+                    default:
+                        break
+                    }
+                    
                 }.store(in: &bindings)
         }
     }
@@ -102,6 +141,16 @@ extension PaymentsParameterViewModelAction {
         struct ActionButtonDidTapped: Action {
             
             let type: Payments.ParameterInput.ActionButtonType
+        }
+        
+        enum ContactSelector {
+            
+            struct Show: Action {
+                
+                let viewModel: ContactsViewModel
+            }
+            
+            struct Close: Action {}
         }
     }
 }
@@ -202,12 +251,12 @@ struct PaymentsInputView_Previews: PreviewProvider {
 
 extension PaymentsInputView.ViewModel {
     
-    static let sampleEmpty = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil)))
+    static let sampleEmpty = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil)), model: .emptyMock)
     
-    static let sampleValue = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil)))
+    static let sampleValue = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil)), model: .emptyMock)
     
-    static let sampleValueNotEditable = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil), isEditable: false))
+    static let sampleValueNotEditable = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil), isEditable: false), model: .emptyMock)
     
-    static let samplePhone = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "+9 925 555-5555"), icon: .init(named: "ic24Smartphone")!, title: "Номер телефона получателя", validator: .init(minLength: 5, maxLength: nil, regEx: nil), isEditable: false, actionButtonType: .contact))
+    static let samplePhone = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "+9 925 555-5555"), icon: .init(named: "ic24Smartphone")!, title: "Номер телефона получателя", validator: .init(minLength: 5, maxLength: nil, regEx: nil), isEditable: false, actionButtonType: .contact), model: .emptyMock)
 }
 

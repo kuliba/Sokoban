@@ -99,6 +99,12 @@ class PaymentsFeedSectionViewModel: PaymentsSectionViewModel {
                     case let payload as PaymentsParameterViewModelAction.Input.ActionButtonDidTapped:
                         self.action.send(PaymentsSectionViewModelAction.InputActionButtonDidTapped(type: payload.type))
                         
+                    case let payload as PaymentsParameterViewModelAction.Input.ContactSelector.Show:
+                        self.action.send(PaymentsSectionViewModelAction.ContactSelector.Show(viewModel: payload.viewModel))
+                        
+                    case _ as PaymentsParameterViewModelAction.Input.ContactSelector.Close:
+                        self.action.send(PaymentsSectionViewModelAction.ContactSelector.Close())
+                        
                     default:
                         break
                     }
@@ -313,7 +319,7 @@ extension PaymentsSectionViewModel {
             return PaymentsInfoView.ViewModel(with: parameterInfo)
             
         case let parameterInput as Payments.ParameterInput:
-            return PaymentsInputView.ViewModel(with: parameterInput)
+            return PaymentsInputView.ViewModel(with: parameterInput, model: model)
             
         case let paremetrName as Payments.ParameterName:
             return PaymentsNameView.ViewModel(with: paremetrName)
@@ -362,6 +368,16 @@ enum PaymentsSectionViewModelAction {
     }
     
     enum BankSelector  {
+        
+        struct Show: Action {
+            
+            let viewModel: ContactsViewModel
+        }
+        
+        struct Close: Action {}
+    }
+    
+    enum ContactSelector  {
         
         struct Show: Action {
             
