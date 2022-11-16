@@ -96,6 +96,17 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
                 }
                 
             }.store(in: &bindings)
+        
+        filter
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] value in
+                
+                withAnimation {
+                    
+                    visible = Self.reduce(items: items, filterByType: nil, filterByName: value)
+                }
+                
+            }.store(in: &bindings)
     }
     
     func bind(searchBar: SearchBarView.ViewModel) {

@@ -49,7 +49,7 @@ class ContactsViewModel: ObservableObject {
     
     convenience init(_ model: Model, mode: Mode) {
  
-        self.init(model, searchBar: .init(textFieldPhoneNumberView: .init(.contacts)), visible: [], sections: [], mode: mode)
+        self.init(model, searchBar: Self.searchBar(for: mode), visible: [], sections: [], mode: mode)
         
         sections = sections(for: mode, model: model)
 
@@ -256,6 +256,26 @@ extension ContactsViewModel {
 //MARK: - Reducers
 
 extension ContactsViewModel {
+    
+    static func searchBar(for mode: Mode) -> SearchBarView.ViewModel {
+        
+        switch mode {
+        case .fastPayments:
+            return .init(textFieldPhoneNumberView: .init(.contacts))
+            
+        case let .select(select):
+            switch select {
+            case .contacts:
+                return .init(textFieldPhoneNumberView: .init(.contacts))
+                
+            case .banks:
+                return .init(textFieldPhoneNumberView: .init(.banks))
+                
+            case .countries:
+                return .init(textFieldPhoneNumberView: .init(.countries))
+            }
+        }
+    }
     
     func sections(for mode: Mode, model: Model) -> [ContactsSectionViewModel] {
         

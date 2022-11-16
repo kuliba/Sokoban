@@ -46,7 +46,7 @@ extension TextFieldPhoneNumberView {
                 
                 self.init(placeHolder: placeHolder, filterSymbols: filterSymbols, firstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")], phoneNumberFormatter: PhoneNumberKitFormater())
                 
-            case .banks:
+            default:
                 self.init(placeHolder: placeHolder)
             }
             
@@ -61,10 +61,20 @@ extension TextFieldPhoneNumberView {
             case editing
         }
         
-        enum PlaceHolder: String {
+        enum PlaceHolder {
             
-            case contacts = "Номер телефона или имя"
-            case banks = "Введите название банка"
+            case contacts
+            case banks
+            case countries
+            
+            var title: String {
+                
+                switch self {
+                case .contacts: return "Номер телефона или имя"
+                case .banks: return "Введите название банка"
+                case .countries: return "Введите название страны"
+                }
+            }
         }
     }
 }
@@ -116,7 +126,7 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         textField.autocorrectionType = .no
         textField.shouldHideToolbarPlaceholder = false
         textField.spellCheckingType = .no
-        textField.placeholder = viewModel.placeHolder.rawValue
+        textField.placeholder = viewModel.placeHolder.title
         
         viewModel.dismissKeyboard = { textField.resignFirstResponder() }
         
