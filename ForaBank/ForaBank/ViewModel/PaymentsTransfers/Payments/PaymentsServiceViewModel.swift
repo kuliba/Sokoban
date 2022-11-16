@@ -114,16 +114,15 @@ class PaymentsServiceViewModel: ObservableObject {
                             await MainActor.run {
                                 
                                 let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model)
+                                operationViewModel.rootActions = rootActions
                                 link = .operation(operationViewModel)
-                                
-                                bind(operationViewModel: operationViewModel)
                             }
                             
                         } catch {
                             
                             await MainActor.run {
                                 
-                                self.action.send(PaymentsServiceViewModelAction.Alert(message: error.localizedDescription))
+                                self.rootActions?.alert(error.localizedDescription)
                             }
                         }
                     }
