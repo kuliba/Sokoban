@@ -12,7 +12,7 @@ import Combine
 
 extension PaymentsAmountView {
     
-    class ViewModel: PaymentsParameterViewModel {
+    class ViewModel: PaymentsParameterViewModel, PaymentsParameterViewModelContinuable {
         
         @Published var title: String
         var textField: TextFieldFormatableView.ViewModel
