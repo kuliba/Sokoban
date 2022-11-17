@@ -59,7 +59,8 @@ struct ContactsPlaceholderItemView: View {
                 }
                 .foregroundColor(.mainColorsGray.opacity(0.4))
                 .padding(.trailing, 60)
-            }
+                
+            }.shimmering()
             
         case .bank:
             
@@ -79,7 +80,8 @@ struct ContactsPlaceholderItemView: View {
                 }
                 .foregroundColor(.mainColorsGray.opacity(0.4))
                 .padding(.trailing, 120)
-            }
+                
+            }.shimmering()
             
         case .bankPreffered:
             
@@ -98,7 +100,8 @@ struct ContactsPlaceholderItemView: View {
                         .frame(width: 45, height: 8)
                 }
                 .foregroundColor(.mainColorsGray.opacity(0.4))
-            }
+                
+            }.shimmering()
 
         case .country:
             
@@ -111,7 +114,8 @@ struct ContactsPlaceholderItemView: View {
                     .frame(height: 14)
                     .foregroundColor(.mainColorsGray.opacity(0.4))
                     .padding(.trailing, 120)
-            }
+                
+            }.shimmering()
         }
     }
 }

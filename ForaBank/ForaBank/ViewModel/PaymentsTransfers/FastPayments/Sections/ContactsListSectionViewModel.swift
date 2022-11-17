@@ -17,7 +17,7 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
     @Published var visible: [ContactsItemViewModel]
     let filter: CurrentValueSubject<String?, Never>
     
-    private var contacts: [ContactsItemViewModel]
+    private let contacts: CurrentValueSubject<[ContactsItemViewModel], Never>
     private let phoneFormatter: PhoneNumberFormaterProtocol
 
     init(_ model: Model, selfContact: ContactsPersonItemView.ViewModel?, visible: [ContactsItemViewModel], contacts: [ContactsItemViewModel], filter: String?, phoneFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater(), mode: Mode) {
@@ -25,32 +25,25 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
         self.selfContact = selfContact
         self.visible = visible
         self.filter = .init(filter)
-        self.contacts = contacts
+        self.contacts = .init(contacts)
         self.phoneFormatter = phoneFormatter
         super.init(model: model, mode: mode)
     }
     
     convenience init(_ model: Model, mode: Mode) {
         
-        let visiblePlaceholders = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .person), count: 8)
-        self.init(model, selfContact: nil, visible: visiblePlaceholders, contacts: [], filter: nil, mode: mode)
+        self.init(model, selfContact: nil, visible: [], contacts: [], filter: nil, mode: mode)
         
-        Task {
+        Task.detached(priority: .userInitiated) {
             
             do {
                 
                 let addressBookContacts = try await model.contactsFetchAll()
-                contacts = await Self.reduce(addressBookContacts: addressBookContacts, bankClientInfo: model.bankClientInfo.value, phoneFormatter: phoneFormatter, action: {[weak self] contactId in
+                self.contacts.value = await Self.reduce(addressBookContacts: addressBookContacts, bankClientInfo: model.bankClientInfo.value, phoneFormatter: self.phoneFormatter, action: {[weak self] contactId in
                     
                     { self?.action.send(ContactsSectionViewModelAction.Contacts.ItemDidTapped(phone: contactId)) }
-
                 })
-                
-                await MainActor.run {
-                    
-                    visible = Self.reduce(items: contacts, filter: filter.value)
-                }
-                
+
             } catch {
                 
                 LoggerAgent.shared.log(level: .error, category: .ui, message: "Fetching address book contacts list error: \(error.localizedDescription)")
@@ -81,12 +74,26 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
             }.store(in: &bindings)
         
         filter
+            .combineLatest(contacts)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] filter in
+            .sink { [unowned self] data in
                 
-                withAnimation {
+                let filter = data.0
+                let contacts = data.1
+                
+                if contacts.isEmpty == false {
                     
-                    visible = Self.reduce(items: contacts, filter: filter)
+                    withAnimation {
+                        
+                        visible = Self.reduce(items: contacts, filter: filter)
+                    }
+                    
+                } else {
+                    
+                    withAnimation {
+                        
+                        visible = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .person), count: 8)
+                    }
                 }
                 
             }.store(in: &bindings)
