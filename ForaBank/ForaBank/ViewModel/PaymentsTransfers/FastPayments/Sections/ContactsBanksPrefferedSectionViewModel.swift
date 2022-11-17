@@ -25,8 +25,7 @@ class ContactsBanksPrefferedSectionViewModel: ContactsSectionViewModel, Observab
     
     convenience init(_ model: Model, phone: String?) {
         
-        let placeholders = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .bankPreffered), count: 8)
-        self.init(items: placeholders, phone: phone, mode: .fastPayment, model: model)
+        self.init(items: [], phone: phone, mode: .fastPayment, model: model)
         
         bind()
     }
