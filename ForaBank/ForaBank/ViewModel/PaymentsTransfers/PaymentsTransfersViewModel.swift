@@ -540,7 +540,8 @@ extension PaymentsTransfersViewModel {
         
         enum Kind {
             
-            case meToMe(MeToMeViewModel)
+            case meToMe(PaymentsMeToMeViewModel)
+            case successMeToMe(PaymentsSuccessViewModel)
             case transferByPhone(TransferByPhoneViewModel)
             case anotherCard(AnotherCardViewModel)
             case qrScanner(QrViewModel)

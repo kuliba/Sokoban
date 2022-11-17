@@ -23,7 +23,7 @@ extension Model {
     var productsOpenInsuranceURL: URL { URL(string: "https://www.forabank.ru/landings/e-osago/")! }
     var productsOpenMortgageURL: URL { URL(string: "https://www.forabank.ru/private/mortgage/")! }
     
-    var allProducts: [ProductData] { products.value.values.flatMap { $0 } }
+    var allProducts: [ProductData] { products.value.values.flatMap { $0 }.sorted { $0.productType.order < $1.productType.order } }
     
     func productType(for productId: ProductData.ID) -> ProductType? {
         
@@ -63,21 +63,12 @@ extension Model {
         
         var uniqueCurrency: [Currency] = []
         
-        guard let allProducts = allProducts() else {
-            return uniqueCurrency
-        }
-        
         let allProductsCurrency = allProducts.compactMap { $0.currency }
         let uniqueProductsCurrency = Set(allProductsCurrency)
         
         uniqueCurrency = uniqueProductsCurrency.map(Currency.init)
         
         return uniqueCurrency
-    }
-    
-    func allProducts() -> [ProductData]? {
-        
-        products.value.values.flatMap {$0}.sorted { $0.productType.order < $1.productType.order }
     }
     
     func products(_ productType: ProductType) -> [ProductData]? {

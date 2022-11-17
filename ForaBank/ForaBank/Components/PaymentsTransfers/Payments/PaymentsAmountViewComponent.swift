@@ -22,8 +22,7 @@ extension PaymentsAmountView {
         @Published var alert: AlertViewModel?
         
         private let actionTitle: String
-        private let action: () -> Void
-        private var bindings = Set<AnyCancellable>()
+        private let buttonAction: () -> Void
         
         init(title: String, amount: Double, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil, currencySwitch: CurrencySwitchViewModel? = nil, alert: AlertViewModel? = nil, formatter: NumberFormatter = .currency(with: "₽"), actionTitle: String = "", action: @escaping () -> Void = {}) {
             
@@ -34,11 +33,11 @@ extension PaymentsAmountView {
             self.currencySwitch = currencySwitch
             self.alert = alert
             self.actionTitle = actionTitle
-            self.action = action
+            self.buttonAction = action
             super.init(source: Payments.ParameterMock())
         }
         
-        init(with parameterAmount: Payments.ParameterAmount, actionTitle: String, action: @escaping () -> Void) {
+        init(with parameterAmount: Payments.ParameterAmount, actionTitle: String) {
             
             self.title = parameterAmount.title
             self.textField = .init(type: .general, value: parameterAmount.amount, formatter: .currency(with: "₽"), limit: 10)
@@ -47,7 +46,7 @@ extension PaymentsAmountView {
             self.currencySwitch = nil
             self.alert = nil
             self.actionTitle = actionTitle
-            self.action = action
+            self.buttonAction = {}
             
             super.init(source: parameterAmount)
             bind()
@@ -62,7 +61,7 @@ extension PaymentsAmountView {
             self.currencySwitch = currencySwitch
             self.alert = alert
             self.actionTitle = actionTitle
-            self.action = action
+            self.buttonAction = action
             
             super.init(source: Payments.ParameterMock())
         }
@@ -113,6 +112,7 @@ extension PaymentsAmountView {
             return parameterAmount.validator.isValid(value: textField.value)
         }
         
+        //TODO: - remove
         static func makeTransferButton(_ value: Double = 0, action: @escaping () -> Void) -> TransferButtonViewModel {
             
             if value == 0 {
@@ -122,11 +122,16 @@ extension PaymentsAmountView {
             }
         }
 
-        func updateTranferButton(isEnabled: Bool) {
+        func update(isContinueEnabled: Bool) {
             
-            if isEnabled {
+            if isContinueEnabled == true {
                 
-                transferButton = .active(title: actionTitle, action: action)
+                transferButton = .active(title: actionTitle, action: { [weak self] in
+                    
+                    //TODO: remove
+                    self?.buttonAction()
+                    self?.action.send(PaymentsParameterViewModelAction.Amount.ContinueDidTapped())
+                })
                 
             } else {
                 
@@ -163,6 +168,16 @@ extension PaymentsAmountView {
     }
 }
 
+//MARK: - Action
+
+extension PaymentsParameterViewModelAction {
+
+    enum Amount {
+    
+        struct ContinueDidTapped: Action {}
+    }
+}
+
 //MARK: - View
 
 struct PaymentsAmountView: View {
@@ -186,8 +201,8 @@ struct PaymentsAmountView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         
                         Text(viewModel.title)
-                            .font(Font.custom("Inter-Regular", size: 12))
-                            .foregroundColor(Color(hex: "#999999"))
+                            .font(.textBodySR12160())
+                            .foregroundColor(.textPlaceholder)
                             .padding(.top, 4)
                         
                         HStack {
@@ -209,7 +224,7 @@ struct PaymentsAmountView: View {
                         }
                         
                         Divider()
-                            .background(Color(hex: "#EAEBEB"))
+                            .background(Color.bordersDivider)
                             .padding(.top, 4)
                         
                     }
@@ -234,8 +249,8 @@ struct PaymentsAmountView: View {
              
         }
         .background(
-            Color(hex: "#3D3D45")
-                .edgesIgnoringSafeArea(.bottom))
+            Color.mainColorsBlack
+                .ignoresSafeArea(.container, edges: .bottom))
     }
     
     struct TitleView: View {
@@ -247,14 +262,14 @@ struct PaymentsAmountView: View {
             if let title = title {
                 
                 Text(title)
-                    .font(Font.custom("Inter-Regular", size: 12))
-                    .foregroundColor(Color(hex: "#999999"))
+                    .font(.textBodySR12160())
+                    .foregroundColor(.textPlaceholder)
                 
             } else {
                 
                 Text("")
-                    .font(Font.custom("Inter-Regular", size: 12))
-                    .foregroundColor(Color(hex: "#999999"))
+                    .font(.textBodySR12160())
+                    .foregroundColor(.textPlaceholder)
             }
         }
     }
@@ -273,7 +288,7 @@ struct PaymentsAmountView: View {
                         .foregroundColor(.mainColorsGrayMedium.opacity(0.1))
                     
                     Text(title)
-                        .font(Font.custom("Inter-Regular", size: 16))
+                        .font(.textH4R16240())
                         .foregroundColor(.mainColorsWhite.opacity(0.5))
                 }
                 
@@ -286,8 +301,8 @@ struct PaymentsAmountView: View {
                             .foregroundColor(Color(hex: "#FF3636"))
                         
                         Text(title)
-                            .font(Font.custom("Inter-Regular", size: 16))
-                            .foregroundColor(Color(hex: "#FFFFFF"))
+                            .font(.textH4R16240())
+                            .foregroundColor(.textWhite)
                     }
                 }
                 
@@ -308,15 +323,15 @@ struct PaymentsAmountView: View {
                 HStack(spacing: 8) {
                     
                     Text(title)
-                        .font(Font.custom("Inter-Regular", size: 12))
-                        .foregroundColor(Color(hex: "#999999"))
+                        .font(.textBodySR12160())
+                        .foregroundColor(.textPlaceholder)
                     
                     Button(action: action) {
                         
                         icon
                             .resizable()
                             .renderingMode(.template)
-                            .foregroundColor(Color(hex: "#999999"))
+                            .foregroundColor(.textPlaceholder)
                             .frame(width: 14, height: 14)
                     }
                     
@@ -324,8 +339,8 @@ struct PaymentsAmountView: View {
                 
             case .text(let text):
                 Text(text)
-                    .font(Font.custom("Inter-Regular", size: 12))
-                    .foregroundColor(Color(hex: "#999999"))
+                    .font(.textBodySR12160())
+                    .foregroundColor(.textPlaceholder)
             }
         }
     }
@@ -341,16 +356,16 @@ struct PaymentsAmountView: View {
                 HStack(spacing: 0) {
                     
                     Text(viewModel.from)
-                        .font(Font.custom("Inter-Regular", size: 12))
-                        .foregroundColor(Color(hex: "#1C1C1C"))
+                        .font(.textBodySR12160())
+                        .foregroundColor(.textSecondary)
                         .frame(width: 16, height: 16)
                     
                     viewModel.icon
                         .frame(width: 16, height: 16)
                     
                     Text(viewModel.to)
-                        .font(Font.custom("Inter-Regular", size: 12))
-                        .foregroundColor(Color(hex: "#1C1C1C"))
+                        .font(.textBodySR12160())
+                        .foregroundColor(.textSecondary)
                         .frame(width: 16, height: 16)
                     
                 }
@@ -372,11 +387,11 @@ struct PaymentsAmountView: View {
         var body: some View {
             
             ZStack {
-                
+                //TODO: setup color after update lib
                 Color(hex: "#FF9636")
                 Text(viewModel.title)
-                    .font(Font.custom("Inter-Regular", size: 14))
-                    .foregroundColor(Color(hex: "#FFFFFF"))
+                    .font(.textBodyMR14200())
+                    .foregroundColor(.white)
             }
         }
     }
@@ -434,9 +449,10 @@ extension PaymentsAmountView.ViewModel {
     
     static let amountParameter: PaymentsAmountView.ViewModel = {
         
-        let viewModel = PaymentsAmountView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "100"), title: "Сумма перевода", currency: .init(description: "RUB"), validator: .init(minAmount: 1, maxAmount: 1000)), actionTitle: "Перевести", action: {})
+        let parameter = Payments.ParameterAmount(value: "100", title: "Сумма перевода", currency: .init(description: "RUB"), validator: .init(minAmount: 1, maxAmount: 1000))
+        let viewModel = PaymentsAmountView.ViewModel(with: parameter, actionTitle: "Перевести")
         
-        viewModel.updateTranferButton(isEnabled: true)
+        viewModel.update(isContinueEnabled: true)
         
         return viewModel
     }()

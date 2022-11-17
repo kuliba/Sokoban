@@ -67,7 +67,7 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
                     
                     if bankType == .sfp {
                         
-                        header.icon = .ic24SBP
+                        header.icon = .ic24Sbp
                         
                     } else {
                         

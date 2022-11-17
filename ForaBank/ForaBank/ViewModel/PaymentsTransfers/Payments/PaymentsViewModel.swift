@@ -83,7 +83,11 @@ class PaymentsViewModel: ObservableObject {
                     
                     switch payload.result {
                     case let .complete(paymentSuccess):
+                        //TODO: refactor
+                        /*
                         successViewModel = PaymentsSuccessViewModel(model, paymentSuccess: paymentSuccess, dismissAction: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())})
+                         */
+                        break
                         
                     case .failure(let errorMessage):
                         self.action.send(PaymentsViewModelAction.Alert(message: errorMessage))

@@ -38,7 +38,7 @@ extension ContactsSectionHeaderView {
             
             switch kind {
             case .banks:
-                let icon: Image = .ic24SBP
+                let icon: Image = .ic24Sbp
                 let title = "В другой банк"
                 
                 self.init(icon: icon, title: title, searchButton: nil)

@@ -136,7 +136,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 
                 switch action {
                     
-                case let payload as ModelAction.Payment.OperationDetailByPaymentId.Response:
+                case let payload as ModelAction.Operation.Detail.Response:
                     handleDetailResponse(payload)
                     
                 case let payload as ModelAction.PaymentTemplate.Save.Complete:
@@ -418,14 +418,14 @@ extension PaymentsSuccessViewModel {
                     return
                 }
                 
-                self.model.action.send(ModelAction.Payment.OperationDetailByPaymentId.Request(paymentOperationDetailId: paymentOperationDetailId))
+                self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentOperationDetailId)))
             }
         }
     }
     
-    private func handleDetailResponse(_ payload: ModelAction.Payment.OperationDetailByPaymentId.Response) {
+    private func handleDetailResponse(_ payload: ModelAction.Operation.Detail.Response) {
         
-        switch payload {
+        switch payload.result {
         case let .success(detailData):
             
             let viewModel: OperationDetailInfoViewModel = .init(model: model, operation: detailData) { [weak self] in
@@ -441,7 +441,7 @@ extension PaymentsSuccessViewModel {
                 sheet = .init(type: .detailInfo(viewModel))
             }
             
-        case .failture:
+        case .failure:
             break
         }
     }
