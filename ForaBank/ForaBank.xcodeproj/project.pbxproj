@@ -349,7 +349,6 @@
 		5A5ABFA427AAF7DD00D548AA /* GetLatestInternetPayments.json in Resources */ = {isa = PBXBuildFile; fileRef = 5A5ABF9827AAF7DD00D548AA /* GetLatestInternetPayments.json */; };
 		5A5ABFA527AAF7DD00D548AA /* GetLatestPayments.json in Resources */ = {isa = PBXBuildFile; fileRef = 5A5ABF9927AAF7DD00D548AA /* GetLatestPayments.json */; };
 		5A5ABFA627AAF7DD00D548AA /* GetPaymentCountriesMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 5A5ABF9A27AAF7DD00D548AA /* GetPaymentCountriesMin.json */; };
-		5A5ABFA727AAF7DD00D548AA /* GetLatestPhonePaymentsMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 5A5ABF9B27AAF7DD00D548AA /* GetLatestPhonePaymentsMin.json */; };
 		5A5ABFA827AAF7DD00D548AA /* GetLatestTransportPayments.json in Resources */ = {isa = PBXBuildFile; fileRef = 5A5ABF9C27AAF7DD00D548AA /* GetLatestTransportPayments.json */; };
 		5A5ABFA927AAF7DD00D548AA /* GetAllLatestPayments.json in Resources */ = {isa = PBXBuildFile; fileRef = 5A5ABF9D27AAF7DD00D548AA /* GetAllLatestPayments.json */; };
 		5A5ABFAA27AAF7DD00D548AA /* GetLatestServicePayments.json in Resources */ = {isa = PBXBuildFile; fileRef = 5A5ABF9E27AAF7DD00D548AA /* GetLatestServicePayments.json */; };
@@ -1802,7 +1801,6 @@
 		5A5ABF9827AAF7DD00D548AA /* GetLatestInternetPayments.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetLatestInternetPayments.json; sourceTree = "<group>"; };
 		5A5ABF9927AAF7DD00D548AA /* GetLatestPayments.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetLatestPayments.json; sourceTree = "<group>"; };
 		5A5ABF9A27AAF7DD00D548AA /* GetPaymentCountriesMin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetPaymentCountriesMin.json; sourceTree = "<group>"; };
-		5A5ABF9B27AAF7DD00D548AA /* GetLatestPhonePaymentsMin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetLatestPhonePaymentsMin.json; sourceTree = "<group>"; };
 		5A5ABF9C27AAF7DD00D548AA /* GetLatestTransportPayments.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetLatestTransportPayments.json; sourceTree = "<group>"; };
 		5A5ABF9D27AAF7DD00D548AA /* GetAllLatestPayments.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetAllLatestPayments.json; sourceTree = "<group>"; };
 		5A5ABF9E27AAF7DD00D548AA /* GetLatestServicePayments.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetLatestServicePayments.json; sourceTree = "<group>"; };
@@ -3788,7 +3786,6 @@
 				5A5ABF9827AAF7DD00D548AA /* GetLatestInternetPayments.json */,
 				5A5ABF9927AAF7DD00D548AA /* GetLatestPayments.json */,
 				5A5ABF9A27AAF7DD00D548AA /* GetPaymentCountriesMin.json */,
-				5A5ABF9B27AAF7DD00D548AA /* GetLatestPhonePaymentsMin.json */,
 				5A5ABF9C27AAF7DD00D548AA /* GetLatestTransportPayments.json */,
 				5A5ABF9D27AAF7DD00D548AA /* GetAllLatestPayments.json */,
 				5A5ABF9E27AAF7DD00D548AA /* GetLatestServicePayments.json */,
@@ -7707,7 +7704,6 @@
 			files = (
 				77517FAD27A94C99005CFB77 /* CreateMe2MePullDebitTransferResponseGeneric.json in Resources */,
 				77517FBD27A94EC3005CFB77 /* CreateContactAddresslessTransferResponseMin.json in Resources */,
-				5A5ABFA727AAF7DD00D548AA /* GetLatestPhonePaymentsMin.json in Resources */,
 				77A76A8027FB03CF00A271B3 /* GetAtmListResponseGeneric.json in Resources */,
 				77A76A8C27FB0B1A00A271B3 /* GetAtmServiceListResponseServer.json in Resources */,
 				77517FA927A94C40005CFB77 /* CreateDirectTransferResponseGeneric.json in Resources */,

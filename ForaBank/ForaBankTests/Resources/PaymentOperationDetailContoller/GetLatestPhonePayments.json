@@ -3,7 +3,8 @@
     {
       "bankId": "string",
       "bankName": "string",
-      "payment": true
+      "payment": true,
+      "defaultBank": false
     }
   ],
   "errorMessage": "string",
