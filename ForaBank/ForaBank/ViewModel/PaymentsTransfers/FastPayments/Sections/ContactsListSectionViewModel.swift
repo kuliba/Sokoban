@@ -55,31 +55,13 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
     
     private func bind() {
         
-        model.clientInfo
+        contacts
+            .combineLatest(filter)
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] data in
                 
-                guard let selfPhone = data?.phone else {
-                    return
-                }
-                
-                withAnimation {
-                    
-                    selfContact = Self.reduceClientInfo(phone: selfPhone, phoneFormatter: phoneFormatter, action: { [weak self] phone in
-                        
-                        { self?.action.send(ContactsSectionViewModelAction.Contacts.ItemDidTapped(phone: phone)) }
-                    })
-                }
-                
-            }.store(in: &bindings)
-        
-        filter
-            .combineLatest(contacts)
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] data in
-                
-                let filter = data.0
-                let contacts = data.1
+                let contacts = data.0
+                let filter = data.1
                 
                 if contacts.isEmpty == false {
                     
@@ -94,6 +76,24 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
                         
                         visible = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .person), count: 8)
                     }
+                }
+                
+            }.store(in: &bindings)
+        
+        model.clientInfo
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] data in
+                
+                guard let selfPhone = data?.phone else {
+                    return
+                }
+                
+                withAnimation {
+                    
+                    selfContact = Self.reduceClientInfo(phone: selfPhone, phoneFormatter: phoneFormatter, action: { [weak self] phone in
+                        
+                        { self?.action.send(ContactsSectionViewModelAction.Contacts.ItemDidTapped(phone: phone)) }
+                    })
                 }
                 
             }.store(in: &bindings)
