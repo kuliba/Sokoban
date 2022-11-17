@@ -18,16 +18,17 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
     @Published var visible: [ContactsItemViewModel]
     let filter: CurrentValueSubject<String?, Never>
 
-    private var items: [ContactsItemViewModel]
-    private var bankType: BankType? { BankType(rawValue: options.selected) }
+    private let items: CurrentValueSubject<[ContactsItemViewModel], Never>
+    private let bankType: CurrentValueSubject<BankType?, Never>
     
-    init(_ model: Model, header: ContactsSectionHeaderView.ViewModel, isCollapsed: Bool, mode: Mode, searchBar: SearchBarView.ViewModel?, options: OptionSelectorView.ViewModel, visible: [ContactsItemViewModel], items: [ContactsItemViewModel], filter: String? = nil) {
+    init(_ model: Model, header: ContactsSectionHeaderView.ViewModel, isCollapsed: Bool, mode: Mode, searchBar: SearchBarView.ViewModel?, options: OptionSelectorView.ViewModel, visible: [ContactsItemViewModel], items: [ContactsItemViewModel], bankType: BankType? = nil, filter: String? = nil) {
         
         self.searchBar = searchBar
         self.options = options
         self.visible = visible
-        self.items = items
+        self.items = .init(items)
         self.filter = .init(filter)
+        self.bankType = .init(bankType)
 
         super.init(header: header, isCollapsed: isCollapsed, mode: mode, model: model)
     }
@@ -35,21 +36,12 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
     convenience init(_ model: Model, mode: Mode) {
         
         let options = Self.createOptionViewModel()
-        let visiblePlaceholders = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .bank), count: 8)
-        self.init(model, header: .init(kind: .banks), isCollapsed: true, mode: mode, searchBar: nil, options: options, visible: visiblePlaceholders, items: [])
+        self.init(model, header: .init(kind: .banks), isCollapsed: true, mode: mode, searchBar: nil, options: options, visible: [], items: [])
 
-        Task {
+        Task.detached(priority: .userInitiated) {
             
-            items = await Self.reduce(bankList: model.bankList.value) { [weak self]  bank in
+            self.items.value = await Self.reduce(bankList: model.bankList.value) { [weak self]  bank in
                 { self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bankId: bank.id)) }
-            }
-            
-            await MainActor.run {
-                
-                withAnimation {
-                    
-                    visible = Self.reduce(items: items, filterByType: bankType)
-                }
             }
         }
     }
@@ -57,13 +49,45 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
     override func bind() {
         super.bind()
         
+        items
+            .combineLatest(bankType, filter)
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] data in
+                
+                let items = data.0
+                let bankType = data.1
+                let filter = data.2
+                
+                if items.isEmpty == false {
+                    
+                    withAnimation {
+                        
+                        visible = Self.reduce(items: items, filterByType: bankType, filterByName: filter)
+                    }
+                    
+                } else {
+                    
+                    withAnimation {
+  
+                        visible = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .bank), count: 8)
+                    }
+                }
+ 
+            }.store(in: &bindings)
+        
         options.$selected
             .receive(on: DispatchQueue.main)
             .sink{[unowned self] selected in
                 
+                bankType.value = BankType(rawValue: selected)
+                
+            }.store(in: &bindings)
+        
+        bankType
+            .receive(on: DispatchQueue.main)
+            .sink{[unowned self] bankType in
+                
                 withAnimation {
-                    
-                    visible = Self.reduce(items: items, filterByType: bankType)
                     
                     if bankType == .sfp {
                         
@@ -96,17 +120,6 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
                 }
                 
             }.store(in: &bindings)
-        
-        filter
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] value in
-                
-                withAnimation {
-                    
-                    visible = Self.reduce(items: items, filterByType: nil, filterByName: value)
-                }
-                
-            }.store(in: &bindings)
     }
     
     func bind(searchBar: SearchBarView.ViewModel) {
@@ -120,7 +133,7 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
                     withAnimation {
                         
                         self.searchBar = nil
-                        visible = Self.reduce(items: items, filterByType: bankType)
+                        filter.value = nil
                     }
                     
                 default:
@@ -133,10 +146,7 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] text in
                 
-                withAnimation {
-                    
-                    visible = Self.reduce(items: items, filterByType: bankType, filterByName: text)
-                }
+                filter.value = text
                 
             }.store(in: &bindings)
     }
