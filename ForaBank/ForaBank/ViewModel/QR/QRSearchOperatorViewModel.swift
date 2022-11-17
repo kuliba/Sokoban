@@ -10,10 +10,13 @@ import Combine
 
 class QRSearchOperatorViewModel: ObservableObject {
     
+    let operators: [OperatorGroupData.OperatorData]
     @Published var isLinkActive: Bool = false
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     
-    
+    init(operators: [OperatorGroupData.OperatorData]) {
+        self.operators = operators
+    }
     
     enum Link {
         

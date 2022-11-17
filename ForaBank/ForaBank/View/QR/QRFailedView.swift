@@ -34,6 +34,18 @@ struct QRFailedView: View {
                 }
             }
         }
+        
+        NavigationLink("", isActive: $viewModel.isLinkActive) {
+            
+            if let link = viewModel.link  {
+                
+                switch link {
+
+                case .failedView(let view):
+                    QRSearchOperatorView(viewModel: view)
+                }
+            }
+        }
     }
     
     var avatarView: some View {
