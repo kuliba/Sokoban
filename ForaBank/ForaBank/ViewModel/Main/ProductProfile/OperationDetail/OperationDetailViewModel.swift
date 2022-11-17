@@ -166,7 +166,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         var featureButtonsUpdated = [FeatureButtonViewModel]()
         
         switch productStatement.paymentDetailType {
-        case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b:
+        case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .insideDeposit:
             if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
                 featureButtonsUpdated.append(templateButtonViewModel)
             }

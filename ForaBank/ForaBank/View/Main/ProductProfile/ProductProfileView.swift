@@ -10,6 +10,7 @@ import SwiftUI
 struct ProductProfileView: View {
     
     @ObservedObject var viewModel: ProductProfileViewModel
+    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     
     var accentColor: some View {
         
@@ -118,8 +119,29 @@ struct ProductProfileView: View {
             // workaround to fix mini-cards jumps when product name editing alert presents
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
+
+            if let closeAccountSpinner = viewModel.closeAccountSpinner {
+                CloseAccountSpinnerView(viewModel: closeAccountSpinner)
+            }
+            
+            if let spinner = viewModel.spinner {
+                
+                VStack {
+                    
+                    SpinnerView(viewModel: spinner)
+                }
+                .frame(width: .infinity, height: .infinity, alignment: .center)
+            }
         }
         .navigationBar(with: viewModel.navigationBar)
+        .onReceive(viewModel.action) { action in
+            switch action {
+            case _ as ProductProfileViewModelAction.Close.SelfView:
+                self.mode.wrappedValue.dismiss()
+                
+            default: break
+            }
+        }
         .sheet(item: $viewModel.sheet, content: { sheet in
             switch sheet.type {
             case let .printForm(printFormViewModel):
@@ -132,6 +154,13 @@ struct ProductProfileView: View {
                 OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
             }
         })
+        .fullScreenCover(item: $viewModel.fullCoverSpinner) { fullCoverSpinner in
+
+            switch fullCoverSpinner.type {
+            case let .successMeToMe(successMeToMeViewModel):
+                PaymentsSuccessView(viewModel: successMeToMeViewModel)
+            }
+        }
         .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
             
             switch sheet.type {
@@ -150,9 +179,30 @@ struct ProductProfileView: View {
                     .frame(height: 474)
                 
             case let .closeAccount(viewModel):
-                MeToMeView(viewModel: viewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .frame(height: 474)
+                
+                PaymentsMeToMeView(viewModel: viewModel)
+                    .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+
+                        switch fullCover.type {
+                        case let .successMeToMe(successMeToMeViewModel):
+                            PaymentsSuccessView(viewModel: successMeToMeViewModel)
+                        }
+                        
+                    }.transaction { transaction in
+                        transaction.disablesAnimations = false
+                    }
+            case let .closeDeposit(viewModel):
+                PaymentsMeToMeView(viewModel: viewModel)
+                    .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+
+                        switch fullCover.type {
+                        case let .successMeToMe(successMeToMeViewModel):
+                            PaymentsSuccessView(viewModel: successMeToMeViewModel)
+                        }
+                        
+                    }.transaction { transaction in
+                        transaction.disablesAnimations = false
+                    }
             }
         })
         .alert(item: $viewModel.alert, content: { alertViewModel in
@@ -196,7 +246,8 @@ extension ProductProfileViewModel {
         navigationBar: NavigationBarView.ViewModel.sampleNoActionButton,
         product: .sample,
         buttons: .sample, detail: nil,
-        history: .sampleHistory)
+        history: .sampleHistory,
+        rootView: "")
 }
 
 extension NavigationBarView.ViewModel {

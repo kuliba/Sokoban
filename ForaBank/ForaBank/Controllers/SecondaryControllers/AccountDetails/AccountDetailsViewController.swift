@@ -110,14 +110,13 @@ class AccountDetailsViewController: UIViewController {
         
         
     }
-    func longIntToDateString(longInt: Int) -> String?{
+    func longIntToDateString(longInt: Int) -> String? {
         let date = Date(timeIntervalSince1970: TimeInterval(longInt/1000))
         let dateFormatter = DateFormatter()
         dateFormatter.timeStyle = DateFormatter.Style.none//Set time style
         dateFormatter.dateStyle = DateFormatter.Style.long //Set date style
         
         dateFormatter.dateFormat =  "d MMMM yyyy"
-        dateFormatter.timeZone = .current
         dateFormatter.locale = Locale(identifier: "ru_RU")
         var localDate = dateFormatter.string(from: date)
         if localDate == "1 января 1970"{

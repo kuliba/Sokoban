@@ -121,7 +121,6 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         dateFormatter.dateStyle = DateFormatter.Style.long //Set date style
         
         dateFormatter.dateFormat =  "dd.MM.yy"
-        dateFormatter.timeZone = .current
         dateFormatter.locale = Locale(identifier: "ru_RU")
         let localDate = dateFormatter.string(from: date)
         

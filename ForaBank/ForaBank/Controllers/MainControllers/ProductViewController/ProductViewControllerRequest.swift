@@ -69,11 +69,10 @@ extension ProductViewController {
                     for i in self.historyArrayAccount{
                         
                         if let timeResult = (i.tranDate) {
-                            _ = Date(timeIntervalSince1970: TimeInterval(timeResult/1000) )
+                            _ = Date.dateUTC(with: timeResult)
                             let dateFormatter = DateFormatter()
                             dateFormatter.timeStyle = DateFormatter.Style.none
                             dateFormatter.dateStyle = DateFormatter.Style.medium
-                            dateFormatter.timeZone = .current
                             dateFormatter.locale = Locale(identifier: "ru_RU")
                         }
                     }
@@ -149,11 +148,10 @@ extension ProductViewController {
                     for i in self.historyArray{
                         
                         if let timeResult = (i.tranDate) {
-                            let date = Date(timeIntervalSince1970: TimeInterval(timeResult/1000) )
+                            let date = Date.dateUTC(with: timeResult)
                             let dateFormatter = DateFormatter()
                             dateFormatter.timeStyle = DateFormatter.Style.none //Set time style
                             dateFormatter.dateStyle = DateFormatter.Style.medium //Set date style
-                            dateFormatter.timeZone = .current
                             dateFormatter.locale = Locale(identifier: "ru_RU")
                             _ = dateFormatter.string(from: date)
                         }
@@ -235,11 +233,10 @@ extension ProductViewController {
                         
                         if let timeResult = (i.tranDate) {
                             
-                            let date = Date(timeIntervalSince1970: TimeInterval(timeResult/1000) )
+                            let date = Date.dateUTC(with: timeResult)
                             let dateFormatter = DateFormatter()
                             dateFormatter.timeStyle = DateFormatter.Style.none
                             dateFormatter.dateStyle = DateFormatter.Style.medium
-                            dateFormatter.timeZone = .current
                             dateFormatter.locale = Locale(identifier: "ru_RU")
                             _ = dateFormatter.string(from: date)
                         }

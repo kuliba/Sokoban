@@ -83,15 +83,15 @@ class MainViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case let payload as MainViewModelAction.Show.ProductProfile:
-                    guard let prooduct = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }) else {
-                        return
-                    }
+                    guard let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId })
+                    else { return }
                     
-                    guard let productProfileViewModel = ProductProfileViewModel(model, product: prooduct, dismissAction: { [weak self] in
-                              self?.action.send(MainViewModelAction.Close.Link())
-                          }) else {
-                        return
-                    }
+                    guard let productProfileViewModel = ProductProfileViewModel
+                        .init(model,
+                              product: product,
+                              rootView: "\(type(of: self))")
+                    else { return }
+                    
                     productProfileViewModel.rootActions = rootActions
                     bind(productProfileViewModel)
                     link = .productProfile(productProfileViewModel)
@@ -113,7 +113,7 @@ class MainViewModel: ObservableObject, Resetable {
                     
                 case _ as MainViewModelAction.PullToRefresh:
                     model.action.send(ModelAction.Products.Update.Total.All())
-                    model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
+                    model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList, .bannerCatalogList]))
                 
                 case _ as MainViewModelAction.Close.Link:
                     self.link = nil
@@ -131,15 +131,15 @@ class MainViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] products in
                 
-                guard model.depositsCloseNotified == nil else { return }
-                
-                let products = products.values.flatMap {$0}
-                
-                let deposits = products.filter({$0.productType == .deposit})
+                guard let deposits = products[.deposit] else { return }
                 
                 for deposit in deposits {
                     
-                    if let deposit = deposit as? ProductDepositData, let endDate = deposit.endDateNf, endDate {
+                    if let deposit = deposit as? ProductDepositData {
+                        
+                        guard !self.model.depositsCloseNotified.contains(.init(depositId: deposit.depositId)), deposit.endDateNf else {
+                            continue
+                        }
                         
                         self.alert = .init(title: "Срок действия вклада истек", message: "Переведите деньги со вклада на свою карту/счет в любое время", primary: .init(type: .default, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Ok", action: {
                             
@@ -147,6 +147,8 @@ class MainViewModel: ObservableObject, Resetable {
                         }))
                         
                         self.model.action.send(ModelAction.Deposits.CloseNotified(productId: deposit.id))
+                        
+                        return
                     }
                 }
             }.store(in: &bindings)
@@ -189,14 +191,24 @@ class MainViewModel: ObservableObject, Resetable {
                             case .account:
                                 
                                 let accountProductsList = model.accountProductsList.value
-                                let items = OpenAccountViewModel.reduce(products: accountProductsList)
                                 
-                                let openAccountViewModel: OpenAccountViewModel = .init(model: model, items: items, currency: .rub)
+                                guard let openAccountViewModel: OpenAccountViewModel = .init(model, products: accountProductsList) else {
+                                    return
+                                }
                                 
                                 bottomSheet = .init(type: .openAccount(openAccountViewModel))
 
                             case .deposit:
                                 self.action.send(MainViewModelAction.Show.OpenDeposit())
+                                
+                            case .card:
+                                
+                                let authProductsViewModel = AuthProductsViewModel(self.model,
+                                                                                      products: self.model.catalogProducts.value,
+                                                                                      dismissAction: { [weak self] in
+                                        self?.action.send(MainViewModelAction.Close.Link()) })
+                                    
+                                    self.link = .openCard(authProductsViewModel)
                                 
                             default:
                                 break
@@ -270,24 +282,24 @@ class MainViewModel: ObservableObject, Resetable {
                         case let payload as MainSectionViewModelAction.PromoAction.ButtonTapped:
                             switch payload.actionData {
                             case let payload as BannerActionDepositOpen:
-                                
-                                if let openDepositViewModel: OpenProductViewModel = .init(depositId: payload.depositProductId) {
+                                guard let depositId = Int(payload.depositProductId),
+                                      let openDepositViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: model) else {
                                     
-                                    self.link = .openDeposit(openDepositViewModel)
+                                    return
                                 }
-                            case _ as BannerActionDepositsList:
+                                self.link = .openDeposit(openDepositViewModel)
                                 
+                            case _ as BannerActionDepositsList:
                                 self.link = .openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
                                 }))
-                            case let payload as BannerActionMigTransfer:
                                 
+                            case let payload as BannerActionMigTransfer:
                                 self.link = .country(.init(country: payload.countryId, operatorsViewModel: .init(closeAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
                                 }, template: nil), paymentType: .withOutAddress(withOutViewModel: .init(phoneNumber: nil))))
                                 
                             case let payload as BannerActionContactTransfer:
-                                  
                                 self.link = .country(.init(country: payload.countryId, operatorsViewModel: .init(closeAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
                                 }, template: nil), paymentType: .turkeyWithOutAddress(turkeyWithOutAddress: .init(firstName: "", middleName: "", surName: "", phoneNumber: ""))))
@@ -313,8 +325,7 @@ class MainViewModel: ObservableObject, Resetable {
                         self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
     
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
-                        let myProductsViewModel = MyProductsViewModel(model, dismissAction: { [weak self] in self?.action.send(MainViewModelAction.Close.Link()) })
-                        bind(myProductsViewModel)
+                        let myProductsViewModel = MyProductsViewModel(model)
                         link = .myProducts(myProductsViewModel)
                         
                         // CurrencyMetall section
@@ -405,36 +416,6 @@ class MainViewModel: ObservableObject, Resetable {
                 }
                 
             }.store(in: &bindings)
-    }
-    
-    private func bind(_ myProductsViewModel: MyProductsViewModel) {
-        
-        myProductsViewModel.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case let payload as MyProductsViewModelAction.Tapped.Product:
-                    
-                    self.action.send(MainViewModelAction.Close.Link())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                        
-                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
-                    }
-                    
-                case _ as MyProductsViewModelAction.Tapped.OpenDeposit:
-                    
-                    self.action.send(MainViewModelAction.Close.Link())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                        
-                        self.action.send(MainViewModelAction.Show.OpenDeposit())
-                    }
-                    
-                default:
-                    break
-                }
-                
-        }.store(in: &bindings)
     }
     
     private func bind(_ templatesListViewModel: TemplatesListViewModel) {
@@ -534,13 +515,14 @@ extension MainViewModel {
         case userAccount(UserAccountViewModel)
         case productProfile(ProductProfileViewModel)
         case messages(MessagesHistoryViewModel)
-        case openDeposit(OpenProductViewModel)
+        case openDeposit(OpenDepositDetailViewModel)
         case openDepositsList(OpenDepositViewModel)
         case templates(TemplatesListViewModel)
         case qrScanner(QrViewModel)
         case currencyWallet(CurrencyWalletViewModel)
         case myProducts(MyProductsViewModel)
         case country(CountryPaymentView.ViewModel)
+        case openCard(AuthProductsViewModel)
 
     }
 

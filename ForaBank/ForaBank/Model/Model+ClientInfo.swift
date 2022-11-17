@@ -167,20 +167,17 @@ extension Model {
                         try localAgent.store(clientPhotoData, serial: nil)
                         
                     } catch {
-                        //TODO: added handler for upload command
-                        print("Model: handleClientPhotoSave error: \(error.localizedDescription)")
+                        
+                        handleServerCommandCachingError(error: error, command: command)
                     }
                     
                 default:
-                    //TODO: added handler for upload command
-                    break
+                    handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                     
                 }
                 
             case .failure(let error):
-                //TODO: added handler for upload command
-                print("Model: handleClientPhotoSave error: \(error)")
-
+                handleServerCommandError(error: error, command: command)
             }
         }
     }
@@ -209,28 +206,17 @@ extension Model {
                         
                     } catch {
                         
-                        //TODO: added handler for download command
-                        print("Model: store: ClientPhotoData error: \(error.localizedDescription)")
+                        handleServerCommandCachingError(error: error, command: command)
                     }
                     
                 } else {
                     
                     clientPhoto.value = nil
-                    
-                    do {
-                        
-                        try localAgent.clear(type: ClientPhotoData.self)
-                        
-                    } catch {
-                        
-                        //TODO: added handler for download command
-                        print("Model: localAgent clear error: \(error.localizedDescription)")
-                    }
+                    try? localAgent.clear(type: ClientPhotoData.self)
                 }
                 
             case .failure(let error):
-                //TODO: added handler for download command
-                print("Model: store: ClientPhotoData error: \(error)")
+                handleServerCommandError(error: error, command: command)
             }
         }
     }
@@ -260,7 +246,6 @@ extension Model {
                 }
                 
             case .failure(let error):
-                
                 self.handleServerCommandError(error: error, command: command)
             }
         }

@@ -117,7 +117,7 @@ extension Model {
                         }
                     }
 
-                    let update = ProductStatementsStorage.Update(period: requestProperties.period, statements: resultStatements, direction: requestProperties.direction, limitDate: requestProperties.limitDate, override: requestProperties.override)
+                    let update = ProductStatementsStorage.Update(period: requestProperties.period, statements: resultStatements, direction: requestProperties.direction, limitDate: requestProperties.limitDate)
 
                     storage = Self.reduce(storage: storage, update: update, product: product)
 
@@ -262,7 +262,6 @@ extension Model {
         return state.isDownloadActive
     }
     
-    //TODO: tests
     static func statementsRequestParameters(storage: ProductStatementsStorage?, product: ProductData, direction: Period.Direction, days: Int, currentDate: Date, latestDaysOffset: Int) -> ProductStatementsStorage.Request? {
         
         switch direction {
@@ -284,7 +283,7 @@ extension Model {
                     
                     let adjustedPeriod = Period(start: startDate, end: endDate)
                     
-                    return .init(period: adjustedPeriod, direction: direction, limitDate: currentDate, override: true)
+                    return .init(period: adjustedPeriod, direction: direction, limitDate: currentDate)
                 }
                 
             } else {

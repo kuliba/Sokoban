@@ -155,7 +155,7 @@ extension ServerCommands {
         struct GetProductListByType: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/getProductListByType"
+            let endpoint = "/rest/getProductListByType_V3"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             
@@ -302,6 +302,102 @@ extension ServerCommands {
                 parameters.append(.init(name: "productType", value: productType.rawValue))
                 
                 self.parameters = parameters
+            }
+        }
+        
+        /*
+         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/setProductsVisibility
+         */
+        struct UserVisibilityProductsSettings: ServerCommand {
+            
+            let token: String
+            let endpoint = "/rest/userVisibilityProductsSettings"
+            let method: ServerCommandMethod = .post
+            let payload: Payload?
+            
+            struct Payload: Encodable {
+                        
+                let categoryType: String
+                var products: [Product]
+
+                struct Product: Encodable {
+                        
+                    let id: Int
+                    let visibility: Bool
+                }
+            }
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: EmptyData?
+            }
+            
+            internal init(token: String, payload: Payload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+            
+            init(token: String, productType: ProductType, productId: ProductData.ID, visibility: Bool) {
+                
+                self.init(token: token,
+                          payload: .init(categoryType: productType.rawValue,
+                                         products: [.init(id: productId, visibility: visibility)]))
+            }
+        }
+        
+        /*
+         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/setProductsOrder
+         */
+        struct UserOrdersProductsSettings: ServerCommand {
+            
+            let token: String
+            let endpoint = "/rest/userOrdersProductsSettings"
+            let method: ServerCommandMethod = .post
+            let payload: [PayloadOrdersSettings]?
+            
+            struct PayloadOrdersSettings: Encodable {
+                        
+                let categoryType: String
+                var products: [Product]
+
+                struct Product: Encodable {
+                        
+                    let id: Int
+                    let order: Int
+                }
+            }
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: EmptyData?
+            }
+            
+            internal init(token: String, payload: [PayloadOrdersSettings]) {
+                
+                self.token = token
+                self.payload = payload
+            }
+            
+            init(token: String, newOrders: [ProductType: [ProductData.ID]]) {
+                
+                var payload: [PayloadOrdersSettings] = []
+                    
+                    for (key, value) in newOrders {
+                    
+                        var products: [PayloadOrdersSettings.Product] = []
+                        for (index, productId) in value.enumerated() {
+                            products.append(PayloadOrdersSettings.Product(id: productId, order: index))
+                        }
+                        
+                        payload.append(PayloadOrdersSettings(categoryType: key.rawValue, products: products))
+                    }
+                
+                self.init(token: token, payload: payload)
             }
         }
         

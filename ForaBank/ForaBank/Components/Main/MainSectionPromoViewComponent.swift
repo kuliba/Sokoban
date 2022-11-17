@@ -44,116 +44,38 @@ extension MainSectionPromoView {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] catalogBanners in
                     
-                    var updated = [BannerViewModel]()
-                    
-                    for banner in catalogBanners {
-                        
-                        if let bannerViewModel = banners.first(where: { $0.id == banner.id}) {
-                            
-                            switch banner.action {
-                            case let payload as BannerActionDepositOpen:
-                                let action: () -> Void = { self.action.send(MainSectionViewModelAction.PromoAction.ButtonTapped(actionData: payload))}
-                                bannerViewModel.showAction = action
-                                
-                            case let payload as BannerActionDepositsList:
-                                let action: () -> Void = { self.action.send(MainSectionViewModelAction.PromoAction.ButtonTapped(actionData: payload))}
-                                bannerViewModel.showAction = action
-                                
-                            case let payload as BannerActionMigTransfer:
-                                let action: () -> Void = { self.action.send(MainSectionViewModelAction.PromoAction.ButtonTapped(actionData: payload))}
-                                bannerViewModel.showAction = action
-                                
-                            case let payload as BannerActionContactTransfer:
-                                let action: () -> Void = { self.action.send(MainSectionViewModelAction.PromoAction.ButtonTapped(actionData: payload))}
-                                bannerViewModel.showAction = action
-                                
-                            default: break
-                            }
-                            
-                            updated.append(bannerViewModel)
-                            
-                            guard bannerViewModel.image == nil else { continue }
-                            
-                            model.action.send(ModelAction.General.DownloadImage.Request(endpoint: banner.imageEndpoint))
-                            
-                        } else {
-                            
-                            let bannerViewModel = BannerViewModel(with: banner)
-                            
-                            switch banner.action {
-                            case let payload as BannerActionDepositOpen:
-                                let action: () -> Void = { self.action.send(MainSectionViewModelAction.PromoAction.ButtonTapped(actionData: payload))}
-                                bannerViewModel.showAction = action
-                                
-                            case let payload as BannerActionDepositsList:
-                                let action: () -> Void = { self.action.send(MainSectionViewModelAction.PromoAction.ButtonTapped(actionData: payload))}
-                                bannerViewModel.showAction = action
-                                
-                            case let payload as BannerActionMigTransfer:
-                                let action: () -> Void = { self.action.send(MainSectionViewModelAction.PromoAction.ButtonTapped(actionData: payload))}
-                                bannerViewModel.showAction = action
-                                
-                            case let payload as BannerActionContactTransfer:
-                                let action: () -> Void = { self.action.send(MainSectionViewModelAction.PromoAction.ButtonTapped(actionData: payload))}
-                                bannerViewModel.showAction = action
-                                
-                            default: break
-                            }
-                            
-                            updated.append(bannerViewModel)
-                            
-                            model.action.send(ModelAction.General.DownloadImage.Request(endpoint: banner.imageEndpoint))
-                        }
-                    }
-                    
+                    let updated = Self.reduce(catalogBanners: catalogBanners, images: model.images.value, action: { [weak self] bannerAction in { self?.action.send(MainSectionViewModelAction.PromoAction.ButtonTapped(actionData: bannerAction)) }
+                    })
+
                     withAnimation {
                         
                         banners = updated
                     }
                     
+                    if let endpointsToDownload = Self.reduce(banners: banners) {
+                        
+                        for endpoint in endpointsToDownload {
+                            
+                            model.action.send(ModelAction.General.DownloadImage.Request(endpoint: endpoint))
+                        }
+                    }
+  
                 }.store(in: &bindings)
             
-            model.action
+            model.images
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] action in
+                .sink { [unowned self] images in
                     
-                    switch action {
-                    case let payload as ModelAction.General.DownloadImage.Response:
-                        switch payload.result {
-                        case .success(let data):
-                            
-                            
-                            if let image = Image(data: data) {
-                                
-                                let bannersFilter = banners.filter({$0.image == .endpoint(payload.endpoint)})
-                                
-                                withAnimation {
-                                    
-                                    for banner in bannersFilter {
-                                        
-                                        banner.image = .image(image)
-                                    }
-                                }
-                                
-                            } else {
-                                
-                                // remove banner if creating image from data failed
-                                withAnimation {
-                                    
-                                    banners = banners.filter{ $0.image != .endpoint(payload.endpoint) }
-                                }
-                            }
-                            
-                        case .failure:
-                            // remove banner if image downloading failed
-                            withAnimation {
-                                
-                                banners = banners.filter{ $0.image != .endpoint(payload.endpoint) }
-                            }
+                    for banner in banners {
+                        
+                        guard let endpoint = banner.endpoint,
+                              let image = images[endpoint]?.image else {
+                            continue
                         }
                         
-                    default:
-                        break
+                        withAnimation {
+                            banner.image = .image(image)
+                        }
                     }
                     
                 }.store(in: &bindings)
@@ -163,34 +85,104 @@ extension MainSectionPromoView {
 
 extension MainSectionPromoView.ViewModel {
     
+    static func reduce(catalogBanners: [BannerCatalogListData], images: [String: ImageData], action: @escaping (BannerAction) -> (() -> Void)) -> [BannerViewModel] {
+        
+        var result = [BannerViewModel]()
+        
+        for banner in catalogBanners {
+            
+            let image = images[banner.imageEndpoint]?.image
+            if let bannerAction = banner.action {
+                
+                result.append(.init(with: banner, image: image, action: action(bannerAction)))
+                
+            } else {
+                
+                result.append(.init(with: banner, image: image))
+            }
+        }
+        
+        return result
+    }
+    
+    static func reduce(banners: [BannerViewModel]) -> [String]? {
+        
+        let endpoints = banners.compactMap({ $0.endpoint })
+        guard endpoints.isEmpty == false else {
+            return nil
+        }
+        
+        return endpoints
+    }
+}
+
+extension MainSectionPromoView.ViewModel {
+    
     class BannerViewModel: Identifiable, ObservableObject {
         
         let id: BannerCatalogListData.ID
         @Published var image: BannerImage
-        let url: URL
-        var showAction: () -> Void?
-        let openLink: Bool
+        let action: BannerAction
+        
+        var endpoint: String? {
+            
+            switch image {
+            case let .endpoint(endpoint): return endpoint
+            default: return nil
+            }
+        }
+
+        init(id: BannerCatalogListData.ID, image: BannerImage, action: BannerAction) {
+            
+            self.id = id
+            self.image = image
+            self.action = action
+        }
+        
+        convenience init(with bannerData: BannerCatalogListData, image: Image? = nil, action: (() -> Void)? = nil) {
+            
+            let bannerImage = BannerImage(endpoint: bannerData.imageEndpoint, image: image)
+            let bannerAction = BannerAction(link: bannerData.orderURL, action: action)
+
+            self.init(id: bannerData.id, image: bannerImage, action: bannerAction)
+        }
+        
+        //MARK: Types
         
         enum BannerImage: Equatable {
             
             case endpoint(String)
             case image(Image)
+            
+            init(endpoint: String, image: Image?) {
+                
+                if let image = image {
+                    
+                    self = .image(image)
+                    
+                } else {
+                    
+                    self = .endpoint(endpoint)
+                }
+            }
         }
         
-        internal init(id: Int, image: BannerImage, url: URL, showAction: @escaping () -> Void, openLink: Bool) {
+        enum BannerAction {
             
-            self.id = id
-            self.image = image
-            self.url = url
-            self.showAction = showAction
-            self.openLink = openLink
-        }
-        
-        convenience init(with bannerData: BannerCatalogListData) {
+            case action(() -> Void)
+            case link(URL)
             
-            let image: BannerImage = .endpoint(bannerData.imageEndpoint)
-            let openLink = { bannerData.action != nil }()
-            self.init(id: bannerData.id, image: image, url: bannerData.orderURL, showAction: {}, openLink: openLink)
+            init(link: URL, action: (() -> Void)?) {
+                
+                if let action = action {
+                    
+                    self = .action(action)
+                    
+                } else {
+                    
+                    self = .link(link)
+                }
+            }
         }
     }
 }
@@ -232,12 +224,9 @@ struct MainSectionPromoView: View {
                 
             case .image(let image):
                 
-                if viewModel.openLink {
-                    
-                    Button{
-                        viewModel.showAction()
-                        
-                    } label: {
+                switch viewModel.action {
+                case let .action(action):
+                    Button(action: action) {
                         
                         image
                             .resizable()
@@ -247,9 +236,8 @@ struct MainSectionPromoView: View {
                         
                     }.buttonStyle(PushButtonStyle())
                     
-                } else {
-                    
-                    Link(destination: viewModel.url) {
+                case let .link(url):
+                    Link(destination: url) {
                         
                         image
                             .resizable()
@@ -275,7 +263,7 @@ struct MainSectionPromotionsView_Previews: PreviewProvider {
             MainSectionPromoView(viewModel: .sample)
                 .previewLayout(.fixed(width: 375, height: 300))
             
-            MainSectionPromoView.BannerView(viewModel: .init(id: 0, image: .image(.ic48Abroad), url: URL(string: "https://google.com")!, showAction: {}, openLink: true))
+            MainSectionPromoView.BannerView(viewModel: .sample)
                 .previewLayout(.fixed(width: 375, height: 300))
         }
     }
@@ -285,5 +273,10 @@ struct MainSectionPromotionsView_Previews: PreviewProvider {
 
 extension MainSectionPromoView.ViewModel {
     
-    static let sample = MainSectionPromoView.ViewModel(banners: [.init(id: 1, image: .image(Image("Promo Banner Cashback")), url: URL(string: "https://google.com")!, showAction: {}, openLink: true), .init(id: 0, image: .endpoint(""), url: URL(string: "https://google.com")!, showAction: {}, openLink: true)])
+    static let sample = MainSectionPromoView.ViewModel(banners: [.sample])
+}
+
+extension MainSectionPromoView.ViewModel.BannerViewModel {
+    
+    static let sample = MainSectionPromoView.ViewModel.BannerViewModel(id: 0, image: .image(Image("Promo Banner Cashback")), action: .link(URL(string: "https://google.com")!))
 }

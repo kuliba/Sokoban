@@ -27,7 +27,6 @@
                 "background": ["FFBB36"],
                 "openDate": 1648512000000,
                 "endDate": 1648512000000,
-                "endDate_nf": true,
                 "branchId": 2000,
                 "externalID": 10000788533,
                 "name": "ВСФ",
@@ -45,7 +44,13 @@
                 ],
                 "id": 10002585800,
                 "balanceRUB": 1000123,
-                "XLDesign": "string"
+                "XLDesign": "string",
+                "visibility": true,
+                "order": 0,
+                "smallBackgroundDesignHash": "",
+                "smallDesignMd5hash": "",
+                "detailedRatesUrl": "",
+                "detailedConditionUrl": ""
             },
             {
                 "number": "4444555566661122",
@@ -85,7 +90,13 @@
                 ],
                 "id": 10002585800,
                 "balanceRUB": 1000123,
-                "XLDesign": "string"
+                "XLDesign": "string",
+                "visibility": true,
+                "order": 0,
+                "smallBackgroundDesignHash": "",
+                "smallDesignMd5hash": "",
+                "detailedRatesUrl": "",
+                "detailedConditionUrl": ""
             },
             {
                 "number": "4444555566661122",
@@ -116,7 +127,14 @@
                 "minimumBalance": 2000,
                 "id": 10002585800,
                 "balanceRUB": 1000123,
-                "XLDesign": "string"
+                "XLDesign": "string",
+                "visibility": true,
+                "endDate_nf": true,
+                "order": 0,
+                "smallBackgroundDesignHash": "",
+                "smallDesignMd5hash": "",
+                "detailedRatesUrl": "",
+                "detailedConditionUrl": ""
             },
             {
                 "number": "4444555566661122",
@@ -154,7 +172,13 @@
                 "strDateLong": "12/27",
                 "id": 10002585800,
                 "balanceRUB": 1000123,
-                "XLDesign": "string"
+                "XLDesign": "string",
+                "visibility": true,
+                "order": 0,
+                "smallBackgroundDesignHash": "",
+                "smallDesignMd5hash": "",
+                "detailedRatesUrl": "",
+                "detailedConditionUrl": ""
             }
         ]
     }

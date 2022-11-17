@@ -17,15 +17,18 @@ extension PrintFormView {
         
         @Published var state: State
         @Published var sheet: Sheet?
-
+        @Published var alert: Alert.ViewModel?
+        let dismissAction: (() -> Void)?
+        
         private let model: Model
         private var bindings = Set<AnyCancellable>()
-        
         
         enum Kind {
             
             case operation(paymentOperationDetailId: Int, printFormType: PrintFormType)
             case product(productId: ProductData.ID, startDate: Date, endDate: Date)
+            case contract(productId: ProductData.ID)
+            case closeAccount(id: ProductData.ID)
         }
         
         enum State {
@@ -49,16 +52,18 @@ extension PrintFormView {
             }
         }
         
-        init(state: State, model: Model = .emptyMock) {
+        init(state: State, model: Model = .emptyMock, dismissAction: (() -> Void)? = nil) {
             
             self.state = state
             self.model = model
+            self.dismissAction = dismissAction
         }
         
-        init(type: Kind, model: Model) {
+        init(type: Kind, model: Model, dismissAction: (() -> Void)? = nil) {
             
             self.state = .loading
             self.model = model
+            self.dismissAction = dismissAction
             
             bind()
             
@@ -68,14 +73,20 @@ extension PrintFormView {
                 
             case let .product(productId, startDate, endDate):
                 model.action.send(ModelAction.Products.StatementPrintForm.Request(productId: productId, startDate: startDate, endDate: endDate))
+                
+            case let .contract(productId):
+                model.action.send(ModelAction.Products.ContractPrintForm.Request(depositId: productId))
+                
+            case let .closeAccount(id: productId):
+                model.action.send(ModelAction.Account.CloseAccount.PrintForm.Request(id: productId))
             }
         }
         
-        convenience init(pdfDocument: PDFDocument) {
+        convenience init(pdfDocument: PDFDocument, dismissAction: (() -> Void)? = nil) {
             
             let activityViewModel = ActivityView.ViewModel(activityItems: [pdfDocument.dataRepresentation() as Any])
             let state: State = .loading
-            self.init(state: state)
+            self.init(state: state, dismissAction: dismissAction)
             let button = ButtonSimpleView.ViewModel(title: "Сохранить или отправить", style: .red, action: {[weak self] in self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))})
             self.state = .document(pdfDocument, button)
         }
@@ -85,7 +96,7 @@ extension PrintFormView {
             model.action
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] action in
-                
+                    
                     switch action {
                     case let payload as ModelAction.PrintForm.Response:
                         switch payload.result {
@@ -112,6 +123,34 @@ extension PrintFormView {
                             //TODO: show alert with error message
                         }
                         
+                    case let payload as ModelAction.Products.ContractPrintForm.Response:
+                        switch payload.result {
+                        case .success(let data):
+                            if let document = PDFDocument(data: data) {
+                                
+                                let activityViewModel = ActivityView.ViewModel(activityItems: [document.dataRepresentation() as Any])
+                                let button = ButtonSimpleView.ViewModel(title: "Сохранить или отправить", style: .red, action: {[weak self] in self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))})
+                                withAnimation {
+                                    self.state = .document(document, button)
+                                }
+      
+                            } else {
+                                
+                                withAnimation {
+                                    
+                                    self.state = .failed
+                                    self.dismissAction?()
+                                }
+                            }
+                            
+                        case .failure(let error):
+                            withAnimation {
+                                
+                                self.state = .failed
+
+                            }
+                        }
+                        
                     case let payload as ModelAction.Products.StatementPrintForm.Response:
                         switch payload.result {
                         case .success(let data):
@@ -135,6 +174,36 @@ extension PrintFormView {
                                 self.state = .failed
                             }
                             //TODO: show alert with error message
+                        }
+                        
+                    case let payload as ModelAction.Account.CloseAccount.PrintForm.Response:
+                        
+                        switch payload.result {
+                        case let .success(data):
+                            
+                            if let document = PDFDocument(data: data) {
+                                
+                                let activityViewModel = ActivityView.ViewModel(activityItems: [document.dataRepresentation() as Any])
+                                let button = ButtonSimpleView.ViewModel(title: "Сохранить или отправить", style: .red) { [weak self] in
+                                    self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))
+                                }
+                                
+                                withAnimation {
+                                    self.state = .document(document, button)
+                                }
+                                
+                            } else {
+                                
+                                withAnimation {
+                                    self.state = .failed
+                                }
+                            }
+                            
+                        case .failure:
+                            
+                            withAnimation {
+                                self.state = .failed
+                            }
                         }
                         
                     default:
@@ -174,28 +243,32 @@ struct PrintFormView: View {
     
     var body: some View {
         
-        switch viewModel.state {
-        case .document(let document, let button):
-            VStack {
-                
-                PDFDocumentView(document: document)
-                ButtonSimpleView(viewModel: button)
-                    .frame(height: 48)
-                    .padding()
-            }
-            .sheet(item: $viewModel.sheet) { item in
-                
-                switch item.type {
-                case .activity(let activityViewModel):
-                    ActivityView(viewModel: activityViewModel)
+        Group {
+         
+            switch viewModel.state {
+            case .document(let document, let button):
+                VStack {
+                    
+                    PDFDocumentView(document: document)
+                    ButtonSimpleView(viewModel: button)
+                        .frame(height: 48)
+                        .padding()
                 }
+                .sheet(item: $viewModel.sheet) { item in
+                    
+                    switch item.type {
+                    case .activity(let activityViewModel):
+                        ActivityView(viewModel: activityViewModel)
+                    }
+                }
+                
+            case .loading:
+                SpinnerRefreshView(icon: .init("Logo Fora Bank"))
+                
+            case .failed:
+                Text("Не удалось загрузить документ")
+                
             }
-            
-        case .loading:
-            SpinnerRefreshView(icon: .init("Logo Fora Bank"))
-            
-        case .failed:
-            Text("Failed")
         }
     }
 }
@@ -211,5 +284,5 @@ struct PrintFormViewComponent_Previews: PreviewProvider {
 
 extension PrintFormView.ViewModel {
     
-    static let sample = PrintFormView.ViewModel(state: .document(.sample, .init(title: "Сохранить или отправить", style: .red, action: {})))
+    static let sample = PrintFormView.ViewModel(state: .document(.sample, .init(title: "Сохранить или отправить", style: .red, action: {})), dismissAction: {})
 }

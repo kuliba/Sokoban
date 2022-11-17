@@ -40,14 +40,13 @@ class DateFormatterExtensionsTests: XCTestCase {
         // when
         let date = formatter.date(from: sample)
         var calendar = Calendar.current
-        calendar.timeZone = TimeZone(identifier: "GMT+3")!
         let components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date!)
 
         // then
         XCTAssertEqual(components.year, 2021)
         XCTAssertEqual(components.month, 12)
         XCTAssertEqual(components.day, 27)
-        XCTAssertEqual(components.hour, 21)
+        XCTAssertEqual(components.hour, 18)
         XCTAssertEqual(components.minute, 22)
         XCTAssertEqual(components.second, 58)
     }

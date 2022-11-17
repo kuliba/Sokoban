@@ -14,16 +14,17 @@ extension OpenAccountCardView {
     class ViewModel: ObservableObject {
 
         @Published var numberCard: String
+        @Published var icon: Image?
         
         let balance: Double
         let currrentAccountTitle: String
-        let currencyType: OpenAccountСurrencyType
         let currencyBalance: String
+        let currencySymbol: String
 
         var numberCardLast: String {
             
             if numberCard.isEmpty == false {
-                return "• \(numberCard.suffix(4))"
+                return "\(numberCard.suffix(4))"
             } else {
                 return ""
             }
@@ -32,14 +33,16 @@ extension OpenAccountCardView {
         init(balance: Double = 0,
              numberCard: String = "",
              currrentAccountTitle: String = "Текущий счет",
-             currencyType: OpenAccountСurrencyType) {
+             currencySymbol: String,
+             icon: Image?) {
 
             self.balance = balance
             self.numberCard = numberCard
             self.currrentAccountTitle = currrentAccountTitle
-            self.currencyType = currencyType
+            self.currencySymbol = currencySymbol
+            self.icon = icon
 
-            currencyBalance = "\(balance.currencyDepositFormatter(symbol: currencyType.moneySign))"
+            currencyBalance = "\(balance.currencyDepositFormatter(symbol: currencySymbol))"
         }
     }
 }
@@ -54,12 +57,17 @@ struct OpenAccountCardView: View {
 
         ZStack {
 
-            Color.cardAccount
-
-            HStack {
-
-                Spacer()
-                viewModel.currencyType.icon
+            if let icon = viewModel.icon {
+                
+                icon
+                    .resizable()
+                    .frame(width: 112, height: 72)
+                
+            } else {
+                
+                Color.cardAccount
+                    .cornerRadius(8)
+                    .frame(width: 112, height: 72)
             }
 
             HStack {
@@ -68,16 +76,11 @@ struct OpenAccountCardView: View {
 
                     HStack(spacing: 3) {
 
-                        viewModel.currencyType.iconDetail
-                            .renderingMode(.original)
-                            .resizable()
-                            .foregroundColor(.mainColorsWhite)
-                            .frame(width: 20, height: 20)
-
                         Text(viewModel.numberCardLast)
                             .font(.textBodyXSR11140())
                             .foregroundColor(.mainColorsWhite)
-                    }
+                        
+                    }.padding(.leading, 29)
 
                     VStack(alignment: .leading, spacing: 3) {
 
@@ -95,9 +98,8 @@ struct OpenAccountCardView: View {
 
                 Spacer()
             }
-        }
-        .cornerRadius(8)
-        .frame(width: 112, height: 72)
+            
+        }.frame(width: 112, height: 72)
     }
 }
 
@@ -105,9 +107,7 @@ struct OpenAccountCardView: View {
 
 extension OpenAccountCardView.ViewModel {
 
-    static let sample = OpenAccountCardView.ViewModel(
-        numberCard: "4444555566664345",
-        currencyType: .USD)
+    static let sample: OpenAccountCardView.ViewModel = .init(balance: 100, numberCard: "4444555566664345", currencySymbol: "$", icon: .init("Card RUB"))
 }
 
 // MARK: - Previews
@@ -117,8 +117,7 @@ struct OpenAccountCardViewComponent_Previews: PreviewProvider {
     static var previews: some View {
 
         OpenAccountCardView(viewModel: .sample)
-            .padding()
-            .background(Color.mainColorsGrayMedium)
             .previewLayout(.sizeThatFits)
+            .padding(8)
     }
 }

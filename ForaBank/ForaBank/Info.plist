@@ -70,7 +70,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Разрешите приложению доступ, чтобы сканировать QR-код, номер карты и использовать другие возможности</string>
 	<key>NSContactsUsageDescription</key>
-	<string>Разрешите доступ к контактам</string>
+	<string>Разрешите доступ к контактам, чтобы совершать переводы по номеру телефона</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Доступ к камере позволит использовать FaceId</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

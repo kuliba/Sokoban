@@ -85,7 +85,10 @@ struct MainView: View {
                         MessagesHistoryView(viewModel: messagesHistoryViewModel)
                         
                     case .openDeposit(let depositListViewModel):
-                        ProductDetailView(viewModel: depositListViewModel)
+                        OpenDepositDetailView(viewModel: depositListViewModel)
+                    
+                    case .openCard( let authProductsViewModel):
+                        AuthProductsView(viewModel: authProductsViewModel)
                         
                     case .openDepositsList(let openDepositViewModel):
                         OpenDepositView(viewModel: openDepositViewModel)
@@ -133,7 +136,7 @@ struct MainView: View {
                 OpenAccountView(viewModel: openAccountViewModel)      
             }
         })
-        .bottomSheet(item: $viewModel.bottomSheet, keyboardOfssetMultiplier: 0.7) { bottomSheet in
+        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
 
             switch bottomSheet.type {
             case let .openAccount(openAccountViewModel):

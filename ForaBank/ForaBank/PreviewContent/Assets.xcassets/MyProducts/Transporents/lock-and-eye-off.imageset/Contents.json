@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "lock-and-eye-off.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

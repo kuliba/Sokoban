@@ -27,11 +27,15 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
     @Published var bottomSheet: BottomSheet?
     @Published var sheet: Sheet?
+    @Published var fullCover: FullCover?
     @Published var link: Link? { didSet { isLinkActive = link != nil; isTabBarHidden = link != nil } }
     @Published var isLinkActive: Bool = false
     @Published var isTabBarHidden: Bool = false
     @Published var alert: Alert.ViewModel?
     private let model: Model
+    
+    var rootActions: RootViewModel.RootActions?
+    
     private var bindings = Set<AnyCancellable>()
     
     init(model: Model) {
@@ -60,6 +64,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     func reset() {
         
         bottomSheet = nil
+        fullCover = nil
         sheet = nil
         link = nil
         isTabBarHidden = false
@@ -114,10 +119,19 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                 case _ as PaymentsTransfersViewModelAction.Close.Sheet:
                     sheet = nil
+                    
+                case _ as PaymentsTransfersViewModelAction.Close.FullCover:
+                    fullCover = nil
                 
                 case _ as PaymentsTransfersViewModelAction.Close.Link:
                     link = nil
                     
+                case _ as PaymentsTransfersViewModelAction.Close.DismissAll:
+                    
+                    withAnimation {
+                        NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
+                    }
+
                 case _ as PaymentsTransfersViewModelAction.OpenQr:
                     link = .qrScanner(.init(closeAction:  { [weak self] value  in
                         
@@ -238,10 +252,20 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             })))
                             
                         case .betweenSelf:
-                            bottomSheet = .init(type: .meToMe(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
-                            })))
+
+                            let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .general)
                             
-                        case .byBankDetails:
+                            guard let viewModel = viewModel else {
+                                return
+                            }
+                            
+                            let swapViewModel = viewModel.swapViewModel
+                            bind(viewModel, swapViewModel: swapViewModel)
+                            
+                            bottomSheet = .init(type: .meToMe(viewModel))
+
+                    case .byBankDetails:
+
                             link = .transferByRequisites(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }))
                             
@@ -399,6 +423,73 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         }
     }
     
+    private func bind(_ viewModel: PaymentsMeToMeViewModel, swapViewModel: ProductsSwapView.ViewModel) {
+        
+        viewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as PaymentsMeToMeAction.Response.Success:
+
+                    guard let productIdFrom = swapViewModel.productIdFrom,
+                          let productIdTo = swapViewModel.productIdTo else {
+                        return
+                    }
+
+                    model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
+                    model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
+                    
+                    bind(payload.viewModel)
+                    fullCover = .init(type: .successMeToMe(payload.viewModel))
+                    
+                case _ as PaymentsMeToMeAction.Response.Failed:
+                    
+                    makeAlert("Перевод выполнен")
+                    self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func bind(_ viewModel: PaymentsSuccessViewModel) {
+        
+        viewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as PaymentsSuccessAction.Button.Close:
+
+                    self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
+                    self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
+                    
+                    self.rootActions?.switchTab(.main)
+                    
+                case _ as PaymentsSuccessAction.Button.Repeat:
+                    
+                    self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
+                    self.rootActions?.switchTab(.payments)
+
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func makeAlert(_ message: String) {
+        
+        let alertViewModel = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "ОК") { [weak self] in
+            self?.action.send(ProductProfileViewModelAction.Close.Alert())
+        })
+        
+        alert = .init(alertViewModel)
+    }
+    
     private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
         
         [.init(icon: .ic24BarcodeScanner2,
@@ -418,13 +509,27 @@ extension PaymentsTransfersViewModel {
         let id = UUID()
         let type: Kind
         
-        var keyboardOfssetMultiplier: CGFloat { return 0 }
+        var keyboardOfssetMultiplier: CGFloat {
+            
+            switch type {
+            case .meToMe: return 1
+            default: return 0
+            }
+        }
+        
+        var animationSpeed: Double {
+            
+            switch type {
+            case .meToMe: return 0.4
+            default: return 0.5
+            }
+        }
         
         enum Kind {
             
             case exampleDetail(String)
             case anotherCard(AnotherCardViewModel)
-            case meToMe(MeToMeViewModel)
+            case meToMe(PaymentsMeToMeViewModel)
         }
     }
     
@@ -440,6 +545,16 @@ extension PaymentsTransfersViewModel {
             case anotherCard(AnotherCardViewModel)
             case qrScanner(QrViewModel)
             case fastPayment(ContactsViewModel)
+        }
+    }
+    
+    struct FullCover: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            case successMeToMe(PaymentsSuccessViewModel)
         }
     }
     
@@ -483,7 +598,11 @@ enum PaymentsTransfersViewModelAction {
         
         struct Sheet: Action {}
         
+        struct FullCover: Action {}
+        
         struct Link: Action {}
+        
+        struct DismissAll: Action {}
     }
     
     struct OpenQr: Action {}

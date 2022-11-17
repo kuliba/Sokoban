@@ -301,11 +301,7 @@ extension Model {
     
     func dictionaryCurrencySimbol(for code: String) -> String? {
         
-        guard let unicode = dictionaryCurrency(for: code)?.unicode
-        else { return nil }
-        
-        return unicode.replacingOccurrences(of: "\\", with: "")
-                      .applyingTransform(.init("Hex/Unicode-Any"), reverse: false)
+        dictionaryCurrency(for: code)?.currencySymbol
     }
     
     //MARK: BankList helper
@@ -1619,7 +1615,10 @@ extension Model {
             return
         }
         
-        let command = ServerCommands.DictionaryController.GetSvgImageList(token: token, payload: .init(md5HashList: payload.imagesIds))
+        let command = ServerCommands.DictionaryController
+                        .GetSvgImageList(token: token,
+                                         payload: .init(md5HashList: payload.imagesIds))
+        
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {

@@ -87,12 +87,12 @@ extension ProductProfileButtonsView {
                     } else {
                         return true
                     }
-                    
+
                 default: return true
                 }
             }
         }
-        
+
         func buttonName(for buttonType: ButtonType, for product: ProductData) -> String {
             
             switch buttonType {
@@ -143,7 +143,6 @@ extension ProductProfileButtonsView {
                 switch product {
                 case let cardProduct as ProductCardData:
                     return cardProduct.isBlocked ? .ic24Unlock : .ic24Lock
-                    
                 case _ as ProductAccountData: return .ic24Close
                 case _ as ProductDepositData: return .ic24Server
                 default: return .ic24Clock

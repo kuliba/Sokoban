@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DepositCalculatorView: View {
 
-    @ObservedObject var viewModel: DepositCalculatorViewModel
+    let viewModel: DepositCalculatorViewModel
 
     var body: some View {
 
@@ -38,7 +38,7 @@ extension DepositCalculatorView {
 
     struct DepositTitleView: View {
 
-        @ObservedObject var viewModel: DepositCalculatorViewModel
+        let viewModel: DepositCalculatorViewModel
 
         var body: some View {
 

@@ -20,15 +20,16 @@ class Model {
     let products: CurrentValueSubject<ProductsData, Never>
     let productsUpdating: CurrentValueSubject<[ProductType], Never>
     let productsFastUpdating: CurrentValueSubject<Set<ProductData.ID>, Never>
-    let productsHidden: CurrentValueSubject<[ProductData.ID], Never>
+    let productsVisibilityUpdating: CurrentValueSubject<Set<ProductData.ID>, Never>
+    let productsOrdersUpdating: CurrentValueSubject<Bool, Never>
     var productsAllowed: Set<ProductType> { [.card, .account, .deposit, .loan] }
     let loans: CurrentValueSubject<LoansData, Never>
     let loansUpdating: CurrentValueSubject<Set<ProductData.ID>, Never>
     let depositsInfo: CurrentValueSubject<DepositsInfoData, Never>
-
+    let productsOpening: CurrentValueSubject<Set<ProductType>, Never>
+    
     //MARK: Account
     let accountProductsList: CurrentValueSubject<[OpenAccountProductData], Never>
-    let accountOpening: CurrentValueSubject<Bool, Never>
     
     //MARK: Statements
     let statements: CurrentValueSubject<StatementsData, Never>
@@ -37,7 +38,6 @@ class Model {
     //MARK: Currency rates
     let rates: CurrentValueSubject<[ExchangeRateData], Never>
     let ratesUpdating: CurrentValueSubject<[Currency], Never>
-    var ratesAllowed: Set<Currency> { [.usd, .eur] }
     
     //MARK: Dictionaries
     let dictionariesUpdating: CurrentValueSubject<Set<DictionaryType>, Never>
@@ -53,7 +53,7 @@ class Model {
     
     //MARK: Deposits
     let deposits: CurrentValueSubject<[DepositProductData], Never>
-    var depositsCloseNotified: DepositCloseNotification?
+    var depositsCloseNotified: Set<DepositCloseNotification>
     
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
@@ -132,9 +132,9 @@ class Model {
         self.products = .init([:])
         self.productsUpdating = .init([])
         self.accountProductsList = .init([])
-        self.accountOpening = .init(false)
         self.productsFastUpdating = .init([])
-        self.productsHidden = .init([])
+        self.productsVisibilityUpdating = .init([])
+        self.productsOrdersUpdating = .init(false)
         self.loans = .init([])
         self.loansUpdating = .init([])
         self.depositsInfo = .init(DepositsInfoData())
@@ -169,6 +169,8 @@ class Model {
         self.userSettings = .init([])
         self.bankClientInfo = .init([])
         self.deepLinkType = nil
+        self.productsOpening = .init([])
+        self.depositsCloseNotified = .init([])
         
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
@@ -195,9 +197,9 @@ class Model {
         
         // server agent
 #if DEBUG
-        let enviroment = ServerAgent.Environment.test
+        let enviroment = ServerAgentEnvironment.test
 #else
-        let enviroment = ServerAgent.Environment.prod
+        let enviroment = ServerAgentEnvironment.prod
 #endif
         
         let serverAgent = ServerAgent(enviroment: enviroment)
@@ -269,7 +271,6 @@ class Model {
                     LoggerAgent.shared.log(category: .model, message: "auth: AUTHORIZED")
                     loadCachedAuthorizedData()
                     loadSettings()
-                    depositsCloseNotified = nil
                     action.send(ModelAction.Products.Update.Total.All())
                     action.send(ModelAction.ClientInfo.Fetch.Request())
                     action.send(ModelAction.ClientPhoto.Load())
@@ -282,7 +283,6 @@ class Model {
                     action.send(ModelAction.Account.ProductList.Request())
                     action.send(ModelAction.AppVersion.Request())
                     action.send(ModelAction.Settings.GetUserSettings())
-                    action.send(ModelAction.Dictionary.UpdateCache.List(types: [.bannerCatalogList]))
                     
                     if let deepLinkType = deepLinkType {
                         
@@ -490,7 +490,7 @@ class Model {
                     clearMemoryData()
                     sessionAgent.action.send(SessionAgentAction.Session.Terminate())
                     
-                    //MARK: - Products Actions
+        //MARK: - Products Actions
                     
                 case _ as ModelAction.Products.Update.Fast.All:
                     handleProductsUpdateFastAll()
@@ -500,6 +500,12 @@ class Model {
                     
                 case _ as ModelAction.Products.Update.Total.All:
                     handleProductsUpdateTotalAll()
+                
+                case let payload as ModelAction.Products.UpdateVisibility:
+                    handleProductsUpdateVisibility(payload)
+                    
+                case let payload as ModelAction.Products.UpdateOrders :
+                    handleProductsUpdateOrders(payload)
 
                 case let payload as ModelAction.Products.UpdateCustomName.Request:
                     handleProductsUpdateCustomName(payload)
@@ -528,6 +534,9 @@ class Model {
                 case let payload as ModelAction.Products.DepositConditionsPrintForm.Request:
                     handleProductsDepositConditionPrintFormRequest(payload)
                     
+                case let payload as ModelAction.Products.ContractPrintForm.Request:
+                    handleProductsContractPrintFormRequest(payload)
+                    
                 case let payload as ModelAction.Card.Unblock.Request:
                     handleUnblockCardRequest(payload)
                     
@@ -542,7 +551,10 @@ class Model {
                     //MARK: - Rates
                     
                 case _ as ModelAction.Rates.Update.All:
-                    handleRatesUpdateAll()
+                    handleRatesUpdate(allProductsCurrency())
+                    
+                case let payload as ModelAction.Rates.Update.Single:
+                    handleRateUpdate(payload.currency)
                     
                     //MARK: - Payments
                     
@@ -553,6 +565,12 @@ class Model {
                     
                 case let payload as ModelAction.Operation.Detail.Request:
                     handleOperationDetailRequest(payload)
+                    
+                case let payload as ModelAction.Payment.MeToMe.CreateTransfer.Request:
+                    handlerCreateTransferRequest(payload)
+                    
+                case let payload as ModelAction.Payment.MeToMe.MakeTransfer.Request:
+                    handlerMakeTransferRequest(payload)
                     
                     //MARK: - Transfers
                     
@@ -629,8 +647,8 @@ class Model {
                     
                     //MARK: - Settings Actions
                     
-                case let payload as ModelAction.Settings.UpdateProductsHidden:
-                    handleUpdateProductsHidden(payload.productID)
+                case _ as ModelAction.Settings.ApplicationSettings.Request:
+                    handleAppSettingsRequest()
                     
                     //MARK: - BankClients
                 
@@ -773,6 +791,9 @@ class Model {
                 case let payload as ModelAction.Deposits.CloseNotified:
                     handleDidShowCloseAlert(payload)
                     
+                case let payload as ModelAction.Deposits.BeforeClosing.Request:
+                    handleBeforeClosingRequest(payload)
+                    
                     //MARK: - Location Actions
                     
                 case _ as ModelAction.Location.Updates.Start:
@@ -799,15 +820,21 @@ class Model {
 
                 case let payload as ModelAction.Account.MakeOpenAccount.Response:
                     handleMakeOpenAccountUpdate(payload: payload)
-
-                //MARK: - DeepLink
                     
+                case let payload as ModelAction.Account.Close.Request:
+                    handleCloseAccountRequest(payload)
+                    
+                case let payload as ModelAction.Account.CloseAccount.PrintForm.Request:
+                    handleCloseAccountPrintForm(payload)
+                    
+                //MARK: - DeepLink
+
                 case let payload as ModelAction.DeepLink.Set:
                     handleDeepLinkSet(payload)
                     
                 case _ as ModelAction.DeepLink.Clear:
                     handleDeepLinkClear()
-                    
+
                 //MARK: - AppStore Version
                 case _ as ModelAction.AppVersion.Request:
                     handleVersionAppStore()
@@ -1022,19 +1049,17 @@ private extension Model {
             
             self.paymentsByPhone.value = paymentsByPhone
         }
+        
+        if let depositsCloseNotified = localAgent.load(type: Set<DepositCloseNotification>.self) {
+            
+            self.depositsCloseNotified = depositsCloseNotified
+        } else {
+            
+            self.depositsCloseNotified = []
+        }
     }
     
     func loadSettings() {
-        
-        do {
-            
-            let productsHidden: [ProductData.ID] = try settingsAgent.load(type: .interface(.productsHidden))
-            self.productsHidden.value = productsHidden
-            
-        } catch {
-            
-            handleSettingsCachingError(error: error)
-        }
         
         if let userSettings = localAgent.load(type: [UserSettingData].self) {
             
@@ -1182,13 +1207,21 @@ private extension Model {
             
             //TODO: set logger
         }
+        do {
+            
+            try localAgent.clear(type: Set<DepositCloseNotification>.self)
+            
+        } catch {
+            
+            LoggerAgent.shared.log(category: .cache, message: "Clear temporary chache error: \(error)")
+        }
     }
     
     func clearMemoryData() {
         
         products.value = [:]
         productsUpdating.value = []
-        productsHidden.value = []
+        productsVisibilityUpdating.value = []
         loans.value = []
         loansUpdating.value = []
         statements.value = [:]
@@ -1205,7 +1238,8 @@ private extension Model {
         dictionariesUpdating.value = []
         currencyWalletList.value = []
         userSettings.value = []
+        productsOpening.value = []
         
-        print("Model: memory data cleaned")
+        LoggerAgent.shared.log(category: .model, message: "Memory data cleaned")
     }
 }

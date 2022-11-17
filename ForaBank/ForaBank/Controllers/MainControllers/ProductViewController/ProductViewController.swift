@@ -830,7 +830,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             var popView = CustomPopUpWithRateView()
             let currentDate = Date()
             let endDate = product?.endDate ?? 0
-            let dateEnd = Date(timeIntervalSince1970: TimeInterval((endDate) / 1000))
+            let dateEnd = Date.dateUTC(with: endDate)
             
             if let card = product, card.depositProductID == 10000003792, dateEnd > currentDate, sumPayPrc != 0 {
                 
@@ -887,7 +887,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                     let currentDate = Date()
                     let endDate = product?.endDate ?? 0
                     
-                    let dateEnd = Date(timeIntervalSince1970: TimeInterval((endDate) / 1000))
+                    let dateEnd = Date.dateUTC(with: endDate)
                         
                     if dateEnd <= currentDate || (product?.depositProductID == 10000003792 && sumPayPrc != 0) {
                        

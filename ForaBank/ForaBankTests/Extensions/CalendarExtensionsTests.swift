@@ -38,12 +38,3 @@ class CalendarExtensionsTests: XCTestCase {
         XCTAssertEqual(result, -15)
     }
 }
-
-fileprivate extension Date {
-    
-    static func date(year: Int, month: Int, day: Int, calendar: Calendar) -> Date? {
-        
-        let components = DateComponents(year: year, month: month, day: day)
-        return calendar.date(from: components)
-    }
-}

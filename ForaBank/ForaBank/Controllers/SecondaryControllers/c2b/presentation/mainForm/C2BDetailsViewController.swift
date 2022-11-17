@@ -371,7 +371,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
                     case .noLimit:
                         break
                     case .failure(let error):
-                        print(error.localizedDescription)
+                        LoggerAgent.shared.log(level: .error, category: .ui, message: "ModelAction.Transfers.TransferLimit.Response error: \(error.localizedDescription)")
                     }
                 default:
                     break

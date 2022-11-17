@@ -40,7 +40,7 @@ extension TextFieldFormatableView {
         enum Kind {
             
             case general
-            case currencyWallet
+            case currency
         }
         
         internal init(type: Kind = .general, value: Double, formatter: NumberFormatter, isEnabled: Bool = true, isEditing: Bool = false, limit: Int? = nil, toolbar: ToolbarViewModel? = nil) {
@@ -54,6 +54,13 @@ extension TextFieldFormatableView {
             self.toolbar = toolbar
             self.becomeFirstResponder = {}
             self.dismissKeyboard = {}
+        }
+        
+        convenience init(_ value: Double, isEnabled: Bool = true, currencySymbol: String) {
+            
+            self.init(value: value, formatter: .currency(with: currencySymbol), isEnabled: isEnabled, limit: 9, toolbar: .init(doneButton: .init(isEnabled: true) {
+                    UIApplication.shared.endEditing()
+            }))
         }
     }
 }
@@ -172,9 +179,9 @@ struct TextFieldFormatableView: UIViewRepresentable {
                 text.wrappedValue = textField.text
                 updateCursorPosition(textField)
                 
-            case .currencyWallet:
+            case .currency:
                 
-                textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter, limit: limit, type: .currencyWallet)
+                textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter, limit: limit, type: .currency)
                 text.wrappedValue = textField.text
             }
             
@@ -290,7 +297,7 @@ struct TextFieldFormatableView: UIViewRepresentable {
                 case .general:
                     // return formatted double value, example: `1234.56` -> `1 234,56 ₽`
                     return formatter.string(from: NSNumber(value: doubleValue))
-                case .currencyWallet:
+                case .currency:
                     
                     let filterredUpdate = filterredUpdateFixed.replacingOccurrences(of: ".", with: ",")
                     return filterredUpdate

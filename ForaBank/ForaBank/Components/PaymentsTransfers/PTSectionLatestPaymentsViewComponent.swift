@@ -113,7 +113,7 @@ extension LatestPaymentData.Kind {
         switch self {
         case .country: return .ic24Globe
         case .phone: return .ic24Smartphone
-        case .service: return .ic24ZKX
+        case .service: return .ic24Zkx
         case .mobile: return .ic24Smartphone
         case .internet: return .ic24Tv
         case .transport: return .ic24Car

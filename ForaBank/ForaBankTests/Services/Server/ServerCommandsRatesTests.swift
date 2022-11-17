@@ -22,7 +22,7 @@ class ServerCommandsRatesTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "GetExchangeCurrencyRatesResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let date = Date(timeIntervalSince1970: TimeInterval(1648512000000 / 1000))
+        let date = Date.dateUTC(with: 1648512000000)
         let expected = ServerCommands.RatesController.GetExchangeCurrencyRates.Response(statusCode: .ok, errorMessage: "string", data: .init(currency: .eur, currencyCode: "978", currencyId: 90001299, currencyName: "Евро", rateBuy: 85.9, rateBuyDate: date, rateSell: 87.3, rateSellDate: date, rateType: "КурсДБОФЛ", rateTypeId: 10000000002))
         
         // when

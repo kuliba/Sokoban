@@ -59,7 +59,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         let url = bundle.url(forResource: "GetAllLatestPayments", withExtension: "json")!
         let json = try Data(contentsOf: url)
 
-        let date = Date(timeIntervalSince1970: TimeInterval(1653570551608 / 1000))
+        let date = Date.dateUTC(with: 1653570551608)
 
         let data = PaymentGeneralData(amount: "10000.00",
                                       bankId: "100000000217",
@@ -92,7 +92,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         let url = bundle.url(forResource: "GetLatestInternetPayments", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let date = Date(timeIntervalSince1970: TimeInterval(1653570551608 / 1000))
+        let date = Date.dateUTC(with: 1653570551608)
         
         let data = PaymentServiceData(additionalList: [.init(fieldTitle: "Лицевой счет у Получателя",
                                                              fieldName: "a3_PERSONAL_ACCOUNT_5_5",
@@ -126,7 +126,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         let url = bundle.url(forResource: "GetLatestMobilePayments", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let date = Date(timeIntervalSince1970: TimeInterval(1653570551608 / 1000))
+        let date = Date.dateUTC(with: 1653570551608)
         
         let data = PaymentServiceData(additionalList: [.init(fieldTitle: "Лицевой счет у Получателя",
                                                              fieldName: "a3_PERSONAL_ACCOUNT_5_5",
@@ -161,7 +161,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         let url = bundle.url(forResource: "GetLatestPayments", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let date = Date(timeIntervalSince1970: TimeInterval(1653570551608 / 1000))
+        let date = Date.dateUTC(with: 1653570551608)
         
         let data = PaymentGeneralData(amount: "100",
                                       bankId: "100000000004",
@@ -239,7 +239,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         let url = bundle.url(forResource: "GetLatestServicePayments", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let date = Date(timeIntervalSince1970: TimeInterval(1653570551608 / 1000))
+        let date = Date.dateUTC(with: 1653570551608)
         
         let data = PaymentServiceData(additionalList: [.init(fieldTitle: "Лицевой счет у Получателя",
                                                              fieldName: "a3_PERSONAL_ACCOUNT_5_5",
@@ -274,7 +274,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         let url = bundle.url(forResource: "GetLatestTransportPayments", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let date = Date(timeIntervalSince1970: TimeInterval(1653570551608 / 1000))
+        let date = Date.dateUTC(with: 1653570551608)
         
         let data = PaymentServiceData(additionalList: [.init(fieldTitle: "Лицевой счет у Получателя",
                                                              fieldName: "a3_PERSONAL_ACCOUNT_5_5",
@@ -527,7 +527,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         let url = bundle.url(forResource: "GetPaymentCountries", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let date = Date(timeIntervalSince1970: TimeInterval(1653570551608 / 1000))
+        let date = Date.dateUTC(with: 1653570551608)
         
         let data = PaymentCountryData(countryCode: "AM",
                                       countryName: "Армения",
@@ -562,7 +562,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         let url = bundle.url(forResource: "GetPaymentCountriesMin", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let date = Date(timeIntervalSince1970: TimeInterval(1653570551608 / 1000))
+        let date = Date.dateUTC(with: 1653570551608)
         
         let data = PaymentCountryData(countryCode: "AM",
                                       countryName: "Армения",
