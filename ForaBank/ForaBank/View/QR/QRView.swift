@@ -56,7 +56,6 @@ struct QRView: View {
                             .padding(.horizontal, 20)
                             .padding(.vertical, 50)
                     }
-                    
                 } 
             }
             
@@ -70,6 +69,8 @@ struct QRView: View {
                             .edgesIgnoringSafeArea(.all)
                             .navigationBarBackButtonHidden(false)
                             .navigationBarTitle("Выберите фото", displayMode: .inline)
+                    case .failedView(let view):
+                        QRFailedView(viewModel: view)
                     }
                 }
             }

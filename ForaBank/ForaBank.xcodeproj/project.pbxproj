@@ -94,6 +94,8 @@
 		0B7A18CB268648030007CC75 /* GetProductListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18CA268648030007CC75 /* GetProductListDecodableModel.swift */; };
 		0B7A18CE2689C4ED0007CC75 /* AddHeaderImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18CD2689C4ED0007CC75 /* AddHeaderImageViewController.swift */; };
 		0B7A18D02689C51A0007CC75 /* AppHeaderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18CF2689C51A0007CC75 /* AppHeaderProtocol.swift */; };
+		0B8365DD2926A99900A11F0A /* QRSearchOperatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8365DC2926A99900A11F0A /* QRSearchOperatorView.swift */; };
+		0B8365DF2926A9C000A11F0A /* QRSearchOperatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8365DE2926A9C000A11F0A /* QRSearchOperatorViewModel.swift */; };
 		0B8BC0412901EF110022DDE4 /* QRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC0402901EF110022DDE4 /* QRView.swift */; };
 		0B8BC0432901EF610022DDE4 /* QRScannerViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC0422901EF610022DDE4 /* QRScannerViewComponent.swift */; };
 		0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */; };
@@ -1236,7 +1238,6 @@
 		EDA563B026F881D60093F0C8 /* BanksView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDA563AF26F881D60093F0C8 /* BanksView.xib */; };
 		EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAA99AE2673AB9200435484 /* ForaSwitchView.swift */; };
 		EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDAA99B02673ABF200435484 /* ForaSwitchView.xib */; };
-		EDAA99B42674C38900435484 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = EDAA99B32674C38900435484 /* ProgressHUD */; };
 		EDB02AE22816E9C6005F64B5 /* AccountCellDefaultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB02AE12816E9C6005F64B5 /* AccountCellDefaultViewModel.swift */; };
 		EDB02AE42816EB07005F64B5 /* AccountCellFullButtonViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB02AE32816EB07005F64B5 /* AccountCellFullButtonViewComponent.swift */; };
 		EDB02AE62816EDF4005F64B5 /* AccountCellSwitchViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB02AE52816EDF4005F64B5 /* AccountCellSwitchViewComponent.swift */; };
@@ -1529,6 +1530,8 @@
 		0B7A18CA268648030007CC75 /* GetProductListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetProductListDecodableModel.swift; sourceTree = "<group>"; };
 		0B7A18CD2689C4ED0007CC75 /* AddHeaderImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHeaderImageViewController.swift; sourceTree = "<group>"; };
 		0B7A18CF2689C51A0007CC75 /* AppHeaderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppHeaderProtocol.swift; sourceTree = "<group>"; };
+		0B8365DC2926A99900A11F0A /* QRSearchOperatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchOperatorView.swift; sourceTree = "<group>"; };
+		0B8365DE2926A9C000A11F0A /* QRSearchOperatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchOperatorViewModel.swift; sourceTree = "<group>"; };
 		0B8BC0402901EF110022DDE4 /* QRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRView.swift; sourceTree = "<group>"; };
 		0B8BC0422901EF610022DDE4 /* QRScannerViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerViewComponent.swift; sourceTree = "<group>"; };
 		0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFDecodableModel.swift; sourceTree = "<group>"; };
@@ -2824,7 +2827,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				77AC9159277A518B00E49D5D /* Shimmer in Frameworks */,
-				EDAA99B42674C38900435484 /* ProgressHUD in Frameworks */,
 				68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */,
 				7769F5CB27D8CAD100F80607 /* ScrollViewProxy in Frameworks */,
 				0BA2524926C5DB5600AD087A /* RealmSwift in Frameworks */,
@@ -3119,6 +3121,7 @@
 			children = (
 				0B8BC0402901EF110022DDE4 /* QRView.swift */,
 				0B11A7892922C8B400C9BDD0 /* QRFailedView.swift */,
+				0B8365DC2926A99900A11F0A /* QRSearchOperatorView.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -3477,6 +3480,7 @@
 				0BE0BDFC29071BE10064549E /* QRButtonsViewComponent.swift */,
 				0BE0BE042910760B0064549E /* QRViewModel.swift */,
 				0B11A7872922A71E00C9BDD0 /* QRFailedViewModel.swift */,
+				0B8365DE2926A9C000A11F0A /* QRSearchOperatorViewModel.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -7377,7 +7381,6 @@
 			packageProductDependencies = (
 				ED4FC620266EA5CD0092B4AB /* Valet */,
 				EDF6821C266FC37F00FD5C07 /* FirebaseMessaging */,
-				EDAA99B32674C38900435484 /* ProgressHUD */,
 				ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */,
 				0B7A18AA2681CED70007CC75 /* SwiftEntryKit */,
 				ED39EC87268B308800158E46 /* SDWebImageSVGCoder */,
@@ -7477,7 +7480,6 @@
 			packageReferences = (
 				ED4FC61F266EA5CD0092B4AB /* XCRemoteSwiftPackageReference "Valet" */,
 				EDF6821B266FC37F00FD5C07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
 				ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				0B7A18A92681CED70007CC75 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */,
 				ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */,
@@ -8165,6 +8167,7 @@
 				7705408F27BD1C6900094006 /* BiometricAgent.swift in Sources */,
 				0BA14E1C2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift in Sources */,
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,
+				0B8365DF2926A9C000A11F0A /* QRSearchOperatorViewModel.swift in Sources */,
 				7772979327C77C190099EF91 /* MainViewModel.swift in Sources */,
 				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,
 				0BC4ADC22860DADE00921AE2 /* OperatorGroupData+Legacy.swift in Sources */,
@@ -8755,6 +8758,7 @@
 				0B01073C27D1159D006462E6 /* PaymentsSuccessViewModel.swift in Sources */,
 				ED84994426A6F647005205C6 /* ChooseCountryHeaderCell.swift in Sources */,
 				682092B827AC138D003DCAFD /* ServerCommands+DaData.swift in Sources */,
+				0B8365DD2926A99900A11F0A /* QRSearchOperatorView.swift in Sources */,
 				503F073428252B7900E84A77 /* DepositSliderViewComponent.swift in Sources */,
 				774706AE277DD53100B524F1 /* OperationDetailInfoView.swift in Sources */,
 				77F1582D28191DFE00CA5E4E /* SessionCredentials.swift in Sources */,
@@ -9482,14 +9486,6 @@
 				minimumVersion = 4.1.2;
 			};
 		};
-		EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/relatedcode/ProgressHUD.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 		EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImagePDFCoder.git";
@@ -9603,11 +9599,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = ED4FC61F266EA5CD0092B4AB /* XCRemoteSwiftPackageReference "Valet" */;
 			productName = Valet;
-		};
-		EDAA99B32674C38900435484 /* ProgressHUD */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */;
-			productName = ProgressHUD;
 		};
 		EDC8BA3326A5AA0E00EDB401 /* SDWebImagePDFCoder */ = {
 			isa = XCSwiftPackageProductDependency;

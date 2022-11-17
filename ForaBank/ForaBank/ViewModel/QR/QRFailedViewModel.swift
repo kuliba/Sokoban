@@ -9,21 +9,21 @@ import SwiftUI
 import Combine
 
 class QRFailedViewModel: ObservableObject {
-
-        let icon: Image
-        let title: String
-        let content: String
-        @Published var searchOperatorButton: [ButtonSimpleView.ViewModel]
-        @Published var alert: Alert.ViewModel?
-//        @Published var link: Link? { didSet { isLinkActive = link != nil } }
-        @Published var isLinkActive: Bool = false
-        
-        internal init(icon: Image, title: String, content: String, searchOpratorButton: [ButtonSimpleView.ViewModel]) {
-            self.icon = icon
-            self.title = title
-            self.content = content
-            self.searchOperatorButton = searchOpratorButton
-        }
+    
+    let icon: Image
+    let title: String
+    let content: String
+    @Published var searchOperatorButton: [ButtonSimpleView.ViewModel]
+    @Published var alert: Alert.ViewModel?
+    @Published var isLinkActive: Bool = false
+    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    
+    init(icon: Image, title: String, content: String, searchOpratorButton: [ButtonSimpleView.ViewModel]) {
+        self.icon = icon
+        self.title = title
+        self.content = content
+        self.searchOperatorButton = searchOpratorButton
+    }
     
     convenience init() {
         
@@ -42,5 +42,10 @@ class QRFailedViewModel: ObservableObject {
                 self?.alert = .init(title: "Переход на оплату реквизитами", message: "", primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
             })
         ]
+    }
+    
+    enum Link {
+        
+        case failedView
     }
 }

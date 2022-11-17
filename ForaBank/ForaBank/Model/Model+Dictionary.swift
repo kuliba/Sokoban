@@ -1674,8 +1674,6 @@ extension Model {
     func dictionaryAnywayOperator(with code: QRCode, mapping: QRMapping) -> OperatorGroupData.OperatorData? {
 
         guard let inn = code.stringValue(type: .general(.inn), mapping: mapping) else { return nil}
-        
-        let a = dictionaryAnywayOperators()
 
         return dictionaryAnywayOperators()?.first(where: { $0.synonymList.contains(inn) })
 

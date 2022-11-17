@@ -13,45 +13,54 @@ struct QRFailedView: View {
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 50) {
             
-            var iconView: some View {
-                
-                if let icon = viewModel.icon {
-                    
-                    if let iconImage = icon.image {
-                        
-                        iconImage
-                            .resizable()
-                            .scaledToFill()
-                            .clipShape(Circle())
-                            .frame(width: 96, height: 96)
-                            .overlay(Circle()
-                                .stroke(lineWidth: 0)
-                            )
-                    }
-                    
-                    ZStack {
-                        Circle()
-                            .foregroundColor(.iconBlack)
-                            .frame(width: 32, height: 32)
-                        
-                        Image.ic16Edit2
-                            .foregroundColor(.iconWhite)
-                    } .offset(x: 32, y: -32)
-                }
-            }
+            avatarView
             
             Text(viewModel.title)
                 .font(Font.textH3M18240())
                 .foregroundColor(Color.textSecondary)
+            
             Text(viewModel.content)
                 .font(Font.textBodyMSB14200())
                 .foregroundColor(Color.textPlaceholder)
             
-            ForEach(viewModel.searchOperatorButton) { buttons in
-                ButtonSimpleView(viewModel: buttons)
+            VStack(spacing: 10) {
+                ForEach(viewModel.searchOperatorButton) { buttons in
+                    ButtonSimpleView(viewModel: buttons)
+                        .frame(height: 48)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                }
             }
+        }
+    }
+    
+    var avatarView: some View {
+        
+        ZStack {
+            
+            Circle()
+                .foregroundColor(.mainColorsGrayLightest)
+                .frame(width: 88, height: 88)
+            
+            Image.ic24BarcodeScanner2
+                .resizable()
+                .frame(width: 48, height: 48)
+                .foregroundColor(.iconBlack)
+            
+            ZStack {
+                
+                Circle()
+                    .foregroundColor(.iconRed)
+                    .frame(width: 32, height: 32)
+                
+                Image.ic16AlertCircle
+                    .resizable()
+                    .foregroundColor(.iconWhite)
+                    .frame(width: 20, height: 20)
+            }
+            .offset(x: 32, y: -32)
         }
     }
 }

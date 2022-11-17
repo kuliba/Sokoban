@@ -168,12 +168,15 @@ class QRViewModel: ObservableObject {
                             var operatorDescription = ""
                             
                             if puref != nil {
+                                
                                 operatorDescription = puref!
+                                self.alert = .init(title: "QR: operator: \(operatorDescription)", message: qr.original, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                                
                             } else {
-                                operatorDescription = "Оператор не найден"
+                                
+                                let failedView = QRFailedViewModel()
+                                self.link = .failedView(failedView)
                             }
-
-                            self.alert = .init(title: "QR: operator: \(operatorDescription))", message: qr.original, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
                      
                         case .c2bURL(let qr):
                             self.alert = .init(title: "C2b", message: qr.absoluteString, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
@@ -182,6 +185,7 @@ class QRViewModel: ObservableObject {
                             self.alert = .init(title: "Url", message: qr.absoluteString, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
 
                         case .unknown(let qr):
+                            
                             self.alert = .init(title: "Unknown", message: qr, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
                         }
                 default:
@@ -206,6 +210,7 @@ class QRViewModel: ObservableObject {
     enum Link {
         
         case imagePicker(ImagePickerViewModel)
+        case failedView(QRFailedViewModel)
     }
     
     private func flashlight() throws {
