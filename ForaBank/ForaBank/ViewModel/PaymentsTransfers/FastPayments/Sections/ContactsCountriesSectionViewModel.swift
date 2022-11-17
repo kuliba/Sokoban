@@ -15,26 +15,24 @@ class ContactsCountriesSectionViewModel: ContactsSectionCollapsableViewModel {
     @Published var visible: [ContactsItemViewModel]
     let filter: CurrentValueSubject<String?, Never>
     
-    private var items: [ContactsItemViewModel]
+    private let items: CurrentValueSubject<[ContactsItemViewModel], Never>
 
     init(header: ContactsSectionHeaderView.ViewModel, isCollapsed: Bool, mode: Mode, visible: [ContactsItemViewModel], items: [ContactsItemViewModel], filter: String? = nil, model: Model) {
         
         self.visible = visible
         self.filter = .init(filter)
-        self.items = items
+        self.items = .init(items)
         super.init(header: header, isCollapsed: isCollapsed, mode: mode, model: model)
     }
     
     convenience init(_ model: Model, mode: Mode) {
         
-        let placeholders = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .country), count: 8)
-        self.init(header: .init(kind: .country), isCollapsed: true, mode: mode, visible: placeholders, items: [], model: model)
+        self.init(header: .init(kind: .country), isCollapsed: true, mode: mode, visible: [], items: [], model: model)
         
-        let countriesList = model.countriesList.value.filter({$0.paymentSystemIdList.contains({"DIRECT"}())})
-        
-        withAnimation {
+        Task.detached(priority: .userInitiated) {
             
-            items = Self.reduceCounry(countriesList: countriesList) { [weak self] country in
+            let countriesList = model.countriesList.value.filter({$0.paymentSystemIdList.contains({"DIRECT"}())})
+            self.items.value = Self.reduceCounry(countriesList: countriesList) { [weak self] country in
                 
                 { self?.action.send(ContactsSectionViewModelAction.Countries.ItemDidTapped(countryId: country.id)) }
             }
@@ -44,15 +42,29 @@ class ContactsCountriesSectionViewModel: ContactsSectionCollapsableViewModel {
     override func bind() {
         super.bind()
         
-        filter
+        items
+            .combineLatest(filter)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] filter in
+            .sink { [unowned self] data in
                 
-                withAnimation {
+                let items = data.0
+                let filter = data.1
+                
+                if items.isEmpty == false {
                     
-                    visible = Self.reduce(items: items, filter: filter)
+                    withAnimation {
+                        
+                        visible = Self.reduce(items: items, filter: filter)
+                    }
+                    
+                } else {
+                    
+                    withAnimation {
+                        
+                        visible = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .country), count: 8)
+                    }
                 }
-                
+
             }.store(in: &bindings)
     }
 }
