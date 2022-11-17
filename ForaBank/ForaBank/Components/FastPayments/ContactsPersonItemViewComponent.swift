@@ -110,7 +110,7 @@ struct ContactsPersonItemView: View {
                 }
             }
             
-        }.buttonStyle(PushButtonStyle())
+        }
     }
 }
 

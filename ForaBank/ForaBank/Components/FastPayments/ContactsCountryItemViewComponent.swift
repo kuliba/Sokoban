@@ -61,9 +61,7 @@ struct ContactsCountryItemView: View {
                 
                 Spacer()
             }
-            
-        }.buttonStyle(PushButtonStyle())
-        
+        }
     }
 }
 

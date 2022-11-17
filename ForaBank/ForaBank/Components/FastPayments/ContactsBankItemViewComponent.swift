@@ -63,8 +63,7 @@ struct ContactsBankItemView: View {
                 
                 Spacer()
             }
-            
-        }.buttonStyle(PushButtonStyle())
+        }
     }
 }
 

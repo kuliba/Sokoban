@@ -74,8 +74,7 @@ struct ContactsBankPrefferedItemView: View {
                         .font(.textBodyXSR11140())
                 }
             }
-            
-        }.buttonStyle(PushButtonStyle())
+        }
     }
 }
 
