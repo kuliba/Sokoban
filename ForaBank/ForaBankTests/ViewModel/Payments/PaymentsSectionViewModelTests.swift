@@ -13,7 +13,7 @@ class PaymentsSectionViewModelTests: XCTestCase {}
 
 extension PaymentsSectionViewModelTests {
     
-    func testReduceOperation_Feed_All_Visible() {
+    func testReduceOperation_Feed_All_Visible() throws {
         
         // given
         let paramOne = Payments.ParameterMock(id: "one", value: nil, placement: .feed)
@@ -23,10 +23,11 @@ extension PaymentsSectionViewModelTests {
         let parameters = [paramOne, paramTwo, paramThree]
         let visible = parameters.map{ $0.id }
         let step = Payments.Operation.Step(parameters: parameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: .local, required: [], processed: nil))
-        let operation = Payments.Operation(service: .fms, source: nil, steps: [step], visible: [])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [], visible: [])
+        let operationUpdated = try operation.appending(step: step)
         
         // when
-        let result = PaymentsSectionViewModel.reduce(operation: operation, model: .emptyMock)
+        let result = PaymentsSectionViewModel.reduce(operation: operationUpdated, model: .emptyMock)
         
         // then
         let feedSections = result.filter({ $0.placement == .feed })
@@ -44,7 +45,7 @@ extension PaymentsSectionViewModelTests {
         XCTAssertEqual(result[0].items[2].source.parameter, paramThree.parameter)
     }
     
-    func testReduceOperation_Feed_Visible_Partly() {
+    func testReduceOperation_Feed_Visible_Partly() throws {
         
         // given
         let paramOne = Payments.ParameterMock(id: "one", value: nil, placement: .feed)
@@ -54,10 +55,11 @@ extension PaymentsSectionViewModelTests {
         let parameters = [paramOne, paramTwo, paramThree]
         let visible = [paramOne.id, paramThree.id]
         let step = Payments.Operation.Step(parameters: parameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: .local, required: [], processed: nil))
-        let operation = Payments.Operation(service: .fms, source: nil, steps: [step], visible: [])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [], visible: [])
+        let operationUpdated = try operation.appending(step: step)
         
         // when
-        let result = PaymentsSectionViewModel.reduce(operation: operation, model: .emptyMock)
+        let result = PaymentsSectionViewModel.reduce(operation: operationUpdated, model: .emptyMock)
         
         // then
         let feedSections = result.filter({ $0.placement == .feed })
@@ -74,7 +76,7 @@ extension PaymentsSectionViewModelTests {
         XCTAssertEqual(result[0].items[1].source.parameter, paramThree.parameter)
     }
     
-    func testReduceOperation_Feed_And_Spoiler() {
+    func testReduceOperation_Feed_And_Spoiler() throws {
         
         // given
         let paramOne = Payments.ParameterMock(id: "one", value: nil, placement: .feed)
@@ -88,10 +90,11 @@ extension PaymentsSectionViewModelTests {
         let parameters = [paramOne, paramTwo, paramThree, paramFour, paramFive]
         let visible = parameters.map{ $0.id }
         let step = Payments.Operation.Step(parameters: parameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: .local, required: [], processed: nil))
-        let operation = Payments.Operation(service: .fms, source: nil, steps: [step], visible: [])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [], visible: [])
+        let operationUpdated = try operation.appending(step: step)
         
         // when
-        let result = PaymentsSectionViewModel.reduce(operation: operation, model: .emptyMock)
+        let result = PaymentsSectionViewModel.reduce(operation: operationUpdated, model: .emptyMock)
         
         // then
         let feedSections = result.filter({ $0.placement == .feed })
@@ -120,7 +123,7 @@ extension PaymentsSectionViewModelTests {
         XCTAssertEqual(result[2].items[0].source.parameter, paramFive.parameter)
     }
     
-    func testReduceOperation_Feed_And_Spoiler_Mixed() {
+    func testReduceOperation_Feed_And_Spoiler_Mixed() throws {
         
         // given
         let paramOne = Payments.ParameterMock(id: "one", value: nil, placement: .feed)
@@ -132,10 +135,11 @@ extension PaymentsSectionViewModelTests {
         let parameters = [paramOne, paramTwo, paramThree, paramFour, paramFive]
         let visible = parameters.map{ $0.id }
         let step = Payments.Operation.Step(parameters: parameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: .local, required: [], processed: nil))
-        let operation = Payments.Operation(service: .fms, source: nil, steps: [step], visible: [])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [], visible: [])
+        let operationUpdated = try operation.appending(step: step)
         
         // when
-        let result = PaymentsSectionViewModel.reduce(operation: operation, model: .emptyMock)
+        let result = PaymentsSectionViewModel.reduce(operation: operationUpdated, model: .emptyMock)
         
         // then
         let feedSections = result.filter({ $0.placement == .feed })

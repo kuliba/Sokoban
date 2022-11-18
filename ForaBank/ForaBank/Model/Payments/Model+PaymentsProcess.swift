@@ -76,7 +76,7 @@ extension Model {
                     operation = try operation.appending(step: stepUpdatedWithSource)
                     
                     // try to update visible
-                    operation = operation.updated(visible: try await visible(operation))
+                    operation = operation.reseted(visible: try await visible(operation))
                     
                 case let .remote(remoteStage):
                     switch remoteStage {
@@ -112,7 +112,7 @@ extension Model {
                             operation = try operation.appending(step: nextStepUpdatedWithSource)
                             
                             // try to update visible
-                            operation = operation.updated(visible: try await visible(operation))
+                            operation = operation.reseted(visible: try await visible(operation))
                         }
                         
                     case .next:
@@ -147,7 +147,7 @@ extension Model {
                             operation = try operation.appending(step: nextStepUpdatedWithSource)
                             
                             // try to update visible
-                            operation = operation.updated(visible: try await visible(operation))
+                            operation = operation.reseted(visible: try await visible(operation))
                         }
                         
                     case .confirm:

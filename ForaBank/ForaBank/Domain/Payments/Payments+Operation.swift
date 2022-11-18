@@ -52,15 +52,6 @@ extension Payments.Operation {
             throw Payments.Operation.Error.appendingStepDuplicateParameters
         }
         
-        let stepsVisibleParametersIds = steps.flatMap({ $0.front.visible })
-        let existingVisibleParametersIds = Set(stepsVisibleParametersIds)
-        let appendingVisibleParametersIds = Set(step.front.visible)
-        
-        // check for duplicate visible parameters
-        guard existingVisibleParametersIds.intersection(appendingVisibleParametersIds).count == 0 else {
-            throw Payments.Operation.Error.appendingStepDuplicateVisibleParameters
-        }
-        
         let allParametersIds = existingParametersIds.union(appendingParametersIds)
         let requiredParametersIds = Set(step.back.required)
         
@@ -72,19 +63,33 @@ extension Payments.Operation {
         var stepsUpdated = steps
         stepsUpdated.append(step)
         
-        let visible = stepsUpdated.flatMap { $0.front.visible }
+        // update visible parameters
+        var visibleUpdated = [Parameter.ID]()
+        for parameterId in visible {
+            
+            // check if parameter id contains in step visible
+            // if so this parameter just change it's order
+            // becasuse all step's visible parameters we will add after
+            guard step.front.visible.contains(parameterId) == false else {
+                continue
+            }
+            
+            visibleUpdated.append(parameterId)
+        }
         
-        let updatedOperation = Payments.Operation(service: service, source: source, steps: stepsUpdated, visible: visible)
+        visibleUpdated.append(contentsOf: step.front.visible)
+        
+        let updatedOperation = Payments.Operation(service: service, source: source, steps: stepsUpdated, visible: visibleUpdated)
         
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Operation: \(updatedOperation.shortDescription) step appended")
 
         return updatedOperation
     }
     
-    /// Updates visible parameters for operation. Only parameters represented in operation can be visible. If list is nil - operation returns unchanged. If visible list after filtration with operaton parameters contains no elemnts, operation returns unchanged.
+    /// Resets visible parameters for operation. Only parameters represented in operation can be visible. If list is nil - operation returns unchanged. If visible list after filtration with operaton parameters contains no elemnts, operation returns unchanged.
     /// - Parameter visible: Optional list of visible parameters ids. Order in this list also defines order in the view.
     /// - Returns: Updated operation.
-    func updated(visible: [Parameter.ID]?) -> Payments.Operation {
+    func reseted(visible: [Parameter.ID]?) -> Payments.Operation {
         
         guard let visible = visible else {
             return self
@@ -256,7 +261,6 @@ extension Payments.Operation {
     enum Error: LocalizedError {
         
         case appendingStepDuplicateParameters
-        case appendingStepDuplicateVisibleParameters
         case appendingStepIncorrectParametersTerms
         case rollbackStepIndexOutOfRange
         case processStepIndexOutOfRange
@@ -271,9 +275,6 @@ extension Payments.Operation {
             switch self {
             case .appendingStepDuplicateParameters:
                 return "Operation appending step: duplicate parameters "
-                
-            case .appendingStepDuplicateVisibleParameters:
-                return "Operation appending step: duplicate visible parameters"
                 
             case .appendingStepIncorrectParametersTerms:
                 return "Operation appending step: incorrect parameters terms"
