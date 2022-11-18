@@ -228,7 +228,8 @@ struct TextFieldFormatableView: UIViewRepresentable {
             // apply update to value in range
             updatedValue.replaceSubrange(rangeStart..<rangeEnd, with: update)
             
-            let semicolon = updatedValue.filter { ".,".contains($0) }
+            let initialValue = updatedValue
+            let semicolon = initialValue.filter { ".,".contains($0) }
             
             // number dots and commas is not more than one
             if semicolon.count > 1 {
@@ -295,8 +296,21 @@ struct TextFieldFormatableView: UIViewRepresentable {
                 
                 switch type {
                 case .general:
-                    // return formatted double value, example: `1234.56` -> `1 234,56 ₽`
-                    return formatter.string(from: NSNumber(value: doubleValue))
+                    
+                    if let filterredSplittedLast = filterredUpdateSplitted.last, filterredSplittedLast.count == 1, filterredSplittedLast.first == "0" {
+                        
+                        return initialValue
+                        
+                    } else if let filterredSplittedLast = filterredUpdateSplitted.last, filterredUpdateSplitted.count == 2, filterredSplittedLast.last == "0" {
+                        
+                        return value
+                        
+                    } else {
+                        
+                        // return formatted double value, example: `1234.56` -> `1 234,56 ₽`
+                        return formatter.string(from: NSNumber(value: doubleValue))
+                    }
+                    
                 case .currency:
                     
                     let filterredUpdate = filterredUpdateFixed.replacingOccurrences(of: ".", with: ",")

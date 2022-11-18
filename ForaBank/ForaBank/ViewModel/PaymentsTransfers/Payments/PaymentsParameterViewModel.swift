@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PaymentsParameterViewModel: Identifiable, ObservableObject {
+class PaymentsParameterViewModel: Identifiable {
     
     @Published var value: Value
     

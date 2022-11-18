@@ -12,7 +12,7 @@ import Combine
 
 extension PaymentsSelectSimpleView {
     
-    class ViewModel: PaymentsParameterViewModel {
+    class ViewModel: PaymentsParameterViewModel, ObservableObject {
         
         let action: PassthroughSubject<Action, Never> = .init()
         

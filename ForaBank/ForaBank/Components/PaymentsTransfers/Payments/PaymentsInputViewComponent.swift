@@ -12,7 +12,7 @@ import Combine
 
 extension PaymentsInputView {
     
-    class ViewModel: PaymentsParameterViewModel {
+    class ViewModel: PaymentsParameterViewModel, ObservableObject {
         
         let logo: Image
         let description: String

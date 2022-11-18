@@ -12,7 +12,7 @@ import Combine
 
 extension PaymentsSwitchView {
     
-    class ViewModel: PaymentsParameterViewModel {
+    class ViewModel: PaymentsParameterViewModel, ObservableObject {
         
         let options: [OptionViewModel]
         @Published var selected: OptionViewModel.ID
