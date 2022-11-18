@@ -40,4 +40,13 @@ extension Model {
             throw Payments.Error.unsupported
         }
     }
+    
+    func paymentsMockFMS() -> Payments.Mock {
+        
+        return .init(service: .fms,
+                     parameters: [.init(id: "a3_INN_4_1", value: "5503026780"),
+                                  .init(id: "a3_OKTMO_5_1", value: "52643151"),
+                                  .init(id: "a3_docType_3_2", value: "2"),
+                                  .init(id: "a3_docValue_4_2", value: "7723013452")])
+    }
 }

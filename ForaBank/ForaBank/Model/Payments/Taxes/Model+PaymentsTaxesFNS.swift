@@ -89,4 +89,13 @@ extension Model {
             throw Payments.Error.unsupported
         }
     }
+    
+    func paymentsMockFNS() -> Payments.Mock {
+        
+        return .init(service: .fns,
+                     parameters: [.init(id: "a3_BillNumber_1_1", value: "18204437200029004095"),
+                                  .init(id: "a3_INN_4_1", value: "7723013452"),
+                                  .init(id: "a3_OKTMO_5_1", value: "45390000"),
+                                  .init(id: "a3_docValue_4_2", value: "7723013452")])
+    }
 }

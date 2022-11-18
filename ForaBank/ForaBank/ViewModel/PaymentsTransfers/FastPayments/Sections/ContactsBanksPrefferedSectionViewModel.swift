@@ -52,9 +52,6 @@ class ContactsBanksPrefferedSectionViewModel: ContactsSectionViewModel, Observab
                         }
                     }
                     
-                    // anyway update banks data even if we have it in the cache
-                    model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: phone))
-                    
                 } else {
                     
                     withAnimation {
@@ -62,6 +59,18 @@ class ContactsBanksPrefferedSectionViewModel: ContactsSectionViewModel, Observab
                         items = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .bankPreffered), count: 8)
                     }
                 }
+                
+            }.store(in: &bindings)
+        
+        phone
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] phone in
+                
+                guard let phone = phone else {
+                    return
+                }
+                
+                model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: phone))
                 
             }.store(in: &bindings)
     }

@@ -84,5 +84,12 @@ extension Model {
                 Payments.Parameter.Identifier.fee.rawValue,
                 Payments.Parameter.Identifier.code.rawValue]
     }
+    
+    func paymentsMockSFP() -> Payments.Mock {
+        
+        return .init(service: .sfp,
+                     parameters: [.init(id: Payments.Parameter.Identifier.sfpPhone.rawValue, value: "+7 0115110217"),
+                                  .init(id: Payments.Parameter.Identifier.sfpBank.rawValue, value: "1crt88888881")])
+    }
 }
 

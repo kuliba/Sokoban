@@ -358,7 +358,11 @@ extension ContactsViewModel {
         
         switch bank.bankType {
         case .sfp:
+            #if DEBUG
+            self.action.send(ContactsViewModelAction.PaymentRequested(source: .mock(model.paymentsMockSFP())))
+            #else
             self.action.send(ContactsViewModelAction.PaymentRequested(source: .sfp(phone: phone, bankId: bank.id)))
+            #endif
             
         case .direct:
             guard let country = self.model.countriesList.value.first(where: { $0.id == bank.bankCountry}) else {

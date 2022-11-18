@@ -68,6 +68,16 @@ extension Model {
         }
     }
     
+    func paymentsMockFSSP() -> Payments.Mock {
+        
+        return .init(service: .fssp,
+                     parameters: [.init(id: "a3_BillNumber_1_1", value: "32227009220006631003"),
+                                  .init(id: "a3_IPnumber_1_1", value: "6631/22/27009-ИП"),
+                                  .init(id: "a3_docNumber_2_2", value: "7816218222")])
+                                    //.init(id: "a3_docNumber_2_2", value: "7816218222")
+                                    //.init(id: "a3_docNumber_2_2", value: "13420742521")
+    }
+    
     /*
     func parametersFSSP(_ parameters: [PaymentsParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[PaymentsParameterRepresentable], Error>) -> Void) {
         
