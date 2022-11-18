@@ -452,14 +452,14 @@ private func remoteConfirm(parameters: [Payments.Parameter], operation: Payments
                       parameters.first(where: { $0.id == "amount" })?.value == "100" else {
                     throw Payments.Error.missingParameter("code")
                 }
-                return Payments.Success(status: .complete, amount: 100, currency: .init(description: "RUB"), icon: nil, operationDetailId: 1)
+                return Payments.Success(operationDetailId: 1, status: .complete, productId: 1, amount: 100, service: .fns)
                 
             case "fnsUin":
                 guard parameters.first(where: { $0.id == "code" })?.value == "555",
                       parameters.first(where: { $0.id == "amount" })?.value == "200" else {
                     throw Payments.Error.missingParameter("code")
                 }
-                return Payments.Success(status: .complete, amount: 100, currency: .init(description: "RUB"), icon: nil, operationDetailId: 1)
+                return Payments.Success(operationDetailId: 1, status: .complete, productId: 1, amount: 100, service: .fns)
                 
             default:
                 throw Payments.Error.unsupported

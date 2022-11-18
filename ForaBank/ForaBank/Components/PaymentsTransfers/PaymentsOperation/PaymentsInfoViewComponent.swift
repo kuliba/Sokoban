@@ -11,7 +11,7 @@ import SwiftUI
 
 extension PaymentsInfoView {
     
-    class ViewModel: PaymentsParameterViewModel {
+    class ViewModel: PaymentsParameterViewModel, ObservableObject {
         
         let icon: Image
         let title: String

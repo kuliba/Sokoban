@@ -11,7 +11,7 @@ import SwiftUI
 
 extension PaymentsSelectServiceView {
     
-    class ViewModel: PaymentsParameterViewModel {
+    class ViewModel: PaymentsParameterViewModel, ObservableObject {
 
         @Published var items: [ItemViewModel]
         

@@ -9,7 +9,7 @@ import SwiftUI
 
 extension PaymentsContinueButtonView {
     
-    class ViewModel: PaymentsParameterViewModel, PaymentsParameterViewModelContinuable {
+    class ViewModel: PaymentsParameterViewModel, PaymentsParameterViewModelContinuable, ObservableObject {
         
         let title: String
         @Published var button: ButtonSimpleView.ViewModel

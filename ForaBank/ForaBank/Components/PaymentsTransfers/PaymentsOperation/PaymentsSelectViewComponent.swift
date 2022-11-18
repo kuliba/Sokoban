@@ -12,7 +12,7 @@ import Combine
 
 extension PaymentsSelectView {
     
-    class ViewModel: PaymentsParameterViewModel {
+    class ViewModel: PaymentsParameterViewModel, ObservableObject {
         
         @Published var state: State
         

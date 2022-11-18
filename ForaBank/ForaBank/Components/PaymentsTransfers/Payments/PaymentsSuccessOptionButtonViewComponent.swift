@@ -11,7 +11,7 @@ import SwiftUI
 
 extension PaymentsSuccessOptionButtonView {
     
-    class ViewModel: PaymentsSuccessOptionButtonViewModel {}
+    class ViewModel: PaymentsSuccessOptionButtonViewModel, ObservableObject {}
 }
 
 //MARK: - View
