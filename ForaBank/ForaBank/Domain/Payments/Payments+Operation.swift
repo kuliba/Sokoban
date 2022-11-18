@@ -15,13 +15,12 @@ extension Payments.Operation {
     
     var parameters: [PaymentsParameterRepresentable] { steps.flatMap({ $0.parameters }) }
     var parametersIds: [Payments.Parameter.ID] { parameters.map({ $0.id })}
-   
-    var visibleParametersIds: [Payments.Parameter.ID] { steps.flatMap({ $0.front.visible }) }
     var visibleParameters: [PaymentsParameterRepresentable] {
         
         var result = [PaymentsParameterRepresentable]()
         
-        for parameterId in visibleParametersIds {
+        // sort order from visible
+        for parameterId in visible {
             
             guard let parameter = parameters.first(where: { $0.id == parameterId }) else {
                 continue
@@ -31,7 +30,6 @@ extension Payments.Operation {
         }
         
         return result
-        
     }
     
     var transferType: Payments.Operation.TransferType {
@@ -54,7 +52,8 @@ extension Payments.Operation {
             throw Payments.Operation.Error.appendingStepDuplicateParameters
         }
         
-        let existingVisibleParametersIds = Set(visibleParametersIds)
+        let stepsVisibleParametersIds = steps.flatMap({ $0.front.visible })
+        let existingVisibleParametersIds = Set(stepsVisibleParametersIds)
         let appendingVisibleParametersIds = Set(step.front.visible)
         
         // check for duplicate visible parameters
