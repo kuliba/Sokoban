@@ -110,22 +110,24 @@ extension Payments {
         let service: Service
         let source: Source?
         let steps: [Step]
+        let visible: [Parameter.ID]
         
-        init(service: Service, source: Source?, steps: [Step]) {
+        init(service: Service, source: Source?, steps: [Step], visible: [Parameter.ID]) {
             
             self.service = service
             self.source = source
             self.steps = steps
+            self.visible = visible
         }
         
         init(service: Service) {
             
-            self.init(service: service, source: nil, steps: [])
+            self.init(service: service, source: nil, steps: [], visible: [])
         }
         
         init(service: Service, source: Source) {
             
-            self.init(service: service, source: source, steps: [])
+            self.init(service: service, source: source, steps: [], visible: [])
         }
     }
 }

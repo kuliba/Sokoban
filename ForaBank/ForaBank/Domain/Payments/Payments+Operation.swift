@@ -73,13 +73,28 @@ extension Payments.Operation {
         var stepsUpdated = steps
         stepsUpdated.append(step)
         
-        let updatedOperation = Payments.Operation(service: service, source: source, steps: stepsUpdated)
+        let visible = stepsUpdated.flatMap { $0.front.visible }
+        
+        let updatedOperation = Payments.Operation(service: service, source: source, steps: stepsUpdated, visible: visible)
         
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Operation: \(updatedOperation.shortDescription) step appended")
 
         return updatedOperation
     }
-
+    
+    /// Updates visible parameters for operation. Only parameters represented in operation can be visible. If visible list after filtration with operaton parameters contains no elemnts, operation returns unchanged.
+    /// - Parameter visible: List of visible parameters ids. Order in this list also defines order in the view.
+    /// - Returns: Updated operation.
+    func updated(visible: [Parameter.ID]) -> Payments.Operation {
+        
+        let visibleFilterred = visible.filter({ parametersIds.contains($0) })
+        
+        guard visibleFilterred.isEmpty == false else {
+            return self
+        }
+        
+        return .init(service: service, source: source, steps: steps, visible: visibleFilterred)
+    }
     
     /// Updates operation parameters
     /// - Parameter update: parameters used to update
@@ -103,7 +118,7 @@ extension Payments.Operation {
             updatedSteps.append(updatedStep)
         }
         
-        let updatedOperation = Payments.Operation(service: service, source: source, steps: updatedSteps)
+        let updatedOperation = Payments.Operation(service: service, source: source, steps: updatedSteps, visible: visible)
         
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Operation: \(updatedOperation.shortDescription) updated")
        
@@ -144,7 +159,7 @@ extension Payments.Operation {
             }
         }
         
-        let updatedOperation = Payments.Operation(service: service, source: source, steps: stepsUpdated)
+        let updatedOperation = Payments.Operation(service: service, source: source, steps: stepsUpdated, visible: visible)
         
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Operation: ROLLED BACK \(updatedOperation)")
 
@@ -170,7 +185,7 @@ extension Payments.Operation {
         var updatedSteps = steps
         updatedSteps.replaceSubrange(stepIndex...stepIndex, with: [updatedStep])
         
-        let updatedOperation = Payments.Operation(service: service, source: source, steps: updatedSteps)
+        let updatedOperation = Payments.Operation(service: service, source: source, steps: updatedSteps, visible: visible)
         
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Operation: UPDATED \(updatedOperation)")
         
@@ -203,7 +218,7 @@ extension Payments.Operation {
             updatedSteps.append(updatedStep)
         }
         
-        return .init(service: service, source: source, steps: updatedSteps)
+        return .init(service: service, source: source, steps: updatedSteps, visible: visible)
     }
     
     /// Generates next action for payment process
@@ -312,5 +327,5 @@ extension Payments.Operation: CustomDebugStringConvertible {
 
 extension Payments.Operation {
     
-    static let emptyMock = Payments.Operation(service: .fms, source: nil, steps: [])
+    static let emptyMock = Payments.Operation(service: .fms, source: nil, steps: [], visible: [])
 }

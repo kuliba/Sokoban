@@ -23,7 +23,7 @@ extension PaymentsSectionViewModelTests {
         let parameters = [paramOne, paramTwo, paramThree]
         let visible = parameters.map{ $0.id }
         let step = Payments.Operation.Step(parameters: parameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: .local, required: [], processed: nil))
-        let operation = Payments.Operation(service: .fms, source: nil, steps: [step])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [step], visible: [])
         
         // when
         let result = PaymentsSectionViewModel.reduce(operation: operation, model: .emptyMock)
@@ -54,7 +54,7 @@ extension PaymentsSectionViewModelTests {
         let parameters = [paramOne, paramTwo, paramThree]
         let visible = [paramOne.id, paramThree.id]
         let step = Payments.Operation.Step(parameters: parameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: .local, required: [], processed: nil))
-        let operation = Payments.Operation(service: .fms, source: nil, steps: [step])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [step], visible: [])
         
         // when
         let result = PaymentsSectionViewModel.reduce(operation: operation, model: .emptyMock)
@@ -88,7 +88,7 @@ extension PaymentsSectionViewModelTests {
         let parameters = [paramOne, paramTwo, paramThree, paramFour, paramFive]
         let visible = parameters.map{ $0.id }
         let step = Payments.Operation.Step(parameters: parameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: .local, required: [], processed: nil))
-        let operation = Payments.Operation(service: .fms, source: nil, steps: [step])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [step], visible: [])
         
         // when
         let result = PaymentsSectionViewModel.reduce(operation: operation, model: .emptyMock)
@@ -132,7 +132,7 @@ extension PaymentsSectionViewModelTests {
         let parameters = [paramOne, paramTwo, paramThree, paramFour, paramFive]
         let visible = parameters.map{ $0.id }
         let step = Payments.Operation.Step(parameters: parameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: .local, required: [], processed: nil))
-        let operation = Payments.Operation(service: .fms, source: nil, steps: [step])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [step], visible: [])
         
         // when
         let result = PaymentsSectionViewModel.reduce(operation: operation, model: .emptyMock)

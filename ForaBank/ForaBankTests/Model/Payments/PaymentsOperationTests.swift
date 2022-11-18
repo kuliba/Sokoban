@@ -21,7 +21,7 @@ extension PaymentsOperationTests {
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let stepOne = Payments.Operation.Step(parameters: [paramOne], front: .init(visible: [], isCompleted: false), back:  .init(stage: .local, required: ["one"], processed: nil))
         let stepTwo = Payments.Operation.Step(parameters: [paramTwo], front: .init(visible: [], isCompleted: false), back:  .init(stage: .local, required: ["two"], processed: nil))
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne, stepTwo])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne, stepTwo], visible: [])
         
         // when
         let result = operation.parameters
@@ -40,7 +40,7 @@ extension PaymentsOperationTests {
     func testNextStep_Zero() throws {
         
         // given
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [], visible: [])
         
         // when
         let result = operation.nextStep
@@ -54,7 +54,7 @@ extension PaymentsOperationTests {
         
         // given
         let stepOne = Payments.Operation.Step(parameters: [], front: .init(visible: [], isCompleted: false), back:  .init(stage: .local, required: [], processed: nil))
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne], visible: [])
         
         // when
         let result = operation.nextStep
@@ -72,7 +72,7 @@ extension PaymentsOperationTests {
     func testAppendingStep_First_Correct() throws {
         
         // given
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [], visible: [])
         
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
@@ -85,6 +85,7 @@ extension PaymentsOperationTests {
         // then
         XCTAssertEqual(result.parameters.count, 2)
         XCTAssertEqual(result.steps.count, 1)
+        XCTAssertEqual(result.visible, [])
         XCTAssertEqual(result.steps[0].parameters.count, 2)
         XCTAssertEqual(result.steps[0].parameters[0].id, paramOne.id)
         XCTAssertEqual(result.steps[0].parameters[1].id, paramTwo.id)
@@ -97,7 +98,7 @@ extension PaymentsOperationTests {
     func testAppendingStep_First_Empty_Back_Correct() throws {
         
         // given
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [], visible: [])
         
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
@@ -109,6 +110,7 @@ extension PaymentsOperationTests {
         // then
         XCTAssertEqual(result.parameters.count, 2)
         XCTAssertEqual(result.steps.count, 1)
+        XCTAssertEqual(result.visible, [])
         XCTAssertEqual(result.steps[0].parameters.count, 2)
         XCTAssertEqual(result.steps[0].parameters[0].id, paramOne.id)
         XCTAssertEqual(result.steps[0].parameters[1].id, paramTwo.id)
@@ -121,7 +123,7 @@ extension PaymentsOperationTests {
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let stepFirst = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back:  .init(stage: .local, required: ["one"], processed: nil))
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepFirst])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepFirst], visible: [])
         
         let paramThree = Payments.ParameterMock(id: "three", value: "300")
         let stepSecond = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: [], isCompleted: false), back: .init(stage: .remote(.start), required: ["three"], processed: nil))
@@ -132,6 +134,7 @@ extension PaymentsOperationTests {
         // then
         XCTAssertEqual(result.parameters.count, 3)
         XCTAssertEqual(result.steps.count, 2)
+        XCTAssertEqual(result.visible, [])
     }
     
     func testAppendingStep_Duplicate_Param_Incorrect() throws {
@@ -140,7 +143,7 @@ extension PaymentsOperationTests {
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let stepFirst = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back:  .init(stage: .local, required: ["one"], processed: nil))
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepFirst])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepFirst], visible: [])
         
         let paramThree = Payments.ParameterMock(id: "one", value: "300")
         let stepSecond = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: [], isCompleted: false), back:  .init(stage: .local, required: ["one"], processed: nil))
@@ -155,7 +158,7 @@ extension PaymentsOperationTests {
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let stepFirst = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: ["one"], isCompleted: false), back:  .init(stage: .local, required: ["one"], processed: nil))
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepFirst])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepFirst], visible: [])
         
         let paramThree = Payments.ParameterMock(id: "three", value: "300")
         let stepSecond = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: ["one"], isCompleted: false), back:  .init(stage: .local, required: ["three"], processed: nil))
@@ -170,7 +173,7 @@ extension PaymentsOperationTests {
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let stepFirst = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: ["one"], isCompleted: false), back:  .init(stage: .local, required: ["one"], processed: nil))
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepFirst])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepFirst], visible: ["one"])
         
         let paramThree = Payments.ParameterMock(id: "three", value: "300")
         let stepSecond = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: ["three"], isCompleted: false), back: .init(stage: .remote(.start), required: ["unknown"], processed: nil))
@@ -179,6 +182,92 @@ extension PaymentsOperationTests {
         XCTAssertThrowsError( try operation.appending(step: stepSecond))
     }
 }
+
+//MARK: - Visible Parameters
+
+extension PaymentsOperationTests {
+    
+    func testAppendingFirstStep_Visible() throws {
+        
+        // given
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [], visible: [])
+        
+        let paramOne = Payments.ParameterMock(id: "one", value: "100")
+        let paramTwo = Payments.ParameterMock(id: "two", value: "200")
+        let paramProcessed = Payments.Parameter(id: "two", value: "300")
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: ["one"], isCompleted: false), back: .init(stage: .remote(.start), required: ["one"], processed: [paramProcessed]))
+        
+        // when
+        let result = try operation.appending(step: step)
+        
+        // then
+        XCTAssertEqual(result.visible, ["one"])
+    }
+    
+    func testAppendingSecondStep_Visible() throws {
+        
+        // given
+        let paramOne = Payments.ParameterMock(id: "one", value: "100")
+        let paramTwo = Payments.ParameterMock(id: "two", value: "200")
+        let stepFirst = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: ["one"], isCompleted: false), back:  .init(stage: .local, required: ["one"], processed: nil))
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepFirst], visible: ["one"])
+        
+        let paramThree = Payments.ParameterMock(id: "three", value: "300")
+        let stepSecond = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: ["three"], isCompleted: false), back: .init(stage: .remote(.start), required: ["three"], processed: nil))
+        
+        // when
+        let result = try operation.appending(step: stepSecond)
+        
+        // then
+        XCTAssertEqual(result.visible, ["one", "three"])
+    }
+    
+    func testUpdatedVisible_Correct() throws {
+        
+        // given
+        let paramOne = Payments.ParameterMock(id: "one", value: "100")
+        let paramTwo = Payments.ParameterMock(id: "two", value: "200")
+        let stepFirst = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: ["one"], isCompleted: false), back:  .init(stage: .local, required: ["one"], processed: nil))
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepFirst], visible: ["one"])
+        
+        // when
+        let result = operation.updated(visible: ["two"])
+        
+        // then
+        XCTAssertEqual(result.visible, ["two"])
+    }
+    
+    func testUpdatedVisible_Filterred() throws {
+        
+        // given
+        let paramOne = Payments.ParameterMock(id: "one", value: "100")
+        let paramTwo = Payments.ParameterMock(id: "two", value: "200")
+        let stepFirst = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: ["one"], isCompleted: false), back:  .init(stage: .local, required: ["one"], processed: nil))
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepFirst], visible: ["one"])
+        
+        // when
+        let result = operation.updated(visible: ["two", "three"])
+        
+        // then
+        XCTAssertEqual(result.visible, ["two"])
+    }
+    
+    func testUpdatedVisible_Unchanged() throws {
+        
+        // given
+        let paramOne = Payments.ParameterMock(id: "one", value: "100")
+        let paramTwo = Payments.ParameterMock(id: "two", value: "200")
+        let stepFirst = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: ["one"], isCompleted: false), back:  .init(stage: .local, required: ["one"], processed: nil))
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepFirst], visible: ["one"])
+        
+        // when
+        let result = operation.updated(visible: ["three"])
+        
+        // then
+        XCTAssertEqual(result.visible, ["one"])
+    }
+}
+
 
 //MARK: - Updated
 
@@ -194,7 +283,7 @@ extension PaymentsOperationTests {
         let paramThree = Payments.ParameterMock(id: "three", value: "300")
         let stepTwo = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: [], isCompleted: true), back:  .init(stage: .local, required: ["three"], processed: nil))
         
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne, stepTwo])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne, stepTwo], visible: [])
         let updateOne = Payments.Parameter(id: "one", value: "100")
         let updateTwo = Payments.Parameter(id: "two", value: "300")
         let updateThree = Payments.Parameter(id: "three", value: "400")
@@ -217,7 +306,7 @@ extension PaymentsOperationTests {
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: true), back:  .init(stage: .local, required: ["one"], processed: nil))
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [step])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [step], visible: [])
         let update = Payments.Parameter(id: "unexpected", value: "300")
         
         // when
@@ -247,7 +336,7 @@ extension PaymentsOperationTests {
         let paramThree = Payments.ParameterMock(id: "three", value: "300")
         let stepThree = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.complete), required: ["three"], processed: [paramThree.parameter]))
 
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne, stepTwo, stepThree])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne, stepTwo, stepThree], visible: [])
         
         // when
         let result = try operation.rollback(to: 1)
@@ -286,7 +375,7 @@ extension PaymentsOperationTests {
         let paramThree = Payments.ParameterMock(id: "three", value: "300")
         let stepThree = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.next), required: ["three"], processed: [paramThree.parameter]))
 
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne, stepTwo, stepThree])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne, stepTwo, stepThree], visible: [])
         
         // when
         let result = try operation.rollback(to: 1)
@@ -323,7 +412,7 @@ extension PaymentsOperationTests {
         let paramThree = Payments.ParameterMock(id: "three", value: "300")
         let stepThree = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.complete), required: ["three"], processed: [paramThree.parameter]))
 
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne, stepTwo, stepThree])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne, stepTwo, stepThree], visible: [])
         
         // then
         XCTAssertThrowsError(try operation.rollback(to: 5))
@@ -346,7 +435,7 @@ extension PaymentsOperationTests {
         let paramThree = Payments.ParameterMock(id: "three", value: "300")
         let stepThree = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.complete), required: ["three"], processed: nil))
 
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne, stepTwo, stepThree])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne, stepTwo, stepThree], visible: [])
         
         // when
         let result = try operation.processed(parameters: [paramThree.parameter], stepIndex: 2)
@@ -365,7 +454,7 @@ extension PaymentsOperationTests {
         // given
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let stepOne = Payments.Operation.Step(parameters: [paramOne], front: .init(visible: ["one"], isCompleted: true), back: .init(stage: .remote(.start), required: ["one"], processed: [paramOne.parameter]))
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne], visible: [])
         
         // then
         XCTAssertThrowsError(try operation.processed(parameters: [paramOne.parameter], stepIndex: 2))
@@ -388,7 +477,7 @@ extension PaymentsOperationTests {
         let paramThree = Payments.ParameterMock(id: "three", value: "300")
         let stepThree = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.complete), required: ["three"], processed: nil))
 
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne, stepTwo, stepThree])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne, stepTwo, stepThree], visible: [])
         
         // when
         let result = operation.updatedDepended(reducer: mockReducer(parameterId:parameters:))
@@ -411,7 +500,7 @@ extension PaymentsOperationTests {
         let paramThree = Payments.ParameterMock(id: "three", value: "100")
         let stepThree = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.complete), required: ["three"], processed: nil))
 
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne, stepTwo, stepThree])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne, stepTwo, stepThree], visible: [])
         
         // when
         let result = operation.updatedDepended(reducer: mockReducer(parameterId:parameters:))
@@ -453,7 +542,7 @@ extension PaymentsOperationTests {
     func testNextAction_Params_For_Step_0() throws {
         
         // given
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [], visible: [])
         
         // when
         let result = try operation.nextAction()
@@ -468,7 +557,7 @@ extension PaymentsOperationTests {
         let paramOne = Payments.ParameterMock(id: "one", value: nil)
         let stepOne = Payments.Operation.Step(parameters: [paramOne], front: .init(visible: ["one"], isCompleted: false), back: .init(stage: .remote(.start), required: ["one"], processed: nil))
 
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne], visible: [])
         
         // when
         let result = try operation.nextAction()
@@ -483,7 +572,7 @@ extension PaymentsOperationTests {
         let paramOne = Payments.ParameterMock(id: "one", value: "100")
         let stepOne = Payments.Operation.Step(parameters: [paramOne], front: .init(visible: ["one"], isCompleted: true), back: .init(stage: .remote(.start), required: ["one"], processed: nil))
 
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne], visible: [])
         
         // when
         let result = try operation.nextAction()
@@ -501,7 +590,7 @@ extension PaymentsOperationTests {
         let paramTwo = Payments.ParameterMock(id: "two", value: nil)
         let stepTwo = Payments.Operation.Step(parameters: [paramTwo], front: .init(visible: ["two"], isCompleted: false), back: .init(stage: .remote(.next), required: ["two"], processed: nil))
 
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne, stepTwo])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne, stepTwo], visible: [])
         
         // when
         let result = try operation.nextAction()
@@ -519,7 +608,7 @@ extension PaymentsOperationTests {
         let paramTwo = Payments.ParameterMock(id: "two", value: "200")
         let stepTwo = Payments.Operation.Step(parameters: [paramTwo], front: .init(visible: ["two"], isCompleted: true), back: .init(stage: .remote(.next), required: ["two"], processed: nil))
 
-        let operation = Payments.Operation(service: .fms, source: .none, steps: [stepOne, stepTwo])
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne, stepTwo], visible: [])
         
         // when
         let result = try operation.nextAction()

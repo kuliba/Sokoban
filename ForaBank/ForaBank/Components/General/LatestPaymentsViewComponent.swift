@@ -381,7 +381,6 @@ struct LatestPaymentsView: View {
                 
             }
             .padding(.leading, 8)
-            .frame(height: 96)
         }
     }
 }
