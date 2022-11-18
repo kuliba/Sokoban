@@ -57,12 +57,19 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         self.init(model, iconType: .success, actionButton: .init(title: "На главный", style: .red, action: closeAction), optionButtons: [])
     }
     
-    convenience init(_ model: Model, iconType: IconTypeViewModel, paymentSuccess: Payments.Success, dismissAction: @escaping () -> Void) {
+    convenience init(_ model: Model, paymentSuccess: Payments.Success) {
         
-        let amount = model.amountFormatted(amount: paymentSuccess.amount, currencyCode: nil, style: .normal)
-        let image = paymentSuccess.icon?.image ?? .ic40Sbp
+        let product = model.allProducts.first(where: { $0.id == paymentSuccess.productId })
+        let amount = model.amountFormatted(amount: paymentSuccess.amount, currencyCode: product?.currency, style: .normal)
         
-        self.init(model, title: paymentSuccess.status.description, amount: amount, iconType: .success, logo: .init(title: "сбп", image: image), actionButton: .init(title: "На главный", style: .red, action: dismissAction), optionButtons: [])
+        self.init(model, documentStatus: paymentSuccess.status, mode: .normal, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [])
+
+        updateButtons(
+            .normal,
+            documentStatus: paymentSuccess.status,
+            paymentOperationDetailId: paymentSuccess.operationDetailId)
+        
+        bind(paymentSuccess.operationDetailId)
     }
 
     convenience init?(_ model: Model, mode: Mode = .normal, transferData: TransferResponseData) {

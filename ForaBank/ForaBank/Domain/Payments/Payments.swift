@@ -270,105 +270,33 @@ extension Payments.Operation {
 extension Payments {
     
     struct Success {
-
-        let status: Status
-        let amount: Double
-        let currency: Currency
-        let icon: ImageData?
+ 
         let operationDetailId: Int
+        let status: TransferResponseBaseData.DocumentStatus
+        let productId: ProductData.ID
+        let amount: Double
+        let service: Payments.Service
         
-        internal init(status: Payments.Success.Status, amount: Double, currency: Currency, icon: ImageData?, operationDetailId: Int) {
+        init(operationDetailId: Int, status: TransferResponseBaseData.DocumentStatus, productId: ProductData.ID, amount: Double, service: Payments.Service) {
             
-            self.status = status
-            self.amount = amount
-            self.currency = currency
-            self.icon = icon
             self.operationDetailId = operationDetailId
+            self.status = status
+            self.productId = productId
+            self.amount = amount
+            self.service = service
         }
-
+        
         init(with response: TransferResponseBaseData, operation: Payments.Operation) throws {
             
-            self.status = Status(with: response.documentStatus)
-            self.amount = try Self.amount(with: response, operation: operation)
-            self.currency = try Self.currency(with: response, operation: operation)
-            self.icon = nil
-            self.operationDetailId = response.paymentOperationDetailId
-        }
-        
-        static func amount(with response: TransferResponseBaseData, operation: Payments.Operation) throws -> Double {
-        
-            //FIXME: - refactor
-            return 0
-            /*
-            if let anywayTransferResponse = response as? TransferAnywayResponseData,
-                let amount = anywayTransferResponse.amount {
+            guard let status = response.documentStatus,
+            let amount = operation.amount,
+            let productId = operation.productId else {
                 
-                return amount
-                
-            } else if let parameter = operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.amount.rawValue }) as? Payments.ParameterAmount {
-                
-                return parameter.amount
-                
-            } else {
-                
-                throw Payments.Error.missingAmountParameter
-            }
-             */
-        }
-        
-        static func currency(with response: TransferResponseBaseData, operation: Payments.Operation) throws -> Currency {
-        
-            //FIXME: - refactor
-            return .eur
-            /*
-            if let anywayTransferResponse = response as? TransferAnywayResponseData,
-                let currencyValue = anywayTransferResponse.currencyAmount {
-                
-                return currencyValue
-                
-            } else if let parameter = operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.amount.rawValue }) as? Payments.ParameterAmount {
-                
-                return parameter.currency
-                
-            } else {
-                
-                throw Payments.Error.missingCurrency
-            }
-             */
-        }
-        
-        enum Status {
-            
-            case complete
-            case inProgress
-            case rejected
-            
-            var description: String {
-                
-                switch self {
-                case .complete: return "Оплата прошла успешно"
-                case .inProgress: return "Операция выполняется"
-                case .rejected: return "Отказ"
-                }
+                //TODO: more informative error
+                throw Payments.Error.unsupported
             }
             
-            init(with documentStatus: TransferResponseBaseData.DocumentStatus?) {
-                
-                //FIXME: TransferResponseBaseData.DocumentStatus must be not optional
-                guard let documentStatus = documentStatus else {
-                    
-                    self = .inProgress
-                    return
-                }
-                
-                switch documentStatus {
-                case .complete: self = .complete
-                case .inProgress: self = .inProgress
-                case .rejected: self = .rejected
-                //FIXME: status for unknown document status required
-                default: self = .inProgress
-                }
-            }
+            self.init(operationDetailId: response.paymentOperationDetailId, status: status, productId: productId, amount: amount, service: operation.service)
         }
     }
 }

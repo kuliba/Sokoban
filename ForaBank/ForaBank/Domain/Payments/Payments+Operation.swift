@@ -250,6 +250,29 @@ extension Payments.Operation {
     }
 }
 
+//MARK: - Helpers
+
+extension Payments.Operation {
+    
+    var amount: Double? {
+        
+        guard let amountParameter = parameters.first(where: { $0.id == Payments.Parameter.Identifier.amount.rawValue }) as? Payments.ParameterAmount else {
+            return nil
+        }
+        
+        return amountParameter.amount
+    }
+    
+    var productId: ProductData.ID? {
+        
+        guard let productParameter = parameters.first(where: { $0.id == Payments.Parameter.Identifier.product.rawValue }) as? Payments.ParameterProduct else {
+            return nil
+        }
+        
+        return productParameter.productId
+    }
+}
+
 //MARK: - Error
 
 extension Payments.Operation {

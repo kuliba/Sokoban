@@ -27,16 +27,18 @@ struct PaymentsView: View {
                     PaymentsOperationView(viewModel: operationViewModel)
                 }
             }
-            .fullScreenCoverLegacy(viewModel: $viewModel.successViewModel) { successViewModel in
-                PaymentsSuccessView(viewModel: successViewModel)
-            }
             
             if let spinnerViewModel = viewModel.spinner {
                 
                 SpinnerView(viewModel: spinnerViewModel)
             }
         }
+        .fullScreenCover(item: $viewModel.successViewModel, content: { successViewModel in
+            
+            PaymentsSuccessView(viewModel: successViewModel)
+        })
         .alert(item: $viewModel.alert, content: { alertViewModel in
+            
             Alert(with: alertViewModel)
         })
     }
