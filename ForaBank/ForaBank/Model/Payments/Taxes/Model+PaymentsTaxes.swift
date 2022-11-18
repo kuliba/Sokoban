@@ -9,7 +9,7 @@ import Foundation
 
 extension Model {
     
-    func paymentsParameterRepresentableTaxes(service: Payments.Service, parameterData: ParameterData) throws -> PaymentsParameterRepresentable? {
+    func paymentsParameterRepresentableTaxes(operation: Payments.Operation, parameterData: ParameterData) throws -> PaymentsParameterRepresentable? {
         
         switch parameterData.id {
         case "a3_categorySelect_3_1":

@@ -266,8 +266,22 @@ extension PaymentsOperationTests {
         // then
         XCTAssertEqual(result.visible, ["one"])
     }
+    
+    func testUpdatedVisible_Nil_Unchanged() throws {
+        
+        // given
+        let paramOne = Payments.ParameterMock(id: "one", value: "100")
+        let paramTwo = Payments.ParameterMock(id: "two", value: "200")
+        let stepFirst = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: ["one"], isCompleted: false), back:  .init(stage: .local, required: ["one"], processed: nil))
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepFirst], visible: ["one"])
+        
+        // when
+        let result = operation.updated(visible: nil)
+        
+        // then
+        XCTAssertEqual(result.visible, ["one"])
+    }
 }
-
 
 //MARK: - Updated
 

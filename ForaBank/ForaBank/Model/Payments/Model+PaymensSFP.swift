@@ -48,5 +48,41 @@ extension Model {
             throw Payments.Error.unsupported
         }
     }
+    
+    func paymentsParameterRepresentableSFP(_ operation: Payments.Operation, adittionalData: TransferAnywayResponseData.AdditionalData) throws -> PaymentsParameterRepresentable? {
+        
+        switch adittionalData.fieldName {
+        case Payments.Parameter.Identifier.sftRecipient.rawValue:
+            return Payments.ParameterInfo(
+                .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
+                icon: adittionalData.iconData ?? .parameterDocument,
+                title: adittionalData.fieldTitle, placement: .feed)
+            
+        case Payments.Parameter.Identifier.sfpAmount.rawValue:
+            return Payments.ParameterInfo(
+                .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
+                icon: adittionalData.iconData ?? .parameterDocument,
+                title: adittionalData.fieldTitle, placement: .feed)
+
+        default:
+            return nil
+        }
+    }
+    
+    func paymentsProcessOperationVisibleSFP(_ operation: Payments.Operation) async throws -> [Payments.Parameter.ID]? {
+        
+        // check if current step stage is confirm
+        guard case .remote(let remote) = operation.steps.last?.back.stage,
+              remote == .confirm else {
+            return nil
+        }
+
+        return [Payments.Parameter.Identifier.sfpPhone.rawValue,
+                Payments.Parameter.Identifier.sftRecipient.rawValue,
+                Payments.Parameter.Identifier.sfpBank.rawValue,
+                Payments.Parameter.Identifier.sfpAmount.rawValue,
+                Payments.Parameter.Identifier.fee.rawValue,
+                Payments.Parameter.Identifier.code.rawValue]
+    }
 }
 

@@ -53,6 +53,8 @@ extension Payments.Parameter {
         
         case sfpPhone       = "RecipientID"
         case sfpBank        = "BankRecipientID"
+        case sftRecipient   = "RecipientNm"
+        case sfpAmount      = "SumSTrs"
         case sfpMessage     = "Ustrd"
     }
     

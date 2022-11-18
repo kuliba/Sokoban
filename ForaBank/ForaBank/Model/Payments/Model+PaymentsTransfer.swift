@@ -87,12 +87,12 @@ extension Model {
 
 extension Model {
     
-    func paymentsTransferStepParameters(service: Payments.Service, response: TransferResponseData) throws -> [PaymentsParameterRepresentable] {
+    func paymentsTransferStepParameters(_ operation: Payments.Operation, response: TransferResponseData) throws -> [PaymentsParameterRepresentable] {
         
         return []
     }
     
-    func paymentsTransferStepVisible(service: Payments.Service, nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], response: TransferResponseData) throws -> [Payments.Parameter.ID] {
+    func paymentsTransferStepVisible(_ operation: Payments.Operation, nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], response: TransferResponseData) throws -> [Payments.Parameter.ID] {
         
         var result = [Payments.Parameter.ID]()
         
@@ -102,7 +102,7 @@ extension Model {
         return result
     }
     
-    func paymentsTransferStepStage(service: Payments.Service, operation: Payments.Operation, response: TransferResponseData) throws -> Payments.Operation.Stage {
+    func paymentsTransferStepStage(_ operation: Payments.Operation, response: TransferResponseData) throws -> Payments.Operation.Stage {
         
         if response.needOTP == true {
             
@@ -129,7 +129,7 @@ extension Model {
         }
     }
     
-    func paymentsTransferStepRequired(service: Payments.Service, visible: [Payments.Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable]) throws -> [Payments.Parameter.ID] {
+    func paymentsTransferStepRequired(_ operation: Payments.Operation, visible: [Payments.Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable]) throws -> [Payments.Parameter.ID] {
         
         nextStepParameters.filter({ visible.contains($0.id) }).map({ $0.id })
     }

@@ -169,6 +169,19 @@ extension Model {
         return operation
     }
     
+    /// Executes each time after appending step to operation.
+    /// Return nil if no changes in parameters visibility and order required
+    /// Othewise return parameters ids that must be visible in exact order
+    func paymentsProcessOperationVisible(operation: Payments.Operation) async throws -> [Payments.Parameter.ID]? {
+        
+        switch operation.service {
+        case .sfp:
+            return try await paymentsProcessOperationVisibleSFP(operation)
+            
+        default:
+            return nil
+        }
+    }
 }
 
 //MARK: - Step
@@ -207,7 +220,7 @@ extension Model {
             switch operation.transferType {
             case .anyway:
                 
-                let next = try paymentsTransferAnywayStepParameters(service: operation.service, response: anywayResponse)
+                let next = try paymentsTransferAnywayStepParameters(operation, response: anywayResponse)
                 
                 let duplicates = next.map({ $0.parameter }).filter({ operation.parametersIds.contains($0.id) })
                 if duplicates.count > 0 {
@@ -217,14 +230,14 @@ extension Model {
                 // next parameters without duplicates
                 let nextParameters = next.filter({ operation.parametersIds.contains($0.id) == false })
                 
-                let visible = try paymentsTransferAnywayStepVisible(service: operation.service, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
-                let stepStage = try paymentsTransferAnywayStepStage(service: operation.service, operation: operation, response: anywayResponse)
-                let required = try paymentsTransferAnywayStepRequired(service: operation.service, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters)
+                let visible = try paymentsTransferAnywayStepVisible(operation, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
+                let stepStage = try paymentsTransferAnywayStepStage(operation, response: anywayResponse)
+                let required = try paymentsTransferAnywayStepRequired(operation, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters)
                 
                 return Payments.Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, required: required, processed: nil))
                 
             case .sfp:
-                let next = try paymentsTransferSFPStepParameters(service: operation.service, response: anywayResponse)
+                let next = try paymentsTransferSFPStepParameters(operation, response: anywayResponse)
                 
                 let duplicates = next.map({ $0.parameter }).filter({ operation.parametersIds.contains($0.id) })
                 if duplicates.count > 0 {
@@ -234,9 +247,9 @@ extension Model {
                 // next parameters without duplicates
                 let nextParameters = next.filter({ operation.parametersIds.contains($0.id) == false })
                 
-                let visible = try paymentsTransferSFPStepVisible(service: operation.service, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
-                let stepStage = try paymentsTransferSFPStepStage(service: operation.service, operation: operation, response: anywayResponse)
-                let required = try paymentsTransferSFPStepRequired(service: operation.service, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters)
+                let visible = try paymentsTransferSFPStepVisible(operation, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
+                let stepStage = try paymentsTransferSFPStepStage(operation, response: anywayResponse)
+                let required = try paymentsTransferSFPStepRequired(operation, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters)
                 
                 return Payments.Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, required: required, processed: nil))
                 
@@ -351,11 +364,11 @@ extension Model {
 
 extension Model {
 
-    func paymentsParameterRepresentable(service: Payments.Service, parameterData: ParameterData) throws -> PaymentsParameterRepresentable? {
+    func paymentsParameterRepresentable(_ operation: Payments.Operation, parameterData: ParameterData) throws -> PaymentsParameterRepresentable? {
         
-        switch service {
+        switch operation.service {
         case .fns, .fms, .fssp:
-            return try paymentsParameterRepresentableTaxes(service: service, parameterData: parameterData)
+            return try paymentsParameterRepresentableTaxes(operation: operation, parameterData: parameterData)
             
         default:
             throw Payments.Error.unsupported
@@ -403,20 +416,11 @@ extension Model {
         }
     }
     
-    func paymentsParameterRepresentable(service: Payments.Service, adittionalData: TransferAnywayResponseData.AdditionalData) throws -> PaymentsParameterRepresentable? {
+    func paymentsParameterRepresentable(_ operation: Payments.Operation, adittionalData: TransferAnywayResponseData.AdditionalData) throws -> PaymentsParameterRepresentable? {
         
-        switch service {
+        switch operation.service {
         case .sfp:
-            switch adittionalData.fieldName {
-            case "RecipientNm", "SumSTrs":
-                return Payments.ParameterInfo(
-                    .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
-                    icon: adittionalData.iconData ?? .parameterDocument,
-                    title: adittionalData.fieldTitle, placement: .feed)
-                
-            default:
-                return nil
-            }
+            return try paymentsParameterRepresentableSFP(operation, adittionalData: adittionalData)
             
         default:
             return Payments.ParameterInfo(

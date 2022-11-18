@@ -78,13 +78,13 @@ extension Model {
 
 extension Model {
     
-    func paymentsTransferAnywayStepParameters(service: Payments.Service, response: TransferAnywayResponseData) throws -> [PaymentsParameterRepresentable] {
+    func paymentsTransferAnywayStepParameters(_ operation: Payments.Operation, response: TransferAnywayResponseData) throws -> [PaymentsParameterRepresentable] {
         
         var result = [PaymentsParameterRepresentable]()
         
         for additionalData in response.additionalList {
             
-            guard let parameter = try paymentsParameterRepresentable(service: service, adittionalData: additionalData) else {
+            guard let parameter = try paymentsParameterRepresentable(operation, adittionalData: additionalData) else {
                 
                 continue
             }
@@ -94,7 +94,7 @@ extension Model {
         
         for parameterData in response.parameterListForNextStep {
             
-            if let parameter = try paymentsParameterRepresentable(service: service, parameterData: parameterData) {
+            if let parameter = try paymentsParameterRepresentable(operation, parameterData: parameterData) {
                 
                 result.append(parameter)
                 
@@ -120,7 +120,7 @@ extension Model {
         return result
     }
     
-    func paymentsTransferAnywayStepVisible(service: Payments.Service, nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], response: TransferAnywayResponseData) throws -> [Payments.Parameter.ID] {
+    func paymentsTransferAnywayStepVisible(_ operation: Payments.Operation, nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], response: TransferAnywayResponseData) throws -> [Payments.Parameter.ID] {
         
         var result = [Payments.Parameter.ID]()
         
@@ -143,7 +143,7 @@ extension Model {
         return result
     }
     
-    func paymentsTransferAnywayStepStage(service: Payments.Service, operation: Payments.Operation, response: TransferAnywayResponseData) throws -> Payments.Operation.Stage {
+    func paymentsTransferAnywayStepStage(_ operation: Payments.Operation, response: TransferAnywayResponseData) throws -> Payments.Operation.Stage {
         
         if response.finalStep == true {
             
@@ -163,8 +163,8 @@ extension Model {
         }
     }
     
-    func paymentsTransferAnywayStepRequired(service: Payments.Service, visible: [Payments.Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable]) throws -> [Payments.Parameter.ID] {
+    func paymentsTransferAnywayStepRequired(_ operation: Payments.Operation, visible: [Payments.Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable]) throws -> [Payments.Parameter.ID] {
         
-        try paymentsTransferStepRequired(service: service, visible: visible, nextStepParameters: nextStepParameters, operationParameters: operationParameters)
+        try paymentsTransferStepRequired(operation, visible: visible, nextStepParameters: nextStepParameters, operationParameters: operationParameters)
     }
 }

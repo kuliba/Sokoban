@@ -283,14 +283,15 @@ extension PaymentsProcessTests {
     func process(_ operation: Payments.Operation) async throws -> Payments.ProcessResult {
         
         try await Model.paymentsProcess(operation: operation,
-                              localStep: localStep(operation:stepIndex:),
-                              remoteStep: remoteStep(operation:response:),
-                              remoteStart: remoteStart(parameters:operation:),
-                              remoteNext: remoteNext(parameters:operation:),
-                              remoteConfirm: remoteConfirm(parameters:operation:),
-                              remoteComplete: remoteComplete(parameters:operation:),
-                              sourceReducer: sourceReducer(service:source:parameter:),
-                              dependenceReducer: dependenceReducer(parameterId:parameters:))
+                                        localStep: localStep(operation:stepIndex:),
+                                        remoteStep: remoteStep(operation:response:),
+                                        visible: visibleReducer(operation:),
+                                        remoteStart: remoteStart(parameters:operation:),
+                                        remoteNext: remoteNext(parameters:operation:),
+                                        remoteConfirm: remoteConfirm(parameters:operation:),
+                                        remoteComplete: remoteComplete(parameters:operation:),
+                                        sourceReducer: sourceReducer(service:source:parameter:),
+                                        dependenceReducer: dependenceReducer(parameterId:parameters:))
     }
 }
 
@@ -484,6 +485,11 @@ private func sourceReducer(service: Payments.Service, source: Payments.Operation
 }
 
 private func dependenceReducer(parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
+    
+    return nil
+}
+
+private func visibleReducer(operation: Payments.Operation) async throws -> [Payments.Parameter.ID]? {
     
     return nil
 }

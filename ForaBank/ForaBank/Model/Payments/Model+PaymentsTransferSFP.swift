@@ -86,13 +86,13 @@ extension Model {
 
 extension Model {
     
-    func paymentsTransferSFPStepParameters(service: Payments.Service, response: TransferAnywayResponseData) throws -> [PaymentsParameterRepresentable] {
+    func paymentsTransferSFPStepParameters(_ operation: Payments.Operation, response: TransferAnywayResponseData) throws -> [PaymentsParameterRepresentable] {
         
         var result = [PaymentsParameterRepresentable]()
         
         for additionalData in response.additionalList {
             
-            guard let parameter = try paymentsParameterRepresentable(service: service, adittionalData: additionalData) else {
+            guard let parameter = try paymentsParameterRepresentable(operation, adittionalData: additionalData) else {
                 continue
             }
             
@@ -113,17 +113,17 @@ extension Model {
         return result
     }
     
-    func paymentsTransferSFPStepVisible(service: Payments.Service, nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], response: TransferAnywayResponseData) throws -> [Payments.Parameter.ID] {
+    func paymentsTransferSFPStepVisible(_ operation: Payments.Operation, nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], response: TransferAnywayResponseData) throws -> [Payments.Parameter.ID] {
         
         nextStepParameters.map{ $0.id }
     }
     
-    func paymentsTransferSFPStepStage(service: Payments.Service, operation: Payments.Operation, response: TransferAnywayResponseData) throws -> Payments.Operation.Stage {
+    func paymentsTransferSFPStepStage(_ operation: Payments.Operation, response: TransferAnywayResponseData) throws -> Payments.Operation.Stage {
         
         return .remote(.confirm)
     }
     
-    func paymentsTransferSFPStepRequired(service: Payments.Service, visible: [Payments.Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable]) throws -> [Payments.Parameter.ID] {
+    func paymentsTransferSFPStepRequired(_ operation: Payments.Operation, visible: [Payments.Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable]) throws -> [Payments.Parameter.ID] {
         
         return []
     }
