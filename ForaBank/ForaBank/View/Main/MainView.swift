@@ -147,6 +147,7 @@ struct MainView: View {
             Alert(with: alertViewModel)
         })
         .tabBar(isHidden: $viewModel.isTabBarHidden)
+        .onAppear { viewModel.action.send(MainViewModelAction.ViewDidApear()) }
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(leading:
                                 UserAccountButton(viewModel: viewModel.userAccountButton),

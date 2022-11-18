@@ -121,6 +121,9 @@ class MainViewModel: ObservableObject, Resetable {
                 case _ as MainViewModelAction.Close.Sheet:
                     self.sheet = nil
                     
+                case _ as MainViewModelAction.ViewDidApear:
+                    self.isTabBarHidden = false
+                    
                 default:
                     break
                 }
@@ -553,6 +556,8 @@ enum MainViewModelAction {
     
     struct PullToRefresh: Action {}
     
+    struct ViewDidApear: Action {}
+    
     enum Close {
      
         struct Link: Action {}
@@ -561,7 +566,7 @@ enum MainViewModelAction {
     }
     
     enum Show {
-    
+        
         struct ProductProfile: Action {
             
             let productId: ProductData.ID

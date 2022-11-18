@@ -12,7 +12,7 @@ import Combine
 
 extension PaymentsSpoilerButtonView {
     
-    class ViewModel: PaymentsParameterViewModel {
+    class ViewModel: PaymentsParameterViewModel, ObservableObject {
         
         let title: String
         @Published var isSelected: Bool

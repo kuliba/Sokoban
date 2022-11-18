@@ -12,7 +12,7 @@ import Combine
 
 extension PaymentsProductView {
     
-    class ViewModel: PaymentsParameterViewModel {
+    class ViewModel: PaymentsParameterViewModel, ObservableObject {
         
         let title: String
         @Published var cardIcon: Image

@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class PaymentsParameterViewModel: Identifiable, ObservableObject {
+class PaymentsParameterViewModel: Identifiable {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
