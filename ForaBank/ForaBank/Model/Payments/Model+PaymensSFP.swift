@@ -69,7 +69,8 @@ extension Model {
         }
     }
     
-    func paymentsProcessOperationVisibleSFP(_ operation: Payments.Operation) async throws -> [Payments.Parameter.ID]? {
+    // resets visible items and order 
+    func paymentsProcessOperationResetVisibleSFP(_ operation: Payments.Operation) async throws -> [Payments.Parameter.ID]? {
         
         // check if current step stage is confirm
         guard case .remote(let remote) = operation.steps.last?.back.stage,

@@ -15,7 +15,7 @@ extension Model {
             operation: operation,
             localStep: paymentsProcessLocalStep(operation:stepIndex:),
             remoteStep: paymentsProcessRemoteStep(operation:response:),
-            visible: paymentsProcessOperationVisible(operation:),
+            resetVisible: paymentsProcessOperationResetVisible(operation:),
             remoteStart: paymentsProcessRemoteStart(_:_:),
             remoteNext: paymentsProcessRemoteNext(_:_:),
             remoteConfirm: paymentsProcessRemoteConfirm(_:_:),
@@ -27,7 +27,7 @@ extension Model {
     static func paymentsProcess(operation: Payments.Operation,
                          localStep: (Payments.Operation, Int) async throws -> Payments.Operation.Step,
                          remoteStep: (Payments.Operation, TransferResponseData) async throws -> Payments.Operation.Step,
-                         visible: (Payments.Operation) async throws -> [Payments.Parameter.ID]?,
+                         resetVisible: (Payments.Operation) async throws -> [Payments.Parameter.ID]?,
                          remoteStart: ([Payments.Parameter], Payments.Operation) async throws -> TransferResponseData,
                          remoteNext: ([Payments.Parameter], Payments.Operation) async throws -> TransferResponseData,
                          remoteConfirm: ([Payments.Parameter], Payments.Operation) async throws -> Payments.Success,
@@ -76,7 +76,10 @@ extension Model {
                     operation = try operation.appending(step: stepUpdatedWithSource)
                     
                     // try to update visible
-                    operation = operation.reseted(visible: try await visible(operation))
+                    if let resetedVisible = try await resetVisible(operation) {
+    
+                        operation = operation.reseted(visible: resetedVisible)
+                    }
                     
                 case let .remote(remoteStage):
                     switch remoteStage {
@@ -112,7 +115,10 @@ extension Model {
                             operation = try operation.appending(step: nextStepUpdatedWithSource)
                             
                             // try to update visible
-                            operation = operation.reseted(visible: try await visible(operation))
+                            if let resetedVisible = try await resetVisible(operation) {
+            
+                                operation = operation.reseted(visible: resetedVisible)
+                            }
                         }
                         
                     case .next:
@@ -147,7 +153,10 @@ extension Model {
                             operation = try operation.appending(step: nextStepUpdatedWithSource)
                             
                             // try to update visible
-                            operation = operation.reseted(visible: try await visible(operation))
+                            if let resetedVisible = try await resetVisible(operation) {
+            
+                                operation = operation.reseted(visible: resetedVisible)
+                            }
                         }
                         
                     case .confirm:

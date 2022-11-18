@@ -285,7 +285,7 @@ extension PaymentsProcessTests {
         try await Model.paymentsProcess(operation: operation,
                                         localStep: localStep(operation:stepIndex:),
                                         remoteStep: remoteStep(operation:response:),
-                                        visible: visibleReducer(operation:),
+                                        resetVisible: visibleReducer(operation:),
                                         remoteStart: remoteStart(parameters:operation:),
                                         remoteNext: remoteNext(parameters:operation:),
                                         remoteConfirm: remoteConfirm(parameters:operation:),

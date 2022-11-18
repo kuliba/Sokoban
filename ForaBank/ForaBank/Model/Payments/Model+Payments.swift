@@ -172,11 +172,11 @@ extension Model {
     /// Executes each time after appending step to operation.
     /// Return nil if no changes in parameters visibility and order required
     /// Othewise return parameters ids that must be visible in exact order
-    func paymentsProcessOperationVisible(operation: Payments.Operation) async throws -> [Payments.Parameter.ID]? {
+    func paymentsProcessOperationResetVisible(operation: Payments.Operation) async throws -> [Payments.Parameter.ID]? {
         
         switch operation.service {
         case .sfp:
-            return try await paymentsProcessOperationVisibleSFP(operation)
+            return try await paymentsProcessOperationResetVisibleSFP(operation)
             
         default:
             return nil

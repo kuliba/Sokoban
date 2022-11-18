@@ -87,13 +87,9 @@ extension Payments.Operation {
     }
     
     /// Resets visible parameters for operation. Only parameters represented in operation can be visible. If list is nil - operation returns unchanged. If visible list after filtration with operaton parameters contains no elemnts, operation returns unchanged.
-    /// - Parameter visible: Optional list of visible parameters ids. Order in this list also defines order in the view.
+    /// - Parameter visible: List of visible parameters ids. Order in this list also defines order in the view.
     /// - Returns: Updated operation.
-    func reseted(visible: [Parameter.ID]?) -> Payments.Operation {
-        
-        guard let visible = visible else {
-            return self
-        }
+    func reseted(visible: [Parameter.ID]) -> Payments.Operation {
         
         let visibleFilterred = visible.filter({ parametersIds.contains($0) })
         
