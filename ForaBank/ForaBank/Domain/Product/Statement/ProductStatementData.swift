@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ProductStatementData: Codable, Equatable, Hashable, Identifiable {
+struct ProductStatementData: Identifiable {
     
     var id: Int { hashValue }
     let mcc: Int?
@@ -112,7 +112,7 @@ extension ProductStatementData {
 
 //MARK: - Codable
 
-extension ProductStatementData {
+extension ProductStatementData: Codable {
     
     private enum CodingKeys: String, CodingKey {
         
@@ -176,7 +176,7 @@ extension ProductStatementData {
     }
     
     func encode(to encoder: Encoder) throws {
-
+        
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(mcc, forKey: .mcc)
         try container.encode(accountId, forKey: .accountId)
@@ -211,6 +211,76 @@ extension ProductStatementData {
         }
         
         try container.encode(type, forKey: .type)
+    }
+}
+
+//MARK: - Equatable
+
+extension ProductStatementData: Equatable {
+    
+    static func == (lhs: ProductStatementData, rhs: ProductStatementData) -> Bool {
+        
+        return  lhs.mcc == rhs.mcc &&
+        lhs.accountId == rhs.accountId &&
+        lhs.accountNumber == rhs.accountNumber &&
+        lhs.amount == rhs.amount &&
+        lhs.cardTranNumber == rhs.cardTranNumber &&
+        lhs.city == rhs.city &&
+        lhs.comment == rhs.comment &&
+        lhs.country == rhs.country &&
+        lhs.currencyCodeNumeric == rhs.currencyCodeNumeric &&
+        lhs.date == rhs.date &&
+        lhs.deviceCode == rhs.deviceCode &&
+        lhs.documentAmount == rhs.documentAmount &&
+        lhs.documentId == rhs.documentId &&
+        lhs.fastPayment == rhs.fastPayment &&
+        lhs.groupName == rhs.groupName &&
+        lhs.isCancellation == rhs.isCancellation &&
+        lhs.md5hash == rhs.md5hash &&
+        lhs.merchantName == rhs.merchantName &&
+        lhs.merchantNameRus == rhs.merchantNameRus &&
+        lhs.opCode == rhs.opCode &&
+        lhs.operationId == rhs.operationId &&
+        lhs.operationType == rhs.operationType &&
+        lhs.paymentDetailType == rhs.paymentDetailType &&
+        lhs.svgImage == rhs.svgImage &&
+        lhs.terminalCode == rhs.terminalCode &&
+        lhs.type == rhs.type
+    }
+}
+
+//MARK: - Hashable
+
+extension ProductStatementData: Hashable {
+    
+    func hash(into hasher: inout Hasher) {
+        
+        hasher.combine(mcc)
+        hasher.combine(accountId)
+        hasher.combine(accountNumber)
+        hasher.combine(amount)
+        hasher.combine(cardTranNumber)
+        hasher.combine(city)
+        hasher.combine(comment)
+        hasher.combine(country)
+        hasher.combine(currencyCodeNumeric)
+        hasher.combine(date)
+        hasher.combine(deviceCode)
+        hasher.combine(documentAmount)
+        hasher.combine(documentId)
+        hasher.combine(fastPayment)
+        hasher.combine(groupName)
+        hasher.combine(isCancellation)
+        hasher.combine(md5hash)
+        hasher.combine(merchantName)
+        hasher.combine(merchantNameRus)
+        hasher.combine(opCode)
+        hasher.combine(operationId)
+        hasher.combine(operationType)
+        hasher.combine(paymentDetailType)
+        hasher.combine(svgImage)
+        hasher.combine(terminalCode)
+        hasher.combine(type)
     }
 }
 

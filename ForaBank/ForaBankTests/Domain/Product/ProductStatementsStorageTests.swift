@@ -67,8 +67,8 @@ extension ProductStatementsStorageTests {
         let updateEnd = Date.date(year: 2022, month: 5, day: 30, calendar: calendar)!
         let updatePeriod = Period(start: updateStart, end: updateEnd)
         
-        let updateStatementDate = Date.date(year: 2022, month: 4, day: 22, calendar: calendar)!
-        let updateStatement = ProductStatementData(date: updateStatementDate, amount: 300, operationType: .debit, tranDate: nil)
+        let updateStatementTranDate = Date.date(year: 2022, month: 5, day: 15, calendar: calendar)!
+        let updateStatement = ProductStatementData(date: lastStatementDate, amount: 200, operationType: .debit, tranDate: updateStatementTranDate)
         
         let update = ProductStatementsStorage.Update(period: updatePeriod, statements: [updateStatement], direction: .latest, limitDate: updateEnd)
         
@@ -79,7 +79,7 @@ extension ProductStatementsStorageTests {
         XCTAssertEqual(result.period, Period(start: startDate, end: updateEnd))
         XCTAssertEqual(result.statements.count, 2)
         XCTAssertEqual(result.statements[0].date, firstStatementDate)
-        XCTAssertEqual(result.statements[1].date, updateStatementDate)
+        XCTAssertEqual(result.statements[1].tranDate, updateStatementTranDate)
     }
 }
 
