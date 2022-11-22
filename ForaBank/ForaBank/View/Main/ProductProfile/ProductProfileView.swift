@@ -147,12 +147,9 @@ struct ProductProfileView: View {
             switch sheet.type {
             case let .printForm(printFormViewModel):
                 PrintFormView(viewModel: printFormViewModel)
-                
+
             case let .placesMap(placesViewModel):
                 PlacesView(viewModel: placesViewModel)
-                
-            case let .info(operationDetailInfoViewModel):
-                OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
             }
         })
         .fullScreenCover(item: $viewModel.fullCoverSpinner) { fullCoverSpinner in
@@ -204,6 +201,15 @@ struct ProductProfileView: View {
                     }.transaction { transaction in
                         transaction.disablesAnimations = false
                     }
+                
+            case let .printForm(printFormViewModel):
+                PrintFormView(viewModel: printFormViewModel)
+                
+            case let .placesMap(placesViewModel):
+                PlacesView(viewModel: placesViewModel)
+                
+            case let .info(operationDetailInfoViewModel):
+                OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
             }
         })
         .alert(item: $viewModel.alert, content: { alertViewModel in

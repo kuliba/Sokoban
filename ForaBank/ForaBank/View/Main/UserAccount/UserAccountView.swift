@@ -115,8 +115,8 @@ struct UserAccountView: View {
             Alert(with: alertViewModel)
         })
         .textfieldAlert(alert: $viewModel.textFieldAlert)
+        .navigationBarTitle("", displayMode: .inline)
         .navigationBar(with: viewModel.navigationBar)
-        
     }
     
     var avatarView: some View {
