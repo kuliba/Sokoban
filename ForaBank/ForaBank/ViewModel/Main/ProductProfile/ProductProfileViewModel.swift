@@ -540,7 +540,7 @@ class ProductProfileViewModel: ObservableObject {
                        self.bottomSheet = .init(type: .operationDetail(operationDetailViewModel))
                        
                        if #unavailable(iOS 14.5) {
-                           
+
                            self.bind(operationDetailViewModel)
                        }
                        
@@ -560,20 +560,20 @@ class ProductProfileViewModel: ObservableObject {
                 switch action {
                 case let payload as OperationDetailViewModelAction.ShowInfo:
                     self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
 
-                        self.sheet = .init(type: .info(payload.viewModel))
+                        self.bottomSheet = .init(type: .info(payload.viewModel))
                     }
                 
                 case let payload as OperationDetailViewModelAction.ShowDocument:
                     self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                         
-                        self.sheet = .init(type: .printForm(payload.viewModel))
+                        self.bottomSheet = .init(type: .printForm(payload.viewModel))
                     }
                 
                 case _ as OperationDetailViewModelAction.CloseSheet:
-                    sheet = nil
+                    bottomSheet = nil
                     
                 default:
                     break
@@ -1193,6 +1193,9 @@ extension ProductProfileViewModel {
             case meToMe(MeToMeViewModel)
             case closeAccount(PaymentsMeToMeViewModel)
             case closeDeposit(PaymentsMeToMeViewModel)
+            case printForm(PrintFormView.ViewModel)
+            case placesMap(PlacesViewModel)
+            case info(OperationDetailInfoViewModel)
         }
     }
     
@@ -1213,7 +1216,6 @@ extension ProductProfileViewModel {
             
             case printForm(PrintFormView.ViewModel)
             case placesMap(PlacesViewModel)
-            case info(OperationDetailInfoViewModel)
         }
     }
     

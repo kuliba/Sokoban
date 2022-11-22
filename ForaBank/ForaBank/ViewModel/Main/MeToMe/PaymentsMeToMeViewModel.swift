@@ -267,7 +267,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 return
                             }
                                 
-                            self.model.action.send(ModelAction.Deposits.Close.Request(payload: .init(id: productFrom.depositId, name: productFrom.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: productFrom.id, cardId: nil)))
+                            self.model.action.send(ModelAction.Deposits.Close.Request(payload: .init(id: productFrom.depositId, name: productFrom.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: productTo.id, cardId: nil)))
                             
                         default: break
                             
@@ -278,7 +278,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     
                     switch mode {
                     case .closeDeposit(_, _):
-                        self.bottomSheet = .init(type: .info(.init(icon: .ic48AlertCircle, title: "Сумма расчитана автоматически с учетом условий по вашему вкладу")))
+                        self.bottomSheet = .init(type: .info(.init(icon: .ic48AlertCircle, title: "Сумма расcчитана автоматически с учетом условий по вашему вкладу")))
 
                     default: break
                     }
