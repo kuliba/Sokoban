@@ -40,6 +40,8 @@ extension ProductSelectorView {
             return productViewModel
         }
         
+        var selectedProductId: ProductData.ID? { productViewModel?.id }
+        
         init(_ model: Model, content: Content, listViewModel: ProductsListView.ViewModel?, context: Context) {
             
             self.model = model
@@ -58,15 +60,12 @@ extension ProductSelectorView {
                 
             } else {
                 
-                let list: ProductsListView.ViewModel? = .init(model: model, context: context)
+                let list = ProductsListView.ViewModel(selectedProductId: productData.id, filter: context.filter, model: model)
                 self.init(model, content: .product(productViewModel), listViewModel: list, context: context)
-                
-                if let list = list {
-                    bind(list: list)
-                }
             }
             
             bind()
+            bind(list: list)
         }
         
         convenience init(_ model: Model, context: Context) {
@@ -77,7 +76,7 @@ extension ProductSelectorView {
         
         convenience init(_ model: Model, parameterProduct: Payments.ParameterProduct) {
             
-            let context = Context(title: "Счет списания", direction: .from)
+            let context = Context(title: parameterProduct.title, direction: .from, filter: parameterProduct.filter)
             
             if let productId = parameterProduct.productId,
                let productData = model.product(productId: productId) {
@@ -100,16 +99,10 @@ extension ProductSelectorView {
                     case _ as ProductSelectorAction.Product.Tap:
                         
                         if list == nil {
-                            
-                            let list = ProductsListView.ViewModel(model: model, context: context.value)
-                            
-                            guard let list = list else {
-                                return
-                            }
-                            
+         
                             withAnimation {
                                 
-                                self.list = list
+                                self.list = ProductsListView.ViewModel(selectedProductId: selectedProductId, filter: context.value.filter, model: model)
                             }
                             
                             bind(list: list)
@@ -137,38 +130,34 @@ extension ProductSelectorView {
                     case let .placeholder(placeholderViewModel):
                         placeholderViewModel.update(context: context)
                     }
-   
-                    updateList(context: context)
                     
                 }.store(in: &bindings)
         }
         
-        func bind(list: ProductsListView.ViewModel) {
+        func bind(list: ProductsListView.ViewModel?) {
             
-            list.action
+            list?.action
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] action in
                     
                     switch action {
-                    case let payload as ProductsListAction.Product.Tap:
+                    case let payload as ProductsListViewModelAction.Product.Tap:
                         
                         if let product = model.product(productId: payload.id) {
-                            
-                            var context = context.value
-                            context.checkProductId = product.id
-                            
+
                             let productViewModel: ProductViewModel = .init(
                                 model,
                                 productData: product,
-                                context: context)
+                                context: context.value)
 
                             content = .product(productViewModel)
-                            self.context.value = context
-                            
                             collapseList()
                             
                             self.action.send(ProductSelectorAction.Selected(id: product.id))
                         }
+                        
+                    case _ as ProductsListViewModelAction.CloseList:
+                        collapseList()
                         
                     default:
                         break
@@ -185,6 +174,7 @@ extension ProductSelectorView {
                         switch content {
                         case let .product(productViewModel):
                             productViewModel.isCollapsed = list == nil
+                            
                         case let .placeholder(placeholderViewModel):
                             placeholderViewModel.isCollapsed = list == nil
                         }
@@ -193,12 +183,6 @@ extension ProductSelectorView {
                 }.store(in: &bindings)
         }
         
-        private func updateList(context: Context) {
-            
-            if let list = list {
-                list.context = context
-            }
-        }
         
         func collapseList() {
             
@@ -222,11 +206,7 @@ extension ProductSelectorView.ViewModel {
         var isUserInteractionEnabled: Bool = true
         
         // ProductsList
-        var currency: Currency?
-        var excludeTypes: [ProductType]?
-        var excludeProductId: ProductData.ID?
-        var checkProductId: ProductData.ID?
-        var isAdditionalProducts: Bool = false
+        var filter: ProductData.Filter
         
         enum Direction {
             
@@ -247,7 +227,7 @@ extension ProductSelectorView.ViewModel {
         
         let action: PassthroughSubject<Action, Never> = .init()
         
-        @Published var id: ProductData.ID
+        let id: ProductData.ID
         @Published var title: String
         @Published var cardIcon: Image?
         @Published var paymentIcon: Image?

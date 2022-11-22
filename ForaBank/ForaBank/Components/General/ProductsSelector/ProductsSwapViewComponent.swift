@@ -56,8 +56,8 @@ extension ProductsSwapView {
             switch mode {
             case .general:
                 
-                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, checkProductId: productData.id)
-                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to)
+                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, filter: .meToMeFrom)
+                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, filter: .meToMeTo)
                 
                 let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
                 let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
@@ -68,8 +68,12 @@ extension ProductsSwapView {
                 
             case let .closeAccount(productData, _):
                 
-                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, isUserInteractionEnabled: false, checkProductId: productData.id)
-                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, currency: .init(description: productData.currency), excludeTypes: [.deposit, .loan])
+                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, isUserInteractionEnabled: false, filter: .closeAccountFrom)
+                
+                var filterTo = ProductData.Filter.closeAccountTo
+                filterTo.rules.append(ProductData.Filter.CurrencyRule([.init(description: productData.currency)]))
+                filterTo.rules.append(ProductData.Filter.ProductRestrictedRule([productData.id]))
+                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, filter: filterTo)
                 
                 let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
                 let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
@@ -78,9 +82,12 @@ extension ProductsSwapView {
                 
             case let .closeDeposit(productData, _):
                 
-                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, isUserInteractionEnabled: false, checkProductId: productData.id, isAdditionalProducts: true)
+                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, isUserInteractionEnabled: false, filter: .closeDepositFrom)
                 
-                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, currency: .init(description: productData.currency), excludeTypes: [.deposit, .loan])
+                var filterTo = ProductData.Filter.closeDepositTo
+                filterTo.rules.append(ProductData.Filter.CurrencyRule([.init(description: productData.currency)]))
+                filterTo.rules.append(ProductData.Filter.ProductRestrictedRule([productData.id]))
+                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, filter: filterTo)
                 
                 let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
                 let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
@@ -127,17 +134,11 @@ extension ProductsSwapView {
                         return
                     }
 
-                    var contextFrom = from.context.value
-                    var contextTo = to.context.value
+                    let contextFrom = to.context.value
+                    let contextTo = from.context.value
                     
-                    contextFrom.direction = .from
-                    contextTo.direction = .to
-                    
-                    contextFrom.title = "Откуда"
-                    contextTo.title = "Куда"
-                    
-                    from.context.send(contextFrom)
-                    to.context.send(contextTo)
+                    from.context.value = contextFrom
+                    to.context.value = contextTo
                     
                 }.store(in: &bindings)
         }

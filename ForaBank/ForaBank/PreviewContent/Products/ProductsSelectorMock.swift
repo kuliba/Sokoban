@@ -13,24 +13,22 @@ extension ProductSelectorView.ViewModel {
         listViewModel: nil,
         context: .init(
             title: "Откуда",
-            direction: .from))
+            direction: .from, filter: .generalFrom))
         
     static let sample2: ProductSelectorView.ViewModel = .init(
         .emptyMock,
         content: .product(.sample2),
         listViewModel: .init(
-            model: .emptyMock,
             products: [.classicSmall, .accountSmall],
-            typeSelector: .init(
+            selector: .init(
                 options: [
                     .init(id: "CARD", name: ProductType.card.pluralName),
                     .init(id: "ACCOUNT", name: ProductType.account.pluralName)
                 ],
                 selected: "CARD", style: .productsSmall),
-            context: .init(title: "Куда", direction: .to)),
-        context: .init(
-            title: "Куда",
-            direction: .to))
+            selectedProductId: 10,
+            filter: .generalFrom, model: .emptyMock),
+        context: .init(title: "Куда", direction: .to, filter: .generalFrom))
     
-    static let sample3: ProductSelectorView.ViewModel = .init(.emptyMock, context: .init(title: "Куда", direction: .to))
+    static let sample3: ProductSelectorView.ViewModel = .init(.emptyMock, context: .init(title: "Куда", direction: .to, filter: .generalFrom))
 }

@@ -28,10 +28,11 @@ extension Model {
             
             // product
             let productParameterId = Payments.Parameter.Identifier.product.rawValue
-            guard let productId = firstProductId(of: .card, currency: .rub) else {
+            let filter = ProductData.Filter.generalFrom
+            guard let productId = firstProductId(with: filter) else {
                 throw Payments.Error.unableCreateRepresentable(productParameterId)
             }
-            let productParameter = Payments.ParameterProduct(value: String(productId), isEditable: true)
+            let productParameter = Payments.ParameterProduct(value: String(productId), filter: filter, isEditable: true)
             
             //message
             let messageParameterId = Payments.Parameter.Identifier.sfpMessage.rawValue

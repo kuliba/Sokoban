@@ -445,6 +445,8 @@ extension Payments {
     struct ParameterProduct: PaymentsParameterRepresentable {
         
         let parameter: Parameter
+        let title: String
+        let filter: ProductData.Filter
         let isEditable: Bool
         var productId: ProductData.ID? {
             
@@ -455,15 +457,17 @@ extension Payments {
             return ProductData.ID(value)
         }
         
-        init(value: Parameter.Value, isEditable: Bool) {
+        init(value: Parameter.Value, title: String = "Счет списания", filter: ProductData.Filter, isEditable: Bool) {
             
             self.parameter = .init(id: Payments.Parameter.Identifier.product.rawValue, value: value)
+            self.title = title
+            self.filter = filter
             self.isEditable = isEditable
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterProduct(value: value, isEditable: isEditable)
+            ParameterProduct(value: value, title: title, filter: filter, isEditable: isEditable)
         }
     }
     

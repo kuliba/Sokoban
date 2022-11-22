@@ -201,14 +201,35 @@ extension ProductData.Filter  {
     
     //MARK: General Payment Filter
     
-    static let general = ProductData.Filter(
+    static let generalFrom = ProductData.Filter(
         rules: [DebitRule(),
                 ProductTypeRule([.card, .account]),
                 CurrencyRule([.rub]),
                 CardActiveRule(),
                 AccountActiveRule()])
-
     
+    static let generalTo = ProductData.Filter(
+        rules: [CreditRule(),
+                ProductTypeRule([.card, .account]),
+                CurrencyRule([.rub]),
+                CardActiveRule(),
+                AccountActiveRule()])
+    
+    
+    //MARK: Me2Me Payment Filter
+    
+    static let meToMeFrom = ProductData.Filter(
+        rules: [DebitRule(),
+                ProductTypeRule([.card, .account]),
+                CardActiveRule(),
+                AccountActiveRule()])
+    
+    static let meToMeTo = ProductData.Filter(
+        rules: [CreditRule(),
+                ProductTypeRule([.card, .account]),
+                CardActiveRule(),
+                AccountActiveRule()])
+
     //MARK: Close Account Base
     
     static let closeAccountFrom = ProductData.Filter(
