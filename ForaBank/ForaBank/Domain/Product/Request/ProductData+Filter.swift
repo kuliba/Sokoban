@@ -37,7 +37,6 @@ extension ProductData {
             }
         }
         
-        //TODO: tests
         func filterredProductsTypes(_ products: [ProductData]) -> [ProductType] {
             
             let filterredProducts = filterredProducts(products)

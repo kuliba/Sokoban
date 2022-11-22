@@ -323,6 +323,40 @@ extension ProductFilterTets {
     }
 }
 
+//MARK: - Types
+
+extension ProductFilterTets {
+    
+    func testFilteredProductTypes() {
+        
+        // griven
+        let products = [Self.cardActiveAddUsd, Self.accountActiveRub, Self.depositActiveRub, Self.loanActiveRub]
+        let filter = ProductData.Filter(rules: [ProductData.Filter.ProductTypeRule([.card, .account])])
+        
+        // when
+        let result = filter.filterredProductsTypes(products)
+        
+        // then
+        XCTAssertEqual(result.count, 2)
+        XCTAssertEqual(result[0], .card)
+        XCTAssertEqual(result[1], .account)
+    }
+    
+    func testFilteredProductTypes_Currency() {
+        
+        // griven
+        let products = [Self.cardActiveAddUsd, Self.accountActiveRub, Self.depositActiveRub, Self.loanActiveRub]
+        let filter = ProductData.Filter(rules: [ProductData.Filter.ProductTypeRule([.card, .account]), ProductData.Filter.CurrencyRule([.usd])])
+        
+        // when
+        let result = filter.filterredProductsTypes(products)
+        
+        // then
+        XCTAssertEqual(result.count, 1)
+        XCTAssertEqual(result[0], .card)
+    }
+}
+
 
 private extension ProductCardData {
     
