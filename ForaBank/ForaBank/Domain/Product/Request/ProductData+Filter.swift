@@ -18,7 +18,6 @@ extension ProductData {
         
         var rules: [ProductDataFilterRule]
         
-        //TODO: Tests
         func filterredProducts(_ products: [ProductData]) -> [ProductData] {
             
             products.filter { productData in
@@ -38,6 +37,7 @@ extension ProductData {
             }
         }
         
+        //TODO: tests
         func filterredProductsTypes(_ products: [ProductData]) -> [ProductType] {
             
             let filterredProducts = filterredProducts(products)
@@ -54,9 +54,14 @@ extension ProductData {
 
 extension ProductData.Filter {
     
-    struct ProductTypeAllowedRule: ProductDataFilterRule {
+    struct ProductTypeRule: ProductDataFilterRule {
         
         let allowed: Set<ProductType>
+        
+        init(_ allowed: Set<ProductType>) {
+            
+            self.allowed = allowed
+        }
         
         func result(_ productData: ProductData) -> Bool? {
             
@@ -69,9 +74,14 @@ extension ProductData.Filter {
 
 extension ProductData.Filter {
     
-    struct CurrencyAllowedRule: ProductDataFilterRule {
+    struct CurrencyRule: ProductDataFilterRule {
         
         let allowed: Set<Currency>
+        
+        init(_ allowed: Set<Currency>) {
+            
+            self.allowed = allowed
+        }
         
         func result(_ productData: ProductData) -> Bool? {
             
@@ -79,7 +89,7 @@ extension ProductData.Filter {
         }
     }
     
-    struct FromRule: ProductDataFilterRule {
+    struct DebitRule: ProductDataFilterRule {
         
         func result(_ productData: ProductData) -> Bool? {
             
@@ -87,7 +97,7 @@ extension ProductData.Filter {
         }
     }
     
-    struct ToRule: ProductDataFilterRule {
+    struct CreditRule: ProductDataFilterRule {
         
         func result(_ productData: ProductData) -> Bool? {
             
@@ -98,6 +108,11 @@ extension ProductData.Filter {
     struct ProductRestrictedRule: ProductDataFilterRule {
         
         let restricted: Set<ProductData.ID>
+        
+        init(_ restricted: Set<ProductData.ID>) {
+            
+            self.restricted = restricted
+        }
         
         func result(_ productData: ProductData) -> Bool? {
             
@@ -168,7 +183,7 @@ extension ProductData.Filter {
 
 extension ProductData.Filter {
     
-    struct AccountNotBlockedRule: ProductDataFilterRule {
+    struct AccountActiveRule: ProductDataFilterRule {
         
         func result(_ productData: ProductData) -> Bool? {
             
@@ -185,40 +200,40 @@ extension ProductData.Filter {
 
 extension ProductData.Filter  {
     
-    static let generalFrom = ProductData.Filter(
-        rules: [FromRule(),
-                ProductTypeAllowedRule(allowed: [.card, .account]),
-                CurrencyAllowedRule(allowed: [.rub]),
-                CardActiveRule(),
-                AccountNotBlockedRule()])
+    //MARK: General Payment Filter
     
-    static let generalTo = ProductData.Filter(
-        rules: [ToRule(),
-                ProductTypeAllowedRule(allowed: [.card, .account]),
-                CurrencyAllowedRule(allowed: [.rub]),
+    static let general = ProductData.Filter(
+        rules: [DebitRule(),
+                ProductTypeRule([.card, .account]),
+                CurrencyRule([.rub]),
                 CardActiveRule(),
-                AccountNotBlockedRule()])
-    
+                AccountActiveRule()])
 
-    //MARK: Close Account
+    
+    //MARK: Close Account Base
     
     static let closeAccountFrom = ProductData.Filter(
         rules: [AllRestrictedRule()])
     
+    // add CurrencyRule([productFrom.currency]
+    // add ProductRestrictedRule([productFrom.id])
     static let closeAccountTo = ProductData.Filter(
-        rules: [ToRule(),
-                ProductTypeAllowedRule(allowed: [.card, .account]),
+        rules: [CreditRule(),
+                ProductTypeRule([.card, .account]),
                 CardActiveRule(),
-                AccountNotBlockedRule()])
+                AccountActiveRule()])
+    
     
     //MARK: Close Deposit
     
     static let closeDepositFrom = ProductData.Filter(
         rules: [AllRestrictedRule()])
     
+    // add CurrencyRule([productFrom.currency]
+    // add ProductRestrictedRule([productFrom.id])
     static let closeDepositTo = ProductData.Filter(
-        rules: [ToRule(),
-                ProductTypeAllowedRule(allowed: [.card, .account]),
+        rules: [CreditRule(),
+                ProductTypeRule([.card, .account]),
                 CardActiveRule(),
-                AccountNotBlockedRule()])
+                AccountActiveRule()])
 }
