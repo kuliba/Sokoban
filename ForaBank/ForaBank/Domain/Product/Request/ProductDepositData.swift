@@ -166,6 +166,7 @@ extension ProductDepositData {
     
     static let foraHitProductId = 10000003792
     static let birjevoyProductId = 10000003655
+    static let multiDepositProductId = 10000001870
     
     var isForaHitProduct: Bool {
         
@@ -175,6 +176,11 @@ extension ProductDepositData {
     var isBirjevoyProduct: Bool {
         
         depositProductId == Self.birjevoyProductId
+    }
+    
+    var isMultiProduct: Bool {
+        
+        depositProductId == Self.multiDepositProductId
     }
     
     var isCanClosedDeposit: Bool {
