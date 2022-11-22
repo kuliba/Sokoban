@@ -113,7 +113,7 @@ extension CurrencyListView {
                 }.store(in: &bindings)
         }
         
-        struct BottomSheet: Identifiable {
+        struct BottomSheet: BottomSheetCustomizable {
 
             let id = UUID()
             let sheetType: BottomSheetType

@@ -484,7 +484,7 @@ extension MyProductsViewModel {
         case ordersModeDisable
     }
     
-    struct BottomSheet: Identifiable {
+    struct BottomSheet: BottomSheetCustomizable {
 
         let id = UUID()
         let type: BottomSheetType

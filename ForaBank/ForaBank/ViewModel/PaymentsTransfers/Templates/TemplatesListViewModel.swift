@@ -358,7 +358,7 @@ extension TemplatesListViewModel {
         static let initial = Settings(style: .list)
     }
     
-    struct Sheet: Identifiable {
+    struct Sheet: BottomSheetCustomizable {
         
         let id = UUID()
         let type: Kind
