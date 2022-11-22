@@ -799,7 +799,11 @@ class ProductProfileViewModel: ObservableObject {
                         
                         case .closeDeposit:
                             
-                            if let product = productData as? ProductDepositData, product.isBirjevoyProduct {
+                            guard let product = productData as? ProductDepositData else {
+                                return
+                            }
+                            
+                            if product.isBirjevoyProduct {
                                 
                                 self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
                                 self.action.send(ProductProfileViewModelAction.Close.Sheet())
@@ -816,12 +820,31 @@ class ProductProfileViewModel: ObservableObject {
                                             self?.openLinkURL(depositCloseBirjevoyURL)
                                         }
                                     }))
+
+                                    self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
+                                }
+                            } else if let currencySymbol = self.model.dictionaryCurrencySimbol(for: "RUB"),
+                                      product.currency == currencySymbol,
+                                      !product.isMultiProduct {
+                                
+                                self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
+                            } else {
+                                
+                                self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
+                                self.action.send(ProductProfileViewModelAction.Close.Sheet())
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
+                                    
+                                    let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                         message: "Срок вашего вклада еще не истек. Для досрочного закрытия обратитесь в ближайший офис",
+                                                                         primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in
+                                        self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                                        self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())
+                                    }),
+                                     secondary: .init(type: .default, title: "Ок", action: {}))
                                     
                                     self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
                                 }
-                            } else {
-                                
-                                self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
                             }
                                                     
                         case .statementOpenAccount:
