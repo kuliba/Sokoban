@@ -14,124 +14,29 @@ extension PaymentsProductView {
     
     class ViewModel: PaymentsParameterViewModel, ObservableObject {
         
-        let title: String
-        @Published var cardIcon: Image
-        @Published var paymentSystemIcon: Image?
-        @Published var name: String
-        @Published var amount: String
-        @Published var captionItems: [CaptionItemViewModel]
+        let selector: ProductSelectorView.ViewModel
         
-        @Published var state: State
-        
-        var isExpanded: Bool {
+        private let model: Model
+
+        init(selector: ProductSelectorView.ViewModel, model: Model = .emptyMock, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
-            switch state {
-            case .normal: return false
-            case .expanded: return true
-            }
-        }
-        
-        internal let model: Model
-        internal var selectorBinding: AnyCancellable?
-        
-        static let cardIconPlaceholder = Image("Placeholder Card Small")
-        
-        init(title: String, cardIcon: Image, paymentSystemIcon: Image?, name: String, amount: String, captionItems: [CaptionItemViewModel], state: State, model: Model = .emptyMock, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
-            
-            self.title = title
-            self.cardIcon = cardIcon
-            self.paymentSystemIcon = paymentSystemIcon
-            self.name = name
-            self.amount = amount
-            self.captionItems = captionItems
-            self.state = state
+            self.selector = selector
             self.model = model
-            
             super.init(source: source)
         }
 
-        init(_ model: Model, parameterProduct: Payments.ParameterProduct) {
+        convenience init(_ model: Model, parameterProduct: Payments.ParameterProduct) {
             
-            self.title = "Счет списания"
-            self.cardIcon = Self.cardIconPlaceholder
-            self.paymentSystemIcon = Image("card_mastercard_logo")
-            self.name = "Основная"
-            self.amount = "170 897 ₽"
-            self.captionItems = [.init(title: "4996"), .init(title: "Корпоротивная")]
-            self.state = .normal
-            self.model = model
+            let selector = ProductSelectorView.ViewModel(model, parameterProduct: parameterProduct)
+            self.init(selector: selector, model: model, source: parameterProduct)
             
-            super.init(source: parameterProduct)
             bind()
         }
         
         internal func bind() {
             
-            action
-                .receive(on: DispatchQueue.main)
-                .sink {[unowned self] action in
-                    
-                    switch action {
-                    case _ as PaymentsProductView.ViewModelAction.ToggleSelector:
-                        
-                        withAnimation {
-                            
-                            switch state {
-                            case .normal:
-                                
-                                let selectorViewModel = PaymentsProductSelectorView.ViewModel(.emptyMock)
-                                state = .expanded(selectorViewModel)
-                                bind(selector: selectorViewModel)
-                                
-                            case .expanded:
-                                state = .normal
-                            }
-                        }
-
-                    default:
-                        break
-                    }
-                    
-                }.store(in: &bindings)
-        }
-        
-        func bind(selector: PaymentsProductSelectorView.ViewModel) {
-
-            selectorBinding = selector.action
-                .receive(on: DispatchQueue.main)
-                .sink {[unowned self] action in
-                    
-                    switch action {
-                    case let payload as PaymentsProductSelectorView.ViewModelAction.SelectedProduct:
-                        update(value: String(payload.productId))
-                        
-                        withAnimation {
-                            
-                            state = .normal
-                        }
-                    
-                    default:
-                        break
-                    }
-                }
-        }
-        
-        enum State {
             
-            case normal
-            case expanded(PaymentsProductSelectorView.ViewModel)
         }
-        
-        struct CaptionItemViewModel: Identifiable {
-            
-            let id = UUID()
-            let title: String
-        }
-    }
-    
-    enum ViewModelAction {
-    
-        struct ToggleSelector: Action {}
     }
 }
 
@@ -143,95 +48,7 @@ struct PaymentsProductView: View {
 
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 4) {
-            
-            Text(viewModel.title)
-                    .font(.textBodySR12160())
-                    .foregroundColor(.textPlaceholder)
-                    .padding(.leading, 48)
-            
-            HStack(alignment: .top, spacing: 16) {
-               
-                viewModel.cardIcon
-                    .resizable()
-                    .frame(width: 32, height: 32)
-                
-                VStack(alignment: .leading, spacing: 0) {
-                    
-                    HStack(alignment: .center, spacing: 10) {
-                        
-                        viewModel.paymentSystemIcon
-                            .frame(width: 24, height: 24)
-                        
-                        Text(viewModel.name)
-                            .font(.textBodyMM14200())
-                            .foregroundColor(.textSecondary)
-                        
-                        Spacer()
-                        
-                        Text(viewModel.amount)
-                            .font(.textBodyMM14200())
-                            .foregroundColor(.textSecondary)
-                        
-                        if viewModel.isEditable == true {
-
-                            Image.ic24ChevronDown
-                                .renderingMode(.template)
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(.mainColorsGray)
-                                .rotationEffect(viewModel.isExpanded ? .degrees(0) : .degrees(-90))
-                        }
-                    }
-                    
-                    HStack {
-                      
-                        ForEach(viewModel.captionItems) { itemViewModel in
-                            
-                            PaymentsProductView.CaptionItemView(viewModel: itemViewModel)
-                        }
-                    }
-                }
-            }
-            .onTapGesture {
-                
-                if viewModel.isEditable == true {
-
-                    viewModel.action.send(PaymentsProductView.ViewModelAction.ToggleSelector())
-                }
-            }
-            
-            switch viewModel.state {
-            case .normal:
-                EmptyView()
-                
-            case .expanded(let productSelectorViewModel):
-                PaymentsProductSelectorView(viewModel: productSelectorViewModel)
-                    .padding(.top, 8)
-            }
-        }
-    }
-}
-
-extension PaymentsProductView {
-    
-    struct CaptionItemView: View {
-        
-        let viewModel: ViewModel.CaptionItemViewModel
-        
-        var body: some View {
-            
-            HStack(spacing: 8) {
-                
-                Circle()
-                    .frame(width: 2, height: 2)
-                    .foregroundColor(.mainColorsGray)
-                
-                Text(viewModel.title)
-                    .font(.textBodySR12160())
-                    .foregroundColor(.textPlaceholder)
-            }
-        }
+        ProductSelectorView(viewModel: viewModel.selector)
     }
 }
 
@@ -256,9 +73,9 @@ struct PaymentsCardView_Previews: PreviewProvider {
 
 extension PaymentsProductView.ViewModel {
     
-    static let sample = PaymentsProductView.ViewModel(title: "Счет списания", cardIcon: cardIconPlaceholder, paymentSystemIcon: Image("card_mastercard_logo"), name: "Основная", amount: "170 897 ₽", captionItems: [.init(title: "4996"), .init(title: "Корпоротивная")], state: .normal)
+    static let sample = PaymentsProductView.ViewModel(selector: .sample1)
     
-    static let sampleExpanded = PaymentsProductView.ViewModel(title: "Счет списания", cardIcon: cardIconPlaceholder, paymentSystemIcon: Image("card_mastercard_logo"), name: "Основная", amount: "170 897 ₽", captionItems: [.init(title: "4996"), .init(title: "Корпоротивная")], state: .expanded(.sample))
+    static let sampleExpanded = PaymentsProductView.ViewModel(selector: .sample2)
 }
 
 

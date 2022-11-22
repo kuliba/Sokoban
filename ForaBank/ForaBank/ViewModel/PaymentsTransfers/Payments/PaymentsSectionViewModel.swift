@@ -328,7 +328,7 @@ extension PaymentsSectionViewModel {
             return PaymentsSelectSimpleView.ViewModel(with: parameterSelectSimple)
             
         case let parameterProduct as Payments.ParameterProduct:
-            return PaymentsProductView.ViewModel(parameterProduct: parameterProduct, model: model)
+            return PaymentsProductView.ViewModel(model, parameterProduct: parameterProduct)
             
         case let parameterAmount as Payments.ParameterAmount:
             return PaymentsAmountView.ViewModel(with: parameterAmount, actionTitle: "Продолжить")

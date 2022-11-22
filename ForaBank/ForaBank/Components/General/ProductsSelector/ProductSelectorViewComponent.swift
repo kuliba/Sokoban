@@ -75,6 +75,21 @@ extension ProductSelectorView {
             bind()
         }
         
+        convenience init(_ model: Model, parameterProduct: Payments.ParameterProduct) {
+            
+            let context = Context(title: "Счет списания", direction: .from)
+            
+            if let productId = parameterProduct.productId,
+               let productData = model.product(productId: productId) {
+                
+                self.init(model, productData: productData, context: context)
+                
+            } else {
+                
+                self.init(model, context: context)
+            }
+        }
+        
         private func bind() {
             
             action
