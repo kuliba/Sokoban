@@ -45,6 +45,17 @@ extension ProductData {
             
             return sortedTypes
         }
+        
+        mutating func remove<T: ProductDataFilterRule>(ruleType: T.Type) {
+
+            rules = rules.filter({ type(of: $0) != ruleType })
+        }
+        
+        mutating func replace<T: ProductDataFilterRule>(with rule: T) {
+            
+            remove(ruleType: type(of: rule))
+            rules.append(rule)
+        }
     }
 }
 
@@ -235,8 +246,9 @@ extension ProductData.Filter  {
     static let closeAccountFrom = ProductData.Filter(
         rules: [AllRestrictedRule()])
     
-    // add CurrencyRule([productFrom.currency]
-    // add ProductRestrictedRule([productFrom.id])
+    // add in code
+    // CurrencyRule([productFrom.currency]
+    // ProductRestrictedRule([productFrom.id])
     static let closeAccountTo = ProductData.Filter(
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account]),
@@ -249,8 +261,9 @@ extension ProductData.Filter  {
     static let closeDepositFrom = ProductData.Filter(
         rules: [AllRestrictedRule()])
     
-    // add CurrencyRule([productFrom.currency]
-    // add ProductRestrictedRule([productFrom.id])
+    // add in code
+    // CurrencyRule([productFrom.currency]
+    // ProductRestrictedRule([productFrom.id])
     static let closeDepositTo = ProductData.Filter(
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account]),
