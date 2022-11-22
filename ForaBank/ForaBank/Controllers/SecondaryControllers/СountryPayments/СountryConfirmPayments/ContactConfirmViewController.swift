@@ -775,7 +775,7 @@ class ContactConfurmViewController: UIViewController {
         
         stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
                          left: view.leftAnchor, right: view.rightAnchor,
-                         paddingTop: 50)
+                         paddingTop: 20)
         
         view.addSubview(doneButton)        
         doneButton.anchor(left: stackView.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: stackView.rightAnchor,

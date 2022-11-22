@@ -118,7 +118,7 @@ class AccountStatementController: UIViewController {
             top: view.topAnchor,
             left: view.leftAnchor,
             right: view.rightAnchor,
-            paddingTop: 40,
+            paddingTop: 20,
             paddingLeft: 20,
             paddingRight: 20,
             height: 32)
