@@ -529,7 +529,7 @@ extension MainViewModel {
 
     }
 
-    struct BottomSheet: Identifiable {
+    struct BottomSheet: BottomSheetCustomizable {
 
         let id = UUID()
         let type: BottomSheetType

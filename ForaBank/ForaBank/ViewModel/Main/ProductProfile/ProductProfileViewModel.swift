@@ -647,7 +647,7 @@ class ProductProfileViewModel: ObservableObject {
                         case .account:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .statementOpenAccount(false), .tariffsByAccount, .termsOfService], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
-                    
+
                         default:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
@@ -896,6 +896,14 @@ class ProductProfileViewModel: ObservableObject {
                     
                     makeAlert("Счет закрыт")
                     self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
+                    
+                case let payload as PaymentsMeToMeAction.InteractionEnabled:
+                    
+                    guard let bottomSheet = bottomSheet else {
+                        return
+                    }
+                    
+                    bottomSheet.isUserInteractionEnabled.value = payload.isUserInteractionEnabled
     
                 default:
                     break
@@ -1201,6 +1209,8 @@ extension ProductProfileViewModel {
 
         let id = UUID()
         let type: Kind
+        
+        let isUserInteractionEnabled: CurrentValueSubject<Bool, Never> = .init(true)
         
         var keyboardOfssetMultiplier: CGFloat {
             switch type {

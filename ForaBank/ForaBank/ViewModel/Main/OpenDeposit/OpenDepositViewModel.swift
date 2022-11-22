@@ -176,7 +176,7 @@ class OpenDepositViewModel: ObservableObject {
 
 extension OpenDepositViewModel {
     
-    struct BottomSheet: Identifiable {
+    struct BottomSheet: BottomSheetCustomizable {
 
         let id = UUID()
         let type: BottomSheetType

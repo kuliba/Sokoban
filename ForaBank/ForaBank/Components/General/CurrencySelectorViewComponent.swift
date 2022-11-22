@@ -48,7 +48,7 @@ extension CurrencySelectorView {
             case productSelector
         }
         
-        struct BottomSheet: Identifiable {
+        struct BottomSheet: BottomSheetCustomizable {
             
             let id = UUID()
             let type: SheetType

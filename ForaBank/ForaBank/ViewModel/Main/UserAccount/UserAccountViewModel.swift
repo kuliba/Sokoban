@@ -451,7 +451,7 @@ extension UserAccountViewModel {
         }
     }
     
-    struct BottomSheet: Identifiable {
+    struct BottomSheet: BottomSheetCustomizable {
         
         let id = UUID()
         let sheetType: SheetType

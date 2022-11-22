@@ -365,6 +365,14 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                     makeAlert("Перевод выполнен")
                     self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                    
+                case let payload as PaymentsMeToMeAction.InteractionEnabled:
+                    
+                    guard let bottomSheet = bottomSheet else {
+                        return
+                    }
+                    
+                    bottomSheet.isUserInteractionEnabled.value = payload.isUserInteractionEnabled
     
                 default:
                     break
@@ -426,6 +434,8 @@ extension PaymentsTransfersViewModel {
 
         let id = UUID()
         let type: Kind
+        
+        let isUserInteractionEnabled: CurrentValueSubject<Bool, Never> = .init(true)
         
         var keyboardOfssetMultiplier: CGFloat {
             

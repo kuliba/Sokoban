@@ -166,7 +166,7 @@ enum MessagesHistoryViewModelAction {
 
 extension MessagesHistoryViewModel {
     
-    struct Sheet: Identifiable {
+    struct Sheet: BottomSheetCustomizable {
         
         let id = UUID()
         let sheetType: SheetType
