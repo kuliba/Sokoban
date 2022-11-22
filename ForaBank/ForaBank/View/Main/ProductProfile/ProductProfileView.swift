@@ -133,6 +133,7 @@ struct ProductProfileView: View {
                 .frame(width: .infinity, height: .infinity, alignment: .center)
             }
         }
+        .navigationBarTitle("", displayMode: .inline)
         .navigationBar(with: viewModel.navigationBar)
         .onReceive(viewModel.action) { action in
             switch action {
