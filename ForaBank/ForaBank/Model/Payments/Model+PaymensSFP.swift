@@ -57,13 +57,19 @@ extension Model {
         case Payments.Parameter.Identifier.sftRecipient.rawValue:
             return Payments.ParameterInfo(
                 .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
-                icon: adittionalData.iconData ?? .parameterDocument,
+                icon: ImageData(named: "ic24Customer") ?? .parameterDocument,
                 title: adittionalData.fieldTitle, placement: .feed)
             
         case Payments.Parameter.Identifier.sfpAmount.rawValue:
+            guard let amountStringValue = adittionalData.fieldValue,
+                  let amountValue = Double(amountStringValue),
+                  let amountFormatted = paymentsAmountFormatted(amount: amountValue, parameters: operation.parameters) else {
+                return nil
+            }
+
             return Payments.ParameterInfo(
-                .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
-                icon: adittionalData.iconData ?? .parameterDocument,
+                .init(id: adittionalData.fieldName, value: amountFormatted),
+                icon: ImageData(named: "ic24Coins") ?? .parameterDocument,
                 title: adittionalData.fieldTitle, placement: .feed)
 
         default:

@@ -516,6 +516,27 @@ extension Model {
         return parameters.first(where: { $0.id == id })?.value
     }
     
+    func paymentsProduct(from parameters: [PaymentsParameterRepresentable]) -> ProductData? {
+        
+        let productParameterId = Payments.Parameter.Identifier.product.rawValue
+        guard let productParameter = parameters.first(where: { $0.id == productParameterId}) as? Payments.ParameterProduct,
+              let productId = productParameter.productId else {
+            return nil
+        }
+        
+        return product(productId: productId)
+    }
+    
+    func paymentsAmountFormatted(amount: Double, parameters: [PaymentsParameterRepresentable]) -> String? {
+        
+        guard let product = paymentsProduct(from: parameters),
+        let amountFormatted = amountFormatted(amount: amount, currencyCode: product.currency, style: .normal) else {
+            return nil
+        }
+        
+        return amountFormatted
+    }
+    
     func paymentsMock(for service: Payments.Service) -> Payments.Mock? {
         
         switch service {

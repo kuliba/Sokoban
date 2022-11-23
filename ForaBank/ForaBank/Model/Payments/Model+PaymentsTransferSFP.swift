@@ -99,15 +99,19 @@ extension Model {
             result.append(parameter)
         }
         
-        let feeParameterId = Payments.Parameter.Identifier.fee.rawValue
-        let feeAmount = response.fee ?? 0
-        let feeParameter = Payments.ParameterInfo(
-            .init(id: feeParameterId, value: String(feeAmount)),
-            icon: .init(named: "ic24PercentCommission") ?? .parameterDocument,
-            title: "Комиссия", placement: .feed)
-        
-        result.append(feeParameter)
-        
+       
+        if let feeAmount = response.fee,
+           let feeAmountFormatted = paymentsAmountFormatted(amount: feeAmount, parameters: operation.parameters) {
+            
+            let feeParameterId = Payments.Parameter.Identifier.fee.rawValue
+            let feeParameter = Payments.ParameterInfo(
+                .init(id: feeParameterId, value: feeAmountFormatted),
+                icon: .init(named: "ic24PercentCommission") ?? .parameterDocument,
+                title: "Комиссия", placement: .feed)
+            
+            result.append(feeParameter)
+        }
+
         result.append(Payments.ParameterCode.regular)
         
         return result
