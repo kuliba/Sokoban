@@ -33,9 +33,22 @@ extension PaymentsProductView {
             bind()
         }
         
-        internal func bind() {
+        private func bind() {
             
-            
+            selector.$content
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] content in
+                    
+                    if case let .product(productViewModel) = content {
+                        
+                        update(value: "\(productViewModel.id)")
+                        
+                    } else {
+                        
+                        update(value: nil)
+                    }
+   
+                }.store(in: &bindings)
         }
     }
 }

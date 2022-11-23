@@ -42,7 +42,7 @@ extension PaymentsAmountView {
             
             self.init(title: parameterAmount.title, textField: .init(parameterAmount.amount, currencySymbol: parameterAmount.currencySymbol), transferButton: .inactive(title: parameterAmount.transferButtonTitle), actionTitle: parameterAmount.transferButtonTitle, source: parameterAmount)
             
-            bind()
+            bind(textField: textField)
         }
 
         convenience init(_ value: Double = 0, productData: ProductData, mode: PaymentsMeToMeViewModel.Mode, action: @escaping () -> Void = {}) {
@@ -73,7 +73,7 @@ extension PaymentsAmountView {
             }
         }
 
-        func bind() {
+        func bind(textField: TextFieldFormatableView.ViewModel) {
             
             textField.$text
                 .receive(on: DispatchQueue.main)
@@ -94,12 +94,13 @@ extension PaymentsAmountView {
         override func update(source: PaymentsParameterRepresentable) {
             super.update(source: source)
             
-            guard let amountParameter = source as? Payments.ParameterAmount else {
+            guard let parameterAmount = source as? Payments.ParameterAmount else {
                 return
             }
             
-            textField.formatter = .currency(amountParameter.currencySymbol)
-            actionTitle = amountParameter.transferButtonTitle
+            textField = .init(parameterAmount.amount, currencySymbol: parameterAmount.currencySymbol)
+            bind(textField: textField)
+            actionTitle = parameterAmount.transferButtonTitle
         }
         
         func update(isContinueEnabled: Bool) {

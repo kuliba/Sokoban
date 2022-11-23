@@ -291,10 +291,26 @@ extension Model {
         }
     }
     
-    func paymentsProcessDependencyReducer(parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
+    func paymentsProcessDependencyReducer(service: Payments.Service, parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
         
-        //TODO: implementation required
-        return nil
+        switch parameterId {
+        case Payments.Parameter.Identifier.amount.rawValue:
+            
+            let productParameterId = Payments.Parameter.Identifier.product.rawValue
+            guard let amountParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterAmount,
+                  let productParameter = parameters.first(where: { $0.id == productParameterId}) as? Payments.ParameterProduct,
+                  let productId = productParameter.productId,
+                  let product = product(productId: productId),
+                  let currencySymbol = dictionaryCurrencySimbol(for: product.currency) else {
+                
+                return nil
+            }
+            
+            return Payments.ParameterAmount(value: amountParameter.value, title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 10, maxAmount: product.balance))
+            
+        default:
+            return nil
+        }
     }
 }
 

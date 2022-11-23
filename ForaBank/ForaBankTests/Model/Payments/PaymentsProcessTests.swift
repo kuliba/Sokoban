@@ -291,7 +291,7 @@ extension PaymentsProcessTests {
                                         remoteConfirm: remoteConfirm(parameters:operation:),
                                         remoteComplete: remoteComplete(parameters:operation:),
                                         sourceReducer: sourceReducer(service:source:parameter:),
-                                        dependenceReducer: dependenceReducer(parameterId:parameters:))
+                                        dependenceReducer: dependenceReducer(service:parameterId:parameters:))
     }
 }
 
@@ -484,7 +484,7 @@ private func sourceReducer(service: Payments.Service, source: Payments.Operation
     return nil
 }
 
-private func dependenceReducer(parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
+private func dependenceReducer(service: Payments.Service, parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
     
     return nil
 }

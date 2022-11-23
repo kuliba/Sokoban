@@ -21,7 +21,7 @@ extension Model {
             remoteConfirm: paymentsProcessRemoteConfirm(_:_:),
             remoteComplete: paymentsProcessRemoteComplete(_:_:),
             sourceReducer: paymentsProcessSourceReducer(service:source:parameterId:),
-            dependenceReducer: paymentsProcessDependencyReducer(parameterId:parameters:))
+            dependenceReducer: paymentsProcessDependencyReducer(service:parameterId:parameters:))
     }
     
     static func paymentsProcess(operation: Payments.Operation,
@@ -33,7 +33,7 @@ extension Model {
                          remoteConfirm: ([Payments.Parameter], Payments.Operation) async throws -> Payments.Success,
                          remoteComplete: ([Payments.Parameter], Payments.Operation) async throws -> Payments.Success,
                          sourceReducer: (Payments.Service, Payments.Operation.Source, Payments.Parameter.ID) -> Payments.Parameter.Value?,
-                         dependenceReducer: (Payments.Parameter.ID, [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable?) async throws -> Payments.ProcessResult {
+                                dependenceReducer: (Payments.Service, Payments.Parameter.ID, [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable?) async throws -> Payments.ProcessResult {
         
         /// operation with updated depended parameters
         var operation = operation.updatedDepended(reducer: dependenceReducer)

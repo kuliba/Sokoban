@@ -128,6 +128,7 @@ class PaymentsOperationViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as PaymentsOperationViewModelAction.ItemDidUpdated:
+                    
                     // update operation with parameters
                     let updatedOperation = Self.reduce(operation: operation.value, items: items)
                     
@@ -141,9 +142,9 @@ class PaymentsOperationViewModel: ObservableObject {
                         rootActions?.spinner.show()
                         
                     } else {
-                        
+           
                         // update dependend items
-                        Self.reduce(items: items, dependenceReducer: model.paymentsProcessDependencyReducer(parameterId:parameters:))
+                        Self.reduce(service: operation.value.service, items: items, dependenceReducer: model.paymentsProcessDependencyReducer(service:parameterId:parameters:))
                         
                         top = Self.reduceTopItems(sections: sections.value)
                         content = Self.reduceContentItems(sections: sections.value)
@@ -185,7 +186,7 @@ class PaymentsOperationViewModel: ObservableObject {
                     
                     switch action {
                     case let payload as PaymentsSectionViewModelAction.ItemValueDidChanged:
-                        guard payload.value.isChanged == true else {
+                        guard payload.value.isChanged == true || payload.value.id == Payments.Parameter.Identifier.product.rawValue else {
                             return
                         }
                         self.action.send(PaymentsOperationViewModelAction.ItemDidUpdated(parameterId: payload.value.id))
@@ -294,12 +295,12 @@ extension PaymentsOperationViewModel {
         return updatedOperation
     }
     
-    static func reduce(items: [PaymentsParameterViewModel], dependenceReducer: (Payments.Parameter.ID, [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable?) {
+    static func reduce(service: Payments.Service, items: [PaymentsParameterViewModel], dependenceReducer: (Payments.Service, Payments.Parameter.ID, [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable?) {
         
-        let parameters = items.map{ $0.source }
+        let parameters = items.map{ $0.source.updated(value: $0.value.current) }
         for item in items {
             
-            guard let updatedParameter = dependenceReducer(item.id, parameters) else {
+            guard let updatedParameter = dependenceReducer(service, item.id, parameters) else {
                 continue
             }
             
