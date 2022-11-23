@@ -76,7 +76,7 @@ extension ProductSelectorView {
         
         convenience init(_ model: Model, parameterProduct: Payments.ParameterProduct) {
             
-            let context = Context(title: parameterProduct.title, direction: .from, filter: parameterProduct.filter)
+            let context = Context(title: parameterProduct.title, direction: .from, style: .regular, filter: parameterProduct.filter)
             
             if let productId = parameterProduct.productId,
                let productData = model.product(productId: productId) {
@@ -202,7 +202,7 @@ extension ProductSelectorView.ViewModel {
         // Product
         var title: String
         var direction: Direction
-        var titleIndent: TitleIndent = .normal
+        var style: Style
         var isUserInteractionEnabled: Bool = true
         
         // ProductsList
@@ -214,10 +214,10 @@ extension ProductSelectorView.ViewModel {
             case to
         }
         
-        enum TitleIndent {
+        enum Style {
             
-            case normal
-            case left
+            case regular
+            case me2me
         }
     }
     
@@ -237,8 +237,9 @@ extension ProductSelectorView.ViewModel {
         @Published var description: String?
         @Published var isCollapsed: Bool
         @Published var isUserInteractionEnabled: Bool
+        let style: Context.Style
         
-        init(id: Int, title: String = "", cardIcon: Image? = nil, paymentIcon: Image? = nil, name: String, balance: String, numberCard: String? = nil, description: String? = nil, isCollapsed: Bool = true, isUserInteractionEnabled: Bool = true) {
+        init(id: Int, title: String = "", cardIcon: Image? = nil, paymentIcon: Image? = nil, name: String, balance: String, numberCard: String? = nil, description: String? = nil, isCollapsed: Bool = true, isUserInteractionEnabled: Bool = true, style: Context.Style = .regular) {
             
             self.id = id
             self.title = title
@@ -250,6 +251,7 @@ extension ProductSelectorView.ViewModel {
             self.description = description
             self.isCollapsed = isCollapsed
             self.isUserInteractionEnabled = isUserInteractionEnabled
+            self.style = style
         }
         
         convenience init(_ model: Model, productData: ProductData, context: Context) {
@@ -263,7 +265,7 @@ extension ProductSelectorView.ViewModel {
                 paymentSystemImage = product.paymentSystemImage
             }
             
-            self.init(id: productData.id, title: context.title, cardIcon: productData.smallDesign.image, paymentIcon: paymentSystemImage?.image, name: name, balance: balance, numberCard: productData.displayNumber, description: productData.additionalField, isUserInteractionEnabled: context.isUserInteractionEnabled)
+            self.init(id: productData.id, title: context.title, cardIcon: productData.smallDesign.image, paymentIcon: paymentSystemImage?.image, name: name, balance: balance, numberCard: productData.displayNumber, description: productData.additionalField, isUserInteractionEnabled: context.isUserInteractionEnabled, style: context.style)
         }
         
         func update(context: ProductSelectorView.ViewModel.Context) {
@@ -299,7 +301,23 @@ extension ProductSelectorView.ViewModel {
     }
 }
 
+// MARK: - Action
 
+enum ProductSelectorAction {
+    
+    struct Selected: Action {
+        
+        let id: ProductData.ID
+    }
+
+    enum Product {
+
+        struct Tap: Action {
+            
+            let id: UUID
+        }
+    }
+}
 
 // MARK: - View
 
@@ -309,7 +327,7 @@ struct ProductSelectorView: View {
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 12) {
 
             switch viewModel.content {
             case let .product(productViewModel):
@@ -344,20 +362,37 @@ extension ProductSelectorView {
         
         var body: some View {
             
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 0) {
                 
-                Text(viewModel.title)
-                    .font(.textBodySR12160())
-                    .foregroundColor(.mainColorsBlack)
-                
+                switch viewModel.style {
+                case .regular:
+                    Text(viewModel.title)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.textPlaceholder)
+                        .padding(.leading, 48)
+                        .padding(.bottom, 4)
+                    
+                case .me2me:
+                    Text(viewModel.title)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.mainColorsBlack)
+                        .padding(.bottom, 12)
+                }
+
                 HStack(alignment: .top, spacing: 16) {
                     
                     if let cardIcon = viewModel.cardIcon {
                         
                         cardIcon
                             .resizable()
-                            .frame(width: 32, height: 32)
-                            .offset(y: -3)
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 32, height: 22)
+             
+                    } else {
+                        
+                        RoundedRectangle(cornerRadius: 3)
+                            .foregroundColor(.mainColorsGrayLightest)
+                            .frame(width: 32, height: 22)
                     }
                     
                     VStack(alignment: .leading, spacing: 2) {
@@ -456,23 +491,25 @@ extension ProductSelectorView {
     }
 }
 
-// MARK: - Action
+// MARK: - Previews
 
-enum ProductSelectorAction {
+struct ProductSelectorView_Previews: PreviewProvider {
     
-    struct Selected: Action {
-        
-        let id: ProductData.ID
-    }
+    static var previews: some View {
 
-    enum Product {
+        Group {
 
-        struct Tap: Action {
-            
-            let id: UUID
+            ProductSelectorView(viewModel: .sampleRegularCollapsed)
+            ProductSelectorView(viewModel: .sampleMe2MeCollapsed)
+            ProductSelectorView(viewModel: .sample2)
+            ProductSelectorView(viewModel: .sample3)
         }
+        .previewLayout(.sizeThatFits)
+        .padding()
     }
 }
+
+// MARK: - Preview Content
 
 extension ProductSelectorView.ViewModel.ProductViewModel {
     
@@ -484,7 +521,8 @@ extension ProductSelectorView.ViewModel.ProductViewModel {
         name: "Platinum",
         balance: "2,71 млн ₽",
         numberCard: "2953",
-        description: "Все включено")
+        description: "Все включено",
+        style: .me2me)
     
     static let sample2: ProductSelectorView.ViewModel.ProductViewModel = .init(
         id: 10002585802,
@@ -494,22 +532,17 @@ extension ProductSelectorView.ViewModel.ProductViewModel {
         name: "Platinum",
         balance: "2,71 млн ₽",
         numberCard: "2953",
-        description: "Все включено")
-}
-
-// MARK: - Previews
-
-struct ProductSelectorView_Previews: PreviewProvider {
+        description: "Все включено",
+        style: .me2me)
     
-    static var previews: some View {
-
-        Group {
-
-            ProductSelectorView(viewModel: .sample1)
-            ProductSelectorView(viewModel: .sample2)
-            ProductSelectorView(viewModel: .sample3)
-        }
-        .previewLayout(.sizeThatFits)
-        .padding()
-    }
+    static let sampleRegular: ProductSelectorView.ViewModel.ProductViewModel = .init(
+        id: 10002585801,
+        title: "Счет списания",
+        cardIcon: .init("Platinum Card"),
+        paymentIcon: .init("Platinum Logo"),
+        name: "Platinum",
+        balance: "2,71 млн ₽",
+        numberCard: "2953",
+        description: "Все включено",
+        style: .regular)
 }

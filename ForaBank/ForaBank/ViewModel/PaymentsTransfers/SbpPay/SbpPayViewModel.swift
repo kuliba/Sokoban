@@ -163,19 +163,19 @@ class SbpPayViewModel: ObservableObject {
          
             if let product = products.filter({($0 as? ProductCardData)?.accountId == accountId}).first {
                 
-                let productSelectorViewModel = ProductSelectorView.ViewModel(model, productData: product, context: .init(title: title, direction: .from, titleIndent: .left, filter: .generalFrom))
+                let productSelectorViewModel = ProductSelectorView.ViewModel(model, productData: product, context: .init(title: title, direction: .from, style: .regular, filter: .generalFrom))
                 
                 return productSelectorViewModel
                 
             } else if let product = products.filter({$0.id == accountId}).first {
                 
-                let productSelectorViewModel = ProductSelectorView.ViewModel(model, productData: product, context: .init(title: title, direction: .from, titleIndent: .left, filter: .generalFrom))
+                let productSelectorViewModel = ProductSelectorView.ViewModel(model, productData: product, context: .init(title: title, direction: .from, style: .regular, filter: .generalFrom))
                 
                 return productSelectorViewModel
             }
         }
         
-        let productSelectorViewModel = ProductSelectorView.ViewModel(model, productData: productData, context: .init(title: title, direction: .from, titleIndent: .left, filter: .generalFrom))
+        let productSelectorViewModel = ProductSelectorView.ViewModel(model, productData: productData, context: .init(title: title, direction: .from, style: .regular, filter: .generalFrom))
         
         return productSelectorViewModel
     }

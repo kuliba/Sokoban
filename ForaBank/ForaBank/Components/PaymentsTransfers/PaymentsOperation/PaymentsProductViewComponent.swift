@@ -73,7 +73,7 @@ struct PaymentsCardView_Previews: PreviewProvider {
 
 extension PaymentsProductView.ViewModel {
     
-    static let sample = PaymentsProductView.ViewModel(selector: .sample1)
+    static let sample = PaymentsProductView.ViewModel(selector: .sampleMe2MeCollapsed)
     
     static let sampleExpanded = PaymentsProductView.ViewModel(selector: .sample2)
 }

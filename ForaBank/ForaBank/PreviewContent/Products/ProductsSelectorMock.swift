@@ -7,13 +7,13 @@
 
 extension ProductSelectorView.ViewModel {
     
-    static let sample1 = ProductSelectorView.ViewModel(
+    static let sampleMe2MeCollapsed = ProductSelectorView.ViewModel(
         .emptyMock,
         content: .product(.sample1),
         listViewModel: nil,
         context: .init(
             title: "Откуда",
-            direction: .from, filter: .generalFrom))
+            direction: .from, style: .me2me, filter: .generalFrom))
         
     static let sample2: ProductSelectorView.ViewModel = .init(
         .emptyMock,
@@ -28,7 +28,15 @@ extension ProductSelectorView.ViewModel {
                 selected: "CARD", style: .productsSmall),
             selectedProductId: 10,
             filter: .generalFrom, model: .emptyMock),
-        context: .init(title: "Куда", direction: .to, filter: .generalFrom))
+        context: .init(title: "Куда", direction: .to, style: .me2me, filter: .generalFrom))
     
-    static let sample3: ProductSelectorView.ViewModel = .init(.emptyMock, context: .init(title: "Куда", direction: .to, filter: .generalFrom))
+    static let sample3: ProductSelectorView.ViewModel = .init(.emptyMock, context: .init(title: "Куда", direction: .to, style: .me2me, filter: .generalFrom))
+    
+    static let sampleRegularCollapsed = ProductSelectorView.ViewModel(
+        .emptyMock,
+        content: .product(.sampleRegular),
+        listViewModel: nil,
+        context: .init(
+            title: "Счет списания",
+            direction: .from, style: .regular, filter: .generalFrom))
 }

@@ -64,7 +64,7 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
                 .emptyMock,
                 swapViewModel: .init(
                     model: .emptyMock,
-                    items: [.sample1, .sample2],
+                    items: [.sampleMe2MeCollapsed, .sample2],
                     divider: .sample),
                 paymentsAmount: .init(
                     title: "Сумма перевода",
@@ -76,7 +76,7 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
                 .emptyMock,
                 swapViewModel: .init(
                     model: .emptyMock,
-                    items: [.sample1, .sample3],
+                    items: [.sampleMe2MeCollapsed, .sample3],
                     divider: .sample),
                 paymentsAmount: .init(
                     title: "Сумма перевода",

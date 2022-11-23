@@ -56,8 +56,8 @@ extension ProductsSwapView {
             switch mode {
             case .general:
                 
-                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, filter: .meToMeFrom)
-                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, filter: .meToMeTo)
+                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, style: .me2me, filter: .meToMeFrom)
+                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, style: .me2me, filter: .meToMeTo)
                 
                 let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
                 let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
@@ -68,12 +68,12 @@ extension ProductsSwapView {
                 
             case let .closeAccount(productData, _):
                 
-                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, isUserInteractionEnabled: false, filter: .closeAccountFrom)
+                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, style: .me2me, isUserInteractionEnabled: false, filter: .closeAccountFrom)
                 
                 var filterTo = ProductData.Filter.closeAccountTo
                 filterTo.rules.append(ProductData.Filter.CurrencyRule([.init(description: productData.currency)]))
                 filterTo.rules.append(ProductData.Filter.ProductRestrictedRule([productData.id]))
-                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, filter: filterTo)
+                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, style: .me2me, filter: filterTo)
                 
                 let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
                 let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
@@ -82,12 +82,12 @@ extension ProductsSwapView {
                 
             case let .closeDeposit(productData, _):
                 
-                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, isUserInteractionEnabled: false, filter: .closeDepositFrom)
+                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, style: .me2me, isUserInteractionEnabled: false, filter: .closeDepositFrom)
                 
                 var filterTo = ProductData.Filter.closeDepositTo
                 filterTo.rules.append(ProductData.Filter.CurrencyRule([.init(description: productData.currency)]))
                 filterTo.rules.append(ProductData.Filter.ProductRestrictedRule([productData.id]))
-                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, filter: filterTo)
+                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, style: .me2me, filter: filterTo)
                 
                 let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
                 let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
@@ -435,8 +435,8 @@ struct ProductsSwapViewComponent_Previews: PreviewProvider {
         
         Group {
             
-            ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sample1, .sample2], divider: .sample))
-            ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sample1, .sample3], divider: .sample))
+            ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sampleMe2MeCollapsed, .sample2], divider: .sample))
+            ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sampleMe2MeCollapsed, .sample3], divider: .sample))
             
         }.previewLayout(.sizeThatFits)
     }
