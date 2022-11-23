@@ -154,11 +154,11 @@ extension Model {
                 
                 if let result = result, result.phone != "" {
                     
-                    self.bankClientInfo.value.insert([result])
+                    self.bankClientsInfo.value.insert(result)
                     
                     do {
                         
-                        try localAgent.store(self.bankClientInfo.value, serial: nil)
+                        try localAgent.store(self.bankClientsInfo.value, serial: nil)
                         
                     } catch(let error) {
                         

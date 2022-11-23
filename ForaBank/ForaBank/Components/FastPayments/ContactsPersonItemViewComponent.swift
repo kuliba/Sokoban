@@ -11,13 +11,13 @@ import SwiftUI
 
 extension ContactsPersonItemView {
     
-    class ViewModel: ContactsItemViewModel {
+    class ViewModel: ContactsItemViewModel, ObservableObject {
 
         let id: AddressBookContact.ID
         let icon: Icon
         let name: String?
         let phone: String
-        let isBankIcon: Bool
+        @Published var isBankIcon: Bool
         let action: () -> Void
         
         enum Icon {
@@ -43,7 +43,7 @@ extension ContactsPersonItemView {
 
 struct ContactsPersonItemView: View {
     
-    let viewModel: ViewModel
+    @ObservedObject var viewModel: ViewModel
     
     var body: some View {
         

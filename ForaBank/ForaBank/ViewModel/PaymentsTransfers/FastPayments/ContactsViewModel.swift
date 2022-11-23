@@ -93,10 +93,8 @@ class ContactsViewModel: ObservableObject {
                             feedbackGenerator.notificationOccurred(.success)
                             self.searchBar.action.send(SearchBarViewModelAction.Idle())
                             mode = .fastPayments(.banksAndCountries(phone: phone))
-                            
-                            //TODO: move to contacts list
-                            //TODO: subscribe to bank clients an update icon
-                            self.model.action.send(ModelAction.BankClient.Request(phone: phone))
+
+                            self.model.action.send(ModelAction.BankClient.Request(phone: phone.digits))
 
                         } else {
  

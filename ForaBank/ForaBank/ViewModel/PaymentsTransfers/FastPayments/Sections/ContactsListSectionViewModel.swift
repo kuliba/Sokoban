@@ -39,7 +39,7 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
             do {
                 
                 let addressBookContacts = try await model.contactsFetchAll()
-                self.contacts.value = await Self.reduce(addressBookContacts: addressBookContacts, bankClientInfo: model.bankClientInfo.value, phoneFormatter: self.phoneFormatter, action: {[weak self] contactId in
+                self.contacts.value = await Self.reduce(addressBookContacts: addressBookContacts, phoneFormatter: self.phoneFormatter, action: {[weak self] contactId in
                     
                     { self?.action.send(ContactsSectionViewModelAction.Contacts.ItemDidTapped(phone: contactId)) }
                 })
@@ -97,6 +97,23 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
                 }
                 
             }.store(in: &bindings)
+        
+        model.bankClientsInfo
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] bankClients in
+                
+                guard let contactsViewModels = contacts.value as? [ContactsPersonItemView.ViewModel] else {
+                    return
+                }
+                
+                let bankClientsPhoneNumbers = bankClients.map{ $0.phone.digits }
+                
+                for contact in contactsViewModels {
+                    
+                    contact.isBankIcon = bankClientsPhoneNumbers.contains(contact.phone.digits) ? true : false
+                }
+                
+            }.store(in: &bindings)
     }
 }
 
@@ -126,7 +143,7 @@ extension ContactsListSectionViewModel {
         })
     }
     
-    static func reduce(addressBookContacts: [AddressBookContact], bankClientInfo: Set<[BankClientInfo]>, phoneFormatter: PhoneNumberFormaterProtocol, action: @escaping (AddressBookContact.ID) -> () -> Void) async -> [ContactsItemViewModel] {
+    static func reduce(addressBookContacts: [AddressBookContact], phoneFormatter: PhoneNumberFormaterProtocol, action: @escaping (AddressBookContact.ID) -> () -> Void) async -> [ContactsItemViewModel] {
     
         addressBookContacts.sorted(by: { first, second in
             
@@ -146,20 +163,18 @@ extension ContactsListSectionViewModel {
             
         }).map({ contact in
             
-            let isBankIcon = bankClientInfo.contains(where: {$0.contains(where: {$0.phone == contact.phone})}) ? true : false
-            
             if let image = contact.avatar?.image {
                 
-                return ContactsPersonItemView.ViewModel(id: contact.id, icon: .image(image), name: contact.fullName, phone: contact.phone, isBankIcon: isBankIcon, action: action(contact.id))
+                return ContactsPersonItemView.ViewModel(id: contact.id, icon: .image(image), name: contact.fullName, phone: contact.phone, isBankIcon: false, action: action(contact.id))
 
                 
             } else if let initials = contact.initials {
                 
-                return ContactsPersonItemView.ViewModel(id: contact.id, icon: .initials(initials), name: contact.fullName, phone: contact.phone, isBankIcon: isBankIcon, action: action(contact.id))
+                return ContactsPersonItemView.ViewModel(id: contact.id, icon: .initials(initials), name: contact.fullName, phone: contact.phone, isBankIcon: false, action: action(contact.id))
                 
             } else {
                 
-                return ContactsPersonItemView.ViewModel(id: contact.id, icon: .placeholder, name: contact.fullName, phone: contact.phone, isBankIcon: isBankIcon, action: action(contact.id))
+                return ContactsPersonItemView.ViewModel(id: contact.id, icon: .placeholder, name: contact.fullName, phone: contact.phone, isBankIcon: false, action: action(contact.id))
             }
         })
     }

@@ -83,7 +83,7 @@ class Model {
     let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
 
     //MARK: Bank Client Info
-    let bankClientInfo: CurrentValueSubject<Set<[BankClientInfo]>, Never>
+    let bankClientsInfo: CurrentValueSubject<Set<BankClientInfo>, Never>
     
     //MARK: DeepLink
     var deepLinkType: DeepLinkType?
@@ -167,7 +167,7 @@ class Model {
         self.notificationsTransition = nil
         self.dictionariesUpdating = .init([])
         self.userSettings = .init([])
-        self.bankClientInfo = .init([])
+        self.bankClientsInfo = .init([])
         self.deepLinkType = nil
         self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
@@ -1040,9 +1040,9 @@ private extension Model {
             self.depositsInfo.value = depositsInfo
         }
         
-        if let bankClientInfo = localAgent.load(type: Set<[BankClientInfo]>.self) {
+        if let bankClientInfo = localAgent.load(type: Set<BankClientInfo>.self) {
             
-            self.bankClientInfo.value = bankClientInfo
+            self.bankClientsInfo.value = bankClientInfo
         }
         
         if let paymentsByPhone = localAgent.load(type: [String: [PaymentPhoneData]].self) {
