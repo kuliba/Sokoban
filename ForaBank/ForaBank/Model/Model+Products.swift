@@ -30,9 +30,9 @@ extension Model {
         allProducts.first(where: { $0.id == productId })?.productType
     }
     
-    func firstProductId(with filter: ProductData.Filter) -> ProductData.ID? {
+    func firstProduct(with filter: ProductData.Filter) -> ProductData? {
         
-        filter.filterredProducts(allProducts).first?.id
+        filter.filterredProducts(allProducts).first
     }
     
     var isAllProductsHidden: Bool {

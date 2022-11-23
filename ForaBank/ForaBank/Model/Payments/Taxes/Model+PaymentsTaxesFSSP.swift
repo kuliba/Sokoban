@@ -22,10 +22,10 @@ extension Model {
             // product
             let productParameterId = Payments.Parameter.Identifier.product.rawValue
             let filter = ProductData.Filter.generalFrom
-            guard let productId = firstProductId(with: filter) else {
+            guard let product = firstProduct(with: filter) else {
                 throw Payments.Error.unableCreateRepresentable(productParameterId)
             }
-            let productParameter = Payments.ParameterProduct(value: String(productId), filter: filter, isEditable: true)
+            let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
 
             // search type
             let searchTypeParameter = Payments.ParameterSelectSwitch(

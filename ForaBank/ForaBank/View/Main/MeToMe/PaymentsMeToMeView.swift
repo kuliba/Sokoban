@@ -66,11 +66,11 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
                     model: .emptyMock,
                     items: [.sampleMe2MeCollapsed, .sample2],
                     divider: .sample),
-                paymentsAmount: .init(
-                    title: "Сумма перевода",
-                    amount: 150,
-                    transferButton: .active(title: "Перевести") {},
-                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими"))
+                paymentsAmount: .init(title: "Сумма перевода",
+                                      textField: .init(150, currencySymbol: "₽"),
+                                      transferButton: .active(title: "Перевести", action: {}),
+                                      info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими"))
+            
             
             PaymentsMeToMeView(viewModel: .init(
                 .emptyMock,
@@ -78,11 +78,10 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
                     model: .emptyMock,
                     items: [.sampleMe2MeCollapsed, .sample3],
                     divider: .sample),
-                paymentsAmount: .init(
-                    title: "Сумма перевода",
-                    amount: 0,
-                    transferButton: .active(title: "Перевести") {},
-                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими"))
+                paymentsAmount: .init(title: "Сумма перевода",
+                                      textField: .init(0, currencySymbol: "₽"),
+                                      transferButton: .active(title: "Перевести", action: {}),
+                                      info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими"))
         }
         .previewLayout(.sizeThatFits)
         .padding(.top)

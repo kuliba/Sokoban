@@ -397,7 +397,8 @@ extension Payments {
         
         let parameter: Parameter
         let title: String
-        let currency: Currency
+        let currencySymbol: String
+        let transferButtonTitle: String
         let validator: Validator
         let isEditable: Bool
         let placement: Payments.Parameter.Placement = .bottom
@@ -411,33 +412,40 @@ extension Payments {
             return amount
         }
 
-        init(value: Parameter.Value, title: String, currency: Currency, validator: Validator, isEditable: Bool = true) {
+        init(value: Parameter.Value, title: String, currencySymbol: String, transferButtonTitle: String = "Перевести", validator: Validator, isEditable: Bool = true) {
             
             self.parameter = .init(id: Payments.Parameter.Identifier.amount.rawValue, value: value)
             self.title = title
-            self.currency = currency
+            self.currencySymbol = currencySymbol
+            self.transferButtonTitle = transferButtonTitle
             self.validator = validator
             self.isEditable = isEditable
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterAmount(value: value, title: title, currency: currency, validator: validator, isEditable: isEditable)
+            ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, transferButtonTitle: transferButtonTitle, validator: validator, isEditable: isEditable)
         }
         
         struct Validator: ValidatorProtocol {
             
             let minAmount: Double
-            let maxAmount: Double
+            let maxAmount: Double?
             
             func isValid(value: Double) -> Bool {
                 
-                //FIXME: implement correct floats comparision
-                guard value >= minAmount, value <= maxAmount else {
+                guard value >= minAmount else {
                     return false
                 }
                 
-                return true
+                if let maxAmount = maxAmount {
+                    
+                    return value <= maxAmount
+                    
+                } else {
+                    
+                    return true
+                }
             }
         }
     }

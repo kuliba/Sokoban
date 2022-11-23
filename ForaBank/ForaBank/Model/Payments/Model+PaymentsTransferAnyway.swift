@@ -108,7 +108,15 @@ extension Model {
         if response.needSum == true {
             
             // amount
-            let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма", currency: .rub, validator: .init(minAmount: 0, maxAmount: 100000))
+            let productParameterId = Payments.Parameter.Identifier.product.rawValue
+            guard let productParameter = operation.parameters.first(where: { $0.id == productParameterId}) as? Payments.ParameterProduct,
+                  let productId = productParameter.productId,
+                  let product = product(productId: productId),
+                  let currencySymbol = dictionaryCurrencySimbol(for: product.currency) else {
+                throw Payments.Error.missingParameter(productParameterId)
+            }
+            
+            let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 10, maxAmount: product.balance))
             result.append(amountParameter)
         }
         

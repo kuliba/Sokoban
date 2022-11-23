@@ -21,38 +21,10 @@ extension PaymentsAmountView {
         @Published var info: InfoViewModel?
         @Published var alert: AlertViewModel?
         
-        private let actionTitle: String
+        private var actionTitle: String
         private let buttonAction: () -> Void
         
-        init(title: String, amount: Double, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil, currencySwitch: CurrencySwitchViewModel? = nil, alert: AlertViewModel? = nil, formatter: NumberFormatter = .currency(with: "₽"), actionTitle: String = "", action: @escaping () -> Void = {}) {
-            
-            self.title = title
-            self.textField = .init(value: amount, formatter: formatter, limit: 10)
-            self.transferButton = transferButton
-            self.info = info
-            self.currencySwitch = currencySwitch
-            self.alert = alert
-            self.actionTitle = actionTitle
-            self.buttonAction = action
-            super.init(source: Payments.ParameterMock())
-        }
-        
-        init(with parameterAmount: Payments.ParameterAmount, actionTitle: String) {
-            
-            self.title = parameterAmount.title
-            self.textField = .init(type: .general, value: parameterAmount.amount, formatter: .currency(with: "₽"), limit: 10)
-            self.transferButton = .inactive(title: "Перевести")
-            self.info = nil
-            self.currencySwitch = nil
-            self.alert = nil
-            self.actionTitle = actionTitle
-            self.buttonAction = {}
-            
-            super.init(source: parameterAmount)
-            bind()
-        }
-        
-        init(_ title: String, textField: TextFieldFormatableView.ViewModel, currencySwitch: CurrencySwitchViewModel? = nil, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil,  alert: AlertViewModel? = nil, actionTitle: String = "", action: @escaping () -> Void = {}) {
+        init(title: String, textField: TextFieldFormatableView.ViewModel, currencySwitch: CurrencySwitchViewModel? = nil, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil, alert: AlertViewModel? = nil, actionTitle: String = "", source: PaymentsParameterRepresentable = Payments.ParameterMock(), action: @escaping () -> Void = {}) {
             
             self.title = title
             self.textField = textField
@@ -63,9 +35,16 @@ extension PaymentsAmountView {
             self.actionTitle = actionTitle
             self.buttonAction = action
             
-            super.init(source: Payments.ParameterMock())
+            super.init(source: source)
         }
         
+        convenience init(with parameterAmount: Payments.ParameterAmount, actionTitle: String) {
+            
+            self.init(title: parameterAmount.title, textField: .init(parameterAmount.amount, currencySymbol: parameterAmount.currencySymbol), transferButton: .inactive(title: parameterAmount.transferButtonTitle), actionTitle: parameterAmount.transferButtonTitle, source: parameterAmount)
+            
+            bind()
+        }
+
         convenience init(_ value: Double = 0, productData: ProductData, mode: PaymentsMeToMeViewModel.Mode, action: @escaping () -> Void = {}) {
             
             switch mode {
@@ -76,21 +55,21 @@ extension PaymentsAmountView {
                 
                 let transferButton: TransferButtonViewModel = Self.makeTransferButton(value, action: action)
                 
-                self.init("Сумма перевода", textField: textField, transferButton: transferButton)
+                self.init(title: "Сумма перевода", textField: textField, transferButton: transferButton)
                 
             case let .closeAccount(productData, balance):
                 
                 let currency = Currency(description: productData.currency)
                 let textField: TextFieldFormatableView.ViewModel = .init(balance, isEnabled: false, currencySymbol: currency.currencySymbol)
                 
-                self.init("Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"))
+                self.init(title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"))
                 
             case let .closeDeposit(productData, balance):
                 
                 let currency = Currency(description: productData.currency)
                 let textField: TextFieldFormatableView.ViewModel = .init(balance, isEnabled: false, currencySymbol: currency.currencySymbol)
                 
-                self.init("Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
+                self.init(title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
             }
         }
 
@@ -112,16 +91,17 @@ extension PaymentsAmountView {
             return parameterAmount.validator.isValid(value: textField.value)
         }
         
-        //TODO: - remove
-        static func makeTransferButton(_ value: Double = 0, action: @escaping () -> Void) -> TransferButtonViewModel {
+        override func update(source: PaymentsParameterRepresentable) {
+            super.update(source: source)
             
-            if value == 0 {
-                return .inactive(title: "Перевести")
-            } else {
-                return .active(title: "Перевести", action: action)
+            guard let amountParameter = source as? Payments.ParameterAmount else {
+                return
             }
+            
+            textField.formatter = .currency(amountParameter.currencySymbol)
+            actionTitle = amountParameter.transferButtonTitle
         }
-
+        
         func update(isContinueEnabled: Bool) {
             
             if isContinueEnabled == true {
@@ -139,32 +119,47 @@ extension PaymentsAmountView {
             }
         }
         
-        enum TransferButtonViewModel {
+        //TODO: - remove
+        static func makeTransferButton(_ value: Double = 0, action: @escaping () -> Void) -> TransferButtonViewModel {
             
-            case inactive(title: String)
-            case active(title: String, action: () -> Void )
-            case loading(icon: Image, iconSize: CGSize)
+            if value == 0 {
+                return .inactive(title: "Перевести")
+            } else {
+                return .active(title: "Перевести", action: action)
+            }
         }
+    }
+}
+
+//MARK: - Types
+
+extension PaymentsAmountView.ViewModel {
+    
+    enum TransferButtonViewModel {
         
-        enum InfoViewModel {
-            
-            case button(title: String, icon: Image, action: () -> Void)
-            case text(String)
-        }
+        case inactive(title: String)
+        case active(title: String, action: () -> Void )
+        case loading(icon: Image, iconSize: CGSize)
+    }
+    
+    enum InfoViewModel {
         
-        struct CurrencySwitchViewModel {
-            
-            let from: String
-            let to: String
-            let icon: Image
-            let isUserInteractionEnabled: Bool
-            let action: () -> Void
-        }
+        case button(title: String, icon: Image, action: () -> Void)
+        case text(String)
+    }
+    
+    struct CurrencySwitchViewModel {
         
-        struct AlertViewModel {
-            
-            let title: String
-        }
+        let from: String
+        let to: String
+        let icon: Image
+        let isUserInteractionEnabled: Bool
+        let action: () -> Void
+    }
+    
+    struct AlertViewModel {
+        
+        let title: String
     }
 }
 
@@ -404,7 +399,7 @@ struct PaymentsAmountView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-            
+
             PaymentsAmountView(viewModel: .amountParameter)
                 .previewLayout(.fixed(width: 375, height: 160))
                 .previewDisplayName("Parameter Amount")
@@ -435,21 +430,22 @@ struct PaymentsAmountView_Previews: PreviewProvider {
 
 extension PaymentsAmountView.ViewModel {
     
-    static let empty = PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 0, transferButton: .inactive(title: "Перевести"))
     
-    static let emptyInfo =  PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 0, transferButton: .inactive(title: "Перевести"), info: .button(title: "Возможна комиссия", icon: Image("infoBlack"), action: {}))
+    static let empty = PaymentsAmountView.ViewModel(title: "Сумма перевода", textField: .init(0, currencySymbol: "₽"), transferButton: .inactive(title: "Перевести"))
     
-    static let amount = PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 1000, transferButton: .active(title: "Перевести", action: {}))
+    static let emptyInfo = PaymentsAmountView.ViewModel(title: "Сумма перевода", textField: .init(0, currencySymbol: "₽"), transferButton: .inactive(title: "Перевести"), info: .button(title: "Возможна комиссия", icon: Image("infoBlack"), action: {}))
     
-    static let amountZeroCurrencyInfo = PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 0, transferButton: .active(title: "Перевести", action: {}), info: .text("1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), isUserInteractionEnabled: true, action: {}))
+    static let amount = PaymentsAmountView.ViewModel(title: "Сумма перевода", textField: .init(1000, currencySymbol: "₽"), transferButton: .active(title: "Перевести", action: {}))
     
-    static let amountCurrencyInfo = PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 10000.20, transferButton: .active(title: "Перевести", action: {}), info: .text("13.75 $   |   1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), isUserInteractionEnabled: true, action: {}))
+    static let amountZeroCurrencyInfo = PaymentsAmountView.ViewModel(title: "Сумма перевода", textField: .init(0, currencySymbol: "₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), isUserInteractionEnabled: true, action: {}), transferButton: .active(title: "Перевести", action: {}), info: .text("1$ - 72.72 ₽"))
     
-    static let amountCurrencyInfoAlert = PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 214.45, transferButton: .active(title: "Перевести", action: {}), info: .text("13.75 $   |   1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), isUserInteractionEnabled: true, action: {}), alert: .init(title: "Недостаточно средств"))
+    static let amountCurrencyInfo = PaymentsAmountView.ViewModel(title: "Сумма перевода", textField: .init(10000.20, currencySymbol: "₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), isUserInteractionEnabled: true, action: {}), transferButton: .active(title: "Перевести", action: {}), info: .text("13.75 $   |   1$ - 72.72 ₽"))
+    
+    static let amountCurrencyInfoAlert = PaymentsAmountView.ViewModel(title: "Сумма перевода", textField: .init(214.45, currencySymbol: "₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), isUserInteractionEnabled: true, action: {}), transferButton: .active(title: "Перевести", action: {}), info: .text("13.75 $   |   1$ - 72.72 ₽"), alert: .init(title: "Недостаточно средств"))
     
     static let amountParameter: PaymentsAmountView.ViewModel = {
         
-        let parameter = Payments.ParameterAmount(value: "100", title: "Сумма перевода", currency: .init(description: "RUB"), validator: .init(minAmount: 1, maxAmount: 1000))
+        let parameter = Payments.ParameterAmount(value: "100", title: "Сумма перевода", currencySymbol: "₽", validator: .init(minAmount: 1, maxAmount: 1000))
         let viewModel = PaymentsAmountView.ViewModel(with: parameter, actionTitle: "Перевести")
         
         viewModel.update(isContinueEnabled: true)

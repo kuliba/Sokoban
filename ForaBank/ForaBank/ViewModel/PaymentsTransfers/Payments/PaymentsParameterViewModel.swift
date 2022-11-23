@@ -41,6 +41,7 @@ class PaymentsParameterViewModel: Identifiable {
     func update(source: PaymentsParameterRepresentable) {
         
         self.source = source
+        self.value = .init(with: source)
     }
     
     func updateEditable(update: EditableUpdate) {

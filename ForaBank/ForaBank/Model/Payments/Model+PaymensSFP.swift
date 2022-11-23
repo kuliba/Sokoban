@@ -29,10 +29,11 @@ extension Model {
             // product
             let productParameterId = Payments.Parameter.Identifier.product.rawValue
             let filter = ProductData.Filter.generalFrom
-            guard let productId = firstProductId(with: filter) else {
+            guard let product = firstProduct(with: filter),
+                  let currencySymbol = dictionaryCurrencySimbol(for: product.currency) else {
                 throw Payments.Error.unableCreateRepresentable(productParameterId)
             }
-            let productParameter = Payments.ParameterProduct(value: String(productId), filter: filter, isEditable: true)
+            let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
             
             //message
             let messageParameterId = Payments.Parameter.Identifier.sfpMessage.rawValue
@@ -41,7 +42,7 @@ extension Model {
             
             // amount
             let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
-            let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма", currency: .rub, validator: .init(minAmount: 1, maxAmount: 100000))
+            let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 10, maxAmount: product.balance))
             
             return .init(parameters: [operatorParameter, phoneParameter, bankParameter, productParameter, messageParameter, amountParameter], front: .init(visible: [phoneParameterId, bankParameterId, productParameterId, messageParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [phoneParameterId, bankParameterId, productParameterId], processed: nil))
             
