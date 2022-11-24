@@ -127,6 +127,7 @@ extension ProductsSwapView {
                 }.store(in: &bindings)
             
             $items
+                .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] items in
                     
