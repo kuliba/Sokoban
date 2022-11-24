@@ -540,7 +540,7 @@ class ProductProfileViewModel: ObservableObject {
                        self.bottomSheet = .init(type: .operationDetail(operationDetailViewModel))
                        
                        if #unavailable(iOS 14.5) {
-                           
+
                            self.bind(operationDetailViewModel)
                        }
                        
@@ -560,20 +560,20 @@ class ProductProfileViewModel: ObservableObject {
                 switch action {
                 case let payload as OperationDetailViewModelAction.ShowInfo:
                     self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
 
-                        self.sheet = .init(type: .info(payload.viewModel))
+                        self.bottomSheet = .init(type: .info(payload.viewModel))
                     }
                 
                 case let payload as OperationDetailViewModelAction.ShowDocument:
                     self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                         
-                        self.sheet = .init(type: .printForm(payload.viewModel))
+                        self.bottomSheet = .init(type: .printForm(payload.viewModel))
                     }
                 
                 case _ as OperationDetailViewModelAction.CloseSheet:
-                    sheet = nil
+                    bottomSheet = nil
                     
                 default:
                     break
@@ -647,7 +647,7 @@ class ProductProfileViewModel: ObservableObject {
                         case .account:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .statementOpenAccount(false), .tariffsByAccount, .termsOfService], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
-                    
+
                         default:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
@@ -799,7 +799,11 @@ class ProductProfileViewModel: ObservableObject {
                         
                         case .closeDeposit:
                             
-                            if let product = productData as? ProductDepositData, product.isBirjevoyProduct {
+                            guard let product = productData as? ProductDepositData else {
+                                return
+                            }
+                            
+                            if product.isBirjevoyProduct {
                                 
                                 self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
                                 self.action.send(ProductProfileViewModelAction.Close.Sheet())
@@ -816,12 +820,31 @@ class ProductProfileViewModel: ObservableObject {
                                             self?.openLinkURL(depositCloseBirjevoyURL)
                                         }
                                     }))
+
+                                    self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
+                                }
+                            } else if let currencySymbol = self.model.dictionaryCurrencySimbol(for: "RUB"),
+                                      product.currency == currencySymbol,
+                                      !product.isMultiProduct {
+                                
+                                self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
+                            } else {
+                                
+                                self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
+                                self.action.send(ProductProfileViewModelAction.Close.Sheet())
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
+                                    
+                                    let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                         message: "Срок вашего вклада еще не истек. Для досрочного закрытия обратитесь в ближайший офис",
+                                                                         primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in
+                                        self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                                        self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())
+                                    }),
+                                     secondary: .init(type: .default, title: "Ок", action: {}))
                                     
                                     self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
                                 }
-                            } else {
-                                
-                                self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
                             }
                                                     
                         case .statementOpenAccount:
@@ -873,6 +896,14 @@ class ProductProfileViewModel: ObservableObject {
                     
                     makeAlert("Счет закрыт")
                     self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
+                    
+                case let payload as PaymentsMeToMeAction.InteractionEnabled:
+                    
+                    guard let bottomSheet = bottomSheet else {
+                        return
+                    }
+                    
+                    bottomSheet.isUserInteractionEnabled.value = payload.isUserInteractionEnabled
     
                 default:
                     break
@@ -1179,6 +1210,8 @@ extension ProductProfileViewModel {
         let id = UUID()
         let type: Kind
         
+        let isUserInteractionEnabled: CurrentValueSubject<Bool, Never> = .init(true)
+        
         var keyboardOfssetMultiplier: CGFloat {
             switch type {
             case .meToMe: return 0
@@ -1193,6 +1226,9 @@ extension ProductProfileViewModel {
             case meToMe(MeToMeViewModel)
             case closeAccount(PaymentsMeToMeViewModel)
             case closeDeposit(PaymentsMeToMeViewModel)
+            case printForm(PrintFormView.ViewModel)
+            case placesMap(PlacesViewModel)
+            case info(OperationDetailInfoViewModel)
         }
     }
     
@@ -1213,7 +1249,6 @@ extension ProductProfileViewModel {
             
             case printForm(PrintFormView.ViewModel)
             case placesMap(PlacesViewModel)
-            case info(OperationDetailInfoViewModel)
         }
     }
     

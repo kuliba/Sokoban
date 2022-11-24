@@ -45,7 +45,7 @@ class MeToMeSetupSwitchView: UIView {
         heightConstraint.identifier = "MeToMeSetupSwitchView height constraint"
         heightConstraint.isActive = true
 
-        configViewWithValue(false)
+//        configViewWithValue(false)
     }
     
     

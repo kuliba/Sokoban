@@ -11,27 +11,19 @@ import Combine
 protocol BottomSheetCustomizable: Identifiable {
     
     var animationSpeed: Double { get }
+    var isUserInteractionEnabled: CurrentValueSubject<Bool, Never> { get }
 }
 
 extension BottomSheetCustomizable {
     
     var animationSpeed: Double { 0.5 }
+    var isUserInteractionEnabled: CurrentValueSubject<Bool, Never> { .init(true) }
 }
 
 // MARK: - View Extensions
 
 extension View {
-    
-    func bottomSheet<Content>(isPresented: Binding<Bool>, animationSpeed: Double = 0.5, @ViewBuilder content: @escaping () -> Content) -> some View where Content: View {
-        
-        modifier(BottomSheetModifier(isPresented: isPresented, animationSpeed: animationSpeed, sheetContent: content))
-    }
-    
-    func bottomSheet<Item, Content>(item: Binding<Item?>, animationSpeed: Double = 0.5, @ViewBuilder content: @escaping (Item) -> Content) -> some View where Item : Identifiable, Content : View {
-        
-        modifier(BottomSheetItemModifier(item: item, animationSpeed: animationSpeed, sheetContent: content))
-    }
-    
+
     func bottomSheet<Item, Content>(item: Binding<Item?>, animationSpeed: Double = 0.5, @ViewBuilder content: @escaping (Item) -> Content) -> some View where Item : BottomSheetCustomizable, Content : View {
         
         if let itemWrappedValue = item.wrappedValue {
@@ -47,34 +39,14 @@ extension View {
 
 //MARK: - Bottom Sheet Modifier
 
-struct BottomSheetModifier<SheetContent: View>: ViewModifier {
-    
-    let isPresented: Binding<Bool>
-    let animationSpeed: Double
-    let sheetContent: () -> SheetContent
-    
-    @ViewBuilder
-    func body(content: Content) -> some View {
-        
-        content
-            .transaction({ transaction in
-                transaction.disablesAnimations = false
-            })
-            .fullScreenCover(isPresented: isPresented) {
-                BottomSheetView(isPresented: isPresented, animationSpeed: animationSpeed, content: sheetContent())
-            }
-            .transaction({ transaction in
-                transaction.disablesAnimations = true
-            })
-    }
-}
-
-struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModifier {
+struct BottomSheetItemModifier<SheetContent: View, Item: BottomSheetCustomizable>: ViewModifier {
     
     @Binding var item: Item?
     var isPresented: Binding<Bool>
     let animationSpeed: Double
     let sheetContent: (Item) -> SheetContent
+    
+    @State private var isUserInteractionEnabled: Bool = true
     
     init(item: Binding<Item?>, animationSpeed: Double, @ViewBuilder sheetContent: @escaping (Item) -> SheetContent) {
         
@@ -98,8 +70,10 @@ struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModi
                 })
                 .fullScreenCover(item: $item, content: { item in
                     
-                    BottomSheetView(isPresented: isPresented, animationSpeed: animationSpeed, content: sheetContent(item))
-                    
+                    BottomSheetView(isPresented: isPresented, isUserInteractionEnabled: $isUserInteractionEnabled, animationSpeed: animationSpeed, content: sheetContent(item))
+                        .onReceive(item.isUserInteractionEnabled) {
+                            isUserInteractionEnabled = $0
+                        }
                 })
                 .transaction({ transaction in
                     transaction.disablesAnimations = true
@@ -115,8 +89,10 @@ struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModi
                     })
                     .fullScreenCover(item: $item, content: { item in
                         
-                        BottomSheetView(isPresented: isPresented, animationSpeed: animationSpeed, content: sheetContent(item))
-                        
+                        BottomSheetView(isPresented: isPresented, isUserInteractionEnabled: $isUserInteractionEnabled, animationSpeed: animationSpeed, content: sheetContent(item))
+                            .onReceive(item.isUserInteractionEnabled) {
+                                isUserInteractionEnabled = $0
+                            }
                     })
                     .transaction({ transaction in
                         transaction.disablesAnimations = true
@@ -135,6 +111,8 @@ struct BottomSheetItemModifier<SheetContent: View, Item: Identifiable>: ViewModi
 struct BottomSheetView<Content: View>: View {
     
     @Binding var isPresented: Bool
+    @Binding private var isUserInteractionEnabled: Bool
+    
     let animationSpeed: Double
     let content: Content
     
@@ -144,9 +122,10 @@ struct BottomSheetView<Content: View>: View {
     @State private var bottomPadding: CGFloat = 0
     @GestureState private var translation: CGFloat = 0
     
-    init(isPresented: Binding<Bool>, animationSpeed: Double, content: Content) {
+    init(isPresented: Binding<Bool>, isUserInteractionEnabled: Binding<Bool>, animationSpeed: Double, content: Content) {
         
         self._isPresented = isPresented
+        self._isUserInteractionEnabled = isUserInteractionEnabled
         self.animationSpeed = animationSpeed
         self.content = content
     }
@@ -155,12 +134,12 @@ struct BottomSheetView<Content: View>: View {
         
         ZStack(alignment: .bottom) {
             
-            DimmView(isShutterPresented: $isShutterPresented, progress: $dimmProgress)
+            DimmView(isShutterPresented: $isShutterPresented, progress: $dimmProgress, isUserInteractionEnabled: isUserInteractionEnabled)
                 .zIndex(0)
             
             if isShutterPresented {
                 
-                BottomSheetShutterView(isShutterPresented: $isShutterPresented, content: content)
+                BottomSheetShutterView(isShutterPresented: $isShutterPresented, isUserInteractionEnabled: isUserInteractionEnabled, content: content)
                     .zIndex(1)
                     .background(
                         GeometryReader { proxy in
@@ -178,6 +157,10 @@ struct BottomSheetView<Content: View>: View {
                         }.onEnded { value in
                             
                             if value.translation.height > contentSize.height / 3 {
+                                
+                                guard isUserInteractionEnabled == true else {
+                                    return
+                                }
                                 
                                 isShutterPresented = false
                             }
@@ -230,12 +213,19 @@ extension BottomSheetView {
         @Binding var isShutterPresented: Bool
         @Binding var progress: CGFloat
         
+        let isUserInteractionEnabled: Bool
+        
         var body: some View {
             
             Color.black
                 .opacity(0.3 * progress)
                 .ignoresSafeArea(.all, edges: .all)
                 .onTapGesture {
+                    
+                    guard isUserInteractionEnabled == true else {
+                        return
+                    }
+                    
                     isShutterPresented = false
                 }
         }
@@ -273,6 +263,8 @@ extension BottomSheetView {
 struct BottomSheetShutterView<Content: View>: View {
     
     @Binding var isShutterPresented: Bool
+    let isUserInteractionEnabled: Bool
+    
     let content: Content
     
     var body: some View {
@@ -282,7 +274,7 @@ struct BottomSheetShutterView<Content: View>: View {
             .frame(width: UIScreen.main.bounds.width)
             .background(Color.white)
             .clipShape(RoundedCorner(radius: 12, corners: [.topLeft, .topRight]))
-            .overlay(IndicatorView(isShutterPresented: $isShutterPresented).offset(x: 0, y: -14))
+            .overlay(IndicatorView(isShutterPresented: $isShutterPresented, isUserInteractionEnabled: isUserInteractionEnabled).offset(x: 0, y: -14))
     }
 }
 
@@ -291,6 +283,7 @@ extension BottomSheetShutterView {
     struct IndicatorView: View {
         
         @Binding var isShutterPresented: Bool
+        let isUserInteractionEnabled: Bool
         
         var body: some View {
             
@@ -307,6 +300,11 @@ extension BottomSheetShutterView {
                 .frame(width: UIScreen.main.bounds.width, height: 44)
                 .onTapGesture {
                     withAnimation(.easeIn(duration: 0.3)) {
+                        
+                        guard isUserInteractionEnabled == true else {
+                            return
+                        }
+                        
                         isShutterPresented = false
                     }
                 }
@@ -335,13 +333,13 @@ struct BottomSheetView_Previews: PreviewProvider {
         
         Group {
             
-            BottomSheetView(isPresented: .constant(true), animationSpeed: 0.5, content: Rectangle().fill(Color.red)
+            BottomSheetView(isPresented: .constant(true), isUserInteractionEnabled: .constant(true), animationSpeed: 0.5, content: Rectangle().fill(Color.red)
                 .frame(height: 500))
             
             ZStack(alignment: .bottom) {
                 Color.gray
                     .ignoresSafeArea(.all, edges: .all)
-                BottomSheetShutterView(isShutterPresented: .constant(true), content: Text("Hello, World").frame(height: 300))
+                BottomSheetShutterView(isShutterPresented: .constant(true), isUserInteractionEnabled: true, content: Text("Hello, World").frame(height: 300))
             }
         }
     }

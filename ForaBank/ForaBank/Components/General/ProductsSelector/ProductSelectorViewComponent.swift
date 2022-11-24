@@ -185,7 +185,7 @@ extension ProductSelectorView {
         
         
         func collapseList() {
-            
+
             withAnimation {
                 list = nil
             }

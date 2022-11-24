@@ -19,13 +19,12 @@ final class OperationDetailInfoViewModel: Identifiable {
     let dismissAction: () -> Void
     let model: Model
     
-    init(logo: Image?, cells: [DefaultCellViewModel], dismissAction: @escaping () -> Void, model: Model) {
+    init(model: Model, logo: Image?, cells: [DefaultCellViewModel], dismissAction: @escaping () -> Void) {
         
+        self.model = model
         self.logo = nil
         self.cells = cells
         self.dismissAction = dismissAction
-        self.model = model
-        
     }
     
     init(model: Model, operation: OperationDetailData, dismissAction: @escaping () -> Void) {
@@ -802,7 +801,7 @@ extension OperationDetailInfoViewModel {
             iconType: .commission)
         
         let payeeViewModel = makeProductViewModel(
-            title: "Счет пополнения",
+            title: "Счет зачисления",
             productId: payeeProductId,
             productNumber: payeeProductNumber)
         
@@ -810,7 +809,7 @@ extension OperationDetailInfoViewModel {
             productId: payerProductId,
             operation: operation,
             iconType: .date)
-        
+
         let purposeViewModel = makePropertyViewModel(
             productId: payerProductId,
             operation: operation,
@@ -818,6 +817,7 @@ extension OperationDetailInfoViewModel {
         
         switch operation.transferEnum {
         case .depositClose:
+            
             return [
                 payeeViewModel,
                 payerViewModel,
@@ -827,12 +827,22 @@ extension OperationDetailInfoViewModel {
                 dateViewModel,
             ].compactMap {$0}
             
-        default:
+        case .accountClose:
+            
             return [
-                payeeViewModel,
+                payerViewModel,
                 balanceViewModel,
                 commissionViewModel,
+                payeeViewModel,
+                dateViewModel].compactMap {$0}
+            
+        default:
+            
+            return [
                 payerViewModel,
+                balanceViewModel,
+                commissionViewModel,
+                payeeViewModel,
                 dateViewModel].compactMap {$0}
         }
     }
@@ -847,7 +857,7 @@ extension OperationDetailInfoViewModel {
         switch iconType {
         case .balance:
             
-            let formattedAmount = model.amountFormatted(amount: operation.amount, currencyCode: productData.currency, style: .fraction)
+            let formattedAmount = model.amountFormatted(amount: operation.amount, currencyCode: operation.payerCurrency, style: .fraction)
             
             guard let formattedAmount = formattedAmount else {
                 return nil
@@ -1027,7 +1037,7 @@ extension OperationDetailInfoViewModel {
     
     static let detailMockData: OperationDetailInfoViewModel = {
         
-        return OperationDetailInfoViewModel(logo: nil, cells: [PropertyCellViewModel(title: "По номеру телефона", iconType: .phone, value: "+7 (962) 62-12-12"),
+        return OperationDetailInfoViewModel(model: .emptyMock, logo: nil, cells: [PropertyCellViewModel(title: "По номеру телефона", iconType: .phone, value: "+7 (962) 62-12-12"),
                                                                PropertyCellViewModel(title: "Получатель", iconType: .user, value: "Алексей Андреевич К."),
                                                                BankCellViewModel(title: "Банк получателя", icon: Image("Bank Logo Sample"), name: "СБЕР"),
                                                                PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: "1 000,00 ₽"),
@@ -1036,7 +1046,7 @@ extension OperationDetailInfoViewModel {
                                                                PropertyCellViewModel(title: "Назначение платежа", iconType: .purpose, value: "Оплата по договору №285"),
                                                                PropertyCellViewModel(title: "Номер операции СБП", iconType: .operationNumber, value: "B11271248585590B00001750251A3F95"),
                                                                PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: "10.05.2021 15:38:12")
-                                                              ], dismissAction: {}, model: .emptyMock)
+                                                              ], dismissAction: {})
         
     }()
 }

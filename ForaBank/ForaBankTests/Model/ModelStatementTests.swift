@@ -115,6 +115,34 @@ extension ModelStatementTests {
         // then
         XCTAssertNil(result)
     }
+    
+    func testStatementHashValue_TranDate_Same() {
+        
+        // given
+        let currentDate = Date.date(year: 2022, month: 4, day: 10, calendar: calendar)!
+        
+        // when
+        let statement = ProductStatementData(mcc: nil, accountId: nil, accountNumber: "", amount: 0, cardTranNumber: nil, city: nil, comment: "Открытие текущего счета", country: nil, currencyCodeNumeric: 810, date: currentDate, deviceCode: nil, documentAmount: nil, documentId: nil, fastPayment: nil, groupName: "Открытие вклада", isCancellation: false, md5hash: "3a98a5f6aa5aabc44baf787e276b2e5a", merchantName: nil, merchantNameRus: "Открытие счета вклада", opCode: nil, operationId: nil, operationType: .open, paymentDetailType: .notFinance, svgImage: nil, terminalCode: nil, tranDate: nil, type: .inside)
+        
+        let statementSecond = ProductStatementData(mcc: nil, accountId: nil, accountNumber: "", amount: 0, cardTranNumber: nil, city: nil, comment: "Открытие текущего счета", country: nil, currencyCodeNumeric: 810, date: currentDate, deviceCode: nil, documentAmount: nil, documentId: nil, fastPayment: nil, groupName: "Открытие вклада", isCancellation: false, md5hash: "3a98a5f6aa5aabc44baf787e276b2e5a", merchantName: nil, merchantNameRus: "Открытие счета вклада", opCode: nil, operationId: nil, operationType: .open, paymentDetailType: .notFinance, svgImage: nil, terminalCode: nil, tranDate: nil, type: .inside)
+        
+        // then
+        XCTAssertEqual(statement.hashValue, statementSecond.hashValue)
+    }
+    
+    func testStatementHashValue_TranDate_Different() {
+        
+        // given
+        let currentDate = Date.date(year: 2022, month: 4, day: 10, calendar: calendar)!
+        
+        // when
+        let statement = ProductStatementData(mcc: nil, accountId: nil, accountNumber: "", amount: 0, cardTranNumber: nil, city: nil, comment: "Открытие текущего счета", country: nil, currencyCodeNumeric: 810, date: currentDate, deviceCode: nil, documentAmount: nil, documentId: nil, fastPayment: nil, groupName: "Открытие вклада", isCancellation: false, md5hash: "3a98a5f6aa5aabc44baf787e276b2e5a", merchantName: nil, merchantNameRus: "Открытие счета вклада", opCode: nil, operationId: nil, operationType: .open, paymentDetailType: .notFinance, svgImage: nil, terminalCode: nil, tranDate: currentDate, type: .inside)
+        
+        let statementSecond = ProductStatementData(mcc: nil, accountId: nil, accountNumber: "", amount: 0, cardTranNumber: nil, city: nil, comment: "Открытие текущего счета", country: nil, currencyCodeNumeric: 810, date: currentDate, deviceCode: nil, documentAmount: nil, documentId: nil, fastPayment: nil, groupName: "Открытие вклада", isCancellation: false, md5hash: "3a98a5f6aa5aabc44baf787e276b2e5a", merchantName: nil, merchantNameRus: "Открытие счета вклада", opCode: nil, operationId: nil, operationType: .open, paymentDetailType: .notFinance, svgImage: nil, terminalCode: nil, tranDate: currentDate, type: .inside)
+        
+        // then
+        XCTAssertEqual(statement.hashValue, statementSecond.hashValue)
+    }
 }
 
 extension ModelStatementTests {

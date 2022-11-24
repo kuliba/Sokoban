@@ -80,8 +80,18 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             // For ruble transfers
                             if response.needOTP == false {
                                 
-                                if let successViewModel = PaymentsSuccessViewModel(model, mode: .meToMe, transferData: response) {
-                                    self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+                                switch response.documentStatus {
+                                case .complete:
+                                    
+                                    if let successViewModel = PaymentsSuccessViewModel(model, mode: .meToMe, transferData: response) {
+                                        self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+                                    }
+
+                                default:
+
+                                    if let successViewModel = PaymentsSuccessViewModel(model, mode: .meToMe, productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo, transferData: response) {
+                                        self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+                                    }
                                 }
                                 
                             } else {
@@ -146,7 +156,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         switch mode {
                         case let .closeDeposit(productData, balance):
                             
-                            if let successViewModel = PaymentsSuccessViewModel(model, mode: .closeAccount, currency: .init(description: productData.currency), balance: balance, transferData: transferData) {
+                            if let successViewModel = PaymentsSuccessViewModel(model, mode: .closeDeposit, currency: .init(description: productData.currency), balance: balance, transferData: transferData) {
                                 
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                             }
@@ -214,30 +224,38 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             return
                         }
                         
-                        switch productTo.productType {
-                        case .card:
+                        if productFrom.id == productTo.id {
                             
-                            state = .loading
+                            makeAlert(.emptyData(message: "Счет списания совпадает со счетом зачисления. Выберите другой продукт"))
                             
-                            guard let productFrom = productFrom as? ProductAccountData else {
-                                return
-                            }
+                        } else {
+                            
+                            switch productTo.productType {
+                            case .card:
                                 
-                            model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.name, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: productTo.id)))
-                            
-                        case .account:
-                            
-                            state = .loading
-                            
-                            guard let productFrom = productFrom as? ProductAccountData else {
-                                return
-                            }
+                                state = .loading
                                 
-                            model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.name, startDate: nil, endDate: nil, statementFormat: nil, accountId: productTo.id, cardId: nil)))
-                            
-                        default:
-                            break
+                                guard let productFrom = productFrom as? ProductAccountData else {
+                                    return
+                                }
+                                
+                                model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.name, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: productTo.id)))
+                                
+                            case .account:
+                                
+                                state = .loading
+                                
+                                guard let productFrom = productFrom as? ProductAccountData else {
+                                    return
+                                }
+                                
+                                model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.name, startDate: nil, endDate: nil, statementFormat: nil, accountId: productTo.id, cardId: nil)))
+                                
+                            default:
+                                break
+                            }
                         }
+                        
                     case let .closeDeposit(productFrom, _):
                         
                         guard let to = swapViewModel.to,
@@ -266,20 +284,23 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 return
                             }
                                 
-                            self.model.action.send(ModelAction.Deposits.Close.Request(payload: .init(id: productFrom.depositId, name: productFrom.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: productFrom.id, cardId: nil)))
+                            self.model.action.send(ModelAction.Deposits.Close.Request(payload: .init(id: productFrom.depositId, name: productFrom.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: productTo.id, cardId: nil)))
                             
-                        default: break
-                            
+                        default:
+                            break
                         }
                     }
+                    
+                    self.action.send(PaymentsMeToMeAction.InteractionEnabled(isUserInteractionEnabled: false))
 
                 case _ as PaymentsMeToMeAction.Button.Info.Tap:
                     
                     switch mode {
                     case .closeDeposit(_, _):
-                        self.bottomSheet = .init(type: .info(.init(icon: .ic48AlertCircle, title: "Сумма расчитана автоматически с учетом условий по вашему вкладу")))
+                        self.bottomSheet = .init(type: .info(.init(icon: .ic48AlertCircle, title: "Сумма расcчитана автоматически с учетом условий по вашему вкладу")))
 
-                    default: break
+                    default:
+                        break
                     }
                     
                 default:
@@ -328,8 +349,13 @@ class PaymentsMeToMeViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] state in
                 
+                switch state {
+                case .normal: setUserInteractionEnabled(true)
+                case .loading: setUserInteractionEnabled(false)
+                }
+                
                 updateTransferButton(state)
-
+                
             }.store(in: &bindings)
         
         paymentsAmount.textField.$text
@@ -374,6 +400,11 @@ class PaymentsMeToMeViewModel: ObservableObject {
         }
         
         updateAmountSwitch(from: productIdFrom, to: id)
+    }
+    
+    private func setUserInteractionEnabled(_ value: Bool) {
+        
+        self.action.send(PaymentsMeToMeAction.InteractionEnabled(isUserInteractionEnabled: value))
     }
     
     private func updateAmountSwitch(from: ProductData.ID, to: ProductData.ID) {
@@ -727,6 +758,11 @@ enum PaymentsMeToMeAction {
         
         struct Failed: Action {}
     }
+    
+    struct InteractionEnabled: Action {
+        
+        let isUserInteractionEnabled: Bool
+    }
 }
 
 // MARK: - Mode
@@ -740,7 +776,7 @@ extension PaymentsMeToMeViewModel {
         case closeDeposit(ProductData, Double)
     }
     
-    struct BottomSheet: Identifiable {
+    struct BottomSheet: BottomSheetCustomizable {
 
         let id = UUID()
         let type: BottomSheetType

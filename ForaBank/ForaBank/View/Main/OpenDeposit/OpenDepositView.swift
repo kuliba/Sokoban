@@ -33,6 +33,7 @@ struct OpenDepositView: View {
                 }
             }
         }
+        .ignoresSafeArea()
         .navigationBar(with: viewModel.navigationBar)
     }
 }

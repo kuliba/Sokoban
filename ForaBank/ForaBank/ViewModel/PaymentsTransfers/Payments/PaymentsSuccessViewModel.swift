@@ -87,7 +87,26 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             documentStatus: documentStatus,
             paymentOperationDetailId: transferData.paymentOperationDetailId)
         
-        bind(transferData.paymentOperationDetailId)
+        bind(mode, paymentOperationDetailId: transferData.paymentOperationDetailId)
+    }
+    
+    convenience init?(_ model: Model, mode: Mode = .normal, productIdFrom: ProductData.ID?, productIdTo: ProductData.ID?, transferData: TransferResponseData) {
+        
+        guard let documentStatus = transferData.documentStatus else {
+            return nil
+        }
+        
+        let debitAmount = transferData.debitAmount ?? 0
+        let amount = Self.amountFormatted(model, amount: debitAmount, currencyCode: transferData.currencyPayer?.description)
+        
+        self.init(model, documentStatus: documentStatus, mode: mode, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [])
+
+        updateButtons(
+            mode,
+            documentStatus: documentStatus,
+            paymentOperationDetailId: transferData.paymentOperationDetailId)
+        
+        bind(mode, paymentOperationDetailId: transferData.paymentOperationDetailId, amount: debitAmount, productIdFrom: productIdFrom, productIdTo: productIdTo)
     }
 
     convenience init?(_ model: Model, mode: Mode = .normal, currency: Currency, balance: Double, transferData: CloseProductTransferData) {
@@ -111,7 +130,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             documentStatus: documentStatus,
             paymentOperationDetailId: paymentOperationDetailId)
         
-        bind(paymentOperationDetailId)
+        bind(mode, paymentOperationDetailId: paymentOperationDetailId)
     }
     
     convenience init(_ model: Model, documentStatus: TransferResponseBaseData.DocumentStatus, mode: Mode, amount: String?, actionButton: ButtonSimpleView.ViewModel, optionButtons: [PaymentsSuccessOptionButtonViewModel]) {
@@ -135,7 +154,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         }
     }
 
-    private func bind(_ paymentOperationDetailId: Int) {
+    private func bind(_ mode: Mode, paymentOperationDetailId: Int) {
         
         model.action
             .receive(on: DispatchQueue.main)
@@ -144,7 +163,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 switch action {
                     
                 case let payload as ModelAction.Operation.Detail.Response:
-                    handleDetailResponse(payload)
+                    handleDetailResponse(mode, payload: payload)
                     
                 case let payload as ModelAction.PaymentTemplate.Save.Complete:
 
@@ -164,6 +183,35 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     }
 
                     optionButtons[0] = templateButton
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func bind(_ mode: Mode, paymentOperationDetailId: Int, amount: Double, productIdFrom: ProductData.ID?, productIdTo: ProductData.ID?) {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+
+                case _ as ModelAction.Payment.OperationDetailByPaymentId.Response:
+                    
+                    guard let productIdFrom = productIdFrom,
+                          let productIdTo = productIdTo,
+                          let productFrom = model.product(productId: productIdFrom),
+                          let productTo = model.product(productId: productIdTo) else {
+                        return
+                    }
+                    
+                    let detailData: OperationDetailData = makeDetailData(amount: amount, productFrom: productFrom, productTo: productTo, paymentOperationDetailId: paymentOperationDetailId, transferEnum: .conversionCardToAccount)
+                    let payload: ModelAction.Payment.OperationDetailByPaymentId.Response = .success(detailData)
+                    
+                    handleDetailResponse(mode, payload: payload)
                     
                 default:
                     break
@@ -197,6 +245,7 @@ extension PaymentsSuccessViewModel {
 
         case normal
         case meToMe
+        case closeDeposit
         case closeAccount
         case closeAccountEmpty(ProductData.ID)
     }
@@ -308,21 +357,21 @@ extension PaymentsSuccessViewModel {
         case .complete:
             
             switch mode {
-            case .normal, .meToMe, .closeAccount: return "Успешный перевод"
+            case .normal, .meToMe, .closeDeposit, .closeAccount: return "Успешный перевод"
             case .closeAccountEmpty: return "Счет успешно закрыт"
             }
             
         case .inProgress:
             
             switch mode {
-            case .normal, .closeAccount, .closeAccountEmpty: return .init()
+            case .normal, .closeAccount, .closeDeposit, .closeAccountEmpty: return .init()
             case .meToMe: return "Операция в обработке!"
             }
             
         case .rejected, .unknown:
             
             switch mode {
-            case .normal, .closeAccount: return .init()
+            case .normal, .closeDeposit, .closeAccount: return .init()
             case .meToMe: return "Операция неуспешна!"
             case .closeAccountEmpty: return "Отказ"
             }
@@ -349,7 +398,7 @@ extension PaymentsSuccessViewModel {
                         optionButton(mode, type: .document, paymentOperationDetailId: paymentOperationDetailId),
                         optionButton(mode, type: .details, paymentOperationDetailId: paymentOperationDetailId)]
                 
-            case .closeAccount:
+            case .closeDeposit, .closeAccount:
                 
                 return [optionButton(mode, type: .document, paymentOperationDetailId: paymentOperationDetailId),
                         optionButton(mode, type: .details, paymentOperationDetailId: paymentOperationDetailId)]
@@ -362,7 +411,7 @@ extension PaymentsSuccessViewModel {
         case .inProgress:
             
             switch mode {
-            case .normal, .closeAccount, .closeAccountEmpty:
+            case .normal, .closeDeposit, .closeAccount, .closeAccountEmpty:
                 return .init()
 
             case .meToMe:
@@ -374,7 +423,7 @@ extension PaymentsSuccessViewModel {
         case .rejected, .unknown:
             
             switch mode {
-            case .normal, .closeAccount, .closeAccountEmpty:
+            case .normal, .closeDeposit, .closeAccount, .closeAccountEmpty:
                 return .init()
                 
             case .meToMe:
@@ -403,7 +452,7 @@ extension PaymentsSuccessViewModel {
                 }
             
                 switch mode {
-                case .normal, .meToMe, .closeAccount:
+                case .normal, .meToMe, .closeDeposit, .closeAccount:
                     
                     let printViewModel: PrintFormView.ViewModel = .init(type: .operation(paymentOperationDetailId: paymentOperationDetailId, printFormType: .internal), model: self.model)
                     
@@ -430,25 +479,44 @@ extension PaymentsSuccessViewModel {
         }
     }
     
-    private func handleDetailResponse(_ payload: ModelAction.Operation.Detail.Response) {
+    private func handleDetailResponse(_ mode: Mode, payload: ModelAction.Operation.Detail.Response) {
         
         switch payload.result {
         case let .success(detailData):
             
-            let viewModel: OperationDetailInfoViewModel = .init(model: model, operation: detailData) { [weak self] in
+            switch mode {
+            case .closeDeposit:
                 
-                guard let self = self else {
-                    return
+                let viewModel: OperationDetailInfoViewModel = .init(model: model, operation: detailData) { [weak self] in
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.sheet = nil
                 }
                 
-                self.sheet = nil
+                if sheet == nil {
+                    sheet = .init(type: .detailInfo(viewModel))
+                }
+                
+            default:
+                
+                let viewModel: OperationDetailInfoViewModel = .init(model: model, operation: detailData) { [weak self] in
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.sheet = nil
+                }
+                
+                if sheet == nil {
+                    sheet = .init(type: .detailInfo(viewModel))
+                }
             }
             
-            if sheet == nil {
-                sheet = .init(type: .detailInfo(viewModel))
-            }
-            
-        case .failure:
+        case .failture:
             break
         }
     }
@@ -480,5 +548,18 @@ enum PaymentsSuccessAction {
             
             struct Tap: Action {}
         }
+    }
+}
+
+extension PaymentsSuccessViewModel {
+    
+    func makeDetailData(amount: Double, productFrom: ProductData, productTo: ProductData, paymentOperationDetailId: Int, transferEnum: OperationDetailData.TransferEnum) -> OperationDetailData {
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
+        
+        let date = dateFormatter.string(from: Date())
+        
+        return .init(oktmo: nil, account: nil, accountTitle: nil, amount: amount, billDate: nil, billNumber: nil, claimId: UUID().uuidString, comment: "Перевод с конверсией денежных средств между счетами Клиента", countryName: nil, currencyAmount: productFrom.currency, dateForDetail: date, division: nil, driverLicense: nil, externalTransferType: nil, isForaBank: nil, isTrafficPoliceService: false, memberId: nil, operation: "Перевод денежных средств между счетами Клиента с конверсией по курсу банка", payeeAccountId: productTo.id, payeeAccountNumber: productTo.accountNumber, payeeAmount: productTo.balanceValue, payeeBankBIC: nil, payeeBankCorrAccount: nil, payeeBankName: productTo.displayName, payeeCardId: nil, payeeCardNumber: productTo.number, payeeCurrency: productTo.currency, payeeFirstName: nil, payeeFullName: productTo.productName, payeeINN: nil, payeeKPP: nil, payeeMiddleName: nil, payeePhone: nil, payeeSurName: nil, payerAccountId: productFrom.id, payerAccountNumber: productFrom.accountNumber ?? "", payerAddress: "", payerAmount: productFrom.balanceValue, payerCardId: productFrom.id, payerCardNumber: productFrom.number, payerCurrency: productFrom.currency, payerDocument: nil, payerFee: 0, payerFirstName: productFrom.displayName, payerFullName: productFrom.productName, payerINN: nil, payerMiddleName: productFrom.displayName, payerPhone: nil, payerSurName: nil, paymentOperationDetailId: paymentOperationDetailId, paymentTemplateId: nil, period: nil, printFormType: .internal, provider: nil, puref: nil, regCert: nil, requestDate: date, responseDate: date, returned: nil, transferDate: date, transferEnum: transferEnum, transferNumber: nil, transferReference: nil, cursivePayerAmount: nil, cursivePayeeAmount: nil, cursiveAmount: nil, serviceSelect: nil, serviceName: nil, merchantSubName: nil, merchantIcon: nil, operationStatus: nil, shopLink: nil, payeeCheckAccount: nil, depositNumber: nil, depositDateOpen: nil, currencyRate: nil, mcc: nil, printData: nil)
     }
 }

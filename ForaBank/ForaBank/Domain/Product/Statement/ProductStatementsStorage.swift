@@ -47,9 +47,9 @@ extension ProductStatementsStorage {
         let updatedPeriod = period.including(update.period)
             
         // statements
-        var statementsUpdated = statements.filter({ $0.dateValue < update.period.start || $0.dateValue > update.period.end })
+        var statementsUpdated = statements.filter({ $0.date < update.period.start || $0.date > update.period.end })
         statementsUpdated.append(contentsOf: update.statements)
-        let statementsSorted = statementsUpdated.sorted(by: { $0.date < $1.date })
+        let statementsSorted = statementsUpdated.sorted(by: { $0.dateValue < $1.dateValue })
 
         return ProductStatementsStorage(period: updatedPeriod, statements: statementsSorted, historyLimitDate: historyLimitDate)
     }
