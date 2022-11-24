@@ -98,11 +98,10 @@ extension ServerCommands {
             struct Payload: Encodable {}
             
             struct Response: ServerResponse {
-                
+
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                //FIXME: data must be optional
-                let data: Bool
+                let data: Bool?
             }
             
             internal init(token: String) {

@@ -17,7 +17,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
     var operatorsListInternet: Results<InternetTVLatestOperationsModel>? = nil
     lazy var realm = try? Realm()
     let iconImageView = UIImageView()
-    let phoneFormatter = PhoneNumberFormater()
+    let phoneFormatter = PhoneNumberKitFormater()
 
     let avatarImageView: UIImageView = {
         let imageView = UIImageView()

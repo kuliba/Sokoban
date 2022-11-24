@@ -10,15 +10,16 @@ import Combine
 
 class ContactsAgentMock: ContactsAgentProtocol {
     
+    var phoneNumberFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater()
     var status: CurrentValueSubject<ContactsAgentStatus, Never> = .init(.disabled)
     
     func fetchContact(by phoneNumber: String) -> AddressBookContact? {
         return nil
     }
     
-    func requestPermission() {
-        
+    func requestPermission() {}
+    
+    func fetchContactsList() -> [AddressBookContact] {
+        return []
     }
-    
-    
 }

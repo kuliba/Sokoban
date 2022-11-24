@@ -205,31 +205,6 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         XCTAssertEqual(resultString, expected)
     }
     
-    func testGetLatestPhonePayments_MinResponse_Decoding() throws {
-
-        // given
-        let url = bundle.url(forResource: "GetLatestPhonePaymentsMin", withExtension: "json")!
-        let json = try Data(contentsOf: url)
-
-        let data = PaymentPhoneData(bankId: nil,
-                                    bankName: nil,
-                                    payment: nil)
-
-        let expected = ServerCommands
-                        .PaymentOperationDetailContoller
-                        .GetLatestPhonePayments.Response(statusCode: .ok,
-                                                        errorMessage: "string",
-                                                        data: [data])
-
-        // when
-        let result = try decoder.decode(ServerCommands
-                                        .PaymentOperationDetailContoller
-                                        .GetLatestPhonePayments.Response.self, from: json)
-
-        // then
-        XCTAssertEqual(result, expected)
-    }
-    
     func testGetLatestPhonePayments_Response_Decoding() throws {
 
         // given
@@ -238,7 +213,8 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
 
         let data = PaymentPhoneData(bankId: "string",
                                     bankName: "string",
-                                    payment: true)
+                                    payment: true,
+                                    defaultBank: false)
 
         let expected = ServerCommands
                         .PaymentOperationDetailContoller

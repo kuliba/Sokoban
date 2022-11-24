@@ -146,13 +146,14 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 break
             case 5:
                 // Налоги
-                
-                let viewModel = PaymentsViewModel(Model.shared, category: Payments.Category.taxes)
+                /*
+                let viewModel = PaymentsViewModel(category: Payments.Category.taxes, model: Model.shared, closeAction: {})
                 let vc = PaymentsHoustingViewController(with: viewModel)
                 vc.modalPresentationStyle = .fullScreen
                 present(vc, animated: true)
-
+                 */
                 break
+                
             default:
                 break
             }

@@ -53,7 +53,7 @@ open class EPContact {
             		if let label = phoneNumber.label {
             		    phoneLabel = label
             		}
-            let phoneFormatter = PhoneNumberFormater()
+            let phoneFormatter = PhoneNumberKitFormater()
             let formattedPhone = phoneFormatter.format(phoneNumber.value.stringValue)
             let phone = formattedPhone
 			

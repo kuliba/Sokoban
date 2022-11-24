@@ -9,7 +9,78 @@ import Foundation
 
 extension Model {
     
-    func parametersFSSP(_ parameters: [ParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[ParameterRepresentable], Error>) -> Void) {
+    func paymentsStepFSSP(_ operation: Payments.Operation, for stepIndex: Int) async throws -> Payments.Operation.Step {
+        
+        let searchTypeParameterId = "a3_SearchType_1_1"
+        
+        switch stepIndex {
+        case 0:
+            
+            // operator
+            let operatorParameter = Payments.ParameterOperator(operatorType: .fssp)
+            
+            // product
+            let productParameterId = Payments.Parameter.Identifier.product.rawValue
+            let filter = ProductData.Filter.generalFrom
+            guard let product = firstProduct(with: filter) else {
+                throw Payments.Error.unableCreateRepresentable(productParameterId)
+            }
+            let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
+
+            // search type
+            let searchTypeParameter = Payments.ParameterSelectSwitch(
+                .init(id: searchTypeParameterId, value: "20"),
+                options: [
+                    .init(id: "20", name: "Документ"),
+                    .init(id: "30", name: "УИН"),
+                    .init(id: "40", name: "ИП")
+                    
+                ], placement: .top)
+            
+            return .init(parameters: [operatorParameter, productParameter, searchTypeParameter], front: .init(visible: [searchTypeParameter.id], isCompleted: true), back: .init(stage: .local, required: [searchTypeParameter.id], processed: [.init(id: searchTypeParameter.id, value: "20")] ))
+            
+        case 1:
+            guard let searchTypeParameterValue = paymentsParameterValue(operation.parameters, id: searchTypeParameterId) else {
+                throw Payments.Error.missingParameter(searchTypeParameterId)
+            }
+            
+            switch searchTypeParameterValue {
+            case "20":
+                guard let fsspDocumentList = dictionaryFSSPDocumentList() else {
+                    throw Payments.Error.missingParameter("a3_docName_1_2")
+                }
+                
+                let documentParameter = Payments.ParameterSelect(
+                    Payments.Parameter(id: "a3_docName_1_2", value: nil),
+                    title: "Тип документа",
+                    options: fsspDocumentList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) })
+                
+                return .init(parameters: [documentParameter], front: .init(visible: [documentParameter.id], isCompleted: false), back: .init(stage: .remote(.start), required: [documentParameter.id], processed: nil))
+                
+            case "30", "40":
+                return  .init(parameters: [], front: .init(visible: [], isCompleted: true), back: .init(stage: .remote(.start), required: [searchTypeParameterId], processed: nil ))
+
+            default:
+                throw Payments.Error.unsupported
+            }
+
+        default:
+            throw Payments.Error.unsupported
+        }
+    }
+    
+    func paymentsMockFSSP() -> Payments.Mock {
+        
+        return .init(service: .fssp,
+                     parameters: [.init(id: "a3_BillNumber_1_1", value: "32227009220006631003"),
+                                  .init(id: "a3_IPnumber_1_1", value: "6631/22/27009-ИП"),
+                                  .init(id: "a3_docNumber_2_2", value: "7816218222")])
+                                    //.init(id: "a3_docNumber_2_2", value: "7816218222")
+                                    //.init(id: "a3_docNumber_2_2", value: "13420742521")
+    }
+    
+    /*
+    func parametersFSSP(_ parameters: [PaymentsParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[PaymentsParameterRepresentable], Error>) -> Void) {
         
         switch step {
         case 0:
@@ -31,7 +102,7 @@ extension Model {
                     let documentParameter = Payments.ParameterSelect(
                         Parameter(id: "a3_docName_1_2", value: nil),
                         title: "Тип документа",
-                        options: fsspDocumentList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) }, affectsHistory: true)
+                        options: fsspDocumentList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) })
                     
                     completion(.success(updatedParameters + [documentParameter]))
                     
@@ -46,6 +117,8 @@ extension Model {
                          УИН 32227009220006631003
                          */
                         
+                        //TODO: refactor
+                        /*
                         do {
                             
                             let transferStepData = try await paymentsTransferAnywayStep(with: parameters, include: ["a3_SearchType_1_1"], step: .initial)
@@ -64,6 +137,7 @@ extension Model {
                             
                             completion(.failure(error))
                         }
+                         */
                     }
                     
                 case "40":
@@ -77,6 +151,8 @@ extension Model {
                          ИП 6631/22/27009-ИП
                          */
                         
+                        //TODO: refactor
+                        /*
                         do {
                             
                             let transferStepData = try await paymentsTransferAnywayStep(with: parameters, include: ["a3_SearchType_1_1"], step: .initial)
@@ -94,6 +170,7 @@ extension Model {
                             
                             completion(.failure(error))
                         }
+                         */
                     }
      
                 default:
@@ -112,7 +189,7 @@ extension Model {
                         .init(id: "20", name: "Документ"),
                         .init(id: "30", name: "УИН"),
                         .init(id: "40", name: "ИП")
-                    ], affectsHistory: true)
+                    ])
                 
                 // documents
                 guard let fsspDocumentList = dictionaryFSSPDocumentList() else {
@@ -123,7 +200,7 @@ extension Model {
                 let documentParameter = Payments.ParameterSelect(
                     Parameter(id: "a3_docName_1_2", value: nil),
                     title: "Тип документа",
-                    options: fsspDocumentList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) }, affectsHistory: true)
+                    options: fsspDocumentList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) })
                 
                 completion(.success([operatorParameter, searchTypeParameter, documentParameter]))
             }
@@ -148,6 +225,8 @@ extension Model {
                      a3_docNumber_2_2 7816218222
                      */
                     
+                    //TODO: refactor
+                    /*
                     do {
                         
                         let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_SearchType_1_1"], step: .next)
@@ -167,6 +246,7 @@ extension Model {
                         
                         completion(.failure(error))
                     }
+                     */
                 }
                 
             case "30":
@@ -175,6 +255,8 @@ extension Model {
                     
                     let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_BillNumber_1_1"])
                     
+                    //TODO: refactor
+                    /*
                     do {
                         
                         let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_BillNumber_1_1"], step: .next)
@@ -188,6 +270,7 @@ extension Model {
                         
                         completion(.failure(error))
                     }
+                     */
                 }
                 
             case "40":
@@ -195,6 +278,8 @@ extension Model {
                     
                     let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_IPnumber_1_1"])
                     
+                    //TODO: refactor
+                    /*
                     do {
                         
                         let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_IPnumber_1_1"], step: .next)
@@ -208,6 +293,7 @@ extension Model {
                         
                         completion(.failure(error))
                     }
+                     */
                 }
                 
                 
@@ -230,6 +316,8 @@ extension Model {
                     
                     let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_docName_1_2", "a3_docNumber_2_2"])
                     
+                    //TODO: refactor
+                    /*
                     do {
                         
                         let transferStepData = try await paymentsTransferAnywayStep(with: parameters, include: ["a3_docName_1_2", "a3_docNumber_2_2"], step: .next)
@@ -244,10 +332,13 @@ extension Model {
                         
                         completion(.failure(error))
                     }
+                     */
                 }
                 
             case "30":
                 
+                //TODO: refactor
+                /*
                 Task {
                     
                     let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_lastName_1_3", "a3_firstName_2_3", "a3_middleName_3_3", "a3_address_4_3"])
@@ -266,8 +357,12 @@ extension Model {
                         completion(.failure(error))
                     }
                 }
+                 */
+                break
                 
             case "40":
+                //TODO: refactor
+                /*
                 Task {
                     // a3_lastName_1_2, a3_firstName_2_2, a3_middleName_3_2, a3_address_4_2
                     let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_lastName_1_2", "a3_firstName_2_2", "a3_middleName_3_2", "a3_address_4_2"])
@@ -285,6 +380,8 @@ extension Model {
                         completion(.failure(error))
                     }
                 }
+                 */
+                break
                 
                 
             default:
@@ -302,6 +399,8 @@ extension Model {
             
             switch searchTypeParameter {
             case "20":
+                //TODO: refactor
+                /*
                 Task {
      
                     let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_lastName_1_2", "a3_firstName_2_2", "a3_middleName_3_2", "a3_address_4_2"])
@@ -319,6 +418,8 @@ extension Model {
                         completion(.failure(error))
                     }
                 }
+                 */
+                return
                 
             default:
                 completion(.failure(Payments.Error.unsupported))
@@ -329,4 +430,5 @@ extension Model {
             completion(.failure(Payments.Error.unsupported))
         }
     }
+     */
 }

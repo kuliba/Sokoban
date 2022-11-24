@@ -23,6 +23,18 @@ extension Model {
     var productsOpenInsuranceURL: URL { URL(string: "https://www.forabank.ru/landings/e-osago/")! }
     var productsOpenMortgageURL: URL { URL(string: "https://www.forabank.ru/private/mortgage/")! }
     
+    var allProducts: [ProductData] { products.value.values.flatMap { $0 }.sorted { $0.productType.order < $1.productType.order } }
+    
+    func productType(for productId: ProductData.ID) -> ProductType? {
+        
+        allProducts.first(where: { $0.id == productId })?.productType
+    }
+    
+    func firstProduct(with filter: ProductData.Filter) -> ProductData? {
+        
+        filter.filterredProducts(allProducts).first
+    }
+    
     var isAllProductsHidden: Bool {
         products.value.values.flatMap {$0}.filter {$0.visibility}.isEmpty
     }
@@ -39,7 +51,7 @@ extension Model {
     
     func product(productId: ProductData.ID) -> ProductData? {
         
-         products.value.values.flatMap({ $0 }).first(where: { $0.id == productId })
+        allProducts.first(where: { $0.id == productId })
     }
     
     func product(additionalId: ProductData.ID) -> ProductData? {
@@ -51,10 +63,6 @@ extension Model {
         
         var uniqueCurrency: [Currency] = []
         
-        guard let allProducts = allProducts() else {
-            return uniqueCurrency
-        }
-        
         let allProductsCurrency = allProducts.compactMap { $0.currency }
         let uniqueProductsCurrency = Set(allProductsCurrency)
         
@@ -63,19 +71,14 @@ extension Model {
         return uniqueCurrency
     }
     
-    func allProducts() -> [ProductData]? {
-        
-        products.value.values.flatMap {$0}.sorted { $0.productType.order < $1.productType.order }
-    }
-    
     func products(_ productType: ProductType) -> [ProductData]? {
         
         products.value[productType]
     }
     
-    func product(currency: Currency) -> ProductData.ID? {
+    func firstProductId(currency: Currency) -> ProductData.ID? {
         
-        let product = products.value.values.flatMap {$0}.first(where: { $0.currency == currency.description })
+        let product = allProducts.first(where: { $0.currency == currency.description })
         
         guard let product = product else {
             return nil
@@ -98,15 +101,13 @@ extension Model {
     }
     
     func products(products: ProductsData, currency: Currency, currencyOperation: CurrencyOperation) -> [ProductData] {
-        
-        let products = products.values.flatMap {$0}
-        return filterredProducts(currency: currency, currencyOperation: currencyOperation, products: products)
+
+        filterredProducts(currency: currency, currencyOperation: currencyOperation, products: allProducts)
     }
     
     func products(currency: Currency, currencyOperation: CurrencyOperation) -> [ProductData] {
         
-        let products = products.value.values.flatMap {$0}
-        return filterredProducts(currency: currency, currencyOperation: currencyOperation, products: products)
+        return filterredProducts(currency: currency, currencyOperation: currencyOperation, products: allProducts)
     }
     
     func products(currency: Currency) -> [ProductData] {
@@ -118,8 +119,7 @@ extension Model {
     
     func products(currency: Currency, currencyOperation: CurrencyOperation, products: ProductsData) -> [ProductData] {
         
-        let products = products.values.flatMap {$0}
-        return filterredProducts(currency: currency, currencyOperation: currencyOperation, products: products)
+        return filterredProducts(currency: currency, currencyOperation: currencyOperation, products: allProducts)
     }
     
     private func filterredProducts(currency: Currency, currencyOperation: CurrencyOperation, products: [ProductData]) -> [ProductData] {

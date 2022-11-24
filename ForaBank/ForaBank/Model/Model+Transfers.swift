@@ -38,6 +38,17 @@ extension ModelAction {
                 case failure(Error)
             }
         }
+        
+        enum ResendCode {
+            
+            struct Request: Action {}
+
+            enum Response: Action {
+                
+                case success(data: VerificationCodeData)
+                case failure(message: String)
+            }
+        }
     }
 }
 
@@ -120,4 +131,47 @@ extension Model {
         }
     }
     
+    func handleTransfersResendCodeRequest() {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.TransferController.GetVerificationCode(token: token)
+        serverAgent.executeCommand(command: command) { [unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    
+                    guard let data = response.data else {
+                        self.handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                        
+                    self.action.send(ModelAction.Transfers.ResendCode.Response.success(data: data))
+                    
+                default:
+
+                    if let errorMessage = response.errorMessage {
+
+                        self.action.send(ModelAction.Transfers.ResendCode.Response.failure(message: errorMessage))
+                    } else {
+                        
+                        self.action.send(ModelAction.Transfers.ResendCode.Response.failure(message: self.defaultErrorMessage))
+                    }
+                    
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    
+                }
+            case .failure(let error):
+                
+                self.action.send(ModelAction.Transfers.ResendCode.Response.failure(message: error.localizedDescription))
+                
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
 }

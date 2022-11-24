@@ -46,8 +46,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
     
     convenience init?(_ model: Model, mode: Mode) {
 
-        guard let products = model.allProducts(),
-              let productData = Self.reduce(products: products) else {
+        guard let productData = Self.reduce(products: model.allProducts) else {
             return nil
         }
         

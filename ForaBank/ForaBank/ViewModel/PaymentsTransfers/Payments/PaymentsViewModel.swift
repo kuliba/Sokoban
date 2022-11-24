@@ -12,12 +12,13 @@ import Combine
 class PaymentsViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
-    var closeAction: (() -> Void )? = nil
-    
+
     @Published var content: ContentType
     @Published var successViewModel: PaymentsSuccessViewModel?
     @Published var spinner: SpinnerView.ViewModel?
     @Published var alert: Alert.ViewModel?
+    
+    let closeAction: () -> Void
     
     private let category: Payments.Category
     private let model: Model
@@ -25,26 +26,50 @@ class PaymentsViewModel: ObservableObject {
     
     enum ContentType {
         
-        case idle
-        case services(PaymentsServicesViewModel)
+        case service(PaymentsServiceViewModel)
         case operation(PaymentsOperationViewModel)
     }
     
-    init(content: ContentType, category: Payments.Category = .taxes, model: Model = .emptyMock) {
+    init(content: ContentType, category: Payments.Category, model: Model, closeAction: @escaping () -> Void) {
         
         self.content = content
         self.category = category
         self.model = model
+        self.closeAction = closeAction
     }
     
-    internal init(_ model: Model, category: Payments.Category) {
+    convenience init(category: Payments.Category, model: Model, closeAction: @escaping () -> Void) async throws {
         
-        self.content = .idle
-        self.category = category
-        self.model = model
+        let result = try await model.paymentsService(for: category)
+        switch result {
+        case let .select(selectServiceParameter):
+            // multiple services for category
+            let serviceViewModel = PaymentsServiceViewModel(category: category, parameters: [selectServiceParameter], model: model)
+            self.init(content: .service(serviceViewModel), category: category, model: model, closeAction: closeAction)
+            serviceViewModel.rootActions = rootActions
+
+        case let .selected(service):
+            // single service for category
+            let operation = try await model.paymentsOperation(with: service)
+            let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model)
+            self.init(content: .operation(operationViewModel), category: category, model: model, closeAction: closeAction)
+            operationViewModel.rootActions = rootActions
+        }
         
         bind()
-        model.action.send(ModelAction.Payment.Services.Request(category: category))
+    }
+    
+    convenience init(source: Payments.Operation.Source, model: Model, closeAction: @escaping () -> Void) async throws {
+        
+        let operation = try await model.paymentsOperation(with: source)
+        guard let category = Payments.Category.category(for: operation.service) else {
+            throw Error.unableRecognizeCategoryForService(operation.service)
+        }
+        let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model)
+        self.init(content: .operation(operationViewModel), category: category, model: model, closeAction: closeAction)
+        operationViewModel.rootActions = rootActions
+        
+        bind()
     }
     
     private func bind() {
@@ -53,50 +78,18 @@ class PaymentsViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
-                case let payload as ModelAction.Payment.Services.Response:
+                case let payload as ModelAction.Payment.Process.Response:
                     self.action.send(PaymentsViewModelAction.Spinner.Hide())
                     
-                    switch payload {
-                    case .select(let selectServiceParameter):
-                        // multiple services for category
-                        let servicesViewModel = PaymentsServicesViewModel(model, category: category, parameter: selectServiceParameter, rootActions: .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}, spinner: .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show())}, hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide())}), alert: {[weak self] message in self?.action.send(PaymentsViewModelAction.Alert(message: message))}))
-                        content = .services(servicesViewModel)
+                    switch payload.result {
+                    case let .complete(paymentSuccess):
+                        successViewModel = PaymentsSuccessViewModel(model, paymentSuccess: paymentSuccess)
                         
-                    case .selected(let service):
-                        // single service for category
-                        model.action.send(ModelAction.Payment.Begin.Request(source: .service(service)))
+                    case .failure(let errorMessage):
+                        self.action.send(PaymentsViewModelAction.Alert(message: errorMessage))
                         
-                    case .failed(let error):
-                        //TODO: set logger
+                    default:
                         break
-                    }
-                    
-                case let payload as ModelAction.Payment.Begin.Response:
-                    self.action.send(PaymentsViewModelAction.Spinner.Hide())
-                    
-                    switch payload {
-                    case .success(let operation):
-                        
-                        guard case .idle = content else {
-                            return
-                        }
-                        
-                        let operationViewModel = PaymentsOperationViewModel(model, operation: operation, rootActions: .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}, spinner: .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show())}, hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide())}), alert: {[weak self] message in self?.action.send(PaymentsViewModelAction.Alert(message: message)) }))
-                        content = .operation(operationViewModel)
-
-                    case .failure(let errorMessage):
-                        self.action.send(PaymentsViewModelAction.Alert(message: errorMessage))
-                    }
-                    
-                case let payload as ModelAction.Payment.Complete.Response:
-                    self.action.send(PaymentsViewModelAction.Spinner.Hide())
-                    
-                    switch payload {
-                    case .success(let paymentSuccess):
-                        successViewModel = PaymentsSuccessViewModel(model, iconType: .success, paymentSuccess: paymentSuccess, dismissAction: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())})
-                        
-                    case .failure(let errorMessage):
-                        self.action.send(PaymentsViewModelAction.Alert(message: errorMessage))
                     }
                     
                 default:
@@ -137,6 +130,8 @@ class PaymentsViewModel: ObservableObject {
     }
 }
 
+//MARK: - Types
+
 extension PaymentsViewModel {
     
     struct RootActions {
@@ -151,7 +146,18 @@ extension PaymentsViewModel {
             let hide: () -> Void
         }
     }
+    
+    var rootActions: RootActions {
+        
+        return .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss()) },
+                     spinner:
+                .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show()) },
+                      hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide()) }),
+                     alert: { [weak self] message in self?.action.send(PaymentsViewModelAction.Alert(message: message)) })
+    }
 }
+
+//MARK: - Action
 
 enum PaymentsViewModelAction {
     
@@ -166,5 +172,12 @@ enum PaymentsViewModelAction {
     struct Alert: Action {
         
         let message: String
+    }
+}
+
+extension PaymentsViewModel {
+    
+    enum Error: LocalizedError {
+        case unableRecognizeCategoryForService(Payments.Service)
     }
 }

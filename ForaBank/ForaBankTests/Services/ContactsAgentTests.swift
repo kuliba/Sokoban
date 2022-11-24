@@ -10,9 +10,7 @@ import XCTest
 
 class ContactsAgentTests: XCTestCase {
     
-    let contactsAgent = ContactsAgent()
-
-    
+    let contactsAgent = ContactsAgent(phoneNumberFormatter: PhoneNumberKitFormater())
 
     func testClearNumber() throws {
         
@@ -26,7 +24,4 @@ class ContactsAgentTests: XCTestCase {
             // then
             XCTAssertEqual(result, expected)
         }
-
-    
-    
 }

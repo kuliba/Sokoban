@@ -175,7 +175,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     switch action {
                         
                     //LatestPayments Section Buttons
-                    case let payload as PTSectionLatestPaymentsViewAction.ButtonTapped.LatestPayment:
+                    case let payload as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
                         
                         switch (payload.latestPayment.type, payload.latestPayment) {
                         case (.phone, let paymentData as PaymentGeneralData):
@@ -216,12 +216,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         }
                     
                     //LatestPayment Section TemplateButton
-                    case _ as PTSectionLatestPaymentsViewAction.ButtonTapped.Templates:
+                    case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
                         let viewModel = TemplatesListViewModel(model, dismissAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                         })
                         link = .template(viewModel)
                         
-                    case _ as PTSectionLatestPaymentsViewAction.ButtonTapped.CurrencyWallet:
+                    case _ as LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet:
                         guard let firstCurrencyWalletData = model.currencyWalletList.value.first else {
                             return
                         }
@@ -270,7 +270,76 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }))
                             
                         case .byPhoneNumber:
-                            sheet = .init(type: .transferByPhone(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Sheet())})))
+                            
+                            let contactsViewModel = ContactsViewModel(model, mode: .fastPayments(.contacts))
+                            sheet = .init(type: .fastPayment(contactsViewModel))
+                            
+                            contactsViewModel.action
+                                .receive(on: DispatchQueue.main)
+                                .sink { [unowned self] action in
+                                    
+                                    switch action {
+                                    case let payload as ContactsViewModelAction.PaymentRequested:
+                                        self.action.send(PaymentsTransfersViewModelAction.Close.Sheet())
+                                        
+                                        switch payload.source {
+                                        case let .direct(phone: phone, bankId: bankId, countryId: countryId):
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [self] in
+                                                
+                                                guard let country = self.model.countriesList.value.first(where: { $0.id == countryId }),
+                                                      let bank = self.model.bankList.value.first(where: { $0.id == bankId }) else {
+                                                    return
+                                                }
+                                                self.link = .init(.country(.init(phone: phone, country: country, bank: bank, operatorsViewModel: .init(closeAction: { [weak self] in
+                                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                                }, template: nil))))
+                                            }
+                                            
+                                        case let .abroad(phone: phone, countryId: countryId):
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                                
+                                                guard let country = self.model.countriesList.value.first(where: { $0.id == countryId }) else {
+                                                    return
+                                                }
+                                                self.link = .init(.country(.init(phone: phone, country: country, bank: nil, operatorsViewModel: .init(closeAction: { [weak self] in
+                                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                                }, template: nil))))
+                                            }
+
+                                        default:
+                                           
+                                            Task.detached(priority: .high) { [self] in
+                                                
+                                                // 700 milliseconds
+                                                try await Task.sleep(nanoseconds: 100000000)
+                                                
+                                                do {
+                                                    
+                                                    let paymentsViewModel = try await PaymentsViewModel(source: payload.source, model: model) { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                                    }
+                                                    
+                                                    await MainActor.run {
+                                                        
+                                                        link = .init(.taxAndStateService(paymentsViewModel))
+                                                    }
+                                                    
+                                                } catch {
+                                                    
+                                                    await MainActor.run {
+                                                        
+                                                        alert = .init(title: "Error", message: "Unable create PaymentsViewModel for source: \(payload.source) with error: \(error.localizedDescription)", primary: .init(type: .cancel, title: "Ok", action: {}))
+                                                    }
+                                                    
+                                                    LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for source: \(payload.source) with error: \(error.localizedDescription)")
+                                                }
+                                            }
+                                        }
+
+                                    default:
+                                        break
+                                    }
+                                    
+                                }.store(in: &bindings)
                         }
                         
                     //Payments Section
@@ -322,10 +391,23 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             InternetTVMainViewModel.filter = GlobalModule.PAYMENT_TRANSPORT
                        
                         case .taxAndStateService:
-                            let taxAndStateServiceVM = PaymentsViewModel(model, category: Payments.Category.taxes)
-                            taxAndStateServiceVM.closeAction = { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            Task.detached(priority: .high) { [self] in
+                                
+                                do {
+                                    let paymentsViewModel = try await PaymentsViewModel(category: Payments.Category.taxes, model: model) { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                    }
+                                    
+                                    await MainActor.run {
+                                        
+                                        link = .init(.taxAndStateService(paymentsViewModel))
+                                    }
+                                    
+                                } catch {
+                                    
+                                    //TODO: show alert?
+                                    LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for  taxes category with error: \(error.localizedDescription) ")
+                                }
                             }
-                            link = .init(.taxAndStateService(taxAndStateServiceVM))
                             
                         case .socialAndGame: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                         case .security: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
@@ -467,11 +549,13 @@ extension PaymentsTransfersViewModel {
         let type: Kind
         
         enum Kind {
+            
             case meToMe(PaymentsMeToMeViewModel)
             case successMeToMe(PaymentsSuccessViewModel)
             case transferByPhone(TransferByPhoneViewModel)
             case anotherCard(AnotherCardViewModel)
             case qrScanner(QrViewModel)
+            case fastPayment(ContactsViewModel)
         }
     }
     

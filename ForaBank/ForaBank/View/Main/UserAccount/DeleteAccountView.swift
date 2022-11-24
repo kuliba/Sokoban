@@ -23,7 +23,10 @@ extension DeleteAccountView {
         init(model: Model) {
             
             self.model = model
-            self.button = .init(buttonModel: .init(title: "OK", isEnabled: true, action: { model.action.send(ModelAction.Auth.Logout()) }))
+            //FIXME: refactor
+            self.button = .init(title: "Ok", style: .red, action: {
+                model.action.send(ModelAction.Auth.Logout())
+            })
         }
     }
 }

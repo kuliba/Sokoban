@@ -11,9 +11,7 @@ import SwiftUI
 
 extension PaymentsSuccessOptionButtonView {
     
-    class ViewModel: PaymentsSuccessOptionButtonViewModel {
-        
-    }
+    class ViewModel: PaymentsSuccessOptionButtonViewModel, ObservableObject {}
 }
 
 //MARK: - View
@@ -42,8 +40,8 @@ struct PaymentsSuccessOptionButtonView: View {
             }
             
             Text(viewModel.title)
-                .font(Font.custom("Inter-Medium", size: 12))
-                .foregroundColor(Color(hex: "#1C1C1C"))
+                .font(.textBodySM12160())
+                .foregroundColor(.textSecondary)
                 .frame(height: 24)
         }
     }

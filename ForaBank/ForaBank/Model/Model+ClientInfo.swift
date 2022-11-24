@@ -13,7 +13,15 @@ extension ModelAction {
     
     enum ClientInfo {
         
-        struct Fetch: Action {}
+        enum Fetch {
+        
+            struct Request: Action {}
+            
+            struct Response: Action {
+                
+                let result: Result<ClientInfoData, Error>
+            }
+        }
         
         enum Delete {
             
@@ -79,9 +87,7 @@ extension ModelAction {
 
 extension Model {
     
-    func handleClientInfoFetch() {
-        
-        LoggerAgent.shared.log(category: .model, message: "handleClientInfoFetch")
+    func handleClientInfoFetchRequest() {
         
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
@@ -98,12 +104,14 @@ extension Model {
                     
                     guard let clientInfo = response.data else {
                         
+                        self.action.send(ModelAction.ClientInfo.Fetch.Response(result: .failure(ModelClientInfoError.emptyData(message: response.errorMessage))))
                         return
                     }
-
+                    
                     self.clientInfo.value = clientInfo
                     self.clientName.value = .init(name: clientInfo.customName ?? clientInfo.firstName)
-
+                    self.action.send(ModelAction.ClientInfo.Fetch.Response(result: .success(clientInfo)))
+                    
                     // cache
                     do {
                         
@@ -115,10 +123,13 @@ extension Model {
                     }
                     
                 default:
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.action.send(ModelAction.ClientInfo.Fetch.Response(result: .failure(ModelClientInfoError.statusError(status: response.statusCode, message: response.errorMessage))))
+                    
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage )
                 }
                 
             case .failure(let error):
+                self.action.send(ModelAction.ClientInfo.Fetch.Response(result: .failure(ModelClientInfoError.serverCommandError(error: error))))
                 self.handleServerCommandError(error: error, command: command)
             }
         }
@@ -254,7 +265,8 @@ extension Model {
             
             switch result {
             case .success(_):
-                self.action.send(ModelAction.ClientInfo.Fetch())
+
+                self.action.send(ModelAction.ClientInfo.Fetch.Request())
                 
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)
@@ -263,7 +275,7 @@ extension Model {
     }
     
     func handleClientNameLoad() {
-
+        
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
             return
@@ -273,19 +285,24 @@ extension Model {
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
-            case .success(let data):
-
-                    let clientNameData = ClientNameData(name: data.data.firstname)
-                    clientName.value = clientNameData
+            case .success(let response):
+                
+                guard let personData = response.data else {
+                    handleServerCommandEmptyData(command: command)
+                    return
+                }
+                
+                let clientNameData = ClientNameData(name: personData.firstname)
+                clientName.value = clientNameData
+                
+                do {
                     
-                    do {
-                        
-                        try localAgent.store(clientNameData, serial: nil)
-                        
-                    } catch {
-                        
-                        self.handleServerCommandCachingError(error: error, command: command)
-                    }
+                    try localAgent.store(clientNameData, serial: nil)
+                    
+                } catch {
+                    
+                    self.handleServerCommandCachingError(error: error, command: command)
+                }
                 
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)

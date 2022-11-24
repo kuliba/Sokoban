@@ -13,22 +13,29 @@ struct PaymentsOperationView: View {
     @ObservedObject var viewModel: PaymentsOperationViewModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
+    @State private var topSize: CGSize = .zero
+    @State private var bottomSize: CGSize = .zero
+    
     var body: some View {
         
         ZStack {
-            
+
+            // content
             ScrollView(showsIndicators: false) {
-                
-                Color.clear
-                    .frame(height: 40)
                 
                 VStack(spacing: 20) {
                     
-                    ForEach(viewModel.itemsVisible) { item in
+                    Color.clear
+                        .frame(height: topSize.height)
+                    
+                    ForEach(viewModel.content) { item in
                         
                         switch item {
                         case let selectViewModel as PaymentsSelectView.ViewModel:
                             PaymentsSelectView(viewModel: selectViewModel)
+                            
+                        case let selectViewModels as PaymentsSelectSimpleView.ViewModel:
+                            PaymentsSelectSimpleView(viewModel: selectViewModels)
                             
                         case let switchViewModel as PaymentsSwitchView.ViewModel:
                             PaymentsSwitchView(viewModel: switchViewModel)
@@ -42,75 +49,165 @@ struct PaymentsOperationView: View {
                         case let nameViewModel as PaymentsNameView.ViewModel:
                             PaymentsNameView(viewModel: nameViewModel)
                             
-                        case let cardViewModel as PaymentsCardView.ViewModel:
-                            PaymentsCardView(viewModel: cardViewModel)
+                        case let cardViewModel as PaymentsProductView.ViewModel:
+                            PaymentsProductView(viewModel: cardViewModel)
                             
-                        case let selectViewModels as PaymentsSelectSimpleView.ViewModel:
-                            PaymentsSelectSimpleView(viewModel: selectViewModels)
+                        case let codeViewModel as PaymentsCodeView.ViewModel:
+                            PaymentsCodeView(viewModel: codeViewModel)
                             
-                        case let additionButtonViewModel as PaymentsButtonAdditionalView.ViewModel:
-                            PaymentsButtonAdditionalView(viewModel: additionButtonViewModel)
+                        case let additionButtonViewModel as PaymentsSpoilerButtonView.ViewModel:
+                            PaymentsSpoilerButtonView(viewModel: additionButtonViewModel)
                             
                         default:
-                            Color.clear
-                            
+                            EmptyView()
                         }
                     }
                     
                     Color.clear
-                        .frame(height: 120)
+                        .frame(height: bottomSize.height)
                 }
+                
             }
             .padding(.horizontal, 20)
             
-            if let footerViewModel = viewModel.footer {
+            // top
+            if let topItems = viewModel.top {
+                
+                VStack {
+                    
+                    ForEach(topItems) { item in
+                        
+                        switch item {
+                        case let switchViewModel as PaymentsSwitchView.ViewModel:
+                            PaymentsSwitchView(viewModel: switchViewModel)
+                                .padding(.horizontal, 20)
+                            
+                        default:
+                            EmptyView()
+                        }
+                    }
+                    .padding(.vertical, 8)
+                    .modifier(TopBackgroundModifier())
+                    .background(
+                        GeometryReader { proxy in
+                            Color.clear.preference(key: PaymentsOperationViewTopHeightPreferenceKey.self, value: proxy.size)
+                        }
+                    )
+                    .onPreferenceChange(PaymentsOperationViewTopHeightPreferenceKey.self, perform: { self.topSize = $0 })
+                    
+                    Spacer()
+                }
+            }
+            
+            // bottom
+            if let bottomItems = viewModel.bottom {
                 
                 VStack {
                     
                     Spacer()
                     
-                    switch footerViewModel {
-                    case .button(let continueButtonViewModel):
-
+                    ForEach(bottomItems) { item in
                         
-                        ZStack {
+                        switch item {
+                        case let continueViewModel as PaymentsContinueButtonView.ViewModel:
+                            PaymentsContinueButtonView(viewModel: continueViewModel)
                             
-                            Color.white
-                                .opacity(0.9)
-                                .edgesIgnoringSafeArea(.bottom)
-
-                            ButtonSimpleView(viewModel: .init(buttonModel: continueButtonViewModel))
-                                .frame(height: 42)
-                            .padding(.horizontal, 20)
+                        case let amountViewModel as PaymentsAmountView.ViewModel:
+                            PaymentsAmountView(viewModel: amountViewModel)
                             
-                        }.frame(height: 60)
-                        
-                    case .amount(let amountViewModel):
-                        PaymentsAmountView(viewModel: amountViewModel)
-                            .edgesIgnoringSafeArea(.bottom)
+                        default:
+                            EmptyView()
+                        }
                     }
+                    .modifier(BottomBackgroundModifier())
+                    .background(
+                        GeometryReader { proxy in
+                            Color.clear.preference(key: PaymentsOperationViewBottomHeightPreferenceKey.self, value: proxy.size)
+                        }
+                    )
+                    .onPreferenceChange(PaymentsOperationViewBottomHeightPreferenceKey.self, perform: { self.bottomSize = $0 })
                 }
             }
-                    
-            NavigationLink("", isActive: $viewModel.isConfirmViewActive) {
+            
+            NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
-                if let confirmViewModel = viewModel.confirmViewModel {
-
+                if let link = viewModel.link  {
+                    
+                    switch link {
+                    case let .confirm(confirmViewModel):
                         PaymentsOperationView(viewModel: confirmViewModel)
-                    
-                } else {
-                    
-                    EmptyView()
+                    }
                 }
             }
         }
         .navigationBarTitle(Text(viewModel.header.title), displayMode: .inline)
         .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Button(action: { self.presentationMode.wrappedValue.dismiss()}, label: {
+        .navigationBarItems(leading: Button(action: { self.presentationMode.wrappedValue.dismiss() }, label: {
             viewModel.header.backButtonIcon }))
-        .fullScreenCoverLegacy(viewModel: $viewModel.popUpSelector, coverBackgroundColor: .clear) { popUpSelectViewModel in
-            PaymentsPopUpSelectView(viewModel: popUpSelectViewModel)
+        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
+
+            switch bottomSheet.type {
+            case .popUp(let popUpVewModel):
+                PaymentsPopUpSelectView(viewModel: popUpVewModel)
+            }
         }
+        .sheet(item: $viewModel.sheet, content: { sheet in
+            
+            switch sheet.type {
+            case let .contacts(contactsViewModel):
+                ContactsView(viewModel: contactsViewModel)
+            }
+        })
+    }
+}
+
+extension PaymentsOperationView {
+    
+    struct TopBackgroundModifier: ViewModifier {
+        
+        func body(content: Content) -> some View {
+        
+            content
+                .background(Color.white.opacity(0.95).ignoresSafeArea(.container, edges: .top))
+        }
+    }
+    
+    struct BottomBackgroundModifier: ViewModifier {
+        
+        func body(content: Content) -> some View {
+            
+            if #available(iOS 15.0, *) {
+                
+                content
+                    .background(.ultraThinMaterial, ignoresSafeAreaEdges: .bottom)
+                
+            } else {
+                
+                content
+                    .background(Color.white.opacity(0.95).ignoresSafeArea(.container, edges: .bottom))
+            }
+        }
+    }
+}
+
+//MARK: - Preference Keys
+
+
+struct PaymentsOperationViewTopHeightPreferenceKey: PreferenceKey {
+    
+    static var defaultValue: CGSize = .zero
+    
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+        _ = nextValue()
+    }
+}
+
+struct PaymentsOperationViewBottomHeightPreferenceKey: PreferenceKey {
+    
+    static var defaultValue: CGSize = .zero
+    
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+        _ = nextValue()
     }
 }
 
@@ -118,16 +215,38 @@ struct PaymentsOperationView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PaymentsOperationView(viewModel: .sample)
+        Group {
+            
+            NavigationView {
+                PaymentsOperationView(viewModel: .sampleContinue)
+            }
+            
+            NavigationView {
+                PaymentsOperationView(viewModel: .sampleAmount)
+            }
+        }
     }
 }
 
 extension PaymentsOperationViewModel {
     
-    static let sample: PaymentsOperationViewModel = {
+    static let sampleContinue: PaymentsOperationViewModel = {
         
-        let items: [PaymentsParameterViewModel] = [PaymentsSwitchView.ViewModel.sample, PaymentsSelectView.ViewModel.selectedMock, PaymentsInfoView.ViewModel.sample, PaymentsNameView.ViewModel.normal, PaymentsNameView.ViewModel.edit, PaymentsCardView.ViewModel.sample]
+        let topItems = [PaymentsSwitchView.ViewModel.sample]
+        let contentItems = [PaymentsSelectView.ViewModel.selectedStateMock, PaymentsInfoView.ViewModel.sample, PaymentsNameView.ViewModel.normal, PaymentsNameView.ViewModel.edit, PaymentsProductView.ViewModel.sample, PaymentsInfoView.ViewModel.sample]
         
-        return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги", action: {}), items: items, footer: .amount(PaymentsAmountView.ViewModel.amountCurrencyInfoAlert), rootActions: .init(dismiss: {}, spinner: .init(show: {}, hide: {}), alert: { _ in }))
+        let bottomItems = [PaymentsContinueButtonView.ViewModel.sample]
+        
+        return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги"), top: topItems, content: contentItems, bottom: bottomItems, link: nil, bottomSheet: nil, operation: .emptyMock, model: .emptyMock)
+    }()
+    
+    static let sampleAmount: PaymentsOperationViewModel = {
+        
+        let topItems = [PaymentsSwitchView.ViewModel.sample]
+        let contentItems = [PaymentsSelectView.ViewModel.selectedStateMock, PaymentsInfoView.ViewModel.sample, PaymentsNameView.ViewModel.normal, PaymentsNameView.ViewModel.edit, PaymentsProductView.ViewModel.sample]
+        let bottomItems = [PaymentsAmountView.ViewModel.amount]
+        
+        return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги"), top: topItems, content: contentItems, bottom: bottomItems, link: nil, bottomSheet: nil, operation: .emptyMock, model: .emptyMock)
     }()
 }
+

@@ -175,8 +175,10 @@ struct PaymentsTransfersView: View {
                     .navigationBarTitle("", displayMode: .inline)
                     .navigationBarBackButtonHidden(true)
                     .edgesIgnoringSafeArea(.all)
+                
+            case .fastPayment(let viewModel):
+                ContactsView(viewModel: viewModel)
             }
-            
         })
         .bottomSheet(item: $viewModel.bottomSheet) { sheet in
             
@@ -203,6 +205,7 @@ struct PaymentsTransfersView: View {
                     .edgesIgnoringSafeArea(.bottom)
                     .navigationBarTitle("", displayMode: .inline)
                     .frame(height: 494)
+            
             }
         }
         .alert(item: $viewModel.alert, content: { alertViewModel in

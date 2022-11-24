@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-extension PTSectionLatestPaymentsView.ViewModel {
+extension LatestPaymentsView.ViewModel {
     
-    static let sample: PTSectionLatestPaymentsView.ViewModel = {
+    static let sample: LatestPaymentsView.ViewModel = {
         
-        typealias ViewModel = PTSectionLatestPaymentsView.ViewModel
+        typealias ViewModel = LatestPaymentsView.ViewModel
         
         let latestPaymentsButtons: [LatestPaymentButtonVM] =
             
@@ -45,8 +45,8 @@ extension PTSectionLatestPaymentsView.ViewModel {
         
         let items = latestPaymentsButtons.map { ItemViewModel.latestPayment($0) }
         
-        let latestPaymentsVM = ViewModel(items: items, model: .emptyMock)
-        let baseButtons = latestPaymentsVM.baseButtons.map { ItemViewModel.templates($0) }
+        let latestPaymentsVM = ViewModel(.emptyMock, items: items, isBaseButtons: true, filter: nil)
+        let baseButtons = LatestPaymentsView.ViewModel.createBaseButtons(action: {})
         latestPaymentsVM.items = baseButtons + latestPaymentsVM.items
         return latestPaymentsVM
         
@@ -90,10 +90,7 @@ extension PaymentsTransfersViewModel {
         
         let sections: [PaymentsTransfersSectionViewModel] =
         [
-            PTSectionLatestPaymentsView.ViewModel(
-                items: PTSectionLatestPaymentsView.ViewModel.sample.items,
-                model: .emptyMock
-            ),
+            PTSectionLatestPaymentsView.ViewModel(model: .emptyMock),
           
             PTSectionTransfersView.ViewModel(transfersButtons:
                 PTSectionTransfersView.ViewModel.transfersButtonsExample),

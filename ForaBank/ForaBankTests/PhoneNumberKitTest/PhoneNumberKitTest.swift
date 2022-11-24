@@ -15,7 +15,7 @@ class PhoneNumberKitTest: XCTestCase {
 
         // given
         let number = "+37410207469"
-        let formater = PhoneNumberFormater()
+        let formater = PhoneNumberKitFormater()
     
         // when
         let result = formater.format(number)
@@ -28,7 +28,7 @@ class PhoneNumberKitTest: XCTestCase {
 
         // given
         let number = "+79255555555"
-        let formater = PhoneNumberFormater()
+        let formater = PhoneNumberKitFormater()
     
         // when
         let result = formater.format(number)
@@ -42,7 +42,7 @@ class PhoneNumberKitTest: XCTestCase {
         // given
         let number = "+37410207469"
         let testField = PhoneNumberTextField()
-        let formater = PhoneNumberFormater()
+        let formater = PhoneNumberKitFormater()
         // when
         testField.text = number
         let result = formater.format(testField)

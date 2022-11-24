@@ -18,20 +18,14 @@ struct PaymentsView: View {
             NavigationView {
                 
                 switch viewModel.content {
-                case .services(let servicesViewModel):
-                    PaymentsServicesView(viewModel: servicesViewModel)
+                case let .service(serviceViewModel):
+                    PaymentsServiceView(viewModel: serviceViewModel)
                         .navigationBarItems(leading: Button(action: { viewModel.action.send(PaymentsViewModelAction.Dismiss())}, label: {
                             Image("Payments Icon Close") }))
                     
-                case .operation(let operationViewModel):
+                case let .operation(operationViewModel):
                     PaymentsOperationView(viewModel: operationViewModel)
-                    
-                case .idle:
-                    Text("Loading..")
                 }
-            }
-            .fullScreenCoverLegacy(viewModel: $viewModel.successViewModel) { successViewModel in
-                PaymentsSuccessView(viewModel: successViewModel)
             }
             
             if let spinnerViewModel = viewModel.spinner {
@@ -39,12 +33,19 @@ struct PaymentsView: View {
                 SpinnerView(viewModel: spinnerViewModel)
             }
         }
+        .fullScreenCover(item: $viewModel.successViewModel, content: { successViewModel in
+            
+            PaymentsSuccessView(viewModel: successViewModel)
+        })
         .alert(item: $viewModel.alert, content: { alertViewModel in
+            
             Alert(with: alertViewModel)
         })
     }
 }
 
+//TODO: refactor
+/*
 struct PaymentsView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -55,5 +56,6 @@ struct PaymentsView_Previews: PreviewProvider {
 
 extension PaymentsViewModel {
     
-    static let sample = PaymentsViewModel(.emptyMock, category: .taxes)
+    static let sample = PaymentsViewModel(content: .idle, category: .taxes, model: .emptyMock, closeAction: {})
 }
+ */

@@ -6,30 +6,59 @@
 //
 
 import Foundation
+import Combine
 
 class PaymentsParameterViewModel: Identifiable {
     
+    let action: PassthroughSubject<Action, Never> = .init()
+    
     @Published var value: Value
+    @Published var isEditable: Bool
     
     var isValid: Bool { true }
-    var isEditable: Bool { source.editable }
-    var isCollapsable: Bool { source.collapsable }
+    var isFullContent: Bool { false }
     
     var id: Payments.Parameter.ID { source.parameter.id }
-    var result: Payments.Parameter { .init(id: id, value: value.current)}
+    var result: Payments.Parameter { .init(id: id, value: value.current) }
     
-    internal let source: ParameterRepresentable
+    var parameterValue: ((Payments.Parameter.ID) -> Payments.Parameter.Value )?
     
-    init(source: ParameterRepresentable) {
+    private(set) var source: PaymentsParameterRepresentable
+    internal var bindings = Set<AnyCancellable>()
+    
+    init(source: PaymentsParameterRepresentable) {
         
         self.value = .init(with: source)
         self.source = source
+        self.isEditable = source.isEditable
     }
     
     func update(value: String?) {
         
         self.value = self.value.updated(with: value)
     }
+    
+    func update(source: PaymentsParameterRepresentable) {
+        
+        self.source = source
+        self.value = .init(with: source)
+    }
+    
+    func updateEditable(update: EditableUpdate) {
+        
+        switch update {
+        case let .value(value):
+            isEditable = value
+            
+        case .source:
+            isEditable = source.isEditable
+        }
+    }
+}
+
+//MARK: - Types
+
+extension PaymentsParameterViewModel {
     
     struct Value {
  
@@ -46,7 +75,7 @@ class PaymentsParameterViewModel: Identifiable {
             self.current = current
         }
         
-        init(with representable: ParameterRepresentable) {
+        init(with representable: PaymentsParameterRepresentable) {
             
             self.id = representable.parameter.id
             self.original = representable.parameter.value
@@ -58,4 +87,24 @@ class PaymentsParameterViewModel: Identifiable {
             .init(id: id, original: original, current: value)
         }
     }
+    
+    enum EditableUpdate {
+        
+        /// set concrete value
+        case value(Bool)
+        
+        /// set data from source parameter
+        case source
+    }
+}
+
+//MARK: - Action
+
+enum PaymentsParameterViewModelAction {}
+
+//MARK: - Protocols
+
+protocol PaymentsParameterViewModelContinuable {
+    
+    func update(isContinueEnabled: Bool)
 }

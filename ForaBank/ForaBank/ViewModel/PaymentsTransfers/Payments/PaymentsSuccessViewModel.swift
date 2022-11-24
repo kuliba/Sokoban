@@ -57,12 +57,19 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         self.init(model, iconType: .success, actionButton: .init(title: "На главный", style: .red, action: closeAction), optionButtons: [])
     }
     
-    convenience init(_ model: Model, iconType: IconTypeViewModel, paymentSuccess: Payments.Success, dismissAction: @escaping () -> Void) {
+    convenience init(_ model: Model, paymentSuccess: Payments.Success) {
         
-        let amount = model.amountFormatted(amount: paymentSuccess.amount, currencyCode: nil, style: .normal)
-        let image = paymentSuccess.icon?.image ?? .ic40Sbp
+        let product = model.allProducts.first(where: { $0.id == paymentSuccess.productId })
+        let amount = model.amountFormatted(amount: paymentSuccess.amount, currencyCode: product?.currency, style: .normal)
         
-        self.init(model, title: paymentSuccess.status.description, amount: amount, iconType: .success, logo: .init(title: "сбп", image: image), actionButton: .init(title: "На главный", style: .red, action: dismissAction), optionButtons: [])
+        self.init(model, documentStatus: paymentSuccess.status, mode: .normal, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [])
+
+        updateButtons(
+            .normal,
+            documentStatus: paymentSuccess.status,
+            paymentOperationDetailId: paymentSuccess.operationDetailId)
+        
+        bind(.normal, paymentOperationDetailId: paymentSuccess.operationDetailId)
     }
 
     convenience init?(_ model: Model, mode: Mode = .normal, transferData: TransferResponseData) {
@@ -155,7 +162,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 
                 switch action {
                     
-                case let payload as ModelAction.Payment.OperationDetailByPaymentId.Response:
+                case let payload as ModelAction.Operation.Detail.Response:
                     handleDetailResponse(mode, payload: payload)
                     
                 case let payload as ModelAction.PaymentTemplate.Save.Complete:
@@ -192,7 +199,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 
                 switch action {
 
-                case _ as ModelAction.Payment.OperationDetailByPaymentId.Response:
+                case _ as ModelAction.Operation.Detail.Response:
                     
                     guard let productIdFrom = productIdFrom,
                           let productIdTo = productIdTo,
@@ -202,7 +209,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     }
                     
                     let detailData: OperationDetailData = makeDetailData(amount: amount, productFrom: productFrom, productTo: productTo, paymentOperationDetailId: paymentOperationDetailId, transferEnum: .conversionCardToAccount)
-                    let payload: ModelAction.Payment.OperationDetailByPaymentId.Response = .success(detailData)
+                    let payload = ModelAction.Operation.Detail.Response(result: .success(detailData))
                     
                     handleDetailResponse(mode, payload: payload)
                     
@@ -467,14 +474,14 @@ extension PaymentsSuccessViewModel {
                     return
                 }
                 
-                self.model.action.send(ModelAction.Payment.OperationDetailByPaymentId.Request(paymentOperationDetailId: paymentOperationDetailId))
+                self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentOperationDetailId)))
             }
         }
     }
     
-    private func handleDetailResponse(_ mode: Mode, payload: ModelAction.Payment.OperationDetailByPaymentId.Response) {
+    private func handleDetailResponse(_ mode: Mode, payload: ModelAction.Operation.Detail.Response) {
         
-        switch payload {
+        switch payload.result {
         case let .success(detailData):
             
             switch mode {
@@ -509,7 +516,8 @@ extension PaymentsSuccessViewModel {
                 }
             }
             
-        case .failture:
+        case .failure:
+            //TODO: show alert
             break
         }
     }

@@ -47,6 +47,7 @@ class LatestPaymentData: Codable, Identifiable {
 extension LatestPaymentData {
     
     enum Kind: String, Codable, Unknownable {
+        
         case phone
         case country
         case service
@@ -55,6 +56,7 @@ extension LatestPaymentData {
         case transport
         case taxAndStateService
         case unknown
+        
     }
 }
 

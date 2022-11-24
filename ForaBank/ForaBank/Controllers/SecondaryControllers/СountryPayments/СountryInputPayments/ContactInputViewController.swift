@@ -216,6 +216,9 @@ class ContactInputViewController: UIViewController {
         IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
         IQKeyboardManager.shared.enableAutoToolbar = true
+        navigationController?.isNavigationBarHidden = false
+        navigationController?.navigationBar.barTintColor = .black
+        navigationController?.navigationBar.tintColor = .black
         navigationController?.view.backgroundColor = .white
         navigationController?.navigationBar.backgroundColor = .white
         if let template = paymentTemplate {
