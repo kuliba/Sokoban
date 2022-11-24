@@ -350,7 +350,7 @@ extension PaymentsOperationViewModel {
         case confirm(PaymentsConfirmViewModel)
     }
     
-    struct BottomSheet: Identifiable {
+    struct BottomSheet: Identifiable, BottomSheetCustomizable {
 
         let id = UUID()
         let type: BottomSheetType

@@ -69,7 +69,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             documentStatus: paymentSuccess.status,
             paymentOperationDetailId: paymentSuccess.operationDetailId)
         
-        bind(paymentSuccess.operationDetailId)
+        bind(.normal, paymentOperationDetailId: paymentSuccess.operationDetailId)
     }
 
     convenience init?(_ model: Model, mode: Mode = .normal, transferData: TransferResponseData) {
@@ -199,7 +199,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 
                 switch action {
 
-                case _ as ModelAction.Payment.OperationDetailByPaymentId.Response:
+                case _ as ModelAction.Operation.Detail.Response:
                     
                     guard let productIdFrom = productIdFrom,
                           let productIdTo = productIdTo,
@@ -209,7 +209,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     }
                     
                     let detailData: OperationDetailData = makeDetailData(amount: amount, productFrom: productFrom, productTo: productTo, paymentOperationDetailId: paymentOperationDetailId, transferEnum: .conversionCardToAccount)
-                    let payload: ModelAction.Payment.OperationDetailByPaymentId.Response = .success(detailData)
+                    let payload = ModelAction.Operation.Detail.Response(result: .success(detailData))
                     
                     handleDetailResponse(mode, payload: payload)
                     
@@ -516,7 +516,8 @@ extension PaymentsSuccessViewModel {
                 }
             }
             
-        case .failture:
+        case .failure:
+            //TODO: show alert
             break
         }
     }
