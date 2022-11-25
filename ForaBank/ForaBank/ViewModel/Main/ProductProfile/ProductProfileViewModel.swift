@@ -803,11 +803,11 @@ class ProductProfileViewModel: ObservableObject {
                                 return
                             }
                             
-                            if product.isBirjevoyProduct {
-                                
-                                self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
-                                self.action.send(ProductProfileViewModelAction.Close.Sheet())
-                                
+                            self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
+                            self.action.send(ProductProfileViewModelAction.Close.Sheet())
+                            
+                            switch product.depositType {
+                            case .birjevoy:
                                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
                                     
                                     let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
@@ -820,19 +820,10 @@ class ProductProfileViewModel: ObservableObject {
                                             self?.openLinkURL(depositCloseBirjevoyURL)
                                         }
                                     }))
-
+                                    
                                     self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
                                 }
-                            } else if let currencySymbol = self.model.dictionaryCurrencySimbol(for: "RUB"),
-                                      product.currency == currencySymbol,
-                                      !product.isMultiProduct {
-                                
-                                self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
-                            } else {
-                                
-                                self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
-                                self.action.send(ProductProfileViewModelAction.Close.Sheet())
-                                
+                            case .multi:
                                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
                                     
                                     let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
@@ -841,9 +832,29 @@ class ProductProfileViewModel: ObservableObject {
                                         self?.action.send(ProductProfileViewModelAction.Close.Alert())
                                         self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())
                                     }),
-                                     secondary: .init(type: .default, title: "Ок", action: {}))
+                                                                         secondary: .init(type: .default, title: "Ок", action: {}))
                                     
                                     self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
+                                }
+                                
+                            default:
+                                if let currency = self.model.dictionaryCurrency(for: "RUB"),
+                                   product.currency != currency.code {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
+                                        
+                                        let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                             message: "Срок вашего вклада еще не истек. Для досрочного закрытия обратитесь в ближайший офис",
+                                                                             primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in
+                                            self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                                            self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())
+                                        }),
+                                                                             secondary: .init(type: .default, title: "Ок", action: {}))
+                                        
+                                        self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
+                                    }
+                                } else {
+                                    
+                                    self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
                                 }
                             }
                                                     

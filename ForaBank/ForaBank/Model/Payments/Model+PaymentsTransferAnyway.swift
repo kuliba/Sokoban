@@ -112,7 +112,7 @@ extension Model {
             guard let productParameter = operation.parameters.first(where: { $0.id == productParameterId}) as? Payments.ParameterProduct,
                   let productId = productParameter.productId,
                   let product = product(productId: productId),
-                  let currencySymbol = dictionaryCurrencySimbol(for: product.currency) else {
+                  let currencySymbol = dictionaryCurrencySymbol(for: product.currency) else {
                 throw Payments.Error.missingParameter(productParameterId)
             }
             
