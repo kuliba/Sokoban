@@ -30,7 +30,7 @@ extension Model {
             let productParameterId = Payments.Parameter.Identifier.product.rawValue
             let filter = ProductData.Filter.generalFrom
             guard let product = firstProduct(with: filter),
-                  let currencySymbol = dictionaryCurrencySimbol(for: product.currency) else {
+                  let currencySymbol = dictionaryCurrencySymbol(for: product.currency) else {
                 throw Payments.Error.unableCreateRepresentable(productParameterId)
             }
             let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)

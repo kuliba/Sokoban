@@ -299,7 +299,7 @@ extension Model {
         return currencyList.value.first(where: { $0.code == code })
     }
     
-    func dictionaryCurrencySimbol(for code: String) -> String? {
+    func dictionaryCurrencySymbol(for code: String) -> String? {
         
         dictionaryCurrency(for: code)?.currencySymbol
     }

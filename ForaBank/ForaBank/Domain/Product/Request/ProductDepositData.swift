@@ -106,7 +106,7 @@ extension ProductDepositData {
             
         } else {
             
-            if isForaHitProduct == true {
+            if depositType == .forahit {
                 
                 // Fora Hit Deposit
                 
@@ -164,23 +164,9 @@ extension ProductDepositData {
         return isDemandDeposit && depositProductId == 3194
     }
     
-    static let foraHitProductId = 10000003792
-    static let birjevoyProductId = 10000003655
-    static let multiDepositProductId = 10000001870
-    
-    var isForaHitProduct: Bool {
+    var depositType: DepositType? {
         
-        depositProductId == Self.foraHitProductId
-    }
-    
-    var isBirjevoyProduct: Bool {
-        
-        depositProductId == Self.birjevoyProductId
-    }
-    
-    var isMultiProduct: Bool {
-        
-        depositProductId == Self.multiDepositProductId
+        DepositType(rawValue: depositProductId)
     }
     
     var isCanClosedDeposit: Bool {
@@ -202,5 +188,12 @@ extension ProductDepositData {
         
         case remains
         case interest(Double)
+    }
+    
+    enum DepositType: Int {
+        
+        case multi = 10000001870
+        case birjevoy = 10000003655
+        case forahit = 10000003792
     }
 }
