@@ -857,7 +857,7 @@ extension OperationDetailInfoViewModel {
         switch iconType {
         case .balance:
             
-            let formattedAmount = model.amountFormatted(amount: operation.amount, currencyCode: operation.payerCurrency, style: .fraction)
+            let formattedAmount = model.amountFormatted(amount: operation.payerAmount, currencyCode: operation.payerCurrency, style: .fraction)
             
             guard let formattedAmount = formattedAmount else {
                 return nil
