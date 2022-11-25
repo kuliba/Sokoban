@@ -75,6 +75,8 @@ struct PaymentsInfoView: View {
                     
                     viewModel.icon
                         .resizable()
+                        .renderingMode(.template)
+                        .foregroundColor(.mainColorsGray)
                         .frame(width: 24, height: 24)
                         .padding(.top, 16)
                         .padding(.leading, 4)
@@ -96,7 +98,7 @@ struct PaymentsInfoView: View {
                 Divider()
                     .frame(height: 1)
                     .background(Color.bordersDivider)
-                    .opacity(0.2)
+                    .opacity(viewModel.isEditable ? 1.0 : 0.2)
                     .padding(.top, 12)
                     .padding(.leading, 44)
             }
@@ -128,7 +130,7 @@ struct PaymentsInfoView: View {
                 Divider()
                     .frame(height: 1)
                     .background(Color.bordersDivider)
-                    .opacity(0.2)
+                    .opacity(viewModel.isEditable ? 1.0 : 0.2)
                     .padding(.top, 12)
                     .padding(.leading, 48)
             }

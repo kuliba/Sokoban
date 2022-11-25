@@ -29,7 +29,7 @@ extension ModelAction {
                     case step(Payments.Operation)
                     case confirm(Payments.Operation)
                     case complete(Payments.Success)
-                    case failure(String)
+                    case failure(Error)
                 }
             }
         }
@@ -62,7 +62,7 @@ extension Model {
             } catch {
                 
                 LoggerAgent.shared.log(level: .error, category: .model, message: "Failed continue operation: \(payload.operation) with error: \(error.localizedDescription)")
-                self.action.send(ModelAction.Payment.Process.Response(result: .failure(error.localizedDescription)))
+                self.action.send(ModelAction.Payment.Process.Response(result: .failure(error)))
             }
         }
     }

@@ -78,5 +78,7 @@ struct PaymentsContinueViewComponent_Previews: PreviewProvider {
 extension PaymentsContinueButtonView.ViewModel {
     
     static let sample = PaymentsContinueButtonView.ViewModel(title: "Продолжить", button: .init(title: "Продолжить", style: .red, action: {}))
+    
+    static let sampleInactive = PaymentsContinueButtonView.ViewModel(title: "Продолжить", button: .init(title: "Продолжить", style: .inactive, action: {}))
 }
 

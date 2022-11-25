@@ -46,7 +46,7 @@ class PaymentsOperationViewModel: ObservableObject {
     
     convenience init(operation: Payments.Operation, model: Model) {
         
-        let header = HeaderViewModel(title: operation.service.name)
+        let header = HeaderViewModel(with: operation)
 
         self.init(header: header, top: [], content: [], bottom: [], link: nil, bottomSheet: nil, operation: operation, model: model)
         
@@ -166,6 +166,12 @@ class PaymentsOperationViewModel: ObservableObject {
                     
                 case _ as PaymentsOperationViewModelAction.CloseLink:
                     link = nil
+                    
+                case _ as PaymentsOperationViewModelAction.IcorrectCodeEnterred:
+                    guard case .confirm(let confirmViewModel) = link else {
+                        return
+                    }
+                    confirmViewModel.action.send(PaymentsConfirmViewModelAction.IcorrectCodeEnterred())
                     
                 default:
                     break
@@ -340,9 +346,35 @@ extension PaymentsOperationViewModel {
 extension PaymentsOperationViewModel {
     
     struct HeaderViewModel {
-        
+
         let title: String
+        let icon: Image?
         let backButtonIcon = Image("back_button")
+        
+        init(title: String, icon: Image? = nil) {
+            
+            self.title = title
+            self.icon = icon
+        }
+        
+        init(with operation: Payments.Operation) {
+            
+            if let headerParameter = operation.parameters.first(where: { $0.id == Payments.Parameter.Identifier.header.rawValue}) as? Payments.ParameterHeader,
+               let icon = headerParameter.icon {
+                
+                switch icon {
+                case let .image(imageData):
+                    self.init(title: headerParameter.title, icon: imageData.image)
+                    
+                case let .name(imageName):
+                    self.init(title: headerParameter.title, icon: Image(imageName))
+                }
+                
+            } else {
+                
+                self.init(title: "", icon: nil)
+            }
+        }
     }
         
     enum Link {
@@ -390,4 +422,6 @@ enum PaymentsOperationViewModelAction {
     }
     
     struct CloseLink: Action {}
+    
+    struct IcorrectCodeEnterred: Action {}
 }

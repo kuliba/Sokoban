@@ -27,6 +27,22 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
                 case let payload as ModelAction.Auth.VerificationCode.PushRecieved:
                     updateFeedSection(code: payload.code)
                     
+                case let payload as ModelAction.Transfers.ResendCode.Response:
+                    switch payload {
+                    case let .success(data: data):
+                        if data.resendOTPCount < 1 {
+                            
+                            guard let codeItem = items.compactMap({ $0 as? PaymentsCodeView.ViewModel }).first else {
+                                return
+                            }
+                            
+                            codeItem.action.send(PaymentsParameterViewModelAction.Code.ResendCodeDisabled())
+                        }
+                        
+                    case let .failure(message: message):
+                        self.action.send(PaymentsConfirmViewModelAction.ShowErrorAlert(message: message))
+                    }
+
                 default:
                     break
                 }
@@ -54,6 +70,13 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
                     // continue operation
                     model.action.send(ModelAction.Payment.Process.Request(operation: updatedOperation))
                     rootActions?.spinner.show()
+                    
+                case _ as PaymentsConfirmViewModelAction.IcorrectCodeEnterred:
+                    guard let codeItem = items.compactMap({ $0 as? PaymentsCodeView.ViewModel }).first else {
+                        return
+                    }
+                    
+                    codeItem.action.send(PaymentsParameterViewModelAction.Code.EnterredCodeIncorrect())
      
                 default:
                     break
@@ -89,6 +112,18 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
                 updateEditable(for: bottomItems)
                 
             }.store(in: &bindings)
+    }
+}
+
+//MARK: - Action
+
+enum PaymentsConfirmViewModelAction {
+    
+    struct IcorrectCodeEnterred: Action {}
+    
+    struct ShowErrorAlert: Action {
+        
+        let message: String
     }
 }
 

@@ -17,6 +17,9 @@ extension Model {
             // operator
             let operatorParameter = Payments.ParameterOperator(operatorType: .sfp)
             
+            // header
+            let headerParameter = Payments.ParameterHeader(title: "Перевод через СБП", icon: .name("ic24Sbp"))
+            
             // phone
             let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
             let phoneParameterIcon = ImageData(named: "ic24Smartphone") ?? .parameterSample
@@ -44,7 +47,7 @@ extension Model {
             let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
             let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 10, maxAmount: product.balance))
             
-            return .init(parameters: [operatorParameter, phoneParameter, bankParameter, productParameter, messageParameter, amountParameter], front: .init(visible: [phoneParameterId, bankParameterId, productParameterId, messageParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [phoneParameterId, bankParameterId, productParameterId], processed: nil))
+            return .init(parameters: [operatorParameter, headerParameter, phoneParameter, bankParameter, productParameter, messageParameter, amountParameter], front: .init(visible: [phoneParameterId, bankParameterId, productParameterId, messageParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [phoneParameterId, bankParameterId, productParameterId], processed: nil))
             
         default:
             throw Payments.Error.unsupported
