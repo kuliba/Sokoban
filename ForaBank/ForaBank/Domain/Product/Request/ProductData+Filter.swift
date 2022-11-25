@@ -224,6 +224,7 @@ extension ProductData.Filter  {
                 ProductTypeRule([.card, .account]),
                 CurrencyRule([.rub]),
                 CardActiveRule(),
+                CardAdditionalRetrictedRule(),
                 AccountActiveRule()])
     
     static let generalTo = ProductData.Filter(

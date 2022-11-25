@@ -84,9 +84,40 @@ class PaymentsViewModel: ObservableObject {
                     switch payload.result {
                     case let .complete(paymentSuccess):
                         successViewModel = PaymentsSuccessViewModel(model, paymentSuccess: paymentSuccess)
-                        
-                    case .failure(let errorMessage):
-                        self.action.send(PaymentsViewModelAction.Alert(message: errorMessage))
+     
+                    case let .failure(error):
+                        switch error {
+                        case let serverError as ServerAgentError:
+                            switch serverError {
+                            case let .serverStatus(.serverError, errorMessage: message):
+                                guard let message = message else {
+                                    return
+                                }
+                                
+                                if message.contains("Введен некорректный код") {
+                                    
+                                    guard case .operation(let operationViewModel) = content else {
+                                        return
+                                    }
+                                    
+                                    operationViewModel.action.send(PaymentsOperationViewModelAction.IcorrectCodeEnterred())
+                                    
+                                } else if message.contains("Вы исчерпали") {
+                                    
+                                    self.action.send(PaymentsViewModelAction.AlertThenDismiss(message: message))
+                                    
+                                } else {
+                                    
+                                    self.action.send(PaymentsViewModelAction.Alert(message: message))
+                                }
+
+                            default:
+                                self.action.send(PaymentsViewModelAction.Alert(message: error.localizedDescription))
+                            }
+                            
+                        default:
+                            self.action.send(PaymentsViewModelAction.Alert(message: error.localizedDescription))
+                        }
                         
                     default:
                         break
@@ -120,6 +151,9 @@ class PaymentsViewModel: ObservableObject {
                     }
                     
                 case let payload as PaymentsViewModelAction.Alert:
+                    alert = .init(title: "Ошибка", message: payload.message, primary: .init(type: .default, title: "Ok", action: {}))
+                    
+                case let payload as PaymentsViewModelAction.AlertThenDismiss:
                     alert = .init(title: "Ошибка", message: payload.message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}))
  
                 default:
@@ -170,6 +204,11 @@ enum PaymentsViewModelAction {
     }
     
     struct Alert: Action {
+        
+        let message: String
+    }
+    
+    struct AlertThenDismiss: Action {
         
         let message: String
     }

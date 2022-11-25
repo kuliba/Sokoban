@@ -201,7 +201,7 @@ struct PaymentsInputView: View {
                 
                 Spacer()
                 
-                if let actionButton = viewModel.actionButton {
+                if let actionButton = viewModel.actionButton, viewModel.isEditable == true {
                  
                     Button(action: actionButton.action) {
                         

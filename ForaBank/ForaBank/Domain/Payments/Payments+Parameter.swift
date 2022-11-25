@@ -45,6 +45,7 @@ extension Payments.Parameter {
         case category       = "ru.forabank.sense.category"
         case service        = "ru.forabank.sense.service"
         case `operator`     = "ru.forabank.sense.operator"
+        case header         = "ru.forabank.sense.header"
         case product        = "ru.forabank.sense.product"
         case amount         = "ru.forabank.sense.amount"
         case code           = "ru.forabank.sense.code"
@@ -476,6 +477,26 @@ extension Payments {
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
             ParameterProduct(value: value, title: title, filter: filter, isEditable: isEditable)
+        }
+    }
+    
+    struct ParameterHeader: PaymentsParameterRepresentable {
+        
+        let parameter: Parameter
+        let title: String
+        let icon: Icon?
+
+        init(title: String, icon: Icon?) {
+            
+            self.parameter = Parameter(id: Payments.Parameter.Identifier.header.rawValue, value: Payments.Parameter.Identifier.header.rawValue)
+            self.title = title
+            self.icon = icon
+        }
+        
+        enum Icon {
+            
+            case image(ImageData)
+            case name(String)
         }
     }
     
