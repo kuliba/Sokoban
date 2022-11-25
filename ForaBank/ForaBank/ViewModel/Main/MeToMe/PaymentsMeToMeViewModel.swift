@@ -45,8 +45,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
     }
     
     convenience init?(_ model: Model, mode: Mode) {
-
-        guard let productData = Self.reduce(products: model.allProducts) else {
+        
+        guard let productData = Self.reduce(model, products: model.allProducts) else {
             return nil
         }
         
@@ -662,33 +662,11 @@ class PaymentsMeToMeViewModel: ObservableObject {
 
 extension PaymentsMeToMeViewModel {
     
-    static func reduce(products: [ProductData]) -> ProductData? {
+    static func reduce(_ model: Model, products: [ProductData]) -> ProductData? {
         
-        let filterredProducts = products.filter { product in
-            
-            switch product.productType {
-            case .card:
-                
-                guard let product = product as? ProductCardData else {
-                    return false
-                }
-
-                return product.status == .blockedByClient ? false : true
-
-            case .account:
-                
-                guard let product = product as? ProductAccountData else {
-                    return false
-                }
-                
-                return product.status == .blockedByClient ? false : true
-
-            default:
-                return true
-            }
-        }
+        let filterredProducts = ProductData.Filter.generalFrom.filterredProductsOwner(products, ownerId: model.clientInfo.value?.id)
         
-        return filterredProducts.first
+        return filterredProducts?.first
     }
     
     static func productsId(_ model: Model, swapViewModel: ProductsSwapView.ViewModel) -> (from: ProductData.ID, to: ProductData.ID)? {
