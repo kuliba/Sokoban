@@ -198,6 +198,7 @@ class ChangeReturnCountryController: UIViewController {
             dismiss(animated: true)
             
         } else {
+            dismiss(animated: true)
             navigationController?.popViewController(animated: true)
         }
     }
