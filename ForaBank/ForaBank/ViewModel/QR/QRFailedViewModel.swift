@@ -37,7 +37,7 @@ class QRFailedViewModel: ObservableObject {
         return [
             ButtonSimpleView.ViewModel(title: "Найти поставщика вручную", style: .gray, action: { [weak self] in
                 
-                self?.link = .failedView(.init())
+                self?.link = .failedView(.init(textFieldPlaceholder: "Название или ИНН", navigationBar: .init(action: {}), operators: [], model: Model.shared))
                 
             }),
             ButtonSimpleView.ViewModel(title: "Оплатить по реквизитам", style: .gray, action: { [weak self] in

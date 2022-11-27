@@ -68,9 +68,16 @@ struct QRView: View {
                         ImagePicker(viewModel: imagePicker)
                             .edgesIgnoringSafeArea(.all)
                             .navigationBarBackButtonHidden(false)
-                            .navigationBarTitle("Выберите фото", displayMode: .inline)
+                            .navigationBarTitle("Из фото", displayMode: .inline)
+                        
                     case .failedView(let view):
                         QRFailedView(viewModel: view)
+                        
+                    case .documentPicker(let documentPicker):
+                        DocumentPicker(viewModel: documentPicker)
+                            .edgesIgnoringSafeArea(.all)
+                            .navigationBarBackButtonHidden(false)
+                            .navigationBarTitle("Из документов", displayMode: .inline)
                     }
                 }
             }

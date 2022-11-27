@@ -287,13 +287,13 @@ class MainViewModel: ObservableObject, Resetable {
                                 
                                 self.link = .country(.init(country: payload.countryId, operatorsViewModel: .init(closeAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
-                                }, template: nil), paymentType: .withOutAddress(withOutViewModel: .init(phoneNumber: nil))))
+                                }, mode: .general), paymentType: .withOutAddress(withOutViewModel: .init(phoneNumber: nil))))
                                 
                             case let payload as BannerActionContactTransfer:
                                   
                                 self.link = .country(.init(country: payload.countryId, operatorsViewModel: .init(closeAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
-                                }, template: nil), paymentType: .turkeyWithOutAddress(turkeyWithOutAddress: .init(firstName: "", middleName: "", surName: "", phoneNumber: ""))))
+                                }, mode: .general), paymentType: .turkeyWithOutAddress(turkeyWithOutAddress: .init(firstName: "", middleName: "", surName: "", phoneNumber: ""))))
                                 
                             default: break
                             }

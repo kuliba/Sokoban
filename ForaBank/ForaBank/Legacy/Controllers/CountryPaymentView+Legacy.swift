@@ -73,9 +73,14 @@ extension CountryPaymentView {
         
         init(operatorsViewModel: OperatorsViewModel) {
             
+            var paymantTemplate: PaymentTemplateData? {
+                guard case .template(let paymantTemplate) = operatorsViewModel.mode else { return nil}
+                return paymantTemplate
+            }
+            
             self.operatorsViewModel = operatorsViewModel
-            self.paymentTemplate = operatorsViewModel.template
-            self.paymentType = .template(templateViewModel: operatorsViewModel.template!)
+            self.paymentTemplate = paymantTemplate
+            self.paymentType = .template(templateViewModel: paymantTemplate!)
             self.puref = nil
             self.country = nil
             self.bank = nil

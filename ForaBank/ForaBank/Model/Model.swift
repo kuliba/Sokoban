@@ -585,6 +585,9 @@ class Model {
                 case _ as ModelAction.Media.GalleryPermission.Request:
                     handleMediaGalleryPermissionStatusRequest()
                     
+                case _ as ModelAction.Media.DocumentPermission.Request:
+                    handleMediaDocumentPermissionStatusRequest()
+                    
                     //MARK: - Client Info
                     
                 case _ as ModelAction.ClientInfo.Fetch:

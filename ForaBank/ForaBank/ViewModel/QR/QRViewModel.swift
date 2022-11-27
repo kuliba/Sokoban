@@ -48,7 +48,7 @@ class QRViewModel: ObservableObject {
         
         bind()
     }
-
+    
     static func resolve(data: String) -> Result {
         
         if let url = URL(string: data) {
@@ -95,7 +95,8 @@ class QRViewModel: ObservableObject {
                             self?.model.action.send(ModelAction.Media.GalleryPermission.Request())
                         }),
                         .init(icon: .init(image: .ic24Clock, background: .circle), title: .init(text: "Из Документов", style: .bold), orientation: .horizontal, action: { [weak self] in
-                            print("Document")
+//                            self?.bottomSheet = nil
+                          self?.model.action.send(ModelAction.Media.DocumentPermission.Request())
                         })
                     ])))
                     
@@ -129,7 +130,14 @@ class QRViewModel: ObservableObject {
                     if payload.result {
                         
                         self.link = .imagePicker(.init(closeAction: { [weak self] image in
-                            // Получаем фото
+                            
+                            guard let image = image else { return }
+                            guard let qr = self?.string(from: image) else { return }
+                            
+                            let result = Self.resolve(data: qr)
+                            
+                            self?.action.send(QRViewModelAction.Result(result: result))
+                            
                         }))
                         
                     } else {
@@ -137,11 +145,31 @@ class QRViewModel: ObservableObject {
                         self.alert = .init(title: "Ошибка", message: "Нет доступа к галереи", primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
                     }
                     
+                case _ as ModelAction.Media.DocumentPermission.Response:
+                    
+                    withAnimation {
+                        
+                        self.bottomSheet = nil
+                    }
+                    
+                        
+                    self.link = .documentPicker(.init(closeAction: { [weak self] url in
+                        
+                        guard let url = url else { return }
+                        
+                        guard let image = self?.qrFromPDF(url: url) else { return }
+                        
+                        guard let qr = self?.string(from: image) else { return }
+                        
+                        let result = Self.resolve(data: qr)
+                        
+                        self?.action.send(QRViewModelAction.Result(result: result))
+                        
+                    }))
+                    
                 default:
                     break
-                    
                 }
-                
             }.store(in: &bindings)
         
         scanner.action
@@ -149,49 +177,38 @@ class QRViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
-
+                    
                 case let payload as QRScannerViewAction.Scanned:
-                       
-        
+                    
+                    
                     let result = Self.resolve(data: payload.value)
-
-                        switch result {
-                            
-                        case .qrCode(let qr):
-
-                            guard let qrMapping = model.qrDictionary.value else { break }
-
-                            let operatorPuref = model.dictionaryAnywayOperator(with: qr, mapping: qrMapping)
-                            
-                            let puref = operatorPuref?.code
-                            
-                            var operatorDescription = ""
-                            
-                            if puref != nil {
-                                
-                                operatorDescription = puref!
-                                self.alert = .init(title: "QR: operator: \(operatorDescription)", message: qr.original, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
-                                
-                            } else {
-                                
-                                let failedView = QRFailedViewModel()
-                                self.link = .failedView(failedView)
-                            }
-                     
-                        case .c2bURL(let qr):
-                            self.alert = .init(title: "C2b", message: qr.absoluteString, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
-
-                        case .url(let qr):
-                            self.alert = .init(title: "Url", message: qr.absoluteString, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
-
-                        case .unknown(let qr):
-                            
-                            self.alert = .init(title: "Unknown", message: qr, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
-                        }
+                    
+                    self.action.send(QRViewModelAction.Result(result: result))
+                    
                 default:
                     break
                 }
             } .store(in: &bindings)
+    }
+    
+    func string(from image: UIImage) -> String {
+        
+        var qrAsString = ""
+        guard let detector = CIDetector(ofType: CIDetectorTypeQRCode,
+                                        context: nil,
+                                        options: [CIDetectorAccuracy: CIDetectorAccuracyHigh]),
+              let ciImage = CIImage(image: image),
+              let features = detector.features(in: ciImage) as? [CIQRCodeFeature] else {
+            return qrAsString
+        }
+        
+        for feature in features {
+            guard let indeedMessageString = feature.messageString else {
+                continue
+            }
+            qrAsString += indeedMessageString
+        }
+        return qrAsString
     }
     
     struct BottomSheet: Identifiable {
@@ -210,6 +227,7 @@ class QRViewModel: ObservableObject {
     enum Link {
         
         case imagePicker(ImagePickerViewModel)
+        case documentPicker(DocumentPickerViewModel)
         case failedView(QRFailedViewModel)
     }
     
@@ -224,12 +242,47 @@ class QRViewModel: ObservableObject {
         }
     }
     
+    func qrFromPDF(url: URL) -> UIImage? {
+        
+        guard let document = CGPDFDocument(url as CFURL) else { return nil }
+        
+        var width: CGFloat = 0
+        var height: CGFloat = 0
+        
+        // calculating overall page size
+        for index in 1...document.numberOfPages {
+            if let page = document.page(at: index) {
+                let pageRect = page.getBoxRect(.mediaBox)
+                width = max(width, pageRect.width)
+                height = height + pageRect.height
+            }
+        }
+        
+        // now creating the image
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: width, height: height))
+        
+        let image = renderer.image { (ctx) in
+            ctx.cgContext.scaleBy(x: 1.0, y: -1.0)
+            for index in 1...document.numberOfPages {
+                
+                if let page = document.page(at: index) {
+                    let pageRect = page.getBoxRect(.mediaBox)
+                    ctx.cgContext.translateBy(x: 0.0, y: -pageRect.height)
+                    ctx.cgContext.drawPDFPage(page)
+                }
+            }
+            
+            ctx.cgContext.scaleBy(x: 1.0, y: -1.0)
+        }
+        return image
+    }
+    
     enum Result {
-
-       case qrCode(QRCode)
-       case c2bURL(URL)
-       case url(URL)
-       case unknown(String)
+        
+        case qrCode(QRCode)
+        case c2bURL(URL)
+        case url(URL)
+        case unknown(String)
     }
 }
 
@@ -238,4 +291,8 @@ enum QRViewModelAction {
     struct OpenDocument: Action {}
     struct Info: Action {}
     struct Flashlight: Action {}
+    struct Result: Action {
+        
+        let result: QRViewModel.Result
+    }
 }

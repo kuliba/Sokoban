@@ -228,20 +228,52 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         return containsNumber
     }
 
+    var qrDataDictionary = [String: String]()
     func checkQREvent() {
-        if let qrDataUnw = GlobalModule.qrData, let operatorModelUnw = GlobalModule.qrOperator {
-            if operatorModelUnw.parentCode?.contains(GlobalModule.INTERNET_TV_CODE) == true {
-                InternetTVMainViewModel.filter = GlobalModule.INTERNET_TV_CODE
+        
+        let purefArray = ["iFora||4990", "avtodor", "iFora||5173"]
+
+        if qrDataDictionary.isEmpty {
+            
+            guard case .qr( let qrCode) = operatorsViewModel?.mode, let mapping = model.qrDictionary.value else { return }
+            
+            for ( key, value ) in qrCode.rawData {
+                
+                let qrParameter = qrCode.stringValue(type: .value(key), mapping: mapping)
+                qrDataDictionary.updateValue(value, forKey: key)
+                
             }
-            if operatorModelUnw.parentCode?.contains(GlobalModule.UTILITIES_CODE) == true {
-                InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
-            }
-            viewModel.qrData = qrDataUnw
-            viewModel.operatorFromQR = operatorModelUnw
-            GlobalModule.qrData = nil
-            GlobalModule.qrOperator = nil
+            
+            qrDataDictionary.updateValue("qwe", forKey: "qwe")
+            
+            viewModel.qrData = qrCode.rawData
+
+            let inn = qrCode.stringValue(type: .general(.inn), mapping: mapping)
+            var operatorsModel = GKHOperatorsModel()
+            let operatorsList = getOperatorsList(model: model)
+            operatorsList.forEach( { operators in
+                if operators.synonymList.first == inn {
+                    operatorsModel = operators
+                }
+            })
+            
+            viewModel.operatorFromQR = operatorsModel
             performSegue(withIdentifier: "input", sender: self)
         }
+        
+//        if let qrDataUnw = GlobalModule.qrData, let operatorModelUnw = GlobalModule.qrOperator {
+//            if operatorModelUnw.parentCode?.contains(GlobalModule.INTERNET_TV_CODE) == true {
+//                InternetTVMainViewModel.filter = GlobalModule.INTERNET_TV_CODE
+//            }
+//            if operatorModelUnw.parentCode?.contains(GlobalModule.UTILITIES_CODE) == true {
+//                InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
+//            }
+//            viewModel.qrData = qrDataUnw
+//            viewModel.operatorFromQR = operatorModelUnw
+//            GlobalModule.qrData = nil
+//            GlobalModule.qrOperator = nil
+//            performSegue(withIdentifier: "input", sender: self)
+//        }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -286,10 +318,10 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
                     targetController.operatorData = customGroup?.op
                     // Переход по QR
                     if viewModel.qrData.count != 0 {
-                        let dc = segue.destination as! InternetTVDetailsFormController
-                        dc.operatorData = viewModel.operatorFromQR
-                        dc.qrData = viewModel.qrData
-                        dc.operatorsViewModel = operatorsViewModel
+                        let controller = dc.topViewController as! InternetTVDetailsFormController
+                        controller.operatorData = viewModel.operatorFromQR
+                        controller.qrData = viewModel.qrData
+                        controller.operatorsViewModel = operatorsViewModel
                     }
                 }
                 viewModel.qrData.removeAll()
@@ -323,6 +355,15 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         IQKeyboardManager.shared.enable = false
         IQKeyboardManager.shared.enableAutoToolbar = false
         navigationItem.searchController = nil
+    }
+    
+    func getOperatorsList(model: Model) -> [GKHOperatorsModel] {
+        
+        let operators = (model.dictionaryAnywayOperatorGroups()?.compactMap { $0.returnOperators() }) ?? []
+        let operatorCodes = [GlobalModule.UTILITIES_CODE, GlobalModule.INTERNET_TV_CODE, GlobalModule.PAYMENT_TRANSPORT]
+        let parameterTypes = ["INPUT"]
+        let operatorsList = GKHOperatorsModel.childOperators(with: operators, operatorCodes: operatorCodes, parameterTypes: parameterTypes)
+        return operatorsList
     }
 }
 

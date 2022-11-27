@@ -145,6 +145,12 @@ struct PaymentsTransfersView: View {
                         
                     case .currencyWallet(let currencyWalletViewModel):
                         CurrencyWalletView(viewModel: currencyWalletViewModel)
+                        
+                    case .failedView(let failedViewModel):
+                        QRFailedView(viewModel: failedViewModel)
+                        
+                    case .c2b(let c2bViewModel):
+                        C2BDetailsView(viewModel: c2bViewModel)
                     }
                 }
             }

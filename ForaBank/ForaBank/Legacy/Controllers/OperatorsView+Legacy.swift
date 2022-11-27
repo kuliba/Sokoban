@@ -43,17 +43,25 @@ struct OperatorsView: UIViewControllerRepresentable {
 struct OperatorsViewModel {
 
     var closeAction: () -> Void
-    var template: PaymentTemplateData?
+    let mode:  Mode
     
-    init(closeAction: @escaping () -> Void, template: PaymentTemplateData?) {
-
-        self.closeAction = closeAction
-        self.template = template
+    enum Mode {
+        
+        case general
+        case template(PaymentTemplateData)
+        case qr(QRCode)
     }
     
-    init(model: Model, closeAction: @escaping () -> Void, paymentServiceData: PaymentServiceData, paymentTemplate: PaymentTemplateData? = nil) {
+    init(closeAction: @escaping () -> Void, mode: Mode) {
+
+        self.closeAction = closeAction
+        self.mode = mode
+    }
+    
+    init(model: Model, closeAction: @escaping () -> Void, paymentServiceData: PaymentServiceData, mode: Mode) {
         
         self.closeAction = closeAction
+        self.mode = mode
         
         let amount = "\(paymentServiceData.amount)"
         var name = ""

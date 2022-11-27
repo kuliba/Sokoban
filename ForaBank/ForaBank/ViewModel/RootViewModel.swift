@@ -185,7 +185,7 @@ class RootViewModel: ObservableObject, Resetable {
                         GlobalModule.c2bURL = urlString
                         link = .c2b(.init(closeAction: {[weak self] in
                             self?.action.send(RootViewModelAction.CloseLink())
-                        }))
+                        }, mode: .general))
                         model.action.send(ModelAction.DeepLink.Clear())
 
                     case let .sbpPay(tokenIntent):

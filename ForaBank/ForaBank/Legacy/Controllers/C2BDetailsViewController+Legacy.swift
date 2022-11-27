@@ -20,7 +20,8 @@ struct C2BDetailsView: UIViewControllerRepresentable {
         
         controller.modalPresentationStyle = .fullScreen
         controller.closeAction = viewModel.closeAction
-        
+        controller.viewModel = .init(qrViewModel: viewModel)
+
         context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
             vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
             vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
@@ -43,4 +44,18 @@ struct C2BDetailsView: UIViewControllerRepresentable {
 struct C2BViewModel {
     
     let closeAction: () -> Void
+    let mode:  Mode
+    
+    enum Mode {
+        
+        case general
+        case c2bURL(URL)
+    }
+    
+    init(closeAction: @escaping () -> Void, mode: Mode) {
+
+        self.closeAction = closeAction
+        self.mode = mode
+        GlobalModule.c2bURL = "success"
+    }
 }

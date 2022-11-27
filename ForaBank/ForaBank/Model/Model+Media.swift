@@ -30,6 +30,14 @@ extension ModelAction {
                 let result: Bool
             }
         }
+        
+        enum DocumentPermission {
+            
+            struct Request: Action {}
+            
+            struct Response: Action {}
+            
+        }
     }
 }
 
@@ -50,5 +58,10 @@ extension Model {
         imageGalleryAgent.requestPermissions { result in
             self.action.send(ModelAction.Media.GalleryPermission.Response(result: result))
         }
+    }
+    
+    func handleMediaDocumentPermissionStatusRequest() {
+        
+            self.action.send(ModelAction.Media.DocumentPermission.Response())
     }
 }
