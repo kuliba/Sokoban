@@ -71,7 +71,14 @@ extension ProductsSwapView {
                 let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, style: .me2me, isUserInteractionEnabled: false, filter: .closeAccountFrom)
                 
                 var filterTo = ProductData.Filter.closeAccountTo
-                filterTo.rules.append(ProductData.Filter.CurrencyRule([.init(description: productData.currency)]))
+                
+                // check if product currency is not rub
+                if productData.currencyValue != .rub {
+     
+                    // allowed only product currency and rub
+                    filterTo.rules.append(ProductData.Filter.CurrencyRule([productData.currencyValue, .rub]))
+                }
+            
                 filterTo.rules.append(ProductData.Filter.ProductRestrictedRule([productData.id]))
                 let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, style: .me2me, filter: filterTo)
                 
