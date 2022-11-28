@@ -571,6 +571,7 @@ public extension Image {
     static var ic24LogOut: Image { Image(#function) }
     static var ic24LogoForaColor: Image { Image(#function) }
     static var ic24LogoForaLine: Image { Image(#function) }
+    static var ic24LogoForaWhiteElipse: Image { Image(#function) }
     static var ic24LogoForaOneColor: Image { Image(#function) }
     static var ic24Mail: Image { Image(#function) }
     static var ic24Male: Image { Image(#function) }
