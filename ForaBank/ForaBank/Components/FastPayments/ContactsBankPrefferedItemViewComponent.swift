@@ -24,9 +24,23 @@ extension ContactsBankPrefferedItemView {
             
             self.id = id
             self.icon = icon
-            self.name = name
+            if name.count > 12 {
+                
+                self.name = "\(name.prefix(12))."
+            } else {
+                
+                self.name = name
+            }
             self.isFavorite = isFavorite
-            self.contactName = contactName
+            
+            if let contactName = contactName {
+                
+                self.contactName = "\(contactName.prefix(12))."
+            } else {
+                
+                self.contactName = nil
+            }
+            
             self.action = action
         }
     }
@@ -89,6 +103,7 @@ extension ContactsBankPrefferedItemView {
         var body: some View {
             
             if isFavorite == true {
+                
                 ZStack {
                     
                     Circle()

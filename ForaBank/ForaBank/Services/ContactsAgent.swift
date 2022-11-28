@@ -77,6 +77,7 @@ class ContactsAgent: ContactsAgentProtocol {
         let request = CNContactFetchRequest(keysToFetch: keys)
         
         let contactStore = CNContactStore()
+        request.sortOrder = .givenName
         
         try contactStore.enumerateContacts(with: request) { (contact, stop) in
             

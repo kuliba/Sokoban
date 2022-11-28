@@ -17,7 +17,7 @@ struct ContactsBanksPrefferedSectionView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 
-                HStack(spacing: 20) {
+                HStack(alignment: .top, spacing: 20) {
                     
                     ForEach(viewModel.items) { item in
                        

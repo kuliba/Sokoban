@@ -84,6 +84,7 @@ class ContactsViewModel: ObservableObject {
                     
                     contactsSection?.filter.value = text
                     banksPrefferdSection?.phone.value = text
+                    banksSection?.phone.value = text
                     
                     switch phase {
                     case .contacts:
@@ -197,7 +198,23 @@ class ContactsViewModel: ObservableObject {
                         
                     case _ as ContactsSectionViewModelAction.Collapsable.ResetSections:
                         visible = visible(sections: sections, mode: mode)
+                    
+                    case let payload as ContactsViewModelAction.ContactsDidScroll:
                         
+                        if payload.isVisible {
+                            
+                            withAnimation(.linear(duration: 0.5)) {
+                            
+                                visible = visible(sections: sections, mode: mode)
+                            }
+                        } else {
+                            
+                            withAnimation(.linear(duration: 0.5)) {
+                                
+                                visible = visible.filter({ $0.type != .latestPayments})
+                            }
+                        }
+                    
                     default:
                         break
                     }
@@ -285,7 +302,7 @@ extension ContactsViewModel {
             result.append(ContactsLatestPaymentsSectionViewModel(model: model, including: [.phone]))
             result.append(ContactsListSectionViewModel(model, mode: .fastPayment))
             result.append(ContactsBanksPrefferedSectionViewModel(model, phone: nil))
-            result.append(ContactsBanksSectionViewModel(model, mode: .fastPayment))
+            result.append(ContactsBanksSectionViewModel(model, mode: .fastPayment, phone: nil))
             result.append(ContactsCountriesSectionViewModel(model, mode: .fastPayment))
 
         case let .select(select):
@@ -294,7 +311,7 @@ extension ContactsViewModel {
                 result.append(ContactsListSectionViewModel(model, mode: .select))
                 
             case .banks:
-                result.append(ContactsBanksSectionViewModel(model, mode: .select))
+                result.append(ContactsBanksSectionViewModel(model, mode: .select, phone: nil))
                 
             case .countries:
                 result.append(ContactsCountriesSectionViewModel(model, mode: .select))
@@ -396,6 +413,11 @@ enum ContactsViewModelAction {
     struct CountrySelected: Action {
         
         let countryId: CountryData.ID
+    }
+    
+    struct ContactsDidScroll: Action {
+        
+        let isVisible: Bool
     }
 }
 

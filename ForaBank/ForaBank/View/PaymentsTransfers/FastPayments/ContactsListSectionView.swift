@@ -10,6 +10,7 @@ import SwiftUI
 struct ContactsListSectionView: View {
     
     @ObservedObject var viewModel: ContactsListSectionViewModel
+    @State var isScrolling: Bool = true
     
     var body: some View {
         
@@ -32,7 +33,7 @@ struct ContactsListSectionView: View {
                             
                         case let placeholderViewModel as ContactsPlaceholderItemView.ViewModel:
                             ContactsPlaceholderItemView(viewModel: placeholderViewModel)
-                        
+                            
                         default:
                             EmptyView()
                         }
@@ -40,7 +41,40 @@ struct ContactsListSectionView: View {
                 }
                 .padding(.bottom, 10)
                 .padding(.horizontal, 20)
+                .background(GeometryReader { geo in
+                    
+                    Color.clear
+                        .preference(key: ScrollOffsetKey.self, value: -geo.frame(in: .named("scroll")).origin.y)
+                })
+                .onPreferenceChange(ScrollOffsetKey.self) { value in
+                    
+                    guard value > 200, isScrolling else {
+                        
+                        if  value < 200 {
+                            isScrolling = true
+                            viewModel.action.send(ContactsViewModelAction.ContactsDidScroll(isVisible: true))
+                        }
+                        
+                        return
+                    }
+                    
+                    isScrolling = false
+                    viewModel.action.send(ContactsViewModelAction.ContactsDidScroll(isVisible: false))
+                }
             }
+            .coordinateSpace(name: "scroll")
+        }
+    }
+}
+
+extension ContactsListSectionView {
+    
+    struct ScrollOffsetKey: PreferenceKey {
+        
+        typealias Value = CGFloat
+        static var defaultValue = CGFloat.zero
+        static func reduce(value: inout Value, nextValue: () -> Value) {
+            value += nextValue()
         }
     }
 }
