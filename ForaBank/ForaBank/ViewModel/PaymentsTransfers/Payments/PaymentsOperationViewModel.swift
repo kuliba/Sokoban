@@ -45,10 +45,8 @@ class PaymentsOperationViewModel: ObservableObject {
     }
     
     convenience init(operation: Payments.Operation, model: Model) {
-        
-        let header = HeaderViewModel(with: operation)
 
-        self.init(header: header, top: [], content: [], bottom: [], link: nil, bottomSheet: nil, operation: operation, model: model)
+        self.init(header: .init(title: ""), top: [], content: [], bottom: [], link: nil, bottomSheet: nil, operation: operation, model: model)
         
         bind()
     }
@@ -81,6 +79,11 @@ class PaymentsOperationViewModel: ObservableObject {
                 content = Self.reduceContentItems(sections: sections)
                 bottom = Self.reduceBottomItems(sections: sections)
                 
+                // update dependend items
+                Self.reduce(service: operation.value.service, items: items, dependenceReducer: model.paymentsProcessDependencyReducer(service:parameterId:parameters:))
+                
+                header = .init(with: items.map{ $0.source })
+                
                 // update bottom section continue button
                 updateBottomSection(isContinueEnabled: isItemsValuesValid)
                 
@@ -98,7 +101,9 @@ class PaymentsOperationViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as ModelAction.Payment.Process.Response:
+                    
                     rootActions?.spinner.hide()
+                   
                     switch payload.result {
                     case .step(let operation):
                         self.operation.value = operation
@@ -146,6 +151,7 @@ class PaymentsOperationViewModel: ObservableObject {
                         // update dependend items
                         Self.reduce(service: operation.value.service, items: items, dependenceReducer: model.paymentsProcessDependencyReducer(service:parameterId:parameters:))
                         
+                        header = .init(with: items.map{ $0.source })
                         top = Self.reduceTopItems(sections: sections.value)
                         content = Self.reduceContentItems(sections: sections.value)
                         bottom = Self.reduceBottomItems(sections: sections.value)
@@ -357,9 +363,9 @@ extension PaymentsOperationViewModel {
             self.icon = icon
         }
         
-        init(with operation: Payments.Operation) {
+        init(with parameters: [PaymentsParameterRepresentable] ) {
             
-            if let headerParameter = operation.parameters.first(where: { $0.id == Payments.Parameter.Identifier.header.rawValue}) as? Payments.ParameterHeader,
+            if let headerParameter = parameters.first(where: { $0.id == Payments.Parameter.Identifier.header.rawValue}) as? Payments.ParameterHeader,
                let icon = headerParameter.icon {
                 
                 switch icon {

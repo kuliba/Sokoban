@@ -114,43 +114,57 @@ extension PaymentsSelectView {
                         
                     case _ as PaymentsParameterViewModelAction.Select.SelectedItemDidTapped:
                         
-                        guard let parameterSelect = source as? Payments.ParameterSelect,
-                              let selectedViewItem = selectedItem else {
+                        guard let parameterSelect = source as? Payments.ParameterSelect else {
                             return
                         }
                         
-                        withAnimation(.easeOut(duration: 0.3)) {
+                        switch state {
+                        case let .selected(selectedViewItem):
                             
-                            switch parameterSelect.type {
-                            case .general:
-                                let options = parameterSelect.options.map{ Option(id: $0.id, name: $0.name)}
-                                let popUpViewModel = PaymentsPopUpSelectView.ViewModel(title: selectedViewItem.title, description: nil, options: options, selected: selectedViewItem.id, action: { [weak self] optionId in
-                                    
-                                    self?.action.send(PaymentsParameterViewModelAction.Select.DidSelected(itemId: optionId))
-                                    self?.action.send(PaymentsParameterViewModelAction.Select.PopUpSelector.Close())
-                                })
+                            withAnimation(.easeOut(duration: 0.3)) {
                                 
-                                self.action.send(PaymentsParameterViewModelAction.Select.PopUpSelector.Show(viewModel: popUpViewModel))
-                                
-                            case .banks:
-                                guard let parameterValueCallback = parameterValue,
-                                    let phone = parameterValueCallback(Payments.Parameter.Identifier.sfpPhone.rawValue) else {
-                                    return
-                                }
-                                let prefferedBanks = model.paymentsByPhone.value[phone.digits]
-                                let banksData = model.bankList.value
-                                let options = reduce(prefferedBanks: prefferedBanks, banksData: banksData) { [weak self] in
+                                switch parameterSelect.type {
+                                case .general:
+                                    let options = parameterSelect.options.map{ Option(id: $0.id, name: $0.name)}
+                                    let popUpViewModel = PaymentsPopUpSelectView.ViewModel(title: selectedViewItem.title, description: nil, options: options, selected: selectedViewItem.id, action: { [weak self] optionId in
+                                        
+                                        self?.action.send(PaymentsParameterViewModelAction.Select.DidSelected(itemId: optionId))
+                                        self?.action.send(PaymentsParameterViewModelAction.Select.PopUpSelector.Close())
+                                    })
                                     
-                                    { itemId in self?.action.send(PaymentsParameterViewModelAction.Select.DidSelected(itemId: itemId)) }
+                                    self.action.send(PaymentsParameterViewModelAction.Select.PopUpSelector.Show(viewModel: popUpViewModel))
+                                    
+                                case .banks:
+                                    guard let parameterValueCallback = parameterValue,
+                                        let phone = parameterValueCallback(Payments.Parameter.Identifier.sfpPhone.rawValue) else {
+                                        return
+                                    }
+                                    let prefferedBanks = model.paymentsByPhone.value[phone.digits]
+                                    let banksData = model.bankList.value
+                                    let options = reduce(prefferedBanks: prefferedBanks, banksData: banksData) { [weak self] in
+                                        
+                                        { itemId in self?.action.send(PaymentsParameterViewModelAction.Select.DidSelected(itemId: itemId)) }
 
+                                    }
+                                    self.state = .unwrapped(selectedViewItem, options)
+                                    
+                                case .countries:
+                                    //TODO: create countries options
+                                    break
                                 }
-                                self.state = .unwrapped(selectedViewItem, options)
-                                
-                            case .countries:
-                                //TODO: create countries options
-                                break
                             }
+                            
+                        case let .unwrapped(selectedViewItem, _):
+                            withAnimation(.easeOut(duration: 0.3)) {
+                                
+                                self.state = .selected(selectedViewItem)
+                            }
+                            
+                        default:
+                            break
                         }
+                        
+                        
                     default:
                         break
                     }

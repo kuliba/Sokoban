@@ -61,6 +61,18 @@ extension ModelAction {
     }
 }
 
+//MARK: - Helpers
+
+extension Model {
+    
+    func isBankClient(phone: String) -> Bool {
+        
+        let bankClientsPhones = bankClientsInfo.value.map{ $0.phone.digits }
+        
+        return bankClientsPhones.contains(phone.digits)
+    }
+}
+
 //MARK: - Handlers
 
 extension Model {

@@ -839,6 +839,7 @@
 		77517FF827A999D5005CFB77 /* ServerCommandsDefaultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FF727A999D5005CFB77 /* ServerCommandsDefaultTests.swift */; };
 		77517FFA27A99BB6005CFB77 /* ProductTemplateData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FF927A99BB6005CFB77 /* ProductTemplateData.swift */; };
 		77517FFC27A99EDC005CFB77 /* GetPaymentTemplateListResponseMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FFB27A99EDC005CFB77 /* GetPaymentTemplateListResponseMin.json */; };
+		7752F51F293522FA0097B2A6 /* PaymentsHeaderViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7752F51E293522FA0097B2A6 /* PaymentsHeaderViewComponent.swift */; };
 		7757624B276FEC4F00B902BF /* URLHostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624A276FEC4F00B902BF /* URLHostTests.swift */; };
 		7757624D276FEE2400B902BF /* ForaBankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624C276FEE2400B902BF /* ForaBankUITests.swift */; };
 		77583FF927AED4E700251969 /* Model+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77583FF827AED4E700251969 /* Model+Dictionary.swift */; };
@@ -2310,6 +2311,7 @@
 		77517FF727A999D5005CFB77 /* ServerCommandsDefaultTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsDefaultTests.swift; sourceTree = "<group>"; };
 		77517FF927A99BB6005CFB77 /* ProductTemplateData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductTemplateData.swift; sourceTree = "<group>"; };
 		77517FFB27A99EDC005CFB77 /* GetPaymentTemplateListResponseMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetPaymentTemplateListResponseMin.json; sourceTree = "<group>"; };
+		7752F51E293522FA0097B2A6 /* PaymentsHeaderViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsHeaderViewComponent.swift; sourceTree = "<group>"; };
 		7757624A276FEC4F00B902BF /* URLHostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLHostTests.swift; sourceTree = "<group>"; };
 		7757624C276FEE2400B902BF /* ForaBankUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaBankUITests.swift; sourceTree = "<group>"; };
 		77583FF827AED4E700251969 /* Model+Dictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Dictionary.swift"; sourceTree = "<group>"; };
@@ -4826,6 +4828,7 @@
 				774A8B5B2865FDAF00B81140 /* PaymentsNameViewComponent.swift */,
 				774A8B582865FDAF00B81140 /* PaymentsSpoilerButtonViewComponent.swift */,
 				C1DE21122914158600ED0F8D /* PaymentsCodeViewComponent.swift */,
+				7752F51E293522FA0097B2A6 /* PaymentsHeaderViewComponent.swift */,
 				77E0DC42291163D90053CCCA /* Bottom */,
 			);
 			path = PaymentsOperation;
@@ -8698,6 +8701,7 @@
 				777460F32922C5BA00D3FF46 /* ContactsLatestPaymentsSectionViewModel.swift in Sources */,
 				68ECC2BE285C693500A95CE8 /* CountryPaymentView+Legacy.swift in Sources */,
 				0B37F984267A18AC007728FC /* MakeCard2CardDecodableModel.swift in Sources */,
+				7752F51F293522FA0097B2A6 /* PaymentsHeaderViewComponent.swift in Sources */,
 				77D2D9AF275AB90A0097234D /* Array+Extensions.swift in Sources */,
 				5065D9C928F2BC0600529884 /* PaymentsSuccessView.swift in Sources */,
 				77E2899C2858EF440048141B /* ProductProfileDetailDateProgressViewComponent.swift in Sources */,

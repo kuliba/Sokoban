@@ -15,17 +15,14 @@ struct PaymentsView: View {
         
         ZStack {
             
-            NavigationView {
+            switch viewModel.content {
+            case let .service(serviceViewModel):
+                PaymentsServiceView(viewModel: serviceViewModel)
+                    .navigationBarItems(leading: Button(action: { viewModel.action.send(PaymentsViewModelAction.Dismiss())}, label: {
+                        Image("Payments Icon Close") }))
                 
-                switch viewModel.content {
-                case let .service(serviceViewModel):
-                    PaymentsServiceView(viewModel: serviceViewModel)
-                        .navigationBarItems(leading: Button(action: { viewModel.action.send(PaymentsViewModelAction.Dismiss())}, label: {
-                            Image("Payments Icon Close") }))
-                    
-                case let .operation(operationViewModel):
-                    PaymentsOperationView(viewModel: operationViewModel)
-                }
+            case let .operation(operationViewModel):
+                PaymentsOperationView(viewModel: operationViewModel)
             }
             
             if let spinnerViewModel = viewModel.spinner {

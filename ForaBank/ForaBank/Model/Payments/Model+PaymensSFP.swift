@@ -18,7 +18,7 @@ extension Model {
             let operatorParameter = Payments.ParameterOperator(operatorType: .sfp)
             
             // header
-            let headerParameter = Payments.ParameterHeader(title: "Перевод через СБП", icon: .name("ic24Sbp"))
+            let headerParameter = Payments.ParameterHeader(title: "Перевод по номеру телефона", icon: .name("ic24Sbp"))
             
             // phone
             let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
@@ -47,13 +47,76 @@ extension Model {
             let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
             let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 10, maxAmount: product.balance))
             
-            return .init(parameters: [operatorParameter, headerParameter, phoneParameter, bankParameter, productParameter, messageParameter, amountParameter], front: .init(visible: [phoneParameterId, bankParameterId, productParameterId, messageParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [phoneParameterId, bankParameterId, productParameterId], processed: nil))
+            return .init(parameters: [operatorParameter, headerParameter, phoneParameter, bankParameter, productParameter, messageParameter, amountParameter], front: .init(visible: [headerParameter.id, phoneParameterId, bankParameterId, productParameterId, messageParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [phoneParameterId, bankParameterId, productParameterId], processed: nil))
             
         default:
             throw Payments.Error.unsupported
         }
     }
     
+    // update parameter value with source
+    func paymentsProcessSourceReducerSFP(phone: String, bankId: BankData.ID, parameterId: Payments.Parameter.ID) -> Payments.Parameter.Value? {
+
+        switch parameterId {
+        case Payments.Parameter.Identifier.sfpPhone.rawValue:
+            return phone
+            
+        case Payments.Parameter.Identifier.sfpBank.rawValue:
+            return bankId
+            
+        default:
+            return nil
+        }
+    }
+    
+    // update depependend parameters
+    func paymentsProcessDependencyReducerSFP(parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
+        
+        switch parameterId {
+        case Payments.Parameter.Identifier.amount.rawValue:
+            
+            let productParameterId = Payments.Parameter.Identifier.product.rawValue
+            guard let amountParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterAmount,
+                  let productParameter = parameters.first(where: { $0.id == productParameterId}) as? Payments.ParameterProduct,
+                  let productId = productParameter.productId,
+                  let product = product(productId: productId),
+                  let currencySymbol = dictionaryCurrencySymbol(for: product.currency) else {
+                
+                return nil
+            }
+            
+            let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
+            if let phoneParameter = parameters.first(where: { $0.id == phoneParameterId }) as? Payments.ParameterInput,
+               let phoneParameterValue = phoneParameter.value {
+
+                if isBankClient(phone: phoneParameterValue) == true {
+                    
+                    return Payments.ParameterAmount(value: amountParameter.value, title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: product.balance))
+                    
+                } else {
+                    
+                    return Payments.ParameterAmount(value: amountParameter.value, title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 10, maxAmount: product.balance), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
+                }
+                
+            } else {
+                
+                return Payments.ParameterAmount(value: amountParameter.value, title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 10, maxAmount: product.balance), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
+            }
+            
+        case Payments.Parameter.Identifier.header.rawValue:
+            let codeParameterId = Payments.Parameter.Identifier.code.rawValue
+            let parametersIds = parameters.map{ $0.id }
+            guard parametersIds.contains(codeParameterId) else {
+                return nil
+            }
+            return Payments.ParameterHeader(title: "Подтвердите реквизиты", icon: .name("ic24Sbp"))
+            
+        default:
+            return nil
+        }
+    }
+    
+    // map additional data
     func paymentsParameterRepresentableSFP(_ operation: Payments.Operation, adittionalData: TransferAnywayResponseData.AdditionalData) throws -> PaymentsParameterRepresentable? {
         
         switch adittionalData.fieldName {
@@ -89,7 +152,8 @@ extension Model {
             return nil
         }
 
-        return [Payments.Parameter.Identifier.sfpPhone.rawValue,
+        return [Payments.Parameter.Identifier.header.rawValue,
+                Payments.Parameter.Identifier.sfpPhone.rawValue,
                 Payments.Parameter.Identifier.sftRecipient.rawValue,
                 Payments.Parameter.Identifier.sfpBank.rawValue,
                 Payments.Parameter.Identifier.sfpAmount.rawValue,
@@ -97,6 +161,7 @@ extension Model {
                 Payments.Parameter.Identifier.code.rawValue]
     }
     
+    // debug mock
     func paymentsMockSFP() -> Payments.Mock {
         
         return .init(service: .sfp,

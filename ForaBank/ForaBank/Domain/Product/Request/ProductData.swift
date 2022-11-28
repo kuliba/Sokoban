@@ -380,7 +380,8 @@ extension ProductData {
 
 extension ProductData {
     
-    var ownerProduct: Bool {
+    //TODO: remove Model.shared
+    var isProductOwner: Bool {
         
         let clientId = Model.shared.clientInfo.value?.id
         return self.ownerId == clientId

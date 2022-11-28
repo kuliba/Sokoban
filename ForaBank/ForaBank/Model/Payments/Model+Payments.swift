@@ -275,16 +275,7 @@ extension Model {
             return mock.parameters.first(where: { $0.id == parameterId })?.value
             
         case let .sfp(phone: phone, bankId: bankId):
-            switch parameterId {
-            case Payments.Parameter.Identifier.sfpPhone.rawValue:
-                return phone
-                
-            case Payments.Parameter.Identifier.sfpBank.rawValue:
-                return bankId
-                
-            default:
-                return nil
-            }
+            return paymentsProcessSourceReducerSFP(phone: phone, bankId: bankId, parameterId: parameterId)
             
         default:
             return nil
@@ -293,23 +284,29 @@ extension Model {
     
     func paymentsProcessDependencyReducer(service: Payments.Service, parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
         
-        switch parameterId {
-        case Payments.Parameter.Identifier.amount.rawValue:
-            
-            let productParameterId = Payments.Parameter.Identifier.product.rawValue
-            guard let amountParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterAmount,
-                  let productParameter = parameters.first(where: { $0.id == productParameterId}) as? Payments.ParameterProduct,
-                  let productId = productParameter.productId,
-                  let product = product(productId: productId),
-                  let currencySymbol = dictionaryCurrencySymbol(for: product.currency) else {
-                
-                return nil
-            }
-            
-            return Payments.ParameterAmount(value: amountParameter.value, title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 10, maxAmount: product.balance))
+        switch service {
+        case .sfp:
+            return paymentsProcessDependencyReducerSFP(parameterId: parameterId, parameters: parameters)
             
         default:
-            return nil
+            switch parameterId {
+            case Payments.Parameter.Identifier.amount.rawValue:
+                
+                let productParameterId = Payments.Parameter.Identifier.product.rawValue
+                guard let amountParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterAmount,
+                      let productParameter = parameters.first(where: { $0.id == productParameterId}) as? Payments.ParameterProduct,
+                      let productId = productParameter.productId,
+                      let product = product(productId: productId),
+                      let currencySymbol = dictionaryCurrencySymbol(for: product.currency) else {
+                    
+                    return nil
+                }
+                
+                return Payments.ParameterAmount(value: amountParameter.value, title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: product.balance))
+                
+            default:
+                return nil
+            }
         }
     }
 }

@@ -42,6 +42,15 @@ extension PaymentsAmountView {
             
             self.init(title: parameterAmount.title, textField: .init(parameterAmount.amount, currencySymbol: parameterAmount.currencySymbol), transferButton: .inactive(title: parameterAmount.transferButtonTitle), actionTitle: parameterAmount.transferButtonTitle, source: parameterAmount)
             
+            if let infoData = parameterAmount.info {
+                
+                info = .init(parameterInfo: infoData, action: { _ in
+
+                    //TODO: implementation required
+                    return {}
+                })
+            }
+            
             bind(textField: textField)
         }
 
@@ -101,6 +110,15 @@ extension PaymentsAmountView {
             textField = .init(parameterAmount.amount, currencySymbol: parameterAmount.currencySymbol)
             bind(textField: textField)
             actionTitle = parameterAmount.transferButtonTitle
+            
+            if let infoData = parameterAmount.info {
+                
+                info = .init(parameterInfo: infoData, action: { _ in
+
+                    //TODO: implementation required
+                    return {}
+                })
+            }
         }
         
         func update(isContinueEnabled: Bool) {
@@ -147,6 +165,21 @@ extension PaymentsAmountView.ViewModel {
         
         case button(title: String, icon: Image, action: () -> Void)
         case text(String)
+        
+        init(parameterInfo: Payments.ParameterAmount.Info, action: (Payments.ParameterAmount.Info.Action) -> () -> Void) {
+            
+            switch parameterInfo {
+            case let .action(title: title, icon, infoAction):
+                switch icon {
+                case let .name(name):
+                    self = .button(title: title, icon: Image(name), action: action(infoAction))
+                    
+                case let .image(image):
+                    let iconImage = image.image ?? .ic24Info
+                    self = .button(title: title, icon: iconImage, action: action(infoAction))
+                }
+            }
+        }
     }
     
     struct CurrencySwitchViewModel {
@@ -206,13 +239,6 @@ struct PaymentsAmountView: View {
                             TextFieldFormatableView(viewModel: viewModel.textField, font: .systemFont(ofSize: 24, weight: .semibold), textColor: .white, keyboardType: .decimalPad)
                                 .frame(height: 24, alignment: .center)
                             
-                            /*
-                            TextField("", value: $viewModel.amount, formatter: viewModel.formatter)
-                                .keyboardType(.decimalPad)
-                                .font(Font.custom("Inter-SemiBold", size: 24))
-                                .foregroundColor(Color(hex: "#FFFFFF"))
-                             */
-                            
                             if let currencySwitchViewModel = viewModel.currencySwitch {
                                 
                                 CurrencySwitchView(viewModel: currencySwitchViewModel)
@@ -245,7 +271,7 @@ struct PaymentsAmountView: View {
              
         }
         .background(
-            Color.mainColorsBlack
+            Color.mainColorsBlackMedium
                 .ignoresSafeArea(.container, edges: .bottom))
     }
     

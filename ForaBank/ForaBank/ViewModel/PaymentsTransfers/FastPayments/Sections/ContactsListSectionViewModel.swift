@@ -132,12 +132,10 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
                 guard let contactsViewModels = contacts.value as? [ContactsPersonItemView.ViewModel] else {
                     return
                 }
-                
-                let bankClientsPhoneNumbers = bankClients.map{ $0.phone.digits }
-                
+ 
                 for contact in contactsViewModels {
                     
-                    contact.isBankIcon = bankClientsPhoneNumbers.contains(contact.phone.digits) ? true : false
+                    contact.isBankIcon = model.isBankClient(phone: contact.phone.digits)
                 }
                 
             }.store(in: &bindings)

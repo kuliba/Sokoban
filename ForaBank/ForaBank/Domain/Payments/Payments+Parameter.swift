@@ -401,6 +401,7 @@ extension Payments {
         let currencySymbol: String
         let transferButtonTitle: String
         let validator: Validator
+        let info: Info?
         let isEditable: Bool
         let placement: Payments.Parameter.Placement = .bottom
         
@@ -413,19 +414,25 @@ extension Payments {
             return amount
         }
 
-        init(value: Parameter.Value, title: String, currencySymbol: String, transferButtonTitle: String = "Перевести", validator: Validator, isEditable: Bool = true) {
+        init(value: Parameter.Value, title: String, currencySymbol: String, transferButtonTitle: String = "Перевести", validator: Validator, info: Info? = nil, isEditable: Bool = true) {
             
             self.parameter = .init(id: Payments.Parameter.Identifier.amount.rawValue, value: value)
             self.title = title
             self.currencySymbol = currencySymbol
             self.transferButtonTitle = transferButtonTitle
             self.validator = validator
+            self.info = info
             self.isEditable = isEditable
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, transferButtonTitle: transferButtonTitle, validator: validator, isEditable: isEditable)
+            ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, transferButtonTitle: transferButtonTitle, validator: validator, info: info, isEditable: isEditable)
+        }
+        
+        func updated(info: Info) -> PaymentsParameterRepresentable {
+            
+            ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, transferButtonTitle: transferButtonTitle, validator: validator, info: info, isEditable: isEditable)
         }
         
         struct Validator: ValidatorProtocol {
@@ -447,6 +454,22 @@ extension Payments {
                     
                     return true
                 }
+            }
+        }
+        
+        enum Info {
+            
+            case action(title: String, Icon, Action)
+            
+            enum Icon {
+                
+                case image(ImageData)
+                case name(String)
+            }
+            
+            enum Action {
+                
+                case feeInfo
             }
         }
     }
@@ -485,6 +508,8 @@ extension Payments {
         let parameter: Parameter
         let title: String
         let icon: Icon?
+        //TODO: implement case .header
+        let placement: Payments.Parameter.Placement = .top
 
         init(title: String, icon: Icon?) {
             
@@ -497,6 +522,11 @@ extension Payments {
             
             case image(ImageData)
             case name(String)
+        }
+        
+        func updated(title: String) -> PaymentsParameterRepresentable {
+            
+            ParameterHeader(title: title, icon: icon)
         }
     }
     
