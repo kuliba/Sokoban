@@ -103,7 +103,7 @@ struct ContactsPersonItemView: View {
                 
                 if viewModel.isBankIcon == true {
                     
-                    Image.ic24LogoForaColor
+                    Image.ic24LogoForaWhiteElipse
                         .resizable()
                         .renderingMode(.original)
                         .frame(width: 24, height: 24)
