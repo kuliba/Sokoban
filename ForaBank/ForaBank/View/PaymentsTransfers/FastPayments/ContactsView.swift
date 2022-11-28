@@ -51,7 +51,8 @@ struct ContactsView: View {
 
             Spacer()
             
-        }.ignoresSafeArea(.all, edges: .bottom)
+        }
+        .ignoresSafeArea(.all, edges: .bottom)
     }
 }
 

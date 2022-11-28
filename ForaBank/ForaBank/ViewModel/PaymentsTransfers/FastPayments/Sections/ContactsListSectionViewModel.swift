@@ -39,9 +39,7 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
             do {
                 
                 let addressBookContacts = try await model.contactsFetchAll()
-                self.contacts.value = await Self.reduce(addressBookContacts: addressBookContacts, phoneFormatter: self.phoneFormatter, action: {[weak self] contactId in
-                    
-                    { self?.action.send(ContactsSectionViewModelAction.Contacts.ItemDidTapped(phone: contactId)) }
+                self.contacts.value = await Self.reduce(addressBookContacts: addressBookContacts, phoneFormatter: self.phoneFormatter, action: {[weak self] contactId in { self?.action.send(ContactsSectionViewModelAction.Contacts.ItemDidTapped(phone: contactId)) }
                 })
 
             } catch {
@@ -55,6 +53,35 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
     
     private func bind() {
         
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ContactsViewModelAction.ContactsDidScroll:
+                    
+                    guard let phone = model.clientInfo.value?.phone else {
+                        return
+                    }
+                    
+                    if payload.isVisible {
+                        
+                        withAnimation(.linear(duration: 0.5)) {
+                            self.selfContact = Self.reduceClientInfo(phone: phone, phoneFormatter: phoneFormatter, action: { [weak self] phone in { self?.action.send(ContactsSectionViewModelAction.Contacts.ItemDidTapped(phone: phone)) }
+                            })
+                        }
+                        
+                    } else {
+                        
+                        withAnimation(.linear(duration: 0.5)) {
+                            self.selfContact = nil
+                        }
+                    }
+                    
+                default: break
+                }
+            }.store(in: &bindings)
+
         contacts
             .combineLatest(filter)
             .receive(on: DispatchQueue.main)
@@ -145,23 +172,7 @@ extension ContactsListSectionViewModel {
     
     static func reduce(addressBookContacts: [AddressBookContact], phoneFormatter: PhoneNumberFormaterProtocol, action: @escaping (AddressBookContact.ID) -> () -> Void) async -> [ContactsItemViewModel] {
     
-        addressBookContacts.sorted(by: { first, second in
-            
-            guard let firstContactName = first.firstName?.lowercased(),
-                  let secondContactName = second.firstName?.lowercased() else {
-                return false
-            }
-            
-            if firstContactName.localizedCaseInsensitiveCompare(secondContactName) == .orderedAscending {
-                
-                return firstContactName < secondContactName
-                
-            } else {
-                
-                return false
-            }
-            
-        }).map({ contact in
+        let contacts = addressBookContacts.map({ contact -> ContactsItemViewModel in
             
             if let image = contact.avatar?.image {
                 
@@ -177,6 +188,8 @@ extension ContactsListSectionViewModel {
                 return ContactsPersonItemView.ViewModel(id: contact.id, icon: .placeholder, name: contact.fullName, phone: contact.phone, isBankIcon: false, action: action(contact.id))
             }
         })
+        
+        return contacts
     }
     
     static func reduceClientInfo(phone: String, phoneFormatter: PhoneNumberFormaterProtocol, action: @escaping (AddressBookContact.ID) -> () -> Void) -> ContactsPersonItemView.ViewModel {

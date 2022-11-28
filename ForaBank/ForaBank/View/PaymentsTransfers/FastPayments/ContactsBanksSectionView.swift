@@ -99,5 +99,5 @@ struct ContactsBanksSectionView_Previews: PreviewProvider {
 
 extension ContactsBanksSectionViewModel {
     
-    static let sample = ContactsBanksSectionViewModel(.emptyMock, header: .init(kind: .banks), isCollapsed: false, mode: .fastPayment, searchBar: nil, options: .sample, visible: [ContactsBankItemView.ViewModel.sample], items: [])
+    static let sample = ContactsBanksSectionViewModel(.emptyMock, header: .init(kind: .banks), isCollapsed: false, mode: .fastPayment, searchBar: nil, options: .sample, visible: [ContactsBankItemView.ViewModel.sample], items: [], phone: nil)
 }
