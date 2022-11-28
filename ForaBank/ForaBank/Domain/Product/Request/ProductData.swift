@@ -401,4 +401,6 @@ extension ProductData {
             return nil
         }
     }
+    
+    var currencyValue: Currency { .init(description: currency) }
 }
