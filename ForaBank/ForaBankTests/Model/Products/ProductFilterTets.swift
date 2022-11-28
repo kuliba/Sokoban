@@ -90,7 +90,7 @@ extension ProductFilterTets {
         
         // given
         let products = Self.cardProducts
-        let filter = ProductData.Filter(rules: [ProductData.Filter.CardAdditionalRetrictedRule()])
+        let filter = ProductData.Filter(rules: [ProductData.Filter.CardAdditionalNotOwnedRetrictedRule()])
         
         // when
         let result = filter.filterredProducts(products)
@@ -113,7 +113,7 @@ extension ProductFilterTets {
         let products = Self.cardProducts
         let filter = ProductData.Filter(rules: [ProductData.Filter.CardActiveRule(),
                                                 ProductData.Filter.CardLoanRestrictedRule(),
-                                                ProductData.Filter.CardAdditionalRetrictedRule()])
+                                                ProductData.Filter.CardAdditionalNotOwnedRetrictedRule()])
         
         // when
         let result = filter.filterredProducts(products)

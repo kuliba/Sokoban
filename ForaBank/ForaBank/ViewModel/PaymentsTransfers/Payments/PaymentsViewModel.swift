@@ -83,7 +83,9 @@ class PaymentsViewModel: ObservableObject {
                     
                     switch payload.result {
                     case let .complete(paymentSuccess):
-                        successViewModel = PaymentsSuccessViewModel(model, paymentSuccess: paymentSuccess)
+                        let successViewModel = PaymentsSuccessViewModel(model, paymentSuccess: paymentSuccess)
+                        self.successViewModel = successViewModel
+                        bind(successViewModel: successViewModel)
      
                     case let .failure(error):
                         switch error {
@@ -156,6 +158,23 @@ class PaymentsViewModel: ObservableObject {
                 case let payload as PaymentsViewModelAction.AlertThenDismiss:
                     alert = .init(title: "Ошибка", message: payload.message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}))
  
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func bind(successViewModel: PaymentsSuccessViewModel) {
+        
+        successViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as PaymentsSuccessAction.Button.Close:
+                    self.action.send(PaymentsViewModelAction.Dismiss())
+                    
                 default:
                     break
                 }

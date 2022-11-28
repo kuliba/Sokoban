@@ -335,6 +335,9 @@ extension PaymentsSectionViewModel {
             
         case let parameterCode as Payments.ParameterCode:
             return PaymentsCodeView.ViewModel(with: parameterCode)
+            
+        case let parameterHeader as Payments.ParameterHeader:
+            return PaymentsHeaderViewComponent(source: parameterHeader)
         
             // for tests only
         case let parameterMock as Payments.ParameterMock:

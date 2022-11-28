@@ -183,7 +183,8 @@ extension ProductData.Filter {
         }
     }
     
-    struct CardAdditionalRetrictedRule: ProductDataFilterRule {
+    
+    struct CardAdditionalNotOwnedRetrictedRule: ProductDataFilterRule {
         
         func result(_ productData: ProductData) -> Bool? {
             
@@ -191,7 +192,33 @@ extension ProductData.Filter {
                 return nil
             }
             
-            return productCard.isMain == true
+            if productCard.isProductOwner == false {
+                
+                return productCard.isMain == true
+                
+            } else {
+                
+                return true
+            }
+        }
+    }
+    
+    struct CardAdditionalOwnedRetrictedRule: ProductDataFilterRule {
+        
+        func result(_ productData: ProductData) -> Bool? {
+            
+            guard let productCard = productData as? ProductCardData else {
+                return nil
+            }
+            
+            if productCard.isProductOwner == true {
+                
+                return productCard.isMain == true
+                
+            } else {
+                
+                return true
+            }
         }
     }
 }
@@ -224,7 +251,7 @@ extension ProductData.Filter  {
                 ProductTypeRule([.card, .account]),
                 CurrencyRule([.rub]),
                 CardActiveRule(),
-                CardAdditionalRetrictedRule(),
+                CardAdditionalNotOwnedRetrictedRule(),
                 AccountActiveRule()])
     
     static let generalTo = ProductData.Filter(

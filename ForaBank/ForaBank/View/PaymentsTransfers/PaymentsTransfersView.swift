@@ -82,10 +82,8 @@ struct PaymentsTransfersView: View {
                             .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
-                    case let .taxAndStateService(taxAndStateServiceVM):
-                        PaymentsView(viewModel: taxAndStateServiceVM)
-                            .edgesIgnoringSafeArea(.all)
-                            .navigationBarHidden(true)
+                    case let .payments(paymentsViewModel):
+                        PaymentsView(viewModel: paymentsViewModel)
                         
                     case let .transferByRequisites(transferByRequisitesViewModel):
                         TransferByRequisitesView(viewModel: transferByRequisitesViewModel)

@@ -113,6 +113,9 @@ struct MainView: View {
                             .navigationBarTitle("", displayMode: .inline)
                             .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
+                        
+                    case let .payments(paymentsViewModel):
+                        PaymentsView(viewModel: paymentsViewModel)
                     }
                 }
             }
@@ -122,18 +125,18 @@ struct MainView: View {
             switch sheet.type {
             case .productProfile(let productProfileViewModel):
                 ProductProfileView(viewModel: productProfileViewModel)
-             
+                
             case .messages(let messagesHistoryViewModel):
                 MessagesHistoryView(viewModel: messagesHistoryViewModel)
-            
+                
             case .places(let placesViewModel):
                 PlacesView(viewModel: placesViewModel)
-
+                
             case .byPhone(let viewModel):
-                    TransferByPhoneView(viewModel: viewModel)
+                ContactsView(viewModel: viewModel)
                 
             case let .openAccount(openAccountViewModel):
-                OpenAccountView(viewModel: openAccountViewModel)      
+                OpenAccountView(viewModel: openAccountViewModel)
             }
         })
         .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
