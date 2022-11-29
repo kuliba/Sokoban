@@ -18,7 +18,8 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
     @Published var visible: [ContactsItemViewModel]
     let filter: CurrentValueSubject<String?, Never>
     let phone: CurrentValueSubject<String?, Never>
-
+    @Published var searchPlaceholder: SearchPlaceholder? = nil
+    
     private let items: CurrentValueSubject<[ContactsItemViewModel], Never>
     private let bankType: CurrentValueSubject<BankType?, Never>
     
@@ -80,7 +81,18 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
                     
                     withAnimation {
                         
-                        visible = Self.reduce(items: items, filterByType: bankType, filterByName: filter)
+                        let filterBanks = Self.reduce(items: items, filterByType: bankType, filterByName: filter)
+                        
+                        if filterBanks.count > 0 {
+                            
+                            self.searchPlaceholder = nil
+                            visible = filterBanks
+                            
+                        } else {
+                            
+                            visible = []
+                            self.searchPlaceholder = .init()
+                        }
                     }
                     
                 } else {
@@ -167,6 +179,18 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
                 filter.value = text
                 
             }.store(in: &bindings)
+    }
+}
+
+//MARK: - SearchPlaceholder
+
+extension ContactsBanksSectionViewModel {
+
+    struct SearchPlaceholder {
+    
+        let image: Image = .ic24Search
+        let title = "Не удалось найти банк"
+        let description = "Попробуйте изменить название банка"
     }
 }
 
