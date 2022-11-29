@@ -19,6 +19,9 @@ extension Model {
             // operator
             let operatorParameter = Payments.ParameterOperator(operatorType: .fssp)
             
+            // header
+            let headerParameter = Payments.ParameterHeader(title: "ФССП", icon: .name("ic24Sbp"))
+            
             // product
             let productParameterId = Payments.Parameter.Identifier.product.rawValue
             let filter = ProductData.Filter.generalFrom
@@ -37,7 +40,7 @@ extension Model {
                     
                 ], placement: .top)
             
-            return .init(parameters: [operatorParameter, productParameter, searchTypeParameter], front: .init(visible: [searchTypeParameter.id], isCompleted: true), back: .init(stage: .local, required: [searchTypeParameter.id], processed: [.init(id: searchTypeParameter.id, value: "20")] ))
+            return .init(parameters: [operatorParameter, headerParameter, productParameter, searchTypeParameter], front: .init(visible: [headerParameter.id, searchTypeParameter.id], isCompleted: true), back: .init(stage: .local, required: [searchTypeParameter.id], processed: [.init(id: searchTypeParameter.id, value: "20")] ))
             
         case 1:
             guard let searchTypeParameterValue = paymentsParameterValue(operation.parameters, id: searchTypeParameterId) else {

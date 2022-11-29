@@ -69,12 +69,17 @@ extension LatestPaymentsView {
                     
                     if isBaseButtons == true {
                         
-                        let baseButton = Self.createBaseButtons { [weak self] in
+                        let templatesButton = Self.createTemplateButton { [weak self] in
                             
                             self?.action.send(LatestPaymentsViewModelAction.ButtonTapped.Templates())
                         }
                         
-                        items.insert(contentsOf: baseButton, at: 0)
+                        let currencyWalletButton = Self.createCurrencyWalletButton { [weak self] in
+                            
+                            self?.action.send(LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet())
+                        }
+                        
+                        items.insert(contentsOf: [templatesButton, currencyWalletButton], at: 0)
                     }
                     
                     self.items = items
@@ -111,22 +116,26 @@ extension LatestPaymentsView {
             return updatedItems
         }
         
-        static func createBaseButtons(action: @escaping () -> Void) -> [ItemViewModel] {
+        static func createTemplateButton(action: @escaping () -> Void) -> ItemViewModel {
             
-            let baseButtons: [LatestPaymentButtonVM] = [
-                .init(id: 0,
-                      avatar: .icon(.ic24Star, .iconBlack),
-                      topIcon: nil,
-                      description: "Шаблоны",
-                      action: action),
-                .init(id: -1,
-                      avatar: .icon(.ic24CurrencyExchange, .iconBlack),
-                      topIcon: nil,
-                      description: "Обмен валют",
-                      action: action)
-            ]
+            let buttonViewModel = LatestPaymentButtonVM(id: 0,
+                                                        avatar: .icon(.ic24Star, .iconBlack),
+                                                        topIcon: nil,
+                                                        description: "Шаблоны",
+                                                        action: action)
             
-            return baseButtons.map { ItemViewModel.templates($0) }
+            return .templates(buttonViewModel)
+        }
+        
+        static func createCurrencyWalletButton(action: @escaping () -> Void) -> ItemViewModel {
+            
+            let buttonViewModel = LatestPaymentButtonVM(id: -1,
+                                                        avatar: .icon(.ic24CurrencyExchange, .iconBlack),
+                                                        topIcon: nil,
+                                                        description: "Обмен валют",
+                                                        action: action)
+            
+            return .templates(buttonViewModel)
         }
     }
 }

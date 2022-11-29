@@ -33,7 +33,7 @@ class OpenDepositViewModel: ObservableObject {
     
     init(_ model: Model, catalogType: CatalogType, dismissAction: @escaping () -> Void) {
         
-        self.navigationBar = .init(title: "Вклады", leftButtons: [NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: dismissAction)])
+        self.navigationBar = .init(title: "Вклады", leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)])
         self.model = model
         self.products = []
         self.catalogType = catalogType

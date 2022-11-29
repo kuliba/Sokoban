@@ -43,8 +43,8 @@ class UserAccountViewModel: ObservableObject {
         
         self.model = model
         sections = []
-        navigationBar = .init(title: "Профиль", leftButtons: [
-            NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: dismissAction)
+        navigationBar = .init(title: "Профиль", leftItems: [
+            NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)
         ])
         
         exitButton = .init(

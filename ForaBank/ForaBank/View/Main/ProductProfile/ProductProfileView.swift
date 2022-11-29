@@ -261,7 +261,7 @@ extension NavigationBarView.ViewModel {
 
     static let sampleNoActionButton = NavigationBarView.ViewModel(
         title: "Platinum", subtitle: "· 4329",
-        leftButtons: [BackButtonViewModel(icon: .ic24ChevronLeft, action: {})],
-        rightButtons: [],
+        leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})],
+        rightItems: [],
         background: .purple, foreground: .iconWhite)
 }

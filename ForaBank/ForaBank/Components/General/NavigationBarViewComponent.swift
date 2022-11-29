@@ -14,96 +14,155 @@ extension NavigationBarView {
         @Published var title: String
         @Published var subtitle: String?
         
-        @Published var leftButtons: [BaseButtonViewModel]
-        @Published var rightButtons: [ButtonViewModel]
+        @Published var leftItems: [ItemViewModel]
+        @Published var rightItems: [ItemViewModel]
         
         @Published var background: Color
         @Published var foreground: Color
         @Published var backgroundDimm: BackgroundColorDimm?
         
-        internal init(title: String = "",
-                      subtitle: String? = nil,
-                      leftButtons: [BaseButtonViewModel] = [],
-                      rightButtons: [ButtonViewModel] = [],
-                      background: Color = Color.textWhite,
-                      foreground: Color = Color.textSecondary,
-                      backgroundDimm: BackgroundColorDimm? = nil) {
+        init(title: String = "",
+             subtitle: String? = nil,
+             leftItems: [ItemViewModel] = [],
+             rightItems: [ItemViewModel] = [],
+             background: Color = Color.textWhite,
+             foreground: Color = Color.textSecondary,
+             backgroundDimm: BackgroundColorDimm? = nil) {
             
             self.title = title
             self.subtitle = subtitle
-            self.leftButtons = leftButtons
-            self.rightButtons = rightButtons
+            self.leftItems = leftItems
+            self.rightItems = rightItems
             self.background = background
             self.foreground = foreground
             self.backgroundDimm = backgroundDimm
         }
         
-        class BaseButtonViewModel: Identifiable {
+        convenience init(with parameters: [PaymentsParameterRepresentable], closeAction: @escaping () -> Void) {
             
-            let id: UUID = UUID()
-        }
-        
-        class ButtonViewModel: BaseButtonViewModel {
-                    
-            @Published var isDisabled: Bool
-            @Published var markedDot: MarkedDotViewModel?
-                    
-            var icon: Image
-            let action: () -> Void
-
-            init(icon: Image,
-                 isDisabled: Bool = false,
-                 markedDot: MarkedDotViewModel? = nil,
-                 action: @escaping () -> Void) {
-                        
-                self.icon = icon
-                self.isDisabled = isDisabled
-                self.markedDot = markedDot
-                self.action = action
-                super.init()
-            }
-
-            struct MarkedDotViewModel {
-
-                var color: Color = .red
-                let isBlinking: Bool
-            }
-        }
-        
-        class BackButtonViewModel: BaseButtonViewModel {
-            
-            let icon: Image
-            let action: () -> Void
-            
-            init(icon: Image, action: @escaping () -> Void) {
+            let headerParameterId = Payments.Parameter.Identifier.header.rawValue
+            if let headerParameter = parameters.first(where: { $0.id == headerParameterId }) as? Payments.ParameterHeader,
+                  let icon = headerParameter.icon {
                 
-                self.icon = icon
-                self.action = action
-                super.init()
+                let backButton = BackButtonItemViewModel(action: closeAction)
+                switch icon {
+                case let .image(imageData):
+                    if let iconImage = imageData.image {
+                        
+                        let imageItem = IconItemViewModel(icon: iconImage)
+                        self.init(title: headerParameter.title, subtitle: nil, leftItems: [backButton], rightItems: [imageItem])
+                        
+                    } else {
+                        
+                        self.init(title: headerParameter.title, subtitle: nil, leftItems: [backButton])
+                    }
+                    
+                case let .name(imageName):
+                    let imageItem = IconItemViewModel(icon: Image(imageName))
+                    self.init(title: headerParameter.title, subtitle: nil, leftItems: [backButton], rightItems: [imageItem])
+                }
+                
+            } else {
+                
+                self.init()
             }
-        }
-        
-        struct BackgroundColorDimm {
-            
-            let color: Color
-            let opacity: Double
         }
     }
 }
 
+//MARK: - Types
+
+extension NavigationBarView.ViewModel {
+    
+    class ItemViewModel: Identifiable {
+        
+        let id: UUID = UUID()
+    }
+    
+    class ButtonItemViewModel: ItemViewModel {
+                
+        @Published var isDisabled: Bool
+        let icon: Image
+        let action: () -> Void
+
+        init(icon: Image, isDisabled: Bool = false, action: @escaping () -> Void) {
+                    
+            self.icon = icon
+            self.isDisabled = isDisabled
+            self.action = action
+            super.init()
+        }
+    }
+    
+    class ButtonMarkedItemViewModel: ItemViewModel {
+                
+        @Published var isDisabled: Bool
+        @Published var markedDot: MarkedDotViewModel?
+                
+        var icon: Image
+        let action: () -> Void
+
+        init(icon: Image, isDisabled: Bool = false, markedDot: MarkedDotViewModel? = nil, action: @escaping () -> Void) {
+                    
+            self.icon = icon
+            self.isDisabled = isDisabled
+            self.markedDot = markedDot
+            self.action = action
+            super.init()
+        }
+
+        struct MarkedDotViewModel {
+
+            var color: Color = .red
+            let isBlinking: Bool
+        }
+    }
+    
+    class BackButtonItemViewModel: ItemViewModel {
+        
+        let icon: Image
+        let action: () -> Void
+        
+        init(icon: Image = .ic24ChevronLeft, action: @escaping () -> Void) {
+            
+            self.icon = icon
+            self.action = action
+            super.init()
+        }
+    }
+    
+    class IconItemViewModel: ItemViewModel {
+        
+        let icon: Image
+        
+        init(icon: Image) {
+            
+            self.icon = icon
+            super.init()
+        }
+    }
+    
+    struct BackgroundColorDimm {
+        
+        let color: Color
+        let opacity: Double
+    }
+}
+
+//MARK: - View
+
 struct NavigationBarView: View {
 
     @ObservedObject var viewModel: ViewModel
-    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
-    
+
     var leftPlaceholdersCount: Int {
         
-        return max(viewModel.rightButtons.count - viewModel.leftButtons.count, 0)
+        return max(viewModel.rightItems.count - viewModel.leftItems.count, 0)
     }
     
     var rightPlaceholdersCount: Int {
         
-        return max(viewModel.leftButtons.count - viewModel.rightButtons.count, 0)
+        return max(viewModel.leftItems.count - viewModel.rightItems.count, 0)
     }
     
     var backgroundColor: some View {
@@ -121,35 +180,9 @@ struct NavigationBarView: View {
             
             HStack(alignment: .center, spacing: 18) {
                 
-                ForEach(viewModel.leftButtons) { button in
+                ForEach(viewModel.leftItems) { item in
                     
-                    switch button {
-                    case let backButtonViewModel as NavigationBarView.ViewModel.BackButtonViewModel:
-                        Button {
-                            
-                            mode.wrappedValue.dismiss()
-                            backButtonViewModel.action()
-                            
-                        } label: {
-                            
-                            backButtonViewModel.icon
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(viewModel.foreground)
-                        }
-                        
-                    case let buttonViewModel as NavigationBarView.ViewModel.ButtonViewModel:
-                        Button(action: buttonViewModel.action) {
-                            
-                            buttonViewModel.icon
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(viewModel.foreground)
-                        }
-                        
-                    default:
-                        EmptyView()
-                    }
+                    view(for: item, foregroundColor: viewModel.foreground, backgroundColor: viewModel.background)
                 }
                 
                 ForEach(0..<leftPlaceholdersCount, id: \.self) { _ in
@@ -183,11 +216,9 @@ struct NavigationBarView: View {
                     Spacer().frame(width: 24, height: 24)
                 }
                 
-                ForEach(viewModel.rightButtons) { button in
+                ForEach(viewModel.rightItems) { item in
                     
-                    RightButtonView(viewModel: button,
-                                    foreground: viewModel.foreground,
-                                    background: viewModel.background)
+                    view(for: item, foregroundColor: viewModel.foreground, backgroundColor: viewModel.background)
                 }
             }
         }
@@ -196,12 +227,80 @@ struct NavigationBarView: View {
         .background(backgroundColor.edgesIgnoringSafeArea(.top))
     }
 }
+
+//MARK: - Helpers
+
 extension NavigationBarView {
     
-    struct RightButtonView: View {
+    func view(for item: ViewModel.ItemViewModel, foregroundColor: Color, backgroundColor: Color) -> AnyView {
+        
+        switch item {
+        case let backButtonItem as NavigationBarView.ViewModel.BackButtonItemViewModel:
+            return AnyView(BackButtonItemView(viewModel: backButtonItem, foregroundColor: foregroundColor))
+        
+        case let buttonItem as NavigationBarView.ViewModel.ButtonItemViewModel:
+            return AnyView(ButtonItemView(viewModel: buttonItem, foregroundColor: foregroundColor))
+            
+        case let buttonMarkedItem as NavigationBarView.ViewModel.ButtonMarkedItemViewModel:
+            return AnyView(ButtonMarkedItemView(viewModel: buttonMarkedItem, foreground: foregroundColor, background: backgroundColor))
+            
+        case let iconItem as NavigationBarView.ViewModel.IconItemViewModel:
+            return AnyView(IconItemView(viewModel: iconItem))
+            
+        default:
+            return AnyView(EmptyView())
+        }
+    }
+}
+
+//MARK: - Subviews
+
+extension NavigationBarView {
+    
+    struct BackButtonItemView: View {
+        
+        let viewModel: ViewModel.BackButtonItemViewModel
+        let foregroundColor: Color
+        @Environment(\.presentationMode) private var mode: Binding<PresentationMode>
+        
+        var body: some View {
+            
+            Button {
+                
+                mode.wrappedValue.dismiss()
+                viewModel.action()
+                
+            } label: {
+                
+                viewModel.icon
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(foregroundColor)
+            }
+        }
+    }
+    
+    struct ButtonItemView: View {
+        
+        let viewModel: ViewModel.ButtonItemViewModel
+        let foregroundColor: Color
+ 
+        var body: some View {
+            
+            Button(action: viewModel.action) {
+                
+                viewModel.icon
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(foregroundColor)
+            }
+        }
+    }
+    
+    struct ButtonMarkedItemView: View {
         
         @State var blinking: Bool = false
-        var viewModel: ViewModel.ButtonViewModel
+        var viewModel: ViewModel.ButtonMarkedItemViewModel
         let foreground: Color
         let background: Color
         
@@ -249,8 +348,20 @@ extension NavigationBarView {
             .disabled(viewModel.isDisabled)
         }
     }
+    
+    struct IconItemView: View {
+        
+        let viewModel: ViewModel.IconItemViewModel
+ 
+        var body: some View {
+            
+            viewModel.icon
+                .resizable()
+                .renderingMode(.original)
+                .frame(width: 24, height: 24)
+        }
+    }
 }
-
 
 struct NavigationBarViewModifier: ViewModifier {
     
@@ -279,11 +390,11 @@ extension NavigationBarView.ViewModel {
     
     static let sample = NavigationBarView.ViewModel(
         title: "Заголовок экрана",
-        leftButtons: [
-            NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: {})
+        leftItems: [
+            NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})
         ],
-        rightButtons: [
-            .init(icon: .ic24Settings, action: { })
+        rightItems: [
+            NavigationBarView.ViewModel.ButtonItemViewModel(icon: .ic24Settings, action: { })
         ])
 }
 
@@ -292,12 +403,12 @@ struct NavigationBarView_Previews: PreviewProvider {
     static let model = NavigationBarView.ViewModel(
         title: "Перевод по номеру телефона",
         subtitle: "* 4329",                     //Optional
-        leftButtons: [
-            NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: {})
+        leftItems: [
+            NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})
         ],
-        rightButtons: [
-            .init(icon: .ic24Share, action: { }),
-            .init(icon: .ic24BarInOrder, markedDot: .init(isBlinking: true), action: { })
+        rightItems: [
+            NavigationBarView.ViewModel.ButtonItemViewModel(icon: .ic24Share, action: { }),
+            NavigationBarView.ViewModel.ButtonMarkedItemViewModel(icon: .ic24BarInOrder, markedDot: .init(isBlinking: true), action: { })
         ],
         background:  .barsTabbar                  //Optional
         //foreground: .textWhite                  //Optional

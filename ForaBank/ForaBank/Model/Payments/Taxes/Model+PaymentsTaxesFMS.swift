@@ -17,6 +17,9 @@ extension Model {
             // operator
             let operatorParameter = Payments.ParameterOperator(operatorType: .fms)
             
+            // header
+            let headerParameter = Payments.ParameterHeader(title: "ФМС", icon: .name("ic24Sbp"))
+            
             // product
             let productParameterId = Payments.Parameter.Identifier.product.rawValue
             let filter = ProductData.Filter.generalFrom
@@ -35,7 +38,7 @@ extension Model {
                 title: "Категория платежа",
                 options: fmsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) })
             
-            return .init(parameters: [operatorParameter, productParameter, categoryParameter], front: .init(visible: [categoryParameter.id], isCompleted: false), back: .init(stage: .remote(.start), required: [categoryParameter.id], processed: nil))
+            return .init(parameters: [operatorParameter, headerParameter, productParameter, categoryParameter], front: .init(visible: [headerParameter.id, categoryParameter.id], isCompleted: false), back: .init(stage: .remote(.start), required: [categoryParameter.id], processed: nil))
             
         default:
             throw Payments.Error.unsupported

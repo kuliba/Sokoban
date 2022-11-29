@@ -182,8 +182,8 @@ extension PaymentsSelectView {
                     case .list:
                         update(value: nil)
                         
-                    case .unwrapped(let selected, _):
-                        update(value: selected.id)
+                    default:
+                        break
                     }
                 }
                 .store(in: &bindings)

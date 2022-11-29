@@ -164,17 +164,7 @@ struct PaymentsOperationView: View {
             }
         }
         .ignoresSafeArea(.container, edges: .bottom)
-        .navigationBarTitle(Text(viewModel.header.title), displayMode: .inline)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Button(action: { self.presentationMode.wrappedValue.dismiss() }, label: {
-            viewModel.header.backButtonIcon }), trailing: headerIcon)
-        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
-
-            switch bottomSheet.type {
-            case .popUp(let popUpVewModel):
-                PaymentsPopUpSelectView(viewModel: popUpVewModel)
-            }
-        }
+        .navigationBar(with: viewModel.navigationBar)
         .sheet(item: $viewModel.sheet, content: { sheet in
             
             switch sheet.type {
@@ -182,22 +172,17 @@ struct PaymentsOperationView: View {
                 ContactsView(viewModel: contactsViewModel)
             }
         })
+        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
+
+            switch bottomSheet.type {
+            case .popUp(let popUpVewModel):
+                PaymentsPopUpSelectView(viewModel: popUpVewModel)
+            }
+        }
     }
 }
 
 extension PaymentsOperationView {
-    
-    var headerIcon: some View {
-        
-        if let iconImage = viewModel.header.icon {
-            
-            return AnyView(iconImage.renderingMode(.original))
-            
-        } else {
-            
-            return AnyView(EmptyView())
-        }
-    }
     
     struct TopBackgroundModifier: ViewModifier {
         
@@ -265,7 +250,7 @@ extension PaymentsOperationViewModel {
         
         let bottomItems = [PaymentsContinueButtonView.ViewModel.sampleInactive]
         
-        return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги"), top: topItems, content: contentItems, bottom: bottomItems, link: nil, bottomSheet: nil, operation: .emptyMock, model: .emptyMock)
+        return PaymentsOperationViewModel(navigationBar: .init(title: "Налоги и услуги"), top: topItems, content: contentItems, bottom: bottomItems, link: nil, bottomSheet: nil, operation: .emptyMock, model: .emptyMock, closeAction: {})
     }()
     
     static let sampleAmount: PaymentsOperationViewModel = {
@@ -274,7 +259,7 @@ extension PaymentsOperationViewModel {
         let contentItems = [PaymentsSelectView.ViewModel.selectedStateMock, PaymentsInfoView.ViewModel.sample, PaymentsNameView.ViewModel.normal, PaymentsNameView.ViewModel.edit, PaymentsProductView.ViewModel.sample]
         let bottomItems = [PaymentsAmountView.ViewModel.amount]
         
-        return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги"), top: topItems, content: contentItems, bottom: bottomItems, link: nil, bottomSheet: nil, operation: .emptyMock, model: .emptyMock)
+        return PaymentsOperationViewModel(navigationBar: .init(title: "Налоги и услуги"), top: topItems, content: contentItems, bottom: bottomItems, link: nil, bottomSheet: nil, operation: .emptyMock, model: .emptyMock, closeAction: {})
     }()
 }
 

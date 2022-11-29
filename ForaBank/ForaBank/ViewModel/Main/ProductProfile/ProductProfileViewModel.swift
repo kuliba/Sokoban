@@ -472,7 +472,7 @@ class ProductProfileViewModel: ObservableObject {
                     
                     withAnimation {
                         
-                        navigationBar.rightButtons = [.init(icon: .ic16Edit2, action: { [weak self] in
+                        navigationBar.rightItems = [ NavigationBarView.ViewModel.ButtonItemViewModel(icon: .ic16Edit2, action: { [weak self] in
                             
                             self?.action.send(ProductProfileViewModelAction.Product.UpdateCustomName(productId: product.id, productType: product.productType, alertTitle: alertTitle))
                         })]
@@ -481,7 +481,7 @@ class ProductProfileViewModel: ObservableObject {
                     
                     withAnimation {
                         
-                        navigationBar.rightButtons = []
+                        navigationBar.rightItems = []
                     }
                 }
                 
@@ -1151,12 +1151,12 @@ class ProductProfileViewModel: ObservableObject {
 
 fileprivate extension NavigationBarView.ViewModel {
     
-    convenience init(product: ProductData, dismissAction: @escaping () -> Void, rightButtons: [ButtonViewModel] = []) {
+    convenience init(product: ProductData, dismissAction: @escaping () -> Void, rightButtons: [ButtonItemViewModel] = []) {
         self.init(
             title: Self.title(with: product),
             subtitle: Self.subtitle(with: product),
-            leftButtons: [BackButtonViewModel(icon: .ic24ChevronLeft, action: dismissAction)],
-            rightButtons: rightButtons,
+            leftItems: [BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)],
+            rightItems: rightButtons,
             background: Self.accentColor(with: product),
             foreground: Self.textColor(with: product),
             backgroundDimm: .init(color: Color(hex: "1с1с1с"), opacity: 0.3))

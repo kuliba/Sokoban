@@ -55,16 +55,43 @@ extension PTSectionLatestPaymentsView {
                                 withAnimation(.easeInOut(duration: 1)) {
                                     
                                     // temporally removed taxAndStateService from list
-                                    self.latestPayments = .init(model, filter: .excluding([.taxAndStateService]))
+                                    let latestPayments = LatestPaymentsView.ViewModel(model, filter: .excluding([.taxAndStateService]))
+                                    self.latestPayments = latestPayments
+                                    bind(latestPayments)
                                 }
                             }
                         
-                        default: break
+                        default:
+                            break
                         }
-                    default: break
+                    default:
+                        break
                     }
                     
             }.store(in: &bindings)
+        }
+        
+        func bind(_ latestPayments: LatestPaymentsView.ViewModel) {
+            
+            latestPayments.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                    case let payload as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
+                        self.action.send(LatestPaymentsViewModelAction.ButtonTapped.LatestPayment(latestPayment: payload.latestPayment))
+                        
+                    case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
+                        self.action.send(LatestPaymentsViewModelAction.ButtonTapped.Templates())
+                        
+                    case _ as LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet:
+                        self.action.send(LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet())
+                        
+                    default:
+                        break
+                    }
+                    
+                }.store(in: &bindings)
         }
     }
 }

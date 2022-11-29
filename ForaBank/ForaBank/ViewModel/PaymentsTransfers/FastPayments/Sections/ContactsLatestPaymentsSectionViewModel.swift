@@ -25,6 +25,8 @@ class ContactsLatestPaymentsSectionViewModel: ContactsSectionViewModel, Observab
         
         let latestPaymentsViewModel = LatestPaymentsView.ViewModel(model, isBaseButtons: false, filter: .including(including))
         self.init(latestPayments: latestPaymentsViewModel, mode: .fastPayment, model: model)
+        
+        bind()
     }
     
     func bind() {
@@ -42,7 +44,6 @@ class ContactsLatestPaymentsSectionViewModel: ContactsSectionViewModel, Observab
                 }
                 
             }.store(in: &bindings)
-        
     }
 }
 

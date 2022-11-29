@@ -38,20 +38,7 @@ struct PaymentsTransfersView: View {
                     
                 } //mainVerticalScrollView
             } //mainVStack
-            .onAppear {
-                viewModel.action.send(PaymentsTransfersViewModelAction.ViewDidApear())
-            }
-            .navigationBarTitle("", displayMode: .inline)
-            .navigationBarItems(
-                leading: MainView.UserAccountButton(viewModel: viewModel.userAccountButton),
-                trailing:
-                    HStack {
-                        ForEach(viewModel.navButtonsRight) { navButtonViewModel in
-                                            
-                            NavBarButton(viewModel: navButtonViewModel)
-                        }
-                    })
- 
+
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
                 if let link = viewModel.link  {
@@ -148,6 +135,47 @@ struct PaymentsTransfersView: View {
                 }
             }
         }
+        .onAppear {
+            viewModel.action.send(PaymentsTransfersViewModelAction.ViewDidApear())
+        }
+        .navigationBarTitle("", displayMode: .inline)
+        .navigationBarItems(
+            leading: MainView.UserAccountButton(viewModel: viewModel.userAccountButton),
+            trailing:
+                HStack {
+                    ForEach(viewModel.navButtonsRight) { navButtonViewModel in
+                                        
+                        NavBarButton(viewModel: navButtonViewModel)
+                    }
+                })
+        .bottomSheet(item: $viewModel.bottomSheet) { sheet in
+            
+            switch sheet.type {
+            case let .exampleDetail(title):
+                ExampleDetailMock(title: title)
+                
+            case let .meToMe(viewModel):
+                
+                PaymentsMeToMeView(viewModel: viewModel)
+                    .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+                        
+                        switch fullCover.type {
+                        case let .successMeToMe(successMeToMeViewModel):
+                            PaymentsSuccessView(viewModel: successMeToMeViewModel)
+                        }
+                        
+                    }.transaction { transaction in
+                        transaction.disablesAnimations = false
+                    }
+                
+            case .anotherCard(let model):
+                AnotherCardView(viewModel: model)
+                    .edgesIgnoringSafeArea(.bottom)
+                    .navigationBarTitle("", displayMode: .inline)
+                    .frame(height: 494)
+            
+            }
+        }
         .sheet(item: $viewModel.sheet, content: { sheet in
             
             switch sheet.type {
@@ -178,34 +206,6 @@ struct PaymentsTransfersView: View {
                 ContactsView(viewModel: viewModel)
             }
         })
-        .bottomSheet(item: $viewModel.bottomSheet) { sheet in
-            
-            switch sheet.type {
-            case let .exampleDetail(title):
-                ExampleDetailMock(title: title)
-                
-            case let .meToMe(viewModel):
-                
-                PaymentsMeToMeView(viewModel: viewModel)
-                    .fullScreenCover(item: $viewModel.fullCover) { fullCover in
-                        
-                        switch fullCover.type {
-                        case let .successMeToMe(successMeToMeViewModel):
-                            PaymentsSuccessView(viewModel: successMeToMeViewModel)
-                        }
-                        
-                    }.transaction { transaction in
-                        transaction.disablesAnimations = false
-                    }
-                
-            case .anotherCard(let model):
-                AnotherCardView(viewModel: model)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .navigationBarTitle("", displayMode: .inline)
-                    .frame(height: 494)
-            
-            }
-        }
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })

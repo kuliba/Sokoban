@@ -12,7 +12,7 @@ class PaymentsOperationViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
 
-    @Published var header: HeaderViewModel
+    @Published var navigationBar: NavigationBarView.ViewModel
     @Published var top: [PaymentsParameterViewModel]?
     @Published var content: [PaymentsParameterViewModel]
     @Published var bottom: [PaymentsParameterViewModel]?
@@ -22,6 +22,7 @@ class PaymentsOperationViewModel: ObservableObject {
     @Published var bottomSheet: BottomSheet?
     @Published var sheet: Sheet?
         
+    internal let closeAction: () -> Void
     internal let operation: CurrentValueSubject<Payments.Operation, Never>
     internal let sections: CurrentValueSubject<[PaymentsSectionViewModel], Never> = .init([])
     internal let model: Model
@@ -32,9 +33,9 @@ class PaymentsOperationViewModel: ObservableObject {
     var items: [PaymentsParameterViewModel] { sections.value.flatMap{ $0.items } }
     var isItemsValuesValid: Bool { items.filter({ $0.isValid == false }).isEmpty }
     
-    init(header: HeaderViewModel, top: [PaymentsParameterViewModel]?, content: [PaymentsParameterViewModel], bottom: [PaymentsParameterViewModel]?, link: Link?, bottomSheet: BottomSheet?, operation: Payments.Operation, model: Model) {
+    init(navigationBar: NavigationBarView.ViewModel, top: [PaymentsParameterViewModel]?, content: [PaymentsParameterViewModel], bottom: [PaymentsParameterViewModel]?, link: Link?, bottomSheet: BottomSheet?, operation: Payments.Operation, model: Model, closeAction: @escaping () -> Void) {
         
-        self.header = header
+        self.navigationBar = navigationBar
         self.top = top
         self.content = content
         self.bottom = bottom
@@ -42,11 +43,12 @@ class PaymentsOperationViewModel: ObservableObject {
         self.bottomSheet = bottomSheet
         self.operation = .init(operation)
         self.model = model
+        self.closeAction = closeAction
     }
     
-    convenience init(operation: Payments.Operation, model: Model) {
+    convenience init(operation: Payments.Operation, model: Model, closeAction: @escaping () -> Void) {
 
-        self.init(header: .init(title: ""), top: [], content: [], bottom: [], link: nil, bottomSheet: nil, operation: operation, model: model)
+        self.init(navigationBar: .init(), top: [], content: [], bottom: [], link: nil, bottomSheet: nil, operation: operation, model: model, closeAction: closeAction)
         
         bind()
     }
@@ -82,7 +84,7 @@ class PaymentsOperationViewModel: ObservableObject {
                 // update dependend items
                 Self.reduce(service: operation.value.service, items: items, dependenceReducer: model.paymentsProcessDependencyReducer(service:parameterId:parameters:))
                 
-                header = .init(with: items.map{ $0.source })
+                navigationBar = .init(with: items.map{ $0.source }, closeAction: closeAction)
                 
                 // update bottom section continue button
                 updateBottomSection(isContinueEnabled: isItemsValuesValid)
@@ -109,7 +111,10 @@ class PaymentsOperationViewModel: ObservableObject {
                         self.operation.value = operation
                         
                     case .confirm(let operation):
-                        let confirmViewModel = PaymentsConfirmViewModel(operation: operation, model: model)
+                        let confirmViewModel = PaymentsConfirmViewModel(operation: operation, model: model) { [weak self] in
+                            
+                            self?.link = nil
+                        }
                         confirmViewModel.rootActions = rootActions
                         link = .confirm(confirmViewModel)
                         
@@ -151,7 +156,7 @@ class PaymentsOperationViewModel: ObservableObject {
                         // update dependend items
                         Self.reduce(service: operation.value.service, items: items, dependenceReducer: model.paymentsProcessDependencyReducer(service:parameterId:parameters:))
                         
-                        header = .init(with: items.map{ $0.source })
+                        navigationBar = .init(with: items.map{ $0.source }, closeAction: closeAction)
                         top = Self.reduceTopItems(sections: sections.value)
                         content = Self.reduceContentItems(sections: sections.value)
                         bottom = Self.reduceBottomItems(sections: sections.value)
@@ -198,7 +203,8 @@ class PaymentsOperationViewModel: ObservableObject {
                     
                     switch action {
                     case let payload as PaymentsSectionViewModelAction.ItemValueDidChanged:
-                        guard payload.value.isChanged == true || payload.value.id == Payments.Parameter.Identifier.product.rawValue else {
+                       
+                        guard payload.value.isChanged == true else {
                             return
                         }
                         self.action.send(PaymentsOperationViewModelAction.ItemDidUpdated(parameterId: payload.value.id))
@@ -363,7 +369,7 @@ extension PaymentsOperationViewModel {
             self.icon = icon
         }
         
-        init(with parameters: [PaymentsParameterRepresentable] ) {
+        init(with parameters: [PaymentsParameterRepresentable]) {
             
             if let headerParameter = parameters.first(where: { $0.id == Payments.Parameter.Identifier.header.rawValue}) as? Payments.ParameterHeader,
                let icon = headerParameter.icon {

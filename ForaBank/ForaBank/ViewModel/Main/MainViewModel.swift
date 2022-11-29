@@ -239,9 +239,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 link = .templates(templatesListviewModel)
                                 
                             case .byPhone:
-                                let contactsViewModel = ContactsViewModel(model, mode: .fastPayments(.contacts))
-                                sheet = .init(type: .byPhone(contactsViewModel))
-                                bind(contactsViewModel)
+                                openContacts()
          
                             case .byQr:
                                 if model.cameraAgent.isCameraAvailable {
@@ -483,13 +481,58 @@ class MainViewModel: ObservableObject, Resetable {
                             }, template: nil))))
                         }
                         
+                    case let .latestPayment(latestPaymentId):
+                        guard let latestPayment = model.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData else {
+                            return
+                        }
+                        
+                        Task {
+                            
+                            do {
+                                
+                                let paymentsViewModel = try await PaymentsViewModel(source: .sfp(phone: latestPayment.phoneNumber, bankId: latestPayment.bankId), model: model) { [weak self] in
+                                    
+                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                    
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
+                                        
+                                        self?.openContacts()
+                                    }
+                                }
+                                
+                                await MainActor.run {
+
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                        
+                                        self.link = .init(.payments(paymentsViewModel))
+                                    }
+                                }
+                                
+                            } catch {
+                                
+                                await MainActor.run {
+                                    
+                                    self.alert = .init(title: "Error", message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения.", primary: .init(type: .cancel, title: "Ok", action: {}))
+                                }
+                                
+                                LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for SFP source with phone: \(latestPayment.phoneNumber) and bankId: \(latestPayment.bankId)  with error: \(error.localizedDescription)")
+                            }
+                        }
+
                     default:
                         
                         Task {
                             
                             do {
                                 
-                                let paymentsViewModel = try await PaymentsViewModel(source: payload.source, model: model) { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                let paymentsViewModel = try await PaymentsViewModel(source: payload.source, model: model) { [weak self] in
+                                    
+                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                    
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
+                                        
+                                        self?.openContacts()
+                                    }
                                 }
                                 
                                 await MainActor.run {
@@ -544,6 +587,13 @@ class MainViewModel: ObservableObject, Resetable {
     private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
         
         [.init(icon: .ic24Bell, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Messages())})]
+    }
+    
+    private func openContacts() {
+        
+        let contactsViewModel = ContactsViewModel(model, mode: .fastPayments(.contacts))
+        sheet = .init(type: .byPhone(contactsViewModel))
+        bind(contactsViewModel)
     }
     
 }
