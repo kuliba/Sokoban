@@ -7,7 +7,6 @@
 
 import UIKit
 import SwiftUI
-import UniformTypeIdentifiers
 
 struct DocumentPickerViewModel {
     
@@ -17,10 +16,10 @@ struct DocumentPickerViewModel {
 struct DocumentPicker: UIViewControllerRepresentable {
     
     var viewModel: DocumentPickerViewModel
-    let controller = UIDocumentPickerViewController(forOpeningContentTypes: [.jpeg, .image, .pdf], asCopy: true)
+    let controller = UIDocumentPickerViewController(forOpeningContentTypes: [.jpeg, .image, .pdf])
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<DocumentPicker>) -> UIDocumentPickerViewController {
- 
+        
         controller.delegate = context.coordinator
         controller.allowsMultipleSelection = false
         controller.shouldShowFileExtensions = true
@@ -28,33 +27,30 @@ struct DocumentPicker: UIViewControllerRepresentable {
     }
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(self)
+        return Coordinator(DocumentPickerViewModel(closeAction: {_ in }))
     }
     
     func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: UIViewControllerRepresentableContext<DocumentPicker>) {}
     
     class Coordinator: NSObject, UIDocumentPickerDelegate {
         
-        let picker: DocumentPicker
+        let viewModel: DocumentPickerViewModel
         
-        init(_ pickerContent: DocumentPicker) {
-            picker = pickerContent
+        init(_ documentPickerViewModel: DocumentPickerViewModel) {
+            viewModel = documentPickerViewModel
         }
         
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
             
             print()
             guard let url = urls.first else { return }
-            defer {
-                url.stopAccessingSecurityScopedResource()
-            }
             
-            self.picker.viewModel.closeAction(url.absoluteURL)
+            viewModel.closeAction(url.absoluteURL)
             controller.navigationController?.popViewController(animated: true)
         }
         
         func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-            self.picker.viewModel.closeAction(nil)
+            viewModel.closeAction(nil)
             controller.navigationController?.popViewController(animated: true)
         }
         

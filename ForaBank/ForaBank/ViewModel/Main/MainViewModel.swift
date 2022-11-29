@@ -88,8 +88,8 @@ class MainViewModel: ObservableObject, Resetable {
                     }
                     
                     guard let productProfileViewModel = ProductProfileViewModel(model, product: prooduct, dismissAction: { [weak self] in
-                              self?.action.send(MainViewModelAction.Close.Link())
-                          }) else {
+                        self?.action.send(MainViewModelAction.Close.Link())
+                    }) else {
                         return
                     }
                     productProfileViewModel.rootActions = rootActions
@@ -114,7 +114,7 @@ class MainViewModel: ObservableObject, Resetable {
                 case _ as MainViewModelAction.PullToRefresh:
                     model.action.send(ModelAction.Products.Update.Total.All())
                     model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
-                
+                    
                 case _ as MainViewModelAction.Close.Link:
                     self.link = nil
                     
@@ -194,7 +194,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 let openAccountViewModel: OpenAccountViewModel = .init(model: model, items: items, currency: .rub)
                                 
                                 bottomSheet = .init(type: .openAccount(openAccountViewModel))
-
+                                
                             case .deposit:
                                 self.action.send(MainViewModelAction.Show.OpenDeposit())
                                 
@@ -233,27 +233,21 @@ class MainViewModel: ObservableObject, Resetable {
                                         
                                         if available {
                                             
-                                            self.link = .qrScanner(.init( closeAction: {
-                                                
- //                                               if value == false {
-                                                self.action.send(MainViewModelAction.Close.Link())
-                                                self.action.send(PaymentsTransfersViewModelAction
-                                                                  .Close.Link() )
-//                                            } else {
-//                                                self?.action.send(PaymentsTransfersViewModelAction
-//                                                                  .Close.Link() )
-//                                                self?.action.send(PTSectionPaymentsViewAction.ButtonTapped.Payment(type: .service))
-//                                            }
-                                                
+                                            let qrScannerModel = QRViewModel.init(closeAction: {
+                                                self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                            })
+                                            
+                                            self.bind(qrScannerModel)
+                                            self.link = .qrScanner(qrScannerModel)
+                                            
+                                    } else {
+                                        self.alert = .init(
+                                            title: "Внимание",
+                                            message: "Для сканирования QR кода, необходим доступ к камере",
+                                            primary: .init(type: .cancel, title: "Понятно", action: {
                                             }))
-                                        } else {
-                                            self.alert = .init(
-                                                title: "Внимание",
-                                                message: "Для сканирования QR кода, необходим доступ к камере",
-                                                primary: .init(type: .cancel, title: "Понятно", action: {
-                                                }))
-                                        }
-                                    })
+                                    }
+                                                                         })
                                 }
                             }
                             
@@ -290,7 +284,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 }, mode: .general), paymentType: .withOutAddress(withOutViewModel: .init(phoneNumber: nil))))
                                 
                             case let payload as BannerActionContactTransfer:
-                                  
+                                
                                 self.link = .country(.init(country: payload.countryId, operatorsViewModel: .init(closeAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
                                 }, mode: .general), paymentType: .turkeyWithOutAddress(turkeyWithOutAddress: .init(firstName: "", middleName: "", surName: "", phoneNumber: ""))))
@@ -314,7 +308,7 @@ class MainViewModel: ObservableObject, Resetable {
                         // products section
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
                         self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
-    
+                        
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel = MyProductsViewModel(model, dismissAction: { [weak self] in self?.action.send(MainViewModelAction.Close.Link()) })
                         bind(myProductsViewModel)
@@ -328,7 +322,7 @@ class MainViewModel: ObservableObject, Resetable {
                             self?.action.send(MainViewModelAction.Close.Link())}) else {
                             return
                         }
-
+                        
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
                         link = .currencyWallet(walletViewModel)
                         
@@ -381,6 +375,62 @@ class MainViewModel: ObservableObject, Resetable {
         }
     }
     
+    func bind(_ qrViewModel: QRViewModel ) {
+        
+        qrViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as QRViewModelAction.Result:
+                    
+                    switch payload.result {
+                        
+                    case .qrCode(let qr):
+                        
+                        guard let qrMapping = model.qrDictionary.value else { break }
+                        
+                        let operatorPuref = model.dictionaryAnywayOperator(with: qr, mapping: qrMapping)
+                        
+                        let puref = operatorPuref?.code
+                        
+                        if puref != nil {
+                            
+                            let operatorsViewModel = OperatorsViewModel(closeAction: {
+                                self.link = nil
+                            }, mode: .qr(qr))
+                            
+                            self.link = .serviceOperators(operatorsViewModel)
+                        } else {
+                            
+                            let failedView = QRFailedViewModel()
+                            self.link = .failedView(failedView)
+                        }
+                        
+                    case .c2bURL(let c2bURL):
+                        
+                        let c2bViewModel = C2BViewModel(closeAction: {
+                            self.link = nil
+                        }, mode: .c2bURL(c2bURL))
+                        
+                        self.link = .c2b(c2bViewModel)
+                        
+                    case .url( _):
+                        
+                        let failedView = QRFailedViewModel()
+                        self.link = .failedView(failedView)
+                        
+                    case .unknown(let qr):
+                        
+                        self.alert = .init(title: "Unknown", message: qr, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                    }
+                    
+                default:
+                    break
+                }
+            }.store(in: &bindings)
+    }
+    
     private func bind(_ productProfile: ProductProfileViewModel) {
         
         productProfile.action
@@ -402,13 +452,15 @@ class MainViewModel: ObservableObject, Resetable {
                         
                         self.action.send(MainViewModelAction.Show.OpenDeposit())
                     }
-
+                    
                 default:
                     break
                 }
                 
             }.store(in: &bindings)
     }
+    
+    
     
     private func bind(_ myProductsViewModel: MyProductsViewModel) {
         
@@ -437,7 +489,7 @@ class MainViewModel: ObservableObject, Resetable {
                     break
                 }
                 
-        }.store(in: &bindings)
+            }.store(in: &bindings)
     }
     
     private func bind(_ templatesListViewModel: TemplatesListViewModel) {
@@ -448,10 +500,10 @@ class MainViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case _ as TemplatesListViewModelAction.AddTemplate:
-                
+                    
                     self.action.send(MainViewModelAction.Close.Link())
                     if let productFirst = model.products.value.values.flatMap({ $0 }).first {
-                
+                        
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
                             self.action.send(MainViewModelAction.Show.ProductProfile(productId: productFirst.id))
                         }
@@ -461,7 +513,7 @@ class MainViewModel: ObservableObject, Resetable {
                     break
                 }
                 
-        }.store(in: &bindings)
+            }.store(in: &bindings)
     }
     
     private func update(_ sections: [MainSectionViewModel], with settings: MainSectionsSettings) {
@@ -482,7 +534,7 @@ class MainViewModel: ObservableObject, Resetable {
             }
         }
     }
-
+    
     private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
         
         [.init(icon: .ic24Bell, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Messages())})]
@@ -529,6 +581,7 @@ extension MainViewModel {
             case places(PlacesViewModel)
             case byPhone(TransferByPhoneViewModel)
             case openAccount(OpenAccountViewModel)
+            case qrScanner(QRViewModel)
         }
     }
     
@@ -544,23 +597,25 @@ extension MainViewModel {
         case currencyWallet(CurrencyWalletViewModel)
         case myProducts(MyProductsViewModel)
         case country(CountryPaymentView.ViewModel)
-
+        case serviceOperators(OperatorsViewModel)
+        case failedView(QRFailedViewModel)
+        case c2b(C2BViewModel)
     }
-
+    
     struct BottomSheet: Identifiable {
-
+        
         let id = UUID()
         let type: BottomSheetType
-
+        
         enum BottomSheetType {
-
+            
             case openAccount(OpenAccountViewModel)
         }
     }
 }
 
 enum MainViewModelAction {
-
+    
     enum ButtonTapped {
         
         struct UserAccount: Action {}
@@ -575,14 +630,14 @@ enum MainViewModelAction {
     struct PullToRefresh: Action {}
     
     enum Close {
-     
+        
         struct Link: Action {}
         
         struct Sheet: Action {}
     }
     
     enum Show {
-    
+        
         struct ProductProfile: Action {
             
             let productId: ProductData.ID
@@ -590,6 +645,6 @@ enum MainViewModelAction {
         
         struct OpenDeposit: Action {}
     }
-
+    
 }
 

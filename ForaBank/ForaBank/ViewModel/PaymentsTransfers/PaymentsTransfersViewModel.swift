@@ -86,26 +86,30 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:
                     if model.cameraAgent.isCameraAvailable {
                         model.cameraAgent.requestPermissions(completion: { available in
-                            
-//                            if available {
-//                                self.link = .qrScanner(.init(closeAction: { [weak self] value  in
-//
-//                                    if !value {
-//                                    self?.action.send(PaymentsTransfersViewModelAction
-//                                                      .Close.Link() )
-//                                } else {
-//                                    let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-//                                    }, template: nil)
-//                                    self?.link = .serviceOperators(serviceOperators)
-//                                    InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
-//                                }}))
-//                            } else {
-//                                self.alert = .init(
-//                                    title: "Внимание",
-//                                    message: "Для сканирования QR кода, необходим доступ к камере",
-//                                    primary: .init(type: .cancel, title: "Понятно", action: {
-//                                    }))
-//                            }
+                        
+                            // вызов из навбара
+                            if available {
+                                if #available(iOS 14, *) {
+                                    
+                                    // на экране платежей нижний переход
+                                    let qrScannerModel = QRViewModel.init(closeAction: {
+                                        self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                    })
+                                    
+                                    self.bind(qrScannerModel)
+                                    self.link = .qrScanner(qrScannerModel)
+                                    
+                                } else {
+                                    self.sheet = .init(type: .qrScanner(.init(closeAction: { self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                    })))
+                                }
+                            } else {
+                                self.alert = .init(
+                                    title: "Внимание",
+                                    message: "Для сканирования QR кода, необходим доступ к камере",
+                                    primary: .init(type: .cancel, title: "Понятно", action: {
+                                    }))
+                            }
                         })
                     }
                    
@@ -266,6 +270,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                     if available {
                                         if #available(iOS 14, *) {
                                             
+                                            // на экране платежей нижний переход
                                             let qrScannerModel = QRViewModel.init(closeAction: {
                                                 self.action.send(PaymentsTransfersViewModelAction.Close.Link())
                                             })

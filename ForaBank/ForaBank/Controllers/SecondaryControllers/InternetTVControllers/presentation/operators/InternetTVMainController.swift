@@ -1,4 +1,5 @@
 import UIKit
+import SwiftUI
 import AVFoundation
 import IQKeyboardManagerSwift
 
@@ -185,10 +186,24 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     @objc func onQR() {
         PermissionHelper.checkCameraAccess(isAllowed: { granted, alert in
             if granted {
-                DispatchQueue.main.async {
-                    self.navigationController?.isNavigationBarHidden = true
-                    self.performSegue(withIdentifier: "qr", sender: nil)
+//                DispatchQueue.main.async {
+//                    self.navigationController?.isNavigationBarHidden = true
+//                    self.performSegue(withIdentifier: "qr", sender: nil)
+//                }
+                
+                var presentedController : UINavigationController?
+                
+                let qrViewModel = QRViewModel {
+                    presentedController?.dismiss(animated: true)
                 }
+                
+                let qrView = QRView(viewModel: qrViewModel)
+                let hostingController = UIHostingController(rootView: qrView)
+                let navVC = UINavigationController(rootViewController: hostingController)
+                navVC.modalPresentationStyle = .fullScreen
+                self.present(navVC, animated: true , completion: nil)
+                presentedController = self.navigationController
+
             } else {
                 DispatchQueue.main.async {
                     if let alertUnw = alert {

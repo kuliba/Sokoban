@@ -94,9 +94,8 @@ struct MainView: View {
                         TemplatesListView(viewModel: templatesViewModel)
                         
                     case .qrScanner(let qrViewModel):
-                        QrScannerView(viewModel: qrViewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
+                        QRView(viewModel: qrViewModel)
+                            .navigationBarHidden(true)
                             .edgesIgnoringSafeArea(.all)
                     
                     case let .currencyWallet(viewModel):
@@ -110,6 +109,18 @@ struct MainView: View {
                             .navigationBarTitle("", displayMode: .inline)
                             .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
+                        
+                    case .serviceOperators(let viewModel):
+                        OperatorsView(viewModel: viewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case .failedView(let failedViewModel):
+                        QRFailedView(viewModel: failedViewModel)
+                        
+                    case .c2b(let c2bViewModel):
+                        C2BDetailsView(viewModel: c2bViewModel)
                     }
                 }
             }
@@ -131,6 +142,11 @@ struct MainView: View {
                 
             case let .openAccount(openAccountViewModel):
                 OpenAccountView(viewModel: openAccountViewModel)      
+            case .qrScanner(let qrViewModel):
+                QrScannerView(viewModel: qrViewModel)
+                    .navigationBarTitle("", displayMode: .inline)
+                    .navigationBarBackButtonHidden(true)
+                    .edgesIgnoringSafeArea(.all)
             }
         })
         .bottomSheet(item: $viewModel.bottomSheet, keyboardOfssetMultiplier: 0.7) { bottomSheet in
