@@ -117,7 +117,9 @@ class PaymentsServiceViewModel: ObservableObject {
                             
                             await MainActor.run {
                                 
-                                let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model)
+                                let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model){ [weak self] in
+                                    self?.action.send(PaymentsServiceViewModelAction.DissmissLink())
+                                }
                                 operationViewModel.rootActions = rootActions
                                 link = .operation(operationViewModel)
                             }
