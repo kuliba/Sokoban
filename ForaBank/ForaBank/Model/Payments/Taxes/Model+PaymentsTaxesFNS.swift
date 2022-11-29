@@ -24,6 +24,9 @@ extension Model {
             }
             let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
             
+            // header
+            let headerParameter = Payments.ParameterHeader(title: "ФНС", icon: .name("ic24Sbp"))
+            
             // operator
             let operatorParameterValue = Payments.Operator.fns.rawValue
             let operatorParameter = Payments.ParameterSelectSwitch(
@@ -33,7 +36,7 @@ extension Model {
                     .init(id: Payments.Operator.fnsUin.rawValue, name: Payments.Operator.fnsUin.name)
                 ], placement: .top)
             
-            return .init(parameters: [productParameter, operatorParameter], front: .init(visible: [operatorParameterId], isCompleted: true), back: .init(stage: .local, required: [operatorParameterId], processed: [.init(id: operatorParameterId, value: operatorParameterValue)]))
+            return .init(parameters: [productParameter, headerParameter, operatorParameter], front: .init(visible: [headerParameter.id, operatorParameterId], isCompleted: true), back: .init(stage: .local, required: [operatorParameterId], processed: [.init(id: operatorParameterId, value: operatorParameterValue)]))
             
         case 1:
             guard let operatorParameterValue = paymentsParameterValue(operation.parameters, id: operatorParameterId),

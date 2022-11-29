@@ -121,6 +121,13 @@ struct MainView: View {
             }
         }
         .ignoreKeyboard()
+        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
+
+            switch bottomSheet.type {
+            case let .openAccount(openAccountViewModel):
+                OpenAccountView(viewModel: openAccountViewModel)
+            }
+        }
         .sheet(item: $viewModel.sheet, content: { sheet in
             switch sheet.type {
             case .productProfile(let productProfileViewModel):
@@ -139,13 +146,6 @@ struct MainView: View {
                 OpenAccountView(viewModel: openAccountViewModel)
             }
         })
-        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
-
-            switch bottomSheet.type {
-            case let .openAccount(openAccountViewModel):
-                OpenAccountView(viewModel: openAccountViewModel)
-            }
-        }
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })

@@ -16,12 +16,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     let action: PassthroughSubject<Action, Never> = .init()
     
     lazy var userAccountButton: MainViewModel.UserAccountButtonViewModel = .init(
-                                    logo: .ic12LogoForaColor,
-                                    name: "",
-                                    avatar: nil,
-                                    action: { [weak self] in
-                                        self?.action.send(PaymentsTransfersViewModelAction
-                                                            .ButtonTapped.UserAccount())})
+        logo: .ic12LogoForaColor,
+        name: "",
+        avatar: nil,
+        action: { [weak self] in
+            self?.action.send(PaymentsTransfersViewModelAction
+                .ButtonTapped.UserAccount())})
     
     @Published var sections: [PaymentsTransfersSectionViewModel]
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
@@ -82,13 +82,13 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     else {return }
                     
                     link = .userAccount(
-                            .init(model: model,
-                                  clientInfo: clientInfo,
-                                  dismissAction: {[weak self] in
-                                      self?.action.send(PaymentsTransfersViewModelAction
-                                                        .Close.Link() )}))
-                
-                case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:                    
+                        .init(model: model,
+                              clientInfo: clientInfo,
+                              dismissAction: {[weak self] in
+                                  self?.action.send(PaymentsTransfersViewModelAction
+                                    .Close.Link() )}))
+                    
+                case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:
                     if model.cameraAgent.isCameraAvailable {
                         model.cameraAgent.requestPermissions(completion: { available in
                             
@@ -96,14 +96,14 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 self.link = .qrScanner(.init(closeAction: { [weak self] value  in
                                     
                                     if !value {
-                                    self?.action.send(PaymentsTransfersViewModelAction
-                                                      .Close.Link() )
-                                } else {
-                                    let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                    }, template: nil)
-                                    self?.link = .serviceOperators(serviceOperators)
-                                    InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
-                                }}))
+                                        self?.action.send(PaymentsTransfersViewModelAction
+                                            .Close.Link() )
+                                    } else {
+                                        let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                        }, template: nil)
+                                        self?.link = .serviceOperators(serviceOperators)
+                                        InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
+                                    }}))
                             } else {
                                 self.alert = .init(
                                     title: "Внимание",
@@ -113,7 +113,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }
                         })
                     }
-                   
+                    
                 case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
                     bottomSheet = nil
                     
@@ -122,7 +122,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                 case _ as PaymentsTransfersViewModelAction.Close.FullCover:
                     fullCover = nil
-                
+                    
                 case _ as PaymentsTransfersViewModelAction.Close.Link:
                     link = nil
                     
@@ -131,23 +131,23 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     withAnimation {
                         NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                     }
-
+                    
                 case _ as PaymentsTransfersViewModelAction.OpenQr:
                     link = .qrScanner(.init(closeAction:  { [weak self] value  in
                         
                         if !value {
-                        self?.action.send(PaymentsTransfersViewModelAction
-                                          .Close.Link() )
-                    } else {
-                        let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                        }, template: nil)
-                        self?.link = .serviceOperators(serviceOperators)
-                        InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
-                    }}))
-                  
-                case _ as PaymentsTransfersViewModelAction.ViewDidApear:
+                            self?.action.send(PaymentsTransfersViewModelAction
+                                .Close.Link() )
+                        } else {
+                            let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }, template: nil)
+                            self?.link = .serviceOperators(serviceOperators)
+                            InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
+                        }}))
                     
+                case _ as PaymentsTransfersViewModelAction.ViewDidApear:
                     model.action.send(ModelAction.Contacts.PermissionStatus.Request())
+                    isTabBarHidden = false
                     
                 default:
                     break
@@ -174,48 +174,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                     switch action {
                         
-                    //LatestPayments Section Buttons
+                        //LatestPayments Section Buttons
                     case let payload as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
+                        handle(latestPayment: payload.latestPayment)
                         
-                        switch (payload.latestPayment.type, payload.latestPayment) {
-                        case (.phone, let paymentData as PaymentGeneralData):
-                            link = .init(.phone(PaymentByPhoneViewModel(phoneNumber: paymentData.phoneNumber, bankId: paymentData.bankId, closeAction: { [weak self] in
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            })))
-                        
-                        case (.country, let paymentData as PaymentCountryData):
-                            link = .init(.country(CountryPaymentView.ViewModel(countryData: paymentData, operatorsViewModel: .init(closeAction: { [weak self] in
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, template: nil))))
-                            
-                        case (.service, let paymentData as PaymentServiceData):
-                            link = .service(.init(model: model, closeAction: { [weak self] in
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, paymentServiceData: paymentData))
-                                    
-                        case (.transport, let paymentData as PaymentServiceData):
-                            link = .transport(.init(model: model, closeAction: { [weak self] in
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, paymentServiceData: paymentData))
-                            
-                        case (.internet, let paymentData as PaymentServiceData):
-                            link = .internet(.init(model: model, closeAction: { [weak self] in
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, paymentServiceData: paymentData))
-                            
-                        case (.mobile, let paymentData as PaymentServiceData):
-                            link = .mobile(.init(paymentServiceData: paymentData, closeAction: { [weak self] in
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }))
-                            
-                        case (.taxAndStateService, let paymentData as PaymentServiceData):
-                            bottomSheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
-                            
-                        default: //error matching
-                            bottomSheet = .init(type: .exampleDetail(payload.latestPayment.type.rawValue)) //TODO:
-                        }
-                    
-                    //LatestPayment Section TemplateButton
+                        //LatestPayment Section TemplateButton
                     case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
                         let viewModel = TemplatesListViewModel(model, dismissAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                         })
@@ -232,13 +195,13 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             self?.action.send(PaymentsTransfersViewModelAction.Close.Link())}) else {
                             return
                         }
-
+                        
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
                         
                         link = .currencyWallet(walletViewModel)
                         
                         
-                    //Transfers Section
+                        //Transfers Section
                     case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
                         
                         switch payload.type {
@@ -252,7 +215,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             })))
                             
                         case .betweenSelf:
-
+                            
                             let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .general)
                             
                             guard let viewModel = viewModel else {
@@ -263,20 +226,17 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             bind(viewModel, swapViewModel: swapViewModel)
                             
                             bottomSheet = .init(type: .meToMe(viewModel))
-
-                    case .byBankDetails:
-
+                            
+                        case .byBankDetails:
+                            
                             link = .transferByRequisites(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }))
                             
                         case .byPhoneNumber:
-                            
-                            let contactsViewModel = ContactsViewModel(model, mode: .fastPayments(.contacts))
-                            sheet = .init(type: .fastPayment(contactsViewModel))
-                            bind(contactsViewModel)
+                            openContacts()
                         }
                         
-                    //Payments Section
+                        //Payments Section
                     case let payload as PTSectionPaymentsViewAction.ButtonTapped.Payment:
                         
                         switch payload.type {
@@ -323,7 +283,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }, template: nil)
                             link = .transportOperators(transportOperators)
                             InternetTVMainViewModel.filter = GlobalModule.PAYMENT_TRANSPORT
-                       
+                            
                         case .taxAndStateService:
                             Task.detached(priority: .high) { [self] in
                                 
@@ -346,11 +306,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         case .socialAndGame: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                         case .security: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                         case .others: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
-        
+                            
                         }
                     default:
                         break
-
+                        
                     }
                     
                 }.store(in: &bindings)
@@ -365,12 +325,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case let payload as PaymentsMeToMeAction.Response.Success:
-
+                    
                     guard let productIdFrom = swapViewModel.productIdFrom,
                           let productIdTo = swapViewModel.productIdTo else {
                         return
                     }
-
+                    
                     model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
                     model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
                     
@@ -389,7 +349,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     }
                     
                     bottomSheet.isUserInteractionEnabled.value = payload.isUserInteractionEnabled
-    
+                    
                 default:
                     break
                 }
@@ -405,7 +365,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case _ as PaymentsSuccessAction.Button.Close:
-
+                    
                     self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
                     self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
                     
@@ -415,7 +375,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                     self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
                     self.rootActions?.switchTab(.payments)
-
+                    
                 default:
                     break
                 }
@@ -449,7 +409,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         }
                         
                     case let .abroad(phone: phone, countryId: countryId):
-
+                        
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                             
                             guard let country = self.model.countriesList.value.first(where: { $0.id == countryId }) else {
@@ -460,17 +420,29 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }, template: nil))))
                         }
                         
+                    case let .latestPayment(latestPaymentId):
+                        guard let latestPayment = model.latestPayments.value.first(where: { $0.id == latestPaymentId }) else {
+                            return
+                        }
+                        handle(latestPayment: latestPayment)
+                        
                     default:
                         
                         Task {
                             
                             do {
                                 
-                                let paymentsViewModel = try await PaymentsViewModel(source: payload.source, model: model) { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                let paymentsViewModel = try await PaymentsViewModel(source: payload.source, model: model) { [weak self] in
+                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                    
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
+                                        
+                                        self?.openContacts()
+                                    }
                                 }
                                 
                                 await MainActor.run {
-
+                                    
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                                         
                                         self.link = .init(.payments(paymentsViewModel))
@@ -511,10 +483,90 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
         
         [.init(icon: .ic24BarcodeScanner2,
-              action: { [weak self] in
-                        self?.action.send(PaymentsTransfersViewModelAction
-                                            .ButtonTapped.Scanner())})
+               action: { [weak self] in
+            self?.action.send(PaymentsTransfersViewModelAction
+                .ButtonTapped.Scanner())})
         ]
+    }
+}
+
+//MARK: - Helpers
+
+extension PaymentsTransfersViewModel {
+    
+    func handle(latestPayment: LatestPaymentData) {
+        
+        switch (latestPayment.type, latestPayment) {
+        case (.phone, let paymentData as PaymentGeneralData):
+            
+            Task {
+                
+                do {
+                    
+                    let paymentsViewModel = try await PaymentsViewModel(source: .sfp(phone: paymentData.phoneNumber, bankId: paymentData.bankId), model: model) { [weak self] in
+                        
+                        self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
+                            
+                            self?.openContacts()
+                        }
+                    }
+                    
+                    await MainActor.run {
+                        
+                        self.link = .init(.payments(paymentsViewModel))
+                    }
+                    
+                } catch {
+                    
+                    await MainActor.run {
+                        
+                        self.alert = .init(title: "Error", message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения.", primary: .init(type: .cancel, title: "Ok", action: {}))
+                    }
+                    
+                    LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for SFP source with phone: \(paymentData.phoneNumber) and bankId: \(paymentData.bankId)  with error: \(error.localizedDescription)")
+                }
+            }
+            
+        case (.country, let paymentData as PaymentCountryData):
+            link = .init(.country(CountryPaymentView.ViewModel(countryData: paymentData, operatorsViewModel: .init(closeAction: { [weak self] in
+                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+            }, template: nil))))
+            
+        case (.service, let paymentData as PaymentServiceData):
+            link = .service(.init(model: model, closeAction: { [weak self] in
+                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+            }, paymentServiceData: paymentData))
+            
+        case (.transport, let paymentData as PaymentServiceData):
+            link = .transport(.init(model: model, closeAction: { [weak self] in
+                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+            }, paymentServiceData: paymentData))
+            
+        case (.internet, let paymentData as PaymentServiceData):
+            link = .internet(.init(model: model, closeAction: { [weak self] in
+                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+            }, paymentServiceData: paymentData))
+            
+        case (.mobile, let paymentData as PaymentServiceData):
+            link = .mobile(.init(paymentServiceData: paymentData, closeAction: { [weak self] in
+                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+            }))
+            
+        case (.taxAndStateService, let paymentData as PaymentServiceData):
+            bottomSheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
+            
+        default: //error matching
+            bottomSheet = .init(type: .exampleDetail(latestPayment.type.rawValue)) //TODO:
+        }
+    }
+    
+    func openContacts() {
+        
+        let contactsViewModel = ContactsViewModel(model, mode: .fastPayments(.contacts))
+        sheet = .init(type: .fastPayment(contactsViewModel))
+        bind(contactsViewModel)
     }
 }
 
@@ -523,7 +575,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
 extension PaymentsTransfersViewModel {
     
     struct BottomSheet: BottomSheetCustomizable {
-
+        
         let id = UUID()
         let type: Kind
         
@@ -614,7 +666,7 @@ enum PaymentsTransfersViewModelAction {
     }
     
     enum Close {
-    
+        
         struct BottomSheet: Action {}
         
         struct Sheet: Action {}

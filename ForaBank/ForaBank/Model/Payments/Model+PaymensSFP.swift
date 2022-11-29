@@ -45,7 +45,7 @@ extension Model {
             
             // amount
             let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
-            let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 10, maxAmount: product.balance))
+            let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: product.balance))
             
             return .init(parameters: [operatorParameter, headerParameter, phoneParameter, bankParameter, productParameter, messageParameter, amountParameter], front: .init(visible: [headerParameter.id, phoneParameterId, bankParameterId, productParameterId, messageParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [phoneParameterId, bankParameterId, productParameterId], processed: nil))
             
@@ -75,34 +75,35 @@ extension Model {
         switch parameterId {
         case Payments.Parameter.Identifier.amount.rawValue:
             
-            let productParameterId = Payments.Parameter.Identifier.product.rawValue
-            guard let amountParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterAmount,
-                  let productParameter = parameters.first(where: { $0.id == productParameterId}) as? Payments.ParameterProduct,
-                  let productId = productParameter.productId,
-                  let product = product(productId: productId),
-                  let currencySymbol = dictionaryCurrencySymbol(for: product.currency) else {
-                
+            guard let amountParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterAmount else {
                 return nil
             }
+        
+            var currencySymbol = amountParameter.currencySymbol
+            var maxAmount = amountParameter.validator.maxAmount
             
-            let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
-            if let phoneParameter = parameters.first(where: { $0.id == phoneParameterId }) as? Payments.ParameterInput,
-               let phoneParameterValue = phoneParameter.value {
-
-                if isBankClient(phone: phoneParameterValue) == true {
-                    
-                    return Payments.ParameterAmount(value: amountParameter.value, title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: product.balance))
-                    
-                } else {
-                    
-                    return Payments.ParameterAmount(value: amountParameter.value, title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 10, maxAmount: product.balance), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
-                }
+            let productParameterId = Payments.Parameter.Identifier.product.rawValue
+            if let productParameter = parameters.first(where: { $0.id == productParameterId}) as? Payments.ParameterProduct,
+               let productId = productParameter.productId,
+               let product = product(productId: productId),
+               let productCurrencySymbol = dictionaryCurrencySymbol(for: product.currency) {
+                
+                currencySymbol = productCurrencySymbol
+                maxAmount = product.balance
+            }
+            
+            let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
+            if let bankParameter = parameters.first(where: { $0.id == bankParameterId }),
+               let bankParameterValue = bankParameter.value,
+               isForaBank(bankId: bankParameterValue) == true {
+                
+                return Payments.ParameterAmount(value: amountParameter.value, title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: maxAmount), info: .action(title: "Без комиссии", .name("ic24Info"), .feeInfo))
                 
             } else {
                 
-                return Payments.ParameterAmount(value: amountParameter.value, title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 10, maxAmount: product.balance), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
+                return Payments.ParameterAmount(value: amountParameter.value, title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: maxAmount), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
             }
-            
+
         case Payments.Parameter.Identifier.header.rawValue:
             let codeParameterId = Payments.Parameter.Identifier.code.rawValue
             let parametersIds = parameters.map{ $0.id }

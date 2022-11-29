@@ -41,7 +41,7 @@ class PaymentsParameterViewModel: Identifiable {
     func update(source: PaymentsParameterRepresentable) {
         
         self.source = source
-        self.value = .init(with: source)
+        update(value: source.value)
     }
     
     func updateEditable(update: EditableUpdate) {
@@ -63,28 +63,28 @@ extension PaymentsParameterViewModel {
     struct Value {
  
         let id: Payments.Parameter.ID
-        let original: String?
+        let last: String?
         let current: String?
         
-        var isChanged: Bool { original != current }
+        var isChanged: Bool { last != current }
         
-        internal init(id: Payments.Parameter.ID, original: String?, current: String?) {
+        internal init(id: Payments.Parameter.ID, last: String?, current: String?) {
             
             self.id = id
-            self.original = original
+            self.last = last
             self.current = current
         }
         
         init(with representable: PaymentsParameterRepresentable) {
             
             self.id = representable.parameter.id
-            self.original = representable.parameter.value
+            self.last = representable.parameter.value
             self.current = representable.parameter.value
         }
         
         func updated(with value: String?) -> Value {
             
-            .init(id: id, original: original, current: value)
+            .init(id: id, last: current, current: value)
         }
     }
     

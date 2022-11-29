@@ -391,14 +391,14 @@ class MyProductsViewModel: ObservableObject {
     func updateNavBar(state: NavBarState) {
         
         let title: String
-        let leftButton: NavigationBarView.ViewModel.BaseButtonViewModel
-        let rightButton: NavigationBarView.ViewModel.ButtonViewModel
+        let leftButton: NavigationBarView.ViewModel.ItemViewModel
+        let rightButton: NavigationBarView.ViewModel.ButtonMarkedItemViewModel
         
         switch state {
         case .normal:
             
             title = "Мои продукты"
-            leftButton = NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: {})
+            leftButton = NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})
             rightButton =  .init(icon: .ic24BarInOrder, isDisabled: false,
                                  action: { [weak self] in
                                             self?.action.send(MyProductsViewModelAction.Tapped.EditMode(needSave: true)) })
@@ -406,7 +406,7 @@ class MyProductsViewModel: ObservableObject {
         case .ordersModeDisable:
             
             title = "Мои продукты"
-            leftButton = NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: {})
+            leftButton = NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})
             rightButton =  .init(icon: .ic24BarInOrder, isDisabled: true,
                                  action: { [weak self] in
                                             self?.action.send(MyProductsViewModelAction.Tapped.EditMode(needSave: true)) })
@@ -414,7 +414,7 @@ class MyProductsViewModel: ObservableObject {
         case .orderedNotMove:
             
             title = "Последовательность"
-            leftButton = NavigationBarView.ViewModel.ButtonViewModel
+            leftButton = NavigationBarView.ViewModel.ButtonItemViewModel
                 .init(icon: .ic24Close, action: { [weak self] in
                     self?.action.send(MyProductsViewModelAction.Tapped.EditMode(needSave: false)) })
 
@@ -425,7 +425,7 @@ class MyProductsViewModel: ObservableObject {
         case .orderedMoved:
             
             title = "Последовательность"
-            leftButton = NavigationBarView.ViewModel.ButtonViewModel
+            leftButton = NavigationBarView.ViewModel.ButtonItemViewModel
                 .init(icon: .ic24Close, action: { [weak self] in
                     self?.action.send(MyProductsViewModelAction.Tapped.EditMode(needSave: false)) })
 
@@ -450,8 +450,8 @@ class MyProductsViewModel: ObservableObject {
         }
         
         self.navigationBar.title = title
-        self.navigationBar.rightButtons = [ rightButton ]
-        self.navigationBar.leftButtons = [ leftButton ]
+        self.navigationBar.rightItems = [ rightButton ]
+        self.navigationBar.leftItems = [ leftButton ]
     }
     
 }
@@ -536,8 +536,8 @@ extension MyProductsViewModel {
     static let sample = MyProductsViewModel(
             navigationBar: .init(
             title: "Мои продукты",
-            leftButtons: [NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: {})],
-            rightButtons: [.init(icon: .ic24BarInOrder, action: {})],
+            leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})],
+            rightItems: [NavigationBarView.ViewModel.ButtonItemViewModel(icon: .ic24BarInOrder, action: {})],
             background: .mainColorsWhite),
             totalMoney: .sampleBalance,
             productSections: [.sample2, .sample3],
@@ -548,8 +548,8 @@ extension MyProductsViewModel {
     static let sampleOpenProduct = MyProductsViewModel(
             navigationBar: .init(
             title: "Мои продукты",
-            leftButtons: [NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: {})],
-            rightButtons: [.init(icon: .ic24Edit, action: { })],
+            leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})],
+            rightItems: [NavigationBarView.ViewModel.ButtonItemViewModel(icon: .ic24Edit, action: { })],
             background: .mainColorsWhite),
             totalMoney: .sampleBalance,
             productSections: [.sample2, .sample3],

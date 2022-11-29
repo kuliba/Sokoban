@@ -51,7 +51,7 @@ class PaymentsViewModel: ObservableObject {
         case let .selected(service):
             // single service for category
             let operation = try await model.paymentsOperation(with: service)
-            let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model)
+            let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model, closeAction: closeAction)
             self.init(content: .operation(operationViewModel), category: category, model: model, closeAction: closeAction)
             operationViewModel.rootActions = rootActions
         }
@@ -65,7 +65,7 @@ class PaymentsViewModel: ObservableObject {
         guard let category = Payments.Category.category(for: operation.service) else {
             throw Error.unableRecognizeCategoryForService(operation.service)
         }
-        let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model)
+        let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model, closeAction: closeAction)
         self.init(content: .operation(operationViewModel), category: category, model: model, closeAction: closeAction)
         operationViewModel.rootActions = rootActions
         

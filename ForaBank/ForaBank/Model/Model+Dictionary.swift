@@ -311,7 +311,13 @@ extension Model {
         return bankList.value
     }
     
-    //Operators&OperatorGroups
+    func isForaBank(bankId: BankData.ID) -> Bool {
+        
+        bankId == "100000000217"
+    }
+    
+    //MARK: Operators & OperatorGroups
+    
     func dictionaryAnywayOperatorGroups() -> [OperatorGroupData]? {
         
         return localAgent.load(type: [OperatorGroupData].self)
