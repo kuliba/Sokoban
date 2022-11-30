@@ -82,12 +82,14 @@ class MeToMeViewController: UIViewController {
         setupStackView()
         setupCardFromView()
         setupActions()
-        setupPaymentsUI()
+//        setupPaymentsUI()
         setupCardList { [weak self] error in
             if error != nil {
                 self?.showAlert(with: "Ошибка", and: error!)
             }
         }
+        
+        self.navigationController?.isNavigationBarHidden = true
     }
     
     func setupStackView() {

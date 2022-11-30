@@ -61,11 +61,12 @@ class AccountStatementController: UIViewController {
         title = "Выписка по счету"
         view.backgroundColor = .white
         cardFromField.model = startProduct
-        setupCloseButton()
+//        setupCloseButton()
         setupUI()
         setupActions()
         
         setButtonEnabled(button: generateButton, isEnabled: false)
+        self.navigationController?.isNavigationBarHidden = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -115,7 +116,7 @@ class AccountStatementController: UIViewController {
         
         view.addSubview(topLabel)
         topLabel.anchor(
-            top: view.topAnchor,
+            top: view.safeAreaLayoutGuide.topAnchor,
             left: view.leftAnchor,
             right: view.rightAnchor,
             paddingTop: 20,

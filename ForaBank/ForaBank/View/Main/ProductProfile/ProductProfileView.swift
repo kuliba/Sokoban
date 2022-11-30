@@ -101,13 +101,17 @@ struct ProductProfileView: View {
                         
                     case let .productStatement(productStatementViewModel):
                         ProductStatementView(viewModel: productStatementViewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.bottom)
+                            .navigationBarTitleDisplayMode(.inline)
+                            .navigationBarTitle("Выписка по счету")
                         
                     case let .meToMeExternal(meToMeExternalViewModel):
+                        
                         MeToMeExternalView(viewModel: meToMeExternalViewModel)
-                            .navigationBarTitle("", displayMode: .inline)
                             .edgesIgnoringSafeArea(.bottom)
+                            .navigationBarTitleDisplayMode(.inline)
+                            .navigationBarTitle("Пополнить со счета в другом банке")
+                            .navigationBarItems(trailing: Image(uiImage: UIImage(named: "logo-spb-mini") ?? UIImage()))
                         
                     case let .myProducts(myProductsViewModel):
                         MyProductsView(viewModel: myProductsViewModel)
