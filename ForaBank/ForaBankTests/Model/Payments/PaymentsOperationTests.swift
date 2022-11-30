@@ -623,3 +623,74 @@ extension PaymentsOperationTests {
         XCTAssertEqual(result, .rollback(stepIndex: 0))
     }
 }
+
+//MARK: - Updated Current Step Stage
+
+extension PaymentsOperationTests {
+    
+    func testUpdatedCurrentStepStage_Updated() throws {
+        
+        // given
+        let paramOne = Payments.ParameterMock(id: "one", value: "100")
+        let paramTwo = Payments.ParameterMock(id: "two", value: "200")
+        let stepOne = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back:  .init(stage: .local, required: ["one"], processed: nil))
+        
+        let paramThree = Payments.ParameterMock(id: "three", value: "300")
+        let stepTwo = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: [], isCompleted: true), back:  .init(stage: .remote(.confirm), required: ["three"], processed: nil))
+        
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne, stepTwo], visible: [])
+    
+        // when
+        let result = operation.updatedCurrentStepStage(reducer: reduce(service:parameters:stepIndex:stepStage:))
+        
+        // then
+        XCTAssertEqual(result.parameters.count, operation.parameters.count)
+        XCTAssertEqual(result.steps.count, operation.steps.count)
+        XCTAssertEqual(result.parameters[0].value, paramOne.value)
+        XCTAssertEqual(result.parameters[1].value, paramTwo.value)
+        XCTAssertEqual(result.parameters[2].value, paramThree.value)
+        XCTAssertEqual(result.steps[0].back.stage, stepOne.back.stage)
+        XCTAssertEqual(result.steps[1].back.stage, .remote(.complete))
+    }
+    
+    func testUpdatedCurrentStepStage_Unchanged() throws {
+        
+        // given
+        let paramOne = Payments.ParameterMock(id: "one", value: "200")
+        let paramTwo = Payments.ParameterMock(id: "two", value: "200")
+        let stepOne = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back:  .init(stage: .local, required: ["one"], processed: nil))
+        
+        let paramThree = Payments.ParameterMock(id: "three", value: "300")
+        let stepTwo = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: [], isCompleted: true), back:  .init(stage: .remote(.confirm), required: ["three"], processed: nil))
+        
+        let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne, stepTwo], visible: [])
+    
+        // when
+        let result = operation.updatedCurrentStepStage(reducer: reduce(service:parameters:stepIndex:stepStage:))
+        
+        // then
+        XCTAssertEqual(result.parameters.count, operation.parameters.count)
+        XCTAssertEqual(result.steps.count, operation.steps.count)
+        XCTAssertEqual(result.parameters[0].value, paramOne.value)
+        XCTAssertEqual(result.parameters[1].value, paramTwo.value)
+        XCTAssertEqual(result.parameters[2].value, paramThree.value)
+        XCTAssertEqual(result.steps[0].back.stage, stepOne.back.stage)
+        XCTAssertEqual(result.steps[1].back.stage, stepTwo.back.stage)
+    }
+    
+    func reduce(service: Payments.Service, parameters: [PaymentsParameterRepresentable], stepIndex: Int, stepStage: Payments.Operation.Stage) -> Payments.Operation.Stage? {
+        
+        guard let paramOneValue = parameters.first(where: { $0.id == "one"})?.value else {
+            return nil
+        }
+        
+        if paramOneValue == "100" {
+            
+            return .remote(.complete)
+            
+        } else {
+            
+            return .remote(.confirm)
+        }
+    }
+}

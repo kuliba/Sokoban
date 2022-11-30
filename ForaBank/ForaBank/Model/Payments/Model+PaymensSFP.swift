@@ -117,6 +117,28 @@ extension Model {
         }
     }
     
+    func paymentsProcessCurrentStepStageReducerSFP(service: Payments.Service, parameters: [PaymentsParameterRepresentable], stepIndex: Int, stepStage: Payments.Operation.Stage) -> Payments.Operation.Stage? {
+        
+        guard stepIndex == 0 else {
+            return nil
+        }
+        
+        let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
+        guard let bankParameterValue = parameters.first(where: { $0.id == bankParameterId })?.value else {
+            
+           return nil
+        }
+        
+        if isForaBank(bankId: bankParameterValue) == true {
+            
+            return .remote(.complete)
+            
+        } else {
+            
+            return .remote(.start)
+        }
+    }
+    
     // map additional data
     func paymentsParameterRepresentableSFP(_ operation: Payments.Operation, adittionalData: TransferAnywayResponseData.AdditionalData) throws -> PaymentsParameterRepresentable? {
         

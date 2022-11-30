@@ -69,7 +69,7 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
                     
                     // continue operation
                     model.action.send(ModelAction.Payment.Process.Request(operation: updatedOperation))
-                    rootActions?.spinner.show()
+                    self.action.send(PaymentsOperationViewModelAction.Spinner.Show())
                     
                 case _ as PaymentsConfirmViewModelAction.IcorrectCodeEnterred:
                     guard let codeItem = items.compactMap({ $0 as? PaymentsCodeView.ViewModel }).first else {
@@ -77,6 +77,16 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
                     }
                     
                     codeItem.action.send(PaymentsParameterViewModelAction.Code.EnterredCodeIncorrect())
+                    
+                case _ as PaymentsOperationViewModelAction.Spinner.Show:
+                    withAnimation {
+                        spinner = .init()
+                    }
+                    
+                case _ as PaymentsOperationViewModelAction.Spinner.Hide:
+                    withAnimation {
+                        spinner = nil
+                    }
      
                 default:
                     break
@@ -133,7 +143,7 @@ extension PaymentsConfirmViewModel {
     
     func updateFeedSection(code: String) {
         
-        guard let codeParameter = items.first(where: { $0.id == Payments.Parameter.Identifier.code.rawValue }) as? PaymentsInputView.ViewModel else {
+        guard let codeParameter = items.first(where: { $0.id == Payments.Parameter.Identifier.code.rawValue }) as? PaymentsCodeView.ViewModel else {
             return
         }
         
