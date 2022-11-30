@@ -79,7 +79,6 @@ extension ProductProfileHistoryView {
                     // isMapped = false  это согласованный костыль
                     updateSegmentedBar(productId: id, statements: storage.statements, isMapped: false)
                     
-                    
                     Task.detached(priority: .high) { [self] in
                         
                         let update = await reduce(content: content, statements: storage.statements, images: model.images.value, model: model) { [weak self] statementId in

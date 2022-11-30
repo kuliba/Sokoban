@@ -259,7 +259,7 @@ class CustomPopUpWithRateView: UIViewController {
     
     @objc func buttonAction(sender: UIButton!) {
         
-        let vc = InfoViewController(depositType: .fullWithAmount("Вы можете снять полную или частичную сумму выплаченных процентов, но не более \(String(describing: sumMax?.currencyFormatter()))"))
+        let vc = InfoViewController(depositType: .fullWithAmount("Вы можете снять полную или частичную сумму выплаченных процентов, но не более \(sumMax?.currencyFormatter() ?? "")"))
         
         let nav = UINavigationController(rootViewController: vc)
         nav.modalPresentationStyle = .custom

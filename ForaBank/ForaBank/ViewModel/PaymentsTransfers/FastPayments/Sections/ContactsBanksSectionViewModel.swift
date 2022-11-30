@@ -54,9 +54,13 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
         
         phone
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] text in
+            .sink { [unowned self] phone in
                 
-                if text?.digits.first == "7" {
+                guard let phone = phone else {
+                    return
+                }
+                
+                if phone.digits.first == "7" {
                     
                     self.options.selected = BankType.sfp.rawValue
                     bankType.value = BankType.sfp

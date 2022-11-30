@@ -206,9 +206,12 @@
             
             bottomView.doneButtonIsEnabled(newText.isEmpty)
             
-            IQKeyboardManager.shared.enable = true
-            IQKeyboardManager.shared.enableAutoToolbar = true
-            IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
+                
+                IQKeyboardManager.shared.enable = true
+                IQKeyboardManager.shared.enableAutoToolbar = true
+                IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+            }
         }
         
         override func viewDidDisappear(_ animated: Bool) {

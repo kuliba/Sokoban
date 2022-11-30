@@ -83,7 +83,7 @@ extension DateExtensionsTests {
         
         // given
         
-        //Monday, 17 October 2022 20:29:02
+        //Monday, 17 October 2022 20:29:02 - UTC // Monday, 17 October 2022 23:29:02 - MSK
         let miliseconds = 1666038542000
         
         // when
