@@ -33,6 +33,7 @@ struct OpenDepositView: View {
                 }
             }
         }
+        .navigationBarTitle(viewModel.navigationBar.title, displayMode: .inline)
         .ignoresSafeArea()
         .navigationBar(with: viewModel.navigationBar)
     }

@@ -112,14 +112,13 @@ class BottomPopUpViewAdapter: UIViewController {
                 self.bottomConstraint.constant = 0
                 self.popupView.layer.cornerRadius = 20
                 self.overlayView.alpha = 0.3
-                self.navigationController?.isNavigationBarHidden = true
             case .closed:
+                
+                
                 self.bottomConstraint.constant = self.hight
                 self.popupView.layer.cornerRadius = 0
                 self.overlayView.alpha = 0
-                self.navigationController?.isNavigationBarHidden = true
             }
-            self.view.layoutIfNeeded()
         })
         
         // the transition completion block
@@ -228,8 +227,6 @@ class BottomPopUpViewAdapter: UIViewController {
         subView.trailingAnchor.constraint(equalTo: popupView.trailingAnchor).isActive = true
         subView.topAnchor.constraint(equalTo: popupView.topAnchor, constant: 20).isActive = true
         subView.bottomAnchor.constraint(equalTo: popupView.bottomAnchor).isActive = true
-        
-        self.navigationController?.isNavigationBarHidden = true
     }
 }
 

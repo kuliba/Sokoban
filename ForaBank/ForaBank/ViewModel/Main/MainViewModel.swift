@@ -430,7 +430,7 @@ class MainViewModel: ObservableObject, Resetable {
                 case _ as TemplatesListViewModelAction.AddTemplate:
                 
                     self.action.send(MainViewModelAction.Close.Link())
-                    if let productFirst = model.products.value.values.flatMap({ $0 }).first {
+                    if let productFirst = model.allProducts.first {
                 
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
                             self.action.send(MainViewModelAction.Show.ProductProfile(productId: productFirst.id))
