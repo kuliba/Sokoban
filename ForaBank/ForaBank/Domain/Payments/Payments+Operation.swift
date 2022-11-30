@@ -225,6 +225,31 @@ extension Payments.Operation {
         return .init(service: service, source: source, steps: updatedSteps, visible: visible)
     }
     
+    /// Updates stage of current step if required based on service and parameters.
+    /// - Parameter reducer: returns new stage value (optional)
+    /// - Returns: updated operation
+    func updatedCurrentStepStage(reducer: (Payments.Service, [PaymentsParameterRepresentable], Int, Payments.Operation.Stage) -> Payments.Operation.Stage?) -> Payments.Operation {
+        
+        guard steps.isEmpty == false else {
+            
+            return .init(service: service, source: source, steps: steps, visible: visible)
+        }
+        
+        let currentStepIndex = steps.count - 1
+        let currentStepStage = steps[currentStepIndex].back.stage
+        guard let newStage = reducer(service, parameters, currentStepIndex, currentStepStage) else {
+            
+            return .init(service: service, source: source, steps: steps, visible: visible)
+        }
+
+        var updatedSteps = steps
+        let currentStep = updatedSteps.removeLast()
+        let updatedCurrentStep = currentStep.updated(stage: newStage)
+        updatedSteps.append(updatedCurrentStep)
+        
+        return .init(service: service, source: source, steps: updatedSteps, visible: visible)
+    }
+    
     /// Generates next action for payment process
     /// - Returns: payments action
     func nextAction() throws -> Action {

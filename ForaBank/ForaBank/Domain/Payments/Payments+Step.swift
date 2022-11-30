@@ -154,6 +154,14 @@ extension Payments.Operation.Step {
         return .init(parameters: updatedParameters, front: front, back: back)
     }
     
+    /// Updates back stage for step
+    /// - Parameter stage: back stage value
+    /// - Returns: updated step
+    func updated(stage: Payments.Operation.Stage) -> Payments.Operation.Step {
+        
+        .init(parameters: parameters, front: front, back: .init(stage: stage, required: back.required, processed: back.processed))
+    }
+    
     /// Checks if step contains parameter with id
     /// - Parameter parameterId: parameter id to check
     /// - Returns: true if contains

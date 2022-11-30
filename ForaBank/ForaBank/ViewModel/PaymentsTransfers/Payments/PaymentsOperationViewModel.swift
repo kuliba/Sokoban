@@ -21,6 +21,7 @@ class PaymentsOperationViewModel: ObservableObject {
     @Published var isLinkActive: Bool = false
     @Published var bottomSheet: BottomSheet?
     @Published var sheet: Sheet?
+    @Published var spinner: SpinnerView.ViewModel?
         
     internal let closeAction: () -> Void
     internal let operation: CurrentValueSubject<Payments.Operation, Never>
@@ -104,7 +105,7 @@ class PaymentsOperationViewModel: ObservableObject {
                 switch action {
                 case let payload as ModelAction.Payment.Process.Response:
                     
-                    rootActions?.spinner.hide()
+                    self.action.send(PaymentsOperationViewModelAction.Spinner.Hide())
                    
                     switch payload.result {
                     case .step(let operation):
@@ -145,11 +146,14 @@ class PaymentsOperationViewModel: ObservableObject {
                     // check if auto continue required
                     if model.paymentsIsAutoContinueRequired(operation: updatedOperation, updated: payload.parameterId) == true {
                         
-                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "Continue operation: \(updatedOperation)")
+                        // update stage
+                        let updatedStageOperation = updatedOperation.updatedCurrentStepStage(reducer: model.paymentsProcessCurrentStepStageReducer(service:parameters:stepIndex:stepStage:))
                         
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "Continue operation: \(updatedStageOperation)")
+  
                         // auto continue operation
-                        model.action.send(ModelAction.Payment.Process.Request(operation: updatedOperation))
-                        rootActions?.spinner.show()
+                        model.action.send(ModelAction.Payment.Process.Request(operation: updatedStageOperation))
+                        self.action.send(PaymentsOperationViewModelAction.Spinner.Show())
                         
                     } else {
            
@@ -169,11 +173,14 @@ class PaymentsOperationViewModel: ObservableObject {
                     // update operation with parameters
                     let updatedOperation = Self.reduce(operation: operation.value, items: items)
                     
-                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "Continue operation: \(updatedOperation)")
+                    // update stage
+                    let updatedStageOperation = updatedOperation.updatedCurrentStepStage(reducer: model.paymentsProcessCurrentStepStageReducer(service:parameters:stepIndex:stepStage:))
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "Continue operation: \(updatedStageOperation)")
                     
                     // continue operation
-                    model.action.send(ModelAction.Payment.Process.Request(operation: updatedOperation))
-                    rootActions?.spinner.show()
+                    model.action.send(ModelAction.Payment.Process.Request(operation: updatedStageOperation))
+                    self.action.send(PaymentsOperationViewModelAction.Spinner.Show())
                     
                 case _ as PaymentsOperationViewModelAction.CloseLink:
                     link = nil
@@ -183,6 +190,16 @@ class PaymentsOperationViewModel: ObservableObject {
                         return
                     }
                     confirmViewModel.action.send(PaymentsConfirmViewModelAction.IcorrectCodeEnterred())
+                    
+                case _ as PaymentsOperationViewModelAction.Spinner.Show:
+                    withAnimation {
+                        spinner = .init()
+                    }
+                    
+                case _ as PaymentsOperationViewModelAction.Spinner.Hide:
+                    withAnimation {
+                        spinner = nil
+                    }
                     
                 default:
                     break
@@ -431,6 +448,13 @@ enum PaymentsOperationViewModelAction {
     struct ShowPopUpSelectView: Action {
         
         let viewModel: PaymentsPopUpSelectView.ViewModel
+    }
+    
+    enum Spinner {
+    
+        struct Show: Action {}
+        
+        struct Hide: Action {}
     }
     
     struct CloseLink: Action {}

@@ -165,6 +165,7 @@ struct PaymentsOperationView: View {
         }
         .ignoresSafeArea(.container, edges: .bottom)
         .navigationBar(with: viewModel.navigationBar)
+        .modifier(SpinnerViewModifier(spinnerViewModel: $viewModel.spinner))
         .sheet(item: $viewModel.sheet, content: { sheet in
             
             switch sheet.type {
@@ -183,6 +184,24 @@ struct PaymentsOperationView: View {
 }
 
 extension PaymentsOperationView {
+    
+    struct SpinnerViewModifier: ViewModifier {
+        
+        @Binding var spinnerViewModel: SpinnerView.ViewModel?
+        
+        func body(content: Content) -> some View {
+            
+            ZStack {
+                
+                content
+                
+                if let spinnerViewModel = spinnerViewModel{
+                    
+                    SpinnerView(viewModel: spinnerViewModel)
+                }
+            }
+        }
+    }
     
     struct TopBackgroundModifier: ViewModifier {
         

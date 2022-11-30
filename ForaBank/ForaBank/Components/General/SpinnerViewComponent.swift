@@ -35,7 +35,7 @@ struct SpinnerView: View {
             
             Color.black
                 .opacity(0.3)
-                .edgesIgnoringSafeArea(.all)
+                .ignoresSafeArea()
             
             SpinnerRefreshView(icon: viewModel.icon)
         }

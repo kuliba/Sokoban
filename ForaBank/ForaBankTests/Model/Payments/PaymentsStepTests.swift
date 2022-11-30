@@ -433,3 +433,30 @@ extension PaymentsStepTests {
         }
     }
 }
+
+//MARK: - Updated Stage
+
+extension PaymentsStepTests {
+    
+    func testUpdatedStage() throws {
+        
+        // given
+        let paramOne = Payments.ParameterMock(id: "one", value: "100")
+        let paramTwo = Payments.ParameterMock(id: "two", value: nil)
+        let step = Payments.Operation.Step(parameters: [paramOne, paramTwo], front: .init(visible: [], isCompleted: false), back: .init(stage: .local, required: ["one"], processed: nil))
+
+        // when
+        let result = step.updated(stage: .remote(.complete))
+        
+        // then
+        XCTAssertEqual(result.parameters.count, 2)
+        XCTAssertEqual(result.parameters[0].value, "100")
+        XCTAssertNil(result.parameters[1].value)
+        XCTAssertEqual(result.front.visible, step.front.visible)
+        XCTAssertEqual(result.front.isCompleted, false)
+        
+        XCTAssertEqual(result.back.stage, .remote(.complete))
+        XCTAssertEqual(result.back.required, step.back.required)
+        XCTAssertEqual(result.back.processed, step.back.processed)
+    }
+}

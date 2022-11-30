@@ -309,6 +309,17 @@ extension Model {
             }
         }
     }
+    
+    func paymentsProcessCurrentStepStageReducer(service: Payments.Service, parameters: [PaymentsParameterRepresentable], stepIndex: Int, stepStage: Payments.Operation.Stage) -> Payments.Operation.Stage? {
+        
+        switch service {
+        case .sfp:
+            return paymentsProcessCurrentStepStageReducerSFP(service: service, parameters: parameters, stepIndex: stepIndex, stepStage: stepStage)
+            
+        default:
+            return nil
+        }
+    }
 }
 
 //MARK: - Remote Process
@@ -365,11 +376,15 @@ extension Model {
         
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Remote: COMPLETE: parameters \(process) requested for operation: \(operation.shortDescription)")
         
-        //FIXME: optional code value?
-        let response = try await paymentsTransferComplete(code: "")
-        let success = try Payments.Success(with: response, operation: operation)
-        
-        return success
+        switch operation.service {
+        case .sfp:
+            let response = try await paymentsTransferSFPProcessFora(parameters: operation.parameters, process: process)
+            let success = try Payments.Success(with: response, operation: operation)
+            return success
+            
+        default:
+            throw Payments.Error.unsupported
+        }
     }
 }
 
