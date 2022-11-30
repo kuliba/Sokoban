@@ -218,7 +218,19 @@ class ProductProfileViewModel: ObservableObject {
                     
                 case _ as ProductProfileViewModelAction.Close.TextFieldAlert:
                     textFieldAlert = nil
-                    
+                
+                case _ as ProductProfileViewModelAction.Show.MeToMeExternal:
+                    if let productData = productData as? ProductLoanData, let loanAccount = self.model.products.value[.account]?.first(where: {$0.number == productData.settlementAccount}) {
+                        
+                        let meToMeExternalViewModel = MeToMeExternalViewModel(productTo: loanAccount, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())})
+                        self.link = .meToMeExternal(meToMeExternalViewModel)
+                    } else {
+                        
+                        let meToMeExternalViewModel = MeToMeExternalViewModel(productTo: productData, closeAction: { [weak self] in
+                            self?.action.send(ProductProfileViewModelAction.Close.Link())
+                        })
+                        self.link = .meToMeExternal(meToMeExternalViewModel)
+                    }
                 default:
                     break
                 }
@@ -764,15 +776,7 @@ class ProductProfileViewModel: ObservableObject {
                             }
                             
                         case .refillFromOtherBank:
-                            if let productData = productData as? ProductLoanData, let loanAccount = self.model.products.value[.account]?.first(where: {$0.number == productData.settlementAccount}) {
-                                
-                                let meToMeExternalViewModel = MeToMeExternalViewModel(productTo: loanAccount, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())})
-                                self.link = .meToMeExternal(meToMeExternalViewModel)
-                            } else {
-                                
-                                let meToMeExternalViewModel = MeToMeExternalViewModel(productTo: productData, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())})
-                                self.link = .meToMeExternal(meToMeExternalViewModel)
-                            }
+                            self.action.send(ProductProfileViewModelAction.Show.MeToMeExternal())
                             
                         case .conditions:
                             self.model.action.send(ModelAction.Products.DepositConditionsPrintForm.Request(depositId: productData.id))
@@ -1327,6 +1331,8 @@ enum ProductProfileViewModelAction {
             
             let viewModel: ProductProfileOptionsPannelView.ViewModel
         }
+        
+        struct MeToMeExternal: Action {}
         
         struct PlacesMap: Action {}
         
