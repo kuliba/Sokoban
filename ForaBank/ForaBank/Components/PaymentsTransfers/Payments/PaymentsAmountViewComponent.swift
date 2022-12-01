@@ -15,7 +15,7 @@ extension PaymentsAmountView {
     class ViewModel: PaymentsParameterViewModel, PaymentsParameterViewModelContinuable, ObservableObject {
         
         @Published var title: String
-        var textField: TextFieldFormatableView.ViewModel
+        let textField: TextFieldFormatableView.ViewModel
         @Published var currencySwitch: CurrencySwitchViewModel?
         @Published var transferButton: TransferButtonViewModel
         @Published var info: InfoViewModel?
@@ -107,8 +107,7 @@ extension PaymentsAmountView {
                 return
             }
             
-            textField = .init(parameterAmount.amount, currencySymbol: parameterAmount.currencySymbol)
-            bind(textField: textField)
+            textField.update(parameterAmount.amount, currencySymbol: parameterAmount.currencySymbol)
             actionTitle = parameterAmount.transferButtonTitle
             
             if let infoData = parameterAmount.info {

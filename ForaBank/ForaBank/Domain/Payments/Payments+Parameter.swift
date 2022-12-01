@@ -264,6 +264,27 @@ extension Payments {
         }
     }
     
+    struct ParameterInputPhone: PaymentsParameterRepresentable {
+        
+        let parameter: Parameter
+        let title: String
+        let isEditable: Bool
+        let placement: Payments.Parameter.Placement
+ 
+        init(_ parameter: Parameter, title: String, isEditable: Bool = true, placement: Payments.Parameter.Placement = .feed) {
+            
+            self.parameter = parameter
+            self.title = title
+            self.isEditable = isEditable
+            self.placement = placement
+        }
+        
+        func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
+            
+            ParameterInputPhone(.init(id: parameter.id, value: value), title: title, isEditable: isEditable, placement: placement)
+        }
+    }
+    
     struct ParameterCode: PaymentsParameterRepresentable {
         
         let parameter: Parameter
@@ -435,7 +456,7 @@ extension Payments {
             ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, transferButtonTitle: transferButtonTitle, validator: validator, info: info, isEditable: isEditable)
         }
         
-        struct Validator: ValidatorProtocol {
+        struct Validator: ValidatorProtocol, Equatable {
             
             let minAmount: Double
             let maxAmount: Double?
@@ -457,11 +478,11 @@ extension Payments {
             }
         }
         
-        enum Info {
+        enum Info: Equatable {
             
             case action(title: String, Icon, Action)
             
-            enum Icon {
+            enum Icon: Equatable {
                 
                 case image(ImageData)
                 case name(String)

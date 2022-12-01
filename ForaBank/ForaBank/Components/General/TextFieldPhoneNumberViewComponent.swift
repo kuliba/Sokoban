@@ -13,6 +13,7 @@ extension TextFieldPhoneNumberView {
     
     class ViewModel: ObservableObject {
         
+        let style: Style
         @Published var text: String?
         @Published var state: State
         var dismissKeyboard: () -> Void
@@ -26,8 +27,9 @@ extension TextFieldPhoneNumberView {
         
         var bindings = Set<AnyCancellable>()
         
-        init(text: String? = nil, placeHolder: PlaceHolder, state: State = .idle, toolbar: ToolbarViewModel? = nil, filterSymbols: [Character]? = nil, firstDigitReplaceList: [Replace]? = nil, phoneNumberFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater()) {
+        init(style: Style = .general, text: String? = nil, placeHolder: PlaceHolder, state: State = .idle, toolbar: ToolbarViewModel? = nil, filterSymbols: [Character]? = nil, firstDigitReplaceList: [Replace]? = nil, phoneNumberFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater()) {
             
+            self.style = style
             self.text = text
             self.placeHolder = placeHolder
             self.state = state
@@ -61,11 +63,18 @@ extension TextFieldPhoneNumberView {
             case editing
         }
         
+        enum Style {
+            
+            case general
+            case payments
+        }
+        
         enum PlaceHolder {
             
             case contacts
             case banks
             case countries
+            case text(String)
             
             var title: String {
                 
@@ -73,6 +82,7 @@ extension TextFieldPhoneNumberView {
                 case .contacts: return "Номер телефона или имя"
                 case .banks: return "Введите название банка"
                 case .countries: return "Введите название страны"
+                case let .text(text): return text
                 }
             }
         }
@@ -121,12 +131,20 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
     func makeUIView(context: Context) -> UITextField {
         
         textField.delegate = context.coordinator
-        textField.keyboardType = .default
         textField.returnKeyType = .done
         textField.autocorrectionType = .no
         textField.shouldHideToolbarPlaceholder = false
         textField.spellCheckingType = .no
         textField.placeholder = viewModel.placeHolder.title
+        
+        switch viewModel.style {
+        case .general:
+            textField.keyboardType = .default
+            
+        case .payments:
+            textField.keyboardType = .phonePad
+            textField.font = .init(name: "Inter-Medium", size: 14.0)
+        }
         
         viewModel.dismissKeyboard = { textField.resignFirstResponder() }
         
