@@ -135,16 +135,27 @@ struct PaymentsOperationView: View {
                         
                         switch item {
                         case let continueViewModel as PaymentsContinueButtonView.ViewModel:
-                            PaymentsContinueButtonView(viewModel: continueViewModel)
+                            VStack(spacing: 0) {
+                                
+                                PaymentsContinueButtonView(viewModel: continueViewModel)
+                                
+                                Color.clear
+                                    .frame(height: 33)
+                            }
                             
                         case let amountViewModel as PaymentsAmountView.ViewModel:
-                            PaymentsAmountView(viewModel: amountViewModel)
+                            VStack(spacing: 0) {
+                                
+                                PaymentsAmountView(viewModel: amountViewModel)
+                                
+                                Color.mainColorsBlackMedium
+                                    .frame(height: 33)
+                            }
                             
                         default:
                             EmptyView()
                         }
                     }
-                    .padding(.bottom, 33)
                     .modifier(BottomBackgroundModifier())
                     .background(
                         GeometryReader { proxy in
