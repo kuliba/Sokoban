@@ -21,7 +21,7 @@ class PaymentsParameterViewModel: Identifiable {
     var id: Payments.Parameter.ID { source.parameter.id }
     var result: Payments.Parameter { .init(id: id, value: value.current) }
     
-    var parameterValue: ((Payments.Parameter.ID) -> Payments.Parameter.Value )?
+    var parameterValue: ((Payments.Parameter.ID) -> Payments.Parameter.Value)?
     
     private(set) var source: PaymentsParameterRepresentable
     internal var bindings = Set<AnyCancellable>()

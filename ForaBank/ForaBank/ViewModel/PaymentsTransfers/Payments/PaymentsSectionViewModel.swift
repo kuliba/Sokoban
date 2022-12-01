@@ -105,6 +105,13 @@ class PaymentsFeedSectionViewModel: PaymentsSectionViewModel {
                     case _ as PaymentsParameterViewModelAction.Input.ContactSelector.Close:
                         self.action.send(PaymentsSectionViewModelAction.ContactSelector.Close())
                         
+                    //MARK: InputPhoneComponent
+                    case let payload as PaymentsParameterViewModelAction.InputPhone.ContactSelector.Show:
+                        self.action.send(PaymentsSectionViewModelAction.ContactSelector.Show(viewModel: payload.viewModel))
+                        
+                    case _ as PaymentsParameterViewModelAction.InputPhone.ContactSelector.Close:
+                        self.action.send(PaymentsSectionViewModelAction.ContactSelector.Close())
+                        
                     default:
                         break
                     }
@@ -320,6 +327,9 @@ extension PaymentsSectionViewModel {
             
         case let parameterInput as Payments.ParameterInput:
             return PaymentsInputView.ViewModel(with: parameterInput, model: model)
+            
+        case let parameterInputPhone as Payments.ParameterInputPhone:
+            return PaymentsInputPhoneView.ViewModel(with: parameterInputPhone, model: model)
             
         case let paremetrName as Payments.ParameterName:
             return PaymentsNameView.ViewModel(with: paremetrName)

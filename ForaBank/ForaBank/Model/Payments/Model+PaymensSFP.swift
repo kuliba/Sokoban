@@ -22,8 +22,7 @@ extension Model {
             
             // phone
             let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
-            let phoneParameterIcon = ImageData(named: "ic24Smartphone") ?? .parameterSample
-            let phoneParameter = Payments.ParameterInput(.init(id: phoneParameterId, value: nil), icon: phoneParameterIcon, title: "Номер телефона получателя", validator: .init(minLength: 8, maxLength: nil, regEx: nil), actionButtonType: .contact)
+            let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneParameterId, value: nil), title: "Номер телефона получателя")
             
             // bank
             let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
@@ -59,7 +58,15 @@ extension Model {
 
         switch parameterId {
         case Payments.Parameter.Identifier.sfpPhone.rawValue:
-            return phone
+            //FIXME: fix on server for latest operations and remove this
+            if phone.digits.prefix(1) != "7" {
+                
+                return "+7\(phone.digits)"
+                
+            } else {
+                
+                return "+\(phone.digits)"
+            }
             
         case Payments.Parameter.Identifier.sfpBank.rawValue:
             return bankId
@@ -92,17 +99,22 @@ extension Model {
                 maxAmount = product.balance
             }
             
+            var isForaBankValue: Bool? = nil
+            
             let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
             if let bankParameter = parameters.first(where: { $0.id == bankParameterId }),
-               let bankParameterValue = bankParameter.value,
-               isForaBank(bankId: bankParameterValue) == true {
-                
-                return Payments.ParameterAmount(value: amountParameter.value, title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: maxAmount), info: .action(title: "Без комиссии", .name("ic24Info"), .feeInfo))
-                
-            } else {
-                
-                return Payments.ParameterAmount(value: amountParameter.value, title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: maxAmount), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
+               let bankParameterValue = bankParameter.value {
+             
+                isForaBankValue = isForaBank(bankId: bankParameterValue)
             }
+            
+            let updatedAmountParameter = amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount, isForaBank: isForaBankValue)
+            
+            guard updatedAmountParameter.currencySymbol != amountParameter.currencySymbol || updatedAmountParameter.validator != amountParameter.validator || updatedAmountParameter.info != amountParameter.info else {
+                return nil
+            }
+            
+            return updatedAmountParameter
 
         case Payments.Parameter.Identifier.header.rawValue:
             let codeParameterId = Payments.Parameter.Identifier.code.rawValue
@@ -193,3 +205,17 @@ extension Model {
     }
 }
 
+extension Payments.ParameterAmount {
+    
+    func updated(currencySymbol: String, maxAmount: Double?, isForaBank: Bool?) -> Payments.ParameterAmount {
+        
+        if isForaBank == true {
+            
+            return Payments.ParameterAmount(value: value, title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: maxAmount), info: .action(title: "Без комиссии", .name("ic24Info"), .feeInfo))
+            
+        } else {
+            
+            return Payments.ParameterAmount(value: value, title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: maxAmount), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
+        }
+    }
+}

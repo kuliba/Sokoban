@@ -358,13 +358,12 @@ extension PaymentsOperationViewModel {
     }
     
     func updateParameterValueCallback(items: [PaymentsParameterViewModel]) {
-        
-        let results = items.map{ $0.result }
+
         for item in items {
             
-            item.parameterValue = {  parameterId in
+            item.parameterValue = { [weak self] parameterId in
                 
-                results.first(where: { $0.id == parameterId })?.value
+                self?.items.first(where: { $0.result.id == parameterId })?.result.value
             }
         }
     }

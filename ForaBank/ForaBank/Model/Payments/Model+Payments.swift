@@ -302,6 +302,9 @@ extension Model {
                     return nil
                 }
                 
+                //FIXME: check if currency & validator changed before return
+                // see: paymentsProcessDependencyReducerSFP
+                
                 return Payments.ParameterAmount(value: amountParameter.value, title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: product.balance))
                 
             default:

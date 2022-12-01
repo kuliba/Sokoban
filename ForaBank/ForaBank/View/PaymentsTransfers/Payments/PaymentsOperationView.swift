@@ -46,6 +46,9 @@ struct PaymentsOperationView: View {
                             case let inputViewModel as PaymentsInputView.ViewModel:
                                 PaymentsInputView(viewModel: inputViewModel)
                                 
+                            case let inputPhoneViewModel as PaymentsInputPhoneView.ViewModel:
+                                PaymentsInputPhoneView(viewModel: inputPhoneViewModel)
+                                
                             case let infoViewModel as PaymentsInfoView.ViewModel:
                                 PaymentsInfoView(viewModel: infoViewModel)
                                 

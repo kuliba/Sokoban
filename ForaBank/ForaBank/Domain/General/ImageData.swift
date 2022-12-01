@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SwiftUI
 
-struct ImageData: Codable {
+struct ImageData: Codable, Equatable {
 
     let data: Data
     

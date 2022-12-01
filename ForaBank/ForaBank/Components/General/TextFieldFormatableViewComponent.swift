@@ -46,8 +46,8 @@ extension TextFieldFormatableView {
         internal init(type: Kind = .general, value: Double, formatter: NumberFormatter, isEnabled: Bool = true, isEditing: Bool = false, limit: Int? = nil, toolbar: ToolbarViewModel? = nil) {
             
             self.type = type
-            self.formatter = formatter
             self.text = formatter.string(from: NSNumber(value: value))
+            self.formatter = formatter
             self.isEnabled = isEnabled
             self.isEditing = isEditing
             self.limit = limit
@@ -61,6 +61,13 @@ extension TextFieldFormatableView {
             self.init(value: value, formatter: .currency(with: currencySymbol), isEnabled: isEnabled, limit: 9, toolbar: .init(doneButton: .init(isEnabled: true) {
                     UIApplication.shared.endEditing()
             }))
+        }
+        
+        func update(_ value: Double, isEnabled: Bool = true, currencySymbol: String) {
+            
+            let formatter = NumberFormatter.currency(with: currencySymbol)
+            self.text = formatter.string(from: NSNumber(value: value))
+            self.formatter = formatter
         }
     }
 }
@@ -134,23 +141,16 @@ struct TextFieldFormatableView: UIViewRepresentable {
     
     func makeCoordinator() -> Coordinator {
         
-        Coordinator(viewModel: viewModel, text: $viewModel.text, formatter: viewModel.formatter, limit: viewModel.limit)
+        Coordinator(viewModel: viewModel)
     }
     
     class Coordinator: NSObject, UITextFieldDelegate {
         
         @ObservedObject var viewModel: ViewModel
         
-        var text: Binding<String?>
-        var formatter: NumberFormatter
-        var limit: Int?
-        
-        init(viewModel: ViewModel, text: Binding<String?>, formatter: NumberFormatter, limit: Int?) {
+        init(viewModel: ViewModel) {
             
             self.viewModel = viewModel
-            self.text = text
-            self.formatter = formatter
-            self.limit = limit
         }
         
         func textFieldDidChangeSelection(_ textField: UITextField) {
@@ -175,14 +175,14 @@ struct TextFieldFormatableView: UIViewRepresentable {
             switch viewModel.type {
             case .general:
                 
-                textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter, limit: limit)
-                text.wrappedValue = textField.text
+                textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: viewModel.formatter, limit: viewModel.limit)
+                viewModel.text = textField.text
                 updateCursorPosition(textField)
                 
             case .currency:
                 
-                textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter, limit: limit, type: .currency)
-                text.wrappedValue = textField.text
+                textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: viewModel.formatter, limit: viewModel.limit, type: .currency)
+                viewModel.text = textField.text
             }
             
             return false
