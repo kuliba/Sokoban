@@ -168,7 +168,7 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         }
         
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-            
+        
             let result = TextFieldPhoneNumberView.updateMasked(value: textField.text, inRange: range, update: string, firstDigitReplace: viewModel.firstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
             
             textField.text = result
@@ -216,7 +216,7 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
             let rangeEnd = value.index(value.startIndex, offsetBy: inRange.upperBound)
             updatedValue.replaceSubrange(rangeStart..<rangeEnd, with: update)
             
-            let filterdValue = updatedValue.replacingOccurrences(of: " ", with: "").filter { char in
+            let filteredValue = updatedValue.replacingOccurrences(of: " ", with: "").filter { char in
                 
                 if let filterSymbols = filterSymbols {
                     
@@ -232,7 +232,7 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
                 return true
             }
             
-            guard filterdValue.isNumeric else {
+            guard filteredValue.isNumeric || phoneFormatter.isValid(update) else {
                 return updatedValue.isEmpty ? nil : updatedValue
             }
             

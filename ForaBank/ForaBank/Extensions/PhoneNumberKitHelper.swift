@@ -22,8 +22,9 @@ struct PhoneNumberKitFormater: PhoneNumberFormaterProtocol {
     
     func format(_ phoneNumber: String) -> String {
         
-        guard let phoneNumberParsed = try? phoneNumberKit.parse(phoneNumber, ignoreType: true)
-        else { return phoneNumber }
+        guard let phoneNumberParsed = try? phoneNumberKit.parse(phoneNumber, ignoreType: true) else {
+            return phoneNumber
+        }
                 
         return phoneNumberKit.format(phoneNumberParsed, toType: .international)
     }

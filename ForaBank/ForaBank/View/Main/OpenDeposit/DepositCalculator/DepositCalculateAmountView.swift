@@ -73,10 +73,13 @@ struct DepositCalculateAmountView: View {
                             .fixedSize()
                             .onAppear {
                                 
-                                IQKeyboardManager.shared.enable = true
-                                IQKeyboardManager.shared.enableAutoToolbar = true
-                                IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
-                                IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
+                                    
+                                    IQKeyboardManager.shared.enable = true
+                                    IQKeyboardManager.shared.enableAutoToolbar = true
+                                    IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+                                    IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
+                                }
                             }
                             .onDisappear {
                                 
