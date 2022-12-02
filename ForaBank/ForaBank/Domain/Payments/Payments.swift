@@ -322,6 +322,18 @@ extension Payments {
     }
 }
 
+//MARK: - Antifraud
+
+extension Payments {
+    
+    struct AntifraudData {
+        
+        let payeeName: String
+        let phone: String
+        let amount: String
+    }
+}
+
 //MARK: - Mock
 
 extension Payments {

@@ -117,7 +117,9 @@ class PaymentsOperationViewModel: ObservableObject {
                             self?.link = nil
                         }
                         confirmViewModel.rootActions = rootActions
+                        bind(confirmViewModel: confirmViewModel)
                         link = .confirm(confirmViewModel)
+                        
                         
                         // complete and failed handled on PaymentsViewModel side
                     default:
@@ -184,6 +186,9 @@ class PaymentsOperationViewModel: ObservableObject {
                     
                 case _ as PaymentsOperationViewModelAction.CloseLink:
                     link = nil
+                    
+                case _ as PaymentsOperationViewModelAction.CloseBottomSheet:
+                    bottomSheet = nil
                     
                 case _ as PaymentsOperationViewModelAction.IcorrectCodeEnterred:
                     guard case .confirm(let confirmViewModel) = link else {
@@ -264,6 +269,23 @@ class PaymentsOperationViewModel: ObservableObject {
                     
                 }.store(in: &bindings)
         }
+    }
+    
+    private func bind(confirmViewModel: PaymentsConfirmViewModel) {
+        
+        confirmViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as PaymentsConfirmViewModelAction.CancelOperation:
+                    self.action.send(PaymentsOperationViewModelAction.CancelOperation(amount: payload.amount, reason: payload.reason))
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
 }
 
@@ -415,9 +437,12 @@ extension PaymentsOperationViewModel {
         let id = UUID()
         let type: BottomSheetType
 
+        let isUserInteractionEnabled: CurrentValueSubject<Bool, Never> = .init(true)
+        
         enum BottomSheetType {
 
             case popUp(PaymentsPopUpSelectView.ViewModel)
+            case antifraud(PaymentsAntifraudViewModel)
         }
     }
     
@@ -458,5 +483,13 @@ enum PaymentsOperationViewModelAction {
     
     struct CloseLink: Action {}
     
+    struct CloseBottomSheet: Action {}
+    
     struct IcorrectCodeEnterred: Action {}
+    
+    struct CancelOperation: Action {
+        
+        let amount: String
+        let reason: String?
+    }
 }

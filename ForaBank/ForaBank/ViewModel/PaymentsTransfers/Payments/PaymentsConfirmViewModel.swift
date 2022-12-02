@@ -11,6 +11,18 @@ import Combine
 
 class PaymentsConfirmViewModel: PaymentsOperationViewModel {
     
+    convenience init(operation: Payments.Operation, model: Model, closeAction: @escaping () -> Void) {
+
+        self.init(navigationBar: .init(), top: [], content: [], bottom: [], link: nil, bottomSheet: nil, operation: operation, model: model, closeAction: closeAction)
+        
+        bind()
+        
+        if let antifraudData = model.paymentsAntifraudData(for: operation) {
+            
+            showAntifraudBottomSheet(with: antifraudData, operation: operation)
+        }
+    }
+    
     override func bind() {
         
         super.bind()
@@ -87,6 +99,9 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
                     withAnimation {
                         spinner = nil
                     }
+                    
+                case _ as PaymentsOperationViewModelAction.CloseBottomSheet:
+                    bottomSheet = nil
      
                 default:
                     break
@@ -135,6 +150,12 @@ enum PaymentsConfirmViewModelAction {
         
         let message: String
     }
+    
+    struct CancelOperation: Action {
+        
+        let amount: String
+        let reason: String?
+    }
 }
 
 //MARK: - Helpers
@@ -161,6 +182,31 @@ extension PaymentsConfirmViewModel {
             default:
                 item.updateEditable(update: .value(false))
             }
+        }
+    }
+    
+    func showAntifraudBottomSheet(with antifraudData: Payments.AntifraudData, operation: Payments.Operation) {
+        
+        let antifraudViewModel = PaymentsAntifraudViewModel(with: antifraudData) { [weak self] in
+            
+            self?.action.send(PaymentsOperationViewModelAction.CloseBottomSheet())
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                
+                self?.action.send(PaymentsConfirmViewModelAction.CancelOperation(amount: antifraudData.amount, reason: nil))
+            }
+            
+        } continueAction: { [weak self] in
+            
+            self?.action.send(PaymentsOperationViewModelAction.CloseBottomSheet())
+        }
+        
+        let antifraudBottomSheet = BottomSheet(type: .antifraud(antifraudViewModel))
+        antifraudBottomSheet.isUserInteractionEnabled.value = false
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+            
+            self.bottomSheet = antifraudBottomSheet
         }
     }
 }

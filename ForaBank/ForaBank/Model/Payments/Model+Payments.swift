@@ -255,11 +255,17 @@ extension Model {
                 
             default:
                 throw Payments.Error.unsupported
-                
             }
 
         default:
-            throw Payments.Error.unsupported
+            switch operation.service {
+            case .sfp:
+                // Fora client payment first step response
+                return try await paymentsProcessRemoteStepSFP(operation: operation, response: response)
+                
+            default:
+                throw Payments.Error.unsupported
+            }
         }
     }
 }
@@ -268,6 +274,7 @@ extension Model {
 
 extension Model {
     
+    /// updates operation parameters with data in operation source
     func paymentsProcessSourceReducer(service: Payments.Service, source: Payments.Operation.Source, parameterId: Payments.Parameter.ID) -> Payments.Parameter.Value? {
 
         switch source {
@@ -282,6 +289,7 @@ extension Model {
         }
     }
     
+    /// update dependend on each other parameters
     func paymentsProcessDependencyReducer(service: Payments.Service, parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
         
         switch service {
@@ -313,6 +321,7 @@ extension Model {
         }
     }
     
+    /// updates current step back stage on data in parameters
     func paymentsProcessCurrentStepStageReducer(service: Payments.Service, parameters: [PaymentsParameterRepresentable], stepIndex: Int, stepStage: Payments.Operation.Stage) -> Payments.Operation.Stage? {
         
         switch service {
@@ -583,6 +592,36 @@ extension Model {
             
         default:
             return false
+        }
+    }
+    
+    func paymentsAntifraudData(for operation: Payments.Operation) -> Payments.AntifraudData? {
+        
+        switch operation.service {
+        case .sfp:
+            let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
+            guard let antifraudParameter = operation.parameters.first(where: { $0.id == antifraudParameterId}) else {
+                return nil
+            }
+            
+            guard antifraudParameter.value != "G" else {
+                return nil
+            }
+            
+            let recipientParameterId = Payments.Parameter.Identifier.sftRecipient.rawValue
+            let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
+            let amountParameterId = Payments.Parameter.Identifier.sfpAmount.rawValue
+            
+            guard let recipientValue = operation.parameters.first(where: { $0.id == recipientParameterId})?.value,
+            let phoneValue = operation.parameters.first(where: { $0.id == phoneParameterId })?.value,
+            let amountValue = operation.parameters.first(where: { $0.id == amountParameterId })?.value else {
+                return nil
+            }
+            
+            return .init(payeeName: recipientValue, phone: phoneValue, amount: "- \(amountValue)")
+            
+        default:
+            return nil
         }
     }
 }

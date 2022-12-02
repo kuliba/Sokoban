@@ -57,6 +57,7 @@ extension Payments.Parameter {
         case sftRecipient   = "RecipientNm"
         case sfpAmount      = "SumSTrs"
         case sfpMessage     = "Ustrd"
+        case sfpAntifraud   = "AFResponse"
     }
     
     static let emptyMock = Payments.Parameter(id: Identifier.mock.rawValue, value: nil)

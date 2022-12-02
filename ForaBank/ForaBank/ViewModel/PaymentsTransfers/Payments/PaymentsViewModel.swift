@@ -54,6 +54,7 @@ class PaymentsViewModel: ObservableObject {
             let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model, closeAction: closeAction)
             self.init(content: .operation(operationViewModel), category: category, model: model, closeAction: closeAction)
             operationViewModel.rootActions = rootActions
+            bind(operationViewModel: operationViewModel)
         }
         
         bind()
@@ -68,6 +69,7 @@ class PaymentsViewModel: ObservableObject {
         let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model, closeAction: closeAction)
         self.init(content: .operation(operationViewModel), category: category, model: model, closeAction: closeAction)
         operationViewModel.rootActions = rootActions
+        bind(operationViewModel: operationViewModel)
         
         bind()
     }
@@ -175,6 +177,30 @@ class PaymentsViewModel: ObservableObject {
                 case _ as PaymentsSuccessAction.Button.Close:
                     self.action.send(PaymentsViewModelAction.Dismiss())
                     
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func bind(operationViewModel: PaymentsOperationViewModel) {
+        
+        operationViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as PaymentsOperationViewModelAction.CancelOperation:
+
+                    //TODO: move to convenience init
+                    let successViewModel = PaymentsSuccessViewModel(model, warningTitle: "Перевод отменен!", amount: payload.amount, iconType: .accepted, logo: .init(title: "сбп", image: .ic40Sbp), actionButton: .init(title: "На главный", style: .red, action: { [weak self] in
+                        
+                        self?.action.send(PaymentsViewModelAction.Dismiss())
+                        
+                    }), optionButtons: [])
+                    self.successViewModel = successViewModel
+
                 default:
                     break
                 }
