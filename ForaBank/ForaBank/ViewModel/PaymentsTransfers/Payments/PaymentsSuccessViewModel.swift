@@ -248,7 +248,7 @@ extension PaymentsSuccessViewModel {
         case normal
         case meToMe
         case closeDeposit
-        case closeAccount
+        case closeAccount(ProductData.ID)
         case closeAccountEmpty(ProductData.ID)
     }
     
@@ -454,9 +454,15 @@ extension PaymentsSuccessViewModel {
                 }
             
                 switch mode {
-                case .normal, .meToMe, .closeDeposit, .closeAccount:
+                case .normal, .meToMe, .closeDeposit:
                     
                     let printViewModel: PrintFormView.ViewModel = .init(type: .operation(paymentOperationDetailId: paymentOperationDetailId, printFormType: .internal), model: self.model)
+                    
+                    self.sheet = .init(type: .printForm(printViewModel))
+                    
+                case let .closeAccount(productDataId):
+                    
+                    let printViewModel: PrintFormView.ViewModel = .init(type: .closeAccount(id: productDataId), model: self.model)
                     
                     self.sheet = .init(type: .printForm(printViewModel))
                     
