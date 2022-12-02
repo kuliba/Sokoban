@@ -815,7 +815,40 @@ extension OperationDetailInfoViewModel {
             operation: operation,
             iconType: .purpose)
         
+        let payeeNumberPhone = makePropertyViewModel(
+            productId: payerProductId,
+            operation: operation,
+            iconType: .phone)
+        
+        let payeeNameViewModel = makePropertyViewModel(
+            productId: payerProductId,
+            operation: operation,
+            iconType: .user)
+
+        let operationNumberViewModel = makePropertyViewModel(
+            productId: payerProductId,
+            operation: operation,
+            iconType: .operationNumber)
+        
+        let payeeBankViewModel = makeBankViewModel(
+            operation: operation)
+        
         switch operation.transferEnum {
+        
+        case .sfp:
+            
+            return [
+                payeeNumberPhone,
+                payeeNameViewModel,
+                payeeBankViewModel,
+                balanceViewModel,
+                commissionViewModel,
+                payerViewModel,
+                purposeViewModel,
+                operationNumberViewModel,
+                dateViewModel
+            ].compactMap {$0}
+            
         case .depositClose:
             
             return [
@@ -876,7 +909,8 @@ extension OperationDetailInfoViewModel {
             return .init(title: "Комиссия", iconType: .commission, value: payerFee)
 
         case .purpose:
-            guard let comment = operation.comment else {
+            //FIXME: backend send "" if comment nil
+            guard let comment = operation.comment, operation.comment != "" else {
                 return nil
             }
             
@@ -889,6 +923,33 @@ extension OperationDetailInfoViewModel {
             default:
                 return .init(title: "Дата и время операции (МСК)", iconType: .date, value: operation.responseDate)
             }
+            
+        case .phone:
+            
+            guard let payeePhone = operation.payeePhone else {
+                return nil
+            }
+            
+            let phoneFormatter = PhoneNumberKitFormater()
+            let formattedPhone = phoneFormatter.format(payeePhone)
+            
+            return .init(title: "Номер телефона получателя", iconType: .phone, value: formattedPhone)
+        
+        case .user:
+            
+            guard let payeeName = operation.payeeFullName else {
+                return nil
+            }
+
+            return .init(title: "Получатель", iconType: .user, value: payeeName)
+
+        case .operationNumber:
+            
+            guard let transferNumber = operation.transferNumber else {
+                return nil
+            }
+
+            return .init(title: "Номер операции СБП", iconType: .operationNumber, value: transferNumber)
 
         default:
             return nil
@@ -920,6 +981,23 @@ extension OperationDetailInfoViewModel {
         let viewModel: ProductCellViewModel = .init(title: title, icon: icon, name: name, iconPaymentService: image, balance: formattedBalance, description: "\(lastNumber)\(description)")
         
         return viewModel
+    }
+    
+    private func makeBankViewModel(operation: OperationDetailData) -> BankCellViewModel? {
+         
+        guard let bankName = operation.payeeBankName, let memberId = operation.memberId else {
+            return nil
+        }
+        
+        let bank = model.bankList.value.first(where: {$0.memberId == memberId})
+        let title = "Банк получателя"
+        
+        guard let md5hash = bank?.md5hash, let icon = model.images.value[md5hash]?.image else {
+            
+            return BankCellViewModel(title: title, icon: Image("BankIcon"), name: bankName)
+        }
+        
+        return BankCellViewModel(title: title, icon: icon, name: bankName)
     }
 }
 
