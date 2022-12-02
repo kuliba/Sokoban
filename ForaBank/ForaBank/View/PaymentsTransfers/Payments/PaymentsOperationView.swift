@@ -180,6 +180,9 @@ struct PaymentsOperationView: View {
             switch bottomSheet.type {
             case .popUp(let popUpVewModel):
                 PaymentsPopUpSelectView(viewModel: popUpVewModel)
+            
+            case .antifraud(let antifraudViewModel):
+                PaymentsAntifraudView(viewModel: antifraudViewModel)
             }
         }
     }

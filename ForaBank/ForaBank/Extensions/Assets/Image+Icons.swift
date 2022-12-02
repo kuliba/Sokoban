@@ -536,6 +536,7 @@ public extension Image {
     static var ic24Gitlab: Image { Image(#function) }
     static var ic24Globe: Image { Image(#function) }
     static var ic24Grid: Image { Image(#function) }
+    static var ic24Hammer: Image { Image(#function) }
     static var ic24HardDrive: Image { Image(#function) }
     static var ic24Hash: Image { Image(#function) }
     static var ic24Headphones: Image { Image(#function) }
@@ -750,6 +751,7 @@ public extension Image {
     static var ic32LogoForaLine: Image { Image(#function) }
     static var ic32Swap: Image { Image(#function) }
     static var ic40Card: Image { Image(#function) }
+    static var ic40Danger: Image { Image(#function) }
     static var ic40Delete: Image { Image(#function) }
     static var ic40FaceId: Image { Image(#function) }
     static var ic40FinancialRiskInsurance: Image { Image(#function) }

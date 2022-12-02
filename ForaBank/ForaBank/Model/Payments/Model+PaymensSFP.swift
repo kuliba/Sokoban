@@ -129,25 +129,81 @@ extension Model {
         }
     }
     
+    /// update current step stage
     func paymentsProcessCurrentStepStageReducerSFP(service: Payments.Service, parameters: [PaymentsParameterRepresentable], stepIndex: Int, stepStage: Payments.Operation.Stage) -> Payments.Operation.Stage? {
         
         guard stepIndex == 0 else {
             return nil
         }
         
+        let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
         let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
-        guard let bankParameterValue = parameters.first(where: { $0.id == bankParameterId })?.value else {
+        guard let phoneParameterValue = parameters.first(where: { $0.id == phoneParameterId })?.value,
+              let bankParameterValue = parameters.first(where: { $0.id == bankParameterId })?.value,
+              let clientPhone = clientInfo.value?.phone else {
             
-           return nil
+            return nil
         }
         
-        if isForaBank(bankId: bankParameterValue) == true {
+        if isForaBank(bankId: bankParameterValue) == true, phoneParameterValue.digits == clientPhone.digits {
             
             return .remote(.complete)
             
         } else {
             
             return .remote(.start)
+        }
+    }
+
+    // process remote confirm step for payment to Fora clint
+    func paymentsProcessRemoteStepSFP(operation: Payments.Operation, response: TransferResponseData) async throws -> Payments.Operation.Step {
+
+        var parameters = [PaymentsParameterRepresentable]()
+        
+        if let customerName = response.payeeName {
+            
+            let customerParameterId = Payments.Parameter.Identifier.sftRecipient.rawValue
+            let customerParameter = Payments.ParameterInfo(
+                .init(id: customerParameterId, value: customerName),
+                icon: ImageData(named: "ic24Customer") ?? .parameterDocument,
+                title: "Получатель", placement: .feed)
+            
+            parameters.append(customerParameter)
+        }
+
+        if let amountValue = response.debitAmount,
+              let amountFormatted = paymentsAmountFormatted(amount: amountValue, parameters: operation.parameters) {
+            
+            let amountParameterId = Payments.Parameter.Identifier.sfpAmount.rawValue
+            let amountParameter = Payments.ParameterInfo(
+                .init(id: amountParameterId, value: amountFormatted),
+                icon: ImageData(named: "ic24Coins") ?? .parameterDocument,
+                title: "Сумма перевода", placement: .feed)
+            
+            parameters.append(amountParameter)
+        }
+        
+        if let feeAmount = response.fee,
+           let feeAmountFormatted = paymentsAmountFormatted(amount: feeAmount, parameters: operation.parameters) {
+            
+            let feeParameterId = Payments.Parameter.Identifier.fee.rawValue
+            let feeParameter = Payments.ParameterInfo(
+                .init(id: feeParameterId, value: feeAmountFormatted),
+                icon: .init(named: "ic24PercentCommission") ?? .parameterDocument,
+                title: "Комиссия", placement: .feed)
+            
+            parameters.append(feeParameter)
+        }
+        
+        if response.needOTP == true {
+            
+            parameters.append(Payments.ParameterCode.regular)
+            
+            return .init(parameters: parameters, front: .init(visible: parameters.map({ $0.id }), isCompleted: false), back: .init(stage: .remote(.confirm), required: [], processed: nil))
+            
+        } else {
+            
+            return .init(parameters: parameters, front: .init(visible: parameters.map({ $0.id }), isCompleted: false), back: .init(stage: .remote(.next), required: [], processed: nil))
         }
     }
     
@@ -171,6 +227,12 @@ extension Model {
             return Payments.ParameterInfo(
                 .init(id: adittionalData.fieldName, value: amountFormatted),
                 icon: ImageData(named: "ic24Coins") ?? .parameterDocument,
+                title: adittionalData.fieldTitle, placement: .feed)
+            
+        case Payments.Parameter.Identifier.sfpAntifraud.rawValue:
+            return Payments.ParameterInfo(
+                .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
+                icon: .parameterDocument,
                 title: adittionalData.fieldTitle, placement: .feed)
 
         default:

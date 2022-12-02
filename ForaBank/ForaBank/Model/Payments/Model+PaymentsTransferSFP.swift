@@ -11,22 +11,43 @@ import Foundation
 
 extension Model {
     
-    func paymentsTransferSFPProcess(parameters: [PaymentsParameterRepresentable], process: [Payments.Parameter]) async throws -> TransferAnywayResponseData {
+    func paymentsTransferSFPProcess(parameters: [PaymentsParameterRepresentable], process: [Payments.Parameter]) async throws -> TransferResponseData {
+        
+        let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
+        guard let bankParameterValue = parameters.first(where: { $0.id == bankParameterId })?.value else {
+            
+            throw Payments.Error.missingParameter(bankParameterId)
+        }
         
         guard let token = token else {
             throw Payments.Error.notAuthorized
         }
         
-        let puref = try paymentsTransferSFPPuref(parameters)
-        let payer = try paymentsTransferSFPPayer(parameters)
-        let amount = try paymentsTransferSFPAmount(parameters)
-        let currency = try paymentsTransferSFPCurrency(parameters)
-        let comment = try paymentsTransferSFPComment(parameters)
-        let additional = try paymentsTransferSFPAdditional(process)
-        
-        let command = ServerCommands.TransferController.CreateSFPTransfer(token: token, payload: .init(amount: amount, check: false, comment: comment, currencyAmount: currency, payer: payer, additional: additional, puref: puref))
-        
-        return try await serverAgent.executeCommand(command: command)
+        if isForaBank(bankId: bankParameterValue) == true {
+            
+            let payer = try paymentsTransferSFPPayer(parameters)
+            let amount = try paymentsTransferSFPAmount(parameters)
+            let currency = try paymentsTransferSFPCurrency(parameters)
+            let comment = try paymentsTransferSFPComment(parameters)
+            let payeeInternal = try paymentsTransfersSFPPayeeInternalPhone(parameters)
+            
+            let command = ServerCommands.TransferController.CreateTransfer(token: token, payload: .init(amount: amount, check: false, comment: comment, currencyAmount: currency, payer: payer, payeeExternal: nil, payeeInternal: payeeInternal))
+            
+            return try await serverAgent.executeCommand(command: command)
+            
+        } else {
+            
+            let puref = try paymentsTransferSFPPuref(parameters)
+            let payer = try paymentsTransferSFPPayer(parameters)
+            let amount = try paymentsTransferSFPAmount(parameters)
+            let currency = try paymentsTransferSFPCurrency(parameters)
+            let comment = try paymentsTransferSFPComment(parameters)
+            let additional = try paymentsTransferSFPAdditional(process)
+            
+            let command = ServerCommands.TransferController.CreateSFPTransfer(token: token, payload: .init(amount: amount, check: true, comment: comment, currencyAmount: currency, payer: payer, additional: additional, puref: puref))
+            
+            return try await serverAgent.executeCommand(command: command)
+        }
     }
     
     func paymentsTransferSFPProcessFora(parameters: [PaymentsParameterRepresentable], process: [Payments.Parameter]) async throws -> TransferResponseData {
@@ -41,7 +62,7 @@ extension Model {
         let comment = try paymentsTransferSFPComment(parameters)
         let payeeInternal = try paymentsTransfersSFPPayeeInternalPhone(parameters)
         
-        let command = ServerCommands.TransferController.CreateTransfer(token: token, payload: .init(amount: amount, check: false, comment: comment, currencyAmount: currency, payer: payer, payeeExternal: nil, payeeInternal: payeeInternal))
+        let command = ServerCommands.TransferController.CreateTransfer(token: token, payload: .init(amount: amount, check: true, comment: comment, currencyAmount: currency, payer: payer, payeeExternal: nil, payeeInternal: payeeInternal))
         
         return try await serverAgent.executeCommand(command: command)
     }
@@ -147,7 +168,8 @@ extension Model {
     
     func paymentsTransferSFPStepVisible(_ operation: Payments.Operation, nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], response: TransferAnywayResponseData) throws -> [Payments.Parameter.ID] {
         
-        nextStepParameters.map{ $0.id }
+        let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
+        return nextStepParameters.map{ $0.id }.filter({ $0 != antifraudParameterId })
     }
     
     func paymentsTransferSFPStepStage(_ operation: Payments.Operation, response: TransferAnywayResponseData) throws -> Payments.Operation.Stage {
