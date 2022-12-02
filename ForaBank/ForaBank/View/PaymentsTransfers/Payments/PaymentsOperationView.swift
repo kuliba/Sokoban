@@ -135,22 +135,10 @@ struct PaymentsOperationView: View {
                         
                         switch item {
                         case let continueViewModel as PaymentsContinueButtonView.ViewModel:
-                            VStack(spacing: 0) {
-                                
                                 PaymentsContinueButtonView(viewModel: continueViewModel)
-                                
-                                Color.clear
-                                    .frame(height: 33)
-                            }
                             
                         case let amountViewModel as PaymentsAmountView.ViewModel:
-                            VStack(spacing: 0) {
-                                
                                 PaymentsAmountView(viewModel: amountViewModel)
-                                
-                                Color.mainColorsBlackMedium
-                                    .frame(height: 33)
-                            }
                             
                         default:
                             EmptyView()
