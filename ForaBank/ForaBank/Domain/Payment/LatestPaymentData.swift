@@ -56,7 +56,6 @@ extension LatestPaymentData {
         case transport
         case taxAndStateService
         case unknown
-        
     }
 }
 

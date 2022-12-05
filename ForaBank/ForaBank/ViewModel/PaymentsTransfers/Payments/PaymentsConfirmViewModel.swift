@@ -83,6 +83,9 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
                     model.action.send(ModelAction.Payment.Process.Request(operation: updatedOperation))
                     self.action.send(PaymentsOperationViewModelAction.Spinner.Show())
                     
+                    // hide keyboard
+                    UIApplication.shared.endEditing()
+                    
                 case _ as PaymentsConfirmViewModelAction.IcorrectCodeEnterred:
                     guard let codeItem = items.compactMap({ $0 as? PaymentsCodeView.ViewModel }).first else {
                         return
