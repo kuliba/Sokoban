@@ -111,9 +111,9 @@ extension ServerCommands {
                 self.payload = payload
             }
             
-            init(token: String, accountId: ProductData.ID) {
+            init(token: String, accountId: ProductData.ID, paymentOperationDetailId: Int?) {
                 
-                self.init(token: token, payload: .init(id: accountId, accountId: "\(accountId)"))
+                self.init(token: token, payload: .init(id: paymentOperationDetailId ?? accountId, accountId: "\(accountId)"))
             }
         }
         
