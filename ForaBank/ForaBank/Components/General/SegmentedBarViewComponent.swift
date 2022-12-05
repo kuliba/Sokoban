@@ -111,6 +111,7 @@ struct SegmentedBarView: View {
         GeometryReader { geometry in
             
             VStack {
+                
                 HStack {
                 
                     Text(viewModel.titleLabel)
@@ -122,6 +123,7 @@ struct SegmentedBarView: View {
                 .padding(.bottom, 6)
             
                 if viewModel.totalValue != 0 {
+                    
                     ZStack {
                 
                         HStack(alignment: .center, spacing: 0) {
