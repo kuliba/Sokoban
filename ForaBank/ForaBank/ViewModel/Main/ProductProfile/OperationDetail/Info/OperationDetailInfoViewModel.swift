@@ -34,6 +34,13 @@ final class OperationDetailInfoViewModel: Identifiable {
         self.cells = []
         
         cells = makeItems(operation: operation)
+        
+        switch operation.transferEnum {
+        case .sfp:
+            self.logo = .ic24Sbp
+            
+        default: break
+        }
     }
     
     init?(with statement: ProductStatementData, operation: OperationDetailData?, product: ProductData, dismissAction: @escaping () -> Void, model: Model) {

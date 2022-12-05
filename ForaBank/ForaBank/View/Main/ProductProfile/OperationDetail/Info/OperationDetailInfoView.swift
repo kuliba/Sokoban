@@ -42,6 +42,7 @@ struct OperationDetailInfoView: View {
                     
                     logo
                         .resizable()
+                        .renderingMode(.original)
                         .frame(width: 32, height: 32)
                     
                 } else {
