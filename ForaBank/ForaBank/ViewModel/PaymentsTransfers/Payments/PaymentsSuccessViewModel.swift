@@ -462,13 +462,13 @@ extension PaymentsSuccessViewModel {
                     
                 case let .closeAccount(productDataId):
                     
-                    let printViewModel: PrintFormView.ViewModel = .init(type: .closeAccount(id: productDataId), model: self.model)
+                    let printViewModel: PrintFormView.ViewModel = .init(type: .closeAccount(id: productDataId, paymentOperationDetailId: paymentOperationDetailId), model: self.model)
                     
                     self.sheet = .init(type: .printForm(printViewModel))
                     
                 case let .closeAccountEmpty(productId):
                     
-                    let printViewModel: PrintFormView.ViewModel = .init(type: .closeAccount(id: productId), model: self.model)
+                    let printViewModel: PrintFormView.ViewModel = .init(type: .closeAccountEmpty(id: productId), model: self.model)
                     
                     self.sheet = .init(type: .printForm(printViewModel))
                 }

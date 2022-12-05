@@ -28,7 +28,8 @@ extension PrintFormView {
             case operation(paymentOperationDetailId: Int, printFormType: PrintFormType)
             case product(productId: ProductData.ID, startDate: Date, endDate: Date)
             case contract(productId: ProductData.ID)
-            case closeAccount(id: ProductData.ID)
+            case closeAccount(id: ProductData.ID, paymentOperationDetailId: Int)
+            case closeAccountEmpty(id: ProductData.ID)
         }
         
         enum State {
@@ -77,8 +78,11 @@ extension PrintFormView {
             case let .contract(productId):
                 model.action.send(ModelAction.Products.ContractPrintForm.Request(depositId: productId))
                 
-            case let .closeAccount(id: productId):
-                model.action.send(ModelAction.Account.CloseAccount.PrintForm.Request(id: productId))
+            case let .closeAccount(id: productId, paymentOperationDetailId: paymentOperationDetailId):
+                model.action.send(ModelAction.Account.CloseAccount.PrintForm.Request(id: productId, paymentOperationDetailId: paymentOperationDetailId))
+                
+            case let .closeAccountEmpty(id: productId):
+                model.action.send(ModelAction.Account.CloseAccount.PrintForm.Request(id: productId, paymentOperationDetailId: nil))
             }
         }
         

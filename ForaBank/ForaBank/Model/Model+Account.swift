@@ -228,8 +228,9 @@ extension Model {
             handledUnauthorizedCommandAttempt()
             return
         }
+
+        let command = ServerCommands.AccountController.GetPrintFormForCloseAccount(token: token, accountId: payload.id, paymentOperationDetailId: payload.paymentOperationDetailId)
         
-        let command = ServerCommands.AccountController.GetPrintFormForCloseAccount(token: token, accountId: payload.id)
         serverAgent.executeDownloadCommand(command: command) { [weak self] result in
             
             guard let self = self else {
@@ -414,6 +415,7 @@ extension ModelAction {
                 struct Request: Action {
                     
                     let id: ProductData.ID
+                    let paymentOperationDetailId: Int?
                 }
                 
                 struct Response: Action {
