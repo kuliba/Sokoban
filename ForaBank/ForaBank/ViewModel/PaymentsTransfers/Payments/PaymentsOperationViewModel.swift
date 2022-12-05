@@ -184,6 +184,9 @@ class PaymentsOperationViewModel: ObservableObject {
                     model.action.send(ModelAction.Payment.Process.Request(operation: updatedStageOperation))
                     self.action.send(PaymentsOperationViewModelAction.Spinner.Show())
                     
+                    // hide keyboard
+                    UIApplication.shared.endEditing()
+                    
                 case _ as PaymentsOperationViewModelAction.CloseLink:
                     link = nil
                     

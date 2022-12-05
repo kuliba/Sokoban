@@ -41,23 +41,22 @@ extension LatestPaymentsView {
             model.latestPayments
                 .combineLatest(model.latestPaymentsUpdating)
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] data in
+                .sink { [unowned self] latestPayments, isUpdating in
                     
-                    var latestPayments = data.0
-                    let isUpdating = data.1
+                    var latestPaymentsFiltered = latestPayments
                     
                     if let filter = filter {
                         
                         switch filter {
                         case let .including(including):
-                            latestPayments = latestPayments.filter({ including.contains($0.type) })
+                            latestPaymentsFiltered = latestPayments.filter({ including.contains($0.type) })
                             
                         case let .excluding(excluding):
-                            latestPayments = latestPayments.filter({ excluding.contains($0.type) == false })
+                            latestPaymentsFiltered = latestPayments.filter({ excluding.contains($0.type) == false })
                         }
                     }
                     
-                    var items = Self.itemsReduce(model: model, latest: latestPayments, isUpdating: isUpdating, action: { [weak self] itemId in
+                    var items = Self.itemsReduce(model: model, latest: latestPaymentsFiltered, isUpdating: isUpdating, action: { [weak self] itemId in
                         
                         if let item = latestPayments.first(where: {$0.id == itemId}) {
                             
@@ -82,7 +81,9 @@ extension LatestPaymentsView {
                         items.insert(contentsOf: [templatesButton, currencyWalletButton], at: 0)
                     }
                     
-                    self.items = items
+                    withAnimation {
+                        self.items = items
+                    }
                     
                 }.store(in: &bindings)
         }

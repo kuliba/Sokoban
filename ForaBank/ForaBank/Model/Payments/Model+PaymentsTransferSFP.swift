@@ -102,7 +102,7 @@ extension Model {
         var additional = [TransferAnywayData.Additional]()
         for (index, parameter) in parameters.enumerated() {
             
-            guard let parameterValue = parameter.value else {
+            guard let parameterValue = parameter.value, parameterValue.isEmpty == false else {
                 continue
             }
             switch parameter.id {
