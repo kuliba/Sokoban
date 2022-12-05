@@ -219,7 +219,7 @@ class MyProductsMoneyViewModel: ObservableObject {
                 
                 updateBalance(isUpdating: dictUpdatingSet.contains(.centralBanksRates)
                                             || !productsUpdating.isEmpty,
-                              products: model.products.value,
+                              products: model.allProducts,
                               rates: model.centralBankRates.value,
                               selectedCurrency: (model.settingsProductsMoney.selectedCurrencyId,
                                                  model.settingsProductsMoney.selectedCurrencySymbol))
@@ -229,14 +229,11 @@ class MyProductsMoneyViewModel: ObservableObject {
         model.products
             .combineLatest(model.centralBankRates)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] data in
-            
-                let products = data.0
-                let rates = data.1
-                
-                updateBalance(isUpdating: model.dictionariesUpdating.value.contains(.centralBanksRates)
-                                            || !model.productsUpdating.value.isEmpty,
-                              products: products,
+            .sink { [unowned self] products, rates in
+
+                let isUpdating = model.dictionariesUpdating.value.contains(.centralBanksRates) || model.productsUpdating.value.isEmpty == false
+                updateBalance(isUpdating: isUpdating,
+                              products: model.allProducts,
                               rates: rates,
                               selectedCurrency: (model.settingsProductsMoney.selectedCurrencyId,
                                                  model.settingsProductsMoney.selectedCurrencySymbol))
@@ -256,7 +253,7 @@ class MyProductsMoneyViewModel: ObservableObject {
                     model.settingsProductsMoneyUpdate(.init(selectedCurrencyId: payload.id,
                                                             selectedCurrencySymbol: payload.symbol))
                     
-                    updateBalance(products: model.products.value,
+                    updateBalance(products: model.allProducts,
                                   rates: model.centralBankRates.value,
                                   selectedCurrency: (model.settingsProductsMoney.selectedCurrencyId,
                                                      model.settingsProductsMoney.selectedCurrencySymbol))
@@ -267,23 +264,26 @@ class MyProductsMoneyViewModel: ObservableObject {
     }
     
     private func updateBalance(isUpdating: Bool = false,
-                               products: ProductsData,
+                               products: [ProductData],
                                rates: [CentralBankRatesData],
                                selectedCurrency: (id: String, symbol: String)) {
         
         if isUpdating {
             
             withAnimation {
+                
                 self.balanceVM = .placeholder
                 self.currencyButtonVM.state = .disabled
             }
             
         } else {
             
-            let balanceRub = products
-                            .filter { $0.key != .loan }.values
-                            .flatMap { $0 }
-                            .reduce(into: 0.0) { result, item in result += item.balanceRub ?? 0 }
+            let filter = ProductData.Filter(rules: [ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
+                                                    ProductData.Filter.CardAdditionalOwnedRetrictedRule(),
+                                                    ProductData.Filter.CardAdditionalNotOwnedRetrictedRule()])
+            
+            let filterredProducts = filter.filterredProducts(products)
+            let balanceRub = filterredProducts.compactMap({ $0.balanceRub }).reduce(0, +)
             
             if let currencyDataItem = rates.first(where: { $0.id == selectedCurrency.id }) {
             
@@ -305,7 +305,6 @@ class MyProductsMoneyViewModel: ObservableObject {
                     self.currencyButtonVM.state = .enabled
                     self.currencyButtonVM.currencySymbol = "\u{20BD}"
                 }
-                
             }
         }
     }
