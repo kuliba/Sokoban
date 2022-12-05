@@ -559,8 +559,11 @@ struct ProductProfileHistoryView: View {
                 VStack(spacing: 64) {
                     
                     if let segmentedVM = viewModel.segmentBarViewModel {
+                        
                         SegmentedBarView(viewModel: segmentedVM)
+                            .padding(.vertical, 5)
                     }
+                    
                     ListView(viewModel: listViewModel)
                 }
                 

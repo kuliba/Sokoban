@@ -60,7 +60,7 @@ struct ProductProfileView: View {
                                 .padding(.horizontal, 20)
                             
                             if let detailAccount = viewModel.detail {
-                                
+
                                 ProductProfileDetailView(viewModel: detailAccount)
                                     .padding(.horizontal, 20)
                             }
@@ -256,7 +256,8 @@ extension ProductProfileViewModel {
     static let sample = ProductProfileViewModel(
         navigationBar: NavigationBarView.ViewModel.sampleNoActionButton,
         product: .sample,
-        buttons: .sample, detail: nil,
+        buttons: .sample,
+        detail: .sample,
         history: .sampleHistory,
         rootView: "")
 }
