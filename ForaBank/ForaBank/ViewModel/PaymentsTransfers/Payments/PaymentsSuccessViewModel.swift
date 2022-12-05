@@ -66,6 +66,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
 
         updateButtons(
             .normal,
+            paymentService: paymentSuccess.service,
             documentStatus: paymentSuccess.status,
             paymentOperationDetailId: paymentSuccess.operationDetailId)
         
@@ -222,10 +223,10 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             }.store(in: &bindings)
     }
     
-    private func updateButtons(_ mode: Mode, documentStatus: TransferResponseBaseData.DocumentStatus, paymentOperationDetailId: Int) {
+    private func updateButtons(_ mode: Mode, paymentService: Payments.Service? = nil, documentStatus: TransferResponseBaseData.DocumentStatus, paymentOperationDetailId: Int) {
         
         actionButton = .init(title: "На главный", style: .red, action: closeAction)
-        optionButtons = makeOptionButtons(mode, documentStatus: documentStatus, paymentOperationDetailId: paymentOperationDetailId)
+        optionButtons = makeOptionButtons(mode, paymentService: paymentService, documentStatus: documentStatus, paymentOperationDetailId: paymentOperationDetailId)
     }
 }
 
@@ -388,7 +389,7 @@ extension PaymentsSuccessViewModel {
         return amount
     }
     
-    private func makeOptionButtons(_ mode: Mode, documentStatus: TransferResponseBaseData.DocumentStatus, paymentOperationDetailId: Int) -> [PaymentsSuccessOptionButtonViewModel] {
+    private func makeOptionButtons(_ mode: Mode, paymentService: Payments.Service? = nil, documentStatus: TransferResponseBaseData.DocumentStatus, paymentOperationDetailId: Int) -> [PaymentsSuccessOptionButtonViewModel] {
         
         switch documentStatus {
         case .complete:
@@ -397,7 +398,7 @@ extension PaymentsSuccessViewModel {
             case .normal, .meToMe:
                 
                 return [optionButton(mode, type: .template, paymentOperationDetailId: paymentOperationDetailId),
-                        optionButton(mode, type: .document, paymentOperationDetailId: paymentOperationDetailId),
+                        optionButton(mode, paymentService: paymentService, type: .document, paymentOperationDetailId: paymentOperationDetailId),
                         optionButton(mode, type: .details, paymentOperationDetailId: paymentOperationDetailId)]
                 
             case .closeDeposit, .closeAccount:
@@ -435,7 +436,7 @@ extension PaymentsSuccessViewModel {
         }
     }
 
-    private func optionButton(_ mode: Mode, type: OptionButtonType, paymentOperationDetailId: Int = 0) -> PaymentsSuccessOptionButtonView.ViewModel {
+    private func optionButton(_ mode: Mode, paymentService: Payments.Service? = nil, type: OptionButtonType, paymentOperationDetailId: Int = 0) -> PaymentsSuccessOptionButtonView.ViewModel {
         
         switch type {
         case .template:
@@ -456,9 +457,15 @@ extension PaymentsSuccessViewModel {
                 switch mode {
                 case .normal, .meToMe, .closeDeposit:
                     
-                    let printViewModel: PrintFormView.ViewModel = .init(type: .operation(paymentOperationDetailId: paymentOperationDetailId, printFormType: .internal), model: self.model)
-                    
-                    self.sheet = .init(type: .printForm(printViewModel))
+                    switch paymentService?.transferType {
+                    case .sfp:
+                        let printViewModel: PrintFormView.ViewModel = .init(type: .operation(paymentOperationDetailId: paymentOperationDetailId, printFormType: .sbp), model: self.model)
+                        self.sheet = .init(type: .printForm(printViewModel))
+                        
+                    default:
+                        let printViewModel: PrintFormView.ViewModel = .init(type: .operation(paymentOperationDetailId: paymentOperationDetailId, printFormType: .internal), model: self.model)
+                        self.sheet = .init(type: .printForm(printViewModel))
+                    }
                     
                 case let .closeAccount(productDataId):
                     
