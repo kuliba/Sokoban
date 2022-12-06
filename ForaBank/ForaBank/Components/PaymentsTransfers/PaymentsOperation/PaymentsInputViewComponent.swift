@@ -16,9 +16,12 @@ extension PaymentsInputView {
         
         let icon: Image
         let description: String
-        @Published var content: String
+        let textField: TextFieldRegularView.ViewModel
         @Published var title: String?
         @Published var actionButton: ActionButtonViewModel?
+        
+        //TODO: refactor
+        var content: String { textField.text ?? "" }
         
         private let model: Model
         private static let iconPlaceholder = Image.ic24File
@@ -30,7 +33,7 @@ extension PaymentsInputView {
             
             self.icon = icon
             self.description = description
-            self.content = content
+            self.textField = .init(text: content)
             self.actionButton = actionButton
             self.model = model
             
@@ -58,7 +61,7 @@ extension PaymentsInputView {
 
         private func bind() {
             
-            $content
+            textField.$text
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] content in
                     
@@ -66,7 +69,7 @@ extension PaymentsInputView {
                     
                     withAnimation(.easeInOut(duration: 0.2)) {
                         
-                        title = content.count > 0 ? description : nil
+                        title = self.content.count > 0 ? description : nil
                     }
 
                 }.store(in: &bindings)
@@ -99,7 +102,7 @@ extension PaymentsInputView {
                     
                     switch action {
                     case let payload as ContactsViewModelAction.ContactPhoneSelected:
-                        self?.content = payload.phone
+                        self?.textField.text = payload.phone
                         self?.action.send(PaymentsParameterViewModelAction.Input.ContactSelector.Close())
     
                     default:
@@ -187,10 +190,7 @@ struct PaymentsInputView: View {
                 
                 if viewModel.isEditable == true {
                     
-                    TextField(viewModel.description, text: $viewModel.content)
-                        .foregroundColor(.textSecondary)
-                        .font(.textBodyMM14200())
-                        .textFieldStyle(DefaultTextFieldStyle())
+                    TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 14), textColor: .textSecondary)
                     
                 } else {
                     

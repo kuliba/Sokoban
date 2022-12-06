@@ -88,7 +88,10 @@ class PaymentsViewModel: ObservableObject {
                         let successViewModel = PaymentsSuccessViewModel(model, paymentSuccess: paymentSuccess)
                         self.successViewModel = successViewModel
                         bind(successViewModel: successViewModel)
+                        // update products balances
                         model.action.send(ModelAction.Products.Update.Fast.All())
+                        // update latest operations list
+                        model.action.send(ModelAction.LatestPayments.List.Requested())
      
                     case let .failure(error):
                         switch error {

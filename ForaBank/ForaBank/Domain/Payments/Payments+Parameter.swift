@@ -227,7 +227,12 @@ extension Payments {
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterInput(.init(id: parameter.id, value: value), icon: icon, title: title, validator: validator,isEditable: isEditable, placement: placement, actionButtonType: actionButtonType)
+            ParameterInput(.init(id: parameter.id, value: value), icon: icon, title: title, validator: validator, isEditable: isEditable, placement: placement, actionButtonType: actionButtonType)
+        }
+        
+        func updated(isEditable: Bool) -> PaymentsParameterRepresentable {
+            
+            ParameterInput(parameter, icon: icon, title: title, validator: validator, isEditable: isEditable, placement: placement, actionButtonType: actionButtonType)
         }
         
         struct Validator: ValidatorProtocol {

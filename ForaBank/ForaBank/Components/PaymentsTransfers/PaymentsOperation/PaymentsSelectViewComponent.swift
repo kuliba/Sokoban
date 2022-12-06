@@ -26,6 +26,14 @@ extension PaymentsSelectView {
             default: return false
             }
         }
+        
+        var isExpanded: Bool {
+            
+            switch state {
+            case .selected: return false
+            default: return true
+            }
+        }
 
         init(state: PaymentsSelectView.ViewModel.State, model: Model, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
@@ -518,11 +526,11 @@ struct PaymentsSelectView: View {
                 }
                 
             case .selected(let selectedItemViewModel):
-                SelectedItemView(viewModel: selectedItemViewModel, isEditable: viewModel.isEditable)
+                SelectedItemView(viewModel: selectedItemViewModel, isExpanded: viewModel.isExpanded, isEditable: viewModel.isEditable)
                     .frame(minHeight: 56)
                 
             case .unwrapped(let selectedItemViewModel, let items):
-                SelectedItemView(viewModel: selectedItemViewModel, isEditable: viewModel.isEditable)
+                SelectedItemView(viewModel: selectedItemViewModel, isExpanded: viewModel.isExpanded, isEditable: viewModel.isEditable)
                     .frame(minHeight: 56)
                 
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -640,6 +648,7 @@ struct PaymentsSelectView: View {
     struct SelectedItemView: View {
         
         let viewModel: PaymentsSelectView.ViewModel.SelectedItemViewModel
+        let isExpanded: Bool
         let isEditable: Bool
         
         var body: some View {
@@ -667,7 +676,11 @@ struct PaymentsSelectView: View {
                             Spacer()
                             
                             Image.ic24ChevronDown
+                                .renderingMode(.template)
+                                .resizable()
                                 .frame(width: 24, height: 24)
+                                .foregroundColor(.mainColorsGray)
+                                .rotationEffect(isExpanded == true ? .degrees(0) : .degrees(-90))
                         }
                         
                         Divider()
