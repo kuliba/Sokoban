@@ -13,16 +13,14 @@ class ProductStatementDataTests: XCTestCase {
     let bundle = Bundle(for: ProductStatementDataTests.self)
     let decoder = JSONDecoder.serverDate
     let encoder = JSONEncoder.serverDate
-    let formatter = DateFormatter.iso8601
-    
+    let calendar = Calendar.current
+
     func testDecoding_Generic() throws {
      
         // given
         let url = bundle.url(forResource: "ProductStatementDataDecodingGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
         let fastPayment = ProductStatementData.FastPayment(documentComment: "string", foreignBankBIC: "044525491", foreignBankID: "10000001153", foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"", foreignName: "Петров Петр Петрович", foreignPhoneNumber: "70115110217", opkcid: "A1355084612564010000057CAFC75755",operTypeFP: "string", tradeName: "string", guid: "string")
-        let date = formatter.date(from: "2022-12-04T21:00:00.000Z")!
-
         
         // when
         let result = try decoder.decode(ProductStatementData.self, from: json)
@@ -39,7 +37,7 @@ class ProductStatementDataTests: XCTestCase {
         XCTAssertEqual(result.currencyCodeNumeric, 810)
 
         //"2022-01-20T13:44:17.810Z"
-        XCTAssertEqual(result.date, date)
+        XCTAssertEqual(result.date, Date.dateUTC(with: 1648512000000))
 
         XCTAssertEqual(result.deviceCode, "string")
         XCTAssertEqual(result.documentAmount, 144.21)
@@ -57,7 +55,7 @@ class ProductStatementDataTests: XCTestCase {
         XCTAssertEqual(result.svgImage, SVGImageData.init(description: "string"))
         XCTAssertEqual(result.terminalCode, "41010601")
         
-        XCTAssertEqual(result.tranDate, date)
+        XCTAssertEqual(result.tranDate, Date.dateUTC(with: 1648512000000))
         
         XCTAssertEqual(result.type, OperationEnvironment.inside)
     }
