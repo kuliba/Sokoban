@@ -160,18 +160,21 @@ extension MyProductsMoneyView {
                                 
                                             VStack(alignment: .leading, spacing: 1) {
                                                 
-                                                Text(item.name)
+                                                HStack {
+                                                
+                                                    Text(item.name)
                                                     .font(.textBodyMM14200())
+                                                    
+                                                    Spacer()
+                                                    
+                                                    if item.isSelected { Image.ic16Check }
+                                                }
                                 
                                                 Text(item.rateFormatted)
                                                     .foregroundColor(.textPlaceholder)
                                                     .font(.textBodySR12160())
                                                 
                                             }.padding(.top, 4)
-                                            
-                                            Spacer()
-                                            
-                                            if item.isSelected { Image.ic16Check }
                                         }
                                     }.foregroundColor(.mainColorsBlack)
                                     .frame(height: 36)
