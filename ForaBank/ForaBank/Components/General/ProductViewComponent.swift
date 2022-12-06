@@ -166,15 +166,15 @@ extension ProductView {
                 
             case let cardProduct as ProductCardData:
                 guard let subtitle = cardProduct.additionalField else { return nil }
-                return "• \(subtitle)"
+                return subtitle
                 
             case let depositProduct as ProductDepositData:
                 let subtitle = depositProduct.interestRate
-                return "• Ставка \(subtitle)%"
+                return "Ставка \(subtitle)%"
                 
             case let loanProduct as ProductLoanData:
                 let subtitle = loanProduct.currentInterestRate
-                return "• Ставка \(subtitle)%"
+                return "Ставка \(subtitle)%"
                 
             default: return nil
             }
