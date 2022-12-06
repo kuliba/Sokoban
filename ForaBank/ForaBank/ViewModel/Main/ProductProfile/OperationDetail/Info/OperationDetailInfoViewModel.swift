@@ -938,10 +938,19 @@ extension OperationDetailInfoViewModel {
             }
             
             let phoneFormatter = PhoneNumberKitFormater()
-            let formattedPhone = phoneFormatter.format(payeePhone)
             
-            return .init(title: "Номер телефона получателя", iconType: .phone, value: formattedPhone)
-        
+            //TODO: remove after backend will be send number with country code
+            if operation.transferEnum == .sfp {
+                
+                let formattedPhone = phoneFormatter.format("7\(payeePhone)")
+                return .init(title: "Номер телефона получателя", iconType: .phone, value: formattedPhone)
+
+            } else {
+                
+                let formattedPhone = phoneFormatter.format(payeePhone)
+                return .init(title: "Номер телефона получателя", iconType: .phone, value: formattedPhone)
+            }
+                
         case .user:
             
             guard let payeeName = operation.payeeFullName else {
