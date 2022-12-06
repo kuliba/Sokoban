@@ -119,6 +119,27 @@ struct MainView: View {
                     }
                 }
             }
+            
+            Color.clear
+                .sheet(item: $viewModel.sheet, content: { sheet in
+                    switch sheet.type {
+                    case .productProfile(let productProfileViewModel):
+                        ProductProfileView(viewModel: productProfileViewModel)
+                        
+                    case .messages(let messagesHistoryViewModel):
+                        MessagesHistoryView(viewModel: messagesHistoryViewModel)
+                        
+                    case .places(let placesViewModel):
+                        PlacesView(viewModel: placesViewModel)
+                        
+                    case .byPhone(let viewModel):
+                        ContactsView(viewModel: viewModel)
+                        
+                    case let .openAccount(openAccountViewModel):
+                        OpenAccountView(viewModel: openAccountViewModel)
+                    }
+                })
+               
         }
         .ignoreKeyboard()
         .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
@@ -128,24 +149,6 @@ struct MainView: View {
                 OpenAccountView(viewModel: openAccountViewModel)
             }
         }
-        .sheet(item: $viewModel.sheet, content: { sheet in
-            switch sheet.type {
-            case .productProfile(let productProfileViewModel):
-                ProductProfileView(viewModel: productProfileViewModel)
-                
-            case .messages(let messagesHistoryViewModel):
-                MessagesHistoryView(viewModel: messagesHistoryViewModel)
-                
-            case .places(let placesViewModel):
-                PlacesView(viewModel: placesViewModel)
-                
-            case .byPhone(let viewModel):
-                ContactsView(viewModel: viewModel)
-                
-            case let .openAccount(openAccountViewModel):
-                OpenAccountView(viewModel: openAccountViewModel)
-            }
-        })
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
