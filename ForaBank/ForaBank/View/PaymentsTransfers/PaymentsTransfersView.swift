@@ -134,6 +134,39 @@ struct PaymentsTransfersView: View {
                     }
                 }
             }
+            
+            Color.clear
+                .sheet(item: $viewModel.sheet, content: { sheet in
+                    
+                    switch sheet.type {
+                        
+                    case let .transferByPhone(viewModel):
+                        TransferByPhoneView(viewModel: viewModel)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case let .meToMe(viewModel):
+                        PaymentsMeToMeView(viewModel: viewModel)
+                            .edgesIgnoringSafeArea(.bottom)
+                            .fixedSize(horizontal: false, vertical: true)
+                        
+                    case let .successMeToMe(successMeToMeViewModel):
+                        PaymentsSuccessView(viewModel: successMeToMeViewModel)
+                        
+                    case .anotherCard(let anotherCardViewModel):
+                        AnotherCardView(viewModel: anotherCardViewModel)
+                            .edgesIgnoringSafeArea(.bottom)
+                        
+                    case .qrScanner(let qrViewModel):
+                        QrScannerView(viewModel: qrViewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case .fastPayment(let viewModel):
+                        ContactsView(viewModel: viewModel)
+                    }
+                })
+                
         }
         .onAppear {
             viewModel.action.send(PaymentsTransfersViewModelAction.ViewDidApear())
@@ -176,36 +209,7 @@ struct PaymentsTransfersView: View {
             
             }
         }
-        .sheet(item: $viewModel.sheet, content: { sheet in
-            
-            switch sheet.type {
-                
-            case let .transferByPhone(viewModel):
-                TransferByPhoneView(viewModel: viewModel)
-                    .edgesIgnoringSafeArea(.all)
-                
-            case let .meToMe(viewModel):
-                PaymentsMeToMeView(viewModel: viewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .fixedSize(horizontal: false, vertical: true)
-                
-            case let .successMeToMe(successMeToMeViewModel):
-                PaymentsSuccessView(viewModel: successMeToMeViewModel)
-                
-            case .anotherCard(let anotherCardViewModel):
-                AnotherCardView(viewModel: anotherCardViewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                
-            case .qrScanner(let qrViewModel):
-                QrScannerView(viewModel: qrViewModel)
-                    .navigationBarTitle("", displayMode: .inline)
-                    .navigationBarBackButtonHidden(true)
-                    .edgesIgnoringSafeArea(.all)
-                
-            case .fastPayment(let viewModel):
-                ContactsView(viewModel: viewModel)
-            }
-        })
+        
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
