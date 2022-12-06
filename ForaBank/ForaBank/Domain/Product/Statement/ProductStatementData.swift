@@ -145,8 +145,7 @@ extension ProductStatementData: Codable {
         self.comment = try container.decode(String.self, forKey: .comment)
         self.country = try container.decodeIfPresent(String.self, forKey: .country)
         self.currencyCodeNumeric = try container.decode(Int.self, forKey: .currencyCodeNumeric)
-        let dateValue = try container.decode(Int.self, forKey: .date)
-        self.date = Date.dateUTC(with: dateValue)
+        self.date = try container.decode(Date.self, forKey: .date)
         self.deviceCode = try container.decodeIfPresent(String.self, forKey: .deviceCode)
         self.documentAmount = try container.decodeIfPresent(Double.self, forKey: .documentAmount)
         self.documentId = try container.decodeIfPresent(Int.self, forKey: .documentId)
@@ -158,16 +157,7 @@ extension ProductStatementData: Codable {
         self.opCode = try container.decodeIfPresent(Int.self, forKey: .opCode)
         self.operationId = try container.decodeIfPresent(String.self, forKey: .operationId)
         self.terminalCode = try container.decodeIfPresent(String.self, forKey: .terminalCode)
-        
-        if let tranDateValue = try container.decodeIfPresent(Int.self, forKey: .tranDate) {
-            
-            self.tranDate = Date.dateUTC(with: tranDateValue)
-            
-        } else {
-            
-            self.tranDate = nil
-        }
-        
+        self.tranDate = try container.decodeIfPresent(Date.self, forKey: .tranDate)
         self.fastPayment = try container.decodeIfPresent(FastPayment.self, forKey: .fastPayment)
         self.operationType = try container.decode(OperationType.self, forKey: .operationType)
         self.paymentDetailType = try container.decode(ProductStatementData.Kind.self, forKey: .paymentDetailType)
@@ -207,7 +197,7 @@ extension ProductStatementData: Codable {
         
         if let tranDate = tranDate {
             
-            try container.encode(tranDate.secondsSince1970UTC, forKey: .tranDate)
+            try container.encode(tranDate, forKey: .tranDate)
         }
         
         try container.encode(type, forKey: .type)
