@@ -259,7 +259,7 @@ private extension OperationDetailViewModel {
             
             switch operationDetail.printFormType {
             case .closeAccount:
-                let printFormViewModel = PrintFormView.ViewModel(type: .closeAccount(id: operationDetail.payerAccountId, paymentOperationDetailId: operationDetail.payerAccountId), model: self.model, dismissAction: {})
+                let printFormViewModel = PrintFormView.ViewModel(type: .closeAccount(id: operationDetail.payerAccountId, paymentOperationDetailId: operationDetail.paymentOperationDetailId), model: self.model, dismissAction: {})
                 
                 self.action.send(OperationDetailViewModelAction.ShowDocument(viewModel: printFormViewModel))
                 
