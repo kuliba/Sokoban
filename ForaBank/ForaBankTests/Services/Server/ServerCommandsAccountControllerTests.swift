@@ -23,7 +23,7 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 		// given
 		let url = bundle.url(forResource: "GetAccountStatementResponseGeneric", withExtension: "json")!
 		let json = try Data(contentsOf: url)
-        let date = Date.dateUTC(with: 1648512000000)
+        let date = formatter.date(from: "2022-12-04T21:00:00.000Z")!
 
 		let accountStatementData = ProductStatementData(mcc: 3245,
 														accountId: 10004111477,
@@ -34,7 +34,7 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 														comment: "Перевод денежных средств. НДС не облагается.",
 														country: "string",
 														currencyCodeNumeric: 810,
-														date: date,
+                                                        date: date,
 														deviceCode: "string",
 														documentAmount: 144.21,
 														documentId: 10230444722,
@@ -75,7 +75,7 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 		// given
 		let url = bundle.url(forResource: "GetAccountStatementResponseGenericMin", withExtension: "json")!
 		let json = try Data(contentsOf: url)
-        let date = Date.dateUTC(with: 1648512000000)
+        let date = formatter.date(from: "2022-12-04T21:00:00.000Z")!
 
 		let accountStatementData = ProductStatementData(mcc: nil,
 														accountId: nil,

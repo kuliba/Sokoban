@@ -5,7 +5,7 @@
       "amount": 144.21,
       "comment": "Перевод денежных средств. НДС не облагается.",
       "currencyCodeNumeric": 810,
-      "date": 1648512000000,
+      "date": "2022-12-04T21:00:00.000Z",
       "groupName": "Прочие операции",
       "md5hash": "75f3ee3b2d44e5808f41777c613f23c9",
       "operationType": "DEBIT",

@@ -71,14 +71,14 @@ extension ServerCommands {
         }
         
         /*
-         http://10.1.206.21:8080/swagger-ui/index.html#/CardController/getCardStatementForPeriod_V2
+         http://10.1.206.21:8080/swagger-ui/index.html#/CardController/getCardStatementForPeriod_V3
          */
         
         //TODO: - tests
         struct GetCardStatementForPeriod: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/getCardStatementForPeriod_V2"
+            let endpoint = "/rest/getCardStatementForPeriod_V3"
             let method: ServerCommandMethod = .post
             let payload: BasePayload?
             
