@@ -33,7 +33,7 @@ extension PaymentsInputView {
             
             self.icon = icon
             self.description = description
-            self.textField = .init(text: content)
+            self.textField = .init(text: content, placeholder: description)
             self.actionButton = actionButton
             self.model = model
             

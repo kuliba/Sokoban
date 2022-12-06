@@ -19,23 +19,25 @@ extension TextFieldRegularView {
         @Published var isEnabled: Bool
         @Published var isEditing: Bool
         
+        let placeholder: String?
         let toolbar: ToolbarViewModel?
         var becomeFirstResponder: () -> Void
         var dismissKeyboard: () -> Void
         
-        init(text: String?, isEnabled: Bool, isEditing: Bool, toolbar: ToolbarViewModel?, becomeFirstResponder: @escaping () -> Void, dismissKeyboard: @escaping () -> Void) {
+        init(text: String?, isEnabled: Bool, isEditing: Bool, placeholder: String?, toolbar: ToolbarViewModel?, becomeFirstResponder: @escaping () -> Void, dismissKeyboard: @escaping () -> Void) {
             
             self.text = text
             self.isEnabled = isEnabled
             self.isEditing = isEditing
+            self.placeholder = placeholder
             self.toolbar = toolbar
             self.becomeFirstResponder = becomeFirstResponder
             self.dismissKeyboard = dismissKeyboard
         }
         
-        convenience init(text: String?) {
+        convenience init(text: String?, placeholder: String?) {
             
-            self.init(text: text, isEnabled: true, isEditing: true, toolbar: .init(doneButton: .init(isEnabled: true, action: {  UIApplication.shared.endEditing() })), becomeFirstResponder: {}, dismissKeyboard: {})
+            self.init(text: text, isEnabled: true, isEditing: true, placeholder: placeholder, toolbar: .init(doneButton: .init(isEnabled: true, action: {  UIApplication.shared.endEditing() })), becomeFirstResponder: {}, dismissKeyboard: {})
         }
     }
 }
@@ -89,6 +91,9 @@ struct TextFieldRegularView: UIViewRepresentable {
         textField.backgroundColor = backgroundColor.uiColor()
         textField.textColor = textColor.uiColor()
         textField.tintColor = tintColor.uiColor()
+        textField.placeholder = viewModel.placeholder
+        
+        textField.addTarget(context.coordinator, action: #selector(context.coordinator.textFieldDidChange(textField:)), for: .editingChanged)
         
         viewModel.becomeFirstResponder = { textField.becomeFirstResponder() }
         viewModel.dismissKeyboard = { textField.resignFirstResponder() }
@@ -126,6 +131,11 @@ struct TextFieldRegularView: UIViewRepresentable {
         
         func textFieldDidEndEditing(_ textField: UITextField) {
             viewModel.isEditing = false
+        }
+        
+        @objc func textFieldDidChange(textField: UITextField) {
+            
+            viewModel.text = textField.text
         }
         
         @objc func handleDoneAction() {
