@@ -548,8 +548,8 @@ struct ProductView: View {
                 
                 ProductView.HeaderView(viewModel: viewModel.header, appearance: viewModel.appearance)
                     .padding(.leading, headerPaddingLeading)
-                    .padding(.top, 4)
-                
+                    .padding(.top, viewModel.appearance.size == .small ? 4 : 6.2)
+                    
                 Spacer()
                 
                 VStack(alignment: .leading, spacing: nameSpacing) {
