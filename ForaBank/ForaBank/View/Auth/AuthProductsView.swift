@@ -93,34 +93,41 @@ extension AuthProductsView {
                     VStack(alignment: .leading, spacing: 4) {
                         
                         ForEach(viewModel.subtitle, id: \.self) { line in
-                           
-                            Text(line)
-                                .font(.textBodyMR14200())
-                                .foregroundColor(viewModel.style.textColor)
+                            
+                            HStack(alignment: .firstTextBaseline) {
                                 
+                                Circle()
+                                    .frame(width: 4, height: 4)
+                                    .foregroundColor(viewModel.style.textColor)
+                                    .frame(width: 11, height: 11)
+                                
+                                Text(line)
+                                    .font(.textBodyMR14200())
+                                    .foregroundColor(viewModel.style.textColor)
+                                
+                                Spacer()
+                            }
                         }
-                        
                     }.padding(.top, 24)
- 
-                    switch viewModel.image {
-                    case .image(let image):
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: 236)
-                            .cornerRadius(12)
-                            .padding(.top, 20)
-                        
-                    case .endpoint:
-                        Color
-                            .mainColorsGrayMedium
-                            .opacity(0.5)
-                            .frame(height: 236)
-                            .cornerRadius(12)
-                            .padding(.top, 20)
-                    }
-         
-                    HStack(alignment: .center, spacing: 20) {
+                    
+                    Group {
+                        switch viewModel.image {
+                        case .image(let image):
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .cornerRadius(12)
+                            
+                        case .endpoint:
+                            Color
+                                .mainColorsGrayMedium
+                                .opacity(0.5)
+                                .frame(height: 236)
+                                .cornerRadius(12)
+                        }
+                    }.padding(.top, 20)
+                    
+                    HStack(alignment: .center, spacing: 16) {
                         
                         AuthProductsView.InfoButtonView(viewModel: viewModel.infoButton, color: viewModel.style.textColor)
                         
@@ -174,7 +181,7 @@ extension AuthProductsView {
                     .frame(width: 166)
                     .background(Color.buttonPrimary)
                     .cornerRadius(8)
-            }   
+            }
         }
     }
 }
