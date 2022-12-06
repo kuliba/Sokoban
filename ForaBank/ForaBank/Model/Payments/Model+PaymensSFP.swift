@@ -124,6 +124,27 @@ extension Model {
             }
             return Payments.ParameterHeader(title: "Подтвердите реквизиты", icon: .name("ic24Sbp"))
             
+        case Payments.Parameter.Identifier.sfpMessage.rawValue:
+            
+            guard let messageParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterInput else {
+                return nil
+            }
+            
+            let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
+            guard let bankParameter = parameters.first(where: { $0.id == bankParameterId }),
+               let bankParameterValue = bankParameter.value else {
+                return nil
+            }
+            
+            if isForaBank(bankId: bankParameterValue) == true {
+                
+                return messageParameter.updated(isEditable: false)
+
+            } else {
+                
+                return messageParameter.updated(isEditable: true)
+            }
+            
         default:
             return nil
         }

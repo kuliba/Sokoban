@@ -239,6 +239,8 @@ class PaymentsOperationViewModel: ObservableObject {
  
                     case let payload as PaymentsSectionViewModelAction.PopUpSelector.Show:
                         bottomSheet = .init(type: .popUp(payload.viewModel))
+                        // hide keyboard
+                        UIApplication.shared.endEditing()
                         
                     case _ as PaymentsSectionViewModelAction.PopUpSelector.Close:
                         withAnimation {
@@ -247,12 +249,16 @@ class PaymentsOperationViewModel: ObservableObject {
                         
                     case let payload as PaymentsSectionViewModelAction.BankSelector.Show:
                         sheet = .init(type: .contacts(payload.viewModel))
+                        // hide keyboard
+                        UIApplication.shared.endEditing()
                         
                     case _ as PaymentsSectionViewModelAction.BankSelector.Close:
                         sheet = nil
                         
                     case let payload as PaymentsSectionViewModelAction.ContactSelector.Show:
                         sheet = .init(type: .contacts(payload.viewModel))
+                        // hide keyboard
+                        UIApplication.shared.endEditing()
                         
                     case _ as PaymentsSectionViewModelAction.ContactSelector.Close:
                         sheet = nil

@@ -916,6 +916,7 @@
 		77988490285DD30F0023CA65 /* ProductProfileDetailInfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7798848F285DD30F0023CA65 /* ProductProfileDetailInfoViewComponent.swift */; };
 		77A1466427C12B52006CC112 /* PaymentsParameterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A1466327C12B52006CC112 /* PaymentsParameterViewModel.swift */; };
 		77A3C53A2938D2AA006FC9EB /* PaymentsInputPhoneViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A3C5392938D2AA006FC9EB /* PaymentsInputPhoneViewComponent.swift */; };
+		77A3C53C293F59BF006FC9EB /* TextFieldRegularComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A3C53B293F59BF006FC9EB /* TextFieldRegularComponent.swift */; };
 		77A411E727EB962100D36E46 /* MainSectionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A411E627EB962100D36E46 /* MainSectionsSettings.swift */; };
 		77A411E927EC456800D36E46 /* Model+Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A411E827EC456800D36E46 /* Model+Settings.swift */; };
 		77A411EB27EC624000D36E46 /* Model+Deposits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A411EA27EC624000D36E46 /* Model+Deposits.swift */; };
@@ -2390,6 +2391,7 @@
 		7798848F285DD30F0023CA65 /* ProductProfileDetailInfoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileDetailInfoViewComponent.swift; sourceTree = "<group>"; };
 		77A1466327C12B52006CC112 /* PaymentsParameterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsParameterViewModel.swift; sourceTree = "<group>"; };
 		77A3C5392938D2AA006FC9EB /* PaymentsInputPhoneViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsInputPhoneViewComponent.swift; sourceTree = "<group>"; };
+		77A3C53B293F59BF006FC9EB /* TextFieldRegularComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldRegularComponent.swift; sourceTree = "<group>"; };
 		77A411E627EB962100D36E46 /* MainSectionsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionsSettings.swift; sourceTree = "<group>"; };
 		77A411E827EC456800D36E46 /* Model+Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Settings.swift"; sourceTree = "<group>"; };
 		77A411EA27EC624000D36E46 /* Model+Deposits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Deposits.swift"; sourceTree = "<group>"; };
@@ -4627,6 +4629,7 @@
 				774A8B7D2865FF1400B81140 /* TextFieldFormatableViewComponent.swift */,
 				774A8B7B2865FF0900B81140 /* TextFieldMaskableViewComponent.swift */,
 				C10CE65C29070CDF00FC5706 /* TextFieldPhoneNumberViewComponent.swift */,
+				77A3C53B293F59BF006FC9EB /* TextFieldRegularComponent.swift */,
 				ED288CA92874C95F00B9ABC6 /* AlertTextFieldComponent.swift */,
 				509EE0E1285F855D002281BF /* KeyboardPublisher.swift */,
 				ED374C8E2861FBCE00A97219 /* ActivityViewComponent.swift */,
@@ -8597,6 +8600,7 @@
 				77EC58AE277120CE0054D75C /* TransferMe2MeData.swift in Sources */,
 				ED15DAEF2812C33D00BF7E9F /* DocumentCellViewComponent.swift in Sources */,
 				EDB1453C2666AEB90028EF5A /* AppDelegate UI extension.swift in Sources */,
+				77A3C53C293F59BF006FC9EB /* TextFieldRegularComponent.swift in Sources */,
 				ED4B5444270345D400C87A1A /* CardsScrollCell.swift in Sources */,
 				0B66E8DC26CC5F4D00FD735D /* QRScannerCodeDelegate.swift in Sources */,
 				C154986C29075D5200D00670 /* ContactsBanksPrefferedSectionViewModel.swift in Sources */,
