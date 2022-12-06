@@ -219,10 +219,10 @@ extension ProductView {
                 
             case let depositProduct as ProductDepositData:
                 guard let endDate = depositProduct.endDate else { return nil }
-                return "• \(DateFormatter.shortDate.string(from: endDate))"
+                return DateFormatter.shortDate.string(from: endDate)
                 
             case let loanProduct as ProductLoanData:
-                return "• \(DateFormatter.shortDate.string(from: loanProduct.dateLong))"
+                return DateFormatter.shortDate.string(from: loanProduct.dateLong)
                 
             default: return nil
             }
