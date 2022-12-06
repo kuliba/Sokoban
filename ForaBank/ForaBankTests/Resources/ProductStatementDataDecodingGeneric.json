@@ -8,7 +8,7 @@
   "comment": "Перевод денежных средств. НДС не облагается.",
   "country": "string",
   "currencyCodeNumeric": 810,
-  "date": "2022-12-04T21:00:00.000Z",
+  "date": 1648512000000,
   "deviceCode": "string",
   "documentAmount": 144.21,
   "documentID": 10230444722,
@@ -35,6 +35,6 @@
   "paymentDetailType": "BETWEEN_THEIR",
   "svgImage": "string",
   "terminalCode": "41010601",
-  "tranDate": "2022-12-04T21:00:00.000Z",
+  "tranDate": 1648512000000,
   "type": "INSIDE"
 }

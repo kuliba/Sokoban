@@ -41,14 +41,14 @@ extension ServerCommands {
         }
         
         /*
-         http://10.1.206.21:8080/swagger-ui/index.html#/AccountController/getAccountStatementForPeriod_V3
+         http://10.1.206.21:8080/swagger-ui/index.html#/AccountController/getAccountStatementForPeriod_V2
          */
         
         //TODO: - tests
         struct GetAccountStatementForPeriod: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/getAccountStatementForPeriod_V3"
+            let endpoint = "/rest/getAccountStatementForPeriod_V2"
             let method: ServerCommandMethod = .post
             var payload: BasePayload?
             
