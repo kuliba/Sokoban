@@ -257,9 +257,18 @@ private extension OperationDetailViewModel {
                 return
             }
             
-            let printFormViewModel = PrintFormView.ViewModel(type: .operation(paymentOperationDetailId: paymentOperationDetailID, printFormType: printFormType), model: self.model)
-            
-            self.action.send(OperationDetailViewModelAction.ShowDocument(viewModel: printFormViewModel))
+            switch operationDetail.printFormType {
+            case .closeAccount:
+                let printFormViewModel = PrintFormView.ViewModel(type: .closeAccount(id: operationDetail.payerAccountId, paymentOperationDetailId: operationDetail.payerAccountId), model: self.model, dismissAction: {})
+                
+                self.action.send(OperationDetailViewModelAction.ShowDocument(viewModel: printFormViewModel))
+                
+            default:
+                let printFormViewModel = PrintFormView.ViewModel(type: .operation(paymentOperationDetailId: paymentOperationDetailID, printFormType: printFormType), model: self.model)
+                
+                self.action.send(OperationDetailViewModelAction.ShowDocument(viewModel: printFormViewModel))
+                
+            }
         })
     }
     
