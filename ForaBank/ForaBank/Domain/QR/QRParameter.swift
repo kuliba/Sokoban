@@ -7,16 +7,14 @@
 
 import Foundation
 
-struct QRParameter: Codable, Equatable {
+struct QRParameter: Codable {
     
     let parameter: Kind
     let keys: [String]
     let type: ValueType
-    
-    static func == (lhs: QRParameter, rhs: QRParameter) -> Bool {
-        return lhs.type == rhs.type && lhs.parameter == rhs.parameter
-    }
 }
+
+//MARK: - Types
 
 extension QRParameter {
     
@@ -88,6 +86,15 @@ extension QRParameter {
         case integer = "INTEGER"
         case double = "DOUBLE"
         case date = "DATE"
+    }
+}
+
+//MARK: - Equatable
+
+extension QRParameter: Equatable {
+    
+    static func == (lhs: QRParameter, rhs: QRParameter) -> Bool {
+        return lhs.type == rhs.type && lhs.parameter == rhs.parameter
     }
 }
 

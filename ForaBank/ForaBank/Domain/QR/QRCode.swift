@@ -29,7 +29,27 @@ struct QRCode {
         
         self.init(original: string, rawData: rawData)
     }
+}
+
+//MARK: - Value
+
+extension QRCode {
     
+    func stringValue(type: QRParameter.Kind, mapping: QRMapping) -> String? {
+        
+        guard let parameter = mapping.allParameters.first(where: { $0.parameter.name == type.name }) else {
+            return nil
+        }
+        
+        for key in parameter.keys {
+            
+            guard let value = rawData[key.lowercased()] else { return nil }
+            
+            return value
+        }
+        
+        return nil
+    }
     
     func value<Value>(type: QRParameter.Kind, mapping: QRMapping) throws -> Value? {
         
@@ -64,45 +84,18 @@ struct QRCode {
                 return value as? Value
             }
         }
+        
         return nil
     }
+}
+
+//MARK: - Helpers
+
+extension QRCode {
     
     static func separatedString(string: String) -> [String] {
         
         return string.components(separatedBy: "|")
-    }
-    
-    func check(mapping: QRMapping) -> QRMapping.FailData? {
-        
-        let rawDataKays = self.rawData.map{ $0.key }
-        
-        let parametersKays = mapping.allParameters.flatMap{ $0.keys }
-        
-        let unknownKeys = rawDataKays.difference(from: parametersKays)
-        
-        if unknownKeys.count > 0 {
-            
-            return QRMapping.FailData(rawData: original, parsed: rawData, unknownKeys: unknownKeys)
-        } else {
-            
-            return nil
-        }
-    }
-    
-    func stringValue(type: QRParameter.Kind, mapping: QRMapping) -> String? {
-        
-        guard let parameter = mapping.allParameters.first(where: { $0.parameter.name == type.name }) else {
-            return nil
-        }
-        
-        for key in parameter.keys {
-            
-            guard let value = rawData[key.lowercased()] else { return nil }
-            
-            return value
-        }
-        
-        return nil
     }
     
     static func rawDataMapping(qrStringData: [String]) -> [String: String] {
@@ -119,6 +112,20 @@ struct QRCode {
             }
         }
         return tempRawData
+    }
+    
+    //TODO: tests
+    func check(mapping: QRMapping) -> QRMapping.FailData? {
+        
+        let rawDataKays = self.rawData.map{ $0.key }
+        let parametersKays = mapping.allParameters.flatMap{ $0.keys }
+        let unknownKeys = rawDataKays.difference(from: parametersKays)
+        
+        guard unknownKeys.isEmpty == false else {
+            return nil
+        }
+        
+        return QRMapping.FailData(rawData: original, parsed: rawData, unknownKeys: unknownKeys)
     }
 }
 
