@@ -385,22 +385,24 @@ class MainViewModel: ObservableObject, Resetable {
                 case let payload as QRViewModelAction.Result:
                     
                     switch payload.result {
-                        
                     case .qrCode(let qr):
                         
                         guard let qrMapping = model.qrDictionary.value else { break }
                         
-                        let operatorPuref = model.dictionaryAnywayOperator(with: qr, mapping: qrMapping)
-                        
-                        let puref = operatorPuref?.code
-                        
-                        if puref != nil {
+                        if let operators = model.dictionaryAnywayOperators(with: qr, mapping: qrMapping) {
                             
-                            let operatorsViewModel = OperatorsViewModel(closeAction: {
-                                self.link = nil
-                            }, mode: .qr(qr))
+                            if operators.count == 1 {
+                                
+                                let operatorsViewModel = OperatorsViewModel(closeAction: {
+                                    self.link = nil
+                                }, mode: .qr(qr))
+                                self.link = .serviceOperators(operatorsViewModel)
+                                
+                            } else {
+                                
+                                //TODO: QRSearchOperatorViewModel with operators
+                            }
                             
-                            self.link = .serviceOperators(operatorsViewModel)
                         } else {
                             
                             let failedView = QRFailedViewModel()

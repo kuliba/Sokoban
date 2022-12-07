@@ -345,7 +345,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
 
                         guard let qrMapping = model.qrDictionary.value else { break }
 
-                        let operatorPuref = model.dictionaryAnywayOperator(with: qr, mapping: qrMapping)
+                        let operatorPuref = model.dictionaryAnywayFirstOperator(with: qr, mapping: qrMapping)
 
                         let puref = operatorPuref?.code
 

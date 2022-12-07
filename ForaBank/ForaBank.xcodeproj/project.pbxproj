@@ -3474,6 +3474,7 @@
 				0BE0BDF52905D2340064549E /* QRDocumentsButtonsViewComponent.swift */,
 				0BE0BDFE2907315D0064549E /* QRInfoView.swift */,
 				0B1781222926E6CE005209B5 /* QRSearchItemComponent.swift */,
+				0BE0BDFC29071BE10064549E /* QRButtonsViewComponent.swift */,
 				0BA7F27429320A8300A13EA1 /* DocumentPicker.swift */,
 			);
 			path = QR;
@@ -3482,7 +3483,6 @@
 		0BE0BDF92906F8BA0064549E /* QR */ = {
 			isa = PBXGroup;
 			children = (
-				0BE0BDFC29071BE10064549E /* QRButtonsViewComponent.swift */,
 				0BE0BE042910760B0064549E /* QRViewModel.swift */,
 				0B11A7872922A71E00C9BDD0 /* QRFailedViewModel.swift */,
 				0B8365DE2926A9C000A11F0A /* QRSearchOperatorViewModel.swift */,

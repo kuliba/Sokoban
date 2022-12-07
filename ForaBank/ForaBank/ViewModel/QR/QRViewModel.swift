@@ -49,40 +49,8 @@ class QRViewModel: ObservableObject {
         bind()
     }
     
-    static func resolve(data: String) -> Result {
-        
-        if let url = URL(string: data) {
-            
-            if url.absoluteString.contains("qr.nspk.ru") {
-                
-                return .c2bURL(url)
-                
-            } else {
-                
-                return .url(url)
-            }
-            
-        } else if let qrCode = QRCode(string: data) {
-            return .qrCode(qrCode)
-        } else {
-            return .unknown(data)
-        }
-    }
-    private func createButtons() -> [ButtonIconTextView.ViewModel] {
-        
-        return [
-            ButtonIconTextView.ViewModel(icon: .init(image: .ic24Image, background: .circle), title: .init(text: "Из файла"), orientation: .vertical, action: { [weak self] in
-                self?.action.send(QRViewModelAction.OpenDocument())
-            }),
-            ButtonIconTextView.ViewModel(icon: .init(image: .ic24ZapOff, background: .circle), title: .init(text: "Фонарик"), orientation: .vertical, action: { [weak self] in
-                self?.action.send(QRViewModelAction.Flashlight())
-            }),
-            ButtonIconTextView.ViewModel(icon: .init(image: .ic24AlertCircle, background: .circle), title: .init(text: "Инфо"), orientation: .vertical, action: { [weak self] in
-                self?.action.send(QRViewModelAction.Info())
-            })]
-    }
-    
     func bind() {
+        
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
@@ -95,7 +63,6 @@ class QRViewModel: ObservableObject {
                             self?.model.action.send(ModelAction.Media.GalleryPermission.Request())
                         }),
                         .init(icon: .init(image: .ic24Clock, background: .circle), title: .init(text: "Из Документов", style: .bold), orientation: .horizontal, action: { [weak self] in
-//                            self?.bottomSheet = nil
                           self?.model.action.send(ModelAction.Media.DocumentPermission.Request())
                         })
                     ])))
@@ -110,8 +77,8 @@ class QRViewModel: ObservableObject {
                     
                 default:
                     break
-                    
                 }
+                
             }.store(in: &bindings)
         
         model.action
@@ -155,12 +122,12 @@ class QRViewModel: ObservableObject {
                         
                     self.link = .documentPicker(.init(closeAction: { [weak self] url in
                         
-                        guard let url = url else { return }
-                        
-                        guard let image = self?.qrFromPDF(url: url) else { return }
-                        
-                        guard let qr = self?.string(from: image) else { return }
-                        
+                        guard let url = url,
+                              let image = self?.qrFromPDF(url: url),
+                              let qr = self?.string(from: image)else {
+                            return
+                        }
+      
                         let result = Self.resolve(data: qr)
                         
                         self?.action.send(QRViewModelAction.Result(result: result))
@@ -177,10 +144,7 @@ class QRViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
-                    
                 case let payload as QRScannerViewAction.Scanned:
-                    
-                    
                     let result = Self.resolve(data: payload.value)
                     
                     self.action.send(QRViewModelAction.Result(result: result))
@@ -190,26 +154,11 @@ class QRViewModel: ObservableObject {
                 }
             } .store(in: &bindings)
     }
-    
-    func string(from image: UIImage) -> String {
-        
-        var qrAsString = ""
-        guard let detector = CIDetector(ofType: CIDetectorTypeQRCode,
-                                        context: nil,
-                                        options: [CIDetectorAccuracy: CIDetectorAccuracyHigh]),
-              let ciImage = CIImage(image: image),
-              let features = detector.features(in: ciImage) as? [CIQRCodeFeature] else {
-            return qrAsString
-        }
-        
-        for feature in features {
-            guard let indeedMessageString = feature.messageString else {
-                continue
-            }
-            qrAsString += indeedMessageString
-        }
-        return qrAsString
-    }
+}
+
+//MARK: - Types
+
+extension QRViewModel {
     
     struct BottomSheet: Identifiable {
         
@@ -231,14 +180,40 @@ class QRViewModel: ObservableObject {
         case failedView(QRFailedViewModel)
     }
     
-    private func flashlight() throws {
-        let device = AVCaptureDevice.default(for: .video)
-        if ((device?.hasTorch) != nil) {
-            do {
-                try device?.lockForConfiguration()
-                device?.torchMode = device?.torchMode == AVCaptureDevice.TorchMode.on ? .off : .on
-                device?.unlockForConfiguration()
+    enum Result {
+        
+        case qrCode(QRCode)
+        case c2bURL(URL)
+        case url(URL)
+        case unknown(String)
+    }
+}
+
+//MARK: - Resovers
+
+extension QRViewModel {
+    
+    //TODO: tests
+    static func resolve(data: String) -> Result {
+        
+        if let url = URL(string: data) {
+            
+            if url.absoluteString.contains("qr.nspk.ru") {
+                
+                return .c2bURL(url)
+                
+            } else {
+                
+                return .url(url)
             }
+            
+        } else if let qrCode = QRCode(string: data) {
+            
+            return .qrCode(qrCode)
+            
+        } else {
+            
+            return .unknown(data)
         }
     }
     
@@ -276,13 +251,55 @@ class QRViewModel: ObservableObject {
         }
         return image
     }
+}
+
+//MARK: - Helpers
+
+extension QRViewModel {
     
-    enum Result {
+    private func createButtons() -> [ButtonIconTextView.ViewModel] {
         
-        case qrCode(QRCode)
-        case c2bURL(URL)
-        case url(URL)
-        case unknown(String)
+        return [
+            ButtonIconTextView.ViewModel(icon: .init(image: .ic24Image, background: .circle), title: .init(text: "Из файла"), orientation: .vertical, action: { [weak self] in
+                self?.action.send(QRViewModelAction.OpenDocument())
+            }),
+            ButtonIconTextView.ViewModel(icon: .init(image: .ic24ZapOff, background: .circle), title: .init(text: "Фонарик"), orientation: .vertical, action: { [weak self] in
+                self?.action.send(QRViewModelAction.Flashlight())
+            }),
+            ButtonIconTextView.ViewModel(icon: .init(image: .ic24AlertCircle, background: .circle), title: .init(text: "Инфо"), orientation: .vertical, action: { [weak self] in
+                self?.action.send(QRViewModelAction.Info())
+            })]
+    }
+    
+    func string(from image: UIImage) -> String {
+        
+        var qrAsString = ""
+        guard let detector = CIDetector(ofType: CIDetectorTypeQRCode,
+                                        context: nil,
+                                        options: [CIDetectorAccuracy: CIDetectorAccuracyHigh]),
+              let ciImage = CIImage(image: image),
+              let features = detector.features(in: ciImage) as? [CIQRCodeFeature] else {
+            return qrAsString
+        }
+        
+        for feature in features {
+            guard let indeedMessageString = feature.messageString else {
+                continue
+            }
+            qrAsString += indeedMessageString
+        }
+        return qrAsString
+    }
+    
+    private func flashlight() throws {
+        let device = AVCaptureDevice.default(for: .video)
+        if ((device?.hasTorch) != nil) {
+            do {
+                try device?.lockForConfiguration()
+                device?.torchMode = device?.torchMode == AVCaptureDevice.TorchMode.on ? .off : .on
+                device?.unlockForConfiguration()
+            }
+        }
     }
 }
 

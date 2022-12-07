@@ -1671,14 +1671,19 @@ extension Model {
         }
     }
     
-    func dictionaryAnywayOperator(with code: QRCode, mapping: QRMapping) -> OperatorGroupData.OperatorData? {
+    func dictionaryAnywayFirstOperator(with code: QRCode, mapping: QRMapping) -> OperatorGroupData.OperatorData? {
 
-        guard let inn = code.stringValue(type: .general(.inn), mapping: mapping) else { return nil}
+        guard let inn = code.stringValue(type: .general(.inn), mapping: mapping) else { return nil }
 
         return dictionaryAnywayOperators()?.first(where: { $0.synonymList.contains(inn) })
-
     }
+    
+    func dictionaryAnywayOperators(with code: QRCode, mapping: QRMapping) -> [OperatorGroupData.OperatorData]? {
 
+        guard let inn = code.stringValue(type: .general(.inn), mapping: mapping) else { return nil }
+
+        return dictionaryAnywayOperators()?.filter( { $0.synonymList.contains(inn) })
+    }
 }
 
 

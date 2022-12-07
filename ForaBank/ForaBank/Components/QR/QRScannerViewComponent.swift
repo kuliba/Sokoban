@@ -10,9 +10,21 @@ import UIKit
 import SwiftUI
 import Combine
 
+//MARK: - View Model
+
+extension QRScannerView {
+    
+    class ViewModel {
+        
+        let action: PassthroughSubject<Action, Never> = .init()
+    }
+}
+
+//MARK: - View
+
 struct QRScannerView: UIViewControllerRepresentable {
     
-    @ObservedObject var viewModel: ViewModel
+    let viewModel: ViewModel
     
     func makeUIViewController(context: Context) -> QRScannerViewController {
         QRScannerViewController(viewModel: viewModel)
@@ -21,34 +33,19 @@ struct QRScannerView: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: QRScannerViewController, context: Context) {}
 }
 
-extension QRScannerView {
-    
-    class ViewModel: ObservableObject {
-        
-        let action: PassthroughSubject<Action, Never> = .init()
-    }
-}
+//MARK: - Action
 
 enum QRScannerViewAction {
-
-   struct Scanned: Action {
-
-     let value: String
-   }
     
-   struct Fail: Action {
-
-    let error: QRScannerViewModelError
-  }
-}
-
-
-enum QRScannerViewModelError: Error {
+    struct Scanned: Action {
+        
+        let value: String
+    }
     
-    case unableCreateVideoCaptureDevice
-    case unableCreateVideoInput
-    case unableAddVideoInputToCaptureSession
-    case unableAddMetadataOutputToCaptureSession
+    struct Fail: Action {
+        
+        let error: QRScannerViewModelError
+    }
 }
 
 class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
@@ -123,7 +120,7 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
         super.viewWillAppear(animated)
         
         if (captureSession?.isRunning == false) {
-                self.captureSession?.startRunning()
+            self.captureSession?.startRunning()
         }
     }
     
@@ -132,8 +129,8 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
         guard let metadataObject = metadataObjects.first,
               let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject,
               let stringValue = readableObject.stringValue
-              else {
-                   return
+        else {
+            return
         }
         
         self.viewModel.action.send(QRScannerViewAction.Scanned(value: stringValue))
@@ -145,3 +142,12 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
     }
 }
 
+//MARK: - Error
+
+enum QRScannerViewModelError: Error {
+    
+    case unableCreateVideoCaptureDevice
+    case unableCreateVideoInput
+    case unableAddVideoInputToCaptureSession
+    case unableAddMetadataOutputToCaptureSession
+}
