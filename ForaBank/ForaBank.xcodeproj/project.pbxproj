@@ -215,7 +215,7 @@
 		0BDCF00A2749A5A900AAA1C3 /* GKHInputModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDCF0092749A5A900AAA1C3 /* GKHInputModel.swift */; };
 		0BDCF00D274A8B0F00AAA1C3 /* IsSingleServiceDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDCF00C274A8B0F00AAA1C3 /* IsSingleServiceDecodableModel.swift */; };
 		0BDCF00F274D56C500AAA1C3 /* NextStepServiceTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDCF00E274D56C500AAA1C3 /* NextStepServiceTransferDecodableModel.swift */; };
-		0BDDFE05290028910045CDC6 /* QRMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDDFE04290028910045CDC6 /* QRMappingTests.swift */; };
+		0BDDFE05290028910045CDC6 /* QRCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDDFE04290028910045CDC6 /* QRCodeTests.swift */; };
 		0BDE452D26E298F600B64A0A /* ExtensionQRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE452C26E298F600B64A0A /* ExtensionQRViewController.swift */; };
 		0BDE452F26E2995700B64A0A /* ExtensionQRMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE452E26E2995700B64A0A /* ExtensionQRMetaData.swift */; };
 		0BDE453126E2A8CB00B64A0A /* ExtensionGKHMainQR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE453026E2A8CB00B64A0A /* ExtensionGKHMainQR.swift */; };
@@ -1039,6 +1039,7 @@
 		77F5CE1B28060E1D00611B66 /* GetAtmCityListResponseServer.json in Resources */ = {isa = PBXBuildFile; fileRef = 77F5CE1A28060E1D00611B66 /* GetAtmCityListResponseServer.json */; };
 		77F5CE1D28060E4E00611B66 /* GetAtmRegionListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77F5CE1C28060E4E00611B66 /* GetAtmRegionListResponseGeneric.json */; };
 		77F5CE1F28060E6800611B66 /* GetAtmRegionListResponseServer.json in Resources */ = {isa = PBXBuildFile; fileRef = 77F5CE1E28060E6800611B66 /* GetAtmRegionListResponseServer.json */; };
+		77FC5E1B2940F8E0006784F4 /* QRMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FC5E1A2940F8E0006784F4 /* QRMappingTests.swift */; };
 		77FF66CD27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF66CC27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift */; };
 		77FF670327B446D7009FEA09 /* AsyncAwaitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF670227B446D7009FEA09 /* AsyncAwaitTests.swift */; };
 		77FF670527B4B07B009FEA09 /* PaymentsDataModel+Parameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF670427B4B07B009FEA09 /* PaymentsDataModel+Parameter.swift */; };
@@ -1647,7 +1648,7 @@
 		0BDCF0092749A5A900AAA1C3 /* GKHInputModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHInputModel.swift; sourceTree = "<group>"; };
 		0BDCF00C274A8B0F00AAA1C3 /* IsSingleServiceDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsSingleServiceDecodableModel.swift; sourceTree = "<group>"; };
 		0BDCF00E274D56C500AAA1C3 /* NextStepServiceTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextStepServiceTransferDecodableModel.swift; sourceTree = "<group>"; };
-		0BDDFE04290028910045CDC6 /* QRMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRMappingTests.swift; sourceTree = "<group>"; };
+		0BDDFE04290028910045CDC6 /* QRCodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeTests.swift; sourceTree = "<group>"; };
 		0BDE452C26E298F600B64A0A /* ExtensionQRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionQRViewController.swift; sourceTree = "<group>"; };
 		0BDE452E26E2995700B64A0A /* ExtensionQRMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionQRMetaData.swift; sourceTree = "<group>"; };
 		0BDE453026E2A8CB00B64A0A /* ExtensionGKHMainQR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHMainQR.swift; sourceTree = "<group>"; };
@@ -2468,6 +2469,7 @@
 		77F5CE1A28060E1D00611B66 /* GetAtmCityListResponseServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetAtmCityListResponseServer.json; sourceTree = "<group>"; };
 		77F5CE1C28060E4E00611B66 /* GetAtmRegionListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetAtmRegionListResponseGeneric.json; sourceTree = "<group>"; };
 		77F5CE1E28060E6800611B66 /* GetAtmRegionListResponseServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetAtmRegionListResponseServer.json; sourceTree = "<group>"; };
+		77FC5E1A2940F8E0006784F4 /* QRMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRMappingTests.swift; sourceTree = "<group>"; };
 		77FF66CC27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTaxesFMS.swift"; sourceTree = "<group>"; };
 		77FF670227B446D7009FEA09 /* AsyncAwaitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncAwaitTests.swift; sourceTree = "<group>"; };
 		77FF670427B4B07B009FEA09 /* PaymentsDataModel+Parameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsDataModel+Parameter.swift"; sourceTree = "<group>"; };
@@ -3441,7 +3443,8 @@
 		0BDDFE03290028420045CDC6 /* QR */ = {
 			isa = PBXGroup;
 			children = (
-				0BDDFE04290028910045CDC6 /* QRMappingTests.swift */,
+				0BDDFE04290028910045CDC6 /* QRCodeTests.swift */,
+				77FC5E1A2940F8E0006784F4 /* QRMappingTests.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -8891,6 +8894,7 @@
 				68E765282796D6DF005860FE /* ServerCommandsRegistrationTests.swift in Sources */,
 				682092AA27AC069F003DCAFD /* ServerCommandsSuggestTests.swift in Sources */,
 				682C62BD28B38CCC00C9A00D /* SettingsModelTests.swift in Sources */,
+				77FC5E1B2940F8E0006784F4 /* QRMappingTests.swift in Sources */,
 				684192EC2799C0D000B4E184 /* ServerCommandsConsentTests.swift in Sources */,
 				682092BD27AC17D2003DCAFD /* ServerCommandsDaDataTests.swift in Sources */,
 				77517FEA27A98F2D005CFB77 /* ServerCommandsUserTests.swift in Sources */,
@@ -8921,7 +8925,7 @@
 				7772978C27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift in Sources */,
 				77E1803927AC0CF00006ACC9 /* ServerCommandsNotificationTests.swift in Sources */,
 				77A76A7E27FB036200A271B3 /* ServerCommandsAtmTests.swift in Sources */,
-				0BDDFE05290028910045CDC6 /* QRMappingTests.swift in Sources */,
+				0BDDFE05290028910045CDC6 /* QRCodeTests.swift in Sources */,
 				77E1803527AC05370006ACC9 /* DateFormatterExtensionsTests.swift in Sources */,
 				77517FC927A9519E005CFB77 /* ServerCommandsTransferTests.swift in Sources */,
 				77B6B35D2852286500E3001B /* ProductStatementsStorageTests.swift in Sources */,

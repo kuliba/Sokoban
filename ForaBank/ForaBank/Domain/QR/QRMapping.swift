@@ -9,8 +9,8 @@ import Foundation
 
 struct QRMapping: Codable, Equatable {
     
-    let operators: [QROperator]    
     let parameters: [QRParameter]
+    let operators: [QROperator]    
 }
 
 extension QRMapping {
@@ -29,8 +29,8 @@ extension QRMapping {
     
     enum CodingKeys: String, CodingKey {
 
-        case operators
         case parameters = "general"
+        case operators
     }
 }
 
