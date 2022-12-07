@@ -80,7 +80,7 @@ struct TextFieldRegularView: UIViewRepresentable {
     var font: UIFont = .systemFont(ofSize: 19, weight: .regular)
     var backgroundColor: Color = .clear
     var textColor: Color = .white
-    var tintColor: Color = .white
+    var tintColor: Color = .black
     
     private let textField = UITextField()
     
