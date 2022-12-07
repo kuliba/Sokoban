@@ -51,7 +51,7 @@ extension MyProductsSectionItemView {
         
         var body: some View {
             
-            ZStack {
+            ZStack(alignment: .center) {
                 
                 Color.barsTabbar
                 
@@ -59,39 +59,37 @@ extension MyProductsSectionItemView {
                     
                     MyProductsSectionItemView.IconView(viewModel: viewModel.icon)
                     
-                    VStack(spacing: 0) {
+                    VStack(alignment: .leading, spacing: 4) {
                         
                         HStack {
                             
                             if let paymentSystemIcon = viewModel.paymentSystemIcon {
-                                paymentSystemIcon
-                                    .renderingMode(.original)
+                                paymentSystemIcon.renderingMode(.original)
                             }
                             
-                            Text(viewModel.name)
-                                .lineLimit(1)
-                                .font(.textH4M16240())
-                                .foregroundColor(.mainColorsBlack)
+                            Text(viewModel.name).lineLimit(1)
                             
                             Spacer()
                             
                             Text(viewModel.balance)
-                                .font(.textH4M16240())
-                                .foregroundColor(.mainColorsBlack)
-                                .frame(alignment: .trailing)
-                            
-                        }.padding(.bottom, 4)
+                
+                        }
+                        .font(.textH4M16240())
+                        .foregroundColor(.mainColorsBlack)
+                        .padding(.top, 12)
 
-                        HStack {
+                        HStack(spacing: 8) {
                             
-                            Text(viewModel.description)
-                                .font(.textBodyMR14180())
-                                .foregroundColor(.mainColorsGray)
-                            
-                            Spacer()
+                            ForEach(viewModel.descriptions, id: \.self) { description in
+                                
+                                Circle().frame(width: 3)
+                                
+                                Text(description).font(.textBodyMR14180())
+                            }
+                            .foregroundColor(.mainColorsGray)
                             
                         }.padding(.bottom, 12)
-                        
+                      
                     }.padding(.trailing, 12)
                 }
             }

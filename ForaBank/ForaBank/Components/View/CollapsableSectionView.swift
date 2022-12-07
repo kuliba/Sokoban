@@ -55,7 +55,7 @@ struct CollapsableSectionView<Content: View>: View {
                     if maxWidth { backgroundColor.frame(maxHeight: 20) }
                         
                     Image.ic24ChevronDown
-                        .rotationEffect(isCollapsed ? .degrees(-90) : .degrees(0))
+                        .rotationEffect(isCollapsed ? .degrees(0) : .degrees(-180))
                         .foregroundColor(isShevronVisible ? .iconGray : backgroundColor)
 
                     if !maxWidth { Spacer() }

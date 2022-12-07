@@ -22,21 +22,21 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     
     let paymentSystemIcon: Image?
     let name: String
-    let description: String
+    let descriptions: [String]
     let orderModePadding: CGFloat
     
   
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(id: ProductData.ID, icon: IconViewModel, paymentSystemIcon: Image?, name: String, balance: String, description: String, sideButton: SideButtonViewModel?, orderModePadding: CGFloat = 0, model: Model) {
+    init(id: ProductData.ID, icon: IconViewModel, paymentSystemIcon: Image?, name: String, balance: String, descriptions: [String], sideButton: SideButtonViewModel?, orderModePadding: CGFloat = 0, model: Model) {
         
         self.id = id
         self.icon = icon
         self.paymentSystemIcon = paymentSystemIcon
         self.name = name
         self.balance = balance
-        self.description = description
+        self.descriptions = descriptions
         self.sideButton = sideButton
         self.orderModePadding = orderModePadding
         self.model = model
@@ -50,7 +50,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
         let paymentSystemIcon = ProductView.ViewModel.paymentSystemIcon(from: productData)
         let name = ProductView.ViewModel.name(product: productData, style: .main)
         let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
-        let description = Self.description(with: productData)
+        let descriptions = Self.descriptions(with: productData)
         var orderModePadding: CGFloat = 0
         
         if #available(iOS 16, *) {
@@ -61,7 +61,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
                   icon: icon,
                   paymentSystemIcon: paymentSystemIcon,
                   name: name, balance: balance,
-                  description: description,
+                  descriptions: descriptions,
                   sideButton: nil,
                   orderModePadding: orderModePadding,
                   model: model)
@@ -78,11 +78,23 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
         }
     }
     
-    static func description(with productData: ProductData) -> String {
+    static func descriptions(with productData: ProductData) -> [String] {
         
-        return "• \(productData.displayNumber ?? "") "
-        + (ProductView.ViewModel.createSubtitle(from: productData) ?? "")
-        + (ProductView.ViewModel.dateLong(from: productData) ?? "")
+        var value: [String] = []
+        
+        if let displayNumber = productData.displayNumber {
+            value.append(displayNumber)
+        }
+        
+        if let subtitle = ProductView.ViewModel.createSubtitle(from: productData) {
+            value.append(subtitle)
+        }
+        
+        if let dateLong = ProductView.ViewModel.dateLong(from: productData) {
+            value.append(dateLong)
+        }
+  
+        return value
     }
     
     func update(with productData: ProductData) {
@@ -362,7 +374,7 @@ extension MyProductsSectionItemViewModel {
         paymentSystemIcon: .init("Logo Visa"),
         name: "СБЕРЕГАТЕЛЬНЫЙ ОН-ЛАЙН",
         balance: "19 547 ₽",
-        description: "•  2953  • Дебетовая •  29.08.22",
+        descriptions: ["2953", "Дебетовая", "29.08.22"],
         sideButton: nil,
         model: .emptyMock)
     
@@ -374,7 +386,7 @@ extension MyProductsSectionItemViewModel {
         paymentSystemIcon: .init("Logo Visa"),
         name: "Кредит",
         balance: "19 547 ₽",
-        description: "•  2953  • Дебетовая •  29.08.22",
+        descriptions: ["2953", "Дебетовая", "29.08.22"],
         sideButton: .right(.init(type: .add, action: {})),
         model: .emptyMock)
     
@@ -386,7 +398,7 @@ extension MyProductsSectionItemViewModel {
         paymentSystemIcon: .init("Logo Visa"),
         name: "Кредит",
         balance: "19 547 ₽",
-        description: "•  2953  • Дебетовая •  29.08.22",
+        descriptions: ["2953", "Дебетовая", "29.08.22"],
         sideButton: .left(.init(type: .activate, action: {})),
         model: .emptyMock)
 }

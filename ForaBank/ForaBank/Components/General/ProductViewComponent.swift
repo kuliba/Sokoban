@@ -166,15 +166,15 @@ extension ProductView {
                 
             case let cardProduct as ProductCardData:
                 guard let subtitle = cardProduct.additionalField else { return nil }
-                return "• \(subtitle)"
+                return subtitle
                 
             case let depositProduct as ProductDepositData:
                 let subtitle = depositProduct.interestRate
-                return "• Ставка \(subtitle)%"
+                return "Ставка \(subtitle)%"
                 
             case let loanProduct as ProductLoanData:
                 let subtitle = loanProduct.currentInterestRate
-                return "• Ставка \(subtitle)%"
+                return "Ставка \(subtitle)%"
                 
             default: return nil
             }
@@ -219,10 +219,10 @@ extension ProductView {
                 
             case let depositProduct as ProductDepositData:
                 guard let endDate = depositProduct.endDate else { return nil }
-                return "• \(DateFormatter.shortDate.string(from: endDate))"
+                return DateFormatter.shortDate.string(from: endDate)
                 
             case let loanProduct as ProductLoanData:
-                return "• \(DateFormatter.shortDate.string(from: loanProduct.dateLong))"
+                return DateFormatter.shortDate.string(from: loanProduct.dateLong)
                 
             default: return nil
             }
@@ -548,8 +548,8 @@ struct ProductView: View {
                 
                 ProductView.HeaderView(viewModel: viewModel.header, appearance: viewModel.appearance)
                     .padding(.leading, headerPaddingLeading)
-                    .padding(.top, 4)
-                
+                    .padding(.top, viewModel.appearance.size == .small ? 4 : 6.2)
+                    
                 Spacer()
                 
                 VStack(alignment: .leading, spacing: nameSpacing) {

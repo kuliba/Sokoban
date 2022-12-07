@@ -26,7 +26,7 @@ struct MyProductsSectionView: View {
                 Color.barsTabbar
 
                 Image.ic24ChevronDown
-                    .rotationEffect(viewModel.isCollapsed ? .degrees(-90) : .degrees(0))
+                    .rotationEffect(viewModel.isCollapsed ? .degrees(0) : .degrees(-180))
                     .foregroundColor(.iconGray)
             }
             .padding(.horizontal, 12)
