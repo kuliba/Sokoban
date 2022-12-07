@@ -514,6 +514,7 @@ class ProductProfileViewModel: ObservableObject {
                         
                     } else {
                         let myProductsViewModel = MyProductsViewModel(model)
+                        myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
                     }
                     

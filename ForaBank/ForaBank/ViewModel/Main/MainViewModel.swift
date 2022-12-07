@@ -328,6 +328,7 @@ class MainViewModel: ObservableObject, Resetable {
     
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel = MyProductsViewModel(model)
+                        myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
                         
                         // CurrencyMetall section

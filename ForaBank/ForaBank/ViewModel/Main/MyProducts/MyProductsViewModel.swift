@@ -26,7 +26,8 @@ class MyProductsViewModel: ObservableObject {
     let openProductVM: MyProductsOpenProductView.ViewModel
     var refreshingIndicator: RefreshingIndicatorView.ViewModel
     let openProductTitle = "Открыть продукт"
-    
+    var rootActions: RootViewModel.RootActions?
+
     private  lazy var settingsOnboarding = model.settingsMyProductsOnboarding
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -237,6 +238,7 @@ class MyProductsViewModel: ObservableObject {
                                   rootView: "\(type(of: self))")
                         else { return }
                         
+                        productProfileViewModel.rootActions = rootActions
                         link = .productProfile(productProfileViewModel)
                         
                     default: break
