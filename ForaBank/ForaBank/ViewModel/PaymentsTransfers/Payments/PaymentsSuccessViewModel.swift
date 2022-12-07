@@ -159,7 +159,27 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 switch action {
                     
                 case let payload as ModelAction.Operation.Detail.Response:
-                    handleDetailResponse(mode, payload: payload, documentStatus: documentStatus)
+                    
+                    switch payload.result {
+                    case let .success(detailData):
+                     
+                        switch mode {
+                        case .closeAccount(_):
+                            let viewModel: OperationDetailInfoViewModel = .init(model: self.model, operation: detailData, dismissAction: {
+                                
+                                self.sheet = nil
+                            })
+                            
+                            self.action.send(PaymentsSuccessAction.OptionButton.Details.Tap(viewModel: viewModel))
+                            
+                        default:
+                            handleDetailResponse(mode, payload: payload, documentStatus: documentStatus)
+                        }
+                        
+                    default:
+                        //show error
+                        break
+                    }
                     
                 case let payload as ModelAction.PaymentTemplate.Save.Complete:
                     
@@ -529,16 +549,23 @@ extension PaymentsSuccessViewModel {
                     return
                 }
                 
-                guard let operationDetail = operationDetail else {
-                    return
-                }
-                
-                let viewModel: OperationDetailInfoViewModel = .init(model: self.model, operation: operationDetail, dismissAction: {
+                switch mode {
+                case .closeAccount(_):
+                    self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentOperationDetailId)))
+
+                default:
+                    guard let operationDetail = operationDetail else {
+                        self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentOperationDetailId)))
+                        return
+                    }
                     
-                    self.sheet = nil
-                })
-                
-                self.action.send(PaymentsSuccessAction.OptionButton.Details.Tap(viewModel: viewModel))
+                    let viewModel: OperationDetailInfoViewModel = .init(model: self.model, operation: operationDetail, dismissAction: {
+                        
+                        self.sheet = nil
+                    })
+                    
+                    self.action.send(PaymentsSuccessAction.OptionButton.Details.Tap(viewModel: viewModel))
+                }
             }
         }
     }
