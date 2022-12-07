@@ -11,6 +11,7 @@ struct QRView: View {
     @ObservedObject var viewModel: QRViewModel
     
     var body: some View {
+        
         ZStack {
             QRScannerView(viewModel: viewModel.scanner)
             
@@ -72,12 +73,6 @@ struct QRView: View {
                         
                     case .failedView(let view):
                         QRFailedView(viewModel: view)
-                        
-                    case .documentPicker(let documentPicker):
-                        DocumentPicker(viewModel: documentPicker)
-                            .edgesIgnoringSafeArea(.all)
-                            .navigationBarBackButtonHidden(false)
-                            .navigationBarTitle("Из документов", displayMode: .inline)
                     }
                 }
             }
@@ -102,6 +97,18 @@ struct QRView: View {
                     .padding(.horizontal, 30)
             }
         })
+        .sheet(item: $viewModel.sheet) { item in
+            
+            switch item.sheetType {
+            case .documentPicker(let documentPicker):
+                //TODO: move Navigation to DocumentPicker
+                NavigationView {
+                    DocumentPicker(viewModel: documentPicker)
+                        .navigationBarTitle("Из документов", displayMode: .inline)
+                        .navigationBarBackButtonHidden(true)
+                }
+            }
+        }
     }
 }
 

@@ -23,6 +23,7 @@ class QRViewModel: ObservableObject {
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
     @Published var bottomSheet: BottomSheet?
+    @Published var sheet: Sheet?
     @Published var alert: Alert.ViewModel?
     
     private let model: Model
@@ -75,6 +76,17 @@ class QRViewModel: ObservableObject {
                 case _ as QRViewModelAction.Flashlight:
                     print("QrViewModelAction.Flashlight")
                     
+                case _ as QRViewModelAction.CloseLink:
+                    link = nil
+                    
+                case _ as QRViewModelAction.CloseBottomSheet:
+                    withAnimation {
+                        
+                        self.bottomSheet = nil
+                    }
+                case _ as QRViewModelAction.CloseSheet:
+                    sheet = nil
+                    
                 default:
                     break
                 }
@@ -89,23 +101,28 @@ class QRViewModel: ObservableObject {
                     
                 case let payload as ModelAction.Media.GalleryPermission.Response:
                     
-                    withAnimation {
-                        
-                        self.bottomSheet = nil
-                    }
+                    self.action.send(QRViewModelAction.CloseBottomSheet())
                     
                     if payload.result {
                         
-                        self.link = .imagePicker(.init(closeAction: { [weak self] image in
+                        let documentPicker = DocumentPickerViewModel { [weak self] url in
                             
-                            guard let image = image else { return }
-                            guard let qr = self?.string(from: image) else { return }
+                            if let image = self?.qrFromPDF(url: url),
+                               let qrData = self?.string(from: image) {
+                                
+                                let result = Self.resolve(data: qrData)
+                                
+                                self?.action.send(QRViewModelAction.Result(result: result))
+                            }
                             
-                            let result = Self.resolve(data: qr)
+                            self?.action.send(QRViewModelAction.CloseSheet())
                             
-                            self?.action.send(QRViewModelAction.Result(result: result))
+                        } closeAction: { [weak self] in
                             
-                        }))
+                            self?.action.send(QRViewModelAction.CloseSheet())
+                        }
+
+                        self.sheet = .init(sheetType: .documentPicker(documentPicker))
                         
                     } else {
                         
@@ -114,25 +131,30 @@ class QRViewModel: ObservableObject {
                     
                 case _ as ModelAction.Media.DocumentPermission.Response:
                     
-                    withAnimation {
-                        
-                        self.bottomSheet = nil
-                    }
+                    self.action.send(QRViewModelAction.CloseBottomSheet())
                     
+                    let documentPicker = DocumentPickerViewModel { [weak self] url in
                         
-                    self.link = .documentPicker(.init(closeAction: { [weak self] url in
-                        
-                        guard let url = url,
-                              let image = self?.qrFromPDF(url: url),
-                              let qr = self?.string(from: image)else {
-                            return
+                        if let image = self?.qrFromPDF(url: url),
+                           let qrData = self?.string(from: image) {
+                            
+                            let result = Self.resolve(data: qrData)
+                            
+                            self?.action.send(QRViewModelAction.Result(result: result))
+                            
+                        } else {
+                            
+                            
                         }
-      
-                        let result = Self.resolve(data: qr)
                         
-                        self?.action.send(QRViewModelAction.Result(result: result))
+                        self?.action.send(QRViewModelAction.CloseSheet())
                         
-                    }))
+                    } closeAction: { [weak self] in
+                        
+                        self?.action.send(QRViewModelAction.CloseSheet())
+                    }
+
+                    self.sheet = .init(sheetType: .documentPicker(documentPicker))
                     
                 default:
                     break
@@ -173,10 +195,20 @@ extension QRViewModel {
         }
     }
     
+    struct Sheet: Identifiable {
+        
+        let id = UUID()
+        let sheetType: SheetType
+        
+        enum SheetType {
+            
+            case documentPicker(DocumentPickerViewModel)
+        }
+    }
+    
     enum Link {
         
         case imagePicker(ImagePickerViewModel)
-        case documentPicker(DocumentPickerViewModel)
         case failedView(QRFailedViewModel)
     }
     
@@ -312,4 +344,7 @@ enum QRViewModelAction {
         
         let result: QRViewModel.Result
     }
+    struct CloseLink: Action {}
+    struct CloseBottomSheet: Action {}
+    struct CloseSheet: Action {}
 }

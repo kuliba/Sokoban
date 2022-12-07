@@ -10,12 +10,13 @@ import SwiftUI
 
 struct DocumentPickerViewModel {
     
-    var closeAction: (_ url: URL?) -> Void
+    let selectedAction: (_ url: URL) -> Void
+    let closeAction: () -> Void
 }
 
 struct DocumentPicker: UIViewControllerRepresentable {
     
-    var viewModel: DocumentPickerViewModel
+    let viewModel: DocumentPickerViewModel
     let controller = UIDocumentPickerViewController(forOpeningContentTypes: [.jpeg, .image, .pdf])
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<DocumentPicker>) -> UIDocumentPickerViewController {
@@ -27,7 +28,7 @@ struct DocumentPicker: UIViewControllerRepresentable {
     }
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(DocumentPickerViewModel(closeAction: {_ in }))
+        return Coordinator(viewModel)
     }
     
     func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: UIViewControllerRepresentableContext<DocumentPicker>) {}
@@ -39,23 +40,17 @@ struct DocumentPicker: UIViewControllerRepresentable {
         init(_ documentPickerViewModel: DocumentPickerViewModel) {
             viewModel = documentPickerViewModel
         }
-        
+
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
             
-            print()
             guard let url = urls.first else { return }
             
-            viewModel.closeAction(url.absoluteURL)
-            controller.navigationController?.popViewController(animated: true)
+            viewModel.selectedAction(url.absoluteURL)
         }
         
         func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-            viewModel.closeAction(nil)
-            controller.navigationController?.popViewController(animated: true)
-        }
-        
-        func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
-            print()
+           
+            viewModel.closeAction()
         }
     }
 }
