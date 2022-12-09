@@ -9,20 +9,42 @@ import Foundation
 import PhoneNumberKit
 
 protocol PhoneNumberFormaterProtocol {
+    
     func format(_ phoneNumber: String) -> String
+    func partialFormatter(_ phoneNumber: String) -> String
+    func isValid(_ phoneNumber: String) -> Bool
+    func unformatted(_ phoneNumber: String) -> String
 }
 
-
-struct PhoneNumberFormater: PhoneNumberFormaterProtocol {
+struct PhoneNumberKitFormater: PhoneNumberFormaterProtocol {
     
     private let phoneNumberKit = PhoneNumberKit()
     
     func format(_ phoneNumber: String) -> String {
         
-        guard let phoneNumberParsed = try? phoneNumberKit.parse(phoneNumber, ignoreType: true)
-        else { return phoneNumber }
+        guard let phoneNumberParsed = try? phoneNumberKit.parse(phoneNumber, ignoreType: true) else {
+            return phoneNumber
+        }
                 
         return phoneNumberKit.format(phoneNumberParsed, toType: .international)
+    }
+    
+    func partialFormatter(_ phoneNumber: String) -> String {
+        
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit)
+        let phoneFormatted = partialFormatter.formatPartial(phoneNumber)
+        
+        return phoneFormatted
+    }
+    
+    func isValid(_ phoneNumber: String) -> Bool {
+        
+        phoneNumberKit.isValidPhoneNumber(phoneNumber)
+    }
+    
+    func unformatted(_ phoneNumber: String) -> String {
+        
+        phoneNumber.digits
     }
     
     //TODO: remove afrer refactoring

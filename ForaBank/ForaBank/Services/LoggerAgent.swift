@@ -18,6 +18,7 @@ class LoggerAgent: LoggerAgentProtocol {
     private let networkLogger = Logger(subsystem: subsystem, category: LoggerAgentCategory.network.rawValue)
     private let cacheLogger = Logger(subsystem: subsystem, category: LoggerAgentCategory.cache.rawValue)
     private let sessionLogger = Logger(subsystem: subsystem, category: LoggerAgentCategory.session.rawValue)
+    private let paymentsLogger = Logger(subsystem: subsystem, category: LoggerAgentCategory.payments.rawValue)
     
     func log(level: LoggerAgentLevel = .default, category: LoggerAgentCategory, message: String, file: String = #file, line: Int = #line) {
         
@@ -41,6 +42,7 @@ class LoggerAgent: LoggerAgentProtocol {
         case .network: return networkLogger
         case .cache: return cacheLogger
         case .session: return sessionLogger
+        case .payments: return paymentsLogger
         }
     }
     

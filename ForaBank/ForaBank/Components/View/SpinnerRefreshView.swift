@@ -11,7 +11,7 @@ import SwiftUI
 
 struct SpinnerRefreshView: View {
 
-    @State var degrees: Double = 0
+    @State var degrees: Double = 0.01
 
     let icon: Image
     let duration: Double
@@ -40,9 +40,12 @@ struct SpinnerRefreshView: View {
         .rotation3DEffect(
             .degrees(degrees), axis: (x: 0, y: 1, z: 0), anchor: .center, perspective: 0.1)
         .onAppear {
-            degrees += 180
+            
+            withAnimation {
+                degrees += 180
+            }
         }
-        .animation(.easeInOut(duration: duration).repeatForever())
+        .animation(.easeInOut(duration: duration).repeatForever(), value: degrees)
     }
 }
 

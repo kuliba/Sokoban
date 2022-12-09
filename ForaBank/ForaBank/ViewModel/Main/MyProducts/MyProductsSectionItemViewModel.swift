@@ -3,6 +3,7 @@
 //  ForaBank
 //
 //  Created by Pavel Samsonov on 17.04.2022.
+//  Full refactored by Dmitry Martynov on 18.09.2022
 //
 
 import Foundation
@@ -15,101 +16,91 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     
     let id: ProductData.ID
     
-    let title: String
-    let subtitle: String?
+    @Published var icon: IconViewModel
+    @Published var balance: String
+    @Published var sideButton: SideButtonViewModel?
     
-    internal init(id: Int, title: String, subtitle: String?) {
-        self.id = id
-        self.title = title
-        self.subtitle = subtitle
-    }
-}
-
-class MyProductsSectionButtonItemViewModel: MyProductsSectionItemViewModel {
-
-    let type: ButtonItemType
-    let icon: Image
-    
-    init(type: ButtonItemType) {
-        
-        self.type = type
-        self.icon = type.icon
-        
-        super.init(id: Int.random(in: -9000000000 ..< -8000000000), title: type.title, subtitle: type.subtitle)
-    }
-    
-    enum ButtonItemType {
-        
-        case card
-        case deposit
-        
-        var icon: Image {
-            switch self {
-            case .card: return .ic24NewCardColor
-            case .deposit: return .ic24DepositPlusColor
-            }
-        }
-        
-        var title: String {
-            switch self {
-            case .card:
-                return "Хочу карту"
-            case .deposit:
-                return "Хочу вклад"
-            }
-        }
-        
-        var subtitle: String {
-            return "Бесплатно"
-        }
-    }
-    
-}
-
-class MyProductsSectionProductItemViewModel: MyProductsSectionItemViewModel {
-    
-    @Published var state: State
-    @Published var isMainScreenHidden: Bool
-    
-    let icon: Image?
-    let number: String
-    let numberCard: String
-    let balance: String
     let paymentSystemIcon: Image?
-    let balanceRub: Double
-    let dateLong: String?
-    let isNeedsActivated: Bool
+    let name: String
+    let descriptions: [String]
+    let orderModePadding: CGFloat
     
+  
+    private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(id: Int,
-         icon: Image?,
-         title: String,
-         subtitle: String? = nil,
-         number: String,
-         numberCard: String,
-         balance: String,
-         balanceRub: Double = 0,
-         dateLong: String? = nil,
-         isNeedsActivated: Bool = false,
-         isMainScreenHidden: Bool = false,
-         paymentSystemIcon: Image? = nil,
-         state: State = .normal) {
+    init(id: ProductData.ID, icon: IconViewModel, paymentSystemIcon: Image?, name: String, balance: String, descriptions: [String], sideButton: SideButtonViewModel?, orderModePadding: CGFloat = 0, model: Model) {
         
+        self.id = id
         self.icon = icon
-        self.number = number
-        self.numberCard = numberCard
-        self.balance = balance
         self.paymentSystemIcon = paymentSystemIcon
-        self.balanceRub = balanceRub
-        self.dateLong = dateLong
-        self.isNeedsActivated = isNeedsActivated
-        self.isMainScreenHidden = isMainScreenHidden
-        self.state = state
-        
-        super.init(id: id, title: title, subtitle: subtitle)
+        self.name = name
+        self.balance = balance
+        self.descriptions = descriptions
+        self.sideButton = sideButton
+        self.orderModePadding = orderModePadding
+        self.model = model
         
         bind()
+    }
+
+    convenience init(productData: ProductData, model: Model) {
+
+        let icon = IconViewModel(with: productData, model: model)
+        let paymentSystemIcon = ProductView.ViewModel.paymentSystemIcon(from: productData)
+        let name = ProductView.ViewModel.name(product: productData, style: .main)
+        let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
+        let descriptions = Self.descriptions(with: productData)
+        var orderModePadding: CGFloat = 0
+        
+        if #available(iOS 16, *) {
+            orderModePadding = 12
+        }
+        
+        self.init(id: productData.id,
+                  icon: icon,
+                  paymentSystemIcon: paymentSystemIcon,
+                  name: name, balance: balance,
+                  descriptions: descriptions,
+                  sideButton: nil,
+                  orderModePadding: orderModePadding,
+                  model: model)
+    }
+    
+    var isHidden: Bool {
+        get {
+            guard let product = model.product(productId: self.id) else { return true }
+            return !product.productStatus.contains(.visible) //!productData.visibility
+        }
+        
+        set {
+            model.action.send(ModelAction.Products.UpdateVisibility(productId: self.id, visibility: !newValue))
+        }
+    }
+    
+    static func descriptions(with productData: ProductData) -> [String] {
+        
+        var value: [String] = []
+        
+        if let displayNumber = productData.displayNumber {
+            value.append(displayNumber)
+        }
+        
+        if let subtitle = ProductView.ViewModel.createSubtitle(from: productData) {
+            value.append(subtitle)
+        }
+        
+        if let dateLong = ProductView.ViewModel.dateLong(from: productData) {
+            value.append(dateLong)
+        }
+  
+        return value
+    }
+    
+    func update(with productData: ProductData) {
+        
+        icon = IconViewModel(with: productData, model: model)
+        balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
     }
     
     private func bind() {
@@ -119,74 +110,196 @@ class MyProductsSectionProductItemViewModel: MyProductsSectionItemViewModel {
             .sink { [unowned self] action in
                 
                 switch action {
-                case _ as MyProductsSectionItemAction.SwipeDirection.Left:
-                    switch self.state {
-                    case .normal:
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            
-                            let viewModel = ActionButtonViewModel(type: isMainScreenHidden ? .add : .delete) { [weak self] in
-                                self?.action.send(MyProductsSectionItemAction.ButtonType.Hidden(productID: id))
-                            }
-                            
-                            self.state = .rightButton(viewModel)
-                        }
-                    case .leftButton:
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            self.state = .normal
-                        }
-                    default:
-                        break
-                    }
+                case _ as MyProductsSectionItemAction.SideButtonTapped.Activate:
+                    //TODO: send activation action to model
+                    dismissSideButton()
                     
-                case _ as MyProductsSectionItemAction.SwipeDirection.Right:
-                    switch self.state {
-                    case .normal:
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            
-                            let viewModel = ActionButtonViewModel(type: .activate) { [weak self] in
-
-                                self?.action.send(MyProductsSectionItemAction.ButtonType.Activate(cardID: id, cardNumber: number))
-                            }
-                            
-                            self.state = .leftButton(viewModel)
-                        }
-                    case .rightButton:
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            self.state = .normal
-                        }
-                    default:
-                        break
-                    }
+                case _ as MyProductsSectionItemAction.SideButtonTapped.Add:
+                    model.action.send(ModelAction.Products.UpdateVisibility(productId: id, visibility: true))
+                    dismissSideButton()
                     
-                case _ as MyProductsSectionItemAction.ButtonType.Hidden:
-                    setNormalStateWithAnimation()
-                    
-                case _ as MyProductsSectionItemAction.ButtonType.Add:
-                    setNormalStateWithAnimation()
-                    //TODO: Implementation required
-                    
-                case _ as MyProductsSectionItemAction.ButtonType.Activate:
-                    setNormalStateWithAnimation()
-                    
+                case _ as MyProductsSectionItemAction.SideButtonTapped.Remove:
+                    model.action.send(ModelAction.Products.UpdateVisibility(productId: id, visibility: false))
+                    dismissSideButton()
+  
                 default:
                     break
                 }
+                
             }.store(in: &bindings)
         
+        model.productsVisibilityUpdating
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] updatingSet in
+               
+                icon.isUpdating = updatingSet.contains(id)
+            
+        }.store(in: &bindings)
+        
+        model.images
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self ] images in
+                
+                guard let productData = model.product(productId: self.id) else { return }
+                update(with: productData)
+        }
+        .store(in: &bindings)
+        
+    }
+    
+    func isSwipeAvailable(direction: SwipeDirection) -> Bool {
+        
+        guard let sideButton = sideButton else { return true }
+
+        switch (sideButton, direction) {
+        case (.left, .right), (.right, .left):
+            return true
+            
+        default:
+            return false
+        }
+    }
+    
+    func actionButton(for direction: SwipeDirection) -> ActionButtonViewModel? {
+        
+        guard let product = model.product(productId: id)
+        else { return nil }
+        
+        switch direction {
+        case .right:
+            
+            guard false, !product.productStatus.contains(.active) //fix if activated button need
+            else { return nil }
+            
+            return ActionButtonViewModel(type: .activate, action: { [weak self] in self?.action.send(MyProductsSectionItemAction.SideButtonTapped.Activate())})
+            
+        case .left:
+            
+            guard product.productStatus.contains(.active),
+                  !model.productsVisibilityUpdating.value.contains(id)
+                  
+            else { return nil }
+            
+            if product.visibility {
+                
+                return ActionButtonViewModel(type: .remove, action: { [weak self] in self?.action.send(MyProductsSectionItemAction.SideButtonTapped.Remove())})
+                
+            } else {
+                
+                return ActionButtonViewModel(type: .add, action: { [weak self] in self?.action.send(MyProductsSectionItemAction.SideButtonTapped.Add())})
+            }
+        }
+    }
+    
+    func dismissSideButton() {
+        
+        withAnimation {
+            
+            sideButton = nil
+        }
     }
 }
 
-extension MyProductsSectionProductItemViewModel {
+//MARK: - Types
 
-    var currencyBalance: String {
-        NumberFormatter.currency(balance: balance)
-    }
+extension MyProductsSectionItemViewModel {
 
-    enum State {
+    class IconViewModel: ObservableObject {
         
-        case normal
-        case leftButton(ActionButtonViewModel)
-        case rightButton(ActionButtonViewModel)
+        @Published var isUpdating: Bool
+        
+        let background: Background
+        let overlay: Overlay?
+        
+        init(background: Background, overlay: Overlay?, isUpdating: Bool) {
+            
+            self.background = background
+            self.overlay = overlay
+            self.isUpdating = isUpdating
+        }
+        
+        convenience init(with productData: ProductData, model: Model) {
+            
+            let isUpdating = model.productsVisibilityUpdating.value.contains(productData.id)
+            
+            let backgroundImage = model.images.value[productData.smallDesignMd5hash]?.image
+            let backgroundDesignImage = model.images.value[productData.smallBackgroundDesignHash]?.image
+            
+            switch productData.productStatus {
+            case [.active, .blocked, .visible]:
+                self.init(background: .init(img: backgroundDesignImage, color: productData.backgroundColor),
+                          overlay: .init(image: .ic16Lock,
+                                         imageColor: productData.overlayImageColor),
+                          isUpdating: isUpdating)
+                
+            case [.active, .blocked]:
+                // active, blocked, not visible
+                self.init(background: .init(img: backgroundDesignImage, color: productData.backgroundColor),
+                          overlay: .init(image: .ic12Lockandeyeoff,
+                                         imageColor: productData.overlayImageColor),
+                          isUpdating: isUpdating)
+                
+            case [.active, .visible]:
+                // active, not blocked, visible
+                self.init(background: .init(img: backgroundImage, color: productData.backgroundColor),
+                          overlay: nil,
+                          isUpdating: isUpdating)
+                
+            case .active:
+                // active, not blocked, not visible
+                self.init(background: .init(img: backgroundDesignImage, color: productData.backgroundColor),
+                          overlay: .init(image: .ic16EyeOff,
+                                         imageColor: productData.overlayImageColor),
+                          isUpdating: isUpdating)
+            default:
+                // not active
+                self.init(background: .init(img: backgroundDesignImage, color: productData.backgroundColor),
+                          overlay: .init(image: .ic16ArrowRightCircle,
+                                         imageColor: productData.overlayImageColor),
+                          isUpdating: isUpdating)
+            }
+        }
+        
+        enum Background {
+            
+            case image(Image)
+            case color(Color)
+            
+            init(img: Image?, color: Color) {
+
+                if let img = img {
+                    self = .image(img)
+                } else {
+                    self = .color(color) }
+                }
+        }
+        
+        struct Overlay {
+            
+            let image: Image
+            let imageColor: Color
+        }
+    }
+    
+    enum SideButtonViewModel {
+
+        case left(ActionButtonViewModel)
+        case right(ActionButtonViewModel)
+    }
+    
+    enum SwipeDirection {
+        
+        case left
+        case right
+        
+        @available(iOS 15.0, *)
+        init(with edge: HorizontalEdge) {
+            
+            switch edge {
+            case .leading: self = .right
+            case .trailing: self = .left
+            }
+        }
     }
     
     struct ActionButtonViewModel {
@@ -199,13 +312,14 @@ extension MyProductsSectionProductItemViewModel {
         
         case activate
         case add
-        case delete
+        case remove
         
-        var icon: String? {
+        var icon: Image {
             
             switch self {
-            case .activate: return "Activate Button Action"
-            default: return nil
+            case .activate: return .ic24Lock
+            case .add: return .ic24Eye
+            case .remove: return .ic24EyeOff
             }
         }
         
@@ -213,8 +327,8 @@ extension MyProductsSectionProductItemViewModel {
             
             switch self {
             case .activate: return "Активировать"
-            case .add: return "Добавить на главный"
-            case .delete: return "Удалить с главного экрана"
+            case .add: return "Вернуть\nна главный"
+            case .remove: return "Скрыть с\nглавного"
             }
         }
         
@@ -222,150 +336,72 @@ extension MyProductsSectionProductItemViewModel {
             
             switch self {
             case .activate: return .systemColorActive
-            case .add: return .textSecondary
-            case .delete: return .textSecondary
+            case .add: return .mainColorsBlack
+            case .remove: return .mainColorsGray
             }
         }
     }
     
-    private func setNormalStateWithAnimation() {
-        
-        withAnimation {
-            self.state = .normal
-        }
-    }
 }
 
 enum MyProductsSectionItemAction {
     
-    enum ButtonType {
+    enum SideButtonTapped {
         
         struct Add: Action {}
 
-        struct Hidden: Action {
+        struct Remove: Action {}
 
-            let productID: ProductData.ID
-        }
-
-        struct Activate: Action {
-
-            let cardID: Int
-            let cardNumber: String
-        }
+        struct Activate: Action {}
     }
     
-    enum SwipeDirection {
+    struct Swiped: Action {
         
-        struct Left: Action {}
-        struct Right: Action {}
+        let direction: MyProductsSectionItemViewModel.SwipeDirection
+        let editMode: EditMode
     }
     
-    struct Tap: Action {
-        let productId: ProductData.ID
-    }
-    
-    struct PlaceholderTap: Action {
-        let type: MyProductsSectionButtonItemViewModel.ButtonItemType
-    }
-    
+    struct ItemTapped: Action {}
 }
 
 extension MyProductsSectionItemViewModel {
-
-    static let sample1 = MyProductsSectionProductItemViewModel(
-        id: 10002585800,
-        icon: .init("Multibonus Card"),
-        title: "Кредит",
-        subtitle: "Дебетовая",
-        number: "4444555566661120",
-        numberCard: "•  2953  •",
-        balance: "19 547 ₽",
-        dateLong: "•  29.08.22",
-        paymentSystemIcon: .init("Logo Visa")
-    )
-
-    static let sample2 = MyProductsSectionProductItemViewModel(
-        id: 10002585801,
-        icon: .init("Digital Card"),
-        title: "Цифровая",
-        subtitle: "Дебетовая",
-        number: "4444555566661121",
-        numberCard: "•  2953  •",
-        balance: "19 547 ₽",
-        paymentSystemIcon: .init("Logo Visa"))
-
-    static let sample3 = MyProductsSectionProductItemViewModel(
-        id: 10002585802,
-        icon: .init("Salary Card"),
-        title: "Зарплатная",
-        subtitle: "Дебетовая",
-        number: "4444555566661122",
-        numberCard: "•  2953  •",
-        balance: "19 547 ₽",
-        paymentSystemIcon: .init("Logo Visa"))
-
-    static let sample4 = MyProductsSectionProductItemViewModel(
-        id: 10002585803,
-        icon: .init("Want Card"),
-        title: "Хочу карту",
-        subtitle: "Бесплатно",
-        number: "4444555566661123",
-        numberCard: "•  2953  •",
-        balance: "19 547 ₽")
-
-    static let sample5 = MyProductsSectionProductItemViewModel(
-        id: 10002585804,
-        icon: .init("Classic Card"),
-        title: "Classic",
-        subtitle: "Дебетовая",
-        number: "4444555566661124",
-        numberCard: "•  2953  •",
-        balance: "19 547 ₽",
-        paymentSystemIcon: .init("Logo Visa"))
-
-    static let sample6 = MyProductsSectionProductItemViewModel(
-        id: 10002585805,
-        icon: .init("Multibonus Card"),
-        title: "Мультибонус",
-        subtitle: "Дебетовая",
-        number: "4444555566661125",
-        numberCard: "•  2953  •",
-        balance: "19 547 ₽",
-        paymentSystemIcon: .init("Logo Visa"))
-
-    static let sample7 = MyProductsSectionProductItemViewModel(
+    
+    static let sample7 = MyProductsSectionItemViewModel(
         id: 10002585806,
-        icon: .init("Multibonus Card"),
-        title: "Кредит",
-        subtitle: "Дебетовая",
-        number: "4444555566661126",
-        numberCard: "•  2953  •",
-        balance: "19 547 ₽",
-        dateLong: "•  29.08.22",
-        paymentSystemIcon: .init("Logo Visa"))
-
-    static let sample8 = MyProductsSectionProductItemViewModel(
-        id: 10002585807,
-        icon: .init("Digital Card"),
-        title: "Цифровая",
-        subtitle: "Дебетовая",
-        number: "4444555566661127",
-        numberCard: "•  2953  •",
-        balance: "19 547 ₽",
+        icon: .init(background: .color(.orange),
+                    overlay: .init(image: Image("lock-and-eye-off"),
+                                   imageColor: .white), isUpdating: true),
         paymentSystemIcon: .init("Logo Visa"),
-        state: .leftButton(.init(type: .activate, action: {})))
-
-    static let sample9 = MyProductsSectionProductItemViewModel(
-        id: 10002585808,
-        icon: .init("Salary Card"),
-        title: "Зарплатная",
-        subtitle: "Дебетовая",
-        number: "4444555566661128",
-        numberCard: "•  2953  •",
+        name: "СБЕРЕГАТЕЛЬНЫЙ ОН-ЛАЙН",
         balance: "19 547 ₽",
+        descriptions: ["2953", "Дебетовая", "29.08.22"],
+        sideButton: nil,
+        model: .emptyMock)
+    
+    static let sample8 = MyProductsSectionItemViewModel(
+        id: 10002585806,
+        icon: .init(background: .color(.orange),
+                    overlay: .init(image: Image("lock-and-eye-off"),
+                                   imageColor: .white), isUpdating: false),
         paymentSystemIcon: .init("Logo Visa"),
-        state: .rightButton(.init(type: .add, action: {})))
+        name: "Кредит",
+        balance: "19 547 ₽",
+        descriptions: ["2953", "Дебетовая", "29.08.22"],
+        sideButton: .right(.init(type: .add, action: {})),
+        model: .emptyMock)
     
-    static let sample10 = MyProductsSectionButtonItemViewModel(type: .card)
-    
+    static let sample9 = MyProductsSectionItemViewModel(
+        id: 10002585806,
+        icon: .init(background: .color(.orange),
+                    overlay: .init(image: Image("lock-and-eye-off"),
+                                   imageColor: .white), isUpdating: false),
+        paymentSystemIcon: .init("Logo Visa"),
+        name: "Кредит",
+        balance: "19 547 ₽",
+        descriptions: ["2953", "Дебетовая", "29.08.22"],
+        sideButton: .left(.init(type: .activate, action: {})),
+        model: .emptyMock)
 }
+
+
+

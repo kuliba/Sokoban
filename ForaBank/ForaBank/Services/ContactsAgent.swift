@@ -10,11 +10,14 @@ import Combine
 
 class ContactsAgent: ContactsAgentProtocol {
     
+    var phoneNumberFormatter: PhoneNumberFormaterProtocol
     let status: CurrentValueSubject<ContactsAgentStatus, Never>
     private let store: CNContactStore
     
-    init() {
+    init(phoneNumberFormatter: PhoneNumberFormaterProtocol) {
+        
         self.store = CNContactStore()
+        self.phoneNumberFormatter = phoneNumberFormatter
         self.status = .init(.init(with: CNContactStore.authorizationStatus(for: .contacts)))
     }
     
@@ -59,6 +62,48 @@ class ContactsAgent: ContactsAgentProtocol {
                                   avatar: avatar(for: contact))
     }
     
+    func fetchContactsList() throws -> [AddressBookContact] {
+        
+        var bookContacts = [AddressBookContact]()
+        var contacts = [CNContact]()
+        let keys = [CNContactPhoneNumbersKey,
+                    CNContactGivenNameKey,
+                    CNContactMiddleNameKey,
+                    CNContactFamilyNameKey,
+                    CNContactImageDataAvailableKey,
+                    CNContactThumbnailImageDataKey
+        ] as [CNKeyDescriptor]
+        
+        let request = CNContactFetchRequest(keysToFetch: keys)
+        
+        let contactStore = CNContactStore()
+        request.sortOrder = .givenName
+        
+        try contactStore.enumerateContacts(with: request) { (contact, stop) in
+            
+            contacts.append(contact)
+        }
+        
+        for contact in contacts {
+
+          guard let phoneNumberData = contact.phoneNumbers.first?.value as? CNPhoneNumber,
+                let phoneNumber = phoneNumberData.value(forKey: "digits") as? String else {
+                
+                continue
+           }
+
+           let formattedPhoneNumber = phoneNumberFormatter.format(phoneNumber)
+
+           bookContacts.append(AddressBookContact(phone: formattedPhoneNumber,
+                                                               firstName: contact.givenName,
+                                                               middleName: contact.middleName,
+                                                               lastName: contact.familyName,
+                                                               avatar: avatar(for: contact)))
+        }
+ 
+        return bookContacts
+    }
+    
     private func avatar(for contact: CNContact) -> ImageData? {
         
         guard let thumbnailImageData = contact.thumbnailImageData
@@ -67,5 +112,4 @@ class ContactsAgent: ContactsAgentProtocol {
         return ImageData(data: thumbnailImageData)
 
       }
-    
 }

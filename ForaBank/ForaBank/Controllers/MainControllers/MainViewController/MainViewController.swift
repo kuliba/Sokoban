@@ -367,7 +367,7 @@ class MainViewController: UIViewController {
                 
                 switch action {
                 case let payload as ModelAction.Deposits.List.Response:
-                    switch payload.result {
+                    switch payload {
                     case .success(let deposits):
                         guard let maxRate = deposits.map({ $0.generalСondition.maxRate }).max(),
                               
@@ -389,7 +389,7 @@ class MainViewController: UIViewController {
                         openProductMutable[openDepositIndex] = depositProduct
                         openProductViewModels = openProductMutable
                         
-                    case .failure(let error): break
+                    case .failure(_): break
                     }
                   
                     /*

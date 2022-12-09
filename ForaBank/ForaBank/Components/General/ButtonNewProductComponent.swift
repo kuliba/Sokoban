@@ -11,12 +11,12 @@ import SwiftUI
 
 extension ButtonNewProduct {
     
-    struct ViewModel: Identifiable {
+    class ViewModel: Identifiable, ObservableObject {
         
-        let id: UUID
+        let id: String 
         let icon: Image
         let title: String
-        let subTitle: String
+        @Published var subTitle: String
         let tapActionType: TapActionType
         
         enum TapActionType {
@@ -25,7 +25,7 @@ extension ButtonNewProduct {
             case url(URL)
         }
         
-        internal init(id: UUID = UUID(), icon: Image, title: String, subTitle: String, action: @escaping () -> Void) {
+        init(id: String = UUID().description, icon: Image, title: String, subTitle: String, action: @escaping () -> Void) {
             
             self.id = id
             self.icon = icon
@@ -34,7 +34,7 @@ extension ButtonNewProduct {
             self.tapActionType = .action(action)
         }
         
-        internal init(id: UUID = UUID(), icon: Image, title: String, subTitle: String, url: URL) {
+        init(id: String = UUID().description, icon: Image, title: String, subTitle: String, url: URL) {
             
             self.id = id
             self.icon = icon
@@ -49,7 +49,7 @@ extension ButtonNewProduct {
 
 struct ButtonNewProduct: View {
     
-    var viewModel: ViewModel
+    @ObservedObject var viewModel: ViewModel
     
     var body: some View {
         
@@ -137,7 +137,7 @@ struct ButtonNewProduct_Previews: PreviewProvider {
                 .previewLayout(.fixed(width: 112, height: 124))
             
             ButtonNewProduct(viewModel: .sampleLongSubtitle)
-                .previewLayout(.fixed(width: 112, height: 124))
+                .previewLayout(.fixed(width: 140, height: 80))
         }
     }
 }
@@ -146,9 +146,11 @@ struct ButtonNewProduct_Previews: PreviewProvider {
 
 extension ButtonNewProduct.ViewModel {
     
-    static let sample =  ButtonNewProduct.ViewModel.init(icon: .ic24NewCardColor, title: "Карту", subTitle: "62 дня без %", action: {})
+    static let sample =  ButtonNewProduct.ViewModel.init(id: "CARD", icon: .ic24NewCardColor, title: "Карту", subTitle: "62 дня без %", action: {})
     
-    static let sampleEmptySubtitle =  ButtonNewProduct.ViewModel.init(icon: .ic24NewCardColor, title: "Карту", subTitle: "", action: {})
+    static let sampleAccount =  ButtonNewProduct.ViewModel.init(id: "ACCOUNT", icon: .ic24FilePluseColor, title: "Счет", subTitle: "Бесплатно", action: {})
     
-    static let sampleLongSubtitle =  ButtonNewProduct.ViewModel.init(icon: .ic24NewCardColor, title: "Карту", subTitle: "13,08 % годовых", action: {})
+    static let sampleEmptySubtitle =  ButtonNewProduct.ViewModel.init(id: "CARD", icon: .ic24NewCardColor, title: "Карту", subTitle: "", action: {})
+    
+    static let sampleLongSubtitle =  ButtonNewProduct.ViewModel.init(id: "CARD", icon: .ic24NewCardColor, title: "Карту", subTitle: "13,08 % годовых", action: {})
 }

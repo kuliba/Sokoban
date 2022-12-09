@@ -10,6 +10,7 @@ import SwiftUI
 struct ProductProfileView: View {
     
     @ObservedObject var viewModel: ProductProfileViewModel
+    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     
     var accentColor: some View {
         
@@ -59,7 +60,7 @@ struct ProductProfileView: View {
                                 .padding(.horizontal, 20)
                             
                             if let detailAccount = viewModel.detail {
-                                
+
                                 ProductProfileDetailView(viewModel: detailAccount)
                                     .padding(.horizontal, 20)
                             }
@@ -100,13 +101,17 @@ struct ProductProfileView: View {
                         
                     case let .productStatement(productStatementViewModel):
                         ProductStatementView(viewModel: productStatementViewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.bottom)
+                            .navigationBarTitleDisplayMode(.inline)
+                            .navigationBarTitle("Выписка по счету")
                         
                     case let .meToMeExternal(meToMeExternalViewModel):
+                        
                         MeToMeExternalView(viewModel: meToMeExternalViewModel)
-                            .navigationBarTitle("", displayMode: .inline)
                             .edgesIgnoringSafeArea(.bottom)
+                            .navigationBarTitleDisplayMode(.inline)
+                            .navigationBarTitle("Пополнить со счета в другом банке")
+                            .navigationBarItems(trailing: Image(uiImage: UIImage(named: "logo-spb-mini") ?? UIImage()))
                         
                     case let .myProducts(myProductsViewModel):
                         MyProductsView(viewModel: myProductsViewModel)
@@ -118,20 +123,46 @@ struct ProductProfileView: View {
             // workaround to fix mini-cards jumps when product name editing alert presents
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
+
+            if let closeAccountSpinner = viewModel.closeAccountSpinner {
+                CloseAccountSpinnerView(viewModel: closeAccountSpinner)
+            }
+            
+            if let spinner = viewModel.spinner {
+                
+                VStack {
+                    
+                    SpinnerView(viewModel: spinner)
+                }
+                .frame(width: .infinity, height: .infinity, alignment: .center)
+            }
         }
+        .navigationBarTitle("", displayMode: .inline)
         .navigationBar(with: viewModel.navigationBar)
+        .onReceive(viewModel.action) { action in
+            switch action {
+            case _ as ProductProfileViewModelAction.Close.SelfView:
+                self.mode.wrappedValue.dismiss()
+                
+            default: break
+            }
+        }
         .sheet(item: $viewModel.sheet, content: { sheet in
             switch sheet.type {
             case let .printForm(printFormViewModel):
                 PrintFormView(viewModel: printFormViewModel)
-                
+
             case let .placesMap(placesViewModel):
                 PlacesView(viewModel: placesViewModel)
-                
-            case let .info(operationDetailInfoViewModel):
-                OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
             }
         })
+        .fullScreenCover(item: $viewModel.fullCoverSpinner) { fullCoverSpinner in
+
+            switch fullCoverSpinner.type {
+            case let .successMeToMe(successMeToMeViewModel):
+                PaymentsSuccessView(viewModel: successMeToMeViewModel)
+            }
+        }
         .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
             
             switch sheet.type {
@@ -150,9 +181,39 @@ struct ProductProfileView: View {
                     .frame(height: 474)
                 
             case let .closeAccount(viewModel):
-                MeToMeView(viewModel: viewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .frame(height: 474)
+                
+                PaymentsMeToMeView(viewModel: viewModel)
+                    .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+
+                        switch fullCover.type {
+                        case let .successMeToMe(successMeToMeViewModel):
+                            PaymentsSuccessView(viewModel: successMeToMeViewModel)
+                        }
+                        
+                    }.transaction { transaction in
+                        transaction.disablesAnimations = false
+                    }
+            case let .closeDeposit(viewModel):
+                PaymentsMeToMeView(viewModel: viewModel)
+                    .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+
+                        switch fullCover.type {
+                        case let .successMeToMe(successMeToMeViewModel):
+                            PaymentsSuccessView(viewModel: successMeToMeViewModel)
+                        }
+                        
+                    }.transaction { transaction in
+                        transaction.disablesAnimations = false
+                    }
+                
+            case let .printForm(printFormViewModel):
+                PrintFormView(viewModel: printFormViewModel)
+                
+            case let .placesMap(placesViewModel):
+                PlacesView(viewModel: placesViewModel)
+                
+            case let .info(operationDetailInfoViewModel):
+                OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
             }
         })
         .alert(item: $viewModel.alert, content: { alertViewModel in
@@ -195,15 +256,17 @@ extension ProductProfileViewModel {
     static let sample = ProductProfileViewModel(
         navigationBar: NavigationBarView.ViewModel.sampleNoActionButton,
         product: .sample,
-        buttons: .sample, detail: nil,
-        history: .sampleHistory)
+        buttons: .sample,
+        detail: .sample,
+        history: .sampleHistory,
+        rootView: "")
 }
 
 extension NavigationBarView.ViewModel {
 
     static let sampleNoActionButton = NavigationBarView.ViewModel(
         title: "Platinum", subtitle: "· 4329",
-        leftButtons: [BackButtonViewModel(icon: .ic24ChevronLeft, action: {})],
-        rightButtons: [],
+        leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})],
+        rightItems: [],
         background: .purple, foreground: .iconWhite)
 }

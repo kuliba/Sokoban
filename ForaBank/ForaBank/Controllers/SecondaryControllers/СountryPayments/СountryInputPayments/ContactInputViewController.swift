@@ -216,6 +216,9 @@ class ContactInputViewController: UIViewController {
         IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
         IQKeyboardManager.shared.enableAutoToolbar = true
+        navigationController?.isNavigationBarHidden = false
+        navigationController?.navigationBar.barTintColor = .black
+        navigationController?.navigationBar.tintColor = .black
         navigationController?.view.backgroundColor = .white
         navigationController?.navigationBar.backgroundColor = .white
         if let template = paymentTemplate {
@@ -584,8 +587,8 @@ class ContactInputViewController: UIViewController {
                     
                 } else {
                     
-                    self.cardFromField.model = filterProduct.first
-                    guard let cardNumber  = filterProduct.first?.number else { return }
+                    self.cardFromField.model = filterProduct.filter({$0.ownerID == Model.shared.clientInfo.value?.id}).first
+                    guard let cardNumber  = filterProduct.filter({$0.ownerID == Model.shared.clientInfo.value?.id}).first?.number else { return }
                     self.selectedCardNumber = cardNumber
                     self.cardIsSelect = true
                 }

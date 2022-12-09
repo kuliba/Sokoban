@@ -86,6 +86,9 @@ struct MainView: View {
                         
                     case .openDeposit(let depositListViewModel):
                         OpenDepositDetailView(viewModel: depositListViewModel)
+                    
+                    case .openCard( let authProductsViewModel):
+                        AuthProductsView(viewModel: authProductsViewModel)
                         
                     case .openDepositsList(let openDepositViewModel):
                         OpenDepositView(viewModel: openDepositViewModel)
@@ -110,30 +113,36 @@ struct MainView: View {
                             .navigationBarTitle("", displayMode: .inline)
                             .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
+                        
+                    case let .payments(paymentsViewModel):
+                        PaymentsView(viewModel: paymentsViewModel)
                     }
                 }
             }
+            
+            Color.clear
+                .sheet(item: $viewModel.sheet, content: { sheet in
+                    switch sheet.type {
+                    case .productProfile(let productProfileViewModel):
+                        ProductProfileView(viewModel: productProfileViewModel)
+                        
+                    case .messages(let messagesHistoryViewModel):
+                        MessagesHistoryView(viewModel: messagesHistoryViewModel)
+                        
+                    case .places(let placesViewModel):
+                        PlacesView(viewModel: placesViewModel)
+                        
+                    case .byPhone(let viewModel):
+                        ContactsView(viewModel: viewModel)
+                        
+                    case let .openAccount(openAccountViewModel):
+                        OpenAccountView(viewModel: openAccountViewModel)
+                    }
+                })
+               
         }
         .ignoreKeyboard()
-        .sheet(item: $viewModel.sheet, content: { sheet in
-            switch sheet.type {
-            case .productProfile(let productProfileViewModel):
-                ProductProfileView(viewModel: productProfileViewModel)
-             
-            case .messages(let messagesHistoryViewModel):
-                MessagesHistoryView(viewModel: messagesHistoryViewModel)
-            
-            case .places(let placesViewModel):
-                PlacesView(viewModel: placesViewModel)
-
-            case .byPhone(let viewModel):
-                    TransferByPhoneView(viewModel: viewModel)
-                
-            case let .openAccount(openAccountViewModel):
-                OpenAccountView(viewModel: openAccountViewModel)      
-            }
-        })
-        .bottomSheet(item: $viewModel.bottomSheet, keyboardOfssetMultiplier: 0.7) { bottomSheet in
+        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
 
             switch bottomSheet.type {
             case let .openAccount(openAccountViewModel):
@@ -144,6 +153,7 @@ struct MainView: View {
             Alert(with: alertViewModel)
         })
         .tabBar(isHidden: $viewModel.isTabBarHidden)
+        .onAppear { viewModel.action.send(MainViewModelAction.ViewDidApear()) }
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(leading:
                                 UserAccountButton(viewModel: viewModel.userAccountButton),

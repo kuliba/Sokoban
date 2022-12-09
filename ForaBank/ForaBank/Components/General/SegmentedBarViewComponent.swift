@@ -86,8 +86,7 @@ extension SegmentedBarView {
         
         private static func getTitleLabel(productType: ProductType) -> String {
             
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "LLLL"
+            let dateFormatter = DateFormatter.monthFormatter
             let currentMonth = dateFormatter.string(from: Date())
             
             return productType == .deposit ? "Мой доход за \(currentMonth)" : "Tраты за \(currentMonth)"
@@ -112,6 +111,7 @@ struct SegmentedBarView: View {
         GeometryReader { geometry in
             
             VStack {
+                
                 HStack {
                 
                     Text(viewModel.titleLabel)
@@ -123,6 +123,7 @@ struct SegmentedBarView: View {
                 .padding(.bottom, 6)
             
                 if viewModel.totalValue != 0 {
+                    
                     ZStack {
                 
                         HStack(alignment: .center, spacing: 0) {

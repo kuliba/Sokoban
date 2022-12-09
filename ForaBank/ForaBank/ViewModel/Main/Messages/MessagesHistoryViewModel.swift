@@ -33,7 +33,7 @@ class MessagesHistoryViewModel: ObservableObject {
         self.sections = Self.reduce(sections: [], with: model.notifications.value)
         self.state = .stating
         self.navigationBar = .init(title: "Центр уведомлений",
-                                   leftButtons: [ NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: closeAction)])
+                                   leftItems: [ NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: closeAction)])
         self.model = model
         
         bind()
@@ -166,7 +166,7 @@ enum MessagesHistoryViewModelAction {
 
 extension MessagesHistoryViewModel {
     
-    struct Sheet: Identifiable {
+    struct Sheet: BottomSheetCustomizable {
         
         let id = UUID()
         let sheetType: SheetType

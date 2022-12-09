@@ -83,15 +83,15 @@ class MainViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case let payload as MainViewModelAction.Show.ProductProfile:
-                    guard let prooduct = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }) else {
-                        return
-                    }
+                    guard let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId })
+                    else { return }
                     
-                    guard let productProfileViewModel = ProductProfileViewModel(model, product: prooduct, dismissAction: { [weak self] in
-                              self?.action.send(MainViewModelAction.Close.Link())
-                          }) else {
-                        return
-                    }
+                    guard let productProfileViewModel = ProductProfileViewModel
+                        .init(model,
+                              product: product,
+                              rootView: "\(type(of: self))")
+                    else { return }
+                    
                     productProfileViewModel.rootActions = rootActions
                     bind(productProfileViewModel)
                     link = .productProfile(productProfileViewModel)
@@ -121,6 +121,9 @@ class MainViewModel: ObservableObject, Resetable {
                 case _ as MainViewModelAction.Close.Sheet:
                     self.sheet = nil
                     
+                case _ as MainViewModelAction.ViewDidApear:
+                    self.isTabBarHidden = false
+                    
                 default:
                     break
                 }
@@ -137,7 +140,7 @@ class MainViewModel: ObservableObject, Resetable {
                     
                     if let deposit = deposit as? ProductDepositData {
                         
-                        guard !self.model.depositsCloseNotified.contains(.init(depositId: deposit.depositId)), deposit.isClosed else {
+                        guard !self.model.depositsCloseNotified.contains(.init(depositId: deposit.depositId)), deposit.endDateNf else {
                             continue
                         }
                         
@@ -201,6 +204,15 @@ class MainViewModel: ObservableObject, Resetable {
                             case .deposit:
                                 self.action.send(MainViewModelAction.Show.OpenDeposit())
                                 
+                            case .card:
+                                
+                                let authProductsViewModel = AuthProductsViewModel(self.model,
+                                                                                      products: self.model.catalogProducts.value,
+                                                                                      dismissAction: { [weak self] in
+                                        self?.action.send(MainViewModelAction.Close.Link()) })
+                                    
+                                    self.link = .openCard(authProductsViewModel)
+                                
                             default:
                                 break
                             }
@@ -227,9 +239,8 @@ class MainViewModel: ObservableObject, Resetable {
                                 link = .templates(templatesListviewModel)
                                 
                             case .byPhone:
-                                sheet = .init(type: .byPhone(.init(closeAction: { [weak self] in
-                                    self?.action.send(MainViewModelAction.Close.Sheet())
-                                })))
+                                openContacts()
+         
                             case .byQr:
                                 if model.cameraAgent.isCameraAvailable {
                                     model.cameraAgent.requestPermissions(completion: { available in
@@ -316,8 +327,8 @@ class MainViewModel: ObservableObject, Resetable {
                         self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
     
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
-                        let myProductsViewModel = MyProductsViewModel(model, dismissAction: { [weak self] in self?.action.send(MainViewModelAction.Close.Link()) })
-                        bind(myProductsViewModel)
+                        let myProductsViewModel = MyProductsViewModel(model)
+                        myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
                         
                         // CurrencyMetall section
@@ -410,36 +421,6 @@ class MainViewModel: ObservableObject, Resetable {
             }.store(in: &bindings)
     }
     
-    private func bind(_ myProductsViewModel: MyProductsViewModel) {
-        
-        myProductsViewModel.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case let payload as MyProductsViewModelAction.Tapped.Product:
-                    
-                    self.action.send(MainViewModelAction.Close.Link())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                        
-                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
-                    }
-                    
-                case _ as MyProductsViewModelAction.Tapped.OpenDeposit:
-                    
-                    self.action.send(MainViewModelAction.Close.Link())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                        
-                        self.action.send(MainViewModelAction.Show.OpenDeposit())
-                    }
-                    
-                default:
-                    break
-                }
-                
-        }.store(in: &bindings)
-    }
-    
     private func bind(_ templatesListViewModel: TemplatesListViewModel) {
         
         templatesListViewModel.action
@@ -450,7 +431,7 @@ class MainViewModel: ObservableObject, Resetable {
                 case _ as TemplatesListViewModelAction.AddTemplate:
                 
                     self.action.send(MainViewModelAction.Close.Link())
-                    if let productFirst = model.products.value.values.flatMap({ $0 }).first {
+                    if let productFirst = model.allProducts.first {
                 
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
                             self.action.send(MainViewModelAction.Show.ProductProfile(productId: productFirst.id))
@@ -462,6 +443,127 @@ class MainViewModel: ObservableObject, Resetable {
                 }
                 
         }.store(in: &bindings)
+    }
+    
+    private func bind(_ viewModel: ContactsViewModel) {
+        
+        viewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ContactsViewModelAction.PaymentRequested:
+                    
+                    self.action.send(MainViewModelAction.Close.Sheet())
+                    
+                    switch payload.source {
+                    case let .direct(phone: phone, bankId: bankId, countryId: countryId):
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [self] in
+                            
+                            guard let country = self.model.countriesList.value.first(where: { $0.id == countryId }),
+                                  let bank = self.model.bankList.value.first(where: { $0.id == bankId }) else {
+                                return
+                            }
+                            self.link = .init(.country(.init(phone: phone, country: country, bank: bank, operatorsViewModel: .init(closeAction: { [weak self] in
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }, template: nil))))
+                        }
+                        
+                    case let .abroad(phone: phone, countryId: countryId):
+
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                            
+                            guard let country = self.model.countriesList.value.first(where: { $0.id == countryId }) else {
+                                return
+                            }
+                            self.link = .init(.country(.init(phone: phone, country: country, bank: nil, operatorsViewModel: .init(closeAction: { [weak self] in
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }, template: nil))))
+                        }
+                        
+                    case let .latestPayment(latestPaymentId):
+                        guard let latestPayment = model.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData else {
+                            return
+                        }
+                        
+                        Task {
+                            
+                            do {
+                                
+                                let paymentsViewModel = try await PaymentsViewModel(source: .sfp(phone: latestPayment.phoneNumber, bankId: latestPayment.bankId), model: model) { [weak self] in
+                                    
+                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                    
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
+                                        
+                                        self?.openContacts()
+                                    }
+                                }
+                                
+                                await MainActor.run {
+
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                        
+                                        self.link = .init(.payments(paymentsViewModel))
+                                    }
+                                }
+                                
+                            } catch {
+                                
+                                await MainActor.run {
+                                    
+                                    self.alert = .init(title: "Error", message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения.", primary: .init(type: .cancel, title: "Ok", action: {}))
+                                }
+                                
+                                LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for SFP source with phone: \(latestPayment.phoneNumber) and bankId: \(latestPayment.bankId)  with error: \(error.localizedDescription)")
+                            }
+                        }
+
+                    default:
+                        
+                        Task {
+                            
+                            do {
+                                
+                                let paymentsViewModel = try await PaymentsViewModel(source: payload.source, model: model) { [weak self] in
+                                    
+                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                    
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
+                                        
+                                        self?.openContacts()
+                                    }
+                                }
+                                
+                                await MainActor.run {
+
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                        
+                                        self.link = .init(.payments(paymentsViewModel))
+                                    }
+                                }
+                                
+                            } catch {
+                                
+                                await MainActor.run {
+                                    
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                        
+                                        self.alert = .init(title: "Error", message: "Unable create PaymentsViewModel for source: \(payload.source) with error: \(error.localizedDescription)", primary: .init(type: .cancel, title: "Ok", action: {}))
+                                    }
+                                }
+                                
+                                LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for source: \(payload.source) with error: \(error.localizedDescription)")
+                            }
+                        }
+                    }
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
     
     private func update(_ sections: [MainSectionViewModel], with settings: MainSectionsSettings) {
@@ -486,6 +588,13 @@ class MainViewModel: ObservableObject, Resetable {
     private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
         
         [.init(icon: .ic24Bell, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Messages())})]
+    }
+    
+    private func openContacts() {
+        
+        let contactsViewModel = ContactsViewModel(model, mode: .fastPayments(.contacts))
+        sheet = .init(type: .byPhone(contactsViewModel))
+        bind(contactsViewModel)
     }
     
 }
@@ -527,7 +636,7 @@ extension MainViewModel {
             case productProfile(ProductProfileViewModel)
             case messages(MessagesHistoryViewModel)
             case places(PlacesViewModel)
-            case byPhone(TransferByPhoneViewModel)
+            case byPhone(ContactsViewModel)
             case openAccount(OpenAccountViewModel)
         }
     }
@@ -544,10 +653,11 @@ extension MainViewModel {
         case currencyWallet(CurrencyWalletViewModel)
         case myProducts(MyProductsViewModel)
         case country(CountryPaymentView.ViewModel)
-
+        case openCard(AuthProductsViewModel)
+        case payments(PaymentsViewModel)
     }
 
-    struct BottomSheet: Identifiable {
+    struct BottomSheet: BottomSheetCustomizable {
 
         let id = UUID()
         let type: BottomSheetType
@@ -574,6 +684,8 @@ enum MainViewModelAction {
     
     struct PullToRefresh: Action {}
     
+    struct ViewDidApear: Action {}
+    
     enum Close {
      
         struct Link: Action {}
@@ -582,7 +694,7 @@ enum MainViewModelAction {
     }
     
     enum Show {
-    
+        
         struct ProductProfile: Action {
             
             let productId: ProductData.ID

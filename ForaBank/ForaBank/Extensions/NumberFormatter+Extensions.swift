@@ -18,7 +18,6 @@ extension NumberFormatter {
         return formatter
     }
     
-    @available(*, deprecated, message: "Use Model func amountFormatted(amount: Double, currencyCode: String?, style: AmountFormatStyle) -> String? in Model+Formatter.swift file")
     static func currency(with currencySymbol: String) -> NumberFormatter {
         
         let formatter = NumberFormatter()

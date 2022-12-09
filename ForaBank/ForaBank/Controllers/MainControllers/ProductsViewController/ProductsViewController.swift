@@ -121,7 +121,6 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         dateFormatter.dateStyle = DateFormatter.Style.long //Set date style
         
         dateFormatter.dateFormat =  "dd.MM.yy"
-        dateFormatter.timeZone = .current
         dateFormatter.locale = Locale(identifier: "ru_RU")
         let localDate = dateFormatter.string(from: date)
         
@@ -136,7 +135,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         navigationController?.view.backgroundColor =  .white
         navigationController?.navigationBar.backgroundColor = .white
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(action))
+//        navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(buttonAction))
         navigationItem.rightBarButtonItem?.tintColor = .black
         
         let displayWidth: CGFloat = self.view.frame.width

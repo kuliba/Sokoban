@@ -67,7 +67,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: EmptyData
+                let data: EmptyData?
             }
             
             internal init(token: String, media: ServerCommandMediaParameter) {
@@ -92,7 +92,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: EmptyData
+                let data: EmptyData?
             }
             
             internal init(token: String) {
@@ -116,7 +116,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: PersonData
+                let data: PersonData?
                 
                 struct PersonData: Codable, Equatable {
                     
@@ -152,7 +152,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: EmptyData
+                let data: EmptyData?
             }
             
             internal init(token: String, payload: Payload) {
@@ -177,7 +177,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: EmptyData
+                let data: EmptyData?
             }
             
             internal init(token: String) {
@@ -201,7 +201,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: EmptyData
+                let data: EmptyData?
             }
             
             internal init(token: String) {

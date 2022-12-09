@@ -9,7 +9,8 @@
         "paymentSystemCodeList": [
           "string"
         ],
-        "svgImage": "string"
+        "svgImage": "string",
+        "bankCountry": "RU"
       }
     ],
     "serial": "bea36075a58954199a6b8980549f6b69"

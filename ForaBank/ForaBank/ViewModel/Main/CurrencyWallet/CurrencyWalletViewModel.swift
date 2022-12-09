@@ -137,7 +137,7 @@ class CurrencyWalletViewModel: ObservableObject {
                     handleExchangeApproveResponse(payload)
                     setUserInteractionEnabled()
                     
-                case let payload as ModelAction.Payment.OperationDetailByPaymentId.Response:
+                case let payload as ModelAction.Operation.Detail.Response:
                     handleOperationDetailResponse(payload)
                     
                 default:
@@ -311,7 +311,7 @@ class CurrencyWalletViewModel: ObservableObject {
         if let productAccountSelector = productSelectorViewModel.productAccountSelector,
            let productViewModel = productAccountSelector.productViewModel {
             
-            if let productId = model.product(currency: currency) {
+            if let productId = model.firstProductId(currency: currency) {
                 productAccountSelector.setProductSelectorData(productId: productId)
             }
             
@@ -327,7 +327,7 @@ class CurrencyWalletViewModel: ObservableObject {
         return productSelectorViewModel
     }
     
-    private func makeConfirmationViewModel(data: CurrencyExchangeConfirmationData) {
+    private func makeConfirmationViewModel(data: TransferResponseData) {
         
         if confirmationViewModel == nil, let responseCurrencyRate = data.currencyRate {
             
@@ -453,7 +453,7 @@ class CurrencyWalletViewModel: ObservableObject {
         if let selectorViewModel = selectorViewModel,
            let productAccountSelector = selectorViewModel.productAccountSelector {
             
-            if let productId = model.product(currency: currency) {
+            if let productId = model.firstProductId(currency: currency) {
                 productAccountSelector.setProductSelectorData(productId: productId)
             }
         }
@@ -570,7 +570,7 @@ class CurrencyWalletViewModel: ObservableObject {
     private func handleExchangeApproveResponse(_ payload: ModelAction.CurrencyWallet.ExchangeOperations.Approve.Response) {
         
         switch payload {
-        case let .successed(paymentOperationDetailId):
+        case let .successed(response):
             
             guard let selectorViewModel = selectorViewModel,
                   let productCardSelector = selectorViewModel.productCardSelector,
@@ -582,7 +582,7 @@ class CurrencyWalletViewModel: ObservableObject {
                 return
             }
             
-            makeSuccessViewModel(paymentOperationDetailId, amount: confirmationViewModel.debitAmount, currency: confirmationViewModel.currencyPayer, state: .success)
+            makeSuccessViewModel(response.paymentOperationDetailId, amount: confirmationViewModel.debitAmount, currency: confirmationViewModel.currencyPayer, state: .success)
             
             scrollToItem = lastItem.id
             
@@ -603,9 +603,9 @@ class CurrencyWalletViewModel: ObservableObject {
         continueButton.title = "На главную"
     }
     
-    private func handleOperationDetailResponse(_ payload: ModelAction.Payment.OperationDetailByPaymentId.Response) {
+    private func handleOperationDetailResponse(_ payload: ModelAction.Operation.Detail.Response) {
         
-        switch payload {
+        switch payload.result {
         case let .success(detailData):
             
             let viewModel: OperationDetailInfoViewModel = .init(model: model, operation: detailData) {
@@ -616,7 +616,7 @@ class CurrencyWalletViewModel: ObservableObject {
                 sheet = .init(type: .detailInfo(viewModel))
             }
             
-        case let .failture(error):
+        case let .failure(error):
             
             makeAlert(error: error)
         }
@@ -677,7 +677,7 @@ class CurrencyWalletViewModel: ObservableObject {
                         sheet = .init(type: .printForm(printViewModel))
                         
                     case _ as CurrencyExchangeSuccessAction.Button.Details:
-                        model.action.send(ModelAction.Payment.OperationDetailByPaymentId.Request(paymentOperationDetailId: paymentOperationDetailId))
+                        model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentOperationDetailId)))
                         
                     case _ as CurrencyExchangeSuccessAction.Button.Repeat:
                         

@@ -39,6 +39,7 @@ enum SettingType {
         case productsHidden
         case productsSections
         case productsMoney
+        case myProductsOnboarding
     }
 }
 

@@ -79,7 +79,6 @@ extension ProductProfileHistoryView {
                     // isMapped = false  это согласованный костыль
                     updateSegmentedBar(productId: id, statements: storage.statements, isMapped: false)
                     
-                    
                     Task.detached(priority: .high) { [self] in
                         
                         let update = await reduce(content: content, statements: storage.statements, images: model.images.value, model: model) { [weak self] statementId in
@@ -333,16 +332,15 @@ extension ProductProfileHistoryView.ViewModel {
     
     func reduce(operations: [HistoryListViewModel.DayGroupViewModel.Operation], statements: [ProductStatementData], images: [String: ImageData], model: Model, action: (ProductStatementData.ID) -> () -> Void) async -> (operations: [HistoryListViewModel.DayGroupViewModel.Operation], downloadImagesIds: [String]) {
         
-        var updatedOperations = operations
+        var updatedOperations = [HistoryListViewModel.DayGroupViewModel.Operation]()
+        
         var downloadImagesIds = [String]()
         
         for statement in statements {
             
-            guard operations.contains(where: { $0.id == statement.id }) == false else {
-                continue
-            }
-            
             let operation = HistoryListViewModel.DayGroupViewModel.Operation(statement: statement, model: model, action: action(statement.id))
+            updatedOperations.append(operation)
+
             let imageId = statement.md5hash
             if let imageData = images[imageId] {
                 
@@ -351,9 +349,7 @@ extension ProductProfileHistoryView.ViewModel {
             } else {
                 
                 downloadImagesIds.append(imageId)
-            }
-            
-            updatedOperations.append(operation)
+            }            
         }
         
         let sortedUpdatedOperations = updatedOperations.sorted(by: { $0.statement.date > $1.statement.date })
@@ -563,8 +559,11 @@ struct ProductProfileHistoryView: View {
                 VStack(spacing: 64) {
                     
                     if let segmentedVM = viewModel.segmentBarViewModel {
+                        
                         SegmentedBarView(viewModel: segmentedVM)
+                            .padding(.vertical, 5)
                     }
+                    
                     ListView(viewModel: listViewModel)
                 }
                 

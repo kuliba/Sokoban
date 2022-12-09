@@ -16,6 +16,11 @@ protocol ServerAgentProtocol {
     func executeCommand<Command: ServerCommand>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void)
     func executeDownloadCommand<Command: ServerDownloadCommand>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void)
     func executeUploadCommand<Command: ServerUploadCommand>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void)
+    
+    // async api
+    func executeCommand<Command: ServerCommand>(command: Command) async throws -> Command.Response.Payload
+    func executeDownloadCommand<Command: ServerDownloadCommand>(command: Command) async throws ->  Command.Response
+    func executeUploadCommand<Command: ServerUploadCommand>(command: Command) async throws
 }
 
 /// Regular server request
@@ -76,7 +81,7 @@ protocol ServerResponse: Decodable, Equatable {
     
     var statusCode: ServerStatusCode { get }
     var errorMessage: String? { get }
-    var data: Payload { get }
+    var data: Payload? { get }
 }
 
 /// ServerAgent's error
@@ -95,31 +100,32 @@ enum ServerAgentError: LocalizedError {
         
         switch self {
         case .requestCreationError(let error):
-            return "Request creation error: \(error.localizedDescription))"
+            return "Server: request creation failed with error: \(error.localizedDescription))"
             
         case .sessionError(let error):
-            return "Session error: \(error.localizedDescription)"
+            return "Server: session error: \(error.localizedDescription)"
 
         case .emptyResponse:
-            return "Empty response"
+            return "Server: unexpected empty response"
 
         case .emptyResponseData:
-            return "Empty response data"
+            return "Server: unexpected empty response data"
             
         case .unexpectedResponseStatus(let statusCode):
-            return "Unexpected response status code: \(statusCode)"
+            return "Server: unexpected response status code: \(statusCode)"
 
         case .curruptedData(let error):
-            return "Currupted data: \(error.localizedDescription)"
+            return "Server: data corrupted: \(error.localizedDescription)"
 
         case .serverStatus(let serverStatusCode, let errorMessage):
             
             if let errorMessage = errorMessage {
                 
-                return "Server status: \(serverStatusCode) \(errorMessage)"
+                return "Server: status: \(serverStatusCode) \(errorMessage)"
+                
             } else {
                 
-                return "Server status: \(serverStatusCode)"
+                return "Server: status: \(serverStatusCode)"
             }
             
         case .notAuthorized:
@@ -226,4 +232,68 @@ extension ServerDownloadCommand {
     var payload: Payload? { nil }
     var timeout: TimeInterval? { nil }
     var cachePolicy: URLRequest.CachePolicy { .useProtocolCachePolicy }
+}
+
+//MARK: - Async
+
+extension ServerAgentProtocol {
+    
+    func executeCommand<Command: ServerCommand>(command: Command) async throws -> Command.Response.Payload {
+        
+        return try await withCheckedThrowingContinuation({ continuation in
+            
+            executeCommand(command: command) { result in
+                
+                switch result {
+                case .success(let response):
+                    
+                    if let responseData = response.data {
+                        
+                        continuation.resume(with: .success(responseData))
+                        
+                    } else {
+
+                        continuation.resume(with: .failure(ServerAgentError.serverStatus(response.statusCode, errorMessage: response.errorMessage)))
+                    }
+                    
+                case .failure(let error):
+                    continuation.resume(with: .failure(error))
+                }
+            }
+        })
+    }
+    
+    func executeDownloadCommand<Command: ServerDownloadCommand>(command: Command) async throws ->  Command.Response {
+        
+        return try await withCheckedThrowingContinuation({ continuation in
+            
+            executeDownloadCommand(command: command) { result in
+                
+                switch result {
+                case .success(let response):
+                    continuation.resume(with: .success(response))
+
+                case .failure(let error):
+                    continuation.resume(with: .failure(error))
+                }
+            }
+        })
+    }
+    
+    func executeUploadCommand<Command: ServerUploadCommand>(command: Command) async throws {
+        
+        return try await withCheckedThrowingContinuation({ continuation in
+            
+            executeUploadCommand(command: command) { result in
+                
+                switch result {
+                case .success:
+                    continuation.resume(with: .success(()))
+
+                case .failure(let error):
+                    continuation.resume(with: .failure(error))
+                }
+            }
+        })
+    }
 }

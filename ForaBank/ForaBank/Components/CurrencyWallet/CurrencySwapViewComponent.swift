@@ -461,7 +461,7 @@ extension CurrencySwapView.ViewModel {
         }
         
         lazy var textField: TextFieldFormatableView.ViewModel = .init(
-            type: .currencyWallet,
+            type: .currency,
             value: currencyAmount,
             formatter: .decimal(),
             isEnabled: true,
@@ -846,6 +846,8 @@ struct CurrencySwapVIewComponent_Previews: PreviewProvider {
 
         VStack {
             CurrencySwapView(viewModel: .sample)
-        }.previewLayout(.sizeThatFits)
+        }
+        .previewLayout(.sizeThatFits)
+        .padding(.vertical)
     }
 }

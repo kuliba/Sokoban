@@ -28,6 +28,8 @@ extension PrintFormView {
             case operation(paymentOperationDetailId: Int, printFormType: PrintFormType)
             case product(productId: ProductData.ID, startDate: Date, endDate: Date)
             case contract(productId: ProductData.ID)
+            case closeAccount(id: ProductData.ID, paymentOperationDetailId: Int)
+            case closeAccountEmpty(id: ProductData.ID)
         }
         
         enum State {
@@ -75,6 +77,12 @@ extension PrintFormView {
                 
             case let .contract(productId):
                 model.action.send(ModelAction.Products.ContractPrintForm.Request(depositId: productId))
+                
+            case let .closeAccount(id: productId, paymentOperationDetailId: paymentOperationDetailId):
+                model.action.send(ModelAction.Account.CloseAccount.PrintForm.Request(id: productId, paymentOperationDetailId: paymentOperationDetailId))
+                
+            case let .closeAccountEmpty(id: productId):
+                model.action.send(ModelAction.Account.CloseAccount.PrintForm.Request(id: productId, paymentOperationDetailId: nil))
             }
         }
         
@@ -170,6 +178,36 @@ extension PrintFormView {
                                 self.state = .failed
                             }
                             //TODO: show alert with error message
+                        }
+                        
+                    case let payload as ModelAction.Account.CloseAccount.PrintForm.Response:
+                        
+                        switch payload.result {
+                        case let .success(data):
+                            
+                            if let document = PDFDocument(data: data) {
+                                
+                                let activityViewModel = ActivityView.ViewModel(activityItems: [document.dataRepresentation() as Any])
+                                let button = ButtonSimpleView.ViewModel(title: "Сохранить или отправить", style: .red) { [weak self] in
+                                    self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))
+                                }
+                                
+                                withAnimation {
+                                    self.state = .document(document, button)
+                                }
+                                
+                            } else {
+                                
+                                withAnimation {
+                                    self.state = .failed
+                                }
+                            }
+                            
+                        case .failure:
+                            
+                            withAnimation {
+                                self.state = .failed
+                            }
                         }
                         
                     default:

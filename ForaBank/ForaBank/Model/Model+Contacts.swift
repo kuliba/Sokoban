@@ -31,6 +31,7 @@ extension ModelAction {
 extension Model {
     
     var contactsPermissionStatus: ContactsAgentStatus {
+        
         contactsAgent.status.value
     }
     
@@ -42,6 +43,10 @@ extension Model {
     func contact(for phoneNumber: String) -> AddressBookContact? {
         
         contactsAgent.fetchContact(by: phoneNumber)
+    }
+    
+    func contactsFetchAll() async throws -> [AddressBookContact] {
         
+        try contactsAgent.fetchContactsList()
     }
 }

@@ -19,13 +19,12 @@ final class OperationDetailInfoViewModel: Identifiable {
     let dismissAction: () -> Void
     let model: Model
     
-    init(logo: Image?, cells: [DefaultCellViewModel], dismissAction: @escaping () -> Void, model: Model) {
+    init(model: Model, logo: Image?, cells: [DefaultCellViewModel], dismissAction: @escaping () -> Void) {
         
+        self.model = model
         self.logo = nil
         self.cells = cells
         self.dismissAction = dismissAction
-        self.model = model
-        
     }
     
     init(model: Model, operation: OperationDetailData, dismissAction: @escaping () -> Void) {
@@ -35,6 +34,13 @@ final class OperationDetailInfoViewModel: Identifiable {
         self.cells = []
         
         cells = makeItems(operation: operation)
+        
+        switch operation.transferEnum {
+        case .sfp:
+            self.logo = .ic24Sbp
+            
+        default: break
+        }
     }
     
     init?(with statement: ProductStatementData, operation: OperationDetailData?, product: ProductData, dismissAction: @escaping () -> Void, model: Model) {
@@ -60,14 +66,17 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Счет пополнения", iconType: .bank, value: payeeCardNumber))
             }
             
-            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
-            
-            if let payerFee = operation?.payerFee {
+            if let amountCell = Self.amountCell(with: model, amount: statement.amount, currency: currency) {
                 
-                cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: payerFee.currencyFormatter(symbol: currency)))
+                cells.append(amountCell)
             }
             
-            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
+            if let fee = operation?.payerFee, let comissionCell = Self.commissionCell(with: model, fee: fee, currency: currency) {
+                
+                cells.append(comissionCell)
+            }
+            
+            if let debitAccounCell = Self.accountCell(with: product, model: model, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -82,19 +91,25 @@ final class OperationDetailInfoViewModel: Identifiable {
                     
                     if let card = i.value.first(where: { $0.id == payeeCardId }) {
                         
-                        if let description = card.number?.suffix(4), let balance = card.balance?.currencyFormatter(symbol: card.currency), let icon = card.smallDesign.image, let additional = card.additionalField {
+                        if let description = card.number?.suffix(4),
+                           let balance = card.balance,
+                           let balanceFormatted = model.amountFormatted(amount: balance, currencyCode: card.currency, style: .clipped), let icon = card.smallDesign.image,
+                           let additional = card.additionalField {
                             
-                            cells.append(ProductCellViewModel(title: "Счет пополнения", icon: icon, name: card.mainField, iconPaymentService: nil, balance: balance, description: "· \(description) · \(additional)"))
+                            cells.append(ProductCellViewModel(title: "Счет пополнения", icon: icon, name: card.mainField, iconPaymentService: nil, balance: balanceFormatted, description: "· \(description) · \(additional)"))
                         }
                     }
                 }
             }
             
-            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
-            
-            if let payerFee = operation?.payerFee {
+            if let amountCell = Self.amountCell(with: model, amount: statement.amount, currency: currency) {
                 
-                cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: payerFee.currencyFormatter(symbol: currency)))
+                cells.append(amountCell)
+            }
+            
+            if let fee = operation?.payerFee, let comissionCell = Self.commissionCell(with: model, fee: fee, currency: currency) {
+                
+                cells.append(comissionCell)
             }
             
             if let payerCardId = operation?.payerCardId {
@@ -103,9 +118,13 @@ final class OperationDetailInfoViewModel: Identifiable {
                     
                     if let card = i.value.first(where: { $0.id == payerCardId }) {
                         
-                        if let description = card.number?.suffix(4), let balance = card.balance?.currencyFormatter(symbol: card.currency), let icon = card.smallDesign.image, let additional = card.additionalField {
+                        if let description = card.number?.suffix(4),
+                           let balance = card.balance,
+                           let balanceFormatted = model.amountFormatted(amount: balance, currencyCode: card.currency, style: .clipped),
+                           let icon = card.smallDesign.image,
+                           let additional = card.additionalField {
                             
-                            cells.append(ProductCellViewModel(title: "Счет списания", icon: icon, name: card.mainField, iconPaymentService: nil, balance: balance, description: "· \(description) · \(additional)"))
+                            cells.append(ProductCellViewModel(title: "Счет списания", icon: icon, name: card.mainField, iconPaymentService: nil, balance: balanceFormatted, description: "· \(description) · \(additional)"))
                         }
                     }
                 }
@@ -113,7 +132,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             
             cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: dateString))
             
-        case  .insideBank:
+        case .insideBank:
             
             if let payeeAccountNumber = operation?.payeeAccountNumber {
                 
@@ -124,21 +143,25 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Номер карты получателя", iconType: .bank, value: payeeCardNumber))
                 
             } else if let payeePhone = operation?.payeePhone {
-                let phoneFormatter = PhoneNumberFormater()
+                let phoneFormatter = PhoneNumberKitFormater()
                 let formattedPhone = phoneFormatter.format(payeePhone)
                 cells.append(PropertyCellViewModel(title: "Номер телефона получателя", iconType: .phone, value: formattedPhone))
             }
             
             cells.append(PropertyCellViewModel(title: "Получатель", iconType: .user, value: statement.merchant))
             cells.append(BankCellViewModel(title: "Банк получателя", icon:  foraBankIcon, name: foraBankName))
-            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
             
-            if let fee = operation?.payerFee {
+            if let amountCell = Self.amountCell(with: model, amount: statement.amount, currency: currency) {
                 
-                cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
+                cells.append(amountCell)
             }
             
-            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
+            if let fee = operation?.payerFee, let comissionCell = Self.commissionCell(with: model, fee: fee, currency: currency) {
+                
+                cells.append(comissionCell)
+            }
+            
+            if let debitAccounCell = Self.accountCell(with: product, model: model, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -161,22 +184,26 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Страна", iconType: .geo, value: countryName))
             }
             
-            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
-            
-            if let fee = operation?.payerFee {
+            if let amountCell = Self.amountCell(with: model, amount: statement.amount, currency: currency) {
                 
-                cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
+                cells.append(amountCell)
             }
             
-            if let payeeAmount = operation?.payeeAmount, let payeeCurrency = operation?.payeeCurrency {
+            if let fee = operation?.payerFee, let comissionCell = Self.commissionCell(with: model, fee: fee, currency: currency) {
                 
-                cells.append(PropertyCellViewModel(title: "Сумма зачисления в валюте", iconType: .balance, value: payeeAmount.currencyFormatter(symbol: payeeCurrency)))
+                cells.append(comissionCell)
+            }
+                
+            if let payeeAmount = operation?.payeeAmount, let payeeCurrency = operation?.payeeCurrency,
+               let amountCell = Self.amountCell(with: model, title: "Сумма зачисления в валюте", amount: payeeAmount, currency: payeeCurrency) {
+                
+                cells.append(amountCell)
             }
             
             cells.append(PropertyCellViewModel(title: "Способ выплаты", iconType: .cash, value: "Наличные"))
             
             
-            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
+            if let debitAccounCell = Self.accountCell(with: product, model: model, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -194,7 +221,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             logo = directLogoImage
             
             if let foreignPhoneNumber = operation?.payeePhone {
-                let phoneFormatter = PhoneNumberFormater()
+                let phoneFormatter = PhoneNumberKitFormater()
                 let formattedPhone = phoneFormatter.format(foreignPhoneNumber)
                 cells.append(PropertyCellViewModel(title: "Номер телефона получателя", iconType: .phone, value: formattedPhone))
                 
@@ -217,19 +244,23 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Страна", iconType: .geo, value: countryName))
             }
             
-            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
-            
-            if let fee = operation?.payerFee {
+            if let amountCell = Self.amountCell(with: model, amount: statement.amount, currency: currency) {
                 
-                cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
+                cells.append(amountCell)
             }
             
-            if let payeeAmount = operation?.payeeAmount, let payeeCurrency = operation?.payeeCurrency {
+            if let fee = operation?.payerFee, let comissionCell = Self.commissionCell(with: model, fee: fee, currency: currency) {
                 
-                cells.append(PropertyCellViewModel(title: "Сумма зачисления в валюте", iconType: .balance, value: payeeAmount.currencyFormatter(symbol: payeeCurrency)))
+                cells.append(comissionCell)
             }
             
-            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
+            if let payeeAmount = operation?.payeeAmount, let payeeCurrency = operation?.payeeCurrency,
+               let amountCell = Self.amountCell(with: model, title: "Сумма зачисления в валюте", amount: payeeAmount, currency: payeeCurrency) {
+                
+                cells.append(amountCell)
+            }
+            
+            if let debitAccounCell = Self.accountCell(with: product, model: model, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -266,14 +297,17 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(BankCellViewModel(title: "Бик банка получателя", icon: bankLogoImage, name: bankBic))
             }
             
-            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
-            
-            if let fee = operation?.payerFee {
+            if let amountCell = Self.amountCell(with: model, amount: statement.amount, currency: currency) {
                 
-                cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
+                cells.append(amountCell)
             }
             
-            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
+            if let fee = operation?.payerFee, let comissionCell = Self.commissionCell(with: model, fee: fee, currency: currency) {
+                
+                cells.append(comissionCell)
+            }
+            
+            if let debitAccounCell = Self.accountCell(with: product, model: model, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -311,14 +345,17 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(BankCellViewModel(title: "Банк получателя", icon: bankLogoImage, name: bankBic))
             }
             
-            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
-            
-            if let fee = operation?.payerFee {
+            if let amountCell = Self.amountCell(with: model, amount: statement.amount, currency: currency) {
                 
-                cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
+                cells.append(amountCell)
             }
             
-            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
+            if let fee = operation?.payerFee, let comissionCell = Self.commissionCell(with: model, fee: fee, currency: currency) {
+                
+                cells.append(comissionCell)
+            }
+            
+            if let debitAccounCell = Self.accountCell(with: product, model: model, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -335,7 +372,12 @@ final class OperationDetailInfoViewModel: Identifiable {
             }
             
             cells.append(PropertyCellViewModel(title: "Категория операции", iconType: .nil, value: statement.groupName))
-            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
+
+            if let amountCell = Self.amountCell(with: model, amount: statement.amount, currency: currency) {
+                
+                cells.append(amountCell)
+            }
+
             cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: dateString))
             
             
@@ -347,7 +389,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             }
             
             if let payeePhone = operation?.payeePhone {
-                let phoneFormatter = PhoneNumberFormater()
+                let phoneFormatter = PhoneNumberKitFormater()
                 let formattedPhone = phoneFormatter.format(payeePhone)
                 cells.append(PropertyCellViewModel(title: "Номер телефона", iconType: .phone, value: formattedPhone))
                 
@@ -358,14 +400,17 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(BankCellViewModel(title: "Наименование получателя", icon: image, name: provider))
             }
             
-            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
-            
-            if let fee = operation?.payerFee {
+            if let amountCell = Self.amountCell(with: model, amount: statement.amount, currency: currency) {
                 
-                cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
+                cells.append(amountCell)
             }
             
-            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
+            if let fee = operation?.payerFee, let comissionCell = Self.commissionCell(with: model, fee: fee, currency: currency) {
+                
+                cells.append(comissionCell)
+            }
+            
+            if let debitAccounCell = Self.accountCell(with: product, model: model, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -386,14 +431,17 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Номер счета получателя", iconType: .account, value: account))
             }
             
-            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
-            
-            if let fee = operation?.payerFee {
+            if let amountCell = Self.amountCell(with: model, amount: statement.amount, currency: currency) {
                 
-                cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
+                cells.append(amountCell)
             }
             
-            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
+            if let fee = operation?.payerFee, let comissionCell = Self.commissionCell(with: model, fee: fee, currency: currency) {
+                
+                cells.append(comissionCell)
+            }
+            
+            if let debitAccounCell = Self.accountCell(with: product, model: model, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -424,14 +472,17 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Код плательщика", iconType: .account, value: account))
             }
             
-            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
-            
-            if let fee = operation?.payerFee {
+            if let amountCell = Self.amountCell(with: model, amount: statement.amount, currency: currency) {
                 
-                cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
+                cells.append(amountCell)
             }
             
-            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
+            if let fee = operation?.payerFee, let comissionCell = Self.commissionCell(with: model, fee: fee, currency: currency) {
+                
+                cells.append(comissionCell)
+            }
+            
+            if let debitAccounCell = Self.accountCell(with: product, model: model, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -444,16 +495,19 @@ final class OperationDetailInfoViewModel: Identifiable {
             
         case .outsideCash:
             
-            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
+            if let debitAccounCell = Self.accountCell(with: product, model: model, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
             
-            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
-            
-            if let fee = operation?.payerFee {
+            if let amountCell = Self.amountCell(with: model, amount: statement.amount, currency: currency) {
                 
-                cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
+                cells.append(amountCell)
+            }
+            
+            if let fee = operation?.payerFee, let comissionCell = Self.commissionCell(with: model, fee: fee, currency: currency) {
+                
+                cells.append(comissionCell)
             }
             
             cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: dateString))
@@ -475,14 +529,18 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Категория операции", iconType: .nil, value: "\(statement.groupName)"))
             }
             
-            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
-            
-            if let fee = operation?.payerFee {
+            if let formattedAmount = model.amountFormatted(amount: statement.amount, currencyCode: currency, style: .fraction) {
                 
-                cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
+                let amount = statement.operationType == .credit ? "+ \(formattedAmount)" : formattedAmount
+                cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: amount))
             }
             
-            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
+            if let fee = operation?.payerFee, let comissionCell = Self.commissionCell(with: model, fee: fee, currency: currency) {
+                
+                cells.append(comissionCell)
+            }
+            
+            if let debitAccounCell = Self.accountCell(with: product, model: model, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -496,7 +554,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             logo = sfpLogoImage
             
             if let foreignPhoneNumber = statement.fastPayment?.foreignPhoneNumber {
-                let phoneFormatter = PhoneNumberFormater()
+                let phoneFormatter = PhoneNumberKitFormater()
                 let formattedPhone = phoneFormatter.format(foreignPhoneNumber)
                 cells.append(PropertyCellViewModel(title: "Номер телефона получателя", iconType: .phone, value: formattedPhone))
                 
@@ -510,14 +568,18 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(BankCellViewModel(title: "Банк отправителя", icon:  model.images.value[statement.md5hash]?.image ?? Image.ic12LogoForaColor, name: bankName))
             }
             
-            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
-            
-            if let fee = operation?.payerFee {
+            if let formattedAmount = model.amountFormatted(amount: statement.amount, currencyCode: currency, style: .fraction) {
                 
-                cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
+                let amount = statement.operationType == .credit ? "+ \(formattedAmount)" : formattedAmount
+                cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: amount))
             }
             
-            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
+            if let fee = operation?.payerFee, let comissionCell = Self.commissionCell(with: model, fee: fee, currency: currency) {
+                
+                cells.append(comissionCell)
+            }
+            
+            if let debitAccounCell = Self.accountCell(with: product, model: model, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -551,14 +613,18 @@ final class OperationDetailInfoViewModel: Identifiable {
                 }
             }
             
-            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
-            
-            if let fee = operation?.payerFee {
+            if let formattedAmount = model.amountFormatted(amount: statement.amount, currencyCode: currency, style: .fraction) {
                 
-                cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
+                let amount = statement.operationType == .credit ? "+ \(formattedAmount)" : formattedAmount
+                cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: amount))
             }
             
-            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
+            if let fee = operation?.payerFee, let comissionCell = Self.commissionCell(with: model, fee: fee, currency: currency) {
+                
+                cells.append(comissionCell)
+            }
+            
+            if let debitAccounCell = Self.accountCell(with: product, model: model, currency: currency, operationType: statement.operationType) {
                 
                 cells.append(debitAccounCell)
             }
@@ -578,8 +644,12 @@ final class OperationDetailInfoViewModel: Identifiable {
                     imageBank = Image.init(uiImage: image)
                 }
             }
-            let amount = statement.operationType == .credit ? "+ \(statement.amount.currencyFormatter(symbol: currency))" : statement.amount.currencyFormatter(symbol: currency)
-            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: amount))
+            
+            if let formattedAmount = model.amountFormatted(amount: statement.amount, currencyCode: currency, style: .fraction) {
+                
+                let amount = statement.operationType == .credit ? "+ \(formattedAmount)" : formattedAmount
+                cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: amount))
+            }
             
             if let image = model.images.value[statement.md5hash]?.image {
                 
@@ -614,7 +684,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(BankCellViewModel(title: title, icon: Image("OkOperators"), name: "Успешно"))
             }
             
-            if let debitAccounCell = Self.accountCell(with: product, currency: currency, operationType: statement.operationType) {
+            if let debitAccounCell = Self.accountCell(with: product, model: model, currency: currency, operationType: statement.operationType) {
             
                 cells.append(debitAccounCell)
             }
@@ -638,7 +708,22 @@ final class OperationDetailInfoViewModel: Identifiable {
             
             cells.append(BankCellViewModel(title: "Идентификатор операции", icon: Image("hash"), name: statement.fastPayment?.opkcid ?? ""))
             cells.append(IconCellViewModel(icon: Image("sbptext")))
+        
+        case .insideDeposit:
+
+            if let image = model.images.value[statement.md5hash]?.image {
+                
+                cells.append(BankCellViewModel(title: "Наименование получателя", icon: image, name: statement.merchant))
+            }
             
+            if let formattedAmount = model.amountFormatted(amount: statement.amount, currencyCode: currency, style: .clipped) {
+                
+                let amount = statement.operationType == .credit ? "+ \(formattedAmount)" : formattedAmount
+                cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: amount))
+            }
+            
+            cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: dateString))
+
         default:
             //FIXME: implement taxes
             break
@@ -654,14 +739,14 @@ final class OperationDetailInfoViewModel: Identifiable {
 
 private extension OperationDetailInfoViewModel {
     
-    static func accountCell(with product: ProductData, currency: String, operationType: OperationType) -> DefaultCellViewModel? {
+    static func accountCell(with product: ProductData, model: Model, currency: String, operationType: OperationType) -> DefaultCellViewModel? {
         
         let productCurrency = product.currency
         let title = operationType == .debit ? "Счет списания" : "Счет зачисления"
         
         guard let smallDesign = product.smallDesign.image,
               let description = product.number?.suffix(4),
-              let balanceString = product.balance?.currencyFormatter(symbol: productCurrency) else  {
+              let balanceString = model.amountFormatted(amount: product.balanceValue, currencyCode: productCurrency, style: .clipped) else  {
             return nil
         }
         
@@ -674,6 +759,24 @@ private extension OperationDetailInfoViewModel {
             
             return ProductCellViewModel(title: title, icon: smallDesign, name: productName, iconPaymentService: nil, balance: balanceString, description: "· \(description)")
         }
+    }
+    
+    static func commissionCell(with model: Model, icon: PropertyIconType = .commission, fee: Double, currency: String) -> PropertyCellViewModel? {
+        
+        guard let feeFormatted = model.amountFormatted(amount: fee, currencyCode: currency, style: .clipped) else {
+            return nil
+        }
+        
+        return .init(title: "Коммиссия", iconType: .commission, value: feeFormatted)
+    }
+    
+    static func amountCell(with model: Model, title: String = "Сумма перевода", icon: PropertyIconType = .balance, amount: Double, currency: String) -> PropertyCellViewModel? {
+        
+        guard let amountFormatted = model.amountFormatted(amount: amount, currencyCode: currency, style: .clipped) else {
+            return nil
+        }
+
+        return .init(title: title, iconType: .balance, value: amountFormatted)
     }
 }
 
@@ -689,10 +792,10 @@ extension OperationDetailInfoViewModel {
         let payerProductId = [operation.payerCardId, operation.payerAccountId].compactMap {$0}.first
         let payerProductNumber = [operation.payerCardNumber, operation.payerAccountNumber].compactMap {$0}.first
         
-        let payeeViewModel = makeProductViewModel(
-            title: "Счет пополнения",
-            productId: payeeProductId,
-            productNumber: payeeProductNumber)
+        let payerViewModel = makeProductViewModel(
+            title: "Счет списания",
+            productId: payerProductId,
+            productNumber: payerProductNumber)
         
         let balanceViewModel = makePropertyViewModel(
             productId: payerProductId,
@@ -704,35 +807,97 @@ extension OperationDetailInfoViewModel {
             operation: operation,
             iconType: .commission)
         
-        let payerViewModel = makeProductViewModel(
-            title: "Счет списания",
-            productId: payerProductId,
-            productNumber: payerProductNumber)
+        let payeeViewModel = makeProductViewModel(
+            title: "Счет зачисления",
+            productId: payeeProductId,
+            productNumber: payeeProductNumber)
         
         let dateViewModel = makePropertyViewModel(
             productId: payerProductId,
             operation: operation,
             iconType: .date)
+
+        let purposeViewModel = makePropertyViewModel(
+            productId: payerProductId,
+            operation: operation,
+            iconType: .purpose)
         
-        return [
-            payeeViewModel,
-            balanceViewModel,
-            commissionViewModel,
-            payerViewModel,
-            dateViewModel].compactMap {$0}
+        let payeeNumberPhone = makePropertyViewModel(
+            productId: payerProductId,
+            operation: operation,
+            iconType: .phone)
+        
+        let payeeNameViewModel = makePropertyViewModel(
+            productId: payerProductId,
+            operation: operation,
+            iconType: .user)
+
+        let operationNumberViewModel = makePropertyViewModel(
+            productId: payerProductId,
+            operation: operation,
+            iconType: .operationNumber)
+        
+        let payeeBankViewModel = makeBankViewModel(
+            operation: operation)
+        
+        switch operation.transferEnum {
+        
+        case .sfp:
+            
+            return [
+                payeeNumberPhone,
+                payeeNameViewModel,
+                payeeBankViewModel,
+                balanceViewModel,
+                commissionViewModel,
+                payerViewModel,
+                purposeViewModel,
+                operationNumberViewModel,
+                dateViewModel
+            ].compactMap {$0}
+            
+        case .depositClose:
+            
+            return [
+                payeeViewModel,
+                payerViewModel,
+                balanceViewModel,
+                commissionViewModel,
+                purposeViewModel,
+                dateViewModel,
+            ].compactMap {$0}
+            
+        case .accountClose:
+            
+            return [
+                payerViewModel,
+                balanceViewModel,
+                commissionViewModel,
+                payeeViewModel,
+                dateViewModel].compactMap {$0}
+            
+        default:
+            
+            return [
+                payerViewModel,
+                balanceViewModel,
+                commissionViewModel,
+                payeeViewModel,
+                dateViewModel].compactMap {$0}
+        }
     }
     
     func makePropertyViewModel(productId: Int?, operation: OperationDetailData, iconType: PropertyIconType) -> PropertyCellViewModel? {
         
         guard let productId = productId,
-              let productData = model.product(productId: productId) else {
+              let productData = model.product(productId: productId) ?? model.product(additionalId: productId) else {
             return nil
         }
         
         switch iconType {
         case .balance:
             
-            let formattedAmount = model.amountFormatted(amount: operation.amount, currencyCode: productData.currency, style: .fraction)
+            let formattedAmount = model.amountFormatted(amount: operation.payerAmount, currencyCode: operation.payerCurrency, style: .fraction)
             
             guard let formattedAmount = formattedAmount else {
                 return nil
@@ -749,10 +914,59 @@ extension OperationDetailInfoViewModel {
             }
             
             return .init(title: "Комиссия", iconType: .commission, value: payerFee)
+
+        case .purpose:
+            //FIXME: backend send "" if comment nil
+            guard let comment = operation.comment, operation.comment != "" else {
+                return nil
+            }
             
+            return .init(title: "Назначение платежа", iconType: .purpose, value: comment)
+
         case .date:
-            return .init(title: "Дата и время операции (МСК)", iconType: .date, value: operation.responseDate)
+            switch operation.transferEnum {
+            case .depositClose:
+                return .init(title: "Тип платежа", iconType: .date, value: "Закрытие вклада")
+            default:
+                return .init(title: "Дата и время операции (МСК)", iconType: .date, value: operation.responseDate)
+            }
             
+        case .phone:
+            
+            guard let payeePhone = operation.payeePhone else {
+                return nil
+            }
+            
+            let phoneFormatter = PhoneNumberKitFormater()
+            
+            //TODO: remove after backend will be send number with country code
+            if operation.transferEnum == .sfp {
+                
+                let formattedPhone = phoneFormatter.format("7\(payeePhone)")
+                return .init(title: "Номер телефона получателя", iconType: .phone, value: formattedPhone)
+
+            } else {
+                
+                let formattedPhone = phoneFormatter.format(payeePhone)
+                return .init(title: "Номер телефона получателя", iconType: .phone, value: formattedPhone)
+            }
+                
+        case .user:
+            
+            guard let payeeName = operation.payeeFullName else {
+                return nil
+            }
+
+            return .init(title: "Получатель", iconType: .user, value: payeeName)
+
+        case .operationNumber:
+            
+            guard let transferNumber = operation.transferNumber else {
+                return nil
+            }
+
+            return .init(title: "Номер операции СБП", iconType: .operationNumber, value: transferNumber)
+
         default:
             return nil
         }
@@ -761,7 +975,7 @@ extension OperationDetailInfoViewModel {
     private func makeProductViewModel(title: String, productId: Int?, productNumber: String?) -> ProductCellViewModel? {
         
         guard let productId = productId,
-              let productData = model.product(productId: productId),
+              let productData = model.product(productId: productId) ?? model.product(additionalId: productId),
               let icon = productData.smallDesign.image,
               let balance = productData.balance,
               let formattedBalance = model.amountFormatted(amount: balance, currencyCode: productData.currency, style: .fraction) else {
@@ -783,6 +997,23 @@ extension OperationDetailInfoViewModel {
         let viewModel: ProductCellViewModel = .init(title: title, icon: icon, name: name, iconPaymentService: image, balance: formattedBalance, description: "\(lastNumber)\(description)")
         
         return viewModel
+    }
+    
+    private func makeBankViewModel(operation: OperationDetailData) -> BankCellViewModel? {
+         
+        guard let bankName = operation.payeeBankName, let memberId = operation.memberId else {
+            return nil
+        }
+        
+        let bank = model.bankList.value.first(where: {$0.memberId == memberId})
+        let title = "Банк получателя"
+        
+        guard let md5hash = bank?.md5hash, let icon = model.images.value[md5hash]?.image else {
+            
+            return BankCellViewModel(title: title, icon: Image("BankIcon"), name: bankName)
+        }
+        
+        return BankCellViewModel(title: title, icon: icon, name: bankName)
     }
 }
 
@@ -900,7 +1131,7 @@ extension OperationDetailInfoViewModel {
     
     static let detailMockData: OperationDetailInfoViewModel = {
         
-        return OperationDetailInfoViewModel(logo: nil, cells: [PropertyCellViewModel(title: "По номеру телефона", iconType: .phone, value: "+7 (962) 62-12-12"),
+        return OperationDetailInfoViewModel(model: .emptyMock, logo: nil, cells: [PropertyCellViewModel(title: "По номеру телефона", iconType: .phone, value: "+7 (962) 62-12-12"),
                                                                PropertyCellViewModel(title: "Получатель", iconType: .user, value: "Алексей Андреевич К."),
                                                                BankCellViewModel(title: "Банк получателя", icon: Image("Bank Logo Sample"), name: "СБЕР"),
                                                                PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: "1 000,00 ₽"),
@@ -909,7 +1140,7 @@ extension OperationDetailInfoViewModel {
                                                                PropertyCellViewModel(title: "Назначение платежа", iconType: .purpose, value: "Оплата по договору №285"),
                                                                PropertyCellViewModel(title: "Номер операции СБП", iconType: .operationNumber, value: "B11271248585590B00001750251A3F95"),
                                                                PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: "10.05.2021 15:38:12")
-                                                              ], dismissAction: {}, model: .emptyMock)
+                                                              ], dismissAction: {})
         
     }()
 }

@@ -51,6 +51,26 @@ extension ModelAction {
             }
         }
     }
+    
+    enum BankClient {
+        
+        struct Request: Action {
+            
+            let phone: String
+        }
+    }
+}
+
+//MARK: - Helpers
+
+extension Model {
+    
+    func isBankClient(phone: String) -> Bool {
+        
+        let bankClientsPhones = bankClientsInfo.value.map{ $0.phone.digits }
+        
+        return bankClientsPhones.contains(phone.digits)
+    }
 }
 
 //MARK: - Handlers
@@ -125,6 +145,77 @@ extension Model {
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)
                 
+            }
+        }
+    }
+    
+    func handleBankClientRequest(_ payload: ModelAction.BankClient.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        Task {
+            
+            let command = ServerCommands.CardController.GetOwnerPhoneNumber(token: token, payload: .init(phoneNumber: payload.phone))
+            
+            do {
+                
+                let result = try await getBankClientWithCommand(command: command)
+                
+                if let result = result, result.phone != "" {
+                    
+                    self.bankClientsInfo.value.insert(result)
+                    
+                    do {
+                        
+                        try localAgent.store(self.bankClientsInfo.value, serial: nil)
+                        
+                    } catch(let error) {
+                        
+                        LoggerAgent.shared.log(category: .cache, message: "Chaching Error: \(error)")
+                    }
+                }
+                
+            } catch {
+                
+                self.handleServerCommandError(error: error, command: command)
+            }
+            
+        }
+    }
+    
+    func getBankClientWithCommand(command: ServerCommands.CardController.GetOwnerPhoneNumber) async throws -> BankClientInfo? {
+        
+        try await withCheckedThrowingContinuation { continuation in
+            
+            serverAgent.executeCommand(command: command) { result in
+                
+                switch result {
+                case .success(let response):
+                    switch response.statusCode {
+                    case .ok:
+                        guard let data = response.data else {
+                            continuation.resume(with: .failure(ModelRatesError.emptyData(message: response.errorMessage)))
+                            return
+                        }
+                        
+                        if data != "", let phone = command.payload?.phoneNumber {
+                            continuation.resume(returning: BankClientInfo(name: data, phone: phone))
+
+                        } else {
+                            continuation.resume(returning: nil)
+                        }
+                        
+                    default:
+                        continuation.resume(with: .failure(ModelRatesError.statusError(status: response.statusCode, message: response.errorMessage)))
+                        
+                    }
+                case .failure(let error):
+                    continuation.resume(with: .failure(ModelRatesError.serverCommandError(error: error.localizedDescription)))
+                    
+                }
             }
         }
     }

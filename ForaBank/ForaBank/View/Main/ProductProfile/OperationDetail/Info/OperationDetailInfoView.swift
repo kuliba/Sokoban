@@ -16,26 +16,35 @@ struct OperationDetailInfoView: View {
     var body: some View {
         
         VStack {
-            HStack(alignment: .center, spacing: 0){
+            
+            HStack(alignment: .center, spacing: 0) {
+                
                 Button {
                     
                     viewModel.dismissAction()
                     
                 } label: {
                     
-                    Image("xmarknew")
+                    Image.ic24Close
+                        .foregroundColor(.textSecondary)
+                    
                 }.padding(6)
+                
                 Spacer()
+                
                 Text(viewModel.title)
-                    .foregroundColor(Color(hex: "1C1C1C"))
-                    .font(.system(size: 16))
-                    .fontWeight(.semibold)
+                    .foregroundColor(.textSecondary)
+                    .font(.textH4SB16240())
+                
                 Spacer()
+                
                 if let logo = viewModel.logo {
                     
                     logo
                         .resizable()
+                        .renderingMode(.original)
                         .frame(width: 32, height: 32)
+                    
                 } else {
                     
                     Color.clear
@@ -48,17 +57,24 @@ struct OperationDetailInfoView: View {
             
             ScrollView {
                 
-                VStack(alignment: .leading, spacing: 20){
+                VStack(alignment: .leading, spacing: 20) {
+                    
                     ForEach(viewModel.cells) { item in
+                        
                         switch item{
+                            
                         case let propertyViewModel as OperationDetailInfoViewModel.PropertyCellViewModel:
                             PropertyCellView(viewModel: propertyViewModel)
+                            
                         case let bankViewModel as OperationDetailInfoViewModel.BankCellViewModel:
                             BankCellView(viewModel: bankViewModel)
+                            
                         case let productViewModel as OperationDetailInfoViewModel.ProductCellViewModel:
                             ProductCellView(viewModel: productViewModel)
+                            
                         case let iconCellViewModel as OperationDetailInfoViewModel.IconCellViewModel:
                             IconCellView(viewModel: iconCellViewModel)
+                            
                         default:
                             EmptyView()
                         }
@@ -66,8 +82,6 @@ struct OperationDetailInfoView: View {
                 }
                 .padding(.top, 5)
             }
-            
-            
         }
     }
     
@@ -80,16 +94,23 @@ extension OperationDetailInfoView {
         var viewModel: OperationDetailInfoViewModel.PropertyCellViewModel
         
         var body: some View {
-            HStack(alignment: .bottom, spacing: 15){
+            
+            HStack(alignment: .bottom, spacing: 15) {
+                
                 viewModel.iconType?.icon
                     .frame(width: 32, height: 24, alignment: .bottom)
-                VStack(alignment: .leading, spacing: 4){
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    
                     Text(viewModel.title)
-                        .foregroundColor(Color(hex: "999999"))
-                        .font(.system(size: 12))
+                        .foregroundColor(.textPlaceholder)
+                        .font(.textBodySR12160())
+
                     Text(viewModel.value)
-                        .font(.system(size: 14))
-                    Color(hex: "FBFBFB")
+                        .font(.textBodyMM14200())
+                        .foregroundColor(.textSecondary)
+
+                    Color.bordersDivaiderDisabled
                         .frame(height: 1)
                 }
             }.padding(.init(top: 10, leading: 20, bottom: 10, trailing: 20))
@@ -116,18 +137,25 @@ extension OperationDetailInfoView {
         var viewModel: OperationDetailInfoViewModel.BankCellViewModel
         
         var body: some View {
-            HStack(alignment: .bottom, spacing: 15){
+            
+            HStack(alignment: .bottom, spacing: 15) {
+                
                 viewModel.icon
                     .resizable()
                     .frame(width: 32, height: 32, alignment: .bottom)
+                    .foregroundColor(.mainColorsGrayLightest)
                 
-                VStack(alignment: .leading, spacing: 4){
+                VStack(alignment: .leading, spacing: 4) {
+                    
                     Text(viewModel.title)
-                        .foregroundColor(Color(hex: "999999"))
-                        .font(.system(size: 12))
+                        .foregroundColor(.textPlaceholder)
+                        .font(.textBodySR12160())
+                    
                     Text(viewModel.name)
-                        .font(.system(size: 14))
-                    Color(hex: "FBFBFB")
+                        .foregroundColor(.textSecondary)
+                        .font(.textBodyMM14200())
+                    
+                    Color.bordersDivaiderDisabled
                         .frame(height: 1)
                 }
             }.padding(.init(top: 10, leading: 20, bottom: 10, trailing: 20))
@@ -140,27 +168,39 @@ extension OperationDetailInfoView {
         var viewModel: OperationDetailInfoViewModel.ProductCellViewModel
         
         var body: some View {
-            HStack(alignment: .center, spacing: 15){
+            
+            HStack(alignment: .center, spacing: 15) {
+                
                 viewModel.icon
                     .frame(width: 32, height: 22, alignment: .center)
+                
                 HStack{
-                    VStack(alignment: .leading, spacing: 4){
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        
                         Text(viewModel.title)
-                            .foregroundColor(Color(hex: "999999"))
-                            .font(.system(size: 12))
+                            .foregroundColor(.textPlaceholder)
+                            .font(.textBodySR12160())
+                        
                         HStack{
+                            
                             viewModel.iconPaymentService?
                                 .frame(width: 24, height: 24, alignment: .center)
+                            
                             Text(viewModel.name)
-                                .font(.system(size: 14))
+                                .foregroundColor(.textSecondary)
+                                .font(.textBodyMM14200())
                         }
                         Text(viewModel.description)
-                            .foregroundColor(Color(hex: "999999"))
-                            .font(.system(size: 12))
+                            .foregroundColor(.textPlaceholder)
+                            .font(.textBodySR12160())
                     }
+                    
                     Spacer()
+                    
                     Text(viewModel.balance)
-                        .font(.system(size: 14))
+                        .font(.textBodyMM14200())
+                        .foregroundColor(.textSecondary)
                 }
                 
             }

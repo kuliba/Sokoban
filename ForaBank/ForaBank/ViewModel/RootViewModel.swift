@@ -39,8 +39,10 @@ class RootViewModel: ObservableObject, Resetable {
         self.model = model
         
         mainViewModel.rootActions = rootActions
+        paymentsViewModel.rootActions = rootActions
                 
         bind()
+        bindAuth()
     }
     
     func reset() {

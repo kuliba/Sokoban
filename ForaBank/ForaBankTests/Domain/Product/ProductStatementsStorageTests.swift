@@ -11,7 +11,82 @@ import XCTest
 class ProductStatementsStorageTests: XCTestCase {
     
     let calendar = Calendar.current
+}
 
+//MARK: - Updated
+
+extension ProductStatementsStorageTests {
+    
+    func testUpdated_No_Intersect_No_Override() throws {
+        
+        // given
+        let startDate = Date.date(year: 2022, month: 4, day: 10, calendar: calendar)!
+        let endDate = Date.date(year: 2022, month: 5, day: 10, calendar: calendar)!
+        let initialPeriod = Period(start: startDate, end: endDate)
+        
+        let firstStatementDate =  Date.date(year: 2022, month: 4, day: 11, calendar: calendar)!
+        let firstStatement = ProductStatementData(date: firstStatementDate, amount: 100, operationType: .debit, tranDate: nil)
+        let lastStatementDate = Date.date(year: 2022, month: 5, day: 9, calendar: calendar)!
+        let lastStatement = ProductStatementData(date: lastStatementDate, amount: 200, operationType: .debit, tranDate: nil)
+        let storage = ProductStatementsStorage(period: initialPeriod, statements: [firstStatement, lastStatement])
+        
+        let updateStart = endDate
+        let updateEnd = Date.date(year: 2022, month: 5, day: 30, calendar: calendar)!
+        let updatePeriod = Period(start: updateStart, end: updateEnd)
+        
+        let updateStatementDate = Date.date(year: 2022, month: 5, day: 20, calendar: calendar)!
+        let updateStatement = ProductStatementData(date: updateStatementDate, amount: 300, operationType: .debit, tranDate: nil)
+        
+        let update = ProductStatementsStorage.Update(period: updatePeriod, statements: [updateStatement], direction: .latest, limitDate: updateEnd)
+        
+        // when
+        let result = storage.updated(with: update, historyLimitDate: nil)
+        
+        // then
+        XCTAssertEqual(result.period, Period(start: startDate, end: updateEnd))
+        XCTAssertEqual(result.statements.count, 3)
+        XCTAssertEqual(result.statements[0].date, firstStatementDate)
+        XCTAssertEqual(result.statements[1].date, lastStatementDate)
+        XCTAssertEqual(result.statements[2].date, updateStatementDate)
+    }
+    
+    func testUpdated_Intersect_Ovveride() throws {
+        
+        // given
+        let startDate = Date.date(year: 2022, month: 4, day: 10, calendar: calendar)!
+        let endDate = Date.date(year: 2022, month: 5, day: 10, calendar: calendar)!
+        let initialPeriod = Period(start: startDate, end: endDate)
+        
+        let firstStatementDate = startDate
+        let firstStatement = ProductStatementData(date: firstStatementDate, amount: 100, operationType: .debit, tranDate: nil)
+        let lastStatementDate = endDate
+        let lastStatement = ProductStatementData(date: lastStatementDate, amount: 200, operationType: .debit, tranDate: nil)
+        let storage = ProductStatementsStorage(period: initialPeriod, statements: [firstStatement, lastStatement])
+        
+        let updateStart = Date.date(year: 2022, month: 4, day: 20, calendar: calendar)!
+        let updateEnd = Date.date(year: 2022, month: 5, day: 30, calendar: calendar)!
+        let updatePeriod = Period(start: updateStart, end: updateEnd)
+        
+        let updateStatementTranDate = Date.date(year: 2022, month: 5, day: 15, calendar: calendar)!
+        let updateStatement = ProductStatementData(date: lastStatementDate, amount: 200, operationType: .debit, tranDate: updateStatementTranDate)
+        
+        let update = ProductStatementsStorage.Update(period: updatePeriod, statements: [updateStatement], direction: .latest, limitDate: updateEnd)
+        
+        // when
+        let result = storage.updated(with: update, historyLimitDate: nil)
+        
+        // then
+        XCTAssertEqual(result.period, Period(start: startDate, end: updateEnd))
+        XCTAssertEqual(result.statements.count, 2)
+        XCTAssertEqual(result.statements[0].date, firstStatementDate)
+        XCTAssertEqual(result.statements[1].tranDate, updateStatementTranDate)
+    }
+}
+
+//MARK: - Latest Period
+
+extension ProductStatementsStorageTests {
+    
     func testLatestPeriod() throws {
         
         // given
@@ -87,6 +162,11 @@ class ProductStatementsStorageTests: XCTestCase {
         // then
         XCTAssertNil(result)
     }
+}
+
+//MARK: - Eldest Period
+
+extension ProductStatementsStorageTests {
     
     func testEldestPeriod() throws {
         
@@ -164,9 +244,13 @@ class ProductStatementsStorageTests: XCTestCase {
         XCTAssertNil(result)
     }
     
-    //MARK: - isHistoryComplete
+}
+
+//MARK: - isHistoryComplete
+
+extension ProductStatementsStorageTests {
     
-    func testIsHistoryComplete_With_Update_Eldest_True() {
+    func testIsHistoryComplete_With_Update_Eldest_True() throws {
         
         // given
         let startDate = Date.date(year: 2022, month: 4, day: 10, calendar: calendar)!
@@ -175,7 +259,7 @@ class ProductStatementsStorageTests: XCTestCase {
         let period = Period(start: startDate, end: endDate)
         
         let limitDate = Date.date(year: 2022, month: 4, day: 10, calendar: calendar)!
-        let update = ProductStatementsStorage.Update(period: period, statements: [], direction: .eldest, limitDate: limitDate, override: false)
+        let update = ProductStatementsStorage.Update(period: period, statements: [], direction: .eldest, limitDate: limitDate)
         
         // when
         let result = ProductStatementsStorage(with: update, historyLimitDate: limitDate).isHistoryComplete
@@ -184,7 +268,7 @@ class ProductStatementsStorageTests: XCTestCase {
         XCTAssertTrue(result)
     }
     
-    func testIsHistoryComplete_With_Update_Eldest_False() {
+    func testIsHistoryComplete_With_Update_Eldest_False() throws {
         
         // given
         let startDate = Date.date(year: 2022, month: 4, day: 10, calendar: calendar)!
@@ -193,7 +277,7 @@ class ProductStatementsStorageTests: XCTestCase {
         let period = Period(start: startDate, end: endDate)
         
         let limitDate = Date.date(year: 2022, month: 3, day: 10, calendar: calendar)!
-        let update = ProductStatementsStorage.Update(period: period, statements: [], direction: .eldest, limitDate: limitDate, override: false)
+        let update = ProductStatementsStorage.Update(period: period, statements: [], direction: .eldest, limitDate: limitDate)
         
         // when
         let result = ProductStatementsStorage(with: update, historyLimitDate: limitDate)
@@ -202,7 +286,7 @@ class ProductStatementsStorageTests: XCTestCase {
         XCTAssertFalse(result.isHistoryComplete)
     }
     
-    func testIsHistoryComplete_With_Update_Latest_True() {
+    func testIsHistoryComplete_With_Update_Latest_True() throws {
         
         // given
         let startDate = Date.date(year: 2022, month: 4, day: 10, calendar: calendar)!
@@ -211,7 +295,7 @@ class ProductStatementsStorageTests: XCTestCase {
         let period = Period(start: startDate, end: endDate)
         
         let limitDate = Date.date(year: 2022, month: 5, day: 10, calendar: calendar)!
-        let update = ProductStatementsStorage.Update(period: period, statements: [], direction: .latest, limitDate: limitDate, override: false)
+        let update = ProductStatementsStorage.Update(period: period, statements: [], direction: .latest, limitDate: limitDate)
         
         // when
         let result = ProductStatementsStorage(with: update, historyLimitDate: limitDate).isHistoryComplete
@@ -221,11 +305,35 @@ class ProductStatementsStorageTests: XCTestCase {
     }
 }
 
-fileprivate extension Date {
+//MARK: - History Limit Date
+
+extension ProductStatementsStorageTests {
     
-    static func date(year: Int, month: Int, day: Int, calendar: Calendar) -> Date? {
+    func testHistoryLimitDateForProduct_Date() throws{
         
-        let components = DateComponents(year: year, month: month, day: day)
-        return calendar.date(from: components)
+        // given
+        let openDate = Date.date(year: 2022, month: 4, day: 10, calendar: calendar)!
+        let product = ProductData(id: 0, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: "RUB", mainField: "CARD", additionalField: nil, customName: nil, productName: "CARD", openDate: openDate, ownerId: 1, branchId: nil, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], order: 1, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
+        
+        // when
+        let result = ProductStatementsStorage.historyLimitDate(for: product)
+        
+        // then
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result, openDate)
+    }
+    
+    func testHistoryLimitDate_BankOpenDate() throws{
+        
+        // given
+        let product = ProductData(id: 0, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: "RUB", mainField: "CARD", additionalField: nil, customName: nil, productName: "CARD", openDate: nil, ownerId: 1, branchId: nil, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], order: 1, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
+        let bankOpenDate = Date.date(year: 1992, month: 5, day: 27, calendar: calendar)!
+        
+        // when
+        let result = ProductStatementsStorage.historyLimitDate(for: product)
+        
+        // then
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result, bankOpenDate)
     }
 }

@@ -10,7 +10,7 @@ import AVFoundation
 
 class PaymentsViewController: UIViewController {
     
-    var strongSelf: PaymentsServicesViewModel?
+    var strongSelf: PaymentsServiceViewModel?
     
     // QR data
     var qrData = [String: String]()
@@ -31,7 +31,7 @@ class PaymentsViewController: UIViewController {
     
     lazy var searchContact: NavigationBarUIView = UIView.fromNib()
     
-    let phoneFormatter = PhoneNumberFormater()
+    let phoneFormatter = PhoneNumberKitFormater()
 
     enum Section: Int, CaseIterable {
         case payments, transfers, pay

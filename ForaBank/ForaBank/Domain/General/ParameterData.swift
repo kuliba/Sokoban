@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ParameterData: Codable, Equatable {
+struct ParameterData: Codable, Equatable, Identifiable {
     
     let content: String?
     let dataType: String?
@@ -40,6 +40,16 @@ extension ParameterData {
     
     var value: String? { content }
     
+    var view: Payments.Parameter.View {
+        
+        switch type.lowercased() {
+        case "select": return .select
+        case "masklist": return .selectSwitch
+        case "input", "string", "int": return .input
+        default: return .info
+        }
+    }
+    
     //"=,inn_oktmo=ИНН и ОКТМО подразделения,number=Номер подразделения"
     var options: [Option]? {
         
@@ -70,6 +80,12 @@ extension ParameterData {
         }
         
         return options
+    }
+    
+    var switchOptions: [Payments.ParameterSelectSwitch.Option]? {
+        
+        //TODO: implementation required
+        return nil
     }
     
     var iconData: ImageData? {

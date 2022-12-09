@@ -38,20 +38,7 @@ struct PaymentsTransfersView: View {
                     
                 } //mainVerticalScrollView
             } //mainVStack
-            .onAppear {
-                viewModel.action.send(PaymentsTransfersViewModelAction.ViewDidApear())
-            }
-            .navigationBarTitle("", displayMode: .inline)
-            .navigationBarItems(
-                leading: MainView.UserAccountButton(viewModel: viewModel.userAccountButton),
-                trailing:
-                    HStack {
-                        ForEach(viewModel.navButtonsRight) { navButtonViewModel in
-                                            
-                            NavBarButton(viewModel: navButtonViewModel)
-                        }
-                    })
- 
+
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
                 if let link = viewModel.link  {
@@ -82,10 +69,8 @@ struct PaymentsTransfersView: View {
                             .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
-                    case let .taxAndStateService(taxAndStateServiceVM):
-                        PaymentsView(viewModel: taxAndStateServiceVM)
-                            .edgesIgnoringSafeArea(.all)
-                            .navigationBarHidden(true)
+                    case let .payments(paymentsViewModel):
+                        PaymentsView(viewModel: paymentsViewModel)
                         
                     case let .transferByRequisites(transferByRequisitesViewModel):
                         TransferByRequisitesView(viewModel: transferByRequisitesViewModel)
@@ -149,49 +134,82 @@ struct PaymentsTransfersView: View {
                     }
                 }
             }
+            
+            Color.clear
+                .sheet(item: $viewModel.sheet, content: { sheet in
+                    
+                    switch sheet.type {
+                        
+                    case let .transferByPhone(viewModel):
+                        TransferByPhoneView(viewModel: viewModel)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case let .meToMe(viewModel):
+                        PaymentsMeToMeView(viewModel: viewModel)
+                            .edgesIgnoringSafeArea(.bottom)
+                            .fixedSize(horizontal: false, vertical: true)
+                        
+                    case let .successMeToMe(successMeToMeViewModel):
+                        PaymentsSuccessView(viewModel: successMeToMeViewModel)
+                        
+                    case .anotherCard(let anotherCardViewModel):
+                        AnotherCardView(viewModel: anotherCardViewModel)
+                            .edgesIgnoringSafeArea(.bottom)
+                        
+                    case .qrScanner(let qrViewModel):
+                        QrScannerView(viewModel: qrViewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case .fastPayment(let viewModel):
+                        ContactsView(viewModel: viewModel)
+                    }
+                })
+                
         }
-        .sheet(item: $viewModel.sheet, content: { sheet in
-            
-            switch sheet.type {
-                
-            case let .transferByPhone(viewModel):
-                TransferByPhoneView(viewModel: viewModel)
-                    .edgesIgnoringSafeArea(.all)
-                
-            case let .meToMe(viewModel):
-                MeToMeView(viewModel: viewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                
-            case .anotherCard(let anotherCardViewModel):
-                AnotherCardView(viewModel: anotherCardViewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                
-            case .qrScanner(let qrViewModel):
-                QrScannerView(viewModel: qrViewModel)
-                    .navigationBarTitle("", displayMode: .inline)
-                    .navigationBarBackButtonHidden(true)
-                    .edgesIgnoringSafeArea(.all)
-            }
-            
-        })
+        .onAppear {
+            viewModel.action.send(PaymentsTransfersViewModelAction.ViewDidApear())
+        }
+        .navigationBarTitle("", displayMode: .inline)
+        .navigationBarItems(
+            leading: MainView.UserAccountButton(viewModel: viewModel.userAccountButton),
+            trailing:
+                HStack {
+                    ForEach(viewModel.navButtonsRight) { navButtonViewModel in
+                                        
+                        NavBarButton(viewModel: navButtonViewModel)
+                    }
+                })
         .bottomSheet(item: $viewModel.bottomSheet) { sheet in
             
             switch sheet.type {
             case let .exampleDetail(title):
                 ExampleDetailMock(title: title)
-            
+                
             case let .meToMe(viewModel):
-                MeToMeView(viewModel: viewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .frame(height: 474)
+                
+                PaymentsMeToMeView(viewModel: viewModel)
+                    .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+                        
+                        switch fullCover.type {
+                        case let .successMeToMe(successMeToMeViewModel):
+                            PaymentsSuccessView(viewModel: successMeToMeViewModel)
+                        }
+                        
+                    }.transaction { transaction in
+                        transaction.disablesAnimations = false
+                    }
                 
             case .anotherCard(let model):
                 AnotherCardView(viewModel: model)
                     .edgesIgnoringSafeArea(.bottom)
                     .navigationBarTitle("", displayMode: .inline)
                     .frame(height: 494)
+            
             }
         }
+        
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })

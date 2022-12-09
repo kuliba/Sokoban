@@ -34,16 +34,16 @@ class UserDocumentViewModel: ObservableObject {
         self.itemType = itemType
         self.navigationBar = .init(
             title: itemType.title,
-            leftButtons: [
-                NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: dismissAction)
+            leftItems: [
+                NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)
             ],
-            rightButtons: [],
+            rightItems: [],
             background: itemType.backgroundColor,
             foreground: .textWhite)
                 
         self.items = Self.createItems(from: clientInfo, itemType: itemType)
         
-        navigationBar.rightButtons = [.init(icon: .ic24Share, action: { [weak self] in
+        navigationBar.rightItems = [ NavigationBarView.ViewModel.ButtonItemViewModel(icon: .ic24Share, action: { [weak self] in
             self?.action.send(UserDocumentViewModelAction.Share(clientInfo: clientInfo, itemType: itemType))
         })]
         

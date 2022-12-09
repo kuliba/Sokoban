@@ -3,6 +3,7 @@
 //  ForaBank
 //
 //  Created by Pavel Samsonov on 10.04.2022.
+//  Full refactored by Dmitry Martynov on 18.09.2022
 //
 
 import Foundation
@@ -16,51 +17,155 @@ struct MyProductsView: View {
     
     var body: some View {
         
-        ZStack {
+        VStack(spacing: 0) {
             
-            VStack(spacing: 0) {
+            MyProductsMoneyView(viewModel: viewModel.totalMoneyVM)
+                .zIndex(1)
+                .onTapGesture {
+                    viewModel.action.send(MyProductsViewModelAction.Tapped.CancelExpandedCurrency())
+                }
+                .overlay13 {
                 
-                MyProductsMoneyView(viewModel: viewModel.totalMoneyVM).zIndex(1)
-                
-                ScrollView {
-                    
-                    ForEach(viewModel.sections) { model in
+                    if let playerViewModel = MyProductsViewModel.Onboarding.ordered.playerVM,
+                       let isShow = viewModel.showOnboarding[.ordered], isShow {
                         
-                        MyProductsSectionView(viewModel: model)
+                        OnboardingPlayerView(viewModel: playerViewModel)
+                            .frame(width: 108, height: 108)
+                            .clipShape(Circle())
+                            .shadow(color: Color(hex: "1C1C1C").opacity(0.1), radius: 10, x: 0, y: 12)
+                            .offset(x: UIScreen.main.bounds.width / 2 - 62, y: 12)
+                    }
+                
+                    if let playerViewModel = MyProductsViewModel.Onboarding.hide.playerVM,
+                        let isShow = viewModel.showOnboarding[.hide], isShow {
+                        
+                        OnboardingPlayerView(viewModel: playerViewModel)
+                            .frame(width: 108, height: 108)
+                            .clipShape(Circle())
+                            .shadow(color: Color(hex: "1C1C1C").opacity(0.1), radius: 10, x: 0, y: 12)
+                            .offset(x: UIScreen.main.bounds.width / 2 - 108, y: 146)
+                    }
+                    
+                }
+            
+            ZStack(alignment: .top) {
+            
+                ScrollView {
+                    VStack {
+                        ForEach(viewModel.sections) { sectionVM in
+                    
+                            MyProductsSectionView(viewModel: sectionVM, editMode: $viewModel.editModeState)
+                                .padding(.top, 16)
+                        }
+                
+                        Button(action: {
+                            viewModel.action.send(MyProductsViewModelAction.Tapped.CancelExpandedCurrency())
+                            viewModel.action.send(MyProductsViewModelAction.Tapped.NewProductLauncher())
+                        }) {
+                    
+                            Text(viewModel.openProductTitle)
+                                .font(.buttonLargeSB16180())
+                                .foregroundColor(viewModel.editModeState == .active
+                                                 ? .mainColorsGray : .mainColorsBlack)
+                                .frame(maxWidth: .infinity, minHeight: 48)
+                                .background(Color.barsTabbar)
+                                .cornerRadius(12)
+                        }
+                        .disabled(viewModel.editModeState == .active)
+                        .padding(.horizontal)
+                        .padding(.vertical, 24)
+                        
+                    } //vsta
+                    .background(GeometryReader { geo in
+
+                        Color.clear
+                            .preference(key: ScrollOffsetKey.self,
+                                        value: -geo.frame(in: .named("scroll")).origin.y)
+
+                    })
+                    .onPreferenceChange(ScrollOffsetKey.self) { offset in
+
+                        if offset < -100 {
+                            viewModel.action.send(MyProductsViewModelAction.PullToRefresh())
+                        }
+                    }
+                }//scroll
+                .background(Color.mainColorsWhite)
+                .coordinateSpace(name: "scroll")
+                .zIndex(0)
+               
+                RefreshingIndicatorView(viewModel: viewModel.refreshingIndicator).zIndex(1)
+            } //zstack
+            
+            NavigationLink("", isActive: $viewModel.isLinkActive) {
+                
+                if let link = viewModel.link  {
+                    
+                    switch link {
+                    case let .openCard(authProductsViewModel):
+                        AuthProductsView(viewModel: authProductsViewModel)
+                        
+                    case let  .openDeposit(openDepositViewModel):
+                        OpenDepositView(viewModel: openDepositViewModel)
+                    
+                    case let .productProfile(productProfileViewModel):
+                        ProductProfileView(viewModel: productProfileViewModel)
                     }
                 }
-                .background(Color.mainColorsWhite)
-                .padding(.top, -5)
             }
-            .navigationBar(with: viewModel.navigationBar)
             
-            if let viewModel = viewModel.currencyMenu {
+        } //vstack
+        .ignoresSafeArea(.container , edges: .bottom)
+        .onAppear {
+            viewModel.action.send(MyProductsViewModelAction.StartIndicator())
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                viewModel.startOnboarding()
+            }
+        }
+        .navigationBar(with: viewModel.navigationBar)
+        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
+
+            switch bottomSheet.type {
                 
-                ZStack(alignment: .topTrailing) {
-                    
-                    Color.clear
-                    
-                    MyProductsCurrencyMenuView(viewModel: viewModel)
-                        .frame(width: 239, height: 222)
-                        .padding(.top, 42)
-                        .padding(.trailing, 19)
-                }
+            case let .openAccount(openAccountViewModel):
+                OpenAccountView(viewModel: openAccountViewModel)
+                
+            case let .newProductLauncher(openProductVM):
+                MyProductsOpenProductView(viewModel: openProductVM)
             }
-        }.onTapGesture {
-            
-            viewModel.action.send(MyProductsViewModelAction.Tapped.CancelExpandedCurrency())
+        }
+    }
+    
+}
+
+extension MyProductsView {
+    
+    struct ScrollOffsetKey: PreferenceKey {
+        
+        typealias Value = CGFloat
+        static var defaultValue = CGFloat.zero
+        static func reduce(value: inout Value, nextValue: () -> Value) {
+            value += nextValue()
         }
     }
 }
 
 //MARK: - Preview
 
-struct AllMoneyView_Previews: PreviewProvider {
+struct MyProductsView_Previews: PreviewProvider {
     
     static var previews: some View {
-        NavigationView {
-            MyProductsView(viewModel: .sample)
+       
+        Group {
+            NavigationView {
+                MyProductsView(viewModel: .sample)
+            }
+            
+            NavigationView {
+                MyProductsView(viewModel: .sampleOpenProduct)
+            }
         }
-        .previewDevice("iPhone SE (1st generation)")
+        
     }
 }
+

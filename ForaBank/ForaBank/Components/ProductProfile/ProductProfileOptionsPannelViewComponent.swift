@@ -41,7 +41,7 @@ extension ProductProfileOptionsPannelView {
             
             switch type {
             case .refillFromOtherBank:
-                return .init(icon: .init(image: .ic40SBP, style: .original, background: .circleSmall), title: .init(text: "С моего счета в другом банке", style: .bold), orientation: .horizontal, action: action)
+                return .init(icon: .init(image: .ic40Sbp, style: .original, background: .circleSmall), title: .init(text: "С моего счета в другом банке", style: .bold), orientation: .horizontal, action: action)
                 
             case .refillFromOtherProduct:
                 return .init(icon: .init(image: .ic24Between, background: .circleSmall), title: .init(text: "Со своего счета", style: .bold), orientation: .horizontal, action: action)
@@ -111,19 +111,15 @@ extension ProductProfileOptionsPannelView {
                 
             case .closeDeposit(let isActive):
                 return .init(icon: .init(image: .ic24Close, background: .circleSmall), title: .init(text: "Закрыть вклад", style: .bold), orientation: .horizontal, action: action, isActive: isActive)
-                
-            // TODO: DBSNEW-6553
-                
-            /*
+
             case .statementOpenAccount(let isActive):
                 return .init(icon: .init(image: .ic24FileText, background: .circleSmall), title: .init(text: "Заявление-анкета на открытие счета", style: .bold), orientation: .horizontal, action: action, isActive: isActive)
-
+                
             case .tariffsByAccount:
                 return .init(icon: .init(image: .ic24FileText, background: .circleSmall), title: .init(text: "Тарифы по счету", style: .bold), orientation: .horizontal, action: action)
-
+                
             case .termsOfService:
                 return .init(icon: .init(image: .ic24FileText, background: .circleSmall), title: .init(text: "Условия комплексного банковского обслуживания", style: .bold), orientation: .horizontal, action: action)
-             */
             }
         }
         
@@ -136,14 +132,9 @@ extension ProductProfileOptionsPannelView {
             case info
             case conditions
             case closeDeposit(Bool)
-            
-            // TODO: DBSNEW-6553
-            
-            /*
             case statementOpenAccount(Bool)
             case tariffsByAccount
             case termsOfService
-             */
             
             case contract
         }
@@ -200,6 +191,6 @@ struct ProductProfileOptionsPannelViewComponent_Previews: PreviewProvider {
 
 extension ProductProfileOptionsPannelView.ViewModel {
     
-    static let sample = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttons: [.init(icon: .init(image: .ic40SBP, style: .original, background: .circleSmall), title: .init(text: "С моего счета в другом банке", style: .bold), orientation: .horizontal, action: {}), .init(icon: .init(image: .ic24Between, background: .circleSmall), title: .init(text: "Со своего счета", style: .bold), orientation: .horizontal, action: {}), .init(icon: .init(image: .ic24CreditCard, background: .circleSmall), title: .init(text: "С карты другого банка", style: .bold), orientation: .horizontal, action: {})])
+    static let sample = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttons: [.init(icon: .init(image: .ic40Sbp, style: .original, background: .circleSmall), title: .init(text: "С моего счета в другом банке", style: .bold), orientation: .horizontal, action: {}), .init(icon: .init(image: .ic24Between, background: .circleSmall), title: .init(text: "Со своего счета", style: .bold), orientation: .horizontal, action: {}), .init(icon: .init(image: .ic24CreditCard, background: .circleSmall), title: .init(text: "С карты другого банка", style: .bold), orientation: .horizontal, action: {})])
 
 }

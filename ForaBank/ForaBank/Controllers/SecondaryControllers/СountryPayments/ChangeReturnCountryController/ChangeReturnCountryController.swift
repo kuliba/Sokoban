@@ -194,7 +194,13 @@ class ChangeReturnCountryController: UIViewController {
     @objc
     func closeButtonTapped() {
         
-        navigationController?.popViewController(animated: true)
+        if #unavailable(iOS 14.5) {
+            dismiss(animated: true)
+            
+        } else {
+            dismiss(animated: true)
+            navigationController?.popViewController(animated: true)
+        }
     }
     
     @objc func doneButtonTapped() {

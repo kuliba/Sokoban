@@ -36,7 +36,7 @@ extension CurrencyExchangeConfirmationView {
             self.currencyPayer = currencyPayer
         }
         
-        init?(response: CurrencyExchangeConfirmationData, isCourseChange: Bool, model: Model) {
+        init?(response: TransferResponseData, isCourseChange: Bool, model: Model) {
             
             guard let debitAmount = response.debitAmount,
                   let fee = response.fee,

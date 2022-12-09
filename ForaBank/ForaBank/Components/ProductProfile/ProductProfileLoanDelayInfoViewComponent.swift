@@ -103,7 +103,7 @@ struct ProductProfileLoanDelayInfoView: View {
 
 //MARK: - Preview
 
-struct InfoView_Previews: PreviewProvider {
+struct ProductProfileLoanDelayInfoView_Previews: PreviewProvider {
     static var previews: some View {
         ProductProfileLoanDelayInfoView(viewModel: .init())
             .previewLayout(.fixed(width: 360, height: 250))

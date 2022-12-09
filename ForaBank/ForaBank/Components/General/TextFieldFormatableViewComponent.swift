@@ -40,20 +40,34 @@ extension TextFieldFormatableView {
         enum Kind {
             
             case general
-            case currencyWallet
+            case currency
         }
         
         internal init(type: Kind = .general, value: Double, formatter: NumberFormatter, isEnabled: Bool = true, isEditing: Bool = false, limit: Int? = nil, toolbar: ToolbarViewModel? = nil) {
             
             self.type = type
-            self.formatter = formatter
             self.text = formatter.string(from: NSNumber(value: value))
+            self.formatter = formatter
             self.isEnabled = isEnabled
             self.isEditing = isEditing
             self.limit = limit
             self.toolbar = toolbar
             self.becomeFirstResponder = {}
             self.dismissKeyboard = {}
+        }
+        
+        convenience init(_ value: Double, isEnabled: Bool = true, currencySymbol: String) {
+            
+            self.init(value: value, formatter: .currency(with: currencySymbol), isEnabled: isEnabled, limit: 9, toolbar: .init(doneButton: .init(isEnabled: true) {
+                    UIApplication.shared.endEditing()
+            }))
+        }
+        
+        func update(_ value: Double, isEnabled: Bool = true, currencySymbol: String) {
+            
+            let formatter = NumberFormatter.currency(with: currencySymbol)
+            self.text = formatter.string(from: NSNumber(value: value))
+            self.formatter = formatter
         }
     }
 }
@@ -127,23 +141,16 @@ struct TextFieldFormatableView: UIViewRepresentable {
     
     func makeCoordinator() -> Coordinator {
         
-        Coordinator(viewModel: viewModel, text: $viewModel.text, formatter: viewModel.formatter, limit: viewModel.limit)
+        Coordinator(viewModel: viewModel)
     }
     
     class Coordinator: NSObject, UITextFieldDelegate {
         
         @ObservedObject var viewModel: ViewModel
         
-        var text: Binding<String?>
-        var formatter: NumberFormatter
-        var limit: Int?
-        
-        init(viewModel: ViewModel, text: Binding<String?>, formatter: NumberFormatter, limit: Int?) {
+        init(viewModel: ViewModel) {
             
             self.viewModel = viewModel
-            self.text = text
-            self.formatter = formatter
-            self.limit = limit
         }
         
         func textFieldDidChangeSelection(_ textField: UITextField) {
@@ -168,14 +175,14 @@ struct TextFieldFormatableView: UIViewRepresentable {
             switch viewModel.type {
             case .general:
                 
-                textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter, limit: limit)
-                text.wrappedValue = textField.text
+                textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: viewModel.formatter, limit: viewModel.limit)
+                viewModel.text = textField.text
                 updateCursorPosition(textField)
                 
-            case .currencyWallet:
+            case .currency:
                 
-                textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter, limit: limit, type: .currencyWallet)
-                text.wrappedValue = textField.text
+                textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: viewModel.formatter, limit: viewModel.limit, type: .currency)
+                viewModel.text = textField.text
             }
             
             return false
@@ -221,7 +228,8 @@ struct TextFieldFormatableView: UIViewRepresentable {
             // apply update to value in range
             updatedValue.replaceSubrange(rangeStart..<rangeEnd, with: update)
             
-            let semicolon = updatedValue.filter { ".,".contains($0) }
+            let initialValue = updatedValue
+            let semicolon = initialValue.filter { ".,".contains($0) }
             
             // number dots and commas is not more than one
             if semicolon.count > 1 {
@@ -288,9 +296,22 @@ struct TextFieldFormatableView: UIViewRepresentable {
                 
                 switch type {
                 case .general:
-                    // return formatted double value, example: `1234.56` -> `1 234,56 ₽`
-                    return formatter.string(from: NSNumber(value: doubleValue))
-                case .currencyWallet:
+                    
+                    if let filterredSplittedLast = filterredUpdateSplitted.last, filterredSplittedLast.count == 1, filterredSplittedLast.first == "0" {
+                        
+                        return initialValue
+                        
+                    } else if let filterredSplittedLast = filterredUpdateSplitted.last, filterredUpdateSplitted.count == 2, filterredSplittedLast.last == "0" {
+                        
+                        return value
+                        
+                    } else {
+                        
+                        // return formatted double value, example: `1234.56` -> `1 234,56 ₽`
+                        return formatter.string(from: NSNumber(value: doubleValue))
+                    }
+                    
+                case .currency:
                     
                     let filterredUpdate = filterredUpdateFixed.replacingOccurrences(of: ".", with: ",")
                     return filterredUpdate

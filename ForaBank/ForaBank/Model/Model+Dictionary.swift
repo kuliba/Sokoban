@@ -299,7 +299,7 @@ extension Model {
         return currencyList.value.first(where: { $0.code == code })
     }
     
-    func dictionaryCurrencySimbol(for code: String) -> String? {
+    func dictionaryCurrencySymbol(for code: String) -> String? {
         
         dictionaryCurrency(for: code)?.currencySymbol
     }
@@ -311,7 +311,13 @@ extension Model {
         return bankList.value
     }
     
-    //Operators&OperatorGroups
+    func isForaBank(bankId: BankData.ID) -> Bool {
+        
+        bankId == "100000000217"
+    }
+    
+    //MARK: Operators & OperatorGroups
+    
     func dictionaryAnywayOperatorGroups() -> [OperatorGroupData]? {
         
         return localAgent.load(type: [OperatorGroupData].self)
@@ -1615,7 +1621,10 @@ extension Model {
             return
         }
         
-        let command = ServerCommands.DictionaryController.GetSvgImageList(token: token, payload: .init(md5HashList: payload.imagesIds))
+        let command = ServerCommands.DictionaryController
+                        .GetSvgImageList(token: token,
+                                         payload: .init(md5HashList: payload.imagesIds))
+        
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {

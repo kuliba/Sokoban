@@ -86,15 +86,23 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         
         let userInfo = notification.request.content.userInfo
         
-        guard let push = try? Push(decoding: userInfo) else { return }
-        
-        if let code = push.code, let _ = push.aps {
+        do {
             
-            model.action.send(ModelAction.Auth.VerificationCode.PushRecieved(code: code))
-            NotificationCenter.default.post(name: Notification.Name("otpCode"), object: nil, userInfo: userInfo)
+            let push = try Push(decoding: userInfo)
+            
+            if let code = push.code, let _ = push.aps {
+                
+                model.action.send(ModelAction.Auth.VerificationCode.PushRecieved(code: code))
+                NotificationCenter.default.post(name: Notification.Name("otpCode"), object: nil, userInfo: userInfo)
+            }
+            
+            model.action.send(ModelAction.Notification.ChangeNotificationStatus.Request(statusData: .init(push: push)))
+            
+        } catch {
+            
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Unable decode push data with error: \(error)")
         }
         
-        model.action.send(ModelAction.Notification.ChangeNotificationStatus.Request(statusData: .init(push: push)))
         completionHandler([[.list, .banner, .sound]])
     }
 

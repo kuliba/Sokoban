@@ -97,7 +97,9 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let bankListData = ServerCommands.DictionaryController.GetBanks.Response.BankListData(banksList: [.init(md5hash: "257108d9f58bc12ece63986ba17428eb", memberId: "100000000001", memberName: "Gazprombank", memberNameRus: "Газпромбанк", paymentSystemCodeList: ["string"], svgImage: SVGImageData(description: "string"))], serial: "bea36075a58954199a6b8980549f6b69")
+        let bankListData = ServerCommands.DictionaryController.GetBanks.Response.BankListData(banksList: [.init(memberId: "100000000001", memberName: "Gazprombank", memberNameRus: "Газпромбанк", paymentSystemCodeList: ["string"], md5hash: "257108d9f58bc12ece63986ba17428eb", svgImage: SVGImageData(description: "string"), bankCountry: "RU")], serial: "bea36075a58954199a6b8980549f6b69")
+        
+        //.init(md5hash: "257108d9f58bc12ece63986ba17428eb", memberId: "100000000001", memberName: "Gazprombank", memberNameRus: "Газпромбанк", paymentSystemCodeList: ["string"], svgImage: SVGImageData(description: "string"))
         
         let expected = ServerCommands.DictionaryController.GetBanks.Response(statusCode: .ok, errorMessage: "string", data: bankListData)
         
@@ -117,7 +119,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let bankListData = ServerCommands.DictionaryController.GetBanks.Response.BankListData(banksList: [.init(md5hash: "257108d9f58bc12ece63986ba17428eb", memberId: nil, memberName: nil, memberNameRus: "Газпромбанк", paymentSystemCodeList: ["string"], svgImage: SVGImageData(description: "string"))], serial: "bea36075a58954199a6b8980549f6b69")
+        let bankListData = ServerCommands.DictionaryController.GetBanks.Response.BankListData(banksList: [.init(memberId: "100000000001", memberName: nil, memberNameRus: "Газпромбанк", paymentSystemCodeList: ["string"], md5hash: "257108d9f58bc12ece63986ba17428eb", svgImage: SVGImageData(description: "string"), bankCountry: "RU")], serial: "bea36075a58954199a6b8980549f6b69")
         
         let expected = ServerCommands.DictionaryController.GetBanks.Response(statusCode: .ok, errorMessage: "string", data: bankListData)
         

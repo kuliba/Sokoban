@@ -19,15 +19,66 @@ typealias LoansData = [PersonsCreditData]
 extension Model {
     
     var productsOpenAccountURL: URL { URL(string: "https://promo.forabank.ru/")! }
+    var productsOpenLoanURL: URL { URL(string: "https://www.forabank.ru/private/credits/")! }
+    var productsOpenInsuranceURL: URL { URL(string: "https://www.forabank.ru/landings/e-osago/")! }
+    var productsOpenMortgageURL: URL { URL(string: "https://www.forabank.ru/private/mortgage/")! }
+    
+    var allProducts: [ProductData] { products.value.values.flatMap { $0 }.sorted { $0.productType.order < $1.productType.order } }
+    
+    func productType(for productId: ProductData.ID) -> ProductType? {
+        
+        allProducts.first(where: { $0.id == productId })?.productType
+    }
+    
+    func firstProduct(with filter: ProductData.Filter) -> ProductData? {
+        
+        filter.filterredProducts(allProducts).first
+    }
+    
+    var isAllProductsHidden: Bool {
+        products.value.values.flatMap {$0}.filter {$0.visibility}.isEmpty
+    }
+    
+    var productsTypes: [ProductType] {
+        
+        products.value.keys.map {$0}
+    }
+    
+    func product() -> ProductData? {
+        
+        products.value.values.flatMap {$0}.sorted { $0.productType.order < $1.productType.order }.first
+    }
     
     func product(productId: ProductData.ID) -> ProductData? {
         
-        products.value.values.flatMap({ $0 }).first(where: { $0.id == productId })
+        allProducts.first(where: { $0.id == productId })
     }
     
-    func product(currency: Currency) -> ProductData.ID? {
+    func product(additionalId: ProductData.ID) -> ProductData? {
         
-        let product = products.value.values.flatMap {$0}.first(where: { $0.currency == currency.description })
+        products.value.values.flatMap({ $0 }).first(where: { $0.additionalAccountId == additionalId })
+    }
+    
+    func allProductsCurrency() -> [Currency] {
+        
+        var uniqueCurrency: [Currency] = []
+        
+        let allProductsCurrency = allProducts.compactMap { $0.currency }
+        let uniqueProductsCurrency = Set(allProductsCurrency)
+        
+        uniqueCurrency = uniqueProductsCurrency.map(Currency.init)
+        
+        return uniqueCurrency
+    }
+    
+    func products(_ productType: ProductType) -> [ProductData]? {
+        
+        products.value[productType]
+    }
+    
+    func firstProductId(currency: Currency) -> ProductData.ID? {
+        
+        let product = allProducts.first(where: { $0.currency == currency.description })
         
         guard let product = product else {
             return nil
@@ -50,15 +101,13 @@ extension Model {
     }
     
     func products(products: ProductsData, currency: Currency, currencyOperation: CurrencyOperation) -> [ProductData] {
-        
-        let products = products.values.flatMap {$0}
-        return filterredProducts(currency: currency, currencyOperation: currencyOperation, products: products)
+
+        filterredProducts(currency: currency, currencyOperation: currencyOperation, products: allProducts)
     }
     
     func products(currency: Currency, currencyOperation: CurrencyOperation) -> [ProductData] {
         
-        let products = products.value.values.flatMap {$0}
-        return filterredProducts(currency: currency, currencyOperation: currencyOperation, products: products)
+        return filterredProducts(currency: currency, currencyOperation: currencyOperation, products: allProducts)
     }
     
     func products(currency: Currency) -> [ProductData] {
@@ -70,8 +119,7 @@ extension Model {
     
     func products(currency: Currency, currencyOperation: CurrencyOperation, products: ProductsData) -> [ProductData] {
         
-        let products = products.values.flatMap {$0}
-        return filterredProducts(currency: currency, currencyOperation: currencyOperation, products: products)
+        return filterredProducts(currency: currency, currencyOperation: currencyOperation, products: allProducts)
     }
     
     private func filterredProducts(currency: Currency, currencyOperation: CurrencyOperation, products: [ProductData]) -> [ProductData] {
@@ -229,6 +277,17 @@ extension ModelAction {
                 
                 let result: Result<Data, Error>
             }
+        }
+        
+        struct UpdateVisibility: Action {
+            
+            let productId: ProductData.ID
+            let visibility: Bool
+        }
+        
+        struct UpdateOrders: Action {
+            
+            let orders: [ProductType: [ProductData.ID]]
         }
         
         enum ContractPrintForm {
@@ -437,6 +496,16 @@ extension Model {
                     let updatedProducts = Self.reduce(products: self.products.value, with: result.products, for: productType)
                     self.products.value = updatedProducts
                     
+                    //md5hash -> image
+                    let md5Products = result.products.reduce(Set<String>(), {
+                        $0.union([$1.smallDesignMd5hash,
+                                  $1.smallBackgroundDesignHash]) })
+                    
+                    let md5ToUpload = Array(md5Products.subtracting(images.value.keys))
+                    if !md5ToUpload.isEmpty {
+                        action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: md5ToUpload ))
+                    }
+                    
                     // cache products
                     do {
                         
@@ -506,6 +575,8 @@ extension Model {
                 let updatedProducts = Self.reduce(products: self.products.value, with: result.products, for: payload.productType)
                 self.products.value = updatedProducts
                 
+                //TODO: - hash image
+                
                 // cache products
                 do {
                     
@@ -540,6 +611,103 @@ extension Model {
                 //TODO: show error message in UI
             }
         }
+    }
+    
+    func handleProductsUpdateVisibility(_ payload: ModelAction.Products.UpdateVisibility) {
+        
+        guard !productsVisibilityUpdating.value.contains(payload.productId) else { return }
+        
+        guard let token = token
+        else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        Task {
+                
+            guard let product = self.product(productId: payload.productId) else { return }
+            
+            let command = ServerCommands.ProductController
+                                        .UserVisibilityProductsSettings(token: token,
+                                                                        productType: product.productType,
+                                                                        productId: product.id,
+                                                                        visibility: payload.visibility)
+            self.productsVisibilityUpdating.value.insert(product.id)
+          
+            do {
+                
+                let _ = try await productsSetSettingsWithCommand(command: command)
+                    
+                self.productsVisibilityUpdating.value.remove(product.id)
+                    
+                // update products
+                let updatedProducts = Self.reduce(productsData: self.products.value,
+                                                          productId: payload.productId,
+                                                          visibility: payload.visibility)
+                self.products.value = updatedProducts
+                    
+                do { // update cache
+                        
+                    try self.productsCaheStore(productsData: updatedProducts) //productsCaheData(productsData: updatedProducts)
+                        
+                } catch {
+                        
+                    self.handleServerCommandCachingError(error: error, command: command)
+                }
+
+            } catch {
+                    
+                self.productsVisibilityUpdating.value.remove(product.id)
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+        
+    }
+    
+    func handleProductsUpdateOrders(_ payload: ModelAction.Products.UpdateOrders) {
+        
+        guard !productsOrdersUpdating.value else { return }
+        
+        guard let token = token
+        else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        Task {
+            
+            let command = ServerCommands.ProductController
+                            .UserOrdersProductsSettings(token: token, newOrders: payload.orders)
+            
+            self.productsOrdersUpdating.value = true
+          
+            do {
+                
+                let _ = try await productsSetSettingsWithCommand(command: command)
+                    
+                self.productsOrdersUpdating.value = false
+                
+                // update products
+                let updatedProducts = Self.reduce(productsData: self.products.value, newOrders: payload.orders)
+                                                      
+                self.products.value = updatedProducts
+                    
+                do { // update cache
+                        
+                    try self.productsCaheStore(productsData: updatedProducts)
+                        
+                } catch {
+                     
+                    self.handleServerCommandCachingError(error: error, command: command)
+                }
+
+            } catch {
+                    
+                self.productsOrdersUpdating.value = false
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+        
     }
 
     func handleProductsActivateCard(_ payload: ModelAction.Products.ActivateCard.Request) {
@@ -621,6 +789,29 @@ extension Model {
         }
     }
     
+    func productsSetSettingsWithCommand<Command: ServerCommand>(command: Command) async throws -> Bool {
+        
+        try await withCheckedThrowingContinuation { continuation in
+            
+            serverAgent.executeCommand(command: command) { result in
+                
+                switch result{
+                case .success(let response):
+                    switch response.statusCode {
+                    case .ok:
+                        
+                        continuation.resume(returning: true)
+
+                    default:
+                        continuation.resume(with: .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage)))
+                    }
+                case .failure(let error):
+                    continuation.resume(with: .failure(ModelProductsError.serverCommandError(error: error.localizedDescription)))
+                }
+            }
+        }
+    }
+ 
     func handleProductsUpdateCustomName(_ payload: ModelAction.Products.UpdateCustomName.Request) {
         
         guard let token = token else {
@@ -941,7 +1132,7 @@ extension Model {
             }
         }
     }
-   
+    
     func loansFetchWithCommand(command: ServerCommands.LoanController.GetPersonsCredit) async throws -> ServerCommands.LoanController.GetPersonsCredit.Response.ResultData {
         
         try await withCheckedThrowingContinuation { continuation in
@@ -1114,6 +1305,49 @@ extension Model {
             return updated
         }
     }
+    
+    static func reduce(productsData: ProductsData, productId: ProductData.ID, visibility: Bool ) -> ProductsData {
+        
+        let product = productsData.values.flatMap({ $0 }).first(where: { $0.id == productId })
+        
+        product?.update(visibility: visibility)
+        
+        return productsData
+    }
+    
+    static func reduce(productsData: ProductsData, newOrders: [ProductType: [ProductData.ID]])  -> ProductsData {
+            
+            var productsUpdated = ProductsData()
+            
+            for productType in ProductType.allCases {
+                
+                guard var productsForType = productsData[productType] else { continue }
+                
+                if let productsIdsNewOrder = newOrders[productType]  {
+                    
+                    let productsForTypeIdsSet = Set(productsForType.map { $0.id })
+                    let productsIdsNewOrderSet = Set(productsIdsNewOrder)
+                    
+                    guard productsForTypeIdsSet == productsIdsNewOrderSet
+                    else { return productsData }
+                    
+                    for (index, productId) in productsIdsNewOrder.enumerated() {
+                        
+                        if let product = productsForType.first(where: { $0.id == productId }) {
+                            
+                            product.update(order: index)
+                        }
+                    }
+                    
+                    productsForType.sort(by: {$1.order > $0.order })
+                }
+                
+                productsUpdated[productType] = productsForType
+            } 
+            
+            return productsUpdated
+        }
+    
 }
 
 //MARK: - Cache

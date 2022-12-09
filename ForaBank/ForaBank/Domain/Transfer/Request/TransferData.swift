@@ -81,6 +81,7 @@ extension TransferData: Equatable {
     }
 }
 
+/*
 extension TransferData {
     
     enum Step {
@@ -90,9 +91,10 @@ extension TransferData {
         case check
         
         var isNewPayment: Bool { self == .initial }
-        var check: Bool { self == .check }
+        var isCheck: Bool { self == .check }
     }
 }
+ */
 
 extension TransferData: CustomDebugStringConvertible {
     

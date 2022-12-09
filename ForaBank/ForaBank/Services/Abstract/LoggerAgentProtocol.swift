@@ -29,4 +29,5 @@ enum LoggerAgentCategory: String, CaseIterable {
     case network
     case cache
     case session
+    case payments
 }
