@@ -228,27 +228,13 @@ class MainViewModel: ObservableObject, Resetable {
                                     self?.action.send(MainViewModelAction.Close.Sheet())
                                 })))
                             case .byQr:
-                                if model.cameraAgent.isCameraAvailable {
-                                    model.cameraAgent.requestPermissions(completion: { available in
-                                        
-                                        if available {
-                                            
-                                            let qrScannerModel = QRViewModel.init(closeAction: {
-                                                self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                            })
-                                            
-                                            self.bind(qrScannerModel)
-                                            self.link = .qrScanner(qrScannerModel)
-                                            
-                                    } else {
-                                        self.alert = .init(
-                                            title: "Внимание",
-                                            message: "Для сканирования QR кода, необходим доступ к камере",
-                                            primary: .init(type: .cancel, title: "Понятно", action: {
-                                            }))
-                                    }
-                                                                         })
-                                }
+                                
+                                let qrScannerModel = QRViewModel.init(closeAction: {
+                                    self.action.send(MainViewModelAction.Close.Link())
+                                })
+
+                                self.bind(qrScannerModel)
+                                self.link = .qrScanner(qrScannerModel)
                             }
                             
                         default:

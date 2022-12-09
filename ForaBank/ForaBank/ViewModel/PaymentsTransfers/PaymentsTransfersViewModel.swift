@@ -84,34 +84,14 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                                         .Close.Link() )}))
                 
                 case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:
-                    if model.cameraAgent.isCameraAvailable {
-                        model.cameraAgent.requestPermissions(completion: { available in
-                        
-                            // вызов из навбара
-                            if available {
-                                if #available(iOS 14, *) {
-                                    
-                                    // на экране платежей нижний переход
-                                    let qrScannerModel = QRViewModel.init(closeAction: {
-                                        self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                    })
-                                    
-                                    self.bind(qrScannerModel)
-                                    self.link = .qrScanner(qrScannerModel)
-                                    
-                                } else {
-                                    self.sheet = .init(type: .qrScanner(.init(closeAction: { self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                    })))
-                                }
-                            } else {
-                                self.alert = .init(
-                                    title: "Внимание",
-                                    message: "Для сканирования QR кода, необходим доступ к камере",
-                                    primary: .init(type: .cancel, title: "Понятно", action: {
-                                    }))
-                            }
-                        })
-                    }
+                    
+                    // на экране платежей нижний переход
+                    let qrScannerModel = QRViewModel.init(closeAction: {
+                        self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                    })
+                    
+                    self.bind(qrScannerModel)
+                    self.link = .qrScanner(qrScannerModel)
                    
                 case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
                     bottomSheet = nil
@@ -264,33 +244,42 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }))
                             
                         case .qrPayment:
-                            if model.cameraAgent.isCameraAvailable {
-                                model.cameraAgent.requestPermissions(completion: { available in
-                                    
-                                    if available {
-                                        if #available(iOS 14, *) {
-                                            
-                                            // на экране платежей нижний переход
-                                            let qrScannerModel = QRViewModel.init(closeAction: {
-                                                self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                            })
-                                            
-                                            self.bind(qrScannerModel)
-                                            self.link = .qrScanner(qrScannerModel)
-                                            
-                                        } else {
-                                            self.sheet = .init(type: .qrScanner(.init(closeAction: { self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                            })))
-                                        }
-                                    } else {
-                                        self.alert = .init(
-                                            title: "Внимание",
-                                            message: "Для сканирования QR кода, необходим доступ к камере",
-                                            primary: .init(type: .cancel, title: "Понятно", action: {
-                                            }))
-                                    }
-                                })
-                            }
+                            
+                            // на экране платежей нижний переход
+                            let qrScannerModel = QRViewModel.init(closeAction: {
+                                self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            })
+                            
+                            self.bind(qrScannerModel)
+                            self.link = .qrScanner(qrScannerModel)
+                            
+//                            if model.cameraAgent.isCameraAvailable {
+//                                model.cameraAgent.requestPermissions(completion: { available in
+//
+//                                    if available {
+//                                        if #available(iOS 14, *) {
+//
+//                                            // на экране платежей нижний переход
+//                                            let qrScannerModel = QRViewModel.init(closeAction: {
+//                                                self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+//                                            })
+//
+//                                            self.bind(qrScannerModel)
+//                                            self.link = .qrScanner(qrScannerModel)
+//
+//                                        } else {
+//                                            self.sheet = .init(type: .qrScanner(.init(closeAction: { self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+//                                            })))
+//                                        }
+//                                    } else {
+//                                        self.alert = .init(
+//                                            title: "Внимание",
+//                                            message: "Для сканирования QR кода, необходим доступ к камере",
+//                                            primary: .init(type: .cancel, title: "Понятно", action: {
+//                                            }))
+//                                    }
+//                                })
+//                            }
                             
                         case .service:
                             let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())

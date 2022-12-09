@@ -95,6 +95,21 @@ struct QRView: View {
                 InfoView
                     .frame(height: 400)
                     .padding(.horizontal, 30)
+                
+            case .qRAccessViewComponent(_):
+                
+                QRAccessViewComponent(viewModel: .init(input: .camera,  closeAction: {
+                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+                }))
+                    .frame(height: 400)
+                    .padding(.horizontal, 30)
+                
+            case .photoAccessViewComponent(_):
+                QRAccessViewComponent(viewModel: .init(input: .photo,  closeAction: {
+                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+                }))
+                    .frame(height: 400)
+                    .padding(.horizontal, 30)
             }
         })
         .sheet(item: $viewModel.sheet) { item in
