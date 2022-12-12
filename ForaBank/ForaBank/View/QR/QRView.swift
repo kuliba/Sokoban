@@ -65,11 +65,11 @@ struct QRView: View {
                 if let link = viewModel.link  {
                     
                     switch link {
-                    case .imagePicker(let imagePicker):
-                        ImagePicker(viewModel: imagePicker)
-                            .edgesIgnoringSafeArea(.all)
-                            .navigationBarBackButtonHidden(false)
-                            .navigationBarTitle("Из фото", displayMode: .inline)
+//                    case .imagePicker(let imagePicker):
+//                        ImagePickerController(viewModel: imagePicker)
+//                            .edgesIgnoringSafeArea(.all)
+//                            .navigationBarBackButtonHidden(false)
+//                            .navigationBarTitle("Из фото", displayMode: .inline)
                         
                     case .failedView(let view):
                         QRFailedView(viewModel: view)
@@ -84,7 +84,7 @@ struct QRView: View {
             switch sheet.sheetType {
                 
             case let .imageCapture(imageCapture):
-                ImageCapture(viewModel: imageCapture)
+                QRImagePickerController(viewModel: imageCapture)
                     .edgesIgnoringSafeArea(.all)
                     .navigationBarBackButtonHidden(false)
                 
@@ -120,6 +120,12 @@ struct QRView: View {
                 NavigationView {
                     DocumentPicker(viewModel: documentPicker)
                         .navigationBarTitle("Из документов", displayMode: .inline)
+                        .navigationBarBackButtonHidden(true)
+                }
+            case .imagePicker(let imagePicker):
+                NavigationView {
+                    QRImagePickerController(viewModel: imagePicker)
+                        .navigationBarTitle("Из фото", displayMode: .inline)
                         .navigationBarBackButtonHidden(true)
                 }
             }

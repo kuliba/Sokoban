@@ -118,10 +118,9 @@ class QRViewModel: ObservableObject {
                     
                     if payload.result {
                         
-                        let documentPicker = DocumentPickerViewModel { [weak self] url in
+                        let imagePicker = ImagePickerControllerViewModel { [weak self] image in
                             
-                            if let image = self?.qrFromPDF(url: url),
-                               let qrData = self?.string(from: image) {
+                            if let qrData = self?.string(from: image) {
                                 
                                 let result = Self.resolve(data: qrData)
                                 
@@ -135,7 +134,7 @@ class QRViewModel: ObservableObject {
                             self?.action.send(QRViewModelAction.CloseSheet())
                         }
 
-                        self.sheet = .init(sheetType: .documentPicker(documentPicker))
+                        self.sheet = .init(sheetType: .imagePicker(imagePicker))
                         
                     } else {
                         self.action.send(QRViewModelAction.AccessPhotoGallery())
@@ -201,7 +200,7 @@ extension QRViewModel {
         
         enum SheetType {
             
-            case imageCapture(ImageCaptureViewModel)
+            case imageCapture(ImagePickerControllerViewModel)
             case info(QRInfoViewComponent)
             case choiseDocument(QRButtonsView.ViewModel)
             case qRAccessViewComponent(QRAccessViewComponent)
@@ -216,13 +215,13 @@ extension QRViewModel {
         
         enum SheetType {
             
+            case imagePicker(ImagePickerControllerViewModel)
             case documentPicker(DocumentPickerViewModel)
         }
     }
     
     enum Link {
-        
-        case imagePicker(ImagePickerViewModel)
+
         case failedView(QRFailedViewModel)
     }
     

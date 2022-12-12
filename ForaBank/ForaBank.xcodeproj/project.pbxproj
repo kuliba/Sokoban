@@ -193,6 +193,7 @@
 		0BBACF76281F13B5008E983D /* GetPrintFormForCardStatmentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBACF75281F13B5008E983D /* GetPrintFormForCardStatmentModel.swift */; };
 		0BBAFAAA277CB748006D9323 /* PhoneNumberKitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAFAA9277CB748006D9323 /* PhoneNumberKitHelper.swift */; };
 		0BBC55FE2943318600B95E6C /* QRAccessViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC55FD2943318600B95E6C /* QRAccessViewComponent.swift */; };
+		0BBC562329472CB600B95E6C /* ImagePackerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC562229472CB600B95E6C /* ImagePackerController.swift */; };
 		0BBDFBE027BBF71200A30D6D /* PaymentsServicesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDFBDF27BBF71200A30D6D /* PaymentsServicesView.swift */; };
 		0BBDFBE227BBF75600A30D6D /* PaymentsServicesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDFBE127BBF75600A30D6D /* PaymentsServicesViewModel.swift */; };
 		0BBDFBE427BD05FD00A30D6D /* PaymentsOperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDFBE327BD05FD00A30D6D /* PaymentsOperationView.swift */; };
@@ -1627,6 +1628,7 @@
 		0BBACF75281F13B5008E983D /* GetPrintFormForCardStatmentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPrintFormForCardStatmentModel.swift; sourceTree = "<group>"; };
 		0BBAFAA9277CB748006D9323 /* PhoneNumberKitHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberKitHelper.swift; sourceTree = "<group>"; };
 		0BBC55FD2943318600B95E6C /* QRAccessViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRAccessViewComponent.swift; sourceTree = "<group>"; };
+		0BBC562229472CB600B95E6C /* ImagePackerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePackerController.swift; sourceTree = "<group>"; };
 		0BBDFBDF27BBF71200A30D6D /* PaymentsServicesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesView.swift; sourceTree = "<group>"; };
 		0BBDFBE127BBF75600A30D6D /* PaymentsServicesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesViewModel.swift; sourceTree = "<group>"; };
 		0BBDFBE327BD05FD00A30D6D /* PaymentsOperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsOperationView.swift; sourceTree = "<group>"; };
@@ -3478,6 +3480,7 @@
 				0B1781222926E6CE005209B5 /* QRSearchItemComponent.swift */,
 				0BE0BDFC29071BE10064549E /* QRButtonsViewComponent.swift */,
 				0BA7F27429320A8300A13EA1 /* DocumentPicker.swift */,
+				0BBC562229472CB600B95E6C /* ImagePackerController.swift */,
 				0BBC55FD2943318600B95E6C /* QRAccessViewComponent.swift */,
 			);
 			path = QR;
@@ -8177,6 +8180,7 @@
 				0BC4ADC22860DADE00921AE2 /* OperatorGroupData+Legacy.swift in Sources */,
 				6820928C27AB0FD7003DCAFD /* FastPaymentContractAttributeTypeData.swift in Sources */,
 				6862B55327B688CC006E833F /* AuthLoginViewModel.swift in Sources */,
+				0BBC562329472CB600B95E6C /* ImagePackerController.swift in Sources */,
 				7744940027FDE3B9001E2B9E /* PlacesFilterViewModel.swift in Sources */,
 				EDE7090627976AB90048CA94 /* TemplatesListViewModelAction.swift in Sources */,
 				774A8B4B2865FD3600B81140 /* MyProductsMoneyView.swift in Sources */,
