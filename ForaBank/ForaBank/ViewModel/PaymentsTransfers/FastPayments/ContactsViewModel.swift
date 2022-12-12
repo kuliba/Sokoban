@@ -95,7 +95,8 @@ class ContactsViewModel: ObservableObject {
                             self.searchBar.action.send(SearchBarViewModelAction.Idle())
                             mode = .fastPayments(.banksAndCountries(phone: phone))
 
-                            self.model.action.send(ModelAction.BankClient.Request(phone: phone.digits))
+                            model.action.send(ModelAction.BankClient.Request(phone: phone.digits))
+                            model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: phone))
 
                         } else {
  
