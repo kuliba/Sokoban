@@ -44,10 +44,7 @@ struct DocumentPicker: UIViewControllerRepresentable {
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
             
             guard let url = urls.first else { return }
-            guard url.startAccessingSecurityScopedResource() else {
-                print("Error: could not access content of url: \(url)")
-                return
-            }
+            guard url.startAccessingSecurityScopedResource() else { return }
             
             viewModel.selectedAction(url)
         }
