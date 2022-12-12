@@ -1,5 +1,5 @@
 //
-//  ImagePackerController.swift
+//  QRImagePackerController.swift
 //  ForaBank
 //
 //  Created by Константин Савялов on 12.12.2022.
@@ -24,12 +24,11 @@ struct QRImagePickerController: UIViewControllerRepresentable {
         let imagePicker = UIImagePickerController()
         imagePicker.allowsEditing = false
         imagePicker.sourceType = sourceType
-        
+        imagePicker.delegate = context.coordinator
         return imagePicker
     }
     
     func updateUIViewController(_ uiViewController: UIImagePickerController, context: UIViewControllerRepresentableContext<QRImagePickerController>) {
-        
     }
     
     func makeCoordinator() -> Coordinator {

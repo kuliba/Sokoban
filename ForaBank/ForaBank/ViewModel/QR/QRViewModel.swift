@@ -146,7 +146,7 @@ class QRViewModel: ObservableObject {
                     
                     let documentPicker = DocumentPickerViewModel { [weak self] url in
                         
-                        if let image = self?.qrFromPDF(url: url),
+                        if let image = self?.qrFromPDF(path: url),
                            let qrData = self?.string(from: image) {
                             
                             let result = Self.resolve(data: qrData)
@@ -262,9 +262,9 @@ extension QRViewModel {
         }
     }
     
-    func qrFromPDF(url: URL) -> UIImage? {
+    func qrFromPDF(path: URL) -> UIImage? {
         
-        guard let document = CGPDFDocument(url as CFURL) else { return nil }
+        guard let document = CGPDFDocument(path as CFURL) else { return nil }
         
         var width: CGFloat = 0
         var height: CGFloat = 0
