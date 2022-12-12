@@ -9,6 +9,7 @@
       "groupName": "Прочие операции",
       "md5hash": "75f3ee3b2d44e5808f41777c613f23c9",
       "operationType": "DEBIT",
+      "operationId" : "123",
       "paymentDetailType": "BETWEEN_THEIR",
       "type": "INSIDE"
     }
