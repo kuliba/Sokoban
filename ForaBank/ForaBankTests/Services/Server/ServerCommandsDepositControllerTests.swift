@@ -215,7 +215,7 @@ class ServerCommandsDepositControllerTests: XCTestCase {
                                         merchantName: nil,
                                         merchantNameRus: nil,
                                         opCode: nil,
-                                        operationId: nil,
+                                        operationId: "123",
                                         operationType: .debit,
                                         paymentDetailType: .betweenTheir,
                                         svgImage: nil,

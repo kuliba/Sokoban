@@ -25,9 +25,9 @@ extension ProductStatementsStorageTests {
         let initialPeriod = Period(start: startDate, end: endDate)
         
         let firstStatementDate =  Date.date(year: 2022, month: 4, day: 11, calendar: calendar)!
-        let firstStatement = ProductStatementData(date: firstStatementDate, amount: 100, operationType: .debit, tranDate: nil)
+        let firstStatement = ProductStatementData(id: "1", date: firstStatementDate, amount: 100, operationType: .debit, tranDate: nil)
         let lastStatementDate = Date.date(year: 2022, month: 5, day: 9, calendar: calendar)!
-        let lastStatement = ProductStatementData(date: lastStatementDate, amount: 200, operationType: .debit, tranDate: nil)
+        let lastStatement = ProductStatementData(id: "2", date: lastStatementDate, amount: 200, operationType: .debit, tranDate: nil)
         let storage = ProductStatementsStorage(period: initialPeriod, statements: [firstStatement, lastStatement])
         
         let updateStart = endDate
@@ -35,7 +35,7 @@ extension ProductStatementsStorageTests {
         let updatePeriod = Period(start: updateStart, end: updateEnd)
         
         let updateStatementDate = Date.date(year: 2022, month: 5, day: 20, calendar: calendar)!
-        let updateStatement = ProductStatementData(date: updateStatementDate, amount: 300, operationType: .debit, tranDate: nil)
+        let updateStatement = ProductStatementData(id: "3", date: updateStatementDate, amount: 300, operationType: .debit, tranDate: nil)
         
         let update = ProductStatementsStorage.Update(period: updatePeriod, statements: [updateStatement], direction: .latest, limitDate: updateEnd)
         
@@ -58,9 +58,9 @@ extension ProductStatementsStorageTests {
         let initialPeriod = Period(start: startDate, end: endDate)
         
         let firstStatementDate = startDate
-        let firstStatement = ProductStatementData(date: firstStatementDate, amount: 100, operationType: .debit, tranDate: nil)
+        let firstStatement = ProductStatementData(id: "1", date: firstStatementDate, amount: 100, operationType: .debit, tranDate: nil)
         let lastStatementDate = endDate
-        let lastStatement = ProductStatementData(date: lastStatementDate, amount: 200, operationType: .debit, tranDate: nil)
+        let lastStatement = ProductStatementData(id: "2", date: lastStatementDate, amount: 200, operationType: .debit, tranDate: nil)
         let storage = ProductStatementsStorage(period: initialPeriod, statements: [firstStatement, lastStatement])
         
         let updateStart = Date.date(year: 2022, month: 4, day: 20, calendar: calendar)!
@@ -68,7 +68,7 @@ extension ProductStatementsStorageTests {
         let updatePeriod = Period(start: updateStart, end: updateEnd)
         
         let updateStatementTranDate = Date.date(year: 2022, month: 5, day: 15, calendar: calendar)!
-        let updateStatement = ProductStatementData(date: lastStatementDate, amount: 200, operationType: .debit, tranDate: updateStatementTranDate)
+        let updateStatement = ProductStatementData(id: "2", date: lastStatementDate, amount: 200, operationType: .debit, tranDate: updateStatementTranDate)
         
         let update = ProductStatementsStorage.Update(period: updatePeriod, statements: [updateStatement], direction: .latest, limitDate: updateEnd)
         
