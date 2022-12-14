@@ -85,6 +85,8 @@ class AuthPinCodeViewModel: ObservableObject {
                 self.init(pincodeValue: .init(""), pinCode: pinCode, numpad: numpad, footer: footer, rootActions: rootActions, model: model, mode: mode, stage: .editing)
             }
             
+            model.action.send(ModelAction.Auth.Session.Start.Request())
+            
         case .create:
             let pinCode = PinCodeViewModel(title: "Придумайте код", pincodeLength: model.authPincodeLength)
             let numpad = NumPadViewModel(leftButton: .init(type: .empty, action: .none), rightButton: .init(type: .icon(.ic40Delete), action: .delete))
