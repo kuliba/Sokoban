@@ -76,11 +76,6 @@ extension ProductProfileHistoryView {
                         return
                     }
                     
-                    let statementsInfo = storage.statements.map({ "id: \($0.id), date: \($0.date), amount: \($0.amount)"})
-                    for info in statementsInfo {
-                        print(info)
-                    }
-                    
                     // isMapped = false  это согласованный костыль
                     updateSegmentedBar(productId: id, statements: storage.statements, isMapped: false)
                     
