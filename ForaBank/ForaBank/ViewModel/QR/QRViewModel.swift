@@ -16,7 +16,9 @@ class QRViewModel: ObservableObject {
     let scanner: QRScannerView.ViewModel
     let title: String
     let subTitle: String
+    private let model: Model
     
+    var flashLight: FlashLight = .on
     @Published var buttons: [ButtonIconTextView.ViewModel]
     @Published var clouseButton: ButtonSimpleView.ViewModel
     
@@ -26,7 +28,6 @@ class QRViewModel: ObservableObject {
     @Published var sheet: Sheet?
     @Published var alert: Alert.ViewModel?
     
-    private let model: Model
     private var bindings = Set<AnyCancellable>()
     
     
@@ -60,12 +61,12 @@ class QRViewModel: ObservableObject {
                     
                 case _ as QRViewModelAction.OpenDocument:
                     self.bottomSheet = .init(sheetType: .choiseDocument(.init(buttons: [
-                        .init(icon: .init(image: .ic24AlertCircle, background: .circle), title: .init(text: "Из фото", style: .bold), orientation: .horizontal, action: { [weak self] in
+                        .init(icon: .init(image: .ic24Camera, background: .circle), title: .init(text: "Из фото", style: .bold), orientation: .horizontal, action: { [weak self] in
                             self?.bottomSheet = nil
                             self?.model.action.send(ModelAction.Media.GalleryPermission.Request())
                         }),
-                        .init(icon: .init(image: .ic24Clock, background: .circle), title: .init(text: "Из Документов", style: .bold), orientation: .horizontal, action: { [weak self] in
-                          self?.model.action.send(ModelAction.Media.DocumentPermission.Request())
+                        .init(icon: .init(image: .ic24FileText, background: .circle), title: .init(text: "Из Документов", style: .bold), orientation: .horizontal, action: { [weak self] in
+                            self?.model.action.send(ModelAction.Media.DocumentPermission.Request())
                         })
                     ])))
                     
@@ -87,7 +88,8 @@ class QRViewModel: ObservableObject {
                     }))))
                     
                 case _ as QRViewModelAction.Flashlight:
-                    print("QrViewModelAction.Flashlight")
+                    
+                    self.flashLightTorch(on: self.flashLight.result.0)
                     
                 case _ as QRViewModelAction.CloseLink:
                     link = nil
@@ -133,7 +135,7 @@ class QRViewModel: ObservableObject {
                             
                             self?.action.send(QRViewModelAction.CloseSheet())
                         }
-
+                        
                         self.sheet = .init(sheetType: .imagePicker(imagePicker))
                         
                     } else {
@@ -164,7 +166,7 @@ class QRViewModel: ObservableObject {
                         
                         self?.action.send(QRViewModelAction.CloseSheet())
                     }
-
+                    
                     self.sheet = .init(sheetType: .documentPicker(documentPicker))
                     
                 default:
@@ -221,7 +223,7 @@ extension QRViewModel {
     }
     
     enum Link {
-
+        
         case failedView(QRFailedViewModel)
     }
     
@@ -302,6 +304,46 @@ extension QRViewModel {
 
 extension QRViewModel {
     
+    enum FlashLight {
+        
+        case on
+        case off
+        
+        var result: (Bool, Image) {
+            switch self {
+            case .on: return (true, Image.ic24ZapOff)
+            case .off: return (false, Image.ic24Zap)
+            }
+        }
+    }
+    
+    func flashLightTorch(on: Bool) {
+        
+        guard let device = AVCaptureDevice.default(for: .video) else { return }
+        
+        if device.hasTorch {
+            do {
+                try device.lockForConfiguration()
+                
+                if on == true {
+                    device.torchMode = .on
+                    self.flashLight = .off
+                } else {
+                    device.torchMode = .off
+                    self.flashLight = .on
+                }
+                
+                self.buttons = createButtons()
+                
+                device.unlockForConfiguration()
+            } catch {
+                print("Torch could not be used")
+            }
+        } else {
+            print("Torch is not available")
+        }
+    }
+    
     func cameraAccess() {
         
         if model.cameraAgent.isCameraAvailable {
@@ -310,8 +352,8 @@ extension QRViewModel {
                 if !available {
                     self?.action.send(QRViewModelAction.AccessCamera())
                 }
-        })
-    }
+            })
+        }
     }
     func createButtons() -> [ButtonIconTextView.ViewModel] {
         
@@ -319,7 +361,7 @@ extension QRViewModel {
             ButtonIconTextView.ViewModel(icon: .init(image: .ic24Image, background: .circle), title: .init(text: "Из файла", color: .white), orientation: .vertical, action: { [weak self] in
                 self?.action.send(QRViewModelAction.OpenDocument())
             }),
-            ButtonIconTextView.ViewModel(icon: .init(image: .ic24ZapOff, background: .circle), title: .init(text: "Фонарик", color: .white), orientation: .vertical, action: { [weak self] in
+            ButtonIconTextView.ViewModel(icon: .init(image: self.flashLight.result.1, background: .circle), title: .init(text: "Фонарик", color: .white), orientation: .vertical, action: { [weak self] in
                 self?.action.send(QRViewModelAction.Flashlight())
             }),
             ButtonIconTextView.ViewModel(icon: .init(image: .ic24AlertCircle, background: .circle), title: .init(text: "Инфо", color: .white), orientation: .vertical, action: { [weak self] in

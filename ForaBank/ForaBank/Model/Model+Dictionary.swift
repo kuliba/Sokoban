@@ -380,6 +380,17 @@ extension Model {
         guard let banksList = dictionaryFullBankInfoList() else { return nil }
         return banksList.first(where: { $0.bic == bic })
     }
+    
+    // Region
+    
+    func dictionaryRegion(for region: String) -> [OperatorGroupData.OperatorData] {
+        
+        guard let regionList = dictionaryAnywayOperators() else { return [] }
+        
+        let regions = regionList.filter{ $0.city == region }
+
+        return regions
+    }
         
     //Countries
     

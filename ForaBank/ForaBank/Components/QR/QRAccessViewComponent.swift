@@ -27,8 +27,8 @@ struct QRAccessViewModel {
         convenience init(input: Input, closeAction: @escaping () -> Void) {
             let clouseButton = ButtonSimpleView.ViewModel(title: "Перейти в настройки", style: .red, action: closeAction)
             
-            self.init(icon: .ic24AlertCircle, title: input.result,
-                      content: "Сможете сканировать файлы/документы с QR-кодом",
+            self.init(icon: input.result.2, title: input.result.0,
+                      content: input.result.1,
                       clouseButton: clouseButton)
         }
         
@@ -36,10 +36,10 @@ struct QRAccessViewModel {
             case photo
             case camera
             
-            var result: String {
+            var result: (String, String, Image) {
                 switch self {
-                case .photo: return "Разрешите доступ к фото"
-                case .camera: return "Разрешите доступ к камере"
+                case .photo: return ("Разрешите доступ к фото", "Сможете сканировать файлы/документы с QR-кодом", Image.ic24Camera)
+                case .camera: return ("Разрешите доступ к камере", "Сможете оплачивать по QR-коду и сканировать карты", Image.ic24Image)
                 }
             }
         }

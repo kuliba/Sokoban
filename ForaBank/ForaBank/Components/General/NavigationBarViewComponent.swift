@@ -12,6 +12,7 @@ extension NavigationBarView {
     class ViewModel: ObservableObject {
         
         @Published var title: String
+        @Published var titleButton: TitleButtonViewModel?
         @Published var subtitle: String?
         
         @Published var leftButtons: [BaseButtonViewModel]
@@ -22,6 +23,7 @@ extension NavigationBarView {
         @Published var backgroundDimm: BackgroundColorDimm?
         
         internal init(title: String,
+                      titleButton: TitleButtonViewModel? = nil,
                       subtitle: String? = nil,
                       leftButtons: [BaseButtonViewModel] = [],
                       rightButtons: [ButtonViewModel] = [],
@@ -30,6 +32,7 @@ extension NavigationBarView {
                       backgroundDimm: BackgroundColorDimm? = nil) {
             
             self.title = title
+            self.titleButton = titleButton
             self.subtitle = subtitle
             self.leftButtons = leftButtons
             self.rightButtons = rightButtons
@@ -73,6 +76,18 @@ extension NavigationBarView {
             
             let color: Color
             let opacity: Double
+        }
+        
+        struct TitleButtonViewModel {
+            
+            let icon: Image
+            let action: () -> Void
+            
+            init(icon: Image, action: @escaping () -> Void) {
+                
+                self.icon = icon
+                self.action = action
+            }
         }
     }
 }
@@ -144,19 +159,34 @@ struct NavigationBarView: View {
             
             Spacer()
             
-            VStack(alignment: .center, spacing: 0) {
+            HStack(spacing: 10) {
                 
-                Text(viewModel.title)
-                    .font(.textH3M18240())
-                    .foregroundColor(viewModel.foreground)
-                    .lineLimit(1)
-                   
-                if let subtitle = viewModel.subtitle {
+                VStack(alignment: .center, spacing: 0) {
                     
-                    Text(subtitle)
-                        .font(.textBodySR12160())
+                    Text(viewModel.title)
+                        .font(.textH3M18240())
                         .foregroundColor(viewModel.foreground)
                         .lineLimit(1)
+                    
+                    if let subtitle = viewModel.subtitle {
+                        
+                        Text(subtitle)
+                            .font(.textBodySR12160())
+                            .foregroundColor(viewModel.foreground)
+                            .lineLimit(1)
+                    }
+                }
+                
+                Button {
+                    
+                    viewModel.titleButton?.action()
+                    
+                } label: {
+                    
+                    viewModel.titleButton?.icon
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(viewModel.foreground)
                 }
             }
             

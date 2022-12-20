@@ -347,7 +347,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             self.link = .serviceOperators(operatorsViewModel)
                         } else {
 
-                            let failedView = QRFailedViewModel()
+                            let failedView = QRFailedViewModel(model: model)
                             self.link = .failedView(failedView)
                         }
 
@@ -361,7 +361,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
 
                     case .url( _):
                         
-                        let failedView = QRFailedViewModel()
+                        let failedView = QRFailedViewModel(model: model)
                         self.link = .failedView(failedView)
 
                     case .unknown(let qr):

@@ -10,6 +10,7 @@ import Combine
 
 class QRFailedViewModel: ObservableObject {
     
+    let model: Model
     let icon: Image
     let title: String
     let content: String
@@ -18,16 +19,18 @@ class QRFailedViewModel: ObservableObject {
     @Published var isLinkActive: Bool = false
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     
-    init(icon: Image, title: String, content: String, searchOpratorButton: [ButtonSimpleView.ViewModel]) {
+    init(model: Model, icon: Image, title: String, content: String, searchOpratorButton: [ButtonSimpleView.ViewModel]) {
+        
+        self.model = model
         self.icon = icon
         self.title = title
         self.content = content
         self.searchOperatorButton = searchOpratorButton
     }
     
-    convenience init() {
+    convenience init(model: Model) {
         
-        self.init(icon: Image.ic24BarcodeScanner2, title: "Не удалось распознать QR-код", content: "Воспользуйтесь другими способами оплаты", searchOpratorButton: [])
+        self.init(model: model, icon: Image.ic24BarcodeScanner2, title: "Не удалось распознать QR-код", content: "Воспользуйтесь другими способами оплаты", searchOpratorButton: [])
         
         self.searchOperatorButton = createButtons()
     }
@@ -37,7 +40,16 @@ class QRFailedViewModel: ObservableObject {
         return [
             ButtonSimpleView.ViewModel(title: "Найти поставщика вручную", style: .gray, action: { [weak self] in
                 
-                self?.link = .failedView(.init(textFieldPlaceholder: "Название или ИНН", navigationBar: .init(action: {}), operators: [], model: Model.shared))
+                self?.link = .failedView(.init(textFieldPlaceholder: "Название или ИНН", navigationBar:
+                        .init(
+                            title: "Все регионы",
+                            titleButton: .init(icon: Image.ic16ChevronDown, action: {
+                                self?.model.action.send(QRSearchOperatorViewModelAction.OpenCityView())
+                            }),
+                            leftButtons: [NavigationBarView.ViewModel.BackButtonViewModel(icon: Image.ic24ChevronLeft,
+                                                                                          action: { [weak self] in
+                                                                                              self?.link = nil})]),
+                                               model: Model.shared))
                 
             }),
             ButtonSimpleView.ViewModel(title: "Оплатить по реквизитам", style: .gray, action: { [weak self] in

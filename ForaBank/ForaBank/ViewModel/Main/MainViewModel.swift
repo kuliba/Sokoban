@@ -391,7 +391,7 @@ class MainViewModel: ObservableObject, Resetable {
                             
                         } else {
                             
-                            let failedView = QRFailedViewModel()
+                            let failedView = QRFailedViewModel(model: model)
                             self.link = .failedView(failedView)
                         }
                         
@@ -405,7 +405,7 @@ class MainViewModel: ObservableObject, Resetable {
                         
                     case .url( _):
                         
-                        let failedView = QRFailedViewModel()
+                        let failedView = QRFailedViewModel(model: model)
                         self.link = .failedView(failedView)
                         
                     case .unknown(let qr):
