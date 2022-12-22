@@ -133,11 +133,6 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
             }
         }
         readAndSetupCard()
-        if GlobalModule.c2bURL ?? "" == "success" {
-            dismissActivity()
-            openSuccessScreen()
-            return
-        }
         
         view.insertSubview(limitAlertView, at: 1)
         limitAlertView.addSubview(limitAlertContentLable)

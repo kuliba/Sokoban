@@ -9,11 +9,11 @@ import Foundation
 import UIKit
 
 class C2BDetailsViewModel {
-    var controller: C2BDetailsViewController? = nil
+    
+    weak var controller: C2BDetailsViewController? = nil
     var consent: [FastPaymentContractFindListDatum]? = nil
     var qrData: GetQRDataAnswer? = nil
     var c2bLink: String = ""
-//    var qrViewModel: C2BViewModel?
     static var recipientText = ""
     static var recipientIcon: UIImage? = nil
     static var recipientDescription = ""
@@ -22,41 +22,10 @@ class C2BDetailsViewModel {
     static var makeTransfer: MakeTransferDecodableModel? = nil
     static var modelCreateC2BTransfer: CreateDirectTransferDecodableModel? = nil
     static var operationDetail: GetOperationDetailsByPaymentIdDatum? = nil
-    
-    
-//    init() {
-//        if GlobalModule.c2bURL ?? "" == "success" {
-//            C2BDetailsViewModel.operationDetail = GetOperationDetailsByPaymentIdDatum(amount: 10.00,
-//                                                                                      dateForDetail: "10.04.2020",
-//                                                                                      merchantSubName: "Ромашка",
-//                                                                                      operationStatus: "COMPLETE",
-//                                                                                      payeeFullName: "ООО Ромашка",
-//                                                                                      payeeBankName: "ФОРАБАНК",
-//                                                                                      comment: "комент",
-//                                                                                      transferNumber: "#1234568779870917203123",
-//                                                                                      shopLink: "")
-//            //controller?.openSuccessScreen()
-//            return
-//        }
-//        let str = GlobalModule.c2bURL ?? ""
-//        c2bLink = str.replacingOccurrences(of: "amp;", with: "")
-//        GlobalModule.c2bURL = nil
-//        getConsent()
-//        C2BApiRequests.getQRData(link: c2bLink) { model, error in
-//            if error != nil {
-//                self.controller?.dismissActivity()
-//                self.controller?.showAlert(with: "Ошибка", and: error!)
-//            } else {
-//                self.qrData = model
-//                self.dataArrived()
-//            }
-//        }
-//    }
-    
-    init(qrViewModel: C2BViewModel?) {
-        
-        guard case .c2bURL(let url) = qrViewModel?.mode else { return }
-        c2bLink = url.absoluteString.replacingOccurrences(of: "amp;", with: "")
+
+    init(urlString: String) {
+
+        c2bLink = urlString.replacingOccurrences(of: "amp;", with: "")
         getConsent()
         C2BApiRequests.getQRData(link: c2bLink) { model, error in
             if error != nil {
