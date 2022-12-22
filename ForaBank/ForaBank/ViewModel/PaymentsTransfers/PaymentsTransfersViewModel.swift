@@ -353,9 +353,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
 
                     case .c2bURL(let c2bURL):
                             
-                            let c2bViewModel = C2BViewModel(closeAction: {
+                        let c2bViewModel = C2BViewModel(urlString: c2bURL.absoluteString, closeAction: {
                                 self.link = nil
-                            }, mode: .c2bURL(c2bURL))
+                            })
 
                             self.link = .c2b(c2bViewModel)
 

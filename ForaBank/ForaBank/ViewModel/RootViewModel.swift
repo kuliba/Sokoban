@@ -182,10 +182,9 @@ class RootViewModel: ObservableObject, Resetable {
                         model.action.send(ModelAction.DeepLink.Clear())
 
                     case let .c2b(urlString):
-                        GlobalModule.c2bURL = urlString
-                        link = .c2b(.init(closeAction: {[weak self] in
+                        link = .c2b(.init(urlString: urlString, closeAction: {[weak self] in
                             self?.action.send(RootViewModelAction.CloseLink())
-                        }, mode: .general))
+                        }))
                         model.action.send(ModelAction.DeepLink.Clear())
 
                     case let .sbpPay(tokenIntent):

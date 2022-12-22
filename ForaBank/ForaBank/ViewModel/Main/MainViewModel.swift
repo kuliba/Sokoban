@@ -229,12 +229,12 @@ class MainViewModel: ObservableObject, Resetable {
                                 })))
                             case .byQr:
                                 
-                                let qrScannerModel = QRViewModel.init(closeAction: {
-                                    self.action.send(MainViewModelAction.Close.Link())
+                                let qrScannerModel = QRViewModel.init(closeAction: { [weak self] in
+                                    self?.action.send(MainViewModelAction.Close.Link())
                                 })
 
-                                self.bind(qrScannerModel)
-                                self.link = .qrScanner(qrScannerModel)
+                                bind(qrScannerModel)
+                                link = .qrScanner(qrScannerModel)
                             }
                             
                         default:
@@ -396,13 +396,19 @@ class MainViewModel: ObservableObject, Resetable {
                         }
                         
                     case .c2bURL(let c2bURL):
+                        // close qr scanner
+                        self.action.send(MainViewModelAction.Close.Link())
                         
-                        let c2bViewModel = C2BViewModel(closeAction: {
-                            self.link = nil
-                        }, mode: .c2bURL(c2bURL))
-                        
-                        self.link = .c2b(c2bViewModel)
-                        
+                        // show c2b payment after delay required to finish qr scanner close animation
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                            
+                            let c2bViewModel = C2BViewModel(urlString: c2bURL.absoluteString, closeAction: { [weak self] in
+                                self?.action.send(MainViewModelAction.Close.Link())
+                            })
+                            
+                            self.link = .c2b(c2bViewModel)
+                        }
+
                     case .url( _):
                         
                         let failedView = QRFailedViewModel(model: model)
@@ -416,6 +422,7 @@ class MainViewModel: ObservableObject, Resetable {
                 default:
                     break
                 }
+                
             }.store(in: &bindings)
     }
     
