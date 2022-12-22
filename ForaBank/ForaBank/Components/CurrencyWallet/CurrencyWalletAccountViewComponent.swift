@@ -17,7 +17,7 @@ extension CurrencyWalletAccountView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var title: String
-        @Published var currencySymbol: String
+        @Published private(set) var currencySymbol: String
         @Published var openAccountIcon: Image
         @Published var currency: Currency
         @Published var currencyName: String
@@ -56,25 +56,36 @@ extension CurrencyWalletAccountView {
         private func bind() {
             
             $currency
+                .combineLatest(model.accountProductsList)
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] currency in
+                .sink { [unowned self] currency, accountList in
                     
-                    warning.description = warningTitle(currency)
+                    warning.description = warningTitle(currency, accountList: accountList)
                     
-                    if let currencyData = model.dictionaryCurrency(for: currency.description),
-                       let currencySymbol = currencyData.currencySymbol {
+                    if  let currencySymbol = model.dictionaryCurrencySymbol(for: currency.description) {
                         self.currencySymbol = currencySymbol
                     }
                     
                 }.store(in: &bindings)
         }
         
-        private func warningTitle(_ currency: Currency) -> String {
-            "Для завершения операции Вам необходимо открыть счет \(currency.currencyTitle)"
+        private func warningTitle(_ currency: Currency, accountList: [OpenAccountProductData]) -> String {
+            
+            if let accountItem = model.accountDescription(for: currency, in: accountList) {
+                
+                let subTitle = accountItem.breakdownAccount.prefix(1).lowercased()
+                              + accountItem.breakdownAccount.dropFirst()
+                return "Для завершения операции Вам необходимо открыть \(subTitle)"
+                
+            } else {
+            
+                return "Для завершения операции Вам необходимо открыть счет \(currency.description)"
+            }
         }
         
         private func makeWarning() -> WarningViewModel {
-            .init(icon: Image("Warning Account"), description: warningTitle(currency))
+            .init(icon: Image("Warning Account"),
+                  description: warningTitle(currency, accountList: model.accountProductsList.value))
         }
     }
 }

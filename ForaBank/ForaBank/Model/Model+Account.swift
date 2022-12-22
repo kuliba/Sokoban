@@ -7,6 +7,18 @@
 
 import SwiftUI
 
+// MARK: - Helpers
+
+extension Model {
+ 
+    func accountDescription(for currency: Currency, in list: [OpenAccountProductData]) -> OpenAccountProductData? {
+        
+        return list.first(where: { $0.currencyAccount.contains(currency.description) })
+    }
+    
+}
+
+
 // MARK: - Handlers
 
 extension Model {

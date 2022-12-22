@@ -341,6 +341,7 @@ class MainViewModel: ObservableObject, Resetable {
                         }
 
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
+                        model.action.send(ModelAction.Account.ProductList.Request())
                         link = .currencyWallet(walletViewModel)
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Buy:
@@ -351,6 +352,7 @@ class MainViewModel: ObservableObject, Resetable {
                         }
                         
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
+                        model.action.send(ModelAction.Account.ProductList.Request())
                         link = .currencyWallet(walletViewModel)
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Sell:
@@ -361,6 +363,7 @@ class MainViewModel: ObservableObject, Resetable {
                         }
                         
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
+                        model.action.send(ModelAction.Account.ProductList.Request())
                         link = .currencyWallet(walletViewModel)
                         
                         // atm section

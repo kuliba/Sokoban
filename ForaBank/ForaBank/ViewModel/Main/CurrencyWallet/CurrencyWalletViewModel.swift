@@ -345,15 +345,8 @@ class CurrencyWalletViewModel: ObservableObject {
     
     private func checkCourseChange(_ responseCurrencyRate: Double) -> Bool {
         
-        let currencyRate = currencyOperation == .buy ? currencyItem.rateBuy : currencyItem.rateSell
-        let formattedCurrencyRate = NumberFormatter.decimal(currencyRate)
-        
-        if let formattedCurrencyRate = formattedCurrencyRate,
-           formattedCurrencyRate.round() == responseCurrencyRate.round() {
-            return false
-        } else {
-            return true
-        }
+        let currencyRate = currencyOperation == .buy ? currencyItem.rateBuyItem : currencyItem.rateSellItem
+        return responseCurrencyRate.precised(4) != currencyRate.precised(4)
     }
     
     private func continueButtonAction() {
