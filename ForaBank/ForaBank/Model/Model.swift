@@ -15,6 +15,10 @@ class Model {
     
     //MARK: Auth
     let auth: CurrentValueSubject<AuthorizationState, Never>
+    var sessionState: AnyPublisher<SessionState, Never> {
+        sessionAgent.sessionState
+            .eraseToAnyPublisher()
+    }
     
     //MARK: Products
     let products: CurrentValueSubject<ProductsData, Never>

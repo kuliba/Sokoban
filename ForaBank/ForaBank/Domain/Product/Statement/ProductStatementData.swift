@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct ProductStatementData: Identifiable {
+struct ProductStatementData: Identifiable, Equatable, Hashable {
     
-    var id: Int { hashValue }
+    var id: String { operationId }
     let mcc: Int?
     let accountId: Int?
     let accountNumber: String
@@ -30,7 +30,7 @@ struct ProductStatementData: Identifiable {
     let merchantName: String?
     let merchantNameRus: String?
     let opCode: Int?
-    let operationId: String?
+    let operationId: String
     let operationType: OperationType
     let paymentDetailType: Kind
     let svgImage: SVGImageData?
@@ -38,7 +38,7 @@ struct ProductStatementData: Identifiable {
     let tranDate: Date?
     let type: OperationEnvironment
     
-    init(mcc: Int?, accountId: Int?, accountNumber: String, amount: Double, cardTranNumber: String?, city: String?, comment: String, country: String?, currencyCodeNumeric: Int, date: Date, deviceCode: String?, documentAmount: Double?, documentId: Int?, fastPayment: ProductStatementData.FastPayment?, groupName: String, isCancellation: Bool?, md5hash: String, merchantName: String?, merchantNameRus: String?, opCode: Int?, operationId: String?, operationType: OperationType, paymentDetailType: ProductStatementData.Kind, svgImage: SVGImageData?, terminalCode: String?, tranDate: Date?, type: OperationEnvironment) {
+    init(mcc: Int?, accountId: Int?, accountNumber: String, amount: Double, cardTranNumber: String?, city: String?, comment: String, country: String?, currencyCodeNumeric: Int, date: Date, deviceCode: String?, documentAmount: Double?, documentId: Int?, fastPayment: ProductStatementData.FastPayment?, groupName: String, isCancellation: Bool?, md5hash: String, merchantName: String?, merchantNameRus: String?, opCode: Int?, operationId: String, operationType: OperationType, paymentDetailType: ProductStatementData.Kind, svgImage: SVGImageData?, terminalCode: String?, tranDate: Date?, type: OperationEnvironment) {
         self.mcc = mcc
         self.accountId = accountId
         self.accountNumber = accountNumber
@@ -156,7 +156,7 @@ extension ProductStatementData: Codable {
         self.merchantName = try container.decodeIfPresent(String.self, forKey: .merchantName)
         self.merchantNameRus = try container.decodeIfPresent(String.self, forKey: .merchantNameRus)
         self.opCode = try container.decodeIfPresent(Int.self, forKey: .opCode)
-        self.operationId = try container.decodeIfPresent(String.self, forKey: .operationId)
+        self.operationId = try container.decode(String.self, forKey: .operationId)
         self.terminalCode = try container.decodeIfPresent(String.self, forKey: .terminalCode)
         
         if let tranDateValue = try container.decodeIfPresent(Int.self, forKey: .tranDate) {
@@ -199,7 +199,7 @@ extension ProductStatementData: Codable {
         try container.encodeIfPresent(merchantName, forKey: .merchantName)
         try container.encodeIfPresent(merchantNameRus, forKey: .merchantNameRus)
         try container.encodeIfPresent(opCode, forKey: .opCode)
-        try container.encodeIfPresent(operationId, forKey: .operationId)
+        try container.encode(operationId, forKey: .operationId)
         try container.encode(operationType, forKey: .operationType)
         try container.encode(paymentDetailType, forKey: .paymentDetailType)
         try container.encodeIfPresent(svgImage, forKey: .svgImage)
@@ -211,76 +211,6 @@ extension ProductStatementData: Codable {
         }
         
         try container.encode(type, forKey: .type)
-    }
-}
-
-//MARK: - Equatable
-
-extension ProductStatementData: Equatable {
-    
-    static func == (lhs: ProductStatementData, rhs: ProductStatementData) -> Bool {
-        
-        return  lhs.mcc == rhs.mcc &&
-        lhs.accountId == rhs.accountId &&
-        lhs.accountNumber == rhs.accountNumber &&
-        lhs.amount == rhs.amount &&
-        lhs.cardTranNumber == rhs.cardTranNumber &&
-        lhs.city == rhs.city &&
-        lhs.comment == rhs.comment &&
-        lhs.country == rhs.country &&
-        lhs.currencyCodeNumeric == rhs.currencyCodeNumeric &&
-        lhs.date == rhs.date &&
-        lhs.deviceCode == rhs.deviceCode &&
-        lhs.documentAmount == rhs.documentAmount &&
-        lhs.documentId == rhs.documentId &&
-        lhs.fastPayment == rhs.fastPayment &&
-        lhs.groupName == rhs.groupName &&
-        lhs.isCancellation == rhs.isCancellation &&
-        lhs.md5hash == rhs.md5hash &&
-        lhs.merchantName == rhs.merchantName &&
-        lhs.merchantNameRus == rhs.merchantNameRus &&
-        lhs.opCode == rhs.opCode &&
-        lhs.operationId == rhs.operationId &&
-        lhs.operationType == rhs.operationType &&
-        lhs.paymentDetailType == rhs.paymentDetailType &&
-        lhs.svgImage == rhs.svgImage &&
-        lhs.terminalCode == rhs.terminalCode &&
-        lhs.type == rhs.type
-    }
-}
-
-//MARK: - Hashable
-
-extension ProductStatementData: Hashable {
-    
-    func hash(into hasher: inout Hasher) {
-        
-        hasher.combine(mcc)
-        hasher.combine(accountId)
-        hasher.combine(accountNumber)
-        hasher.combine(amount)
-        hasher.combine(cardTranNumber)
-        hasher.combine(city)
-        hasher.combine(comment)
-        hasher.combine(country)
-        hasher.combine(currencyCodeNumeric)
-        hasher.combine(date)
-        hasher.combine(deviceCode)
-        hasher.combine(documentAmount)
-        hasher.combine(documentId)
-        hasher.combine(fastPayment)
-        hasher.combine(groupName)
-        hasher.combine(isCancellation)
-        hasher.combine(md5hash)
-        hasher.combine(merchantName)
-        hasher.combine(merchantNameRus)
-        hasher.combine(opCode)
-        hasher.combine(operationId)
-        hasher.combine(operationType)
-        hasher.combine(paymentDetailType)
-        hasher.combine(svgImage)
-        hasher.combine(terminalCode)
-        hasher.combine(type)
     }
 }
 
