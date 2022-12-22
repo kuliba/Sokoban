@@ -98,7 +98,6 @@
 		0B7A18D02689C51A0007CC75 /* AppHeaderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18CF2689C51A0007CC75 /* AppHeaderProtocol.swift */; };
 		0B8365DD2926A99900A11F0A /* QRSearchOperatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8365DC2926A99900A11F0A /* QRSearchOperatorView.swift */; };
 		0B8365DF2926A9C000A11F0A /* QRSearchOperatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8365DE2926A9C000A11F0A /* QRSearchOperatorViewModel.swift */; };
-		0B8716762949E8D5005B8C0A /* QRFilterTeste.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8716752949E8D5005B8C0A /* QRFilterTeste.swift */; };
 		0B871678294A121A005B8C0A /* QRSearchViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B871677294A121A005B8C0A /* QRSearchViewComponent.swift */; };
 		0B87167C294A7DFC005B8C0A /* QRSearchCityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B87167B294A7DFC005B8C0A /* QRSearchCityView.swift */; };
 		0B87167E294A8003005B8C0A /* QRSearchCityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B87167D294A8003005B8C0A /* QRSearchCityViewModel.swift */; };
@@ -1540,7 +1539,6 @@
 		0B7A18CF2689C51A0007CC75 /* AppHeaderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppHeaderProtocol.swift; sourceTree = "<group>"; };
 		0B8365DC2926A99900A11F0A /* QRSearchOperatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchOperatorView.swift; sourceTree = "<group>"; };
 		0B8365DE2926A9C000A11F0A /* QRSearchOperatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchOperatorViewModel.swift; sourceTree = "<group>"; };
-		0B8716752949E8D5005B8C0A /* QRFilterTeste.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRFilterTeste.swift; sourceTree = "<group>"; };
 		0B871677294A121A005B8C0A /* QRSearchViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchViewComponent.swift; sourceTree = "<group>"; };
 		0B87167B294A7DFC005B8C0A /* QRSearchCityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchCityView.swift; sourceTree = "<group>"; };
 		0B87167D294A8003005B8C0A /* QRSearchCityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchCityViewModel.swift; sourceTree = "<group>"; };
@@ -3460,7 +3458,6 @@
 			children = (
 				0BDDFE04290028910045CDC6 /* QRCodeTests.swift */,
 				77FC5E1A2940F8E0006784F4 /* QRMappingTests.swift */,
-				0B8716752949E8D5005B8C0A /* QRFilterTeste.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -8952,7 +8949,6 @@
 				7772978C27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift in Sources */,
 				77E1803927AC0CF00006ACC9 /* ServerCommandsNotificationTests.swift in Sources */,
 				77A76A7E27FB036200A271B3 /* ServerCommandsAtmTests.swift in Sources */,
-				0B8716762949E8D5005B8C0A /* QRFilterTeste.swift in Sources */,
 				0BDDFE05290028910045CDC6 /* QRCodeTests.swift in Sources */,
 				77E1803527AC05370006ACC9 /* DateFormatterExtensionsTests.swift in Sources */,
 				77517FC927A9519E005CFB77 /* ServerCommandsTransferTests.swift in Sources */,
