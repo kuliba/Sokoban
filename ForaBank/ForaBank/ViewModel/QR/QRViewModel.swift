@@ -61,7 +61,7 @@ class QRViewModel: ObservableObject {
                     
                 case _ as QRViewModelAction.OpenDocument:
                     self.bottomSheet = .init(sheetType: .choiseDocument(.init(buttons: [
-                        .init(icon: .init(image: .ic24Camera, background: .circle), title: .init(text: "Из фото", style: .bold), orientation: .horizontal, action: { [weak self] in
+                        .init(icon: .init(image: .ic24Image, background: .circle), title: .init(text: "Из фото", style: .bold), orientation: .horizontal, action: { [weak self] in
                             self?.bottomSheet = nil
                             self?.model.action.send(ModelAction.Media.GalleryPermission.Request())
                         }),
@@ -311,8 +311,8 @@ extension QRViewModel {
         
         var result: (Bool, Image) {
             switch self {
-            case .on: return (true, Image.ic24ZapOff)
-            case .off: return (false, Image.ic24Zap)
+            case .on: return (true, Image.ic24Zap)
+            case .off: return (false, Image.ic24ZapOff)
             }
         }
     }

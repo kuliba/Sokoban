@@ -33,8 +33,16 @@ struct QRInfoViewComponent: View {
         
         VStack {
             
-            viewModel.icon
+            ZStack {
+            Circle()
+                .foregroundColor(.mainColorsGrayLightest)
                 .frame(width: 88, height: 88)
+            
+            viewModel.icon
+                .resizable()
+                .frame(width: 48, height: 48)
+                .foregroundColor(.iconGray)
+            }
             
             Text(viewModel.title)
                 .foregroundColor(Color.textSecondary)
