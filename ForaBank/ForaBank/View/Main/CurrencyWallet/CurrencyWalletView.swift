@@ -116,7 +116,9 @@ struct CurrencyWalletView_Previews: PreviewProvider {
                 icon: nil,
                 currency: .rub,
                 rateBuy: "1,00",
-                rateSell: "64,50"),
+                rateSell: "64,50",
+                rateBuyItem: 1.00,
+                rateSellItem: 64.50),
             currencyOperation: .buy,
             currencySymbol: "₽") {})
     }

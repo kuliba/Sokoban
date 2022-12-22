@@ -142,17 +142,20 @@ extension CurrencyRatesListView.ViewModel {
 
         @Published
         var mainImage: (md5: String, img: Image?)
+        let codeTitle: String
         let nameCurrency: String
         let buySection: SectionItemViewModel
         let sellSection: SectionItemViewModel
         
         init(id: String,
              mainImage: (md5: String, img: Image?),
+             codeTitle: String,
              nameCurrency: String,
              buySection: SectionItemViewModel,
              sellSection: SectionItemViewModel) {
             
             self.id = id
+            self.codeTitle = codeTitle
             self.mainImage = mainImage
             self.nameCurrency = nameCurrency
             self.buySection = buySection
@@ -168,11 +171,22 @@ extension CurrencyRatesListView.ViewModel {
             
             let nameCurrency = currencyData.first(where: { $0.code == item.code })?.shortName ?? ""
 
-            let buySection: SectionItemViewModel = .init(kindImage: Self.kindImage(rateSellDelta), valueText: String(item.rateSell), type: .buy)
+            let buySection: SectionItemViewModel = .init(
+                kindImage: Self.kindImage(rateSellDelta),
+                valueText: Self.formattedText(item.rateSell * Double(item.currAmount)),
+                type: .buy)
             
-            let sellSection: SectionItemViewModel = .init(kindImage: Self.kindImage(rateBuyDelta), valueText: String(item.rateBuy), type: .sell)
+            let sellSection: SectionItemViewModel = .init(
+                kindImage: Self.kindImage(rateBuyDelta),
+                valueText: Self.formattedText(item.rateBuy * Double(item.currAmount)),
+                type: .sell)
             
-            self.init(id: item.code, mainImage: imageData, nameCurrency: nameCurrency, buySection: buySection, sellSection: sellSection)
+            self.init(id: item.code,
+                      mainImage: imageData,
+                      codeTitle: item.nameCw,
+                      nameCurrency: nameCurrency,
+                      buySection: buySection,
+                      sellSection: sellSection)
         }
         
         struct SectionItemViewModel {
@@ -278,7 +292,7 @@ extension CurrencyRatesListView {
                         
                             VStack(alignment: .leading, spacing: 2) {
                         
-                                Text(viewModel.id)
+                                Text(viewModel.codeTitle)
                                     .font(.textBodyMM14200())
                                     .foregroundColor(.textSecondary)
                             

@@ -249,6 +249,7 @@
 		0C5CE76228B2D2F200C30CD3 /* ProductsMoneySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CE76128B2D2F200C30CD3 /* ProductsMoneySettings.swift */; };
 		0C6508CF28299C6D0058916A /* PaymentsTransfersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */; };
 		0C6508D228299DAF0058916A /* PaymentsTransfersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */; };
+		0C69D7FC2951C36E00D161B2 /* DoubleExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C69D7FB2951C36E00D161B2 /* DoubleExtensionsTests.swift */; };
 		0C78331C287DC201003ADC73 /* MainSectionCurrencyMetalComponentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78331B287DC201003ADC73 /* MainSectionCurrencyMetalComponentMock.swift */; };
 		0C78332328847DFC003ADC73 /* CurrencyExchageSuccessComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78332228847DFC003ADC73 /* CurrencyExchageSuccessComponent.swift */; };
 		0C89318B28ABEDF200835694 /* CentralBankRatesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C89318A28ABEDF200835694 /* CentralBankRatesData.swift */; };
@@ -1728,6 +1729,7 @@
 		0C5CE76128B2D2F200C30CD3 /* ProductsMoneySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsMoneySettings.swift; sourceTree = "<group>"; };
 		0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersView.swift; sourceTree = "<group>"; };
 		0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModel.swift; sourceTree = "<group>"; };
+		0C69D7FB2951C36E00D161B2 /* DoubleExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtensionsTests.swift; sourceTree = "<group>"; };
 		0C78331B287DC201003ADC73 /* MainSectionCurrencyMetalComponentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionCurrencyMetalComponentMock.swift; sourceTree = "<group>"; };
 		0C78332228847DFC003ADC73 /* CurrencyExchageSuccessComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchageSuccessComponent.swift; sourceTree = "<group>"; };
 		0C89318A28ABEDF200835694 /* CentralBankRatesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CentralBankRatesData.swift; sourceTree = "<group>"; };
@@ -4581,6 +4583,7 @@
 			children = (
 				77067CD8275FBB70000C442B /* StringExtensionsTests.swift */,
 				77E1803427AC05370006ACC9 /* DateFormatterExtensionsTests.swift */,
+				0C69D7FB2951C36E00D161B2 /* DoubleExtensionsTests.swift */,
 				77BF27B6284785B8009624BB /* DateExtensionsTests.swift */,
 				77E289A128592A8E0048141B /* CalendarExtensionsTests.swift */,
 			);
@@ -9156,6 +9159,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C69D7FC2951C36E00D161B2 /* DoubleExtensionsTests.swift in Sources */,
 				77E1804327AC34A90006ACC9 /* ServerCommandsPushDeviceTests.swift in Sources */,
 				68AD340527997DC000647665 /* ServerCommandsCardTests.swift in Sources */,
 				68E765282796D6DF005860FE /* ServerCommandsRegistrationTests.swift in Sources */,

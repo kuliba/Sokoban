@@ -51,7 +51,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
         }
         
         let swapViewModel: ProductsSwapView.ViewModel = .init(model, productData: productData, mode: mode)
-        let amountViewModel: PaymentsAmountView.ViewModel = .init(productData: productData, mode: mode)
+        let amountViewModel: PaymentsAmountView.ViewModel = .init(productData: productData, mode: mode, model: model)
         
         self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, title: "Между своими", mode: mode, state: .normal)
         
@@ -470,17 +470,14 @@ class PaymentsMeToMeViewModel: ObservableObject {
 
     private func updateTextField(_ id: ProductData.ID, textField: TextFieldFormatableView.ViewModel) {
         
-        if let product = model.product(productId: id) {
+        if let productData = model.product(productId: id) {
             
-            let currency = Currency(description: product.currency)
-            let formatter: NumberFormatter = .currency(with: currency.currencySymbol)
+            let currencySymbol = model.dictionaryCurrencySymbol(for: productData.currency) ?? ""
+            let formatter: NumberFormatter = .currency(with: currencySymbol)
             
-            guard let stringValue = formatter.string(from: .init(value: textField.value)) else {
-                return
-            }
-            
-            textField.formatter.currencySymbol = currency.currencySymbol
-            textField.text = stringValue
+            textField.formatter.currencySymbol = currencySymbol
+            textField.text = formatter.string(from: .init(value: textField.value))
+
         }
     }
     
