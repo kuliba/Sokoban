@@ -38,8 +38,8 @@ struct QRAccessViewModel {
             
             var result: (String, String, Image) {
                 switch self {
-                case .photo: return ("Разрешите доступ к фото", "Сможете сканировать файлы/документы с QR-кодом", Image.ic24Camera)
-                case .camera: return ("Разрешите доступ к камере", "Сможете оплачивать по QR-коду и сканировать карты", Image.ic24Image)
+                case .photo: return ("Разрешите доступ к фото", "Сможете сканировать файлы/документы с QR-кодом", Image.ic24Image)
+                case .camera: return ("Разрешите доступ к камере", "Сможете оплачивать по QR-коду и сканировать карты", Image.ic24Camera)
                 }
             }
         }

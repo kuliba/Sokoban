@@ -408,9 +408,10 @@ class MainViewModel: ObservableObject, Resetable {
                         let failedView = QRFailedViewModel(model: model)
                         self.link = .failedView(failedView)
                         
-                    case .unknown(let qr):
+                    case .unknown(_):
                         
-                        self.alert = .init(title: "Unknown", message: qr, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                        let failedView = QRFailedViewModel(model: model)
+                        self.link = .failedView(failedView)
                     }
                     
                 default:

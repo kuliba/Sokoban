@@ -60,6 +60,7 @@ class QRViewModel: ObservableObject {
                 switch action {
                     
                 case _ as QRViewModelAction.OpenDocument:
+                    
                     self.bottomSheet = .init(sheetType: .choiseDocument(.init(buttons: [
                         .init(icon: .init(image: .ic24Image, background: .circle), title: .init(text: "Из фото", style: .bold), orientation: .horizontal, action: { [weak self] in
                             self?.bottomSheet = nil

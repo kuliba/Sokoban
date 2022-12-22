@@ -50,7 +50,7 @@ struct QRView: View {
                                 ButtonIconTextView(viewModel: buttons)
                                 //    .padding(.leading, 20)
                             } 
-                        }//.padding(.horizontal, 20)
+                        }
                         
                         ButtonSimpleView(viewModel: viewModel.clouseButton)
                             .frame(height: 48)
@@ -65,11 +65,6 @@ struct QRView: View {
                 if let link = viewModel.link  {
                     
                     switch link {
-//                    case .imagePicker(let imagePicker):
-//                        ImagePickerController(viewModel: imagePicker)
-//                            .edgesIgnoringSafeArea(.all)
-//                            .navigationBarBackButtonHidden(false)
-//                            .navigationBarTitle("Из фото", displayMode: .inline)
                         
                     case .failedView(let view):
                         QRFailedView(viewModel: view)
@@ -93,7 +88,7 @@ struct QRView: View {
                 
             case let .info(InfoView) :
                 InfoView
-                    .frame(height: 400)
+                    .frame(height: 450)
                     .padding(.horizontal, 30)
                 
             case .qRAccessViewComponent(_):
