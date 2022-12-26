@@ -3096,8 +3096,8 @@
 			isa = PBXGroup;
 			children = (
 				0B71D7A128FD834D00AA1970 /* QRCode.swift */,
-				0B71D7A328FD837300AA1970 /* QRParameter.swift */,
 				0B71D7A528FD839300AA1970 /* QRMapping.swift */,
+				0B71D7A328FD837300AA1970 /* QRParameter.swift */,
 				0BE0BE02290F30BA0064549E /* QROperator.swift */,
 			);
 			path = QR;

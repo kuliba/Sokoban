@@ -10,7 +10,7 @@ import Foundation
 struct QRCode {
     
     let original: String
-    let rawData: [String: String] // name : ПАО "Калужская сбытовая компания"
+    let rawData: [String: String]
     
     init(original: String, rawData: [String : String]) {
         
@@ -43,7 +43,9 @@ extension QRCode {
         
         for key in parameter.keys {
             
-            guard let value = rawData[key.lowercased()] else { return nil }
+            guard let value = rawData[key] else {
+                continue
+            }
             
             return value
         }
@@ -51,10 +53,10 @@ extension QRCode {
         return nil
     }
     
-    func value<Value>(type: QRParameter.Kind, mapping: QRMapping) throws -> Value? {
+    func value<Value>(type: QRParameter.Kind, mapping: QRMapping) throws -> Value {
         
         guard let parameter = mapping.allParameters.first(where: { $0.parameter.name == type.name }) else {
-            return nil
+            throw QRCode.Error.missingParameter
         }
         
         for key in parameter.keys {
@@ -64,28 +66,84 @@ extension QRCode {
             }
             
             guard parameter.swiftType == Value.self || Value.self == String.self else {
-                throw QRCodeError.typeMissmatch
+                throw QRCode.Error.typeMissmatch
             }
             
             switch parameter.type {
-                
             case .string:
-                return value as? Value
+                guard let stringValue = value as? Value else {
+                    throw QRCode.Error.typeMissmatch
+                }
+                return stringValue
                 
             case .integer:
-                return Int(value) as? Value
+                guard let intValue = Int(value) as? Value else {
+                    throw QRCode.Error.typeMissmatch
+                }
+                return intValue
                 
             case .double:
+                guard value.count >= 2 else {
+                    throw QRCode.Error.incorrectDoubleValue(value)
+                }
+                
+                let formatter = NumberFormatter()
+                formatter.locale = Locale(identifier: "en_US")
+                
                 value.insert(".", at: value.index(value.endIndex, offsetBy: -2))
-                let doubleValue = NumberFormatter().number(from: value)?.doubleValue
-                return doubleValue as? Value
+
+                guard let doubleValue = formatter.number(from: value)?.doubleValue as? Value else {
+                    throw QRCode.Error.typeMissmatch
+                }
+                
+                return doubleValue
                 
             case .date:
-                return value as? Value
+                let formatter = DateFormatter()
+                for dateFormat in mapping.dateFormats {
+                    
+                    formatter.dateFormat = dateFormat
+                    guard let dateValue = formatter.date(from: value) as? Value else {
+                        continue
+                    }
+                    
+                    return dateValue
+                }
+                
+                throw QRCode.Error.incorrectDateValue(value)
             }
         }
         
-        return nil
+        throw QRCode.Error.missingValue
+    }
+}
+
+//MARK: - Fail Data
+
+extension QRCode {
+    
+    func check(mapping: QRMapping) -> QRMapping.FailData? {
+        
+        var parsed = [QRMapping.FailData.ParsedData]()
+        var unknownKeys = [String]()
+        
+        for (key, value) in rawData {
+
+            if let parameter = mapping.allParameters.first(where: { $0.keys.contains(key) }) {
+                
+                parsed.append(.init(parameter: parameter.parameter, key: key, value: value, type: parameter.type))
+                
+            } else {
+                
+                unknownKeys.append(key)
+            }
+        }
+        
+        guard unknownKeys.isEmpty == false else {
+            return nil
+        }
+        
+        return .init(rawData: original, parsed: parsed, unknownKeys: unknownKeys)
     }
 }
 
@@ -105,38 +163,28 @@ extension QRCode {
         qrStringData.forEach { component in
             
             if component.contains("=") {
+                
                 let tempArray = component.components(separatedBy: "=")
                 let componentKey = tempArray[0].lowercased()
                 let componentValue = tempArray[1]
                 tempRawData[componentKey] = componentValue
             }
         }
+        
         return tempRawData
     }
+}
+
+extension QRCode {
     
-    //TODO: tests
-    func check(mapping: QRMapping) -> QRMapping.FailData? {
+    enum Error: LocalizedError {
         
-        let rawDataKays = self.rawData.map{ $0.key }
-        let parametersKays = mapping.allParameters.flatMap{ $0.keys }
-        let unknownKeys = rawDataKays.difference(from: parametersKays)
-        
-        guard unknownKeys.isEmpty == false else {
-            return nil
-        }
-        
-        return QRMapping.FailData(rawData: original, parsed: rawData, unknownKeys: unknownKeys)
+        case missingParameter
+        case missingValue
+        case typeMissmatch
+        case incorrectDoubleValue(String)
+        case incorrectDateValue(String)
     }
 }
 
-enum QRCodeError: Error {
-    case typeMissmatch
-}
 
-extension Array where Element: Hashable {
-    func difference(from other: [Element]) -> [Element] {
-        let thisSet = Set(self)
-        let otherSet = Set(other)
-        return Array(thisSet.subtracting(otherSet))
-    }
-}

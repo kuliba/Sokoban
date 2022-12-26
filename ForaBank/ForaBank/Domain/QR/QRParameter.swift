@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct QRParameter: Codable {
+struct QRParameter: Codable, Equatable {
     
     let parameter: Kind
     let keys: [String]
@@ -18,7 +18,7 @@ struct QRParameter: Codable {
 
 extension QRParameter {
     
-    enum Kind: Codable, Equatable {
+    enum Kind: Equatable {
         
         case general(General)
         case value(String)
@@ -45,41 +45,8 @@ extension QRParameter {
             case let .value(valueName): return valueName
             }
         }
-        
-        init(from decoder: Decoder) throws {
-            
-            let container = try decoder.singleValueContainer()
-            
-            do {
-                
-                let general = try container.decode(General.self)
-                self = .general(general)
-                
-            } catch {
-                
-                let value = try container.decode(String.self)
-                self = .value(value)
-            }
-        }
-        
-        func encode(to encoder: Encoder) throws {
-            
-            var container = encoder.singleValueContainer()
-            
-            try container.encode(name)
-        }
     }
-    
-    var swiftType: Any.Type {
         
-        switch type {
-        case .double:  return Double.self
-        case .string:  return String.self
-        case .integer: return Int.self
-        case .date: return Date.self
-        }
-    }
-    
     enum ValueType: String, Codable {
         
         case string = "STRING"
@@ -89,12 +56,45 @@ extension QRParameter {
     }
 }
 
-//MARK: - Equatable
+//MARK: - Helpers
 
-extension QRParameter: Equatable {
+extension QRParameter {
     
-    static func == (lhs: QRParameter, rhs: QRParameter) -> Bool {
-        return lhs.type == rhs.type && lhs.parameter == rhs.parameter
+    var swiftType: Any.Type {
+        
+        switch type {
+        case .double: return Double.self
+        case .string: return String.self
+        case .integer: return Int.self
+        case .date: return Date.self
+        }
+    }
+}
+
+//MARK: - Codable
+
+extension QRParameter.Kind: Codable {
+    
+    init(from decoder: Decoder) throws {
+        
+        let container = try decoder.singleValueContainer()
+        
+        do {
+            
+            let general = try container.decode(General.self)
+            self = .general(general)
+            
+        } catch {
+            
+            let value = try container.decode(String.self)
+            self = .value(value)
+        }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.singleValueContainer()
+        try container.encode(name)
     }
 }
 

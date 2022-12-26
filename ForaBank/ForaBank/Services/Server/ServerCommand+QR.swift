@@ -16,20 +16,14 @@ extension ServerCommands {
          */
         
         struct SetQRFailData: ServerCommand {
-            
+ 
             let token: String
             let endpoint = "/rest/setQrFailData"
             let method: ServerCommandMethod = .post
-//            let parameters: QRMapping.FailData
             let payload: Payload?
             
-            struct Payload: Encodable {
-                
-                let rawData: String
-                let parsed: [String: String]
-                let unknownKeys: [String]
-            }
-            
+            typealias Payload = QRMapping.FailData
+                        
             struct Response: ServerResponse {
                 
                 let statusCode: ServerStatusCode
@@ -41,7 +35,6 @@ extension ServerCommands {
                 
                 self.token = token
                 self.payload = payload
-//                var parameters = QRMapping.FailData(rawData: <#String#>, parsed: <#[String : String]#>, unknownKeys: <#[String]#>)
             }
         }
         
@@ -67,15 +60,16 @@ extension ServerCommands {
 
                 struct QRMappingData: Decodable, Equatable {
 
-                    let qrMapping: QRMapping
                     let serial: String
+                    let qrMapping: QRMapping
                 }
             }
 
             init(token: String, serial: String?) {
 
                 self.token = token
-                if let serial = serial{
+                
+                if let serial = serial {
                     
                     var parameters = [ServerCommandParameter]()
                     parameters.append(.init(name: "serial", value: serial))
