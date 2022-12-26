@@ -322,6 +322,11 @@ extension Model {
         return bankList.value
     }
     
+    static let dictionaryQRAnywayOperatorCodes = ["iFora||1031001",
+                                                  "iFora||1051001",
+                                                  "iFora||1051062",
+                                                  "iFora||1331001"]
+    
     //Operators&OperatorGroups
     func dictionaryAnywayOperatorGroups() -> [OperatorGroupData]? {
         
@@ -353,6 +358,22 @@ extension Model {
         }
         
         return anywayOperators.first(where: { $0.code == code })
+    }
+    
+    func dictionaryQRAnewayOperator() -> [OperatorGroupData.OperatorData] {
+        
+        guard let operators = dictionaryAnywayOperators() else { return [] }
+        
+        var operatorsTemp = [OperatorGroupData.OperatorData]()
+        
+        for item in operators {
+            
+            if Self.dictionaryQRAnywayOperatorCodes.contains(item.parentCode) {
+                operatorsTemp.append(item)
+            }
+        }
+        
+        return operatorsTemp
     }
     
     //Banks

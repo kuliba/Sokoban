@@ -37,7 +37,7 @@ class QRSearchOperatorViewModel: ObservableObject {
         self.emptyViewSubtitle = "Сообщите нам, и мы подключим новую организацию"
         self.searchOperatorButton = self.createButtons()
         bind()
-        guard let operatorsData = model.dictionaryAnywayOperators() else { return }
+        let operatorsData = model.dictionaryQRAnewayOperator()
         self.operators = operatorsData.map {QRSearchOperatorComponent.ViewModel.init(operators: $0) }
     }
     
