@@ -138,11 +138,6 @@ struct PaymentsTransfersView: View {
                     case .template(let templateListViewModel):
                         TemplatesListView(viewModel: templateListViewModel)
                         
-                    case .qrScanner(let qrViewModel):
-                        QRView(viewModel: qrViewModel)
-                            .navigationBarHidden(true)
-                            .edgesIgnoringSafeArea(.all)
-                        
                     case .currencyWallet(let currencyWalletViewModel):
                         CurrencyWalletView(viewModel: currencyWalletViewModel)
                         
@@ -151,7 +146,26 @@ struct PaymentsTransfersView: View {
                         
                     case .c2b(let c2bViewModel):
                         C2BDetailsView(viewModel: c2bViewModel)
+                        
+                    case .searchOperators(let viewModel):
+                        QRSearchOperatorView(viewModel: viewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
                     }
+                }
+            }
+        }
+        .fullScreenCoverLegacy  (viewModel: $viewModel.fullScreenSheet) { item in
+            
+            switch item.type {
+            case let .qrScanner(viewModel):
+                NavigationView {
+                    QRView(viewModel: viewModel)
+                        .navigationBarTitle("", displayMode: .inline)
+                        .navigationBarBackButtonHidden(true)
+                        .edgesIgnoringSafeArea(.all)
                 }
             }
         }

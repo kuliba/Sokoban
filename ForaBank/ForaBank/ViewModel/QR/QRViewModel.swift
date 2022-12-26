@@ -60,6 +60,7 @@ class QRViewModel: ObservableObject {
                 switch action {
                     
                 case _ as QRViewModelAction.OpenDocument:
+                    
                     self.bottomSheet = .init(sheetType: .choiseDocument(.init(buttons: [
                         .init(icon: .init(image: .ic24Image, background: .circle), title: .init(text: "Из фото", style: .bold), orientation: .horizontal, action: { [weak self] in
                             self?.bottomSheet = nil
@@ -71,9 +72,9 @@ class QRViewModel: ObservableObject {
                     ])))
                     
                 case _ as QRViewModelAction.Info:
-                    self.bottomSheet = .init(sheetType: .info(.init(viewModel: .init(icon: .ic24AlertCircle,
+                    self.bottomSheet = .init(sheetType: .info(.init(icon: .ic24AlertCircle,
                                                                                      title: "Сканировать QR-код",
-                                                                                     content: "Наведите камеру телефона на QR-код, и приложение автоматически его считает.\n\n Перед оплатой проверьте, что все поля заполнены правильно.\n\n Чтобы оплатить квитанцию, сохраненнуюв телефоне, откройте ее с помощью кнопки \"Из файла\", и отсканируйте QR-код."))) )
+                                                                                     content: "Наведите камеру телефона на QR-код, и приложение автоматически его считает.\n\n Перед оплатой проверьте, что все поля заполнены правильно.\n\n Чтобы оплатить квитанцию, сохраненнуюв телефоне, откройте ее с помощью кнопки \"Из файла\", и отсканируйте QR-код.")))
                     
                 case _ as QRViewModelAction.AccessCamera:
                     
@@ -203,7 +204,7 @@ extension QRViewModel {
         enum SheetType {
             
             case imageCapture(ImagePickerControllerViewModel)
-            case info(QRInfoViewComponent)
+            case info(QRInfoViewModel.ViewModel)
             case choiseDocument(QRButtonsView.ViewModel)
             case qRAccessViewComponent(QRAccessViewComponent)
             case photoAccessViewComponent(QRAccessViewComponent)

@@ -54,6 +54,7 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
     
     private var captureSession: AVCaptureSession?
     private var previewLayer: AVCaptureVideoPreviewLayer?
+    private let sessionQueue = DispatchQueue(label: "sessionQueue")
     
     init(viewModel: QRScannerView.ViewModel) {
         self.viewModel = viewModel
@@ -119,8 +120,10 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if (captureSession?.isRunning == false) {
-            self.captureSession?.startRunning()
+        sessionQueue.async { [unowned self] in
+            if (captureSession?.isRunning == false) {
+                self.captureSession?.startRunning()
+            }
         }
     }
     

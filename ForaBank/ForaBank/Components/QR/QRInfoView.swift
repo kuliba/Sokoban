@@ -31,7 +31,7 @@ struct QRInfoViewComponent: View {
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 20) {
             
             ZStack {
             Circle()
@@ -40,7 +40,7 @@ struct QRInfoViewComponent: View {
             
             viewModel.icon
                 .resizable()
-                .frame(width: 48, height: 48)
+                .frame(width: 40, height: 40)
                 .foregroundColor(.iconGray)
             }
             
@@ -53,10 +53,9 @@ struct QRInfoViewComponent: View {
                     Text(content)
                         .foregroundColor(Color.textSecondary)
                         .font(Font.buttonSmallM14160())
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding(.vertical, 5)
+                        .multilineTextAlignment(.center)
                 }
-            }.padding(20)
+            }
         }
     }
 }

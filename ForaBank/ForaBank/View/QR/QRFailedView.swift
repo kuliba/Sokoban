@@ -13,7 +13,7 @@ struct QRFailedView: View {
     
     var body: some View {
         
-        VStack(spacing: 50) {
+        VStack(spacing: 30) {
             
             avatarView
             
@@ -25,12 +25,11 @@ struct QRFailedView: View {
                 .font(Font.textBodyMSB14200())
                 .foregroundColor(Color.textPlaceholder)
             
-            VStack(spacing: 10) {
+            VStack(spacing: 8) {
                 ForEach(viewModel.searchOperatorButton) { buttons in
                     ButtonSimpleView(viewModel: buttons)
                         .frame(height: 48)
                         .padding(.horizontal, 20)
-                        .padding(.vertical, 10)
                 }
             }
         }

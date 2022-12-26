@@ -31,6 +31,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     @Published var isLinkActive: Bool = false
     @Published var isTabBarHidden: Bool = false
     @Published var alert: Alert.ViewModel?
+    @Published var fullScreenSheet: FullScreenSheet?
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
@@ -87,11 +88,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                     // на экране платежей нижний переход
                     let qrScannerModel = QRViewModel.init(closeAction: {
-                        self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                     })
                     
                     self.bind(qrScannerModel)
-                    self.link = .qrScanner(qrScannerModel)
+                    fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
                    
                 case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
                     bottomSheet = nil
@@ -101,6 +102,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 
                 case _ as PaymentsTransfersViewModelAction.Close.Link:
                     link = nil
+                    
+                case _ as PaymentsTransfersViewModelAction.Close.FullScreenSheet:
+                    fullScreenSheet = nil
                     
                 case _ as PaymentsTransfersViewModelAction.OpenQr:
 //                    link = .qrScanner(.init(closeAction:  { [weak self] value  in
@@ -247,11 +251,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                             // на экране платежей нижний переход
                             let qrScannerModel = QRViewModel.init(closeAction: {
-                                self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                             })
                             
                             self.bind(qrScannerModel)
-                            self.link = .qrScanner(qrScannerModel)
+                            fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
                             
 //                            if model.cameraAgent.isCameraAvailable {
 //                                model.cameraAgent.requestPermissions(completion: { available in
@@ -329,47 +333,74 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 case let payload as QRViewModelAction.Result:
                     switch payload.result {
                     case .qrCode(let qr):
+                        
                         //TODO: REFACTOR
                         if let qrMapping = model.qrMapping.value {
                             
-                            let operatorPuref = model.dictionaryAnywayFirstOperator(with: qr, mapping: qrMapping)
-                            let puref = operatorPuref?.code
-
-                            if puref != nil {
+                            if let operators = model.dictionaryAnywayOperators(with: qr, mapping: qrMapping) {
                                 
-                                let operatorsViewModel = OperatorsViewModel(closeAction: {
-                                    self.link = nil
-                                }, mode: .qr(qr))
-
-                                self.link = .serviceOperators(operatorsViewModel)
+                                if operators.count == 1 {
+                                    
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                        let operatorsViewModel = OperatorsViewModel(closeAction: { [weak self] in
+                                            self?.link = nil
+                                        }, mode: .qr(qr))
+                                        self.link = .serviceOperators(operatorsViewModel)
+                                    }
+                                    
+                                } else {
+                                    
+                                    //TODO: QRSearchOperatorViewModel with operators
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                        let operatorsViewModel = QRSearchOperatorViewModel(textFieldPlaceholder: "Название или ИНН", navigationBar:
+                                                .init(
+                                                    title: "Все регионы",
+                                                    titleButton: .init(icon: Image.ic16ChevronDown, action: {
+                                                        self.model.action.send(QRSearchOperatorViewModelAction.OpenCityView())
+                                                    }),
+                                                    leftButtons: [NavigationBarView.ViewModel.BackButtonViewModel(icon: Image.ic24ChevronLeft,
+                                                                                                                  action: { [weak self] in
+                                                                                                                      self?.link = nil})]),
+                                                                                           model: self.model, operators: operators)
+                                        
+                                        self.link = .searchOperators(operatorsViewModel)
+                                    }
+                                }
                                 
                             } else {
-
-                                let failedView = QRFailedViewModel(model: model)
-                                self.link = .failedView(failedView)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                    let failedView = QRFailedViewModel(model: self.model)
+                                    self.link = .failedView(failedView)
+                                }
                             }
                             
                         } else {
-                            
-                            self.alert = .init(title: "The QR mapping data missing", message: "Unable recognize QR code because of missing the QR mapping data", primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                let failedView = QRFailedViewModel(model: self.model)
+                                self.link = .failedView(failedView)
+                            }
                         }
-
                     case .c2bURL(let c2bURL):
-                            
-                        let c2bViewModel = C2BViewModel(urlString: c2bURL.absoluteString, closeAction: {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                            let c2bViewModel = C2BViewModel(urlString: c2bURL.absoluteString, closeAction: {
                                 self.link = nil
                             })
-
+                            
                             self.link = .c2b(c2bViewModel)
+                        }
 
                     case .url( _):
-                        
-                        let failedView = QRFailedViewModel(model: model)
-                        self.link = .failedView(failedView)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                            let failedView = QRFailedViewModel(model: self.model)
+                            self.link = .failedView(failedView)
+                        }
 
-                    case .unknown(let qr):
+                    case .unknown(_):
 
-                        self.alert = .init(title: "Unknown", message: qr, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                            let failedView = QRFailedViewModel(model: self.model)
+                            self.link = .failedView(failedView)
+                        }
                     }
 
                 default:
@@ -436,11 +467,26 @@ extension PaymentsTransfersViewModel {
         case internet(OperatorsViewModel)
         case transport(OperatorsViewModel)
         case template(TemplatesListViewModel)
-        case qrScanner(QRViewModel)
         case country(CountryPaymentView.ViewModel)
         case currencyWallet(CurrencyWalletViewModel)
         case failedView(QRFailedViewModel)
         case c2b(C2BViewModel)
+        case searchOperators(QRSearchOperatorViewModel)
+    }
+    
+    struct FullScreenSheet: Identifiable, Equatable {
+
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            
+            case qrScanner(QRViewModel)
+        }
+        
+        static func == (lhs: PaymentsTransfersViewModel.FullScreenSheet, rhs: PaymentsTransfersViewModel.FullScreenSheet) -> Bool {
+            lhs.id == rhs.id
+        }
     }
     
 }
@@ -463,6 +509,8 @@ enum PaymentsTransfersViewModelAction {
         struct Sheet: Action {}
         
         struct Link: Action {}
+        
+        struct FullScreenSheet: Action {}
     }
     
     struct OpenQr: Action {}

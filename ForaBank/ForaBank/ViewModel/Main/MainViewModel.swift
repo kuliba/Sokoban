@@ -23,6 +23,7 @@ class MainViewModel: ObservableObject, Resetable {
     @Published var isLinkActive: Bool = false
     @Published var isTabBarHidden: Bool = false
     @Published var bottomSheet: BottomSheet?
+    @Published var fullScreenSheet: FullScreenSheet?
     @Published var alert: Alert.ViewModel?
     
     var rootActions: RootViewModel.RootActions?
@@ -120,6 +121,9 @@ class MainViewModel: ObservableObject, Resetable {
                     
                 case _ as MainViewModelAction.Close.Sheet:
                     self.sheet = nil
+                    
+                case _ as MainViewModelAction.Close.FullScreenSheet:
+                    self.fullScreenSheet = nil
                     
                 default:
                     break
@@ -230,11 +234,11 @@ class MainViewModel: ObservableObject, Resetable {
                             case .byQr:
                                 
                                 let qrScannerModel = QRViewModel.init(closeAction: { [weak self] in
-                                    self?.action.send(MainViewModelAction.Close.Link())
+                                    self?.action.send(MainViewModelAction.Close.FullScreenSheet())
                                 })
 
                                 bind(qrScannerModel)
-                                link = .qrScanner(qrScannerModel)
+                                fullScreenSheet = .init(type: .qrScanner(qrScannerModel)) 
                             }
                             
                         default:
@@ -380,25 +384,44 @@ class MainViewModel: ObservableObject, Resetable {
                                 
                                 if operators.count == 1 {
                                     
-                                    let operatorsViewModel = OperatorsViewModel(closeAction: {
-                                        self.link = nil
-                                    }, mode: .qr(qr))
-                                    self.link = .serviceOperators(operatorsViewModel)
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                        let operatorsViewModel = OperatorsViewModel(closeAction: { [weak self] in
+                                            self?.link = nil
+                                        }, mode: .qr(qr))
+                                        self.link = .serviceOperators(operatorsViewModel)
+                                    }
                                     
                                 } else {
                                     
                                     //TODO: QRSearchOperatorViewModel with operators
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                        let operatorsViewModel = QRSearchOperatorViewModel(textFieldPlaceholder: "Название или ИНН", navigationBar:
+                                                .init(
+                                                    title: "Все регионы",
+                                                    titleButton: .init(icon: Image.ic16ChevronDown, action: {
+                                                        self.model.action.send(QRSearchOperatorViewModelAction.OpenCityView())
+                                                    }),
+                                                    leftButtons: [NavigationBarView.ViewModel.BackButtonViewModel(icon: Image.ic24ChevronLeft,
+                                                                                                                  action: { [weak self] in
+                                                                                                                      self?.link = nil})]),
+                                                                                           model: self.model, operators: operators)
+                                        
+                                        self.link = .searchOperators(operatorsViewModel)
+                                    }
                                 }
                                 
                             } else {
-                                
-                                let failedView = QRFailedViewModel(model: model)
-                                self.link = .failedView(failedView)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                    let failedView = QRFailedViewModel(model: self.model)
+                                    self.link = .failedView(failedView)
+                                }
                             }
                             
                         } else {
-                            
-                            self.alert = .init(title: "The QR mapping data missing", message: "Unable recognize QR code because of missing the QR mapping data", primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                let failedView = QRFailedViewModel(model: self.model)
+                                self.link = .failedView(failedView)
+                            }
                         }
 
                     case .c2bURL(let c2bURL):
@@ -417,12 +440,19 @@ class MainViewModel: ObservableObject, Resetable {
 
                     case .url( _):
                         
-                        let failedView = QRFailedViewModel(model: model)
-                        self.link = .failedView(failedView)
+                        self.action.send(MainViewModelAction.Close.FullScreenSheet())
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                            let failedView = QRFailedViewModel(model: self.model)
+                            self.link = .failedView(failedView)
+                        }
                         
-                    case .unknown(let qr):
+                    case .unknown(_):
                         
-                        self.alert = .init(title: "Unknown", message: qr, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                        self.action.send(MainViewModelAction.Close.FullScreenSheet())
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                            let failedView = QRFailedViewModel(model: self.model)
+                            self.link = .failedView(failedView)
+                        }
                     }
                     
                    
@@ -585,7 +615,7 @@ extension MainViewModel {
             case places(PlacesViewModel)
             case byPhone(TransferByPhoneViewModel)
             case openAccount(OpenAccountViewModel)
-            case qrScanner(QRViewModel)
+//            case qrScanner(QRViewModel)
         }
     }
     
@@ -597,13 +627,13 @@ extension MainViewModel {
         case openDeposit(OpenProductViewModel)
         case openDepositsList(OpenDepositViewModel)
         case templates(TemplatesListViewModel)
-        case qrScanner(QRViewModel)
         case currencyWallet(CurrencyWalletViewModel)
         case myProducts(MyProductsViewModel)
         case country(CountryPaymentView.ViewModel)
         case serviceOperators(OperatorsViewModel)
         case failedView(QRFailedViewModel)
         case c2b(C2BViewModel)
+        case searchOperators(QRSearchOperatorViewModel)
     }
     
     struct BottomSheet: Identifiable {
@@ -614,6 +644,21 @@ extension MainViewModel {
         enum BottomSheetType {
             
             case openAccount(OpenAccountViewModel)
+        }
+    }
+    
+    struct FullScreenSheet: Identifiable, Equatable {
+
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            
+            case qrScanner(QRViewModel)
+        }
+        
+        static func == (lhs: MainViewModel.FullScreenSheet, rhs: MainViewModel.FullScreenSheet) -> Bool {
+            lhs.id == rhs.id
         }
     }
 }
@@ -638,6 +683,8 @@ enum MainViewModelAction {
         struct Link: Action {}
         
         struct Sheet: Action {}
+        
+        struct FullScreenSheet: Action {}
     }
     
     enum Show {

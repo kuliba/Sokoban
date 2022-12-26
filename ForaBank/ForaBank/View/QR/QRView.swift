@@ -50,7 +50,7 @@ struct QRView: View {
                                 ButtonIconTextView(viewModel: buttons)
                                 //    .padding(.leading, 20)
                             } 
-                        }//.padding(.horizontal, 20)
+                        }
                         
                         ButtonSimpleView(viewModel: viewModel.clouseButton)
                             .frame(height: 48)
@@ -65,53 +65,50 @@ struct QRView: View {
                 if let link = viewModel.link  {
                     
                     switch link {
-//                    case .imagePicker(let imagePicker):
-//                        ImagePickerController(viewModel: imagePicker)
-//                            .edgesIgnoringSafeArea(.all)
-//                            .navigationBarBackButtonHidden(false)
-//                            .navigationBarTitle("Из фото", displayMode: .inline)
                         
                     case .failedView(let view):
                         QRFailedView(viewModel: view)
                     }
                 }
             }
+            Color.clear
+                .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
+                    switch sheet.sheetType {
+                        
+                    case let .imageCapture(imageCapture):
+                        QRImagePickerController(viewModel: imageCapture)
+                            .edgesIgnoringSafeArea(.all)
+                            .navigationBarBackButtonHidden(false)
+                        
+                    case let .choiseDocument(choiseDocument):
+                        QRButtonsView(viewModel: choiseDocument)
+                        
+                    case let .info(infoViewModel) :
+                        QRInfoViewComponent(viewModel: infoViewModel)
+                            .frame(height: 450)
+                            .padding(.horizontal, 30)
+                        
+                    case .qRAccessViewComponent(_):
+                        
+                        QRAccessViewComponent(viewModel: .init(input: .camera,  closeAction: {
+                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+                        }))
+                            .frame(height: 400)
+                            .padding(.horizontal, 30)
+                        
+                    case .photoAccessViewComponent(_):
+                        QRAccessViewComponent(viewModel: .init(input: .photo,  closeAction: {
+                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+                        }))
+                            .frame(height: 400)
+                            .padding(.horizontal, 30)
+                    }
+                })
         }
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
-        .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
-            switch sheet.sheetType {
-                
-            case let .imageCapture(imageCapture):
-                QRImagePickerController(viewModel: imageCapture)
-                    .edgesIgnoringSafeArea(.all)
-                    .navigationBarBackButtonHidden(false)
-                
-            case let .choiseDocument(choiseDocument):
-                QRButtonsView(viewModel: choiseDocument)
-                
-            case let .info(InfoView) :
-                InfoView
-                    .frame(height: 400)
-                    .padding(.horizontal, 30)
-                
-            case .qRAccessViewComponent(_):
-                
-                QRAccessViewComponent(viewModel: .init(input: .camera,  closeAction: {
-                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
-                }))
-                    .frame(height: 400)
-                    .padding(.horizontal, 30)
-                
-            case .photoAccessViewComponent(_):
-                QRAccessViewComponent(viewModel: .init(input: .photo,  closeAction: {
-                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
-                }))
-                    .frame(height: 400)
-                    .padding(.horizontal, 30)
-            }
-        })
+        
         .sheet(item: $viewModel.sheet) { item in
             
             switch item.sheetType {
