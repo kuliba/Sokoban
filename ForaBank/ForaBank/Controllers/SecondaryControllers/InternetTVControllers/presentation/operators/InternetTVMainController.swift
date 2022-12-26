@@ -250,7 +250,7 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
 
         if qrDataDictionary.isEmpty {
             
-            guard case .qr( let qrCode) = operatorsViewModel?.mode, let mapping = model.qrDictionary.value else { return }
+            guard case .qr( let qrCode) = operatorsViewModel?.mode, let mapping = model.qrMapping.value else { return }
             
             for ( key, value ) in qrCode.rawData {
                 
