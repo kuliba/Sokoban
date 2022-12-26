@@ -41,6 +41,13 @@ class QRSearchOperatorViewModel: ObservableObject {
         self.operators = operatorsData.map {QRSearchOperatorComponent.ViewModel.init(operators: $0) }
     }
     
+    convenience init(textFieldPlaceholder: String, navigationBar: NavigationBarView.ViewModel, model: Model, operators: [OperatorGroupData.OperatorData]) {
+        
+        self.init(textFieldPlaceholder: textFieldPlaceholder, navigationBar: navigationBar, model: model)
+        
+        self.operators = operators.map {QRSearchOperatorComponent.ViewModel.init(operators: $0) }
+    }
+    
     func bind() {
         
         $textFieldValue

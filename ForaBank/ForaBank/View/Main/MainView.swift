@@ -92,11 +92,6 @@ struct MainView: View {
                         
                     case .templates(let templatesViewModel):
                         TemplatesListView(viewModel: templatesViewModel)
-                        
-//                    case .qrScanner(let qrViewModel):
-//                        QRView(viewModel: qrViewModel)
-//                            .navigationBarHidden(true)
-//                            .edgesIgnoringSafeArea(.all)
                     
                     case let .currencyWallet(viewModel):
                         CurrencyWalletView(viewModel: viewModel)
@@ -122,8 +117,14 @@ struct MainView: View {
                     case .c2b(let c2bViewModel):
                         C2BDetailsView(viewModel: c2bViewModel)
                             .navigationBarTitle("", displayMode: .inline)
-//                            .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
+                        
+                    case .searchOperators(let viewModel):
+                        QRSearchOperatorView(viewModel: viewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
                     }
                 }
             }
@@ -145,11 +146,7 @@ struct MainView: View {
                 
             case let .openAccount(openAccountViewModel):
                 OpenAccountView(viewModel: openAccountViewModel)      
-//            case .qrScanner(let qrViewModel):
-//                QrScannerView(viewModel: qrViewModel)
-//                    .navigationBarTitle("", displayMode: .inline)
-//                    .navigationBarBackButtonHidden(true)
-//                    .edgesIgnoringSafeArea(.all)
+
             }
         })
         .bottomSheet(item: $viewModel.bottomSheet, keyboardOfssetMultiplier: 0.7) { bottomSheet in

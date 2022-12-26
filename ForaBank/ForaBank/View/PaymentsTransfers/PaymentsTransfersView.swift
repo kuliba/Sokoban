@@ -146,6 +146,13 @@ struct PaymentsTransfersView: View {
                         
                     case .c2b(let c2bViewModel):
                         C2BDetailsView(viewModel: c2bViewModel)
+                        
+                    case .searchOperators(let viewModel):
+                        QRSearchOperatorView(viewModel: viewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
                     }
                 }
             }

@@ -384,20 +384,37 @@ class MainViewModel: ObservableObject, Resetable {
                                 
                                 if operators.count == 1 {
                                     
-                                    let operatorsViewModel = OperatorsViewModel(closeAction: {
-                                        self.link = nil
-                                    }, mode: .qr(qr))
-                                    self.link = .serviceOperators(operatorsViewModel)
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                        let operatorsViewModel = OperatorsViewModel(closeAction: { [weak self] in
+                                            self?.link = nil
+                                        }, mode: .qr(qr))
+                                        self.link = .serviceOperators(operatorsViewModel)
+                                    }
                                     
                                 } else {
                                     
                                     //TODO: QRSearchOperatorViewModel with operators
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                        let operatorsViewModel = QRSearchOperatorViewModel(textFieldPlaceholder: "Название или ИНН", navigationBar:
+                                                .init(
+                                                    title: "Все регионы",
+                                                    titleButton: .init(icon: Image.ic16ChevronDown, action: {
+                                                        self.model.action.send(QRSearchOperatorViewModelAction.OpenCityView())
+                                                    }),
+                                                    leftButtons: [NavigationBarView.ViewModel.BackButtonViewModel(icon: Image.ic24ChevronLeft,
+                                                                                                                  action: { [weak self] in
+                                                                                                                      self?.link = nil})]),
+                                                                                           model: self.model, operators: operators)
+                                        
+                                        self.link = .searchOperators(operatorsViewModel)
+                                    }
                                 }
                                 
                             } else {
-                                
-                                let failedView = QRFailedViewModel(model: model)
-                                self.link = .failedView(failedView)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                    let failedView = QRFailedViewModel(model: self.model)
+                                    self.link = .failedView(failedView)
+                                }
                             }
                             
                         } else {
@@ -422,12 +439,16 @@ class MainViewModel: ObservableObject, Resetable {
                         }
 
                     case .url( _):
+                        
+                        self.action.send(MainViewModelAction.Close.FullScreenSheet())
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                             let failedView = QRFailedViewModel(model: self.model)
                             self.link = .failedView(failedView)
                         }
                         
                     case .unknown(_):
+                        
+                        self.action.send(MainViewModelAction.Close.FullScreenSheet())
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                             let failedView = QRFailedViewModel(model: self.model)
                             self.link = .failedView(failedView)
@@ -606,13 +627,13 @@ extension MainViewModel {
         case openDeposit(OpenProductViewModel)
         case openDepositsList(OpenDepositViewModel)
         case templates(TemplatesListViewModel)
-//        case qrScanner(QRViewModel)
         case currencyWallet(CurrencyWalletViewModel)
         case myProducts(MyProductsViewModel)
         case country(CountryPaymentView.ViewModel)
         case serviceOperators(OperatorsViewModel)
         case failedView(QRFailedViewModel)
         case c2b(C2BViewModel)
+        case searchOperators(QRSearchOperatorViewModel)
     }
     
     struct BottomSheet: Identifiable {

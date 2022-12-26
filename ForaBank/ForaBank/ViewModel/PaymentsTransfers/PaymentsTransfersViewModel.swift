@@ -333,24 +333,45 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 case let payload as QRViewModelAction.Result:
                     switch payload.result {
                     case .qrCode(let qr):
+                        
                         //TODO: REFACTOR
                         if let qrMapping = model.qrMapping.value {
                             
-                            let operatorPuref = model.dictionaryAnywayFirstOperator(with: qr, mapping: qrMapping)
-                            let puref = operatorPuref?.code
-
-                            if puref != nil {
+                            if let operators = model.dictionaryAnywayOperators(with: qr, mapping: qrMapping) {
                                 
-                                let operatorsViewModel = OperatorsViewModel(closeAction: {
-                                    self.link = nil
-                                }, mode: .qr(qr))
-
-                                self.link = .serviceOperators(operatorsViewModel)
+                                if operators.count == 1 {
+                                    
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                        let operatorsViewModel = OperatorsViewModel(closeAction: { [weak self] in
+                                            self?.link = nil
+                                        }, mode: .qr(qr))
+                                        self.link = .serviceOperators(operatorsViewModel)
+                                    }
+                                    
+                                } else {
+                                    
+                                    //TODO: QRSearchOperatorViewModel with operators
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                        let operatorsViewModel = QRSearchOperatorViewModel(textFieldPlaceholder: "Название или ИНН", navigationBar:
+                                                .init(
+                                                    title: "Все регионы",
+                                                    titleButton: .init(icon: Image.ic16ChevronDown, action: {
+                                                        self.model.action.send(QRSearchOperatorViewModelAction.OpenCityView())
+                                                    }),
+                                                    leftButtons: [NavigationBarView.ViewModel.BackButtonViewModel(icon: Image.ic24ChevronLeft,
+                                                                                                                  action: { [weak self] in
+                                                                                                                      self?.link = nil})]),
+                                                                                           model: self.model, operators: operators)
+                                        
+                                        self.link = .searchOperators(operatorsViewModel)
+                                    }
+                                }
                                 
                             } else {
-
-                                let failedView = QRFailedViewModel(model: model)
-                                self.link = .failedView(failedView)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                    let failedView = QRFailedViewModel(model: self.model)
+                                    self.link = .failedView(failedView)
+                                }
                             }
                             
                         } else {
@@ -359,7 +380,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 self.link = .failedView(failedView)
                             }
                         }
-
                     case .c2bURL(let c2bURL):
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                             let c2bViewModel = C2BViewModel(urlString: c2bURL.absoluteString, closeAction: {
@@ -447,11 +467,11 @@ extension PaymentsTransfersViewModel {
         case internet(OperatorsViewModel)
         case transport(OperatorsViewModel)
         case template(TemplatesListViewModel)
-//         case qrScanner(QRViewModel)
         case country(CountryPaymentView.ViewModel)
         case currencyWallet(CurrencyWalletViewModel)
         case failedView(QRFailedViewModel)
         case c2b(C2BViewModel)
+        case searchOperators(QRSearchOperatorViewModel)
     }
     
     struct FullScreenSheet: Identifiable, Equatable {
