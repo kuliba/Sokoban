@@ -62,7 +62,7 @@ extension ModelAction {
             .banks,
             .paymentSystemList,
             .fullBankInfoList,
-            .qr
+            .qrMapping
         ]
     }
 }
@@ -139,7 +139,8 @@ extension Model {
             
         case .centralBanksRates:
             return localAgent.load(type: [CentralBankRatesData].self) != nil
-        case .qr:
+            
+        case .qrMapping:
             return localAgent.load(type: QRMapping.self) != nil
         }
         
@@ -213,7 +214,8 @@ extension Model {
         
         case .centralBanksRates:
             return localAgent.serial(for: [CentralBankRatesData].self)
-        case .qr:
+            
+        case .qrMapping:
             return localAgent.serial(for: QRMapping.self)
         }
     }
@@ -286,7 +288,8 @@ extension Model {
         
         case .centralBanksRates:
             try? localAgent.clear(type: [CentralBankRatesData].self)
-        case .qr:
+            
+        case .qrMapping:
             try? localAgent.clear(type: QRMapping.self)
         }
     }
@@ -1644,6 +1647,55 @@ extension Model {
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    //QRMapping
+    func handleDictionaryQRMapping(_ serial: String?) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.QRController.GetPaymentsMapping(token: token, serial: serial)
+        serverAgent.executeCommand(command: command) { [unowned self] result in
+
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+
+                    guard let data = response.data else {
+                        self.handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.qrMapping.parameters.isEmpty == false,
+                          data.qrMapping.operators.isEmpty == false else {
+                        
+                        return
+                    }
+
+                    qrMapping.value = data.qrMapping
+
+                    do {
+
+                        try localAgent.store(data.qrMapping, serial: data.serial)
+
+                    } catch {
+
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+
+                default:
+                    handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+
             case .failure(let error):
                 handleServerCommandError(error: error, command: command)
             }

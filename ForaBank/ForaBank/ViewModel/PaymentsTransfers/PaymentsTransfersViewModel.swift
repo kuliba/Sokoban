@@ -331,24 +331,28 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case let payload as QRViewModelAction.Result:
-                    
                     switch payload.result {
-
                     case .qrCode(let qr):
-
-                        guard let qrMapping = model.qrDictionary.value else { break }
-
-                        let operatorPuref = model.dictionaryAnywayFirstOperator(with: qr, mapping: qrMapping)
-
-                        let puref = operatorPuref?.code
-
-                        if puref != nil {
+                        //TODO: REFACTOR
+                        if let qrMapping = model.qrMapping.value {
                             
-                            let operatorsViewModel = OperatorsViewModel(closeAction: {
-                                self.link = nil
-                            }, mode: .qr(qr))
+                            let operatorPuref = model.dictionaryAnywayFirstOperator(with: qr, mapping: qrMapping)
+                            let puref = operatorPuref?.code
 
-                            self.link = .serviceOperators(operatorsViewModel)
+                            if puref != nil {
+                                
+                                let operatorsViewModel = OperatorsViewModel(closeAction: {
+                                    self.link = nil
+                                }, mode: .qr(qr))
+
+                                self.link = .serviceOperators(operatorsViewModel)
+                                
+                            } else {
+
+                                let failedView = QRFailedViewModel(model: model)
+                                self.link = .failedView(failedView)
+                            }
+                            
                         } else {
                             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                                 let failedView = QRFailedViewModel(model: self.model)
@@ -378,7 +382,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             self.link = .failedView(failedView)
                         }
                     }
-                    
+
                 default:
                     break
                 }

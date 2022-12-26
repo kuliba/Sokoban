@@ -377,20 +377,27 @@ class MainViewModel: ObservableObject, Resetable {
                     switch payload.result {
                     case .qrCode(let qr):
                         
-                        guard let qrMapping = model.qrDictionary.value else { break }
-                        
-                        if let operators = model.dictionaryAnywayOperators(with: qr, mapping: qrMapping) {
+                        //TODO: REFACTOR
+                        if let qrMapping = model.qrMapping.value {
                             
-                            if operators.count == 1 {
+                            if let operators = model.dictionaryAnywayOperators(with: qr, mapping: qrMapping) {
                                 
-                                let operatorsViewModel = OperatorsViewModel(closeAction: {
-                                    self.link = nil
-                                }, mode: .qr(qr))
-                                self.link = .serviceOperators(operatorsViewModel)
+                                if operators.count == 1 {
+                                    
+                                    let operatorsViewModel = OperatorsViewModel(closeAction: {
+                                        self.link = nil
+                                    }, mode: .qr(qr))
+                                    self.link = .serviceOperators(operatorsViewModel)
+                                    
+                                } else {
+                                    
+                                    //TODO: QRSearchOperatorViewModel with operators
+                                }
                                 
                             } else {
                                 
-                                //TODO: QRSearchOperatorViewModel with operators
+                                let failedView = QRFailedViewModel(model: model)
+                                self.link = .failedView(failedView)
                             }
                             
                         } else {
@@ -399,7 +406,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 self.link = .failedView(failedView)
                             }
                         }
-                        
+
                     case .c2bURL(let c2bURL):
                         // close qr scanner
                         self.action.send(MainViewModelAction.Close.Link())
@@ -426,6 +433,9 @@ class MainViewModel: ObservableObject, Resetable {
                             self.link = .failedView(failedView)
                         }
                     }
+                    
+                   
+                    
                     
                 default:
                     break

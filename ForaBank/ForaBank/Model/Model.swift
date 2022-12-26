@@ -84,7 +84,7 @@ class Model {
     var deepLinkType: DeepLinkType?
     
     //MARK: QR
-    let qrDictionary: CurrentValueSubject<QRMapping?, Never>
+    let qrMapping: CurrentValueSubject<QRMapping?, Never>
     
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
@@ -165,7 +165,7 @@ class Model {
         self.userSettings = .init([])
         self.deepLinkType = nil
         self.depositsCloseNotified = nil
-        self.qrDictionary = .init(nil)
+        self.qrMapping = .init(nil)
         
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
@@ -750,8 +750,9 @@ class Model {
                         
                     case .centralBanksRates:
                         handleDictionaryCentralBankRates()
-                    case .qr:
-                        handleGetPaymentsMapping(payload.serial)
+                        
+                    case .qrMapping:
+                        handleDictionaryQRMapping(payload.serial)
                     }
                     
                 case let payload as ModelAction.Dictionary.DownloadImages.Request:
@@ -825,6 +826,11 @@ class Model {
                     
                 case let payload as ModelAction.Consent.Me2MeDebit.Request:
                     handleConsentGetMe2MeDebit(payload)
+                    
+                //MARK: - QR
+                    
+                case let payload as ModelAction.QRAction.SendFailData.Request:
+                    handleQRActionSendFailData(payload)
                     
                 default:
                     break
@@ -951,6 +957,7 @@ private extension Model {
         }
 
         if let productsList = productsListCacheLoadData() {
+            
             self.accountProductsList.value = productsList
         }
         
@@ -977,6 +984,11 @@ private extension Model {
         if let currencyWalletList = localAgent.load(type: [CurrencyWalletData].self) {
             
             self.currencyWalletList.value = currencyWalletList
+        }
+        
+        if let qrMapping = localAgent.load(type: QRMapping.self) {
+            
+            self.qrMapping.value = qrMapping
         }
     }
     
@@ -1196,6 +1208,7 @@ private extension Model {
         dictionariesUpdating.value = []
         currencyWalletList.value = []
         userSettings.value = []
+        qrMapping.value = nil
         
         print("Model: memory data cleaned")
     }
