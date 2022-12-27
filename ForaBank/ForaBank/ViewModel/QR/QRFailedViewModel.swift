@@ -30,7 +30,7 @@ class QRFailedViewModel: ObservableObject {
     
     convenience init(model: Model) {
         
-        self.init(model: model, icon: Image.ic24BarcodeScanner2, title: "Не удалось распознать QR-код", content: "Воспользуйтесь другими способами оплаты", searchOpratorButton: [])
+        self.init(model: model, icon: Image.ic48BarcodeScanner, title: "Не удалось распознать QR-код", content: "Воспользуйтесь другими способами оплаты", searchOpratorButton: [])
         
         self.searchOperatorButton = createButtons()
     }

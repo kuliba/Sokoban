@@ -385,6 +385,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 if operators.count == 1 {
                                     
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                        self.action.send(MainViewModelAction.Close.FullScreenSheet())
                                         let operatorsViewModel = OperatorsViewModel(closeAction: { [weak self] in
                                             self?.link = nil
                                         }, mode: .qr(qr))
@@ -395,6 +396,7 @@ class MainViewModel: ObservableObject, Resetable {
                                     
                                     //TODO: QRSearchOperatorViewModel with operators
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                        self.action.send(MainViewModelAction.Close.FullScreenSheet())
                                         let operatorsViewModel = QRSearchOperatorViewModel(textFieldPlaceholder: "Название или ИНН", navigationBar:
                                                 .init(
                                                     title: "Все регионы",
@@ -411,7 +413,10 @@ class MainViewModel: ObservableObject, Resetable {
                                 }
                                 
                             } else {
+                                
                                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                    
+                                    self.action.send(MainViewModelAction.Close.FullScreenSheet())
                                     let failedView = QRFailedViewModel(model: self.model)
                                     self.link = .failedView(failedView)
                                 }
@@ -419,18 +424,19 @@ class MainViewModel: ObservableObject, Resetable {
                             
                         } else {
                             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                
+                                self.action.send(MainViewModelAction.Close.FullScreenSheet())
                                 let failedView = QRFailedViewModel(model: self.model)
                                 self.link = .failedView(failedView)
                             }
                         }
 
                     case .c2bURL(let c2bURL):
-                        // close qr scanner
-                        self.action.send(MainViewModelAction.Close.Link())
                         
                         // show c2b payment after delay required to finish qr scanner close animation
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                            
+                    
+                            self.action.send(MainViewModelAction.Close.FullScreenSheet())
                             let c2bViewModel = C2BViewModel(urlString: c2bURL.absoluteString, closeAction: { [weak self] in
                                 self?.action.send(MainViewModelAction.Close.Link())
                             })
@@ -440,16 +446,18 @@ class MainViewModel: ObservableObject, Resetable {
 
                     case .url( _):
                         
-                        self.action.send(MainViewModelAction.Close.FullScreenSheet())
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                            
+                            self.action.send(MainViewModelAction.Close.FullScreenSheet())
                             let failedView = QRFailedViewModel(model: self.model)
                             self.link = .failedView(failedView)
                         }
                         
                     case .unknown(_):
                         
-                        self.action.send(MainViewModelAction.Close.FullScreenSheet())
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                            
+                            self.action.send(MainViewModelAction.Close.FullScreenSheet())
                             let failedView = QRFailedViewModel(model: self.model)
                             self.link = .failedView(failedView)
                         }

@@ -72,9 +72,9 @@ class QRViewModel: ObservableObject {
                     ])))
                     
                 case _ as QRViewModelAction.Info:
-                    self.bottomSheet = .init(sheetType: .info(.init(icon: .ic24AlertCircle,
+                    self.bottomSheet = .init(sheetType: .info(.init(icon: .ic48Info,
                                                                                      title: "Сканировать QR-код",
-                                                                                     content: "Наведите камеру телефона на QR-код, и приложение автоматически его считает.\n\n Перед оплатой проверьте, что все поля заполнены правильно.\n\n Чтобы оплатить квитанцию, сохраненнуюв телефоне, откройте ее с помощью кнопки \"Из файла\", и отсканируйте QR-код.")))
+                                                                                     content: "Наведите камеру телефона на QR-код, и приложение автоматически его считает.\n\n Перед оплатой проверьте, что все поля заполнены правильно.\n\n Чтобы оплатить квитанцию, сохраненную в телефоне, откройте ее с помощью кнопки \"Из файла\", и отсканируйте QR-код.")))
                     
                 case _ as QRViewModelAction.AccessCamera:
                     

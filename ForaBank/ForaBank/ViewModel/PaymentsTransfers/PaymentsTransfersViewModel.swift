@@ -63,6 +63,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         bottomSheet = nil
         sheet = nil
         link = nil
+        fullScreenSheet = nil
         isTabBarHidden = false
     }
     
@@ -86,7 +87,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 
                 case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:
                     
-                    // на экране платежей нижний переход
+                    // на экране платежей верхний переход
                     let qrScannerModel = QRViewModel.init(closeAction: {
                         self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                     })
@@ -257,34 +258,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             self.bind(qrScannerModel)
                             fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
                             
-//                            if model.cameraAgent.isCameraAvailable {
-//                                model.cameraAgent.requestPermissions(completion: { available in
-//
-//                                    if available {
-//                                        if #available(iOS 14, *) {
-//
-//                                            // на экране платежей нижний переход
-//                                            let qrScannerModel = QRViewModel.init(closeAction: {
-//                                                self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-//                                            })
-//
-//                                            self.bind(qrScannerModel)
-//                                            self.link = .qrScanner(qrScannerModel)
-//
-//                                        } else {
-//                                            self.sheet = .init(type: .qrScanner(.init(closeAction: { self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-//                                            })))
-//                                        }
-//                                    } else {
-//                                        self.alert = .init(
-//                                            title: "Внимание",
-//                                            message: "Для сканирования QR кода, необходим доступ к камере",
-//                                            primary: .init(type: .cancel, title: "Понятно", action: {
-//                                            }))
-//                                    }
-//                                })
-//                            }
-                            
                         case .service:
                             let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }, mode: .general)
@@ -331,6 +304,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case let payload as QRViewModelAction.Result:
+                    
                     switch payload.result {
                     case .qrCode(let qr):
                         
@@ -342,6 +316,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 if operators.count == 1 {
                                     
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                                         let operatorsViewModel = OperatorsViewModel(closeAction: { [weak self] in
                                             self?.link = nil
                                         }, mode: .qr(qr))
@@ -352,6 +327,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                     
                                     //TODO: QRSearchOperatorViewModel with operators
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                        
+                                        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                                         let operatorsViewModel = QRSearchOperatorViewModel(textFieldPlaceholder: "Название или ИНН", navigationBar:
                                                 .init(
                                                     title: "Все регионы",
@@ -368,7 +345,10 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 }
                                 
                             } else {
+                                
                                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                    
+                                    self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                                     let failedView = QRFailedViewModel(model: self.model)
                                     self.link = .failedView(failedView)
                                 }
@@ -376,32 +356,45 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                         } else {
                             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                
+                                self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                                 let failedView = QRFailedViewModel(model: self.model)
                                 self.link = .failedView(failedView)
                             }
                         }
+
                     case .c2bURL(let c2bURL):
+                        
+                        // show c2b payment after delay required to finish qr scanner close animation
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                            let c2bViewModel = C2BViewModel(urlString: c2bURL.absoluteString, closeAction: {
-                                self.link = nil
+                    
+                            self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                            let c2bViewModel = C2BViewModel(urlString: c2bURL.absoluteString, closeAction: { [weak self] in
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             })
                             
                             self.link = .c2b(c2bViewModel)
                         }
 
                     case .url( _):
+                        
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                            
+                            self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                             let failedView = QRFailedViewModel(model: self.model)
                             self.link = .failedView(failedView)
                         }
-
+                        
                     case .unknown(_):
-
+                        
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                            
+                            self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                             let failedView = QRFailedViewModel(model: self.model)
                             self.link = .failedView(failedView)
                         }
                     }
+                    
 
                 default:
                     break
@@ -447,7 +440,7 @@ extension PaymentsTransfersViewModel {
             case meToMe(MeToMeViewModel)
             case transferByPhone(TransferByPhoneViewModel)
             case anotherCard(AnotherCardViewModel)
-            case qrScanner(QRViewModel)
+//            case qrScanner(QRViewModel)
         }
     }
     

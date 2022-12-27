@@ -184,12 +184,6 @@ struct PaymentsTransfersView: View {
             case .anotherCard(let anotherCardViewModel):
                 AnotherCardView(viewModel: anotherCardViewModel)
                     .edgesIgnoringSafeArea(.bottom)
-                
-            case .qrScanner(let qrViewModel):
-                QrScannerView(viewModel: qrViewModel)
-                    .navigationBarTitle("", displayMode: .inline)
-                    .navigationBarBackButtonHidden(true)
-                    .edgesIgnoringSafeArea(.all)
             }
             
         })
