@@ -233,8 +233,10 @@ extension MainView {
                     Text(viewModel.name)
                         .foregroundColor(.textSecondary)
                         .font(.textH4R16240())
+                        .accessibilityIdentifier("mainUserName")
                 }
             }
+            .accessibilityIdentifier("mainUserButton")
         }
     }
     

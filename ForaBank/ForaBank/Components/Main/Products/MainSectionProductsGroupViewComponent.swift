@@ -358,6 +358,7 @@ struct MainSectionProductsGroupView: View {
                         
                         ProductView(viewModel: productViewModel)
                             .frame(width: viewModel.dimensions.widths.product, height: 104)
+                            .accessibilityIdentifier("mainProduct")
                     }
                     
                     Spacer()

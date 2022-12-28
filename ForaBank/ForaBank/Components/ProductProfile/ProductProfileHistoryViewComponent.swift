@@ -698,6 +698,7 @@ extension ProductProfileHistoryView {
                     .font(.textBodyMSB14200())
                     .foregroundColor(.textSecondary)
                     .padding(.bottom, 16)
+                    .accessibilityIdentifier("historyGroupDate")
           
                 ForEach(viewModel.operations) { operationViewModel in
                     
@@ -736,10 +737,12 @@ extension ProductProfileHistoryView {
                     Text(viewModel.title)
                         .font(.textH4M16240())
                         .foregroundColor(.textSecondary)
+                        .accessibilityIdentifier("operationName")
                     
                     Text(viewModel.subtitle)
                         .font(.textBodySR12160())
                         .foregroundColor(.textPlaceholder)
+                        .accessibilityIdentifier("operationDescription")
                 }
                 .padding(.vertical, 8)
                 
@@ -751,6 +754,7 @@ extension ProductProfileHistoryView {
                         .font(.textH4M16240())
                         .foregroundColor(amount.color)
                         .padding(.top, 8)
+                        .accessibilityIdentifier("operationAmount")
                 }
             }
             .onTapGesture {
