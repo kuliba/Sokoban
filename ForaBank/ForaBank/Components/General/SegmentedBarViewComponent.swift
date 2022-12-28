@@ -115,8 +115,10 @@ struct SegmentedBarView: View {
                 HStack {
                 
                     Text(viewModel.titleLabel)
+                        .accessibilityIdentifier("spendingTitleMonth")
                     Spacer()
                     Text(viewModel.totalValueFormatted)
+                        .accessibilityIdentifier("spendingAmount")
                 }
                 .foregroundColor(.textSecondary)
                 .font(.textH4M16240())

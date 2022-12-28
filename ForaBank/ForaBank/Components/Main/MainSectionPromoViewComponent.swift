@@ -221,6 +221,7 @@ struct MainSectionPromoView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .frame(width: 288, height: 124)
                     .shimmering(active: true, bounce: false)
+                    .accessibilityIdentifier("placeholderBanner")
                 
             case .image(let image):
                 
@@ -234,7 +235,9 @@ struct MainSectionPromoView: View {
                             .frame(width: 288, height: 124)
                             .cornerRadius(12)
                         
-                    }.buttonStyle(PushButtonStyle())
+                    }
+                    .buttonStyle(PushButtonStyle())
+                    .accessibilityIdentifier("actionBanner")
                     
                 case let .link(url):
                     Link(destination: url) {
@@ -245,7 +248,10 @@ struct MainSectionPromoView: View {
                             .frame(width: 288, height: 124)
                             .cornerRadius(12)
                         
-                    }.buttonStyle(PushButtonStyle())
+                        
+                    }
+                    .buttonStyle(PushButtonStyle())
+                    .accessibilityIdentifier("linkBanner")
                 }
             }
         }

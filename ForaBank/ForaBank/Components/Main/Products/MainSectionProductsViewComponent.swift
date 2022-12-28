@@ -380,6 +380,7 @@ struct MainSectionProductsView: View {
                     OptionSelectorView(viewModel: selectorViewModel)
                         .frame(height: 24)
                         .padding(.leading, 20)
+                        .accessibilityIdentifier("optionProductTypeSelection")
                 }
                 
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -401,6 +402,7 @@ struct MainSectionProductsView: View {
                                 ForEach(groups) { groupViewModel in
                                     
                                     MainSectionProductsGroupView(viewModel: groupViewModel)
+                                        .accessibilityIdentifier("mainProductScrollView")
                                 }
                             }
                             .padding(.horizontal, 20)
