@@ -199,8 +199,10 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
                 
                 let qrView = QRView(viewModel: qrViewModel)
                 let hostingController = UIHostingController(rootView: qrView)
+                hostingController._disableSafeArea = true
                 let navVC = UINavigationController(rootViewController: hostingController)
                 navVC.modalPresentationStyle = .fullScreen
+                hostingController.navigationController?.setNavigationBarHidden(true, animated: false)
                 self.present(navVC, animated: true , completion: nil)
                 presentedController = self.navigationController
 

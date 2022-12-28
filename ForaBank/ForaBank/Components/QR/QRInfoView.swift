@@ -41,7 +41,7 @@ struct QRInfoViewComponent: View {
             viewModel.icon
                 .resizable()
                 .frame(width: 40, height: 40)
-                .foregroundColor(.iconGray)
+                .foregroundColor(.iconBlack)
             }
             
             Text(viewModel.title)

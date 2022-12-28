@@ -17,13 +17,15 @@ struct QRFailedView: View {
             
             avatarView
             
-            Text(viewModel.title)
-                .font(Font.textH3M18240())
-                .foregroundColor(Color.textSecondary)
-            
-            Text(viewModel.content)
-                .font(Font.textBodyMSB14200())
-                .foregroundColor(Color.textPlaceholder)
+            VStack(spacing: 8) {
+                Text(viewModel.title)
+                    .font(Font.textH3SB18240())
+                    .foregroundColor(Color.textSecondary)
+                
+                Text(viewModel.content)
+                    .font(Font.textBodyMSB14200())
+                    .foregroundColor(Color.textPlaceholder)
+            }
             
             VStack(spacing: 8) {
                 ForEach(viewModel.searchOperatorButton) { buttons in

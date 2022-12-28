@@ -43,7 +43,7 @@ extension QRCode {
         
         for key in parameter.keys {
             
-            guard let value = rawData[key] else {
+            guard let value = rawData[key.lowercased()] else {
                 continue
             }
             
