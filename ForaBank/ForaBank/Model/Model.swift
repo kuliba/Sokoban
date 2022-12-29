@@ -93,6 +93,9 @@ class Model {
     //MARK: DeepLink
     var deepLinkType: DeepLinkType?
     
+    //MARK: QR
+    let qrMapping: CurrentValueSubject<QRMapping?, Never>
+    
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
     let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
@@ -175,6 +178,7 @@ class Model {
         self.userSettings = .init([])
         self.bankClientsInfo = .init([])
         self.deepLinkType = nil
+        self.qrMapping = .init(nil)
         self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
         
@@ -605,6 +609,9 @@ class Model {
                 case _ as ModelAction.Media.GalleryPermission.Request:
                     handleMediaGalleryPermissionStatusRequest()
                     
+                case _ as ModelAction.Media.DocumentPermission.Request:
+                    handleMediaDocumentPermissionStatusRequest()
+                    
                     //MARK: - Client Info
                     
                 case _ as ModelAction.ClientInfo.Fetch.Request:
@@ -776,6 +783,9 @@ class Model {
                     case .centralBanksRates:
                         handleDictionaryCentralBankRates()
                         
+                    case .qrMapping:
+                        handleDictionaryQRMapping(payload.serial)
+                        
                     case .prefferedBanks:
                         handleDictionaryPrefferedBanks(payload.serial)
                     }
@@ -860,6 +870,11 @@ class Model {
                     
                 case let payload as ModelAction.Consent.Me2MeDebit.Request:
                     handleConsentGetMe2MeDebit(payload)
+                    
+                //MARK: - QR
+                    
+                case let payload as ModelAction.QRAction.SendFailData.Request:
+                    handleQRActionSendFailData(payload)
                     
                 default:
                     break
@@ -986,6 +1001,7 @@ private extension Model {
         }
 
         if let productsList = productsListCacheLoadData() {
+            
             self.accountProductsList.value = productsList
         }
         
@@ -1012,6 +1028,11 @@ private extension Model {
         if let currencyWalletList = localAgent.load(type: [CurrencyWalletData].self) {
             
             self.currencyWalletList.value = currencyWalletList
+        }
+        
+        if let qrMapping = localAgent.load(type: QRMapping.self) {
+            
+            self.qrMapping.value = qrMapping
         }
     }
     
@@ -1247,6 +1268,7 @@ private extension Model {
         dictionariesUpdating.value = []
         currencyWalletList.value = []
         userSettings.value = []
+        qrMapping.value = nil
         productsOpening.value = []
         
         LoggerAgent.shared.log(category: .model, message: "Memory data cleaned")

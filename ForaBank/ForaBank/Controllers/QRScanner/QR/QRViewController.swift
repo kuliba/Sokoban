@@ -25,7 +25,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
             return storyboard.instantiateViewController(withIdentifier: "qr") as? QRViewController
         }
     
-    var viewModel: QrViewModel?
+    var viewModel: QRViewModel?
     weak var delegate: QRProtocol?
     var qrCodeLayer = AVCaptureVideoPreviewLayer()
     let qrCodesession = AVCaptureSession()
@@ -168,7 +168,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
             
             let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
             if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
-                viewModel?.closeAction(false)
+            //    viewModel?.closeAction(false)
                 self.present(vc, animated: true)
             }
         }
@@ -177,7 +177,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
     final func onC2B(link: String) {
         qrCodesession.stopRunning()
         GlobalModule.c2bURL = link
-        viewModel?.closeAction(false)
+       // viewModel?.closeAction(false)
         navigationController?.popViewController(animated: true)
         self.presentingViewController?.dismiss(animated: true, completion: nil)
         
@@ -195,7 +195,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
             GlobalModule.qrOperator = operators
             GlobalModule.qrData = qrData
             if viewModel != nil {
-                viewModel?.closeAction(true)
+           //     viewModel?.closeAction(true)
             } else if segueOut == true {
                 self.navigationController?.popViewController(animated: true)
             } else {
@@ -230,7 +230,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
         
         qrCodesession.stopRunning()
         if viewModel != nil {
-            viewModel?.closeAction(false)
+        //    viewModel?.closeAction(false)
         } else if segueOut == true {
             self.navigationController?.popViewController(animated: true)
         } else {
@@ -298,7 +298,7 @@ extension QRViewController {
                 
                 let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
                 if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
-                    self?.viewModel?.closeAction(false)
+               //     self?.viewModel?.closeAction(false)
                     self?.present(vc, animated: true)
                 }
             }

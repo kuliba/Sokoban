@@ -1,0 +1,205 @@
+
+  {
+    "general": [
+      {
+        "parameter": "GENERAL_INN",
+        "keys": [
+          "payeeinn"
+        ],
+        "type": "STRING"
+      },
+      {
+        "parameter": "GENERAL_AMOUNT",
+        "keys": [
+          "amount",
+          "sum"
+        ],
+        "type": "DOUBLE"
+      },
+      {
+        "parameter": "GENERAL_ACCOUNT",
+        "keys": [
+          "personalacc"
+        ],
+        "type": "STRING"
+      },
+      {
+        "parameter": "GENERAL_BIC",
+        "keys": [
+          "bic"
+        ],
+        "type": "STRING"
+      },
+      {
+        "parameter": "GENERAL_FIRST_NAME",
+        "keys": [
+          "firstname"
+        ],
+        "type": "STRING"
+      },
+      {
+        "parameter": "GENERAL_LAST_NAME",
+        "keys": [
+          "lastname"
+        ],
+        "type": "STRING"
+      },
+      {
+        "parameter": "GENERAL_MIDDLE_NAME",
+        "keys": [
+          "middlename"
+        ],
+        "type": "STRING"
+      },
+      {
+        "parameter": "GENERAL_NAME",
+        "keys": [
+          "name"
+        ],
+        "type": "STRING"
+      },
+      {
+        "parameter": "GENERAL_KPP",
+        "keys": [
+          "kpp"
+        ],
+        "type": "STRING"
+      },
+      {
+        "parameter": "GENERAL_PURPOSE",
+        "keys": [
+          "purpose"
+        ],
+        "type": "STRING"
+      },
+      {
+        "parameter": "GENERAL_TECHCODE",
+        "keys": [
+          "techcode"
+        ],
+        "type": "INTEGER"
+      }
+    ],
+    "operators": [
+      {
+        "operator": "iFora||4747",
+        "parameters": [
+          {
+            "parameter": "a3_PERSONAL_ACCOUNT_1_1",
+            "keys": [
+              "persacc"
+            ],
+            "type": "STRING"
+          }
+        ]
+      },
+      {
+        "operator": "iFora||5872",
+        "parameters": [
+          {
+            "parameter": "a3_PERSONAL_ACCOUNT_1_3",
+            "keys": [
+              "persacc"
+            ],
+            "type": "STRING"
+          }
+        ]
+      },
+      {
+        "operator": "iFora||6420",
+        "parameters": [
+          {
+            "parameter": "a3_PERSONAL_ACCOUNT_1_1",
+            "keys": [
+              "persacc"
+            ],
+            "type": "STRING"
+          }
+        ]
+      },
+      {
+        "operator": "iFora||4147",
+        "parameters": [
+          {
+            "parameter": "a3_NUMBER_1_2",
+            "keys": [
+              "persacc"
+            ],
+            "type": "STRING"
+          }
+        ]
+      },
+      {
+        "operator": "iFora||6526",
+        "parameters": [
+          {
+            "parameter": "a3_PERSONAL_ACCOUNT_1_1",
+            "keys": [
+              "persacc"
+            ],
+            "type": "STRING"
+          }
+        ]
+      },
+      {
+        "operator": "iFora||TVK",
+        "parameters": [
+          {
+            "parameter": "account",
+            "keys": [
+              "persacc"
+            ],
+            "type": "STRING"
+          }
+        ]
+      },
+      {
+        "operator": "iFora||4568",
+        "parameters": [
+          {
+            "parameter": "a3_PersonalAccount_1_2",
+            "keys": [
+              "persacc"
+            ],
+            "type": "STRING"
+          }
+        ]
+      },
+      {
+        "operator": "iFora||RIZ",
+        "parameters": [
+          {
+            "parameter": "account",
+            "keys": [
+              "persacc"
+            ],
+            "type": "STRING"
+          }
+        ]
+      },
+      {
+        "operator": "iFora||5476",
+        "parameters": [
+          {
+            "parameter": "a3_NUMBER_1_2",
+            "keys": [
+              "phone"
+            ],
+            "type": "STRING"
+          }
+        ]
+      },
+      {
+        "operator": "iFora||KSK",
+        "parameters": [
+          {
+            "parameter": "account",
+            "keys": [
+              "persacc"
+            ],
+            "type": "STRING"
+          }
+        ]
+      }
+    ]
+  }

@@ -507,6 +507,8 @@ enum MyProductsViewModelAction {
             let productId: ProductData.ID
         }
         
+        struct OpenDeposit: Action {}
+        
         struct NewProduct: Action {
             let productType: ProductType
         }

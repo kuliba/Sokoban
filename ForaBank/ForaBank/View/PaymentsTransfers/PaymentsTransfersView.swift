@@ -11,13 +11,13 @@ struct PaymentsTransfersView: View {
     
     @ObservedObject
     var viewModel: PaymentsTransfersViewModel
-
+    
     var body: some View {
         
         ZStack(alignment: .top) {
             
             VStack() {
-           
+                
                 ScrollView(.vertical, showsIndicators: false) {
                     
                     ForEach(viewModel.sections) { section in
@@ -38,7 +38,7 @@ struct PaymentsTransfersView: View {
                     
                 } //mainVerticalScrollView
             } //mainVStack
-
+            
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
                 if let link = viewModel.link  {
@@ -120,14 +120,20 @@ struct PaymentsTransfersView: View {
                     case .template(let templateListViewModel):
                         TemplatesListView(viewModel: templateListViewModel)
                         
-                    case .qrScanner(let qrViewModel):
-                        QrScannerView(viewModel: qrViewModel)
+                    case .currencyWallet(let currencyWalletViewModel):
+                        CurrencyWalletView(viewModel: currencyWalletViewModel)
+                        
+                    case .failedView(let failedViewModel):
+                        QRFailedView(viewModel: failedViewModel)
+                        
+                    case .c2b(let c2bViewModel):
+                        C2BDetailsView(viewModel: c2bViewModel)
+                        
+                    case .searchOperators(let viewModel):
+                        QRSearchOperatorView(viewModel: viewModel)
                             .navigationBarTitle("", displayMode: .inline)
                             .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
-                        
-                    case .currencyWallet(let currencyWalletViewModel):
-                        CurrencyWalletView(viewModel: currencyWalletViewModel)
                     }
                 }
             }
@@ -153,17 +159,11 @@ struct PaymentsTransfersView: View {
                         AnotherCardView(viewModel: anotherCardViewModel)
                             .edgesIgnoringSafeArea(.bottom)
                         
-                    case .qrScanner(let qrViewModel):
-                        QrScannerView(viewModel: qrViewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
-                            .edgesIgnoringSafeArea(.all)
-                        
                     case .fastPayment(let viewModel):
                         ContactsView(viewModel: viewModel)
                     }
                 })
-                
+            
         }
         .onAppear {
             viewModel.action.send(PaymentsTransfersViewModelAction.ViewDidApear())
@@ -174,7 +174,7 @@ struct PaymentsTransfersView: View {
             trailing:
                 HStack {
                     ForEach(viewModel.navButtonsRight) { navButtonViewModel in
-                                        
+                        
                         NavBarButton(viewModel: navButtonViewModel)
                     }
                 })
@@ -203,13 +203,25 @@ struct PaymentsTransfersView: View {
                     .edgesIgnoringSafeArea(.bottom)
                     .navigationBarTitle("", displayMode: .inline)
                     .frame(height: 494)
-            
+                
             }
         }
-        
+        .fullScreenCover(item: $viewModel.fullScreenSheet, content: { item in
+            
+            switch item.type {
+            case let .qrScanner(viewModel):
+                NavigationView {
+                    QRView(viewModel: viewModel)
+                        .navigationBarTitle("", displayMode: .inline)
+                        .navigationBarBackButtonHidden(true)
+                        .edgesIgnoringSafeArea(.all)
+                }
+            }
+        })
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
+        
         .tabBar(isHidden: $viewModel.isTabBarHidden)
     }
 }
@@ -228,14 +240,13 @@ extension PaymentsTransfersView {
             Spacer()
         }
     }
-    
 }
 
 
 extension PaymentsTransfersView {
- 
-//MARK: - ViewBarButton
-
+    
+    //MARK: - ViewBarButton
+    
     struct NavBarButton: View {
         
         let viewModel: NavigationBarButtonViewModel
@@ -250,7 +261,7 @@ extension PaymentsTransfersView {
             }
         }
     }
-
+    
 }
 
 //MARK: - Preview
@@ -276,7 +287,7 @@ struct Payments_TransfersView_Previews: PreviewProvider {
         PaymentsTransfersView(viewModel: .sample)
             .previewDevice("5se 15.4")
             .previewDisplayName("iPhone 5 SE")
-            
+        
     }
 }
 

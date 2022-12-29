@@ -144,7 +144,23 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
             }
         }
         
+        // persacc
+        
+        if isPersonalAcc(strCheck: item.title ?? ""), let textValue = qrData["persacc"]  {
+            textView.text = textValue
+            InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,
+                                                                       "fieldname" : fieldName,
+                                                                       "fieldvalue" : textValue]
+        }
+        
         if isPersonalAcc(strCheck: item.title ?? ""), let textValue = qrData["Лицевой счет"]  {
+            textView.text = textValue
+            InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,
+                                                                       "fieldname" : fieldName,
+                                                                       "fieldvalue" : textValue]
+        }
+        
+        if isPersonalAcc_1(strCheck: item.title ?? ""), let textValue = qrData["personalacc"]  {
             textView.text = textValue
             InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,
                                                                        "fieldname" : fieldName,

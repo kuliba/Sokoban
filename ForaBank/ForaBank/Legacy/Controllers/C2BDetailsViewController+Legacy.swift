@@ -13,24 +13,23 @@ struct C2BDetailsView: UIViewControllerRepresentable {
     
     let viewModel: C2BViewModel
     
-    func makeUIViewController(context: Context) -> UINavigationController {
+    func makeUIViewController(context: Context) -> UIViewController {
         guard let controller = C2BDetailsViewController.storyboardInstance() else {
-            return UINavigationController()
+            return UIViewController()
         }
         
         controller.modalPresentationStyle = .fullScreen
         controller.closeAction = viewModel.closeAction
-        
+        controller.viewModel = .init(urlString: viewModel.urlString)
+
         context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
             vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
-            vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
-            vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
         })
         
-        return .init(rootViewController: controller)
+        return controller
     }
     
-    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {}
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
     
     class Coordinator {
         
@@ -42,5 +41,12 @@ struct C2BDetailsView: UIViewControllerRepresentable {
 
 struct C2BViewModel {
     
+    let urlString: String
     let closeAction: () -> Void
+
+    init(urlString: String, closeAction: @escaping () -> Void) {
+
+        self.urlString = urlString
+        self.closeAction = closeAction
+    }
 }

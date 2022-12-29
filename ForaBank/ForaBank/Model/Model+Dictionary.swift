@@ -62,6 +62,7 @@ extension ModelAction {
             .banks,
             .paymentSystemList,
             .fullBankInfoList,
+            .qrMapping,
             .prefferedBanks
         ]
     }
@@ -140,9 +141,11 @@ extension Model {
         case .centralBanksRates:
             return localAgent.load(type: [CentralBankRatesData].self) != nil
             
+        case .qrMapping:
+            return localAgent.load(type: QRMapping.self) != nil
+            
         case .prefferedBanks:
             return localAgent.load(type: [PrefferedBanksList].self) != nil
-
         }
     }
     
@@ -215,9 +218,11 @@ extension Model {
         case .centralBanksRates:
             return localAgent.serial(for: [CentralBankRatesData].self)
             
+        case .qrMapping:
+            return localAgent.serial(for: QRMapping.self)
+            
         case .prefferedBanks:
             return localAgent.serial(for: [PrefferedBanksList].self)
-
         }
     }
     
@@ -289,6 +294,9 @@ extension Model {
         
         case .centralBanksRates:
             try? localAgent.clear(type: [CentralBankRatesData].self)
+
+        case .qrMapping:
+            try? localAgent.clear(type: QRMapping.self)
             
         case .prefferedBanks:
             try? localAgent.clear(type: [PrefferedBanksList].self)
@@ -329,6 +337,11 @@ extension Model {
     
     //MARK: Operators & OperatorGroups
     
+    static let dictionaryQRAnywayOperatorCodes = ["iFora||1031001",
+                                                  "iFora||1051001",
+                                                  "iFora||1051062",
+                                                  "iFora||1331001"]
+
     func dictionaryAnywayOperatorGroups() -> [OperatorGroupData]? {
         
         return localAgent.load(type: [OperatorGroupData].self)
@@ -361,6 +374,22 @@ extension Model {
         return anywayOperators.first(where: { $0.code == code })
     }
     
+    func dictionaryQRAnewayOperator() -> [OperatorGroupData.OperatorData] {
+        
+        guard let operators = dictionaryAnywayOperators() else { return [] }
+        
+        var operatorsTemp = [OperatorGroupData.OperatorData]()
+        
+        for item in operators {
+            
+            if Self.dictionaryQRAnywayOperatorCodes.contains(item.parentCode) {
+                operatorsTemp.append(item)
+            }
+        }
+        
+        return operatorsTemp
+    }
+    
     //Banks
     
     func dictionaryBanks() -> [BankData]? {
@@ -385,6 +414,17 @@ extension Model {
         
         guard let banksList = dictionaryFullBankInfoList() else { return nil }
         return banksList.first(where: { $0.bic == bic })
+    }
+    
+    // Region
+    
+    func dictionaryRegion(for region: String) -> [OperatorGroupData.OperatorData] {
+        
+        guard let regionList = dictionaryAnywayOperators() else { return [] }
+        
+        let regions = regionList.filter{ $0.city == region }
+
+        return regions
     }
         
     //Countries
@@ -1676,6 +1716,55 @@ extension Model {
         }
     }
     
+    //QRMapping
+    func handleDictionaryQRMapping(_ serial: String?) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.QRController.GetPaymentsMapping(token: token, serial: serial)
+        serverAgent.executeCommand(command: command) { [unowned self] result in
+
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+
+                    guard let data = response.data else {
+                        self.handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.qrMapping.parameters.isEmpty == false,
+                          data.qrMapping.operators.isEmpty == false else {
+                        
+                        return
+                    }
+
+                    qrMapping.value = data.qrMapping
+
+                    do {
+
+                        try localAgent.store(data.qrMapping, serial: data.serial)
+
+                    } catch {
+
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+
+                default:
+                    handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
     //DownloadImages
     func handleDictionaryDownloadImages(payload: ModelAction.Dictionary.DownloadImages.Request) {
         
@@ -1730,6 +1819,20 @@ extension Model {
                 self.action.send(ModelAction.Dictionary.DownloadImages.Response(result: .failure(ModelDictionaryError.serverCommandError(error: error))))
             }
         }
+    }
+    
+    func dictionaryAnywayFirstOperator(with code: QRCode, mapping: QRMapping) -> OperatorGroupData.OperatorData? {
+
+        guard let inn = code.stringValue(type: .general(.inn), mapping: mapping) else { return nil }
+
+        return dictionaryAnywayOperators()?.first(where: { $0.synonymList.contains(inn) })
+    }
+    
+    func dictionaryAnywayOperators(with code: QRCode, mapping: QRMapping) -> [OperatorGroupData.OperatorData]? {
+
+        guard let inn = code.stringValue(type: .general(.inn), mapping: mapping) else { return nil }
+
+        return dictionaryAnywayOperators()?.filter( { $0.synonymList.contains(inn) })
     }
 }
 
