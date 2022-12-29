@@ -106,6 +106,10 @@ extension ConfirmView {
                         return
                     }
                     
+                    if textFieldToolbar.text.isEmpty == false {
+                        textFieldToolbar.text = ""
+                    }
+                    
                     timerViewModel = makeTimer(delay: TimeInterval(prepareData.otpResendTime))
                     
                 }.store(in: &bindings)

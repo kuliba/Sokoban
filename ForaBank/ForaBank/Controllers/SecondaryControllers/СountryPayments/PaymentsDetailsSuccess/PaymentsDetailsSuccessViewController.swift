@@ -39,7 +39,7 @@ class PaymentsDetailsSuccessViewController: UIViewController {
             vc.id = self?.confurmVCModel?.paymentOperationDetailId
             vc.printFormType = self?.printFormType
             let navVC = UINavigationController(rootViewController: vc)
-            navVC.modalPresentationStyle = .fullScreen
+            navVC.modalPresentationStyle = .automatic
             self?.present(navVC, animated: true, completion: nil)
         }
         

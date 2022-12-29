@@ -42,7 +42,7 @@ struct QRActionButtonsView: View {
 
 struct QRActionButtonsView_Previews: PreviewProvider {
     static var previews: some View {
-        QRActionButtonsView(viewModel: .init(buttons: [.init(icon: .init(image: .ic40SBP, style: .original, background: .circleSmall), title: .init(text: "Из документов", style: .bold), orientation: .horizontal, action: {})]))
+        QRActionButtonsView(viewModel: .init(buttons: [.init(icon: .init(image: .ic40Sbp, style: .original, background: .circleSmall), title: .init(text: "Из документов", style: .bold), orientation: .horizontal, action: {})]))
     }
 }
 

@@ -42,6 +42,6 @@ struct OptionsButtonsViewComponent: View {
 
 struct OptionsButtonsViewComponent_Previews: PreviewProvider {
     static var previews: some View {
-        OptionsButtonsViewComponent(viewModel: .init(buttons: [.init(icon: .init(image: .ic40SBP, style: .original, background: .circleSmall), title: .init(text: "С моего счета в другом банке", style: .bold), orientation: .horizontal, action: {})]))
+        OptionsButtonsViewComponent(viewModel: .init(buttons: [.init(icon: .init(image: .ic40Sbp, style: .original, background: .circleSmall), title: .init(text: "С моего счета в другом банке", style: .bold), orientation: .horizontal, action: {})]))
     }
 }

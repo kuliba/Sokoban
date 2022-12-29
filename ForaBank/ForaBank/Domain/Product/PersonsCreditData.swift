@@ -65,7 +65,7 @@ extension PersonsCreditData: Codable {
         number = try container.decodeIfPresent(String.self, forKey: .number)
         if let dateValue = try container.decodeIfPresent(Int.self, forKey: .datePayment) {
             
-            datePayment = Date(timeIntervalSince1970: TimeInterval(dateValue / 1000))
+            datePayment = Date.dateUTC(with: dateValue)
             
         } else {
             
@@ -88,7 +88,7 @@ extension PersonsCreditData: Codable {
         try container.encodeIfPresent(number, forKey: .number)
         if let datePayment = datePayment {
             
-            let dateValue = Int(datePayment.timeIntervalSince1970) * 1000
+            let dateValue = datePayment.secondsSince1970UTC
             try container.encode(dateValue, forKey: .datePayment)
         }
         try container.encodeIfPresent(amountCredit, forKey: .amountCredit)

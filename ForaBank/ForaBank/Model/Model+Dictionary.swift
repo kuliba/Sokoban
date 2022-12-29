@@ -62,7 +62,8 @@ extension ModelAction {
             .banks,
             .paymentSystemList,
             .fullBankInfoList,
-            .qrMapping
+            .qrMapping,
+            .prefferedBanks
         ]
     }
 }
@@ -142,8 +143,10 @@ extension Model {
             
         case .qrMapping:
             return localAgent.load(type: QRMapping.self) != nil
+            
+        case .prefferedBanks:
+            return localAgent.load(type: [PrefferedBanksList].self) != nil
         }
-        
     }
     
     func dictionaryCacheSerial(for dictionaryType: DictionaryType) -> String? {
@@ -217,6 +220,9 @@ extension Model {
             
         case .qrMapping:
             return localAgent.serial(for: QRMapping.self)
+            
+        case .prefferedBanks:
+            return localAgent.serial(for: [PrefferedBanksList].self)
         }
     }
     
@@ -288,9 +294,12 @@ extension Model {
         
         case .centralBanksRates:
             try? localAgent.clear(type: [CentralBankRatesData].self)
-            
+
         case .qrMapping:
             try? localAgent.clear(type: QRMapping.self)
+            
+        case .prefferedBanks:
+            try? localAgent.clear(type: [PrefferedBanksList].self)
         }
     }
 }
@@ -309,13 +318,9 @@ extension Model {
         return currencyList.value.first(where: { $0.code == code })
     }
     
-    func dictionaryCurrencySimbol(for code: String) -> String? {
+    func dictionaryCurrencySymbol(for code: String) -> String? {
         
-        guard let unicode = dictionaryCurrency(for: code)?.unicode
-        else { return nil }
-        
-        return unicode.replacingOccurrences(of: "\\", with: "")
-                      .applyingTransform(.init("Hex/Unicode-Any"), reverse: false)
+        dictionaryCurrency(for: code)?.currencySymbol
     }
     
     //MARK: BankList helper
@@ -325,12 +330,18 @@ extension Model {
         return bankList.value
     }
     
+    func isForaBank(bankId: BankData.ID) -> Bool {
+        
+        bankId == "100000000217"
+    }
+    
+    //MARK: Operators & OperatorGroups
+    
     static let dictionaryQRAnywayOperatorCodes = ["iFora||1031001",
                                                   "iFora||1051001",
                                                   "iFora||1051062",
                                                   "iFora||1331001"]
-    
-    //Operators&OperatorGroups
+
     func dictionaryAnywayOperatorGroups() -> [OperatorGroupData]? {
         
         return localAgent.load(type: [OperatorGroupData].self)
@@ -624,6 +635,58 @@ extension Model {
                     do {
                         
                         try self.localAgent.store(data.banksList, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    func handleDictionaryPrefferedBanks(_ serial: String?) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .prefferedBanks
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetPrefferdBanksList(token: token, serial: serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        
+                        handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.list.count > 0 else {
+                        return
+                    }
+                    
+                    self.prefferedBanksList.value = data.list
+                    
+                    do {
+                        
+                        try self.localAgent.store(data, serial: data.serial)
                         
                     } catch {
                         
@@ -1710,7 +1773,10 @@ extension Model {
             return
         }
         
-        let command = ServerCommands.DictionaryController.GetSvgImageList(token: token, payload: .init(md5HashList: payload.imagesIds))
+        let command = ServerCommands.DictionaryController
+                        .GetSvgImageList(token: token,
+                                         payload: .init(md5HashList: payload.imagesIds))
+        
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {

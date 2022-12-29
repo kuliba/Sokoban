@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Period: Codable {
+struct Period: Codable, Equatable {
 
     let start: Date
     let end: Date

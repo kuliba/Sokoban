@@ -6171,7 +6171,7 @@
             "fastPayment" : null,
             "merchantNameRus" : "Зачисление суммы на счет",
             "comment" : "Перечисление денежных средств на счет, открытый по договору № 05055_224RUB5200\/22  от 25\/05\/2022",
-            "operationId" : null,
+            "operationId" : "10516590724",
             "svgImage" : "<svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http:\/\/www.w3.org\/2000\/svg\">\n<path d=\"M0 20C0 8.95431 8.95431 0 20 0C31.0457 0 40 8.95431 40 20C40 31.0457 31.0457 40 20 40C8.95431 40 0 31.0457 0 20Z\" fill=\"#FF9D9D\"\/>\n<line x1=\"13.625\" y1=\"31.375\" x2=\"26.375\" y2=\"31.375\" stroke=\"white\" stroke-width=\"1.25\" stroke-linecap=\"round\"\/>\n<path d=\"M20 13V27M20 27L27 20.0001M20 27L13 20.0001\" stroke=\"white\" stroke-width=\"1.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\/>\n<\/svg>"
         },
         {
@@ -6200,7 +6200,7 @@
             "fastPayment" : null,
             "merchantNameRus" : "Открытие счета вклада",
             "comment" : "Открытие депозита",
-            "operationId" : null,
+            "operationId" : "10516590724",
             "svgImage" : "<svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http:\/\/www.w3.org\/2000\/svg\">\n<rect width=\"40\" height=\"40\" rx=\"20\" fill=\"#FF9D9D\"\/>\n<path d=\"M21.1366 26C13.5667 26 12.4227 26 12.4227 26C12.0454 26 11.6835 25.849 11.4167 25.5803C11.1499 25.3116 11 24.9472 11 24.5672V15.4328C11 15.0528 11.1499 14.6884 11.4167 14.4197C11.6835 14.151 12.0454 14 12.4227 14H26.8273C27.2046 14 27.5665 14.151 27.8333 14.4197C28.1001 14.6884 28.25 15.0528 28.25 15.4328V18.6132\" stroke=\"white\" stroke-width=\"1.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\/>\n<path d=\"M28.25 28.25L28.25 23.75\" stroke=\"white\" stroke-width=\"1.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\/>\n<path d=\"M30.5 26H26\" stroke=\"white\" stroke-width=\"1.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\/>\n<\/svg>"
         }
     ],

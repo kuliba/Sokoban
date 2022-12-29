@@ -88,7 +88,6 @@ struct MyProductsMoneyView: View {
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 12)
-        .background(Color.barsTabbar)
         .onAppear {
             viewModel.action.send(MyProductsMoneyViewModelAction.ViewDidApear())
         }
@@ -140,9 +139,9 @@ extension MyProductsMoneyView {
                             .foregroundColor(.mainColorsWhite)
                             .shadow(color: .mainColorsGrayMedium, radius: 3, x: 0, y: 3)
                     
-                        ScrollView(showsIndicators: false) {
+                        ScrollView(showsIndicators: true) {
                             
-                            VStack(alignment: .leading, spacing: 16) {
+                            VStack(alignment: .leading, spacing: 2) {
                     
                                 ForEach(currencyItemsVM) { item in
                         
@@ -161,29 +160,36 @@ extension MyProductsMoneyView {
                                 
                                             VStack(alignment: .leading, spacing: 1) {
                                                 
-                                                Text(item.name)
+                                                HStack {
+                                                
+                                                    Text(item.name)
                                                     .font(.textBodyMM14200())
+                                                    
+                                                    Spacer()
+                                                    
+                                                    if item.isSelected { Image.ic16Check }
+                                                }
                                 
                                                 Text(item.rateFormatted)
                                                     .foregroundColor(.textPlaceholder)
                                                     .font(.textBodySR12160())
                                                 
                                             }.padding(.top, 4)
-                                            
-                                            Spacer()
-                                            
-                                            if item.isSelected { Image.ic16Check }
                                         }
                                     }.foregroundColor(.mainColorsBlack)
                                     .frame(height: 36)
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 11)
                         
                                 } //ForEach
                             }
                             
-                        }.padding(11) //Scroll
+                        } //Scroll
                     }
-                    .frame(width: 240, height: 270)
-                    .offset(x: -100, y: 153)
+                    .frame(width: 240,
+                           height: currencyItemsVM.count < 6 ? CGFloat(currencyItemsVM.count * 54) : 296)
+                    .offset(x: -100,
+                            y: currencyItemsVM.count < 6 ? (CGFloat(currencyItemsVM.count * 54 / 2) + 18 ) : 166 )
                     
                 }
             }

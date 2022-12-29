@@ -46,7 +46,7 @@ class QRFailedViewModel: ObservableObject {
                             titleButton: .init(icon: Image.ic16ChevronDown, action: {
                                 self?.model.action.send(QRSearchOperatorViewModelAction.OpenCityView())
                             }),
-                            leftButtons: [NavigationBarView.ViewModel.BackButtonViewModel(icon: Image.ic24ChevronLeft,
+                            leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: Image.ic24ChevronLeft,
                                                                                           action: { [weak self] in
                                                                                               self?.link = nil})]),
                                                model: Model.shared))

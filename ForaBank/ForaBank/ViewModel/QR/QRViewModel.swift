@@ -196,7 +196,7 @@ class QRViewModel: ObservableObject {
 
 extension QRViewModel {
     
-    struct BottomSheet: Identifiable {
+    struct BottomSheet: BottomSheetCustomizable {
         
         let id = UUID()
         let sheetType: SheetType

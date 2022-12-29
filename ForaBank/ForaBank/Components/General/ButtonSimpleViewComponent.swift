@@ -25,13 +25,6 @@ extension ButtonSimpleView {
             self.style = style
         }
         
-        internal init(buttonModel: PaymentsOperationViewModel.ContinueButtonViewModel) {
-
-            self.title = buttonModel.title
-            self.action = buttonModel.action
-            self.style = buttonModel.isEnabled ? .red : .inactive
-        }
-        
         enum ButtonStyle {
             
             case red

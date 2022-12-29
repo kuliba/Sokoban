@@ -137,6 +137,7 @@ struct OperationDetailData: Codable, Equatable {
         case conversionAccountToAccount = "CONVERSION_ACCOUNT_2_ACCOUNT"
         case conversionAccountToPhone = "CONVERSION_ACCOUNT_2_PHONE"
         case depositClose = "DEPOSIT_CLOSE"
+        case accountClose = "ACCOUNT_CLOSE"
         case taxAndStateService = "TAX_AND_STATE_SERVICE"
         case ctbQrData = "C2B_QR_DATA"
         case ctbPayment = "C2B_PAYMENT"

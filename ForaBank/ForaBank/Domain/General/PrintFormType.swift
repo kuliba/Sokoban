@@ -21,5 +21,6 @@ enum PrintFormType: String, Codable, Unknownable {
     case housingAndCommunalService
     case c2b
     case closeDeposit
+    case closeAccount
     case unknown
 }

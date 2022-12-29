@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct ProductStatementData: Codable, Equatable, Hashable, Identifiable {
+struct ProductStatementData: Identifiable, Equatable, Hashable {
     
-    var id: Int { hashValue }
+    var id: String { operationId }
     let mcc: Int?
     let accountId: Int?
     let accountNumber: String
@@ -30,13 +30,43 @@ struct ProductStatementData: Codable, Equatable, Hashable, Identifiable {
     let merchantName: String?
     let merchantNameRus: String?
     let opCode: Int?
-    let operationId: String?
+    let operationId: String
     let operationType: OperationType
     let paymentDetailType: Kind
     let svgImage: SVGImageData?
     let terminalCode: String?
     let tranDate: Date?
     let type: OperationEnvironment
+    
+    init(mcc: Int?, accountId: Int?, accountNumber: String, amount: Double, cardTranNumber: String?, city: String?, comment: String, country: String?, currencyCodeNumeric: Int, date: Date, deviceCode: String?, documentAmount: Double?, documentId: Int?, fastPayment: ProductStatementData.FastPayment?, groupName: String, isCancellation: Bool?, md5hash: String, merchantName: String?, merchantNameRus: String?, opCode: Int?, operationId: String, operationType: OperationType, paymentDetailType: ProductStatementData.Kind, svgImage: SVGImageData?, terminalCode: String?, tranDate: Date?, type: OperationEnvironment) {
+        self.mcc = mcc
+        self.accountId = accountId
+        self.accountNumber = accountNumber
+        self.amount = amount
+        self.cardTranNumber = cardTranNumber
+        self.city = city
+        self.comment = comment
+        self.country = country
+        self.currencyCodeNumeric = currencyCodeNumeric
+        self.date = date
+        self.deviceCode = deviceCode
+        self.documentAmount = documentAmount
+        self.documentId = documentId
+        self.fastPayment = fastPayment
+        self.groupName = groupName
+        self.isCancellation = isCancellation
+        self.md5hash = md5hash
+        self.merchantName = merchantName
+        self.merchantNameRus = merchantNameRus
+        self.opCode = opCode
+        self.operationId = operationId
+        self.operationType = operationType
+        self.paymentDetailType = paymentDetailType
+        self.svgImage = svgImage
+        self.terminalCode = terminalCode
+        self.tranDate = tranDate
+        self.type = type
+    }
 }
 
 extension ProductStatementData {
@@ -80,7 +110,9 @@ extension ProductStatementData {
     }
 }
 
-extension ProductStatementData {
+//MARK: - Codable
+
+extension ProductStatementData: Codable {
     
     private enum CodingKeys: String, CodingKey {
         
@@ -114,7 +146,7 @@ extension ProductStatementData {
         self.country = try container.decodeIfPresent(String.self, forKey: .country)
         self.currencyCodeNumeric = try container.decode(Int.self, forKey: .currencyCodeNumeric)
         let dateValue = try container.decode(Int.self, forKey: .date)
-        self.date = Date(timeIntervalSince1970: TimeInterval(dateValue / 1000))
+        self.date = Date.dateUTC(with: dateValue)
         self.deviceCode = try container.decodeIfPresent(String.self, forKey: .deviceCode)
         self.documentAmount = try container.decodeIfPresent(Double.self, forKey: .documentAmount)
         self.documentId = try container.decodeIfPresent(Int.self, forKey: .documentId)
@@ -124,12 +156,12 @@ extension ProductStatementData {
         self.merchantName = try container.decodeIfPresent(String.self, forKey: .merchantName)
         self.merchantNameRus = try container.decodeIfPresent(String.self, forKey: .merchantNameRus)
         self.opCode = try container.decodeIfPresent(Int.self, forKey: .opCode)
-        self.operationId = try container.decodeIfPresent(String.self, forKey: .operationId)
+        self.operationId = try container.decode(String.self, forKey: .operationId)
         self.terminalCode = try container.decodeIfPresent(String.self, forKey: .terminalCode)
         
         if let tranDateValue = try container.decodeIfPresent(Int.self, forKey: .tranDate) {
             
-            self.tranDate = Date(timeIntervalSince1970: TimeInterval(tranDateValue / 1000))
+            self.tranDate = Date.dateUTC(with: tranDateValue)
             
         } else {
             
@@ -144,7 +176,7 @@ extension ProductStatementData {
     }
     
     func encode(to encoder: Encoder) throws {
-
+        
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(mcc, forKey: .mcc)
         try container.encode(accountId, forKey: .accountId)
@@ -156,7 +188,7 @@ extension ProductStatementData {
         try container.encode(country, forKey: .country)
         try container.encodeIfPresent(country, forKey: .country)
         try container.encode(currencyCodeNumeric, forKey: .currencyCodeNumeric)
-        try container.encode(Int(date.timeIntervalSince1970) * 1000, forKey: .date)
+        try container.encode(date.secondsSince1970UTC, forKey: .date)
         try container.encodeIfPresent(deviceCode, forKey: .deviceCode)
         try container.encodeIfPresent(documentAmount, forKey: .documentAmount)
         try container.encodeIfPresent(documentId, forKey: .documentId)
@@ -167,7 +199,7 @@ extension ProductStatementData {
         try container.encodeIfPresent(merchantName, forKey: .merchantName)
         try container.encodeIfPresent(merchantNameRus, forKey: .merchantNameRus)
         try container.encodeIfPresent(opCode, forKey: .opCode)
-        try container.encodeIfPresent(operationId, forKey: .operationId)
+        try container.encode(operationId, forKey: .operationId)
         try container.encode(operationType, forKey: .operationType)
         try container.encode(paymentDetailType, forKey: .paymentDetailType)
         try container.encodeIfPresent(svgImage, forKey: .svgImage)
@@ -175,7 +207,7 @@ extension ProductStatementData {
         
         if let tranDate = tranDate {
             
-            try container.encode(Int(tranDate.timeIntervalSince1970) * 1000, forKey: .tranDate)
+            try container.encode(tranDate.secondsSince1970UTC, forKey: .tranDate)
         }
         
         try container.encode(type, forKey: .type)

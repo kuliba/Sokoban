@@ -20,7 +20,7 @@ extension OptionSelectorView {
         @Published var selected: Option.ID
         let style: Style
         let mode: Mode
-     
+
         internal init(options: [Option], selected: Option.ID, style: Style, mode: Mode = .auto) {
            
             self.options = []

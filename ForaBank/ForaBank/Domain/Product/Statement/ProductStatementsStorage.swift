@@ -43,26 +43,16 @@ extension ProductStatementsStorage {
     
     func updated(with update: Update, historyLimitDate: Date?) -> ProductStatementsStorage {
         
+        // period
         let updatedPeriod = period.including(update.period)
-        let updateStatementsUnique = Set(update.statements)
-        if let earlestUpdateDate = update.statements.map({ $0.date }).min() {
             
-            var statementsUpdated = statements
-            
-            if update.override == true {
+        // statements
+        let updateStatementsIds = update.statements.map({ $0.id })
+        var statementsUpdated = statements.filter({ updateStatementsIds.contains($0.id) == false })
+        statementsUpdated.append(contentsOf: update.statements)
+        let statementsSorted = statementsUpdated.sorted(by: { $0.dateValue < $1.dateValue })
 
-                statementsUpdated = statements.filter({ $0.date < earlestUpdateDate })
-            }
-
-            statementsUpdated.append(contentsOf: updateStatementsUnique)
-            let statementsSorted = statementsUpdated.sorted(by: { $0.date < $1.date })
-            
-            return ProductStatementsStorage(period: updatedPeriod, statements: statementsSorted, historyLimitDate: historyLimitDate)
-            
-        } else {
-            
-            return ProductStatementsStorage(period: updatedPeriod, statements: statements, historyLimitDate: historyLimitDate)
-        }
+        return ProductStatementsStorage(period: updatedPeriod, statements: statementsSorted, historyLimitDate: historyLimitDate)
     }
     
     func latestPeriod(days: Int, limitDate: Date) -> Period? {
@@ -89,18 +79,6 @@ extension ProductStatementsStorage {
         return Period(start: startDate, end: endDate)
     }
     
-    func latestPeriod(days: Int, limitDate: Date, offset: Int) -> Period? {
-        
-        guard let latestPeriod = latestPeriod(days: days, limitDate: limitDate) else {
-            return nil
-        }
-        
-        let startDate = latestPeriod.end.advanced(by: -TimeInterval.value(days: offset))
-        let endDate = latestPeriod.end
-        
-        return Period(start: startDate, end: endDate)
-    }
-    
     static func historyLimitDate(for product: ProductData) -> Date? {
         
         product.openDate ?? Self.bankOpenDate
@@ -112,22 +90,6 @@ extension ProductStatementsStorage {
         return Calendar.current.date(from: components)
         
     }()
-    
-    static func reduce(isHistoryComplete: Bool, update: Update) -> Bool {
-        
-        if update.direction == .eldest {
-            
-            guard update.period.start <= update.limitDate else {
-                return false
-            }
-            
-            return true
-            
-        } else {
-            
-            return isHistoryComplete
-        }
-    }
 }
 
 //MARK: - Types
@@ -139,7 +101,6 @@ extension ProductStatementsStorage {
         let period: Period
         let direction: Period.Direction
         let limitDate: Date
-        var override: Bool = false
         
         var debugDescription: String {
             
@@ -153,6 +114,5 @@ extension ProductStatementsStorage {
         let statements: [ProductStatementData]
         let direction: Period.Direction
         let limitDate: Date
-        let override: Bool
     }
 }

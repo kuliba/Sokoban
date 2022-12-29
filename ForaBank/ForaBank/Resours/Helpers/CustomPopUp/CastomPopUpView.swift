@@ -234,9 +234,9 @@ class MemeDetailVC: UIViewController {
             self.viewModel.cardFromRealm = card
             
         } else {
-            
-            self.cardFromField.model = products.first
-            self.viewModel.cardFromRealm = products.first
+
+            self.cardFromField.model = products.filter({$0.ownerID == Model.shared.clientInfo.value?.id}).first
+            self.viewModel.cardFromRealm = products.filter({$0.ownerID == Model.shared.clientInfo.value?.id}).first
         }
     }
     

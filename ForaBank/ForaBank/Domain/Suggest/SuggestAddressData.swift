@@ -18,6 +18,7 @@ extension SuggestAddressData {
     
     struct AddressItem: Codable, Equatable {
         
+        let address: String?
         let area: String?
         let areaFiasId: String?
         let areaKladrId: String?
@@ -33,9 +34,9 @@ extension SuggestAddressData {
         let city: String?
         let cityArea: String?
         let cityDistrict: String?
-        let cityDistrictFiasId: String
-        let cityDistrictKladrId: String
-        let cityDistrictType: String
+        let cityDistrictFiasId: String?
+        let cityDistrictKladrId: String?
+        let cityDistrictType: String?
         let cityDistrictTypeFull: String?
         let cityDistrictWithType: String?
         let cityFiasId: String?

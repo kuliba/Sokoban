@@ -293,7 +293,6 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
         dateFormatter.dateStyle = DateFormatter.Style.long //Set date style
         
         dateFormatter.dateFormat =  "d MMMM, E"
-        dateFormatter.timeZone = .current
         dateFormatter.locale = Locale(identifier: "ru_RU")
         let localDate = dateFormatter.string(from: date)
         
@@ -339,7 +338,6 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
             dateFormatter.dateStyle = DateFormatter.Style.long
             
             dateFormatter.dateFormat = "LLLL"
-            dateFormatter.timeZone = .current
             dateFormatter.locale = Locale(identifier: "ru_RU")
             let localDate = dateFormatter.string(from: date)
         

@@ -27,7 +27,7 @@ class PaymentByPhoneViewModel {
         if phoneNumber.count == 10 {
             phoneNumberFixed = "+7" + phoneNumber
         }
-        let phoneFormatter = PhoneNumberFormater()
+        let phoneFormatter = PhoneNumberKitFormater()
         let formattedPhone = phoneFormatter.format(phoneNumberFixed)
         return formattedPhone
     }

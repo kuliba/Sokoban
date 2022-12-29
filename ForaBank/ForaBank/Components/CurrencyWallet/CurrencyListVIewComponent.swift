@@ -113,7 +113,7 @@ extension CurrencyListView {
                 }.store(in: &bindings)
         }
         
-        struct BottomSheet: Identifiable {
+        struct BottomSheet: BottomSheetCustomizable {
 
             let id = UUID()
             let sheetType: BottomSheetType
@@ -140,12 +140,16 @@ extension CurrencyListView.ViewModel {
         let currency: Currency
         let rateBuy: String
         let rateSell: String
+        let rateBuyItem: Double
+        let rateSellItem: Double
         let iconId: String
 
         init(icon: Image?,
              currency: Currency,
              rateBuy: String,
              rateSell: String,
+             rateBuyItem: Double,
+             rateSellItem: Double,
              iconId: String = "",
              isSelected: Bool = false) {
 
@@ -153,6 +157,8 @@ extension CurrencyListView.ViewModel {
             self.currency = currency
             self.rateBuy = rateBuy
             self.rateSell = rateSell
+            self.rateBuyItem = rateBuyItem
+            self.rateSellItem = rateSellItem
             self.iconId = iconId
             self.isSelected = isSelected
         }
@@ -314,8 +320,10 @@ extension CurrencyListView.ViewModel {
             return .init(
                 icon: icon?.image,
                 currency: Currency(description: item.code),
-                rateBuy: NumberFormatter.decimal(item.rateSell),
-                rateSell: NumberFormatter.decimal(item.rateBuy),
+                rateBuy: NumberFormatter.decimal(item.rateSell * Double(item.currAmount)),
+                rateSell: NumberFormatter.decimal(item.rateBuy * Double(item.currAmount)),
+                rateBuyItem: item.rateSell,
+                rateSellItem: item.rateBuy,
                 iconId: item.md5hash,
                 isSelected: currency.description == item.code)
         }
@@ -332,6 +340,8 @@ extension CurrencyListView.ViewModel {
                 currency: Currency(description: item.code),
                 rateBuy: NumberFormatter.decimal(item.rateSell),
                 rateSell: NumberFormatter.decimal(item.rateBuy),
+                rateBuyItem: item.rateSell,
+                rateSellItem: item.rateBuy,
                 iconId: item.md5hash,
                 isSelected: currency.description == item.code)
         }

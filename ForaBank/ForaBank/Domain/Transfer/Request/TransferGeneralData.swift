@@ -62,11 +62,11 @@ extension TransferGeneralData {
     
     struct PayeeExternal: Codable, Equatable {
         
-        let inn: String
+        let inn: String?
         let kpp: String?
         let accountId: Int?
         let accountNumber: String
-        let bankBIC: String
+        let bankBIC: String?
         let cardId: Int?
         let cardNumber: String?
         let compilerStatus: String?

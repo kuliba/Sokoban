@@ -39,7 +39,7 @@ struct MobilePayView: UIViewControllerRepresentable {
 
                 if let number = phoneNumber.first?.fieldValue {
                     
-                    let phoneFormatter = PhoneNumberFormater()
+                    let phoneFormatter = PhoneNumberKitFormater()
                     let formattedPhone = phoneFormatter.format(number)
                     controller.phoneField.text = formattedPhone
                     controller.selectNumber = formattedPhone

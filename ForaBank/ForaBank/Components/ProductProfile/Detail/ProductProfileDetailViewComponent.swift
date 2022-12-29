@@ -273,15 +273,13 @@ struct ProductProfileDetailView: View {
     
     var body: some View {
         
-        if #available(iOS 14, *) {
+        ZStack {
             
-            ZStack {
-                
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundColor(.mainColorsBlack)
-                    .zIndex(0)
-                
-                VStack(spacing: 0) {
+            RoundedRectangle(cornerRadius: 12)
+                .foregroundColor(.mainColorsBlack)
+                .zIndex(0)
+            
+            VStack(spacing: 0) {
                 
                 ProductProfileDetailView.HeaderView(viewModel: viewModel.header)
                 
@@ -318,48 +316,18 @@ struct ProductProfileDetailView: View {
                         .frame(height: 0.05)
                 }
             }
-                .padding(.horizontal, 20)
-                .padding(.top, 16)
-                .padding(.bottom, 18)
-                .zIndex(1)
-                
-                
-                if viewModel.isUpdating == true {
-                    
-                    Color.mainColorsBlackMedium
-                        .shimmering()
-                        .blendMode(.colorDodge)
-                        .zIndex(2)
-                }
-            }
-            
-        } else {
-            
-            VStack {
-                
-                if viewModel.isCollapsed == true {
-                    
-                    ProductProfileDetailView.HeaderView(viewModel: viewModel.header)
-                    ProductProfileDetailView.InfoView(viewModel: viewModel.info, isCollapsed: $viewModel.isCollapsed)
-                    
-                } else {
-                    
-                    ProductProfileDetailView.HeaderView(viewModel: viewModel.header)
-                    ProductProfileDetailView.InfoView(viewModel: viewModel.info, isCollapsed: $viewModel.isCollapsed)
-                    
-                    ProductProfileDetailView.MainBlockView(viewModel: viewModel.mainBlock)
-                        .frame(height: 112)
-                    
-                    if let footerViewModel = viewModel.footer {
-                        
-                        ProductProfileDetailView.FooterView(viewModel: footerViewModel)
-                    }
-                }
-            }
             .padding(.horizontal, 20)
             .padding(.top, 16)
             .padding(.bottom, 18)
-            .background(RoundedRectangle(cornerRadius: 12).foregroundColor(.mainColorsBlack))
+            .zIndex(1)
+            
+            if viewModel.isUpdating == true {
+                
+                Color.mainColorsBlackMedium
+                    .shimmering()
+                    .blendMode(.colorDodge)
+                    .zIndex(2)
+            }
         }
     }
 }

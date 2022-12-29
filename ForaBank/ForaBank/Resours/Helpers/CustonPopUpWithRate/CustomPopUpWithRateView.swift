@@ -14,7 +14,7 @@ class CustomPopUpWithRateView: UIViewController {
     private var bindings = Set<AnyCancellable>()
     let model: Model = .shared
     
-    var titleLabel = UILabel(text: "Между счетами", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
+    var titleLabel = UILabel(text: "Между своими", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
     
     var onlyMy = true
     var cardTo: UserAllCardsModel?
@@ -22,6 +22,7 @@ class CustomPopUpWithRateView: UIViewController {
     var withProducts: Bool = true
     var paymentTemplate: PaymentTemplateData? = nil
     var depositClose: Bool = false
+    var meToMeViewModelType: InfoViewController.DepositType? = nil
     var sumMax: Double?
     
     var trasfer = ("", "") {
@@ -258,15 +259,7 @@ class CustomPopUpWithRateView: UIViewController {
     
     @objc func buttonAction(sender: UIButton!) {
         
-        var title: String?
-        
-        if let sumMax = sumMax {
-            
-            title = "Вы можете снять полную или частичную сумму выплаченных процентов, но не более \(sumMax.currencyFormatter())"
-        }
-
-        let vc = InfoViewController()
-        vc.infoTitle = title
+        let vc = InfoViewController(depositType: .fullWithAmount("Вы можете снять полную или частичную сумму выплаченных процентов, но не более \(sumMax?.currencyFormatter() ?? "")"))
         
         let nav = UINavigationController(rootViewController: vc)
         nav.modalPresentationStyle = .custom
@@ -277,13 +270,22 @@ class CustomPopUpWithRateView: UIViewController {
     
     @objc func buttonActionTotal(sender: UIButton) {
         
-        let vc = InfoViewController()
-        vc.infoTitle = "Вы можете снять полную сумму вклада и выплаченных процентов"
-        
-        let nav = UINavigationController(rootViewController: vc)
-        nav.modalPresentationStyle = .custom
-        nav.transitioningDelegate = self
-        self.present(nav, animated: true, completion: nil)
+        switch meToMeViewModelType {
+            
+        case .beforeClosing:
+            let vc = InfoViewController(depositType: .beforeClosing)
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .custom
+            nav.transitioningDelegate = self
+            self.present(nav, animated: true, completion: nil)
+            
+        default:
+            let vc = InfoViewController(depositType: .full)
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .custom
+            nav.transitioningDelegate = self
+            self.present(nav, animated: true, completion: nil)
+        }
     }
     
     init(paymentTemplate: PaymentTemplateData) {

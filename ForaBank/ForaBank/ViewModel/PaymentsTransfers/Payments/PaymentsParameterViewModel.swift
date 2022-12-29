@@ -6,24 +6,32 @@
 //
 
 import Foundation
+import Combine
 
-class PaymentsParameterViewModel: Identifiable, ObservableObject {
+class PaymentsParameterViewModel: Identifiable {
+    
+    let action: PassthroughSubject<Action, Never> = .init()
+    
+    let id: String
     
     @Published var value: Value
+    @Published var isEditable: Bool
     
     var isValid: Bool { true }
-    var isEditable: Bool { source.editable }
-    var isCollapsable: Bool { source.collapsable }
+    var isFullContent: Bool { false }
     
-    var id: Payments.Parameter.ID { source.parameter.id }
-    var result: Payments.Parameter { .init(id: id, value: value.current)}
+    var result: Payments.Parameter { .init(id: source.id, value: value.current) }
+    var parameterValue: ((Payments.Parameter.ID) -> Payments.Parameter.Value)?
     
-    internal let source: ParameterRepresentable
+    private(set) var source: PaymentsParameterRepresentable
+    internal var bindings = Set<AnyCancellable>()
     
-    init(source: ParameterRepresentable) {
+    init(source: PaymentsParameterRepresentable) {
         
+        self.id = UUID().uuidString
         self.value = .init(with: source)
         self.source = source
+        self.isEditable = source.isEditable
     }
     
     func update(value: String?) {
@@ -31,31 +39,79 @@ class PaymentsParameterViewModel: Identifiable, ObservableObject {
         self.value = self.value.updated(with: value)
     }
     
+    func update(source: PaymentsParameterRepresentable) {
+        
+        self.source = source
+        update(value: source.value)
+        self.isEditable = source.isEditable
+    }
+    
+    func updateEditable(update: EditableUpdate) {
+        
+        switch update {
+        case let .value(value):
+            isEditable = value
+            
+        case .source:
+            isEditable = source.isEditable
+        }
+    }
+}
+
+//MARK: - Types
+
+extension PaymentsParameterViewModel {
+    
     struct Value {
  
         let id: Payments.Parameter.ID
-        let original: String?
+        let last: String?
         let current: String?
         
-        var isChanged: Bool { original != current }
+        var isChanged: Bool { last != current }
         
-        internal init(id: Payments.Parameter.ID, original: String?, current: String?) {
+        internal init(id: Payments.Parameter.ID, last: String?, current: String?) {
             
             self.id = id
-            self.original = original
+            self.last = last
             self.current = current
         }
         
-        init(with representable: ParameterRepresentable) {
+        init(with representable: PaymentsParameterRepresentable) {
             
             self.id = representable.parameter.id
-            self.original = representable.parameter.value
+            self.last = representable.parameter.value
             self.current = representable.parameter.value
         }
         
         func updated(with value: String?) -> Value {
             
-            .init(id: id, original: original, current: value)
+            .init(id: id, last: current, current: value)
         }
     }
+    
+    enum EditableUpdate {
+        
+        /// set concrete value
+        case value(Bool)
+        
+        /// set data from source parameter
+        case source
+    }
+}
+
+//MARK: - Action
+
+enum PaymentsParameterViewModelAction {}
+
+//MARK: - Protocols
+
+protocol PaymentsParameterViewModelContinuable {
+    
+    func update(isContinueEnabled: Bool)
+}
+
+protocol PaymentsParameterViewModelWarnable {
+    
+    func update(warning: String)
 }

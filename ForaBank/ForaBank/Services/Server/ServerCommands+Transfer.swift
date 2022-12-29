@@ -306,12 +306,6 @@ extension ServerCommands {
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: VerificationCodeData?
-                
-                struct VerificationCodeData: Codable, Equatable {
-                    
-                    let otp: String?
-                    let resendOTPCount: Int
-                }
             }
             
             internal init(token: String) {

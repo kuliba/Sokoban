@@ -160,15 +160,13 @@ private extension TemplatesListViewModel {
                         }))
 
                     case .direct:
-                        let operatorsViewModel = OperatorsViewModel(closeAction: {  [weak self] in
-                            self?.action.send(TemplatesListViewModelAction.CloseAction())
-                        }, mode: .general)
+                        let operatorsViewModel = OperatorsViewModel(mode: .template(temp), closeAction: {  [weak self] in
+                            self?.action.send(TemplatesListViewModelAction.CloseAction()) }, requisitsViewAction: {})
                         link = .direct(CountryPaymentView.ViewModel(operatorsViewModel: operatorsViewModel))
-
+                        
                     case .contactAdressless:
-                        let operatorsViewModel = OperatorsViewModel(closeAction: {  [weak self] in
-                            self?.action.send(TemplatesListViewModelAction.CloseAction())
-                        }, mode: .general)
+                        let operatorsViewModel = OperatorsViewModel(mode: .template(temp), closeAction: {  [weak self] in
+                            self?.action.send(TemplatesListViewModelAction.CloseAction()) }, requisitsViewAction: {})
                         link = .contactAdressless(CountryPaymentView.ViewModel(operatorsViewModel: operatorsViewModel))
                         
                     case .housingAndCommunalService:
@@ -358,7 +356,7 @@ extension TemplatesListViewModel {
         static let initial = Settings(style: .list)
     }
     
-    struct Sheet: Identifiable {
+    struct Sheet: BottomSheetCustomizable {
         
         let id = UUID()
         let type: Kind

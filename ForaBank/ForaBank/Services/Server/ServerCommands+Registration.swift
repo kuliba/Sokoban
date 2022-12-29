@@ -90,14 +90,12 @@ extension ServerCommands {
             let method: ServerCommandMethod = .post
             
             struct Payload: Encodable {}
-            
-            
+
             struct Response: ServerResponse {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                //FIXME: data must be optional
-                let data: EmptyData
+                let data: EmptyData?
             }
             
             internal init(token: String) {
@@ -137,8 +135,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                //FIXME: data must be optional
-                let data: EmptyData
+                let data: EmptyData?
             }
             
             internal init(token: String, payload: Payload) {

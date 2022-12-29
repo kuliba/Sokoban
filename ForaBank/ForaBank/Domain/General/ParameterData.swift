@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ParameterData: Codable, Equatable {
+struct ParameterData: Codable, Equatable, Identifiable {
     
     let content: String?
     let dataType: String?
@@ -39,6 +39,16 @@ struct ParameterData: Codable, Equatable {
 extension ParameterData {
     
     var value: String? { content }
+    
+    var view: Payments.Parameter.View {
+        
+        switch type.lowercased() {
+        case "select": return .select
+        case "masklist": return .selectSwitch
+        case "input", "string", "int": return .input
+        default: return .info
+        }
+    }
     
     //"=,inn_oktmo=ИНН и ОКТМО подразделения,number=Номер подразделения"
     var options: [Option]? {
@@ -72,6 +82,12 @@ extension ParameterData {
         return options
     }
     
+    var switchOptions: [Payments.ParameterSelectSwitch.Option]? {
+        
+        //TODO: implementation required
+        return nil
+    }
+    
     var iconData: ImageData? {
         
         guard let svgImage = svgImage else {
@@ -79,6 +95,33 @@ extension ParameterData {
         }
         
         return ImageData(with: svgImage)
+    }
+}
+
+//MARK: - Validator
+
+extension ParameterData {
+    
+    var validator: Payments.Validation.RulesSystem {
+        
+        var rules = [Payments.Validation.Rule]()
+        
+        if let minLength = minLength {
+            
+            rules.append(Payments.Validation.MinLengthRule(minLenght: UInt(minLength), actions: [.post: .warning("Минимальная длинна должна быть \(minLength) символов.")]))
+        }
+        
+        if let maxLength = maxLength {
+            
+            rules.append(Payments.Validation.MaxLengthRule(maxLenght: UInt(maxLength), actions: [.post: .warning("Максимальная длинна должна не превышать \(maxLength) символов.")]))
+        }
+        
+        if let regExp = regExp {
+            
+            rules.append(Payments.Validation.RegExpRule(regExp: regExp, actions: [.post: .warning("Введено некорректное значение")]))
+        }
+        
+        return .init(rules: rules)
     }
 }
 

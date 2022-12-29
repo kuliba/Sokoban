@@ -50,10 +50,6 @@ class SessionAgent: SessionAgentProtocol {
                     timerStart()
                     
                     switch sessionState.value {
-                    case .inactive:
-                        LoggerAgent.shared.log(category: .session, message: "sent SessionAgentAction.Session.Start.Request")
-                        self.action.send(SessionAgentAction.Session.Start.Request())
-                        
                     case .active:
                         DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(100)) {
                             
@@ -62,7 +58,8 @@ class SessionAgent: SessionAgentProtocol {
                         }
 
                     default:
-                        break
+                        LoggerAgent.shared.log(category: .session, message: "sent SessionAgentAction.Session.Start.Request")
+                        self.action.send(SessionAgentAction.Session.Start.Request())
                     }
                     
                 case _ as SessionAgentAction.App.Inactivated:

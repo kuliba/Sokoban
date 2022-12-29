@@ -176,13 +176,13 @@ extension ServerCommands {
         struct GetLatestPhonePayments: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/getLatestPhonePayments"
+            let endpoint = "/rest/getLatestPhonePaymentsWithDefaultBank"
             let method: ServerCommandMethod = .post
             let payload: Payload?
             
             struct Payload: Encodable {
                 
-                let phoneNumber: String?
+                let phoneNumber: String
             }
             
             struct Response: ServerResponse {
@@ -326,6 +326,36 @@ extension ServerCommands {
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: [PaymentCountryData]?
+            }
+            
+            internal init(token: String, payload: Payload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+        }
+        
+        /*
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getBicAccountCheck
+         */
+        struct GetBicAccountCheck: ServerCommand {
+            
+            let token: String
+            let endpoint = "/rest/v1/getBicAccountCheck"
+            let method: ServerCommandMethod = .post
+            let payload: Payload?
+            
+            struct Payload: Encodable {
+                
+                let bic: String
+                let account: String
+            }
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: BicAccountCheck?
             }
             
             internal init(token: String, payload: Payload) {

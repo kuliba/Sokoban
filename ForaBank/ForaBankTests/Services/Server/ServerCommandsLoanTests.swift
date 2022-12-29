@@ -24,7 +24,7 @@ class ServerCommandsLoanTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "GetPersonsCreditResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let datePayment = Date(timeIntervalSince1970: TimeInterval(1648512000000 / 1000))
+        let datePayment = Date.dateUTC(with: 1648512000000)
         let personCredit = ServerCommands.LoanController.GetPersonsCredit.Response.ResultData(original: .init(loandId: 10000184511, clientId: 0, currencyCode: "RUB", currencyNumber: 810, currencyId: 810, number: "КД-810", datePayment: datePayment, amountCredit: 56305.61, amountRepaid: 56305.61, amountPayment: 56305.61, overduePayment: 56305.61), customName: "Мой продукт")
         
         let expected = ServerCommands.LoanController.GetPersonsCredit.Response(statusCode: .ok, errorMessage: "string", data: personCredit)

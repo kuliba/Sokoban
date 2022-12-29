@@ -9,8 +9,10 @@ struct CurrencyWalletData: Codable, Equatable {
     
     let code: String
     let rateBuy: Double
-    let rateBuyDelta: Double
+    let rateBuyDelta: Double?
     let rateSell: Double
-    let rateSellDelta: Double
+    let rateSellDelta: Double?
     let md5hash: String
+    let currAmount: Int
+    let nameCw: String
 }

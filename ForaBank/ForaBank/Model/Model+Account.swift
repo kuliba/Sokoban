@@ -7,6 +7,18 @@
 
 import SwiftUI
 
+// MARK: - Helpers
+
+extension Model {
+ 
+    func accountDescription(for currency: Currency, in list: [OpenAccountProductData]) -> OpenAccountProductData? {
+        
+        return list.first(where: { $0.currencyAccount.contains(currency.description) })
+    }
+    
+}
+
+
 // MARK: - Handlers
 
 extension Model {
@@ -38,6 +50,11 @@ extension Model {
                     }
 
                     self.accountProductsList.value = accountProductsList
+                    let imagesIds = Self.reduce(accountProductsList, images: self.images.value)
+                    
+                    if imagesIds.isEmpty == false {
+                        self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: imagesIds))
+                    }
 
                     do {
                         
@@ -124,7 +141,8 @@ extension Model {
                 currencyCode: payload.currencyCode))
         let productsListError = ProductsListError.emptyData(message: ProductsListError.errorMessage)
 
-        accountOpening.value = true
+        productsOpening.value.insert(.account)
+        
         action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет открывается", icon: .refresh, type: .openAccount)))
         
         serverAgent.executeCommand(command: command) { result in
@@ -142,7 +160,8 @@ extension Model {
                         return
                     }
 
-                    self.accountOpening.value = false
+                    self.productsOpening.value.remove(.account)
+                    
                     self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет открыт", icon: .check)))
                     
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.complete(data))
@@ -154,7 +173,7 @@ extension Model {
                     
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .statusError(status: response.statusCode, message: errorMessage)))
                     
-                    self.accountOpening.value = false
+                    self.productsOpening.value.remove(.account)
                     
                     if let errorMessage = errorMessage, OpenAccountRawResponse(rawValue: errorMessage) == nil {
                         
@@ -171,8 +190,71 @@ extension Model {
                 self.handleServerCommandError(error: error, command: command)
                 self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .serverCommandError(error: error.localizedDescription)))
                 
-                self.accountOpening.value = false
+                self.productsOpening.value.remove(.account)
                 self.action.send(ModelAction.Informer.Show(informer: .init(message: "\(payload.currency.description) счет не открыт", icon: .close)))
+            }
+        }
+    }
+    
+    func handleCloseAccountRequest(_ payload: ModelAction.Account.Close.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.AccountController.CloseAccount(token: token, payload: .init(id: payload.payload.id, name: payload.payload.name, startDate: payload.payload.startDate, endDate: payload.payload.endDate, statementFormat: payload.payload.statementFormat, accountId: payload.payload.accountId, cardId: payload.payload.cardId))
+        
+        serverAgent.executeCommand(command: command) { [weak self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    
+                    guard let data = response.data else {
+                        return
+                    }
+                    
+                    self?.action.send(ModelAction.Account.Close.Response.success(data: data))
+                    
+                default:
+                    
+                    if let error = response.errorMessage {
+                        
+                        self?.action.send(ModelAction.Account.Close.Response.failure(message: error))
+                    }
+                    
+                    self?.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                self?.action.send(ModelAction.Account.Close.Response.failure(message: error.localizedDescription))
+            }
+        }
+    }
+    
+    func handleCloseAccountPrintForm(_ payload: ModelAction.Account.CloseAccount.PrintForm.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+
+        let command = ServerCommands.AccountController.GetPrintFormForCloseAccount(token: token, accountId: payload.id, paymentOperationDetailId: payload.paymentOperationDetailId)
+        
+        serverAgent.executeDownloadCommand(command: command) { [weak self] result in
+            
+            guard let self = self else {
+                return
+            }
+            
+            switch result {
+            case let .success(data):
+                self.action.send(ModelAction.Account.CloseAccount.PrintForm.Response(result: .success(data)))
+                
+            case let .failure(error):
+                self.action.send(ModelAction.Account.CloseAccount.PrintForm.Response(result: .failure(error)))
             }
         }
     }
@@ -234,6 +316,14 @@ extension Model {
         }
         
         return rawValue
+    }
+    
+    static func reduce(_ productsList: [OpenAccountProductData], images: [String: ImageData]) -> [String] {
+        
+        let filterredList = productsList.filter { images[$0.designMd5hash] == nil }
+        let imagesIds = filterredList.map { $0.designMd5hash }
+        
+        return imagesIds
     }
 }
 
@@ -313,6 +403,37 @@ extension ModelAction {
 
                 case complete(OpenAccountMakeData)
                 case failed(error: Model.ProductsListError)
+            }
+        }
+        
+        enum Close {
+            
+            struct Request: Action {
+                
+                let payload: ServerCommands.AccountController.CloseAccount.Payload
+            }
+            
+            enum Response: Action {
+                
+                case success(data: CloseProductTransferData)
+                case failure(message: String)
+            }
+        }
+        
+        enum CloseAccount {
+            
+            enum PrintForm {
+                
+                struct Request: Action {
+                    
+                    let id: ProductData.ID
+                    let paymentOperationDetailId: Int?
+                }
+                
+                struct Response: Action {
+                    
+                    let result: Result<Data, Error>
+                }
             }
         }
     }

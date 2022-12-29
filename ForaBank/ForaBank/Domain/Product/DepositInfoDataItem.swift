@@ -56,7 +56,7 @@ extension DepositInfoDataItem: Codable {
         
         if let dateEnd = try container.decodeIfPresent(Int.self, forKey: .dateEnd) {
             
-            self.dateEnd = Date(timeIntervalSince1970: TimeInterval(dateEnd / 1000))
+            self.dateEnd = Date.dateUTC(with: dateEnd)
             
         } else {
             
@@ -65,14 +65,14 @@ extension DepositInfoDataItem: Codable {
 
         if let dateNext = try container.decodeIfPresent(Int.self, forKey: .dateNext) {
             
-            self.dateNext = Date(timeIntervalSince1970: TimeInterval(dateNext / 1000))
+            self.dateNext = Date.dateUTC(with: dateNext)
         } else {
             
             self.dateNext = nil
         }
         
         let dateOpen = try container.decode(Int.self, forKey: .dateOpen)
-        self.dateOpen = Date(timeIntervalSince1970: TimeInterval(dateOpen / 1000))
+        self.dateOpen = Date.dateUTC(with: dateOpen)
         
         id = try container.decode(Int.self, forKey: .id)
         initialAmount = try container.decode(Double.self, forKey: .initialAmount)
@@ -91,13 +91,13 @@ extension DepositInfoDataItem: Codable {
         try container.encode(balance, forKey: .balance)
         if let dateEnd = dateEnd {
             
-            try container.encode(Int(dateEnd.timeIntervalSince1970) * 1000, forKey: .dateEnd)
+            try container.encode(dateEnd.secondsSince1970UTC, forKey: .dateEnd)
         }
         if let dateNext = dateNext {
             
-            try container.encode(Int(dateNext.timeIntervalSince1970) * 1000, forKey: .dateNext)
+            try container.encode(dateNext.secondsSince1970UTC, forKey: .dateNext)
         }
-        try container.encode(Int(dateOpen.timeIntervalSince1970) * 1000, forKey: .dateOpen)
+        try container.encode(dateOpen.secondsSince1970UTC, forKey: .dateOpen)
         try container.encode(id, forKey: .id)
         try container.encode(initialAmount, forKey: .initialAmount)
         try container.encode(interestRate, forKey: .interestRate)

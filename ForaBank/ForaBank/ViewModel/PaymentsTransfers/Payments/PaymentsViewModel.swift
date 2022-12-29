@@ -12,12 +12,13 @@ import Combine
 class PaymentsViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
-    var closeAction: (() -> Void )? = nil
-    
+
     @Published var content: ContentType
     @Published var successViewModel: PaymentsSuccessViewModel?
     @Published var spinner: SpinnerView.ViewModel?
     @Published var alert: Alert.ViewModel?
+    
+    let closeAction: () -> Void
     
     private let category: Payments.Category
     private let model: Model
@@ -25,26 +26,68 @@ class PaymentsViewModel: ObservableObject {
     
     enum ContentType {
         
-        case idle
-        case services(PaymentsServicesViewModel)
+        case service(PaymentsServiceViewModel)
         case operation(PaymentsOperationViewModel)
     }
     
-    init(content: ContentType, category: Payments.Category = .taxes, model: Model = .emptyMock) {
+    init(content: ContentType, category: Payments.Category, model: Model, closeAction: @escaping () -> Void) {
         
         self.content = content
         self.category = category
         self.model = model
+        self.closeAction = closeAction
     }
     
-    internal init(_ model: Model, category: Payments.Category) {
+    convenience init(category: Payments.Category, model: Model, closeAction: @escaping () -> Void) async throws {
         
-        self.content = .idle
-        self.category = category
-        self.model = model
+        let result = try await model.paymentsService(for: category)
+        switch result {
+        case let .select(selectServiceParameter):
+            // multiple services for category
+            let serviceViewModel = PaymentsServiceViewModel(category: category, parameters: [selectServiceParameter], model: model)
+            self.init(content: .service(serviceViewModel), category: category, model: model, closeAction: closeAction)
+            serviceViewModel.rootActions = rootActions
+
+        case let .selected(service):
+            // single service for category
+            let operation = try await model.paymentsOperation(with: service)
+            let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model, closeAction: closeAction)
+            self.init(content: .operation(operationViewModel), category: category, model: model, closeAction: closeAction)
+            operationViewModel.rootActions = rootActions
+            bind(operationViewModel: operationViewModel)
+        }
         
         bind()
-        model.action.send(ModelAction.Payment.Services.Request(category: category))
+    }
+    
+    convenience init(source: Payments.Operation.Source, model: Model, closeAction: @escaping () -> Void) async throws {
+        
+        let operation = try await model.paymentsOperation(with: source)
+        guard let category = Payments.Category.category(for: operation.service) else {
+            throw Error.unableRecognizeCategoryForService(operation.service)
+        }
+        let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model, closeAction: closeAction)
+        self.init(content: .operation(operationViewModel), category: category, model: model, closeAction: closeAction)
+        operationViewModel.rootActions = rootActions
+        bind(operationViewModel: operationViewModel)
+        
+        bind()
+    }
+    
+    convenience init(_ model: Model, service: Payments.Service, closeAction: @escaping () -> Void) async throws {
+
+        let operation = try await model.paymentsOperation(with: service)
+        let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model, closeAction: closeAction)
+        guard let category = Payments.Category.category(for: operation.service) else {
+            throw Error.unableRecognizeCategoryForService(operation.service)
+        }
+        
+        self.init(content: .operation(operationViewModel), category: category, model: model, closeAction: closeAction)
+        
+        operationViewModel.rootActions = rootActions
+        bind(operationViewModel: operationViewModel)
+        
+        bind()
     }
     
     private func bind() {
@@ -53,50 +96,77 @@ class PaymentsViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
-                case let payload as ModelAction.Payment.Services.Response:
+                case let payload as ModelAction.Payment.Process.Response:
                     self.action.send(PaymentsViewModelAction.Spinner.Hide())
                     
-                    switch payload {
-                    case .select(let selectServiceParameter):
-                        // multiple services for category
-                        let servicesViewModel = PaymentsServicesViewModel(model, category: category, parameter: selectServiceParameter, rootActions: .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}, spinner: .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show())}, hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide())}), alert: {[weak self] message in self?.action.send(PaymentsViewModelAction.Alert(message: message))}))
-                        content = .services(servicesViewModel)
-                        
-                    case .selected(let service):
-                        // single service for category
-                        model.action.send(ModelAction.Payment.Begin.Request(source: .service(service)))
-                        
-                    case .failed(let error):
-                        //TODO: set logger
-                        break
-                    }
-                    
-                case let payload as ModelAction.Payment.Begin.Response:
-                    self.action.send(PaymentsViewModelAction.Spinner.Hide())
-                    
-                    switch payload {
-                    case .success(let operation):
-                        
-                        guard case .idle = content else {
-                            return
+                    switch payload.result {
+                    case let .complete(paymentSuccess):
+                        let successViewModel = PaymentsSuccessViewModel(model, paymentSuccess: paymentSuccess)
+                        self.successViewModel = successViewModel
+                        bind(successViewModel: successViewModel)
+                        // update products balances
+                        model.action.send(ModelAction.Products.Update.Fast.All())
+                        // update latest operations list
+                        model.action.send(ModelAction.LatestPayments.List.Requested())
+     
+                    case let .failure(error):
+                        switch error {
+                        case let paymentsError as Payments.Error:
+                            switch paymentsError {
+                            case let .action(action):
+                                switch action {
+                                case let .warning(parameterId: parameterId, message: message):
+                                   
+                                    if case .operation(let operationViewModel) = content {
+                                        
+                                        operationViewModel.action.send(PaymentsOperationViewModelAction.ShowWarning(parameterId: parameterId, message: message))
+                                        
+                                    } else {
+                                        
+                                        self.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: error.localizedDescription))
+                                    }
+                                    
+                                case let .alert(title: title, message: message):
+                                    self.action.send(PaymentsViewModelAction.Alert(title: title, message: message))
+                                }
+                                
+                            default:
+                                self.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: error.localizedDescription))
+                            }
+                        case let serverError as ServerAgentError:
+                            switch serverError {
+                            case let .serverStatus(.serverError, errorMessage: message):
+                                guard let message = message else {
+                                    return
+                                }
+                                
+                                if message.contains("Введен некорректный код") {
+                                    
+                                    guard case .operation(let operationViewModel) = content else {
+                                        return
+                                    }
+                                    
+                                    operationViewModel.action.send(PaymentsOperationViewModelAction.IcorrectCodeEnterred())
+                                    
+                                } else if message.contains("Вы исчерпали") {
+                                    
+                                    self.action.send(PaymentsViewModelAction.AlertThenDismiss(message: message))
+                                    
+                                } else {
+                                    
+                                    self.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: message))
+                                }
+
+                            default:
+                                self.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: error.localizedDescription))
+                            }
+                            
+                        default:
+                            self.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: error.localizedDescription))
                         }
                         
-                        let operationViewModel = PaymentsOperationViewModel(model, operation: operation, rootActions: .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}, spinner: .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show())}, hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide())}), alert: {[weak self] message in self?.action.send(PaymentsViewModelAction.Alert(message: message)) }))
-                        content = .operation(operationViewModel)
-
-                    case .failure(let errorMessage):
-                        self.action.send(PaymentsViewModelAction.Alert(message: errorMessage))
-                    }
-                    
-                case let payload as ModelAction.Payment.Complete.Response:
-                    self.action.send(PaymentsViewModelAction.Spinner.Hide())
-                    
-                    switch payload {
-                    case .success(let paymentSuccess):
-                        successViewModel = PaymentsSuccessViewModel(model, paymentSuccess: paymentSuccess, dismissAction: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())})
-                        
-                    case .failure(let errorMessage):
-                        self.action.send(PaymentsViewModelAction.Alert(message: errorMessage))
+                    default:
+                        break
                     }
                     
                 default:
@@ -127,6 +197,9 @@ class PaymentsViewModel: ObservableObject {
                     }
                     
                 case let payload as PaymentsViewModelAction.Alert:
+                    alert = .init(title: payload.title, message: payload.message, primary: .init(type: .default, title: "Ok", action: {}))
+                    
+                case let payload as PaymentsViewModelAction.AlertThenDismiss:
                     alert = .init(title: "Ошибка", message: payload.message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}))
  
                 default:
@@ -135,7 +208,50 @@ class PaymentsViewModel: ObservableObject {
                 
             }.store(in: &bindings)
     }
+    
+    private func bind(successViewModel: PaymentsSuccessViewModel) {
+        
+        successViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as PaymentsSuccessAction.Button.Close:
+                    self.action.send(PaymentsViewModelAction.Dismiss())
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func bind(operationViewModel: PaymentsOperationViewModel) {
+        
+        operationViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as PaymentsOperationViewModelAction.CancelOperation:
+
+                    //TODO: move to convenience init
+                    let successViewModel = PaymentsSuccessViewModel(model, warningTitle: "Перевод отменен!", amount: payload.amount, iconType: .accepted, logo: .init(title: "сбп", image: .ic40Sbp), actionButton: .init(title: "На главный", style: .red, action: { [weak self] in
+                        
+                        self?.action.send(PaymentsViewModelAction.Dismiss())
+                        
+                    }), optionButtons: [])
+                    self.successViewModel = successViewModel
+
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
 }
+
+//MARK: - Types
 
 extension PaymentsViewModel {
     
@@ -151,7 +267,18 @@ extension PaymentsViewModel {
             let hide: () -> Void
         }
     }
+    
+    var rootActions: RootActions {
+        
+        return .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss()) },
+                     spinner:
+                .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show()) },
+                      hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide()) }),
+                     alert: { [weak self] message in self?.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: message)) })
+    }
 }
+
+//MARK: - Action
 
 enum PaymentsViewModelAction {
     
@@ -165,6 +292,19 @@ enum PaymentsViewModelAction {
     
     struct Alert: Action {
         
+        let title: String
         let message: String
+    }
+    
+    struct AlertThenDismiss: Action {
+        
+        let message: String
+    }
+}
+
+extension PaymentsViewModel {
+    
+    enum Error: LocalizedError {
+        case unableRecognizeCategoryForService(Payments.Service)
     }
 }

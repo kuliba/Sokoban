@@ -61,7 +61,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         
         if let documentId = productStatement.documentId {
             
-            model.action.send(ModelAction.Payment.OperationDetail.Request(documentId: "\(documentId)"))
+            model.action.send(ModelAction.Operation.Detail.Request(type: .documentId(documentId)))
             
             withAnimation {
                 self.isLoading = true
@@ -77,36 +77,29 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                 
                 switch action {
                 case _ as ModelAction.PaymentTemplate.Save.Complete:
-                    guard let statement = model.statement(statementId: id) else {
+                    guard let statement = model.statement(statementId: id),
+                          let documentId = statement.documentId else {
                         return
                     }
                     
-                    if let documentId = statement.documentId {
-                        
-                        model.action.send(ModelAction.Payment.OperationDetail.Request(documentId: "\(documentId)"))
-                        
-                    }
+                    model.action.send(ModelAction.Operation.Detail.Request(type: .documentId(documentId)))
                     
                 case _ as ModelAction.PaymentTemplate.Delete.Complete:
-                    
-                    guard let statement = model.statement(statementId: id) else {
+                    guard let statement = model.statement(statementId: id),
+                          let documentId = statement.documentId else {
                         return
                     }
                     
-                    if let documentId = statement.documentId {
-                        
-                        model.action.send(ModelAction.Payment.OperationDetail.Request(documentId: "\(documentId)"))
-                        
-                    }
+                    model.action.send(ModelAction.Operation.Detail.Request(type: .documentId(documentId)))
                     
-                case let result as ModelAction.Payment.OperationDetail.Response:
+                case let payload as ModelAction.Operation.Detail.Response:
                     withAnimation {
                         self.isLoading = false
                     }
-                    switch result {
+                    switch payload.result {
                     case .success(details: let details):
                         guard let statement = model.statement(statementId: id),
-                                let product = model.product(statementId: id) else {
+                              let product = model.product(statementId: id) else {
                             return
                         }
                         
@@ -173,7 +166,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         var featureButtonsUpdated = [FeatureButtonViewModel]()
         
         switch productStatement.paymentDetailType {
-        case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b:
+        case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .insideDeposit, .insideOther:
             if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
                 featureButtonsUpdated.append(templateButtonViewModel)
             }
@@ -264,9 +257,18 @@ private extension OperationDetailViewModel {
                 return
             }
             
-            let printFormViewModel = PrintFormView.ViewModel(type: .operation(paymentOperationDetailId: paymentOperationDetailID, printFormType: printFormType), model: self.model)
-            
-            self.action.send(OperationDetailViewModelAction.ShowDocument(viewModel: printFormViewModel))
+            switch operationDetail.printFormType {
+            case .closeAccount:
+                let printFormViewModel = PrintFormView.ViewModel(type: .closeAccount(id: operationDetail.payerAccountId, paymentOperationDetailId: operationDetail.paymentOperationDetailId), model: self.model, dismissAction: {})
+                
+                self.action.send(OperationDetailViewModelAction.ShowDocument(viewModel: printFormViewModel))
+                
+            default:
+                let printFormViewModel = PrintFormView.ViewModel(type: .operation(paymentOperationDetailId: paymentOperationDetailID, printFormType: printFormType), model: self.model)
+                
+                self.action.send(OperationDetailViewModelAction.ShowDocument(viewModel: printFormViewModel))
+                
+            }
         })
     }
     
@@ -335,8 +337,8 @@ private extension OperationDetailViewModel {
             product: product,
             paymantSystemIcon: paymentSystemImage,
             type: .changePay,
-            operatorsViewModel: .init(closeAction: dismissAction, mode: .general))
-        
+            operatorsViewModel: .init(mode: .general, closeAction: dismissAction, requisitsViewAction: {}))
+
         let changeButton = ActionButtonViewModel(name: "Изменить",
                                                  action: { [weak self] in
             self?.action.send(OperationDetailViewModelAction.ShowChangeReturn(viewModel: changeViewModel))
@@ -354,7 +356,8 @@ private extension OperationDetailViewModel {
             product: product,
             paymantSystemIcon: paymentSystemImage,
             type: .returnPay,
-            operatorsViewModel: .init(closeAction: dismissAction, mode: .general))
+            operatorsViewModel: .init(mode: .general, closeAction: dismissAction, requisitsViewAction: {}))
+
         let returnButton = ActionButtonViewModel(name: "Вернуть",
                                                  action: { [weak self] in
             self?.action.send(OperationDetailViewModelAction.ShowChangeReturn(viewModel: returnViewModel))

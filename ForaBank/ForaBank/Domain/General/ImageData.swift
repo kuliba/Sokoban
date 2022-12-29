@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SwiftUI
 
-struct ImageData: Codable {
+struct ImageData: Codable, Equatable {
 
     let data: Data
     
@@ -30,6 +30,15 @@ struct ImageData: Codable {
     init?(with svgImageData: SVGImageData) {
         
         guard let uiImage = svgImageData.uiImage else {
+           return nil
+        }
+        
+        self.init(with: uiImage)
+    }
+    
+    init?(named: String) {
+        
+        guard let uiImage = UIImage(named: named) else {
            return nil
         }
         

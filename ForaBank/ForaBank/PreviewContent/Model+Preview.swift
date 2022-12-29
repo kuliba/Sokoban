@@ -37,7 +37,7 @@ extension Model {
            let json = try? Data(contentsOf: url),
            let statements = try? JSONDecoder.serverDate.decode([ProductStatementData].self, from: json)  {
             
-            let update = ProductStatementsStorage.Update(period: Period(daysBack: 1, from: Date()), statements: statements, direction: .eldest, limitDate: Date(), override: false)
+            let update = ProductStatementsStorage.Update(period: Period(daysBack: 1, from: Date()), statements: statements, direction: .eldest, limitDate: Date())
         }
         
         return model
@@ -55,4 +55,5 @@ extension ImageData {
     static let parameterHash = ImageData(with: UIImage(named: "Payments Icon Hash")!)!
     static let parameterLocation = ImageData(with: UIImage(named: "Payments Icon Location")!)!
     static let parameterSMS = ImageData(with: UIImage(named: "Payments Icon SMS")!)!
+    static let iconPlaceholder = ImageData(with: UIImage(named: "Payments Icon Placeholder")!)!
 }

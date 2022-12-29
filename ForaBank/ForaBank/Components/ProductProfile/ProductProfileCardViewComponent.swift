@@ -313,7 +313,8 @@ extension ProductProfileCardView.ViewModel {
         
         @Published var thumbnails: [ThumbnailViewModel]
         @Published var selected: ThumbnailViewModel.ID
-        lazy var moreButton: MoreButtonViewModel = .init(action: { [weak self] in self?.action.send(SelectorViewModelAction.MoreButtonTapped())})
+        
+        lazy var moreButton: MoreButtonViewModel = .init(action: { [weak self] in self?.action.send(SelectorViewModelAction.MoreButtonTapped()) })
         
         init(thumbnails: [ThumbnailViewModel], selected: ThumbnailViewModel.ID) {
             
@@ -517,6 +518,7 @@ extension ProductProfileCardView {
                 }
                 .frame(width: 48, height: 48)
             }
+            .accessibilityIdentifier("thumbnailButton")
         }
     }
     
@@ -527,7 +529,6 @@ extension ProductProfileCardView {
         var body: some View {
             
             Button(action: viewModel.action) {
-                
                 ZStack {
                     
                     Color.white
@@ -547,6 +548,7 @@ extension ProductProfileCardView {
                 .frame(width: 48, height: 48)
                 .opacity(0.4)
             }
+            .accessibilityIdentifier("moreButton")
         }
     }
 }

@@ -19,9 +19,10 @@ extension ModelAction {
             
             struct Request: Action {}
             
-            struct Response: Action {
+            enum Response: Action {
                 
-                let result: Result<[DepositProductData], Error>
+                case success(data: [DepositProductData])
+                case failure(message: String)
             }
         }
         
@@ -53,10 +54,26 @@ extension ModelAction {
             
             enum Response: Action {
                 
-                case success(data: ServerCommands.DepositController.CloseDeposit.Response.TransferData)
+                case success(data: CloseProductTransferData)
                 case failure(message: String)
             }
         }
+        
+        struct BeforeClosing {
+        
+            struct Request: Action {
+             
+                let depositId: Int
+                let operDate: Date
+            }
+            
+            enum Response: Action {
+                
+                case success(data: Double)
+                case failure(message: String)
+            }
+        }
+        
         struct CloseNotified: Action {
             
             let productId: ProductData.ID
@@ -81,28 +98,32 @@ extension Model {
             case .success(let response):
                 switch response.statusCode {
                 case .ok:
+                    
                     guard let deposits = response.data else {
+                        self.action.send(ModelAction.Deposits.List.Response.failure(message: self.emptyDataErrorMessage))
                         self.handleServerCommandEmptyData(command: command)
                         return
                     }
                     
                     self.deposits.value = deposits
-                    self.action.send(ModelAction.Deposits.List.Response(result: .success(deposits)))
+                    self.action.send(ModelAction.Deposits.List.Response.success(data: deposits))
                     
                     do {
                         
                         try self.localAgent.store(deposits, serial: nil)
                         
-                    } catch {
+                    } catch(let error) {
                         
-                        //TODO: set logger
+                        self.handleServerCommandCachingError(error: error, command: command)
                     }
 
                 default:
+                    self.action.send(ModelAction.Deposits.List.Response.failure(message: self.defaultErrorMessage))
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
             case .failure(let error):
-            self.action.send(ModelAction.Deposits.List.Response(result: .failure(error)))
+                self.action.send(ModelAction.Deposits.List.Response.failure(message: self.defaultErrorMessage))
+                self.handleServerCommandError(error: error, command: command)
             }
         }
     }
@@ -115,7 +136,7 @@ extension Model {
         }
         
         let command = ServerCommands.DepositController.CloseDeposit(token: token, payload: .init(id: payload.payload.id, name: payload.payload.name, startDate: payload.payload.startDate, endDate: payload.payload.endDate, statementFormat: payload.payload.statementFormat, accountId: payload.payload.accountId, cardId: payload.payload.cardId))
-        serverAgent.executeCommand(command: command) { [weak self] result in
+        serverAgent.executeCommand(command: command) { result in
             
             switch result {
             case .success(let response):
@@ -123,22 +144,71 @@ extension Model {
                 case .ok:
                     
                     guard let data = response.data else {
+                        self.handleServerCommandEmptyData(command: command)
+                        self.action.send(ModelAction.Deposits.Close.Response.failure(message: self.emptyDataErrorMessage))
                         return
                     }
                     
-                    self?.action.send(ModelAction.Deposits.Close.Response.success(data: data))
+                    self.action.send(ModelAction.Deposits.Close.Response.success(data: data))
                     
                 default:
                     
                     if let error = response.errorMessage {
                         
-                        self?.action.send(ModelAction.Deposits.Close.Response.failure(message: error))
+                        self.action.send(ModelAction.Deposits.Close.Response.failure(message: error))
+                        
+                    } else {
+                        
+                        self.action.send(ModelAction.Deposits.Close.Response.failure(message: self.defaultErrorMessage))
                     }
                     
-                    self?.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
             case .failure(let error):
-                self?.action.send(ModelAction.Deposits.Close.Response.failure(message: error.localizedDescription))
+                self.handleServerCommandError(error: error, command: command)
+                self.action.send(ModelAction.Deposits.Close.Response.failure(message: self.defaultErrorMessage))
+            }
+        }
+    }
+    
+    func handleBeforeClosingRequest(_ payload: ModelAction.Deposits.BeforeClosing.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.DepositController.GetDepositRestBeforeClosing(token: token, dateFormatter: DateFormatterISO8601(), depositId: payload.depositId, operDate: payload.operDate)
+        serverAgent.executeCommand(command: command) { result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    
+                    guard let data = response.data else {
+                        self.action.send(ModelAction.Deposits.BeforeClosing.Response.failure(message: self.emptyDataErrorMessage))
+                        self.handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    self.action.send(ModelAction.Deposits.BeforeClosing.Response.success(data: data))
+                    
+                default:
+                    
+                    if let error = response.errorMessage {
+                        
+                        self.action.send(ModelAction.Deposits.BeforeClosing.Response.failure(message: error))
+                    } else {
+                        
+                        self.action.send(ModelAction.Deposits.BeforeClosing.Response.failure(message: self.defaultErrorMessage))
+                    }
+                    
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+            case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
+                self.action.send(ModelAction.Deposits.BeforeClosing.Response.failure(message: self.defaultErrorMessage))
             }
         }
     }
@@ -170,9 +240,11 @@ extension Model {
                 switch response.statusCode {
                 case .ok:
                     guard let info = response.data else {
+                        self.action.send(ModelAction.Deposits.Info.Single.Response.failure(message: self.emptyDataErrorMessage))
                         self.handleServerCommandEmptyData(command: command)
                         return
                     }
+                    
                     self.action.send(ModelAction.Deposits.Info.Single.Response.success(data: info))
                     self.depositsInfo.value = Self.reduce(depositsInfoData: self.depositsInfo.value, productId: payload.productId, info: info)
                     
@@ -180,30 +252,43 @@ extension Model {
                         
                         try self.localAgent.store(self.depositsInfo.value, serial: nil)
                         
-                    } catch {
+                    } catch(let error){
                         
-                        //TODO: set logger
+                        self.handleServerCommandCachingError(error: error, command: command)
                     }
   
                 default:
+                    self.action.send(ModelAction.Deposits.Info.Single.Response.failure(message: self.defaultErrorMessage))
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
+                
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)
-                self.action.send(ModelAction.Deposits.Info.Single.Response.failure(message: error.localizedDescription))
+                self.action.send(ModelAction.Deposits.Info.Single.Response.failure(message: self.defaultErrorMessage))
             }
         }
     }
     
     func handleDidShowCloseAlert(_ payload: ModelAction.Deposits.CloseNotified) {
         
-        self.depositsCloseNotified = .init(depositId: payload.productId)
+        self.depositsCloseNotified.insert(.init(depositId: payload.productId))
+        
+        do {
+            
+            try self.localAgent.store(self.depositsCloseNotified, serial: nil)
+            
+        } catch(let error) {
+            
+            LoggerAgent.shared.log(category: .cache, message: "Caching error: \(error)")
+        }
     }
 }
 
 //MARK: - Reducers
 
 extension Model {
+    
+    var depositCloseBirjevoyURL: String { "https://finuslugi.ru/" }
     
     static func reduce(depositsInfoData: DepositsInfoData, productId: ProductData.ID, info: DepositInfoDataItem) -> DepositsInfoData {
         
@@ -212,4 +297,14 @@ extension Model {
         
         return updated
     }
+}
+
+//MARK: - Deposits Error
+
+enum ModelDepositsError: Error {
+    
+    case emptyData(message: String?)
+    case statusError(status: ServerStatusCode, message: String?)
+    case serverCommandError(error: String)
+    case unauthorizedCommandAttempt
 }

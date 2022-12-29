@@ -27,6 +27,7 @@ struct RootView: View {
                     tabIcon(type: .main, selected: viewModel.selected)
                     Text(RootViewModel.TabType.main.name)
                         .foregroundColor(.black)
+                        .accessibilityIdentifier("tabBarMainButton")
                 }
                 .tag(RootViewModel.TabType.main)
                 
@@ -39,6 +40,7 @@ struct RootView: View {
                     tabIcon(type: .payments, selected: viewModel.selected)
                     Text(RootViewModel.TabType.payments.name)
                         .foregroundColor(.black)
+                        .accessibilityIdentifier("tabBarTransferButton")
                 }
                 .tag(RootViewModel.TabType.payments)
                 
@@ -48,10 +50,13 @@ struct RootView: View {
                         tabIcon(type: .chat, selected: viewModel.selected)
                         Text(RootViewModel.TabType.chat.name)
                             .foregroundColor(.black)
+                            .accessibilityIdentifier("tabBarChatButton")
                     }
                     .tag(RootViewModel.TabType.chat)
                 
-            }.accentColor(.black)
+            }
+            .accentColor(.black)
+            .accessibilityIdentifier("tabBar")
             
             if let link = viewModel.link  {
                 

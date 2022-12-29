@@ -11,13 +11,13 @@ struct PaymentsTransfersView: View {
     
     @ObservedObject
     var viewModel: PaymentsTransfersViewModel
-
+    
     var body: some View {
         
         ZStack(alignment: .top) {
             
             VStack() {
-           
+                
                 ScrollView(.vertical, showsIndicators: false) {
                     
                     ForEach(viewModel.sections) { section in
@@ -38,20 +38,7 @@ struct PaymentsTransfersView: View {
                     
                 } //mainVerticalScrollView
             } //mainVStack
-            .onAppear {
-                viewModel.action.send(PaymentsTransfersViewModelAction.ViewDidApear())
-            }
-            .navigationBarTitle("", displayMode: .inline)
-            .navigationBarItems(
-                leading: MainView.UserAccountButton(viewModel: viewModel.userAccountButton),
-                trailing:
-                    HStack {
-                        ForEach(viewModel.navButtonsRight) { navButtonViewModel in
-                                            
-                            NavBarButton(viewModel: navButtonViewModel)
-                        }
-                    })
- 
+            
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
                 if let link = viewModel.link  {
@@ -82,16 +69,11 @@ struct PaymentsTransfersView: View {
                             .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
-                    case let .taxAndStateService(taxAndStateServiceVM):
-                        PaymentsView(viewModel: taxAndStateServiceVM)
-                            .edgesIgnoringSafeArea(.all)
-                            .navigationBarHidden(true)
+                    case let .payments(paymentsViewModel):
+                        PaymentsView(viewModel: paymentsViewModel)
                         
                     case let .transferByRequisites(transferByRequisitesViewModel):
-                        TransferByRequisitesView(viewModel: transferByRequisitesViewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
-                            .edgesIgnoringSafeArea(.all)
+                        PaymentsView(viewModel: transferByRequisitesViewModel)
                         
                     case let .phone(phoneData):
                         PaymentPhoneView(viewModel: phoneData)
@@ -152,12 +134,79 @@ struct PaymentsTransfersView: View {
                             .navigationBarTitle("", displayMode: .inline)
                             .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
-                        
                     }
                 }
             }
+            
+            Color.clear
+                .sheet(item: $viewModel.sheet, content: { sheet in
+                    
+                    switch sheet.type {
+                        
+                    case let .transferByPhone(viewModel):
+                        TransferByPhoneView(viewModel: viewModel)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case let .meToMe(viewModel):
+                        PaymentsMeToMeView(viewModel: viewModel)
+                            .edgesIgnoringSafeArea(.bottom)
+                            .fixedSize(horizontal: false, vertical: true)
+                        
+                    case let .successMeToMe(successMeToMeViewModel):
+                        PaymentsSuccessView(viewModel: successMeToMeViewModel)
+                        
+                    case .anotherCard(let anotherCardViewModel):
+                        AnotherCardView(viewModel: anotherCardViewModel)
+                            .edgesIgnoringSafeArea(.bottom)
+                        
+                    case .fastPayment(let viewModel):
+                        ContactsView(viewModel: viewModel)
+                    }
+                })
+            
         }
-        .fullScreenCoverLegacy  (viewModel: $viewModel.fullScreenSheet) { item in
+        .onAppear {
+            viewModel.action.send(PaymentsTransfersViewModelAction.ViewDidApear())
+        }
+        .navigationBarTitle("", displayMode: .inline)
+        .navigationBarItems(
+            leading: MainView.UserAccountButton(viewModel: viewModel.userAccountButton),
+            trailing:
+                HStack {
+                    ForEach(viewModel.navButtonsRight) { navButtonViewModel in
+                        
+                        NavBarButton(viewModel: navButtonViewModel)
+                    }
+                })
+        .bottomSheet(item: $viewModel.bottomSheet) { sheet in
+            
+            switch sheet.type {
+            case let .exampleDetail(title):
+                ExampleDetailMock(title: title)
+                
+            case let .meToMe(viewModel):
+                
+                PaymentsMeToMeView(viewModel: viewModel)
+                    .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+                        
+                        switch fullCover.type {
+                        case let .successMeToMe(successMeToMeViewModel):
+                            PaymentsSuccessView(viewModel: successMeToMeViewModel)
+                        }
+                        
+                    }.transaction { transaction in
+                        transaction.disablesAnimations = false
+                    }
+                
+            case .anotherCard(let model):
+                AnotherCardView(viewModel: model)
+                    .edgesIgnoringSafeArea(.bottom)
+                    .navigationBarTitle("", displayMode: .inline)
+                    .frame(height: 494)
+                
+            }
+        }
+        .fullScreenCover(item: $viewModel.fullScreenSheet, content: { item in
             
             switch item.type {
             case let .qrScanner(viewModel):
@@ -168,46 +217,11 @@ struct PaymentsTransfersView: View {
                         .edgesIgnoringSafeArea(.all)
                 }
             }
-        }
-        .sheet(item: $viewModel.sheet, content: { sheet in
-            
-            switch sheet.type {
-                
-            case let .transferByPhone(viewModel):
-                TransferByPhoneView(viewModel: viewModel)
-                    .edgesIgnoringSafeArea(.all)
-                
-            case let .meToMe(viewModel):
-                MeToMeView(viewModel: viewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                
-            case .anotherCard(let anotherCardViewModel):
-                AnotherCardView(viewModel: anotherCardViewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-            }
-            
         })
-        .bottomSheet(item: $viewModel.bottomSheet) { sheet in
-            
-            switch sheet.type {
-            case let .exampleDetail(title):
-                ExampleDetailMock(title: title)
-            
-            case let .meToMe(viewModel):
-                MeToMeView(viewModel: viewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .frame(height: 474)
-                
-            case .anotherCard(let model):
-                AnotherCardView(viewModel: model)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .navigationBarTitle("", displayMode: .inline)
-                    .frame(height: 494)
-            }
-        }
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
+        
         .tabBar(isHidden: $viewModel.isTabBarHidden)
     }
 }
@@ -226,14 +240,13 @@ extension PaymentsTransfersView {
             Spacer()
         }
     }
-    
 }
 
 
 extension PaymentsTransfersView {
- 
-//MARK: - ViewBarButton
-
+    
+    //MARK: - ViewBarButton
+    
     struct NavBarButton: View {
         
         let viewModel: NavigationBarButtonViewModel
@@ -248,7 +261,7 @@ extension PaymentsTransfersView {
             }
         }
     }
-
+    
 }
 
 //MARK: - Preview
@@ -274,7 +287,7 @@ struct Payments_TransfersView_Previews: PreviewProvider {
         PaymentsTransfersView(viewModel: .sample)
             .previewDevice("5se 15.4")
             .previewDisplayName("iPhone 5 SE")
-            
+        
     }
 }
 
