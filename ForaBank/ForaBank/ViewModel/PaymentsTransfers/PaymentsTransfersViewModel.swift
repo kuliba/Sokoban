@@ -315,8 +315,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 
                                 if operators.count == 1 {
                                     
+                                    self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                                        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                                        
                                         let operatorsViewModel = OperatorsViewModel(closeAction: { [weak self] in
                                             self?.link = nil
                                         }, mode: .qr(qr))
@@ -326,9 +327,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 } else {
                                     
                                     //TODO: QRSearchOperatorViewModel with operators
+                                    self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                                         
-                                        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                                         let operatorsViewModel = QRSearchOperatorViewModel(textFieldPlaceholder: "Название или ИНН", navigationBar:
                                                 .init(
                                                     title: "Все регионы",
@@ -346,18 +347,18 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 
                             } else {
                                 
+                                self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                                     
-                                    self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                                     let failedView = QRFailedViewModel(model: self.model)
                                     self.link = .failedView(failedView)
                                 }
                             }
                             
                         } else {
+                            self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                                 
-                                self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                                 let failedView = QRFailedViewModel(model: self.model)
                                 self.link = .failedView(failedView)
                             }
@@ -366,9 +367,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     case .c2bURL(let c2bURL):
                         
                         // show c2b payment after delay required to finish qr scanner close animation
+                        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                     
-                            self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                             let c2bViewModel = C2BViewModel(urlString: c2bURL.absoluteString, closeAction: { [weak self] in
                                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             })
@@ -378,18 +379,18 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
 
                     case .url( _):
                         
+                        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                             
-                            self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                             let failedView = QRFailedViewModel(model: self.model)
                             self.link = .failedView(failedView)
                         }
                         
                     case .unknown(_):
                         
+                        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                             
-                            self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                             let failedView = QRFailedViewModel(model: self.model)
                             self.link = .failedView(failedView)
                         }
