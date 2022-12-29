@@ -73,10 +73,7 @@ struct PaymentsTransfersView: View {
                         PaymentsView(viewModel: paymentsViewModel)
                         
                     case let .transferByRequisites(transferByRequisitesViewModel):
-                        TransferByRequisitesView(viewModel: transferByRequisitesViewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
-                            .edgesIgnoringSafeArea(.all)
+                        PaymentsView(viewModel: transferByRequisitesViewModel)
                         
                     case let .phone(phoneData):
                         PaymentPhoneView(viewModel: phoneData)

@@ -59,7 +59,7 @@ extension PTSectionTransfersView.ViewModel {
             .init(type: .betweenSelf, action: {}),
             .init(type: .abroad, action: {}),
             .init(type: .anotherCard, action: {}),
-            .init(type: .byBankDetails, action: {})
+            .init(type: .requisites, action: {})
         ]
     }()
 }

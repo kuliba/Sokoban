@@ -82,7 +82,7 @@ extension PaymentsInputPhoneView {
                 
                 let contactViewModel = ContactsViewModel(model, mode: .select(.contacts))
                 self?.bind(contactsViewModel: contactViewModel)
-                self?.action.send(PaymentsParameterViewModelAction.Input.ContactSelector.Show(viewModel: contactViewModel))
+                self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Show(viewModel: contactViewModel))
             })
             
             textField.toolbar = .init(doneButton: .init(isEnabled: true,
@@ -118,7 +118,7 @@ extension PaymentsInputPhoneView {
                     switch action {
                     case let payload as ContactsViewModelAction.ContactPhoneSelected:
                         self?.textField.text = payload.phone
-                        self?.action.send(PaymentsParameterViewModelAction.Input.ContactSelector.Close())
+                        self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Close())
     
                     default:
                         break

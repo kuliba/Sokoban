@@ -34,7 +34,7 @@ extension PaymentsCodeView {
         
         init(with parameterInput: Payments.ParameterCode) {
             
-            self.icon = Image.ic24MessageSquare
+            self.icon = parameterInput.icon.image ?? Image.ic24MessageSquare
             self.content = parameterInput.parameter.value ?? ""
             self.description = parameterInput.title
             self.editingState = .idle

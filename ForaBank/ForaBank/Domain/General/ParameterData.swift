@@ -98,6 +98,33 @@ extension ParameterData {
     }
 }
 
+//MARK: - Validator
+
+extension ParameterData {
+    
+    var validator: Payments.Validation.RulesSystem {
+        
+        var rules = [Payments.Validation.Rule]()
+        
+        if let minLength = minLength {
+            
+            rules.append(Payments.Validation.MinLengthRule(minLenght: UInt(minLength), actions: [.post: .warning("Минимальная длинна должна быть \(minLength) символов.")]))
+        }
+        
+        if let maxLength = maxLength {
+            
+            rules.append(Payments.Validation.MaxLengthRule(maxLenght: UInt(maxLength), actions: [.post: .warning("Максимальная длинна должна не превышать \(maxLength) символов.")]))
+        }
+        
+        if let regExp = regExp {
+            
+            rules.append(Payments.Validation.RegExpRule(regExp: regExp, actions: [.post: .warning("Введено некорректное значение")]))
+        }
+        
+        return .init(rules: rules)
+    }
+}
+
 extension ParameterData: CustomDebugStringConvertible {
     
     var debugDescription: String {

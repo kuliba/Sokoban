@@ -18,6 +18,7 @@ extension Payments.Service {
         case .fssp: return [.fssp]
         case .sfp: return [.sfp]
         case .direct: return [.direct]
+        case .requisites: return [.requisites]
         }
     }
     
@@ -40,6 +41,7 @@ extension Payments.Service {
         case .fms, .fns, .fssp : return .anyway
         case .sfp: return .sfp
         case .direct: return .direct
+        case .requisites: return .requisites
         }
     }
 }
