@@ -299,12 +299,12 @@ class MainViewModel: ObservableObject, Resetable {
                             case let payload as BannerActionMigTransfer:
                                 self.link = .country(.init(country: payload.countryId, operatorsViewModel: .init(closeAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
-                                }, template: nil), paymentType: .withOutAddress(withOutViewModel: .init(phoneNumber: nil))))
+                                }, template: nil, requisitsViewAction: {}), paymentType: .withOutAddress(withOutViewModel: .init(phoneNumber: nil))))
                                 
                             case let payload as BannerActionContactTransfer:
                                 self.link = .country(.init(country: payload.countryId, operatorsViewModel: .init(closeAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
-                                }, template: nil), paymentType: .turkeyWithOutAddress(turkeyWithOutAddress: .init(firstName: "", middleName: "", surName: "", phoneNumber: ""))))
+                                }, template: nil, requisitsViewAction: {}), paymentType: .turkeyWithOutAddress(turkeyWithOutAddress: .init(firstName: "", middleName: "", surName: "", phoneNumber: ""))))
                                 
                             default: break
                             }
@@ -470,7 +470,7 @@ class MainViewModel: ObservableObject, Resetable {
                             }
                             self.link = .init(.country(.init(phone: phone, country: country, bank: bank, operatorsViewModel: .init(closeAction: { [weak self] in
                                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, template: nil))))
+                            }, template: nil, requisitsViewAction: {}))))
                         }
                         
                     case let .abroad(phone: phone, countryId: countryId):
@@ -482,7 +482,7 @@ class MainViewModel: ObservableObject, Resetable {
                             }
                             self.link = .init(.country(.init(phone: phone, country: country, bank: nil, operatorsViewModel: .init(closeAction: { [weak self] in
                                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, template: nil))))
+                            }, template: nil, requisitsViewAction: {}))))
                         }
                         
                     case let .latestPayment(latestPaymentId):

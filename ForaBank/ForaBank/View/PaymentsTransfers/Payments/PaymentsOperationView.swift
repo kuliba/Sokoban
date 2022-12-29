@@ -26,7 +26,7 @@ struct PaymentsOperationView: View {
                 
                 ScrollViewReader { reader in
                     
-                    VStack(spacing: 20) {
+                    VStack(spacing: 24) {
                         
                         Color.clear
                             .frame(height: topSize.height)
@@ -36,6 +36,9 @@ struct PaymentsOperationView: View {
                             switch item {
                             case let selectViewModel as PaymentsSelectView.ViewModel:
                                 PaymentsSelectView(viewModel: selectViewModel)
+
+                            case let selectBankViewModel as PaymentsSelectBankView.ViewModel:
+                                PaymentsSelectBankView(viewModel: selectBankViewModel)
                                 
                             case let selectViewModels as PaymentsSelectSimpleView.ViewModel:
                                 PaymentsSelectSimpleView(viewModel: selectViewModels)
@@ -45,6 +48,9 @@ struct PaymentsOperationView: View {
                                 
                             case let inputViewModel as PaymentsInputView.ViewModel:
                                 PaymentsInputView(viewModel: inputViewModel)
+                                
+                            case let checkBoxViewModel as PaymentsCheckBoxView.ViewModel:
+                                PaymentsCheckBoxView(viewModel: checkBoxViewModel)
                                 
                             case let inputPhoneViewModel as PaymentsInputPhoneView.ViewModel:
                                 PaymentsInputPhoneView(viewModel: inputPhoneViewModel)
@@ -183,6 +189,9 @@ struct PaymentsOperationView: View {
             
             case .antifraud(let antifraudViewModel):
                 PaymentsAntifraudView(viewModel: antifraudViewModel)
+        
+            case .hint(let hintViewModel):
+                HintView(viewModel: hintViewModel)
             }
         }
     }
@@ -228,7 +237,6 @@ extension PaymentsOperationView {
 }
 
 //MARK: - Preference Keys
-
 
 struct PaymentsOperationViewTopHeightPreferenceKey: PreferenceKey {
     

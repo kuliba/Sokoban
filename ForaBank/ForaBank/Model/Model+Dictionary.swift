@@ -61,7 +61,8 @@ extension ModelAction {
             .countries,
             .banks,
             .paymentSystemList,
-            .fullBankInfoList
+            .fullBankInfoList,
+            .prefferedBanks
         ]
     }
 }
@@ -138,8 +139,11 @@ extension Model {
             
         case .centralBanksRates:
             return localAgent.load(type: [CentralBankRatesData].self) != nil
+            
+        case .prefferedBanks:
+            return localAgent.load(type: [PrefferedBanksList].self) != nil
+
         }
-        
     }
     
     func dictionaryCacheSerial(for dictionaryType: DictionaryType) -> String? {
@@ -210,6 +214,10 @@ extension Model {
         
         case .centralBanksRates:
             return localAgent.serial(for: [CentralBankRatesData].self)
+            
+        case .prefferedBanks:
+            return localAgent.serial(for: [PrefferedBanksList].self)
+
         }
     }
     
@@ -281,6 +289,9 @@ extension Model {
         
         case .centralBanksRates:
             try? localAgent.clear(type: [CentralBankRatesData].self)
+            
+        case .prefferedBanks:
+            try? localAgent.clear(type: [PrefferedBanksList].self)
         }
     }
 }
@@ -584,6 +595,58 @@ extension Model {
                     do {
                         
                         try self.localAgent.store(data.banksList, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    func handleDictionaryPrefferedBanks(_ serial: String?) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .prefferedBanks
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetPrefferdBanksList(token: token, serial: serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        
+                        handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.list.count > 0 else {
+                        return
+                    }
+                    
+                    self.prefferedBanksList.value = data.list
+                    
+                    do {
+                        
+                        try self.localAgent.store(data, serial: data.serial)
                         
                     } catch {
                         

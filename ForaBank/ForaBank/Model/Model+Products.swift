@@ -364,7 +364,7 @@ extension Model {
                     // cache products
                     do {
                         
-                        try self.productsCaheStore(productsData: updatedProducts)
+                        try self.productsCacheStore(productsData: updatedProducts)
                         
                     } catch {
                         
@@ -420,7 +420,7 @@ extension Model {
                     // cache products
                     do {
                         
-                        try self.productsCaheStore(productsData: updatedProducts)
+                        try self.productsCacheStore(productsData: updatedProducts)
                         
                     } catch {
                         
@@ -509,7 +509,7 @@ extension Model {
                     // cache products
                     do {
                         
-                        try self.productsCaheStore(productsData: updatedProducts)
+                        try self.productsCacheStore(productsData: updatedProducts)
                         
                     } catch {
                         
@@ -580,7 +580,7 @@ extension Model {
                 // cache products
                 do {
                     
-                    try self.productsCaheStore(productsData: updatedProducts)
+                    try self.productsCacheStore(productsData: updatedProducts)
                     
                 } catch {
                     
@@ -648,7 +648,7 @@ extension Model {
                     
                 do { // update cache
                         
-                    try self.productsCaheStore(productsData: updatedProducts) //productsCaheData(productsData: updatedProducts)
+                    try self.productsCacheStore(productsData: updatedProducts) //productsCaheData(productsData: updatedProducts)
                         
                 } catch {
                         
@@ -694,7 +694,7 @@ extension Model {
                     
                 do { // update cache
                         
-                    try self.productsCaheStore(productsData: updatedProducts)
+                    try self.productsCacheStore(productsData: updatedProducts)
                         
                 } catch {
                      
@@ -744,7 +744,7 @@ extension Model {
                     // cache products
                     do {
                         
-                        try self.productsCaheStore(productsData: updatedProducts)
+                        try self.productsCacheStore(productsData: updatedProducts)
                         
                     } catch {
                         
@@ -1354,7 +1354,7 @@ extension Model {
 
 extension Model {
     
-    func productsCaheStore(productsData: ProductsData) throws {
+    func productsCacheStore(productsData: ProductsData) throws {
         
         var errors = [Error]()
         

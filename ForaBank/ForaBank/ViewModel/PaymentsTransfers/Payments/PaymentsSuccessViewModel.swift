@@ -175,10 +175,9 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                         default:
                             handleDetailResponse(mode, payload: payload, documentStatus: documentStatus)
                         }
-                        
-                    default:
-                        //show error
-                        break
+                          
+                    case let .failure(error):
+                        LoggerAgent.shared.log(level: .error, category: .ui, message: "ModelAction.Operation.Detail.Response error: \(error)")
                     }
                     
                 case let payload as ModelAction.PaymentTemplate.Save.Complete:
@@ -396,7 +395,7 @@ extension PaymentsSuccessViewModel {
         case .inProgress:
             
             switch mode {
-            case .normal, .closeAccount, .closeDeposit, .closeAccountEmpty: return .init()
+            case .normal, .closeAccount, .closeDeposit, .closeAccountEmpty: return "Платеж принят в обработку"
             case .meToMe: return "Операция в обработке!"
             }
             

@@ -77,11 +77,13 @@ extension Model {
                 
             case .fnsUin:
                 let numberParameterId = "a3_BillNumber_1_1"
+                
+                //TODO: min length validation
                 let numberParameter = Payments.ParameterInput(
                     Payments.Parameter(id: numberParameterId, value: nil),
                     icon: .parameterDocument,
                     title: "УИН",
-                    validator: .init(minLength: 1, maxLength: nil, regEx: nil))
+                    validator: .anyValue)
                 
                 return .init(parameters: [numberParameter], front: .init(visible: [numberParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [numberParameterId], processed: nil))
                 

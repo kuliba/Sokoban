@@ -13,12 +13,14 @@ enum Payments {
 
     enum Category: String, CaseIterable {
         
+        case general = "ru.forabank.sense.payments.category.general"
         case fast  = "ru.forabank.sense.payments.category.fast"
         case taxes = "iFora||1331001"
         
         var services: [Service] {
             
             switch self {
+            case .general: return [.requisites]
             case .fast: return [.sfp, .direct]
             case .taxes: return [.fns, .fms, .fssp]
             }
@@ -29,6 +31,7 @@ enum Payments {
             switch self {
             case .fast: return "Быстрые платежи"
             case .taxes: return "Налоги и услуги"
+            case .general: return ""
             }
         }
         
@@ -53,6 +56,7 @@ enum Payments {
         case fms
         case fns
         case fssp
+        case requisites
     }
     
     enum Operator : String {
@@ -63,6 +67,7 @@ enum Payments {
         case fms        = "iFora||6887"
         case fns        = "iFora||6273"
         case fnsUin     = "iFora||7069"
+        case requisites = "requisites"
     }
 }
 
@@ -244,6 +249,7 @@ extension Payments.Operation {
         case anyway
         case sfp
         case direct
+        case requisites
     }
     
     enum Action: Equatable {
@@ -360,9 +366,17 @@ extension Payments {
         case missingOptions(ParameterData)
         case missingValueForParameter(Payments.Parameter.ID)
         case missingValue(ParameterData)
+        
+        case action(Action)
 
         case notAuthorized
         case unsupported
+        
+        enum Action {
+            
+            case warning(parameterId: Payments.Parameter.ID, message: String)
+            case alert(title: String, message: String)
+        }
         
         var errorDescription: String? {
             
@@ -390,6 +404,15 @@ extension Payments {
             
             case let .missingValueForParameter(parameterId):
                 return "Missing value for parameter: \(parameterId)"
+                
+            case let .action(action):
+                switch action {
+                case let .warning(parameterId: parameterId, message: message):
+                    return "Warning action for parameter id: \(parameterId), message: \(message)"
+                    
+                case let .alert(title: title, message: message):
+                    return "Alert action with title: \(title), message: \(message)"
+                }
 
             case .notAuthorized:
                 return "Not authorized request attempt"

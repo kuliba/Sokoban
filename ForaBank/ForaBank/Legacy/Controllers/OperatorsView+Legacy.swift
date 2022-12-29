@@ -43,18 +43,21 @@ struct OperatorsView: UIViewControllerRepresentable {
 struct OperatorsViewModel {
 
     var closeAction: () -> Void
+    var requisitsViewAction:  () throws -> Void
     var template: PaymentTemplateData?
     
-    init(closeAction: @escaping () -> Void, template: PaymentTemplateData?) {
+    init(closeAction: @escaping () -> Void, template: PaymentTemplateData?, requisitsViewAction: @escaping () -> Void) {
 
         self.closeAction = closeAction
+        self.requisitsViewAction = requisitsViewAction
         self.template = template
     }
     
-    init(model: Model, closeAction: @escaping () -> Void, paymentServiceData: PaymentServiceData, paymentTemplate: PaymentTemplateData? = nil) {
+    init(model: Model, closeAction: @escaping () -> Void, paymentServiceData: PaymentServiceData, paymentTemplate: PaymentTemplateData? = nil, requisitsViewAction:  @escaping () throws -> Void) {
         
         self.closeAction = closeAction
-        
+        self.requisitsViewAction = requisitsViewAction
+
         let amount = "\(paymentServiceData.amount)"
         var name = ""
         var image: UIImage

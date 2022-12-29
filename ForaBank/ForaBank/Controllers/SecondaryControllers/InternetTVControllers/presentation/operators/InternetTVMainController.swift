@@ -22,7 +22,7 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
 
     @IBOutlet weak var reqView: UIView!
     @IBOutlet weak var zayavka: UIView!
-
+    
     @IBOutlet weak var historyView: UIView!
 
     @IBOutlet weak var tableView: UITableView!
@@ -111,7 +111,9 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         InternetTVMainController.iMsg = self
-        
+        let presentRequisitsView = UITapGestureRecognizer(target: self, action: #selector(presentRequisitsView))
+        reqView.addGestureRecognizer(presentRequisitsView)
+        reqView.isUserInteractionEnabled = true
         InternetTVApiRequests.getClientInfo()
         if  InternetTVMainViewModel.filter == GlobalModule.PAYMENT_TRANSPORT {
             InternetTVApiRequests.getMosParkingList()
@@ -165,6 +167,19 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         }
     }
 
+    @objc func presentRequisitsView() {
+        
+        do {
+            
+            try operatorsViewModel?.requisitsViewAction()
+            
+        } catch {
+            
+            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for Requisits: with error: \(error.localizedDescription)")
+
+        }
+    }
+    
     @objc func titleDidTaped() {
         performSegue(withIdentifier: "citySearch", sender: self)
     }

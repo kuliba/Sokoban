@@ -51,6 +51,7 @@ class Model {
     let countriesList: CurrentValueSubject<[CountryData], Never>
     let paymentSystemList: CurrentValueSubject<[PaymentSystemData], Never>
     let bankList: CurrentValueSubject<[BankData], Never>
+    let prefferedBanksList: CurrentValueSubject<[String], Never>
     let currencyWalletList: CurrentValueSubject<[CurrencyWalletData], Never>
     let centralBankRates: CurrentValueSubject<[CentralBankRatesData], Never>
     var images: CurrentValueSubject<[String: ImageData], Never>
@@ -152,6 +153,7 @@ class Model {
         self.currencyWalletList = .init([])
         self.centralBankRates = .init([])
         self.bankList = .init([])
+        self.prefferedBanksList = .init([])
         self.countriesList = .init([])
         self.paymentSystemList = .init([])
         self.images = .init([:])
@@ -773,6 +775,9 @@ class Model {
                         
                     case .centralBanksRates:
                         handleDictionaryCentralBankRates()
+                        
+                    case .prefferedBanks:
+                        handleDictionaryPrefferedBanks(payload.serial)
                     }
                     
                 case let payload as ModelAction.Dictionary.DownloadImages.Request:

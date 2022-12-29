@@ -41,27 +41,50 @@ extension NavigationBarView {
         convenience init(with parameters: [PaymentsParameterRepresentable], closeAction: @escaping () -> Void) {
             
             let headerParameterId = Payments.Parameter.Identifier.header.rawValue
-            if let headerParameter = parameters.first(where: { $0.id == headerParameterId }) as? Payments.ParameterHeader,
-                  let icon = headerParameter.icon {
+            if let headerParameter = parameters.first(where: { $0.id == headerParameterId }) as? Payments.ParameterHeader {
                 
                 let backButton = BackButtonItemViewModel(action: closeAction)
-                switch icon {
-                case let .image(imageData):
-                    if let iconImage = imageData.image {
-                        
-                        let imageItem = IconItemViewModel(icon: iconImage)
-                        self.init(title: headerParameter.title, subtitle: nil, leftItems: [backButton], rightItems: [imageItem])
-                        
-                    } else {
-                        
-                        self.init(title: headerParameter.title, subtitle: nil, leftItems: [backButton])
-                    }
+                
+                var rightButton = [ItemViewModel]()
+                
+                if let icon = headerParameter.icon {
                     
-                case let .name(imageName):
-                    let imageItem = IconItemViewModel(icon: Image(imageName))
-                    self.init(title: headerParameter.title, subtitle: nil, leftItems: [backButton], rightItems: [imageItem])
+                    switch icon {
+                    case let .image(imageData):
+                        if let iconImage = imageData.image {
+                            
+                            let imageItem = IconItemViewModel(icon: iconImage)
+                            rightButton.append(imageItem)
+                        }
+                        
+                    case let .name(imageName):
+                        let imageItem = IconItemViewModel(icon: Image(imageName))
+                        rightButton.append(imageItem)
+                    }
                 }
                 
+                for button in headerParameter.rightButton {
+                    
+                    guard let icon = button.icon.image else {
+                        break
+                    }
+                    
+                    switch button.action {
+                    case .scanQrCode:
+                        rightButton.append(ButtonItemViewModel.init(icon: icon, action: {
+                             //setup qr code view action
+                        }))
+                    }
+                }
+                
+                if let subtitle = headerParameter.subtitle {
+                    self.init(title: headerParameter.title, subtitle: subtitle, leftItems: [backButton], rightItems: rightButton)
+                    
+                } else {
+                    
+                    self.init(title: headerParameter.title, subtitle: nil, leftItems: [backButton], rightItems: rightButton)
+                }
+                 
             } else {
                 
                 self.init()
