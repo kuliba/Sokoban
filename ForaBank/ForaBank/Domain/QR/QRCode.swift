@@ -61,7 +61,7 @@ extension QRCode {
         
         for key in parameter.keys {
             
-            guard var value = rawData[key] else {
+            guard var value = rawData[key.lowercased()] else {
                 continue
             }
             
