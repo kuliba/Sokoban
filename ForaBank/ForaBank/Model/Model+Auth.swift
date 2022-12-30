@@ -224,7 +224,7 @@ extension Model {
     
     var authPincodeLength: Int { 4 }
     var authVerificationCodeLength: Int { 6 }
-    var authVerificationCodeResendDelay: TimeInterval { 30 }
+    var authVerificationCodeResendDelay: TimeInterval { 60 }
     var authUnlockAttemptsAvailable: Int { 3 }
     var authAvailableBiometricSensorType: BiometricSensorType? { biometricAgent.availableSensor }
     var authIsBiometricSensorEnabled: Bool {
