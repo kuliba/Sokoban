@@ -12,9 +12,19 @@ struct MainView: View {
     
     @ObservedObject var viewModel: MainViewModel
     
+    init(viewModel: MainViewModel) {
+        
+        self.viewModel = viewModel
+        UINavigationBar.appearance().backgroundColor = .clear
+        UINavigationBar.appearance().isHidden = false
+    }
+    
     var body: some View {
         
         ZStack(alignment: .top) {
+            
+            Image.imgMainNy
+                .ignoresSafeArea()
             
             ScrollView(showsIndicators: false) {
                 
