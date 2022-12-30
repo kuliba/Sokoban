@@ -192,14 +192,12 @@ extension ProductData.Filter {
                 return nil
             }
             
-            if productCard.isProductOwner == false {
-                
-                return productCard.isMain == true
-                
-            } else {
-                
-                return true
+            // check if this is additional product
+            guard productCard.isMain == false else {
+                return nil
             }
+            
+            return productCard.isProductOwner == false
         }
     }
     
@@ -211,14 +209,12 @@ extension ProductData.Filter {
                 return nil
             }
             
-            if productCard.isProductOwner == true {
-                
-                return productCard.isMain == true
-                
-            } else {
-                
-                return true
+            // check if this is additional product
+            guard productCard.isMain == false else {
+                return nil
             }
+            
+            return productCard.isProductOwner == true
         }
     }
 }
@@ -268,12 +264,14 @@ extension ProductData.Filter  {
         rules: [DebitRule(),
                 ProductTypeRule([.card, .account]),
                 CardActiveRule(),
+                CardAdditionalNotOwnedRetrictedRule(),
                 AccountActiveRule()])
     
     static let meToMeTo = ProductData.Filter(
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account]),
                 CardActiveRule(),
+                CardAdditionalNotOwnedRetrictedRule(),
                 AccountActiveRule()])
 
     //MARK: Close Account Base
