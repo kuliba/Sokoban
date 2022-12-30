@@ -352,6 +352,7 @@ extension ServerCommands {
             let endpoint = "/rest/transfer/makeTransfer"
             let method: ServerCommandMethod = .post
             let payload: Payload?
+            let timeout: TimeInterval? = 120
             
             struct Payload: Encodable {
                 
