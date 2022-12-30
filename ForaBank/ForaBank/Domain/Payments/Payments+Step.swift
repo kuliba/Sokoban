@@ -118,8 +118,8 @@ extension Payments.Operation.Step {
             }
         }
         
-        let completeParamsCount = updatedParameters.compactMap({ $0.value }).count
-        let isComplete = updatedParameters.count == completeParamsCount
+        let completeParamsIds = Set(updatedParameters.filter({ $0.value != nil }).map({ $0.id }))
+        let isComplete = completeParamsIds.isSuperset(of: back.required)
         
         return .init(parameters: updatedParameters, front: .init(visible: front.visible, isCompleted: isComplete), back: back)
     }
