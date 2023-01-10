@@ -69,6 +69,7 @@ extension Payments.Parameter {
         case requisitsCompanyName             = "requisitsCompanyName"
         case requisitsCheckBox                = "requisitsCheckBox"
         case requisitsType                    = "requisitsType"
+        case requisitsPopUpSelector           = "requisitsPopUpSelector"
 
     }
     

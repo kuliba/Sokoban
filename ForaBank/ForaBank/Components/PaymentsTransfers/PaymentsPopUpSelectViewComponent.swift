@@ -38,7 +38,7 @@ extension PaymentsPopUpSelectView {
             
             self.init(title: title, description: description, items: [], selected: selected, action: action)
             
-            self.items = options.map { ItemViewModel(id: $0.id, name: $0.name, isSelected: false, action: {[weak self] itemId in
+            self.items = options.map { ItemViewModel(id: $0.id, name: $0.name, subtitle: $0.subtitle, isSelected: false, action: {[weak self] itemId in
                 self?.selected = itemId
             }) }
             
@@ -73,13 +73,15 @@ extension PaymentsPopUpSelectView {
             
             let id: Option.ID
             let name: String
+            let subtitle: String?
             let action: (Option.ID?) -> Void
             @Published var isSelected: Bool
             
-            init(id: String, name: String, isSelected: Bool, action: @escaping (String?) -> Void) {
+            init(id: String, name: String, subtitle: String? = nil, isSelected: Bool, action: @escaping (String?) -> Void) {
                 
                 self.id = id
                 self.name = name
+                self.subtitle = subtitle
                 self.isSelected = isSelected
                 self.action = action
             }
@@ -124,7 +126,7 @@ struct PaymentsPopUpSelectView: View {
                 
             } else {
                 
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     
                     VStack(spacing: 24) {
                         
@@ -171,6 +173,22 @@ struct PaymentsPopUpSelectView: View {
                     Spacer()
                 }
                 
+                if let subtitle = viewModel.subtitle {
+                    
+                    HStack(spacing: 24) {
+                        
+                        Color.clear
+                            .frame(width: 24, height: 24)
+                        
+                        Text(subtitle)
+                            .foregroundColor(.textPlaceholder)
+                            .font(.textBodySM12160())
+                            .multilineTextAlignment(.leading)
+                        
+                        Spacer()
+                    }
+                }
+                
                 Divider()
                     .frame(height: 1)
                     .foregroundColor(Color.bordersDivider)
@@ -206,5 +224,5 @@ extension PaymentsPopUpSelectView_Previews {
                 .init(id: "1", name: "В возрасте до 14 лет", isSelected: false, action: {_ in }),
                 .init(id: "2", name: "В возрасте до 14 лет (новый образец)", isSelected: false, action: {_ in }),
                 .init(id: "3", name: "Содержащего электронный носитель информации (паспорта нового поколения)", isSelected: false, action: {_ in }),
-                .init(id: "4", name: "За внесение изменений в паспорт", isSelected: false, action: {_ in })], selected: "0", action: { _ in })
+                .init(id: "4", name: "За внесение изменений в паспорт", subtitle: "12329823", isSelected: false, action: {_ in })], selected: "0", action: { _ in })
 }

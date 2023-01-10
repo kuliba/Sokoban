@@ -62,21 +62,28 @@ extension PaymentsSelectBankView.ViewModel {
                 
                 update(value: content)
                 
-                guard let content = content,
-                      let banks = self.model.dictionaryFullBankInfoList() else {
+                guard let content = content else {
                     return
                 }
                 
-                if self.list != nil {
+                if let list = self.list {
                     
-                    let options: [ListViewModel.ItemViewModel] = Self.reduce(model, banksData: banks, filter: content) {{ itemId in
+                    let options: [ListViewModel.ItemViewModel] = list.items.filter({ item in
                         
-                        self.action.send(PaymentsSelectBankViewModelAction.DidSelectBank(id: itemId))
-                    }}
+                        guard let subtitle = item.subtitle else {
+                            return false
+                        }
+                        
+                        if subtitle.contained(in: [content]) {
+                            return true
+                        }
+                        
+                        return false
+                    })
                     
                     withAnimation {
                         
-                        self.list?.items = options
+                        self.list?.filteredItems = options
                     }
                 }
                 
@@ -168,7 +175,7 @@ extension PaymentsSelectBankView.ViewModel {
                         self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Show(viewModel: contactViewModel))
                     }), at: 0)
                     
-                    let listViewModel = ListViewModel(items: options)
+                    let listViewModel = ListViewModel(items: options, filteredItems: options)
                     
                     withAnimation {
                         
@@ -303,11 +310,13 @@ extension PaymentsSelectBankView.ViewModel {
     
     class ListViewModel: ObservableObject {
         
-        @Published var items: [ItemViewModel]
+        let items: [ItemViewModel]
+        @Published var filteredItems: [ItemViewModel]
         
-        init(items: [ItemViewModel]) {
+        init(items: [ItemViewModel], filteredItems: [ItemViewModel]) {
             
             self.items = items
+            self.filteredItems = filteredItems
         }
         
         struct ItemViewModel: Identifiable {
@@ -445,7 +454,7 @@ struct PaymentsSelectBankView: View {
                 
                 HStack(alignment: .top, spacing: 4) {
                     
-                    ForEach(viewModel.items) { item in
+                    ForEach(viewModel.filteredItems) { item in
                         
                         ItemViewHorizontal(viewModel: item)
                             .frame(width: 70)
@@ -471,11 +480,11 @@ struct PaymentsSelectBankView: View {
                         IconView(viewModel: viewModel.icon)
                             .frame(width: 40, height: 40)
                         
-                        Text(viewModel.name + "\n")
+                        Text(viewModel.name)
                             .font(.textBodyXSR11140())
                             .foregroundColor(.textSecondary)
                             .multilineTextAlignment(.center)
-                            .lineLimit(2)
+                            .lineLimit(1)
                         
                         if let subtitle = viewModel.subtitle {
                             
@@ -537,6 +546,7 @@ struct PaymentsSelectBankView: View {
                                 .font(.textBodySR12160())
                                 .foregroundColor(.textPlaceholder)
                                 .padding(.bottom, 4)
+                            
                         } else {
                             
                             EmptyView()
@@ -604,6 +614,7 @@ struct PaymentsSelectBankView: View {
                                 .font(.textBodySR12160())
                                 .foregroundColor(.textPlaceholder)
                                 .padding(.bottom, 4)
+                            
                         } else {
                             
                             EmptyView()
@@ -702,7 +713,7 @@ extension PaymentsSelectBankView.ViewModel {
 
 extension PaymentsSelectBankView.ViewModel.ListViewModel {
     
-    static let itemsViewModelSample = PaymentsSelectBankView.ViewModel.ListViewModel(items: [.init(id: "", icon: .image(Image.ic64ForaColor), name: "Фора-банк", subtitle: "0445283290", action: {_ in })])
+    static let itemsViewModelSample = PaymentsSelectBankView.ViewModel.ListViewModel(items: [.init(id: "", icon: .image(Image.ic64ForaColor), name: "Фора-банк", subtitle: "0445283290", action: {_ in })], filteredItems: [])
 }
 
 extension PaymentsSelectBankView.ViewModel.SelectedItemViewModel {

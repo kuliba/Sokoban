@@ -457,10 +457,10 @@ extension PaymentsSuccessViewModel {
         case .inProgress:
             
             switch mode {
-            case .normal, .closeDeposit, .closeAccount, .closeAccountEmpty:
+            case .closeDeposit, .closeAccount, .closeAccountEmpty:
                 return .init()
                 
-            case .meToMe:
+            case .meToMe, .normal:
                 
                 guard let templateButton = optionButton(mode, type: .template, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail),
                       let detailButton = optionButton(mode, type: .details, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail) else {

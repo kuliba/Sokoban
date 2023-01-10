@@ -138,8 +138,7 @@ extension PaymentsInputView.ViewModel {
                     
                 } else {
                     
-                    if value.current != nil,
-                       let parameterInput = parameterInput,
+                    if let parameterInput = parameterInput,
                        let action = parameterInput.validator.action(with: value.current, for: .post),
                        case .warning(let message) = action {
                         
