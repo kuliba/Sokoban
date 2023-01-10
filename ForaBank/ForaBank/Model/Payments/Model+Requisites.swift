@@ -39,7 +39,7 @@ extension Model {
                 
                 return .init(rules: rules)
             }()
-            let bicBankParameter = Payments.ParameterSelectBank(.init(id: bicBankId, value: nil), icon: defaultInputIcon, title: "Бик банка получателя", options: [], validator: bicValidator, limitator: .init(limit: 9))
+            let bicBankParameter = Payments.ParameterSelectBank(.init(id: bicBankId, value: nil), icon: defaultInputIcon, title: "БИК банка получателя", options: [], validator: bicValidator, limitator: .init(limit: 9))
             
             //MARK: Account Number Parameter
             let accountNumberValidator: Payments.Validation.RulesSystem = {
@@ -49,7 +49,9 @@ extension Model {
                 rules.append(Payments.Validation.LengthLimitsRule(lengthLimits: [20], actions: [.post: .warning("Должен состоять из 20 цифр.")]))
 
                 rules.append(Payments.Validation.RegExpRule(regExp: "^[0-9]\\d*$", actions: [.post: .warning("Введены недопустимые символы")]))
-
+                
+                rules.append(Payments.Validation.RegExpRule(regExp: "\\d{5}810\\d{12}|\\d{5}643\\d{12}$", actions: [.post: .warning("Введите номер рублевого счета")]))
+                
                 return .init(rules: rules)
             }()
             let accountNumberParameter = Payments.ParameterInput(.init(id: accountNumberId, value: nil), icon: defaultInputIcon, title: "Номер счета получателя", validator: accountNumberValidator, limitator: .init(limit: 20), inputType: .number)
@@ -154,7 +156,7 @@ extension Model {
             let command = ServerCommands.SuggestController.SuggestCompany(token: token, payload: .init(branchType: nil, kpp: nil, query: innValue, type: nil))
             
             let result = try await serverAgent.executeCommand(command: command)
-            
+              
             //MARK: Company Name Parameter
             let validator: Payments.Validation.RulesSystem = {
                 
@@ -291,6 +293,33 @@ extension Model {
     func paymentsProcessDependencyReducerRequisits(parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
         
         switch parameterId {
+        case Payments.Parameter.Identifier.amount.rawValue:
+            
+            guard let amountParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterAmount else {
+                return nil
+            }
+        
+            var currencySymbol = amountParameter.currencySymbol
+            var maxAmount = amountParameter.validator.maxAmount
+            
+            let productParameterId = Payments.Parameter.Identifier.product.rawValue
+            if let productParameter = parameters.first(where: { $0.id == productParameterId}) as? Payments.ParameterProduct,
+               let productId = productParameter.productId,
+               let product = product(productId: productId),
+               let productCurrencySymbol = dictionaryCurrencySymbol(for: product.currency) {
+                
+                currencySymbol = productCurrencySymbol
+                maxAmount = product.balance
+            }
+            
+            let updatedAmountParameter = amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount)
+            
+            guard updatedAmountParameter.currencySymbol != amountParameter.currencySymbol || updatedAmountParameter.validator != amountParameter.validator || updatedAmountParameter.info != amountParameter.info else {
+                return nil
+            }
+            
+            return updatedAmountParameter
+            
         case Payments.Parameter.Identifier.requisitsMessage.rawValue:
             
             let messageId = Payments.Parameter.Identifier.requisitsMessage.rawValue
@@ -385,4 +414,11 @@ extension Model {
     }
 }
 
+extension Payments.ParameterAmount {
+    
+    func updated(currencySymbol: String, maxAmount: Double?) -> Payments.ParameterAmount {
+            
+            return Payments.ParameterAmount(value: value, title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: maxAmount), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
+    }
+}
 

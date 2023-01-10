@@ -24,7 +24,7 @@ extension TextFieldRegularView {
         let limit: Int?
         let toolbar: ToolbarViewModel?
         
-        var hasValue: Bool { text != "" ? true : false }
+        var hasValue: Bool { (text != "" && text != nil) ? true : false }
         
         init(text: String?, isEnabled: Bool, isEditing: Bool, placeholder: String?, toolbar: ToolbarViewModel?, limit: Int?, style: Style = .default, regExp: String? = nil) {
             
@@ -156,6 +156,9 @@ struct TextFieldRegularView: UIViewRepresentable {
             uiView.textColor = textColor.uiColor()
             uiView.text = viewModel.text
         }
+        
+        uiView.autocapitalizationType = .none
+        uiView.autocorrectionType = .no
         
         uiView.isUserInteractionEnabled = viewModel.isEnabled
     }
