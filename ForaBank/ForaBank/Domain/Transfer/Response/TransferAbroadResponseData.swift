@@ -5,6 +5,8 @@
 //  Created by Pavel Samsonov on 06.12.2022.
 //
 
+import SwiftUI
+
 struct TransferAbroadResponseData: Codable, Equatable {
     
     let serial: String
@@ -82,7 +84,27 @@ extension TransferAbroadResponseData {
             
             let title: String
             let description: String
-            let iconType: String 
+            let iconType: String
+            
+            enum IconType: String {
+                
+                case cash
+                case limit
+                case commission
+                case sending
+                case offer
+                
+                var icon: Image? {
+                    
+                    switch self {
+                    case .cash: return .ic24Cash
+                    case .limit: return .ic24Limits
+                    case .commission: return .ic24Percent
+                    case .sending: return .ic24ArrowUpRight
+                    case .offer: return .ic24UserCheck
+                    }
+                }
+            }
         }
     }
     
@@ -143,7 +165,7 @@ extension TransferAbroadResponseData {
         let type: BannerActionType
         let title: String?
         let info: String?
-        let list: [ListData]?
+        let list: [AdvantageTransferData.ContentData]?
         let transfersMoney: MoneyData?
         let promoInfo: [String]?
         let freeCard: FreeCardData?
@@ -163,21 +185,6 @@ extension TransferAbroadResponseData {
             let md5hash: String?
         }
         
-        struct ListData: Codable, Equatable {
-            
-            let iconType: IconType?
-            let title: String?
-            let description: String?
-            
-            enum IconType: String, Codable, Equatable {
-                
-                case cash
-                case limit
-                case commission
-                case sending
-                case offer
-            }
-        }
     }
     
     struct CountryDetailData: Codable, Equatable {

@@ -51,9 +51,10 @@ extension TransfersBannersView {
                             self.action.send(TransfersPromoAction.Banner.Mig.Tap(countryId: payload.countryId,
                                                                                  bannerType: payload.type))
                             
-                        case _ as BannerActionDepositTransfer:
+                        case let payload as BannerActionDepositTransfer:
                             
-                            self.action.send(TransfersPromoAction.Banner.Deposit.Tap())
+                            self.action.send(TransfersPromoAction.Banner.Deposit.Tap(countryId: payload.countryId,
+                                                                                     bannerType: payload.type))
                             
                         default:
                             break
@@ -104,7 +105,11 @@ enum TransfersPromoAction {
         
         enum Deposit {
             
-            struct Tap: Action {}
+            struct Tap: Action {
+                
+                let countryId: String
+                let bannerType: BannerActionType
+            }
         }
     }
 }

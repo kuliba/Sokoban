@@ -72,8 +72,11 @@ struct AuthTransfersView: View {
             case let .directions(viewModel):
                 TransfersDetailView(viewModel: viewModel)
                 
-            case let .promo(viewModel):
+            case let .promoMig(viewModel):
                 TransfersPromoDetailView(viewModel: viewModel)
+             
+            case let .promoDeposit(viewModel):
+                TransfersPromoDepositView(viewModel: viewModel)
             }
         }
     }

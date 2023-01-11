@@ -317,7 +317,8 @@ struct TransfersDetailView: View {
                 
             }
             .padding(.horizontal)
-            .padding(.vertical, 12)
+            .padding(.bottom, 12)
+            .padding(.top, 32)
             
             if let items = viewModel.banksList {
                 
@@ -342,8 +343,8 @@ struct TransfersDetailView: View {
             }.padding()
         }
         .ignoresSafeArea(.container, edges: .bottom)
-        .padding(.top, 4)
-        .padding(.bottom)
+        .padding(.top, 10)
+        .padding(.bottom, 40)
     }
 }
 
