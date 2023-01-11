@@ -62,6 +62,7 @@ extension ModelAction {
             .banks,
             .paymentSystemList,
             .fullBankInfoList,
+            .jsonAbroad,
             .qrMapping,
             .prefferedBanks
         ]
@@ -141,6 +142,8 @@ extension Model {
         case .centralBanksRates:
             return localAgent.load(type: [CentralBankRatesData].self) != nil
             
+        case .jsonAbroad:
+            return localAgent.load(type: TransferAbroadResponseData.self) != nil
         case .qrMapping:
             return localAgent.load(type: QRMapping.self) != nil
             
@@ -218,6 +221,8 @@ extension Model {
         case .centralBanksRates:
             return localAgent.serial(for: [CentralBankRatesData].self)
             
+        case .jsonAbroad:
+            return localAgent.serial(for: TransferAbroadResponseData.self)
         case .qrMapping:
             return localAgent.serial(for: QRMapping.self)
             
@@ -298,6 +303,8 @@ extension Model {
         case .qrMapping:
             try? localAgent.clear(type: QRMapping.self)
             
+        case .jsonAbroad:
+            try? localAgent.clear(type: TransferAbroadResponseData.self)
         case .prefferedBanks:
             try? localAgent.clear(type: [PrefferedBanksList].self)
         }
@@ -545,7 +552,6 @@ extension Model {
             }
         }
     }
-    
     
     // Anyway Operators
     func handleDictionaryAnywayOperatorsRequest(_ serial: String?) {

@@ -12,26 +12,38 @@ import Combine
 class AuthLoginViewModel: ObservableObject {
 
     let action: PassthroughSubject<Action, Never> = .init()
-    
     let header: HeaderViewModel
-    lazy var card: CardViewModel = CardViewModel(scanButton: .init(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Show.Scaner()) }), textField: .init(masks: [.card, .account], regExp: "[0-9]"), nextButton: nil, state: .editing)
     
-    let products: ProductsViewModel
-
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var bottomSheet: BottomSheet?
     @Published var isLinkActive: Bool = false
     
     @Published var cardScanner: CardScannerViewModel?
     @Published var alert: Alert.ViewModel?
     
-    private let rootActions: RootViewModel.RootActions
+    @Published var buttons: [ButtonAuthView.ViewModel]
+    
     private let model: Model
+    private let rootActions: RootViewModel.RootActions
     private var bindings = Set<AnyCancellable>()
 
-    init(header: HeaderViewModel = HeaderViewModel(), products: ProductsViewModel, rootActions: RootViewModel.RootActions, model: Model = .emptyMock) {
+    lazy var card: CardViewModel = CardViewModel(scanButton: .init(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Show.Scaner()) }), textField: .init(masks: [.card, .account], regExp: "[0-9]"), nextButton: nil, state: .editing)
+    
+    private lazy var abroadButton: ButtonAuthView.ViewModel = .init(.abroad) { [weak self] in
+        self?.action.send(AuthLoginViewModelAction.Show.Transfers())
+    }
+    
+    private lazy var cardButton: ButtonAuthView.ViewModel = .init(.card) { [weak self] in
+        self?.action.send(AuthLoginViewModelAction.Show.Products())
+    }
+
+    init(header: HeaderViewModel = HeaderViewModel(),
+         buttons: [ButtonAuthView.ViewModel],
+         rootActions: RootViewModel.RootActions,
+         model: Model = .emptyMock) {
 
         self.header = header
-        self.products = products
+        self.buttons = buttons
         self.rootActions = rootActions
         self.model = model
         
@@ -40,8 +52,7 @@ class AuthLoginViewModel: ObservableObject {
     
     convenience init(_ model: Model, rootActions: RootViewModel.RootActions) {
         
-        self.init(header: HeaderViewModel(), products: .init(button: nil), rootActions: rootActions, model: model)
-        
+        self.init(buttons: [], rootActions: rootActions, model: model)
         bind()
     }
     
@@ -101,10 +112,35 @@ class AuthLoginViewModel: ObservableObject {
                 case _ as AuthLoginViewModelAction.Show.Products:
                     LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Show.Products")
                     
-                    let productsViewModel = AuthProductsViewModel(model, products: model.catalogProducts.value, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Close.Link())})
+                    let action: (Int) -> Void = { [weak self] id in
+                        
+                        guard let self = self else { return }
+                        let catalogProduct = self.model.catalogProducts.value.first(where: { $0.id == id })
+                        
+                        if let catalogProduct = catalogProduct {
+                            
+                            let productData = (catalogProduct.tariff, catalogProduct.productType)
+                            self.action.send(AuthLoginViewModelAction.Show.OrderProduct(productData: productData))
+                        }
+                    }
+                    
+                    let dismissAction: () -> Void = { [weak self] in
+                        self?.action.send(AuthLoginViewModelAction.Close.Link())
+                    }
+                    
+                    let viewModel: AuthProductsViewModel = .init(model, products: model.catalogProducts.value, action: action, dismissAction: dismissAction)
                     
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "presented products view")
-                    link = .products(productsViewModel)
+                    link = .products(viewModel)
+                    
+                case _ as AuthLoginViewModelAction.Show.Transfers:
+                    
+                    let viewModel: AuthTransfersViewModel = .init(model) { [weak self] in
+                        self?.action.send(AuthLoginViewModelAction.Close.Link())
+                    }
+                    
+                    bind(viewModel)
+                    link = .transfers(viewModel)
                     
                 case _ as AuthLoginViewModelAction.Show.Scaner:
                     LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Show.Scaner")
@@ -132,6 +168,15 @@ class AuthLoginViewModel: ObservableObject {
                 case _ as AuthLoginViewModelAction.Spinner.Hide:
                     LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Spinner.Hide")
                     rootActions.spinner.hide()
+                    
+                case let payload as AuthLoginViewModelAction.Show.OrderProduct:
+                    
+                    let viewModel: OrderProductView.ViewModel = .init(
+                        model,
+                        productData: payload.productData
+                    )
+                    
+                    bottomSheet = .init(type: .orderProduct(viewModel))
                     
                 default:
                     break
@@ -162,20 +207,80 @@ class AuthLoginViewModel: ObservableObject {
                 
                 if catalogProducts.count > 0 {
                     
-                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "catalog products button presented")
-                    
-                    withAnimation {
-                        products.button = .init(action: { self.action.send(AuthLoginViewModelAction.Show.Products()) })
+                    if !self.buttons.contains(where: {$0.id == .card}) {
+                        
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "catalog products button presented")
+                        withAnimation {
+                            self.buttons.append(self.cardButton)
+                        }
                     }
-
 
                 } else {
                     
-                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "catalog products button dismissed")
-                    
-                    withAnimation {
-                        products.button = nil
+                    for (index, button) in self.buttons.enumerated() {
+                        if button.id == .card {
+                            
+                            LoggerAgent.shared.log(level: .debug, category: .ui, message: "catalog products button dismissed")
+                            withAnimation {
+                                let _ = self.buttons.remove(at: index)
+                            }
+                        }
                     }
+                }
+                
+            }.store(in: &bindings)
+        
+        model.transferAbroad
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] jsonTransferAbroad in
+                
+                if jsonTransferAbroad != nil {
+                    
+                    if !self.buttons.contains(where: {$0.id == .abroad}) {
+                        
+                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "TransferAbroad button presented")
+                        withAnimation {
+                            self.buttons.insert(self.abroadButton, at: 0)
+                        }
+                    }
+
+                } else {
+                    
+                    for (index, button) in self.buttons.enumerated() {
+                        if button.id == .abroad {
+                            
+                            LoggerAgent.shared.log(level: .debug, category: .ui, message: "TransferAbroad button dismissed")
+                            withAnimation {
+                                let _ = self.buttons.remove(at: index)
+                            }
+                        }
+                    }
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func bind(_ viewModel: AuthTransfersViewModel) {
+        
+        viewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { action in
+                
+                switch action {
+                    
+                case _ as TransfersSectionAction.Direction.Detail.Order.Tap:
+                    
+                    self.action.send(AuthLoginViewModelAction.Close.Link())
+    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        self.action.send(AuthLoginViewModelAction.Show.Products())
+                    }
+                    
+                case _ as TransfersSectionAction.Direction.Detail.Transfers.Tap:
+                    self.action.send(AuthLoginViewModelAction.Close.Link())
+                    
+                default:
+                    break
                 }
                 
             }.store(in: &bindings)
@@ -264,30 +369,25 @@ extension AuthLoginViewModel {
             case ready(String)
         }
     }
-
-    class ProductsViewModel: ObservableObject {
-        
-        @Published var button: ButtonViewModel?
-        
-        init(button: ButtonViewModel?) {
-            
-            self.button = button
-        }
-
-        struct ButtonViewModel {
-            
-            let icon: Image = .ic40Card
-            let title = "Нет карты?"
-            let subTitle = "Доставим в любую точку"
-            let arrowRight: Image = .ic24ArrowRight
-            let action: () -> Void
-        }
-    }
     
     enum Link {
         
         case confirm(AuthConfirmViewModel)
+        case transfers(AuthTransfersViewModel)
         case products(AuthProductsViewModel)
+    }
+    
+    struct BottomSheet: BottomSheetCustomizable {
+
+        let id = UUID()
+        let type: Kind
+
+        var animationSpeed: Double { 0.4 }
+        
+        enum Kind {
+            
+            case orderProduct(OrderProductView.ViewModel)
+        }
     }
 }
 
@@ -305,6 +405,13 @@ enum AuthLoginViewModelAction {
         struct Scaner: Action { }
         
         struct Products: Action { }
+        
+        struct Transfers: Action { }
+        
+        struct OrderProduct: Action {
+            
+            let productData: (Int, Int)
+        }
     }
     
     enum Close {

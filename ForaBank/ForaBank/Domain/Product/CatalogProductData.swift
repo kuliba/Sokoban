@@ -15,6 +15,8 @@ struct CatalogProductData: Codable, Equatable, Hashable, Identifiable {
     let imageEndpoint: String
     let infoURL: URL
     let orderURL: URL
+    let tariff: Int
+    let productType: Int
     
     enum CodingKeys : String, CodingKey {
         
@@ -23,5 +25,7 @@ struct CatalogProductData: Codable, Equatable, Hashable, Identifiable {
         case imageEndpoint = "imageLink"
         case infoURL = "conditionLink"
         case orderURL = "orderLink"
+        case tariff = "cardTarif"
+        case productType = "cardType"
     }
 }

@@ -20,6 +20,9 @@ class Model {
             .eraseToAnyPublisher()
     }
     
+    //MARK: Pre-Auth
+    let transferAbroad: CurrentValueSubject<TransferAbroadResponseData?, Never>
+    
     //MARK: Products
     let products: CurrentValueSubject<ProductsData, Never>
     let productsUpdating: CurrentValueSubject<[ProductType], Never>
@@ -46,6 +49,7 @@ class Model {
     //MARK: Dictionaries
     let dictionariesUpdating: CurrentValueSubject<Set<DictionaryType>, Never>
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
+    let authCatalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
     let currencyList: CurrentValueSubject<[CurrencyData], Never>
     let countriesList: CurrentValueSubject<[CountryData], Never>
@@ -148,9 +152,11 @@ class Model {
         self.depositsInfo = .init(DepositsInfoData())
         self.statements = .init([:])
         self.statementsUpdating = .init([:])
+        self.transferAbroad = .init(nil)
         self.rates = .init([])
         self.ratesUpdating = .init([])
         self.catalogProducts = .init([])
+        self.authCatalogBanners = .init([])
         self.catalogBanners = .init([])
         self.currencyList = .init([])
         self.currencyWalletList = .init([])
@@ -500,6 +506,12 @@ class Model {
                     clearMemoryData()
                     sessionAgent.action.send(SessionAgentAction.Session.Terminate())
                     
+                case let payload as ModelAction.Auth.OrderLead.Request:
+                    handleOrderLeadRequest(payload)
+                    
+                case let payload as ModelAction.Auth.VerifyPhone.Request:
+                    handleVerifyPhoneRequest(payload)
+                    
         //MARK: - Products Actions
                     
                 case _ as ModelAction.Products.Update.Fast.All:
@@ -788,6 +800,8 @@ class Model {
                         
                     case .prefferedBanks:
                         handleDictionaryPrefferedBanks(payload.serial)
+                    case .jsonAbroad:
+                        handleJsonAbroadRequest(payload.serial)
                     }
                     
                 case let payload as ModelAction.Dictionary.DownloadImages.Request:
@@ -980,6 +994,13 @@ private extension Model {
             self.catalogProducts.value = catalogProducts
         }
         
+        /*
+        if let catalogBanner = localAgent.load(type: [BannerCatalogListData].self) {
+            
+            self.authCatalogBanners.value = catalogBanner
+        }
+        */
+        
         if let catalogBanner = localAgent.load(type: [BannerCatalogListData].self) {
             
             self.catalogBanners.value = catalogBanner
@@ -1028,6 +1049,11 @@ private extension Model {
         if let currencyWalletList = localAgent.load(type: [CurrencyWalletData].self) {
             
             self.currencyWalletList.value = currencyWalletList
+        }
+        
+        if let transferAbroad = localAgent.load(type: TransferAbroadResponseData.self) {
+            
+            self.transferAbroad.value = transferAbroad
         }
         
         if let qrMapping = localAgent.load(type: QRMapping.self) {
@@ -1256,6 +1282,7 @@ private extension Model {
         loansUpdating.value = []
         statements.value = [:]
         statementsUpdating.value = [:]
+        transferAbroad.value = nil
         paymentTemplates.value = []
         paymentTemplatesViewSettings.value = .initial
         latestPayments.value = []

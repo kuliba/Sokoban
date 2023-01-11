@@ -6,6 +6,8 @@
         "imageLink": "dict/getProductCatalogImage?image=1",
         "orderLink": "https://www.forabank.ru/",
         "productName": "Карта 'Миг'",
+        "cardTarif": 1,
+        "cardType": 1,
         "txtСondition": [
           "string"
         ]

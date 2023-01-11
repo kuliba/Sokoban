@@ -41,6 +41,7 @@ struct MainView: View {
                             
                         case let promoViewModel  as MainSectionPromoView.ViewModel:
                             MainSectionPromoView(viewModel: promoViewModel)
+                                .padding(.horizontal, 20)
                             
                         case let currencyViewModel as MainSectionCurrencyView.ViewModel:
                             MainSectionCurrencyView(viewModel: currencyViewModel)
