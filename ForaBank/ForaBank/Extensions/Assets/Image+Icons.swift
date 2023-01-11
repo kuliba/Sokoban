@@ -24,7 +24,7 @@ public extension Image {
     static var ic12Lock: Image { Image(#function) }
     static var ic12Lockandeyeoff: Image { Image(#function) }
     static var ic12LogoForaColor: Image { Image(#function) }
-    //static var ic12Percent: Image { Image(#function) }
+    static var ic12Percent: Image { Image(#function) }
     static var ic12Shield: Image { Image(#function) }
     static var ic12Star: Image { Image(#function) }
     static var ic12Zap: Image { Image(#function) }
@@ -705,6 +705,7 @@ public extension Image {
     static var ic24Tag: Image { Image(#function) }
     static var ic24Target: Image { Image(#function) }
     static var ic24Tax: Image { Image(#function) }
+    static var ic24Telegram: Image { Image(#function) }
     static var ic24Terminal: Image { Image(#function) }
     static var ic24Thermometer: Image { Image(#function) }
     static var ic24ThumbsDown: Image { Image(#function) }
@@ -736,6 +737,7 @@ public extension Image {
     static var ic24UserPlus: Image { Image(#function) }
     static var ic24UserX: Image { Image(#function) }
     static var ic24Users: Image { Image(#function) }
+    static var ic24Viber: Image { Image(#function) }
     static var ic24Video: Image { Image(#function) }
     static var ic24VideoOff: Image { Image(#function) }
     static var ic24Visa: Image { Image(#function) }
@@ -747,6 +749,7 @@ public extension Image {
     static var ic24Wallet: Image { Image(#function) }
     static var ic24Watch: Image { Image(#function) }
     static var ic24Water: Image { Image(#function) }
+    static var ic24Whatsapp: Image { Image(#function) }
     static var ic24WheelOfFortune: Image { Image(#function) }
     static var ic24Wifi: Image { Image(#function) }
     static var ic24WifiOff: Image { Image(#function) }
@@ -790,6 +793,7 @@ public extension Image {
     static var ic40Sbp: Image { Image(#function) }
     static var ic40Services: Image { Image(#function) }
     static var ic40ShoppingOther: Image { Image(#function) }
+    static var ic40Smth: Image { Image(#function) }
     static var ic40Supermarket: Image { Image(#function) }
     static var ic40TouchId: Image { Image(#function) }
     static var ic40TrainTicket: Image { Image(#function) }
@@ -819,12 +823,4 @@ public extension Image {
     static var ic64TouchId: Image { Image(#function) }
     static var ic64FaceId: Image { Image(#function) }
     static var ic64ForaColor: Image { Image(#function) }
-    static var ic12Percent: Image { Image(#function) }
-   // static var ic12Shield: Image { Image(#function) }
-    //static var ic12Zap: Image { Image(#function) }
-    //static var ic24RegistrationPercent: Image { Image(#function) }
-    //static var ic24RegistrationTime: Image { Image(#function) }
-    //static var ic24RegistrationAllday: Image { Image(#function) }
-    //static var ic24RegistrationPhone: Image { Image(#function) }
-    //static var ic32UserPlus: Image { Image(#function) }
 }
