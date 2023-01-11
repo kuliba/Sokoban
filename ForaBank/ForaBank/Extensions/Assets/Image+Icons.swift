@@ -24,7 +24,7 @@ public extension Image {
     static var ic12Lock: Image { Image(#function) }
     static var ic12Lockandeyeoff: Image { Image(#function) }
     static var ic12LogoForaColor: Image { Image(#function) }
-    static var ic12Percent: Image { Image(#function) }
+    //static var ic12Percent: Image { Image(#function) }
     static var ic12Shield: Image { Image(#function) }
     static var ic12Star: Image { Image(#function) }
     static var ic12Zap: Image { Image(#function) }
@@ -819,4 +819,12 @@ public extension Image {
     static var ic64TouchId: Image { Image(#function) }
     static var ic64FaceId: Image { Image(#function) }
     static var ic64ForaColor: Image { Image(#function) }
+    static var ic12Percent: Image { Image(#function) }
+   // static var ic12Shield: Image { Image(#function) }
+    //static var ic12Zap: Image { Image(#function) }
+    //static var ic24RegistrationPercent: Image { Image(#function) }
+    //static var ic24RegistrationTime: Image { Image(#function) }
+    //static var ic24RegistrationAllday: Image { Image(#function) }
+    //static var ic24RegistrationPhone: Image { Image(#function) }
+    //static var ic32UserPlus: Image { Image(#function) }
 }

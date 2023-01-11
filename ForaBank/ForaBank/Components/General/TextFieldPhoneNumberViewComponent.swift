@@ -13,19 +13,19 @@ extension TextFieldPhoneNumberView {
     
     class ViewModel: ObservableObject {
         
-        let style: Style
         @Published var text: String?
         @Published var state: State
-        var dismissKeyboard: () -> Void
+
         var toolbar: ToolbarViewModel?
+        var dismissKeyboard: () -> Void
+        var bindings = Set<AnyCancellable>()
         
+        let style: Style
         let placeHolder: PlaceHolder
         let filterSymbols: [Character]?
         let firstDigitReplaceList: [Replace]?
         
         let phoneNumberFormatter: PhoneNumberFormaterProtocol
-        
-        var bindings = Set<AnyCancellable>()
         
         init(style: Style = .general, text: String? = nil, placeHolder: PlaceHolder, state: State = .idle, toolbar: ToolbarViewModel? = nil, filterSymbols: [Character]? = nil, firstDigitReplaceList: [Replace]? = nil, phoneNumberFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater()) {
             
@@ -56,6 +56,40 @@ extension TextFieldPhoneNumberView {
                                  closeButton: .init(isEnabled: true, action: { [weak self] in self?.dismissKeyboard() }))
         }
         
+        convenience init(style: Style, placeHolder: PlaceHolder) {
+            
+            switch placeHolder {
+            case .phone:
+                
+                let symbols: [Character] = ["-", "(", ")", "+"]
+                let replaceList: [Replace] = [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")]
+                
+                self.init(style: style, placeHolder: placeHolder, filterSymbols: symbols, firstDigitReplaceList: replaceList)
+            
+            default:
+                self.init(placeHolder: placeHolder)
+            }
+            
+            toolbar = .init(doneButton: .init(isEnabled: true) { [weak self] in
+                self?.dismissKeyboard()
+            }, closeButton: .init(isEnabled: true) { [weak self] in
+                self?.dismissKeyboard()
+            })
+        }
+        
+        var isActive: Bool {
+           
+            if state == .selected {
+                return true
+            }
+            
+            if let text = text, text.isEmpty == false {
+                return true
+            }
+            
+            return false
+        }
+        
         enum State {
             
             case idle
@@ -67,6 +101,7 @@ extension TextFieldPhoneNumberView {
             
             case general
             case payments
+            case order
         }
         
         enum PlaceHolder {
@@ -74,6 +109,8 @@ extension TextFieldPhoneNumberView {
             case contacts
             case banks
             case countries
+            case phone
+            case smsCode
             case text(String)
             
             var title: String {
@@ -82,6 +119,8 @@ extension TextFieldPhoneNumberView {
                 case .contacts: return "Номер телефона или имя"
                 case .banks: return "Введите название банка"
                 case .countries: return "Введите название страны"
+                case .phone: return "Мобильный телефон"
+                case .smsCode: return "Введите код из СМС"
                 case let .text(text): return text
                 }
             }
@@ -144,6 +183,10 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         case .payments:
             textField.keyboardType = .phonePad
             textField.font = .init(name: "Inter-Medium", size: 14.0)
+        
+        case .order:
+            textField.keyboardType = .decimalPad
+            textField.font = .init(name: "Inter", size: 16)
         }
         
         viewModel.dismissKeyboard = { textField.resignFirstResponder() }
@@ -177,10 +220,22 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         
         func textFieldDidBeginEditing(_ textField: UITextField) {
             
+            textField.placeholder = nil
             viewModel.state = state(for: viewModel.text)
         }
         
         func textFieldDidEndEditing(_ textField: UITextField) {
+            
+            guard let text = textField.text else {
+                return
+            }
+            
+            switch text.isEmpty {
+            case true:
+                textField.placeholder = viewModel.placeHolder.title
+            case false:
+                textField.text = viewModel.text
+            }
             
             viewModel.state = .idle
         }
@@ -188,6 +243,16 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
             let result = TextFieldPhoneNumberView.updateMasked(value: textField.text, inRange: range, update: string, firstDigitReplace: viewModel.firstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
+            
+            if viewModel.style == .order {
+                
+                let isValidate = isOrderValidate(textField, result: result)
+                
+                switch isValidate {
+                case true: break
+                case false: return isValidate
+                }
+            }
             
             textField.text = result
             viewModel.text = result
@@ -222,6 +287,33 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
                 
                 return .selected
             }
+        }
+        
+        private func isOrderValidate(_ textField: UITextField, result: String?) -> Bool {
+            
+            if let text = result, viewModel.phoneNumberFormatter.isValid(text) {
+                
+                textField.text = result
+                viewModel.text = result
+                
+                return false
+                
+            } else {
+                
+                if let text = textField.text, let result = result {
+                    
+                    let expectedCharacters = "0123456789"
+                    
+                    let filterredText = text.filter { expectedCharacters.contains($0) }
+                    let filterredResult = result.filter { expectedCharacters.contains($0) }
+                    
+                    if filterredResult.count > filterredText.count, filterredText.count == 11 {
+                        return false
+                    }
+                }
+            }
+            
+            return true
         }
     }
     

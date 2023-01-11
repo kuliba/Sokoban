@@ -141,7 +141,7 @@ struct CheckMark: Shape {
 
 // MARK: - Preview
 
-struct CheckBoxView_Previews: PreviewProvider {
+struct PaymentsCheckBoxView_Previews: PreviewProvider {
     
     static var previews: some View {
         

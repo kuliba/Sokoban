@@ -215,6 +215,40 @@ extension ModelAction {
         }
         
         struct Logout: Action {}
+        
+        enum OrderLead {
+            
+            struct Request: Action {
+                
+                let firstName: String
+                let phone: String
+                let device: String
+                let os: String
+                let cardTarif: Int
+                let cardType: Int
+            }
+            
+            enum Response: Action {
+                
+                case success(leadID: Int?)
+                case error(message: String)
+            }
+        }
+        
+        enum VerifyPhone {
+            
+            struct Request: Action {
+                
+                let leadID: String
+                let smsCode: String
+            }
+            
+            enum Response: Action {
+                
+                case success
+                case error(message: String)
+            }
+        }
     }
 }
 
@@ -841,6 +875,144 @@ internal extension Model {
                 LoggerAgent.shared.log(level: .error, category: .model, message: "Auth Login Request Task Error: \(error.localizedDescription)")
                 LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.Login.Response, failure")
                 self.action.send(ModelAction.Auth.Login.Response.failure(message: self.defaultErrorMessage))
+            }
+        }
+    }
+    
+    // MARK: - Pre-Auth
+
+    func handleJsonAbroadRequest(_ serial: String?) {
+        
+        LoggerAgent.shared.log(category: .model, message: "handleJsonAbroadRequest")
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .jsonAbroad
+        guard self.dictionariesUpdating.value.contains(typeDict) == false else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.UtilityController.GetJsonAbroad(token: token, serial: serial)
+        
+        LoggerAgent.shared.log(category: .model, message: "execute command: \(command)")
+        serverAgent.executeCommand(command: command) { result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
+            
+            switch result {
+            case let .success(response):
+                switch response.statusCode {
+                case .ok:
+                    
+                    guard let data = response.data else {
+                        
+                        self.handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    self.transferAbroad.value = data
+                    
+                    do {
+                        
+                        try self.localAgent.store(data, serial: nil)
+                        
+                    } catch {
+                        
+                        self.handleServerCommandCachingError(error: error, command: command)
+                    }
+
+                default:
+
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: String(describing: response.errorMessage))
+                }
+
+            case let .failure(error):
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    func handleOrderLeadRequest(_ payload: ModelAction.Auth.OrderLead.Request) {
+        
+        LoggerAgent.shared.log(category: .model, message: "handleOrderLeadRequest")
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.UtilityController.CreateLead(token: token, payload: .init(firstName: payload.firstName, phone: payload.phone, device: payload.device, os: payload.os, cardTarif: payload.cardTarif, cardType: payload.cardType))
+        
+        let message = "Возникла техническая ошибка. Свяжитесь с поддержкой банка для уточнения"
+        
+        LoggerAgent.shared.log(category: .model, message: "execute command: \(command)")
+        serverAgent.executeCommand(command: command) { result in
+            
+            switch result {
+            case let .success(response):
+                switch response.statusCode {
+                case .ok:
+                    if let data = response.data  {
+                        
+                        self.action.send(ModelAction.Auth.OrderLead.Response.success(leadID: data.leadID))
+                        
+                    } else {
+                        
+                        self.action.send(ModelAction.Auth.OrderLead.Response.error(message: message))
+                        self.handleServerCommandEmptyData(command: command)
+                    }
+
+                default:
+                    
+                    self.action.send(ModelAction.Auth.OrderLead.Response.error(message: response.errorMessage ?? message))
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: String(describing: response.errorMessage))
+                }
+
+            case let .failure(error):
+                
+                self.action.send(ModelAction.Auth.OrderLead.Response.error(message: error.errorDescription ?? message))
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    func handleVerifyPhoneRequest(_ payload: ModelAction.Auth.VerifyPhone.Request) {
+        
+        LoggerAgent.shared.log(category: .model, message: "handleVerifyPhoneRequest")
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.UtilityController.VerifyPhone(token: token, payload: .init(leadID: payload.leadID, smsCode: payload.smsCode))
+        
+        let message = "Возникла техническая ошибка. Свяжитесь с поддержкой банка для уточнения"
+        
+        LoggerAgent.shared.log(category: .model, message: "execute command: \(command)")
+        serverAgent.executeCommand(command: command) { result in
+            
+            switch result {
+            case let .success(response):
+                switch response.statusCode {
+                case .ok:
+                    
+                    self.action.send(ModelAction.Auth.VerifyPhone.Response.success)
+
+                default:
+                    
+                    self.action.send(ModelAction.Auth.VerifyPhone.Response.error(message: response.errorMessage ?? message))
+
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: String(describing: response.errorMessage))
+                }
+
+            case let .failure(error):
+                
+                self.action.send(ModelAction.Auth.VerifyPhone.Response.error(message: error.errorDescription ?? message))
+                                 
+                self.handleServerCommandError(error: error, command: command)
             }
         }
     }

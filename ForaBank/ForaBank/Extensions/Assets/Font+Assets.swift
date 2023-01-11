@@ -87,6 +87,9 @@ public extension Font {
     static func textH1R24322() -> Font {
         Font.custom("Inter-Regular", size: 24.0)
     }
+    static func textH1R32322() -> Font {
+        Font.custom("Inter-Regular", size: 32.0)
+    }
     static func textH1SB24322() -> Font {
         Font.custom("Inter-SemiBold", size: 24.0)
     }

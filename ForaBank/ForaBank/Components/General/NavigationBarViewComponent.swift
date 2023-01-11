@@ -14,6 +14,7 @@ extension NavigationBarView {
         @Published var title: String
         @Published var titleButton: TitleButtonViewModel?
         @Published var subtitle: String?
+        @Published var opacity: Double
         
         @Published var leftItems: [ItemViewModel]
         @Published var rightItems: [ItemViewModel]
@@ -25,6 +26,7 @@ extension NavigationBarView {
         init(title: String = "",
              titleButton: TitleButtonViewModel? = nil,
              subtitle: String? = nil,
+             opacity: Double = 1,
              leftItems: [ItemViewModel] = [],
              rightItems: [ItemViewModel] = [],
              background: Color = Color.textWhite,
@@ -34,11 +36,18 @@ extension NavigationBarView {
             self.title = title
             self.titleButton = titleButton
             self.subtitle = subtitle
+            self.opacity = opacity
             self.leftItems = leftItems
             self.rightItems = rightItems
             self.background = background
             self.foreground = foreground
             self.backgroundDimm = backgroundDimm
+        }
+
+        convenience init(opacity: Double = 1, action: @escaping () -> Void) {
+
+            let backButton: BackButtonItemViewModel = .init(icon: .ic24ChevronLeft, action: action)
+            self.init(opacity: opacity, leftItems: [backButton], background: .clear)
         }
         
         convenience init(with parameters: [PaymentsParameterRepresentable], closeAction: @escaping () -> Void) {
@@ -494,7 +503,6 @@ struct NavigationBarView_Previews: PreviewProvider {
                 }
             }
             .navigationBar(with: self.model)
-            
         }
     }
 }
