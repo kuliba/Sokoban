@@ -227,6 +227,7 @@ struct TransfersPromoDetailView: View {
             VStack(spacing: 0) {
                 
                 LogoView(viewModel: viewModel.logo)
+                    .padding(.top, 10)
                 
                 if let viewModel = viewModel.transfersMoney {
                     TransfersMoneyView(viewModel: viewModel)

@@ -160,14 +160,16 @@ class AuthTransfersViewModel: ObservableObject {
                             if let viewModel = TransfersPromoDetailView.ViewModel(model: model,
                                                                                   countryId: payload.countryId,
                                                                                   bannerType: payload.bannerType) {
-                                bottomSheet = .init(type: .promo(viewModel))
+                                bottomSheet = .init(type: .promoMig(viewModel))
                             }
                             
-                        case _ as TransfersPromoAction.Banner.Deposit.Tap: break
-                                
-                            //FIX
-                            //let viewModel = TransfersPromoDetailView.ViewModel(.armenia)
-                            //bottomSheet = .init(type: .promo(viewModel))
+                        case let payload as TransfersPromoAction.Banner.Deposit.Tap:
+                             
+                            if let viewModel = TransfersPromoDepositView.ViewModel(model: model,
+                                                                                  countryId: payload.countryId,
+                                                                                  bannerType: payload.bannerType) {
+                                bottomSheet = .init(type: .promoDeposit(viewModel))
+                            }
 
                         default:
                             break
@@ -230,7 +232,8 @@ extension AuthTransfersViewModel {
         enum Kind {
             
             case directions(TransfersDetailView.ViewModel)
-            case promo(TransfersPromoDetailView.ViewModel)
+            case promoMig(TransfersPromoDetailView.ViewModel)
+            case promoDeposit(TransfersPromoDepositView.ViewModel)
         }
     }
 }
@@ -320,7 +323,6 @@ extension AuthTransfersViewModel {
                    TransfersDirectionsView.ViewModel(model: .emptyMock,
                                                      items:  TransfersDirectionsView.ViewModel.sampleItems),
                    TransfersInfoView.ViewModel.sample,
-                   //TransfersBannersView.ViewModel(.emptyMock),
                    TransfersCountriesView.ViewModel(model: .emptyMock,
                                                     items:  TransfersDirectionsView.ViewModel.sampleItems),
                    TransfersAdvantagesView.ViewModel(items: TransfersAdvantagesView.ViewModel.sampleItems),
