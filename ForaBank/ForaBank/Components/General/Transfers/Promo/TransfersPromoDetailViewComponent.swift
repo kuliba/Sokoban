@@ -429,7 +429,7 @@ extension TransfersPromoDetailView {
                                 .frame(width: 62, height: 82)
                         }
                     }
-                }
+                }.padding(.horizontal, 16)
                 
             }.frame(height: 96)
         }
