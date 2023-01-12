@@ -63,7 +63,7 @@ class AuthTransfersViewModel: ObservableObject {
             .sink {[unowned self] state in
                 
                 switch state {
-                case .expired:
+                case .expired, .inactive:
                     model.action.send(ModelAction.Auth.Session.Start.Request())
                     
                 default:

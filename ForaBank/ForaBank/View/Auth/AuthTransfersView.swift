@@ -64,7 +64,11 @@ struct AuthTransfersView: View {
                 .padding(.horizontal)
                 .padding(.bottom)
             
-            }.navigationBar(with: viewModel.navigation)
+            }
+            .navigationBar(with: viewModel.navigation)
+            .navigationBarTitle("") //this must be empty
+            .navigationBarHidden(true)
+            .navigationBarBackButtonHidden(true)
         
         }.bottomSheet(item: $viewModel.bottomSheet) { sheet in
             

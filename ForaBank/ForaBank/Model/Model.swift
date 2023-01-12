@@ -1282,7 +1282,6 @@ private extension Model {
         loansUpdating.value = []
         statements.value = [:]
         statementsUpdating.value = [:]
-        transferAbroad.value = nil
         paymentTemplates.value = []
         paymentTemplatesViewSettings.value = .initial
         latestPayments.value = []
