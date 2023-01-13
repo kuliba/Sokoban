@@ -19,56 +19,63 @@ struct AuthTransfersView: View {
             TransfersImageView(viewModel: viewModel)
             
             ScrollView(.vertical, showsIndicators: false) {
-                
-                VStack(spacing: 24) {
-                    
-                    TransfersTitleView(viewModel: viewModel)
-                    
-                    ForEach(viewModel.sections) { section in
+             
+                    VStack(spacing: 24) {
                         
-                        switch section {
-                        case let coverViewModel as TransfersCoverView.ViewModel:
-                            TransfersCoverView(viewModel: coverViewModel)
+                        TransfersTitleView(viewModel: viewModel)
+                            .padding(.vertical, 32)
+                        
+                        ForEach(viewModel.sections) { section in
                             
-                        case let directionsViewModel as TransfersDirectionsView.ViewModel:
-                            TransfersDirectionsView(viewModel: directionsViewModel)
-                            
-                        case let infoViewModel as TransfersInfoView.ViewModel:
-                            TransfersInfoView(viewModel: infoViewModel)
-                            
-                        case let promoViewModel as TransfersBannersView.ViewModel:
-                            TransfersBannersView(viewModel: promoViewModel)
-                            
-                        case let countriesViewModel as TransfersCountriesView.ViewModel:
-                            TransfersCountriesView(viewModel: countriesViewModel)
-                            
-                        case let advantagesViewModel as TransfersAdvantagesView.ViewModel:
-                            TransfersAdvantagesView(viewModel: advantagesViewModel)
-                            
-                        case let questionsViewModel as TransfersQuestionsView.ViewModel:
-                            TransfersQuestionsView(viewModel: questionsViewModel)
-                            
-                        case let supportViewModel as TransfersSupportView.ViewModel:
-                            TransfersSupportView(viewModel: supportViewModel)
-                            
-                        default:
-                            Color.clear
+                            switch section {
+                            case let coverViewModel as TransfersCoverView.ViewModel:
+                                TransfersCoverView(viewModel: coverViewModel)
+                                
+                            case let directionsViewModel as TransfersDirectionsView.ViewModel:
+                                TransfersDirectionsView(viewModel: directionsViewModel)
+                                
+                            case let infoViewModel as TransfersInfoView.ViewModel:
+                                TransfersInfoView(viewModel: infoViewModel)
+                                
+                            case let promoViewModel as TransfersBannersView.ViewModel:
+                                TransfersBannersView(viewModel: promoViewModel)
+                                
+                            case let countriesViewModel as TransfersCountriesView.ViewModel:
+                                TransfersCountriesView(viewModel: countriesViewModel)
+                                
+                            case let advantagesViewModel as TransfersAdvantagesView.ViewModel:
+                                TransfersAdvantagesView(viewModel: advantagesViewModel)
+                                
+                            case let questionsViewModel as TransfersQuestionsView.ViewModel:
+                                TransfersQuestionsView(viewModel: questionsViewModel).scrollId(9)
+                                
+                            case let supportViewModel as TransfersSupportView.ViewModel:
+                                TransfersSupportView(viewModel: supportViewModel).scrollId(10)
+                                
+                            default:
+                                Color.clear
+                            }
                         }
+                        
+                        Text(viewModel.legalTitle)
+                            .font(.textBodySR12160())
+                            .foregroundColor(.mainColorsGray)
+                        
                     }
-                    
-                    Text(viewModel.legalTitle)
-                        .font(.textBodySR12160())
-                        .foregroundColor(.mainColorsGray)
-                    
-                }
-                .padding(.horizontal)
-                .padding(.bottom)
-            
+                    .padding(.horizontal)
+                    .padding(.bottom)
+                    .background(GeometryReader {
+                                    Color.clear.preference(key: ViewOffsetKey.self,
+                                        value: -$0.frame(in: .named("scroll")).origin.y)
+                                })
+                    .onPreferenceChange(ViewOffsetKey.self) {
+                        
+                        viewModel.navigation.opacity = $0 / 150
+                    }
+                
             }
+            .coordinateSpace(name: "scroll")
             .navigationBar(with: viewModel.navigation)
-            .navigationBarTitle("") //this must be empty
-            .navigationBarHidden(true)
-            .navigationBarBackButtonHidden(true)
         
         }.bottomSheet(item: $viewModel.bottomSheet) { sheet in
             
@@ -87,6 +94,14 @@ struct AuthTransfersView: View {
 }
 
 extension AuthTransfersView {
+    
+    struct ViewOffsetKey: PreferenceKey {
+        typealias Value = CGFloat
+        static var defaultValue = CGFloat.zero
+        static func reduce(value: inout Value, nextValue: () -> Value) {
+            value += nextValue()
+        }
+    }
     
     struct TransfersImageView: View {
         
@@ -131,7 +146,7 @@ extension AuthTransfersView {
                     
                     Spacer()
                     
-                }.padding(.vertical, 32)
+                }
             }
         }
     }
