@@ -248,6 +248,7 @@ struct NavigationBarView: View {
                         .font(.textH3M18240())
                         .foregroundColor(viewModel.foreground)
                         .lineLimit(1)
+                        .opacity(viewModel.opacity)
                         .accessibilityIdentifier("navigationTitle")
   
                     if let subtitle = viewModel.subtitle {
@@ -256,6 +257,7 @@ struct NavigationBarView: View {
                             .font(.textBodySR12160())
                             .foregroundColor(viewModel.foreground)
                             .lineLimit(1)
+                            .opacity(viewModel.opacity)
                     }
                 }
                 
@@ -439,7 +441,9 @@ struct NavigationBarViewModifier: ViewModifier {
             NavigationBarView(viewModel: viewModel)
             content
         }
+        .navigationBarTitle("")
         .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
     }
 }
 
