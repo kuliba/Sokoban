@@ -292,6 +292,7 @@ extension OrderProductView {
                     }
                     
                     isValidPhoneNumber = isValidPhone(text)
+                    self.phoneNumber.isError = !isValidPhoneNumber
                     
                 }.store(in: &bindings)
         }
@@ -397,7 +398,7 @@ extension OrderProductView.ViewModel {
             isValidatePersonalData,
             smsCode.$text
         )
-            .map { $0.0 == true && $0.1.count > 3 } 
+            .map { $0.0 == true && $0.1.count > 3 }
             .eraseToAnyPublisher()
         
         return isValidate
@@ -565,6 +566,7 @@ extension OrderProductView.ViewModel {
 struct OrderProductView: View {
     
     @ObservedObject var viewModel: ViewModel
+    @State var showOk: Bool = true
     
     var body: some View {
         
@@ -618,9 +620,16 @@ struct OrderProductView: View {
             }
         
         } else {
-            
-            NotifyView(viewModel: viewModel.notify)
-                .frame(height: 247)
+           
+            if showOk {
+                NotifyView(viewModel: viewModel.notify)
+                    .frame(height: 247)
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 4, execute: {
+                            showOk = false
+                        })
+                    }
+            }
         }
     }
 }
