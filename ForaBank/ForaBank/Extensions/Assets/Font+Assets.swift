@@ -11,7 +11,7 @@
 import SwiftUI
 
 public extension Font {
-
+    
     static func buttonExtraSmallR12140() -> Font {
         Font.custom("Inter", size: 12.0)
     }
@@ -23,6 +23,12 @@ public extension Font {
     }
     static func buttonSmallM14160() -> Font {
         Font.custom("Inter-Medium", size: 14.0)
+    }
+    static func marketingH0B40X480() -> Font {
+        Font.custom("Inter-Bold", size: 40.0)
+    }
+    static func marketingH0L40X480() -> Font {
+        Font.custom("Inter-Light", size: 40.0)
     }
     static func printFormBodyMR9120() -> Font {
         Font.custom("Roboto-Regular", size: 9.0)
@@ -86,9 +92,6 @@ public extension Font {
     }
     static func textH1R24322() -> Font {
         Font.custom("Inter-Regular", size: 24.0)
-    }
-    static func textH1R32322() -> Font {
-        Font.custom("Inter-Regular", size: 32.0)
     }
     static func textH1SB24322() -> Font {
         Font.custom("Inter-SemiBold", size: 24.0)
