@@ -136,11 +136,11 @@ extension AuthTransfersView {
                     VStack(alignment: .leading) {
                         
                         Text(viewModel.title)
-                            .font(.textH1R32322())
+                            .font(.marketingH0L40X480())
                             .foregroundColor(.mainColorsBlack)
                         
                         Text(viewModel.subTitle)
-                            .font(.textH0B32402())
+                            .font(.marketingH0B40X480())
                             .foregroundColor(.mainColorsBlack)
                     }
                     
