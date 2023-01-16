@@ -105,6 +105,13 @@ class AuthTransfersViewModel: ObservableObject {
                 case _ as AuthTransfersAction.Close.Sheet:
                     bottomSheet = nil
                     
+                case let payload as AuthTransfersAction.Show.NavbarTitle:
+                
+                    let opacity = payload.scrollOffsetY / 300
+                    if (0...1).contains(opacity) {
+                        self.navigation.opacity = opacity
+                    }
+                    
                 default:
                     break
                 }
@@ -245,6 +252,14 @@ enum AuthTransfersAction {
     enum Close {
         
         struct Sheet: Action {}
+    }
+    
+    enum Show {
+        
+        struct NavbarTitle: Action {
+            
+            let scrollOffsetY: Double
+        }
     }
 }
 

@@ -69,13 +69,8 @@ struct AuthTransfersView: View {
                                         value: -$0.frame(in: .named("scroll")).origin.y)
                                 })
                     .onPreferenceChange(ViewOffsetKey.self) {
-                        
-                        let opacity = $0 / 250
-                        if (0...1).contains(opacity) {
-                            viewModel.navigation.opacity = opacity
-                        }
+                        viewModel.action.send(AuthTransfersAction.Show.NavbarTitle(scrollOffsetY: $0))
                     }
-                
             }
             .coordinateSpace(name: "scroll")
             .navigationBar(with: viewModel.navigation)
