@@ -70,7 +70,10 @@ struct AuthTransfersView: View {
                                 })
                     .onPreferenceChange(ViewOffsetKey.self) {
                         
-                        viewModel.navigation.opacity = $0 / 150
+                        let opacity = $0 / 250
+                        if (0...1).contains(opacity) {
+                            viewModel.navigation.opacity = opacity
+                        }
                     }
                 
             }
@@ -136,7 +139,7 @@ extension AuthTransfersView {
                     VStack(alignment: .leading) {
                         
                         Text(viewModel.title)
-                            .font(.textH1R32322())
+                            .font(Font.textH1R32322())
                             .foregroundColor(.mainColorsBlack)
                         
                         Text(viewModel.subTitle)
