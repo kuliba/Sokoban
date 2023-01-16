@@ -215,7 +215,7 @@ extension OrderProductView {
             smsCode.$text
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] text in
-                    print("mdy: \(text.count)")
+                   
                     if text.count == 6 {
                         sendButton.style = .red
                     }
@@ -397,7 +397,7 @@ extension OrderProductView.ViewModel {
             isValidatePersonalData,
             smsCode.$text
         )
-            .map { $0.0 == true && $0.1.count > 3 } //isEmpty == false }
+            .map { $0.0 == true && $0.1.count > 3 } 
             .eraseToAnyPublisher()
         
         return isValidate
