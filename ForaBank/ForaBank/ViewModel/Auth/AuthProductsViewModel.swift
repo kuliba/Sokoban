@@ -74,6 +74,18 @@ class AuthProductsViewModel: ObservableObject {
     
     private func bind() {
         
+        model.sessionState
+            .sink {[unowned self] state in
+                
+                switch state {
+                case .expired, .inactive:
+                    model.action.send(ModelAction.Auth.Session.Start.Request())
+                    
+                default:
+                    break
+                }
+            }.store(in: &bindings)
+        
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
