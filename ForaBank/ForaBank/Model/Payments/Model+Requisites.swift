@@ -59,8 +59,6 @@ extension Model {
             
             if let source = operation.source {
                 
-                //TODO: Setup message parameter after merge request
-                
                 switch source {
                 case let .requisites(qrCode: qrCode):
                     
@@ -71,6 +69,8 @@ extension Model {
                     if let inn = qrCode.stringValue(type: .general(.inn), mapping: qrMapping) {
                         
                         if inn.count == 10 {
+                            
+                            let messageInfoParameter = Payments.ParameterMessage(.init(id: UUID().description, value: .init("false")), message: "Проверьте реквизиты получателя перед совершением перевода")
                             
                             //MARK: Inn Number Parameter
                             let innValidator: Payments.Validation.RulesSystem = {
@@ -145,9 +145,11 @@ extension Model {
                             
                             let messageParameter = Payments.ParameterInput(.init(id: messageParameterId, value: nil), icon: messageParameterIcon, title: "Назначение платежа", validator: messageValidator, limitator: .init(limit: 210))
                             
-                            return .init(parameters: [operatorParameter, headerParameter, bicBankParameter, accountNumberParameter, innParameter, kppParameter, companyNameParameter, checkBoxParameter, messageParameter, productParameter, amountParameter], front: .init(visible: [headerParameter.id, bicBankId, accountNumberId, innNumberId, kppParameterId, companyNameParameterId, checkBoxParameterId, messageParameterId, productParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [bicBankParameter.id, accountNumberParameter.id, innParameter.id, companyNameParameter.id, messageParameter.id, productParameter.id, amountParameter.id], processed: nil))
+                            return .init(parameters: [operatorParameter, headerParameter, messageInfoParameter, bicBankParameter, accountNumberParameter, innParameter, kppParameter, companyNameParameter, checkBoxParameter, messageParameter, productParameter, amountParameter], front: .init(visible: [headerParameter.id, messageInfoParameter.id, bicBankId, accountNumberId, innNumberId, kppParameterId, companyNameParameterId, checkBoxParameterId, messageParameterId, productParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [bicBankParameter.id, accountNumberParameter.id, innParameter.id, companyNameParameter.id, messageParameter.id, productParameter.id, amountParameter.id], processed: nil))
                             
                         } else {
+                            
+                            let messageInfoParameter = Payments.ParameterMessage(.init(id: UUID().description, value: .init("false")), message: "Проверьте реквизиты получателя перед совершением перевода")
                             
                             //MARK: Inn Number Parameter
                             let innValidator: Payments.Validation.RulesSystem = {
@@ -203,11 +205,13 @@ extension Model {
                             
                             let messageParameter = Payments.ParameterInput(.init(id: messageParameterId, value: nil), icon: messageParameterIcon, title: "Назначение платежа", validator: messageValidator, limitator: .init(limit: 210))
                             
-                            return .init(parameters: [operatorParameter, headerParameter, bicBankParameter, accountNumberParameter, innParameter, companyNameParameter, messageParameter, productParameter, amountParameter], front: .init(visible: [headerParameter.id, bicBankId, accountNumberId, innNumberId, companyNameParameterId, messageParameterId, productParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [bicBankParameter.id, accountNumberParameter.id, innParameter.id, companyNameParameter.id, messageParameter.id, productParameter.id, amountParameter.id], processed: nil))
+                            return .init(parameters: [operatorParameter, headerParameter, messageInfoParameter, bicBankParameter, accountNumberParameter, innParameter, companyNameParameter, messageParameter, productParameter, amountParameter], front: .init(visible: [headerParameter.id, messageInfoParameter.id, bicBankId, accountNumberId, innNumberId, companyNameParameterId, messageParameterId, productParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [bicBankParameter.id, accountNumberParameter.id, innParameter.id, companyNameParameter.id, messageParameter.id, productParameter.id, amountParameter.id], processed: nil))
                         }
                         
                     } else {
                      
+                        let messageInfoParameter = Payments.ParameterMessage(.init(id: UUID().description, value: .init("false")), message: "Проверьте реквизиты получателя перед совершением перевода")
+                        
                         //MARK: Name Parameter
                         let nameParameterId = Payments.Parameter.Identifier.requisitsName.rawValue
                         let nameParameter = Payments.ParameterName(id: nameParameterId, value: nil, title: "ФИО Получателя")
@@ -229,7 +233,7 @@ extension Model {
                         let productParameterId = Payments.Parameter.Identifier.product.rawValue
                         let filter = ProductData.Filter.generalFrom
                         guard let product = firstProduct(with: filter),
-                              let currencySymbol = dictionaryCurrencySymbol(for: product.currency)else {
+                              let currencySymbol = dictionaryCurrencySymbol(for: product.currency) else {
                             throw Payments.Error.unableCreateRepresentable(productParameterId)
                         }
                         let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
@@ -238,7 +242,7 @@ extension Model {
                         let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
                         let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма перевода", currencySymbol: currencySymbol, transferButtonTitle: "Продолжить", validator: .init(minAmount: 0.01, maxAmount: product.balance), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
                         
-                        return .init(parameters: [operatorParameter, headerParameter, bicBankParameter, accountNumberParameter, nameParameter, messageParameter, productParameter, amountParameter], front: .init(visible: [headerParameter.id, bicBankId, accountNumberId, nameParameterId, messageParameterId, productParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [bicBankParameter.id, accountNumberParameter.id, nameParameter.id, messageParameter.id, productParameter.id, amountParameter.id], processed: nil))
+                        return .init(parameters: [operatorParameter, headerParameter, messageInfoParameter, messageInfoParameter, bicBankParameter, accountNumberParameter, nameParameter, messageParameter, productParameter, amountParameter], front: .init(visible: [headerParameter.id, messageInfoParameter.id, bicBankId, accountNumberId, nameParameterId, messageParameterId, productParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [bicBankParameter.id, accountNumberParameter.id, nameParameter.id, messageParameter.id, productParameter.id, amountParameter.id], processed: nil))
                     }
                         
                 default:
