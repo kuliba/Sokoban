@@ -74,6 +74,17 @@ struct AuthTransfersView: View {
             }
             .coordinateSpace(name: "scroll")
             .navigationBar(with: viewModel.navigation)
+            
+            NavigationLink("", isActive: $viewModel.isLinkActive) {
+                
+                if let link = viewModel.link  {
+                    
+                    switch link {
+                    case let .products(productsViewModel):
+                        AuthProductsView(viewModel: productsViewModel)
+                    }
+                }
+            }
         
         }.bottomSheet(item: $viewModel.bottomSheet) { sheet in
             
@@ -86,6 +97,9 @@ struct AuthTransfersView: View {
              
             case let .promoDeposit(viewModel):
                 TransfersPromoDepositView(viewModel: viewModel)
+                
+            case let .orderProduct(viewModel):
+                OrderProductView(viewModel: viewModel)
             }
         }
     }

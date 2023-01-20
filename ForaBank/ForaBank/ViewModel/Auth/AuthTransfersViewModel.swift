@@ -15,6 +15,9 @@ class AuthTransfersViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
+    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var isLinkActive: Bool = false
+    
     @Published var sections: [TransfersSectionViewModel]
     @Published var bottomSheet: BottomSheet?
     @Published var opacity: Double
@@ -102,6 +105,10 @@ class AuthTransfersViewModel: ObservableObject {
                 
                 switch action {
                     
+                case _ as AuthTransfersAction.Close.Link:
+                    LoggerAgent.shared.log(category: .ui, message: "received AuthTransfersAction.Close.Link")
+                    link = nil
+                    
                 case _ as AuthTransfersAction.Close.Sheet:
                     bottomSheet = nil
                     
@@ -111,6 +118,15 @@ class AuthTransfersViewModel: ObservableObject {
                     if (0...1).contains(opacity) {
                         self.navigation.opacity = opacity
                     }
+                
+                case let payload as AuthTransfersAction.Show.OrderProduct:
+                    
+                    let viewModel: OrderProductView.ViewModel = .init(
+                        model,
+                        productData: payload.productData
+                    )
+                    
+                    bottomSheet = .init(type: .orderProduct(viewModel))
                     
                 default:
                     break
@@ -194,14 +210,32 @@ class AuthTransfersViewModel: ObservableObject {
         
         viewModel.action
             .receive(on: DispatchQueue.main)
-            .sink { action in
+            .sink { [unowned self] action in
                 
                 switch action {
                
                 case _ as TransfersDetailAction.Button.Order.Tap:
                     
                     self.action.send(AuthTransfersAction.Close.Sheet())
-                    self.action.send(TransfersSectionAction.Direction.Detail.Order.Tap())
+                    
+                    let action: (Int) -> Void = {
+                        
+                       [weak self] id in
+
+                        guard let self = self else { return }
+        
+                        if let catalogProduct = self.model.catalogProducts.value.first(where: { $0.id == id })  {
+                            self.action.send(AuthTransfersAction.Show.OrderProduct(productData: catalogProduct))
+                        }
+                    }
+                    
+                    let dismissAction: () -> Void = { [weak self] in
+                       self?.action.send(AuthTransfersAction.Close.Link()) 
+                    }
+                    
+                    let viewModel: AuthProductsViewModel = .init(self.model, products: self.model.catalogProducts.value, action: action, dismissAction: dismissAction)
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "presented products view")
+                    self.link = .products(viewModel)
                     
                 case _ as TransfersDetailAction.Button.Transfers.Tap:
                     
@@ -241,8 +275,15 @@ extension AuthTransfersViewModel {
             case directions(TransfersDetailView.ViewModel)
             case promoMig(TransfersPromoDetailView.ViewModel)
             case promoDeposit(TransfersPromoDepositView.ViewModel)
+            case orderProduct(OrderProductView.ViewModel)
         }
     }
+    
+    enum Link {
+       
+        case products(AuthProductsViewModel)
+    }
+    
 }
 
 // MARK: - Action
@@ -252,9 +293,17 @@ enum AuthTransfersAction {
     enum Close {
         
         struct Sheet: Action {}
+        
+        struct Link: Action {}
+        
     }
     
     enum Show {
+            
+        struct OrderProduct: Action {
+                
+            let productData: CatalogProductData
+        }
         
         struct NavbarTitle: Action {
             

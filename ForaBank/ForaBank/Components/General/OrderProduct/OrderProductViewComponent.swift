@@ -31,7 +31,8 @@ extension OrderProductView {
         let detailTitle = "В ближайшее время Вам позвонит\nсотрудник банка для\nподтверждения данных"
         
         private let model: Model
-        private let productData: (tariff: Int, productType: Int)
+        private let productTariff: Int
+        private let productType: Int
         private var bindings = Set<AnyCancellable>()
         
         private var leadID: Int?
@@ -43,10 +44,11 @@ extension OrderProductView {
             case error
         }
         
-        init(_ model: Model, productData: (Int, Int), isOrderCompletion: Bool, isValidPhoneNumber: Bool, isSmsCode: Bool, state: State, nameTextField: TextFieldView.ViewModel, phoneNumber: PhoneNumberViewModel, smsCode: SmsCodeViewModel, agreeData: AgreeDataViewModel, sendButton: SendButtonViewModel, notify: NotifyViewModel) {
+        init(_ model: Model, productTariff: Int, productType: Int, isOrderCompletion: Bool, isValidPhoneNumber: Bool, isSmsCode: Bool, state: State, nameTextField: TextFieldView.ViewModel, phoneNumber: PhoneNumberViewModel, smsCode: SmsCodeViewModel, agreeData: AgreeDataViewModel, sendButton: SendButtonViewModel, notify: NotifyViewModel) {
             
             self.model = model
-            self.productData = productData
+            self.productTariff = productTariff
+            self.productType = productType
             self.isOrderCompletion = isOrderCompletion
             self.isValidPhoneNumber = isValidPhoneNumber
             self.isSmsCode = isSmsCode
@@ -59,7 +61,7 @@ extension OrderProductView {
             self.notify = notify
         }
         
-        convenience init(_ model: Model, productData: (Int, Int)) {
+        convenience init(_ model: Model, productData: CatalogProductData) {
             
             let phoneNumber: PhoneNumberViewModel = .init(
                 style: .order,
@@ -68,7 +70,8 @@ extension OrderProductView {
             
             self.init(
                 model,
-                productData: productData,
+                productTariff: productData.tariff,
+                productType: productData.productType,
                 isOrderCompletion: false,
                 isValidPhoneNumber: false,
                 isSmsCode: false,
@@ -347,8 +350,8 @@ extension OrderProductView {
                     phone: phone,
                     device: UIDevice.current.systemName,
                     os: UIDevice.current.systemVersion,
-                    cardTarif: productData.tariff,
-                    cardType: productData.productType)
+                    cardTarif: productTariff,
+                    cardType: productType)
                 )
             }
         }
@@ -958,7 +961,14 @@ struct OrderProductView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        OrderProductView(viewModel: .init(.emptyMock,productData: (3, 6)))
+        OrderProductView(viewModel: .init(.emptyMock,
+                                          productData: .init(name: "",
+                                                             description: [],
+                                                             imageEndpoint: "",
+                                                             infoURL: URL(string: "http://google.com")!,
+                                                             orderURL: URL(string: "http://google.com")!,
+                                                             tariff: 3,
+                                                             productType: 6)))
             .previewLayout(.sizeThatFits)
             .padding()
     }
