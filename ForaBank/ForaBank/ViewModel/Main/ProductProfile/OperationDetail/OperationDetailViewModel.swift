@@ -337,7 +337,7 @@ private extension OperationDetailViewModel {
             product: product,
             paymantSystemIcon: paymentSystemImage,
             type: .changePay,
-            operatorsViewModel: .init(mode: .general, closeAction: dismissAction, requisitsViewAction: {}))
+            operatorsViewModel: .init(mode: .general, closeAction: dismissAction))
 
         let changeButton = ActionButtonViewModel(name: "Изменить",
                                                  action: { [weak self] in
@@ -356,7 +356,7 @@ private extension OperationDetailViewModel {
             product: product,
             paymantSystemIcon: paymentSystemImage,
             type: .returnPay,
-            operatorsViewModel: .init(mode: .general, closeAction: dismissAction, requisitsViewAction: {}))
+            operatorsViewModel: .init(mode: .general, closeAction: dismissAction))
 
         let returnButton = ActionButtonViewModel(name: "Вернуть",
                                                  action: { [weak self] in

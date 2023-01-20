@@ -122,6 +122,8 @@ extension Model {
             
         case .sfp: return .sfp
             
+        case .requisites: return .requisites
+            
         default:
             throw Payments.Error.unsupported
         }
@@ -292,6 +294,9 @@ extension Model {
             
         case let .sfp(phone: phone, bankId: bankId):
             return paymentsProcessSourceReducerSFP(phone: phone, bankId: bankId, parameterId: parameterId)
+        
+        case let .requisites(qrCode: qrCode):
+            return paymentsProcessSourceReducerRequisites(qrCode: qrCode, parameterId: parameterId)
             
         default:
             return nil

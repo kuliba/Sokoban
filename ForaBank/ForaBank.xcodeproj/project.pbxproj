@@ -96,7 +96,6 @@
 		0B7A18D02689C51A0007CC75 /* AppHeaderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7A18CF2689C51A0007CC75 /* AppHeaderProtocol.swift */; };
 		0B8365DD2926A99900A11F0A /* QRSearchOperatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8365DC2926A99900A11F0A /* QRSearchOperatorView.swift */; };
 		0B8365DF2926A9C000A11F0A /* QRSearchOperatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8365DE2926A9C000A11F0A /* QRSearchOperatorViewModel.swift */; };
-		0B871678294A121A005B8C0A /* QRSearchViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B871677294A121A005B8C0A /* QRSearchViewComponent.swift */; };
 		0B87167C294A7DFC005B8C0A /* QRSearchCityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B87167B294A7DFC005B8C0A /* QRSearchCityView.swift */; };
 		0B87167E294A8003005B8C0A /* QRSearchCityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B87167D294A8003005B8C0A /* QRSearchCityViewModel.swift */; };
 		0B8BC0412901EF110022DDE4 /* QRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC0402901EF110022DDE4 /* QRView.swift */; };
@@ -1635,7 +1634,6 @@
 		0B7A18CF2689C51A0007CC75 /* AppHeaderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppHeaderProtocol.swift; sourceTree = "<group>"; };
 		0B8365DC2926A99900A11F0A /* QRSearchOperatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchOperatorView.swift; sourceTree = "<group>"; };
 		0B8365DE2926A9C000A11F0A /* QRSearchOperatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchOperatorViewModel.swift; sourceTree = "<group>"; };
-		0B871677294A121A005B8C0A /* QRSearchViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchViewComponent.swift; sourceTree = "<group>"; };
 		0B87167B294A7DFC005B8C0A /* QRSearchCityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchCityView.swift; sourceTree = "<group>"; };
 		0B87167D294A8003005B8C0A /* QRSearchCityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchCityViewModel.swift; sourceTree = "<group>"; };
 		0B8BC0402901EF110022DDE4 /* QRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRView.swift; sourceTree = "<group>"; };
@@ -3689,15 +3687,14 @@
 		0BE0BDF42905CE2C0064549E /* QR */ = {
 			isa = PBXGroup;
 			children = (
+				0BE0BDFE2907315D0064549E /* QRInfoView.swift */,
 				0B8BC0422901EF610022DDE4 /* QRScannerViewComponent.swift */,
 				0BE0BDF52905D2340064549E /* QRDocumentsButtonsViewComponent.swift */,
-				0BE0BDFE2907315D0064549E /* QRInfoView.swift */,
 				0B1781222926E6CE005209B5 /* QRSearchItemComponent.swift */,
 				0BE0BDFC29071BE10064549E /* QRButtonsViewComponent.swift */,
+				0BBC55FD2943318600B95E6C /* QRAccessViewComponent.swift */,
 				0BA7F27429320A8300A13EA1 /* DocumentPicker.swift */,
 				0BBC562229472CB600B95E6C /* ImagePackerController.swift */,
-				0BBC55FD2943318600B95E6C /* QRAccessViewComponent.swift */,
-				0B871677294A121A005B8C0A /* QRSearchViewComponent.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -9214,7 +9211,6 @@
 				77517FEE27A99383005CFB77 /* ExchangeRateData.swift in Sources */,
 				EDDFE3BD2757D88C00F57C71 /* SelectDepositPeriodViewController.swift in Sources */,
 				688B9BB426E03B3000407A75 /* TotalMoneyView.swift in Sources */,
-				0B871678294A121A005B8C0A /* QRSearchViewComponent.swift in Sources */,
 				7758754927996D510080115D /* LocalAgentProtocol.swift in Sources */,
 				ED84994526A6F647005205C6 /* ChooseCountryHeaderView.swift in Sources */,
 				774A8B222865FC4200B81140 /* MessagesHistoryDetailViewModel.swift in Sources */,
@@ -9627,7 +9623,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -9656,7 +9652,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -9813,7 +9809,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 29;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -9847,7 +9843,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;

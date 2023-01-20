@@ -1838,7 +1838,7 @@ extension Model {
 
         guard let inn = code.stringValue(type: .general(.inn), mapping: mapping) else { return nil }
 
-        return dictionaryAnywayOperators()?.filter( { $0.synonymList.contains(inn) })
+        return dictionaryAnywayOperators()?.filter( { $0.synonymList.contains(inn) }).filter({$0.parameterList.isEmpty == false})
     }
 }
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -30,7 +30,7 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </view>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="y2T-nK-yKL" userLabel="FView">
-                                    <rect key="frame" x="0.0" y="254" width="414" height="300"/>
+                                    <rect key="frame" x="0.0" y="243.33333206176758" width="414" height="300"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="5hc-lY-7H8">
@@ -121,7 +121,7 @@
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="56" id="eug-H7-FtP" customClass="GKHCell">
-                                        <rect key="frame" x="0.0" y="170" width="414" height="56"/>
+                                        <rect key="frame" x="0.0" y="164.66666603088379" width="414" height="56"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="eug-H7-FtP" id="kt6-Ss-5he">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
@@ -199,7 +199,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" textLabel="9ax-EU-vkW" detailTextLabel="VtE-Xf-U1e" style="IBUITableViewCellStyleSubtitle" id="hvO-nn-yAG">
-                                        <rect key="frame" x="0.0" y="50" width="404" height="50"/>
+                                        <rect key="frame" x="0.0" y="44.666666030883789" width="404" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="hvO-nn-yAG" id="HE7-Hg-eEE">
                                             <rect key="frame" x="0.0" y="0.0" width="404" height="50"/>
@@ -512,7 +512,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" rowHeight="80" id="DbZ-12-mKk" userLabel="Anycell">
-                                        <rect key="frame" x="0.0" y="50" width="414" height="80"/>
+                                        <rect key="frame" x="0.0" y="44.666666030883789" width="414" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="DbZ-12-mKk" id="zIj-Ai-34U">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
@@ -696,7 +696,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" rowHeight="80" id="g0T-n9-XVc" userLabel="Anycell">
-                                        <rect key="frame" x="0.0" y="50" width="414" height="80"/>
+                                        <rect key="frame" x="0.0" y="44.666666030883789" width="414" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="g0T-n9-XVc" id="1Zt-nV-T0t">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
@@ -860,7 +860,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" rowHeight="80" id="i3H-zd-ew8" userLabel="Anycell">
-                                        <rect key="frame" x="0.0" y="50" width="414" height="80"/>
+                                        <rect key="frame" x="0.0" y="44.666666030883789" width="414" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="i3H-zd-ew8" id="oyW-sG-Zao">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
@@ -955,9 +955,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="Cws-kP-o6R"/>
                                 </constraints>
-                                <state key="normal" title="Оплатить">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
+                                <state key="normal" title="Оплатить"/>
                                 <connections>
                                     <action selector="goButton:" destination="j7B-k4-86i" eventType="touchUpInside" id="MXp-nQ-iCh"/>
                                     <action selector="goButton:" destination="qr8-HD-W4b" eventType="touchUpInside" id="QL2-MR-b5W"/>
@@ -1078,7 +1076,7 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Khe-nc-kOH">
-                                <rect key="frame" x="65" y="372" width="324" height="50.333333333333314"/>
+                                <rect key="frame" x="65" y="370.66666666666669" width="324" height="50.333333333333314"/>
                                 <string key="text">Включить переводы по СБП. 
 Принять правила осущевстления
 переводов через СБП</string>
@@ -1087,7 +1085,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sbptext" translatesAutoresizingMaskIntoConstraints="NO" id="bPu-zt-vle">
-                                <rect key="frame" x="159" y="592.33333333333337" width="96" height="48"/>
+                                <rect key="frame" x="159" y="546" width="96" height="48"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T6s-b8-m18" customClass="BottomInputView" customModule="ForaBank" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="636" width="414" height="100"/>
@@ -1151,10 +1149,10 @@
                             <constraint firstItem="g4W-FK-MWS" firstAttribute="leading" secondItem="3jP-hV-tFK" secondAttribute="leading" constant="13" id="kmu-qV-uDP"/>
                             <constraint firstItem="DGy-Wf-N2a" firstAttribute="leading" secondItem="3jP-hV-tFK" secondAttribute="leading" id="lzy-8d-saR"/>
                             <constraint firstAttribute="trailing" secondItem="OtM-C2-mnH" secondAttribute="trailing" constant="20" id="mcf-qY-rjj"/>
-                            <constraint firstItem="bPu-zt-vle" firstAttribute="top" secondItem="Khe-nc-kOH" secondAttribute="bottom" constant="170" id="oDy-ro-8P3"/>
                             <constraint firstItem="T6s-b8-m18" firstAttribute="leading" secondItem="IEM-ZD-8x0" secondAttribute="leading" id="oFl-j7-NPE"/>
                             <constraint firstItem="3jP-hV-tFK" firstAttribute="trailing" secondItem="794-7t-DHH" secondAttribute="trailing" id="pzk-Yl-Syf"/>
                             <constraint firstItem="DGy-Wf-N2a" firstAttribute="top" secondItem="794-7t-DHH" secondAttribute="bottom" id="rR2-0Q-i8Y"/>
+                            <constraint firstItem="OtM-C2-mnH" firstAttribute="top" secondItem="bPu-zt-vle" secondAttribute="bottom" constant="62" id="xIq-nD-L8o"/>
                             <constraint firstItem="3jP-hV-tFK" firstAttribute="trailing" secondItem="DGy-Wf-N2a" secondAttribute="trailing" id="zbc-af-10I"/>
                             <constraint firstItem="IW1-hX-2l8" firstAttribute="leading" secondItem="3jP-hV-tFK" secondAttribute="leading" id="zxj-aC-uFU"/>
                         </constraints>

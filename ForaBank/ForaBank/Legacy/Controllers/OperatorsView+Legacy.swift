@@ -44,6 +44,7 @@ struct OperatorsViewModel {
 
     let mode:  Mode
     var closeAction: () -> Void
+    var qrAction: () -> Void
     var requisitsViewAction: () throws -> Void
     
     enum Mode {
@@ -53,16 +54,17 @@ struct OperatorsViewModel {
         case qr(QRCode)
     }
     
-    init( mode: Mode, closeAction: @escaping () -> Void, requisitsViewAction: @escaping () -> Void) {
+    init( mode: Mode, closeAction: @escaping () -> Void, requisitsViewAction: @escaping () -> Void = {}, qrAction: @escaping () -> Void = {}) {
 
         self.mode = mode
         self.closeAction = closeAction
         self.requisitsViewAction = requisitsViewAction
+        self.qrAction = qrAction
     }
     
-    init(mode: Mode, paymentServiceData: PaymentServiceData, model: Model, closeAction: @escaping () -> Void, requisitsViewAction: @escaping () -> Void) {
+    init(mode: Mode, paymentServiceData: PaymentServiceData, model: Model, closeAction: @escaping () -> Void, requisitsViewAction: @escaping () -> Void, qrAction: @escaping () -> Void) {
         
-        self.init(mode: mode, closeAction: closeAction, requisitsViewAction: requisitsViewAction)
+        self.init(mode: mode, closeAction: closeAction, requisitsViewAction: requisitsViewAction, qrAction: qrAction)
 
         let amount = "\(paymentServiceData.amount)"
         var name = ""

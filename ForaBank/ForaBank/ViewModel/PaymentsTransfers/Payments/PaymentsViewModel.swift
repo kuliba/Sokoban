@@ -233,6 +233,10 @@ class PaymentsViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
+                    
+                case _ as PaymentsViewModelAction.ScanQrCode:
+                    self.action.send(PaymentsViewModelAction.ScanQrCode())
+                    
                 case let payload as PaymentsOperationViewModelAction.CancelOperation:
 
                     //TODO: move to convenience init
@@ -300,6 +304,8 @@ enum PaymentsViewModelAction {
         
         let message: String
     }
+    
+    struct ScanQrCode: Action {}
 }
 
 extension PaymentsViewModel {

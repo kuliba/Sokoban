@@ -13,48 +13,68 @@ struct QRSearchOperatorView: View {
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 20) {
             
-            QRSearchViewComponent(text: $viewModel.textFieldValue, textFieldPlaceholder: "Название или ИНН", action: {
-                viewModel.textFieldValue = ""
-            })
-            .padding(20)
+            SearchBarView(viewModel: viewModel.searchBar)
+                .padding(.horizontal, 20)
             
             ScrollView {
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 8) {
                     
                     switch viewModel.searchValue {
                         
                     case .empty:
                         
                         ForEach(viewModel.operators) { singleOperator in
+                        
                             QRSearchOperatorComponent(viewModel: singleOperator)
                         }
+                        
+                        EmptySearchView(viewModel: viewModel)
+                            .padding(.top, 48)
                         
                     case .noEmpty:
                         
                         if let filteredOperators = viewModel.filteredOperators {
                             
                             ForEach(filteredOperators) { singleOperator in
+                                
                                 QRSearchOperatorComponent(viewModel: singleOperator)
                             }
                         }
                         
+                        EmptySearchView(viewModel: viewModel)
+                            .padding(.top, 48)
+                        
                     case .noResult:
                         
                         EmptySearchView(viewModel: viewModel)
-                            .padding(.top, 100)
+                            .padding(.top, 48)
                     }
                 }
             }
-        } .navigationBar(with: viewModel.navigationBar)
-            .sheet(item: $viewModel.sheet) { item in
+        }
+        .background(NavigationLink("", isActive: $viewModel.isLinkActive) {
+            
+            if let link = viewModel.link  {
+                
+                switch link {
+                    
+                case .operation(let viewModel):
+                    InternetTVDetailsView(viewModel: viewModel)
+                        .navigationBarTitle("", displayMode: .inline)
+                        .edgesIgnoringSafeArea(.all)
+                }
+            }
+        }.opacity(0))
+        .padding(.top, 20)
+        .navigationBar(with: viewModel.navigationBar)
+        .sheet(item: $viewModel.sheet) { item in
                 
                 switch item.sheetType {
                 case .city(let model):
                     QRSearchCityView(viewModel: model)
-                    
                 }
             }
     }
@@ -66,33 +86,34 @@ struct EmptySearchView: View {
     
     var body: some View {
         
-        VStack(spacing: 50) {
+        VStack(spacing: 28) {
             
-            VStack(spacing: 20) {
+            VStack(spacing: 16) {
                 
                 Text(viewModel.emptyViewTitle)
-                    .font(Font.textH3M18240())
-                    .foregroundColor(Color.textSecondary)
+                    .font(.textH3SB18240())
+                    .foregroundColor(.textSecondary)
                 
                 Text(viewModel.emptyViewContent)
-                    .font(Font.textBodyMSB14200())
-                    .foregroundColor(Color.textPlaceholder)
+                    .font(.textBodyMR14200())
+                    .foregroundColor(.textPlaceholder)
+                
             } .padding(.horizontal, 20)
-            
             
             VStack(spacing: 20) {
                 
-                VStack(spacing: 10) {
+                VStack(spacing: 8) {
+                    
                     ForEach(viewModel.searchOperatorButton) { buttons in
+                        
                         ButtonSimpleView(viewModel: buttons)
-                            .frame(height: 48)
+                            .frame(height: 56)
                             .padding(.horizontal, 20)
-                            .padding(.vertical, 10)
                     }
                 }
                 
                 Text(viewModel.emptyViewSubtitle)
-                    .font(Font.textBodyMSB14200())
+                    .font(.textBodyMR14200())
                     .foregroundColor(Color.textPlaceholder)
                     .padding(.horizontal, 20)
                     .multilineTextAlignment(.center)
@@ -103,6 +124,6 @@ struct EmptySearchView: View {
 
 struct QRSearchOperatorView_Previews: PreviewProvider {
     static var previews: some View {
-        QRSearchOperatorView.init(viewModel: .init(textFieldPlaceholder: "Название или ИНН", navigationBar: .init(title: "Все регионы"), model: .emptyMock))
+        QRSearchOperatorView.init(viewModel: .init(searchBar: .init(textFieldPhoneNumberView: .init(.text("Введите ИНН"))), navigationBar: .init(title: "Все регионы"), model: .emptyMock, addCompanyAction: {}, requisitesAction: {}))
     }
 }

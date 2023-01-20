@@ -28,19 +28,19 @@ class QRFailedViewModel: ObservableObject {
         self.searchOperatorButton = searchOpratorButton
     }
     
-    convenience init(model: Model) {
+    convenience init(model: Model, addCompanyAction: @escaping () -> Void, requisitsAction: @escaping () -> Void) {
         
         self.init(model: model, icon: Image.ic48BarcodeScanner, title: "Не удалось распознать QR-код", content: "Воспользуйтесь другими способами оплаты", searchOpratorButton: [])
         
-        self.searchOperatorButton = createButtons()
+        self.searchOperatorButton = createButtons(model, addCompanyAction: addCompanyAction, requisitesAction: requisitsAction)
     }
     
-    private func createButtons() -> [ButtonSimpleView.ViewModel] {
+    private func createButtons(_ model: Model, addCompanyAction: @escaping () -> Void, requisitesAction: @escaping () -> Void) -> [ButtonSimpleView.ViewModel] {
         
         return [
             ButtonSimpleView.ViewModel(title: "Найти поставщика вручную", style: .gray, action: { [weak self] in
                 
-                self?.link = .failedView(.init(textFieldPlaceholder: "Название или ИНН", navigationBar:
+                self?.link = .failedView(.init(searchBar: .init(textFieldPhoneNumberView: .init(style: .general, placeHolder: .text("Название или ИНН")), state: .idle, icon: Image.ic24Search), navigationBar:
                         .init(
                             title: "Все регионы",
                             titleButton: .init(icon: Image.ic16ChevronDown, action: {
@@ -49,12 +49,10 @@ class QRFailedViewModel: ObservableObject {
                             leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: Image.ic24ChevronLeft,
                                                                                           action: { [weak self] in
                                                                                               self?.link = nil})]),
-                                               model: Model.shared))
+                                               model: model, addCompanyAction: addCompanyAction, requisitesAction: requisitesAction))
                 
             }),
-            ButtonSimpleView.ViewModel(title: "Оплатить по реквизитам", style: .gray, action: { [weak self] in
-                self?.alert = .init(title: "Переход на оплату реквизитами", message: "", primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
-            })
+            ButtonSimpleView.ViewModel(title: "Оплатить по реквизитам", style: .gray, action: requisitesAction)
         ]
     }
     

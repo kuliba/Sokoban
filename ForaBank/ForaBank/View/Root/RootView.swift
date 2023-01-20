@@ -70,9 +70,14 @@ struct RootView: View {
                         .zIndex(.greatestFiniteMagnitude)
 
                 case .c2b(let viewModel):
-                        
-                    C2BDetailsView(viewModel: viewModel)
-                            .zIndex(.greatestFiniteMagnitude)
+                   
+                    NavigationView {
+
+                        C2BDetailsView(viewModel: viewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                    }
 
                 case .userAccount(let viewModel):
    

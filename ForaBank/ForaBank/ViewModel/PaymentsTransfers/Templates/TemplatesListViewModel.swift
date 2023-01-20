@@ -161,7 +161,7 @@ private extension TemplatesListViewModel {
 
                     case .direct:
                         let operatorsViewModel = OperatorsViewModel(mode: .template(temp), closeAction: {  [weak self] in
-                            self?.action.send(TemplatesListViewModelAction.CloseAction()) }, requisitsViewAction: {})
+                            self?.action.send(TemplatesListViewModelAction.CloseAction()) })
                         link = .direct(CountryPaymentView.ViewModel(operatorsViewModel: operatorsViewModel))
                         
                     case .contactAdressless:

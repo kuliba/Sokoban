@@ -61,6 +61,7 @@ class PaymentsOperationViewModel: ObservableObject {
         bindOperation()
         bindModel()
         bindAction()
+        bindNavBar()
     }
     
     internal func bindOperation() {
@@ -86,6 +87,7 @@ class PaymentsOperationViewModel: ObservableObject {
                 Self.reduce(service: operation.value.service, items: items, dependenceReducer: model.paymentsProcessDependencyReducer(service:parameterId:parameters:))
                 
                 navigationBar = .init(with: items.map{ $0.source }, closeAction: closeAction)
+                bindNavBar()
                 
                 // update bottom section continue button
                 updateBottomSection(isContinueEnabled: isItemsValuesValid)
@@ -112,10 +114,10 @@ class PaymentsOperationViewModel: ObservableObject {
                         self.operation.value = operation
                         
                     case .confirm(let operation):
-                        let confirmViewModel = PaymentsConfirmViewModel(operation: operation, model: model) { [weak self] in
+                        let confirmViewModel = PaymentsConfirmViewModel(operation: operation, model: model, closeAction: { [weak self] in
                             
                             self?.link = nil
-                        }
+                        })
                         confirmViewModel.rootActions = rootActions
                         bind(confirmViewModel: confirmViewModel)
                         link = .confirm(confirmViewModel)
@@ -163,6 +165,7 @@ class PaymentsOperationViewModel: ObservableObject {
                         Self.reduce(service: operation.value.service, items: items, dependenceReducer: model.paymentsProcessDependencyReducer(service:parameterId:parameters:))
                         
                         navigationBar = .init(with: items.map{ $0.source }, closeAction: closeAction)
+                        bindNavBar()
                         top = Self.reduceTopItems(sections: sections.value)
                         content = Self.reduceContentItems(sections: sections.value)
                         bottom = Self.reduceBottomItems(sections: sections.value)
@@ -288,6 +291,23 @@ class PaymentsOperationViewModel: ObservableObject {
                     
                 }.store(in: &bindings)
         }
+    }
+    
+    //MARK: Bind Navigatoin Bar
+    private func bindNavBar() {
+        
+        navigationBar.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+            
+                switch action {
+                case _ as NavigationBarViewModelAction.ScanQrCode:
+                    self.action.send(PaymentsViewModelAction.ScanQrCode())
+                
+                default: break
+                }
+                
+            }.store(in: &bindings)
     }
     
     private func bind(confirmViewModel: PaymentsConfirmViewModel) {

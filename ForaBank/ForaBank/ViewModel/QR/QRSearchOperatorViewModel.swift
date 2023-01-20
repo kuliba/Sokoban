@@ -12,7 +12,7 @@ class QRSearchOperatorViewModel: ObservableObject {
     
     let model: Model
     let navigationBar: NavigationBarView.ViewModel
-    let textFieldPlaceholder: String
+    let searchBar: SearchBarView.ViewModel
     let emptyViewTitle: String
     let emptyViewContent: String
     let emptyViewSubtitle: String
@@ -21,13 +21,15 @@ class QRSearchOperatorViewModel: ObservableObject {
     @Published var operators: [QRSearchOperatorComponent.ViewModel]
     @Published var filteredOperators: [QRSearchOperatorComponent.ViewModel] = []
     @Published var sheet: Sheet?
-    @Published var textFieldValue: String = ""
+    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var isLinkActive: Bool = false
     @Published var searchValue: SearchValue = .empty
 
     private var bindings = Set<AnyCancellable>()
     
-    init(textFieldPlaceholder: String,navigationBar: NavigationBarView.ViewModel, model: Model) {
-        self.textFieldPlaceholder = textFieldPlaceholder
+    init(searchBar: SearchBarView.ViewModel, navigationBar: NavigationBarView.ViewModel, model: Model, addCompanyAction: @escaping () -> Void, requisitesAction: @escaping () -> Void) {
+        
+        self.searchBar = searchBar
         self.navigationBar = navigationBar
         self.model = model
         self.operators = []
@@ -35,24 +37,60 @@ class QRSearchOperatorViewModel: ObservableObject {
         self.emptyViewTitle = "Нет компании в списке?"
         self.emptyViewContent = "Воспользуйтесь другими способами оплаты"
         self.emptyViewSubtitle = "Сообщите нам, и мы подключим новую организацию"
-        self.searchOperatorButton = self.createButtons()
+        self.searchOperatorButton = self.createButtons(addCompanyAction: addCompanyAction, requisitesAction: requisitesAction)
+        
+        //TODO: create convenience init 
         bind()
-        let operatorsData = model.dictionaryQRAnewayOperator()
-        self.operators = operatorsData.map {QRSearchOperatorComponent.ViewModel.init(operators: $0) }
+        let operatorsData = model.dictionaryQRAnewayOperator().filter({$0.parameterList.count > 1})
+        self.operators = operatorsData.map { QRSearchOperatorComponent.ViewModel(id: $0.id.description, operators: $0, action: { [weak self] id in
+
+            guard let model = self?.model else {
+                return
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                
+                if let operatorData = operatorsData.filter({$0.id.description == id}).first {
+
+                    let viewModel: InternetTVDetailsViewModel = .init(model: model, operatorData: operatorData, closeAction: { [weak self] in
+
+                        self?.link = nil
+                    })
+
+                    self?.link = .operation(viewModel)
+                }
+            }
+        })
+        }
     }
     
-    convenience init(textFieldPlaceholder: String, navigationBar: NavigationBarView.ViewModel, model: Model, operators: [OperatorGroupData.OperatorData]) {
+    convenience init(searchBar: SearchBarView.ViewModel, navigationBar: NavigationBarView.ViewModel, model: Model, operators: [OperatorGroupData.OperatorData], addCompanyAction: @escaping () -> Void, requisitesAction: @escaping () -> Void, qrCode: QRCode) {
         
-        self.init(textFieldPlaceholder: textFieldPlaceholder, navigationBar: navigationBar, model: model)
+        self.init(searchBar: searchBar, navigationBar: navigationBar, model: model, addCompanyAction: addCompanyAction, requisitesAction: requisitesAction)
         
-        self.operators = operators.map {QRSearchOperatorComponent.ViewModel.init(operators: $0) }
+        self.operators = operators.map {QRSearchOperatorComponent.ViewModel(id: $0.id.description, operators: $0, action: { [weak self] _ in
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                
+                if let qrMapping = model.qrMapping.value {
+                 
+                    let viewModel: InternetTVDetailsViewModel  = .init(model: model, qrCode: qrCode, mapping: qrMapping)
+                    self?.link = .operation(viewModel)
+
+                }
+            }
+        }) }
     }
     
     func bind() {
         
-        $textFieldValue
+        searchBar.textField.$text
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] value in
+                
+                guard let value = value else {
+                    return
+                }
                 
                 self.filteredOperators.removeAll()
                                 
@@ -97,11 +135,29 @@ class QRSearchOperatorViewModel: ObservableObject {
                 switch action {
                     
                 case _ as QRSearchOperatorViewModelAction.OpenCityView:
-                    self.sheet = .init(sheetType: .city(.init(model: model, action: { region in
+                    self.sheet = .init(sheetType: .city(.init(model: model, searchView: .init(textFieldPhoneNumberView: .init(.text("Введите название города"))), action: { region in
                         
                         let regions = self.model.dictionaryRegion(for: region)
                         self.searchValue = .noEmpty
-                        self.filteredOperators = regions.map {QRSearchOperatorComponent.ViewModel.init(operators: $0) }
+                        self.filteredOperators = regions.map {QRSearchOperatorComponent.ViewModel(id: $0.id.description, operators: $0, action: { [weak self] id in
+                            
+                            guard let model = self?.model else {
+                                return
+                            }
+                            
+                            let operatorsData = model.dictionaryQRAnewayOperator()
+                            
+                            if let operatorData = operatorsData.filter({$0.id.description == id}).first {
+                                
+                                let viewModel: InternetTVDetailsViewModel = .init(model: model, operatorData: operatorData, closeAction: { [weak self] in
+                                    
+                                    self?.link = nil
+                                })
+                                self?.link = .operation(viewModel)
+                            }
+                        })}
+                        
+                        self.sheet = nil
                     })))
                     
                 default:
@@ -129,17 +185,22 @@ class QRSearchOperatorViewModel: ObservableObject {
         }
     }
     
+    enum Link {
+        
+        case operation(InternetTVDetailsViewModel)
+    }
+    
     enum SearchValue {
         case empty
         case noEmpty
         case noResult
     }
     
-    private func createButtons() -> [ButtonSimpleView.ViewModel] {
+    private func createButtons(addCompanyAction: @escaping () -> Void, requisitesAction: @escaping () -> Void) -> [ButtonSimpleView.ViewModel] {
         
         return [
-            ButtonSimpleView.ViewModel(title: "Оплатить по реквизитам", style: .gray, action: {}),
-            ButtonSimpleView.ViewModel(title: "Добавить организацию", style: .gray, action: {})
+            ButtonSimpleView.ViewModel(title: "Оплатить по реквизитам", style: .gray, action: requisitesAction),
+            ButtonSimpleView.ViewModel(title: "Добавить организацию", style: .gray, action: addCompanyAction)
         ]
     }
 }
