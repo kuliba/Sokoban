@@ -36,17 +36,44 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
         super.init(header: header, isCollapsed: isCollapsed, mode: mode, model: model)
     }
     
-    convenience init(_ model: Model, mode: Mode, phone: String?) {
+    convenience init(_ model: Model, mode: Mode, phone: String?, bankDictionary: BankDictionary) {
         
         let options = Self.createOptionViewModel()
         self.init(model, header: .init(kind: .banks), isCollapsed: true, mode: mode, searchBar: nil, options: options, visible: [], items: [], phone: phone)
         
-        Task.detached(priority: .userInitiated) {
+        switch bankDictionary {
+        case .banks:
+            Task.detached(priority: .userInitiated) {
+                
+                self.items.value = await Self.reduce(bankList: model.bankList.value, preffered: model.prefferedBanksList.value) { [weak self]  bank in
+                    { self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bankId: bank.id)) }
+                }
+            }
             
-            self.items.value = await Self.reduce(bankList: model.bankList.value) { [weak self]  bank in
-                { self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bankId: bank.id)) }
+        case .banksFullInfo:
+            Task.detached(priority: .userInitiated) {
+                
+                guard let banks = model.dictionaryFullBankInfoList() else {
+                    return
+                }
+                
+                self.items.value = await Self.reduceBanksFullInfo(bankList: banks.filter({$0.memberId != nil}), preffered: model.prefferedBanksList.value, action: { [weak self]  bank in
+                    
+                    {
+                        if let memberId = bank.memberId {
+                            
+                            self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bankId: memberId))
+                        }
+                    }
+                })
             }
         }
+    }
+    
+    enum BankDictionary {
+        
+        case banks
+        case banksFullInfo
     }
     
     override func bind() {
@@ -202,12 +229,28 @@ extension ContactsBanksSectionViewModel {
 
 extension ContactsBanksSectionViewModel {
     
-    static func reduce(bankList: [BankData], action: @escaping (BankData) -> () -> Void) async -> [ContactsItemViewModel] {
+    static func reduce(bankList: [BankData], preffered: [String], action: @escaping (BankData) -> () -> Void) async -> [ContactsItemViewModel] {
         
-        return bankList
-            .map({ ContactsBankItemView.ViewModel(id: $0.id, icon: $0.svgImage.image, name: $0.memberNameRus, type: $0.bankType, action: action($0)) })
-            .sorted(by: {$0.name.lowercased() < $1.name.lowercased()})
-            .sorted(by: {$0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending})
+        let prefferedBanks = preffered.compactMap { bankId in bankList.first(where: { $0.id == bankId }) }
+        let otherBanks = bankList.filter{ preffered.contains($0.id) == false }
+            .sorted(by: {$0.memberNameRus.lowercased() < $1.memberNameRus.lowercased()})
+            .sorted(by: {$0.memberNameRus.localizedCaseInsensitiveCompare($1.memberNameRus) == .orderedAscending})
+        
+        let allBanks = prefferedBanks + otherBanks
+        
+        return allBanks.map{ ContactsBankItemView.ViewModel(id: $0.id, icon: $0.svgImage.image, name: $0.memberNameRus, subtitle: nil, type: $0.bankType, action: action($0)) }
+    }
+    
+    static func reduceBanksFullInfo(bankList: [BankFullInfoData], preffered: [String], action: @escaping (BankFullInfoData) -> () -> Void) async -> [ContactsItemViewModel] {
+        
+        let prefferedBanks = preffered.compactMap { bankId in bankList.first(where: { $0.memberId == bankId }) }
+        let otherBanks = bankList.filter{ preffered.contains($0.memberId ?? "") == false }
+            .sorted(by: {($0.rusName?.lowercased() ?? $0.fullName.lowercased()) < ($1.rusName?.lowercased() ?? $1.fullName.lowercased())})
+            .sorted(by: {$0.rusName?.localizedCaseInsensitiveCompare($1.rusName ?? $1.fullName) == .orderedAscending})
+        
+        let allBanks = prefferedBanks + otherBanks
+        
+        return allBanks.map{ ContactsBankItemView.ViewModel(icon: $0.svgImage.image, name: $0.rusName ?? $0.fullName, subtitle: $0.bic, type: .sfp, action: action($0)) }
     }
     
     static func reduce(items: [ContactsItemViewModel], filterByType: BankType? = nil, filterByName: String? = nil) -> [ContactsItemViewModel] {
@@ -221,7 +264,17 @@ extension ContactsBanksSectionViewModel {
         
         if let name = filterByName {
             
-            filterredItems = filterredItems.filter({ $0.name.localizedStandardContains(name) })
+            filterredItems = filterredItems.filter({ item in
+                
+                if name.isNumeric, let subtitle = item.subtitle {
+                    
+                    return subtitle.localizedStandardContains(name)
+                } else {
+                    
+                    return item.name.localizedStandardContains(name)
+                }
+
+            })
         }
 
         return filterredItems

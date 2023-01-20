@@ -20,6 +20,9 @@ class PaymentsParameterViewModel: Identifiable {
     var isValid: Bool { true }
     var isFullContent: Bool { false }
     
+    /// on value change of this parameter runs all parameters validation checks
+    var isValidationChecker: Bool { false }
+    
     var result: Payments.Parameter { .init(id: source.id, value: value.current) }
     var parameterValue: ((Payments.Parameter.ID) -> Payments.Parameter.Value)?
     
@@ -55,6 +58,12 @@ class PaymentsParameterViewModel: Identifiable {
         case .source:
             isEditable = source.isEditable
         }
+    }
+    
+    /// if parameter's value is invalid the parameter must show validation warning
+    func updateValidationWarnings() {
+        
+        // implement in subclass
     }
 }
 

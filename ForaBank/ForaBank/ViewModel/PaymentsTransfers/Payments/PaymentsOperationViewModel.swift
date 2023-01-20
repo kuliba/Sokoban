@@ -172,6 +172,9 @@ class PaymentsOperationViewModel: ObservableObject {
                         
                         // update bottom section continue button
                         updateBottomSection(isContinueEnabled: isItemsValuesValid)
+                        
+                        // updates warnins for parameters with invalid values
+                        updateParametersValidationWarnings(parameterId: payload.parameterId)
                     }
                     
                 case _ as PaymentsOperationViewModelAction.Continue:
@@ -436,6 +439,18 @@ extension PaymentsOperationViewModel {
         }
         
         return item.isValid
+    }
+    
+    func updateParametersValidationWarnings(parameterId: Payments.Parameter.ID) {
+        
+        guard let item = items.first(where: { $0.source.id == parameterId }), item.isValidationChecker == true else {
+            return
+        }
+        
+        for item in items {
+            
+            item.updateValidationWarnings()
+        }
     }
 }
 

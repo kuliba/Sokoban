@@ -37,15 +37,29 @@ extension PaymentsSelectBankView {
         
         convenience init(with parameterSelect: Payments.ParameterSelectBank, model: Model) throws {
             
-            let selectedItem = SelectedItemViewModel(model, icon: .placeholder, textField: .init(text: nil, placeholder: "Бик банка получателя", style: .number, limit: 9, regExp: "^[0-9]\\d*$"), action: {})
+            let selectedItem = SelectedItemViewModel(model, icon: .placeholder, textField: .init(text: nil, placeholder: parameterSelect.title, style: .number, limit: 9, regExp: "^[0-9]\\d*$"), action: {})
             
             self.init(model, selectedItem: selectedItem, list: nil, source: parameterSelect)
             
-            self.selectedItem = SelectedItemViewModel(model, icon: .placeholder, textField: .init(text: parameterSelect.value, placeholder: "Бик банка получателя", style: .number, limit: 9, regExp: "^[0-9]\\d*$"), action: { [weak self] in
+            self.selectedItem = SelectedItemViewModel(model, icon: .placeholder, textField: .init(text: parameterSelect.value, placeholder: parameterSelect.title, style: .number, limit: 9, regExp: "^[0-9]\\d*$"), action: { [weak self] in
                 self?.action.send(PaymentsSelectBankViewModelAction.ShowBanksList())
             })
             
             bind()
+        }
+        
+        override func updateValidationWarnings() {
+            
+            if isValid == false,
+               let parameterSelect = parameterSelect,
+               let action = parameterSelect.validator.action(with: value.current, for: .post),
+               case .warning(let message) = action {
+                
+                withAnimation {
+                    
+                    self.warning = message
+                }
+            }
         }
     }
 }
@@ -85,6 +99,28 @@ extension PaymentsSelectBankView.ViewModel {
                         
                         self.list?.filteredItems = options
                     }
+                    
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        
+                        self.selectedItem.title = value.current != nil || selectedItem.textField.isEditing.value == true ? parameterSelect?.title : nil
+                    }
+                }
+                
+                guard let content = selectedItem.textField.text,
+                      let banks = model.dictionaryFullBankInfoList() else {
+                    return
+                }
+                
+                if let bank = banks.first(where: {$0.bic == content}),
+                   let image = bank.svgImage.image {
+                    
+                    self.selectedItem.icon = .image(image)
+                    self.selectedItem.title = parameterSelect?.title
+                    
+                } else {
+                    
+                    self.selectedItem.icon = .placeholder
+                    self.selectedItem.title = parameterSelect?.title
                 }
                 
             }.store(in: &bindings)
@@ -98,14 +134,21 @@ extension PaymentsSelectBankView.ViewModel {
                 if isEditing == true {
                     
                     withAnimation {
-                        
+                               
+                        self.selectedItem.title = parameterSelect?.title
+                        self.action.send(PaymentsSelectBankViewModelAction.ShowBanksList())
                         self.warning = nil
                     }
                     
                 } else {
                     
-                    if value.current != nil,
-                       let parameterSelect = parameterSelect,
+                    withAnimation(.easeIn(duration: 0.2)) {
+
+                        self.list = nil
+                        self.selectedItem.title = nil
+                    }
+                    
+                    if let parameterSelect = parameterSelect,
                        let action = parameterSelect.validator.action(with: value.current, for: .post),
                        case .warning(let message) = action {
                         
@@ -170,7 +213,7 @@ extension PaymentsSelectBankView.ViewModel {
                             return
                         }
                         
-                        let contactViewModel = ContactsViewModel(model, mode: .select(.banks))
+                        let contactViewModel = ContactsViewModel(model, mode: .select(.banksFullInfo))
                         self?.bind(contactsViewModel: contactViewModel)
                         self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Show(viewModel: contactViewModel))
                     }), at: 0)
@@ -196,7 +239,7 @@ extension PaymentsSelectBankView.ViewModel {
                             
                             self.selectedItem.icon = .image(image)
                             self.selectedItem.textField.text = bic
-                            self.selectedItem.title = "Бик банка получателя"
+                            self.selectedItem.title = parameterSelect?.title
                             self.list = nil
                         }
                         
@@ -270,35 +313,6 @@ extension PaymentsSelectBankView.ViewModel {
             self.textField = textField
             self.title = title
             self.action = action
-            
-            bind()
-        }
-        
-        private func bind() {
-            
-            textField.$text
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] content in
-                    
-                    guard let content = content,
-                          let banks = model.dictionaryFullBankInfoList() else {
-                        return
-                    }
-                    
-                    if banks.contains(where: {$0.bic == content}),
-                       let bank = banks.first(where: {$0.bic == content}),
-                       let image = bank.svgImage.image {
-                        
-                        self.icon = .image(image)
-                        self.title = "Бик банка получателя"
-                        
-                    } else {
-                        
-                        self.icon = .placeholder
-                        self.title = "Бик банка получателя"
-                    }
-                    
-                }.store(in: &bindings)
         }
         
         enum IconViewModel {

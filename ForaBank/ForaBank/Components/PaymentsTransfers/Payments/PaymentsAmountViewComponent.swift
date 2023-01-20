@@ -85,6 +85,7 @@ extension PaymentsAmountView {
         func bind(textField: TextFieldFormatableView.ViewModel) {
             
             textField.$text
+                .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink {[unowned self] _ in
                     
@@ -99,6 +100,8 @@ extension PaymentsAmountView {
             
             return parameterAmount.validator.isValid(value: textField.value)
         }
+        
+        override var isValidationChecker: Bool { true }
         
         override func update(source: PaymentsParameterRepresentable) {
             super.update(source: source)
