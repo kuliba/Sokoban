@@ -907,7 +907,6 @@ extension MainViewModel {
             case messages(MessagesHistoryViewModel)
             case places(PlacesViewModel)
             case byPhone(ContactsViewModel)
-            case openAccount(OpenAccountViewModel)
         }
     }
     
