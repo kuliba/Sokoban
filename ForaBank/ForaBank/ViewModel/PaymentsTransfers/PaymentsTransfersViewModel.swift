@@ -126,6 +126,26 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 case _ as PaymentsTransfersViewModelAction.ViewDidApear:
                     model.action.send(ModelAction.Contacts.PermissionStatus.Request())
                     isTabBarHidden = false
+                
+                case let payload as PaymentsTransfersViewModelAction.Show.Requisites:
+                    
+                    Task.detached(priority: .high) { [self] in
+                        
+                        do {
+                            
+                            let operationViewModel = try await PaymentsViewModel(source: .requisites(qrCode: payload.qrCode), model: model, closeAction: {})
+                            bind(operationViewModel)
+                            self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                
+                                self.link = .transferByRequisites(operationViewModel)
+                            }
+                        } catch {
+                            
+                            self.link = nil
+                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for transfer by requisites category with error: \(error.localizedDescription) ")
+                        }
+                    }
                     
                 default:
                     break
@@ -186,7 +206,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         case .abroad:
                             
                             let operatorsViewModel = OperatorsViewModel(mode: .general, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, requisitsViewAction: {})
+                            })
                             link = .chooseCountry(operatorsViewModel)
                             
                         case .anotherCard:
@@ -217,6 +237,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                         self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                                     })
                                     
+                                    bind(paymentsViewModel)
                                     await MainActor.run {
                                         
                                         link = .init(.transferByRequisites(paymentsViewModel))
@@ -263,6 +284,10 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                         
                                         do {
                                             
+                                            guard let model = self?.model else {
+                                                return
+                                            }
+                                            
                                             let paymentsViewModel = try await PaymentsViewModel(model, service: .requisites, closeAction: {
                                                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                                             })
@@ -283,6 +308,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                         }
                                     }
                                 }
+                            }, qrAction: { [weak self] in
+                                
+                                self?.link = nil
+                                self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
+                                
                             })
                             
                             link = .serviceOperators(serviceOperators)
@@ -300,9 +330,15 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                         
                                         do {
                                             
+                                            guard let model = self?.model else {
+                                                return
+                                            }
+                                            
                                             let paymentsViewModel = try await PaymentsViewModel(model, service: .requisites, closeAction: {
                                                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                                             })
+                                            
+                                            self?.bind(paymentsViewModel)
                                             
                                             await MainActor.run {
                                                 
@@ -320,6 +356,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                         }
                                     }
                                 }
+                            }, qrAction: { [weak self] in
+                                
+                                self?.link = nil
+                                self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
+                                
                             })
                             link = .internetOperators(internetOperators)
                             InternetTVMainViewModel.filter = GlobalModule.INTERNET_TV_CODE
@@ -336,10 +377,15 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                         
                                         do {
                                             
+                                            guard let model = self?.model else {
+                                                return
+                                            }
+                                            
                                             let paymentsViewModel = try await PaymentsViewModel(model, service: .requisites, closeAction: {
                                                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                                             })
                                             
+                                            self?.bind(paymentsViewModel)
                                             await MainActor.run {
                                                 
                                                 self?.link = .init(.payments(paymentsViewModel))
@@ -356,6 +402,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                         }
                                     }
                                 }
+                            }, qrAction: { [weak self] in
+                                
+                                self?.link = nil
+                                self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
+                                
                             })
                             link = .transportOperators(transportOperators)
                             InternetTVMainViewModel.filter = GlobalModule.PAYMENT_TRANSPORT
@@ -397,6 +448,31 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                 }.store(in: &bindings)
         }
+    }
+    
+    private func bind(_ paymentsViewModel: PaymentsViewModel) {
+    
+        paymentsViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+            
+                switch action {
+                
+                case _ as PaymentsViewModelAction.ScanQrCode:
+                    
+                    self.link = nil
+                    
+                    let qrScannerModel = QRViewModel.init(closeAction: {
+                        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                    })
+                    
+                    self.bind(qrScannerModel)
+                    fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
+                    
+                default: break
+                }
+                
+            }.store(in: &bindings)
     }
     
     private func bind(_ viewModel: PaymentsMeToMeViewModel, swapViewModel: ProductsSwapView.ViewModel) {
@@ -487,7 +563,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }
                             self.link = .init(.country(.init(phone: phone, country: country, bank: bank, operatorsViewModel: .init(mode: .general, closeAction: { [weak self] in
                                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, requisitsViewAction: {}))))
+                            }))))
                         }
                         
                     case let .abroad(phone: phone, countryId: countryId):
@@ -499,7 +575,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }
                             self.link = .init(.country(.init(phone: phone, country: country, bank: nil, operatorsViewModel: .init(mode: .general, closeAction: { [weak self] in
                                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, requisitsViewAction: {}))))
+                            }, requisitsViewAction: {}, qrAction: { [weak self] in
+                                
+                                self?.link = nil
+                                self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
+                                
+                            }))))
                         }
                         
                     case let .latestPayment(latestPaymentId):
@@ -565,35 +646,51 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     switch payload.result {
                     case .qrCode(let qr):
                         
-                        //TODO: REFACTOR
                         if let qrMapping = model.qrMapping.value {
                             
-                            if let operators = model.dictionaryAnywayOperators(with: qr, mapping: qrMapping) {
+                            if let operators = model.dictionaryAnywayOperators(with: qr, mapping: qrMapping)  {
+                                
+                                guard operators.count > 0 else {
+                                
+                                    self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
+                                    return
+                                }
                                 
                                 if operators.count == 1 {
                                     
                                     self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) { [self] in
                                         
-                                        let operatorsViewModel = OperatorsViewModel(mode: .qr(qr), closeAction: { [weak self] in
-                                            self?.link = nil
-                                        }, requisitsViewAction: {})
-                                        self.link = .serviceOperators(operatorsViewModel)
+                                        let viewModel = InternetTVDetailsViewModel(model: model, qrCode: qr, mapping: qrMapping)
+                                        
+                                        self.link = .operatorView(viewModel)
                                     }
                                     
                                 } else {
                                     
-                                    //TODO: QRSearchOperatorViewModel with operators
                                     self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                                         
-                                        let operatorsViewModel = QRSearchOperatorViewModel(textFieldPlaceholder: "Название или ИНН", navigationBar:
-                                                .init(
-                                                    title: "Все регионы",
-                                                    titleButton: .init(icon: Image.ic16ChevronDown, action: {
-                                                        self.model.action.send(QRSearchOperatorViewModelAction.OpenCityView())
-                                                    }),
-                                                    leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: { [weak self] in self?.link = nil})]), model: self.model, operators: operators)
+                                        let navigationBarViewModel = NavigationBarView.ViewModel(title: "Все регионы", titleButton: .init(icon: Image.ic24ChevronDown, action: { [weak self] in
+                                            self?.model.action.send(QRSearchOperatorViewModelAction.OpenCityView())
+                                        }), leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: { [weak self] in self?.link = nil })])
+                                        
+                                        let operatorsViewModel = QRSearchOperatorViewModel(searchBar: .init(textFieldPhoneNumberView: .init(style: .general, placeHolder: .text("Название или ИНН")), state: .idle, icon: Image.ic24Search),
+                                                                                           navigationBar: navigationBarViewModel, model: self.model,
+                                                                                           operators: operators, addCompanyAction: { [weak self] in
+                                            
+                                            self?.link = nil
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                                self?.rootActions?.switchTab(.chat)
+                                            }
+                                            
+                                        }, requisitesAction: { [weak self] in
+                                            
+                                            self?.link = nil
+                                            self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
+
+
+                                        }, qrCode: qr)
                                         
                                         self.link = .searchOperators(operatorsViewModel)
                                     }
@@ -601,19 +698,27 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 
                             } else {
                                 
-                                self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
-                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                                    
-                                    let failedView = QRFailedViewModel(model: self.model)
-                                    self.link = .failedView(failedView)
-                                }
+                                self.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
                             }
                             
                         } else {
+                            
                             self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                                 
-                                let failedView = QRFailedViewModel(model: self.model)
+                                let failedView = QRFailedViewModel(model: self.model, addCompanyAction: { [weak self] in
+                                    
+                                    self?.link = nil
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                        self?.rootActions?.switchTab(.chat)
+                                    }
+                                    
+                                }, requisitsAction: { [weak self] in
+                                    
+                                    self?.fullScreenSheet = nil
+                                    self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
+
+                                })
                                 self.link = .failedView(failedView)
                             }
                         }
@@ -631,21 +736,90 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             self.link = .c2b(c2bViewModel)
                         }
                         
-                    case .url( _):
+                    case .url(_):
                         
                         self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                             
-                            let failedView = QRFailedViewModel(model: self.model)
+                            let failedView = QRFailedViewModel(model: self.model, addCompanyAction: { [weak self] in
+                                
+                                self?.link = nil
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                    self?.rootActions?.switchTab(.chat)
+                                }
+                                
+                            }, requisitsAction: { [weak self] in
+                                
+                                self?.fullScreenSheet = nil
+                                Task.detached(priority: .high) { [self] in
+                                    
+                                    do {
+                                        guard let model = self?.model else {
+                                            return
+                                        }
+                                        
+                                        let paymentsViewModel = try await PaymentsViewModel(model, service: .requisites, closeAction: { [weak self] in
+                                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                        })
+                                        
+                                        self?.bind(paymentsViewModel)
+                                        await MainActor.run {
+                                            
+                                            self?.link = .init(.transferByRequisites(paymentsViewModel))
+                                        }
+                                        
+                                    } catch {
+                                        
+                                        //TODO: show alert?
+                                        LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for transfer by requisites category with error: \(error.localizedDescription) ")
+                                    }
+                                }
+
+                            })
                             self.link = .failedView(failedView)
                         }
                         
-                    case .unknown(_):
+                    case .unknown:
                         
                         self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                             
-                            let failedView = QRFailedViewModel(model: self.model)
+                            let failedView = QRFailedViewModel(model: self.model, addCompanyAction: { [weak self] in
+                                
+                                self?.link = nil
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                    self?.rootActions?.switchTab(.chat)
+                                }
+                                
+                            }, requisitsAction: { [weak self] in
+                                
+                                self?.fullScreenSheet = nil
+                                Task.detached(priority: .high) { [self] in
+                                    
+                                    do {
+                                        
+                                        guard let model = self?.model else {
+                                            return
+                                        }
+                                        
+                                        let paymentsViewModel = try await PaymentsViewModel(model, service: .requisites, closeAction: { [weak self] in
+                                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                        })
+                                        
+                                        self?.bind(paymentsViewModel)
+                                        await MainActor.run {
+                                            
+                                            self?.link = .init(.transferByRequisites(paymentsViewModel))
+                                        }
+                                        
+                                    } catch {
+                                        
+                                        //TODO: show alert?
+                                        LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for transfer by requisites category with error: \(error.localizedDescription) ")
+                                    }
+                                }
+
+                            })
                             self.link = .failedView(failedView)
                         }
                     }
@@ -718,25 +892,34 @@ extension PaymentsTransfersViewModel {
         case (.country, let paymentData as PaymentCountryData):
             let operatorsViewModel = OperatorsViewModel(mode: .general, closeAction: { [weak self] in
                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-            }, requisitsViewAction: {})
+            })
             link = .init(.country(CountryPaymentView.ViewModel(countryData: paymentData, operatorsViewModel: operatorsViewModel)))
             
         case (.service, let paymentData as PaymentServiceData):
             let operatorsViewModel = OperatorsViewModel(mode: .general, paymentServiceData: paymentData, model: model, closeAction: { [weak self] in
                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-            }, requisitsViewAction: {})
+            }, requisitsViewAction: {}, qrAction: { [weak self] in
+                
+                self?.link = nil
+            })
             link = .service(operatorsViewModel)
             
         case (.transport, let paymentData as PaymentServiceData):
             let operatorsViewModel = OperatorsViewModel(mode: .general, paymentServiceData: paymentData, model: model, closeAction: { [weak self] in
                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-            }, requisitsViewAction: {})
+            }, requisitsViewAction: {}, qrAction: { [weak self] in
+                
+                self?.link = nil
+            })
             link = .transport(operatorsViewModel)
             
         case (.internet, let paymentData as PaymentServiceData):
             let operatorsViewModel = OperatorsViewModel(mode: .general, paymentServiceData: paymentData, model: model, closeAction: { [weak self] in
                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-            }, requisitsViewAction: {})
+            }, requisitsViewAction: {}, qrAction: { [weak self] in
+                
+                self?.link = nil
+            })
             link = .internet(operatorsViewModel)
             
         case (.mobile, let paymentData as PaymentServiceData):
@@ -841,6 +1024,7 @@ extension PaymentsTransfersViewModel {
         case failedView(QRFailedViewModel)
         case c2b(C2BViewModel)
         case searchOperators(QRSearchOperatorViewModel)
+        case operatorView(InternetTVDetailsViewModel)
     }
     
     struct FullScreenSheet: Identifiable, Equatable {
@@ -887,6 +1071,14 @@ enum PaymentsTransfersViewModelAction {
     }
     
     struct OpenQr: Action {}
+    
+    enum Show {
+        
+        struct Requisites: Action {
+            
+            let qrCode: QRCode
+        }
+    }
     
     struct ViewDidApear: Action {}
 }

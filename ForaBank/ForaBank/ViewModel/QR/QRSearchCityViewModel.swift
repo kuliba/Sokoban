@@ -12,31 +12,35 @@ class QRSearchCityViewModel: ObservableObject, Identifiable {
     
     let id = UUID().uuidString
     let title = "Выберите регион"
-    let textFieldPlaceholder = "Введите название города"
     let action: (String) -> Void
     
     var model: Model
+    @Published var searchView: SearchBarView.ViewModel
     @Published var city: [String]
     @Published var filteredCity: [String] = []
-    @Published var textFieldValue: String = ""
     private var bindings = Set<AnyCancellable>()
     
-    internal init(model: Model, action: @escaping (String) -> Void) {
+    internal init(model: Model, searchView: SearchBarView.ViewModel, action: @escaping (String) -> Void) {
         
         self.model = model
+        self.searchView = searchView
         self.city = []
         self.action = action
         
         guard let operatorsData = model.dictionaryAnywayOperators() else { return }
-        self.city = operatorsData.compactMap{$0.city}
+        self.city = operatorsData.compactMap{$0.city}.uniqued()
         bind()
     }
     
     func bind() {
         
-        $textFieldValue
+        searchView.textField.$text
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] value in
+                
+                guard let value = value else {
+                    return
+                }
                 
                 if !self.doStringContainsNumber(value) {
                     filteredCity = city.filter { $0.lowercased().prefix(value.count) == value.lowercased() }

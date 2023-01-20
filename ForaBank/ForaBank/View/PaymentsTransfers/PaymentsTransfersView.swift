@@ -133,7 +133,12 @@ struct PaymentsTransfersView: View {
                         QRSearchOperatorView(viewModel: viewModel)
                             .navigationBarTitle("", displayMode: .inline)
                             .navigationBarBackButtonHidden(true)
+                        
+                    case let .operatorView(internetDetailViewModel):
+                        InternetTVDetailsView(viewModel: internetDetailViewModel)
+                            .navigationBarTitle("", displayMode: .inline)
                             .edgesIgnoringSafeArea(.all)
+                        
                     }
                 }
             }
@@ -211,8 +216,9 @@ struct PaymentsTransfersView: View {
             switch item.type {
             case let .qrScanner(viewModel):
                 NavigationView {
+                    
                     QRView(viewModel: viewModel)
-                        .navigationBarTitle("", displayMode: .inline)
+                        .navigationBarHidden(true)
                         .navigationBarBackButtonHidden(true)
                         .edgesIgnoringSafeArea(.all)
                 }

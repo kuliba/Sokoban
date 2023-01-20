@@ -15,6 +15,11 @@ struct InternetTVDetailsView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> InternetTVDetailsFormController {
         
         let vc = InternetTVDetailsFormController.storyboardInstance()!
+        
+        vc.operatorData = viewModel.operatorData
+        vc.qrData = viewModel.qrData
+        vc.operatorsViewModel = viewModel.operatorsViewModel
+        
         if let template = viewModel.paymentTemplate {
             
             vc.template = template
@@ -24,7 +29,8 @@ struct InternetTVDetailsView: UIViewControllerRepresentable {
         }
         vc.modalPresentationStyle = .fullScreen
         context.coordinator.parentObserver = vc.observe(\.parent, changeHandler: { vc, _ in
-            vc.parent?.navigationItem.title = vc.navigationItem.title
+            
+            vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
             vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
             vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
         })
@@ -43,9 +49,14 @@ struct InternetTVDetailsView: UIViewControllerRepresentable {
 
 struct InternetTVDetailsViewModel {
     
-    let closeAction: () -> Void
-    let paymentTemplate: PaymentTemplateData?
-    var latestOpsDO: InternetLatestOpsDO?
+    var closeAction: () -> Void = {}
+    var paymentTemplate: PaymentTemplateData? = nil
+    var latestOpsDO: InternetLatestOpsDO? = nil
+    
+    var operatorData: GKHOperatorsModel? = nil
+    var qrData = [String: String]()
+    var operatorsViewModel: OperatorsViewModel? = nil
+
     
     init(model: Model, closeAction: @escaping () -> Void, paymentTemplate: PaymentTemplateData? = nil, latestOpsDO: InternetLatestOpsDO? = nil) {
         
@@ -122,6 +133,27 @@ struct InternetTVDetailsViewModel {
             InternetTVMainViewModel.latestOp = latestOpsDO
             InternetTVMainViewModel.filter = foundedOperator.parentCode ?? GlobalModule.UTILITIES_CODE
         }
+    }
+    
+    init(model: Model, qrCode: QRCode, mapping: QRMapping) {
+
+        let inn = qrCode.stringValue(type: .general(.inn), mapping: mapping)
+        var operatorsModel = GKHOperatorsModel()
+        let operatorsList = InternetTVMainController.getOperatorsList(model: model)
+        operatorsList.forEach( { operators in
+            if operators.synonymList.first == inn {
+                operatorsModel = operators
+            }
+        })
+        
+        self.qrData = qrCode.rawData
+        self.operatorData = operatorsModel
+        self.operatorsViewModel = nil
+    }
+    
+    init(model: Model, operatorData: OperatorGroupData.OperatorData, closeAction: @escaping () -> Void) {
+        
+        self.operatorData = .init(with: operatorData, and: nil)
     }
     
     func getOperatorsList(model: Model) -> [GKHOperatorsModel] {

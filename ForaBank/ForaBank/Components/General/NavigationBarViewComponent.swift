@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
+import Combine
 
 extension NavigationBarView {
     
     class ViewModel: ObservableObject {
+        
+        let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var title: String
         @Published var titleButton: TitleButtonViewModel?
@@ -58,37 +61,7 @@ extension NavigationBarView {
                 let backButton = BackButtonItemViewModel(action: closeAction)
                 
                 var rightButton = [ItemViewModel]()
-                
-                if let icon = headerParameter.icon {
-                    
-                    switch icon {
-                    case let .image(imageData):
-                        if let iconImage = imageData.image {
-                            
-                            let imageItem = IconItemViewModel(icon: iconImage)
-                            rightButton.append(imageItem)
-                        }
-                        
-                    case let .name(imageName):
-                        let imageItem = IconItemViewModel(icon: Image(imageName))
-                        rightButton.append(imageItem)
-                    }
-                }
-                
-                for button in headerParameter.rightButton {
-                    
-                    guard let icon = button.icon.image else {
-                        break
-                    }
-                    
-                    switch button.action {
-                    case .scanQrCode:
-                        rightButton.append(ButtonItemViewModel.init(icon: icon, action: {
-                             //setup qr code view action
-                        }))
-                    }
-                }
-                
+
                 if let subtitle = headerParameter.subtitle {
                     
                     self.init(title: headerParameter.title, subtitle: subtitle, leftItems: [backButton], rightItems: rightButton)
@@ -97,13 +70,34 @@ extension NavigationBarView {
                     
                     self.init(title: headerParameter.title, subtitle: nil, leftItems: [backButton], rightItems: rightButton)
                 }
-                 
+                
+                for item in headerParameter.rightButton {
+                    
+                    guard let icon = item.icon.image else {
+                        break
+                    }
+                    
+                    switch item.action {
+                    case .scanQrCode:
+                        
+                        rightButton.append(ButtonItemViewModel.init(icon: icon, action: { [weak self] in
+                            self?.action.send(NavigationBarViewModelAction.ScanQrCode())
+                        }))
+                    }
+                }
+                self.rightItems = rightButton
+                
             } else {
                 
                 self.init()
             }
         }
     }
+}
+
+struct NavigationBarViewModelAction {
+    
+    struct ScanQrCode: Action {}
 }
 
 //MARK: - Types

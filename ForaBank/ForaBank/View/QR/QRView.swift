@@ -13,9 +13,33 @@ struct QRView: View {
     var body: some View {
         
         ZStack {
+            
             QRScannerView(viewModel: viewModel.scanner)
             
-            ZStack {
+            VStack(alignment: .center, spacing: 0)  {
+                
+                Color.clear
+                    .frame(height: 30)
+                    .background(Color.black.opacity(0.5))
+                
+                HStack {
+                    
+                    VStack(alignment: .center, spacing: 10) {
+                        
+                        Text(viewModel.title)
+                            .foregroundColor(.white)
+                            .font(Font.textH1SB24322())
+                            .frame(maxWidth: .infinity)
+                        
+                        Text(viewModel.subTitle)
+                            .foregroundColor(.white)
+                            .font(Font.textH1SB24322())
+                            .frame(alignment: .center)
+                        
+                    }
+                    .padding(.top)
+                    .background(Color.black.opacity(0.5))
+                }
                 
                 GeometryReader { geometry in
                     
@@ -24,41 +48,25 @@ struct QRView: View {
                     QRCenterRectangleView(qrCenterRect: qrCenterRect, geometry: geometry)
                 }
                 
-                ZStack {
+                VStack {
                     
-                    VStack(alignment: .center)  {
+                    HStack(spacing: 20) {
                         
-                        VStack(alignment: .center, spacing: 10) {
+                        ForEach(viewModel.buttons) { buttons in
                             
-                            Text(viewModel.title)
-                                .foregroundColor(.white)
-                                .font(Font.textH1SB24322())
-                                .frame(alignment: .center)
-                            
-                            Text(viewModel.subTitle)
-                                .foregroundColor(.white)
-                                .font(Font.textH1SB24322())
-                                .frame(alignment: .center)
-                            
-                        } .padding(.vertical, 100)
-                        
-                        Spacer()
-                        
-                        HStack(spacing: 20) {
-                            
-                            ForEach(viewModel.buttons) { buttons in
-                                ButtonIconTextView(viewModel: buttons)
-                                //    .padding(.leading, 20)
-                            } 
+                            ButtonIconTextView(viewModel: buttons)
                         }
-                        
-                        ButtonSimpleView(viewModel: viewModel.clouseButton)
-                            .frame(height: 48)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 50)
                     }
-                } 
+                    
+                    ButtonSimpleView(viewModel: viewModel.clouseButton)
+                        .frame(height: 48)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 50)
+                }
+                .background(Color.black.opacity(0.5))
+                
             }
+            .edgesIgnoringSafeArea(.vertical)
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
@@ -85,23 +93,24 @@ struct QRView: View {
                         
                     case let .info(infoViewModel) :
                         QRInfoViewComponent(viewModel: infoViewModel)
-                            .frame(height: 450)
+                            .frame(height: 450, alignment: .top)
                             .padding(.horizontal, 30)
+                            .padding(.top, 20)
                         
                     case .qRAccessViewComponent(_):
                         
-                        QRAccessViewComponent(viewModel: .init(input: .camera,  closeAction: {
+                        QRAccessView(viewModel: .init(input: .camera,  closeAction: {
                             UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
                         }))
-                            .frame(height: 400)
-                            .padding(.horizontal, 30)
+                        .frame(height: 330)
+                        .padding(.horizontal, 30)
                         
                     case .photoAccessViewComponent(_):
-                        QRAccessViewComponent(viewModel: .init(input: .photo,  closeAction: {
+                        QRAccessView(viewModel: .init(input: .photo,  closeAction: {
                             UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
                         }))
-                            .frame(height: 400)
-                            .padding(.horizontal, 30)
+                        .frame(height: 330)
+                        .padding(.horizontal, 30)
                     }
                 })
         }
@@ -143,15 +152,18 @@ struct QRCenterRectangleView: View {
     var body: some View {
         
         ZStack {
+            
             Rectangle()
                 .fill(.black.opacity(0.5))
+            
             RoundedRectangle(cornerRadius: 16)
                 .fill(.black)
-                .frame(width: qrCenterRect - 14, height: qrCenterRect - 14, alignment: .center)
+                .frame(width: qrCenterRect - 25, height: qrCenterRect - 25, alignment: .center)
                 .blendMode(.destinationOut)
+                .padding(10)
         }
         .compositingGroup()
-    
+        
         Path { path in
             
             let left = (geometry.size.width - qrCenterRect) / 2.0
@@ -174,7 +186,7 @@ struct QRCenterRectangleView: View {
 }
 
 extension QRCenterRectangleView {
-   
+    
     private func createCornersPath(
         left: CGFloat,
         top: CGFloat,
@@ -260,8 +272,8 @@ extension QRView_Previews {
     
     static let buttons = [
         ButtonIconTextView.ViewModel(icon: .init(image: .ic24AlertCircle, background: .circle), title: .init(text: "Из документов"), orientation: .horizontal, action: {}),
-               ButtonIconTextView.ViewModel(icon: .init(image: .ic24AlertCircle, background: .circle), title: .init(text: "Фонарик"), orientation: .horizontal, action: {}),
-    ButtonIconTextView.ViewModel(icon: .init(image: .ic24AlertCircle, background: .circle), title: .init(text: "Инфо"), orientation: .horizontal, action: {})]
+        ButtonIconTextView.ViewModel(icon: .init(image: .ic24AlertCircle, background: .circle), title: .init(text: "Фонарик"), orientation: .horizontal, action: {}),
+        ButtonIconTextView.ViewModel(icon: .init(image: .ic24AlertCircle, background: .circle), title: .init(text: "Инфо"), orientation: .horizontal, action: {})]
     
     static let clouseButton = ButtonSimpleView(viewModel: .init(title: "Отменить", style: .gray, action: {} ))
 }

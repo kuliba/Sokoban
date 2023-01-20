@@ -74,13 +74,18 @@ class QRViewModel: ObservableObject {
                 case _ as QRViewModelAction.Info:
                     self.bottomSheet = .init(sheetType: .info(.init(icon: .ic48Info,
                                                                                      title: "Сканировать QR-код",
-                                                                                     content: "Наведите камеру телефона на QR-код, и приложение автоматически его считает.\n\n Перед оплатой проверьте, что все поля заполнены правильно.\n\n Чтобы оплатить квитанцию, сохраненную в телефоне, откройте ее с помощью кнопки \"Из файла\", и отсканируйте QR-код.")))
+                                                                                     content: ["\tНаведите камеру телефона на QR-код,\n и приложение автоматически его считает.",
+                                                                                               "\tПеред оплатой проверьте, что все поля заполнены правильно.",
+                                                                                               "\tЧтобы оплатить квитанцию, сохраненную в телефоне, откройте ее с помощью кнопки \"Из файла\" и отсканируйте QR-код."])))
                     
                 case _ as QRViewModelAction.AccessCamera:
                     
-                    self.bottomSheet = .init(sheetType: .qRAccessViewComponent(.init(viewModel: .init(input: .camera, closeAction: {[weak self] in
-                        self?.sheet = nil
-                    }))))
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                        
+                        self.bottomSheet = .init(sheetType: .qRAccessViewComponent(.init(viewModel: .init(input: .camera, closeAction: {[weak self] in
+                            self?.sheet = nil
+                        }))))
+                    }
                     
                 case _ as QRViewModelAction.AccessPhotoGallery:
                     
@@ -89,17 +94,14 @@ class QRViewModel: ObservableObject {
                     }))))
                     
                 case _ as QRViewModelAction.Flashlight:
-                    
                     self.flashLightTorch(on: self.flashLight.result.0)
                     
                 case _ as QRViewModelAction.CloseLink:
                     link = nil
                     
                 case _ as QRViewModelAction.CloseBottomSheet:
-                    withAnimation {
-                        
-                        self.bottomSheet = nil
-                    }
+                    self.bottomSheet = nil
+                    
                 case _ as QRViewModelAction.CloseSheet:
                     sheet = nil
                     
@@ -158,6 +160,7 @@ class QRViewModel: ObservableObject {
                             
                         } else {
                             
+                            self?.action.send(QRViewModelAction.Result(result: .unknown))
                             
                         }
                         
@@ -185,6 +188,15 @@ class QRViewModel: ObservableObject {
                     
                     self.action.send(QRViewModelAction.Result(result: result))
                     
+                    guard case .qrCode(let qrCode) = result,
+                          let mapping = model.qrMapping.value,
+                          let failData = qrCode.check(mapping: mapping) else {
+                        
+                        return
+                    }
+                    
+                    self.model.action.send(ModelAction.QRAction.SendFailData.Request(failData: failData))
+                          
                 default:
                     break
                 }
@@ -206,8 +218,8 @@ extension QRViewModel {
             case imageCapture(ImagePickerControllerViewModel)
             case info(QRInfoViewModel.ViewModel)
             case choiseDocument(QRButtonsView.ViewModel)
-            case qRAccessViewComponent(QRAccessViewComponent)
-            case photoAccessViewComponent(QRAccessViewComponent)
+            case qRAccessViewComponent(QRAccessView)
+            case photoAccessViewComponent(QRAccessView)
         }
     }
     
@@ -233,7 +245,7 @@ extension QRViewModel {
         case qrCode(QRCode)
         case c2bURL(URL)
         case url(URL)
-        case unknown(String)
+        case unknown
     }
 }
 
@@ -261,7 +273,7 @@ extension QRViewModel {
             
         } else {
             
-            return .unknown(data)
+            return .unknown
         }
     }
     

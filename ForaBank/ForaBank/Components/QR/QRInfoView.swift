@@ -16,11 +16,10 @@ struct QRInfoViewModel {
         let title: String
         let content: [String]
         
-        internal init(icon: Image, title: String, content: String) {
+        internal init(icon: Image, title: String, content: [String]) {
             self.icon = icon
             self.title = title
-            let contentArray = content.components(separatedBy: ".")
-            self.content = contentArray
+            self.content = content
         }
     }
 }
@@ -34,6 +33,7 @@ struct QRInfoViewComponent: View {
         VStack(spacing: 20) {
             
             ZStack {
+                
             Circle()
                 .foregroundColor(.mainColorsGrayLightest)
                 .frame(width: 88, height: 88)
@@ -48,8 +48,10 @@ struct QRInfoViewComponent: View {
                 .foregroundColor(Color.textSecondary)
                 .font(Font.textH4SB16240())
             
-            VStack {
+            VStack(spacing: 20) {
+                
                 ForEach(viewModel.content, id: \.self) { content in
+                    
                     Text(content)
                         .foregroundColor(Color.textSecondary)
                         .font(Font.buttonSmallM14160())
@@ -68,7 +70,7 @@ struct QRInfoViewComponent_Previews: PreviewProvider {
         
         QRInfoViewComponent(viewModel: .init(icon: .ic24AlertCircle,
                                     title: "Сканировать QR-код",
-                                    content: "Наведите камеру телефона на QR-код, и приложение автоматически его считает. Перед оплатой проверьте, что все поля заполнены правильно. Чтобы оплатить квитанцию, сохраненнуюв телефоне, откройте ее с помощью кнопки \"Из файла\", и отсканируйте QR-код."))
+                                    content: ["Наведите камеру телефона на QR-код, и приложение автоматически его считает. Перед оплатой проверьте, что все поля заполнены правильно. Чтобы оплатить квитанцию, сохраненнуюв телефоне, откройте ее с помощью кнопки \"Из файла\", и отсканируйте QR-код."]))
             .previewLayout(.fixed(width: 100, height: 100))
     }
 }

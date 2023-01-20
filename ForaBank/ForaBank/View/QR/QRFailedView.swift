@@ -13,28 +13,37 @@ struct QRFailedView: View {
     
     var body: some View {
         
-        VStack(spacing: 30) {
+        VStack(spacing: 32) {
             
-            avatarView
-            
-            VStack(spacing: 8) {
-                Text(viewModel.title)
-                    .font(Font.textH3SB18240())
-                    .foregroundColor(Color.textSecondary)
+            VStack(spacing: 28) {
+             
+                avatarView
                 
-                Text(viewModel.content)
-                    .font(Font.textBodyMSB14200())
-                    .foregroundColor(Color.textPlaceholder)
+                VStack(spacing: 8) {
+                    
+                    Text(viewModel.title)
+                        .font(Font.textH3SB18240())
+                        .foregroundColor(Color.textSecondary)
+                    
+                    Text(viewModel.content)
+                        .font(.textBodyMR14200())
+                        .foregroundColor(Color.textPlaceholder)
+                }
             }
             
             VStack(spacing: 8) {
+                
                 ForEach(viewModel.searchOperatorButton) { buttons in
+                    
                     ButtonSimpleView(viewModel: buttons)
-                        .frame(height: 48)
+                        .frame(height: 56)
                         .padding(.horizontal, 20)
                 }
             }
+            
+            Spacer()
         }
+        .padding(.top, 80)
         
         NavigationLink("", isActive: $viewModel.isLinkActive) {
             
@@ -55,11 +64,11 @@ struct QRFailedView: View {
             
             Circle()
                 .foregroundColor(.mainColorsGrayLightest)
-                .frame(width: 88, height: 88)
+                .frame(width: 88, height: 88, alignment: .center)
             
-            Image.ic24BarcodeScanner2
+            Image.ic48BarcodeScanner
                 .resizable()
-                .frame(width: 48, height: 48)
+                .frame(width: 48, height: 48, alignment: .center)
                 .foregroundColor(.iconBlack)
             
             ZStack {

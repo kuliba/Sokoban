@@ -199,36 +199,9 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     }
 
     @objc func onQR() {
-        PermissionHelper.checkCameraAccess(isAllowed: { granted, alert in
-            if granted {
-//                DispatchQueue.main.async {
-//                    self.navigationController?.isNavigationBarHidden = true
-//                    self.performSegue(withIdentifier: "qr", sender: nil)
-//                }
                 
-                var presentedController : UINavigationController?
-                
-                let qrViewModel = QRViewModel {
-                    presentedController?.dismiss(animated: true)
-                }
-                
-                let qrView = QRView(viewModel: qrViewModel)
-                let hostingController = UIHostingController(rootView: qrView)
-                hostingController._disableSafeArea = true
-                let navVC = UINavigationController(rootViewController: hostingController)
-                navVC.modalPresentationStyle = .fullScreen
-                hostingController.navigationController?.setNavigationBarHidden(true, animated: false)
-                self.present(navVC, animated: true , completion: nil)
-                presentedController = self.navigationController
+        self.operatorsViewModel?.qrAction()
 
-            } else {
-                DispatchQueue.main.async {
-                    if let alertUnw = alert {
-                        self.present(alertUnw, animated: true, completion: nil)
-                    }
-                }
-            }
-        })
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -262,8 +235,6 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
 
     var qrDataDictionary = [String: String]()
     func checkQREvent() {
-        
-        let purefArray = ["iFora||4990", "avtodor", "iFora||5173"]
 
         if qrDataDictionary.isEmpty {
             
@@ -271,7 +242,6 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
             
             for ( key, value ) in qrCode.rawData {
                 
-                let qrParameter = qrCode.stringValue(type: .value(key), mapping: mapping)
                 qrDataDictionary.updateValue(value, forKey: key)
                 
             }
@@ -282,7 +252,7 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
 
             let inn = qrCode.stringValue(type: .general(.inn), mapping: mapping)
             var operatorsModel = GKHOperatorsModel()
-            let operatorsList = getOperatorsList(model: model)
+            let operatorsList = InternetTVMainController.getOperatorsList(model: model)
             operatorsList.forEach( { operators in
                 if operators.synonymList.first == inn {
                     operatorsModel = operators
@@ -389,7 +359,7 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         navigationItem.searchController = nil
     }
     
-    func getOperatorsList(model: Model) -> [GKHOperatorsModel] {
+    static func getOperatorsList(model: Model) -> [GKHOperatorsModel] {
         
         let operators = (model.dictionaryAnywayOperatorGroups()?.compactMap { $0.returnOperators() }) ?? []
         let operatorCodes = [GlobalModule.UTILITIES_CODE, GlobalModule.INTERNET_TV_CODE, GlobalModule.PAYMENT_TRANSPORT]

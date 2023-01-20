@@ -72,5 +72,24 @@ extension GKHOperatorsModel {
         
         //FIXME: child operators from Operator model not implemented
     }
+    
+    convenience init(with data: OperatorGroupData.OperatorData, and parameterTypes: [String]?) {
+        
+        self.init()
+        puref   = data.code
+        isGroup = data.isGroup
+        name    = data.name
+        region  = data.region
+        parentCode = data.parentCode
+        
+        logotypeList.append(objectsIn: data.logotypeList.map{ LogotypeData(with: $0.logotypeList(), and: data.code)} )
+        
+        synonymList.append(objectsIn: data.synonymList)
+            
+        let parametersObjects = data.parameterList.compactMap{ Parameters(with: $0.returnParamertList(), for: parameterTypes) }
+        let sortedParametersObjects = parametersObjects.sorted(by: { $0.order < $1.order })
+            
+        parameterList.append(objectsIn: sortedParametersObjects )
+    }
 }
 

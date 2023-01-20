@@ -9,7 +9,7 @@ import SwiftUI
 
 //MARK: - ViewModel
 
-extension QRSearchItemComponentView {
+extension QRSearchItemView {
     
     class ViewModel: Identifiable, Equatable {
         
@@ -28,12 +28,7 @@ extension QRSearchItemComponentView {
             self.model = model
         }
         
-        convenience init(icon: Image, title: String, content: String, model: Model) {
-            
-            self.init(icon: icon, title: title, content: content, model: model)
-        }
-        
-        static func == (lhs: QRSearchItemComponentView.ViewModel, rhs: QRSearchItemComponentView.ViewModel) -> Bool {
+        static func == (lhs: QRSearchItemView.ViewModel, rhs: QRSearchItemView.ViewModel) -> Bool {
             lhs.id == rhs.id
         }
     }
@@ -41,9 +36,9 @@ extension QRSearchItemComponentView {
 
 //MARK: - View
 
-struct QRSearchItemComponentView: View {
+struct QRSearchItemView: View {
     
-    let viewModel: QRSearchItemComponentView.ViewModel
+    let viewModel: QRSearchItemView.ViewModel
     
     var body: some View {
         
@@ -88,15 +83,15 @@ struct QRSearchItemComponentView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        QRSearchItemComponentView(viewModel:.sample)
+        QRSearchItemView(viewModel:.sample)
             .previewLayout(.fixed(width: 375, height: 100))
     }
 }
 
 //MARK: - Preview Content
 
-extension QRSearchItemComponentView.ViewModel {
+extension QRSearchItemView.ViewModel {
     
-    static let sample = QRSearchItemComponentView.ViewModel(icon: Image.ic24MoreHorizontal, title: "МосЭнерго", content: "ИНН 7702070139")
+    static let sample = QRSearchItemView.ViewModel(icon: Image.ic24MoreHorizontal, title: "МосЭнерго", content: "ИНН 7702070139")
 }
 

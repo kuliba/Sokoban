@@ -156,6 +156,8 @@ extension Payments.Operation {
         
         case abroad(phone: String, countryId: CountryData.ID)
         
+        case requisites(qrCode: QRCode)
+        
         case mock(Payments.Mock)
         
         var debugDescription: String {
@@ -168,6 +170,7 @@ extension Payments.Operation {
             case let .direct(phone: phone, bankId: bankId, countryId: countryId): return "direct: \(phone), bankId: \(bankId), countryId: \(countryId)"
             case let .abroad(phone: phone, countryId: countryId): return "abroad: \(phone), countryId: \(countryId)"
             case let .mock(mock): return "mock service: \(mock.service.rawValue)"
+            case let .requisites(qrCode): return "qrCode: \(qrCode)"
             }
         }
     }

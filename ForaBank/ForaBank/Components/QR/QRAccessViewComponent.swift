@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct QRAccessViewModel {
+extension QRAccessView {
     
     class ViewModel: Identifiable {
         
@@ -46,40 +46,48 @@ struct QRAccessViewModel {
     }
 }
 
-struct QRAccessViewComponent: View {
+struct QRAccessView: View {
     
-    let viewModel: QRAccessViewModel.ViewModel
+    let viewModel: ViewModel
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 64) {
             
-            ZStack {
-            Circle()
-                .foregroundColor(.mainColorsGrayLightest)
-                .frame(width: 88, height: 88)
-            
-            viewModel.icon
-                .resizable()
-                .frame(width: 48, height: 48)
-                .foregroundColor(.iconGray)
+            VStack(spacing: 24) {
+                
+                ZStack {
+                    
+                    Circle()
+                        .foregroundColor(.buttonSecondaryDisabled)
+                        .frame(width: 64, height: 64)
+                    
+                    viewModel.icon
+                        .resizable()
+                        .frame(width: 32, height: 32)
+                        .foregroundColor(.iconBlack)
+                }
+             
+                VStack(spacing: 8) {
+                    
+                    Text(viewModel.title)
+                        .foregroundColor(Color.textSecondary)
+                        .font(.textH4M16240())
+                    
+                    Text(viewModel.content)
+                        .foregroundColor(.textPlaceholder)
+                        .font(.textBodySR12160())
+                        .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.center)
+                        .padding(.vertical, 5)
+                }
+                .padding(.horizontal, 25)
             }
-
-            Text(viewModel.title)
-                .foregroundColor(Color.textSecondary)
-                .font(Font.textH4SB16240())
-            
-            Text(viewModel.content)
-                .foregroundColor(Color.textSecondary)
-                .font(Font.buttonSmallM14160())
-                .fixedSize(horizontal: false, vertical: true)
-                .multilineTextAlignment(.center)
-                .padding(.vertical, 5)
             
             ButtonSimpleView(viewModel: viewModel.clouseButton)
-                .frame(height: 48)
-                .padding(.vertical, 50)
-        }.padding(20)
+                .frame(height: 56)
+            
+        }
     }
 }
 
@@ -91,12 +99,12 @@ struct QRAccessViewComponent_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        QRAccessViewComponent(viewModel: .init(icon: .ic24AlertCircle,
+        QRAccessView(viewModel: .init(icon: .ic24AlertCircle,
                                                title: "Разрешите доступ к фото",
                                                content: "Сможете сканировать файлы/документы с QR-кодом",
                                                clouseButton: Self.clouseButton
                               ))
-        .previewLayout(.fixed(width: 100, height: 100))
+        .previewLayout(.fixed(width: 400, height: 400))
     }
 }
 

@@ -54,7 +54,197 @@ extension Model {
                 
                 return .init(rules: rules)
             }()
+            
             let accountNumberParameter = Payments.ParameterInput(.init(id: accountNumberId, value: nil), icon: defaultInputIcon, title: "Номер счета получателя", validator: accountNumberValidator, limitator: .init(limit: 20), inputType: .number)
+            
+            if let source = operation.source {
+                
+                //TODO: Setup message parameter after merge request
+                
+                switch source {
+                case let .requisites(qrCode: qrCode):
+                    
+                    guard let qrMapping = self.qrMapping.value else {
+                        throw Payments.Error.unsupported
+                    }
+                        
+                    if let inn = qrCode.stringValue(type: .general(.inn), mapping: qrMapping) {
+                        
+                        if inn.count == 10 {
+                            
+                            //MARK: Inn Number Parameter
+                            let innValidator: Payments.Validation.RulesSystem = {
+                                
+                                var rules = [Payments.Validation.Rule]()
+                                
+                                rules.append(Payments.Validation.LengthLimitsRule.init(lengthLimits: [10, 12], actions: [.post: .warning("Должен состоять из 10 или 12 цифр.")]))
+
+                                rules.append(Payments.Validation.RegExpRule(regExp: "^[0-9]\\d*$", actions: [.post: .warning("Введены недопустимые символы")]))
+                                
+                                return .init(rules: rules)
+                            }()
+                            
+                            let innParameter = Payments.ParameterInput(.init(id: innNumberId, value: nil), icon: defaultInputIcon, title: "ИНН получателя", validator: innValidator, limitator: .init(limit: 12), inputType: .number)
+                            
+                            //MARK: Company Name Parameter
+                            let validator: Payments.Validation.RulesSystem = {
+                                
+                                var rules = [Payments.Validation.Rule]()
+                                
+                                rules.append(Payments.Validation.MinLengthRule(minLenght: 1, actions: [.post: .warning("Заполните поле (до 160 символов)")]))
+                                rules.append(Payments.Validation.MaxLengthRule(maxLenght: 160, actions: [.post: .warning("Заполните поле (до 160 символов)")]))
+                                
+                                return .init(rules: rules)
+                            }()
+                            
+                            let companyNameParameterId = Payments.Parameter.Identifier.requisitsCompanyName.rawValue
+                            let companyNameParameter = Payments.ParameterInput(.init(id: companyNameParameterId, value: nil), icon: nil, title: "Наименование получателя", validator: validator, limitator: .init(limit: 160))
+                            
+                            //MARK: Product Parameter
+                            let productParameterId = Payments.Parameter.Identifier.product.rawValue
+                            let filter = ProductData.Filter.generalFrom
+                            guard let product = firstProduct(with: filter),
+                                  let currencySymbol = dictionaryCurrencySymbol(for: product.currency)else {
+                                throw Payments.Error.unableCreateRepresentable(productParameterId)
+                            }
+                            let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
+                            
+                            //MARK: Amount Parameter
+                            let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
+                            let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма перевода", currencySymbol: currencySymbol, transferButtonTitle: "Продолжить", validator: .init(minAmount: 0.01, maxAmount: product.balance), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
+                            
+                            //MARK: CheckBox Parameter
+                            let checkBoxParameterId = Payments.Parameter.Identifier.requisitsCheckBox.rawValue
+                            let checkBoxParameter = Payments.ParameterCheckBox(.init(id: checkBoxParameterId, value: .init()), title: "Оплата ЖКХ")
+                            
+                            //MARK: Kpp Parameter
+                            let kppValidator: Payments.Validation.RulesSystem = {
+                                
+                                var rules = [Payments.Validation.Rule]()
+                                
+                                rules.append(Payments.Validation.LengthLimitsRule.init(lengthLimits: [9], actions: [.post: .warning("Должен состоять из 9 цифр.")]))
+                                
+                                rules.append(Payments.Validation.RegExpRule(regExp: "^[0-9]\\d*$", actions: [.post: .warning("Введено некорректное значение")]))
+                                
+                                return .init(rules: rules)
+                            }()
+                            
+                            let kppParameterId = Payments.Parameter.Identifier.requisitsKpp.rawValue
+                            let kppParameter = Payments.ParameterInput(.init(id: kppParameterId, value: nil), icon: nil, title: "КПП получателя", validator: kppValidator, limitator: .init(limit: 9), inputType: .number)
+                            
+                            //MARK: Message Parameter
+                            let messageValidator: Payments.Validation.RulesSystem = {
+                                
+                                var rules = [Payments.Validation.Rule]()
+                                
+                                rules.append(Payments.Validation.MinLengthRule(minLenght: 25, actions: [.post: .warning("Заполните поле (от 25 до 210 символов)")]))
+                                rules.append(Payments.Validation.MaxLengthRule(maxLenght: 210, actions: [.post: .warning("Заполните поле (от 25 до 210 символов)")]))
+                                
+                                return .init(rules: rules)
+                            }()
+                            
+                            let messageParameter = Payments.ParameterInput(.init(id: messageParameterId, value: nil), icon: messageParameterIcon, title: "Назначение платежа", validator: messageValidator, limitator: .init(limit: 210))
+                            
+                            return .init(parameters: [operatorParameter, headerParameter, bicBankParameter, accountNumberParameter, innParameter, kppParameter, companyNameParameter, checkBoxParameter, messageParameter, productParameter, amountParameter], front: .init(visible: [headerParameter.id, bicBankId, accountNumberId, innNumberId, kppParameterId, companyNameParameterId, checkBoxParameterId, messageParameterId, productParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [bicBankParameter.id, accountNumberParameter.id, innParameter.id, companyNameParameter.id, messageParameter.id, productParameter.id, amountParameter.id], processed: nil))
+                            
+                        } else {
+                            
+                            //MARK: Inn Number Parameter
+                            let innValidator: Payments.Validation.RulesSystem = {
+                                
+                                var rules = [Payments.Validation.Rule]()
+                                
+                                rules.append(Payments.Validation.LengthLimitsRule.init(lengthLimits: [10, 12], actions: [.post: .warning("Должен состоять из 10 или 12 цифр.")]))
+
+                                rules.append(Payments.Validation.RegExpRule(regExp: "^[0-9]\\d*$", actions: [.post: .warning("Введены недопустимые символы")]))
+                                
+                                return .init(rules: rules)
+                            }()
+                            
+                            let innParameter = Payments.ParameterInput(.init(id: innNumberId, value: nil), icon: defaultInputIcon, title: "ИНН получателя", validator: innValidator, limitator: .init(limit: 12), inputType: .number)
+                            
+                            //MARK: Company Name Parameter
+                            let validator: Payments.Validation.RulesSystem = {
+                                
+                                var rules = [Payments.Validation.Rule]()
+                                
+                                rules.append(Payments.Validation.MinLengthRule(minLenght: 1, actions: [.post: .warning("Заполните поле (до 160 символов)")]))
+                                rules.append(Payments.Validation.MaxLengthRule(maxLenght: 160, actions: [.post: .warning("Заполните поле (до 160 символов)")]))
+
+                                return .init(rules: rules)
+                            }()
+                            
+                            let companyNameParameterId = Payments.Parameter.Identifier.requisitsCompanyName.rawValue
+                            let companyNameParameter = Payments.ParameterInput(.init(id: companyNameParameterId, value: nil), icon: nil, title: "Наименование получателя", validator: validator, limitator: .init(limit: 160))
+                            
+                            //MARK: Product Parameter
+                            let productParameterId = Payments.Parameter.Identifier.product.rawValue
+                            let filter = ProductData.Filter.generalFrom
+                            guard let product = firstProduct(with: filter),
+                                  let currencySymbol = dictionaryCurrencySymbol(for: product.currency)else {
+                                throw Payments.Error.unableCreateRepresentable(productParameterId)
+                            }
+                            let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
+                            
+                            //MARK: Amount Parameter
+                            let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
+                            let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма перевода", currencySymbol: currencySymbol, transferButtonTitle: "Продолжить", validator: .init(minAmount: 0.01, maxAmount: product.balance), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
+                            
+                            //MARK: Message Parameter
+                            let messageValidator: Payments.Validation.RulesSystem = {
+                                
+                                var rules = [Payments.Validation.Rule]()
+                                
+                                rules.append(Payments.Validation.MinLengthRule(minLenght: 25, actions: [.post: .warning("Заполните поле (от 25 до 210 символов)")]))
+                                rules.append(Payments.Validation.MaxLengthRule(maxLenght: 210, actions: [.post: .warning("Заполните поле (от 25 до 210 символов)")]))
+
+                                return .init(rules: rules)
+                            }()
+                            
+                            let messageParameter = Payments.ParameterInput(.init(id: messageParameterId, value: nil), icon: messageParameterIcon, title: "Назначение платежа", validator: messageValidator, limitator: .init(limit: 210))
+                            
+                            return .init(parameters: [operatorParameter, headerParameter, bicBankParameter, accountNumberParameter, innParameter, companyNameParameter, messageParameter, productParameter, amountParameter], front: .init(visible: [headerParameter.id, bicBankId, accountNumberId, innNumberId, companyNameParameterId, messageParameterId, productParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [bicBankParameter.id, accountNumberParameter.id, innParameter.id, companyNameParameter.id, messageParameter.id, productParameter.id, amountParameter.id], processed: nil))
+                        }
+                        
+                    } else {
+                     
+                        //MARK: Name Parameter
+                        let nameParameterId = Payments.Parameter.Identifier.requisitsName.rawValue
+                        let nameParameter = Payments.ParameterName(id: nameParameterId, value: nil, title: "ФИО Получателя")
+                        
+                        //MARK: Message parametr validation
+                        let messageValidator: Payments.Validation.RulesSystem = {
+                            
+                            var rules = [Payments.Validation.Rule]()
+                            
+                            rules.append(Payments.Validation.MaxLengthRule(maxLenght: 210, actions: [.post: .warning("Заполните поле (до 210 символов)")]))
+
+                            return .init(rules: rules)
+                        }()
+                        
+                        //MARK: Message Parameter
+                        let messageParameter = Payments.ParameterInput(.init(id: messageParameterId, value: "Перевод денежных средств. НДС не облагается"), icon: messageParameterIcon, title: "Назначение платежа", validator: messageValidator, limitator: .init(limit: 210))
+                        
+                        //MARK: Product Parameter
+                        let productParameterId = Payments.Parameter.Identifier.product.rawValue
+                        let filter = ProductData.Filter.generalFrom
+                        guard let product = firstProduct(with: filter),
+                              let currencySymbol = dictionaryCurrencySymbol(for: product.currency)else {
+                            throw Payments.Error.unableCreateRepresentable(productParameterId)
+                        }
+                        let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
+                        
+                        //MARK: Amount Parameter
+                        let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
+                        let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма перевода", currencySymbol: currencySymbol, transferButtonTitle: "Продолжить", validator: .init(minAmount: 0.01, maxAmount: product.balance), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
+                        
+                        return .init(parameters: [operatorParameter, headerParameter, bicBankParameter, accountNumberParameter, nameParameter, messageParameter, productParameter, amountParameter], front: .init(visible: [headerParameter.id, bicBankId, accountNumberId, nameParameterId, messageParameterId, productParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [bicBankParameter.id, accountNumberParameter.id, nameParameter.id, messageParameter.id, productParameter.id, amountParameter.id], processed: nil))
+                    }
+                        
+                default:
+                    throw Payments.Error.unsupported
+                }
+            }
             
             return .init(parameters: [operatorParameter, headerParameter, bicBankParameter, accountNumberParameter], front: .init(visible: [headerParameter.id, bicBankId, accountNumberId], isCompleted: false), back: .init(stage: .local, required: [bicBankParameter.id, accountNumberParameter.id], processed: nil))
             
@@ -410,6 +600,50 @@ extension Model {
                     Payments.Parameter.Identifier.requisitsAmount.rawValue,
                     Payments.Parameter.Identifier.fee.rawValue,
                     Payments.Parameter.Identifier.code.rawValue]
+        }
+    }
+    
+    // update parameter value with source
+    func paymentsProcessSourceReducerRequisites(qrCode: QRCode, parameterId: Payments.Parameter.ID) -> Payments.Parameter.Value? {
+        
+        guard let qrMapping = self.qrMapping.value else {
+            return nil
+        }
+        
+        switch parameterId {
+        case Payments.Parameter.Identifier.requisitsInn.rawValue:
+            
+            let inn = qrCode.stringValue(type: .general(.inn), mapping: qrMapping)
+
+            return inn
+            
+        case Payments.Parameter.Identifier.requisitsAccountNumber.rawValue:
+            
+            let accountNumber = qrCode.stringValue(type: .general(.account), mapping: qrMapping)
+            return accountNumber
+            
+        case Payments.Parameter.Identifier.requisitsBankBic.rawValue:
+            
+            let bic = qrCode.stringValue(type: .general(.bic), mapping: qrMapping)
+            return bic
+            
+        case Payments.Parameter.Identifier.requisitsKpp.rawValue:
+            
+            let kpp = qrCode.stringValue(type: .general(.kpp), mapping: qrMapping)
+            return kpp
+        
+        case Payments.Parameter.Identifier.requisitsCompanyName.rawValue:
+            
+            let name = qrCode.stringValue(type: .general(.name), mapping: qrMapping)
+            return name
+            
+        case Payments.Parameter.Identifier.requisitsAmount.rawValue:
+            
+            let amount = qrCode.stringValue(type: .general(.amount), mapping: qrMapping)
+            return amount
+            
+        default:
+            return nil
         }
     }
 }
