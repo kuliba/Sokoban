@@ -822,6 +822,7 @@
 		774A8B822865FF4A00B81140 /* TagsGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B812865FF4A00B81140 /* TagsGridView.swift */; };
 		774A8B842865FF6800B81140 /* FullScreenCoverLagacyModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B832865FF6800B81140 /* FullScreenCoverLagacyModifier.swift */; };
 		774A8B862865FFC200B81140 /* CurrencyExchangeViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B852865FFC200B81140 /* CurrencyExchangeViewComponent.swift */; };
+		774AC9AC2979964C00A6A6AE /* PaymentsMessageViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774AC9AB2979964C00A6A6AE /* PaymentsMessageViewComponent.swift */; };
 		774CA5DA28782A2E00544C17 /* Resetable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774CA5D928782A2E00544C17 /* Resetable.swift */; };
 		774CA5DC28789E6E00544C17 /* LegacyKeychainAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774CA5DB28789E6E00544C17 /* LegacyKeychainAgent.swift */; };
 		774CA5DE287962BA00544C17 /* NotificationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774CA5DD287962BA00544C17 /* NotificationStatus.swift */; };
@@ -2359,6 +2360,7 @@
 		774A8B812865FF4A00B81140 /* TagsGridView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagsGridView.swift; sourceTree = "<group>"; };
 		774A8B832865FF6800B81140 /* FullScreenCoverLagacyModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullScreenCoverLagacyModifier.swift; sourceTree = "<group>"; };
 		774A8B852865FFC200B81140 /* CurrencyExchangeViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyExchangeViewComponent.swift; sourceTree = "<group>"; };
+		774AC9AB2979964C00A6A6AE /* PaymentsMessageViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsMessageViewComponent.swift; sourceTree = "<group>"; };
 		774CA5D928782A2E00544C17 /* Resetable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resetable.swift; sourceTree = "<group>"; };
 		774CA5DB28789E6E00544C17 /* LegacyKeychainAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyKeychainAgent.swift; sourceTree = "<group>"; };
 		774CA5DD287962BA00544C17 /* NotificationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationStatus.swift; sourceTree = "<group>"; };
@@ -5115,6 +5117,7 @@
 				C1DE21122914158600ED0F8D /* PaymentsCodeViewComponent.swift */,
 				7752F51E293522FA0097B2A6 /* PaymentsHeaderViewComponent.swift */,
 				C1097D8F29438242002459F6 /* PaymentCheckBoxViewComponent.swift */,
+				774AC9AB2979964C00A6A6AE /* PaymentsMessageViewComponent.swift */,
 				77E0DC42291163D90053CCCA /* Bottom */,
 			);
 			path = PaymentsOperation;
@@ -8539,6 +8542,7 @@
 				0BDCF00F274D56C500AAA1C3 /* NextStepServiceTransferDecodableModel.swift in Sources */,
 				0C534CAD296DE31300967FE8 /* ImageStateViewModel.swift in Sources */,
 				774A8B5C2865FDAF00B81140 /* PaymentsSelectViewComponent.swift in Sources */,
+				774AC9AC2979964C00A6A6AE /* PaymentsMessageViewComponent.swift in Sources */,
 				68D06F2626C3C11700F9BE4C /* MainViewControllerDataSource.swift in Sources */,
 				0BA251F126C26BE200AD087A /* CreateMe2MePullTransferDecodableModel.swift in Sources */,
 				C1DE211F2919531500ED0F8D /* AppSettings.swift in Sources */,

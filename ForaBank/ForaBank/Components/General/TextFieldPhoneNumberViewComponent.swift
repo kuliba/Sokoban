@@ -67,7 +67,7 @@ extension TextFieldPhoneNumberView {
                 self.init(style: style, placeHolder: placeHolder, filterSymbols: symbols, firstDigitReplaceList: replaceList)
             
             default:
-                self.init(placeHolder: placeHolder)
+                self.init(style: style, placeHolder: placeHolder, state: .idle)
             }
             
             toolbar = .init(doneButton: .init(isEnabled: true) { [weak self] in
@@ -102,6 +102,7 @@ extension TextFieldPhoneNumberView {
             case general
             case payments
             case order
+            case banks
         }
         
         enum PlaceHolder {
@@ -187,6 +188,9 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         case .order:
             textField.keyboardType = .decimalPad
             textField.font = .init(name: "Inter", size: 16)
+            
+        case .banks:
+            textField.keyboardType = .default
         }
         
         viewModel.dismissKeyboard = { textField.resignFirstResponder() }
@@ -242,9 +246,9 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
-            let result = TextFieldPhoneNumberView.updateMasked(value: textField.text, inRange: range, update: string, firstDigitReplace: viewModel.firstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
-            
-            if viewModel.style == .order {
+            switch viewModel.style {
+            case .order:
+                let result = TextFieldPhoneNumberView.updateMasked(value: textField.text, inRange: range, update: string, firstDigitReplace: viewModel.firstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
                 
                 let isValidate = isOrderValidate(textField, result: result)
                 
@@ -252,11 +256,23 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
                 case true: break
                 case false: return isValidate
                 }
+                
+                textField.text = result
+                viewModel.text = result
+            
+            case .banks:
+                let result = TextFieldRegularView.updateMasked(value: textField.text, inRange: range, update: string, limit: nil)
+                
+                textField.text = result
+                viewModel.text = result
+                
+            default:
+                let result = TextFieldPhoneNumberView.updateMasked(value: textField.text, inRange: range, update: string, firstDigitReplace: viewModel.firstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
+                
+                textField.text = result
+                viewModel.text = result
             }
-            
-            textField.text = result
-            viewModel.text = result
-            
+
             if textField.isFirstResponder {
                 
                 viewModel.state = state(for: viewModel.text)

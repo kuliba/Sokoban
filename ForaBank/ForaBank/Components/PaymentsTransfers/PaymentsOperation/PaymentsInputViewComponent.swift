@@ -70,22 +70,21 @@ extension PaymentsInputView {
         override func update(source: PaymentsParameterRepresentable) {
             super.update(source: source)
             
-            guard let hint = parameterInput?.hint else {
-                
-                withAnimation {
-                    
-                    additionalButton = nil
-                }
-                
-                return
-            }
+            textField.text = source.value
             
             withAnimation {
                 
-                additionalButton = .init(icon: Image.ic24Info, action: { [weak self] in
+                if let hint = parameterInput?.hint  {
                     
-                    self?.action.send(PaymentsParameterViewModelAction.Hint.Show(viewModel: .init(hintData: hint)))
-                })
+                    additionalButton = .init(icon: Image.ic24Info, action: { [weak self] in
+                        
+                        self?.action.send(PaymentsParameterViewModelAction.Hint.Show(viewModel: .init(hintData: hint)))
+                    })
+                    
+                } else {
+ 
+                    additionalButton = nil
+                }
             }
         }
         
@@ -94,6 +93,19 @@ extension PaymentsInputView {
             withAnimation {
                 
                 self.warning = warning
+            }
+        }
+        
+        override func updateValidationWarnings() {
+            
+            if isValid == false,
+               let parameterInput = parameterInput,
+               let action = parameterInput.validator.action(with: value.current, for: .post),
+               case .warning(let message) = action {
+                
+                withAnimation {
+                    self.warning = message
+                }
             }
         }
     }
@@ -120,7 +132,7 @@ extension PaymentsInputView.ViewModel {
                 
                 withAnimation(.easeInOut(duration: 0.2)) {
                     
-                    title = value.current != nil ? description : nil
+                    title = value.current != nil || textField.isEditing.value == true ? description : nil
                 }
                 
             }.store(in: &bindings)
@@ -132,11 +144,18 @@ extension PaymentsInputView.ViewModel {
                 
                 if isEditing == true {
                     
-                    withAnimation {
+                    withAnimation(.easeIn(duration: 0.2)) {
+                        
+                        self.title = description
                         self.warning = nil
                     }
                     
                 } else {
+                    
+                    withAnimation(.easeIn(duration: 0.2)) {
+
+                        self.title = nil
+                    }
                     
                     if let parameterInput = parameterInput,
                        let action = parameterInput.validator.action(with: value.current, for: .post),

@@ -69,8 +69,6 @@ extension Payments.Parameter {
         case requisitsCompanyName             = "requisitsCompanyName"
         case requisitsCheckBox                = "requisitsCheckBox"
         case requisitsType                    = "requisitsType"
-        case requisitsPopUpSelector           = "requisitsPopUpSelector"
-
     }
     
     static let emptyMock = Payments.Parameter(id: Identifier.mock.rawValue, value: nil)
@@ -151,14 +149,16 @@ extension Payments {
         let options: [Option]
         let isEditable: Bool
         let type: Kind
+        let description: String?
         
-        init(_ parameter: Parameter, title: String, options: [Option], isEditable: Bool = true, type: Kind = .general) {
+        init(_ parameter: Parameter, title: String, options: [Option], isEditable: Bool = true, type: Kind = .general, description: String? = nil) {
             
             self.parameter = parameter
             self.title = title
             self.options = options
             self.isEditable = isEditable
             self.type = type
+            self.description = description
         }
         
         enum Kind {
@@ -166,18 +166,19 @@ extension Payments {
             case general
             case banks
             case countries
+            case kpp
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterSelect(.init(id: parameter.id, value: value), title: title, options: options, isEditable: isEditable, type: type)
+            ParameterSelect(.init(id: parameter.id, value: value), title: title, options: options, isEditable: isEditable, type: type, description: description)
         }
         
         struct Option: Identifiable {
             
             let id: String
             let name: String
-            let icon: ImageData
+            let icon: ImageData?
         }
     }
     
@@ -464,49 +465,59 @@ extension Payments {
         
         init(id: Parameter.ID, value: String?, title: String, editable: Bool = true) {
             
-            self.init(.init(id: id, value: value), title: title, lastName: .init(title: "Фамилия", value: Self.name(with: value, index: 0)), firstName: .init(title: "Имя", value: Self.name(with: value, index: 1)), middleName: .init(title: "Отчество", value: Self.name(with: value, index: 2)), isEditable: editable)
+            self.init(.init(id: id, value: value), title: title,
+                      lastName: .init(title: "Фамилия", value: Self.name(with: value, index: 0), validator: .baseName, limitator: .init(limit: 158)),
+                      firstName: .init(title: "Имя", value: Self.name(with: value, index: 1), validator: .baseName, limitator: .init(limit: 158)),
+                      middleName: .init(title: "Отчество", value: Self.name(with: value, index: 2), validator: .anyValue, limitator: .init(limit: 158)),
+                      isEditable: editable)
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
         
-            ParameterName(.init(id: parameter.id, value: value), title: title, lastName: .init(title: lastName.title, value: Self.name(with: value, index: 0)), firstName: .init(title: firstName.title, value: Self.name(with: value, index: 1)), middleName: .init(title: middleName.title, value: Self.name(with: value, index: 2)), isEditable: isEditable)
+            ParameterName(.init(id: parameter.id, value: value), title: title,
+                          lastName: .init(title: lastName.title, value: Self.name(with: value, index: 0), validator: .baseName, limitator: .init(limit: 158)),
+                          firstName: .init(title: firstName.title, value: Self.name(with: value, index: 1), validator: .baseName, limitator: .init(limit: 158)),
+                          middleName: .init(title: middleName.title, value: Self.name(with: value, index: 2), validator: .anyValue, limitator: .init(limit: 158)),
+                          isEditable: isEditable)
         }
         
-        static func name(with value: String?, index: Int) -> String {
+        static func name(with value: String?, index: Int) -> String? {
             
             guard let value = value else {
-                return ""
+                return nil
             }
             
             let valueSplitted = value.split(separator: " ")
             switch index {
             case 0:
                 guard valueSplitted.count > 0 else {
-                    return ""
+                    return nil
                 }
                 return String(valueSplitted[0])
                 
             case 1:
                 guard valueSplitted.count > 1 else {
-                    return ""
+                    return nil
                 }
                 return String(valueSplitted[1])
                 
             case 2:
                 guard valueSplitted.count > 2 else {
-                    return ""
+                    return nil
                 }
                 return String(valueSplitted[2])
                 
             default:
-                return ""
+                return nil
             }
         }
         
         struct Name {
             
             let title: String
-            let value: String
+            let value: String?
+            let validator: Payments.Validation.RulesSystem
+            let limitator: Payments.Limitation
         }
     }
     
@@ -661,6 +672,34 @@ extension Payments {
         }
     }
     
+    struct ParameterMessage: PaymentsParameterRepresentable {
+        
+        let parameter: Parameter
+        let message: String
+        let placement: Payments.Parameter.Placement
+        
+        var isViewed: Bool {
+            
+            guard let value = value else {
+                return false
+            }
+            
+            return value == "true" ? true : false
+        }
+        
+        init(_ parameter: Parameter, message: String, placement: Payments.Parameter.Placement = .top) {
+            
+            self.parameter = parameter
+            self.message = message
+            self.placement = placement
+        }
+        
+        func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
+            
+            ParameterMessage(.init(id: parameter.id, value: value), message: message, placement: placement)
+        }
+    }
+    
     struct ParameterMock: PaymentsParameterRepresentable {
         
         let parameter: Parameter
@@ -677,4 +716,16 @@ extension Payments {
             ParameterMock(id: parameter.id, value: value)
         }
     }
+}
+
+extension Payments.Validation.RulesSystem {
+    
+    static let baseName: Payments.Validation.RulesSystem = {
+        
+        let minRule = Payments.Validation.MinLengthRule(minLenght: 1, actions: [.post: .warning("Поле не может быть пустым.")])
+        let maxRule = Payments.Validation.MaxLengthRule(maxLenght: 158, actions: [.post: .warning("Количество символов не должно превышать 158.")])
+        let regExp = Payments.Validation.RegExpRule(regExp:"^[\\s\\-_\\.a-zA-ZА-Яа-яЁё]+$", actions: [.post: .warning("Введены некорректные символы.")])
+        
+        return Payments.Validation.RulesSystem(rules: [minRule, maxRule, regExp])
+    }()
 }

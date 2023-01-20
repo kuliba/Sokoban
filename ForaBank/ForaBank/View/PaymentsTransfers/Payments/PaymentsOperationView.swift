@@ -87,6 +87,7 @@ struct PaymentsOperationView: View {
                                 EmptyView()
                             }
                         }
+                        .padding(.horizontal, 20)
                         
                         Color.clear
                             .frame(height: bottomSize.height)
@@ -97,9 +98,7 @@ struct PaymentsOperationView: View {
                         reader.scrollTo("bottom")
                     }
                 }
-                
             }
-            .padding(.horizontal, 20)
             
             // top
             if let topItems = viewModel.top {
@@ -113,6 +112,9 @@ struct PaymentsOperationView: View {
                             PaymentsSwitchView(viewModel: switchViewModel)
                                 .padding(.horizontal, 20)
                             
+                        case let messageViewModel as PaymentsMessageView.ViewModel:
+                            PaymentsMessageView(viewModel: messageViewModel)
+                            
                         default:
                             EmptyView()
                         }
@@ -124,7 +126,12 @@ struct PaymentsOperationView: View {
                             Color.clear.preference(key: PaymentsOperationViewTopHeightPreferenceKey.self, value: proxy.size)
                         }
                     )
-                    .onPreferenceChange(PaymentsOperationViewTopHeightPreferenceKey.self, perform: { self.topSize = $0 })
+                    .onPreferenceChange(PaymentsOperationViewTopHeightPreferenceKey.self, perform: { value in
+                        
+                        withAnimation {
+                            self.topSize = value
+                        }
+                    })
                     
                     Spacer()
                 }
@@ -156,7 +163,12 @@ struct PaymentsOperationView: View {
                             Color.clear.preference(key: PaymentsOperationViewBottomHeightPreferenceKey.self, value: proxy.size)
                         }
                     )
-                    .onPreferenceChange(PaymentsOperationViewBottomHeightPreferenceKey.self, perform: { self.bottomSize = $0 })
+                    .onPreferenceChange(PaymentsOperationViewBottomHeightPreferenceKey.self, perform: { value in
+                        
+                        withAnimation {
+                            self.bottomSize = value
+                        }
+                    })
                 }
             }
             
@@ -212,6 +224,7 @@ extension PaymentsOperationView {
                 if let spinnerViewModel = spinnerViewModel{
                     
                     SpinnerView(viewModel: spinnerViewModel)
+                        .zIndex(1)
                 }
             }
         }
