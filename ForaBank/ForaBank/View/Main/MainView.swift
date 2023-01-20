@@ -163,11 +163,22 @@ struct MainView: View {
                         
                     case .byPhone(let viewModel):
                         ContactsView(viewModel: viewModel)
-                        
-                    case let .openAccount(openAccountViewModel):
-                        OpenAccountView(viewModel: openAccountViewModel)
                     }
                 })
+            
+            Color.clear
+                .fullScreenCover(item: $viewModel.fullScreenSheet) { item in
+                    
+                    switch item.type {
+                    case let .qrScanner(viewModel):
+                        NavigationView {
+                            QRView(viewModel: viewModel)
+                                .navigationBarTitle("", displayMode: .inline)
+                                .navigationBarBackButtonHidden(true)
+                                .edgesIgnoringSafeArea(.all)
+                        }
+                    }
+                }
                
         }
         .ignoreKeyboard()
@@ -176,19 +187,6 @@ struct MainView: View {
             switch bottomSheet.type {
             case let .openAccount(openAccountViewModel):
                 OpenAccountView(viewModel: openAccountViewModel)
-            }
-        }
-        .fullScreenCover(item: $viewModel.fullScreenSheet) { item in
-            
-            switch item.type {
-            case let .qrScanner(viewModel):
-                NavigationView {
-                    
-                    QRView(viewModel: viewModel)
-                        .navigationBarHidden(true)
-                        .navigationBarBackButtonHidden(true)
-                        .edgesIgnoringSafeArea(.all)
-                }
             }
         }
         .alert(item: $viewModel.alert, content: { alertViewModel in

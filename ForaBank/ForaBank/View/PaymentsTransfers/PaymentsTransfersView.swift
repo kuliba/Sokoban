@@ -169,6 +169,20 @@ struct PaymentsTransfersView: View {
                     }
                 })
             
+            Color.clear
+                .fullScreenCover(item: $viewModel.fullScreenSheet, content: { item in
+                    
+                    switch item.type {
+                    case let .qrScanner(viewModel):
+                        NavigationView {
+                            QRView(viewModel: viewModel)
+                                .navigationBarTitle("", displayMode: .inline)
+                                .navigationBarBackButtonHidden(true)
+                                .edgesIgnoringSafeArea(.all)
+                        }
+                    }
+                })
+            
         }
         .onAppear {
             viewModel.action.send(PaymentsTransfersViewModelAction.ViewDidApear())
@@ -211,19 +225,6 @@ struct PaymentsTransfersView: View {
                 
             }
         }
-        .fullScreenCover(item: $viewModel.fullScreenSheet, content: { item in
-            
-            switch item.type {
-            case let .qrScanner(viewModel):
-                NavigationView {
-                    
-                    QRView(viewModel: viewModel)
-                        .navigationBarHidden(true)
-                        .navigationBarBackButtonHidden(true)
-                        .edgesIgnoringSafeArea(.all)
-                }
-            }
-        })
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
