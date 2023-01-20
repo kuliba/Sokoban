@@ -46,7 +46,7 @@ extension TransfersSupportView {
                         switch action {
                             
                         case let payload as TransfersSupportAction.Item.Tap:
-                            Self.openURL(with: payload.supportType.link)
+                            Self.openURL(with: payload.supportType)
                             
                         default:
                             break
@@ -64,7 +64,7 @@ extension TransfersSupportView.ViewModel {
         
         data.compactMap { dataItem in
             
-            if let type = ItemsViewModel.SupportType(rawValue: dataItem.iconType) {
+            if let type = SupportType(rawValue: dataItem.iconType) {
             
                 return .init(title: dataItem.title, supportType: type)
                 
@@ -75,16 +75,20 @@ extension TransfersSupportView.ViewModel {
         }
     }
     
-    static func openURL(with link: String) {
-        
-        guard let url = URL(string: link) else {
-            return
-        }
+    static func openURL(with type: SupportType) {
         
         let application = UIApplication.shared
         
-        if application.canOpenURL(url) {
-            application.open(url, options: [:], completionHandler: nil)
+        if application.canOpenURL(type.link.general) {
+            application.open(type.link.general, options: [:], completionHandler: nil)
+        
+        } else {
+            
+            guard let urlWebsite = type.link.website else { return }
+            
+            if application.canOpenURL(urlWebsite) {
+                application.open(urlWebsite, options: [:], completionHandler: nil)
+            }
         }
     }
 }
@@ -109,34 +113,41 @@ extension TransfersSupportView.ViewModel {
             self.supportType = supportType
             self.title = title
         }
-        
-        enum SupportType: String {
+    }
+     
+    struct Link {
+         
+        let general: URL
+        var website: URL? = nil
+    }
+
+    enum SupportType: String {
             
-            case telegram
-            case whatsapp
-            case viber
-            case call
+        case telegram
+        case whatsapp
+        case viber
+        case call
             
-            var icon: Image {
+        var icon: Image {
                 
-                switch self {
-                case .telegram: return .init("Telegram")
-                case .whatsapp: return .init("Whatsapp")
-                case .viber: return .init("Viber")
-                case .call: return .init("Phone Call")
-                }
-            }
-            
-            var link: String {
-                
-                switch self {
-                case .telegram: return .init("https://t.me/forabank_bot")
-                case .whatsapp: return .init("https://wa.me/79257756555")
-                case .viber: return .init("viber://pa?chatURI=forabank")
-                case .call: return .init("telprompt://88001009889")
-                }
+            switch self {
+            case .telegram: return .init("Telegram")
+            case .whatsapp: return .init("Whatsapp")
+            case .viber: return .init("Viber")
+            case .call: return .init("Phone Call")
             }
         }
+            
+        var link: Link {
+
+            switch self {
+            case .telegram: return .init(general: .init(string: "https://t.me/forabank_bot")!)
+            case .whatsapp: return .init(general: .init(string: "https://wa.me/79257756555")!)
+            case .viber: return .init(general: .init(string: "viber://pa?chatURI=forabank")!, website: .init(string: "https://viber.com")!)
+            case .call: return .init(general: .init(string: "telprompt://88001009889")!)
+            }
+        }
+            
     }
     
     // MARK: - Action
@@ -147,7 +158,7 @@ extension TransfersSupportView.ViewModel {
 
             struct Tap: Action {
 
-                let supportType: ItemsViewModel.SupportType
+                let supportType: SupportType
             }
         }
     }

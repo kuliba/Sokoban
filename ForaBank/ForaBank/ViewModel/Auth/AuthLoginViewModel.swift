@@ -115,12 +115,9 @@ class AuthLoginViewModel: ObservableObject {
                     let action: (Int) -> Void = { [weak self] id in
                         
                         guard let self = self else { return }
-                        let catalogProduct = self.model.catalogProducts.value.first(where: { $0.id == id })
                         
-                        if let catalogProduct = catalogProduct {
-                            
-                            let productData = (catalogProduct.tariff, catalogProduct.productType)
-                            self.action.send(AuthLoginViewModelAction.Show.OrderProduct(productData: productData))
+                        if let catalogProduct = self.model.catalogProducts.value.first(where: { $0.id == id }) {
+                            self.action.send(AuthLoginViewModelAction.Show.OrderProduct(productData: catalogProduct))
                         }
                     }
                     
@@ -410,7 +407,7 @@ enum AuthLoginViewModelAction {
         
         struct OrderProduct: Action {
             
-            let productData: (Int, Int)
+            let productData: CatalogProductData
         }
     }
     
