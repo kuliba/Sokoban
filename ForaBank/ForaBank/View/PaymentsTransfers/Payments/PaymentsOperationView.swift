@@ -182,30 +182,34 @@ struct PaymentsOperationView: View {
                     }
                 }
             }
+            
+            Color.clear
+                .sheet(item: $viewModel.sheet) { sheet in
+                    
+                    switch sheet.type {
+                    case let .contacts(contactsViewModel):
+                        ContactsView(viewModel: contactsViewModel)
+                    }
+                }
+            
+            Color.clear
+                .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
+
+                    switch bottomSheet.type {
+                    case .popUp(let popUpVewModel):
+                        PaymentsPopUpSelectView(viewModel: popUpVewModel)
+                    
+                    case .antifraud(let antifraudViewModel):
+                        PaymentsAntifraudView(viewModel: antifraudViewModel)
+                
+                    case .hint(let hintViewModel):
+                        HintView(viewModel: hintViewModel)
+                    }
+                }
         }
         .ignoresSafeArea(.container, edges: .bottom)
         .navigationBar(with: viewModel.navigationBar)
         .modifier(SpinnerViewModifier(spinnerViewModel: $viewModel.spinner))
-        .sheet(item: $viewModel.sheet, content: { sheet in
-            
-            switch sheet.type {
-            case let .contacts(contactsViewModel):
-                ContactsView(viewModel: contactsViewModel)
-            }
-        })
-        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
-
-            switch bottomSheet.type {
-            case .popUp(let popUpVewModel):
-                PaymentsPopUpSelectView(viewModel: popUpVewModel)
-            
-            case .antifraud(let antifraudViewModel):
-                PaymentsAntifraudView(viewModel: antifraudViewModel)
-        
-            case .hint(let hintViewModel):
-                HintView(viewModel: hintViewModel)
-            }
-        }
     }
 }
 
