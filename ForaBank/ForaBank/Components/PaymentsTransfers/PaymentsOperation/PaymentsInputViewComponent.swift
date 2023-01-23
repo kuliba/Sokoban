@@ -152,10 +152,7 @@ extension PaymentsInputView.ViewModel {
                     
                 } else {
                     
-                    withAnimation(.easeIn(duration: 0.2)) {
-
-                        self.title = nil
-                    }
+                    self.title = value.current == nil ? nil : description
                     
                     if let parameterInput = parameterInput,
                        let action = parameterInput.validator.action(with: value.current, for: .post),
@@ -226,7 +223,7 @@ struct PaymentsInputView: View {
                     .foregroundColor(.textPlaceholder)
                     .padding(.bottom, 4)
                     .padding(.leading, 48)
-                    .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .opacity))
+                    .transition(.asymmetric(insertion: .move(edge: .bottom).combined(with: .opacity), removal: .opacity))
             }
             
             HStack(spacing: 20) {
