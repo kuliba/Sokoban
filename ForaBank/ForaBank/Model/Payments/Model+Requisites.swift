@@ -212,7 +212,7 @@ extension Model {
                         return .init(id: id, name: companyName, icon: nil)
                     }
                     
-                    let kppParameter = Payments.ParameterSelect(.init(id: kppParameterId, value: options.first?.id), title: "КПП получателя", options: options, type: .kpp, description: "Выберете из \(options.count)")
+                    let kppParameter = Payments.ParameterSelect(.init(id: kppParameterId, value: options.first?.id), title: "КПП получателя", options: options, type: .kpp, description: "Выберите из \(options.count)")
                     parameters.append(kppParameter)
                     
                     //MARK: Company Name Parameter

@@ -207,7 +207,7 @@ extension PaymentsSelectBankView.ViewModel {
                         self.action.send(PaymentsSelectBankViewModelAction.DidSelectBank(id: itemId))
                     }}
                     
-                    options.insert(ListViewModel.ItemViewModel(id: UUID().uuidString, icon: .icon(Image.ic24MoreHorizontal), name: "Смотреть все", subtitle: nil, action: { [weak self] _ in
+                    options.insert(ListViewModel.ItemViewModel(id: UUID().uuidString, icon: .icon(Image.ic24MoreHorizontal), name: "Смотреть все", subtitle: nil, lineLimit: 2, action: { [weak self] _ in
                         
                         guard let model = self?.model else {
                             return
@@ -339,6 +339,7 @@ extension PaymentsSelectBankView.ViewModel {
             let icon: IconViewModel
             let name: String
             let subtitle: String?
+            var lineLimit: Int = 1
             let action: (String) -> Void
             
             enum IconViewModel {
@@ -498,7 +499,7 @@ struct PaymentsSelectBankView: View {
                             .font(.textBodyXSR11140())
                             .foregroundColor(.textSecondary)
                             .multilineTextAlignment(.center)
-                            .lineLimit(1)
+                            .lineLimit(viewModel.lineLimit)
                         
                         if let subtitle = viewModel.subtitle {
                             

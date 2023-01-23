@@ -468,7 +468,7 @@ extension Payments {
             self.init(.init(id: id, value: value), title: title,
                       lastName: .init(title: "Фамилия", value: Self.name(with: value, index: 0), validator: .baseName, limitator: .init(limit: 158)),
                       firstName: .init(title: "Имя", value: Self.name(with: value, index: 1), validator: .baseName, limitator: .init(limit: 158)),
-                      middleName: .init(title: "Отчество", value: Self.name(with: value, index: 2), validator: .anyValue, limitator: .init(limit: 158)),
+                      middleName: .init(title: "Отчество (если есть)", value: Self.name(with: value, index: 2), validator: .anyValue, limitator: .init(limit: 158)),
                       isEditable: editable)
         }
         
@@ -722,9 +722,9 @@ extension Payments.Validation.RulesSystem {
     
     static let baseName: Payments.Validation.RulesSystem = {
         
-        let minRule = Payments.Validation.MinLengthRule(minLenght: 1, actions: [.post: .warning("Поле не может быть пустым.")])
-        let maxRule = Payments.Validation.MaxLengthRule(maxLenght: 158, actions: [.post: .warning("Количество символов не должно превышать 158.")])
-        let regExp = Payments.Validation.RegExpRule(regExp:"^[\\s\\-_\\.a-zA-ZА-Яа-яЁё]+$", actions: [.post: .warning("Введены некорректные символы.")])
+        let minRule = Payments.Validation.MinLengthRule(minLenght: 1, actions: [.post: .warning("Поле обязательно для заполнения")])
+        let maxRule = Payments.Validation.MaxLengthRule(maxLenght: 158, actions: [.post: .warning("Количество символов не должно превышать 158")])
+        let regExp = Payments.Validation.RegExpRule(regExp:"^[\\s\\-_\\.a-zA-ZА-Яа-яЁё]+$", actions: [.post: .warning("Введены недопустимые символы")])
         
         return Payments.Validation.RulesSystem(rules: [minRule, maxRule, regExp])
     }()
