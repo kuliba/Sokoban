@@ -102,11 +102,7 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
         items
             .combineLatest(bankType, filter)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] data in
-                
-                let items = data.0
-                let bankType = data.1
-                let filter = data.2
+            .sink { [unowned self] items, bankType, filter in
                 
                 if items.isEmpty == false {
                     
@@ -262,7 +258,7 @@ extension ContactsBanksSectionViewModel {
             filterredItems = filterredItems.filter({$0.type == bankType})
         }
         
-        if let name = filterByName {
+        if let name = filterByName, name != "" {
             
             filterredItems = filterredItems.filter({ item in
                 
