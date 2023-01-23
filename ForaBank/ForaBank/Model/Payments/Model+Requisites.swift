@@ -382,9 +382,12 @@ extension Model {
                 
                 if suggestedCompanies.count == 1 {
                     
-                    //MARK: Kpp Parameter
-                    let kppParameter = Payments.ParameterInput(.init(id: kppParameterId, value: suggestedCompanies[0].kpp), icon: nil, title: "КПП получателя", validator: kppParameterValidator, limitator: .init(limit: 9), inputType: .number)
-                    parameters.append(kppParameter)
+                    if innValue.count == 10 {
+                        
+                        //MARK: Kpp Parameter
+                        let kppParameter = Payments.ParameterInput(.init(id: kppParameterId, value: suggestedCompanies[0].kpp), icon: nil, title: "КПП получателя", validator: kppParameterValidator, limitator: .init(limit: 9), inputType: .number)
+                        parameters.append(kppParameter)
+                    }
                     
                     //MARK: Company Name Parameter
                     let companyNameParameter = Payments.ParameterInput(.init(id: companyNameParameterId, value: suggestedCompanies[0].name?.full), icon: nil, title: "Наименование получателя", validator: companyNameValidator, limitator: .init(limit: 160))
@@ -414,9 +417,12 @@ extension Model {
                 
                 // user shoud fill kpp and company name parameters
                 
-                //MARK: Kpp Parameter
-                let kppParameter = Payments.ParameterInput(.init(id: kppParameterId, value: nil), icon: nil, title: "КПП получателя", validator: kppParameterValidator, limitator: .init(limit: 9), inputType: .number)
-                parameters.append(kppParameter)
+                if innValue.count == 10 {
+                    
+                    //MARK: Kpp Parameter
+                    let kppParameter = Payments.ParameterInput(.init(id: kppParameterId, value: nil), icon: nil, title: "КПП получателя", validator: kppParameterValidator, limitator: .init(limit: 9), inputType: .number)
+                    parameters.append(kppParameter)
+                }
                 
                 //MARK: Company Name Parameter
                 let companyNameParameter = Payments.ParameterInput(.init(id: companyNameParameterId, value: nil), icon: nil, title: "Наименование получателя", validator: companyNameValidator, limitator: .init(limit: 160))
