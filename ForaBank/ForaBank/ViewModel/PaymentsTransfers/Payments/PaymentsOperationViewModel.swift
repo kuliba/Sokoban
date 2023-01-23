@@ -147,7 +147,7 @@ class PaymentsOperationViewModel: ObservableObject {
                     let updatedOperation = Self.reduce(operation: operation.value, items: items)
                     
                     // check if auto continue required
-                    if isParameterValueValid(parameterId: payload.parameterId),
+                    if isItemsValuesValid == true,
                        model.paymentsIsAutoContinueRequired(operation: updatedOperation, updated: payload.parameterId) == true {
                         
                         // update stage
