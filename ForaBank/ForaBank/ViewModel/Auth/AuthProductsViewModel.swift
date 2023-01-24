@@ -53,7 +53,6 @@ class AuthProductsViewModel: ObservableObject {
         self.init(model, productCards: productCards, dismissAction: dismissAction)
         
         bind()
-        self.model.action.send(ModelAction.Deposits.List.Request())
         requestImages(for: products)
     }
     
@@ -68,24 +67,11 @@ class AuthProductsViewModel: ObservableObject {
         self.model = model
         
         bind()
-        self.model.action.send(ModelAction.Deposits.List.Request())
         requestDepositImages(for: products)
     }
     
     private func bind() {
-        
-        model.sessionState
-            .sink {[unowned self] state in
                 
-                switch state {
-                case .expired, .inactive:
-                    model.action.send(ModelAction.Auth.Session.Start.Request())
-                    
-                default:
-                    break
-                }
-            }.store(in: &bindings)
-        
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
@@ -95,7 +81,7 @@ class AuthProductsViewModel: ObservableObject {
                     case .success(let data):
       
                         guard let image = Image(data: data) else {
-                            //TODO: set logger
+                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Enable decode image data downloaded from: \(payload.endpoint)")
                             return
                         }
                         
@@ -118,8 +104,7 @@ class AuthProductsViewModel: ObservableObject {
                         }
                         
                     case .failure(let error):
-                        break
-                        //TODO: set logger
+                        LoggerAgent.shared.log(level: .error, category: .ui, message: "Image download error: \(error) for endpoint: \(payload.endpoint)")
                     }
                 default:
                     break

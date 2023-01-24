@@ -62,18 +62,6 @@ class AuthTransfersViewModel: ObservableObject {
     
     private func bind() {
         
-        model.sessionState
-            .sink {[unowned self] state in
-                
-                switch state {
-                case .expired, .inactive:
-                    model.action.send(ModelAction.Auth.Session.Start.Request())
-                    
-                default:
-                    break
-                }
-            }.store(in: &bindings)
-        
         model.transferAbroad
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] transferAbroad in

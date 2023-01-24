@@ -199,61 +199,29 @@ class AuthLoginViewModel: ObservableObject {
             }.store(in: &bindings)
         
         model.catalogProducts
+            .combineLatest(model.transferAbroad)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] catalogProducts in
+            .sink { [unowned self] catalogProducts, transferAbroad in
                 
-                if catalogProducts.count > 0 {
+                var buttons = [ButtonAuthView.ViewModel]()
+                
+                if transferAbroad != nil {
                     
-                    if !self.buttons.contains(where: {$0.id == .card}) {
-                        
-                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "catalog products button presented")
-                        withAnimation {
-                            self.buttons.append(self.cardButton)
-                        }
-                    }
-
-                } else {
-                    
-                    for (index, button) in self.buttons.enumerated() {
-                        if button.id == .card {
-                            
-                            LoggerAgent.shared.log(level: .debug, category: .ui, message: "catalog products button dismissed")
-                            withAnimation {
-                                let _ = self.buttons.remove(at: index)
-                            }
-                        }
-                    }
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "TransferAbroad button presented")
+                    buttons.append(self.abroadButton)
                 }
                 
-            }.store(in: &bindings)
-        
-        model.transferAbroad
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] jsonTransferAbroad in
-                
-                if jsonTransferAbroad != nil {
+                if catalogProducts.isEmpty == false {
                     
-                    if !self.buttons.contains(where: {$0.id == .abroad}) {
-                        
-                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "TransferAbroad button presented")
-                        withAnimation {
-                            self.buttons.insert(self.abroadButton, at: 0)
-                        }
-                    }
-
-                } else {
-                    
-                    for (index, button) in self.buttons.enumerated() {
-                        if button.id == .abroad {
-                            
-                            LoggerAgent.shared.log(level: .debug, category: .ui, message: "TransferAbroad button dismissed")
-                            withAnimation {
-                                let _ = self.buttons.remove(at: index)
-                            }
-                        }
-                    }
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "catalog products button presented")
+                    buttons.append(self.cardButton)
                 }
-                
+
+                withAnimation {
+                    
+                    self.buttons = buttons
+                }
+  
             }.store(in: &bindings)
     }
     
