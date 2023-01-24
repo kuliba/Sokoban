@@ -49,6 +49,7 @@ struct QRSearchCityView: View {
                                     } label: {
                                         
                                         Text(city)
+                                            .multilineTextAlignment(.leading)
                                             .font(Font.textH4M16240())
                                             .foregroundColor(Color.iconBlack)
                                             
