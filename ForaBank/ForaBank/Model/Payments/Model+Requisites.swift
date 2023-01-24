@@ -480,6 +480,9 @@ extension Model {
         
         case Payments.Parameter.Identifier.requisitsCompanyName.rawValue:
             return qrCode.stringValue(type: .general(.name), mapping: qrMapping)
+        
+        case Payments.Parameter.Identifier.requisitsMessage.rawValue:
+            return qrCode.stringValue(type: .general(.purpose), mapping: qrMapping)
 
         case Payments.Parameter.Identifier.requisitsAmount.rawValue:
             guard let amount: Double = try? qrCode.value(type: .general(.amount), mapping: qrMapping) else {
