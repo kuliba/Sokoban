@@ -201,7 +201,6 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     @objc func onQR() {
                 
         self.operatorsViewModel?.qrAction()
-
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
