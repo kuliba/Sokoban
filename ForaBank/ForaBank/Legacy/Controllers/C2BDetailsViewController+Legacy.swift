@@ -23,6 +23,9 @@ struct C2BDetailsView: UIViewControllerRepresentable {
         controller.viewModel = .init(urlString: viewModel.urlString)
 
         context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
+            
+            vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
+            vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
             vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
         })
         
