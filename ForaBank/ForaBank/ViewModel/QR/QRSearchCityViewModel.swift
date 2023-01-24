@@ -28,7 +28,7 @@ class QRSearchCityViewModel: ObservableObject, Identifiable {
         self.action = action
         
         guard let operatorsData = model.dictionaryAnywayOperators() else { return }
-        self.city = operatorsData.compactMap{$0.city}.uniqued()
+        self.city = operatorsData.compactMap{$0.region}.uniqued()
         bind()
     }
     

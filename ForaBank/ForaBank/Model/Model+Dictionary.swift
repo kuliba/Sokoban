@@ -429,7 +429,7 @@ extension Model {
         
         guard let regionList = dictionaryAnywayOperators() else { return [] }
         
-        let regions = regionList.filter{ $0.city == region }
+        let regions = regionList.filter{ $0.region == region }
 
         return regions
     }
