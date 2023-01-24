@@ -190,7 +190,7 @@ extension ProductView {
                     return cardProduct.isCreditCard ? "Кредитная карта" : cardProduct.displayName
                     
                 case .profile:
-                    return cardProduct.isCreditCard ? "Кредитная/n\(cardProduct.displayName)" : cardProduct.displayName
+                    return cardProduct.isCreditCard ? "Кредитная\n\(cardProduct.displayName)" : cardProduct.displayName
                 }
                 
             case let loanProduct as ProductLoanData:
