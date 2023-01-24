@@ -175,8 +175,9 @@ struct PaymentsTransfersView: View {
                     switch item.type {
                     case let .qrScanner(viewModel):
                         NavigationView {
+                            
                             QRView(viewModel: viewModel)
-                                .navigationBarTitle("", displayMode: .inline)
+                                .navigationBarHidden(true)
                                 .navigationBarBackButtonHidden(true)
                                 .edgesIgnoringSafeArea(.all)
                         }
