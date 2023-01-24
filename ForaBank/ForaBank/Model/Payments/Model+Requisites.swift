@@ -184,7 +184,14 @@ extension Model {
                 return .init(rules: rules)
             }()
             
-            let suggestedCompanies = result.compactMap({ $0.data })
+            let suggestedCompanies: [(kpp: String?, name: String)] = result.compactMap { company  in
+                
+                guard let name = company.value else {
+                    return nil
+                }
+                
+                return (company.data?.kpp, name)
+            }
             if suggestedCompanies.isEmpty == false {
                 
                 if suggestedCompanies.count == 1 {
@@ -197,19 +204,19 @@ extension Model {
                     }
                     
                     //MARK: Company Name Parameter
-                    let companyNameParameter = Payments.ParameterInput(.init(id: companyNameParameterId, value: suggestedCompanies[0].name?.full), icon: nil, title: "Наименование получателя", validator: companyNameValidator, limitator: .init(limit: 160))
+                    let companyNameParameter = Payments.ParameterInput(.init(id: companyNameParameterId, value: suggestedCompanies[0].name), icon: nil, title: "Наименование получателя", validator: companyNameValidator, limitator: .init(limit: 160))
                     parameters.append(companyNameParameter)
                     
                 } else {
                     
                     //MARK: Kpp Parameter
-                    let options: [Payments.ParameterSelect.Option] = suggestedCompanies.compactMap { companyData in
+                    let options: [Payments.ParameterSelect.Option] = suggestedCompanies.compactMap { company in
                         
-                        guard let id = companyData.kpp, let companyName = companyData.name?.full else {
+                        guard let kpp = company.kpp else {
                             return nil
                         }
                         
-                        return .init(id: id, name: companyName, icon: nil)
+                        return .init(id: kpp, name: company.name, icon: nil)
                     }
                     
                     let kppParameter = Payments.ParameterSelect(.init(id: kppParameterId, value: options.first?.id), title: "КПП получателя", options: options, type: .kpp, description: "Выберите из \(options.count)")
