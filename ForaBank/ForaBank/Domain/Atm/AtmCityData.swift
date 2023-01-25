@@ -33,8 +33,7 @@ struct AtmCityData: Identifiable, Codable, Equatable {
         self.id = try container.decode(Int.self, forKey: .id)
         self.name = try container.decode(String.self, forKey: .name)
         self.region = try container.decode(Int.self, forKey: .region)
-        let locationString = try container.decode(String.self, forKey: .location)
-        self.location = try LocationData(with: locationString)
+        self.location = try container.decode(LocationData.self, forKey: .location)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -43,6 +42,6 @@ struct AtmCityData: Identifiable, Codable, Equatable {
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)
         try container.encode(region, forKey: .region)
-        try container.encode(location.stringValue, forKey: .location)
+        try container.encode(location, forKey: .location)
     }
 }
