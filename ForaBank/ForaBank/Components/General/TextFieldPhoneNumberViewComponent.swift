@@ -131,30 +131,6 @@ extension TextFieldPhoneNumberView {
 
 extension TextFieldPhoneNumberView.ViewModel {
     
-    struct ToolbarViewModel {
-        
-        let doneButton: ButtonViewModel
-        let closeButton: ButtonViewModel?
-        
-        class ButtonViewModel: ObservableObject {
-            
-            @Published var isEnabled: Bool
-            let action: () -> Void
-            
-            init(isEnabled: Bool, action: @escaping () -> Void) {
-                
-                self.isEnabled = isEnabled
-                self.action = action
-            }
-        }
-        
-        init(doneButton: ButtonViewModel, closeButton: ButtonViewModel? = nil) {
-            
-            self.doneButton = doneButton
-            self.closeButton = closeButton
-        }
-    }
-    
     struct Replace {
         
         let from: Character
@@ -388,7 +364,7 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         }
     }
     
-    private func makeToolbar(toolbarViewModel: TextFieldPhoneNumberView.ViewModel.ToolbarViewModel, context: Context) -> UIToolbar? {
+    private func makeToolbar(toolbarViewModel: ToolbarViewModel, context: Context) -> UIToolbar? {
         
         let coordinator = context.coordinator
         
