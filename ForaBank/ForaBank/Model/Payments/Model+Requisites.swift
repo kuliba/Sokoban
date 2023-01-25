@@ -128,7 +128,7 @@ extension Model {
                 
                 //MARK: Amount Parameter
                 let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
-                let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма перевода", currencySymbol: currencySymbol, transferButtonTitle: "Продолжить", validator: .init(minAmount: 0.01, maxAmount: product.balance), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
+                let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, transferButtonTitle: "Продолжить", validator: .init(minAmount: 0.01, maxAmount: product.balance), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
                 
                 return .init(parameters: [nameParameter, messageParameter, productParameter, amountParameter, requisitesTypeParameter], front: .init(visible: [nameParameterId, messageParameterId, productParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [nameParameter.id, messageParameter.id, productParameter.id, amountParameter.id], processed: nil))
                 
@@ -276,7 +276,7 @@ extension Model {
             parameters.append(productParameter)
 
             //MARK: Amount Parameter
-            let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма перевода", currencySymbol: currencySymbol, transferButtonTitle: "Продолжить", validator: .init(minAmount: 0.01, maxAmount: product.balance), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
+            let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, transferButtonTitle: "Продолжить", validator: .init(minAmount: 0.01, maxAmount: product.balance), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
             parameters.append(amountParameter)
 
             let visible = parameters.map({ $0.id })
@@ -485,10 +485,16 @@ extension Model {
             return qrCode.stringValue(type: .general(.purpose), mapping: qrMapping)
 
         case Payments.Parameter.Identifier.requisitsAmount.rawValue:
-            guard let amount: Double = try? qrCode.value(type: .general(.amount), mapping: qrMapping) else {
+            
+            do {
+             
+                let amount: Double = try qrCode.value(type: .general(.amount), mapping: qrMapping)
+                return String(amount)
+                
+            } catch {
+                
                 return nil
             }
-            return String(amount)
             
         default:
             return nil
