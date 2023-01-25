@@ -145,7 +145,7 @@ extension PaymentsSelectBankView.ViewModel {
                     withAnimation(.easeIn(duration: 0.2)) {
 
                         self.list = nil
-                        self.selectedItem.title = nil
+                        self.selectedItem.title = (selectedItem.textField.text != nil && selectedItem.textField.text != "") ? parameterSelect?.title : nil
                     }
                     
                     if let parameterSelect = parameterSelect,
