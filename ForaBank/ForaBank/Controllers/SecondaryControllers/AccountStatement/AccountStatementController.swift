@@ -74,6 +74,11 @@ class AccountStatementController: UIViewController {
         cardFromField.balanceLabel.isHidden = true
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(false, animated: false)
+        super.viewDidAppear(animated)
+    }
+    
     private func setButtonEnabled(button: UIButton, isEnabled: Bool) {
         button.isEnabled = isEnabled
         button.backgroundColor = !isEnabled
