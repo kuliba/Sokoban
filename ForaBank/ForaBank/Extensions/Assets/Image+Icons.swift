@@ -565,6 +565,7 @@ public extension Image {
     static var ic24InternationalPassport: Image { Image(#function) }
     static var ic24Italic: Image { Image(#function) }
     static var ic24Key: Image { Image(#function) }
+    static var ic24Keyboard: Image { Image(#function) }
     static var ic24Layers: Image { Image(#function) }
     static var ic24Layout: Image { Image(#function) }
     static var ic24LifeBuoy: Image { Image(#function) }
