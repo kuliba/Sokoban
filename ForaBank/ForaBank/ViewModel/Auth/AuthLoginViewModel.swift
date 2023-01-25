@@ -27,7 +27,7 @@ class AuthLoginViewModel: ObservableObject {
     private let rootActions: RootViewModel.RootActions
     private var bindings = Set<AnyCancellable>()
 
-    lazy var card: CardViewModel = CardViewModel(scanButton: .init(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Show.Scaner()) }), textField: .init(masks: [.card, .account], regExp: "[0-9]"), nextButton: nil, state: .editing)
+    lazy var card: CardViewModel = CardViewModel(scanButton: .init(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Show.Scaner()) }), textField: .init(masks: [.card, .account], regExp: "[0-9]", toolbar: .init(doneButton: .init(isEnabled: true, action: { UIApplication.shared.endEditing() }), closeButton: .init(isEnabled: true, action: { UIApplication.shared.endEditing() }))), nextButton: nil, state: .editing)
     
     private lazy var abroadButton: ButtonAuthView.ViewModel = .init(.abroad) { [weak self] in
         self?.action.send(AuthLoginViewModelAction.Show.Transfers())

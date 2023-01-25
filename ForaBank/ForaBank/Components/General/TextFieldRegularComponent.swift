@@ -55,34 +55,6 @@ extension TextFieldRegularView.ViewModel {
     }
 }
 
-extension TextFieldRegularView {
-    
-    //TODO: extract to global scoupe
-    struct ToolbarViewModel {
-        
-        let doneButton: ButtonViewModel
-        let closeButton: ButtonViewModel?
-        
-        class ButtonViewModel: ObservableObject {
-            
-            @Published var isEnabled: Bool
-            let action: () -> Void
-            
-            init(isEnabled: Bool, action: @escaping () -> Void) {
-                
-                self.isEnabled = isEnabled
-                self.action = action
-            }
-        }
-        
-        init(doneButton: ButtonViewModel, closeButton: ButtonViewModel? = nil) {
-            
-            self.doneButton = doneButton
-            self.closeButton = closeButton
-        }
-    }
-}
-
 //MARK: - WrappedTextView
 
 class WrappedTextView: UITextView {

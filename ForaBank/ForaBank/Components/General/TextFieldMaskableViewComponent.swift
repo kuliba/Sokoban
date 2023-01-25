@@ -19,14 +19,16 @@ extension TextFieldMaskableView {
         @Published var text: String?
         @Published var isEnabled: Bool
         var dismissKeyboard: () -> Void
+        let toolbar: ToolbarViewModel?
         
-        internal init(masks: [StringValueMask], regExp: String, text: String? = nil, isEnabled: Bool = true) {
+        internal init(masks: [StringValueMask], regExp: String, text: String? = nil, isEnabled: Bool = true, toolbar: ToolbarViewModel?) {
             
             self.masks = masks
             self.regExp = regExp
             self.text = text
             self.isEnabled = isEnabled
             self.dismissKeyboard = {}
+            self.toolbar = toolbar
         }
     }
 }
@@ -58,6 +60,11 @@ struct TextFieldMaskableView: UIViewRepresentable {
         
         viewModel.dismissKeyboard = { textField.resignFirstResponder() }
  
+        if let toolbarViewModel = viewModel.toolbar {
+            
+            textField.inputAccessoryView = makeToolbar(coordinator: context.coordinator, toolbarViewModel: toolbarViewModel)
+        }
+        
         return textField
     }
     
@@ -69,17 +76,19 @@ struct TextFieldMaskableView: UIViewRepresentable {
     
     func makeCoordinator() -> Coordinator {
         
-        Coordinator(masks: viewModel.masks, regExp: viewModel.regExp, text: $viewModel.text)
+        Coordinator(viewModel: viewModel, masks: viewModel.masks, regExp: viewModel.regExp, text: $viewModel.text)
     }
     
     class Coordinator: NSObject, UITextFieldDelegate {
         
+        let viewModel: ViewModel
         let masks: [StringValueMask]
         let regExp: String
         var text: Binding<String?>
         
-        init(masks: [StringValueMask], regExp: String, text: Binding<String?>) {
+        init(viewModel: ViewModel, masks: [StringValueMask], regExp: String, text: Binding<String?>) {
             
+            self.viewModel = viewModel
             self.masks = masks
             self.regExp = regExp
             self.text = text
@@ -91,6 +100,14 @@ struct TextFieldMaskableView: UIViewRepresentable {
             text.wrappedValue = textField.text
             
             return false
+        }
+        
+        @objc func handleDoneAction() {
+            viewModel.toolbar?.doneButton.action()
+        }
+        
+        @objc func handleCloseAction() {
+            viewModel.toolbar?.closeButton?.action()
         }
     }
     
@@ -138,6 +155,35 @@ struct TextFieldMaskableView: UIViewRepresentable {
             
             return masked.count > 0 ? masked : nil
         }
+    }
+    
+    private func makeToolbar(coordinator: Coordinator, toolbarViewModel: ToolbarViewModel) -> UIToolbar {
+        
+        let toolbar = UIToolbar(frame: .init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 44))
+        let color: UIColor = Color.textSecondary.uiColor()
+        let font: UIFont = .systemFont(ofSize: 18, weight: .bold)
+        
+        let doneButton = UIBarButtonItem(title: "Готово", style: .plain, target: coordinator, action: #selector(coordinator.handleDoneAction))
+        doneButton.setTitleTextAttributes([.font: font], for: .normal)
+        doneButton.tintColor = color
+        
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        var items: [UIBarButtonItem] = [flexibleSpace, doneButton]
+        
+        if toolbarViewModel.closeButton != nil {
+            
+            let closeButton = UIBarButtonItem(image: .init(named: "Close Button"), style: .plain, target: coordinator, action: #selector(coordinator.handleCloseAction))
+            closeButton.tintColor = color
+            
+            items.insert(closeButton, at: 0)
+        }
+        
+        toolbar.items = items
+        toolbar.barStyle = .default
+        toolbar.barTintColor = .white.withAlphaComponent(0)
+        toolbar.clipsToBounds = true
+        
+        return toolbar
     }
 }
 
