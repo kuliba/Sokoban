@@ -27,13 +27,14 @@ struct LocationData: Equatable {
     
     init(with stringData: String) throws {
         
-        let coordinateData = stringData.split(separator: ",")
+        let stringDataAdjusted = stringData.replacingOccurrences(of: " ", with: "")
+        let coordinateData = stringDataAdjusted.split(separator: ",")
         
         guard coordinateData.count == 2,
               let latitude = CLLocationDegrees(coordinateData[0]),
               let longitude =  CLLocationDegrees(coordinateData[1]) else {
             
-            throw LocationDataError.unableDecodeLocationFromStringData
+            throw LocationDataError.unableDecodeLocationFromString(stringData)
         }
         
         self.init(latitude: latitude, longitude: longitude)
@@ -43,8 +44,32 @@ struct LocationData: Equatable {
     var stringValue: String { "\(latitude),\(longitude)" }
 }
 
-enum LocationDataError: Error {
+extension LocationData: Codable {
     
-    case unableDecodeLocationFromStringData
+    init(from decoder: Decoder) throws {
+        
+        let container = try decoder.singleValueContainer()
+        let stringValue = try container.decode(String.self)
+        try self.init(with: stringValue)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.singleValueContainer()
+        try container.encode(stringValue)
+    }
+}
+
+enum LocationDataError: LocalizedError {
+    
+    case unableDecodeLocationFromString(String)
+    
+    var errorDescription: String? {
+        
+        switch self {
+        case let .unableDecodeLocationFromString(value):
+            return "Unable decode location from string: \(value)"
+        }
+    }
 }
 
