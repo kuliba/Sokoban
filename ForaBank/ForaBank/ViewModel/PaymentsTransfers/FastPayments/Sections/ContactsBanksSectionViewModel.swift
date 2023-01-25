@@ -114,6 +114,7 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
                             
                             self.searchPlaceholder = nil
                             visible = filterBanks
+                            if #available(iOS 14.5, *) {} else { objectWillChange.send() }
                             
                         } else {
                             
