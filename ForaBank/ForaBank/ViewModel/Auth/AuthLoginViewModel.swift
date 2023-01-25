@@ -127,6 +127,8 @@ class AuthLoginViewModel: ObservableObject {
                     
                     let viewModel: AuthProductsViewModel = .init(model, products: model.catalogProducts.value, action: action, dismissAction: dismissAction)
                     
+                    UIApplication.shared.endEditing()
+                    
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "presented products view")
                     link = .products(viewModel)
                     
@@ -135,6 +137,8 @@ class AuthLoginViewModel: ObservableObject {
                     let viewModel: AuthTransfersViewModel = .init(model) { [weak self] in
                         self?.action.send(AuthLoginViewModelAction.Close.Link())
                     }
+                    
+                    UIApplication.shared.endEditing()
                     
                     bind(viewModel)
                     link = .transfers(viewModel)
