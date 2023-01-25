@@ -95,7 +95,7 @@ extension PaymentsNameView {
                         } else {
       
                             // title
-                            person.lastName.title = (person.lastName.textField.text != nil && person.lastName.textField.text != "") ? parameterName.firstName.title : nil
+                            person.lastName.title = (person.lastName.textField.text != nil && person.lastName.textField.text != "") ? parameterName.lastName.title : nil
                             
                             // warning
                             if let action = parameterName.lastName.validator.action(with: person.lastName.textField.text, for: .post),
