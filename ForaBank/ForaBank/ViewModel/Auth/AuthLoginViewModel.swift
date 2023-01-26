@@ -14,6 +14,7 @@ class AuthLoginViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     let header: HeaderViewModel
     
+    @Published var isInternet: String = ""
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var bottomSheet: BottomSheet?
     @Published var isLinkActive: Bool = false
@@ -58,6 +59,14 @@ class AuthLoginViewModel: ObservableObject {
     
     private func bind() {
 
+        model.networkMonitorAgent.isNetworkAvailable
+            .receive(on: DispatchQueue.main)
+            .sink { isAvailable in
+                
+                self.isInternet = isAvailable ? "true" : "false"
+                
+            }.store(in: &bindings)
+        
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in

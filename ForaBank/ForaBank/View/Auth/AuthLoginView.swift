@@ -19,6 +19,7 @@ struct AuthLoginView: View {
             
             HeaderView(viewModel: viewModel.header)
             CardView(viewModel: viewModel.card)
+            Text(viewModel.isInternet)
             
             Spacer()
             

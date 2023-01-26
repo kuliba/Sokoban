@@ -115,6 +115,7 @@ class Model {
     internal let contactsAgent: ContactsAgentProtocol
     internal let cameraAgent: CameraAgentProtocol
     internal let imageGalleryAgent: ImageGalleryAgentProtocol
+    internal let networkMonitorAgent: NetworkMonitorAgentProtocol
     
     // private
     private var bindings: Set<AnyCancellable>
@@ -137,7 +138,7 @@ class Model {
         return credentials
     }
     
-    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol, cameraAgent: CameraAgentProtocol, imageGalleryAgent: ImageGalleryAgentProtocol) {
+    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol, cameraAgent: CameraAgentProtocol, imageGalleryAgent: ImageGalleryAgentProtocol, networkMonitorAgent: NetworkMonitorAgentProtocol) {
         
         self.action = .init()
         self.auth = keychainAgent.isStoredString(values: [.pincode, .serverDeviceGUID]) ? .init(.signInRequired) : .init(.registerRequired)
@@ -198,6 +199,7 @@ class Model {
         self.contactsAgent = contactsAgent
         self.cameraAgent = cameraAgent
         self.imageGalleryAgent = imageGalleryAgent
+        self.networkMonitorAgent = networkMonitorAgent
         self.bindings = []
         
         LoggerAgent.shared.log(level: .debug, category: .model, message: "initialized")
@@ -245,7 +247,10 @@ class Model {
         // imageGallery agent
         let imageGalleryAgent = ImageGalleryAgent()
         
-        return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent, cameraAgent: cameraAgent, imageGalleryAgent: imageGalleryAgent)
+        // networkMonitor agent
+        let networkMonitorAgent = NetworkMonitorAgent()
+        
+        return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent, cameraAgent: cameraAgent, imageGalleryAgent: imageGalleryAgent, networkMonitorAgent: networkMonitorAgent)
     }()
     
     //MARK: - Session Agent State
