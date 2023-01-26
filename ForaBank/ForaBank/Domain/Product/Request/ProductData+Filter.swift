@@ -197,7 +197,7 @@ extension ProductData.Filter {
                 return nil
             }
             
-            return productCard.isProductOwner == false
+            return productCard.isProductOwner == true
         }
     }
     
@@ -214,7 +214,7 @@ extension ProductData.Filter {
                 return nil
             }
             
-            return productCard.isProductOwner == true
+            return productCard.isProductOwner == false
         }
     }
 }
@@ -255,6 +255,7 @@ extension ProductData.Filter  {
                 ProductTypeRule([.card, .account]),
                 CurrencyRule([.rub]),
                 CardActiveRule(),
+                CardAdditionalNotOwnedRetrictedRule(),
                 AccountActiveRule()])
     
     
@@ -286,6 +287,7 @@ extension ProductData.Filter  {
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account]),
                 CardActiveRule(),
+                CardAdditionalNotOwnedRetrictedRule(),
                 AccountActiveRule()])
     
     
@@ -301,5 +303,6 @@ extension ProductData.Filter  {
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account]),
                 CardActiveRule(),
+                CardAdditionalNotOwnedRetrictedRule(),
                 AccountActiveRule()])
 }

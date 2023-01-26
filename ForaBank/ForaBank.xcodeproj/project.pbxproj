@@ -4453,11 +4453,11 @@
 			isa = PBXGroup;
 			children = (
 				77517FCF27A97AE8005CFB77 /* ProductData.swift */,
-				776E67B4292D0F6B00F587A7 /* ProductData+Filter.swift */,
 				687F9B0627FBF2B2007A38A5 /* ProductCardData.swift */,
 				687F9B0827FBF65F007A38A5 /* ProductAccountData.swift */,
 				687F9B0A27FBF7C0007A38A5 /* ProductDepositData.swift */,
 				687F9B0C27FBF892007A38A5 /* ProductLoanData.swift */,
+				776E67B4292D0F6B00F587A7 /* ProductData+Filter.swift */,
 				0CA1CDE8284551A000021671 /* PaymentData.swift */,
 			);
 			path = Request;
