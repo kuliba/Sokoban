@@ -15,25 +15,25 @@ class NetworkMonitorAgent: NetworkMonitorAgentProtocol {
     
     private var pathMonitor: NWPathMonitor
     
-    private lazy var pathUpdateHandler: ((NWPath) -> Void) = { path in
+    private lazy var pathUpdateHandler: ((NWPath) -> Void) = { [weak self] path in
     
-      if path.status == NWPath.Status.satisfied {
+      if path.status == .satisfied {
           LoggerAgent.shared.log(level: .info,
                                  category: .network,
                                  message: "NWPath.Status.satisfied")
-          self.isNetworkAvailable.send(true)
+          self?.isNetworkAvailable.send(true)
           
-      } else if path.status == NWPath.Status.unsatisfied {
+      } else if path.status == .unsatisfied {
           LoggerAgent.shared.log(level: .info,
                                  category: .network,
                                  message: "NWPath.Status.unsatisfied")
-          self.isNetworkAvailable.send(false)
+          self?.isNetworkAvailable.send(false)
           
-      } else if path.status == NWPath.Status.requiresConnection {
+      } else if path.status == .requiresConnection {
           LoggerAgent.shared.log(level: .info,
                                  category: .network,
                                  message: "NWPath.Status.requiresConnection")
-          self.isNetworkAvailable.send(false)
+          self?.isNetworkAvailable.send(false)
       }
     }
 
