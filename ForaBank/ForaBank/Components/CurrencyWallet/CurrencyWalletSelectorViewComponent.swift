@@ -30,6 +30,7 @@ extension CurrencyWalletSelectorView {
         @Published var excludeProductId: ProductData.ID?
         @Published var isUserInteractionEnabled: Bool
         
+        
         private let model: Model
         
         let backgroundColor: BackgroundColor
