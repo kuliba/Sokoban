@@ -265,7 +265,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         case .qrPayment:
                             
                             // на экране платежей нижний переход
-                            let qrScannerModel = QRViewModel.init(closeAction: {
+                            let qrScannerModel = QRViewModel(closeAction: {
                                 self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                             })
                             
@@ -652,6 +652,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 
                                 guard operators.count > 0 else {
                                 
+                                    self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                                     self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
                                     return
                                 }
@@ -698,7 +699,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 
                             } else {
                                 
-                                self.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
+                                self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                                self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
                             }
                             
                         } else {

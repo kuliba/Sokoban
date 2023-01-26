@@ -433,6 +433,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 
                                 guard operators.count > 0 else {
                                 
+                                    self.fullScreenSheet = nil
                                     self.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
                                     return
                                 }
@@ -478,6 +479,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 
                             } else {
                                 
+                                self.fullScreenSheet = nil
                                 self.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
                             }
                             
