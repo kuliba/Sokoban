@@ -53,8 +53,6 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
     func setupUI (_ index: Int, _ item: RequisiteDO, _ qrData: [String: String], additionalList: [AdditionalListModel], _ selectedValue: String) {
         regEx = item.regExp ?? ""
         
-        let a = item.title
-        
         currentElementUI = item
         infoButon.isHidden = true
         fieldId = String(item.order)
@@ -136,6 +134,7 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
         } else {
             if let el = InternetTVDetailsFormViewModel.additionalDic[item.id ?? ""], !el.isEmpty {
                 textView.text = el["fieldvalue"]
+                
             } else {
                 textView.text = item.content
                 InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,
@@ -237,7 +236,7 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
     
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
         let a = textView.text ?? ""
-        if ( !isValidPassword(a) == true && a != "") {
+        if (!isValidPassword(a) == true && a != "") {
             
             if let showAlert = showAlert {
                 showAlert()
