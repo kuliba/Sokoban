@@ -1233,7 +1233,7 @@ extension Model {
 
 //MARK: - Errors
 
-enum ModelAuthError: Error {
+enum ModelAuthError: LocalizedError {
     
     case unauthorizedCommandAttempt
     case emptyCSRFData(status: ServerStatusCode, message: String?)
@@ -1244,5 +1244,37 @@ enum ModelAuthError: Error {
     case checkClientFailed(status: ServerStatusCode, message: String?)
     case setDeviceSettingsFailed(status: ServerStatusCode, message: String?)
     case sessionActivating
+    
+    var errorDescription: String? {
+        
+        switch self {
+        case .unauthorizedCommandAttempt:
+            return "ModelAuthError: unauthorized command attempt"
+            
+        case .emptyCSRFData(let status, let message):
+            return "ModelAuthError: empty CSRF response data, status: \(status), message: \(String(describing: message))"
+            
+        case .identifierForVendorObtainFailed:
+            return "ModelAuthError: failed to obtain identifier for vendor"
+            
+        case .fcmTokenObtainFailed:
+            return "ModelAuthError: failed to obtain token"
+            
+        case .installPushDeviceFailed(let status, let message):
+            return "ModelAuthError: failed install push device, status: \(status), message: \(String(describing: message))"
+            
+        case .keyExchangeFailed(let status, let message):
+            return "ModelAuthError: failed key exchange, status: \(status), message: \(String(describing: message))"
+            
+        case .checkClientFailed(let status, let message):
+            return "ModelAuthError: failed check client, status: \(status), message: \(String(describing: message))"
+            
+        case .setDeviceSettingsFailed(let status, let message):
+            return "ModelAuthError: failed set device settings, status: \(status), message: \(String(describing: message))"
+            
+        case .sessionActivating:
+            return "ModelAuthError: session is activating"
+        }
+    }
 }
 
