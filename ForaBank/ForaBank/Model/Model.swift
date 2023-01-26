@@ -248,6 +248,36 @@ class Model {
         return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent, cameraAgent: cameraAgent, imageGalleryAgent: imageGalleryAgent)
     }()
     
+    //MARK: - Session Agent State
+    
+    private func bind(sessionAgent: SessionAgentProtocol) {
+        
+        sessionAgent.sessionState
+            .receive(on: queue)
+            .sink { [unowned self] sessionState in
+                
+                switch sessionState {
+                case .active:
+                    LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Activated")
+                    action.send(ModelAction.Auth.Session.Activated())
+                    
+                    loadCachedPublicData()
+                    LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Dictionary.UpdateCache.All")
+                    action.send(ModelAction.Dictionary.UpdateCache.All())
+                    
+                case .inactive:
+                    auth.value = authIsCredentialsStored ? .signInRequired : .registerRequired
+                    
+                case .expired, .failed:
+                    auth.value = authIsCredentialsStored ? .unlockRequired : .registerRequired
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
     private func bind() {
         
         //MARK: - Auth
@@ -295,33 +325,6 @@ class Model {
                     
                 case .unlockRequiredManual:
                     LoggerAgent.shared.log(category: .model, message: "auth: UNLOCK REQUIRED MANUAL")
-                }
-                
-            }.store(in: &bindings)
-        
-        //MARK: - Session Agent State
-        
-        sessionAgent.sessionState
-            .receive(on: queue)
-            .sink { [unowned self] sessionState in
-                
-                switch sessionState {
-                case .active:
-                    LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Activated")
-                    action.send(ModelAction.Auth.Session.Activated())
-                    
-                    loadCachedPublicData()
-                    LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Dictionary.UpdateCache.All")
-                    action.send(ModelAction.Dictionary.UpdateCache.All())
-                    
-                case .inactive:
-                    auth.value = authIsCredentialsStored ? .signInRequired : .registerRequired
-                    
-                case .expired, .failed:
-                    auth.value = authIsCredentialsStored ? .unlockRequired : .registerRequired
-                    
-                default:
-                    break
                 }
                 
             }.store(in: &bindings)
@@ -402,6 +405,7 @@ class Model {
                 case _ as ModelAction.App.Launched:
                     LoggerAgent.shared.log(category: .model, message: "received ModelAction.App.Launched")
                     handleAppFirstLaunch()
+                    bind(sessionAgent: sessionAgent)
 
                 case _ as ModelAction.App.Activated:
                     LoggerAgent.shared.log(category: .model, message: "received ModelAction.App.Activated")
