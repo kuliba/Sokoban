@@ -387,6 +387,9 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     }
 
     func getOperationDetailByPaymentId() {
+
+        UIApplication.shared.endEditing()
+
         viewModel?.getOperationDetailByPaymentId (idDoc: C2BDetailsViewModel.makeTransfer?.data?.paymentOperationDetailId?.description ?? "-1") { model,error in
             self.dismissActivity()
             if (error != nil) {
