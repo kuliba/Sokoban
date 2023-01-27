@@ -553,14 +553,28 @@ final class OperationDetailInfoViewModel: Identifiable {
             let sfpLogoImage = Image("sbp-logo")
             logo = sfpLogoImage
             
-            if let foreignPhoneNumber = statement.fastPayment?.foreignPhoneNumber {
-                let phoneFormatter = PhoneNumberKitFormater()
-                let formattedPhone = phoneFormatter.format(foreignPhoneNumber)
-                cells.append(PropertyCellViewModel(title: "Номер телефона получателя", iconType: .phone, value: formattedPhone))
+            if statement.operationType == .credit {
                 
+                if let foreignPhoneNumber = statement.fastPayment?.foreignPhoneNumber {
+                    let phoneFormatter = PhoneNumberKitFormater()
+                    let formattedPhone = phoneFormatter.format(foreignPhoneNumber)
+                    cells.append(PropertyCellViewModel(title: "Номер телефона отправителя", iconType: .phone, value: formattedPhone))
+                    
+                }
+                
+                cells.append(PropertyCellViewModel(title: "Отправитель", iconType: .user, value: statement.merchant))
+                
+            } else if statement.operationType == .debit {
+                
+                if let foreignPhoneNumber = statement.fastPayment?.foreignPhoneNumber {
+                    let phoneFormatter = PhoneNumberKitFormater()
+                    let formattedPhone = phoneFormatter.format(foreignPhoneNumber)
+                    cells.append(PropertyCellViewModel(title: "Номер телефона получателя", iconType: .phone, value: formattedPhone))
+                    
+                }
+                
+                cells.append(PropertyCellViewModel(title: "Получатель", iconType: .user, value: statement.merchant))
             }
-            
-            cells.append(PropertyCellViewModel(title: "Получатель", iconType: .user, value: statement.merchant))
             
             if let bankName = statement.fastPayment?.foreignBankName, statement.operationType == .debit {
                 cells.append(BankCellViewModel(title: "Банк получателя", icon:  model.images.value[statement.md5hash]?.image ?? Image.ic12LogoForaColor, name: bankName))
