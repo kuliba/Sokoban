@@ -10,5 +10,6 @@ import Combine
 
 protocol NetworkMonitorAgentProtocol {
     
-    var isNetworkAvailable: PassthroughSubject<Bool, Never> { get } 
+    var isNetworkAvailable: PassthroughSubject<Bool, Never> { get }
+    func isGoogleAvailable() -> Bool 
 }

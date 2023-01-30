@@ -9,6 +9,10 @@ import Foundation
 import Combine
 
 class NetworkMonitorAgentMock: NetworkMonitorAgentProtocol {
+    func isGoogleAvailable() -> Bool {
+        return true
+    }
+    
     var isNetworkAvailable: PassthroughSubject<Bool, Never> = .init()
     
 }

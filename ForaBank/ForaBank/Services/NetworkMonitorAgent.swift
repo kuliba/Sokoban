@@ -17,27 +17,60 @@ class NetworkMonitorAgent: NetworkMonitorAgentProtocol {
     
     private lazy var pathUpdateHandler: ((NWPath) -> Void) = { [weak self] path in
     
-      if path.status == .satisfied {
-          LoggerAgent.shared.log(level: .info,
-                                 category: .network,
-                                 message: "NWPath.Status.satisfied")
-          self?.isNetworkAvailable.send(true)
-          
-      } else if path.status == .unsatisfied {
-          LoggerAgent.shared.log(level: .info,
-                                 category: .network,
-                                 message: "NWPath.Status.unsatisfied")
-          self?.isNetworkAvailable.send(false)
-          
-      } else if path.status == .requiresConnection {
-          LoggerAgent.shared.log(level: .info,
-                                 category: .network,
-                                 message: "NWPath.Status.requiresConnection")
-          self?.isNetworkAvailable.send(false)
-      }
+        switch path.status {
+        case .satisfied:
+            LoggerAgent.shared.log(level: .info,
+                                   category: .network,
+                                   message: "NWPath.Status.satisfied")
+            self?.isNetworkAvailable.send(true)
+            
+        case .unsatisfied:
+            LoggerAgent.shared.log(level: .info,
+                                   category: .network,
+                                   message: "NWPath.Status.unsatisfied")
+            self?.isNetworkAvailable.send(false)
+        
+        case .requiresConnection:
+            LoggerAgent.shared.log(level: .info,
+                                   category: .network,
+                                   message: "NWPath.Status.requiresConnection")
+            self?.isNetworkAvailable.send(false)
+            
+        @unknown default:
+            LoggerAgent.shared.log(level: .info,
+                                   category: .network,
+                                   message: "NWPath.Status.Unknown")
+            self?.isNetworkAvailable.send(false)
+        }
     }
 
     private let backgroudQueue = DispatchQueue.global(qos: .background)
+    
+    private var urlSession: URLSession = {
+        var newConfiguration: URLSessionConfiguration = .default
+        newConfiguration.waitsForConnectivity = false
+        newConfiguration.allowsCellularAccess = true
+        return URLSession(configuration: newConfiguration)
+    }()
+
+    public func isGoogleAvailable() -> Bool
+    {
+        let url = URL(string: "https://8.8.8.8")!
+        let semaphore = DispatchSemaphore(value: 0)
+        var success = false
+        let task = urlSession.dataTask(with: url)
+            { data, response, error in
+                if error != nil { success = false }
+                else { success = true }
+                semaphore.signal()
+        }
+
+        task.resume()
+        semaphore.wait()
+
+        return success
+    }
+    
 
     init() {
         self.pathMonitor = NWPathMonitor()

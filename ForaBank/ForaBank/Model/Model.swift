@@ -59,6 +59,7 @@ class Model {
     let currencyWalletList: CurrentValueSubject<[CurrencyWalletData], Never>
     let centralBankRates: CurrentValueSubject<[CentralBankRatesData], Never>
     var images: CurrentValueSubject<[String: ImageData], Never>
+    let clientInform: CurrentValueSubject<ClientInformData?, Never>
     
     //MARK: Deposits
     let deposits: CurrentValueSubject<[DepositProductData], Never>
@@ -188,6 +189,7 @@ class Model {
         self.qrMapping = .init(nil)
         self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
+        self.clientInform = .init(nil)
         
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
@@ -817,8 +819,12 @@ class Model {
                         
                     case .prefferedBanks:
                         handleDictionaryPrefferedBanks(payload.serial)
+                    
                     case .jsonAbroad:
                         handleJsonAbroadRequest(payload.serial)
+                        
+                    case .clientInform:
+                        handleClientInform(payload.serial)
                     }
                     
                 case let payload as ModelAction.Dictionary.DownloadImages.Request:

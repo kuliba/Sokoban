@@ -276,6 +276,7 @@
 		0C5D7D9C2982FE1C00BC0CCF /* NetworkMonitorAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5D7D9B2982FE1C00BC0CCF /* NetworkMonitorAgent.swift */; };
 		0C5D7D9E298320C100BC0CCF /* NetworkMonitorAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5D7D9D298320C100BC0CCF /* NetworkMonitorAgentProtocol.swift */; };
 		0C5D7DA02983294600BC0CCF /* NetworkMonitorAgentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5D7D9F2983294600BC0CCF /* NetworkMonitorAgentMock.swift */; };
+		0C5D7DA2298806BD00BC0CCF /* ClientInformData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5D7DA1298806BD00BC0CCF /* ClientInformData.swift */; };
 		0C6508CF28299C6D0058916A /* PaymentsTransfersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */; };
 		0C6508D228299DAF0058916A /* PaymentsTransfersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */; };
 		0C69D7FC2951C36E00D161B2 /* DoubleExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C69D7FB2951C36E00D161B2 /* DoubleExtensionsTests.swift */; };
@@ -1817,6 +1818,7 @@
 		0C5D7D9B2982FE1C00BC0CCF /* NetworkMonitorAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitorAgent.swift; sourceTree = "<group>"; };
 		0C5D7D9D298320C100BC0CCF /* NetworkMonitorAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitorAgentProtocol.swift; sourceTree = "<group>"; };
 		0C5D7D9F2983294600BC0CCF /* NetworkMonitorAgentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitorAgentMock.swift; sourceTree = "<group>"; };
+		0C5D7DA1298806BD00BC0CCF /* ClientInformData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientInformData.swift; sourceTree = "<group>"; };
 		0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersView.swift; sourceTree = "<group>"; };
 		0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModel.swift; sourceTree = "<group>"; };
 		0C69D7FB2951C36E00D161B2 /* DoubleExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtensionsTests.swift; sourceTree = "<group>"; };
@@ -4241,6 +4243,7 @@
 				6820927E27AB0E1B003DCAFD /* BankData.swift */,
 				6820928027AB0E49003DCAFD /* CountryData.swift */,
 				6820928227AB0E6F003DCAFD /* CurrencyData.swift */,
+				0C5D7DA1298806BD00BC0CCF /* ClientInformData.swift */,
 				6820928427AB0E9D003DCAFD /* MobileData.swift */,
 				6820928627AB0EC3003DCAFD /* MosParkingData.swift */,
 				6820928827AB0EEC003DCAFD /* PaymentSystemData.swift */,
@@ -8790,6 +8793,7 @@
 				0BCFBE012812DD17003F2F36 /* Model+Notifications.swift in Sources */,
 				A50869E027690E53004C5E17 /* InternetTVConfirmViewModel.swift in Sources */,
 				7798848C285CA1BB0023CA65 /* ProductProfileDetailFooterViewComponent.swift in Sources */,
+				0C5D7DA2298806BD00BC0CCF /* ClientInformData.swift in Sources */,
 				0B8C1C4E273B2BB000BA5CAC /* TransferByRequisitesCoordinator.swift in Sources */,
 				ED0B48A0267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift in Sources */,
 				5065D9CB28F2BC5000529884 /* PaymentsSuccessViewModel.swift in Sources */,
