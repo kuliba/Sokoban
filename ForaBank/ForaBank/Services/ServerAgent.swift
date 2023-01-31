@@ -96,7 +96,14 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     completion(.failure(.emptyResponseData))
                     return
                 }
-
+                
+                if let coma = command as? ServerCommands.DictionaryController.GetClientInformData {
+                   
+                    coma.parameters?.forEach({ el in
+                        print("autho \(el.debugDescription)")
+                    })
+                    print(String(decoding: data, as: UTF8.self))
+                }
                 do {
                     
                     let response = try decoder.decode(Command.Response.self, from: data)

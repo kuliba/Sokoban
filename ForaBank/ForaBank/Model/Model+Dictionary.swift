@@ -1795,7 +1795,7 @@ extension Model {
         guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
         self.dictionariesUpdating.value.insert(typeDict)
         
-        let command = ServerCommands.DictionaryController.GetClientInformData(token: token, serial: serial)
+        let command = ServerCommands.DictionaryController.GetClientInformData(token: token, serial: nil) //serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             self.dictionariesUpdating.value.remove(typeDict)

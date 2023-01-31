@@ -940,6 +940,7 @@ extension MainViewModel {
         enum BottomSheetType {
             
             case openAccount(OpenAccountViewModel)
+            case clientInform(ClientInformViewModel)
         }
     }
     

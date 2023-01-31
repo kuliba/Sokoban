@@ -100,6 +100,18 @@ class AuthPinCodeViewModel: ObservableObject {
     
     func bind() {
         
+        model.clientInform
+            .receive(on: DispatchQueue.main)
+            .sink { alarm in
+                
+                alarm?.authorized.forEach({ st in
+                    print("Authorized \(st)")
+                })
+                print("autho \(alarm?.authorized)")
+                print("notAutho \(alarm?.notAuthorized)")
+                
+            }.store(in: &bindings)
+        
         model.sessionState
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] state in
