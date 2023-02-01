@@ -58,14 +58,15 @@ class AuthLoginViewModel: ObservableObject {
     }
     
     private func bind() {
-
-        model.networkMonitorAgent.isNetworkAvailable
+        
+        model.clientInform
             .receive(on: DispatchQueue.main)
-            .sink { isAvailable in
-                
-                self.isInternet = isAvailable ? "true" : "false"
-                
-            }.store(in: &bindings)
+            .sink { [unowned self] clientInformData in
+        
+                guard let message = clientInformData?.notAuthorized else { return }
+                action.send(AuthLoginViewModelAction.Show.AlertClientInform(message: message))
+        
+        }.store(in: &bindings)
         
         model.action
             .receive(on: DispatchQueue.main)
@@ -166,6 +167,13 @@ class AuthLoginViewModel: ObservableObject {
                         self.card.textField.text = maskedValue
                         self.cardScanner = nil
                     })
+                    
+                case let payload as AuthLoginViewModelAction.Show.AlertClientInform:
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "AuthLoginViewModelAction.Show.AlertClientInform: \(payload.message)")
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "alert ClientInform presented")
+                    alert = .init(title: "Ошибка", message: payload.message, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
                     
                 case _ as AuthLoginViewModelAction.Close.Link:
                     LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Close.Link")
@@ -389,6 +397,11 @@ enum AuthLoginViewModelAction {
         struct OrderProduct: Action {
             
             let productData: CatalogProductData
+        }
+        
+        struct AlertClientInform: Action {
+            
+            let message: String
         }
     }
     

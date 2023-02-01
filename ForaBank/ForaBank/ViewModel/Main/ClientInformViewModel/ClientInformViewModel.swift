@@ -27,6 +27,7 @@ class ClientInformViewModel: ObservableObject {
         let icon = Image.ic24Clock
         
         let items = Self.reduce(itemsData: itemsData, itemIcon: icon)
+        //let items = Self.sampleItemsMax
         
         self.init(model: model, items: items)
 
@@ -76,8 +77,22 @@ extension ClientInformViewModel {
     static let sampleItemsMax: [ClientInformItemViewModel] = {
         
         var items = ClientInformViewModel.sampleItems
-        for i in (0...10) {
-            items.append(.init(id: "auth\(i)", icon: .ic24Clock, text: "String \(i)"))
+        for i in (3...13) {
+            items.append(.init(id: "auth\(i)",
+                               icon: .ic24Clock,
+                               text: "Наблюдаются временные сложности в работе переводов по номеру телефону \(i)"))
+        }
+        
+        return items
+    }()
+    
+    static let sampleItemsShort: [ClientInformItemViewModel] = {
+        
+        var items = [ClientInformItemViewModel]()
+        for i in (3...13) {
+            items.append(.init(id: "auth\(i)",
+                               icon: .ic24Clock,
+                               text: "Наблюдаются сложности \(i)"))
         }
         
         return items
