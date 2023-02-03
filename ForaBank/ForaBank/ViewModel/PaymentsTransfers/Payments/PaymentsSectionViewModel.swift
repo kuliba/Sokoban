@@ -95,21 +95,24 @@ class PaymentsFeedSectionViewModel: PaymentsSectionViewModel {
                     case _ as PaymentsParameterViewModelAction.Code.ResendButtonDidTapped:
                         self.action.send(PaymentsSectionViewModelAction.ResendCode())
                     
-                    //MARK: InputComponent
-                    case let payload as PaymentsParameterViewModelAction.Input.ActionButtonDidTapped:
-                        self.action.send(PaymentsSectionViewModelAction.InputActionButtonDidTapped(type: payload.type))
-                        
-                    case let payload as PaymentsParameterViewModelAction.Input.ContactSelector.Show:
-                        self.action.send(PaymentsSectionViewModelAction.ContactSelector.Show(viewModel: payload.viewModel))
-                        
-                    case _ as PaymentsParameterViewModelAction.Input.ContactSelector.Close:
-                        self.action.send(PaymentsSectionViewModelAction.ContactSelector.Close())
-                        
                     //MARK: InputPhoneComponent
                     case let payload as PaymentsParameterViewModelAction.InputPhone.ContactSelector.Show:
                         self.action.send(PaymentsSectionViewModelAction.ContactSelector.Show(viewModel: payload.viewModel))
                         
                     case _ as PaymentsParameterViewModelAction.InputPhone.ContactSelector.Close:
+                        self.action.send(PaymentsSectionViewModelAction.ContactSelector.Close())
+                    
+                    case let payload as PaymentsParameterViewModelAction.Hint.Show:
+                        self.action.send(PaymentsSectionViewModelAction.Hint.Show(viewModel: payload.viewModel))
+                        
+                    case _ as PaymentsParameterViewModelAction.Hint.Close:
+                        self.action.send(PaymentsSectionViewModelAction.Hint.Close())
+                        
+                    //MARK: Bank List Component 
+                    case let payload as PaymentsParameterViewModelAction.BankList.ContactSelector.Show:
+                        self.action.send(PaymentsSectionViewModelAction.BankSelector.Show(viewModel: payload.viewModel))
+                        
+                    case _ as PaymentsParameterViewModelAction.BankList.ContactSelector.Close:
                         self.action.send(PaymentsSectionViewModelAction.ContactSelector.Close())
                         
                     default:
@@ -248,7 +251,7 @@ extension PaymentsSectionViewModel {
             case .spoiler:
                 if items.isEmpty == false,
                    let lastSpoilerItem = items.last,
-                   let lastIndex = visibleParameters.firstIndex(where: { $0.id == lastSpoilerItem.id }) {
+                   let lastIndex = visibleParameters.firstIndex(where: { $0.id == lastSpoilerItem.source.id }) {
                     
                     // feed section before spoiler
                     let prevParameters = Array(visibleParameters.prefix(lastIndex))
@@ -318,9 +321,15 @@ extension PaymentsSectionViewModel {
         switch parameter {
         case let parameterSelect as Payments.ParameterSelect:
             return try? PaymentsSelectView.ViewModel(with: parameterSelect, model: model)
+           
+        case let parameterSelectBank as Payments.ParameterSelectBank:
+            return try? PaymentsSelectBankView.ViewModel(with: parameterSelectBank, model: model)
             
         case let parameterSwitch as Payments.ParameterSelectSwitch:
             return PaymentsSwitchView.ViewModel(with: parameterSwitch)
+            
+        case let parameterCheckBox as Payments.ParameterCheckBox:
+            return try? PaymentsCheckBoxView.ViewModel(with: parameterCheckBox)
             
         case let parameterInfo as Payments.ParameterInfo:
             return PaymentsInfoView.ViewModel(with: parameterInfo)
@@ -348,6 +357,9 @@ extension PaymentsSectionViewModel {
             
         case let parameterHeader as Payments.ParameterHeader:
             return PaymentsHeaderViewComponent(source: parameterHeader)
+            
+        case let parameterMessage as Payments.ParameterMessage:
+            return PaymentsMessageView.ViewModel(with: parameterMessage)
         
             // for tests only
         case let parameterMock as Payments.ParameterMock:
@@ -400,12 +412,17 @@ enum PaymentsSectionViewModelAction {
         struct Close: Action {}
     }
     
+    enum Hint  {
+        
+        struct Show: Action {
+            
+            let viewModel: HintViewModel
+        }
+        
+        struct Close: Action {}
+    }
+    
     struct SpoilerDidUpdated: Action {}
     
     struct ResendCode: Action {}
-    
-    struct InputActionButtonDidTapped: Action {
-        
-        let type: Payments.ParameterInput.ActionButtonType
-    }
 }

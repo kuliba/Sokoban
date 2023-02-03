@@ -19,8 +19,8 @@ extension Date {
 
 extension ProductStatementData {
     
-    init(date: Date, amount: Double, operationType: OperationType, tranDate: Date?) {
+    init(id: ProductStatementData.ID, date: Date, amount: Double, operationType: OperationType, tranDate: Date?) {
         
-        self.init(mcc: nil, accountId: nil, accountNumber: "123", amount: amount, cardTranNumber: nil, city: nil, comment: "", country: nil, currencyCodeNumeric: 123, date: date, deviceCode: nil, documentAmount: nil, documentId: nil, fastPayment: nil, groupName: "", isCancellation: nil, md5hash: "", merchantName: nil, merchantNameRus: nil, opCode: nil, operationId: nil, operationType: operationType, paymentDetailType: .betweenTheir, svgImage: nil, terminalCode: nil, tranDate: tranDate, type: .outside)
+        self.init(mcc: nil, accountId: nil, accountNumber: "123", amount: amount, cardTranNumber: nil, city: nil, comment: "", country: nil, currencyCodeNumeric: 123, date: date, deviceCode: nil, documentAmount: nil, documentId: nil, fastPayment: nil, groupName: "", isCancellation: nil, md5hash: "", merchantName: nil, merchantNameRus: nil, opCode: nil, operationId: id, operationType: operationType, paymentDetailType: .betweenTheir, svgImage: nil, terminalCode: nil, tranDate: tranDate, type: .outside)
     }
 }

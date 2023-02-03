@@ -13,4 +13,6 @@ struct CurrencyWalletData: Codable, Equatable {
     let rateSell: Double
     let rateSellDelta: Double?
     let md5hash: String
+    let currAmount: Int
+    let nameCw: String
 }

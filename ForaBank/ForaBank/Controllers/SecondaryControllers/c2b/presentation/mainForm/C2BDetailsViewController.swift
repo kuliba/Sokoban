@@ -14,7 +14,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     var cardFromField = CardChooseView()
     var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
     var qrData = [String: String]()
-    var viewModel = C2BDetailsViewModel()
+    var viewModel: C2BDetailsViewModel?
     var amount = "0.0"
     var modeConsent = "update"
     var contractId = ""
@@ -52,15 +52,15 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         btnCheckBox.isEnabled = false
         if modeConsent == "update" {
             if let source = cardFromField.model {
-                viewModel.updateContract(contractId: contractId, cardModel: source, isOff: true) { success, error in
-                    self.viewModel.getConsent()
+                viewModel?.updateContract(contractId: contractId, cardModel: source, isOff: true) { success, error in
+                    self.viewModel?.getConsent()
                 }
             } else {
                 dismissActivity()
             }
         } else {
-            viewModel.createContract(cardModel: cardFromField.model!) { success, error in
-                self.viewModel.getConsent()
+            viewModel?.createContract(cardModel: cardFromField.model!) { success, error in
+                self.viewModel?.getConsent()
             }
         }
     }
@@ -92,7 +92,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     override func viewDidLoad() {
         super.viewDidLoad()
         showActivity()
-        viewModel.controller = self
+        viewModel?.controller = self
         view.backgroundColor = .white
         bottomInputView?.tempTextFieldValue = qrData["Сумма"] ?? "0"
         bottomInputView?.updateAmountUI(textAmount: qrData["Сумма"] ?? "0")
@@ -133,11 +133,6 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
             }
         }
         readAndSetupCard()
-        if GlobalModule.c2bURL ?? "" == "success" {
-            dismissActivity()
-            openSuccessScreen()
-            return
-        }
         
         view.insertSubview(limitAlertView, at: 1)
         limitAlertView.addSubview(limitAlertContentLable)
@@ -319,13 +314,13 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
                 [
                     "fieldid": 1,
                     "fieldname": "QRcode",
-                    "fieldvalue": viewModel.c2bLink
+                    "fieldvalue": viewModel?.c2bLink
                 ]
             ]
         ] as [String: AnyObject]
         
         showActivity()
-        viewModel.createC2BTransfer(body: body) { modelCreateC2BTransfer, error in
+        viewModel?.createC2BTransfer(body: body) { modelCreateC2BTransfer, error in
             if (error != nil) {
                 self.dismissActivity()
                 if self.cardFromField.model?.balanceRUB ?? 0.0 < self.operationLimit {
@@ -380,7 +375,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     }
 
     private func makeTransfer() {
-        viewModel.makeTransfer { model,error in
+        viewModel?.makeTransfer { model,error in
             self.dismissActivity()
             if (error != nil) {
                 self.showAlert(with: "Ошибка", and: error?.description ?? "")
@@ -392,7 +387,10 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     }
 
     func getOperationDetailByPaymentId() {
-        viewModel.getOperationDetailByPaymentId (idDoc: C2BDetailsViewModel.makeTransfer?.data?.paymentOperationDetailId?.description ?? "-1") { model,error in
+
+        UIApplication.shared.endEditing()
+
+        viewModel?.getOperationDetailByPaymentId (idDoc: C2BDetailsViewModel.makeTransfer?.data?.paymentOperationDetailId?.description ?? "-1") { model,error in
             self.dismissActivity()
             if (error != nil) {
                 self.showAlert(with: "Ошибка", and: error?.description ?? "")
@@ -415,8 +413,8 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     }
     
     func checkSBPConsent() {
-        if (viewModel.consent?.count ?? 0 > 0) {
-            let item = viewModel.consent?[0]
+        if (viewModel?.consent?.count ?? 0 > 0) {
+            let item = viewModel?.consent?[0]
             if (item?.fastPaymentContractAttributeList?.count ?? 0 > 0) {
                 let fastPayment = item?.fastPaymentContractAttributeList?[0]
                 if (fastPayment != nil) {

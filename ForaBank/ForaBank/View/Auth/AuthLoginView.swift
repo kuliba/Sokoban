@@ -22,7 +22,20 @@ struct AuthLoginView: View {
             
             Spacer()
             
-            ProductsButtonView(viewModel: viewModel.products)
+            VStack(spacing: 8) {
+                
+                ForEach(viewModel.buttons) { button in
+                    ButtonAuthView(viewModel: button)
+                }
+            }
+            .bottomSheet(item: $viewModel.bottomSheet) { sheet in
+                
+                switch sheet.type {
+                case let .orderProduct(viewModel):
+                    OrderProductView(viewModel: viewModel)
+                }
+                
+            }.padding(.horizontal, 20)
 
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
@@ -31,6 +44,9 @@ struct AuthLoginView: View {
                     switch link {
                     case let .confirm(confirmViewModel):
                         AuthConfirmView(viewModel: confirmViewModel)
+                        
+                    case let .transfers(viewModel):
+                        AuthTransfersView(viewModel: viewModel)
                         
                     case let .products(productsViewModel):
                         AuthProductsView(viewModel: productsViewModel)
@@ -47,6 +63,7 @@ struct AuthLoginView: View {
                 .edgesIgnoringSafeArea(.all)
         })
         .padding(.top, 24)
+        .ignoresSafeArea(.container, edges: .bottom)
         .background(
             Image.imgRegistrationBg
                 .resizable()
@@ -188,54 +205,16 @@ extension AuthLoginView {
             }
         }
     }
-    
-    struct ProductsButtonView: View {
-        
-        @ObservedObject var viewModel: AuthLoginViewModel.ProductsViewModel
-        
-        var body: some View {
-            
-            if let button = viewModel.button  {
-                
-                Button(action: button.action) {
-                    
-                    HStack(alignment: .center) {
-                        
-                        button.icon
-                            .renderingMode(.original)
-                        
-                        VStack(alignment: .leading, spacing: 6) {
-                            
-                            Text(button.title)
-                                .font(.textBodyMR14200())
-                                .foregroundColor(.textWhite)
-                            
-                            Text(button.subTitle)
-                                .font(.textBodyMR14200())
-                                .foregroundColor(.textWhite)
-                        }
-                        
-                        Spacer()
-                        
-                        button.arrowRight
-                            .foregroundColor(.mainColorsWhite)
-                        
-                    }
-                    
-                    .padding(EdgeInsets(top: 16, leading: 20, bottom: 16, trailing: 20))
-                    .background(Color.mainColorsBlackMedium)
-                    .cornerRadius(12)
-                    .padding(.horizontal, 20)
-                }
-            }
-        }
-    }
 }
 
 struct AuthLoginView_Previews: PreviewProvider {
     
     static var previews: some View {
-        AuthLoginView(viewModel: .init(.emptyMock, rootActions: .emptyMock))
+        
+        AuthLoginView(viewModel: .init(header: AuthLoginViewModel.HeaderViewModel.init(),
+                                       buttons: [.init(.abroad, action: {}), .init(.card, action: {})],
+                                       rootActions: .emptyMock,
+                                       model: .emptyMock))
     }
 }
 

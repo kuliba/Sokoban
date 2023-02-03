@@ -21,7 +21,7 @@ struct OperatorGroupData: Codable, Equatable {
 
 extension OperatorGroupData {
     
-    struct OperatorData: Codable, Equatable {
+    struct OperatorData: Codable, Equatable, Hashable {
         
         let city: String?
         let code: String
@@ -56,5 +56,28 @@ extension OperatorGroupData.OperatorData {
         }
         
         return ImageData(with: logotypeSVGImage)
+    }
+    
+    var id: Int {
+        
+        return hashValue
+    }
+}
+
+extension OperatorGroupData.OperatorData {
+    
+    static func == (lhs: OperatorGroupData.OperatorData, rhs: OperatorGroupData.OperatorData) -> Bool {
+        
+        lhs.name == rhs.name && lhs.city == rhs.city && lhs.code == rhs.code && lhs.isGroup == rhs.isGroup && lhs.parentCode == rhs.parentCode && lhs.region == rhs.region
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        
+        hasher.combine(name)
+        hasher.combine(city)
+        hasher.combine(code)
+        hasher.combine(isGroup)
+        hasher.combine(parentCode)
+        hasher.combine(region)
     }
 }

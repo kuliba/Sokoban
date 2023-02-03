@@ -12,15 +12,18 @@ class PaymentsParameterViewModel: Identifiable {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
+    let id: String
+    
     @Published var value: Value
     @Published var isEditable: Bool
     
     var isValid: Bool { true }
     var isFullContent: Bool { false }
     
-    var id: Payments.Parameter.ID { source.parameter.id }
-    var result: Payments.Parameter { .init(id: id, value: value.current) }
+    /// on value change of this parameter runs all parameters validation checks
+    var isValidationChecker: Bool { false }
     
+    var result: Payments.Parameter { .init(id: source.id, value: value.current) }
     var parameterValue: ((Payments.Parameter.ID) -> Payments.Parameter.Value)?
     
     private(set) var source: PaymentsParameterRepresentable
@@ -28,6 +31,7 @@ class PaymentsParameterViewModel: Identifiable {
     
     init(source: PaymentsParameterRepresentable) {
         
+        self.id = UUID().uuidString
         self.value = .init(with: source)
         self.source = source
         self.isEditable = source.isEditable
@@ -54,6 +58,12 @@ class PaymentsParameterViewModel: Identifiable {
         case .source:
             isEditable = source.isEditable
         }
+    }
+    
+    /// if parameter's value is invalid the parameter must show validation warning
+    func updateValidationWarnings() {
+        
+        // implement in subclass
     }
 }
 
@@ -108,4 +118,9 @@ enum PaymentsParameterViewModelAction {}
 protocol PaymentsParameterViewModelContinuable {
     
     func update(isContinueEnabled: Bool)
+}
+
+protocol PaymentsParameterViewModelWarnable {
+    
+    func update(warning: String)
 }

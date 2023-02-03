@@ -48,6 +48,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        InternetTVDetailsFormViewModel.additionalDic.removeAll()
         viewModel.controller = self
         view.backgroundColor = .white
         bottomInputView?.tempTextFieldValue = qrData["Сумма"] ?? "0"

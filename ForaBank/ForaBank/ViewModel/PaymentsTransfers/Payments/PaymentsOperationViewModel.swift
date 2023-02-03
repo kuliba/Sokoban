@@ -47,9 +47,9 @@ class PaymentsOperationViewModel: ObservableObject {
         self.closeAction = closeAction
     }
     
-    convenience init(operation: Payments.Operation, model: Model, closeAction: @escaping () -> Void) {
+    convenience init(navigationBar: NavigationBarView.ViewModel = .init(), operation: Payments.Operation, model: Model, closeAction: @escaping () -> Void) {
 
-        self.init(navigationBar: .init(), top: [], content: [], bottom: [], link: nil, bottomSheet: nil, operation: operation, model: model, closeAction: closeAction)
+        self.init(navigationBar: navigationBar, top: [], content: [], bottom: [], link: nil, bottomSheet: nil, operation: operation, model: model, closeAction: closeAction)
         
         bind()
     }
@@ -61,6 +61,7 @@ class PaymentsOperationViewModel: ObservableObject {
         bindOperation()
         bindModel()
         bindAction()
+        bindNavBar()
     }
     
     internal func bindOperation() {
@@ -86,6 +87,7 @@ class PaymentsOperationViewModel: ObservableObject {
                 Self.reduce(service: operation.value.service, items: items, dependenceReducer: model.paymentsProcessDependencyReducer(service:parameterId:parameters:))
                 
                 navigationBar = .init(with: items.map{ $0.source }, closeAction: closeAction)
+                bindNavBar()
                 
                 // update bottom section continue button
                 updateBottomSection(isContinueEnabled: isItemsValuesValid)
@@ -112,14 +114,13 @@ class PaymentsOperationViewModel: ObservableObject {
                         self.operation.value = operation
                         
                     case .confirm(let operation):
-                        let confirmViewModel = PaymentsConfirmViewModel(operation: operation, model: model) { [weak self] in
+                        let confirmViewModel = PaymentsConfirmViewModel(operation: operation, model: model, closeAction: { [weak self] in
                             
                             self?.link = nil
-                        }
+                        })
                         confirmViewModel.rootActions = rootActions
                         bind(confirmViewModel: confirmViewModel)
                         link = .confirm(confirmViewModel)
-                        
                         
                         // complete and failed handled on PaymentsViewModel side
                     default:
@@ -146,29 +147,34 @@ class PaymentsOperationViewModel: ObservableObject {
                     let updatedOperation = Self.reduce(operation: operation.value, items: items)
                     
                     // check if auto continue required
-                    if model.paymentsIsAutoContinueRequired(operation: updatedOperation, updated: payload.parameterId) == true {
+                    if isItemsValuesValid == true,
+                       model.paymentsIsAutoContinueRequired(operation: updatedOperation, updated: payload.parameterId) == true {
                         
                         // update stage
                         let updatedStageOperation = updatedOperation.updatedCurrentStepStage(reducer: model.paymentsProcessCurrentStepStageReducer(service:parameters:stepIndex:stepStage:))
                         
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "Continue operation: \(updatedStageOperation)")
-  
+                        
                         // auto continue operation
                         model.action.send(ModelAction.Payment.Process.Request(operation: updatedStageOperation))
                         self.action.send(PaymentsOperationViewModelAction.Spinner.Show())
                         
                     } else {
-           
+                        
                         // update dependend items
                         Self.reduce(service: operation.value.service, items: items, dependenceReducer: model.paymentsProcessDependencyReducer(service:parameterId:parameters:))
                         
                         navigationBar = .init(with: items.map{ $0.source }, closeAction: closeAction)
+                        bindNavBar()
                         top = Self.reduceTopItems(sections: sections.value)
                         content = Self.reduceContentItems(sections: sections.value)
                         bottom = Self.reduceBottomItems(sections: sections.value)
                         
                         // update bottom section continue button
                         updateBottomSection(isContinueEnabled: isItemsValuesValid)
+                        
+                        // updates warnins for parameters with invalid values
+                        updateParametersValidationWarnings(parameterId: payload.parameterId)
                     }
                     
                 case _ as PaymentsOperationViewModelAction.Continue:
@@ -187,18 +193,24 @@ class PaymentsOperationViewModel: ObservableObject {
                     // hide keyboard
                     UIApplication.shared.endEditing()
                     
-                case _ as PaymentsOperationViewModelAction.CloseLink:
-                    link = nil
-                    
-                case _ as PaymentsOperationViewModelAction.CloseBottomSheet:
-                    bottomSheet = nil
-                    
                 case _ as PaymentsOperationViewModelAction.IcorrectCodeEnterred:
                     guard case .confirm(let confirmViewModel) = link else {
                         return
                     }
                     confirmViewModel.action.send(PaymentsConfirmViewModelAction.IcorrectCodeEnterred())
                     
+                case let payload as PaymentsOperationViewModelAction.ShowWarning:
+                    guard let warnableItem = items.first(where: { $0.source.id == payload.parameterId }) as? PaymentsParameterViewModelWarnable else {
+                        return
+                    }
+                    warnableItem.update(warning: payload.message)
+                    
+                case _ as PaymentsOperationViewModelAction.CloseLink:
+                    link = nil
+                    
+                case _ as PaymentsOperationViewModelAction.CloseBottomSheet:
+                    bottomSheet = nil
+
                 case _ as PaymentsOperationViewModelAction.Spinner.Show:
                     withAnimation {
                         spinner = .init()
@@ -263,14 +275,18 @@ class PaymentsOperationViewModel: ObservableObject {
                     case _ as PaymentsSectionViewModelAction.ContactSelector.Close:
                         sheet = nil
                         
+                    //MARK: Hint
+                    case let payload as PaymentsSectionViewModelAction.Hint.Show:
+                        bottomSheet = .init(type: .hint(payload.viewModel))
+
+                    case _ as PaymentsSectionViewModelAction.Hint.Close:
+                        bottomSheet = nil
+                        
                     case _ as PaymentsSectionViewModelAction.SpoilerDidUpdated:
                         content = Self.reduceContentItems(sections: sections)
                         
                     case _ as PaymentsSectionViewModelAction.ResendCode:
                         self.model.action.send(ModelAction.Transfers.ResendCode.Request())
-                        
-                    case let payload as PaymentsSectionViewModelAction.InputActionButtonDidTapped:
-                        print("InputActionButtonDidTapped type: \(payload.type)")
                         
                     default:
                         break
@@ -278,6 +294,23 @@ class PaymentsOperationViewModel: ObservableObject {
                     
                 }.store(in: &bindings)
         }
+    }
+    
+    //MARK: Bind Navigatoin Bar
+    private func bindNavBar() {
+        
+        navigationBar.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+            
+                switch action {
+                case _ as NavigationBarViewModelAction.ScanQrCode:
+                    self.action.send(PaymentsViewModelAction.ScanQrCode())
+                
+                default: break
+                }
+                
+            }.store(in: &bindings)
     }
     
     private func bind(confirmViewModel: PaymentsConfirmViewModel) {
@@ -366,7 +399,7 @@ extension PaymentsOperationViewModel {
         let parameters = items.map{ $0.source.updated(value: $0.value.current) }
         for item in items {
             
-            guard let updatedParameter = dependenceReducer(service, item.id, parameters) else {
+            guard let updatedParameter = dependenceReducer(service, item.source.id, parameters) else {
                 continue
             }
             
@@ -396,6 +429,27 @@ extension PaymentsOperationViewModel {
                 
                 self?.items.first(where: { $0.result.id == parameterId })?.result.value
             }
+        }
+    }
+    
+    func isParameterValueValid(parameterId: Payments.Parameter.ID) -> Bool {
+        
+        guard let item = items.first(where: { $0.source.id == parameterId }) else {
+            return false
+        }
+        
+        return item.isValid
+    }
+    
+    func updateParametersValidationWarnings(parameterId: Payments.Parameter.ID) {
+        
+        guard let item = items.first(where: { $0.source.id == parameterId }), item.isValidationChecker == true else {
+            return
+        }
+        
+        for item in items {
+            
+            item.updateValidationWarnings()
         }
     }
 }
@@ -452,6 +506,7 @@ extension PaymentsOperationViewModel {
 
             case popUp(PaymentsPopUpSelectView.ViewModel)
             case antifraud(PaymentsAntifraudViewModel)
+            case hint(HintViewModel)
         }
     }
     
@@ -500,5 +555,11 @@ enum PaymentsOperationViewModelAction {
         
         let amount: String
         let reason: String?
+    }
+    
+    struct ShowWarning: Action {
+        
+        let parameterId: Payments.Parameter.ID
+        let message: String
     }
 }

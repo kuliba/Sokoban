@@ -35,10 +35,7 @@ class ContactsBanksPrefferedSectionViewModel: ContactsSectionViewModel, Observab
         phone
             .combineLatest(model.paymentsByPhone)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] result in
-                
-                let phoneData = result.0
-                let banksData = result.1
+            .sink { [unowned self] phoneData, banksData in
                 
                 if let phone = phoneData {
                     
@@ -59,18 +56,6 @@ class ContactsBanksPrefferedSectionViewModel: ContactsSectionViewModel, Observab
                         items = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .bankPreffered), count: 8)
                     }
                 }
-                
-            }.store(in: &bindings)
-        
-        phone
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] phone in
-                
-                guard let phone = phone else {
-                    return
-                }
-                
-                model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: phone))
                 
             }.store(in: &bindings)
     }

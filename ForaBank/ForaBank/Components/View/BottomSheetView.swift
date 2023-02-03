@@ -269,12 +269,21 @@ struct BottomSheetShutterView<Content: View>: View {
     
     var body: some View {
         
-        content
-            .padding(.top, 29)
-            .frame(width: UIScreen.main.bounds.width)
-            .background(Color.white)
-            .clipShape(RoundedCorner(radius: 12, corners: [.topLeft, .topRight]))
-            .overlay(IndicatorView(isShutterPresented: $isShutterPresented, isUserInteractionEnabled: isUserInteractionEnabled).offset(x: 0, y: -14))
+        if #available(iOS 15.0, *) {
+            content
+                .padding(.top, 29)
+                .frame(width: UIScreen.main.bounds.width)
+                .background(Color.white)
+                .clipShape(RoundedCorner(radius: 12, corners: [.topLeft, .topRight]))
+                .overlay(IndicatorView(isShutterPresented: $isShutterPresented, isUserInteractionEnabled: isUserInteractionEnabled).offset(x: 0, y: -14))
+        } else {
+            content
+                .padding(.top, 29)
+                .frame(width: UIScreen.main.bounds.width)
+                .background(Color.white)
+                .cornerRadius(12)
+                .overlay(IndicatorView(isShutterPresented: $isShutterPresented, isUserInteractionEnabled: isUserInteractionEnabled).offset(x: 0, y: -14))
+        }
     }
 }
 

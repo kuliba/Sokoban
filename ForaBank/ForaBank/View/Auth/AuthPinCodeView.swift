@@ -13,29 +13,39 @@ struct AuthPinCodeView: View {
     
     var body: some View {
         
-        VStack(spacing: 0) {
+        ZStack {
             
-            PinCodeView(viewModel: viewModel.pinCode, mistakes: $viewModel.mistakes)
-                .padding(.top, 80)
-            
-            NumPadView(viewModel: viewModel.numpad)
-                .padding(.top, 52)
-            
-            Spacer()
-            
-            FooterView(viewModel: viewModel.footer)
-            
+            VStack(spacing: 0) {
+                
+                PinCodeView(viewModel: viewModel.pinCode, mistakes: $viewModel.mistakes)
+                    .padding(.top, 80)
+                
+                NumPadView(viewModel: viewModel.numpad)
+                    .padding(.top, 52)
+                
+                Spacer()
+                
+                FooterView(viewModel: viewModel.footer)
+            }
+            .zIndex(0)
             
             NavigationLink("", isActive: $viewModel.isPermissionsViewPresented) {
                 
                 if let permissionViewModel = viewModel.permissionsViewModel {
                     
                     AuthPermissionsView(viewModel: permissionViewModel)
+                        .zIndex(1)
                     
                 } else {
                     
                     EmptyView()
                 }
+            }
+            
+            if let spinner = viewModel.spinner {
+                
+                SpinnerView(viewModel: spinner)
+                    .zIndex(2)
             }
         }
         .background(Color.white)

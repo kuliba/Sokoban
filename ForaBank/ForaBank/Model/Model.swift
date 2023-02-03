@@ -15,6 +15,13 @@ class Model {
     
     //MARK: Auth
     let auth: CurrentValueSubject<AuthorizationState, Never>
+    var sessionState: AnyPublisher<SessionState, Never> {
+        sessionAgent.sessionState
+            .eraseToAnyPublisher()
+    }
+    
+    //MARK: Pre-Auth
+    let transferAbroad: CurrentValueSubject<TransferAbroadResponseData?, Never>
     
     //MARK: Products
     let products: CurrentValueSubject<ProductsData, Never>
@@ -42,11 +49,13 @@ class Model {
     //MARK: Dictionaries
     let dictionariesUpdating: CurrentValueSubject<Set<DictionaryType>, Never>
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
+    let authCatalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
     let currencyList: CurrentValueSubject<[CurrencyData], Never>
     let countriesList: CurrentValueSubject<[CountryData], Never>
     let paymentSystemList: CurrentValueSubject<[PaymentSystemData], Never>
     let bankList: CurrentValueSubject<[BankData], Never>
+    let prefferedBanksList: CurrentValueSubject<[String], Never>
     let currencyWalletList: CurrentValueSubject<[CurrencyWalletData], Never>
     let centralBankRates: CurrentValueSubject<[CentralBankRatesData], Never>
     var images: CurrentValueSubject<[String: ImageData], Never>
@@ -87,6 +96,9 @@ class Model {
     
     //MARK: DeepLink
     var deepLinkType: DeepLinkType?
+    
+    //MARK: QR
+    let qrMapping: CurrentValueSubject<QRMapping?, Never>
     
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
@@ -140,14 +152,17 @@ class Model {
         self.depositsInfo = .init(DepositsInfoData())
         self.statements = .init([:])
         self.statementsUpdating = .init([:])
+        self.transferAbroad = .init(nil)
         self.rates = .init([])
         self.ratesUpdating = .init([])
         self.catalogProducts = .init([])
+        self.authCatalogBanners = .init([])
         self.catalogBanners = .init([])
         self.currencyList = .init([])
         self.currencyWalletList = .init([])
         self.centralBankRates = .init([])
         self.bankList = .init([])
+        self.prefferedBanksList = .init([])
         self.countriesList = .init([])
         self.paymentSystemList = .init([])
         self.images = .init([:])
@@ -169,6 +184,7 @@ class Model {
         self.userSettings = .init([])
         self.bankClientsInfo = .init([])
         self.deepLinkType = nil
+        self.qrMapping = .init(nil)
         self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
         
@@ -232,6 +248,8 @@ class Model {
         return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent, cameraAgent: cameraAgent, imageGalleryAgent: imageGalleryAgent)
     }()
     
+    //MARK: - Session Agent State
+    
     private func bind(sessionAgent: SessionAgentProtocol) {
         
         sessionAgent.sessionState
@@ -261,6 +279,8 @@ class Model {
     }
     
     private func bind() {
+        
+        //MARK: - Auth
         
         auth
             .receive(on: queue)
@@ -309,6 +329,8 @@ class Model {
                 
             }.store(in: &bindings)
 
+        //MARK: - Session Agent Action
+        
         sessionAgent.action
             .receive(on: queue)
             .sink { [unowned self] action in
@@ -338,6 +360,8 @@ class Model {
                 
             }.store(in: &bindings)
         
+        //MARK: - Server Agent Action
+        
         serverAgent.action
             .receive(on: queue)
             .sink { [unowned self] action in
@@ -358,6 +382,8 @@ class Model {
                 
             }.store(in: &bindings)
         
+        //MARK: - Contacts Agent Action
+        
         contactsAgent.status
             .receive(on: queue)
             .sink { [unowned self] status in
@@ -365,6 +391,8 @@ class Model {
                 action.send(ModelAction.Contacts.PermissionStatus.Update(status: status))
                 
         }.store(in: &bindings)
+        
+        //MARK: - Model Action
         
         action
             .receive(on: queue)
@@ -490,6 +518,12 @@ class Model {
                     clearMemoryData()
                     sessionAgent.action.send(SessionAgentAction.Session.Terminate())
                     
+                case let payload as ModelAction.Auth.OrderLead.Request:
+                    handleOrderLeadRequest(payload)
+                    
+                case let payload as ModelAction.Auth.VerifyPhone.Request:
+                    handleVerifyPhoneRequest(payload)
+                    
         //MARK: - Products Actions
                     
                 case _ as ModelAction.Products.Update.Fast.All:
@@ -598,6 +632,9 @@ class Model {
                     
                 case _ as ModelAction.Media.GalleryPermission.Request:
                     handleMediaGalleryPermissionStatusRequest()
+                    
+                case _ as ModelAction.Media.DocumentPermission.Request:
+                    handleMediaDocumentPermissionStatusRequest()
                     
                     //MARK: - Client Info
                     
@@ -769,6 +806,14 @@ class Model {
                         
                     case .centralBanksRates:
                         handleDictionaryCentralBankRates()
+                        
+                    case .qrMapping:
+                        handleDictionaryQRMapping(payload.serial)
+                        
+                    case .prefferedBanks:
+                        handleDictionaryPrefferedBanks(payload.serial)
+                    case .jsonAbroad:
+                        handleJsonAbroadRequest(payload.serial)
                     }
                     
                 case let payload as ModelAction.Dictionary.DownloadImages.Request:
@@ -851,6 +896,11 @@ class Model {
                     
                 case let payload as ModelAction.Consent.Me2MeDebit.Request:
                     handleConsentGetMe2MeDebit(payload)
+                    
+                //MARK: - QR
+                    
+                case let payload as ModelAction.QRAction.SendFailData.Request:
+                    handleQRActionSendFailData(payload)
                     
                 default:
                     break
@@ -956,6 +1006,13 @@ private extension Model {
             self.catalogProducts.value = catalogProducts
         }
         
+        /*
+        if let catalogBanner = localAgent.load(type: [BannerCatalogListData].self) {
+            
+            self.authCatalogBanners.value = catalogBanner
+        }
+        */
+        
         if let catalogBanner = localAgent.load(type: [BannerCatalogListData].self) {
             
             self.catalogBanners.value = catalogBanner
@@ -977,6 +1034,7 @@ private extension Model {
         }
 
         if let productsList = productsListCacheLoadData() {
+            
             self.accountProductsList.value = productsList
         }
         
@@ -1003,6 +1061,16 @@ private extension Model {
         if let currencyWalletList = localAgent.load(type: [CurrencyWalletData].self) {
             
             self.currencyWalletList.value = currencyWalletList
+        }
+        
+        if let transferAbroad = localAgent.load(type: TransferAbroadResponseData.self) {
+            
+            self.transferAbroad.value = transferAbroad
+        }
+        
+        if let qrMapping = localAgent.load(type: QRMapping.self) {
+            
+            self.qrMapping.value = qrMapping
         }
     }
     
@@ -1238,6 +1306,7 @@ private extension Model {
         dictionariesUpdating.value = []
         currencyWalletList.value = []
         userSettings.value = []
+        qrMapping.value = nil
         productsOpening.value = []
         
         LoggerAgent.shared.log(category: .model, message: "Memory data cleaned")

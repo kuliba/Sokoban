@@ -33,7 +33,7 @@ extension PTSectionTransfersView {
             case betweenSelf
             case abroad
             case anotherCard
-            case byBankDetails
+            case requisites
             
             var apearance: (title: String, image: String)  {
                 switch self {
@@ -41,7 +41,7 @@ extension PTSectionTransfersView {
                 case .betweenSelf: return ("Между\nсвоими", "ic48BetweenTheir")
                 case .abroad: return ("За рубеж\nи по РФ", "ic48Abroad")
                 case .anotherCard: return ("На другую\nкарту", "ic48AnotherCard")
-                case .byBankDetails: return ("По\nреквизитaм", "ic48BankDetails")
+                case .requisites: return ("По\nреквизитaм", "ic48BankDetails")
                 }
             }
         }

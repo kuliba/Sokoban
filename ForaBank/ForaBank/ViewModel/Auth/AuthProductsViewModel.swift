@@ -39,6 +39,23 @@ class AuthProductsViewModel: ObservableObject {
         requestImages(for: products)
     }
     
+    convenience init(_ model: Model, products: [CatalogProductData], action: @escaping (_ id: Int) -> Void, dismissAction: @escaping () -> Void) {
+        
+        let productCards = products.enumerated().map {
+            
+            ProductCardViewModel(
+                with: $0.element,
+                style: .init(number: $0.offset),
+                action: action
+            )
+        }
+        
+        self.init(model, productCards: productCards, dismissAction: dismissAction)
+        
+        bind()
+        requestImages(for: products)
+    }
+    
     init(_ model: Model, products: [DepositProductData], dismissAction: @escaping () -> Void = {}) {
 
         self.navigationBar = NavigationBarViewModel(title: "Выберите продукт", action: dismissAction)
@@ -50,12 +67,11 @@ class AuthProductsViewModel: ObservableObject {
         self.model = model
         
         bind()
-        self.model.action.send(ModelAction.Deposits.List.Request())
         requestDepositImages(for: products)
     }
     
     private func bind() {
-        
+                
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
@@ -65,7 +81,7 @@ class AuthProductsViewModel: ObservableObject {
                     case .success(let data):
       
                         guard let image = Image(data: data) else {
-                            //TODO: set logger
+                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Enable decode image data downloaded from: \(payload.endpoint)")
                             return
                         }
                         
@@ -88,8 +104,7 @@ class AuthProductsViewModel: ObservableObject {
                         }
                         
                     case .failure(let error):
-                        break
-                        //TODO: set logger
+                        LoggerAgent.shared.log(level: .error, category: .ui, message: "Image download error: \(error) for endpoint: \(payload.endpoint)")
                     }
                 default:
                     break
@@ -137,46 +152,74 @@ extension AuthProductsViewModel {
     
     class ProductCardViewModel: Identifiable, ObservableObject {
 
+        @Published var image: ImageData
+        
         let id = UUID()
         let style: Style
         let title: String
         let subtitle: [String]
-        @Published var image: ImageData
         let infoButton: InfoButton
-        let orderButton: OrderButton
+        let orderButtonType: OrderButtonType
         let conditionViewModel: ConditionViewModel?
         
-        internal init(style: Style, title: String, subtitle: [String], image: ImageData, infoButton: InfoButton, orderButton: OrderButton, conditionViewModel: ConditionViewModel) {
+        init(style: Style, title: String, subtitle: [String], image: ImageData, infoButton: InfoButton, orderButtonType: OrderButtonType, conditionViewModel: ConditionViewModel?) {
             
             self.style = style
             self.title = title
             self.subtitle = subtitle
             self.image = image
             self.infoButton = infoButton
-            self.orderButton = orderButton
+            self.orderButtonType = orderButtonType
             self.conditionViewModel = conditionViewModel
         }
         
-        init(with product: CatalogProductData, style: Style) {
+        convenience init(with product: CatalogProductData, style: Style) {
             
-            self.style = style
-            self.title = product.name
-            self.subtitle = product.description
-            self.conditionViewModel = nil
-            self.image = .endpoint(product.imageEndpoint)
-            self.infoButton = InfoButton(url: product.infoURL)
-            self.orderButton = OrderButton(url: product.orderURL)
+            self.init(
+                style: style,
+                title: product.name,
+                subtitle: product.description,
+                image: .endpoint(product.imageEndpoint),
+                infoButton: .init(url: product.infoURL),
+                orderButtonType: .main(.init(url: product.orderURL)),
+                conditionViewModel: nil
+            )
         }
         
-        init(with deposit: DepositProductData, style: Style) {
-            self.style = style
-            self.title = deposit.name
-            self.conditionViewModel = .init(percent: "\(deposit.generalСondition.maxSum)", amount: "\(deposit.generalСondition.minSum)", date: "\(deposit.generalСondition.minTerm)")
-            self.subtitle = deposit.generalСondition.generalTxtСondition
-            self.image = .endpoint(deposit.generalСondition.imageLink)
-            self.infoButton = .init(url: .init(string: "https://www.forabank.ru")!)
-            self.orderButton = OrderButton(url: .init(string: "https://www.forabank.ru")!)
+        convenience init(with product: CatalogProductData, style: Style, action: @escaping (_ id: Int) -> Void) {
             
+            self.init(
+                style: style,
+                title: product.name,
+                subtitle: product.description,
+                image: .endpoint(product.imageEndpoint),
+                infoButton: .init(url: product.infoURL),
+                orderButtonType: .auth(.init(id: product.id, action: action)),
+                conditionViewModel: nil
+            )
+        }
+        
+        convenience init(with deposit: DepositProductData, style: Style) {
+            
+            self.init(
+                style: style,
+                title: deposit.name,
+                subtitle: deposit.generalСondition.generalTxtСondition,
+                image: .endpoint(deposit.generalСondition.imageLink),
+                infoButton: .init(url: .init(string: "https://www.forabank.ru")!),
+                orderButtonType: .main(.init(url: .init(string: "https://www.forabank.ru")!)),
+                conditionViewModel: .init(
+                    percent: "\(deposit.generalСondition.maxSum)",
+                    amount: "\(deposit.generalСondition.minSum)",
+                    date: "\(deposit.generalСondition.minTerm)"
+                )
+            )
+        }
+        
+        enum OrderButtonType {
+        
+            case main(OrderButton)
+            case auth(OrderAuthButton)
         }
         
         enum ImageData {
@@ -203,6 +246,13 @@ extension AuthProductsViewModel {
 
             let title: String = "Заказать"
             let url: URL
+        }
+        
+        struct OrderAuthButton {
+
+            let id: Int
+            let title: String = "Заказать"
+            let action: (_ id: Int) -> Void
         }
         
         enum Style {

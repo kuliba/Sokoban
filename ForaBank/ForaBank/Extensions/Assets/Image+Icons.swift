@@ -10,6 +10,10 @@
 
 import SwiftUI
 
+private class BundleProvider {
+    static let bundle = Bundle(for: BundleProvider.self)
+}
+
 public extension Image {
     static var ic12ArrowDown: Image { Image(#function) }
     static var ic12ArrowUp: Image { Image(#function) }
@@ -20,11 +24,14 @@ public extension Image {
     static var ic12Lock: Image { Image(#function) }
     static var ic12Lockandeyeoff: Image { Image(#function) }
     static var ic12LogoForaColor: Image { Image(#function) }
+    static var ic12Percent: Image { Image(#function) }
+    static var ic12Shield: Image { Image(#function) }
     static var ic12Star: Image { Image(#function) }
+    static var ic12Zap: Image { Image(#function) }
     static var ic16Ball: Image { Image(#function) }
     static var ic1612Circle: Image { Image(#function) }
     static var ic16Tariff: Image { Image(#function) }
-    static var ic16ZKX: Image { Image(#function) }
+    static var ic16Zkx: Image { Image(#function) }
     static var ic16Activity: Image { Image(#function) }
     static var ic16Airplay: Image { Image(#function) }
     static var ic16AlertCircle: Image { Image(#function) }
@@ -362,6 +369,7 @@ public extension Image {
     static var ic16ZapOff: Image { Image(#function) }
     static var ic16ZoomIn: Image { Image(#function) }
     static var ic16ZoomOut: Image { Image(#function) }
+    static var ic20ForaNy: Image { Image(#function) }
     static var ic24Ball: Image { Image(#function) }
     static var ic2412Circle: Image { Image(#function) }
     static var ic24Apple: Image { Image(#function) }
@@ -557,6 +565,7 @@ public extension Image {
     static var ic24InternationalPassport: Image { Image(#function) }
     static var ic24Italic: Image { Image(#function) }
     static var ic24Key: Image { Image(#function) }
+    static var ic24Keyboard: Image { Image(#function) }
     static var ic24Layers: Image { Image(#function) }
     static var ic24Layout: Image { Image(#function) }
     static var ic24LifeBuoy: Image { Image(#function) }
@@ -647,6 +656,10 @@ public extension Image {
     static var ic24Radio: Image { Image(#function) }
     static var ic24RefreshCcw: Image { Image(#function) }
     static var ic24RefreshCw: Image { Image(#function) }
+    static var ic24RegistrationAllday: Image { Image(#function) }
+    static var ic24RegistrationPercent: Image { Image(#function) }
+    static var ic24RegistrationPhone: Image { Image(#function) }
+    static var ic24RegistrationTime: Image { Image(#function) }
     static var ic24Repeat: Image { Image(#function) }
     static var ic24Requisites: Image { Image(#function) }
     static var ic24Rescheduling: Image { Image(#function) }
@@ -693,6 +706,7 @@ public extension Image {
     static var ic24Tag: Image { Image(#function) }
     static var ic24Target: Image { Image(#function) }
     static var ic24Tax: Image { Image(#function) }
+    static var ic24Telegram: Image { Image(#function) }
     static var ic24Terminal: Image { Image(#function) }
     static var ic24Thermometer: Image { Image(#function) }
     static var ic24ThumbsDown: Image { Image(#function) }
@@ -724,6 +738,7 @@ public extension Image {
     static var ic24UserPlus: Image { Image(#function) }
     static var ic24UserX: Image { Image(#function) }
     static var ic24Users: Image { Image(#function) }
+    static var ic24Viber: Image { Image(#function) }
     static var ic24Video: Image { Image(#function) }
     static var ic24VideoOff: Image { Image(#function) }
     static var ic24Visa: Image { Image(#function) }
@@ -735,6 +750,7 @@ public extension Image {
     static var ic24Wallet: Image { Image(#function) }
     static var ic24Watch: Image { Image(#function) }
     static var ic24Water: Image { Image(#function) }
+    static var ic24Whatsapp: Image { Image(#function) }
     static var ic24WheelOfFortune: Image { Image(#function) }
     static var ic24Wifi: Image { Image(#function) }
     static var ic24WifiOff: Image { Image(#function) }
@@ -748,17 +764,41 @@ public extension Image {
     static var ic24Zkx: Image { Image(#function) }
     static var ic24ZoomIn: Image { Image(#function) }
     static var ic24ZoomOut: Image { Image(#function) }
+    static var ic32Camera: Image { Image(#function) }
+    static var ic32Image: Image { Image(#function) }
     static var ic32LogoForaLine: Image { Image(#function) }
     static var ic32Swap: Image { Image(#function) }
+    static var ic32UserCheck: Image { Image(#function) }
+    static var ic32UserPlus: Image { Image(#function) }
+    static var ic40TvInternet: Image { Image(#function) }
+    static var ic40ZkxServices: Image { Image(#function) }
+    static var ic40AirTickets: Image { Image(#function) }
+    static var ic40Beauty: Image { Image(#function) }
     static var ic40Card: Image { Image(#function) }
+    static var ic40ClothesAccessories: Image { Image(#function) }
     static var ic40Danger: Image { Image(#function) }
     static var ic40Delete: Image { Image(#function) }
+    static var ic40Educations: Image { Image(#function) }
+    static var ic40Entertainment: Image { Image(#function) }
     static var ic40FaceId: Image { Image(#function) }
     static var ic40FinancialRiskInsurance: Image { Image(#function) }
+    static var ic40Goods: Image { Image(#function) }
+    static var ic40GovernmentServices: Image { Image(#function) }
+    static var ic40Helth: Image { Image(#function) }
     static var ic40Lock: Image { Image(#function) }
+    static var ic40Multimedia: Image { Image(#function) }
     static var ic40PropertyInsurance: Image { Image(#function) }
+    static var ic40Recreation: Image { Image(#function) }
+    static var ic40Renovation: Image { Image(#function) }
+    static var ic40Restaurant: Image { Image(#function) }
     static var ic40Sbp: Image { Image(#function) }
+    static var ic40Services: Image { Image(#function) }
+    static var ic40ShoppingOther: Image { Image(#function) }
+    static var ic40Smth: Image { Image(#function) }
+    static var ic40Supermarket: Image { Image(#function) }
     static var ic40TouchId: Image { Image(#function) }
+    static var ic40TrainTicket: Image { Image(#function) }
+    static var ic40Transport: Image { Image(#function) }
     static var ic48Abroad: Image { Image(#function) }
     static var ic48AlertCircle: Image { Image(#function) }
     static var ic48AnotherCard: Image { Image(#function) }

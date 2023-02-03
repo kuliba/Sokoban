@@ -1,4 +1,5 @@
 import UIKit
+import SwiftUI
 import AVFoundation
 import IQKeyboardManagerSwift
 
@@ -22,7 +23,7 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
 
     @IBOutlet weak var reqView: UIView!
     @IBOutlet weak var zayavka: UIView!
-
+    
     @IBOutlet weak var historyView: UIView!
 
     @IBOutlet weak var tableView: UITableView!
@@ -111,7 +112,9 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         InternetTVMainController.iMsg = self
-        
+        let presentRequisitsView = UITapGestureRecognizer(target: self, action: #selector(presentRequisitsView))
+        reqView.addGestureRecognizer(presentRequisitsView)
+        reqView.isUserInteractionEnabled = true
         InternetTVApiRequests.getClientInfo()
         if  InternetTVMainViewModel.filter == GlobalModule.PAYMENT_TRANSPORT {
             InternetTVApiRequests.getMosParkingList()
@@ -165,6 +168,19 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         }
     }
 
+    @objc func presentRequisitsView() {
+        
+        do {
+            
+            try operatorsViewModel?.requisitsViewAction()
+            
+        } catch {
+            
+            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for Requisits: with error: \(error.localizedDescription)")
+
+        }
+    }
+    
     @objc func titleDidTaped() {
         performSegue(withIdentifier: "citySearch", sender: self)
     }
@@ -183,20 +199,8 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     }
 
     @objc func onQR() {
-        PermissionHelper.checkCameraAccess(isAllowed: { granted, alert in
-            if granted {
-                DispatchQueue.main.async {
-                    self.navigationController?.isNavigationBarHidden = true
-                    self.performSegue(withIdentifier: "qr", sender: nil)
-                }
-            } else {
-                DispatchQueue.main.async {
-                    if let alertUnw = alert {
-                        self.present(alertUnw, animated: true, completion: nil)
-                    }
-                }
-            }
-        })
+                
+        self.operatorsViewModel?.qrAction()
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -228,20 +232,49 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         return containsNumber
     }
 
+    var qrDataDictionary = [String: String]()
     func checkQREvent() {
-        if let qrDataUnw = GlobalModule.qrData, let operatorModelUnw = GlobalModule.qrOperator {
-            if operatorModelUnw.parentCode?.contains(GlobalModule.INTERNET_TV_CODE) == true {
-                InternetTVMainViewModel.filter = GlobalModule.INTERNET_TV_CODE
+
+        if qrDataDictionary.isEmpty {
+            
+            guard case .qr( let qrCode) = operatorsViewModel?.mode, let mapping = model.qrMapping.value else { return }
+            
+            for ( key, value ) in qrCode.rawData {
+                
+                qrDataDictionary.updateValue(value, forKey: key)
+                
             }
-            if operatorModelUnw.parentCode?.contains(GlobalModule.UTILITIES_CODE) == true {
-                InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
-            }
-            viewModel.qrData = qrDataUnw
-            viewModel.operatorFromQR = operatorModelUnw
-            GlobalModule.qrData = nil
-            GlobalModule.qrOperator = nil
+            
+            qrDataDictionary.updateValue("qwe", forKey: "qwe")
+            
+            viewModel.qrData = qrCode.rawData
+
+            let inn = qrCode.stringValue(type: .general(.inn), mapping: mapping)
+            var operatorsModel = GKHOperatorsModel()
+            let operatorsList = InternetTVMainController.getOperatorsList(model: model)
+            operatorsList.forEach( { operators in
+                if operators.synonymList.first == inn {
+                    operatorsModel = operators
+                }
+            })
+            
+            viewModel.operatorFromQR = operatorsModel
             performSegue(withIdentifier: "input", sender: self)
         }
+        
+//        if let qrDataUnw = GlobalModule.qrData, let operatorModelUnw = GlobalModule.qrOperator {
+//            if operatorModelUnw.parentCode?.contains(GlobalModule.INTERNET_TV_CODE) == true {
+//                InternetTVMainViewModel.filter = GlobalModule.INTERNET_TV_CODE
+//            }
+//            if operatorModelUnw.parentCode?.contains(GlobalModule.UTILITIES_CODE) == true {
+//                InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
+//            }
+//            viewModel.qrData = qrDataUnw
+//            viewModel.operatorFromQR = operatorModelUnw
+//            GlobalModule.qrData = nil
+//            GlobalModule.qrOperator = nil
+//            performSegue(withIdentifier: "input", sender: self)
+//        }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -286,10 +319,10 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
                     targetController.operatorData = customGroup?.op
                     // Переход по QR
                     if viewModel.qrData.count != 0 {
-                        let dc = segue.destination as! InternetTVDetailsFormController
-                        dc.operatorData = viewModel.operatorFromQR
-                        dc.qrData = viewModel.qrData
-                        dc.operatorsViewModel = operatorsViewModel
+                        let controller = dc.topViewController as! InternetTVDetailsFormController
+                        controller.operatorData = viewModel.operatorFromQR
+                        controller.qrData = viewModel.qrData
+                        controller.operatorsViewModel = operatorsViewModel
                     }
                 }
                 viewModel.qrData.removeAll()
@@ -323,6 +356,15 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         IQKeyboardManager.shared.enable = false
         IQKeyboardManager.shared.enableAutoToolbar = false
         navigationItem.searchController = nil
+    }
+    
+    static func getOperatorsList(model: Model) -> [GKHOperatorsModel] {
+        
+        let operators = (model.dictionaryAnywayOperatorGroups()?.compactMap { $0.returnOperators() }) ?? []
+        let operatorCodes = [GlobalModule.UTILITIES_CODE, GlobalModule.INTERNET_TV_CODE, GlobalModule.PAYMENT_TRANSPORT]
+        let parameterTypes = ["INPUT"]
+        let operatorsList = GKHOperatorsModel.childOperators(with: operators, operatorCodes: operatorCodes, parameterTypes: parameterTypes)
+        return operatorsList
     }
 }
 

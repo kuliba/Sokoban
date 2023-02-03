@@ -190,7 +190,7 @@ extension ProductView {
                     return cardProduct.isCreditCard ? "Кредитная карта" : cardProduct.displayName
                     
                 case .profile:
-                    return cardProduct.isCreditCard ? "Кредитная/n\(cardProduct.displayName)" : cardProduct.displayName
+                    return cardProduct.isCreditCard ? "Кредитная\n\(cardProduct.displayName)" : cardProduct.displayName
                 }
                 
             case let loanProduct as ProductLoanData:
@@ -558,6 +558,7 @@ struct ProductView: View {
                         .font(nameFont)
                         .foregroundColor(viewModel.appearance.textColor)
                         .opacity(0.5)
+                        .accessibilityIdentifier("productName")
                     
                     ProductView.FooterView(viewModel: viewModel.footer, appearance: viewModel.appearance)
                 }
@@ -638,6 +639,7 @@ extension ProductView {
                     Text(number)
                         .font(textFont)
                         .foregroundColor(appearance.textColor)
+                        .accessibilityIdentifier("productNumber")
                 }
                 
                 if let period = viewModel.period {
@@ -649,6 +651,7 @@ extension ProductView {
                     Text(period)
                         .font(textFont)
                         .foregroundColor(appearance.textColor)
+                        .accessibilityIdentifier("productPeriod")
                 }
             }
         }
@@ -687,6 +690,7 @@ extension ProductView {
                         .font(textFont)
                         .fontWeight(.semibold)
                         .foregroundColor(appearance.textColor)
+                        .accessibilityIdentifier("productBalance")
                     
                     Spacer()
                     
@@ -710,6 +714,7 @@ extension ProductView {
                         .font(textFont)
                         .fontWeight(.semibold)
                         .foregroundColor(appearance.textColor)
+                        .accessibilityIdentifier("productBalance")
                     
                     Spacer()
                 }

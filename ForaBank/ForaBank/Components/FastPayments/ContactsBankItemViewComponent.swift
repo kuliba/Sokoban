@@ -13,17 +13,19 @@ extension ContactsBankItemView {
     
     class ViewModel: ContactsItemViewModel {
 
-        let id: BankData.ID
+        let id: String
         let icon: Image?
         let name: String
+        let subtitle: String?
         let type: BankType
         let action: () -> Void
         
-        init(id: BankData.ID, icon: Image?, name: String, type: BankType, action: @escaping () -> Void) {
+        init(id: String = UUID().description, icon: Image?, name: String, subtitle: String?, type: BankType, action: @escaping () -> Void) {
             
             self.id = id
             self.icon = icon
             self.name = name
+            self.subtitle = subtitle
             self.type = type
             self.action = action
         }
@@ -56,10 +58,22 @@ struct ContactsBankItemView: View {
                         .frame(width: 40, height: 40)
                 }
                 
-                Text(viewModel.name)
-                    .foregroundColor(Color.textSecondary)
-                    .lineLimit(1)
-                    .font(.textH4M16240())
+                VStack(alignment: .leading, spacing: 8) {
+                 
+                    Text(viewModel.name)
+                        .foregroundColor(.textSecondary)
+                        .lineLimit(1)
+                        .font(.textH4M16240())
+                    
+                    if let subtitle = viewModel.subtitle {
+                     
+                        Text(subtitle)
+                            .foregroundColor(.textPlaceholder)
+                            .lineLimit(1)
+                            .font(.textH4R16240())
+                            .multilineTextAlignment(.leading)
+                    }
+                }
                 
                 Spacer()
             }
@@ -82,6 +96,6 @@ struct ContactsBankItemView_Previews: PreviewProvider {
 
 extension ContactsBankItemView.ViewModel {
     
-    static let sample = ContactsBankItemView.ViewModel(id: UUID().uuidString, icon: Image("Bank Logo Sample"), name: "Сбербанк", type: .sfp, action: {})
+    static let sample = ContactsBankItemView.ViewModel(id: UUID().uuidString, icon: Image("Bank Logo Sample"), name: "Сбербанк", subtitle: "0721821863", type: .sfp, action: {})
 }
 

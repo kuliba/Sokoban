@@ -19,8 +19,8 @@ extension PaymentsCodeView {
         @Published var editingState: EditingState
         @Published var resendState: ResendState?
 
-        var parameterInput: Payments.ParameterCode? { source as? Payments.ParameterCode }
-        override var isValid: Bool { return parameterInput?.validator.isValid(value: content) ?? false }
+        var parameterCode: Payments.ParameterCode? { source as? Payments.ParameterCode }
+        override var isValid: Bool { return parameterCode?.validator.isValid(value: content) ?? false }
 
         init(icon: Image, description: String, content: String, title: String?, editingState: EditingState, resendState: PaymentsCodeView.ViewModel.ResendState?, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             self.icon = icon
@@ -32,17 +32,17 @@ extension PaymentsCodeView {
             super.init(source: source)
         }
         
-        init(with parameterInput: Payments.ParameterCode) {
+        init(with parameterCode: Payments.ParameterCode) {
             
-            self.icon = Image.ic24MessageSquare
-            self.content = parameterInput.parameter.value ?? ""
-            self.description = parameterInput.title
+            self.icon = parameterCode.icon.image ?? Image.ic24MessageSquare
+            self.content = parameterCode.parameter.value ?? ""
+            self.description = parameterCode.title
             self.editingState = .idle
             self.resendState = nil
             
-            super.init(source: parameterInput)
+            super.init(source: parameterCode)
             
-            self.resendState = .timer(.init(delay: parameterInput.timerDelay, completeAction: { [weak self] in
+            self.resendState = .timer(.init(delay: parameterCode.timerDelay, completeAction: { [weak self] in
                 
                 self?.action.send(PaymentsParameterViewModelAction.Code.ResendDelayIsOver())
             }))
@@ -67,7 +67,7 @@ extension PaymentsCodeView {
                         }
                         
                     case _ as PaymentsParameterViewModelAction.Code.ResendButtonDidTapped:
-                        guard let parameterInput = parameterInput else {
+                        guard let parameterInput = parameterCode else {
                             return
                         }
 
@@ -80,7 +80,7 @@ extension PaymentsCodeView {
                         }
                         
                     case _ as PaymentsParameterViewModelAction.Code.EnterredCodeIncorrect:
-                        guard let parameterInput = parameterInput else {
+                        guard let parameterInput = parameterCode else {
                             return
                         }
                         
@@ -127,6 +127,11 @@ extension PaymentsCodeView {
                     }
                     
                 }.store(in: &bindings)
+        }
+        
+        override func updateValidationWarnings() {
+            
+            //TODO: implement validation warning
         }
     }
 }

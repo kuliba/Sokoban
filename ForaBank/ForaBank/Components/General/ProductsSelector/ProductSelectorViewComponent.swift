@@ -183,7 +183,6 @@ extension ProductSelectorView {
                 }.store(in: &bindings)
         }
         
-        
         func collapseList() {
 
             withAnimation {

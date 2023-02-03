@@ -31,6 +31,7 @@ class ContactsViewModel: ObservableObject {
             switch select {
             case .contacts: return "Выберите контакт"
             case .banks: return "Выберите банк"
+            case .banksFullInfo: return "Выберите банк"
             case .countries: return "Выберите страну"
             }
         }
@@ -95,7 +96,8 @@ class ContactsViewModel: ObservableObject {
                             self.searchBar.action.send(SearchBarViewModelAction.Idle())
                             mode = .fastPayments(.banksAndCountries(phone: phone))
 
-                            self.model.action.send(ModelAction.BankClient.Request(phone: phone.digits))
+                            model.action.send(ModelAction.BankClient.Request(phone: phone.digits))
+                            model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: phone))
 
                         } else {
  
@@ -133,7 +135,10 @@ class ContactsViewModel: ObservableObject {
                         
                     case .banks:
                         banksSection?.filter.value = text
-                    
+                   
+                    case .banksFullInfo:
+                        banksSection?.filter.value = text
+                        
                     case .countries:
                         countriesSection?.filter.value = text
                     }
@@ -243,6 +248,7 @@ extension ContactsViewModel {
             
             case contacts
             case banks
+            case banksFullInfo
             case countries
         }
         
@@ -262,6 +268,7 @@ extension ContactsViewModel {
                 switch select {
                 case .contacts: return [.contacts]
                 case .banks: return [.banks]
+                case .banksFullInfo: return [.banks]
                 case .countries: return [.countries]
                 }
             }
@@ -286,6 +293,9 @@ extension ContactsViewModel {
                 
             case .banks:
                 return .init(textFieldPhoneNumberView: .init(.banks))
+            
+            case .banksFullInfo:
+                return .init(textFieldPhoneNumberView: .init(style: .banks, placeHolder: .banks))
                 
             case .countries:
                 return .init(textFieldPhoneNumberView: .init(.countries))
@@ -302,7 +312,7 @@ extension ContactsViewModel {
             result.append(ContactsLatestPaymentsSectionViewModel(model: model, including: [.phone]))
             result.append(ContactsListSectionViewModel(model, mode: .fastPayment))
             result.append(ContactsBanksPrefferedSectionViewModel(model, phone: nil))
-            result.append(ContactsBanksSectionViewModel(model, mode: .fastPayment, phone: nil))
+            result.append(ContactsBanksSectionViewModel(model, mode: .fastPayment, phone: nil, bankDictionary: .banks))
             result.append(ContactsCountriesSectionViewModel(model, mode: .fastPayment))
 
         case let .select(select):
@@ -311,8 +321,11 @@ extension ContactsViewModel {
                 result.append(ContactsListSectionViewModel(model, mode: .select))
                 
             case .banks:
-                result.append(ContactsBanksSectionViewModel(model, mode: .select, phone: nil))
+                result.append(ContactsBanksSectionViewModel(model, mode: .select, phone: nil, bankDictionary: .banks))
                 
+            case .banksFullInfo:
+                result.append(ContactsBanksSectionViewModel(model, mode: .select, phone: nil, bankDictionary: .banksFullInfo))
+
             case .countries:
                 result.append(ContactsCountriesSectionViewModel(model, mode: .select))
             }

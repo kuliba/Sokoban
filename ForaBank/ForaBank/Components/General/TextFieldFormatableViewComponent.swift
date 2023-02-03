@@ -72,33 +72,6 @@ extension TextFieldFormatableView {
     }
 }
 
-extension TextFieldFormatableView {
-    
-    struct ToolbarViewModel {
-        
-        let doneButton: ButtonViewModel
-        let closeButton: ButtonViewModel?
-        
-        class ButtonViewModel: ObservableObject {
-            
-            @Published var isEnabled: Bool
-            let action: () -> Void
-            
-            init(isEnabled: Bool, action: @escaping () -> Void) {
-                
-                self.isEnabled = isEnabled
-                self.action = action
-            }
-        }
-        
-        init(doneButton: ButtonViewModel, closeButton: ButtonViewModel? = nil) {
-            
-            self.doneButton = doneButton
-            self.closeButton = closeButton
-        }
-    }
-}
-
 //MARK: - View
 
 struct TextFieldFormatableView: UIViewRepresentable {

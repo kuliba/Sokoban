@@ -22,6 +22,17 @@ extension CurrencyWalletListView {
         @Published var currencyOperation: CurrencyOperation
         @Published var currency: Currency
         
+        var filter: ProductData.Filter {
+            
+            switch currencyOperation {
+            case .buy:
+                return .generalTo
+                
+            case .sell:
+                return .generalFrom
+            }
+        }
+        
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
@@ -66,7 +77,7 @@ extension CurrencyWalletListView {
                         
                         if let productType = ProductType(rawValue: selected) {
                             
-                            products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType)
+                            products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType, filter: filter)
                             bind(products)
                             
                             if products.isEmpty == true {
@@ -137,7 +148,7 @@ extension CurrencyWalletListView {
                             
                             if let productType = ProductType(rawValue: selected) {
                                 
-                                self.products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType)
+                                self.products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productType, filter: filter)
                                 bind(self.products)
                                 
                                 if products.isEmpty == true {
@@ -199,9 +210,10 @@ extension CurrencyWalletListViewModel {
         return options
     }
     
-    static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType) -> [ProductView.ViewModel] {
+    static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType, filter: ProductData.Filter) -> [ProductView.ViewModel] {
 
-        let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
+        let sortedProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
+        let filterredProducts = filter.filterredProducts(sortedProducts)
         
         let products = filterredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model) }
 

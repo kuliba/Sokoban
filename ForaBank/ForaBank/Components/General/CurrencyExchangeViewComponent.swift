@@ -179,6 +179,7 @@ struct CurrencyExchangeView: View {
                 Text(viewModel.title)
                     .font(.textH4M16240())
                     .foregroundColor(.textSecondary)
+                    .accessibilityIdentifier("currencyRateTitle")
                 
                 Spacer()
                 
@@ -186,9 +187,11 @@ struct CurrencyExchangeView: View {
                     
                     RateView(viewModel: viewModel.sell)
                         .frame(width: 70, alignment: .leading)
+                        .accessibilityIdentifier("walletCurrentCell")
                     
                     RateView(viewModel: viewModel.buy)
                         .frame(width: 70, alignment: .leading)
+                        .accessibilityIdentifier("walletCurrentBuy")
                         
                 }.padding(.trailing, 16)
             }

@@ -518,6 +518,7 @@ extension ProductProfileCardView {
                 }
                 .frame(width: 48, height: 48)
             }
+            .accessibilityIdentifier("thumbnailButton")
         }
     }
     
@@ -547,6 +548,7 @@ extension ProductProfileCardView {
                 .frame(width: 48, height: 48)
                 .opacity(0.4)
             }
+            .accessibilityIdentifier("moreButton")
         }
     }
 }

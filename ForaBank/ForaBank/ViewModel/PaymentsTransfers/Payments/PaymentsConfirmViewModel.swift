@@ -30,6 +30,7 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
     }
     
     override func bindModel() {
+        super.bindModel()
         
         model.action
             .receive(on: DispatchQueue.main)
@@ -167,7 +168,7 @@ extension PaymentsConfirmViewModel {
     
     func updateFeedSection(code: String) {
         
-        guard let codeParameter = items.first(where: { $0.id == Payments.Parameter.Identifier.code.rawValue }) as? PaymentsCodeView.ViewModel else {
+        guard let codeParameter = items.first(where: { $0.source.id == Payments.Parameter.Identifier.code.rawValue }) as? PaymentsCodeView.ViewModel else {
             return
         }
         
@@ -178,7 +179,7 @@ extension PaymentsConfirmViewModel {
         
         for item in items {
             
-            switch item.id {
+            switch item.source.id {
             case Payments.Parameter.Identifier.code.rawValue:
                 continue
                 

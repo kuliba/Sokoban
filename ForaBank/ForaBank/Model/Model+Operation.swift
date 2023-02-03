@@ -32,6 +32,20 @@ extension ModelAction {
             }
         }
     }
+    
+    enum CheckBicAccount {
+    
+        struct Request: Action {
+            
+            let accountNumber: String
+            let bic: String
+        }
+        
+        struct Response: Action {
+            
+            let result: Result<BicAccountCheck,ModelError>
+        }
+    }
 }
 
 //MARK: - Handlers
@@ -113,6 +127,42 @@ extension Model {
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)
                 self.action.send(ModelAction.Operation.Detail.Response(result: .failure(ModelError.serverCommandError(error: error.localizedDescription))))
+            }
+        }
+    }
+    
+    func handleOperationCheckBicAccount(_ payload: ServerCommands.PaymentOperationDetailContoller.GetBicAccountCheck.Payload) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.PaymentOperationDetailContoller.GetBicAccountCheck(token: token, payload: .init(bic: payload.bic, account: payload.account))
+        
+        serverAgent.executeCommand(command: command) { result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    
+                    guard let details = response.data else {
+                        self.handleServerCommandEmptyData(command: command)
+                        self.action.send(ModelAction.CheckBicAccount.Response(result: .failure(ModelError.emptyData(message: response.errorMessage))))
+                        return
+                    }
+                    
+                    self.action.send(ModelAction.CheckBicAccount.Response(result: .success(details)))
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.action.send(ModelAction.CheckBicAccount.Response(result: .failure(ModelError.statusError(status: response.statusCode, message: response.errorMessage))))
+                }
+                
+            case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
+                self.action.send(ModelAction.CheckBicAccount.Response(result: .failure(ModelError.serverCommandError(error: error.localizedDescription))))
             }
         }
     }

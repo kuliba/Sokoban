@@ -84,7 +84,9 @@ struct ButtonNewProduct: View {
                     }.padding(11)
                 }
 
-            }.buttonStyle(PushButtonStyle())
+            }
+            .buttonStyle(PushButtonStyle())
+            .accessibilityIdentifier("buttonOpenNewProduct")
             
         case let .url(url):
             
@@ -117,7 +119,9 @@ struct ButtonNewProduct: View {
                     }.padding(11)
                 }
                 
-            }.buttonStyle(PushButtonStyle())
+            }
+            .buttonStyle(PushButtonStyle())
+            .accessibilityIdentifier("linkOpenNewProduct")
         }
     }
 }

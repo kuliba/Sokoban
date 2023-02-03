@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/abseil-cpp-SwiftPM.git",
       "state" : {
-        "revision" : "583de9bd60f66b40e78d08599cc92036c2e7e4e1",
-        "version" : "0.20220203.2"
+        "revision" : "fffc3c2729be5747390ad02d5100291a0d9ad26a",
+        "version" : "0.20200225.4"
       }
     },
     {
@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/luximetr/AnyFormatKit",
       "state" : {
-        "revision" : "ae3a965164005b07f81d6aa066520d7ad14ea54e",
-        "version" : "2.5.2"
+        "revision" : "27b35c984c1c81e74c8be5273f7b2dc5250cb5cc",
+        "version" : "2.5.1"
       }
     },
     {
@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/boringssl-SwiftPM.git",
       "state" : {
-        "revision" : "dd3eda2b05a3f459fc3073695ad1b28659066eab",
-        "version" : "0.9.1"
+        "revision" : "734a8247442fde37df4364c21f6a0085b6a36728",
+        "version" : "0.7.2"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CocoaLumberjack/CocoaLumberjack.git",
       "state" : {
-        "revision" : "80ada1f753b0d53d9b57c465936a7c4169375002",
-        "version" : "3.7.4"
+        "revision" : "e518eb6e362df327574ba5e04269cd6d29f40aec",
+        "version" : "3.7.2"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/krzyzanowskim/CryptoSwift.git",
       "state" : {
-        "revision" : "19b3c3ceed117c5cc883517c4e658548315ba70b",
-        "version" : "1.6.0"
+        "revision" : "4b0565384d3c4c588af09e660535b2c7c9bf5b39",
+        "version" : "1.4.2"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk",
       "state" : {
-        "revision" : "111d8d6ad1a1afd6c8e9561d26e55ab1e74fcb42",
-        "version" : "8.15.0"
+        "revision" : "81b568348ab4e113dd8bcef5a83c5dd431741ae4",
+        "version" : "8.8.1"
       }
     },
     {
@@ -68,8 +68,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleAppMeasurement.git",
       "state" : {
-        "revision" : "ef819db8c58657a6ca367322e73f3b6322afe0a2",
-        "version" : "8.15.0"
+        "revision" : "06add56b27b88ae5180e92d4ee21a1199ee888a1",
+        "version" : "8.8.0"
       }
     },
     {
@@ -77,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleDataTransport.git",
       "state" : {
-        "revision" : "5056b15c5acbb90cd214fe4d6138bdf5a740e5a8",
-        "version" : "9.2.0"
+        "revision" : "7fb27ea49414b9c5483503cd06baa821c8654d1e",
+        "version" : "9.1.1"
       }
     },
     {
@@ -86,17 +86,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleUtilities.git",
       "state" : {
-        "revision" : "68ea347bdb1a69e2d2ae2e25cd085b6ef92f64cb",
-        "version" : "7.9.0"
+        "revision" : "616fac2626b6b2d1424d79a6f786b4e2ed1cfb49",
+        "version" : "7.5.2"
       }
     },
     {
-      "identity" : "grpc-ios",
+      "identity" : "grpc-swiftpm",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/grpc/grpc-ios.git",
+      "location" : "https://github.com/firebase/grpc-SwiftPM.git",
       "state" : {
-        "revision" : "8440b914756e0d26d4f4d054a1c1581daedfc5b6",
-        "version" : "1.44.3-grpc"
+        "revision" : "fb405dd2c7901485f7e158b24e3a0a47e4efd8b5",
+        "version" : "1.28.4"
       }
     },
     {
@@ -104,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/gtm-session-fetcher.git",
       "state" : {
-        "revision" : "4e9bbf2808b8fee444e84a48f5f3c12641987d3e",
-        "version" : "1.7.2"
+        "revision" : "bc6a19702ac76ac4e488b68148710eb815f9bc56",
+        "version" : "1.7.0"
       }
     },
     {
@@ -113,8 +113,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hackiftekhar/IQKeyboardManager.git",
       "state" : {
-        "revision" : "9ab144a1a6c6ae8dad25840610c072709b15d8b5",
-        "version" : "6.5.10"
+        "revision" : "4dc6bc7d1c9747bd0c261c8c055903f9fdef91f7",
+        "version" : "6.5.6"
       }
     },
     {
@@ -149,8 +149,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/marmelroy/PhoneNumberKit.git",
       "state" : {
-        "revision" : "2964493a52e64812833662a7bd19def82f35973c",
-        "version" : "3.4.10"
+        "revision" : "1ef0431b971f69c48ca5eb4cdba07f2c5da54c35",
+        "version" : "3.3.3"
       }
     },
     {
@@ -163,21 +163,12 @@
       }
     },
     {
-      "identity" : "progresshud",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/relatedcode/ProgressHUD.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "3ae24c855fff8fd40924a121ab315c125720d917"
-      }
-    },
-    {
       "identity" : "promises",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/promises.git",
       "state" : {
-        "revision" : "3e4e743631e86c8c70dbc6efdc7beaa6e90fd3bb",
-        "version" : "2.1.1"
+        "revision" : "611337c330350c9c1823ad6d671e7f936af5ee13",
+        "version" : "2.0.0"
       }
     },
     {
@@ -185,8 +176,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mercari/QRScanner",
       "state" : {
-        "revision" : "b9bbcabf8ce54974b56a63f403abc43930684314",
-        "version" : "1.9.0"
+        "revision" : "9c81351f4cb90742ab89dd8e685fde4e89dc0718",
+        "version" : "1.8.0"
       }
     },
     {
@@ -203,8 +194,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/realm/realm-cocoa.git",
       "state" : {
-        "revision" : "dc1672b3011eb992ce95db4feec83cd897626a16",
-        "version" : "10.32.1"
+        "revision" : "052f92ef8dd411616cfcfae8dd82888dcd4ecf45",
+        "version" : "10.16.0"
       }
     },
     {
@@ -212,8 +203,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/realm/realm-core",
       "state" : {
-        "revision" : "3c4b86da569368c4ee5ccca2a112d511cc6fa936",
-        "version" : "12.11.0"
+        "revision" : "23f60515a00f076a9e3f2dc672fe1ae07601ee90",
+        "version" : "11.4.1"
       }
     },
     {
@@ -230,8 +221,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImage.git",
       "state" : {
-        "revision" : "9248fe561a2a153916fb9597e3af4434784c6d32",
-        "version" : "5.13.4"
+        "revision" : "d6367439527663d2038ca445a3c3c4e4bac40d60",
+        "version" : "5.12.0"
       }
     },
     {
@@ -248,8 +239,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImageSVGCoder.git",
       "state" : {
-        "revision" : "afbe025cbdae37c20c144956fbabc07ddd5c0fc2",
-        "version" : "1.6.1"
+        "revision" : "0fefd2b89c64fb5ebbce2294dcb67581ed0fc0ff",
+        "version" : "1.6.0"
       }
     },
     {
@@ -257,8 +248,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Juanpe/SkeletonView.git",
       "state" : {
-        "revision" : "739a4f5d78731bebc48811c75fa9e1f4c4cef23e",
-        "version" : "1.30.4"
+        "revision" : "ff1a7e299b20786774c1951e2cce2276ac4b8463",
+        "version" : "1.25.2"
       }
     },
     {
@@ -284,8 +275,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "6fe203dc33195667ce1759bf0182975e4653ba1c",
-        "version" : "1.4.4"
+        "revision" : "5d66f7ba25daf4f94100e7022febf3c75e37a6c7",
+        "version" : "1.4.2"
       }
     },
     {
@@ -293,8 +284,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-protobuf.git",
       "state" : {
-        "revision" : "88c7d15e1242fdb6ecbafbc7926426a19be1e98a",
-        "version" : "1.20.2"
+        "revision" : "7e2c5f3cbbeea68e004915e3a8961e20bd11d824",
+        "version" : "1.18.0"
       }
     },
     {
@@ -329,8 +320,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Square/Valet",
       "state" : {
-        "revision" : "26689601804b0cc86ed212a6b137232c22210d28",
-        "version" : "4.1.3"
+        "revision" : "2bf3329055f5d71d42a12801dd69d1d770fafa5e",
+        "version" : "4.1.2"
       }
     }
   ],

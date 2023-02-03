@@ -11,8 +11,9 @@ import SwiftUI
 
 extension ButtonSimpleView {
     
-    class ViewModel: ObservableObject {
+    class ViewModel: ObservableObject, Identifiable {
         
+        let id = UUID()
         @Published var title: String
         @Published var style: ButtonStyle
         let action: () -> Void

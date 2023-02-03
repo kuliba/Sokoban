@@ -45,25 +45,17 @@ class SessionAgent: SessionAgentProtocol {
                 switch action {
                 case _ as SessionAgentAction.App.Activated:
                     LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.App.Activated, session: \(sessionState.value)")
-                    
-                    updateState(with: Date().timeIntervalSinceReferenceDate)
-                    timerStart()
-                    
+    
                     switch sessionState.value {
-                    case .inactive:
-                        LoggerAgent.shared.log(category: .session, message: "sent SessionAgentAction.Session.Start.Request")
-                        self.action.send(SessionAgentAction.Session.Start.Request())
-                        
                     case .active:
-                        DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(100)) {
-                            
-                            LoggerAgent.shared.log(category: .session, message: "sent SessionAgentAction.Session.Extend")
-                            self.action.send(SessionAgentAction.Session.Extend())
-                        }
+                        updateState(with: Date().timeIntervalSinceReferenceDate)
 
                     default:
-                        break
+                        LoggerAgent.shared.log(category: .session, message: "sent SessionAgentAction.Session.Start.Request")
+                        self.action.send(SessionAgentAction.Session.Start.Request())
                     }
+                    
+                    timerStart()
                     
                 case _ as SessionAgentAction.App.Inactivated:
                     LoggerAgent.shared.log(category: .session, message: "received SessionAgentAction.App.Inactivated")
@@ -119,6 +111,15 @@ class SessionAgent: SessionAgentProtocol {
             .sink { sessionState in
                 
                 LoggerAgent.shared.log(category: .session, message: "session: \(sessionState)")
+                
+                switch sessionState {
+                case .inactive, .expired, .failed:
+                    LoggerAgent.shared.log(category: .session, message: "sent SessionAgentAction.Session.Start.Request")
+                    self.action.send(SessionAgentAction.Session.Start.Request())
+                    
+                default:
+                    break
+                }
                 
             }.store(in: &bindings)
     }

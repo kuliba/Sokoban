@@ -20,37 +20,50 @@ extension MainSectionPromoView {
         @Published var banners: [BannerViewModel]
         
         private let model: Model
+        private let promoType: PromoType
         private var bindings = Set<AnyCancellable>()
         
-        internal init(banners: [BannerViewModel], model: Model = .emptyMock) {
+        private var catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never> {
+            
+            switch promoType {
+            case .general: return model.catalogBanners
+            case .auth: return model.authCatalogBanners
+            }
+        }
+        
+        init(banners: [BannerViewModel], model: Model = .emptyMock, promoType: PromoType) {
             
             self.banners = banners
             self.model = model
+            self.promoType = promoType
+            
             super.init()
         }
-        
-        init(_ model: Model) {
+
+        convenience init(_ model: Model, promoType: PromoType = .general) {
             
-            self.banners = []
-            self.model = model
-            super.init()
-            
+            self.init(banners: [], model: model, promoType: promoType)
             bind()
         }
         
+        enum PromoType {
+            
+            case general
+            case auth
+        }
+
         private func bind() {
             
-            model.catalogBanners
+            catalogBanners
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] catalogBanners in
                     
-                    let updated = Self.reduce(catalogBanners: catalogBanners, images: model.images.value, action: { [weak self] bannerAction in { self?.action.send(MainSectionViewModelAction.PromoAction.ButtonTapped(actionData: bannerAction)) }
+                    let updated = Self.reduce(catalogBanners: catalogBanners,
+                                              images: model.images.value,
+                                              action: { [weak self] bannerAction in { self?.action.send(MainSectionViewModelAction.PromoAction.ButtonTapped(actionData: bannerAction)) }
                     })
 
-                    withAnimation {
-                        
-                        banners = updated
-                    }
+                    updateBanners(updated)
                     
                     if let endpointsToDownload = Self.reduce(banners: banners) {
                         
@@ -80,12 +93,29 @@ extension MainSectionPromoView {
                     
                 }.store(in: &bindings)
         }
+        
+        private func updateBanners(_ updated: [BannerViewModel]) {
+            
+            switch promoType {
+            case .general:
+                
+                withAnimation {
+                    
+                    banners = updated
+                }
+                
+            case .auth:
+                banners = updated
+            }
+        }
     }
 }
 
 extension MainSectionPromoView.ViewModel {
     
-    static func reduce(catalogBanners: [BannerCatalogListData], images: [String: ImageData], action: @escaping (BannerAction) -> (() -> Void)) -> [BannerViewModel] {
+    static func reduce(catalogBanners: [BannerCatalogListData],
+                       images: [String: ImageData],
+                       action: @escaping (BannerAction) -> (() -> Void)) -> [BannerViewModel] {
         
         var result = [BannerViewModel]()
         
@@ -139,7 +169,9 @@ extension MainSectionPromoView.ViewModel {
             self.action = action
         }
         
-        convenience init(with bannerData: BannerCatalogListData, image: Image? = nil, action: (() -> Void)? = nil) {
+        convenience init(with bannerData: BannerCatalogListData,
+                         image: Image? = nil,
+                         action: (() -> Void)? = nil) {
             
             let bannerImage = BannerImage(endpoint: bannerData.imageEndpoint, image: image)
             let bannerAction = BannerAction(link: bannerData.orderURL, action: action)
@@ -204,7 +236,6 @@ struct MainSectionPromoView: View {
                     BannerView(viewModel: bannerViewModel)
                 }
             }
-            .padding(.horizontal, 20)
         }
     }
     
@@ -221,6 +252,7 @@ struct MainSectionPromoView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .frame(width: 288, height: 124)
                     .shimmering(active: true, bounce: false)
+                    .accessibilityIdentifier("placeholderBanner")
                 
             case .image(let image):
                 
@@ -234,7 +266,9 @@ struct MainSectionPromoView: View {
                             .frame(width: 288, height: 124)
                             .cornerRadius(12)
                         
-                    }.buttonStyle(PushButtonStyle())
+                    }
+                    .buttonStyle(PushButtonStyle())
+                    .accessibilityIdentifier("actionBanner")
                     
                 case let .link(url):
                     Link(destination: url) {
@@ -245,7 +279,10 @@ struct MainSectionPromoView: View {
                             .frame(width: 288, height: 124)
                             .cornerRadius(12)
                         
-                    }.buttonStyle(PushButtonStyle())
+                        
+                    }
+                    .buttonStyle(PushButtonStyle())
+                    .accessibilityIdentifier("linkBanner")
                 }
             }
         }
@@ -273,7 +310,7 @@ struct MainSectionPromotionsView_Previews: PreviewProvider {
 
 extension MainSectionPromoView.ViewModel {
     
-    static let sample = MainSectionPromoView.ViewModel(banners: [.sample])
+    static let sample = MainSectionPromoView.ViewModel(banners: [.sample], promoType: .general)
 }
 
 extension MainSectionPromoView.ViewModel.BannerViewModel {

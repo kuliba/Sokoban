@@ -82,7 +82,7 @@ class ServerCommandsCardTests: XCTestCase {
         }
         let json = try Data(contentsOf: url)
         let date = Date.dateUTC(with: 1648512000000)
-        let productStatementData = ProductStatementData(mcc: nil, accountId: nil, accountNumber: "70601810711002740401", amount: 144.21, cardTranNumber: nil, city: nil, comment: "Перевод денежных средств. НДС не облагается.", country: nil, currencyCodeNumeric: 810, date: date, deviceCode: nil, documentAmount: nil, documentId: nil, fastPayment: nil, groupName: "Прочие операции", isCancellation: nil, md5hash: "75f3ee3b2d44e5808f41777c613f23c9", merchantName: nil, merchantNameRus: nil, opCode: nil, operationId: nil, operationType: .debit, paymentDetailType: .betweenTheir, svgImage: nil, terminalCode: nil, tranDate: nil, type: OperationEnvironment.inside)
+        let productStatementData = ProductStatementData(mcc: nil, accountId: nil, accountNumber: "70601810711002740401", amount: 144.21, cardTranNumber: nil, city: nil, comment: "Перевод денежных средств. НДС не облагается.", country: nil, currencyCodeNumeric: 810, date: date, deviceCode: nil, documentAmount: nil, documentId: nil, fastPayment: nil, groupName: "Прочие операции", isCancellation: nil, md5hash: "75f3ee3b2d44e5808f41777c613f23c9", merchantName: nil, merchantNameRus: nil, opCode: nil, operationId: "123", operationType: .debit, paymentDetailType: .betweenTheir, svgImage: nil, terminalCode: nil, tranDate: nil, type: OperationEnvironment.inside)
         let expected = ServerCommands.CardController.GetCardStatement.Response(statusCode: .ok, errorMessage: "string", data: [productStatementData])
         
         // when

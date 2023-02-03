@@ -74,6 +74,22 @@ class PaymentsViewModel: ObservableObject {
         bind()
     }
     
+    convenience init(_ model: Model, service: Payments.Service, closeAction: @escaping () -> Void) async throws {
+
+        let operation = try await model.paymentsOperation(with: service)
+        let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model, closeAction: closeAction)
+        guard let category = Payments.Category.category(for: operation.service) else {
+            throw Error.unableRecognizeCategoryForService(operation.service)
+        }
+        
+        self.init(content: .operation(operationViewModel), category: category, model: model, closeAction: closeAction)
+        
+        operationViewModel.rootActions = rootActions
+        bind(operationViewModel: operationViewModel)
+        
+        bind()
+    }
+    
     private func bind() {
         
         model.action
@@ -95,6 +111,28 @@ class PaymentsViewModel: ObservableObject {
      
                     case let .failure(error):
                         switch error {
+                        case let paymentsError as Payments.Error:
+                            switch paymentsError {
+                            case let .action(action):
+                                switch action {
+                                case let .warning(parameterId: parameterId, message: message):
+                                   
+                                    if case .operation(let operationViewModel) = content {
+                                        
+                                        operationViewModel.action.send(PaymentsOperationViewModelAction.ShowWarning(parameterId: parameterId, message: message))
+                                        
+                                    } else {
+                                        
+                                        self.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: error.localizedDescription))
+                                    }
+                                    
+                                case let .alert(title: title, message: message):
+                                    self.action.send(PaymentsViewModelAction.Alert(title: title, message: message))
+                                }
+                                
+                            default:
+                                self.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: error.localizedDescription))
+                            }
                         case let serverError as ServerAgentError:
                             switch serverError {
                             case let .serverStatus(.serverError, errorMessage: message):
@@ -116,15 +154,15 @@ class PaymentsViewModel: ObservableObject {
                                     
                                 } else {
                                     
-                                    self.action.send(PaymentsViewModelAction.Alert(message: message))
+                                    self.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: message))
                                 }
 
                             default:
-                                self.action.send(PaymentsViewModelAction.Alert(message: error.localizedDescription))
+                                self.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: error.localizedDescription))
                             }
                             
                         default:
-                            self.action.send(PaymentsViewModelAction.Alert(message: error.localizedDescription))
+                            self.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: error.localizedDescription))
                         }
                         
                     default:
@@ -159,7 +197,7 @@ class PaymentsViewModel: ObservableObject {
                     }
                     
                 case let payload as PaymentsViewModelAction.Alert:
-                    alert = .init(title: "Ошибка", message: payload.message, primary: .init(type: .default, title: "Ok", action: {}))
+                    alert = .init(title: payload.title, message: payload.message, primary: .init(type: .default, title: "Ok", action: {}))
                     
                 case let payload as PaymentsViewModelAction.AlertThenDismiss:
                     alert = .init(title: "Ошибка", message: payload.message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}))
@@ -195,6 +233,10 @@ class PaymentsViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
+                    
+                case _ as PaymentsViewModelAction.ScanQrCode:
+                    self.action.send(PaymentsViewModelAction.ScanQrCode())
+                    
                 case let payload as PaymentsOperationViewModelAction.CancelOperation:
 
                     //TODO: move to convenience init
@@ -236,7 +278,7 @@ extension PaymentsViewModel {
                      spinner:
                 .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show()) },
                       hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide()) }),
-                     alert: { [weak self] message in self?.action.send(PaymentsViewModelAction.Alert(message: message)) })
+                     alert: { [weak self] message in self?.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: message)) })
     }
 }
 
@@ -254,6 +296,7 @@ enum PaymentsViewModelAction {
     
     struct Alert: Action {
         
+        let title: String
         let message: String
     }
     
@@ -261,6 +304,8 @@ enum PaymentsViewModelAction {
         
         let message: String
     }
+    
+    struct ScanQrCode: Action {}
 }
 
 extension PaymentsViewModel {

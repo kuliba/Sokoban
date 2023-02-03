@@ -30,7 +30,7 @@ extension ModelAction {
 
 extension Model {
     
-    static let statementsSerial = "version 2"
+    static let statementsSerial = "version 3"
     var statementsRequestDays: Int { 30 }
     var statementslatestDaysOffset: Int { 7 }
     
@@ -98,6 +98,7 @@ extension Model {
                     }
 
                     let resultStatements = try await statementsFetch(token: token, product: product, period: requestProperties.period)
+                    statementsCheckDuplicates(product: product, statements: resultStatements)
      
                     switch currentDirection {
                     case .latest:
@@ -318,6 +319,29 @@ extension Model {
             return ProductStatementsStorage(with: update, historyLimitDate: historyLimitDate)
         }
     }
+}
+
+//MARK: - Reducers
+
+extension Model {
+    
+    func statementsCheckDuplicates(product: ProductData, statements: [ProductStatementData]) {
+        
+        let statementsIds = statements.map{ $0.id }
+        let uniqueStatementsIds = Set(statementsIds)
+        
+        guard statementsIds.count != uniqueStatementsIds.count else {
+            return
+        }
+        
+        let duplicates = uniqueStatementsIds.filter { uniqueStatementId in
+            
+            statementsIds.filter({ $0 == uniqueStatementId }).count > 1
+        }
+        
+        LoggerAgent.shared.log(level: .error, category: .model, message: "Detected statements duplicates: \(duplicates) for product type: \(product.productType) with id: \(product.id)")
+    }
+    
 }
 
 //MARK: - Error

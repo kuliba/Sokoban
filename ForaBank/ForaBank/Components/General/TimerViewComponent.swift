@@ -15,22 +15,40 @@ extension TimerView {
     class ViewModel: ObservableObject {
 
         @Published var value: String
-
+        
         var delay: TimeInterval
+
+        let style: Style
         let onComplete: () -> Void
 
         private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
         private var bindings = Set<AnyCancellable>()
-
-        init(value: String = "", delay: TimeInterval, onComplete: @escaping () -> Void) {
-
+        
+        init(value: String, style: Style, delay: TimeInterval, onComplete: @escaping () -> Void) {
+            
             self.value = value
+            self.style = style
             self.delay = delay
             self.onComplete = onComplete
+        }
 
-            self.value = delayFormat()
+        convenience init(style: Style = .general, delay: TimeInterval, onComplete: @escaping () -> Void) {
 
+            self.init(
+                value: "",
+                style: style,
+                delay: delay,
+                onComplete: onComplete
+            )
+            
+            value = delayFormat()
             bind()
+        }
+        
+        enum Style {
+            
+            case general
+            case order
         }
 
         func bind() {
@@ -51,8 +69,7 @@ extension TimerView {
 
                 }.store(in: &bindings)
         }
-
-
+        
         func stopTimer() {
 
             timer.upstream.connect().cancel()
@@ -79,19 +96,30 @@ struct TimerView: View {
 
     var body: some View {
         
-        HStack {
-
-            Spacer()
-                .fixedSize()
+        switch viewModel.style {
+        case .general:
+            
+            HStack {
+                
+                Spacer()
+                    .fixedSize()
+                
+                Text(viewModel.value)
+                    .font(.textBodySR12160())
+                    .foregroundColor(.mainColorsRed)
+                
+                Spacer()
+            }
+            .frame(width: 56)
+            .offset(x: 16)
+            
+        case .order:
             
             Text(viewModel.value)
-                .font(.textBodySR12160())
+                .font(.textBodyMR14180())
                 .foregroundColor(.mainColorsRed)
-
-            Spacer()
+                .animation(nil, value: viewModel.value)
         }
-        .frame(width: 56)
-        .offset(x: 16)
     }
 }
 

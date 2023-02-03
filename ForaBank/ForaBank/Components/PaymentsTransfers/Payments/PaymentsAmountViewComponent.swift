@@ -54,13 +54,13 @@ extension PaymentsAmountView {
             bind(textField: textField)
         }
 
-        convenience init(_ value: Double = 0, productData: ProductData, mode: PaymentsMeToMeViewModel.Mode, action: @escaping () -> Void = {}) {
+        convenience init(_ value: Double = 0, productData: ProductData, mode: PaymentsMeToMeViewModel.Mode, model: Model, action: @escaping () -> Void = {}) {
             
             switch mode {
             case .general:
                 
-                let currency = Currency(description: productData.currency)
-                let textField: TextFieldFormatableView.ViewModel = .init(value, currencySymbol: currency.currencySymbol)
+                let currencySymbol = model.dictionaryCurrencySymbol(for: productData.currency) ?? ""
+                let textField: TextFieldFormatableView.ViewModel = .init(value, currencySymbol: currencySymbol)
                 
                 let transferButton: TransferButtonViewModel = Self.makeTransferButton(value, action: action)
                 
@@ -68,15 +68,15 @@ extension PaymentsAmountView {
                 
             case let .closeAccount(productData, balance):
                 
-                let currency = Currency(description: productData.currency)
-                let textField: TextFieldFormatableView.ViewModel = .init(balance, isEnabled: false, currencySymbol: currency.currencySymbol)
+                let currencySymbol = model.dictionaryCurrencySymbol(for: productData.currency) ?? ""
+                let textField: TextFieldFormatableView.ViewModel = .init(balance, isEnabled: false, currencySymbol: currencySymbol)
                 
                 self.init(title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"))
                 
             case let .closeDeposit(productData, balance):
                 
-                let currency = Currency(description: productData.currency)
-                let textField: TextFieldFormatableView.ViewModel = .init(balance, isEnabled: false, currencySymbol: currency.currencySymbol)
+                let currencySymbol = model.dictionaryCurrencySymbol(for: productData.currency) ?? ""
+                let textField: TextFieldFormatableView.ViewModel = .init(balance, isEnabled: false, currencySymbol: currencySymbol)
                 
                 self.init(title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
             }
@@ -85,6 +85,7 @@ extension PaymentsAmountView {
         func bind(textField: TextFieldFormatableView.ViewModel) {
             
             textField.$text
+                .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink {[unowned self] _ in
                     
@@ -99,6 +100,8 @@ extension PaymentsAmountView {
             
             return parameterAmount.validator.isValid(value: textField.value)
         }
+        
+        override var isValidationChecker: Bool { true }
         
         override func update(source: PaymentsParameterRepresentable) {
             super.update(source: source)

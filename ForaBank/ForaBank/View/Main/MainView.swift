@@ -12,9 +12,19 @@ struct MainView: View {
     
     @ObservedObject var viewModel: MainViewModel
     
+    init(viewModel: MainViewModel) {
+        
+        self.viewModel = viewModel
+        UINavigationBar.appearance().backgroundColor = .clear
+        UINavigationBar.appearance().isHidden = false
+    }
+    
     var body: some View {
         
         ZStack(alignment: .top) {
+            
+            Image.imgMainNy
+                .ignoresSafeArea()
             
             ScrollView(showsIndicators: false) {
                 
@@ -31,6 +41,7 @@ struct MainView: View {
                             
                         case let promoViewModel  as MainSectionPromoView.ViewModel:
                             MainSectionPromoView(viewModel: promoViewModel)
+                                .padding(.horizontal, 20)
                             
                         case let currencyViewModel as MainSectionCurrencyView.ViewModel:
                             MainSectionCurrencyView(viewModel: currencyViewModel)
@@ -95,12 +106,6 @@ struct MainView: View {
                         
                     case .templates(let templatesViewModel):
                         TemplatesListView(viewModel: templatesViewModel)
-                        
-                    case .qrScanner(let qrViewModel):
-                        QrScannerView(viewModel: qrViewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
-                            .edgesIgnoringSafeArea(.all)
                     
                     case let .currencyWallet(viewModel):
                         CurrencyWalletView(viewModel: viewModel)
@@ -114,8 +119,33 @@ struct MainView: View {
                             .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
+                    case .serviceOperators(let viewModel):
+                        OperatorsView(viewModel: viewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case .failedView(let failedViewModel):
+                        QRFailedView(viewModel: failedViewModel)
+                        
+                    case .c2b(let c2bViewModel):
+                        C2BDetailsView(viewModel: c2bViewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case .searchOperators(let viewModel):
+                        QRSearchOperatorView(viewModel: viewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                        
                     case let .payments(paymentsViewModel):
                         PaymentsView(viewModel: paymentsViewModel)
+                        
+                    case let .operatorView(internetDetailViewModel):
+                        InternetTVDetailsView(viewModel: internetDetailViewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .edgesIgnoringSafeArea(.all)
                     }
                 }
             }
@@ -134,11 +164,23 @@ struct MainView: View {
                         
                     case .byPhone(let viewModel):
                         ContactsView(viewModel: viewModel)
-                        
-                    case let .openAccount(openAccountViewModel):
-                        OpenAccountView(viewModel: openAccountViewModel)
                     }
                 })
+            
+            Color.clear
+                .fullScreenCover(item: $viewModel.fullScreenSheet) { item in
+                    
+                    switch item.type {
+                    case let .qrScanner(viewModel):
+                        NavigationView {
+                            
+                            QRView(viewModel: viewModel)
+                                .navigationBarHidden(true)
+                                .navigationBarBackButtonHidden(true)
+                                .edgesIgnoringSafeArea(.all)
+                        }
+                    }
+                }
                
         }
         .ignoreKeyboard()
@@ -233,8 +275,10 @@ extension MainView {
                     Text(viewModel.name)
                         .foregroundColor(.textSecondary)
                         .font(.textH4R16240())
+                        .accessibilityIdentifier("mainUserName")
                 }
             }
+            .accessibilityIdentifier("mainUserButton")
         }
     }
     

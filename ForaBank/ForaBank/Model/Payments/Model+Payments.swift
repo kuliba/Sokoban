@@ -122,6 +122,8 @@ extension Model {
             
         case .sfp: return .sfp
             
+        case .requisites: return .requisites
+            
         default:
             throw Payments.Error.unsupported
         }
@@ -177,7 +179,10 @@ extension Model {
         switch operation.service {
         case .sfp:
             return try await paymentsProcessOperationResetVisibleSFP(operation)
-            
+        
+        case .requisites:
+            return try await paymentsProcessOperationResetVisibleRequisits(operation)
+
         default:
             return nil
         }
@@ -204,7 +209,10 @@ extension Model {
             
         case .sfp:
             return try await paymentsStepSFP(operation, for: stepIndex)
-            
+        
+        case .requisites:
+            return try await paymentsStepRequisites(operation, for: stepIndex)
+
         default:
             throw Payments.Error.unsupported
         }
@@ -262,7 +270,10 @@ extension Model {
             case .sfp:
                 // Fora client payment first step response
                 return try await paymentsProcessRemoteStepSFP(operation: operation, response: response)
-                
+            
+            case .requisites:
+                return try await paymentsProcessRemoteStepRequisits(operation: operation, response: response)
+
             default:
                 throw Payments.Error.unsupported
             }
@@ -283,6 +294,9 @@ extension Model {
             
         case let .sfp(phone: phone, bankId: bankId):
             return paymentsProcessSourceReducerSFP(phone: phone, bankId: bankId, parameterId: parameterId)
+        
+        case let .requisites(qrCode: qrCode):
+            return paymentsProcessSourceReducerRequisites(qrCode: qrCode, parameterId: parameterId)
             
         default:
             return nil
@@ -295,7 +309,10 @@ extension Model {
         switch service {
         case .sfp:
             return paymentsProcessDependencyReducerSFP(parameterId: parameterId, parameters: parameters)
-            
+        
+        case .requisites:
+            return paymentsProcessDependencyReducerRequisits(parameterId: parameterId, parameters: parameters)
+
         default:
             switch parameterId {
             case Payments.Parameter.Identifier.amount.rawValue:
@@ -349,6 +366,9 @@ extension Model {
             
         case .sfp:
             return try await paymentsTransferSFPProcess(parameters: operation.parameters, process: process)
+        
+        case .requisites:
+            return try await paymentsTransferRequisitesProcess(parameters: operation.parameters, process: process)
             
         default:
             throw Payments.Error.unsupported
@@ -441,12 +461,11 @@ extension Model {
                 options: options)
             
         case .input:
-            //TODO: validator with ParameterData
             return Payments.ParameterInput(
                 .init(id: parameterData.id, value: parameterData.value),
                 icon: parameterData.iconData ?? .parameterDocument,
                 title: parameterData.title,
-                validator: .init(minLength: 1, maxLength: nil, regEx: nil))
+                validator: parameterData.validator)
             
         case .info:
             return Payments.ParameterInfo(

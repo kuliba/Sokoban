@@ -16,70 +16,312 @@ extension PaymentsNameView {
         
         let icon: Image
         let title: String
-        @Published var person: PersonViewModel
-        @Published var isEditing: Bool
+        let person: PersonViewModel
+        @Published var isExpanded: Bool
         
-        lazy var buttonAction: () -> Void = { [weak self] in withAnimation{ self?.isEditing.toggle() }}
-        
-        var fullName: String {
+        var fullName: String? { return Self.nameReduce(personViewModel: person) }
+        var fullNameViewModel: FullNameViewModel {
             
-            return person.components.reduce("") { result, component in
-                
-                return component.count > 0 ?  "\(result) \(component)" : result
-       
-            }.trimmingCharacters(in: .whitespaces)
+            .init(title: title, value: fullName ?? "", button: .init(icon: .ic24PlusSquares, action: buttonAction))
         }
         
-        var buttonIcon: Image { isEditing ? Image("Payments Minus Squares") : Image("Payments Plus Squares")}
+        override var isValid: Bool {
+            
+            guard let parameterName = parameterName else {
+                return false
+            }
+            
+            return parameterName.lastName.validator.isValid(value: person.lastName.textField.text) &&
+            parameterName.firstName.validator.isValid(value: person.firstName.textField.text) &&
+            parameterName.middleName.validator.isValid(value: person.middleName.textField.text)
+        }
         
-        private static let iconPlaceholder = Image("Payments Icon Person")
+        private var parameterName: Payments.ParameterName? { source as? Payments.ParameterName }
+        private lazy var buttonAction: () -> Void = { [weak self] in withAnimation { self?.isExpanded.toggle() }}
         
-        init(icon: Image, title: String, person: PersonViewModel, isEditing: Bool, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
+        init(icon: Image, title: String, person: PersonViewModel, isExpanded: Bool, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.icon = icon
             self.title = title
             self.person = person
-            self.isEditing = isEditing
+            self.isExpanded = isExpanded
             super.init(source: source)
         }
         
-        init(with parameterName: Payments.ParameterName) {
+        convenience init(with parameterName: Payments.ParameterName) {
             
-            self.icon = Self.iconPlaceholder
-            self.title = parameterName.title
-            self.person = PersonViewModel(
-                lastName: .init(
-                    title: parameterName.lastName.title,
-                    value: parameterName.lastName.value),
-                firstName: .init(
-                    title: parameterName.firstName.title,
-                    value: parameterName.firstName.value),
-                middleName: .init(
-                    title: parameterName.middleName.title,
-                    value: parameterName.middleName.value))
-            self.isEditing = false
-            super.init(source: parameterName)
+            let person = PersonViewModel(
+                lastName: .init(name: parameterName.lastName),
+                firstName: .init(name: parameterName.firstName),
+                middleName: .init(name: parameterName.middleName))
+            
+            self.init(icon: .ic24Customer, title: parameterName.title, person: person, isExpanded: false, source: parameterName)
+            
+            person.lastName.button = .init(icon: .ic24MinusSquares, action: buttonAction)
+            
+            bind()
         }
         
-        struct PersonViewModel {
-
-            var lastName: NameViewModel
-            var firstName: NameViewModel
-            var middleName: NameViewModel
-   
-            var components: [String] { [lastName.value, firstName.value, middleName.value] }
+        private func bind() {
+            
+            // last name
+            person.lastName.textField.$text
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] text in
+                    
+                    update(value: fullName)
+                    
+                }.store(in: &bindings)
+            
+            person.lastName.textField.isEditing
+                .dropFirst()
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isEditing in
+                    
+                    guard let parameterName = parameterName else {
+                        return
+                    }
+                    
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        
+                        if isEditing == true {
+                            
+                            // title
+                            person.lastName.title = parameterName.lastName.title
+                            
+                            // warning
+                            person.lastName.warning = nil
+                            
+                        } else {
+      
+                            // title
+                            person.lastName.title = (person.lastName.textField.text != nil && person.lastName.textField.text != "") ? parameterName.lastName.title : nil
+                            
+                            // warning
+                            if let action = parameterName.lastName.validator.action(with: person.lastName.textField.text, for: .post),
+                               case .warning(let message) = action {
+                                
+                                person.lastName.warning = message
+                                
+                            } else {
+                                
+                                person.lastName.warning = nil
+                            }
+                        }
+                    }
+                    
+                }.store(in: &bindings)
+            
+            // first name
+            person.firstName.textField.$text
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] text in
+                    
+                    update(value: fullName)
+                    
+                }.store(in: &bindings)
+            
+            person.firstName.textField.isEditing
+                .dropFirst()
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isEditing in
+                    
+                    guard let parameterName = parameterName else {
+                        return
+                    }
+                    
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        
+                        if isEditing == true {
+                            
+                            // title
+                            person.firstName.title = parameterName.firstName.title
+                            
+                            // warning
+                            person.firstName.warning = nil
+                            
+                        } else {
+      
+                            // title
+                            person.firstName.title = (person.firstName.textField.text != nil && person.firstName.textField.text != "") ? parameterName.firstName.title : nil
+                            
+                            // warning
+                            if let action = parameterName.firstName.validator.action(with: person.firstName.textField.text, for: .post),
+                               case .warning(let message) = action {
+                                
+                                person.firstName.warning = message
+                                
+                            } else {
+                                
+                                person.firstName.warning = nil
+                            }
+                        }
+                    }
+                    
+                }.store(in: &bindings)
+            
+            // middle name
+            person.middleName.textField.$text
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] text in
+                    
+                    update(value: fullName)
+                    
+                }.store(in: &bindings)
+            
+            person.middleName.textField.isEditing
+                .dropFirst()
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isEditing in
+                    
+                    guard let parameterName = parameterName else {
+                        return
+                    }
+                    
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        
+                        if isEditing == true {
+                            
+                            // title
+                            person.middleName.title = parameterName.middleName.title
+                            
+                            // warning
+                            person.middleName.warning = nil
+                            
+                        } else {
+      
+                            // title
+                            person.middleName.title = (person.middleName.textField.text != nil && person.middleName.textField.text != "") ? parameterName.middleName.title : nil
+                            
+                            // warning
+                            if let action = parameterName.middleName.validator.action(with: person.middleName.textField.text, for: .post),
+                               case .warning(let message) = action {
+                                
+                                person.middleName.warning = message
+                                
+                            } else {
+                                
+                                person.middleName.warning = nil
+                            }
+                        }
+                    }
+                    
+                }.store(in: &bindings)
         }
         
-        class NameViewModel: ObservableObject {
+        override func updateValidationWarnings() {
             
-            let title: String
-            @Published var value: String
-            
-            init(title: String, value: String) {
-                
-                self.title = title
-                self.value = value
+            guard isValid == false, let parameterName = parameterName else {
+                return
             }
+            
+            withAnimation {
+                
+                isExpanded = true
+            }
+            
+            withAnimation(.easeInOut(duration: 0.2)) {
+                
+                if let lastNameAction = parameterName.lastName.validator.action(with: person.lastName.textField.text, for: .post),
+                   case .warning(let message) = lastNameAction {
+                    
+                    person.lastName.warning = message
+                    
+                }
+                
+                if let firstNameAction = parameterName.firstName.validator.action(with: person.firstName.textField.text, for: .post),
+                   case .warning(let message) = firstNameAction {
+                    
+                    person.firstName.warning = message
+                    
+                }
+                
+                if let middleNameAction = parameterName.middleName.validator.action(with: person.middleName.textField.text, for: .post),
+                   case .warning(let message) = middleNameAction {
+                    
+                    person.middleName.warning = message
+                }
+            }
+        }
+    }
+}
+
+//MARK: - Types
+
+extension PaymentsNameView.ViewModel {
+    
+    struct PersonViewModel {
+
+        var lastName: NameViewModel
+        var firstName: NameViewModel
+        var middleName: NameViewModel
+
+        var components: [String?] { [lastName.textField.text ?? nil, firstName.textField.text ?? nil, middleName.textField.text ?? nil] }
+    }
+    
+    class NameViewModel: ObservableObject {
+        
+        @Published var title: String?
+        @Published var textField: TextFieldRegularView.ViewModel
+        @Published var button: ButtonViewModel?
+        @Published var warning: String?
+        
+        init(title: String?, textField: TextFieldRegularView.ViewModel, button: ButtonViewModel? = nil) {
+            
+            self.title = title
+            self.textField = textField
+            self.button = button
+        }
+        
+        convenience init(name: Payments.ParameterName.Name) {
+      
+            let title = name.value != nil ? name.title : nil
+            let textField = TextFieldRegularView.ViewModel(text: name.value, placeholder: name.title, style: .default, limit: name.limitator.limit, isEnabled: true)
+            
+            self.init(title: title, textField: textField)
+        }
+    }
+    
+    struct FullNameViewModel {
+
+        let title: String
+        let value: String
+        let button: ButtonViewModel
+    }
+    
+    struct ButtonViewModel {
+        
+        let icon: Image
+        let action: () -> Void
+    }
+}
+
+//MARK: - Helpers
+
+extension PaymentsNameView.ViewModel {
+    
+    static func nameReduce(personViewModel: PersonViewModel) -> String? {
+        
+        var fullName = ""
+        
+        for name in personViewModel.components {
+            
+            guard let name = name else {
+                continue
+            }
+            
+            fullName += String("\(name) ")
+        }
+        
+        let trimName = fullName.trimmingCharacters(in: .whitespaces)
+        
+        if trimName == "" {
+            
+            return nil
+            
+        } else {
+            
+            return fullName
         }
     }
 }
@@ -94,97 +336,83 @@ struct PaymentsNameView: View {
         
         if viewModel.isEditable == true {
             
-            VStack(alignment: .leading, spacing: 30)  {
+            HStack(alignment: .top, spacing: 18) {
                 
-                if viewModel.isEditing == false {
+                viewModel.icon
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .padding(.leading, 4)
+                    .padding(.top, 24)
+                    .foregroundColor(Color.mainColorsGray)
+                
+                VStack(alignment: .leading, spacing: 24)  {
                     
-                    FieldView(icon: viewModel.icon, title: viewModel.title, value: .constant(viewModel.fullName), button: (viewModel.buttonIcon, viewModel.buttonAction))
-                    
-                } else {
-                    
-                    VStack(spacing: 8) {
+                    if viewModel.isExpanded == false {
                         
-                        FieldView(icon: viewModel.icon, title: viewModel.person.lastName.title, value: $viewModel.person.lastName.value, isEditing: true, button: (viewModel.buttonIcon, viewModel.buttonAction))
+                        FullNameView(viewModel: viewModel.fullNameViewModel)
                         
-                        FieldView(title: viewModel.person.firstName.title, value: $viewModel.person.firstName.value, isEditing: true)
+                    } else {
                         
-                        FieldView(title: viewModel.person.middleName.title, value: $viewModel.person.middleName.value, isEditing: true)
+                        FieldView(viewModel: viewModel.person.lastName)
+                            
+                        FieldView(viewModel: viewModel.person.firstName)
+                            
+                        FieldView(viewModel: viewModel.person.middleName)
                     }
                 }
             }
             
         } else {
             
-            HStack(spacing: 0) {
+            HStack(alignment: .top, spacing: 18) {
                 
-                FieldView(icon: viewModel.icon, title: viewModel.title, value: .constant(viewModel.fullName), isDivider: false)
+                viewModel.icon
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .padding(.leading, 4)
+                    .padding(.top, 24)
+                    .foregroundColor(Color.mainColorsGray)
                 
-                Spacer()
+                FullNameView(viewModel: viewModel.fullNameViewModel, isUserInterractionEnabled: false)
             }
         }
     }
+}
+
+//MARK: - Internal Views
+
+extension PaymentsNameView {
     
-    struct FieldView: View {
+    struct FullNameView: View {
         
-        var icon: Image? = nil
-        let title: String
-        @Binding var value: String
-        var isEditing: Bool = false
-        var button: (icon: Image, action: () -> Void)? = nil
-        var isDivider: Bool = true
-        
-        private var displayTitle: String { value.count > 0 ? title : "" }
-        private var displayValue: String { value.count > 0 ? value : title }
-        private var displayValueColor: Color { value.count > 0 ? Color.textSecondary : Color.textPlaceholder }
+        let viewModel: PaymentsNameView.ViewModel.FullNameViewModel
+        var isUserInterractionEnabled: Bool = true
         
         var body: some View {
             
             VStack(alignment: .leading, spacing: 0) {
                 
-                Text(displayTitle)
+                Text(viewModel.title)
                     .font(.textBodySR12160())
                     .foregroundColor(.textPlaceholder)
-                    .padding(.leading, 48)
                     .padding(.bottom, 4)
+                    .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .opacity))
                 
                 HStack(spacing: 0) {
                     
-                    if let icon = icon {
-                        
-                        icon
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .padding(.leading, 4)
-                        
-                    } else {
-                        
-                        Color.clear
-                            .frame(width: 24, height: 24)
-                            .padding(.leading, 4)
-                    }
+                    Text(viewModel.value)
+                        .lineLimit(1)
+                        .font(.textBodyMR14200())
+                        .foregroundColor(.textSecondary)
+                        .frame(minHeight: 33)
+                    
+                    Spacer()
  
-                    if isEditing == true {
+                    if isUserInterractionEnabled {
                         
-                        TextField(title, text: $value)
-                            .foregroundColor(.textSecondary)
-                            .font(.textBodyMM14200())
-                            .padding(.leading, 20)
-                        
-                    } else {
-                        
-                        Text(displayValue)
-                            .font(.textBodyMR14200())
-                            .foregroundColor(displayValueColor)
-                            .padding(.leading, 20)
-                    }
-     
-                    if let button = button {
-                        
-                        Spacer()
-     
-                        Button(action: button.action) {
+                        Button(action: viewModel.button.action) {
                             
-                            button.icon
+                            viewModel.button.icon
                                 .renderingMode(.template)
                                 .resizable()
                                 .frame(width: 24, height: 24)
@@ -196,9 +424,78 @@ struct PaymentsNameView: View {
                 Divider()
                     .frame(height: 1)
                     .background(Color.bordersDivider)
-                    .opacity(isDivider ? 1.0 : 0.2)
+                    .opacity(isUserInterractionEnabled ? 1.0 : 0.2)
                     .padding(.top, 12)
-                    .padding(.leading, 48)
+            }
+            .onTapGesture {
+                
+                if isUserInterractionEnabled == true {
+                    
+                    viewModel.button.action()
+                }
+            }
+        }
+    }
+    
+    struct FieldView: View {
+        
+        @ObservedObject var viewModel: PaymentsNameView.ViewModel.NameViewModel
+        
+        var body: some View {
+            
+            VStack(alignment: .leading, spacing: 0) {
+                
+                if let title = viewModel.title {
+                    
+                    Text(title)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.textPlaceholder)
+                        .padding(.bottom, 4)
+                        .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .opacity))
+                }
+                
+                HStack(spacing: 0) {
+  
+                    TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 14), textColor: .textSecondary)
+                        .frame(minWidth: 24)
+                        .font(.textBodyMM14200())
+                    
+                    Spacer()
+     
+                    if let button = viewModel.button {
+
+                        Button(action: button.action) {
+                            
+                            button.icon
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(.textPlaceholder)
+                        }
+                    }
+                }
+ 
+                if let warning = viewModel.warning {
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        
+                        Divider()
+                            .frame(height: 1)
+                            .background(Color.systemColorError)
+                        
+                        Text(warning)
+                            .font(.textBodySR12160())
+                            .foregroundColor(.systemColorError)
+                        
+                    }.padding(.top, 12)
+                    
+                } else {
+                    
+                    Divider()
+                        .frame(height: 1)
+                        .background(Color.bordersDivider)
+                        .padding(.top, 12)
+                }
             }
         }
     }
@@ -211,33 +508,18 @@ struct PaymentsNameView_Previews: PreviewProvider {
     static var previews: some View {
        
         Group {
-            
+
             PaymentsNameView(viewModel: .normal)
                 .previewLayout(.fixed(width: 375, height: 100))
-            
+
             PaymentsNameView(viewModel: .normalNotEditable)
                 .previewLayout(.fixed(width: 375, height: 100))
-            
+
             PaymentsNameView(viewModel: .edit)
-                .previewLayout(.fixed(width: 375, height: 200))
-            
+                .previewLayout(.fixed(width: 375, height: 300))
+
             PaymentsNameView(viewModel: .editPart)
-                .previewLayout(.fixed(width: 375, height: 200))
-            
-            PaymentsNameView.FieldView(title: "ФИО", value: .constant(""))
-                .previewLayout(.fixed(width: 375, height: 56))
-            
-            PaymentsNameView.FieldView(title: "ФИО", value: .constant("Иванов Иван Иванович"))
-                .previewLayout(.fixed(width: 375, height: 56))
-            
-            PaymentsNameView.FieldView(title: "Фамилия", value: .constant(""))
-                .previewLayout(.fixed(width: 375, height: 56))
-            
-            PaymentsNameView.FieldView(title: "Фамилия", value: .constant("Иванов"), isEditing: true)
-                .previewLayout(.fixed(width: 375, height: 56))
-            
-            PaymentsNameView.FieldView(title: "Имя", value: .constant("Иван"), isEditing: true)
-                .previewLayout(.fixed(width: 375, height: 56))
+                .previewLayout(.fixed(width: 375, height: 300))
         }
     }
 }
@@ -246,26 +528,28 @@ struct PaymentsNameView_Previews: PreviewProvider {
 
 extension PaymentsNameView.ViewModel {
     
-    static let normal = try! PaymentsNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: "Иван"), middleName: .init(title: "Отчество", value: "Иванович")))
-    
-    static let normalNotEditable = try! PaymentsNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: "Иван"), middleName: .init(title: "Отчество", value: "Иванович"), isEditable: false))
-    
+    static let normal = PaymentsNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов", validator: .baseName, limitator: .init(limit: 158)), firstName: .init(title: "Имя", value: "Иван", validator: .baseName, limitator: .init(limit: 158)), middleName: .init(title: "Отчество", value: "Иванович", validator: .baseName, limitator: .init(limit: 158))))
+
+    static let normalNotEditable = PaymentsNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов", validator: .baseName, limitator: .init(limit: 158)), firstName: .init(title: "Имя", value: "Иван", validator: .baseName, limitator: .init(limit: 158)), middleName: .init(title: "Отчество", value: "Иванович", validator: .baseName, limitator: .init(limit: 158)), isEditable: false))
+
     static let edit: PaymentsNameView.ViewModel = {
+
+        var viewModel = PaymentsNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов", validator: .baseName, limitator: .init(limit: 158)), firstName: .init(title: "Имя", value: "Иван", validator: .baseName, limitator: .init(limit: 158)), middleName: .init(title: "Отчество", value: "Иванович", validator: .anyValue, limitator: .init(limit: 158))))
+
+        viewModel.isExpanded = true
         
-        var viewModel = try! PaymentsNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: "Иван"), middleName: .init(title: "Отчество", value: "Иванович")))
-        
-        viewModel.isEditing = true
-        
+
         return viewModel
     }()
-    
-    
+
+
     static let editPart: PaymentsNameView.ViewModel = {
-        
-        var viewModel = try! PaymentsNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: ""), middleName: .init(title: "Отчество", value: "")))
-        
-        viewModel.isEditing = true
-        
+
+        var viewModel = PaymentsNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Напу Амо Хала Она Она Анека Вехи Вехи Она Хивеа Нена Вава", validator: .baseName, limitator: .init(limit: 158)), firstName: .init(title: "Имя", value: nil, validator: .baseName, limitator: .init(limit: 158)), middleName: .init(title: "Отчество", value: nil, validator: .anyValue, limitator: .init(limit: 158))))
+
+        viewModel.isExpanded = true
+        viewModel.person.firstName.warning = "Поле не может быть пустым."
+
         return viewModel
     }()
 }

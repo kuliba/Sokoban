@@ -133,7 +133,7 @@ extension AuthProductsView {
                         
                         Spacer()
                         
-                        AuthProductsView.OrderButtonView(viewModel: viewModel.orderButton)
+                        AuthProductsView.OrderButtonView(viewModel: viewModel)
                     }
                     .frame(height: 48)
                     .padding(.top, 24)
@@ -169,18 +169,32 @@ extension AuthProductsView {
     
     struct OrderButtonView: View {
         
-        let viewModel: AuthProductsViewModel.ProductCardViewModel.OrderButton
+        let viewModel: AuthProductsViewModel.ProductCardViewModel
         
         var body: some View {
             
-            Link(destination: viewModel.url) {
+            switch viewModel.orderButtonType {
                 
-                Text(viewModel.title)
-                    .foregroundColor(.textWhite)
-                    .padding(.vertical, 12)
-                    .frame(width: 166)
-                    .background(Color.buttonPrimary)
-                    .cornerRadius(8)
+            case let .main(orderButton):
+                
+                Link(destination: orderButton.url) {
+                    
+                    Text(orderButton.title)
+                        .foregroundColor(.textWhite)
+                        .padding(.vertical, 12)
+                        .frame(width: 166)
+                        .background(Color.buttonPrimary)
+                        .cornerRadius(8)
+                }
+                
+            case let .auth(orderButton):
+                
+                ButtonOrderView(viewModel: .init(
+                    orderButton.id,
+                    title: orderButton.title,
+                    style: .red,
+                    action: orderButton.action)
+                )
             }
         }
     }

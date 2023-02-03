@@ -97,6 +97,42 @@ extension ServerCommands {
         }
         
         /*
+         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getPrefferdBanksList
+         */
+        struct GetPrefferdBanksList: ServerCommand {
+            
+            let token: String
+            let endpoint = "/dict/v1/getPrefferedBanksRequisitesList"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+            
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: PrefferedBanksList?
+            }
+            
+            init(token: String, serial: String?) {
+                
+                self.token = token
+                
+                if let serial = serial{
+                    
+                    var parameters = [ServerCommandParameter]()
+                    parameters.append(.init(name: "serial", value: serial))
+                    self.parameters = parameters
+                    
+                } else {
+                    
+                    self.parameters = nil
+                }
+            }
+        }
+        
+        /*
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/dict/getCountries
          */
         struct GetCountries: ServerCommand {
@@ -139,12 +175,12 @@ extension ServerCommands {
         }
         
         /*
-         http://10.1.206.21:8080/swagger-ui/index.html#/DictionaryController/getCurrencyWalletList_v2
+         http://10.1.206.21:8080/swagger-ui/index.html#/DictionaryController/getCurrencyWalletList_v3
         */
         struct GetCurrencyWalletList: ServerCommand {
             
             let token: String
-            let endpoint = "/dict/getCurrencyWalletList_V2"
+            let endpoint = "/dict/getCurrencyWalletList_V3"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             

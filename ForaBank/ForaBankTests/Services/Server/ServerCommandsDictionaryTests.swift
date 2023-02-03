@@ -698,16 +698,27 @@ class ServerCommandsDictionaryTests: XCTestCase {
     func testGetProductCatalogList_Response_Decoding() throws {
 
         // given
-        guard let url = bundle.url(forResource: "GetProductCatalogList", withExtension: "json") else {
+        guard let url = bundle.url(forResource: "GetProductCatalogList", withExtension: "json")
+        else {
             XCTFail("testGetProductCatalogList_Response_Decoding : Missing file: GetProductCatalogList.json")
             return
         }
         
         let json = try Data(contentsOf: url)
-        let data = ServerCommands.DictionaryController.GetProductCatalogList.Response.ProductCatalog(productCatalogList: [.init(name: "Карта 'Миг'", description: ["string"], imageEndpoint: "dict/getProductCatalogImage?image=1", infoURL: URL(string: "https://www.forabank.ru/")!, orderURL: URL(string: "https://www.forabank.ru/")!)], serial: "bea36075a58954199a6b8980549f6b69")
-        let expected = ServerCommands.DictionaryController.GetProductCatalogList.Response(statusCode: .ok,
-                                                                                          data: data,
-                                                                                          errorMessage: "string")
+        let data = ServerCommands.DictionaryController.GetProductCatalogList.Response.ProductCatalog
+                .init(productCatalogList: [.init(name: "Карта 'Миг'",
+                                                 description: ["string"],
+                                                 imageEndpoint: "dict/getProductCatalogImage?image=1",
+                                                 infoURL: URL(string: "https://www.forabank.ru/")!,
+                                                 orderURL: URL(string: "https://www.forabank.ru/")!,
+                                                 tariff: 1,
+                                                 productType: 1)],
+                      serial: "bea36075a58954199a6b8980549f6b69")
+        
+        let expected = ServerCommands.DictionaryController.GetProductCatalogList.Response
+                            .init(statusCode: .ok,
+                                  data: data,
+                                  errorMessage: "string")
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetProductCatalogList.Response.self, from: json)

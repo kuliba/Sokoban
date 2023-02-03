@@ -95,13 +95,13 @@ class InfoProductViewModel: ObservableObject {
         
         switch product.productType {
         case .card:
-            
             model.action.send(ModelAction.Products.ProductDetails.Request(type: product.productType, id: product.id))
             self.title = "Реквизиты счета карты"
-        case .account:
             
+        case .account:
             model.action.send(ModelAction.Products.ProductDetails.Request(type: .account, id: product.id))
             self.title = "Реквизиты счета"
+            
         case .deposit:
             if info {
                 
@@ -182,11 +182,18 @@ class InfoProductViewModel: ObservableObject {
                     switch payload {
                     case .success(let data):
                         
+                        guard data.id == product.id else {
+                            return
+                        }
+                        
                         var list: [ItemViewModel] = []
                         
                         let dateFormatter = DateFormatter.detailFormatter
                         
-                        list.append(.init(title: "Сумма первоначального размещения", subtitle: data.initialAmount.currencyFormatter(symbol: product.currency)))
+                        if let initialAmount = model.amountFormatted(amount: data.initialAmount, currencyCode: product.currency, style: .clipped) {
+                            
+                            list.append(.init(title: "Сумма первоначального размещения", subtitle: initialAmount))
+                        }
                         list.append(.init(title: "Дата открытия", subtitle: dateFormatter.string(from: data.dateOpen)))
                         
                         if let dateEnd = data.dateEnd {
@@ -206,19 +213,25 @@ class InfoProductViewModel: ObservableObject {
                             list.append(.init(title: "Дата следующего начисления процентов", subtitle: dateFormatter.string(from: dateNext)))
 
                         }
-                        list.append(.init(title: "Сумма выплаченных процентов всего", subtitle: data.sumPayInt.currencyFormatter(symbol: product.currency)))
-                        
-                        if let sumCredit = data.sumCredit?.currencyFormatter(symbol: product.currency) {
+                        if let sumPayInt = model.amountFormatted(amount: data.sumPayInt, currencyCode: product.currency, style: .clipped) {
                             
-                            list.append(.init(title: "Суммы пополнений", subtitle: sumCredit))
+                            list.append(.init(title: "Сумма выплаченных процентов всего", subtitle: sumPayInt))
                         }
                         
-                        if let sumDebit = data.sumDebit?.currencyFormatter(symbol: product.currency) {
+                        if let sumCredit = data.sumCredit, let sumCreditAmount = model.amountFormatted(amount: sumCredit, currencyCode: product.currency, style: .clipped) {
                             
-                            list.append(.init(title: "Суммы списаний", subtitle: sumDebit))
+                            list.append(.init(title: "Суммы пополнений", subtitle: sumCreditAmount))
                         }
                         
-                        list.append(.init(title: "Сумма начисленных процентов на дату", subtitle: data.sumAccInt.currencyFormatter(symbol: product.currency)))
+                        if let sumDebit = data.sumDebit, let sumDebitAmount = model.amountFormatted(amount: sumDebit, currencyCode: product.currency, style: .clipped) {
+                            
+                            list.append(.init(title: "Суммы списаний", subtitle: sumDebitAmount))
+                        }
+                        
+                        if let sumAccInt = model.amountFormatted(amount: data.sumAccInt, currencyCode: product.currency, style: .clipped) {
+
+                            list.append(.init(title: "Сумма начисленных процентов на дату", subtitle: sumAccInt))
+                        }
                         
                         withAnimation {
                             
