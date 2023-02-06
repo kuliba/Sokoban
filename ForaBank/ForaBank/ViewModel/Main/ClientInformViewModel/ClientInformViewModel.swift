@@ -11,6 +11,7 @@ import Combine
 class ClientInformViewModel: ObservableObject {
 
     let items: [ClientInformItemViewModel]
+    let title = "Технические работы"
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -23,15 +24,10 @@ class ClientInformViewModel: ObservableObject {
     
     convenience init?(model: Model, itemsData: [String]) {
         
-        //let data = model.clientInform.value?.authorized
         let icon = Image.ic24Clock
-        
         let items = Self.reduce(itemsData: itemsData, itemIcon: icon)
-        //let items = Self.sampleItemsMax
         
         self.init(model: model, items: items)
-
-        bind()
     }
     
     struct ClientInformItemViewModel: Identifiable {
@@ -39,11 +35,6 @@ class ClientInformViewModel: ObservableObject {
         let id: String
         let icon: Image
         let text: String
-    }
-
-    private func bind() {
-
-        
     }
 
 }

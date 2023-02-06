@@ -1795,7 +1795,7 @@ extension Model {
         guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
         self.dictionariesUpdating.value.insert(typeDict)
         
-        let command = ServerCommands.DictionaryController.GetClientInformData(token: token, serial: nil) //serial)
+        let command = ServerCommands.DictionaryController.GetClientInformData(token: token, serial: nil)   //befor refactoring back -  <nil>, after serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             self.dictionariesUpdating.value.remove(typeDict)
@@ -1804,28 +1804,15 @@ extension Model {
             case .success(let response):
                 switch response.statusCode {
                 case .ok:
-                    guard let data = response.data else {
-                        
-                        handleServerCommandEmptyData(command: command)
-                        return
-                    }
-                    
-                    self.clientInform.value = data
-                    
-                    do {
-                        
-                        try self.localAgent.store(data, serial: data.serial)
-                        
-                    } catch {
-                        
-                        handleServerCommandCachingError(error: error, command: command)
-                    }
+                    self.clientInform.value = (response.data, true)
                     
                 default:
+                    self.clientInform.value = (nil, true)
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
+                self.clientInform.value = (nil, true)
                 handleServerCommandError(error: error, command: command)
             }
         }

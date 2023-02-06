@@ -71,7 +71,15 @@ class AuthPinCodeViewModel: ObservableObject {
                 
                 if isAutoSensor == true {
                     
-                    self.init(pincodeValue: .init(""), pinCode: pinCode, numpad: numpad, footer: footer, rootActions: rootActions, model: model, mode: mode, stage: .editing, sensorAutoEvaluationStatus: .required(sensor))
+                    self.init(pincodeValue: .init(""),
+                              pinCode: pinCode,
+                              numpad: numpad,
+                              footer: footer,
+                              rootActions: rootActions,
+                              model: model,
+                              mode: mode,
+                              stage: .editing,
+                              sensorAutoEvaluationStatus: .required(sensor))
                     
                 } else {
                     
@@ -100,29 +108,30 @@ class AuthPinCodeViewModel: ObservableObject {
     
     func bind() {
         
-        model.clientInform
-            .receive(on: DispatchQueue.main)
-            .sink { alarm in
-                
-                alarm?.authorized.forEach({ st in
-                    print("Authorized \(st)")
-                })
-                print("autho \(alarm?.authorized)")
-                print("notAutho \(alarm?.notAuthorized)")
-                
-            }.store(in: &bindings)
-        
         model.sessionState
+            .combineLatest(model.clientInform)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] state in
+            .sink { [unowned self] state, clientInformData in
         
                 switch state {
+                
                 case .active:
+                    
+                    guard clientInformData.isRecieved else { return }
+                    
                     withAnimation {
                         self.spinner = nil
                     }
+                        
+                    if !self.model.isShowNotAuthorizedClientInform,
+                       let message = clientInformData.data?.notAuthorized  {
+                       
+                        self.action.send(AuthPinCodeViewModelAction.Show.AlertClientInform(message: message))
                     
-                    tryAutoEvaluateSensor()
+                    } else {
+                    
+                        tryAutoEvaluateSensor()
+                    }
                     
                 default:
                     withAnimation {
@@ -512,7 +521,7 @@ class AuthPinCodeViewModel: ObservableObject {
                 case _ as AuthPinCodeViewModelAction.Appear:
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "received AuthPinCodeViewModelAction.Appear")
                     isViewDidAppear = true
-                    tryAutoEvaluateSensor()
+                    //tryAutoEvaluateSensor()
                     
                 case let payload as AuthPinCodeViewModelAction.Continue:
                     LoggerAgent.shared.log(category: .ui, message: "received AuthPinCodeViewModelAction.Continue")
@@ -548,7 +557,19 @@ class AuthPinCodeViewModel: ObservableObject {
                     
                     LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Logout")
                     model.action.send(ModelAction.Auth.Logout())
-                
+                    
+                case let payload as AuthPinCodeViewModelAction.Show.AlertClientInform:
+                    LoggerAgent.shared.log(category: .ui,
+                                           message: "received AuthPinCodeViewModelAction.Show.AlertClientInform with \(payload.message)")
+                    
+                    self.model.isShowNotAuthorizedClientInform = true
+                    alert = .init(title: "Ошибка",
+                                  message: payload.message,
+                                  primary: .init(type: .default,
+                                                 title: "Ok",
+                                                 action: { [weak self] in
+                                                            self?.alert = nil
+                                                            self?.tryAutoEvaluateSensor() }))
                 default:
                     break
                 }
@@ -605,12 +626,10 @@ class AuthPinCodeViewModel: ObservableObject {
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "Auto evaluate sensor attempt")
         
-        guard case .required(let sensor) = sensorAutoEvaluationStatus,
-              model.authIsSessionActive == true,
-              isViewDidAppear == true else {
-
-            return
-        }
+        guard case let .required(sensor) = sensorAutoEvaluationStatus,
+                        model.authIsSessionActive == true,
+                        isViewDidAppear == true
+        else { return }
         
         LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Sensor.Evaluate.Request: sensor: \(sensor)")
         
@@ -890,4 +909,12 @@ enum AuthPinCodeViewModelAction {
     }
     
     struct Appear: Action {}
+    
+    enum Show {
+        
+        struct AlertClientInform: Action {
+            
+            let message: String
+        }
+    }
 }

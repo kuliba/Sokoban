@@ -9,7 +9,7 @@ import Foundation
 
 struct ClientInformData: Codable, Equatable {
         
-    let serial: String
-    let authorized: [String]
+    let serial: String?
+    let authorized: [String]?
     let notAuthorized: String?
 }

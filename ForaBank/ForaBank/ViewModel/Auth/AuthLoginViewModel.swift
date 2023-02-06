@@ -63,8 +63,11 @@ class AuthLoginViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] clientInformData in
         
-                guard let message = clientInformData?.notAuthorized else { return }
-                action.send(AuthLoginViewModelAction.Show.AlertClientInform(message: message))
+                guard !self.model.isShowNotAuthorizedClientInform,
+                      let message = clientInformData.data?.notAuthorized
+                else { return }
+                self.model.isShowNotAuthorizedClientInform = true
+                self.action.send(AuthLoginViewModelAction.Show.AlertClientInform(message: message))
         
         }.store(in: &bindings)
         

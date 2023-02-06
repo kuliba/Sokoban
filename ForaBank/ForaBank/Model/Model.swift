@@ -59,7 +59,7 @@ class Model {
     let currencyWalletList: CurrentValueSubject<[CurrencyWalletData], Never>
     let centralBankRates: CurrentValueSubject<[CentralBankRatesData], Never>
     var images: CurrentValueSubject<[String: ImageData], Never>
-    let clientInform: CurrentValueSubject<ClientInformData?, Never>
+    let clientInform: CurrentValueSubject<(data: ClientInformData?, isRecieved: Bool), Never>
     
     //MARK: Deposits
     let deposits: CurrentValueSubject<[DepositProductData], Never>
@@ -100,6 +100,10 @@ class Model {
     
     //MARK: QR
     let qrMapping: CurrentValueSubject<QRMapping?, Never>
+    
+    //MARK: ClientInform show flags
+    var isShowNotAuthorizedClientInform = false
+    var isShowAuthorizedClientInform = false
     
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
@@ -189,7 +193,7 @@ class Model {
         self.qrMapping = .init(nil)
         self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
-        self.clientInform = .init(nil)
+        self.clientInform = .init((nil, false))
         
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
