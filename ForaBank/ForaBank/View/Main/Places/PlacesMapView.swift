@@ -230,7 +230,7 @@ extension PlacesMapView {
             }
             
             let categories = cluster.memberAnnotations.compactMap({ $0 as? PlaceAnnotation }).map({ $0.category })
-            let imageName = categories.contains(.office) ? "ic48PinManyBranchesRed" : "ic48PinManyBranchesBlack"
+            let imageName = categories.contains(.office) ? "ic48PinManyBranchesRed" : "ic48PinAtm"
             guard let iconImage = UIImage(named: imageName) else {
                       return
                   }
