@@ -544,7 +544,10 @@ class PaymentsMeToMeViewModel: ObservableObject {
             return
         }
         
-        if currencyFrom == Currency.rub {
+        if currencyFrom == Currency.rub && currencyTo == Currency.rub {
+            paymentsAmount.info = nil
+            
+        } else if currencyFrom == Currency.rub {
             
             if let rateDataTo = rateDataTo {
                 
