@@ -388,6 +388,19 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
                     
                 }
             }
+            
+            self.footerView.showAllCards = {
+                let vc = AllCardListViewController()
+                vc.withTemplate = false
+                vc.didCardTapped = { card in
+                    self.footerView.cardFromField.model = card
+                    self.footerView.hideView(self.footerView.cardListView, needHide: true)
+                    vc.dismiss(animated: true, completion: nil)
+                }
+                let navVc = UINavigationController(rootViewController: vc)
+                navVc.modalPresentationStyle = .fullScreen
+                self.present(navVc, animated: true, completion: nil)
+            }
         }
     }
     
