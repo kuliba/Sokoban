@@ -11,7 +11,7 @@ import Network
 
 class NetworkMonitorAgent: NetworkMonitorAgentProtocol {
 
-    let isNetworkAvailable: PassthroughSubject<Bool, Never> = .init()
+    let networkStatus: PassthroughSubject<NetworkAndInternetStatus, Never> = .init()
     
     private var pathMonitor: NWPathMonitor
     
@@ -22,39 +22,47 @@ class NetworkMonitorAgent: NetworkMonitorAgentProtocol {
             LoggerAgent.shared.log(level: .info,
                                    category: .network,
                                    message: "NWPath.Status.satisfied")
-            self?.isNetworkAvailable.send(true)
+            self?.networkStatus.send(.networkEnabled)
             
         case .unsatisfied:
             LoggerAgent.shared.log(level: .info,
                                    category: .network,
                                    message: "NWPath.Status.unsatisfied")
-            self?.isNetworkAvailable.send(false)
+            self?.networkStatus.send(.noNetwork)
         
         case .requiresConnection:
             LoggerAgent.shared.log(level: .info,
                                    category: .network,
                                    message: "NWPath.Status.requiresConnection")
-            self?.isNetworkAvailable.send(false)
+            self?.networkStatus.send(.noNetwork)
             
         @unknown default:
             LoggerAgent.shared.log(level: .info,
                                    category: .network,
                                    message: "NWPath.Status.Unknown")
-            self?.isNetworkAvailable.send(false)
+            self?.networkStatus.send(.noNetwork)
         }
     }
 
     private let backgroudQueue = DispatchQueue.global(qos: .background)
-    
-    private var urlSession: URLSession = {
-        var newConfiguration: URLSessionConfiguration = .default
-        newConfiguration.waitsForConnectivity = false
-        newConfiguration.allowsCellularAccess = true
-        return URLSession(configuration: newConfiguration)
-    }()
+    private var urlSession: URLSession
 
-    public func isGoogleAvailable() -> Bool
-    {
+    init() {
+        
+        self.urlSession = {
+            let newConfiguration: URLSessionConfiguration = .default
+            newConfiguration.waitsForConnectivity = false
+            newConfiguration.allowsCellularAccess = true
+            return URLSession(configuration: newConfiguration)
+        }()
+        
+        self.pathMonitor = NWPathMonitor()
+        self.pathMonitor.pathUpdateHandler = self.pathUpdateHandler
+        self.pathMonitor.start(queue: backgroudQueue)
+    }
+    
+    public func checkInternet() {
+
         let url = URL(string: "https://8.8.8.8")!
         let semaphore = DispatchSemaphore(value: 0)
         var success = false
@@ -68,15 +76,22 @@ class NetworkMonitorAgent: NetworkMonitorAgentProtocol {
         task.resume()
         semaphore.wait()
 
-        return success
+        self.networkStatus.send(success ? .internetEnabled : .noNetwork)
     }
+
+}
+
+enum NetworkAndInternetStatus {
+    case noNetwork
+    case networkEnabled
+    case internetEnabled
     
-
-    init() {
-        self.pathMonitor = NWPathMonitor()
-        self.pathMonitor.pathUpdateHandler = self.pathUpdateHandler
-        self.pathMonitor.start(queue: backgroudQueue)
+    var isConnect: Bool {
+        
+        switch self {
+        case .networkEnabled, .internetEnabled: return true
+        case .noNetwork: return false
+        }
     }
-
 }
     

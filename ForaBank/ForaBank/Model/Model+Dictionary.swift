@@ -1804,15 +1804,15 @@ extension Model {
             case .success(let response):
                 switch response.statusCode {
                 case .ok:
-                    self.clientInform.value = (response.data, true)
+                    self.clientInform.value = .result(response.data) 
                     
                 default:
-                    self.clientInform.value = (nil, true)
+                    self.clientInform.value = .result(nil)
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
-                self.clientInform.value = (nil, true)
+                self.clientInform.value = .result(nil)
                 handleServerCommandError(error: error, command: command)
             }
         }

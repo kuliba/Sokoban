@@ -14,7 +14,6 @@ class AuthLoginViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     let header: HeaderViewModel
     
-    @Published var isInternet: String = ""
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var bottomSheet: BottomSheet?
     @Published var isLinkActive: Bool = false
@@ -63,10 +62,10 @@ class AuthLoginViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] clientInformData in
         
-                guard !self.model.isShowNotAuthorizedClientInform,
+                guard !self.model.clientInformStatus.isShowNotAuthorized,
                       let message = clientInformData.data?.notAuthorized
                 else { return }
-                self.model.isShowNotAuthorizedClientInform = true
+                self.model.clientInformStatus.isShowNotAuthorized = true
                 self.action.send(AuthLoginViewModelAction.Show.AlertClientInform(message: message))
         
         }.store(in: &bindings)

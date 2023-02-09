@@ -256,6 +256,7 @@
 		0C03FB54286A89A900C2A100 /* BanksCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C03FB53286A89A900C2A100 /* BanksCollectionViewCell.swift */; };
 		0C0DEDA028858F1B00C66AED /* CurrencyExchangeConfirmationComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C0DED9F28858F1B00C66AED /* CurrencyExchangeConfirmationComponent.swift */; };
 		0C1877B328776449004F7699 /* CurrencyWalletData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1877B228776449004F7699 /* CurrencyWalletData.swift */; };
+		0C227A9929956C9000FDDDC6 /* ClientInformTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C227A9829956C9000FDDDC6 /* ClientInformTypes.swift */; };
 		0C27658E290683770007D31D /* OnboardingPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C27658D290683760007D31D /* OnboardingPlayerView.swift */; };
 		0C276593290691C10007D31D /* MyProductsOrdered3x.mov in Resources */ = {isa = PBXBuildFile; fileRef = 0C276591290691C10007D31D /* MyProductsOrdered3x.mov */; };
 		0C276594290691C10007D31D /* MyProductsHide3x.mov in Resources */ = {isa = PBXBuildFile; fileRef = 0C276592290691C10007D31D /* MyProductsHide3x.mov */; };
@@ -1800,6 +1801,7 @@
 		0C03FB53286A89A900C2A100 /* BanksCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksCollectionViewCell.swift; sourceTree = "<group>"; };
 		0C0DED9F28858F1B00C66AED /* CurrencyExchangeConfirmationComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchangeConfirmationComponent.swift; sourceTree = "<group>"; };
 		0C1877B228776449004F7699 /* CurrencyWalletData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyWalletData.swift; sourceTree = "<group>"; };
+		0C227A9829956C9000FDDDC6 /* ClientInformTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientInformTypes.swift; sourceTree = "<group>"; };
 		0C27658D290683760007D31D /* OnboardingPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPlayerView.swift; sourceTree = "<group>"; };
 		0C276591290691C10007D31D /* MyProductsOrdered3x.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = MyProductsOrdered3x.mov; sourceTree = "<group>"; };
 		0C276592290691C10007D31D /* MyProductsHide3x.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = MyProductsHide3x.mov; sourceTree = "<group>"; };
@@ -5766,6 +5768,7 @@
 				C10F481828E4A52F009918EA /* PushNotification.swift */,
 				C169920D28F486F20035CF15 /* ServerAgentEnviroment.swift */,
 				C1DE211E2919531500ED0F8D /* AppSettings.swift */,
+				0C227A9829956C9000FDDDC6 /* ClientInformTypes.swift */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -8514,6 +8517,7 @@
 				0BAD4D35273EDE8200FDF9B6 /* GetNotificationsEntitytModel.swift in Sources */,
 				687FB23326E9E551004A479F /* PaymentMainCell.swift in Sources */,
 				687F9B0B27FBF7C0007A38A5 /* ProductDepositData.swift in Sources */,
+				0C227A9929956C9000FDDDC6 /* ClientInformTypes.swift in Sources */,
 				C169920E28F486F20035CF15 /* ServerAgentEnviroment.swift in Sources */,
 				0BA14E1A2712597D0098E422 /* StaticDefaultTimeOut.swift in Sources */,
 				505E71202948EAEB00AAB895 /* OrderLeadData.swift in Sources */,

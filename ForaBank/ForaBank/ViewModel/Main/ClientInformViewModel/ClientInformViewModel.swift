@@ -11,14 +11,15 @@ import Combine
 class ClientInformViewModel: ObservableObject {
 
     let items: [ClientInformItemViewModel]
-    let title = "Технические работы"
+    let title: String
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
 
-    init(model: Model, items: [ClientInformItemViewModel]) {
+    init(model: Model, title: String = "Технические работы", items: [ClientInformItemViewModel]) {
 
         self.model = model
+        self.title = title
         self.items = items
     }
     
