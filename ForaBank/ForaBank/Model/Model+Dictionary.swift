@@ -1803,9 +1803,16 @@ extension Model {
                         
                         return (item.md5hash, imageData)
                     }
-                    self.images.value = dictionaryImagesReduce(images: self.images.value, updateItems: responseItems)
+                    
                     self.action.send(ModelAction.Dictionary.DownloadImages.Response.init(result: .success(responseItems)))
                     
+                    // if there is no images do not update cache
+                    guard responseItems.isEmpty == false else {
+                        return
+                    }
+                    
+                    self.images.value = dictionaryImagesReduce(images: self.images.value, updateItems: responseItems)
+
                     do {
                         
                         try self.localAgent.store(images.value, serial: nil)

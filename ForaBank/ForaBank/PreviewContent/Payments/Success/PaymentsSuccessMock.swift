@@ -62,4 +62,7 @@ extension PaymentsSuccessViewModel {
     
     static let sample9: PaymentsSuccessViewModel = .init(.emptyMock, title: "Запрос на пополнение со своего счета принят в обработку", amount: "500 ₽", iconType: .accepted, service: .init(title: "Из банка:", description: "Сбербанк"), logo: .init(title: "сбп", image: .ic40Sbp), actionButton: .sample, optionButtons: []
     )
+    
+    static let sample10: PaymentsSuccessViewModel = .init(.emptyMock, title: "Привязка счета оформлена", amount: nil, iconType: .success, service: nil, logo: nil, actionButton: .sample, optionButtons: [], company: .init(icon: .ic40Goods, name: "Цветы у дома"), link: .init(title: "Вернуться в магазин", url: .init(string: "https://www.google.com")!), bottomIcon: .ic72Sbp
+    )
 }

@@ -34,18 +34,18 @@ extension ButtonSimpleView {
             var backgroundColor: Color {
                 switch self {
                     
-                case .red:      return Color(hex: "#FF3636")
+                case .red:      return .buttonPrimary
                 case .gray:     return .buttonSecondary
-                case .inactive: return .buttonSecondary
+                case .inactive: return .buttonPrimaryDisabled
                 }
             }
             
             var foregroundColor: Color {
                 switch self {
                     
-                case .red:      return Color(hex: "#FFFFFF")
+                case .red:      return .textWhite
                 case .gray:     return .textSecondary
-                case .inactive: return Color(hex: "#898989")
+                case .inactive: return .textWhite
                 }
             }
         }

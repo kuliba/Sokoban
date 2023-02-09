@@ -28,27 +28,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>CFBundleURLName</key>
-			<string>ru.nspk.me2mepull</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>bank100000000217</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-			<key>CFBundleURLName</key>
-			<string>qr.nspk.ru</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>https</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-			<key>CFBundleURLName</key>
-			<string>qr.nspk.ru</string>
+			<string>nspk.ru</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>bank100000000217</string>
@@ -61,7 +41,6 @@
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>qr.nspk.ru</string>
 		<string>sbpay</string>
 		<string>maps</string>
 		<string>viber</string>

@@ -41,6 +41,16 @@ struct PaymentsSuccessView: View {
                         .frame(width: 250)
                 }
                 
+                if let company = viewModel.company {
+                    
+                    CompanyView(viewModel: company)
+                }
+                
+                if let link = viewModel.link {
+                    
+                    LinkView(viewModel: link)
+                }
+                
                 if let service = viewModel.service {
                     ServiceView(viewModel: service)
                 }
@@ -99,10 +109,19 @@ struct PaymentsSuccessView: View {
                         .padding(.horizontal, 20)
                 }
                 
-                ButtonSimpleView(viewModel: viewModel.actionButton)
-                    .frame(height: 48)
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, bottomPadding)
+                VStack(spacing: 20) {
+                    
+                    ButtonSimpleView(viewModel: viewModel.actionButton)
+                        .frame(height: 48)
+                        .padding(.horizontal, 20)
+                    
+                    if let bottomIcon = viewModel.bottomIcon {
+                        
+                        bottomIcon
+                            .renderingMode(.original)
+                    }
+                    
+                }.padding(.bottom, bottomPadding)
             }
         }
         .background(Color.mainColorsWhite)
@@ -224,6 +243,54 @@ extension PaymentsSuccessView {
             }
         }
     }
+    
+    struct CompanyView: View {
+        
+        let viewModel: PaymentsSuccessViewModel.Company
+        
+        var body: some View {
+            
+            VStack {
+                
+                viewModel.icon
+                    .renderingMode(.original)
+                    .resizable()
+                    .frame(width: 40, height: 40)
+                
+                Text(viewModel.name)
+                    .font(.textBodyMM14200())
+                    .foregroundColor(.textSecondary)
+            }
+        }
+    }
+    
+    struct LinkView: View {
+        
+        let viewModel: PaymentsSuccessViewModel.Link
+        @Environment(\.openURL) var openURL
+        
+        var body: some View {
+            
+            HStack(spacing: 10) {
+                
+                viewModel.icon
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(.mainColorsGray)
+                
+                Text(viewModel.title)
+                    .font(.textBodyMM14200())
+                    .foregroundColor(.textSecondary)
+            }
+            .padding(.vertical, 10)
+            .padding(.horizontal, 12)
+            .background(RoundedRectangle(cornerRadius: 12).foregroundColor(.mainColorsGrayLightest))
+            .onTapGesture {
+                
+                openURL(viewModel.url)
+            }
+        }
+    }
 }
 
 struct PaymentsSuccessView_Previews: PreviewProvider {
@@ -241,6 +308,7 @@ struct PaymentsSuccessView_Previews: PreviewProvider {
             PaymentsSuccessView(viewModel: .sample7)
             PaymentsSuccessView(viewModel: .sample8)
             PaymentsSuccessView(viewModel: .sample9)
+            PaymentsSuccessView(viewModel: .sample10)
         }
     }
 }
