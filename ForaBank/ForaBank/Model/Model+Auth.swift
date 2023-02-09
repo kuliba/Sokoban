@@ -1038,7 +1038,11 @@ extension Model {
                         
                         do {
                             
+#if MOCK
+                            let csrfAgent = try MockCSRFAgent<MockEncryptionAgent>(MockKeysProvider(), data.cert, data.pk)
+#else
                             let csrfAgent = try CSRFAgent<AESEncryptionAgent>(ECKeysProvider(), data.cert, data.pk)
+#endif
                             let token = data.token
                             
                             let keyExchangeCommand = ServerCommands.UtilityController.KeyExchange(token: token, payload: .init(data: csrfAgent.publicKeyData, token: token, type: ""))

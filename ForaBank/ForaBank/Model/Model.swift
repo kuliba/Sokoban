@@ -214,6 +214,9 @@ class Model {
         // server agent
 #if DEBUG
         let enviroment = ServerAgentEnvironment.test
+        
+#elseif MOCK
+        let enviroment = ServerAgentEnvironment.mock
 #else
         let enviroment = ServerAgentEnvironment.prod
 #endif

@@ -15,7 +15,11 @@ struct URLConstruct {
                        _ host: URLHost.URLHostType,
                        _ path: String) -> URLType {
         
+#if MOCK
+        let temp = "http://" + URLHost().getHost() + path
+#else
         let temp = scheme.rawValue + "://" + URLHost().getHost() + path
+#endif
         
         let components = URLComponents(string: temp)
         

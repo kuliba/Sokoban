@@ -11,11 +11,13 @@ import Foundation
 class URLHost {
     
     func getHost() -> String {
-        var host = "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
-        #if DEBUG
-        host = "pl.forabank.ru/dbo/api/v3"
-        #endif
-        return host
+#if DEBUG
+        "pl.forabank.ru/dbo/api/v3"
+#elseif MOCK
+        "http://10.1.206.85:8443"
+#else
+        "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
+#endif
     }
     
     enum URLHostType: String  {

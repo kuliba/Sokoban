@@ -12,6 +12,7 @@ enum ServerAgentEnvironment {
     
     case test
     case prod
+    case mock
     
     var baseURL: String {
         
@@ -21,6 +22,9 @@ enum ServerAgentEnvironment {
             
         case .prod:
             return "https://bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
+            
+        case .mock:
+            return "http://10.1.206.85:8443"
         }
     }
 }
