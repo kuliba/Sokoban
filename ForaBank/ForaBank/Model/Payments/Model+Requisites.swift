@@ -247,7 +247,7 @@ extension Model {
                 
                 //MARK: CheckBox Parameter
                 let checkBoxParameterId = Payments.Parameter.Identifier.requisitsCheckBox.rawValue
-                let checkBoxParameter = Payments.ParameterCheckBox(.init(id: checkBoxParameterId, value: .init()), title: "Оплата ЖКХ")
+                let checkBoxParameter = Payments.ParameterCheck(.init(id: checkBoxParameterId, value: .init()), title: "Оплата ЖКХ")
                 parameters.append(checkBoxParameter)
             }
             
@@ -364,7 +364,7 @@ extension Model {
             let checkBoxId = Payments.Parameter.Identifier.requisitsCheckBox.rawValue
             let checkBox = parameters.first(where: {$0.id == checkBoxId})
             
-            guard let checkBox = checkBox as? Payments.ParameterCheckBox, checkBox.value == true, let imageData = UIImage(named: "ic24Info")?.pngData() else {
+            guard let checkBox = checkBox as? Payments.ParameterCheck, checkBox.value == true, let imageData = UIImage(named: "ic24Info")?.pngData() else {
                 return message.updated(hint: nil)
             }
             

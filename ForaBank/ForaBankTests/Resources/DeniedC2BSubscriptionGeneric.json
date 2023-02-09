@@ -1,0 +1,11 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "operationStatus": "REJECTED",
+        "title": "Счет не привязан",
+        "brandIcon": "c896aba73a67de2bfc69de70209eb3f3",
+        "brandName": "Тестовый ТСП ТИВ",
+        "redirectUrl": "https://sbp.nspk.ru/test_link_tiv.html"
+    }
+}

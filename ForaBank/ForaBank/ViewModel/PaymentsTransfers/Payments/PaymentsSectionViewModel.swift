@@ -328,8 +328,8 @@ extension PaymentsSectionViewModel {
         case let parameterSwitch as Payments.ParameterSelectSwitch:
             return PaymentsSwitchView.ViewModel(with: parameterSwitch)
             
-        case let parameterCheckBox as Payments.ParameterCheckBox:
-            return try? PaymentsCheckBoxView.ViewModel(with: parameterCheckBox)
+        case let parameterCheckBox as Payments.ParameterCheck:
+            return try? PaymentsCheckView.ViewModel(with: parameterCheckBox)
             
         case let parameterInfo as Payments.ParameterInfo:
             return PaymentsInfoView.ViewModel(with: parameterInfo)
@@ -360,6 +360,12 @@ extension PaymentsSectionViewModel {
             
         case let parameterMessage as Payments.ParameterMessage:
             return PaymentsMessageView.ViewModel(with: parameterMessage)
+            
+        case let parameterSubscriber as Payments.ParameterSubscriber:
+            return PaymentsSubscriberView.ViewModel(with: parameterSubscriber, model: model)
+            
+        case let parameterSubscribe as Payments.ParameterSubscribe:
+            return PaymentsSubscribeView.ViewModel(with: parameterSubscribe)
         
             // for tests only
         case let parameterMock as Payments.ParameterMock:

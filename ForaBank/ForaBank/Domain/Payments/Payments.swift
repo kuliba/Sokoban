@@ -20,7 +20,7 @@ enum Payments {
         var services: [Service] {
             
             switch self {
-            case .general: return [.requisites]
+            case .general: return [.requisites, .c2b]
             case .fast: return [.sfp, .direct]
             case .taxes: return [.fns, .fms, .fssp]
             }
@@ -57,6 +57,7 @@ enum Payments {
         case fns
         case fssp
         case requisites
+        case c2b
     }
     
     enum Operator : String {
@@ -68,6 +69,7 @@ enum Payments {
         case fns        = "iFora||6273"
         case fnsUin     = "iFora||7069"
         case requisites = "requisites"
+        case c2b        = "c2b"
     }
 }
 
@@ -158,6 +160,8 @@ extension Payments.Operation {
         
         case requisites(qrCode: QRCode)
         
+        case c2bSubscribe(URL)
+        
         case mock(Payments.Mock)
         
         var debugDescription: String {
@@ -171,6 +175,7 @@ extension Payments.Operation {
             case let .abroad(phone: phone, countryId: countryId): return "abroad: \(phone), countryId: \(countryId)"
             case let .mock(mock): return "mock service: \(mock.service.rawValue)"
             case let .requisites(qrCode): return "qrCode: \(qrCode)"
+            case let .c2bSubscribe(url): return "c2b subscribe url: \(url.absoluteURL)"
             }
         }
     }
@@ -253,6 +258,7 @@ extension Payments.Operation {
         case sfp
         case direct
         case requisites
+        case c2b
     }
     
     enum Action: Equatable {
@@ -278,6 +284,7 @@ extension Payments.Operation {
 
 extension Payments {
     
+    //TODO: refactor into dynamic list of parameters
     struct Success {
  
         let operationDetailId: Int
@@ -285,21 +292,23 @@ extension Payments {
         let productId: ProductData.ID
         let amount: Double
         let service: Payments.Service
+        let c2bSubscribtion: C2BSubscriptionData?
         
-        init(operationDetailId: Int, status: TransferResponseBaseData.DocumentStatus, productId: ProductData.ID, amount: Double, service: Payments.Service) {
+        init(operationDetailId: Int, status: TransferResponseBaseData.DocumentStatus, productId: ProductData.ID, amount: Double, service: Payments.Service, c2bSubscribtion: C2BSubscriptionData? = nil) {
             
             self.operationDetailId = operationDetailId
             self.status = status
             self.productId = productId
             self.amount = amount
             self.service = service
+            self.c2bSubscribtion = c2bSubscribtion
         }
         
         init(with response: TransferResponseBaseData, operation: Payments.Operation) throws {
             
             guard let status = response.documentStatus,
-            let amount = operation.amount,
-            let productId = operation.productId else {
+                  let amount = operation.amount,
+                  let productId = operation.productId else {
                 
                 //TODO: more informative error
                 throw Payments.Error.unsupported

@@ -244,6 +244,7 @@ extension QRViewModel {
         
         case qrCode(QRCode)
         case c2bURL(URL)
+        case c2bSubscribeURL(URL)
         case url(URL)
         case unknown
     }
@@ -261,6 +262,10 @@ extension QRViewModel {
             if url.absoluteString.contains("qr.nspk.ru") {
                 
                 return .c2bURL(url)
+                
+            } else if url.absoluteString.contains("sub.nspk.ru") {
+                
+                return .c2bSubscribeURL(url)
                 
             } else {
                 

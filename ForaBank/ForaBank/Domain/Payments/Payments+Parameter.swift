@@ -51,6 +51,7 @@ extension Payments.Parameter {
         case code           = "ru.forabank.sense.code"
         case fee            = "ru.forabank.sense.fee"
         case mock           = "ru.forabank.sense.mock"
+        case subscribe      = "ru.forabank.sense.subscribe"
         
         case sfpPhone       = "RecipientID"
         case sfpBank        = "BankRecipientID"
@@ -69,6 +70,8 @@ extension Payments.Parameter {
         case requisitsCompanyName             = "requisitsCompanyName"
         case requisitsCheckBox                = "requisitsCheckBox"
         case requisitsType                    = "requisitsType"
+        
+        case c2bQrcId                         = "qrcId"
     }
     
     static let emptyMock = Payments.Parameter(id: Identifier.mock.rawValue, value: nil)
@@ -271,27 +274,41 @@ extension Payments {
         }
     }
     
-    struct ParameterCheckBox: PaymentsParameterRepresentable {
+    struct ParameterCheck: PaymentsParameterRepresentable {
         
         let parameter: Parameter
         let title: String
+        let link: Link?
+        let style: Style
+        
         var value: Bool {
                         
-            guard parameter.value == "true" else {
-                return true
-            }
-            
-            return false
+            return parameter.value == "true" ? true : false
         }
         
-        internal init(_ parameter: Payments.Parameter, title: String) {
+        init(_ parameter: Payments.Parameter, title: String, link: Link? = nil, style: Style = .regular) {
+            
             self.parameter = parameter
             self.title = title
+            self.link = link
+            self.style = style
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterCheckBox(.init(id: parameter.id, value: value), title: title)
+            ParameterCheck(.init(id: parameter.id, value: value), title: title, link: link, style: style)
+        }
+        
+        struct Link {
+            
+            let title: String
+            let url: URL
+        }
+        
+        enum Style {
+            
+            case regular
+            case c2bSubscribtion
         }
     }
     
@@ -700,12 +717,82 @@ extension Payments {
         }
     }
     
+    struct ParameterSubscriber: PaymentsParameterRepresentable {
+        
+        let parameter: Parameter
+        let icon: String
+        let description: String
+        
+        init(_ parameter: Parameter, icon: String, description: String) {
+            
+            self.parameter = parameter
+            self.icon = icon
+            self.description = description
+        }
+        
+        func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
+            
+            ParameterSubscriber(.init(id: parameter.id, value: value), icon: icon, description: description)
+        }
+    }
+    
+    struct ParameterSubscribe: PaymentsParameterRepresentable {
+        
+        let parameter: Parameter
+        let buttons: [Button]
+        let icon: String
+        let placement: Payments.Parameter.Placement = .bottom
+        
+        init(id: Payments.Parameter.ID = Payments.Parameter.Identifier.subscribe.rawValue, value: Payments.Parameter.Value = nil, buttons: [Button], icon: String) {
+            
+            self.parameter = .init(id: id, value: value)
+            self.buttons = buttons
+            self.icon = icon
+        }
+        
+        func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
+            
+            ParameterSubscribe(id: parameter.id, value: value, buttons: buttons, icon: icon)
+        }
+        
+        struct Button {
+            
+            let title: String
+            let style: Style
+            let action: Action
+            let precondition: Precondition?
+
+            enum Action: String {
+                
+                case confirm
+                case deny
+            }
+            
+            enum Style {
+                
+                case primary
+                case secondary
+            }
+            
+            struct Precondition {
+                
+                let parameterId: Payments.Parameter.ID
+                let value: Payments.Parameter.Value
+            }
+        }
+    }
+    
+    struct ParameterDataValue: PaymentsParameterRepresentable {
+        
+        let parameter: Parameter
+    }
+    
     struct ParameterMock: PaymentsParameterRepresentable {
         
         let parameter: Parameter
         let placement: Payments.Parameter.Placement
 
-        internal init(id: Payments.Parameter.ID = Payments.Parameter.Identifier.mock.rawValue, value: Payments.Parameter.Value = nil, placement: Payments.Parameter.Placement = .feed) {
+        init(id: Payments.Parameter.ID = Payments.Parameter.Identifier.mock.rawValue, value: Payments.Parameter.Value = nil, placement: Payments.Parameter.Placement = .feed) {
             
             self.parameter = Parameter(id: id, value: value)
             self.placement = placement

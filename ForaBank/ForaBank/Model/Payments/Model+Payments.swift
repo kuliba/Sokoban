@@ -117,12 +117,10 @@ extension Model {
     func paymentsService(for source: Payments.Operation.Source) async throws -> Payments.Service {
         
         switch source {
-        case let .mock(mock):
-            return mock.service
-            
+        case let .mock(mock): return mock.service
         case .sfp: return .sfp
-            
         case .requisites: return .requisites
+        case .c2bSubscribe: return .c2b
             
         default:
             throw Payments.Error.unsupported
@@ -212,6 +210,9 @@ extension Model {
         
         case .requisites:
             return try await paymentsStepRequisites(operation, for: stepIndex)
+            
+        case .c2b:
+            return try await paymentsStepC2B(operation, for: stepIndex)
 
         default:
             throw Payments.Error.unsupported
@@ -312,6 +313,9 @@ extension Model {
         
         case .requisites:
             return paymentsProcessDependencyReducerRequisits(parameterId: parameterId, parameters: parameters)
+            
+        case .c2b:
+            return paymentsProcessDependencyReducerC2B(parameterId: parameterId, parameters: parameters)
 
         default:
             switch parameterId {
@@ -413,6 +417,9 @@ extension Model {
             let response = try await paymentsTransferSFPProcessFora(parameters: operation.parameters, process: process)
             let success = try Payments.Success(with: response, operation: operation)
             return success
+            
+        case .c2b:
+            return try await paymentsC2BComplete(operation: operation)
             
         default:
             throw Payments.Error.unsupported

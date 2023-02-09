@@ -738,6 +738,32 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             self.link = .c2b(c2bViewModel)
                         }
                         
+                    case .c2bSubscribeURL(let url):
+                        
+                        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                        Task.detached(priority: .high) { [self] in
+                            
+                            do {
+                                
+                                let operationViewModel = try await PaymentsViewModel(source: .c2bSubscribe(url), model: model, closeAction: {})
+                                bind(operationViewModel)
+                                
+                                await MainActor.run {
+                                    
+                                    self.link = .payments(operationViewModel)
+                                }
+                                
+                            } catch {
+                                
+                                await MainActor.run {
+                                    
+                                    self.alert = .init(title: "Ошибка привязки счета", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
+                                }
+                                
+                                LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for c2b subscribtion with error: \(error.localizedDescription) ")
+                            }
+                        }
+                        
                     case .url(_):
                         
                         self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())

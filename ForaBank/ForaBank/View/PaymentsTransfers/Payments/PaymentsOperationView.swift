@@ -49,8 +49,8 @@ struct PaymentsOperationView: View {
                             case let inputViewModel as PaymentsInputView.ViewModel:
                                 PaymentsInputView(viewModel: inputViewModel)
                                 
-                            case let checkBoxViewModel as PaymentsCheckBoxView.ViewModel:
-                                PaymentsCheckBoxView(viewModel: checkBoxViewModel)
+                            case let checkBoxViewModel as PaymentsCheckView.ViewModel:
+                                PaymentsCheckView(viewModel: checkBoxViewModel)
                                 
                             case let inputPhoneViewModel as PaymentsInputPhoneView.ViewModel:
                                 PaymentsInputPhoneView(viewModel: inputPhoneViewModel)
@@ -82,6 +82,9 @@ struct PaymentsOperationView: View {
                                 
                             case let additionButtonViewModel as PaymentsSpoilerButtonView.ViewModel:
                                 PaymentsSpoilerButtonView(viewModel: additionButtonViewModel)
+                                
+                            case let subscriberViewModel as PaymentsSubscriberView.ViewModel:
+                                PaymentsSubscriberView(viewModel: subscriberViewModel)
                                 
                             default:
                                 EmptyView()
@@ -152,6 +155,9 @@ struct PaymentsOperationView: View {
                             
                         case let amountViewModel as PaymentsAmountView.ViewModel:
                                 PaymentsAmountView(viewModel: amountViewModel)
+                            
+                        case let subscribeViewModel as PaymentsSubscribeView.ViewModel:
+                            PaymentsSubscribeView(viewModel: subscribeViewModel)
                             
                         default:
                             EmptyView()

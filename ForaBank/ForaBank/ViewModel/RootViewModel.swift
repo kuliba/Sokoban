@@ -188,6 +188,9 @@ class RootViewModel: ObservableObject, Resetable {
                             self?.action.send(RootViewModelAction.CloseLink())
                         }))
                         model.action.send(ModelAction.DeepLink.Clear())
+                        
+                    case let .c2bSubscriprion(url):
+                        break
 
                     case let .sbpPay(tokenIntent):
                         self.model.action.send(ModelAction.SbpPay.Register.Request(tokenIntent: tokenIntent))

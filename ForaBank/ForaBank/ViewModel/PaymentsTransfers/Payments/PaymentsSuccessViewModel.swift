@@ -25,6 +25,9 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
     let service: ServiceViewModel?
     let options: [OptionViewModel]?
     let logo: LogoIconViewModel?
+    let company: Company?
+    let link: Link?
+    let bottomIcon: Image?
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -37,7 +40,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         self?.action.send(PaymentsSuccessAction.Button.Close())
     }
     
-    init(_ model: Model, title: String? = nil, warningTitle: String? = nil, amount: String? = nil, iconType: IconTypeViewModel, service: ServiceViewModel? = nil, options: [OptionViewModel]? = nil, logo: LogoIconViewModel? = nil, repeatButton: ButtonSimpleView.ViewModel? = nil, actionButton: ButtonSimpleView.ViewModel, optionButtons: [PaymentsSuccessOptionButtonViewModel]) {
+    init(_ model: Model, title: String? = nil, warningTitle: String? = nil, amount: String? = nil, iconType: IconTypeViewModel, service: ServiceViewModel? = nil, options: [OptionViewModel]? = nil, logo: LogoIconViewModel? = nil, repeatButton: ButtonSimpleView.ViewModel? = nil, actionButton: ButtonSimpleView.ViewModel, optionButtons: [PaymentsSuccessOptionButtonViewModel], company: Company? = nil, link: Link? = nil, bottomIcon: Image? = nil) {
         
         self.model = model
         self.title = title
@@ -50,6 +53,9 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         self.repeatButton = repeatButton
         self.actionButton = actionButton
         self.optionButtons = optionButtons
+        self.company = company
+        self.link = link
+        self.bottomIcon = bottomIcon
     }
     
     convenience init(_ model: Model, closeAction: @escaping () -> Void) {
@@ -59,14 +65,23 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
     
     convenience init(_ model: Model, paymentSuccess: Payments.Success) {
         
-        let product = model.allProducts.first(where: { $0.id == paymentSuccess.productId })
-        let amount = model.amountFormatted(amount: paymentSuccess.amount, currencyCode: product?.currency, style: .normal)
-        
-        self.init(model, documentStatus: paymentSuccess.status, mode: .normal, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [])
-        
-        bind(.normal, paymentOperationDetailId: paymentSuccess.operationDetailId, documentStatus: paymentSuccess.status)
-        
-        self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentSuccess.operationDetailId)))
+        if let c2bSubscribtion = paymentSuccess.c2bSubscribtion {
+
+            self.init(model, title: c2bSubscribtion.title, warningTitle: nil, amount: nil, iconType: .init(with: c2bSubscribtion.operationStatus), service: nil, options: nil, logo: nil, repeatButton: nil, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [], company: .init(with: c2bSubscribtion, model: model), link: .init(with: c2bSubscribtion), bottomIcon: .ic72Sbp)
+            
+            actionButton = .init(title: "На главный", style: .red, action: closeAction)
+            
+        } else {
+            
+            let product = model.allProducts.first(where: { $0.id == paymentSuccess.productId })
+            let amount = model.amountFormatted(amount: paymentSuccess.amount, currencyCode: product?.currency, style: .normal)
+            
+            self.init(model, documentStatus: paymentSuccess.status, mode: .normal, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [])
+            
+            bind(.normal, paymentOperationDetailId: paymentSuccess.operationDetailId, documentStatus: paymentSuccess.status)
+            
+            self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentSuccess.operationDetailId)))
+        }
     }
     
     convenience init?(_ model: Model, mode: Mode = .normal, transferData: TransferResponseData) {
@@ -344,6 +359,77 @@ extension PaymentsSuccessViewModel {
         let title: String
         let subTitle: String?
         let description: String
+    }
+    
+    struct Company {
+
+        let icon: Image
+        let name: String
+        
+        init(icon: Image, name: String) {
+            
+            self.icon = icon
+            self.name = name
+        }
+    }
+    
+    struct Link {
+
+        let icon: Image
+        let title: String
+        let url: URL
+        
+         init(icon: Image = .ic24ExternalLink, title: String, url: URL) {
+             
+            self.icon = icon
+            self.title = title
+            self.url = url
+        }
+    }
+}
+
+extension PaymentsSuccessViewModel.IconTypeViewModel {
+    
+    init(with status: C2BSubscriptionData.Status) {
+        
+        switch status {
+        case .complete:
+            self = .success
+            
+        case .rejected:
+            self = .error
+            
+        default:
+            self = .accepted
+        }
+    }
+}
+
+extension PaymentsSuccessViewModel.Company {
+    
+    init(with data: C2BSubscriptionData, model: Model) {
+        
+        if let companyLogoData = model.images.value[data.brandIcon],
+           let companyLogo = companyLogoData.image {
+            
+            self.init(icon: companyLogo, name: data.brandName)
+            
+        } else {
+            
+            self.init(icon: .ic40Goods, name: data.brandName)
+        }
+    }
+}
+
+extension PaymentsSuccessViewModel.Link {
+    
+    init?(with data: C2BSubscriptionData) {
+        
+        guard let url = data.redirectUrl else {
+            return nil
+        }
+        
+        self.init(title: "Вернуться в магазин", url: url)
     }
 }
 

@@ -19,6 +19,7 @@ extension Payments.Service {
         case .sfp: return [.sfp]
         case .direct: return [.direct]
         case .requisites: return [.requisites]
+        case .c2b: return [.c2b]
         }
     }
     
@@ -42,6 +43,7 @@ extension Payments.Service {
         case .sfp: return .sfp
         case .direct: return .direct
         case .requisites: return .requisites
+        case .c2b: return .c2b
         }
     }
 }
