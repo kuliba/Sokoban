@@ -887,6 +887,9 @@
 		7752F51F293522FA0097B2A6 /* PaymentsHeaderViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7752F51E293522FA0097B2A6 /* PaymentsHeaderViewComponent.swift */; };
 		7757624B276FEC4F00B902BF /* URLHostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624A276FEC4F00B902BF /* URLHostTests.swift */; };
 		7757624D276FEE2400B902BF /* ForaBankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624C276FEE2400B902BF /* ForaBankUITests.swift */; };
+		77577BAD29929F1B00D6BD66 /* MockEncryptionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77577BAC29929F1B00D6BD66 /* MockEncryptionAgent.swift */; };
+		77577BAF29929F7F00D6BD66 /* MockCSRFAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77577BAE29929F7F00D6BD66 /* MockCSRFAgent.swift */; };
+		77577BB12992A05100D6BD66 /* MockKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77577BB02992A05100D6BD66 /* MockKeysProvider.swift */; };
 		77583FF927AED4E700251969 /* Model+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77583FF827AED4E700251969 /* Model+Dictionary.swift */; };
 		7758400027B13C3A00251969 /* Payments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77583FFF27B13C3A00251969 /* Payments.swift */; };
 		7758400227B13CF300251969 /* ImageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758400127B13CF300251969 /* ImageData.swift */; };
@@ -2426,6 +2429,9 @@
 		7752F51E293522FA0097B2A6 /* PaymentsHeaderViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsHeaderViewComponent.swift; sourceTree = "<group>"; };
 		7757624A276FEC4F00B902BF /* URLHostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLHostTests.swift; sourceTree = "<group>"; };
 		7757624C276FEE2400B902BF /* ForaBankUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaBankUITests.swift; sourceTree = "<group>"; };
+		77577BAC29929F1B00D6BD66 /* MockEncryptionAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEncryptionAgent.swift; sourceTree = "<group>"; };
+		77577BAE29929F7F00D6BD66 /* MockCSRFAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCSRFAgent.swift; sourceTree = "<group>"; };
+		77577BB02992A05100D6BD66 /* MockKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockKeysProvider.swift; sourceTree = "<group>"; };
 		77583FF827AED4E700251969 /* Model+Dictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Dictionary.swift"; sourceTree = "<group>"; };
 		77583FFF27B13C3A00251969 /* Payments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payments.swift; sourceTree = "<group>"; };
 		7758400127B13CF300251969 /* ImageData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageData.swift; sourceTree = "<group>"; };
@@ -5205,6 +5211,16 @@
 			path = Product;
 			sourceTree = "<group>";
 		};
+		77577BAB29929EE800D6BD66 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				77577BAE29929F7F00D6BD66 /* MockCSRFAgent.swift */,
+				77577BB02992A05100D6BD66 /* MockKeysProvider.swift */,
+				77577BAC29929F1B00D6BD66 /* MockEncryptionAgent.swift */,
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
 		77583FFE27B13C1600251969 /* Payments */ = {
 			isa = PBXGroup;
 			children = (
@@ -5639,6 +5655,7 @@
 				77DC12682770F63400C917B0 /* Abstract */,
 				77DC126B2770F83400C917B0 /* Server */,
 				77925573279AF3AA00A85723 /* Encryption */,
+				77577BAB29929EE800D6BD66 /* Mock */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -8568,6 +8585,7 @@
 				EDA563AE26F881AF0093F0C8 /* BanksView.swift in Sources */,
 				0B87167C294A7DFC005B8C0A /* QRSearchCityView.swift in Sources */,
 				7772978927C39EF70099EF91 /* String+Extensions.swift in Sources */,
+				77577BB12992A05100D6BD66 /* MockKeysProvider.swift in Sources */,
 				6830A02227D37821003CA4F1 /* DepositProductData.swift in Sources */,
 				0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */,
 				503566C3287D56470077BF8B /* Int+Extensions.swift in Sources */,
@@ -9319,6 +9337,7 @@
 				68E5321D28904A47007BBD2C /* MessageTextView.swift in Sources */,
 				ED2D8A03286DB6D30000B391 /* imageGalleryAgentMock.swift in Sources */,
 				EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */,
+				77577BAD29929F1B00D6BD66 /* MockEncryptionAgent.swift in Sources */,
 				EDB1658F266A1942007E6030 /* PaymentsModel.swift in Sources */,
 				0B931B1C26DCD69900CA8017 /* GKHHistoryModel.swift in Sources */,
 				777167D427CE759200655D60 /* KeychainAgentMock.swift in Sources */,
@@ -9508,6 +9527,7 @@
 				50043665287B3747000545BD /* PagerScrollViewComponent.swift in Sources */,
 				7538D9ADE22F0BF6C08AC91F /* Color+Assets.swift in Sources */,
 				503F074928252D3B00E84A77 /* DepositCalculateAmountView.swift in Sources */,
+				77577BAF29929F7F00D6BD66 /* MockCSRFAgent.swift in Sources */,
 				774A8B762865FED800B81140 /* AlertViewComponent.swift in Sources */,
 				07461C2FE00F0D91E9BF4B5F /* Image+Icons.swift in Sources */,
 				A58F263827E12F4200A73778 /* C2BDetailsViewModel.swift in Sources */,
@@ -9624,14 +9644,158 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		A51568352821B927000D4455 /* Debug */ = {
+		7752FECE29928A7A00795CD5 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_PREVIEWS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=*]" = forabank.debugSense;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Mock;
+		};
+		7752FECF29928A7A00795CD5 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = AppIconNewYear;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon.mock;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_BITCODE = NO;
+				ENABLE_PREVIEWS = NO;
+				INFOPLIST_FILE = ForaBank/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 9.1;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = MOCK;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Mock;
+		};
+		7752FED029928A7A00795CD5 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				INFOPLIST_FILE = ForaBankTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.ForaBankTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ForaBank.app/ForaBank";
+			};
+			name = Mock;
+		};
+		7752FED129928A7A00795CD5 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				INFOPLIST_FILE = ForaBankUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.ForaBankUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ForaBank;
+			};
+			name = Mock;
+		};
+		7752FED229928A7A00795CD5 /* Mock */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -9643,7 +9807,36 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 9.0;
+				MARKETING_VERSION = 9.1;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Mock;
+		};
+		A51568352821B927000D4455 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ForaPushServiceExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 9.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -9660,7 +9853,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -9672,7 +9865,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 9.0;
+				MARKETING_VERSION = 9.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -9817,7 +10010,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -9828,7 +10021,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 9.0;
+				MARKETING_VERSION = 9.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -9851,7 +10044,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -9861,13 +10054,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 9.0;
+				MARKETING_VERSION = 9.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = RELEASE;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -9967,6 +10161,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A51568352821B927000D4455 /* Debug */,
+				7752FED229928A7A00795CD5 /* Mock */,
 				A51568362821B927000D4455 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -9976,6 +10171,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EDB143A5265FDA430028EF5A /* Debug */,
+				7752FECE29928A7A00795CD5 /* Mock */,
 				EDB143A6265FDA430028EF5A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -9985,6 +10181,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EDB143A8265FDA430028EF5A /* Debug */,
+				7752FECF29928A7A00795CD5 /* Mock */,
 				EDB143A9265FDA430028EF5A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -9994,6 +10191,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EDB143AB265FDA430028EF5A /* Debug */,
+				7752FED029928A7A00795CD5 /* Mock */,
 				EDB143AC265FDA430028EF5A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -10003,6 +10201,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EDB143AE265FDA430028EF5A /* Debug */,
+				7752FED129928A7A00795CD5 /* Mock */,
 				EDB143AF265FDA430028EF5A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;

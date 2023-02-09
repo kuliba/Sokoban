@@ -57,7 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private var googleServiceInfoFileName: String {
         
-        #if DEBUG
+        #if DEBUG || MOCK
         "GoogleService-Info-test"
         #else
         "GoogleService-Info"
