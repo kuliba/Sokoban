@@ -803,6 +803,7 @@ extension OrderProductView {
             HStack(alignment: .top, spacing: 16) {
                 
                 CheckBoxView(viewModel: viewModel.checkBox)
+                    .accessibilityIdentifier("CheckBox")
                 
                 VStack(alignment: .leading, spacing: 3) {
                     
