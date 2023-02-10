@@ -189,6 +189,9 @@ struct MainView: View {
             switch bottomSheet.type {
             case let .openAccount(openAccountViewModel):
                 OpenAccountView(viewModel: openAccountViewModel)
+            
+            case let .clientInform(clientInformViewModel):
+                ClientInformView(viewModel: clientInformViewModel)
             }
         }
         .alert(item: $viewModel.alert, content: { alertViewModel in

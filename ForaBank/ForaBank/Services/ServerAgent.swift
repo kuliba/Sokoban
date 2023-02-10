@@ -96,7 +96,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     completion(.failure(.emptyResponseData))
                     return
                 }
-
+                
                 do {
                     
                     let response = try decoder.decode(Command.Response.self, from: data)

@@ -59,6 +59,7 @@ class Model {
     let currencyWalletList: CurrentValueSubject<[CurrencyWalletData], Never>
     let centralBankRates: CurrentValueSubject<[CentralBankRatesData], Never>
     var images: CurrentValueSubject<[String: ImageData], Never>
+    let clientInform: CurrentValueSubject<ClientInformDataState, Never>
     
     //MARK: Deposits
     let deposits: CurrentValueSubject<[DepositProductData], Never>
@@ -100,6 +101,9 @@ class Model {
     //MARK: QR
     let qrMapping: CurrentValueSubject<QRMapping?, Never>
     
+    //MARK: ClientInform show flags
+    var clientInformStatus: ClientInformStatus
+    
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
     let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
@@ -115,6 +119,7 @@ class Model {
     internal let contactsAgent: ContactsAgentProtocol
     internal let cameraAgent: CameraAgentProtocol
     internal let imageGalleryAgent: ImageGalleryAgentProtocol
+    internal let networkMonitorAgent: NetworkMonitorAgentProtocol
     
     // private
     private var bindings: Set<AnyCancellable>
@@ -137,7 +142,7 @@ class Model {
         return credentials
     }
     
-    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol, cameraAgent: CameraAgentProtocol, imageGalleryAgent: ImageGalleryAgentProtocol) {
+    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol, cameraAgent: CameraAgentProtocol, imageGalleryAgent: ImageGalleryAgentProtocol, networkMonitorAgent: NetworkMonitorAgentProtocol) {
         
         self.action = .init()
         self.auth = keychainAgent.isStoredString(values: [.pincode, .serverDeviceGUID]) ? .init(.signInRequired) : .init(.registerRequired)
@@ -187,6 +192,8 @@ class Model {
         self.qrMapping = .init(nil)
         self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
+        self.clientInform = .init(.notRecieved)
+        self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
         
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
@@ -198,6 +205,7 @@ class Model {
         self.contactsAgent = contactsAgent
         self.cameraAgent = cameraAgent
         self.imageGalleryAgent = imageGalleryAgent
+        self.networkMonitorAgent = networkMonitorAgent
         self.bindings = []
         
         LoggerAgent.shared.log(level: .debug, category: .model, message: "initialized")
@@ -248,7 +256,10 @@ class Model {
         // imageGallery agent
         let imageGalleryAgent = ImageGalleryAgent()
         
-        return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent, cameraAgent: cameraAgent, imageGalleryAgent: imageGalleryAgent)
+        // networkMonitor agent
+        let networkMonitorAgent = NetworkMonitorAgent()
+        
+        return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent, cameraAgent: cameraAgent, imageGalleryAgent: imageGalleryAgent, networkMonitorAgent: networkMonitorAgent)
     }()
     
     //MARK: - Session Agent State
@@ -815,8 +826,12 @@ class Model {
                         
                     case .prefferedBanks:
                         handleDictionaryPrefferedBanks(payload.serial)
+                    
                     case .jsonAbroad:
                         handleJsonAbroadRequest(payload.serial)
+                        
+                    case .clientInform:
+                        handleClientInform(payload.serial)
                     }
                     
                 case let payload as ModelAction.Dictionary.DownloadImages.Request:
