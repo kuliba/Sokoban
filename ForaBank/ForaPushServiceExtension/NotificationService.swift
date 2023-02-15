@@ -11,12 +11,18 @@ final class NotificationService: UNNotificationServiceExtension {
     
     var contentHandler: ((UNNotificationContent) -> Void)?
     var bestAttemptContent: UNMutableNotificationContent?
-    
+    let defaults = UserDefaults(suiteName: "group.com.isimplelab.isimplemobile.forabank")
+
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
+        bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
+        var count: Int = defaults?.integer(forKey: "badgesCount") ?? 0
         self.contentHandler = contentHandler
         let content = UNMutableNotificationContent()
         content.body = request.content.body.description
         content.userInfo = request.content.userInfo
+        count = count + 1
+        content.badge = count as NSNumber
+        defaults?.set(count, forKey: "badgesCount")
         bestAttemptContent = content
         
         guard let push = try? Push(decoding: request.content.userInfo) else {

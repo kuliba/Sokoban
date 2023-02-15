@@ -722,6 +722,9 @@ class Model {
                     
                 case _ as ModelAction.Notification.Transition.Clear:
                     handleNotificationTransitionClear()
+                 
+                case _ as ModelAction.Notification.Transition.ClearBadges:
+                    handleNotificationTransitionClearBadges()
                     
                     //MARK: - LatestPayments Actions
                     

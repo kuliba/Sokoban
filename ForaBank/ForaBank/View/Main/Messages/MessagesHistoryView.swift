@@ -78,6 +78,10 @@ struct MessagesHistoryView: View {
                 MessagesHistoryDetailView(model: model)
             }
         }
+        .onAppear {
+            viewModel.action.send(MessagesHistoryViewModelAction.ViewDidAppear())
+        }
+
     }
 }
 
