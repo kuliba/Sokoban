@@ -79,7 +79,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             options: authOptions,
             completionHandler: {_, _ in })
         
-        UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {

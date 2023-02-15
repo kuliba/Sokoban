@@ -86,10 +86,6 @@ extension SceneDelegate {
         UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .black
     }
     
-    func setIconBangeNumber() {
-        
-        UIApplication.shared.applicationIconBadgeNumber = 0
-    }
 }
 
 //MARK: - Scene Lyfecycle
@@ -109,13 +105,11 @@ extension SceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) {
         
         AppDelegate.shared.model.action.send(ModelAction.App.Activated())
-        setIconBangeNumber()
     }
     
     func sceneDidEnterBackground(_ scene: UIScene) {
         
         AppDelegate.shared.model.action.send(ModelAction.App.Inactivated())
-        setIconBangeNumber()
     }
 }
 

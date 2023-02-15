@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 //MARK: - Action
 
@@ -63,6 +64,8 @@ extension ModelAction {
             }
             
             struct Clear: Action {}
+            struct ClearBadges: Action {}
+
         }
     }
 }
@@ -92,6 +95,14 @@ extension Model {
         notificationsTransition = nil
     }
     
+    func handleNotificationTransitionClearBadges() {
+        UserDefaults(suiteName: "group.com.isimplelab.isimplemobile.forabank")?.set(0, forKey: "badgesCount")
+        //UI API called
+        DispatchQueue.main.async {
+            UIApplication.shared.applicationIconBadgeNumber = 0
+        }
+    }
+
     func handleNotificationsFetchNewRequest() {
         
         guard let token = token else {
