@@ -103,12 +103,8 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     if response.statusCode == .userNotAuthorized {
                         
                         self.action.send(ServerAgentAction.NotAuthorized())
-                        completion(.failure(.notAuthorized))
-                        
-                    } else {
-                        
-                        completion(.success(response))
                     }
+                    completion(.success(response))
 
                 } catch {
                     
