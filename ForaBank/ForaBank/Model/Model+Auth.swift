@@ -1213,11 +1213,9 @@ extension Model {
     }
     
     func authPushFcmToken() async throws -> String {
-        
-        guard let fcmToken = Messaging.messaging().fcmToken else {
+        guard let fcmToken = self.fcmToken.value else {
            throw ModelAuthError.fcmTokenObtainFailed
         }
-        
         return fcmToken
     }
     

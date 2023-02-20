@@ -19,7 +19,8 @@ class Model {
         sessionAgent.sessionState
             .eraseToAnyPublisher()
     }
-    
+    let fcmToken: CurrentValueSubject<String?, Never>
+
     //MARK: Pre-Auth
     let transferAbroad: CurrentValueSubject<TransferAbroadResponseData?, Never>
     
@@ -146,6 +147,7 @@ class Model {
         
         self.action = .init()
         self.auth = keychainAgent.isStoredString(values: [.pincode, .serverDeviceGUID]) ? .init(.signInRequired) : .init(.registerRequired)
+        self.fcmToken = .init(.none)
         self.products = .init([:])
         self.productsUpdating = .init([])
         self.accountProductsList = .init([])
