@@ -61,7 +61,7 @@ extension ProductProfileDetailView.ViewModel {
             self.title = title
             self.dateTitle = "Дата платежа - " + formatter.string(from: paymentDate)
             self.remain = "\(remanPaymentDays) дней"
-            self.progress = 1.0 - (Double(passedPaymentDays) / Double(totalPaymentDays))
+            self.progress = Double(passedPaymentDays) / Double(totalPaymentDays)
         }
     }
 }

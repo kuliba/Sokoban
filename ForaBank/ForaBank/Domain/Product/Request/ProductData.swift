@@ -209,14 +209,13 @@ extension ProductData {
     
     var displayPeriod: String? {
         
-        let formatter = DateFormatter.productPeriod
-        
         if let cardProduct = self as? ProductCardData {
             
             return cardProduct.expireDate
             
         } else if let loanProduct = self as? ProductLoanData {
             
+            let formatter = DateFormatter.loanProductPeriod
             return formatter.string(from: loanProduct.dateLong)
             
         } else {

@@ -328,8 +328,8 @@ extension NavigationBarView {
             
             Button {
                 
-                mode.wrappedValue.dismiss()
                 viewModel.action()
+                mode.wrappedValue.dismiss()
                 
             } label: {
                 

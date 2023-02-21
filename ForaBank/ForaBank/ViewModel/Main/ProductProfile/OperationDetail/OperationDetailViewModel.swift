@@ -36,6 +36,13 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         self.featureButtons = featureButtons
         self.isLoading = isLoading
         self.model = model
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "OperationDetailViewModel initilazed")
+    }
+    
+    deinit {
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "OperationDetailViewModel deinitilazed")
     }
     
     init?(productStatement: ProductStatementData, product: ProductData, model: Model) {
