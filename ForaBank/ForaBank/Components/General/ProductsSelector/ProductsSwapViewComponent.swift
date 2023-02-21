@@ -51,24 +51,29 @@ extension ProductsSwapView {
             self.divider = divider
         }
         
-        convenience init(_ model: Model, productData: ProductData, mode: PaymentsMeToMeViewModel.Mode) {
+        convenience init?(_ model: Model, mode: PaymentsMeToMeViewModel.Mode) {
             
             switch mode {
             case .general:
                 
-                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, style: .me2me, filter: .meToMeFrom)
-                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, style: .me2me, filter: .meToMeTo)
+                let productFromFilter: ProductData.Filter = .meToMeFrom
+                guard let productDataFrom = model.firstProduct(with: productFromFilter) else {
+                    return nil
+                }
                 
-                let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
-                let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
+                let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, filter: productFromFilter)
+                let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, filter: .meToMeTo)
+                
+                let from = ProductSelectorView.ViewModel(model, productData: productDataFrom, context: contextFrom)
+                let to = ProductSelectorView.ViewModel(model, context: contextTo)
                 
                 self.init(model: model, items: [from, to], divider: .init())
                 
-                updateDivider()
+                setupSwapButton()
                 
             case let .closeAccount(productData, _):
                 
-                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, style: .me2me, isUserInteractionEnabled: false, filter: .closeAccountFrom)
+                let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, isUserInteractionEnabled: false, filter: .closeAccountFrom)
                 
                 var filterTo = ProductData.Filter.closeAccountTo
                 
@@ -80,24 +85,40 @@ extension ProductsSwapView {
                 }
             
                 filterTo.rules.append(ProductData.Filter.ProductRestrictedRule([productData.id]))
-                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, style: .me2me, filter: filterTo)
+                let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, filter: filterTo)
                 
-                let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
-                let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
+                let from = ProductSelectorView.ViewModel(model, productData: productData, context: contextFrom)
+                let to = ProductSelectorView.ViewModel(model, context: contextTo)
                 
                 self.init(model: model, items: [from, to], divider: .init())
                 
             case let .closeDeposit(productData, _):
                 
-                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, style: .me2me, isUserInteractionEnabled: false, filter: .closeDepositFrom)
+                let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, isUserInteractionEnabled: false, filter: .closeDepositFrom)
                 
                 var filterTo = ProductData.Filter.closeDepositTo
                 filterTo.rules.append(ProductData.Filter.CurrencyRule([.init(description: productData.currency)]))
                 filterTo.rules.append(ProductData.Filter.ProductRestrictedRule([productData.id]))
-                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, style: .me2me, filter: filterTo)
+                let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, filter: filterTo)
                 
-                let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
-                let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
+                let from = ProductSelectorView.ViewModel(model, productData: productData, context: contextFrom)
+                let to = ProductSelectorView.ViewModel(model, context: contextTo)
+                
+                self.init(model: model, items: [from, to], divider: .init())
+                
+            case let .makePaymentTo(productToData, _):
+                var filterFrom = ProductData.Filter.generalFrom
+                filterFrom.rules.append(ProductData.Filter.ProductRestrictedRule([productToData.id]))
+                
+                guard let productFromData = model.firstProduct(with: filterFrom) else {
+                    return nil
+                }
+                
+                let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, filter: filterFrom)
+                let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, isUserInteractionEnabled: false, filter: .init(rules: []))
+
+                let from = ProductSelectorView.ViewModel(model, productData: productFromData, context: contextFrom)
+                let to = ProductSelectorView.ViewModel(model, productData: productToData, context: contextTo)
                 
                 self.init(model: model, items: [from, to], divider: .init())
             }
@@ -189,7 +210,7 @@ extension ProductsSwapView {
             }
         }
         
-        private func updateDivider() {
+        private func setupSwapButton() {
             
             divider.swapButton = .init() { [weak self] in
                 

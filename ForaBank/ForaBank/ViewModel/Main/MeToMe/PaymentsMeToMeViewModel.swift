@@ -46,12 +46,11 @@ class PaymentsMeToMeViewModel: ObservableObject {
     
     convenience init?(_ model: Model, mode: Mode) {
         
-        guard let productData = Self.reduce(model, products: model.allProducts) else {
+        guard let swapViewModel = ProductsSwapView.ViewModel(model, mode: mode) else {
             return nil
         }
         
-        let swapViewModel: ProductsSwapView.ViewModel = .init(model, productData: productData, mode: mode)
-        let amountViewModel: PaymentsAmountView.ViewModel = .init(productData: productData, mode: mode, model: model)
+        let amountViewModel = PaymentsAmountView.ViewModel(mode: mode, model: model)
         
         self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, title: "Между своими", mode: mode, state: .normal)
         
@@ -194,13 +193,13 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 case _ as PaymentsMeToMeAction.Button.Transfer.Tap:
                     
                     switch mode {
-                    case .general:
+                    case .general, .makePaymentTo:
                         
-                        let productsId = Self.productsId(model, swapViewModel: swapViewModel)
-                        
-                        if let productsId = productsId, let product = model.product(productId: productsId.from) {
+                        if let productIdFrom = swapViewModel.productIdFrom,
+                           let productIdTo = swapViewModel.productIdTo,
+                           let productFrom = model.product(productId: productIdFrom) {
                             
-                            if productsId.from == productsId.to {
+                            if productIdFrom == productIdTo {
                                 
                                 makeAlert(.emptyData(message: "Счет списания совпадает со счетом зачисления. Выберите другой продукт"))
                                 
@@ -210,9 +209,9 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 
                                 model.action.send(ModelAction.Payment.MeToMe.CreateTransfer.Request(
                                     amount: paymentsAmount.textField.value,
-                                    currency: product.currency,
-                                    productFrom: productsId.from,
-                                    productTo: productsId.to))
+                                    currency: productFrom.currency,
+                                    productFrom: productIdFrom,
+                                    productTo: productIdTo))
                             }
                         }
                         
@@ -431,15 +430,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
             
         } else {
             
-            var isUserInteractionEnabled: Bool
-            
-            switch mode {
-            case .general: isUserInteractionEnabled = true
-            case .closeAccount: isUserInteractionEnabled = false
-            case .closeDeposit: isUserInteractionEnabled = false
-            }
-            
-            paymentsAmount.currencySwitch = .init(from: fromCurrencySymbol, to: toCurrencySymbol, icon: .init("Payments Refresh CW"), isUserInteractionEnabled: isUserInteractionEnabled) { [weak self] in
+            paymentsAmount.currencySwitch = .init(from: fromCurrencySymbol, to: toCurrencySymbol, icon: .init("Payments Refresh CW"), isUserInteractionEnabled: mode.isUserInterractionEnabled) { [weak self] in
                 self?.swapViewModel.action.send(ProductsSwapAction.Button.Tap())
             }
         }
@@ -456,11 +447,17 @@ class PaymentsMeToMeViewModel: ObservableObject {
             
             let value = paymentsAmount.textField.value
             
-            let transferButton = PaymentsAmountView.ViewModel.makeTransferButton(value) { [weak self] in
-                self?.action.send(PaymentsMeToMeAction.Button.Transfer.Tap())
+            //FIXME: is this correct logic?
+            if value > 0 {
+                
+                paymentsAmount.transferButton = .active(title: "Перевести", action: { [weak self] in
+                    self?.action.send(PaymentsMeToMeAction.Button.Transfer.Tap())
+                })
+                
+            } else {
+                
+                paymentsAmount.transferButton = .inactive(title: "Перевести")
             }
-            
-            paymentsAmount.transferButton = transferButton
             
         case .loading:
             
@@ -662,41 +659,6 @@ class PaymentsMeToMeViewModel: ObservableObject {
 
 extension PaymentsMeToMeViewModel {
     
-    static func reduce(_ model: Model, products: [ProductData]) -> ProductData? {
-        
-        let filterredProducts = ProductData.Filter.generalFrom.filterredProductsOwner(products, ownerId: model.clientInfo.value?.id)
-        
-        return filterredProducts?.first
-    }
-    
-    static func productsId(_ model: Model, swapViewModel: ProductsSwapView.ViewModel) -> (from: ProductData.ID, to: ProductData.ID)? {
-        
-        var productsId: (from: ProductData.ID, to: ProductData.ID) = (0, 0)
-        
-        if let from = swapViewModel.from, let to = swapViewModel.to {
-            
-            switch from.content {
-            case let .product(productViewModel):
-                
-                productsId.from = productViewModel.id
-                
-            case .placeholder:
-                return nil
-            }
-            
-            switch to.content {
-            case let .product(productViewModel):
-                
-                productsId.to = productViewModel.id
-                
-            case .placeholder:
-                return nil
-            }
-        }
-        
-        return productsId
-    }
-    
     static func products(_ model: Model, from: ProductData.ID, to: ProductData.ID) -> (from: ProductData, to: ProductData)? {
         
         let from = model.product(productId: from)
@@ -752,6 +714,18 @@ extension PaymentsMeToMeViewModel {
         case general
         case closeAccount(ProductData, Double)
         case closeDeposit(ProductData, Double)
+        case makePaymentTo(ProductData, Double)
+        
+        var isUserInterractionEnabled: Bool {
+            
+            switch self {
+            case .closeAccount, .closeDeposit:
+                return false
+                
+            default:
+                return true
+            }
+        }
     }
     
     struct BottomSheet: BottomSheetCustomizable {

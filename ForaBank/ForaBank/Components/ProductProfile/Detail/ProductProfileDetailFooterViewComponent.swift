@@ -6,21 +6,24 @@
 //
 
 import SwiftUI
+import Combine
 
 //MARK: - View Model
 
 extension ProductProfileDetailView.ViewModel {
     
-    struct FooterViewModel {
+    final class FooterViewModel: ObservableObject {
 
-        let items: [ProductProfileDetailView.ViewModel.AmountViewModel]
+        let action: PassthroughSubject<Action, Never> = .init()
         
-        internal init(items: [ProductProfileDetailView.ViewModel.AmountViewModel]) {
+        @Published var items: [ProductProfileDetailView.ViewModel.AmountViewModel]
+        
+        init(items: [ProductProfileDetailView.ViewModel.AmountViewModel]) {
             
             self.items = items
         }
         
-        init?(configuration: ProductProfileDetailView.ViewModel.Configuration, loanData: ProductCardData.LoanBaseParamInfoData, model: Model) {
+        convenience init?(configuration: ProductProfileDetailView.ViewModel.Configuration, loanData: ProductCardData.LoanBaseParamInfoData, model: Model) {
             
             var items = [ProductProfileDetailView.ViewModel.AmountViewModel]()
             
@@ -87,16 +90,20 @@ extension ProductProfileDetailView.ViewModel {
                 return nil
             }
             
-            self.items = items
+            self.init(items: items)
         }
         
-        init(productLoan: ProductLoanData, loanData: PersonsCreditData, model: Model) {
+        convenience init(productLoan: ProductLoanData, loanData: PersonsCreditData, model: Model) {
+            
+            self.init(items: [])
             
             var items = [ProductProfileDetailView.ViewModel.AmountViewModel]()
             
             let amountPayment = model.amountFormatted(amount: loanData.amountPaymentValue, currencyCode: productLoan.currency, style: .normal) ?? String(loanData.amountPaymentValue)
             
-            items.append(.init(type: .makePayment, value: amountPayment, backgroundColor: .mainColorsBlackMedium))
+            items.append(.init(type: .makePayment, value: amountPayment, backgroundColor: .mainColorsBlackMedium, action: { [weak self] in
+                
+                self?.action.send(ProductProfileDetailFooterAction.MakePayment(settlementAccountId: productLoan.settlementAccountId, amount: loanData.amountPaymentValue)) }))
             
             if loanData.overduePaymentValue > 0 {
                 
@@ -109,37 +116,33 @@ extension ProductProfileDetailView.ViewModel {
     }
 }
 
+//MARK: - Action
+
+enum ProductProfileDetailFooterAction {
+    
+    struct MakePayment: Action {
+        
+        let settlementAccountId: Int
+        let amount: Double
+    }
+}
+
 //MARK: - View
 
 extension ProductProfileDetailView {
     
     struct FooterView: View {
         
-        let viewModel: ProductProfileDetailView.ViewModel.FooterViewModel
+        @ObservedObject var viewModel: ProductProfileDetailView.ViewModel.FooterViewModel
         
         var body: some View {
             
-            if #available(iOS 14, *) {
+            LazyVGrid(columns: [.init(.flexible(), spacing: 20), .init(.flexible())], alignment: .leading, spacing: 20) {
                 
-                LazyVGrid(columns: [.init(.flexible(), spacing: 20), .init(.flexible())], alignment: .leading, spacing: 20) {
+                ForEach(viewModel.items) { itemViewModel in
                     
-                    ForEach(viewModel.items) { itemViewModel in
-                        
-                        ProductProfileDetailView.AmountView(viewModel: itemViewModel)
-                            .frame(height: 54)
-                    }
-                }
-                
-            } else {
-                
-                //TODO: real implementation required
-                HStack(spacing: 4) {
-                    
-                    ForEach(viewModel.items) { item in
-                        
-                        ProductProfileDetailView.AmountView(viewModel: item)
-                            .frame(height: 54)
-                    }
+                    ProductProfileDetailView.AmountView(viewModel: itemViewModel)
+                        .frame(height: 54)
                 }
             }
         }

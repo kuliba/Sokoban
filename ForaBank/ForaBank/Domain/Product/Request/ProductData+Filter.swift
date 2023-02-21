@@ -46,13 +46,6 @@ extension ProductData {
             return sortedTypes
         }
         
-        func filterredProductsOwner(_ products: [ProductData], ownerId: Int?) -> [ProductData]? {
-            
-            let filterredProducts = filterredProducts(products)
-            let products = filterredProducts.compactMap{$0}.filter({ $0.ownerId == ownerId })
-            return products
-        }
-        
         mutating func remove<T: ProductDataFilterRule>(ruleType: T.Type) {
 
             rules = rules.filter({ type(of: $0) != ruleType })

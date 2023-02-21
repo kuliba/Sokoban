@@ -84,13 +84,12 @@ class MainViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case let payload as MainViewModelAction.Show.ProductProfile:
-                    guard let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId })
-                    else { return }
-                    
-                    guard let productProfileViewModel = ProductProfileViewModel
-                        .init(model,
-                              product: product,
-                              rootView: "\(type(of: self))")
+                    guard let product = model.product(productId: payload.productId),
+                          let productProfileViewModel = ProductProfileViewModel(
+                            model,
+                            product: product,
+                            rootView: "\(type(of: self))",
+                            dismissAction: {[weak self] in self?.link = nil })
                     else { return }
 
                     productProfileViewModel.rootActions = rootActions

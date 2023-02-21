@@ -19,14 +19,16 @@ extension ProductProfileDetailView.ViewModel {
         let prefix: Prefix?
         let postfix: Postfix?
         let backgroundColor: Color?
+        let action: (()->Void)?
         
-        internal init(id: UUID = UUID(), type: Kind, value: String, prefix: Prefix? = nil, postfix: Postfix? = nil, backgroundColor: Color? = nil) {
+        init(id: UUID = UUID(), type: Kind, value: String, prefix: Prefix? = nil, postfix: Postfix? = nil, backgroundColor: Color? = nil, action: (()->Void)? = nil) {
             self.id = id
             self.type = type
             self.value = value
             self.prefix = prefix
             self.postfix = postfix
             self.backgroundColor = backgroundColor
+            self.action = action
         }
         
         enum Prefix {
@@ -91,6 +93,7 @@ extension ProductProfileDetailView {
                     .padding(.horizontal, -8)
                 
                 HStack {
+                    
                     VStack(alignment: .leading, spacing: 8) {
                         
                         Text(viewModel.type.title)
@@ -148,6 +151,14 @@ extension ProductProfileDetailView {
                 }
 
                 .padding(.vertical, 5)
+            }
+            .onTapGesture {
+                
+                guard let action = viewModel.action else {
+                    return
+                }
+                
+                action()
             }
         }
     }

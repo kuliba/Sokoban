@@ -196,16 +196,10 @@ extension ProductView {
             case let loanProduct as ProductLoanData:
                 switch style {
                 case .main:
-                    switch loanProduct.loanType {
-                    case .consumer:
-                        return loanProduct.displayName
-                        
-                    case .mortgage:
-                        return loanProduct.additionalField ?? loanProduct.displayName
-                    }
+                    return loanProduct.displayName
                     
                 case .profile:
-                    return loanProduct.displayName
+                    return loanProduct.additionalField ?? loanProduct.displayName
                 }
                 
             default:

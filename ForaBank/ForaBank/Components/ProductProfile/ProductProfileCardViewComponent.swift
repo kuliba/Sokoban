@@ -88,8 +88,8 @@ extension ProductProfileCardView {
                     if let loansProducts = productsData[.loan] as? [ProductLoanData],
                         let relatedLoanProduct = loansProducts.first(where: { $0.settlementAccountId == accountProduct.id}) {
                         
-                        result.append(relatedLoanProduct)
                         result.append(accountProduct)
+                        result.append(relatedLoanProduct)
                         
                     } else {
                         
@@ -100,8 +100,8 @@ extension ProductProfileCardView {
                     if let accountProducts = productsData[.account] as? [ProductAccountData],
                        let relatedAccountProduct = accountProducts.first(where: { $0.id == loanProduct.settlementAccountId}) {
                         
-                        result.append(loanProduct)
                         result.append(relatedAccountProduct)
+                        result.append(loanProduct)
                         
                     } else {
                         
