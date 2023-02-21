@@ -434,6 +434,16 @@ internal extension Model {
     
     func handleAuthVerificationCodeConfirmRequest(payload: ModelAction.Auth.VerificationCode.Confirm.Request) {
         
+        @Sendable func message(message: String?, count: Int?) -> String {
+            
+            if let message = message, let count = count {
+                return "\(message)\nОсталось попыток: \(count)"
+            } else {
+                return "Введен некорректный код. Попробуйте еще раз."
+            }
+        }
+        
+        
         LoggerAgent.shared.log(category: .model, message: "handleAuthVerificationCodeConfirmRequest")
         
         Task {
@@ -456,8 +466,8 @@ internal extension Model {
                             self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.correct)
                             
                         case .serverError:
-                            let message = response.errorMessage ?? "Введен некорректный код. Попробуйте еще раз."
-                            LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.VerificationCode.Confirm.Response, incorrect")
+                            let message = message(message: response.errorMessage, count: response.data?.verifyOTPCount)
+                            LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.VerificationCode.Confirm.Response, incorrect, \(message)")
                             self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.incorrect(message: message))
                             
                         case .userNotAuthorized:

@@ -86,7 +86,7 @@ class AuthConfirmViewModel: ObservableObject {
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "hide spinner")
                         rootActions.spinner.hide()
                         
-                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in
+                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "OK", action: { [weak self] in
                             self?.alert = nil
                             self?.code.state = .edit
                             self?.code.textField.text = ""
@@ -137,7 +137,7 @@ class AuthConfirmViewModel: ObservableObject {
                         
                     case .failure(message: let message):
                         LoggerAgent.shared.log(category: .ui, message: "ModelAction.Auth.VerificationCode.Confirm.Response: failure message: \(message)")
-                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "OK", action: { [weak self] in self?.alert = nil}))
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                     }
                     
@@ -155,7 +155,7 @@ class AuthConfirmViewModel: ObservableObject {
                         
                     case .restricted(let message):
                         LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.VerificationCode.Resend.Response: restricted message: \(message)")
-                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in
+                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "OK", action: { [weak self] in
                             
                             LoggerAgent.shared.log(category: .ui, message: "sent AuthConfirmViewModelAction.Dismiss")
                             self?.action.send(AuthConfirmViewModelAction.Dismiss())
@@ -165,7 +165,7 @@ class AuthConfirmViewModel: ObservableObject {
                         
                     case .failure(message: let message):
                         LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.VerificationCode.Resend.Response: failure message: \(message)")
-                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "OK", action: { [weak self] in self?.alert = nil}))
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "show alert")
                     }
                     

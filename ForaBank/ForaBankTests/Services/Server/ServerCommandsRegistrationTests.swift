@@ -130,7 +130,24 @@ class ServerCommandsRegistrationTests: XCTestCase {
             return
         }
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.RegistrationContoller.VerifyCode.Response(statusCode: .ok, errorMessage: "string", data: EmptyData())
+        let expected = ServerCommands.RegistrationContoller.VerifyCode.Response(statusCode: .ok, errorMessage: "string", data: .init(verifyOTPCount: nil))
+        
+        // when
+        let result = try decoder.decode(ServerCommands.RegistrationContoller.VerifyCode.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    func testVerifyCodeWithError_Response_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "VerifyCodeResponseError", withExtension: "json") else {
+            XCTFail("testVerifyCodeWithError_Response_Decoding : Missing file: VerifyCodeResponseError.json")
+            return
+        }
+        let json = try Data(contentsOf: url)
+        let expected = ServerCommands.RegistrationContoller.VerifyCode.Response(statusCode: .serverError, errorMessage: "string", data: .init(verifyOTPCount: 4))
         
         // when
         let result = try decoder.decode(ServerCommands.RegistrationContoller.VerifyCode.Response.self, from: json)

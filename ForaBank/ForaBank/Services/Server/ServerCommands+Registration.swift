@@ -205,7 +205,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: EmptyData?
+                let data: VerifyOTPData?
             }
             
             internal init(token: String, payload: Payload) {
