@@ -66,6 +66,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 switch action {
                 case let payload as ModelAction.Payment.MeToMe.CreateTransfer.Response:
                     
+                    state = .normal
+
                     switch payload.result {
                     case let .success(response):
 
@@ -73,6 +75,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         if response.needMake == true {
 
                             model.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Request(transferResponse: response))
+                            state = .loading
 
                         } else {
                             
@@ -98,17 +101,17 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 self.action.send(PaymentsMeToMeAction.Response.Failed())
                             }
                             
-                            state = .normal
                         }
                         
                     case let .failure(error):
                         
-                        state = .normal
                         makeAlert(error)
                     }
                     
                 case let payload as ModelAction.Payment.MeToMe.MakeTransfer.Response:
                     
+                    state = .normal
+
                     switch payload.result {
                     case let .success(transferData):
                         
@@ -120,10 +123,11 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         makeAlert(error)
                     }
                     
-                    state = .normal
 
                 case let payload as ModelAction.Account.Close.Response:
                     
+                    state = .normal
+
                     switch payload {
                     case let .success(data: transferData):
 
@@ -146,9 +150,11 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         makeInformer(closeAccount: false)
                     }
                     
-                    state = .normal
                     
                 case let payload as ModelAction.Deposits.Close.Response:
+                    
+                    state = .normal
+
                     switch payload {
                     case let .success(data: transferData):
 
@@ -169,7 +175,6 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         makeAlert(ModelError.serverCommandError(error: message))
                     }
                     
-                    state = .normal
                     
                 default:
                     break
@@ -205,13 +210,13 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 
                             } else {
                                 
-                                state = .loading
-                                
                                 model.action.send(ModelAction.Payment.MeToMe.CreateTransfer.Request(
                                     amount: paymentsAmount.textField.value,
                                     currency: productFrom.currency,
                                     productFrom: productIdFrom,
                                     productTo: productIdTo))
+                                
+                                state = .loading
                             }
                         }
                         
@@ -232,23 +237,23 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             switch productTo.productType {
                             case .card:
                                 
-                                state = .loading
-                                
                                 guard let productFrom = productFrom as? ProductAccountData else {
                                     return
                                 }
                                 
                                 model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.name, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: productTo.id)))
                                 
-                            case .account:
-                                
                                 state = .loading
+                                
+                            case .account:
                                 
                                 guard let productFrom = productFrom as? ProductAccountData else {
                                     return
                                 }
                                 
                                 model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.name, startDate: nil, endDate: nil, statementFormat: nil, accountId: productTo.id, cardId: nil)))
+                                
+                                state = .loading
                                 
                             default:
                                 break
@@ -267,17 +272,15 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             
                         case .card:
 
-                            state = .loading
-
                             guard let productFrom = productFrom as? ProductDepositData, let productTo = productTo as? ProductCardData else {
                                 return
                             }
                              
                             self.model.action.send(ModelAction.Deposits.Close.Request(payload: .init(id: productFrom.depositId, name: productFrom.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: productTo.cardId)))
                             
-                        case .account:
-
                             state = .loading
+                            
+                        case .account:
 
                             guard let productFrom = productFrom as? ProductDepositData else {
                                 return
@@ -285,13 +288,13 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 
                             self.model.action.send(ModelAction.Deposits.Close.Request(payload: .init(id: productFrom.depositId, name: productFrom.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: productTo.id, cardId: nil)))
                             
+                            state = .loading
+                            
                         default:
                             break
                         }
                     }
                     
-                    self.action.send(PaymentsMeToMeAction.InteractionEnabled(isUserInteractionEnabled: false))
-
                 case _ as PaymentsMeToMeAction.Button.Info.Tap:
                     
                     switch mode {
@@ -438,30 +441,31 @@ class PaymentsMeToMeViewModel: ObservableObject {
 
     private func updateTransferButton(_ state: State) {
         
-        if swapViewModel.productIdTo == nil {
-            return
-        }
-        
-        switch state {
-        case .normal:
+        if swapViewModel.productIdTo != nil, swapViewModel.productIdFrom != nil {
             
-            let value = paymentsAmount.textField.value
-            
-            //FIXME: is this correct logic?
-            if value > 0 {
+            switch state {
+            case .normal:
                 
-                paymentsAmount.transferButton = .active(title: "Перевести", action: { [weak self] in
-                    self?.action.send(PaymentsMeToMeAction.Button.Transfer.Tap())
-                })
+                let value = paymentsAmount.textField.value
                 
-            } else {
+                if value > 0 {
+                    paymentsAmount.transferButton = .active(title: "Перевести", action: { [weak self] in
+                        self?.action.send(PaymentsMeToMeAction.Button.Transfer.Tap())
+                    })
+                    
+                } else {
+                    
+                    paymentsAmount.transferButton = .inactive(title: "Перевести")
+                }
                 
-                paymentsAmount.transferButton = .inactive(title: "Перевести")
+            case .loading:
+                
+                paymentsAmount.transferButton = .loading(icon: .init("Logo Fora Bank"), iconSize: .init(width: 40, height: 40))
             }
+        }
+        else {
+            paymentsAmount.transferButton = .inactive(title: "Перевести")
             
-        case .loading:
-            
-            paymentsAmount.transferButton = .loading(icon: .init("Logo Fora Bank"), iconSize: .init(width: 40, height: 40))
         }
     }
 
