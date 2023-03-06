@@ -30,14 +30,7 @@ final class NotificationService: UNNotificationServiceExtension {
             return
         }
         
-#if DEBUG
-        let enviroment = ServerAgentEnvironment.test
-        
-#elseif MOCK
-        let enviroment = ServerAgentEnvironment.mock
-#else
-        let enviroment = ServerAgentEnvironment.prod
-#endif
+        let enviroment = Config.serverAgentEnvironment
         
         guard let url = URL(string: enviroment.baseURL + "/notification/changeNotificationStatus") else {
             contentHandler(content)

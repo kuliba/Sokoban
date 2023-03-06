@@ -57,14 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
     
-    private var googleServiceInfoFileName: String {
-        
-        #if DEBUG || MOCK
-        "GoogleService-Info-test"
-        #else
-        "GoogleService-Info"
-        #endif
-    }
+    private var googleServiceInfoFileName: String = Config.googleServiceInfoFileName
 }
 
 //MARK: - Push Notifications

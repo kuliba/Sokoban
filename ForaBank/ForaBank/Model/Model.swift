@@ -222,15 +222,7 @@ class Model {
         let sessionAgent = SessionAgent()
         
         // server agent
-#if DEBUG
-        let enviroment = ServerAgentEnvironment.test
-        
-#elseif MOCK
-        let enviroment = ServerAgentEnvironment.mock
-#else
-        let enviroment = ServerAgentEnvironment.prod
-#endif
-        
+        let enviroment = Config.serverAgentEnvironment
         let serverAgent = ServerAgent(enviroment: enviroment)
 
         // local agent

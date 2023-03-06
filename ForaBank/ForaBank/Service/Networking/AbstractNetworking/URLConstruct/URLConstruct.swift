@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct URLConstruct {
+enum URLConstruct {
     
     public typealias URLType = Result< URL, URLError >
     
@@ -16,21 +16,21 @@ struct URLConstruct {
                        _ path: String) -> URLType {
         
 #if MOCK
-        let temp = "http://" + URLHost().getHost() + path
+        let temp = "http://" + URLHost.getHost() + path
 #else
-        let temp = scheme.rawValue + "://" + URLHost().getHost() + path
+        let temp = scheme.rawValue + "://" + URLHost.getHost() + path
 #endif
         
         let components = URLComponents(string: temp)
         
-        guard components?.url != nil else {
+        guard let url = components?.url else {
             return .failure(.URLIsError)
         }
-        return .success((components?.url)!)
+        
+        return .success(url)
     }
 }
 
 public enum URLError: Error {
     case URLIsError
 }
-
