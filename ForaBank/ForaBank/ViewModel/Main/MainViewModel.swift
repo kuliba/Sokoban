@@ -13,7 +13,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
-    lazy var userAccountButton: UserAccountButtonViewModel = .init(logo: .ic20ForaNy, name: "", avatar: nil, action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())})
+    lazy var userAccountButton: UserAccountButtonViewModel = .init(logo: .ic12LogoForaColor, name: "", avatar: nil, action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())})
     let refreshingIndicator: RefreshingIndicatorView.ViewModel
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
     @Published var sections: [MainSectionViewModel]
