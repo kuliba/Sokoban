@@ -54,6 +54,36 @@ extension ProductsSwapView {
         convenience init?(_ model: Model, mode: PaymentsMeToMeViewModel.Mode) {
             
             switch mode {
+            case .demandDeposit:
+                
+                let productFromFilter = ProductData.Filter(
+                    rules: [ProductData.Filter.DebitRule(),
+                            ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
+                            ProductData.Filter.DemandDepositRule(),
+                            ProductData.Filter.CardActiveRule(),
+                            ProductData.Filter.CardAdditionalNotOwnedRetrictedRule(),
+                            ProductData.Filter.AccountActiveRule()])
+                guard let productDataFrom = model.firstProduct(with: productFromFilter) else {
+                    return nil
+                }
+
+                let productToFilter = ProductData.Filter(
+                    rules: [ProductData.Filter.CreditRule(),
+                            ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
+                            ProductData.Filter.CardActiveRule(),
+                            ProductData.Filter.CardAdditionalNotOwnedRetrictedRule(),
+                            ProductData.Filter.AccountActiveRule()])
+
+                let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, filter: productFromFilter)
+                let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, filter: productToFilter)
+                
+                let from = ProductSelectorView.ViewModel(model, productData: productDataFrom, context: contextFrom)
+                let to = ProductSelectorView.ViewModel(model, context: contextTo)
+                
+                self.init(model: model, items: [from, to], divider: .init())
+                
+                setupSwapButton()
+
             case .general:
                 
                 let productFromFilter: ProductData.Filter = .meToMeFrom
@@ -119,6 +149,42 @@ extension ProductsSwapView {
 
                 let from = ProductSelectorView.ViewModel(model, productData: productFromData, context: contextFrom)
                 let to = ProductSelectorView.ViewModel(model, productData: productToData, context: contextTo)
+                
+                self.init(model: model, items: [from, to], divider: .init())
+                
+            case let .makePaymentToDeposite(productToData, _):
+                var filterFrom = ProductData.Filter(
+                    rules: [ProductData.Filter.DebitRule(),
+                            ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
+                            ProductData.Filter.CardActiveRule(),
+                            ProductData.Filter.CardAdditionalNotOwnedRetrictedRule(),
+                            ProductData.Filter.AccountActiveRule()])
+                filterFrom.rules.append(ProductData.Filter.ProductRestrictedRule([productToData.id]))
+                
+                let filterTo = ProductData.Filter(
+                    rules: [ProductData.Filter.CreditRule(),
+                            ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
+                            ProductData.Filter.CardActiveRule(),
+                            ProductData.Filter.CardAdditionalNotOwnedRetrictedRule(),
+                            ProductData.Filter.AccountActiveRule()])
+                let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, filter: filterFrom)
+                let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, isUserInteractionEnabled: true, filter: filterTo)
+
+                let from = ProductSelectorView.ViewModel(model, context: contextFrom)
+                let to = ProductSelectorView.ViewModel(model, productData: productToData, context: contextTo)
+                
+                self.init(model: model, items: [from, to], divider: .init())
+                
+            case let .transferDeposit(productData, _), let .transferAndCloseDeposit(productData, _):
+                
+                let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, isUserInteractionEnabled: false, filter: .closeDepositFrom)
+                
+                var filterTo = ProductData.Filter.closeDepositTo
+                filterTo.rules.append(ProductData.Filter.ProductRestrictedRule([productData.id]))
+                let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, filter: filterTo)
+                
+                let from = ProductSelectorView.ViewModel(model, productData: productData, context: contextFrom)
+                let to = ProductSelectorView.ViewModel(model, context: contextTo)
                 
                 self.init(model: model, items: [from, to], divider: .init())
             }
@@ -277,6 +343,8 @@ extension ProductsSwapView.ViewModel {
         @Published var isUserInteractionEnabled: Bool
         @Published var icon: Image
         @Published var state: State
+        @Published var isSwapButtonEnabled: Bool
+
 
         let action: () -> Void
         
@@ -292,13 +360,13 @@ extension ProductsSwapView.ViewModel {
             case reset
         }
         
-        init(isSwap: Bool = false, isUserInteractionEnabled: Bool = true, icon: Image = .ic32Swap, action: @escaping () -> Void) {
+        init(isSwap: Bool = false, isUserInteractionEnabled: Bool = true, icon: Image = .ic32Swap, isSwapButtonEnabled: Bool = true, action: @escaping () -> Void) {
             
             self.isSwap = isSwap
             self.isUserInteractionEnabled = isUserInteractionEnabled
             self.icon = icon
             self.action = action
-            
+            self.isSwapButtonEnabled = isSwapButtonEnabled
             state = .normal
             
             bind()
@@ -407,16 +475,17 @@ extension ProductsSwapView {
                     .frame(width: 32, height: 32)
                     .rotationEffect(viewModel.rotationAngle)
             }
-            .buttonStyle(ProductsSwapView.SwapButtonStyle())
-            .disabled(viewModel.isUserInteractionEnabled == false)
+            .buttonStyle(ProductsSwapView.SwapButtonStyle(isSwapButtonEnabled: viewModel.isSwapButtonEnabled))
+            .disabled(!viewModel.isSwapButtonEnabled || !viewModel.isUserInteractionEnabled)
         }
     }
     
     struct SwapButtonStyle: ButtonStyle {
+        let isSwapButtonEnabled: Bool
         
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
-                .foregroundColor(.mainColorsGray)
+                .foregroundColor(isSwapButtonEnabled ? .mainColorsGray : .buttonPrimaryDisabled)
         }
     }
 }

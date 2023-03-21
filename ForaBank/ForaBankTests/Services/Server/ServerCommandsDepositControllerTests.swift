@@ -310,7 +310,7 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         
         let json = try Data(contentsOf: url)
         
-        let expected = ServerCommands.DepositController.CloseDeposit.Response(statusCode: .ok, data: .init(paymentOperationDetailId: 1, documentStatus: "COMPLETE", accountNumber: "42317810000000000001", closeDate: 1, comment: "Закрытие срочного банковского вклада по договору № 04913_224RUB0000/22  от 22/04/2022. НДС не облагается.", category: "Закрытие вклада"), errorMessage: "string")
+        let expected = ServerCommands.DepositController.CloseDeposit.Response(statusCode: .ok, data: .init(paymentOperationDetailId: 1, documentStatus: .complete, accountNumber: "42317810000000000001", closeDate: 1, comment: "Закрытие срочного банковского вклада по договору № 04913_224RUB0000/22  от 22/04/2022. НДС не облагается.", category: "Закрытие вклада"), errorMessage: "string")
         
         // when
         let result = try decoder.decode(ServerCommands.DepositController.CloseDeposit.Response.self, from: json)
@@ -329,7 +329,7 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         
         let json = try Data(contentsOf: url)
         
-        let expected = ServerCommands.DepositController.CloseDeposit.Response(statusCode: .ok, data: .init(paymentOperationDetailId: 18445, documentStatus: "COMPLETE", accountNumber: nil, closeDate: nil, comment: "Закрытие срочного банковского вклада по договору № 00080_224RUB4700/21  от 04/02/2021. НДС не облагается.", category: "Закрытие вклада"), errorMessage: nil)
+        let expected = ServerCommands.DepositController.CloseDeposit.Response(statusCode: .ok, data: .init(paymentOperationDetailId: 18445, documentStatus: .complete, accountNumber: nil, closeDate: nil, comment: "Закрытие срочного банковского вклада по договору № 00080_224RUB4700/21  от 04/02/2021. НДС не облагается.", category: "Закрытие вклада"), errorMessage: nil)
         
         // when
         let result = try decoder.decode(ServerCommands.DepositController.CloseDeposit.Response.self, from: json)
@@ -337,6 +337,26 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         // then
         XCTAssertEqual(result, expected)
     }
+    
+    func testCloseDepositUnknowStatus_Response_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "CloseDepositResponseUnknowStatusGeneric", withExtension: "json") else {
+            XCTFail("testCloseDeposit_Response_Decoding : Missing file: CloseDepositResponseUnknowStatusGeneric.json")
+            return
+        }
+        
+        let json = try Data(contentsOf: url)
+        
+        let expected = ServerCommands.DepositController.CloseDeposit.Response(statusCode: .ok, data: .init(paymentOperationDetailId: 1, documentStatus: .unknown, accountNumber: "42317810000000000001", closeDate: 1, comment: "Закрытие срочного банковского вклада по договору № 04913_224RUB0000/22  от 22/04/2022. НДС не облагается.", category: "Закрытие вклада"), errorMessage: "string")
+
+        // when
+        let result = try decoder.decode(ServerCommands.DepositController.CloseDeposit.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+
     
     func testBeforeClosing_Response_Decoding() throws {
 

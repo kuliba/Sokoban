@@ -216,9 +216,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                         case .betweenSelf:
                             
-                            let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .general)
-                            
-                            guard let viewModel = viewModel else {
+                            guard let viewModel = PaymentsMeToMeViewModel(model, mode: .demandDeposit) else {
                                 return
                             }
                             
@@ -499,7 +497,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                     makeAlert("Перевод выполнен")
                     self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+               
+                case _ as PaymentsMeToMeAction.Close.BottomSheet:
                     
+                    self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+
                 case let payload as PaymentsMeToMeAction.InteractionEnabled:
                     
                     guard let bottomSheet = bottomSheet else {

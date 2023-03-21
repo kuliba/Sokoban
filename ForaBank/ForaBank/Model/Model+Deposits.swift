@@ -81,6 +81,31 @@ extension ModelAction {
     }
 }
 
+//MARK: - Helpers
+extension Model {
+    func sendCloseDepositRequest(productFrom: ProductDepositData, productTo: ProductData) throws {
+        //закрытие вклада
+        switch productTo {
+            
+        case let productTo as ProductCardData:
+            self.action.send(ModelAction.Deposits.Close.Request(payload: .init(id: productFrom.depositId, name: productFrom.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: productTo.cardId)))
+            
+        case let productTo as ProductAccountData:
+                
+            self.action.send(ModelAction.Deposits.Close.Request(payload: .init(id: productFrom.depositId, name: productFrom.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: productTo.id, cardId: nil)))
+            
+        case let productTo as ProductDepositData:
+                
+            self.action.send(ModelAction.Deposits.Close.Request(payload: .init(id: productFrom.depositId, name: productFrom.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: productTo.accountId, cardId: nil)))
+
+        default:
+            throw ModelDepositsError.closeDeposit(.productToUnexpectedType)
+        }
+        
+    }
+
+}
+
 //MARK: - Handlers
 
 extension Model {
@@ -307,4 +332,9 @@ enum ModelDepositsError: Error {
     case statusError(status: ServerStatusCode, message: String?)
     case serverCommandError(error: String)
     case unauthorizedCommandAttempt
+    case closeDeposit(CloseDeposit)
+    
+    enum CloseDeposit: LocalizedError {
+        case productToUnexpectedType
+    }
 }

@@ -184,7 +184,7 @@ class CustomPopUpWithRateView: UIViewController {
                     case .success(let data):
                         let vc = PaymentsDetailsSuccessViewController()
                         
-                        if data.documentStatus == "COMPLETE" {
+                        if data.documentStatus == .complete {
                             
                             viewModel.status = .succses
                             viewModel.summTransction = self.bottomView.amountTextField.text ?? ""

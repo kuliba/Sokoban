@@ -89,6 +89,9 @@ struct CurrencyWalletView: View {
                 
             case let .detailInfo(detailViewModel):
                 OperationDetailInfoView(viewModel: detailViewModel)
+                
+            case let .placesMap(placesViewModel):
+                PlacesView(viewModel: placesViewModel)
             }
         }
         .alert(item: $viewModel.alert) { alert in

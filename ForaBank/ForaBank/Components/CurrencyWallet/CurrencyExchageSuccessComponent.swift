@@ -18,7 +18,8 @@ extension CurrencyExchangeSuccessView {
         
         @Published var isPresent = false
         @Published var state: State
-        
+        @Published var needRepeatButton: Bool = true
+
         var id: String { title }
         let icon: Image
         let title: String
@@ -26,10 +27,10 @@ extension CurrencyExchangeSuccessView {
         let delay: TimeInterval?
         
         lazy var buttons: [ButtonIconTextView.ViewModel] = makeButtons()
-        lazy var simpleButton: ButtonSimpleView.ViewModel = makeSimpleButton()
+        var repeatButton: ButtonSimpleView.ViewModel?
         
         private lazy var documentButton: ButtonIconTextView.ViewModel = makeDocumentButton()
-        private lazy var detailsButton: ButtonIconTextView.ViewModel = makeDetailsButton()
+        fileprivate lazy var detailsButton: ButtonIconTextView.ViewModel = makeDetailsButton()
 
         enum State {
                 
@@ -89,7 +90,7 @@ extension CurrencyExchangeSuccessView {
             }
         }
         
-        private func makeSimpleButton() -> ButtonSimpleView.ViewModel {
+        func makeRepeatButton() -> ButtonSimpleView.ViewModel {
             
             .init(title: "Повторить", style: .gray) {
                 self.action.send(CurrencyExchangeSuccessAction.Button.Repeat())
@@ -138,10 +139,20 @@ struct CurrencyExchangeSuccessView: View {
                     .padding(.top)
                     
                 } else {
-                    
-                    ButtonSimpleView(viewModel: viewModel.simpleButton)
-                        .frame(height: 48)
+                    if viewModel.needRepeatButton {
+                        if let repeatButton = viewModel.repeatButton {
+                            ButtonSimpleView(viewModel: repeatButton)
+                                .frame(height: 48)
+                                .padding(.horizontal, 20)
+                        }
+                    }
+                    else {
+                        HStack(alignment: .center, spacing: 36) {
+                            ButtonIconTextView(viewModel: viewModel.detailsButton)
+                        }
                         .padding(.horizontal, 20)
+                        .padding(.top)
+                    }
                 }
             }
             

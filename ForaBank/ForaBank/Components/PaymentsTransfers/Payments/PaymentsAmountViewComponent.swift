@@ -57,7 +57,7 @@ extension PaymentsAmountView {
         convenience init(mode: PaymentsMeToMeViewModel.Mode, model: Model, action: @escaping () -> Void = {}) {
  
             switch mode {
-            case .general:
+            case .general, .demandDeposit:
                 let currencySymbol = model.dictionaryCurrencySymbol(for: Currency.rub.description) ?? ""
                 let textField = TextFieldFormatableView.ViewModel(0, currencySymbol: currencySymbol)
  
@@ -80,6 +80,17 @@ extension PaymentsAmountView {
             case let .makePaymentTo(productData, amount):
                 let currencySymbol = model.dictionaryCurrencySymbol(for: productData.currency) ?? ""
                 let textField: TextFieldFormatableView.ViewModel = .init(amount, isEnabled: true, currencySymbol: currencySymbol)
+                
+                self.init(title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
+                
+            case let .makePaymentToDeposite(productData, amount), let .transferDeposit(productData, amount):
+                let currencySymbol = model.dictionaryCurrencySymbol(for: productData.currency) ?? ""
+                let textField: TextFieldFormatableView.ViewModel = .init(amount, isEnabled: true, currencySymbol: currencySymbol)
+                
+                self.init(title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
+            case let .transferAndCloseDeposit(productData, amount):
+                let currencySymbol = model.dictionaryCurrencySymbol(for: productData.currency) ?? ""
+                let textField: TextFieldFormatableView.ViewModel = .init(amount, isEnabled: false, currencySymbol: currencySymbol)
                 
                 self.init(title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
             }
