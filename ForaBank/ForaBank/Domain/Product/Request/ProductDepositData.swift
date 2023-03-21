@@ -159,7 +159,7 @@ extension ProductDepositData {
         return accountNumber.hasPrefix("42301")
     }
     
-    var isProductDeposit: Bool {
+    var isDemandDepositProduct: Bool {
         
         return isDemandDeposit && depositProductId == 3194
     }

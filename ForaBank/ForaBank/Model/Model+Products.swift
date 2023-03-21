@@ -156,7 +156,7 @@ extension Model {
                     return false
                 }
                 
-                return product.currency == currency.description && product.isProductDeposit && product.allowProduct(currencyOperation)
+                return product.currency == currency.description && product.isDemandDepositProduct && product.allowProduct(currencyOperation)
                 
             case .loan:
                 return false

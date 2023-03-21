@@ -118,10 +118,11 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
     
     convenience init?(_ model: Model, mode: Mode = .normal, currency: Currency, balance: Double, transferData: CloseProductTransferData) {
         
-        guard let documentStatus: TransferResponseData.DocumentStatus = .init(rawValue: transferData.documentStatus),
-              let paymentOperationDetailId = transferData.paymentOperationDetailId else {
+        guard let paymentOperationDetailId = transferData.paymentOperationDetailId else {
             return nil
         }
+        
+        let documentStatus: TransferResponseData.DocumentStatus = transferData.documentStatus
         
         let amount = Self.amountFormatted(model, amount: balance, currencyCode: currency.description)
         
@@ -158,10 +159,14 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             self.init(model, title: title, amount: amount, iconType: .accepted, actionButton: actionButton, optionButtons: [])
             
         case .rejected, .unknown:
-            
-            self.init(model, title: title, amount: amount, iconType: .error, actionButton: actionButton, optionButtons: [])
-            
-            repeatButton = .init(title: "Повторить", style: .gray, action: repeatAction)
+            switch mode {
+            case .makePaymentToDeposite, .closeDeposit:
+                self.init(model, title: title, amount: amount, iconType: .error, actionButton: actionButton, optionButtons: [])
+            default:
+                self.init(model, title: title, amount: amount, iconType: .error, actionButton: actionButton, optionButtons: [])
+                repeatButton = .init(title: "Повторить", style: .gray, action: repeatAction)
+
+            }
         }
     }
     
@@ -294,6 +299,9 @@ extension PaymentsSuccessViewModel {
         case closeDeposit
         case closeAccount(ProductData.ID)
         case closeAccountEmpty(ProductData.ID)
+        
+        
+        case makePaymentToDeposite
     }
     
     enum OptionButtonType {
@@ -474,14 +482,14 @@ extension PaymentsSuccessViewModel {
         case .complete:
             
             switch mode {
-            case .normal, .meToMe, .closeDeposit, .closeAccount: return "Успешный перевод"
+            case .normal, .meToMe, .closeDeposit, .closeAccount, .makePaymentToDeposite: return "Успешный перевод"
             case .closeAccountEmpty: return "Счет успешно закрыт"
             }
             
         case .inProgress:
             
             switch mode {
-            case .normal, .closeAccount, .closeDeposit, .closeAccountEmpty: return "Платеж принят в обработку"
+            case .normal, .closeAccount, .closeDeposit, .closeAccountEmpty, .makePaymentToDeposite: return "Платеж принят в обработку"
             case .meToMe: return "Операция в обработке!"
             }
             
@@ -489,7 +497,7 @@ extension PaymentsSuccessViewModel {
             
             switch mode {
             case .normal, .closeDeposit, .closeAccount: return .init()
-            case .meToMe: return "Операция неуспешна!"
+            case .meToMe, .makePaymentToDeposite: return "Операция неуспешна!"
             case .closeAccountEmpty: return "Отказ"
             }
         }
@@ -520,7 +528,16 @@ extension PaymentsSuccessViewModel {
                 return [templateButton,
                         documentButton,
                         detailButton]
+            case .makePaymentToDeposite:
                 
+                guard let documentButton = optionButton(mode, type: .document, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail),
+                      let detailButton = optionButton(mode, type: .details, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail) else {
+                    return []
+                }
+                
+                return [documentButton,
+                        detailButton]
+
             case .closeDeposit, .closeAccount:
                 
                 guard let documentButton = optionButton(mode, type: .document, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail),
@@ -543,7 +560,7 @@ extension PaymentsSuccessViewModel {
         case .inProgress:
             
             switch mode {
-            case .closeDeposit, .closeAccount, .closeAccountEmpty:
+            case .closeAccount, .closeAccountEmpty:
                 return .init()
                 
             case .meToMe, .normal:
@@ -555,15 +572,22 @@ extension PaymentsSuccessViewModel {
                 
                 return [templateButton,
                         detailButton]
+            case .makePaymentToDeposite, .closeDeposit:
+                guard let detailButton = optionButton(mode, type: .details, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail) else {
+                    return []
+                }
+                
+                return [detailButton]
             }
+            
             
         case .rejected, .unknown:
             
             switch mode {
-            case .normal, .closeDeposit, .closeAccount, .closeAccountEmpty:
+            case .normal, .closeAccount, .closeAccountEmpty:
                 return .init()
                 
-            case .meToMe:
+            case .meToMe, .makePaymentToDeposite, .closeDeposit:
                 
                 guard let detailButton = optionButton(mode, type: .details, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail) else {
                     return []
@@ -603,7 +627,7 @@ extension PaymentsSuccessViewModel {
                 }
                 
                 switch mode {
-                case .normal, .meToMe, .closeDeposit:
+                case .normal, .meToMe, .closeDeposit, .makePaymentToDeposite:
                     
                     guard let operationDetail = operationDetail else {
                         return

@@ -17,6 +17,8 @@ protocol CurrencyWalletItem {
 
 class CurrencyWalletViewModel: ObservableObject {
     
+    let action: PassthroughSubject<Action, Never> = .init()
+    
     @Published var items: [CurrencyWalletItem]
     @Published var state: ButtonActionState
     @Published var currency: Currency
@@ -56,6 +58,8 @@ class CurrencyWalletViewModel: ObservableObject {
         return safeAreaBottom
     }
     
+    private var isCloseDeposit: Bool = false
+    
     private var bindings = Set<AnyCancellable>()
     
     enum ButtonActionState {
@@ -73,6 +77,8 @@ class CurrencyWalletViewModel: ObservableObject {
             
             case printForm(PrintFormView.ViewModel)
             case detailInfo(OperationDetailInfoViewModel)
+            case placesMap(PlacesViewModel)
+
         }
     }
     
@@ -139,7 +145,64 @@ class CurrencyWalletViewModel: ObservableObject {
                     
                 case let payload as ModelAction.Operation.Detail.Response:
                     handleOperationDetailResponse(payload)
+                
+                case let payload as ModelAction.Settings.ApplicationSettings.Response:
+                    state = .button
+                    setUserInteractionEnabled()
+
+                    switch payload.result {
+                        
+                    case .success(let settings):
+                        
+                        if settings.allowCloseDeposit,
+                           let productFrom = productFrom as? ProductDepositData,
+                           productFrom.isDemandDeposit  {
+                            
+                            let currencySymbol = model.dictionaryCurrencySymbol(for: productFrom.currency) ?? productFrom.currency
+                            
+                            let alertViewModel = Alert.ViewModel(title: "Внимание",
+                                                                 message: "Вклад будет закрыт автоматически.\nНеснижаемый остаток равен 1 \(currencySymbol).\nПроверьте сумму перевода.",
+                                                                 primary: .init(type: .cancel, title: "Отмена", action: {}),
+                                                                 secondary: .init(type: .default, title: "Перевести", action: {[weak self] in
+                                guard let self = self, let productTo = self.productTo else {
+                                    return
+                                }
+                                
+                                do {
+                                    try self.model.sendCloseDepositRequest(productFrom: productFrom, productTo: productTo)
+                                    self.isCloseDeposit = true
+                                } catch {
+                                    LoggerAgent.shared.log(level: .error, category: .model, message: "Unable send close deposit request")
+                                }
+                                
+                            }))
+                            self.alert = .init(alertViewModel)
+                        }
+                        else {
+                            
+                            let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                 message: "Срок вашего вклада еще не истек. Для досрочного закрытия обратитесь в ближайший офис",
+                                                                 primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in
+                                self?.action.send(CurrencyWalletViewModelAction.Show.PlacesMap())}),
+                                                                 secondary: .init(type: .default, title: "ОК", action: {}))
+                            self.alert = .init(alertViewModel)
+                        }
+                        
+                    case .failure(let error):
+                        let alertViewModel = Alert.ViewModel(title: "Ошибка",
+                                                             message: error.localizedDescription,
+                                                             primary: .init(type: .default, title: "Наши офисы", action: {[weak self] in self?.action.send(CurrencyWalletViewModelAction.Show.PlacesMap())}),
+                                                             secondary: .init(type: .default, title: "ОК", action: {}))
+                        self.alert = .init(alertViewModel)
+                        
+                    }
+                case let payload as ModelAction.Deposits.Close.Response:
                     
+                    state = .button
+                    setUserInteractionEnabled()
+                    handleCloseDepositResponse(payload)
+
+
                 default:
                     break
                 }
@@ -239,6 +302,21 @@ class CurrencyWalletViewModel: ObservableObject {
                 swapViewModel.isUserInteractionEnabled = isEnabled
                 selectorViewModel?.isUserInteractionEnabled = isEnabled
                 
+            }.store(in: &bindings)
+        
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as CurrencyWalletViewModelAction.Show.PlacesMap:
+                    guard let placesViewModel = PlacesViewModel(model) else {
+                        return
+                    }
+                    sheet = .init(type: .placesMap(placesViewModel))
+                default:
+                    break
+                }
             }.store(in: &bindings)
     }
     
@@ -358,7 +436,7 @@ class CurrencyWalletViewModel: ObservableObject {
             
         } else {
             
-            if confirmationViewModel == nil {
+            if confirmationViewModel == nil, !isCloseDeposit{
                 
                 state = .spinner
                 isUserInteractionEnabled = false
@@ -372,7 +450,10 @@ class CurrencyWalletViewModel: ObservableObject {
                     sendExchangeApproveRequest()
                     
                 } else {
-                    
+                    if isCloseDeposit {
+                        model.action.send(ModelAction.Products.Update.ForProductType(productType: .deposit))
+                    }
+                    isCloseDeposit = false
                     closeAction()
                 }
             }
@@ -467,23 +548,28 @@ class CurrencyWalletViewModel: ObservableObject {
            let productAccountSelector = selectorViewModel.productAccountSelector,
            let productCardViewModel = productCardSelector.productViewModel,
            let productAccountViewModel = productAccountSelector.productViewModel {
-            
-            switch currencyOperation {
-            case .buy:
-                
-                model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start.Request(
-                    amount: swapViewModel.сurrencyCurrentSwap.currencyAmount,
-                    currency: swapViewModel.сurrencyCurrentSwap.currency.description,
-                    productFrom: productCardViewModel.productId,
-                    productTo: productAccountViewModel.productId))
-                
-            case .sell:
-                
-                model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start.Request(
-                    amount: swapViewModel.currencySwap.currencyAmount,
-                    currency: swapViewModel.currencySwap.currency.description,
-                    productFrom: productAccountViewModel.productId,
-                    productTo: productCardViewModel.productId))
+            if let productFrom = productFrom as? ProductDepositData, productFrom.balanceValue == amountFrom {
+                // проверка разрешения закрытия
+                self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
+            }
+            else {
+                switch currencyOperation {
+                case .buy:
+                    
+                    model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start.Request(
+                        amount: swapViewModel.сurrencyCurrentSwap.currencyAmount,
+                        currency: swapViewModel.сurrencyCurrentSwap.currency.description,
+                        productFrom: productCardViewModel.productId,
+                        productTo: productAccountViewModel.productId))
+                    
+                case .sell:
+                    
+                    model.action.send(ModelAction.CurrencyWallet.ExchangeOperations.Start.Request(
+                        amount: swapViewModel.currencySwap.currencyAmount,
+                        currency: swapViewModel.currencySwap.currency.description,
+                        productFrom: productAccountViewModel.productId,
+                        productTo: productCardViewModel.productId))
+                }
             }
         }
     }
@@ -574,13 +660,18 @@ class CurrencyWalletViewModel: ObservableObject {
                   let lastItem = items.last else {
                 return
             }
+            let documentStatus = stateSuccessView(response.documentStatus ?? .unknown)
+
             
-            makeSuccessViewModel(response.paymentOperationDetailId, amount: confirmationViewModel.debitAmount, currency: confirmationViewModel.currencyPayer, state: .success)
+            makeSuccessViewModel(response.paymentOperationDetailId, amount: confirmationViewModel.debitAmount, currency: confirmationViewModel.currencyPayer, state: documentStatus)
             
             scrollToItem = lastItem.id
             
             model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productCardViewModel.productId))
             model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productAccountViewModel.productId))
+            if (productFrom is ProductDepositData || productTo is ProductDepositData) {
+                model.action.send(ModelAction.Products.Update.ForProductType(productType: .deposit))
+            }
             
         case let .failed(error):
             
@@ -593,8 +684,33 @@ class CurrencyWalletViewModel: ObservableObject {
         }
         
         state = .button
-        continueButton.title = "На главную"
+        continueButton.title = "На главный"
     }
+    
+    private func handleCloseDepositResponse(_ payload: ModelAction.Deposits.Close.Response) {
+        switch payload {
+        case let .success(data: transferData):
+
+            guard let productFrom = productFrom,
+                  let productTo = productTo,
+                  let lastItem = items.last else {
+                return
+            }
+            scrollToItem = lastItem.id
+            let state = stateSuccessView(transferData.documentStatus)
+
+            makeSuccessViewModel(transferData.paymentOperationDetailId ?? 0, amount: amountFrom, currency: currencyFrom, state: state)
+            model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productFrom.id))
+            model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productTo.id))
+        case let .failure(message: message):
+            
+            makeAlert(error: ModelError.serverCommandError(error: message))
+        }
+        
+        state = .button
+        continueButton.title = "На главный"
+    }
+
     
     private func handleOperationDetailResponse(_ payload: ModelAction.Operation.Detail.Response) {
         
@@ -657,7 +773,10 @@ class CurrencyWalletViewModel: ObservableObject {
             model: model)
         
         if let successViewModel = successViewModel {
-            
+            successViewModel.needRepeatButton = (state == .error)
+            if successViewModel.needRepeatButton {
+                successViewModel.repeatButton = successViewModel.makeRepeatButton()
+            }
             successViewModel.action
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] action in
@@ -775,5 +894,95 @@ extension CurrencyWalletViewModel {
         let id = UUID()
         let icon: Image
         let action: () -> Void
+    }
+}
+
+extension CurrencyWalletViewModel {
+    var productIdFrom: Int? {
+        guard let selectorViewModel = selectorViewModel,
+              let productCardSelector = selectorViewModel.productCardSelector,
+              let productAccountSelector = selectorViewModel.productAccountSelector,
+              let productCardViewModel = productCardSelector.productViewModel,
+              let productAccountViewModel = productAccountSelector.productViewModel else {
+            return nil
+        }
+        switch currencyOperation {
+        case .buy:
+            return productCardViewModel.productId
+            
+        case .sell:
+            return productAccountViewModel.productId
+        }
+    }
+    
+    var productIdTo: Int? {
+        guard let selectorViewModel = selectorViewModel,
+              let productCardSelector = selectorViewModel.productCardSelector,
+              let productAccountSelector = selectorViewModel.productAccountSelector,
+              let productCardViewModel = productCardSelector.productViewModel,
+              let productAccountViewModel = productAccountSelector.productViewModel else {
+            return nil
+        }
+        switch currencyOperation {
+        case .buy:
+            return productAccountViewModel.productId
+            
+        case .sell:
+            return productCardViewModel.productId
+        }
+    }
+    
+    var productFrom: ProductData? {
+        guard let productIdFrom = productIdFrom else {
+            return nil
+        }
+        return model.product(productId: productIdFrom)
+    }
+    
+    var productTo: ProductData? {
+        guard let productIdTo = productIdTo else {
+            return nil
+        }
+        return model.product(productId: productIdTo)
+    }
+
+    var amountFrom: Double {
+        switch currencyOperation {
+        case .buy:
+            return swapViewModel.сurrencyCurrentSwap.currencyAmount
+        case .sell:
+            return swapViewModel.currencySwap.currencyAmount
+        }
+    }
+    
+    var currencyFrom: Currency {
+        switch currencyOperation {
+        case .buy:
+            return swapViewModel.сurrencyCurrentSwap.currency
+
+        case .sell:
+            return swapViewModel.currencySwap.currency
+        }
+    }
+
+    private func stateSuccessView(_ value: TransferResponseBaseData.DocumentStatus) -> CurrencyExchangeSuccessView.ViewModel.State{
+        switch value {
+        case .complete:
+            return .success
+        case .rejected:
+            return .error
+        case .unknown:
+            return .error
+        case .inProgress:
+            return .wait
+        }
+    }
+}
+
+// MARK: - Action
+
+enum CurrencyWalletViewModelAction {
+    enum Show {
+        struct PlacesMap: Action {}
     }
 }

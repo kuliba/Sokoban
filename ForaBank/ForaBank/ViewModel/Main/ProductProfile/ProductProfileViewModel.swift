@@ -319,22 +319,46 @@ private extension ProductProfileViewModel {
                     switch payload.result {
                         
                     case .success(let settings):
-                        if settings.allowCloseDeposit, let product = productData as? ProductDepositData, let openDate = product.openDate, let number = product.number  {
+                        if settings.allowCloseDeposit, let product = productData as? ProductDepositData, let openDate = product.openDate, let number = product.number {
                             
-                            let dateFormatter = DateFormatter.historyFullDateFormatter
-                            let bottomString = "Подробнее в договоре \"Условия срочного банковского вклада \n№\(number)\nот \(dateFormatter.string(from: openDate))\""
-                            let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
-                                                                 message: "Срок вашего вклада еще не истек.\n\nПри досрочном закрытии вклада возможна потеря или перерасчет начисленных процентов.\n\n\(bottomString)",
-                                                                 primary: .init(type: .default, title: "Отмена", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}),
-                                                                 secondary: .init(type: .default, title: "Продолжить", action: { [weak self] in
-                                if let id = self?.product.activeProductId {
+                            if product.isDemandDepositProduct {
+                                let displayNumber = product.displayNumber ?? number
+                                let topString = "Вы действительно хотите закрыть вклад №*\(displayNumber)?\n\n"
+                                let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                     message: "\(topString)При закрытии будет предложено перевести остаток денежных средств на другой счет/карту. Вклад будет закрыт после совершения перевода.",
+                                                                     primary: .init(type: .default, title: "Отмена", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}),
+                                                                     secondary: .init(type: .default, title: "Закрыть", action: { [weak self] in
+                                    guard let self = self,
+                                          let depositProduct = self.model.product(productId: self.product.activeProductId) as? ProductDepositData else {
+                                        return
+                                    }
                                     
-                                    self?.model.action.send(ModelAction.Deposits.BeforeClosing.Request(depositId: id, operDate: Date()))
-                                    self?.spinner = .init()
-                                }
-                            }))
-                            self.alert = .init(alertViewModel)
-                            
+                                    guard let viewModel = PaymentsMeToMeViewModel(self.model, mode: .transferAndCloseDeposit(depositProduct, depositProduct.balanceValue)) else {
+                                        return
+                                    }
+                                    
+                                    self.bind(viewModel)
+                                    
+                                    self.bottomSheet = .init(type: .meToMe(viewModel))
+                                }))
+                                self.alert = .init(alertViewModel)
+                            }
+                            else{
+                                
+                                let dateFormatter = DateFormatter.historyFullDateFormatter
+                                let bottomString = "Подробнее в договоре \"Условия срочного банковского вклада \n№\(number)\nот \(dateFormatter.string(from: openDate))\""
+                                let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                     message: "Срок вашего вклада еще не истек.\n\nПри досрочном закрытии вклада возможна потеря или перерасчет начисленных процентов.\n\n\(bottomString)",
+                                                                     primary: .init(type: .default, title: "Отмена", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}),
+                                                                     secondary: .init(type: .default, title: "Продолжить", action: { [weak self] in
+                                    if let id = self?.product.activeProductId {
+                                        
+                                        self?.model.action.send(ModelAction.Deposits.BeforeClosing.Request(depositId: id, operDate: Date()))
+                                        self?.spinner = .init()
+                                    }
+                                }))
+                                self.alert = .init(alertViewModel)
+                            }
                         } else {
                             
                             let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
@@ -358,7 +382,7 @@ private extension ProductProfileViewModel {
                     
                     switch payload {
                     case .success(data: let amount):
-                        guard let depositProduct = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) as? ProductDepositData else {
+                        guard let depositProduct = self.model.product(productId: self.product.activeProductId) as? ProductDepositData else {
                             return
                         }
                         
@@ -641,8 +665,8 @@ private extension ProductProfileViewModel {
                             
                         } else {
                             
-                            let alertView = Alert.ViewModel(title: "",
-                                                            message: "Вклад не предусматривает возможности пополнения. Подробнее в информации по вкладу в деталях",
+                            let alertView = Alert.ViewModel(title: "Невозможно пополнить",
+                                                            message: "Вклад не предусматривает возможности пополнения.\nПодробнее в информации по вкладу в деталях",
                                                             primary: .init(type: .default, title: "ОК", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}))
                             self.alert = .init(alertView)
                         }
@@ -662,11 +686,15 @@ private extension ProductProfileViewModel {
                             
                             switch transferType {
                             case .remains:
-                                guard let balance = depositProduct.balance else {
+                                // перевести
+
+                                guard let viewModel = PaymentsMeToMeViewModel(self.model, mode: .transferDeposit(depositProduct, 0)) else {
                                     return
                                 }
-                                let meToMeViewModel = MeToMeViewModel(type: .transferDepositRemains(depositProduct, balance), closeAction: {})
-                                self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
+                                
+                                self.bind(viewModel)
+                                
+                                self.bottomSheet = .init(type: .meToMe(viewModel))
                                 
                             case let .interest(amount):
                                 let meToMeViewModel = MeToMeViewModel(type: .transferDepositInterest(depositProduct, amount), closeAction: {})
@@ -798,7 +826,19 @@ private extension ProductProfileViewModel {
                                 
                                 let meToMeViewModel = MeToMeViewModel(type: .refill(loanAccount), closeAction: {})
                                 self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
-                            } else {
+                            }
+                                //только вклады
+                            else if let productData = productData as? ProductDepositData, productData.isDemandDepositProduct{
+                                                                
+                                guard let viewModel = PaymentsMeToMeViewModel(self.model, mode: .makePaymentToDeposite(productData, 0)) else {
+                                    return
+                                }
+                                
+                                self.bind(viewModel)
+                                
+                                self.bottomSheet = .init(type: .meToMe(viewModel))
+                            }
+                            else {
                                 let meToMeViewModel = MeToMeViewModel(type: .refill(productData), closeAction: {})
                                 self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
                             }
@@ -838,40 +878,28 @@ private extension ProductProfileViewModel {
                             self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
                             self.action.send(ProductProfileViewModelAction.Close.Sheet())
                             
-                            switch product.depositType {
-                            case .birjevoy:
-                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
-                                    
-                                    let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
-                                                                         message: "Операции по вкладу «Биржевой» вы можете осуществить в вашем личном кабинете на финансовой платформе «Финуслуги» ПАО «Московская Биржа ММВБ-РТС»",
-                                                                         primary: .init(type: .default, title: "Отмена", action: {}),
-                                                                         secondary: .init(type: .default, title: "Перейти", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                            if product.isDemandDepositProduct {
+                                self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
+                            }
+                            else{
+                                switch product.depositType {
+                                case .birjevoy:
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
                                         
-                                        if let depositCloseBirjevoyURL = self?.model.depositCloseBirjevoyURL {
+                                        let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                             message: "Операции по вкладу «Биржевой» вы можете осуществить в вашем личном кабинете на финансовой платформе «Финуслуги» ПАО «Московская Биржа ММВБ-РТС»",
+                                                                             primary: .init(type: .default, title: "Отмена", action: {}),
+                                                                             secondary: .init(type: .default, title: "Перейти", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())
                                             
-                                            self?.openLinkURL(depositCloseBirjevoyURL)
-                                        }
-                                    }))
-                                    
-                                    self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
-                                }
-                            case .multi:
-                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
-                                    
-                                    let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
-                                                                         message: "Срок вашего вклада еще не истек. Для досрочного закрытия обратитесь в ближайший офис",
-                                                                         primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in
-                                        self?.action.send(ProductProfileViewModelAction.Close.Alert())
-                                        self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())
-                                    }),
-                                                                         secondary: .init(type: .default, title: "Ок", action: {}))
-                                    
-                                    self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
-                                }
-                                
-                            default:
-                                if let currency = self.model.dictionaryCurrency(for: "RUB"),
-                                   product.currency != currency.code {
+                                            if let depositCloseBirjevoyURL = self?.model.depositCloseBirjevoyURL {
+                                                
+                                                self?.openLinkURL(depositCloseBirjevoyURL)
+                                            }
+                                        }))
+                                        
+                                        self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
+                                    }
+                                case .multi:
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
                                         
                                         let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
@@ -884,9 +912,26 @@ private extension ProductProfileViewModel {
                                         
                                         self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
                                     }
-                                } else {
                                     
-                                    self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
+                                default:
+                                    if let currency = self.model.dictionaryCurrency(for: "RUB"),
+                                       product.currency != currency.code {
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
+                                            
+                                            let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                                 message: "Срок вашего вклада еще не истек. Для досрочного закрытия обратитесь в ближайший офис",
+                                                                                 primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in
+                                                self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                                                self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())
+                                            }),
+                                                                                 secondary: .init(type: .default, title: "Ок", action: {}))
+                                            
+                                            self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
+                                        }
+                                    } else {
+                                        
+                                        self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
+                                    }
                                 }
                             }
                             
@@ -925,11 +970,18 @@ private extension ProductProfileViewModel {
                 switch action {
                 case let payload as PaymentsMeToMeAction.Response.Success:
                     
-                    if let productIdFrom = viewModel?.swapViewModel.productIdFrom,
-                       let productIdTo = viewModel?.swapViewModel.productIdTo {
-                        
-                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
-                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
+                    if let viewModel = viewModel {
+                        switch viewModel.mode {
+                        case .transferAndCloseDeposit, .closeDeposit:
+                            model.action.send(ModelAction.Products.Update.ForProductType(productType: .deposit))
+                        default:
+                            if let productIdFrom = viewModel.swapViewModel.productIdFrom,
+                               let productIdTo = viewModel.swapViewModel.productIdTo {
+                                
+                                model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
+                                model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
+                            }
+                        }
                     }
                     
                     self.bind(payload.viewModel)
@@ -987,6 +1039,7 @@ private extension ProductProfileViewModel {
                 
                 switch action {
                 case _ as PaymentsSuccessAction.Button.Close:
+                    model.action.send(ModelAction.Products.Update.ForProductType(productType: .deposit))
                     self.action.send(ProductProfileViewModelAction.Close.Success())
                     self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
                     self.rootActions?.switchTab(.main)
@@ -1001,7 +1054,7 @@ private extension ProductProfileViewModel {
                 }
                 
                 model.action.send(ModelAction.Products.Update.ForProductType(productType: .account))
-                
+
             }.store(in: &bindings)
     }
 }

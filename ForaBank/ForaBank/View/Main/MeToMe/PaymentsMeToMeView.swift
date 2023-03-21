@@ -38,6 +38,12 @@ struct PaymentsMeToMeView: View {
                     .padding(.top, -29)
             }
         }
+        .sheet(item: $viewModel.sheet, content: { sheet in
+            switch sheet.type {
+            case let .placesMap(placesViewModel):
+                PlacesView(viewModel: placesViewModel)
+            }
+        })
         .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
 
             switch bottomSheet.type {
