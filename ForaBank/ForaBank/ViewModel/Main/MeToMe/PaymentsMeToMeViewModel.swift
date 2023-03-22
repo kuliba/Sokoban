@@ -288,7 +288,6 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 case _ as PaymentsMeToMeAction.Button.Transfer.Tap:
                     
                     switch mode {
-                        
                     case .general, .makePaymentTo, .makePaymentToDeposite:
                         
                         if let productIdFrom = swapViewModel.productIdFrom,
@@ -559,16 +558,14 @@ class PaymentsMeToMeViewModel: ObservableObject {
     private func updateAmountSwitch(from: ProductData.ID, to: ProductData.ID) {
         
         guard let products = Self.products(model, from: from, to: to) else {
+            
+            paymentsAmount.currencySwitch = nil
             return
         }
 
         let currencyData = model.currencyList.value
-        
-        let fromItem = currencyData.first(where: { $0.code == products.from.currency })
-        let toItem = currencyData.first(where: { $0.code == products.to.currency })
-        
-        guard let fromItem = fromItem,
-              let toItem = toItem,
+        guard let fromItem = currencyData.first(where: { $0.code == products.from.currency }),
+              let toItem = currencyData.first(where: { $0.code == products.to.currency }),
               let fromCurrencySymbol = fromItem.currencySymbol,
               let toCurrencySymbol = toItem.currencySymbol else {
             return

@@ -1233,18 +1233,13 @@ fileprivate extension NavigationBarView.ViewModel {
     
     convenience init(product: ProductData, dismissAction: @escaping () -> Void, rightButtons: [ButtonItemViewModel] = []) {
         self.init(
-            title: Self.title(with: product),
+            title: ProductView.ViewModel.name(product: product, style: .profile),
             subtitle: Self.subtitle(with: product),
             leftItems: [BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)],
             rightItems: rightButtons,
             background: Self.accentColor(with: product),
             foreground: Self.textColor(with: product),
             backgroundDimm: .init(color: Color(hex: "1с1с1с"), opacity: 0.3))
-    }
-    
-    static func title(with productData: ProductData) -> String {
-        
-        return productData.displayName
     }
     
     static func subtitle(with productData: ProductData) -> String {
@@ -1281,7 +1276,7 @@ fileprivate extension NavigationBarView.ViewModel {
     
     func update(with product: ProductData) {
         
-        self.title = Self.title(with: product)
+        self.title = ProductView.ViewModel.name(product: product, style: .profile)
         self.subtitle = Self.subtitle(with: product)
         self.foreground = Self.textColor(with: product)
         self.background = Self.accentColor(with: product)
