@@ -138,7 +138,11 @@ extension ProductsSwapView {
                 
             case let .makePaymentTo(productToData, _):
                 var filterFrom = ProductData.Filter.generalFrom
+                /*
+                 temp off because of case with the single account product. Additional analytics is required.
+                 
                 filterFrom.rules.append(ProductData.Filter.ProductRestrictedRule([productToData.id]))
+                 */
                 
                 guard let productFromData = model.firstProduct(with: filterFrom) else {
                     return nil
@@ -187,6 +191,7 @@ extension ProductsSwapView {
                 let to = ProductSelectorView.ViewModel(model, context: contextTo)
                 
                 self.init(model: model, items: [from, to], divider: .init())
+
             }
             
             bind()

@@ -171,10 +171,7 @@ class MyProductsViewModel: ObservableObject {
         model.products
             .combineLatest(model.productsOpening)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] data in
-                
-                let products = data.0
-                let productsOpening = data.1
+            .sink { [unowned self] products, productsOpening in
                 
                 let updatedSections = Self.updateViewModel(with: products,
                                                       sections: self.sections,
