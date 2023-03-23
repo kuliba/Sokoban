@@ -78,7 +78,7 @@ extension ServerCommands {
         struct GetCardStatementForPeriod: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/getCardStatementForPeriod_V2"
+            let endpoint = "/rest/getCardStatementForPeriod_V3"
             let method: ServerCommandMethod = .post
             let payload: BasePayload?
             
