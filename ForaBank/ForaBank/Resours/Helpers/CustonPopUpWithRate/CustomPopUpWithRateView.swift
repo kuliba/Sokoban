@@ -29,6 +29,7 @@ class CustomPopUpWithRateView: UIViewController {
         didSet {
             /// Обновляем модели в BottomView
             self.bottomView.models = (trasfer.0, trasfer.1)
+            self.bottomView.infoButton.isHidden = true
         }
     }
     
@@ -47,7 +48,7 @@ class CustomPopUpWithRateView: UIViewController {
     
     var reversCard = "" {
         didSet {
-            self.trasfer = (viewModel.cardFromRealm?.currency ?? "", viewModel.cardToRealm?.currency ?? "")
+            self.trasfer = (cardFrom?.currency ?? "", viewModel.cardToRealm?.currency ?? "")
         }
     }
     

@@ -41,6 +41,9 @@ class BottomInputViewWithRateView: UIView {
                     self.buttomLabel.text = "Возможна комиссия"
                     
                 } else {
+                    DispatchQueue.main.async {
+                        self.exchangeRate(self.models.to, self.models.from)
+                    }
                     self.buttomLabel.text = "Условия снятия"
                 }
             }
