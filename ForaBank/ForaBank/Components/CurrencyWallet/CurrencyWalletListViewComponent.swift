@@ -26,10 +26,10 @@ extension CurrencyWalletListView {
             
             switch currencyOperation {
             case .buy:
-                return .generalToWithDeposit
+                return .currencyWalletTo
                 
             case .sell:
-                return .generalFromWithDeposit
+                return .currencyWalletFrom
             }
         }
         

@@ -121,36 +121,19 @@ struct DepositCalculateAmountView: View {
 
 extension DepositCalculateAmountView {
     
-    final class DepositCalculateTextField: UIViewRepresentable {
+    struct DepositCalculateTextField: UIViewRepresentable {
         
         @ObservedObject var viewModel: DepositCalculateAmountViewModel
-        private var bindings = Set<AnyCancellable>()
-        
-        private let textField = UITextField()
         
         init(viewModel: DepositCalculateAmountViewModel) {
             
             self.viewModel = viewModel
             
-            bind()
-        }
-        
-        private func bind() {
-            
-            viewModel.$value
-                .receive(on: DispatchQueue.main)
-                .sink { value in
-                    
-                    DispatchQueue.main.async { [unowned self] in
-                        textField.text = viewModel.valueCurrencySymbol
-                        textField.updateCursorPosition()
-                    }
-                    
-                }.store(in: &bindings)
         }
         
         func makeUIView(context: Context) -> UITextField {
             
+            let textField = UITextField()
             textField.delegate = context.coordinator
             textField.textColor = Color.mainColorsWhite.uiColor()
             textField.tintColor = Color.mainColorsGray.uiColor()
@@ -158,25 +141,15 @@ extension DepositCalculateAmountView {
             textField.font = UIFont(name: "Inter-SemiBold", size: 24)
             textField.keyboardType = .numberPad
             
-            NotificationCenter.default.addObserver(
-                self,
-                selector: #selector(keyboardWillHide),
-                name: UIResponder.keyboardWillHideNotification,
-                object: nil)
-            
             return textField
-        }
-        
-        @objc func keyboardWillHide(notification: NSNotification) {
-            
-            guard viewModel.isFirstResponder == true else { return }
-            viewModel.textFieldDidEndEditing(textField)
         }
         
         func updateUIView(_ uiView: UITextField, context: Context) {
             
             uiView.isUserInteractionEnabled = viewModel.isFirstResponder
-            
+            uiView.text = viewModel.valueCurrencySymbol
+            uiView.updateCursorPosition()
+
             switch viewModel.isFirstResponder {
             case true: uiView.becomeFirstResponder()
             case false: uiView.resignFirstResponder()
@@ -190,12 +163,13 @@ extension DepositCalculateAmountView {
         
         class Coordinator: NSObject, UITextFieldDelegate {
             
-            @ObservedObject var viewModel: DepositCalculateAmountViewModel
+            let viewModel: DepositCalculateAmountViewModel
             
             init(viewModel: DepositCalculateAmountViewModel) {
                 self.viewModel = viewModel
+                super.init()
             }
-            
+    
             func textFieldDidBeginEditing(_ textField: UITextField) {
                 textField.updateCursorPosition()
             }
@@ -234,7 +208,7 @@ extension DepositCalculateAmountView {
                 
                 viewModel.value = value
                 
-                return true
+                return false
             }
         }
     }

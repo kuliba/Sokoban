@@ -267,21 +267,21 @@ extension ProductData.Filter  {
                 CardAdditionalNotOwnedRetrictedRule(),
                 AccountActiveRule()])
     
-    static let generalFromWithDeposit = ProductData.Filter(
+    //MARK: Currency Wallet
+    
+    static let currencyWalletFrom = ProductData.Filter(
         rules: [DebitRule(),
                 ProductTypeRule([.card, .account, .deposit]),
                 CardActiveRule(),
                 CardAdditionalNotOwnedRetrictedRule(),
-                AccountActiveRule(),
-                DemandDepositRule()])
+                AccountActiveRule()])
     
-    static let generalToWithDeposit = ProductData.Filter(
+    static let currencyWalletTo = ProductData.Filter(
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account, .deposit]),
                 CardActiveRule(),
                 CardAdditionalNotOwnedRetrictedRule(),
-                AccountActiveRule(),
-                DemandDepositRule()])
+                AccountActiveRule()])
     
     //MARK: Me2Me Payment Filter
     
