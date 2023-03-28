@@ -53,8 +53,9 @@ extension ProductView {
             let backgroundColor = productData.backgroundColor
             let backgroundImage = Self.backgroundImage(with: productData, size: size)
             let statusAction = Self.statusAction(product: productData)
+            let interestRate = Self.rateFormatted(product: productData)
             
-            self.init(id: productData.id, header: .init(number: number, period: period), name: name, footer: .init(balance: balance), statusAction: statusAction, isChecked: isChecked, appearance: .init(textColor: textColor, background: .init(color: backgroundColor, image: backgroundImage), size: size, style: style), isUpdating: false, productType: productType)
+            self.init(id: productData.id, header: .init(number: number, period: period), name: name, footer: .init(balance: balance, interestRate: interestRate), statusAction: statusAction, isChecked: isChecked, appearance: .init(textColor: textColor, background: .init(color: backgroundColor, image: backgroundImage), size: size, style: style), isUpdating: false, productType: productType)
             
             bind()
             bind(statusAction)
@@ -119,6 +120,20 @@ extension ProductView {
             
             bind(statusAction)
         }
+        
+        static func rateFormatted(product: ProductData) -> String? {
+                    
+                    var rateValue: String? = nil
+                    
+                    switch product {
+                    case let depositProduct as ProductDepositData:
+                        rateValue = String(format: "%.2f", depositProduct.interestRate) + "%"
+                    default:
+                        break
+                    }
+                    
+                    return rateValue
+                }
 
         static func balanceFormatted(product: ProductData, style: Appearance.Style, model: Model) -> String {
             
@@ -297,11 +312,13 @@ extension ProductView.ViewModel {
     class FooterViewModel: ObservableObject {
         
         @Published var balance: String
+        @Published var interestRate: String?
         let paymentSystem: Image?
         
-        init(balance: String, paymentSystem: Image? = nil) {
+        init(balance: String, interestRate: String? = nil, paymentSystem: Image? = nil) {
             
             self.balance = balance
+            self.interestRate = interestRate
             self.paymentSystem = paymentSystem
         }
     }
@@ -711,6 +728,19 @@ extension ProductView {
                         .accessibilityIdentifier("productBalance")
                     
                     Spacer()
+                    if let text = viewModel.interestRate {
+                        
+                        ZStack {
+                            
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color.mainColorsGrayMedium)
+                                .frame(width: 56, height: 20)
+                            Text(text)
+                                .font(.textBodySM12160())
+                                .fontWeight(.regular)
+                                .foregroundColor(Color.textSecondary)
+                        }
+                    }
                 }
             }
         }
