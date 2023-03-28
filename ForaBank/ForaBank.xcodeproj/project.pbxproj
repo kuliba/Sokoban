@@ -356,8 +356,6 @@
 		2AF5E29629BB4691004D69F3 /* createAnywayTransfer_iFora_515A3_10rub_request.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A0F2F6E29AE3ED40054B920 /* createAnywayTransfer_iFora_515A3_10rub_request.json */; };
 		2AF5E29729BB4691004D69F3 /* createAnywayTransfer_iFora_4285_9rub_response.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A0F2F6529AE3ED40054B920 /* createAnywayTransfer_iFora_4285_9rub_response.json */; };
 		2AF5E29929BB4691004D69F3 /* createAnywayTransfer_iFora_515A3_10rub_response.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A0F2F6429AE3ED40054B920 /* createAnywayTransfer_iFora_515A3_10rub_response.json */; };
-		2A3EB71C29B1098C002A1309 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3EB71B29B1098C002A1309 /* Config.swift */; };
-		2A3EB71D29B10B3E002A1309 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3EB71B29B1098C002A1309 /* Config.swift */; };
 		50037F7A2934D107009D1F0C /* TransfersInfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50037F792934D107009D1F0C /* TransfersInfoViewComponent.swift */; };
 		50037F7C2934DE56009D1F0C /* TransfersPromoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50037F7B2934DE56009D1F0C /* TransfersPromoViewComponent.swift */; };
 		50043665287B3747000545BD /* PagerScrollViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50043664287B3747000545BD /* PagerScrollViewComponent.swift */; };
@@ -1985,7 +1983,6 @@
 		2AEDAD5B29A640BC00017F73 /* CreateAnywayTransferHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAnywayTransferHelpersTests.swift; sourceTree = "<group>"; };
 		2AF5E28B29BB4516004D69F3 /* NSObject+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Extension.swift"; sourceTree = "<group>"; };
 		2AF5E28C29BB4517004D69F3 /* Model+stubbed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Model+stubbed.swift"; sourceTree = "<group>"; };
-		2A3EB71B29B1098C002A1309 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		50037F792934D107009D1F0C /* TransfersInfoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransfersInfoViewComponent.swift; sourceTree = "<group>"; };
 		50037F7B2934DE56009D1F0C /* TransfersPromoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransfersPromoViewComponent.swift; sourceTree = "<group>"; };
 		50043664287B3747000545BD /* PagerScrollViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerScrollViewComponent.swift; sourceTree = "<group>"; };
@@ -10224,10 +10221,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
-				CURRENT_PROJECT_VERSION = 20;
-				CURRENT_PROJECT_VERSION = 19;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 38;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -10302,10 +10296,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
-				CURRENT_PROJECT_VERSION = 20;
-				CURRENT_PROJECT_VERSION = 19;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -10334,10 +10325,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
-				CURRENT_PROJECT_VERSION = 20;
-				CURRENT_PROJECT_VERSION = 19;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -10366,10 +10354,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
-				CURRENT_PROJECT_VERSION = 20;
-				CURRENT_PROJECT_VERSION = 19;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -10526,10 +10511,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
-				CURRENT_PROJECT_VERSION = 20;
-				CURRENT_PROJECT_VERSION = 19;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 38;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -10564,10 +10546,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
-				CURRENT_PROJECT_VERSION = 20;
-				CURRENT_PROJECT_VERSION = 19;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;

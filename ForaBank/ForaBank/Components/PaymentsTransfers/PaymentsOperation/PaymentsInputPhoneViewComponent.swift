@@ -41,7 +41,7 @@ extension PaymentsInputPhoneView {
             }
             
 #else
-            return textField.phoneNumberFormatter.isValid(phone.digits)
+            return textView.phoneNumberFormatter.isValid(phone.digits)
 #endif
         }
         
@@ -73,7 +73,7 @@ extension PaymentsInputPhoneView {
                 }
 
 #else
-                textField.text = textField.phoneNumberFormatter.partialFormatter("+\(phone.digits)")
+                textView.text = textView.phoneNumberFormatter.partialFormatter("+\(phone.digits)")
 #endif
                 
             }
