@@ -83,7 +83,7 @@ extension ServerCommands {
         struct GetDepositStatementForPeriod: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/getDepositStatementForPeriod_V2"
+            let endpoint = "/rest/getDepositStatementForPeriod_V3"
             let method: ServerCommandMethod = .post
             let payload: BasePayload?
             
