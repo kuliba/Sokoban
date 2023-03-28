@@ -1,0 +1,42 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "needMake": true,
+        "needOTP": true,
+        "amount": 1.00,
+        "creditAmount": null,
+        "fee": 0.00,
+        "currencyAmount": "RUB",
+        "currencyPayer": "RUB",
+        "currencyPayee": null,
+        "currencyRate": null,
+        "debitAmount": 1.00,
+        "payeeName": null,
+        "paymentOperationDetailId": 1482782,
+        "documentStatus": null,
+        "needSum": false,
+        "additionalList": [
+            {
+                "fieldName": "a3_NUMBER_1_2",
+                "fieldValue": "9191619658",
+                "fieldTitle": "Номер телефона (без +7)",
+                "svgImage": "<svg width=\"32\" height=\"32\" viewBox=\"0 0 32 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M17.3929 22H14.6071M11.3571 6C10.3315 6 9.5 6.89543 9.5 8V24C9.5 25.1046 10.3315 26 11.3571 26H20.6429C21.6685 26 22.5 25.1046 22.5 24V8C22.5 6.89543 21.6685 6 20.6429 6H16H11.3571Z\" stroke=\"#999999\" stroke-width=\"1.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n</svg>\n",
+                "recycle": null,
+                "typeIdParameterList": null
+            },
+            {
+                "fieldName": "a3_AMOUNT_3_2",
+                "fieldValue": "1.0",
+                "fieldTitle": "Сумма",
+                "svgImage": null,
+                "recycle": null,
+                "typeIdParameterList": null
+            }
+        ],
+        "parameterListForNextStep": [],
+        "finalStep": true,
+        "infoMessage": null,
+        "printFormType": "mobile"
+    }
+}

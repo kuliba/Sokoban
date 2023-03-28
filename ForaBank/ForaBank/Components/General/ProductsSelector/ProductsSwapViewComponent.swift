@@ -49,6 +49,13 @@ extension ProductsSwapView {
             self.model = model
             self.items = items
             self.divider = divider
+            
+            LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductsSwapView.ViewModel initialized")
+        }
+        
+        deinit {
+            
+            LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductsSwapView.ViewModel deinitialized")
         }
         
         convenience init?(_ model: Model, mode: PaymentsMeToMeViewModel.Mode) {
@@ -201,46 +208,37 @@ extension ProductsSwapView {
         private func bind() {
             
             action
-                .receive(on: DispatchQueue.main)
+                .compactMap { $0 as? ProductsSwapAction.Button.Tap }
                 .throttle(for: .milliseconds(500), scheduler: DispatchQueue.main, latest: false)
-                .sink { [unowned self] action in
-                    
-                    switch action {
-                    case _ as ProductsSwapAction.Button.Tap:
-                                                
-                        withAnimation {
-                            
-                            items = items.reversed()
-                            divider.isToogleButton.toggle()
-                        }
-                        
-                        self.action.send(ProductsSwapAction.Swapped())
-                        
-                    case _ as ProductsSwapAction.Button.Reset:
-                        break
-                        
-                    default:
-                        break
-                    }
-                    
-                }.store(in: &bindings)
-            
-            $items
-                .dropFirst()
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] items in
+                .sink { [unowned self] _ in
                     
-                    guard let from = from, let to = to else {
-                        return
-                    }
-
-                    let contextFrom = to.context.value
-                    let contextTo = from.context.value
-                    
-                    from.context.value = contextFrom
-                    to.context.value = contextTo
-                    
-                }.store(in: &bindings)
+                    swapItems()
+                }
+                .store(in: &bindings)
+         }
+        
+        private func swapItems() {
+            
+            withAnimation {
+                
+                items = items.reversed()
+                
+                guard
+                    let from = from,
+                    let to = to
+                else {
+                    return
+                }
+                
+                let contextFrom = from.context.value
+                let contextTo = to.context.value
+                
+                self.from?.context.value = contextTo
+                self.to?.context.value = contextFrom
+                
+                divider.isToogleButton.toggle()
+            }
         }
         
         func bind(items: [ProductSelectorView.ViewModel]) {
@@ -248,36 +246,36 @@ extension ProductsSwapView {
             for item in items {
                 
                 item.action
+                    .compactMap { $0 as? ProductSelectorAction.Selected }
                     .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] action in
+                    .sink { [unowned self] payload in
                         
-                        switch action {
-                        case let payload as ProductSelectorAction.Selected:
-                            
-                            if let from = from, item.id == from.id {
-                                self.action.send(ProductsSwapAction.Selected.From(productId: payload.id))
-                            } else {
-                                self.action.send(ProductsSwapAction.Selected.To(productId: payload.id))
-                            }
-                            
-                        case let payload as ProductSelectorAction.Product.Tap:
-                            
-                            guard let from = from, let to = to else {
-                                return
-                            }
-                            
-                            switch from.id == payload.id {
-                            case true: to.collapseList()
-                            case false: from.collapseList()
-                            }
-                            
-                            UIApplication.shared.hideKeyboardIfNeeds()
-
-                        default:
-                            break
+                        if let from = from, item.id == from.id {
+                            self.action.send(ProductsSwapAction.Selected.From(productId: payload.id))
+                        } else {
+                            self.action.send(ProductsSwapAction.Selected.To(productId: payload.id))
                         }
-
-                    }.store(in: &bindings)
+                    }
+                    .store(in: &bindings)
+                
+                item.action
+                    .compactMap { $0 as? ProductSelectorAction.Product.Tap }
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] payload in
+                        
+                        guard let from = from, let to = to else {
+                            return
+                        }
+                        
+                        if from.id == payload.id {
+                            to.collapseList()
+                        } else {
+                            from.collapseList()
+                        }
+                        
+                        UIApplication.shared.hideKeyboardIfNeeds()
+                    }
+                    .store(in: &bindings)
             }
         }
         
@@ -412,20 +410,19 @@ struct ProductsSwapView: View {
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 8) {
             
             ForEach(viewModel.items) { item in
                 ProductSelectorView(viewModel: item)
-                    .padding(.vertical, 4)
+                    .padding(.top, 4)
                 
                 if let from = viewModel.from, item.id == from.id {
                     DividerView(viewModel: viewModel.divider)
-                        .padding(.vertical, 8)
+                        .padding(.horizontal, 20)
                 }
             }
         }
-        .fixedSize(horizontal: false, vertical: true)
-        .padding(20)
+        .fixedSize(horizontal: false, vertical: true)        
     }
 }
 
@@ -538,9 +535,31 @@ struct ProductsSwapViewComponent_Previews: PreviewProvider {
         
         Group {
             
-            ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sampleMe2MeCollapsed, .sample2], divider: .sample))
-            ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sampleMe2MeCollapsed, .sample3], divider: .sample))
+            previewGroup()
+                .previewLayout(.sizeThatFits)
             
-        }.previewLayout(.sizeThatFits)
+            VStack(content: previewGroup)
+                .previewLayout(.sizeThatFits)
+        }
+    }
+    
+    static func previewGroup() -> some View {
+        
+        Group {
+            
+            productsSwapView([.sample2, .sampleMe2MeCollapsed])
+            productsSwapView([.sampleMe2MeCollapsed, .sample2])
+            productsSwapView([.sampleMe2MeCollapsed, .sample3])
+            productsSwapView([.sample3, .sampleMe2MeCollapsed])
+        }
+    }
+    
+    private static func productsSwapView(
+        _ items: [ProductSelectorView.ViewModel]
+    ) -> ProductsSwapView {
+        
+        ProductsSwapView(
+            viewModel: .init(model: .emptyMock, items: items, divider: .sample)
+        )
     }
 }

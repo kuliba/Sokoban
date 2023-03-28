@@ -1,0 +1,42 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "needMake": true,
+        "needOTP": true,
+        "amount": 10.00,
+        "creditAmount": null,
+        "fee": 0.00,
+        "currencyAmount": "RUB",
+        "currencyPayer": "RUB",
+        "currencyPayee": null,
+        "currencyRate": null,
+        "debitAmount": 10.00,
+        "payeeName": null,
+        "paymentOperationDetailId": 1483019,
+        "documentStatus": null,
+        "needSum": false,
+        "additionalList": [
+            {
+                "fieldName": "a3_code_1_1_1",
+                "fieldValue": "9999679969",
+                "fieldTitle": "Номер телефона +7:",
+                "svgImage": "<svg width=\"32\" height=\"32\" viewBox=\"0 0 32 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M17.3929 22H14.6071M11.3571 6C10.3315 6 9.5 6.89543 9.5 8V24C9.5 25.1046 10.3315 26 11.3571 26H20.6429C21.6685 26 22.5 25.1046 22.5 24V8C22.5 6.89543 21.6685 6 20.6429 6H16H11.3571Z\" stroke=\"#999999\" stroke-width=\"1.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n</svg>\n",
+                "recycle": null,
+                "typeIdParameterList": null
+            },
+            {
+                "fieldName": "a3_sum_2_1",
+                "fieldValue": "10.0",
+                "fieldTitle": "Сумма к оплате, руб.:",
+                "svgImage": "<svg width=\"32\" height=\"32\" viewBox=\"0 0 32 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M18.7102 11.0208C18.532 10.9431 18.3492 10.8736 18.1625 10.8128C18.2214 10.7979 18.2808 10.7838 18.3405 10.7705L18.7102 11.0208ZM18.1624 21.9343C18.3492 21.8734 18.5319 21.8039 18.7102 21.7263L18.3404 21.9766C18.2807 21.9633 18.2214 21.9492 18.1624 21.9343ZM14.9184 21.9766C14.8443 21.9601 14.7707 21.9424 14.6978 21.9233L14.5398 21.8821L14.3819 21.9233C13.8869 22.0526 13.3664 22.1221 12.8288 22.1221C9.52734 22.1221 6.87463 19.5242 6.87463 16.3735C6.87463 13.2229 9.52734 10.625 12.8289 10.625C13.3665 10.625 13.8869 10.6945 14.3819 10.8238L14.5399 10.865L14.6978 10.8238C14.7708 10.8047 14.8443 10.7869 14.9184 10.7705L16.2375 11.6634C17.7819 12.7088 18.783 14.4344 18.783 16.3735C18.783 18.3127 17.7819 20.0383 16.2375 21.0837L14.9184 21.9766Z\" stroke=\"#999999\" stroke-width=\"1.25\"/>\n</svg>",
+                "recycle": null,
+                "typeIdParameterList": null
+            }
+        ],
+        "parameterListForNextStep": [],
+        "finalStep": true,
+        "infoMessage": null,
+        "printFormType": "mobile"
+    }
+}

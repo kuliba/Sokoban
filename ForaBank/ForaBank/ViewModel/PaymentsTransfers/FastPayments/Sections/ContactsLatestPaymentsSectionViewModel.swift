@@ -24,7 +24,7 @@ class ContactsLatestPaymentsSectionViewModel: ContactsSectionViewModel, Observab
     convenience init(model: Model, including: Set<LatestPaymentData.Kind>) {
         
         let latestPaymentsViewModel = LatestPaymentsView.ViewModel(model, isBaseButtons: false, filter: .including(including))
-        self.init(latestPayments: latestPaymentsViewModel, mode: .fastPayment, model: model)
+        self.init(latestPayments: latestPaymentsViewModel, mode: .select, model: model)
         
         bind()
     }

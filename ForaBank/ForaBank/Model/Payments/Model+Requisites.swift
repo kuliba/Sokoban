@@ -39,7 +39,7 @@ extension Model {
                 
                 return .init(rules: rules)
             }()
-            let bicBankParameter = Payments.ParameterSelectBank(.init(id: bicBankId, value: nil), icon: defaultInputIcon, title: "БИК банка получателя", options: [], validator: bicValidator, limitator: .init(limit: 9))
+            let bicBankParameter = Payments.ParameterSelectBank(.init(id: bicBankId, value: nil), icon: defaultInputIcon, title: "БИК банка получателя", options: [], validator: bicValidator, limitator: .init(limit: 9), transferType: .requisites)
             
             //MARK: Account Number Parameter
             let accountNumberValidator: Payments.Validation.RulesSystem = {
@@ -121,7 +121,7 @@ extension Model {
                 let productParameterId = Payments.Parameter.Identifier.product.rawValue
                 let filter = ProductData.Filter.generalFrom
                 guard let product = firstProduct(with: filter),
-                      let currencySymbol = dictionaryCurrencySymbol(for: product.currency)else {
+                      let currencySymbol = dictionaryCurrencySymbol(for: product.currency) else {
                     throw Payments.Error.unableCreateRepresentable(productParameterId)
                 }
                 let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
@@ -219,7 +219,7 @@ extension Model {
                         return .init(id: kpp, name: company.name, icon: nil)
                     }
                     
-                    let kppParameter = Payments.ParameterSelect(.init(id: kppParameterId, value: options.first?.id), title: "КПП получателя", options: options, type: .kpp, description: "Выберите из \(options.count)")
+                    let kppParameter = Payments.ParameterSelect(.init(id: kppParameterId, value: options.first?.id), title: "КПП получателя", placeholder: "Начните ввод для поиска", options: options, description: "Выберите из \(options.count)")
                     parameters.append(kppParameter)
                     
                     //MARK: Company Name Parameter
@@ -506,7 +506,7 @@ extension Payments.ParameterAmount {
     
     func updated(currencySymbol: String, maxAmount: Double?) -> Payments.ParameterAmount {
             
-            return Payments.ParameterAmount(value: value, title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: maxAmount), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
+        return Payments.ParameterAmount(value: value, title: "Сумма перевода", currencySymbol: currencySymbol, deliveryCurrency: deliveryCurrency, validator: .init(minAmount: 0.01, maxAmount: maxAmount), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
     }
 }
 

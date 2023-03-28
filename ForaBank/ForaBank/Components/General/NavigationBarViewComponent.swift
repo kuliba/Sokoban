@@ -73,18 +73,35 @@ extension NavigationBarView {
                 
                 for item in headerParameter.rightButton {
                     
-                    guard let icon = item.icon.image else {
-                        break
-                    }
-                    
                     switch item.action {
                     case .scanQrCode:
                         
-                        rightButton.append(ButtonItemViewModel.init(icon: icon, action: { [weak self] in
+                        guard let icon = item.icon.image else {
+                            break
+                        }
+                        
+                        rightButton.append(ButtonItemViewModel(icon: icon, action: { [weak self] in
                             self?.action.send(NavigationBarViewModelAction.ScanQrCode())
                         }))
                     }
                 }
+                
+                if let icon = headerParameter.icon {
+                    
+                    switch icon {
+                    case let .image(imageData):
+                        if let iconImage = imageData.image {
+                            
+                            let imageItem = IconItemViewModel(icon: iconImage, style: headerParameter.style)
+                            rightButton.append(imageItem)
+                        }
+                        
+                    case let .name(imageName):
+                        let imageItem = IconItemViewModel(icon: Image(imageName), style: headerParameter.style)
+                        rightButton.append(imageItem)
+                    }
+                }
+                
                 self.rightItems = rightButton
                 
             } else {
@@ -176,11 +193,27 @@ extension NavigationBarView.ViewModel {
     class IconItemViewModel: ItemViewModel {
         
         let icon: Image
+        let style: Style
         
-        init(icon: Image) {
+        init(icon: Image, style: Payments.ParameterHeader.Style) {
             
             self.icon = icon
+            
+            switch style {
+            case .normal:
+                self.style = .normal
+                
+            case .large:
+                self.style = .large
+            }
+            
             super.init()
+        }
+        
+        enum Style {
+            
+            case normal //24pt
+            case large //32pt
         }
     }
     
@@ -416,10 +449,19 @@ extension NavigationBarView {
  
         var body: some View {
             
-            viewModel.icon
-                .resizable()
-                .renderingMode(.original)
-                .frame(width: 24, height: 24)
+            switch viewModel.style {
+            case .normal:
+                viewModel.icon
+                    .resizable()
+                    .renderingMode(.original)
+                    .frame(width: 24, height: 24)
+                
+            case .large:
+                viewModel.icon
+                    .resizable()
+                    .renderingMode(.original)
+                    .frame(width: 32, height: 32)
+            }
         }
     }
 }

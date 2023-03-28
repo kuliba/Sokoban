@@ -27,6 +27,7 @@ class ContactsViewModel: ObservableObject {
         
         switch mode {
         case .fastPayments: return "Выберите контакт"
+        case .abroad: return "В какую страну?"
         case let .select(select):
             switch select {
             case .contacts: return "Выберите контакт"
@@ -128,6 +129,9 @@ class ContactsViewModel: ObservableObject {
                         }
                     }
                     
+                case .abroad:
+                    countriesSection?.filter.value = text
+                    
                 case let .select(select):
                     switch select {
                     case .contacts:
@@ -164,6 +168,9 @@ class ContactsViewModel: ObservableObject {
                         case .fastPayments:
                             let formattedPhone = searchBar.textField.phoneNumberFormatter.partialFormatter("+\(payload.phone)")
                             self.searchBar.textField.text = formattedPhone
+                        
+                        case .abroad:
+                            break
                             
                         case .select:
                             let formattedPhone = searchBar.textField.phoneNumberFormatter.partialFormatter("+\(payload.phone)")
@@ -177,6 +184,9 @@ class ContactsViewModel: ObservableObject {
                         switch mode {
                         case .fastPayments:
                             handleBankDidTapped(bankId: payload.bankId)
+                        
+                        case .abroad:
+                            break
                             
                         case .select:
                             self.action.send(ContactsViewModelAction.BankSelected(bankId: payload.bankId))
@@ -187,15 +197,17 @@ class ContactsViewModel: ObservableObject {
                         switch mode {
                         case let .fastPayments(phase):
                             switch phase {
-                            case .banksAndCountries(phone: let phone):
-                                self.action.send(ContactsViewModelAction.PaymentRequested(source: .abroad(phone: phone, countryId: payload.countryId)))
+                            case .banksAndCountries(phone: _):
+                                self.action.send(ContactsViewModelAction.PaymentRequested(source: payload.source))
                                 
                             default:
                                 break
                             }
-                            
+                        case .abroad:
+                            self.action.send(ContactsViewModelAction.PaymentRequested(source: payload.source))
+
                         case .select:
-                            self.action.send(ContactsViewModelAction.CountrySelected(countryId: payload.countryId))
+                            self.action.send(ContactsViewModelAction.PaymentRequested(source: payload.source))
                         }
                         
                     case _ as ContactsSectionViewModelAction.Collapsable.HideCountries:
@@ -237,6 +249,7 @@ extension ContactsViewModel {
         
         case fastPayments(Phase)
         case select(Select)
+        case abroad
         
         enum Phase {
             
@@ -259,10 +272,14 @@ extension ContactsViewModel {
                 switch phase {
                 case .contacts:
                     return [.latestPayments, .contacts]
-                    
+                
                 case .banksAndCountries:
                     return [.banksPreferred, .banks, .countries]
+                    
                 }
+                
+            case .abroad:
+                return [.latestPayments, .countries]
                 
             case let .select(select):
                 switch select {
@@ -285,7 +302,10 @@ extension ContactsViewModel {
         switch mode {
         case .fastPayments:
             return .init(textFieldPhoneNumberView: .init(.contacts))
-            
+        
+        case .abroad:
+            return .init(textFieldPhoneNumberView: .init(style: .abroad, placeHolder: .countries), state: .idle, icon: .ic24Search)
+
         case let .select(select):
             switch select {
             case .contacts:
@@ -314,6 +334,10 @@ extension ContactsViewModel {
             result.append(ContactsBanksPrefferedSectionViewModel(model, phone: nil))
             result.append(ContactsBanksSectionViewModel(model, mode: .fastPayment, phone: nil, bankDictionary: .banks))
             result.append(ContactsCountriesSectionViewModel(model, mode: .fastPayment))
+
+        case .abroad:
+            result.append(ContactsLatestPaymentsSectionViewModel(model: model, including: [.country]))
+            result.append(ContactsCountriesSectionViewModel(model, mode: .select))
 
         case let .select(select):
             switch select {
@@ -396,7 +420,7 @@ extension ContactsViewModel {
             guard let country = self.model.countriesList.value.first(where: { $0.id == bank.bankCountry}) else {
                 return
             }
-            self.action.send(ContactsViewModelAction.PaymentRequested(source: .direct(phone: phone, bankId: bank.id, countryId: country.id)))
+            self.action.send(ContactsViewModelAction.PaymentRequested(source: .direct(phone: phone, countryId: country.id)))
             
         default:
             return

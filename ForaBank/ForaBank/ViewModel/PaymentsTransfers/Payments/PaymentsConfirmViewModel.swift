@@ -13,7 +13,7 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
     
     convenience init(operation: Payments.Operation, model: Model, closeAction: @escaping () -> Void) {
 
-        self.init(navigationBar: .init(), top: [], content: [], bottom: [], link: nil, bottomSheet: nil, operation: operation, model: model, closeAction: closeAction)
+        self.init(navigationBar: .init(), top: [], feed: [], bottom: [], link: nil, bottomSheet: nil, operation: operation, model: model, closeAction: closeAction)
         
         bind()
         
@@ -118,27 +118,27 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
         
         $top
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] topItems in
+            .sink { [unowned self] topGroups in
                 
-                guard let topItems = topItems else { return }
+                guard let topItems = topGroups else { return }
                 updateEditable(for: topItems)
                 
             }.store(in: &bindings)
         
-        $content
+        $feed
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] contentItems in
+            .sink { [unowned self] contentGroups in
                 
-                updateEditable(for: contentItems)
+                updateEditable(for: contentGroups)
                 
             }.store(in: &bindings)
         
         $bottom
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] bottomItems in
+            .sink { [unowned self] bottomGroups in
                 
-                guard let bottomItems = bottomItems else { return }
-                updateEditable(for: bottomItems)
+                guard let bottomGroups = bottomGroups else { return }
+                updateEditable(for: bottomGroups)
                 
             }.store(in: &bindings)
     }
@@ -172,19 +172,22 @@ extension PaymentsConfirmViewModel {
             return
         }
         
-        codeParameter.content = code
+        codeParameter.textField.text = code
     }
     
-    func updateEditable(for items: [PaymentsParameterViewModel]) {
+    func updateEditable(for groups: [PaymentsGroupViewModel]) {
         
-        for item in items {
+        for group in groups {
             
-            switch item.source.id {
-            case Payments.Parameter.Identifier.code.rawValue:
-                continue
+            for item in group.items {
                 
-            default:
-                item.updateEditable(update: .value(false))
+                switch item.source.id {
+                case Payments.Parameter.Identifier.code.rawValue:
+                    continue
+                    
+                default:
+                    item.updateEditable(update: .value(false))
+                }
             }
         }
     }

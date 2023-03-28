@@ -298,17 +298,29 @@ struct PaymentsSuccessView_Previews: PreviewProvider {
     static var previews: some View {
 
         Group {
+            Group {
+                
+                PaymentsSuccessView(viewModel: .sample1)
+                PaymentsSuccessView(viewModel: .sample2)
+                PaymentsSuccessView(viewModel: .sample3)
+                PaymentsSuccessView(viewModel: .sample4)
+                PaymentsSuccessView(viewModel: .sample5)
+                PaymentsSuccessView(viewModel: .sample6)
+                PaymentsSuccessView(viewModel: .sample7)
+                PaymentsSuccessView(viewModel: .sample8)
+                PaymentsSuccessView(viewModel: .sample9)
+                PaymentsSuccessView(viewModel: .sample10)
+            }
+
+            // Mobile Connection Payments
             
-            PaymentsSuccessView(viewModel: .sample1)
-            PaymentsSuccessView(viewModel: .sample2)
-            PaymentsSuccessView(viewModel: .sample3)
-            PaymentsSuccessView(viewModel: .sample4)
-            PaymentsSuccessView(viewModel: .sample5)
-            PaymentsSuccessView(viewModel: .sample6)
-            PaymentsSuccessView(viewModel: .sample7)
-            PaymentsSuccessView(viewModel: .sample8)
-            PaymentsSuccessView(viewModel: .sample9)
-            PaymentsSuccessView(viewModel: .sample10)
+            Group {
+                
+                PaymentsSuccessView(viewModel: .previewMobileConnectionOk)
+                PaymentsSuccessView(viewModel: .previewMobileConnectionAccepted)
+                PaymentsSuccessView(viewModel: .previewMobileConnectionFailed)
+            }
+            .previewDisplayName("Mobile Connection Payment")
         }
     }
 }

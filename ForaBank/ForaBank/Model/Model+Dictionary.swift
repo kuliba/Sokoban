@@ -42,6 +42,20 @@ extension ModelAction {
             }
         }
         
+        enum AnywayOperator {
+            
+            struct Request: Action {
+                
+                let code: String
+                let codeParent: String
+            }
+            
+            struct Response: Action {
+                
+                let result: Result<[AnywayOperatorData], Error>
+            }
+        }
+        
         static let cached: [DictionaryType] = [
             .anywayOperators,
             .fmsList,
@@ -59,6 +73,7 @@ extension ModelAction {
             .currencyList,
             .currencyWalletList,
             .countries,
+            .countriesWithService,
             .banks,
             .paymentSystemList,
             .fullBankInfoList,
@@ -85,6 +100,9 @@ extension Model {
             
         case .countries:
             return localAgent.load(type: [CountryData].self) != nil
+           
+        case .countriesWithService:
+            return localAgent.load(type: [CountryWithServiceData].self) != nil
             
         case .currencyList:
             return localAgent.load(type: [CurrencyData].self) != nil
@@ -168,6 +186,9 @@ extension Model {
             
         case .countries:
             return localAgent.serial(for: [CountryData].self)
+         
+        case .countriesWithService:
+            return localAgent.serial(for: [CountryWithServiceData].self)
             
         case .currencyList:
             return localAgent.serial(for: [CurrencyData].self)
@@ -250,7 +271,10 @@ extension Model {
             
         case .countries:
             try? localAgent.clear(type: [CountryData].self)
-            
+        
+        case .countriesWithService:
+            try? localAgent.clear(type: [CountryWithServiceData].self)
+
         case .currencyList:
             try? localAgent.clear(type: [CurrencyData].self)
             
@@ -382,6 +406,20 @@ extension Model {
         }
         
         return anywayOperatorGroups.first(where: { $0.code == code })
+    }
+    
+    func dictionaryAnywayGroupOperatorData(for operatorCode: String) -> OperatorGroupData.OperatorData? {
+        
+        guard let anywayOperatorGroups = dictionaryAnywayOperatorGroups() else {
+            return nil
+        }
+        
+        for item in anywayOperatorGroups {
+            
+            return item.operators.first(where: {$0.code == operatorCode})
+        }
+        
+        return nil
     }
     
     func dictionaryAnywayOperator(for code: String) -> OperatorGroupData.OperatorData? {
@@ -616,6 +654,50 @@ extension Model {
         }
     }
     
+    func handleAnywayOperatorsCountryRequest(code: String, codeParent: String) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .anywayOperators
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetDictionaryAnywayOperators(token: token, code: code, codeParent: codeParent)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        
+                        handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    guard let dictionaryList = data.list.first?.dictionaryList else {
+                        return
+                    }
+                    
+                    self.action.send(ModelAction.Dictionary.AnywayOperator.Response(result: .success(dictionaryList)))
+                    
+                default:
+                    self.action.send(ModelAction.Dictionary.AnywayOperator.Response(result: .failure(ModelError.statusError(status:  response.statusCode, message: response.errorMessage))))
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                self.action.send(ModelAction.Dictionary.AnywayOperator.Response(result: .failure(error)))
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
     // Banks
     func handleDictionaryBanks(_ serial: String?) {
         
@@ -758,6 +840,60 @@ extension Model {
                     do {
                         
                         try self.localAgent.store(data.countriesList, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    //CountryWithService
+    func handleDictionaryCountryWithService(_ serial: String?) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .countriesWithService
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        //FIXME: have problem with serial not clean after remove app
+        let command = ServerCommands.DictionaryController.GetCountriesWithServices(token: token, serial: nil)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        
+                        handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.list.count > 0 else {
+                        return
+                    }
+                    
+                    countriesListWithSevice.value = data.list
+                    
+                    do {
+                        
+                        try self.localAgent.store(data.list, serial: data.serial)
                         
                     } catch {
                         

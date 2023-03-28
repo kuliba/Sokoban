@@ -5,7 +5,7 @@
         "code": "AM",
         "name": "АРМЕНИЯ",
         "paymentSystemIdList": [
-          "string"
+          "DIRECT"
         ],
         "sendCurr": "EUR;USD;RUR;",
       }

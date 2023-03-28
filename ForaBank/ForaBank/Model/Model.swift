@@ -54,6 +54,7 @@ class Model {
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
     let currencyList: CurrentValueSubject<[CurrencyData], Never>
     let countriesList: CurrentValueSubject<[CountryData], Never>
+    let countriesListWithSevice: CurrentValueSubject<[CountryWithServiceData], Never>
     let paymentSystemList: CurrentValueSubject<[PaymentSystemData], Never>
     let bankList: CurrentValueSubject<[BankData], Never>
     let prefferedBanksList: CurrentValueSubject<[String], Never>
@@ -68,6 +69,7 @@ class Model {
     
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
+    let productTemplates: CurrentValueSubject<[ProductTemplateData], Never>
     //TODO: move to settings agent
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
     
@@ -171,6 +173,7 @@ class Model {
         self.bankList = .init([])
         self.prefferedBanksList = .init([])
         self.countriesList = .init([])
+        self.countriesListWithSevice = .init([])
         self.paymentSystemList = .init([])
         self.images = .init([:])
         self.deposits = .init([])
@@ -196,6 +199,7 @@ class Model {
         self.depositsCloseNotified = .init([])
         self.clientInform = .init(.notRecieved)
         self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
+        self.productTemplates = .init([])
         
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
@@ -311,6 +315,7 @@ class Model {
                     action.send(ModelAction.Account.ProductList.Request())
                     action.send(ModelAction.AppVersion.Request())
                     action.send(ModelAction.Settings.GetUserSettings())
+                    action.send(ModelAction.ProductTemplate.List.Request())
                     
                     if let deepLinkType = deepLinkType {
                         
@@ -394,9 +399,9 @@ class Model {
         
         contactsAgent.status
             .receive(on: queue)
-            .sink { [unowned self] status in
+            .sink { [weak self] status in
                 
-                action.send(ModelAction.Contacts.PermissionStatus.Update(status: status))
+                self?.action.send(ModelAction.Contacts.PermissionStatus.Update(status: status))
                 
         }.store(in: &bindings)
         
@@ -625,6 +630,9 @@ class Model {
                 case _ as ModelAction.Transfers.ResendCode.Request:
                     handleTransfersResendCodeRequest()
                     
+                case let payload as ModelAction.Transfers.CheckCard.Request:
+                    handleCheckCard(payload)
+                    
                     //MARK: - CurrencyWallet
                     
                 case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Start.Request:
@@ -730,6 +738,12 @@ class Model {
                     
                     //MARK: - Templates Actions
                     
+                case _ as ModelAction.ProductTemplate.List.Request:
+                    handleProductTemplatesListRequest()
+                    
+                case let payload as ModelAction.ProductTemplate.Delete.Request:
+                    handleProductTemplateDeleteRequest(payload)
+                    
                 case _ as ModelAction.PaymentTemplate.List.Requested:
                     handleTemplatesListRequest()
                     
@@ -743,6 +757,9 @@ class Model {
                     handleTemplatesDeleteRequest(payload)
                     
                     //MARK: - Dictionaries Actions
+                    
+                case let payload as ModelAction.Dictionary.AnywayOperator.Request:
+                    handleAnywayOperatorsCountryRequest(code: payload.code, codeParent: payload.codeParent)
                     
                 case _ as ModelAction.Dictionary.UpdateCache.All:
                     handleDictionaryUpdateAll()
@@ -760,6 +777,9 @@ class Model {
                         
                     case .countries:
                         handleDictionaryCountries(payload.serial)
+                    
+                    case .countriesWithService:
+                        handleDictionaryCountryWithService(payload.serial)
                         
                     case .currencyList:
                         handleDictionaryCurrencyList(payload.serial)
@@ -1092,14 +1112,19 @@ private extension Model {
     func loadCachedAuthorizedData() {
         
         self.products.value = productsCacheLoad()
-        
+
         if let paymentTemplates = localAgent.load(type: [PaymentTemplateData].self) {
             
             self.paymentTemplates.value = paymentTemplates
         }
         
+        if let productTemplates = localAgent.load(type: [ProductTemplateData].self) {
+        
+            self.productTemplates.value = productTemplates
+        }
+        
         if localAgent.serial(for: StatementsData.self) == Self.statementsSerial,
-            let statements = localAgent.load(type: StatementsData.self) {
+           let statements = localAgent.load(type: StatementsData.self) {
             
             self.statements.value = statements
         }
@@ -1323,6 +1348,7 @@ private extension Model {
         userSettings.value = []
         qrMapping.value = nil
         productsOpening.value = []
+        productTemplates.value = []
         
         LoggerAgent.shared.log(category: .model, message: "Memory data cleaned")
     }

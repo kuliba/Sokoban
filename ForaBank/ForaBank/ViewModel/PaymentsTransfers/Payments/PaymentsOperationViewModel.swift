@@ -13,9 +13,9 @@ class PaymentsOperationViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
 
     @Published var navigationBar: NavigationBarView.ViewModel
-    @Published var top: [PaymentsParameterViewModel]?
-    @Published var content: [PaymentsParameterViewModel]
-    @Published var bottom: [PaymentsParameterViewModel]?
+    @Published var top: [PaymentsGroupViewModel]?
+    @Published var feed: [PaymentsGroupViewModel]
+    @Published var bottom: [PaymentsGroupViewModel]?
     
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
@@ -34,11 +34,11 @@ class PaymentsOperationViewModel: ObservableObject {
     var items: [PaymentsParameterViewModel] { sections.value.flatMap{ $0.items } }
     var isItemsValuesValid: Bool { items.filter({ $0.isValid == false }).isEmpty }
     
-    init(navigationBar: NavigationBarView.ViewModel, top: [PaymentsParameterViewModel]?, content: [PaymentsParameterViewModel], bottom: [PaymentsParameterViewModel]?, link: Link?, bottomSheet: BottomSheet?, operation: Payments.Operation, model: Model, closeAction: @escaping () -> Void) {
+    init(navigationBar: NavigationBarView.ViewModel, top: [PaymentsGroupViewModel]?, feed: [PaymentsGroupViewModel], bottom: [PaymentsGroupViewModel]?, link: Link? = nil, bottomSheet: BottomSheet? = nil, operation: Payments.Operation = .emptyMock, model: Model = .emptyMock, closeAction: @escaping () -> Void) {
         
         self.navigationBar = navigationBar
         self.top = top
-        self.content = content
+        self.feed = feed
         self.bottom = bottom
         self.link = link
         self.bottomSheet = bottomSheet
@@ -49,7 +49,7 @@ class PaymentsOperationViewModel: ObservableObject {
     
     convenience init(navigationBar: NavigationBarView.ViewModel = .init(), operation: Payments.Operation, model: Model, closeAction: @escaping () -> Void) {
 
-        self.init(navigationBar: navigationBar, top: [], content: [], bottom: [], link: nil, bottomSheet: nil, operation: operation, model: model, closeAction: closeAction)
+        self.init(navigationBar: navigationBar, top: [], feed: [], bottom: [], link: nil, bottomSheet: nil, operation: operation, model: model, closeAction: closeAction)
         
         bind()
     }
@@ -79,12 +79,15 @@ class PaymentsOperationViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] sections in
                 
-                top = Self.reduceTopItems(sections: sections)
-                content = Self.reduceContentItems(sections: sections)
-                bottom = Self.reduceBottomItems(sections: sections)
-                
+                withAnimation(.easeOut(duration: 0.3)) {
+                    
+                    top = Self.reduceTopGroups(sections: sections)
+                    feed = Self.reduceFeedGroups(sections: sections)
+                    bottom = Self.reduceBottomGroups(sections: sections)
+                }
+
                 // update dependend items
-                Self.reduce(service: operation.value.service, items: items, dependenceReducer: model.paymentsProcessDependencyReducer(service:parameterId:parameters:))
+                Self.reduce(operation: operation.value, items: items, dependenceReducer: model.paymentsProcessDependencyReducer(operation:parameterId:parameters:))
                 
                 navigationBar = .init(with: items.map{ $0.source }, closeAction: closeAction)
                 bindNavBar()
@@ -162,14 +165,18 @@ class PaymentsOperationViewModel: ObservableObject {
                     } else {
                         
                         // update dependend items
-                        Self.reduce(service: operation.value.service, items: items, dependenceReducer: model.paymentsProcessDependencyReducer(service:parameterId:parameters:))
+                        Self.reduce(operation: operation.value, items: items, dependenceReducer: model.paymentsProcessDependencyReducer(operation:parameterId:parameters:))
                         
                         navigationBar = .init(with: items.map{ $0.source }, closeAction: closeAction)
                         bindNavBar()
-                        top = Self.reduceTopItems(sections: sections.value)
-                        content = Self.reduceContentItems(sections: sections.value)
-                        bottom = Self.reduceBottomItems(sections: sections.value)
-                        
+
+                        withAnimation(.easeOut(duration: 0.3)) {
+                            
+                            top = Self.reduceTopGroups(sections: sections.value)
+                            feed = Self.reduceFeedGroups(sections: sections.value)
+                            bottom = Self.reduceBottomGroups(sections: sections.value)
+                        }
+
                         // update bottom section continue button
                         updateBottomSection(isContinueEnabled: isItemsValuesValid)
                         
@@ -185,6 +192,9 @@ class PaymentsOperationViewModel: ObservableObject {
                     let updatedStageOperation = updatedOperation.updatedCurrentStepStage(reducer: model.paymentsProcessCurrentStepStageReducer(service:parameters:stepIndex:stepStage:))
                     
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "Continue operation: \(updatedStageOperation)")
+                    
+                    //update collapsable group
+                    collapseContactGroups(groups: self.feed)
                     
                     // continue operation
                     model.action.send(ModelAction.Payment.Process.Request(operation: updatedStageOperation))
@@ -246,7 +256,7 @@ class PaymentsOperationViewModel: ObservableObject {
                         }
                         self.action.send(PaymentsOperationViewModelAction.ItemDidUpdated(parameterId: payload.value.id))
                         
-                    case _ as PaymentsSectionViewModelAction.Continue:
+                    case _ as PaymentsSectionViewModelAction.Continue.DidTapped:
                         self.action.send(PaymentsOperationViewModelAction.Continue())
  
                     case let payload as PaymentsSectionViewModelAction.PopUpSelector.Show:
@@ -281,9 +291,6 @@ class PaymentsOperationViewModel: ObservableObject {
 
                     case _ as PaymentsSectionViewModelAction.Hint.Close:
                         bottomSheet = nil
-                        
-                    case _ as PaymentsSectionViewModelAction.SpoilerDidUpdated:
-                        content = Self.reduceContentItems(sections: sections)
                         
                     case _ as PaymentsSectionViewModelAction.ResendCode:
                         self.model.action.send(ModelAction.Transfers.ResendCode.Request())
@@ -335,50 +342,31 @@ class PaymentsOperationViewModel: ObservableObject {
 
 extension PaymentsOperationViewModel {
     
-    static func reduceTopItems(sections: [PaymentsSectionViewModel]) -> [PaymentsParameterViewModel]? {
+    static func reduceTopGroups(sections: [PaymentsSectionViewModel]) -> [PaymentsGroupViewModel]? {
         
         guard let topSection = sections.first(where: { $0.placement == .top }) else {
             return nil
         }
         
-        return topSection.visibleItems
+        return topSection.groups
     }
     
-    static func reduceContentItems(sections: [PaymentsSectionViewModel]) -> [PaymentsParameterViewModel] {
+    static func reduceFeedGroups(sections: [PaymentsSectionViewModel]) -> [PaymentsGroupViewModel] {
 
-        if let fullScreenItem = reduceFullScreenItem(sections: sections) {
-            
-            return [fullScreenItem]
-            
-        } else {
-            
-            let contentSections = sections.filter({ $0.placement == .feed || $0.placement == .spoiler })
-            
-            return contentSections.flatMap{ $0.visibleItems }
+        guard let feedSection = sections.first(where: { $0.placement == .feed }) else {
+            return []
         }
+        
+        return feedSection.groups
     }
     
-    static func reduceBottomItems(sections: [PaymentsSectionViewModel]) -> [PaymentsParameterViewModel]? {
-        
-        guard reduceFullScreenItem(sections: sections) == nil else {
-            return nil
-        }
+    static func reduceBottomGroups(sections: [PaymentsSectionViewModel]) -> [PaymentsGroupViewModel]? {
         
         guard let bottomSection = sections.first(where: { $0.placement == .bottom }) else {
             return nil
         }
         
-        return bottomSection.visibleItems
-    }
-    
-    static func reduceFullScreenItem(sections: [PaymentsSectionViewModel]) -> PaymentsParameterViewModel? {
-        
-        let feedSections = sections.filter({ $0.placement == .feed })
-        guard let fullScreenItem = feedSections.compactMap({ $0.fullScreenItem }).first else {
-            return nil
-        }
-        
-        return fullScreenItem
+        return bottomSection.groups
     }
 }
 
@@ -390,16 +378,15 @@ extension PaymentsOperationViewModel {
         
         let parameters = items.map{ $0.result }
         let updatedOperation = operation.updated(with: parameters)
-        
         return updatedOperation
     }
     
-    static func reduce(service: Payments.Service, items: [PaymentsParameterViewModel], dependenceReducer: (Payments.Service, Payments.Parameter.ID, [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable?) {
+    static func reduce(operation: Payments.Operation, items: [PaymentsParameterViewModel], dependenceReducer: (Payments.Operation, Payments.Parameter.ID, [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable?) {
         
         let parameters = items.map{ $0.source.updated(value: $0.value.current) }
         for item in items {
             
-            guard let updatedParameter = dependenceReducer(service, item.source.id, parameters) else {
+            guard let updatedParameter = dependenceReducer(operation, item.source.id, parameters) else {
                 continue
             }
             
@@ -414,11 +401,11 @@ extension PaymentsOperationViewModel {
         
     func updateBottomSection(isContinueEnabled: Bool) {
         
-        guard let bottomSection = sections.value.first(where: { $0.placement == .bottom }) as? PaymentsBottomSectionViewModel else {
+        guard let bottomSection = sections.value.first(where: { $0.placement == .bottom }) else {
             return
         }
         
-        bottomSection.isContinueEnabled.value = isContinueEnabled
+        bottomSection.action.send(PaymentsSectionViewModelAction.Continue.EnabledChanged(isEnabled: isContinueEnabled))
     }
     
     func updateParameterValueCallback(items: [PaymentsParameterViewModel]) {
@@ -452,6 +439,18 @@ extension PaymentsOperationViewModel {
             item.updateValidationWarnings()
         }
     }
+    
+    func collapseContactGroups(groups: [PaymentsGroupViewModel]) {
+
+        groups.forEach { group in
+
+          if let group = group as? PaymentsContactGroupViewModel {
+                    
+             group.isCollapsed = true
+          }
+        }
+    }
+
 }
 
 //MARK: - Types

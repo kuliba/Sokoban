@@ -113,7 +113,12 @@ extension Model {
     func products(currency: Currency) -> [ProductData] {
         
         let clientId = Model.shared.clientInfo.value?.id
-        let products = products.value.values.flatMap {$0}.filter({ $0.ownerId == clientId }).filter({$0.currency == currency.description})
+        let products = products.value.values
+            .flatMap { $0 }
+            .filter {
+                $0.ownerId == clientId && $0.currency == currency.description
+            }
+        
         return products
     }
     
@@ -494,7 +499,7 @@ extension Model {
                     
                     // update products
                     let updatedProducts = Self.reduce(products: self.products.value, with: result.products, for: productType)
-                    self.products.value = updatedProducts
+                    self.products.send(updatedProducts)
                     
                     //md5hash -> image
                     let md5Products = result.products.reduce(Set<String>(), {

@@ -291,7 +291,7 @@ extension PaymentsProcessTests {
                                         remoteConfirm: remoteConfirm(parameters:operation:),
                                         remoteComplete: remoteComplete(parameters:operation:),
                                         sourceReducer: sourceReducer(service:source:parameter:),
-                                        dependenceReducer: dependenceReducer(service:parameterId:parameters:))
+                                        dependenceReducer: dependenceReducer(operation:parameterId:parameters:))
     }
 }
 
@@ -484,7 +484,7 @@ private func sourceReducer(service: Payments.Service, source: Payments.Operation
     return nil
 }
 
-private func dependenceReducer(service: Payments.Service, parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
+private func dependenceReducer(operation: Payments.Operation, parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
     
     return nil
 }
@@ -500,7 +500,7 @@ private extension TransferAnywayResponseData {
     
     convenience init(parameters: [ParameterData], needSum: Bool, finalStep: Bool) {
         
-        self.init(amount: nil, creditAmount: nil, currencyAmount: nil, currencyPayee: nil, currencyPayer: nil, currencyRate: nil, debitAmount: nil, fee: nil, needMake: nil, needOTP: nil, payeeName: nil, documentStatus: .inProgress, paymentOperationDetailId: 1, additionalList: [], finalStep: finalStep, infoMessage: nil, needSum: needSum, parameterListForNextStep: parameters)
+        self.init(amount: nil, creditAmount: nil, currencyAmount: nil, currencyPayee: nil, currencyPayer: nil, currencyRate: nil, debitAmount: nil, fee: nil, needMake: nil, needOTP: nil, payeeName: nil, documentStatus: .inProgress, paymentOperationDetailId: 1, additionalList: [], finalStep: finalStep, infoMessage: nil, needSum: needSum, printFormType: nil, parameterListForNextStep: parameters)
     }
 }
 
@@ -508,6 +508,6 @@ private extension ParameterData {
     
     init(id: String, value: String?) {
         
-        self.init(content: value, dataType: nil, id: id, isPrint: nil, isRequired: nil, mask: nil, maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: nil, regExp: nil, subTitle: nil, title: "", type: "", svgImage: nil, viewType: .constant)
+        self.init(content: value, dataType: nil, id: id, isPrint: nil, isRequired: nil, mask: nil, maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: nil, regExp: nil, subTitle: nil, title: "", type: "", inputFieldType: nil, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: nil, viewType: .constant)
     }
 }

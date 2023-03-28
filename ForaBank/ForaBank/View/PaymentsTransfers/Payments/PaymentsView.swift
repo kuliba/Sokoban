@@ -45,6 +45,7 @@ struct PaymentsView: View {
                     Alert(with: alertViewModel)
                 })
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

@@ -20,8 +20,8 @@ enum Payments {
         var services: [Service] {
             
             switch self {
-            case .general: return [.requisites, .c2b]
-            case .fast: return [.sfp, .direct]
+            case .general: return [.requisites, .c2b, .toAnotherCard, .mobileConnection]
+            case .fast: return [.sfp, .abroad]
             case .taxes: return [.fns, .fms, .fssp]
             }
         }
@@ -52,24 +52,31 @@ enum Payments {
     enum Service: String {
         
         case sfp
-        case direct
+        case abroad
         case fms
         case fns
         case fssp
         case requisites
         case c2b
+        case toAnotherCard
+        case mobileConnection
     }
     
     enum Operator : String {
         
-        case sfp        = "iFora||TransferC2CSTEP"
-        case direct     = "REQUIRED!!!!!"
-        case fssp       = "iFora||5429"
-        case fms        = "iFora||6887"
-        case fns        = "iFora||6273"
-        case fnsUin     = "iFora||7069"
-        case requisites = "requisites"
-        case c2b        = "c2b"
+        case sfp         = "iFora||TransferC2CSTEP"
+        case direct      = "iFora||MIG"
+        case directCard  = "iFora||MIG||card"
+        case contact     = "iFora||Addressless"
+        case contactCash = "iFora||Addressing||cash"
+        case fssp        = "iFora||5429"
+        case fms         = "iFora||6887"
+        case fns         = "iFora||6273"
+        case fnsUin         = "iFora||7069"
+        case requisites  = "requisites"
+        case c2b               = "c2b"
+        case toAnotherCard     = "toAnotherCard"
+        case mobileConnection  = "mobileConnection"
     }
 }
 
@@ -95,8 +102,27 @@ extension Payments.Parameter {
         
         case top
         case feed
-        case spoiler
         case bottom
+    }
+    
+    enum Style {
+        
+        case light
+        case dark
+    }
+    
+    struct Group: Hashable {
+        
+        let id: String
+        let type: Kind
+        
+        enum Kind: Hashable {
+            
+            case regular
+            case spoiler
+            case contact
+            case info
+        }
     }
     
     enum View {
@@ -154,9 +180,7 @@ extension Payments.Operation {
         
         case sfp(phone: String, bankId: BankData.ID)
         
-        case direct(phone: String, bankId: BankData.ID, countryId: CountryData.ID)
-        
-        case abroad(phone: String, countryId: CountryData.ID)
+        case direct(phone: String?, countryId: CountryData.ID)
         
         case requisites(qrCode: QRCode)
         
@@ -171,8 +195,7 @@ extension Payments.Operation {
             case let .latestPayment(latestPaymentId): return "latest payment: \(latestPaymentId)"
             case .qr: return "qr"
             case let .sfp(phone: phone, bankId: bankId): return "sfp: \(phone), bankId: \(bankId)"
-            case let .direct(phone: phone, bankId: bankId, countryId: countryId): return "direct: \(phone), bankId: \(bankId), countryId: \(countryId)"
-            case let .abroad(phone: phone, countryId: countryId): return "abroad: \(phone), countryId: \(countryId)"
+            case let .direct(phone: phone, countryId: countryId): return "direct: \(phone ?? "nil"), countryId: \(countryId)"
             case let .mock(mock): return "mock service: \(mock.service.rawValue)"
             case let .requisites(qrCode): return "qrCode: \(qrCode)"
             case let .c2bSubscribe(url): return "c2b subscribe url: \(url.absoluteURL)"
@@ -256,9 +279,11 @@ extension Payments.Operation {
         
         case anyway
         case sfp
-        case direct
+        case abroad
         case requisites
         case c2b
+        case toAnotherCard
+        case mobileConnection
     }
     
     enum Action: Equatable {
@@ -292,19 +317,23 @@ extension Payments {
         let productId: ProductData.ID
         let amount: Double
         let service: Payments.Service
-        let c2bSubscribtion: C2BSubscriptionData?
+        let serviceData: ServiceData?
         
-        init(operationDetailId: Int, status: TransferResponseBaseData.DocumentStatus, productId: ProductData.ID, amount: Double, service: Payments.Service, c2bSubscribtion: C2BSubscriptionData? = nil) {
+        init(operationDetailId: Int, status: TransferResponseBaseData.DocumentStatus, productId: ProductData.ID, amount: Double, service: Payments.Service, serviceData: ServiceData? = nil) {
             
             self.operationDetailId = operationDetailId
             self.status = status
             self.productId = productId
             self.amount = amount
             self.service = service
-            self.c2bSubscribtion = c2bSubscribtion
+            self.serviceData = serviceData
         }
         
-        init(with response: TransferResponseBaseData, operation: Payments.Operation) throws {
+        init(
+            with response: TransferResponseBaseData,
+            operation: Payments.Operation,
+            serviceData: ServiceData? = nil
+        ) throws {
             
             guard let status = response.documentStatus,
                   let amount = operation.amount,
@@ -314,7 +343,13 @@ extension Payments {
                 throw Payments.Error.unsupported
             }
             
-            self.init(operationDetailId: response.paymentOperationDetailId, status: status, productId: productId, amount: amount, service: operation.service)
+            self.init(operationDetailId: response.paymentOperationDetailId, status: status, productId: productId, amount: amount, service: operation.service, serviceData: serviceData)
+        }
+        
+        enum ServiceData {
+            
+            case c2bSubscriptionData(C2BSubscriptionData)
+            case mobileConnectionData(MobileConnectionData)
         }
     }
 }
@@ -378,6 +413,7 @@ extension Payments {
         case missingOptions(ParameterData)
         case missingValueForParameter(Payments.Parameter.ID)
         case missingValue(ParameterData)
+        case missingSource(Service)
         
         case action(Action)
 
@@ -428,6 +464,9 @@ extension Payments {
 
             case .notAuthorized:
                 return "Not authorized request attempt"
+                
+            case let .missingSource(service):
+                return "Missing source for service: \(service)"
                 
             case .unsupported:
                 return "Unsupported"

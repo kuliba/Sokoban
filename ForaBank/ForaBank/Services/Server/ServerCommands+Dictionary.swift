@@ -864,6 +864,95 @@ extension ServerCommands {
             }
         }
         
+        /*
+         http://10.1.206.21:8080/swagger-ui/index.html#/DictionaryController/getCountriesWithServices
+         */
+        struct GetCountriesWithServices: ServerCommand {
+            
+            let token: String
+            let endpoint = "/dict/getCountriesWithServices"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+            
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: Data?
+                
+                struct Data: Decodable, Equatable {
+                    
+                    let serial: String
+                    let list: [CountryWithServiceData]
+                }
+            }
+            
+            init(token: String, serial: String?) {
+                
+                self.token = token
+                
+                if let serial = serial {
+                    
+                    var parameters = [ServerCommandParameter]()
+                    parameters.append(.init(name: "serial", value: serial))
+                    self.parameters = parameters
+                    
+                } else {
+                    
+                    self.parameters = nil
+                }
+            }
+        }
+        
+        /*
+         http://10.1.206.21:8080/swagger-ui/index.html#/DictionaryController/getImageList
+         */
+        struct GetDictionaryAnywayOperators: ServerCommand {
+            
+            let token: String
+            let endpoint = "/dict/getDictionaryAnywayOperators"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: Data?
+                
+                struct Data: Decodable, Equatable {
+                    
+                    let list: [List]
+                    
+                    struct List: Codable, Equatable {
+                        
+                        let code: String
+                        let codeUI: String
+                        let dictionaryList: [AnywayOperatorData]
+                    }
+                }
+            }
+            
+            init(token: String, code: String, codeParent: String?) {
+                
+                self.token = token
+                    
+                var parameters = [ServerCommandParameter]()
+                parameters.append(.init(name: "code", value: code))
+                
+                if let codeParent = codeParent {
+                    
+                    parameters.append(.init(name: "codeParent", value: codeParent))
+                }
+                
+                self.parameters = parameters
+            }
+        }
+        
     
         //https://../DictionaryController/getClientInformData
      

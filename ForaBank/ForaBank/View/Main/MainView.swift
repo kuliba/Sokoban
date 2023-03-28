@@ -28,29 +28,35 @@ struct MainView: View {
             
             ScrollView(showsIndicators: false) {
                 
-                VStack(spacing: 32) {
+                VStack(spacing: 0) {
                     
                     ForEach(viewModel.sections) { section in
                         
                         switch section {
                         case let productsSectionViewModel as MainSectionProductsView.ViewModel:
                             MainSectionProductsView(viewModel: productsSectionViewModel)
+                                .padding(.bottom, 19)
                             
                         case let fastOperationViewModel as MainSectionFastOperationView.ViewModel:
                             MainSectionFastOperationView(viewModel: fastOperationViewModel)
+                                .padding(.bottom, 32)
                             
                         case let promoViewModel  as MainSectionPromoView.ViewModel:
                             MainSectionPromoView(viewModel: promoViewModel)
                                 .padding(.horizontal, 20)
-                            
+                                .padding(.bottom, 32)
+
                         case let currencyViewModel as MainSectionCurrencyView.ViewModel:
                             MainSectionCurrencyView(viewModel: currencyViewModel)
+                                .padding(.bottom, 32)
                             
                         case let currencyMetallViewModel as MainSectionCurrencyMetallView.ViewModel:
                             MainSectionCurrencyMetallView(viewModel: currencyMetallViewModel)
+                                .padding(.bottom, 32)
                             
                         case let openProductViewModel as MainSectionOpenProductView.ViewModel:
                             MainSectionOpenProductView(viewModel: openProductViewModel)
+                                .padding(.bottom, 32)
                             
                         case let atmViewModel as MainSectionAtmView.ViewModel:
                             MainSectionAtmView(viewModel: atmViewModel)
@@ -305,10 +311,15 @@ struct MainView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        NavigationView {
-            
+        Group {
             MainView(viewModel: .sample)
+            
+            NavigationView {
+                
+                MainView(viewModel: .sample)
+            }
         }
+        .previewLayout(.sizeThatFits)
     }
 }
 

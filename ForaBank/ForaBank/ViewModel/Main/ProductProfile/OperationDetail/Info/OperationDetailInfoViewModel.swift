@@ -273,7 +273,6 @@ final class OperationDetailInfoViewModel: Identifiable {
             
             cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: dateString))
             
-            
         case .externalIndivudual:
             
             if let payeeFullName = operation?.payeeFullName {
@@ -889,6 +888,117 @@ extension OperationDetailInfoViewModel {
                 commissionViewModel,
                 payeeViewModel,
                 dateViewModel].compactMap {$0}
+            
+        case .direct:
+            
+            var directCells = [
+                payeeNumberPhone,
+                payeeNameViewModel,
+                payeeBankViewModel,
+                balanceViewModel,
+                commissionViewModel,
+                payerViewModel,
+                purposeViewModel,
+                dateViewModel
+            ]
+            
+            if let payeeAmount = operation.payeeAmount,
+               let payeeCurrency = operation.payeeCurrency,
+               let formattedAmount = model.amountFormatted(amount: payeeAmount, currencyCode: payeeCurrency, style: .fraction) {
+                
+                directCells.insert((PropertyCellViewModel.init(title: "Сумма зачисления в валюте", iconType: .balance, value: formattedAmount)), at: 5)
+            }
+            
+            let payeeAmount = operation.payerAmount
+            let payeeCurrency = operation.payerCurrency
+            if let formattedAmount = model.amountFormatted(amount: payeeAmount, currencyCode: payeeCurrency, style: .fraction) {
+                
+                directCells.insert((PropertyCellViewModel.init(title: "Сумма списания", iconType: .balance, value: formattedAmount)), at: 6)
+            }
+            
+            return directCells.compactMap {$0}
+            
+        case .contactAddressing, .contactAddressingCash, .contactAddressless:
+
+           if let method = operation.paymentMethod,
+              let transferReference = operation.transferReference,
+              let countryName = operation.countryName {
+               
+               let methodViewModel = PropertyCellViewModel(title: "Способ выплаты",
+                                                           iconType: .cash,
+                                                           value: method.rawValue)
+               
+               let transferReferenceViewModel = PropertyCellViewModel(title: "Номер перевода",
+                                                           iconType: .operationNumber,
+                                                            value: transferReference)
+               
+               let countryViewModel = PropertyCellViewModel(title: "Страна",
+                                                            iconType: .geo,
+                                                            value: countryName)
+               
+               if let formattedAmount = model.amountFormatted(amount: operation.payerAmount, currencyCode: operation.payerCurrency, style: .fraction),
+                  let amount = operation.payeeAmount,
+                  let payeeAmount = model.amountFormatted(amount: amount, currencyCode: operation.payeeCurrency, style: .fraction) {
+                
+                   let transferAmount = PropertyCellViewModel(title: "Сумма списания", iconType: .balance, value: formattedAmount)
+                   
+                   let amount = PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: payeeAmount)
+                   
+                   return [
+                       payeeNumberPhone,
+                       payeeNameViewModel,
+                       countryViewModel,
+                       payeeBankViewModel,
+                       transferAmount,
+                       commissionViewModel,
+                       amount,
+                       methodViewModel,
+                       payerViewModel,
+                       purposeViewModel,
+                       transferReferenceViewModel,
+                       dateViewModel
+                   ].compactMap {$0}
+                   
+               }
+               
+               return [
+                   payeeNumberPhone,
+                   payeeNameViewModel,
+                   countryViewModel,
+                   payeeBankViewModel,
+                   commissionViewModel,
+                   balanceViewModel,
+                   methodViewModel,
+                   payerViewModel,
+                   purposeViewModel,
+                   transferReferenceViewModel,
+                   dateViewModel
+               ].compactMap {$0}
+           } else {
+            
+               return [
+                   payeeNumberPhone,
+                   payeeNameViewModel,
+                   payeeBankViewModel,
+                   balanceViewModel,
+                   commissionViewModel,
+                   payerViewModel,
+                   purposeViewModel,
+                   dateViewModel
+               ].compactMap {$0}
+           }
+            
+        case .contactAddressless:
+            return [
+                payeeNumberPhone,
+                payeeNameViewModel,
+                payeeBankViewModel,
+                balanceViewModel,
+                commissionViewModel,
+                payerViewModel,
+                purposeViewModel,
+                dateViewModel
+            ].compactMap {$0}
             
         default:
             

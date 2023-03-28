@@ -21,6 +21,7 @@ extension PaymentsInputView {
         @Published var title: String?
         @Published var additionalButton: ButtonViewModel?
         @Published var warning: String?
+        @Published var info: String?
         
         private let model: Model
         private static let iconPlaceholder = Image.ic24File
@@ -28,10 +29,11 @@ extension PaymentsInputView {
         var parameterInput: Payments.ParameterInput? { source as? Payments.ParameterInput }
         override var isValid: Bool { parameterInput?.validator.isValid(value: value.current) ?? false }
         
-        init(icon: Image?, description: String, content: String, warning: String? = nil, textField: TextFieldRegularView.ViewModel, additionalButton: ButtonViewModel? = nil, model: Model, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
+        init(icon: Image?, description: String, content: String, info: String? = nil, warning: String? = nil, textField: TextFieldRegularView.ViewModel, additionalButton: ButtonViewModel? = nil, model: Model = .emptyMock, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.icon = icon
             self.description = description
+            self.info = info
             self.warning = warning
             self.additionalButton = additionalButton
             self.model = model
@@ -214,19 +216,9 @@ struct PaymentsInputView: View {
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(spacing: 8) {
             
-            if let title = viewModel.title {
-                
-                Text(title)
-                    .font(.textBodySR12160())
-                    .foregroundColor(.textPlaceholder)
-                    .padding(.bottom, 4)
-                    .padding(.leading, 48)
-                    .transition(.asymmetric(insertion: .move(edge: .bottom).combined(with: .opacity), removal: .opacity))
-            }
-            
-            HStack(spacing: 20) {
+            HStack(spacing: 16) {
                 
                 if let icon = viewModel.icon {
                     
@@ -235,7 +227,7 @@ struct PaymentsInputView: View {
                         .renderingMode(.template)
                         .foregroundColor(.mainColorsGray)
                         .frame(width: 24, height: 24)
-                        .padding(.leading, 4)
+                    
                 } else {
                     
                     Color.clear
@@ -243,19 +235,34 @@ struct PaymentsInputView: View {
                         .padding(.leading, 4)
                 }
                 
-                if viewModel.isEditable == true {
+                VStack(alignment: .leading, spacing: 4) {
                     
-                    TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 14), textColor: .textSecondary)
-                        .frame(minWidth: 24)
+                    if let title = viewModel.title {
+                        
+                        Text(title)
+                            .font(.textBodyMR14180())
+                            .foregroundColor(.textPlaceholder)
+                            .transition(.asymmetric(insertion: .move(edge: .bottom).combined(with: .opacity), removal: .opacity))
+                    }
                     
-                } else {
-                    
-                    Text(viewModel.value.current ?? "")
-                        .foregroundColor(.textSecondary)
-                        .font(.textBodyMM14200())
+                    HStack(spacing: 20) {
+                        
+                        if viewModel.isEditable == true {
+                            
+                            TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16), textColor: .textSecondary)
+                                .frame(minWidth: 24)
+                            
+                        } else {
+                            
+                            Text(viewModel.value.current ?? "")
+                                .foregroundColor(.textSecondary)
+                                .font(.textBodyMM14200())
+                        }
+                        
+                        Spacer()
+                        
+                    }
                 }
-                
-                Spacer()
                 
                 if viewModel.isEditable, let additionalButton = viewModel.additionalButton {
                     
@@ -266,33 +273,51 @@ struct PaymentsInputView: View {
                     }
                 }
             }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 13)
             
-            if let warning = viewModel.warning {
-                
-                VStack(alignment: .leading, spacing: 8) {
+            VStack(spacing: 4) {
+             
+                if let info = viewModel.info {
                     
-                    Divider()
-                        .frame(height: 1)
-                        .background(Color.systemColorError)
-                        .padding(.leading, 48)
-                    
-                    Text(warning)
-                        .font(.textBodySR12160())
-                        .foregroundColor(.systemColorError)
-                        .padding(.leading, 48)
-                    
-                }.padding(.top, 12)
+                    HStack {
+                        
+                        Color.clear
+                            .frame(width: 24, height: 0)
+                            .padding(.leading, 4)
+                        
+                        Text(info)
+                            .font(.textBodySR12160())
+                            .foregroundColor(.textPlaceholder)
+                        
+                        Spacer()
+                    }
+
+                }
                 
-            } else {
-                
-                Divider()
-                    .frame(height: 1)
-                    .background(Color.bordersDivider)
-                    .opacity(viewModel.isEditable ? 1.0 : 0.2)
-                    .padding(.top, 12)
-                    .padding(.leading, 48)
+                        
+                        
+                if let warning = viewModel.warning {
+                    
+                    HStack {
+                        
+                        //TODO: chacnge to padding
+                        Color.clear
+                            .frame(width: 24, height: 0)
+                            .padding(.leading, 4)
+                        
+                        Text(warning)
+                            .font(.textBodySR12160())
+                            .foregroundColor(.systemColorError)
+                        
+                        Spacer()
+                    }
+
+                }
             }
         }
+        .padding(.horizontal, 13)
+        .padding(.vertical, 13)
     }
 }
 
@@ -305,19 +330,19 @@ struct PaymentsInputView_Previews: PreviewProvider {
         Group {
             
             PaymentsInputView(viewModel: .sampleEmpty)
-                .previewLayout(.fixed(width: 375, height: 80))
+                .previewLayout(.fixed(width: 375, height: 120))
             
             PaymentsInputView(viewModel: .sampleValue)
-                .previewLayout(.fixed(width: 375, height: 80))
+                .previewLayout(.fixed(width: 375, height: 100))
             
             PaymentsInputView(viewModel: .sampleValueNotEditable)
-                .previewLayout(.fixed(width: 375, height: 80))
+                .previewLayout(.fixed(width: 375, height: 100))
             
             PaymentsInputView(viewModel: .samplePhone)
-                .previewLayout(.fixed(width: 375, height: 80))
-            
-            PaymentsInputView(viewModel: .sampleWarning)
                 .previewLayout(.fixed(width: 375, height: 100))
+            
+            PaymentsInputView(viewModel: .sampleError)
+                .previewLayout(.fixed(width: 375, height: 120))
         }
     }
 }
@@ -335,5 +360,7 @@ extension PaymentsInputView.ViewModel {
     static let samplePhone = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "+9 925 555-5555"), icon: .init(named: "ic24Smartphone")!, title: "Номер телефона получателя", validator: .anyValue, limitator: nil, isEditable: false), model: .emptyMock)
     
     static let sampleWarning = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "123"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(rules: [Payments.Validation.MinLengthRule(minLenght: 5, actions: [.post: .warning("Минимальная длинна 5 символов")])]), limitator: nil), model: .emptyMock)
+    
+    static let sampleError = PaymentsInputView.ViewModel(icon: .init(uiImage: UIImage(named: "Payments Input Sample")!), description: "description", content: "123", info: "info", warning: "warning", textField: .init(text: "123", placeholder: "ИНН подразделения", style: .number, limit: nil), additionalButton: nil, model: .emptyMock)
 }
 

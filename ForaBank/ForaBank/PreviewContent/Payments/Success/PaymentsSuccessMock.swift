@@ -65,4 +65,46 @@ extension PaymentsSuccessViewModel {
     
     static let sample10: PaymentsSuccessViewModel = .init(.emptyMock, title: "Привязка счета оформлена", amount: nil, iconType: .success, service: nil, logo: nil, actionButton: .sample, optionButtons: [], company: .init(icon: .ic40Goods, name: "Цветы у дома"), link: .init(title: "Вернуться в магазин", url: .init(string: "https://www.google.com")!), bottomIcon: .ic72Sbp
     )
+    
+    // Mobile Connection Payments
+    
+    static let previewMobileConnectionOk: PaymentsSuccessViewModel = .init(
+        .emptyMock,
+        title: "Успешный перевод",
+        amount: "1 000 ₽",
+        iconType: .success,
+        logo: .init(
+            title: "",
+            image: .ic40Services
+        ),
+        actionButton: .sample,
+        optionButtons: [.sample1, .sample2, .sample3]
+    )
+    
+    static let previewMobileConnectionAccepted: PaymentsSuccessViewModel = .init(
+        .emptyMock,
+        title: "Операция в обработке!",
+        amount: "1 000 ₽",
+        iconType: .accepted,
+        logo: .init(
+            title: "",
+            image: .ic40Services
+        ),
+        actionButton: .sample,
+        optionButtons: [.sample1, .sample3]
+    )
+    
+    static let previewMobileConnectionFailed: PaymentsSuccessViewModel = .init(
+        .emptyMock,
+        title: "Операция неуспешна!",
+        amount: "1 000 ₽",
+        iconType: .error,
+        repeatButton: .init(
+            title: "Повторить",
+            style: .gray,
+            action: {}
+        ),
+        actionButton: .sample,
+        optionButtons: [.sample3]
+    )
 }

@@ -19,336 +19,106 @@ extension MainSectionProductsView {
         
         override var type: MainSectionType { .products }
         
-        @Published var content: Content
-        @Published var selector: OptionSelectorView.ViewModel?
+        @Published private(set) var isChevronVisible: Bool
+        @Published var isCollapsedContent: Bool
+        @Published private(set) var buttonNewProductViewModel: ButtonNewProduct.ViewModel?
         
-        var isScrollChangeSelectorEnable = true
+        private let settings: MainProductsGroupSettings
+        let productCarouselViewModel: ProductCarouselView.ViewModel
         
         var moreButton: MoreButtonViewModel {
-            .init(icon: .ic24MoreHorizontal, action: {[weak self] in self?.action.send(MainSectionViewModelAction.Products.MoreButtonTapped())})
+            .init(
+                icon: .ic24MoreHorizontal,
+                action: { [weak self] in
+                    
+                    self?.action.send(
+                        MainSectionViewModelAction.Products.MoreButtonTapped()
+                    )
+                }
+            )
         }
-        
-        enum Content {
-            
-            case empty
-            case placeholders
-            case groups([MainSectionProductsGroupView.ViewModel])
-            
-            var isEmpty: Bool {
-                if case .empty = self { return true }
-                else { return false }
-            }
-        }
-        
-        private var products: CurrentValueSubject<[ProductType: [ProductView.ViewModel]], Never> = .init([:])
-        private var groups: [MainSectionProductsGroupView.ViewModel] = []
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        internal init(content: Content, selector: OptionSelectorView.ViewModel?,
-                      model: Model = .emptyMock, isCollapsed: Bool) {
+        init(isContentEmpty: Bool, settings: MainProductsGroupSettings = .base, productCarouselViewModel: ProductCarouselView.ViewModel, model: Model = .emptyMock, isCollapsed: Bool) {
             
-            self.content = content
-            self.selector = selector
+            self.isChevronVisible = isContentEmpty
+            self.isCollapsedContent = isCollapsed
+            self.settings = settings
+            self.productCarouselViewModel = productCarouselViewModel
             self.model = model
             super.init(isCollapsed: isCollapsed)
         }
         
-        init(_ model: Model) {
-            
-            self.content = .placeholders
-            self.selector = nil
-            self.model = model
-            super.init(isCollapsed: false)
+        convenience init(
+            settings: MainProductsGroupSettings = .base,
+            _ model: Model
+        ) {
+            self.init(
+                isContentEmpty: false,
+                settings: settings,
+                productCarouselViewModel: .init(
+                    mode: .main,
+                    style: .regular,
+                    model: model
+                ),
+                model: model,
+                isCollapsed: false
+            )
             
             bind()
         }
         
         private func bind() {
+
+            typealias CarouselProductDidTapped = ProductCarouselViewModelAction.Products.ProductDidTapped
+            typealias MainProductDidTapped = MainSectionViewModelAction.Products.ProductDidTapped
+            
+            productCarouselViewModel.action
+                .compactMap { $0 as? CarouselProductDidTapped }
+                .map(\.productId)
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] id in
+                    
+                    self.action.send(MainProductDidTapped(productId: id))
+                }
+                .store(in: &bindings)
+
+            typealias MainResetScroll = MainSectionViewModelAction.Products.ResetScroll
+            typealias CarouselScrollToFirstGroup = ProductCarouselViewModelAction.Products.ScrollToFirstGroup
+
+            action
+                .compactMap { $0 as? MainResetScroll }
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] _ in
+                    
+                    self.productCarouselViewModel.action.send(CarouselScrollToFirstGroup())
+                }
+                .store(in: &bindings)
+            
+            productCarouselViewModel.$content
+                .map(\.isEmpty)
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] isContentEmpty in
+                    
+                    self?.isChevronVisible = !isContentEmpty
+                    self?.isCollapsedContent = isContentEmpty
+                }
+                .store(in: &bindings)
             
             model.products
-                .receive(on: DispatchQueue.main)
-                .sink {[unowned self] productsUpdate in
+                .map { [unowned self] products in
                     
-                    // all existing products view models list
-                    let currentProductsViewModels = products.value.values.flatMap{ $0 }
+                    guard self.settings.isFreeCardAllowed(for: products)
+                    else { return .none }
                     
-                    var productsUpdated = [ProductType: [ProductView.ViewModel]]()
-                    for productType in ProductType.allCases {
-                        
-                        if let productsForType = productsUpdate[productType]?.filter({ $0.visibility }),
-                           productsForType.count > 0 {
-                            
-                            var productsViewModelsUpdated = [ProductView.ViewModel]()
-                            for product in productsForType {
-                                
-                                // check if we alredy have view model for product data
-                                if let currentProductViewModel = currentProductsViewModels.first(where: { $0.id == product.id }) {
-                                    
-                                    // just update existing view model with product data
-                                    currentProductViewModel.update(with: product, model: model)
-                                    productsViewModelsUpdated.append(currentProductViewModel)
-                                    
-                                } else {
-                                    
-                                    // create new product view model
-                                    let productViewModel = ProductView.ViewModel(with: product, size: .normal, style: .main, model: model)
-                                    bind(productViewModel)
-                                    productsViewModelsUpdated.append(productViewModel)
-                                }
-                            }
-                            
-                            productsUpdated[productType] = productsViewModelsUpdated
-                        }
-                    }
-                    
-                    self.products.value = productsUpdated
-                    
-                }.store(in: &bindings)
-            
-            products
-                .combineLatest(model.productsUpdating)
-                .receive(on: DispatchQueue.main)
-                .sink {[unowned self] data in
-                    
-                    if model.isAllProductsHidden {
-                        
-                        withAnimation {
-                        
-                            content = .empty
-                        }
-                        
-                    } else {
-                    
-                        let products = data.0
-                        let productsUpdating = data.1
-                    
-                        var groupsUpdated = [MainSectionProductsGroupView.ViewModel]()
-                    
-                        for productType in ProductType.allCases {
-                        
-                            guard let productsForType = products[productType]
-                            else { continue }
-                        
-                            let isGroupUpdating = productsUpdating.contains(productType) ? true : false
-                        
-                            if let groupForType = groups.first(where: { $0.productType == productType}) {
-                            
-                                groupForType.update(with: productsForType)
-                                groupForType.isSeparator = true
-                                groupForType.isUpdating = isGroupUpdating
-                                groupsUpdated.append(groupForType)
-                            
-                            } else {
-                            
-                                let group = MainSectionProductsGroupView.ViewModel(productType: productType, products: productsForType, model: model)
-                                group.isSeparator = true
-                                group.isUpdating = isGroupUpdating
-                                groupsUpdated.append(group)
-                            }
-                        } //for
-                    
-                        groupsUpdated.last?.isSeparator = false
-                        groups = groupsUpdated
-                    
-                        withAnimation {
-                        
-                            content = content(with: groups)
-                        }
-                    
-                        bind(groups)
-                    
-                        // create product type selector
-                        if groups.count > 1 {
-                        
-                            let options = groups.map{ Option(id: $0.id, name: $0.productType.pluralName)}
-                        
-                            if let currentSelector = selector {
-                            
-                                let optionsIds = options.map{ $0.id }
-                                let selected = optionsIds.contains(currentSelector.selected) ? currentSelector.selected : options[0].id
-                            
-                                withAnimation {
-                                
-                                    currentSelector.update(options: options, selected: selected)
-                                }
-                            
-                            } else {
-                            
-                                withAnimation {
-                                
-                                    selector = OptionSelectorView.ViewModel(options: options, selected: options[0].id, style: .products, mode: .action)
-                                }
-                            
-                                bind(selector)
-                            }
-                        
-                        } else {
-                        
-                            withAnimation {
-                            
-                                selector = nil
-                            }
-                        }
-                    } //if visibility empty
-                    
-                }.store(in: &bindings)
-            
-            action
-                .receive(on: DispatchQueue.main)
-                .sink {[unowned self] action in
-                    
-                    switch action {
-                    case let payload as MainSectionViewModelAction.Products.HorizontalOffsetDidChanged:
-                        updateSelector(with: payload.offset)
-                        
-                    case _ as MainSectionViewModelAction.Products.ScrollToFirstGroup:
-                        guard case .groups(let groups) = content,
-                              let firstGroup = groups.first else {
-                            return
-                        }
-                        selector?.selected = firstGroup.id
-                        
-                    default:
-                        break
-                    }
-                    
-                }.store(in: &bindings)
-            
-            model.productsOpening
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] productsOpening in
-                    
-                    let accountOpening = productsOpening.contains(.account)
-                            
-                    switch content {
-                    case let .groups(groups):
-                        
-                        guard let accountsGroup = groups.first(where: { $0.productType == .account }) else {
-                            return
-                        }
-                        
-                        withAnimation {
-                            accountsGroup.isOpeningProduct = accountOpening
-                        }
-                        
-                    default:
-                        break
-                    }
-                    
-                }.store(in: &bindings)
-        }
-        
-        private func bind(_ product: ProductView.ViewModel) {
-            
-            product.action
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] action in
-                    
-                    switch action {
-                    case _ as ProductViewModelAction.ProductDidTapped:
-                        self.action.send(MainSectionViewModelAction.Products.ProductDidTapped(productId: product.id))
-                        
-                    default:
-                        break
-                    }
-                    
-                }.store(in: &bindings)
-        }
-        
-        private func bind(_ selector: OptionSelectorView.ViewModel?) {
-            
-            if let selector = selector {
-                
-                selector.action
-                    .receive(on: DispatchQueue.main)
-                    .sink {[unowned self] action in
-                        
-                        switch action {
-                        case let payload as OptionSelectorAction.OptionDidSelected:
-                            guard let productType = ProductType(rawValue: payload.optionId),
-                                  let group = groups.first(where: { $0.productType == productType}) else {
-                                return
-                            }
-                            
-                            self.action.send(MainSectionViewModelAction.Products.ScrollToGroup(groupId: group.id))
-                            
-                        default:
-                            break
-                        }
-                        
-                    }.store(in: &bindings)
-            }
-        }
-        
-        private func bind(_ groups: [MainSectionProductsGroupView.ViewModel]) {
-            
-            for group in groups {
-                
-                group.action
-                    .receive(on: DispatchQueue.main)
-                    .sink {[unowned self] action in
-                        
-                        switch action {
-                        case _ as MainSectionProductsGroupAction.Group.Collapsed:
-                            self.action.send(MainSectionViewModelAction.Products.ScrollToGroup(groupId: group.id))
-                            
-                        default:
-                            break
-                        }
-                        
-                    }.store(in: &bindings)
-            }
-        }
-        
-        private func updateSelector(with offset: CGFloat) {
-            
-            guard let selector = selector, let productType = productType(with: offset) else {
-                return
-            }
-            
-            if selector.selected != productType.rawValue {
-                
-                withAnimation {
-                    
-                    self.selector?.selected = productType.rawValue
+                    return .some(.cardWanted(url: self.model.productsOpenAccountURL))
                 }
-            }
+                .receive(on: DispatchQueue.main)
+                .assign(to: &$buttonNewProductViewModel)
         }
-        
-        private func content(with groups: [MainSectionProductsGroupView.ViewModel]) -> Content {
-            
-            if groups.isEmpty {
-                
-                return .placeholders
-                
-            } else {
-                
-                return .groups(groups)
-            }
-        }
-        
-        private func productType(with offset: CGFloat) -> ProductType? {
-            
-            guard groups.count > 0 else {
-                return nil
-            }
-            
-            var currentLength: CGFloat = 0
-            for group in groups {
-                
-                currentLength += group.width
-                guard currentLength >= offset else {
-                    continue
-                }
-                
-                return group.productType
-            }
-            
-            return groups.last?.productType
-        }
-        
+
         struct MoreButtonViewModel {
             
             let icon: Image
@@ -357,129 +127,54 @@ extension MainSectionProductsView {
     }
 }
 
+private extension ButtonNewProduct.ViewModel {
+    
+    static func cardWanted(url: URL) -> ButtonNewProduct.ViewModel {
+        
+        .init(
+            icon: .ic24NewCardColor,
+            title: "Хочу карту",
+            subTitle: "Бесплатно",
+            url: url
+        )
+    }
+}
+
 //MARK: - View
 
 struct MainSectionProductsView: View {
     
     @ObservedObject var viewModel: ViewModel
-    @State private var scrollView: UIScrollView? = nil
     
     var body: some View {
         
-        CollapsableSectionView(title: viewModel.title,
-                               edges: .horizontal,
-                               padding: 20,
-                               isShevronVisible: !viewModel.content.isEmpty,
-                               isCollapsed: viewModel.content.isEmpty
-                                            ? .constant(true) : $viewModel.isCollapsed) {
+        CollapsableSectionView(
+            title: viewModel.title,
+            edges: .horizontal,
+            padding: 20,
+            isShevronVisible: viewModel.isChevronVisible,
+            isCollapsed: $viewModel.isCollapsedContent
+        ) {
             
-            VStack(spacing: 16) {
-                
-                if let selectorViewModel = viewModel.selector {
-                    
-                    OptionSelectorView(viewModel: selectorViewModel)
-                        .frame(height: 24)
-                        .padding(.leading, 20)
-                        .accessibilityIdentifier("optionProductTypeSelection")
-                }
-                
-                ScrollView(.horizontal, showsIndicators: false) {
-                    
-                    switch viewModel.content {
-                        
-                    case .empty:
-                        EmptyView()
-                        
-                    case .placeholders:
-                        MainSectionProductsView.PlaceholdersView()
-                            .padding(.horizontal, 20)
-                        
-                    case let .groups(groups):
-                        ScrollViewReader { proxy in
-                            
-                            HStack(spacing: 8) {
-                                
-                                ForEach(groups) { groupViewModel in
-                                    
-                                    MainSectionProductsGroupView(viewModel: groupViewModel)
-                                        .accessibilityIdentifier("mainProductScrollView")
-                                }
-                            }
-                            .padding(.horizontal, 20)
-                            .introspectScrollView(customize: { scrollView in
-                                
-                                self.scrollView = scrollView
-                            })
-                            .onReceive(viewModel.action) { action in
-                                
-                                switch action {
-                                case let payload as MainSectionViewModelAction.Products.ScrollToGroup:
-                                    scrollToGroup(groupId: payload.groupId)
-                                    
-                                case _ as MainSectionViewModelAction.Products.ScrollToFirstGroup:
-                                    scrollToFirstGroup()
-                                    
-                                default:
-                                    break
-                                }
-                            }
-                            .onReceive(proxy.offset) { offset in
-                                
-                                if viewModel.isScrollChangeSelectorEnable == true {
-                                    
-                                    viewModel.action.send( MainSectionViewModelAction.Products.HorizontalOffsetDidChanged(offset: offset.x))
-                                }
-                            }
-                        }
-                    }
-                }.frame(height: 104, alignment: .top)
-            }
+            ProductCarouselView(
+                viewModel: viewModel.productCarouselViewModel,
+                buttonNewProduct: buttonNewProduct
+            )
         }
         .overlay13(alignment: .top) {
             MoreButtonView(viewModel: viewModel.moreButton).padding(.trailing, 20)
         }
-    }
-    
-    func scrollToGroup(groupId: MainSectionProductsGroupView.ViewModel.ID) {
-        
-        guard let scrollView = scrollView, case .groups(let groups) = viewModel.content else {
-            return
-        }
-        
-        viewModel.isScrollChangeSelectorEnable = false
-        
-        var offset: CGFloat = 0
-        for group in groups {
-            
-            guard group.id != groupId else {
-                break
-            }
-            
-            offset += group.width
-            offset += 8
-        }
-        
-        let targetRect = CGRect(x: offset, y: 0, width: scrollView.bounds.width , height: scrollView.bounds.height)
-        scrollView.scrollRectToVisible(targetRect, animated: true)
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-            viewModel.isScrollChangeSelectorEnable = true
-        }
-    }
-    
-    func scrollToFirstGroup() {
-        
-        guard let scrollView = scrollView else {
-            return
-        }
-        
-        let targetRect = CGRect(x: 0, y: 0, width: scrollView.bounds.width , height: scrollView.bounds.height)
-        scrollView.scrollRectToVisible(targetRect, animated: false)
     }
 }
 
 //MARK: - Views
 
 extension MainSectionProductsView {
+    
+    func buttonNewProduct() -> ButtonNewProduct? {
+        
+        viewModel.buttonNewProductViewModel.map(ButtonNewProduct.init(viewModel:))
+    }
     
     struct MoreButtonView: View {
         
@@ -507,24 +202,6 @@ extension MainSectionProductsView {
             
         }
     }
-    
-    struct PlaceholdersView: View {
-        
-        var body: some View {
-            
-            HStack(spacing: 8) {
-                
-                ForEach(0..<3) { _ in
-                    
-                    RoundedRectangle(cornerRadius: 12)
-                        .frame(width: 164, height: 104)
-                        .foregroundColor(.mainColorsGrayLightest)
-                        .shimmering(active: true, bounce: false)
-                }
-            }
-        }
-    }
-    
 }
 
 //MARK: - Preview
@@ -536,11 +213,9 @@ struct MainSectionProductsView_Previews: PreviewProvider {
         Group {
             
             MainSectionProductsView(viewModel: .sample)
-                .previewLayout(.fixed(width: 375, height: 300))
-            
-            MainSectionProductsView.PlaceholdersView()
-                .previewLayout(.fixed(width: 375, height: 300))
+            MainSectionProductsView(viewModel: .empty)
         }
+        .previewLayout(.sizeThatFits)
     }
 }
 
@@ -548,7 +223,14 @@ struct MainSectionProductsView_Previews: PreviewProvider {
 
 extension MainSectionProductsView.ViewModel {
     
-    static let sample = MainSectionProductsView.ViewModel(content: .groups([.sampleWant]), selector: nil, isCollapsed: false)
+    static let sample = MainSectionProductsView.ViewModel(
+        isContentEmpty: false,
+        productCarouselViewModel: .preview,
+        isCollapsed: false
+    )
+    static let empty = MainSectionProductsView.ViewModel(
+        isContentEmpty: true,
+        productCarouselViewModel: .preview,
+        isCollapsed: false
+    )
 }
-
-

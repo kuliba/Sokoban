@@ -49,6 +49,21 @@ extension ModelAction {
                 case failure(message: String)
             }
         }
+        
+        enum CheckCard {
+            
+            struct Request: Action {
+                
+                let payload: ServerCommands.TransferController.CheckCard.Payload
+            }
+            
+            enum Response: Action {
+                
+                case success(data: ServerCommands.TransferController.CheckCard.Response.CheckCardResponseData)
+                case failure(message: String)
+            }
+        }
+        
     }
 }
 
@@ -171,6 +186,42 @@ extension Model {
                 self.action.send(ModelAction.Transfers.ResendCode.Response.failure(message: error.localizedDescription))
                 
                 self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    func handleCheckCard(_ payload: ModelAction.Transfers.CheckCard.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.TransferController.CheckCard(token: token, payload: payload.payload)
+        serverAgent.executeCommand(command: command) { [weak self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    
+                    guard let data = response.data else {
+                        return
+                    }
+                    
+                    self?.action.send(ModelAction.Transfers.CheckCard.Response.success(data: data))
+                    
+                default:
+                        
+                    if let error = response.errorMessage {
+                        
+                        self?.action.send(ModelAction.Transfers.CheckCard.Response.failure(message: error))
+                    }
+                    
+                    self?.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+            case .failure(let error):
+                self?.action.send(ModelAction.Transfers.CheckCard.Response.failure(message: error.localizedDescription))
             }
         }
     }

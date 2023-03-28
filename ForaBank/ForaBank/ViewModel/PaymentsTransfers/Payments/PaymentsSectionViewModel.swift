@@ -12,21 +12,45 @@ class PaymentsSectionViewModel {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
-    var placement: Payments.Parameter.Placement { fatalError("Implement in subclass") }
-    var items: [PaymentsParameterViewModel]
-    var visibleItems: [PaymentsParameterViewModel] { items }
-    var fullScreenItem: PaymentsParameterViewModel? { nil }
+    let placement: Payments.Parameter.Placement
+    let groups: [PaymentsGroupViewModel]
+    
+    var items: [PaymentsParameterViewModel] { groups.flatMap({ $0.items }) }
     
     internal var bindings = Set<AnyCancellable>()
     
-    init(items: [PaymentsParameterViewModel]) {
+    init(placement: Payments.Parameter.Placement, groups: [PaymentsGroupViewModel]) {
         
-        self.items = items
+        self.placement = placement
+        self.groups = groups
+    }
+    
+    convenience init(placement: Payments.Parameter.Placement, items: [PaymentsParameterViewModel]) {
+        
+        self.init(placement: placement, groups: Self.reduce(items: items))
         
         bind()
     }
     
     internal func bind() {
+        
+        action
+            .compactMap{ $0 as? PaymentsSectionViewModelAction.Continue.EnabledChanged }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] payload in
+                
+                for item in items {
+                    
+                    switch item {
+                    case let continuableItem as PaymentsParameterViewModelContinuable:
+                        continuableItem.update(isContinueEnabled: payload.isEnabled)
+                        
+                    default:
+                        continue
+                    }
+                }
+            
+            }.store(in: &bindings)
         
         for item in items {
             
@@ -37,52 +61,12 @@ class PaymentsSectionViewModel {
                     action.send(PaymentsSectionViewModelAction.ItemValueDidChanged(value: value))
                     
                 }.store(in: &bindings)
-        }
-    }
-}
-
-//MARK: - Top Section
-
-class PaymentsTopSectionViewModel: PaymentsSectionViewModel {
-    
-    override var placement: Payments.Parameter.Placement { .top }
-}
-
-//MARK: - Feed Section
-
-class PaymentsFeedSectionViewModel: PaymentsSectionViewModel {
-    
-    override var placement: Payments.Parameter.Placement { .feed }
-        
-    override var fullScreenItem: PaymentsParameterViewModel? {
-        
-        items.first(where: { $0.isFullContent == true })
-    }
-    
-    override func bind() {
-        
-        super.bind()
-        
-        for item in items {
             
             item.action
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] action in
                     
                     switch action {
-                        
-                    //MARK: SelectorComponent
-                    case let payload as PaymentsParameterViewModelAction.Select.PopUpSelector.Show:
-                        self.action.send(PaymentsSectionViewModelAction.PopUpSelector.Show(viewModel: payload.viewModel))
-                        
-                    case _ as PaymentsParameterViewModelAction.Select.PopUpSelector.Close:
-                        self.action.send(PaymentsSectionViewModelAction.PopUpSelector.Close())
-                        
-                    case let payload as PaymentsParameterViewModelAction.Select.BanksSelector.Show:
-                        self.action.send(PaymentsSectionViewModelAction.BankSelector.Show(viewModel: payload.viewModel))
-                        
-                    case _ as PaymentsParameterViewModelAction.Select.BanksSelector.Close:
-                        self.action.send(PaymentsSectionViewModelAction.BankSelector.Close())
                         
                     //MARK: SelectSimpleComponent
                     case let payload as PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Show:
@@ -108,116 +92,20 @@ class PaymentsFeedSectionViewModel: PaymentsSectionViewModel {
                     case _ as PaymentsParameterViewModelAction.Hint.Close:
                         self.action.send(PaymentsSectionViewModelAction.Hint.Close())
                         
-                    //MARK: Bank List Component 
+                    //MARK: Bank List Component
                     case let payload as PaymentsParameterViewModelAction.BankList.ContactSelector.Show:
                         self.action.send(PaymentsSectionViewModelAction.BankSelector.Show(viewModel: payload.viewModel))
                         
                     case _ as PaymentsParameterViewModelAction.BankList.ContactSelector.Close:
                         self.action.send(PaymentsSectionViewModelAction.ContactSelector.Close())
+
+                        //MARK: Bottom
                         
-                    default:
-                        break
-                    }
-                    
-                }.store(in: &bindings)
-        }
-    }
-}
-
-//MARK: - Spoiler Section
-
-class PaymentsSpoilerSectionViewModel: PaymentsSectionViewModel {
-    
-    override var placement: Payments.Parameter.Placement { .spoiler }
-    var isCollapsed: Bool
-    override var visibleItems: [PaymentsParameterViewModel] {
-        
-        if isCollapsed == true {
-            
-            guard let buttonItem = items.first(where: { $0 is PaymentsSpoilerButtonView.ViewModel }) else {
-                return []
-            }
-            
-            return [buttonItem]
-            
-        } else {
-            
-            return items
-        }
-    }
-    
-    init(items: [PaymentsParameterViewModel], isCollapsed: Bool) {
-        
-        self.isCollapsed = isCollapsed
-        
-        var itemsUpdated = items
-        itemsUpdated.append(PaymentsSpoilerButtonView.ViewModel(title: "Дополнительные данные", isSelected: isCollapsed))
-        super.init(items: itemsUpdated)
-    }
-    
-    override func bind() {
-        
-        super.bind()
-        
-        for item in items {
-            
-            item.action
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] action in
-                    
-                    switch action {
-                    case let payload as PaymentsParameterViewModelAction.SpoilerButton.DidUpdated:
-                        isCollapsed = payload.isCollapsed
-                        self.action.send(PaymentsSectionViewModelAction.SpoilerDidUpdated())
-                        
-                    default:
-                        break
-                    }
-    
-                }.store(in: &bindings)
-        }
-    }
-}
-
-//MARK: - Bottom Section
-
-class PaymentsBottomSectionViewModel: PaymentsSectionViewModel, ObservableObject {
-    
-    override var placement: Payments.Parameter.Placement { .bottom }
-    let isContinueEnabled: CurrentValueSubject<Bool, Never> = .init(false)
-
-    override func bind() {
-        
-        super.bind()
-        
-        isContinueEnabled
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] isContinueEnabled in
-                
-                for item in items {
-                    
-                    switch item {
-                    case let continuableItem as PaymentsParameterViewModelContinuable:
-                        continuableItem.update(isContinueEnabled: isContinueEnabled)
-                        
-                    default:
-                        continue
-                    }
-                }
-            }.store(in: &bindings)
-        
-        for item in items {
-            
-            item.action
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] action in
-                    
-                    switch action {
                     case _ as PaymentsParameterViewModelAction.Amount.ContinueDidTapped:
-                        self.action.send(PaymentsSectionViewModelAction.Continue())
+                        self.action.send(PaymentsSectionViewModelAction.Continue.DidTapped())
                         
                     case _ as PaymentsParameterViewModelAction.ContinueButton.DidTapped:
-                        self.action.send(PaymentsSectionViewModelAction.Continue())
+                        self.action.send(PaymentsSectionViewModelAction.Continue.DidTapped())
                         
                     default:
                         break
@@ -232,6 +120,59 @@ class PaymentsBottomSectionViewModel: PaymentsSectionViewModel, ObservableObject
 
 extension PaymentsSectionViewModel {
     
+    static func reduce(items: [PaymentsParameterViewModel]) -> [PaymentsGroupViewModel] {
+        
+        var order = [Payments.Parameter.Group]()
+        var processed = [Payments.Parameter.Group: [PaymentsParameterViewModel]]()
+        for item in items {
+            
+            if let group = item.source.group {
+                
+                if var groupItems = processed[group] {
+                    
+                    groupItems.append(item)
+                    processed[group] = groupItems
+                    
+                } else {
+                    
+                    order.append(group)
+                    processed[group] = [item]
+                }
+                
+            } else {
+                
+                let group = Payments.Parameter.Group(id: UUID().uuidString, type: .regular)
+                order.append(group)
+                processed[group] = [item]
+            }
+        }
+        
+        var groups = [PaymentsGroupViewModel]()
+        for group in order {
+            
+            guard let items = processed[group] else {
+                continue
+            }
+            
+            switch group.type {
+            case .regular:
+                groups.append(.init(id: group.id, items: items))
+                
+            case .spoiler:
+                groups.append(PaymentsSpoilerGroupViewModel(id: group.id, items: items, isCollapsed: true))
+                
+            case .contact:
+                groups.append(PaymentsContactGroupViewModel(items: items))
+
+            case .info:
+                groups.append(PaymentsInfoGroupViewModel(id: group.id, items: items))
+                
+            }
+        }
+        
+        return groups
+    }
+    
     static func reduce(operation: Payments.Operation, model: Model) -> [PaymentsSectionViewModel] {
         
         var result = [PaymentsSectionViewModel]()
@@ -242,56 +183,25 @@ extension PaymentsSectionViewModel {
             let items = Self.reduce(parameters: visibleParameters, placement: placement, model: model)
             
             switch placement {
-            case .top:
-                guard items.isEmpty == false else {
-                    continue
-                }
-                result.append(PaymentsTopSectionViewModel(items: items))
-                
-            case .spoiler:
-                if items.isEmpty == false,
-                   let lastSpoilerItem = items.last,
-                   let lastIndex = visibleParameters.firstIndex(where: { $0.id == lastSpoilerItem.source.id }) {
-                    
-                    // feed section before spoiler
-                    let prevParameters = Array(visibleParameters.prefix(lastIndex))
-                    let prevFeedItems = Self.reduce(parameters: prevParameters, placement: .feed, model: model)
-                    if prevFeedItems.isEmpty == false {
-                        
-                        result.append(PaymentsFeedSectionViewModel(items: prevFeedItems))
-                    }
-                    
-                    // spoiler section
-                    result.append(PaymentsSpoilerSectionViewModel(items: items, isCollapsed: true))
-                    
-                    // feed section after spoiler
-                    let postParameters = Array(visibleParameters.suffix(visibleParameters.count - lastIndex))
-                    let postFeedItems = Self.reduce(parameters: postParameters, placement: .feed, model: model)
-                    if postFeedItems.isEmpty == false {
-                        
-                        result.append(PaymentsFeedSectionViewModel(items: postFeedItems))
-                    }
-                    
-                } else {
-                    
-                    // feed section
-                    let feedItems = Self.reduce(parameters: visibleParameters, placement: .feed, model: model)
-                    result.append(PaymentsFeedSectionViewModel(items: feedItems))
-                }
-                
             case .bottom:
                 if items.isEmpty == false {
                     
-                    result.append(PaymentsBottomSectionViewModel(items: items))
+                    result.append(PaymentsSectionViewModel(placement: placement, items: items))
                     
                 } else {
                     
-                    let continueButtonItem = PaymentsContinueButtonView.ViewModel(title: "Продолжить")
-                    result.append(PaymentsBottomSectionViewModel(items: [continueButtonItem]))
+                    //TODO: move to Model side
+                    let continueParameter = Payments.ParameterContinue(title: "Продолжить")
+                    let continueButtonItem = PaymentsContinueButtonView.ViewModel(continueParameter: continueParameter)
+                    result.append(PaymentsSectionViewModel(placement: placement, items: [continueButtonItem]))
                 }
                 
             default:
-                continue
+                guard items.isEmpty == false else {
+                    continue
+                }
+                
+                result.append(PaymentsSectionViewModel(placement: placement, items: items))
             }
         }
         
@@ -320,11 +230,14 @@ extension PaymentsSectionViewModel {
         
         switch parameter {
         case let parameterSelect as Payments.ParameterSelect:
-            return try? PaymentsSelectView.ViewModel(with: parameterSelect, model: model)
+            return PaymentsSelectView.ViewModel(with: parameterSelect, model: model)
            
         case let parameterSelectBank as Payments.ParameterSelectBank:
             return try? PaymentsSelectBankView.ViewModel(with: parameterSelectBank, model: model)
-            
+        
+        case let parameterSelectCountry as Payments.ParameterSelectCountry:
+            return try? PaymentsSelectCountryView.ViewModel(with: parameterSelectCountry, model: model)
+      
         case let parameterSwitch as Payments.ParameterSelectSwitch:
             return PaymentsSwitchView.ViewModel(with: parameterSwitch)
             
@@ -340,17 +253,23 @@ extension PaymentsSectionViewModel {
         case let parameterInputPhone as Payments.ParameterInputPhone:
             return PaymentsInputPhoneView.ViewModel(with: parameterInputPhone, model: model)
             
-        case let paremetrName as Payments.ParameterName:
-            return PaymentsNameView.ViewModel(with: paremetrName)
+        case let paremeterName as Payments.ParameterName:
+            return PaymentsNameView.ViewModel(with: paremeterName)
             
+        case let parameterDropDownList as Payments.ParameterSelectDropDownList:
+            return PaymentSelectDropDownView.ViewModel(with: parameterDropDownList)
+
         case let parameterSelectSimple as Payments.ParameterSelectSimple:
-            return PaymentsSelectSimpleView.ViewModel(with: parameterSelectSimple)
+            return PaymentsSelectSimpleView.ViewModel(with: parameterSelectSimple, model: model)
             
         case let parameterProduct as Payments.ParameterProduct:
             return PaymentsProductView.ViewModel(model, parameterProduct: parameterProduct)
             
+        case let parameterProductTemplate as Payments.ParameterProductTemplate:
+            return PaymentsProductTemplateView.ViewModel(model, parameter: parameterProductTemplate)
+            
         case let parameterAmount as Payments.ParameterAmount:
-            return PaymentsAmountView.ViewModel(with: parameterAmount, actionTitle: "Продолжить")
+            return PaymentsAmountView.ViewModel(with: parameterAmount, model: model)
             
         case let parameterCode as Payments.ParameterCode:
             return PaymentsCodeView.ViewModel(with: parameterCode)
@@ -368,6 +287,9 @@ extension PaymentsSectionViewModel {
             return PaymentsSubscribeView.ViewModel(with: parameterSubscribe)
         
             // for tests only
+        case let parameterHidden as Payments.ParameterHidden:
+            return PaymentsParameterViewModel(source: parameterHidden)
+
         case let parameterMock as Payments.ParameterMock:
             return PaymentsParameterViewModel(source: parameterMock)
             
@@ -386,8 +308,16 @@ enum PaymentsSectionViewModelAction {
         let value: PaymentsParameterViewModel.Value
     }
     
-    struct Continue: Action {}
-    
+    enum Continue {
+        
+        struct DidTapped: Action {}
+        
+        struct EnabledChanged: Action {
+            
+            let isEnabled: Bool
+        }
+    }
+
     enum PopUpSelector  {
         
         struct Show: Action {
@@ -427,8 +357,6 @@ enum PaymentsSectionViewModelAction {
         
         struct Close: Action {}
     }
-    
-    struct SpoilerDidUpdated: Action {}
     
     struct ResendCode: Action {}
 }

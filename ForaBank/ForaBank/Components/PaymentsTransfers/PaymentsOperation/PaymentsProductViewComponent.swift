@@ -49,6 +49,28 @@ extension PaymentsProductView {
                     }
    
                 }.store(in: &bindings)
+            
+            $isEditable
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isEditable in
+                    
+                    selector.context.value.isUserInteractionEnabled = isEditable
+                    
+                }.store(in: &bindings)
+        }
+        
+        override func update(source: PaymentsParameterRepresentable) {
+            super.update(source: source)
+            
+            guard let source = source as? Payments.ParameterProduct,
+                  let product = model.allProducts.first(where: {$0.id.description == source.parameter.value})  else {
+                return
+            }
+            
+            let viewModel = ProductSelectorView.ViewModel.ProductViewModel(model, productData: product, context: .init(title: source.title, direction: .from, style: .regular, isUserInteractionEnabled: self.isEditable, filter: source.filter))
+            
+            self.selector.content = .product(viewModel)
+            self.selector.context.value.filter = source.filter
         }
     }
 }
@@ -62,6 +84,7 @@ struct PaymentsProductView: View {
     var body: some View {
         
         ProductSelectorView(viewModel: viewModel.selector)
+            .padding(.vertical, 13)
     }
 }
 
@@ -74,10 +97,10 @@ struct PaymentsCardView_Previews: PreviewProvider {
         Group {
             
             PaymentsProductView(viewModel: .sample)
-                .previewLayout(.fixed(width: 375, height: 90))
+                .previewLayout(.fixed(width: 375, height: 200))
             
             PaymentsProductView(viewModel: .sampleExpanded)
-                .previewLayout(.fixed(width: 375, height: 200))
+                .previewLayout(.fixed(width: 375, height: 300))
         }
     }
 }

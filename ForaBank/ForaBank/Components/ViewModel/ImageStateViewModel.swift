@@ -13,6 +13,13 @@ typealias Md5hash = String
 enum ImageStateViewModel {
     case placeholder(Md5hash?)
     case image(Image)
+    
+    var isPlaceholder: Bool {
+        switch self {
+        case .placeholder: return true
+        case .image: return false
+        }
+    }
 }
 
 extension ImageStateViewModel {

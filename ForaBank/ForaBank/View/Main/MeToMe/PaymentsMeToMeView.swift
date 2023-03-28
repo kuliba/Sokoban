@@ -27,6 +27,8 @@ struct PaymentsMeToMeView: View {
                 VStack {
                     
                     ProductsSwapView(viewModel: viewModel.swapViewModel)
+                        .padding(.vertical, 20)
+                    
                     PaymentsAmountView(viewModel: viewModel.paymentsAmount)
                 }
             }
@@ -65,18 +67,32 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
     static var previews: some View {
 
         Group {
-
+            
+            PaymentsMeToMeView(viewModel: .init(
+                .emptyMock,
+                swapViewModel: .init(
+                    model: .emptyMock,
+                    items: [.sample2, .sampleMe2MeCollapsed],
+                    divider: .sample),
+                paymentsAmount: .init(
+                    title: "Сумма перевода",
+                    textField: .init(150, currencySymbol: "₽"),
+                    transferButton: .active(title: "Перевести", action: {}),
+                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими")
+            )
+            
             PaymentsMeToMeView(viewModel: .init(
                 .emptyMock,
                 swapViewModel: .init(
                     model: .emptyMock,
                     items: [.sampleMe2MeCollapsed, .sample2],
                     divider: .sample),
-                paymentsAmount: .init(title: "Сумма перевода",
-                                      textField: .init(150, currencySymbol: "₽"),
-                                      transferButton: .active(title: "Перевести", action: {}),
-                                      info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими"))
-            
+                paymentsAmount: .init(
+                    title: "Сумма перевода",
+                    textField: .init(150, currencySymbol: "₽"),
+                    transferButton: .active(title: "Перевести", action: {}),
+                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими")
+            )
             
             PaymentsMeToMeView(viewModel: .init(
                 .emptyMock,
@@ -84,10 +100,12 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
                     model: .emptyMock,
                     items: [.sampleMe2MeCollapsed, .sample3],
                     divider: .sample),
-                paymentsAmount: .init(title: "Сумма перевода",
-                                      textField: .init(0, currencySymbol: "₽"),
-                                      transferButton: .active(title: "Перевести", action: {}),
-                                      info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими"))
+                paymentsAmount: .init(
+                    title: "Сумма перевода",
+                    textField: .init(0, currencySymbol: "₽"),
+                    transferButton: .active(title: "Перевести", action: {}),
+                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими")
+            )
         }
         .previewLayout(.sizeThatFits)
         .padding(.top)

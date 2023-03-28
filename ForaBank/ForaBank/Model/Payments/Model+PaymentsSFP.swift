@@ -26,7 +26,7 @@ extension Model {
             
             // bank
             let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
-            let bankParameter = Payments.ParameterSelect(.init(id: bankParameterId, value: nil), title: "Банк получателя", options: [], type: .banks)
+            let bankParameter = Payments.ParameterSelectBank(.init(id: bankParameterId, value: nil), icon: .iconPlaceholder, title: "Банк получателя", options: [], validator: .anyValue, limitator: nil, transferType: .sfp)
             
             // product
             let productParameterId = Payments.Parameter.Identifier.product.rawValue
@@ -236,7 +236,7 @@ extension Model {
             return Payments.ParameterInfo(
                 .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
                 icon: ImageData(named: "ic24Customer") ?? .parameterDocument,
-                title: adittionalData.fieldTitle, placement: .feed)
+                title: adittionalData.fieldTitle ?? "", placement: .feed) //FIXME: fix unwrap optional title
             
         case Payments.Parameter.Identifier.sfpAmount.rawValue:
             guard let amountStringValue = adittionalData.fieldValue,
@@ -248,13 +248,13 @@ extension Model {
             return Payments.ParameterInfo(
                 .init(id: adittionalData.fieldName, value: amountFormatted),
                 icon: ImageData(named: "ic24Coins") ?? .parameterDocument,
-                title: adittionalData.fieldTitle, placement: .feed)
+                title: adittionalData.fieldTitle ?? "", placement: .feed) //FIXME: fix unwrap optional title
             
         case Payments.Parameter.Identifier.sfpAntifraud.rawValue:
             return Payments.ParameterInfo(
                 .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
                 icon: .parameterDocument,
-                title: adittionalData.fieldTitle, placement: .feed)
+                title: adittionalData.fieldTitle ?? "", placement: .feed) //FIXME: fix unwrap optional title
 
         default:
             return nil

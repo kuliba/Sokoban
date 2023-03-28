@@ -106,14 +106,14 @@ extension Model {
                 let result = try await serverAgent.executeCommand(command: command)
                 
                 //FIXME: update after the Payments.Success is refactored into dynamic parameters list
-                return .init(operationDetailId: 0, status: .complete, productId: productId, amount: 0, service: .c2b, c2bSubscribtion: result)
+                return .init(operationDetailId: 0, status: .complete, productId: productId, amount: 0, service: .c2b, serviceData: .c2bSubscriptionData(result))
                 
             case let account as ProductAccountData:
                 let command = ServerCommands.SubscriptionController.ConfirmC2BSubscription(token: token, payload: .init(qrcId: qrcIdParamValue, cardId: nil, accountId: String(account.id)))
                 let result = try await serverAgent.executeCommand(command: command)
                 
                 //FIXME: update after the Payments.Success is refactored into dynamic parameters list
-                return .init(operationDetailId: 0, status: .complete, productId: productId, amount: 0, service: .c2b, c2bSubscribtion: result)
+                return .init(operationDetailId: 0, status: .complete, productId: productId, amount: 0, service: .c2b, serviceData: .c2bSubscriptionData(result))
                 
             default:
                 throw Payments.Error.unexpectedProductType(product.productType)
@@ -124,7 +124,7 @@ extension Model {
             let result = try await serverAgent.executeCommand(command: command)
             
             //FIXME: update after the Payments.Success is refactored into dynamic parameters list
-            return .init(operationDetailId: 0, status: .complete, productId: 0, amount: 0, service: .c2b, c2bSubscribtion: result)
+            return .init(operationDetailId: 0, status: .complete, productId: 0, amount: 0, service: .c2b, serviceData: .c2bSubscriptionData(result))
         }
     }
     

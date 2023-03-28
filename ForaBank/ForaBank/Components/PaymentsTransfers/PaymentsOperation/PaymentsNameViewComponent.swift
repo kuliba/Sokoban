@@ -22,7 +22,7 @@ extension PaymentsNameView {
         var fullName: String? { return Self.nameReduce(personViewModel: person) }
         var fullNameViewModel: FullNameViewModel {
             
-            .init(title: title, value: fullName ?? "", button: .init(icon: .ic24PlusSquares, action: buttonAction))
+            .init(title: title, value: fullName ?? "", button: .init(icon: .ic24ChevronDown, action: buttonAction))
         }
         
         override var isValid: Bool {
@@ -55,9 +55,9 @@ extension PaymentsNameView {
                 firstName: .init(name: parameterName.firstName),
                 middleName: .init(name: parameterName.middleName))
             
-            self.init(icon: .ic24Customer, title: parameterName.title, person: person, isExpanded: false, source: parameterName)
+            self.init(icon: .ic24User, title: parameterName.title, person: person, isExpanded: false, source: parameterName)
             
-            person.lastName.button = .init(icon: .ic24MinusSquares, action: buttonAction)
+            person.lastName.button = .init(icon: .ic24ChevronRight, action: buttonAction)
             
             bind()
         }
@@ -342,10 +342,10 @@ struct PaymentsNameView: View {
                     .resizable()
                     .frame(width: 24, height: 24)
                     .padding(.leading, 4)
-                    .padding(.top, 24)
+                    .padding(.top, viewModel.isExpanded ? 30: 12)
                     .foregroundColor(Color.mainColorsGray)
                 
-                VStack(alignment: .leading, spacing: 24)  {
+                VStack(alignment: .leading, spacing: 0)  {
                     
                     if viewModel.isExpanded == false {
                         
@@ -354,27 +354,43 @@ struct PaymentsNameView: View {
                     } else {
                         
                         FieldView(viewModel: viewModel.person.lastName)
+                            .frame(minHeight: 72)
+                        
+                        Divider()
+                            .frame(height: 1)
+                            .foregroundColor(.mainColorsGrayMedium)
+                            .opacity(0.5)
                             
                         FieldView(viewModel: viewModel.person.firstName)
+                            .frame(minHeight: 72)
+                        
+                        Divider()
+                            .frame(height: 1)
+                            .foregroundColor(.mainColorsGrayMedium)
+                            .opacity(0.5)
                             
                         FieldView(viewModel: viewModel.person.middleName)
+                            .frame(minHeight: 72)
                     }
                 }
             }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 13)
             
         } else {
             
-            HStack(alignment: .top, spacing: 18) {
+            HStack(spacing: 18) {
                 
                 viewModel.icon
                     .resizable()
                     .frame(width: 24, height: 24)
                     .padding(.leading, 4)
-                    .padding(.top, 24)
                     .foregroundColor(Color.mainColorsGray)
                 
                 FullNameView(viewModel: viewModel.fullNameViewModel, isUserInterractionEnabled: false)
             }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 13)
         }
     }
 }
@@ -420,12 +436,6 @@ extension PaymentsNameView {
                         }
                     }
                 }
-                
-                Divider()
-                    .frame(height: 1)
-                    .background(Color.bordersDivider)
-                    .opacity(isUserInterractionEnabled ? 1.0 : 0.2)
-                    .padding(.top, 12)
             }
             .onTapGesture {
                 
@@ -440,7 +450,7 @@ extension PaymentsNameView {
     struct FieldView: View {
         
         @ObservedObject var viewModel: PaymentsNameView.ViewModel.NameViewModel
-        
+
         var body: some View {
             
             VStack(alignment: .leading, spacing: 0) {
@@ -474,27 +484,12 @@ extension PaymentsNameView {
                         }
                     }
                 }
- 
+
                 if let warning = viewModel.warning {
                     
-                    VStack(alignment: .leading, spacing: 8) {
-                        
-                        Divider()
-                            .frame(height: 1)
-                            .background(Color.systemColorError)
-                        
-                        Text(warning)
-                            .font(.textBodySR12160())
-                            .foregroundColor(.systemColorError)
-                        
-                    }.padding(.top, 12)
-                    
-                } else {
-                    
-                    Divider()
-                        .frame(height: 1)
-                        .background(Color.bordersDivider)
-                        .padding(.top, 12)
+                    Text(warning)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.systemColorError)
                 }
             }
         }
@@ -509,17 +504,17 @@ struct PaymentsNameView_Previews: PreviewProvider {
        
         Group {
 
-            PaymentsNameView(viewModel: .normal)
+            PaymentsGroupView(viewModel: PaymentsGroupViewModel(items: [PaymentsNameView.ViewModel.normal]))
+                .previewLayout(.fixed(width: 375, height: 100))
+            
+            PaymentsGroupView(viewModel: PaymentsGroupViewModel(items: [PaymentsNameView.ViewModel.normalNotEditable]))
                 .previewLayout(.fixed(width: 375, height: 100))
 
-            PaymentsNameView(viewModel: .normalNotEditable)
-                .previewLayout(.fixed(width: 375, height: 100))
+            PaymentsGroupView(viewModel: PaymentsGroupViewModel(items: [PaymentsNameView.ViewModel.edit]))
+                .previewLayout(.fixed(width: 375, height: 320))
 
-            PaymentsNameView(viewModel: .edit)
-                .previewLayout(.fixed(width: 375, height: 300))
-
-            PaymentsNameView(viewModel: .editPart)
-                .previewLayout(.fixed(width: 375, height: 300))
+            PaymentsGroupView(viewModel: PaymentsGroupViewModel(items: [PaymentsNameView.ViewModel.editPart]))
+                .previewLayout(.fixed(width: 375, height: 320))
         }
     }
 }
@@ -545,10 +540,11 @@ extension PaymentsNameView.ViewModel {
 
     static let editPart: PaymentsNameView.ViewModel = {
 
-        var viewModel = PaymentsNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Напу Амо Хала Она Она Анека Вехи Вехи Она Хивеа Нена Вава", validator: .baseName, limitator: .init(limit: 158)), firstName: .init(title: "Имя", value: nil, validator: .baseName, limitator: .init(limit: 158)), middleName: .init(title: "Отчество", value: nil, validator: .anyValue, limitator: .init(limit: 158))))
+        var viewModel = PaymentsNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Напу Амо Хала Она Она Анека Вехи Вехи Она Хивеа Нена Вава", validator: .baseName, limitator: .init(limit: 158)), firstName: .init(title: "Имя", value: nil, validator: .baseName, limitator: .init(limit: 158)), middleName: .init(title: "Отчество", value: nil, validator: .baseName, limitator: .init(limit: 158))))
 
         viewModel.isExpanded = true
         viewModel.person.firstName.warning = "Поле не может быть пустым."
+        viewModel.person.middleName.warning = "Поле не может быть пустым."
 
         return viewModel
     }()

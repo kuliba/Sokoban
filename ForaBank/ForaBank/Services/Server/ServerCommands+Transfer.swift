@@ -93,7 +93,7 @@ extension ServerCommands {
                 struct CheckCardResponseData: Codable, Equatable {
                     
                     let check: Bool
-                    let payeeCurrency: String
+                    let payeeCurrency: String?
                 }
             }
             

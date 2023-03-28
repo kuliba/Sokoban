@@ -27,7 +27,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let anywayOperatorGroupData = ServerCommands.DictionaryController.GetAnywayOperatorsList.Response.AnywayOperatorGroupData(operatorGroupList: [.init(city: "Москва", code: "iFora||1011001", isGroup: true, logotypeList: [.init(content: "string", contentType: "string", name: "Лого Газпром.png", svgImage: SVGImageData(description: "string"))], name: "Мобильная связь", operators: [.init(city: "Москва", code: "iFora||4285", isGroup: false, logotypeList: [.init(content: "string", contentType: "string", name: "Лого Газпром.png", svgImage: SVGImageData(description: "string"))], name: "Билайн", parameterList: [.init(content: "account", dataType: "%String", id: "a3_NUMBER_1_2", isPrint: false, isRequired: true, mask: "+7(___)-___-__-__", maxLength: 10, minLength: 0, order: 2, rawLength: 0, readOnly: false, regExp: "^\\d{10}$", subTitle: "Пример: 9051111111", title: "Номер телефона +7", type: "Input", svgImage: SVGImageData(description: "string"), viewType: .input)], parentCode: "iFora||1011001", region: "Пермский край", synonymList: ["string"])], region: "Пермский край", synonymList: ["string"])], serial: "bea36075a58954199a6b8980549f6b69")
+        let anywayOperatorGroupData = ServerCommands.DictionaryController.GetAnywayOperatorsList.Response.AnywayOperatorGroupData(operatorGroupList: [.init(city: "Москва", code: "iFora||1011001", isGroup: true, logotypeList: [.init(content: "string", contentType: "string", name: "Лого Газпром.png", svgImage: SVGImageData(description: "string"))], name: "Мобильная связь", operators: [.init(city: "Москва", code: "iFora||4285", isGroup: false, logotypeList: [.init(content: "string", contentType: "string", name: "Лого Газпром.png", svgImage: SVGImageData(description: "string"))], name: "Билайн", parameterList: [.init(content: "account", dataType: "%String", id: "a3_NUMBER_1_2", isPrint: false, isRequired: true, mask: "+7(___)-___-__-__", maxLength: 10, minLength: 0, order: 2, rawLength: 0, readOnly: false, regExp: "^\\d{10}$", subTitle: "Пример: 9051111111", title: "Номер телефона +7", type: "Input", inputFieldType: nil, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: SVGImageData(description: "string"), viewType: .input)], parentCode: "iFora||1011001", region: "Пермский край", synonymList: ["string"])], region: "Пермский край", synonymList: ["string"])], serial: "bea36075a58954199a6b8980549f6b69")
         
         let expected = ServerCommands.DictionaryController.GetAnywayOperatorsList.Response(statusCode: .ok, errorMessage: "string", data: anywayOperatorGroupData)
         
@@ -47,7 +47,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let anywayOperatorGroupData = ServerCommands.DictionaryController.GetAnywayOperatorsList.Response.AnywayOperatorGroupData(operatorGroupList: [.init(city: nil, code: "iFora||1011001", isGroup: true, logotypeList: [.init(content: "string", contentType: "string", name: "Лого Газпром.png", svgImage: SVGImageData(description: "string"))], name: "Мобильная связь", operators: [.init(city: nil,code: "iFora||4285", isGroup: false, logotypeList: [.init(content: "string", contentType: "string", name: "Лого Газпром.png", svgImage: SVGImageData(description: "string"))], name: "Билайн", parameterList: [.init(content: nil, dataType: "%String", id: "a3_NUMBER_1_2", isPrint: nil, isRequired: true, mask: "+7(___)-___-__-__", maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: false, regExp: "^\\d{10}$", subTitle: nil, title: "Номер телефона +7", type: "Input", svgImage: nil, viewType: .input)], parentCode: "iFora||1011001", region: nil, synonymList: ["string"])], region: nil, synonymList: ["string"])], serial: "bea36075a58954199a6b8980549f6b69")
+        let anywayOperatorGroupData = ServerCommands.DictionaryController.GetAnywayOperatorsList.Response.AnywayOperatorGroupData(operatorGroupList: [.init(city: nil, code: "iFora||1011001", isGroup: true, logotypeList: [.init(content: "string", contentType: "string", name: "Лого Газпром.png", svgImage: SVGImageData(description: "string"))], name: "Мобильная связь", operators: [.init(city: nil,code: "iFora||4285", isGroup: false, logotypeList: [.init(content: "string", contentType: "string", name: "Лого Газпром.png", svgImage: SVGImageData(description: "string"))], name: "Билайн", parameterList: [.init(content: nil, dataType: "%String", id: "a3_NUMBER_1_2", isPrint: nil, isRequired: true, mask: "+7(___)-___-__-__", maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: false, regExp: "^\\d{10}$", subTitle: nil, title: "Номер телефона +7", type: "Input", inputFieldType: nil, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: nil, viewType: .input)], parentCode: "iFora||1011001", region: nil, synonymList: ["string"])], region: nil, synonymList: ["string"])], serial: "bea36075a58954199a6b8980549f6b69")
 
         let expected = ServerCommands.DictionaryController.GetAnywayOperatorsList.Response(statusCode: .ok, errorMessage: "string", data: anywayOperatorGroupData)
         
@@ -169,7 +169,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.DictionaryController.GetCountries.Response(statusCode: .ok, errorMessage: "string", data: .init(countriesList: [.init(code: "AM", contactCode: "BTOC", md5hash: "string", name: "АРМЕНИЯ", paymentSystemIdList: ["string"], sendCurr: "EUR;USD;RUR;", svgImage: SVGImageData(description: "string"))], serial: "bea36075a58954199a6b8980549f6b69"))
+        let expected = ServerCommands.DictionaryController.GetCountries.Response(statusCode: .ok, errorMessage: "string", data: .init(countriesList: [.init(code: "AM", contactCode: "BTOC", md5hash: "string", name: "АРМЕНИЯ", paymentSystemIdList: [.direct], sendCurr: "EUR;USD;RUR;", svgImage: SVGImageData(description: "string"))], serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetCountries.Response.self, from: json)
@@ -186,7 +186,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
             return
         }
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.DictionaryController.GetCountries.Response(statusCode: .ok, errorMessage: "string", data: .init(countriesList: [.init(code: "AM", contactCode: nil, md5hash: nil, name: "АРМЕНИЯ", paymentSystemIdList: ["string"], sendCurr: "EUR;USD;RUR;", svgImage: nil)], serial: "bea36075a58954199a6b8980549f6b69"))
+        let expected = ServerCommands.DictionaryController.GetCountries.Response(statusCode: .ok, errorMessage: "string", data: .init(countriesList: [.init(code: "AM", contactCode: nil, md5hash: nil, name: "АРМЕНИЯ", paymentSystemIdList: [.direct], sendCurr: "EUR;USD;RUR;", svgImage: nil)], serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetCountries.Response.self, from: json)
@@ -818,6 +818,54 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(command.parameters?[0].name, "image")
         
         XCTAssertEqual(command.parameters?[0].value, "Ic128Icon")
+    }
+    
+    func testGetCountriesWithService_Response_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetCountriesWithServiceResponseGenericFromServer", withExtension: "json") else {
+            XCTFail("testGetCountriesWithService_Response_Decoding : Missing file: GetCountriesWithServiceResponseGenericFromServer.json")
+            return
+        }
+        
+        let json = try Data(contentsOf: url)
+
+        let expected = ServerCommands.DictionaryController.GetCountriesWithServices.Response(statusCode: .ok, errorMessage: "string", data: .init(serial: "7758dc72bcafaf1a2d471493cc8df93b", list: [
+            .init(code: "AB", contactCode: "AGSG", name: "АБХАЗИЯ", sendCurr: "EUR;USD;RUR;", md5hash: "873ae820e558f131084e80df69d6efad", servicesList: [.init(code: .contact, isDefault: true)]),
+            .init(code: "AZ", contactCode: "AUJB", name: "АЗЕРБАЙДЖАН", sendCurr: "EUR;AZN;USD;RUR;", md5hash: "3d35ab0a583e052f1157b1e703bda356", servicesList: [.init(code: .contact, isDefault: true)]),
+            .init(code: "AL", contactCode: "TBYX", name: "АЛБАНИЯ", sendCurr: "EUR;", md5hash: "a1feeead31c90c41d6f6b7fd62023009", servicesList: [.init(code: .contact, isDefault: true)]),
+            .init(code: "AM", contactCode: "BTOC", name: "АРМЕНИЯ", sendCurr: "EUR;USD;RUR;", md5hash: "824df2043628ef1ad8e56c397115a027", servicesList: [.init(code: .direct, isDefault: true), .init(code: .contact, isDefault: false), .init(code: .directCard, isDefault: false)])]))
+        
+        // when
+        let result = try decoder.decode(ServerCommands.DictionaryController.GetCountriesWithServices.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    func testGetDictionaryAnywayOperators_Response_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetDictionaryAnywayOperatorsResponseGenericFromServer", withExtension: "json") else {
+            XCTFail("testGetDictionaryAnywayOperators_Response_Decoding : Missing file: GetDictionaryAnywayOperatorsResponseGenericFromServer.json")
+            return
+        }
+        
+        let json = try Data(contentsOf: url)
+
+        let expected = ServerCommands.DictionaryController.GetDictionaryAnywayOperators.Response.init(statusCode: .ok, errorMessage: "string", data: .init(list: [
+            .init(code: "BANK_MIG", codeUI: "CAROUSEL", dictionaryList: [
+                .init(id: "iFora||TransferEvocaClient12", name: "ЭвокаБанк", subname: nil, timeWork: nil, codeValut: nil, codeParent: "AM", md5hash: "1498e6b4a776464eb4e7fd845c221f06"),
+                .init(id: "iFora||TransferArdshinClient12", name: "Ардшинбанк", subname: nil, timeWork: nil, codeValut: nil, codeParent: "AM", md5hash: "d5861f90100c97706a6952e0dca2e0c2"),
+                .init(id: "iFora||TransferIDClientP", name: "АйДиБанк", subname: nil, timeWork: nil, codeValut: nil, codeParent: "AM", md5hash: "21b6a406c583929effd620f8853c1a39"),
+                .init(id: "iFora||TransferAraratClient12", name: "АраратБанк", subname: nil, timeWork: nil, codeValut: nil, codeParent: "AM", md5hash: "27540fc63bd4e0e91165e4af3934f95b"),
+                .init(id: "iFora||TransferArmBBClientP", name: "АрмББ", subname: nil, timeWork: nil, codeValut: nil, codeParent: "AM", md5hash: "a9571b421f9a680cc42564240b4b63e9")])]))
+            
+        // when
+        let result = try decoder.decode(ServerCommands.DictionaryController.GetDictionaryAnywayOperators.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
     }
 }
     
