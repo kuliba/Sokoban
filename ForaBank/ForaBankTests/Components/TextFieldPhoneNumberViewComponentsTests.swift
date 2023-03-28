@@ -12,7 +12,7 @@ class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
     
     let phonePhormatter = PhoneNumberKitFormater()
     let filterSymbols: [Character] = [.init("-"), .init("("), .init(")"), .init("+")]
-    let phoneNumberFirstDigitReplaceList: [TextFieldPhoneNumberView.ViewModel.Replace] = [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")]
+    let phoneNumberFirstDigitReplaceList: [TextViewPhoneNumberView.ViewModel.Replace] = [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")]
     
     func testUpdateFormatted_EnterFirstDigit() throws {
         
@@ -22,7 +22,7 @@ class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
 
         // when
-        let updatedString = TextFieldPhoneNumberView.updateMasked(value: value, inRange: range, update: update, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: phonePhormatter, filterSymbols: filterSymbols)
+        let updatedString = TextViewPhoneNumberView.updateMasked(value: value, inRange: range, update: update, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: phonePhormatter, filterSymbols: filterSymbols)
         
         // then
         XCTAssertEqual(updatedString, "+7")
@@ -36,10 +36,10 @@ class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
 
         // when
-        let updatedString = TextFieldPhoneNumberView.updateMasked(value: value, inRange: range, update: update, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: phonePhormatter, filterSymbols: filterSymbols)
+        let updatedString = TextViewPhoneNumberView.updateMasked(value: value, inRange: range, update: update, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: phonePhormatter, filterSymbols: filterSymbols)
         
         // then
-        XCTAssertEqual(updatedString, "п")
+        XCTAssertEqual(updatedString, "")
     }
     
     func testUpdateFormatted_RemoveSymbol() throws {
@@ -50,10 +50,10 @@ class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 1, length: 1)
 
         // when
-        let updatedString = TextFieldPhoneNumberView.updateMasked(value: value, inRange: range, update: update, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: phonePhormatter, filterSymbols: filterSymbols)
+        let updatedString = TextViewPhoneNumberView.updateMasked(value: value, inRange: range, update: update, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: phonePhormatter, filterSymbols: filterSymbols)
         
         // then
-        XCTAssertEqual(updatedString, "+")
+        XCTAssertEqual(updatedString, "+7")
     }
     
     func testUpdateFormatted_ReplaceDigit() throws {
@@ -64,7 +64,7 @@ class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
 
         // when
-        let updatedString = TextFieldPhoneNumberView.updateMasked(value: value, inRange: range, update: update, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: phonePhormatter, filterSymbols: filterSymbols)
+        let updatedString = TextViewPhoneNumberView.updateMasked(value: value, inRange: range, update: update, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: phonePhormatter, filterSymbols: filterSymbols)
         
         // then
         XCTAssertEqual(updatedString, "+7")
@@ -78,7 +78,7 @@ class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
 
         // when
-        let updatedString = TextFieldPhoneNumberView.updateMasked(value: value, inRange: range, update: update, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: phonePhormatter, filterSymbols: filterSymbols)
+        let updatedString = TextViewPhoneNumberView.updateMasked(value: value, inRange: range, update: update, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: phonePhormatter, filterSymbols: filterSymbols)
         
         // then
         XCTAssertEqual(updatedString, "+7 925 279-86-13")
@@ -92,9 +92,9 @@ class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 6, length: 0)
         
         // when
-        let updatedString = TextFieldPhoneNumberView.updateMasked(value: value, inRange: range, update: update, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: phonePhormatter, filterSymbols: filterSymbols)
+        let updatedString = TextViewPhoneNumberView.updateMasked(value: value, inRange: range, update: update, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: phonePhormatter, filterSymbols: filterSymbols)
         
-        XCTAssertEqual(updatedString, "+7 925a")
+        XCTAssertEqual(updatedString, "+7 925")
     }
     
     func testUpdateFormatted_PhoneNumberEntered() throws {
@@ -105,7 +105,7 @@ class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 6, length: 0)
         
         // when
-        let updatedString = TextFieldPhoneNumberView.updateMasked(value: value, inRange: range, update: update, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: phonePhormatter, filterSymbols: filterSymbols)
+        let updatedString = TextViewPhoneNumberView.updateMasked(value: value, inRange: range, update: update, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: phonePhormatter, filterSymbols: filterSymbols)
         
         XCTAssertEqual(updatedString, "+7 925-5")
     }

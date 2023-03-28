@@ -61,31 +61,35 @@ struct PaymentsSpoilerButtonView: View {
     
     var body: some View {
         
-        HStack(alignment: .center) {
+        ZStack {
             
-            Button {
+            RoundedRectangle(cornerRadius: 8)
+                .foregroundColor(.mainColorsWhite)
+                .frame(height: 44)
+            
+            HStack(alignment: .center) {
                 
-                viewModel.isSelected.toggle()
-                
-            } label: {
-                
-                HStack(spacing: 10) {
+                Button {
                     
-                    viewModel.icon
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .rotationEffect(viewModel.isSelected ? .degrees(0) : .degrees(180))
-
-                    Text(viewModel.title)
-                        .font(.textBodyMM14200())
-                        .foregroundColor(.textSecondary)
+                    viewModel.isSelected.toggle()
+                    
+                } label: {
+                    
+                    HStack(spacing: 10) {
+                        
+                        viewModel.icon
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .rotationEffect(viewModel.isSelected ? .degrees(0) : .degrees(180))
+                        
+                        Text(viewModel.title)
+                            .font(.textBodyMM14200())
+                            .foregroundColor(.textSecondary)
+                    }
                 }
             }
         }
         .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .background(Color.buttonSecondary)
-        .cornerRadius(8)
     }
 }
 
@@ -97,11 +101,27 @@ struct PaymentsButtonAdditionalView_Preview: PreviewProvider {
         
         Group {
             
-            PaymentsSpoilerButtonView(viewModel: .init(title: "Дополнительные данные", isSelected: false))
-                .previewLayout(.fixed(width: 375, height: 60))
             
-            PaymentsSpoilerButtonView(viewModel: .init(title: "Дополнительные данные", isSelected: true))
+            PaymentsSpoilerButtonView(viewModel: .sampleSelected)
                 .previewLayout(.fixed(width: 375, height: 60))
+                .previewDisplayName("Selected")
+            
+            PaymentsSpoilerButtonView(viewModel: .sampleNotSelected)
+                .previewLayout(.fixed(width: 375, height: 60))
+                .previewDisplayName("Selected")
+            
+            PaymentsSpoilerGroupView(viewModel: .init(items: [], isCollapsed: true))
+                .previewLayout(.fixed(width: 375, height: 90))
+                .previewDisplayName("Spoiler Group")
         }
     }
+}
+
+//MARK: - Preview Content
+
+extension PaymentsSpoilerButtonView.ViewModel {
+    
+    static let sampleSelected = PaymentsSpoilerButtonView.ViewModel(title: "Дополнительные данные", isSelected: true)
+    
+    static let sampleNotSelected = PaymentsSpoilerButtonView.ViewModel(title: "Дополнительные данные", isSelected: false)
 }

@@ -69,7 +69,7 @@ class MainViewModel: ObservableObject, Resetable {
             
             switch section {
             case let productsSection as MainSectionProductsView.ViewModel:
-                productsSection.action.send(MainSectionViewModelAction.Products.ScrollToFirstGroup())
+                productsSection.action.send(MainSectionViewModelAction.Products.ResetScroll())
             default:
                 continue
             }
@@ -311,20 +311,70 @@ class MainViewModel: ObservableObject, Resetable {
                                 
                             case let payload as BannerActionMigTransfer:
                                 
-                                let operatorsViewModel = OperatorsViewModel(mode: .general, closeAction: { [weak self] in
-                                    self?.action.send(MainViewModelAction.Close.Link())
-                                }, requisitsViewAction: {})
-                                
-                                self.link = .country(.init(country: payload.countryId, operatorsViewModel: operatorsViewModel, paymentType: .withOutAddress(withOutViewModel: .init(phoneNumber: nil))))
+                                Task {
+                                    
+                                    do {
+                                        
+                                        let paymentsViewModel = try await PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
+                                            
+                                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                            
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
+                                                
+                                                self?.openCountries()
+                                            }
+                                        }
+                                        
+                                        await MainActor.run {
+
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                                
+                                                self.link = .init(.payments(paymentsViewModel))
+                                            }
+                                        }
+                                        
+                                    } catch {
+                                        
+                                        await MainActor.run {
+                                            
+                                            self.alert = .init(title: "Error", message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения.", primary: .init(type: .cancel, title: "Ok", action: {}))
+                                        }
+                                    }
+                                }
                                 
                             case let payload as BannerActionContactTransfer:
                                 
-                                let operatorsViewModel = OperatorsViewModel(mode: .general, closeAction: { [weak self] in
-                                    self?.action.send(MainViewModelAction.Close.Link())
-                                }, requisitsViewAction: {})
+                                Task {
+                                    
+                                    do {
+                                        
+                                        let paymentsViewModel = try await PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
+                                            
+                                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                            
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
+                                                
+                                                self?.openCountries()
+                                            }
+                                        }
+                                        
+                                        await MainActor.run {
+
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                                
+                                                self.link = .init(.payments(paymentsViewModel))
+                                            }
+                                        }
+                                        
+                                    } catch {
+                                        
+                                        await MainActor.run {
+                                            
+                                            self.alert = .init(title: "Error", message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения.", primary: .init(type: .cancel, title: "Ok", action: {}))
+                                        }
+                                    }
+                                }
                                 
-                                self.link = .country(.init(country: payload.countryId, operatorsViewModel: operatorsViewModel, paymentType: .turkeyWithOutAddress(turkeyWithOutAddress: .init(firstName: "", middleName: "", surName: "", phoneNumber: ""))))
-                           
                             default: break
                             }
                         default:
@@ -754,30 +804,19 @@ class MainViewModel: ObservableObject, Resetable {
                     self.action.send(MainViewModelAction.Close.Sheet())
                     
                     switch payload.source {
-                    case let .direct(phone: phone, bankId: bankId, countryId: countryId):
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [self] in
-                            
-                            guard let country = self.model.countriesList.value.first(where: { $0.id == countryId }),
-                                  let bank = self.model.bankList.value.first(where: { $0.id == bankId }) else {
-                                return
-                            }
-                            self.link = .init(.country(.init(phone: phone, country: country, bank: bank, operatorsViewModel: .init(mode: .general, closeAction: { [weak self] in
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, requisitsViewAction: {}))))
-                        }
-                        
-                    case let .abroad(phone: phone, countryId: countryId):
-
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                            
-                            guard let country = self.model.countriesList.value.first(where: { $0.id == countryId }) else {
-                                return
-                            }
-                            self.link = .init(.country(.init(phone: phone, country: country, bank: nil, operatorsViewModel: .init(mode: .general, closeAction: { [weak self] in
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, requisitsViewAction: {}))))
-                        }
+                    case let .direct(phone: phone, countryId: countryId):
+                        //TODO: setup source bankId
+                        break
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [self] in
+//
+//                            guard let country = self.model.countriesList.value.first(where: { $0.id == countryId }),
+//                                  let bank = self.model.bankList.value.first(where: { $0.id == bankId }), let phone = phone else {
+//                                return
+//                            }
+//                            self.link = .init(.country(.init(phone: phone, country: country, bank: bank, operatorsViewModel: .init(mode: .general, closeAction: { [weak self] in
+//                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+//                            }, requisitsViewAction: {}))))
+//                        }
                         
                     case let .latestPayment(latestPaymentId):
                         guard let latestPayment = model.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData else {
@@ -894,6 +933,12 @@ class MainViewModel: ObservableObject, Resetable {
         bind(contactsViewModel)
     }
     
+    private func openCountries() {
+        
+        let contactsViewModel = ContactsViewModel(model, mode: .abroad)
+        sheet = .init(type: .byPhone(contactsViewModel))
+        bind(contactsViewModel)
+    }
 }
 
 extension MainViewModel {

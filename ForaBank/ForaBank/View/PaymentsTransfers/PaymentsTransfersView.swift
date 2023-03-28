@@ -56,13 +56,6 @@ struct PaymentsTransfersView: View {
                             .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
-                    case .chooseCountry(let model):
-                        ChooseCountryView(viewModel: model)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
-                            .navigationBarHidden(true)
-                            .edgesIgnoringSafeArea(.all)
-                        
                     case let .country(countryData):
                         CountryPaymentView(viewModel: countryData)
                             .navigationBarTitle("", displayMode: .inline)
@@ -71,9 +64,6 @@ struct PaymentsTransfersView: View {
                         
                     case let .payments(paymentsViewModel):
                         PaymentsView(viewModel: paymentsViewModel)
-                        
-                    case let .transferByRequisites(transferByRequisitesViewModel):
-                        PaymentsView(viewModel: transferByRequisitesViewModel)
                         
                     case let .phone(phoneData):
                         PaymentPhoneView(viewModel: phoneData)
@@ -169,6 +159,9 @@ struct PaymentsTransfersView: View {
                         
                     case .fastPayment(let viewModel):
                         ContactsView(viewModel: viewModel)
+                        
+                    case .country(let viewModel):
+                        ContactsView(viewModel: viewModel)
                     }
                 })
             
@@ -220,13 +213,6 @@ struct PaymentsTransfersView: View {
                     }.transaction { transaction in
                         transaction.disablesAnimations = false
                     }
-                
-            case .anotherCard(let model):
-                AnotherCardView(viewModel: model)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .navigationBarTitle("", displayMode: .inline)
-                    .frame(height: 494)
-                
             }
         }
         .alert(item: $viewModel.alert, content: { alertViewModel in

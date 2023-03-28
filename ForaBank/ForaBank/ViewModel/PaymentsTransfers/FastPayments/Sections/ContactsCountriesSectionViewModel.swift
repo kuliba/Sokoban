@@ -31,10 +31,40 @@ class ContactsCountriesSectionViewModel: ContactsSectionCollapsableViewModel {
         
         Task.detached(priority: .userInitiated) {
             
-            let countriesList = model.countriesList.value.filter({$0.paymentSystemIdList.contains({"DIRECT"}())})
-            self.items.value = Self.reduceCounry(countriesList: countriesList) { [weak self] country in
+            var countries: [CountryWithServiceData] = []
+            
+            switch mode {
+            case .fastPayment:
+                 countries = model.countriesListWithSevice.value.filter({$0.id == "AM"})
                 
-                { self?.action.send(ContactsSectionViewModelAction.Countries.ItemDidTapped(countryId: country.id)) }
+            case .select:
+                
+                countries = model.countriesListWithSevice.value
+            }
+            
+            let imageIds = countries.compactMap { $0.md5hash }
+            
+            let containsAll = imageIds.filter { id in
+                
+                if model.images.value.contains(where: {$0.key == id}) {
+                    
+                    return false
+                } else {
+                    
+                    return true
+                }
+            }
+            
+            if containsAll.isEmpty == false {
+                
+                self.model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: containsAll))
+            }
+            
+            self.items.value = Self.reduceCounryWithService(model: self.model, countriesList: countries) { [weak self] country in
+                
+                {
+                    self?.action.send(ContactsSectionViewModelAction.Countries.ItemDidTapped(source: .direct(phone: nil, countryId: country.id)))
+                }
             }
         }
     }
@@ -64,7 +94,37 @@ class ContactsCountriesSectionViewModel: ContactsSectionCollapsableViewModel {
                         visible = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .country), count: 8)
                     }
                 }
-
+                
+            }.store(in: &bindings)
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ModelAction.Dictionary.DownloadImages.Response:
+                    switch payload.result {
+                    case .success(_):
+                        
+                        var countryList: [ContactsCountryItemView.ViewModel] = []
+                        
+                        for country in self.model.countriesListWithSevice.value {
+                        
+                            let icon = self.model.images.value.first(where: {$0.key == country.md5hash})?.value
+                            countryList.append(.init(id: country.code, icon: icon, name: country.name.capitalized, action: {
+                                
+                                self.action.send(ContactsSectionViewModelAction.Countries.ItemDidTapped(source: .direct(phone: nil, countryId: country.id)))
+                            }))
+                        }
+                        
+                        self.items.value = countryList.sorted(by: {$0.name.lowercased() < $1.name.lowercased()}).sorted(by: {$0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending})
+                        
+                    case let .failure(error):
+                        print(error) //TODO: send error action
+                    }
+                default:
+                    break
+                }
             }.store(in: &bindings)
     }
 }
@@ -73,17 +133,24 @@ class ContactsCountriesSectionViewModel: ContactsSectionCollapsableViewModel {
 
 extension ContactsCountriesSectionViewModel {
     
-    static func reduceCounry(countriesList: [CountryData], action: @escaping (CountryData) -> () -> Void) -> [ContactsItemViewModel] {
+    static func reduceCounryWithService(model: Model, countriesList: [CountryWithServiceData], action: @escaping (CountryWithServiceData) -> () -> Void) -> [ContactsItemViewModel] {
+
+        var items: [ContactsCountryItemView.ViewModel] = []
         
-        countriesList
-            .map({ ContactsCountryItemView.ViewModel(id: $0.id, icon: $0.svgImage?.image, name: $0.name, action: action($0)) })
-            .sorted(by: {$0.name.lowercased() < $1.name.lowercased()})
-            .sorted(by: {$0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending})
+        for country in countriesList {
+            
+            let icon = model.images.value.first(where: {$0.key == country.md5hash})?.value
+            items.append(ContactsCountryItemView.ViewModel.init(id: country.id, icon: icon, name: country.name.capitalized, action: action(country)))
+        }
+        
+        let sortedItems = items.sorted(by: {$0.name.lowercased() < $1.name.lowercased()}).sorted(by: {$0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending})
+        
+        return sortedItems
     }
     
     static func reduce(items: [ContactsItemViewModel], filter: String?) -> [ContactsItemViewModel] {
         
-        guard let filter = filter else {
+        guard let filter = filter, filter != "" else {
             return items
         }
         
@@ -100,7 +167,7 @@ extension ContactsSectionViewModelAction {
     
         struct ItemDidTapped: Action {
             
-            let countryId: CountryData.ID
+            let source: Payments.Operation.Source
         }
     }
 }

@@ -13,15 +13,37 @@ extension Model {
         
         switch parameterData.id {
         case "a3_categorySelect_3_1":
-            guard let options = parameterData.options else {
+            guard let options = parameterData.options(style: .general) else {
                 throw Payments.Error.missingOptions(parameterData)
             }
-            return Payments.ParameterSelectSimple(
+            return Payments.ParameterSelect(
                 .init(id: parameterData.id, value: parameterData.value),
                 icon: parameterData.iconData ?? .parameterSample,
                 title: parameterData.title,
-                selectionTitle: "Выберете категорию",
-                options: options)
+                placeholder: "Начните ввод для поиска",
+                options: options.map({ .init(id: $0.id, name: $0.name, icon: nil)}))
+            
+        case "a3_INN_4_1", "a3_docValue_4_2":
+            let validator = Payments.Validation.RulesSystem(rules: [
+                Payments.Validation.LengthLimitsRule(lengthLimits: [10, 12], actions: [.post: .warning("Должен состоять из 10 или 12 цифр")])
+            ])
+            return Payments.ParameterInput(
+                .init(id: parameterData.id, value: parameterData.value),
+                icon: parameterData.iconData ?? .parameterDocument,
+                title: parameterData.title,
+                validator: validator,
+                inputType: .number)
+            
+        case "a3_OKTMO_5_1":
+            let validator = Payments.Validation.RulesSystem(rules: [
+                Payments.Validation.LengthLimitsRule(lengthLimits: [8, 11], actions: [.post: .warning("Должен состоять из 8 или 11 цифр")])
+            ])
+            return Payments.ParameterInput(
+                .init(id: parameterData.id, value: parameterData.value),
+                icon: parameterData.iconData ?? .parameterDocument,
+                title: parameterData.title,
+                validator: validator,
+                inputType: .number)
             
         case "a3_fio_1_2", "a3_fio_4_1":
             return Payments.ParameterName(id: parameterData.id, value: parameterData.value, title: parameterData.title)
@@ -33,15 +55,38 @@ extension Model {
                 title: "Адрес проживания")
             
         case "a3_docType_3_2", "a3_docName_1_1":
-            guard let options = parameterData.options else {
+            guard let options = parameterData.options(style: .general) else {
                 throw Payments.Error.missingOptions(parameterData)
             }
-            return Payments.ParameterSelectSimple(
+            return Payments.ParameterSelect(
                 Payments.Parameter(id: parameterData.id, value: parameterData.value),
                 icon: parameterData.iconData ?? .parameterSample,
                 title: parameterData.title,
-                selectionTitle: "Выберете тип документа",
-                options: options)
+                placeholder: "Начните ввод для поиска",
+                options: options.map({.init(id: $0.id, name: $0.name, icon: nil)}))
+            
+        case "a3_BillNumber_1_1":
+            let validator = Payments.Validation.RulesSystem(rules: [
+                Payments.Validation.LengthLimitsRule(lengthLimits: [20, 25], actions: [.post: .warning("Должен состоять из 20 или 25 цифр")])
+            ])
+            
+            return Payments.ParameterInput(
+                Payments.Parameter(id: parameterData.id, value: parameterData.value),
+                icon: .parameterDocument,
+                title: "УИН",
+                validator: validator,
+                inputType: .number)
+            
+        case "a3_IPnumber_1_1":
+            let validator = Payments.Validation.RulesSystem(rules: [
+                Payments.Validation.RegExpRule(regExp: "^[0-9]{1,7}[/][0-9]{2}[/][0-9]{2}[/][0-9]{2}$|^[0-9]{1,7}[/][0-9]{2}[/][0-9]{5}-ИП$", actions: [.post: .warning("Пример: 1108/10/41/33 или 107460/09/21014-И")])
+            ])
+            
+            return Payments.ParameterInput(
+                Payments.Parameter(id: parameterData.id, value: parameterData.value),
+                icon: .parameterDocument,
+                title: "Номер ИП",
+                validator: validator)
             
         default:
             return nil

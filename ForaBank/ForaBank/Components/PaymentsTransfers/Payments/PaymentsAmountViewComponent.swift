@@ -17,6 +17,7 @@ extension PaymentsAmountView {
         @Published var title: String
         let textField: TextFieldFormatableView.ViewModel
         @Published var currencySwitch: CurrencySwitchViewModel?
+        @Published var deliveryCurrency: DeliveryCurrencyViewModel?
         @Published var transferButton: TransferButtonViewModel
         @Published var info: InfoViewModel?
         @Published var alert: AlertViewModel?
@@ -24,21 +25,29 @@ extension PaymentsAmountView {
         private var actionTitle: String
         private let buttonAction: () -> Void
         
-        init(title: String, textField: TextFieldFormatableView.ViewModel, currencySwitch: CurrencySwitchViewModel? = nil, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil, alert: AlertViewModel? = nil, actionTitle: String = "", source: PaymentsParameterRepresentable = Payments.ParameterMock(), action: @escaping () -> Void = {}) {
+        init(title: String, textField: TextFieldFormatableView.ViewModel, currencySwitch: CurrencySwitchViewModel? = nil, deliveryCurrency: DeliveryCurrencyViewModel? = nil, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil, alert: AlertViewModel? = nil, actionTitle: String = "", source: PaymentsParameterRepresentable = Payments.ParameterMock(), action: @escaping () -> Void = {}) {
             
             self.title = title
             self.textField = textField
             self.transferButton = transferButton
             self.info = info
             self.currencySwitch = currencySwitch
+            self.deliveryCurrency = deliveryCurrency
             self.alert = alert
             self.actionTitle = actionTitle
             self.buttonAction = action
             
             super.init(source: source)
+            
+            LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsAmountView.ViewModel initialized")
         }
         
-        convenience init(with parameterAmount: Payments.ParameterAmount, actionTitle: String) {
+        deinit {
+            
+            LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsAmountView.ViewModel deinitialized")
+        }
+        
+        convenience init(with parameterAmount: Payments.ParameterAmount, model: Model) {
             
             self.init(title: parameterAmount.title, textField: .init(parameterAmount.amount, currencySymbol: parameterAmount.currencySymbol), transferButton: .inactive(title: parameterAmount.transferButtonTitle), actionTitle: parameterAmount.transferButtonTitle, source: parameterAmount)
             
@@ -48,6 +57,35 @@ extension PaymentsAmountView {
 
                     //TODO: implementation required
                     return {}
+                })
+            }
+            
+            if let deliveryCurrencyParams = parameterAmount.deliveryCurrency,
+               let currency = model.currencyList.value.first(where: {$0.code == deliveryCurrencyParams.selectedCurrency.description}),
+               let symbol = currency.currencySymbol {
+                
+                self.deliveryCurrency = .init(currency: symbol, action: { [weak self] in
+                    
+                    var items: [Option] = []
+                    if let currencyList = deliveryCurrencyParams.currenciesList {
+                     
+                        for currency in currencyList {
+                         
+                            let currency = model.currencyList.value.first(where: {$0.code == currency.description})
+                            items.append(.init(id: currency?.currencySymbol ?? "", name: currency?.name ?? ""))
+                        }
+                    }
+                    
+                    self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Show(viewModel: .init(title: "Выберите валюту выдачи", description: nil, options: items, action: { [weak self] currency in
+                        
+                        if let currency = model.currencyList.value.first(where: {$0.currencySymbol == currency.description}),
+                           let symbol = currency.currencySymbol {
+                            
+                            self?.deliveryCurrency?.currency = symbol
+                            self?.update(source: parameterAmount.updated(selectedCurrency: Currency(description: currency.code)))
+                            self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close())
+                        }
+                    })))
                 })
             }
             
@@ -189,6 +227,12 @@ extension PaymentsAmountView.ViewModel {
         }
     }
     
+    struct DeliveryCurrencyViewModel {
+        
+        var currency: String
+        let action: () -> Void
+    }
+    
     struct CurrencySwitchViewModel {
         
         let from: String
@@ -207,7 +251,7 @@ extension PaymentsAmountView.ViewModel {
 //MARK: - Action
 
 extension PaymentsParameterViewModelAction {
-
+    
     enum Amount {
     
         struct ContinueDidTapped: Action {}
@@ -249,6 +293,11 @@ struct PaymentsAmountView: View {
                             if let currencySwitchViewModel = viewModel.currencySwitch {
                                 
                                 CurrencySwitchView(viewModel: currencySwitchViewModel)
+                            }
+                            
+                            if let deliveryCurrency = viewModel.deliveryCurrency {
+                                
+                                DeliveryCurrency(viewModel: deliveryCurrency)
                             }
                         }
                         
@@ -374,6 +423,36 @@ struct PaymentsAmountView: View {
         }
     }
     
+    struct DeliveryCurrency: View {
+        
+        let viewModel: PaymentsAmountView.ViewModel.DeliveryCurrencyViewModel
+        
+        var body: some View {
+            
+            Button(action: { viewModel.action() }) {
+                
+                HStack(spacing: 0) {
+                    
+                    Text(viewModel.currency)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.textSecondary)
+                        .frame(width: 16, height: 16)
+                    
+                    Image.ic16ChevronDown
+                        .frame(width: 16, height: 16)
+                    
+                }
+                .padding(4)
+                .background(
+                    
+                    Capsule()
+                        .foregroundColor(.white)
+                )
+            }
+            
+        }
+    }
+    
     struct CurrencySwitchView: View {
         
         let viewModel: PaymentsAmountView.ViewModel.CurrencySwitchViewModel
@@ -480,7 +559,7 @@ extension PaymentsAmountView.ViewModel {
     static let amountParameter: PaymentsAmountView.ViewModel = {
         
         let parameter = Payments.ParameterAmount(value: "100", title: "Сумма перевода", currencySymbol: "₽", validator: .init(minAmount: 1, maxAmount: 1000))
-        let viewModel = PaymentsAmountView.ViewModel(with: parameter, actionTitle: "Перевести")
+        let viewModel = PaymentsAmountView.ViewModel(with: parameter, model: .emptyMock)
         
         viewModel.update(isContinueEnabled: true)
         

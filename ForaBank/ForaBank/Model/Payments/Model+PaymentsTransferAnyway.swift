@@ -78,13 +78,13 @@ extension Model {
 
 extension Model {
     
-    func paymentsTransferAnywayStepParameters(_ operation: Payments.Operation, response: TransferAnywayResponseData) throws -> [PaymentsParameterRepresentable] {
+    func paymentsTransferAnywayStepParameters(_ operation: Payments.Operation, response: TransferAnywayResponseData) async throws -> [PaymentsParameterRepresentable] {
         
         var result = [PaymentsParameterRepresentable]()
-        
+        let spoilerGroup = Payments.Parameter.Group(id: UUID().uuidString, type: .spoiler)
         for additionalData in response.additionalList {
             
-            guard let parameter = try paymentsParameterRepresentable(operation, adittionalData: additionalData) else {
+            guard let parameter = try paymentsParameterRepresentable(operation, adittionalData: additionalData, group: spoilerGroup) else {
                 
                 continue
             }
@@ -94,14 +94,10 @@ extension Model {
         
         for parameterData in response.parameterListForNextStep {
             
-            if let parameter = try paymentsParameterRepresentable(operation, parameterData: parameterData) {
+            if let parameter = try await paymentsParameterRepresentable(operation, parameterData: parameterData) {
                 
                 result.append(parameter)
                 
-            } else {
-                
-                let parameter = try paymentsParameterRepresentable(parameterData: parameterData)
-                result.append(parameter)
             }
         }
         
@@ -116,8 +112,31 @@ extension Model {
                 throw Payments.Error.missingParameter(productParameterId)
             }
             
-            let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 10, maxAmount: product.balance))
-            result.append(amountParameter)
+            if let currencies = response.parameterListForNextStep.first(where: {$0.id == Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue}) {
+                
+                let currencies = currencies.options(style: .currency)?.compactMap({$0.id}).joined(separator: "-")
+                let currency = currencies?.components(separatedBy: "-")
+
+                var currencyArr: [Currency] = []
+                if let currency = currency {
+                    
+                    for item in currency {
+                        
+                        currencyArr.append(Currency(description: item))
+                    }
+                }
+                
+                if let first = currencyArr.first {
+                    
+                    let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: first, currenciesList: currencyArr), validator: .init(minAmount: 10, maxAmount: product.balance))
+                    result.append(amountParameter)
+                }
+                
+            } else {
+                
+                let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 10, maxAmount: product.balance))
+                result.append(amountParameter)
+            }
         }
         
         if response.finalStep == true {
@@ -171,8 +190,8 @@ extension Model {
         }
     }
     
-    func paymentsTransferAnywayStepRequired(_ operation: Payments.Operation, visible: [Payments.Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable]) throws -> [Payments.Parameter.ID] {
+    func paymentsTransferAnywayStepRequired(_ operation: Payments.Operation, visible: [Payments.Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], restrictedParameters: [Payments.Parameter.ID]) throws -> [Payments.Parameter.ID] {
         
-        try paymentsTransferStepRequired(operation, visible: visible, nextStepParameters: nextStepParameters, operationParameters: operationParameters)
+        try paymentsTransferStepRequired(operation, visible: visible, nextStepParameters: nextStepParameters, operationParameters: operationParameters, restrictedParameters: restrictedParameters)
     }
 }

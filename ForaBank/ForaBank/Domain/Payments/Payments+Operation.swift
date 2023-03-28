@@ -199,7 +199,7 @@ extension Payments.Operation {
     /// Updates depended parameters. For example parameter `amount` or `currency` depends on parameter `product` value
     /// - Parameter reducer: optional returns updated parameter if it depends on other
     /// - Returns: updated operation
-    func updatedDepended(reducer: (Payments.Service, Parameter.ID, [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable?) -> Payments.Operation {
+    func updatedDepended(reducer: (Payments.Operation, Parameter.ID, [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable?) -> Payments.Operation {
         
         var updatedSteps = [Payments.Operation.Step]()
         
@@ -208,7 +208,7 @@ extension Payments.Operation {
             var updatedParameters = [PaymentsParameterRepresentable]()
             for parameter in step.parameters {
                 
-                if let updatedParameter = reducer(service, parameter.id, parameters) {
+                if let updatedParameter = reducer(self, parameter.id, parameters) {
                     
                     updatedParameters.append(updatedParameter)
                     
@@ -295,6 +295,21 @@ extension Payments.Operation {
         }
         
         return productParameter.productId
+    }
+    
+    var isConfirmCurrentStage: Bool {
+        
+        guard case let .remote(remote) = currentStage else {
+            
+            return false
+        }
+        
+        return remote == .confirm
+    }
+    
+    private var currentStage: Payments.Operation.Stage? {
+        
+        steps.last?.back.stage
     }
 }
 

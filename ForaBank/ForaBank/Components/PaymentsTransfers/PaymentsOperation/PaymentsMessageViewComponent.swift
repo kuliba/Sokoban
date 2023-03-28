@@ -81,7 +81,6 @@ struct PaymentsMessageView: View {
                 .frame(width: 44, height: 44)
             }
             .frame(minHeight: 56)
-            .background(Color.buttonBlack)
             
         } else {
             
@@ -110,7 +109,8 @@ struct PaymentsMessageView_Previews: PreviewProvider {
             
             PaymentsMessageView(viewModel: .sampleClosed)
                 .previewLayout(.fixed(width: 375, height: 70))
-        }
+            
+        }.background(Color.mainColorsBlack)
     }
 }
 

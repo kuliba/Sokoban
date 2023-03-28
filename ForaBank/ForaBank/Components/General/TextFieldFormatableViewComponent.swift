@@ -54,6 +54,13 @@ extension TextFieldFormatableView {
             self.toolbar = toolbar
             self.becomeFirstResponder = {}
             self.dismissKeyboard = {}
+            
+            LoggerAgent.shared.log(level: .debug, category: .ui, message: "TextFieldFormatableView.ViewModel initialized")
+        }
+        
+        deinit {
+            
+            LoggerAgent.shared.log(level: .debug, category: .ui, message: "TextFieldFormatableView.ViewModel deinitialized")
         }
         
         convenience init(_ value: Double, isEnabled: Bool = true, currencySymbol: String) {
@@ -84,10 +91,10 @@ struct TextFieldFormatableView: UIViewRepresentable {
     var textColor: Color = .white
     var tintColor: Color = .white
     var keyboardType: UIKeyboardType = .numberPad
-    
-    private let textField = UITextField()
-    
+        
     func makeUIView(context: Context) -> UITextField {
+    
+        let textField = UITextField()
         
         textField.delegate = context.coordinator
         textField.font = font
@@ -119,7 +126,7 @@ struct TextFieldFormatableView: UIViewRepresentable {
     
     class Coordinator: NSObject, UITextFieldDelegate {
         
-        @ObservedObject var viewModel: ViewModel
+        let viewModel: ViewModel
         
         init(viewModel: ViewModel) {
             
@@ -306,6 +313,7 @@ struct TextFieldFormatableView: UIViewRepresentable {
         }
     }
     
+    // FIXME: refactoring required
     private func makeToolbar(context: Context) -> UIToolbar? {
         
         let coordinator = context.coordinator
@@ -324,9 +332,9 @@ struct TextFieldFormatableView: UIViewRepresentable {
         
         toolbarViewModel.doneButton.$isEnabled
             .receive(on: DispatchQueue.main)
-            .sink { isEnabled in
+            .sink { [weak doneButton] isEnabled in
                 
-                doneButton.isEnabled = isEnabled
+                doneButton?.isEnabled = isEnabled
                 
             }.store(in: &viewModel.bindings)
         

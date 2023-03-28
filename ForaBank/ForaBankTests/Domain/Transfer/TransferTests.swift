@@ -32,6 +32,19 @@ class TransferTests: XCTestCase {
         //TODO: check all parameters
     }
     
+    func testDecodingServer_Generic() throws {
+        
+        // given
+        let url = bundle.url(forResource: "TransferAnywayDataServerGeneric", withExtension: "json")!
+        let json = try Data(contentsOf: url)
+        
+        // when
+        let result = try decoder.decode(TransferAnywayResponseData.self, from: json)
+        
+        // then
+        XCTAssertNotNil(result)
+    }
+    
     func testEncoding_Min() throws {
         
         // given

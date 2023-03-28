@@ -11,7 +11,9 @@ extension CountryData {
     
     func getCountriesList() -> CountriesList {
         
-        CountriesList(code: code, contactCode: contactCode, name: name, sendCurr: sendCurr, md5Hash: md5hash, svgImage: svgImage?.description, paymentSystemCodeList: paymentSystemIdList)
+        let paymentSystemIdList = paymentSystemIdList.map({$0.rawValue})
+        
+        return CountriesList(code: code, contactCode: contactCode, name: name, sendCurr: sendCurr, md5Hash: md5hash, svgImage: svgImage?.description, paymentSystemCodeList: paymentSystemIdList)
     }
     
 }

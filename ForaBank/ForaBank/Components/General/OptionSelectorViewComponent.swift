@@ -22,32 +22,67 @@ extension OptionSelectorView {
         let mode: Mode
 
         internal init(options: [Option], selected: Option.ID, style: Style, mode: Mode = .auto) {
-           
+            
             self.options = []
             self.selected = selected
             self.style = style
             self.mode = mode
             
-            self.options = options.map{ OptionViewModel(id: $0.id, title: $0.name, style: style, action: { [weak self] optionId in
-                
-                guard let self = self else { return }
-                
-                switch self.mode {
-                case .auto:
-                    self.selected = optionId
-                    
-                case .action:
-                    self.action.send(OptionSelectorAction.OptionDidSelected(optionId: optionId))
-                }
-            })}
+            typealias OptionDidSelected = OptionSelectorAction.OptionDidSelected
+            
+            self.options = options.map {
+                .init(
+                    id: $0.id,
+                    title: $0.name,
+                    style: style,
+                    action: { [weak self] optionId in
+                        
+                        guard let self = self else { return }
+                        
+                        switch self.mode {
+                        case .auto:
+                            self.selected = optionId
+                            
+                        case .action:
+                            self.selected = optionId
+                            self.action.send(OptionDidSelected(optionId: optionId))
+                        }
+                    }
+                )
+            }
         }
         
         func update(options: [Option], selected: Option.ID) {
             
-            self.options = options.map{ OptionViewModel(id: $0.id, title: $0.name, style: style, action: { [weak self] optionId in
-                self?.selected = optionId
-                self?.action.send(OptionSelectorAction.OptionDidSelected(optionId: optionId))
-            })}
+            typealias OptionDidSelected = OptionSelectorAction.OptionDidSelected
+            
+            self.options = options.map {
+                .init(
+                    id: $0.id,
+                    title: $0.name,
+                    style: style,
+                    action: { [weak self] optionId in
+    
+                        guard let self = self else { return }
+
+                        self.selected = optionId
+                        self.action.send(OptionDidSelected(optionId: optionId))
+                        
+                        /*
+                         guard let self = self else { return }
+                         
+                         switch self.mode {
+                         case .auto:
+                             self.selected = optionId
+                             
+                         case .action:
+                             self.selected = optionId
+                             self.action.send(OptionDidSelected(optionId: optionId))
+                         }
+                         */
+                    }
+                )
+            }
             self.selected = selected
         }
         
@@ -125,102 +160,42 @@ extension OptionSelectorView {
         
         var body: some View {
             
+            Button(
+                action: { viewModel.action(viewModel.id) },
+                label: label
+            )
+        }
+        
+        @ViewBuilder
+        private func label() -> some View {
+            
             switch viewModel.style {
             case .template:
-                Button {
-                    
-                    viewModel.action(viewModel.id)
-                    
-                } label: {
-                    
-                    if isSelected {
-                        
-                        Text(viewModel.title)
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(Capsule().foregroundColor(Color(hex: "#3D3D45")))
-                        
-                    } else {
-                        
-                        Text(viewModel.title)
-                            .foregroundColor(Color(hex: "#3D3D45"))
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(Capsule().foregroundColor(Color(hex: "#F6F6F7")))
-                    }
-                }
                 
-            case .products:
-                Button {
-                    
-                    viewModel.action(viewModel.id)
-                    
-                } label: {
-                    
-                    if isSelected {
-                        
-                        HStack(spacing: 4) {
-                            
-                            Circle()
-                                .frame(width: 4, height: 4, alignment: .center)
-                                .foregroundColor(.mainColorsRed)
-                            
-                            Text(viewModel.title)
-                                .foregroundColor(.textSecondary)
-                                .padding(.vertical, 6)
-                        }
-                        
-                    } else {
-                        
-                        HStack(spacing: 4) {
-
-                        Circle()
-                            .frame(width: 4, height: 4, alignment: .center)
-                            .foregroundColor(.mainColorsGrayLightest)
-                            
-                        Text(viewModel.title)
-                                .foregroundColor(.mainColorsGray)
-                            .padding(.vertical, 6)
-                        }
-                    }
-                }
+                let foregroundColor = isSelected ? .white : Color(hex: "#3D3D45")
+                let capsuleColor = Color(hex: isSelected ? "#3D3D45" : "#F6F6F7")
                 
-            case .productsSmall:
-                Button {
+                Text(viewModel.title)
+                    .foregroundColor(foregroundColor)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Capsule().foregroundColor(capsuleColor))
+                
+            case .products, .productsSmall:
+                
+                let circleColor = isSelected ? Color.mainColorsRed : .mainColorsGrayLightest
+                let textColor = isSelected ? Color.textSecondary : .textPlaceholder
+                
+                HStack(spacing: 4) {
                     
-                    viewModel.action(viewModel.id)
+                    Circle()
+                        .frame(width: 4, height: 4, alignment: .center)
+                        .foregroundColor(circleColor)
                     
-                } label: {
-                    
-                    if isSelected {
-                        
-                        HStack(spacing: 4) {
-                            
-                            Circle()
-                                .frame(width: 4, height: 4, alignment: .center)
-                                .foregroundColor(.mainColorsRed)
-                            
-                            Text(viewModel.title)
-                                .font(.textBodySM12160())
-                                .foregroundColor(.textSecondary)
-                                .padding(.vertical, 6)
-                        }
-                        
-                    } else {
-                        
-                        HStack(spacing: 4) {
-
-                        Circle()
-                            .frame(width: 4, height: 4, alignment: .center)
-                            .foregroundColor(.mainColorsGrayLightest)
-                            
-                        Text(viewModel.title)
-                                .font(.textBodySM12160())
-                                .foregroundColor(.textPlaceholder)
-                            .padding(.vertical, 6)
-                        }
-                    }
+                    Text(viewModel.title)
+                        .font(.textBodySM12160())
+                        .foregroundColor(textColor)
+                        .padding(.vertical, 6)
                 }
             }
         }
@@ -230,15 +205,29 @@ extension OptionSelectorView {
 //MARK: - Preview
 
 struct OptionSelectorView_Previews: PreviewProvider {
-    static var previews: some View {
+    
+    static func previewsGroup() -> some View {
+        
         Group {
             
             OptionSelectorView(viewModel: .sample)
-                .previewLayout(.fixed(width: 375, height: 40))
-            
+                .previewDisplayName("style: .template")
             OptionSelectorView(viewModel: .mainSample)
-                .previewLayout(.fixed(width: 375, height: 40))
+                .previewDisplayName("style: .products")
+            OptionSelectorView(viewModel: .mainSampleSmall)
+                .previewDisplayName("style: .productsSmall")
         }
+    }
+    
+    static var previews: some View {
+        
+        previewsGroup()
+            .previewLayout(.fixed(width: 375, height: 40))
+        
+        // Xcode 14
+        VStack(content: previewsGroup)
+            .previewLayout(.sizeThatFits)
+            .previewDisplayName("Xcode 14")
     }
 }
 
@@ -255,12 +244,26 @@ extension OptionSelectorView.ViewModel {
         .init(id: "additio", name: "Пополнение")
     ], selected: "all", style: .template)
     
-    static let mainSample = OptionSelectorView.ViewModel(options: [
+    static let mainSample = OptionSelectorView.ViewModel(
+        options: .mainOptions,
+        selected: "all",
+        style: .products
+    )
+    
+    static let mainSampleSmall = OptionSelectorView.ViewModel(
+        options: .mainOptions,
+        selected: "all",
+        style: .productsSmall
+    )
+}
+
+private extension Array where Element == Option {
+    
+    static let mainOptions: Self = [
         .init(id: "all", name: "Карты" ),
         .init(id: "add", name: "Счета"),
         .init(id: "addi", name: "Вклады"),
         .init(id: "addit", name: "Кредиты"),
         .init(id: "additi", name: "Страховка")
-    ], selected: "all", style: .products)
-    
+    ]
 }

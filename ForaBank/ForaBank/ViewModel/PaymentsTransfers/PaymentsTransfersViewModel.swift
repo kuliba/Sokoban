@@ -51,6 +51,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         
         bind()
         bindSections(sections)
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsTransfersViewModel initialized")
     }
     
     init(sections: [PaymentsTransfersSectionViewModel],
@@ -60,6 +62,13 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.sections = sections
         self.model = model
         self.navButtonsRight = navButtonsRight
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsTransfersViewModel initialized")
+    }
+    
+    deinit {
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsTransfersViewModel deinitialized")
     }
     
     func reset() {
@@ -138,7 +147,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                                 
-                                self.link = .transferByRequisites(operationViewModel)
+                                self.link = .payments(operationViewModel)
                             }
                         } catch {
                             
@@ -194,7 +203,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             return
                         }
                         
-                        model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
+                        model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList, .countriesWithService]))
                         
                         link = .currencyWallet(walletViewModel)
                         
@@ -204,24 +213,41 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         
                         switch payload.type {
                         case .abroad:
-                            
-                            let operatorsViewModel = OperatorsViewModel(mode: .general, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            })
-                            link = .chooseCountry(operatorsViewModel)
+                            self.openCountries()
                             
                         case .anotherCard:
-                            bottomSheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
-                            })))
+                            model.action.send(ModelAction.ProductTemplate.List.Request())
                             
+                            Task.detached(priority: .high) { [self] in
+                                
+                                do {
+                                    
+                                    let paymentsViewModel = try await PaymentsViewModel
+                                        .init(model,
+                                              service: .toAnotherCard,
+                                              closeAction: { [weak self] in
+                                                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                    })
+                                    
+                                    await MainActor.run {
+                                        
+                                        link = .init(.payments(paymentsViewModel))
+                                    }
+                                    
+                                } catch {
+                                    
+                                    //TODO: show alert?
+                                    LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for transfer by toAnotherCard category with error: \(error.localizedDescription) ")
+                                }
+                            }
+                    
                         case .betweenSelf:
                             
                             guard let viewModel = PaymentsMeToMeViewModel(model, mode: .demandDeposit) else {
                                 return
                             }
                             
-                            let swapViewModel = viewModel.swapViewModel
-                            bind(viewModel, swapViewModel: swapViewModel)
+                            bind(viewModel)
                             
                             bottomSheet = .init(type: .meToMe(viewModel))
                             
@@ -238,7 +264,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                     bind(paymentsViewModel)
                                     await MainActor.run {
                                         
-                                        link = .init(.transferByRequisites(paymentsViewModel))
+                                        link = .init(.payments(paymentsViewModel))
                                     }
                                     
                                 } catch {
@@ -257,8 +283,24 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         
                         switch payload.type {
                         case .mobile:
-                            link = .mobile(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }))
+
+                            Task { [weak self] in
+                                
+                                guard let self = self else { return }
+                                
+                                let paymentsViewModel = try await PaymentsViewModel(
+                                    model,
+                                    service: .mobileConnection,
+                                    closeAction: { [weak self] in
+                                        
+                                        self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                    })
+                                
+                                await MainActor.run { [weak self] in
+                                    
+                                    self?.link = .init(.payments(paymentsViewModel))
+                                }
+                            }
                             
                         case .qrPayment:
                             
@@ -411,29 +453,24 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                         case .taxAndStateService:
                             
-                            self.alert = .init(title: "Сервис временно не доступен", message: "Приносим извинения за доставленные неудобства", primary: .init(type: .default, title: "Ок", action: {}))
-                            
-                            //MARK: uncommited after debugging tax service
-                            /*
-                             Task.detached(priority: .high) { [self] in
-                             
-                             do {
-                             let paymentsViewModel = try await PaymentsViewModel(category: Payments.Category.taxes, model: model) { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                             }
-                             
-                             await MainActor.run {
-                             
-                             link = .init(.payments(paymentsViewModel))
-                             }
-                             
-                             } catch {
-                             
-                             //TODO: show alert?
-                             LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for  taxes category with error: \(error.localizedDescription) ")
-                             }
-                             }
-                             */
-                            
+                            Task.detached(priority: .high) { [self] in
+                                
+                                do {
+                                    let paymentsViewModel = try await PaymentsViewModel(category: Payments.Category.taxes, model: model) { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                    }
+                                    
+                                    await MainActor.run {
+                                        
+                                        link = .init(.payments(paymentsViewModel))
+                                    }
+                                    
+                                } catch {
+                                    
+                                    //TODO: show alert?
+                                    LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for  taxes category with error: \(error.localizedDescription) ")
+                                }
+                            }
+
                         case .socialAndGame: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                         case .security: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                         case .others: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
@@ -473,7 +510,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             }.store(in: &bindings)
     }
     
-    private func bind(_ viewModel: PaymentsMeToMeViewModel, swapViewModel: ProductsSwapView.ViewModel) {
+    private func bind(_ viewModel: PaymentsMeToMeViewModel) {
         
         viewModel.action
             .receive(on: DispatchQueue.main)
@@ -482,8 +519,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 switch action {
                 case let payload as PaymentsMeToMeAction.Response.Success:
                     
-                    guard let productIdFrom = swapViewModel.productIdFrom,
-                          let productIdTo = swapViewModel.productIdTo else {
+                    guard let productIdFrom = viewModel.swapViewModel.productIdFrom,
+                          let productIdTo = viewModel.swapViewModel.productIdTo else {
                         return
                     }
                     
@@ -555,36 +592,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     self.action.send(PaymentsTransfersViewModelAction.Close.Sheet())
                     
                     switch payload.source {
-                    case let .direct(phone: phone, bankId: bankId, countryId: countryId):
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [self] in
-                            
-                            guard let country = self.model.countriesList.value.first(where: { $0.id == countryId }),
-                                  let bank = self.model.bankList.value.first(where: { $0.id == bankId }) else {
-                                return
-                            }
-                            self.link = .init(.country(.init(phone: phone, country: country, bank: bank, operatorsViewModel: .init(mode: .general, closeAction: { [weak self] in
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }))))
-                        }
-                        
-                    case let .abroad(phone: phone, countryId: countryId):
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                            
-                            guard let country = self.model.countriesList.value.first(where: { $0.id == countryId }) else {
-                                return
-                            }
-                            self.link = .init(.country(.init(phone: phone, country: country, bank: nil, operatorsViewModel: .init(mode: .general, closeAction: { [weak self] in
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, requisitsViewAction: {}, qrAction: { [weak self] in
-                                
-                                self?.link = nil
-                                self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
-                                
-                            }))))
-                        }
-                        
                     case let .latestPayment(latestPaymentId):
                         guard let latestPayment = model.latestPayments.value.first(where: { $0.id == latestPaymentId }) else {
                             return
@@ -602,7 +609,15 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                     
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
                                         
-                                        self?.openContacts()
+                                        switch payload.source {
+                                        case .direct:
+                                            self?.openCountries()
+                                            
+                                        case .sfp:
+                                            self?.openContacts()
+                                        
+                                        default: break
+                                        }
                                     }
                                 }
                                 
@@ -629,6 +644,50 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         }
                     }
                     
+                case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
+                    
+                    Task {
+                        
+                        do {
+                            
+                            let paymentsViewModel = try await PaymentsViewModel(source: payload.source, model: model) { [weak self] in
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
+
+                                    switch payload.source {
+                                    case .direct:
+                                        self?.openCountries()
+                                        
+                                    case .sfp:
+                                        self?.openContacts()
+                                    
+                                    default: break
+                                    }
+                                }
+                            }
+                            
+                            await MainActor.run {
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                    
+                                    self.link = .init(.payments(paymentsViewModel))
+                                }
+                            }
+                            
+                        } catch {
+                            
+                            await MainActor.run {
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                    
+                                    self.alert = .init(title: "Error", message: "Unable create PaymentsViewModel for source: \(payload.source) with error: \(error.localizedDescription)", primary: .init(type: .cancel, title: "Ok", action: {}))
+                                }
+                            }
+                            
+                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for source: \(payload.source) with error: \(error.localizedDescription)")
+                        }
+                    }
                 default:
                     break
                 }
@@ -795,7 +854,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                         self?.bind(paymentsViewModel)
                                         await MainActor.run {
                                             
-                                            self?.link = .init(.transferByRequisites(paymentsViewModel))
+                                            self?.link = .init(.payments(paymentsViewModel))
                                         }
                                         
                                     } catch {
@@ -839,7 +898,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                         self?.bind(paymentsViewModel)
                                         await MainActor.run {
                                             
-                                            self?.link = .init(.transferByRequisites(paymentsViewModel))
+                                            self?.link = .init(.payments(paymentsViewModel))
                                         }
                                         
                                     } catch {
@@ -920,10 +979,35 @@ extension PaymentsTransfersViewModel {
             }
             
         case (.country, let paymentData as PaymentCountryData):
-            let operatorsViewModel = OperatorsViewModel(mode: .general, closeAction: { [weak self] in
-                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-            })
-            link = .init(.country(CountryPaymentView.ViewModel(countryData: paymentData, operatorsViewModel: operatorsViewModel)))
+            Task {
+                
+                do {
+                    
+                    let paymentsViewModel = try await PaymentsViewModel(source: .direct(phone: paymentData.phoneNumber, countryId: paymentData.countryCode), model: model) { [weak self] in
+                        
+                        self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
+                            
+                            self?.openCountries()
+                        }
+                    }
+                    
+                    await MainActor.run {
+                        
+                        self.link = .init(.payments(paymentsViewModel))
+                    }
+                    
+                } catch {
+                    
+                    await MainActor.run {
+                        
+                        self.alert = .init(title: "Error", message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения.", primary: .init(type: .cancel, title: "Ok", action: {}))
+                    }
+                    
+                    LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for Abroad source with phone: \(paymentData.phoneNumber) and countryId: \(paymentData.countryCode)  with error: \(error.localizedDescription)")
+                }
+            }
             
         case (.service, let paymentData as PaymentServiceData):
             let operatorsViewModel = OperatorsViewModel(mode: .general, paymentServiceData: paymentData, model: model, closeAction: { [weak self] in
@@ -971,6 +1055,13 @@ extension PaymentsTransfersViewModel {
         sheet = .init(type: .fastPayment(contactsViewModel))
         bind(contactsViewModel)
     }
+    
+    func openCountries() {
+        
+        let contactsViewModel = ContactsViewModel(model, mode: .abroad)
+        sheet = .init(type: .country(contactsViewModel))
+        bind(contactsViewModel)
+    }
 }
 
 //MARK: - Types
@@ -1003,7 +1094,6 @@ extension PaymentsTransfersViewModel {
         enum Kind {
             
             case exampleDetail(String)
-            case anotherCard(AnotherCardViewModel)
             case meToMe(PaymentsMeToMeViewModel)
         }
     }
@@ -1020,6 +1110,7 @@ extension PaymentsTransfersViewModel {
             case transferByPhone(TransferByPhoneViewModel)
             case anotherCard(AnotherCardViewModel)
             case fastPayment(ContactsViewModel)
+            case country(ContactsViewModel)
         }
     }
     
@@ -1038,8 +1129,6 @@ extension PaymentsTransfersViewModel {
         case exampleDetail(String)
         case userAccount(UserAccountViewModel)
         case mobile(MobilePayViewModel)
-        case chooseCountry(OperatorsViewModel)
-        case transferByRequisites(PaymentsViewModel)
         case phone(PaymentByPhoneViewModel)
         case payments(PaymentsViewModel)
         case serviceOperators(OperatorsViewModel)

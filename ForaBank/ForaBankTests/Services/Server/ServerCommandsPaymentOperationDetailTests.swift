@@ -403,7 +403,8 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                        depositDateOpen: nil,
                                        currencyRate: 250.5,
                                        mcc: nil,
-                                       printData: nil)
+                                       printData: nil,
+                                       paymentMethod: nil)
         
         let expected = ServerCommands
                         .PaymentOperationDetailContoller
@@ -502,7 +503,8 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                        depositDateOpen: nil,
                                        currencyRate: 250.5,
                                        mcc: nil,
-                                       printData: nil)
+                                       printData: nil,
+                                       paymentMethod: nil)
         
         let expected = ServerCommands
                         .PaymentOperationDetailContoller

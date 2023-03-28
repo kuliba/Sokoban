@@ -7,175 +7,56 @@
 
 import SwiftUI
 import Combine
-import IQKeyboardManagerSwift
 
 struct PaymentsOperationView: View {
     
     @ObservedObject var viewModel: PaymentsOperationViewModel
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
-    @State private var topSize: CGSize = .zero
-    @State private var bottomSize: CGSize = .zero
     
     var body: some View {
         
-        ZStack {
-
-            // content
-            ScrollView(showsIndicators: false) {
-                
-                ScrollViewReader { reader in
-                    
-                    VStack(spacing: 24) {
-                        
-                        Color.clear
-                            .frame(height: topSize.height)
-                        
-                        ForEach(viewModel.content) { item in
-                            
-                            switch item {
-                            case let selectViewModel as PaymentsSelectView.ViewModel:
-                                PaymentsSelectView(viewModel: selectViewModel)
-
-                            case let selectBankViewModel as PaymentsSelectBankView.ViewModel:
-                                PaymentsSelectBankView(viewModel: selectBankViewModel)
-                                
-                            case let selectViewModels as PaymentsSelectSimpleView.ViewModel:
-                                PaymentsSelectSimpleView(viewModel: selectViewModels)
-                                
-                            case let switchViewModel as PaymentsSwitchView.ViewModel:
-                                PaymentsSwitchView(viewModel: switchViewModel)
-                                
-                            case let inputViewModel as PaymentsInputView.ViewModel:
-                                PaymentsInputView(viewModel: inputViewModel)
-                                
-                            case let checkBoxViewModel as PaymentsCheckView.ViewModel:
-                                PaymentsCheckView(viewModel: checkBoxViewModel)
-                                
-                            case let inputPhoneViewModel as PaymentsInputPhoneView.ViewModel:
-                                PaymentsInputPhoneView(viewModel: inputPhoneViewModel)
-                                
-                            case let infoViewModel as PaymentsInfoView.ViewModel:
-                                PaymentsInfoView(viewModel: infoViewModel)
-                                
-                            case let nameViewModel as PaymentsNameView.ViewModel:
-                                PaymentsNameView(viewModel: nameViewModel)
-                                
-                            case let cardViewModel as PaymentsProductView.ViewModel:
-                                PaymentsProductView(viewModel: cardViewModel)
-                                
-                            case let codeViewModel as PaymentsCodeView.ViewModel:
-                                PaymentsCodeView(viewModel: codeViewModel)
-                                    .onAppear {
-                                        
-                                        //FIXME: get rid of this!!!
-                                        IQKeyboardManager.shared.enable = true
-                                        IQKeyboardManager.shared.enableAutoToolbar = true
-                                        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
-                                        IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
-                                    }
-                                    .onDisappear {
-                                        
-                                        IQKeyboardManager.shared.enable = false
-                                        IQKeyboardManager.shared.enableAutoToolbar = false
-                                    }
-                                
-                            case let additionButtonViewModel as PaymentsSpoilerButtonView.ViewModel:
-                                PaymentsSpoilerButtonView(viewModel: additionButtonViewModel)
-                                
-                            case let subscriberViewModel as PaymentsSubscriberView.ViewModel:
-                                PaymentsSubscriberView(viewModel: subscriberViewModel)
-                                
-                            default:
-                                EmptyView()
-                            }
-                        }
-                        .padding(.horizontal, 20)
-                        
-                        Color.clear
-                            .frame(height: bottomSize.height)
-                            .id("bottom")
-                        
-                    }.onChange(of: viewModel.content.count) { _ in
-                        
-                        reader.scrollTo("bottom")
-                    }
-                }
-            }
+        VStack(spacing: 0) {
             
             // top
             if let topItems = viewModel.top {
                 
-                VStack {
+                ForEach(topItems, content: groupView(for:))
+                    .padding(.bottom, 16)
+            }
+            
+            //content
+            ScrollViewReader { reader in
+                
+                ScrollView(showsIndicators: false) {
                     
-                    ForEach(topItems) { item in
+                    VStack(spacing: 16) {
                         
-                        switch item {
-                        case let switchViewModel as PaymentsSwitchView.ViewModel:
-                            PaymentsSwitchView(viewModel: switchViewModel)
-                                .padding(.horizontal, 20)
-                            
-                        case let messageViewModel as PaymentsMessageView.ViewModel:
-                            PaymentsMessageView(viewModel: messageViewModel)
-                            
-                        default:
-                            EmptyView()
-                        }
+                        ForEach(viewModel.feed, content: groupView(for:))
+                        
+                        //TODO: move id to Vstack
+                        Color.clear
+                            .frame(height: 0)
+                            .id("bottom")
                     }
-                    .padding(.vertical, 8)
-                    .modifier(TopBackgroundModifier())
-                    .background(
-                        GeometryReader { proxy in
-                            Color.clear.preference(key: PaymentsOperationViewTopHeightPreferenceKey.self, value: proxy.size)
-                        }
-                    )
-                    .onPreferenceChange(PaymentsOperationViewTopHeightPreferenceKey.self, perform: { value in
+                    
+                }
+                .transition(.move(edge: .bottom))
+                .onChange(of: viewModel.feed.count) { _ in
+
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(310)) {
                         
                         withAnimation {
-                            self.topSize = value
+                            reader.scrollTo("bottom")
                         }
-                    })
-                    
-                    Spacer()
+                    }
                 }
             }
+            
+            Spacer()
             
             // bottom
             if let bottomItems = viewModel.bottom {
                 
-                VStack {
-                    
-                    Spacer()
-                    
-                    ForEach(bottomItems) { item in
-                        
-                        switch item {
-                        case let continueViewModel as PaymentsContinueButtonView.ViewModel:
-                                PaymentsContinueButtonView(viewModel: continueViewModel)
-                            
-                        case let amountViewModel as PaymentsAmountView.ViewModel:
-                                PaymentsAmountView(viewModel: amountViewModel)
-                            
-                        case let subscribeViewModel as PaymentsSubscribeView.ViewModel:
-                            PaymentsSubscribeView(viewModel: subscribeViewModel)
-                            
-                        default:
-                            EmptyView()
-                        }
-                    }
-                    .modifier(BottomBackgroundModifier())
-                    .background(
-                        GeometryReader { proxy in
-                            Color.clear.preference(key: PaymentsOperationViewBottomHeightPreferenceKey.self, value: proxy.size)
-                        }
-                    )
-                    .onPreferenceChange(PaymentsOperationViewBottomHeightPreferenceKey.self, perform: { value in
-                        
-                        withAnimation {
-                            self.bottomSize = value
-                        }
-                    })
-                }
+                ForEach(bottomItems, content: groupView(for:))
             }
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
@@ -188,8 +69,10 @@ struct PaymentsOperationView: View {
                     }
                 }
             }
+            .frame(height: 0)
             
             Color.clear
+                .frame(height: 0)
                 .sheet(item: $viewModel.sheet) { sheet in
                     
                     switch sheet.type {
@@ -199,15 +82,16 @@ struct PaymentsOperationView: View {
                 }
             
             Color.clear
+                .frame(height: 0)
                 .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
-
+                    
                     switch bottomSheet.type {
                     case .popUp(let popUpVewModel):
                         PaymentsPopUpSelectView(viewModel: popUpVewModel)
-                    
+                        
                     case .antifraud(let antifraudViewModel):
                         PaymentsAntifraudView(viewModel: antifraudViewModel)
-                
+                        
                     case .hint(let hintViewModel):
                         HintView(viewModel: hintViewModel)
                     }
@@ -218,6 +102,31 @@ struct PaymentsOperationView: View {
         .modifier(SpinnerViewModifier(spinnerViewModel: $viewModel.spinner))
     }
 }
+
+//MARK: - View Builders
+
+extension PaymentsOperationView {
+    
+    @ViewBuilder
+    func groupView(for groupViewModel: PaymentsGroupViewModel) -> some View {
+        
+        switch groupViewModel {
+        case let contactGroupViewModel as PaymentsContactGroupViewModel:
+            PaymentsContactGroupView(viewModel: contactGroupViewModel)
+            
+        case let infoGroupViewModel as PaymentsInfoGroupViewModel:
+            PaymentsInfoGroupView(viewModel: infoGroupViewModel)
+            
+        case let spoilerGroupViewModel as PaymentsSpoilerGroupViewModel:
+            PaymentsSpoilerGroupView(viewModel: spoilerGroupViewModel)
+            
+        default:
+            PaymentsGroupView(viewModel: groupViewModel)
+        }
+    }
+}
+
+//MARK: - Modifiers
 
 extension PaymentsOperationView {
     
@@ -239,45 +148,9 @@ extension PaymentsOperationView {
             }
         }
     }
-    
-    struct TopBackgroundModifier: ViewModifier {
-        
-        func body(content: Content) -> some View {
-        
-            content
-                .background(Color.white.opacity(0.95).ignoresSafeArea(.container, edges: .top))
-        }
-    }
-    
-    struct BottomBackgroundModifier: ViewModifier {
-        
-        func body(content: Content) -> some View {
-            
-            content
-                .background(Color.white)
-        }
-    }
 }
 
-//MARK: - Preference Keys
-
-struct PaymentsOperationViewTopHeightPreferenceKey: PreferenceKey {
-    
-    static var defaultValue: CGSize = .zero
-    
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
-        _ = nextValue()
-    }
-}
-
-struct PaymentsOperationViewBottomHeightPreferenceKey: PreferenceKey {
-    
-    static var defaultValue: CGSize = .zero
-    
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
-        _ = nextValue()
-    }
-}
+//MARK: - Preview
 
 struct PaymentsOperationView_Previews: PreviewProvider {
     
@@ -285,36 +158,46 @@ struct PaymentsOperationView_Previews: PreviewProvider {
         
         Group {
             
-            NavigationView {
-                PaymentsOperationView(viewModel: .sampleContinue)
-            }
+            PaymentsOperationView(viewModel: .sampleContinue)
             
-            NavigationView {
-                PaymentsOperationView(viewModel: .sampleAmount)
-            }
+            PaymentsOperationView(viewModel: .sampleAmount)
         }
     }
 }
+
+//MARK: - Preview Content
 
 extension PaymentsOperationViewModel {
     
     static let sampleContinue: PaymentsOperationViewModel = {
         
-        let topItems = [PaymentsSwitchView.ViewModel.sample]
-        let contentItems = [PaymentsSelectView.ViewModel.selectedStateMock, PaymentsInfoView.ViewModel.sample, PaymentsNameView.ViewModel.normal, PaymentsNameView.ViewModel.edit, PaymentsProductView.ViewModel.sample, PaymentsInfoView.ViewModel.sample]
+        let topItems = [PaymentSelectDropDownView.ViewModel.sample]
         
-        let bottomItems = [PaymentsContinueButtonView.ViewModel.sampleInactive]
+        let contentItems = [PaymentsSelectView.ViewModel.sample, PaymentsInfoView.ViewModel.sample,  PaymentsProductView.ViewModel.sample]
         
-        return PaymentsOperationViewModel(navigationBar: .init(title: "Налоги и услуги"), top: topItems, content: contentItems, bottom: bottomItems, link: nil, bottomSheet: nil, operation: .emptyMock, model: .emptyMock, closeAction: {})
+        let bottomItems = [PaymentsContinueButtonView.ViewModel.sampleParam]
+        
+        return PaymentsOperationViewModel(
+            navigationBar: .init(title: "Налоги и услуги"),
+            top: [PaymentsGroupViewModel(items: topItems)],
+            feed: [PaymentsGroupViewModel(items: contentItems)],
+            bottom: [PaymentsGroupViewModel(items: bottomItems)],
+            closeAction: {})
     }()
     
     static let sampleAmount: PaymentsOperationViewModel = {
         
-        let topItems = [PaymentsSwitchView.ViewModel.sample]
-        let contentItems = [PaymentsSelectView.ViewModel.selectedStateMock, PaymentsInfoView.ViewModel.sample, PaymentsNameView.ViewModel.normal, PaymentsNameView.ViewModel.edit, PaymentsProductView.ViewModel.sample]
-        let bottomItems = [PaymentsAmountView.ViewModel.amount]
+        let topItems = [PaymentSelectDropDownView.ViewModel.sample]
         
-        return PaymentsOperationViewModel(navigationBar: .init(title: "Налоги и услуги"), top: topItems, content: contentItems, bottom: bottomItems, link: nil, bottomSheet: nil, operation: .emptyMock, model: .emptyMock, closeAction: {})
+        let contentItems = [PaymentsSelectView.ViewModel.sample, PaymentsInfoView.ViewModel.sample,  PaymentsProductView.ViewModel.sample]
+        
+        let bottomItems = [PaymentsAmountView.ViewModel.amountParameter]
+        
+        return PaymentsOperationViewModel(
+            navigationBar: .init(title: "Налоги и услуги"),
+            top: [PaymentsGroupViewModel(items: topItems)],
+            feed: [PaymentsGroupViewModel(items: contentItems)],
+            bottom: [PaymentsGroupViewModel(items: bottomItems)],
+            closeAction: {})
     }()
 }
-

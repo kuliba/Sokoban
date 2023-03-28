@@ -87,6 +87,15 @@ struct OperationDetailData: Codable, Equatable {
     let currencyRate: Double?
     let mcc: String?
     let printData: PrintMapData?
+    let paymentMethod: PaymentMethod?
+    
+    
+    enum PaymentMethod: String, Codable, Unknownable {
+    
+        case cash = "Наличные"
+        case cashless = "Безналичный"
+        case unknown
+    }
     
     enum ExternalTransferType: String, Codable, Unknownable {
         
@@ -115,9 +124,10 @@ struct OperationDetailData: Codable, Equatable {
         case cardToPhone = "CARD_2_PHONE"
         case changeOutgoing = "CHANGE_OUTGOING"
         case contactAddressing = "CONTACT_ADDRESSING"
-        case contactAddressless = "CONTACT_ADDRESSLESS"
+        case contactAddressless = "ADDRESSLESS"
+        case contactAddressingCash = "ADDRESSING_CASH"
         case depositOpen = "DEPOSIT_OPEN"
-        case direct = "DIRECT"
+        case direct = "NEW_DIRECT"
         case elecsnet = "ELECSNET"
         case external = "EXTERNAL"
         case housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
@@ -301,5 +311,6 @@ struct OperationDetailData: Codable, Equatable {
         case currencyRate
         case printData = "printDataForOperationDetailResponse"
         case mcc = "MCC"
+        case paymentMethod
     }
 }

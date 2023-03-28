@@ -138,10 +138,10 @@ extension Model {
     func paymentsTransferSFPStepParameters(_ operation: Payments.Operation, response: TransferAnywayResponseData) throws -> [PaymentsParameterRepresentable] {
         
         var result = [PaymentsParameterRepresentable]()
-        
+        let spoilerGroup = Payments.Parameter.Group(id: UUID().uuidString, type: .spoiler)
         for additionalData in response.additionalList {
             
-            guard let parameter = try paymentsParameterRepresentable(operation, adittionalData: additionalData) else {
+            guard let parameter = try paymentsParameterRepresentable(operation, adittionalData: additionalData, group: spoilerGroup) else {
                 continue
             }
             

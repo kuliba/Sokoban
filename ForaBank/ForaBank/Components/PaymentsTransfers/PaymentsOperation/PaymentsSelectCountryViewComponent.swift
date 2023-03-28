@@ -1,30 +1,30 @@
 //
-//  PaymentSelectBankViewComponent.swift
+//  PaymentsSelectCountryViewComponent.swift
 //  ForaBank
 //
-//  Created by Дмитрий Савушкин on 08.12.2022.
+//  Created by Дмитрий Савушкин on 13.02.2023.
 //
 
+import Foundation
 import SwiftUI
 import Combine
-import Shimmer
 
 //MARK: - ViewModel
 
-extension PaymentsSelectBankView {
+extension PaymentsSelectCountryView {
     
     class ViewModel: PaymentsParameterViewModel, ObservableObject {
         
         @Published var selectedItem: SelectedItemViewModel
         @Published var list: ListViewModel?
         @Published var warning: String?
-
+        
         var isExpanded: Bool { list == nil }
         
         let model: Model
         
-        var parameterSelect: Payments.ParameterSelectBank? { source as? Payments.ParameterSelectBank }
-        override var isValid: Bool { model.dictionaryFullBankInfoList()?.contains(where: {$0.bic == selectedItem.textField.text}) == true && parameterSelect?.validator.isValid(value: value.current) ?? false }
+        var parameterSelect: Payments.ParameterSelectCountry? { source as? Payments.ParameterSelectCountry }
+        override var isValid: Bool { model.countriesListWithSevice.value.contains(where: {$0.name.capitalized == selectedItem.textField.text?.capitalized}) == true && parameterSelect?.validator.isValid(value: value.current) ?? false }
         
         init(_ model: Model, selectedItem: SelectedItemViewModel, list: ListViewModel?, warning: String? = nil, source: PaymentsParameterRepresentable = Payments.ParameterMock()) {
             
@@ -35,15 +35,23 @@ extension PaymentsSelectBankView {
             super.init(source: source)
         }
         
-        convenience init(with parameterSelect: Payments.ParameterSelectBank, model: Model) throws {
+        convenience init(with parameterSelect: Payments.ParameterSelectCountry, model: Model) throws {
             
-            let selectedItem = SelectedItemViewModel(model, icon: .placeholder, textField: .init(text: nil, placeholder: parameterSelect.title, style: .number, limit: 9, regExp: "^[0-9]\\d*$"), action: {})
+            let selectedItem = SelectedItemViewModel(model, icon: .placeholder, textField: .init(text: nil, placeholder: parameterSelect.title, style: .default, limit: nil, regExp: nil), action: {})
             
             self.init(model, selectedItem: selectedItem, list: nil, source: parameterSelect)
             
-            self.selectedItem = SelectedItemViewModel(model, icon: .placeholder, textField: .init(text: parameterSelect.value, placeholder: parameterSelect.title, style: .number, limit: 9, regExp: "^[0-9]\\d*$"), action: { [weak self] in
-                self?.action.send(PaymentsSelectBankViewModelAction.ShowBanksList())
-            })
+            if let country = model.countriesListWithSevice.value.first(where: {$0.code == parameterSelect.value}) {
+                
+                let image = model.images.value.filter({$0.key == country.md5hash})
+                
+                self.selectedItem = SelectedItemViewModel(model, icon: .image(image.values.first?.image ?? .ic12ArrowDown), textField: .init(text: country.name.capitalized, placeholder: parameterSelect.title, style: .default, limit: nil, regExp: nil), action: { [weak self] in
+                    self?.action.send(PaymentsSelectCountryViewModelAction.ShowCountriesList())
+                })
+            }
+            
+            let imageIds = model.countriesListWithSevice.value.compactMap { $0.md5hash }
+            model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: imageIds))
             
             bind()
         }
@@ -66,15 +74,59 @@ extension PaymentsSelectBankView {
 
 //MARK: Bindings
 
-extension PaymentsSelectBankView.ViewModel {
+extension PaymentsSelectCountryView.ViewModel {
     
     private func bind() {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ModelAction.Dictionary.DownloadImages.Response:
+                    switch payload.result {
+                    case let .success(data):
+                        
+                        var countryList: [ListViewModel.ItemViewModel] = []
+                        
+                        for item in data {
+                            
+                            for country in self.model.countriesListWithSevice.value {
+                                
+                                if item.id == country.md5hash {
+                                    
+                                    if let icon = item.imageData.image {
+                                        
+                                        countryList.append(.init(id: country.id, icon: .icon(icon), name: country.name.capitalized, subtitle: nil, action: { itemId in
+                                            
+                                            self.action.send(PaymentsSelectCountryViewModelAction.DidSelectCountry(id: itemId))
+                                        }))
+                                    } else {
+                                        countryList.append(.init(id: country.id, icon: .placeholder, name: country.name.capitalized, subtitle: nil, action: { itemId in
+                                            
+                                            self.action.send(PaymentsSelectCountryViewModelAction.DidSelectCountry(id: itemId))
+                                        }))
+                                    }
+                                }
+                            }
+                        }
+                        
+                        self.list?.items = countryList.sorted(by: {$0.name.lowercased() < $1.name.lowercased()}).sorted(by: {$0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending})
+                        
+                    case let .failure(error):
+                        print(error) //TODO: send error action
+                    }
+                default:
+                    break
+                }
+            }.store(in: &bindings)
         
         selectedItem.textField.$text
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] content in
                 
-                update(value: content)
+                let countryId = model.countriesListWithSevice.value.first(where: {$0.name.capitalized == content?.capitalized})
+                update(value: countryId?.code)
                 
                 guard let content = content else {
                     return
@@ -106,22 +158,24 @@ extension PaymentsSelectBankView.ViewModel {
                     }
                 }
                 
-                guard let content = selectedItem.textField.text,
-                      let banks = model.dictionaryFullBankInfoList() else {
+                guard let content = selectedItem.textField.text else {
                     return
                 }
                 
-                if let bank = banks.first(where: {$0.bic == content}),
-                   let image = bank.svgImage.image {
-                    
-                    self.selectedItem.icon = .image(image)
-                    self.selectedItem.title = parameterSelect?.title
-                    
-                } else {
-                    
-                    self.selectedItem.icon = .placeholder
-                    self.selectedItem.title = parameterSelect?.title
-                }
+                let countries = model.countriesListWithSevice.value
+                
+                
+                //                if let countries = countries.first(where: {$0.name == content}),
+                //                   let image = countries.svgImage.image {
+                //
+                //                    self.selectedItem.icon = .image(image)
+                //                    self.selectedItem.title = parameterSelect?.title
+                //
+                //                } else {
+                
+//                self.selectedItem.icon = .placeholder
+                self.selectedItem.title = parameterSelect?.title
+                //                }
                 
             }.store(in: &bindings)
         
@@ -134,18 +188,18 @@ extension PaymentsSelectBankView.ViewModel {
                 if isEditing == true {
                     
                     withAnimation {
-                               
+                        
                         self.selectedItem.title = parameterSelect?.title
-                        self.action.send(PaymentsSelectBankViewModelAction.ShowBanksList())
+                        self.action.send(PaymentsSelectCountryViewModelAction.ShowCountriesList())
                         self.warning = nil
                     }
                     
                 } else {
                     
                     withAnimation(.easeIn(duration: 0.2)) {
-
+                        
                         self.list = nil
-                        self.selectedItem.title = (selectedItem.textField.text != nil && selectedItem.textField.text != "") ? parameterSelect?.title : nil
+                        self.selectedItem.title = selectedItem.textField.hasValue ? parameterSelect?.title : nil
                     }
                     
                     if let parameterSelect = parameterSelect,
@@ -159,10 +213,11 @@ extension PaymentsSelectBankView.ViewModel {
                         
                     } else {
                         
-                        if let banks = self.model.dictionaryFullBankInfoList(),
-                           let text = self.selectedItem.textField.text,
+                        let countries = self.model.countriesListWithSevice.value
+                        
+                        if let text = self.selectedItem.textField.text,
                            text.count == parameterSelect?.limitator?.limit,
-                           banks.contains(where: {$0.bic == text}) == false {
+                           countries.contains(where: {$0.name == text}) == false {
                             
                             withAnimation {
                                 
@@ -175,7 +230,7 @@ extension PaymentsSelectBankView.ViewModel {
                                 self.warning = nil
                             }
                         }
-
+                        
                     }
                 }
                 
@@ -187,7 +242,7 @@ extension PaymentsSelectBankView.ViewModel {
                 
                 switch action {
                     
-                case _ as PaymentsSelectBankViewModelAction.ShowBanksList:
+                case _ as PaymentsSelectCountryViewModelAction.ShowCountriesList:
                     
                     guard list == nil else {
                         
@@ -198,22 +253,20 @@ extension PaymentsSelectBankView.ViewModel {
                         return
                     }
                     
-                    guard let banks = self.model.dictionaryFullBankInfoList() else {
-                        return
-                    }
+                    let countries = self.model.countriesListWithSevice.value
                     
-                    var options: [ListViewModel.ItemViewModel] = Self.reduce(model, banksData: banks) {{ itemId in
+                    var options: [ListViewModel.ItemViewModel] = Self.reduce(model, countriesData: countries) {{ itemId in
                         
-                        self.action.send(PaymentsSelectBankViewModelAction.DidSelectBank(id: itemId))
+                        self.action.send(PaymentsSelectCountryViewModelAction.DidSelectCountry(id: itemId))
                     }}
                     
-                    options.insert(ListViewModel.ItemViewModel(id: UUID().uuidString, icon: .icon(Image.ic24MoreHorizontal), name: "Смотреть все", subtitle: nil, lineLimit: 2, action: { [weak self] _ in
+                    options.insert(ListViewModel.ItemViewModel(id: UUID().uuidString, icon: .overlay(Image.ic24MoreHorizontal), name: "См. все", subtitle: nil, lineLimit: 2, action: { [weak self] _ in
                         
                         guard let model = self?.model else {
                             return
                         }
                         
-                        let contactViewModel = ContactsViewModel(model, mode: .select(.banksFullInfo))
+                        let contactViewModel = ContactsViewModel(model, mode: .select(.countries))
                         self?.bind(contactsViewModel: contactViewModel)
                         self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Show(viewModel: contactViewModel))
                     }), at: 0)
@@ -225,25 +278,33 @@ extension PaymentsSelectBankView.ViewModel {
                         self.list = listViewModel
                     }
                     
-                case let payload as PaymentsSelectBankViewModelAction.DidSelectBank:
+                case let payload as PaymentsSelectCountryViewModelAction.DidSelectCountry:
                     
-                    guard let banks = self.list?.items,
-                          let bank = banks.first(where: {$0.id == payload.id}),
-                          let bic = bank.subtitle else{
+                    let countries = model.countriesListWithSevice.value
+                    
+                    guard let country = countries.first(where: {$0.id == payload.id}) else{
                         return
                     }
                     
-                    switch bank.icon {
-                    case .image(let image):
+                    if let imageData = model.images.value.first(where: {$0.key == country.md5hash}),
+                       let image = imageData.value.image  {
+
                         withAnimation {
                             
                             self.selectedItem.icon = .image(image)
-                            self.selectedItem.textField.text = bic
-                            self.selectedItem.title = parameterSelect?.title
+                            self.selectedItem.textField.text = country.name.capitalized
                             self.list = nil
+
                         }
                         
-                    default: break
+                    } else {
+                        
+                        withAnimation {
+                         
+                            self.selectedItem.icon = .placeholder
+                            self.selectedItem.textField.text = country.name.capitalized
+                            self.list = nil
+                        }
                     }
                     
                     withAnimation {
@@ -274,10 +335,14 @@ extension PaymentsSelectBankView.ViewModel {
                     }
                     
                     let bank = banks.first(where: {$0.memberId == payload.bankId})
-                    self?.selectedItem.textField.text = bank?.bic
-                    self?.list = nil
-                    self?.action.send(PaymentsParameterViewModelAction.BankList.ContactSelector.Close())
-
+                    
+                    withAnimation {
+                        
+                        self?.selectedItem.textField.text = bank?.bic
+                        self?.list = nil
+                        self?.action.send(PaymentsParameterViewModelAction.BankList.ContactSelector.Close())
+                    }
+                    
                 default:
                     break
                 }
@@ -294,7 +359,7 @@ extension PaymentsSelectBankView.ViewModel {
     }
 }
 
-extension PaymentsSelectBankView.ViewModel {
+extension PaymentsSelectCountryView.ViewModel {
     
     class SelectedItemViewModel: ObservableObject {
         
@@ -302,7 +367,7 @@ extension PaymentsSelectBankView.ViewModel {
         var title: String?
         let action: () -> Void
         @Published var icon: IconViewModel
-
+        
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
@@ -324,7 +389,7 @@ extension PaymentsSelectBankView.ViewModel {
     
     class ListViewModel: ObservableObject {
         
-        let items: [ItemViewModel]
+        var items: [ItemViewModel]
         @Published var filteredItems: [ItemViewModel]
         
         init(items: [ItemViewModel], filteredItems: [ItemViewModel]) {
@@ -345,7 +410,8 @@ extension PaymentsSelectBankView.ViewModel {
             enum IconViewModel {
                 
                 case icon(Image)
-                case image(Image)
+                case overlay(Image)
+                case placeholder
             }
         }
     }
@@ -353,47 +419,23 @@ extension PaymentsSelectBankView.ViewModel {
 
 //MARK: - Reducers
 
-extension PaymentsSelectBankView.ViewModel {
+extension PaymentsSelectCountryView.ViewModel {
     
-    static func reduce(_ model: Model, banksData: [BankFullInfoData], filter: String? = nil, action: @escaping () ->(String) -> Void) -> [ListViewModel.ItemViewModel] {
+    static func reduce(_ model: Model, countriesData: [CountryWithServiceData], filter: String? = nil, action: @escaping () ->(String) -> Void) -> [ListViewModel.ItemViewModel] {
         
         var items = [ListViewModel.ItemViewModel]()
         
-        for bank in banksData {
+        for country in countriesData {
             
-            guard let name = bank.rusName, let id = bank.memberId else {
-                break
-            }
+            let name = country.name.capitalized
             
-            if let bankIcon = bank.svgImage.image {
+            if let imageData = model.images.value.first(where: {$0.key == country.md5hash}), let image = imageData.value.image {
                 
-                items.append(ListViewModel.ItemViewModel(id: id, icon: .image(bankIcon) ,name: name, subtitle: bank.bic, action: action()))
+                items.append(ListViewModel.ItemViewModel(id: country.id, icon: .icon(image) ,name: name, subtitle: nil, action: action()))
                 
             } else {
                 
-                items.append(ListViewModel.ItemViewModel(id: id, icon: .icon(Image.ic24Bank), name: name, subtitle: bank.bic, action: action()))
-            }
-        }
-
-        for id in model.prefferedBanksList.value.reversed() {
-            
-            guard let bank = banksData.first(where: {$0.memberId == id}) else {
-                continue
-            }
-            
-            guard let name = bank.rusName, let id = bank.memberId else {
-                break
-            }
-            
-            if let bankIcon = bank.svgImage.image {
-                
-                items = items.filter({$0.subtitle != bank.bic})
-                items.insert(ListViewModel.ItemViewModel(id: id, icon: .image(bankIcon), name: name, subtitle: bank.bic, action: action()), at: 0)
-                
-            } else {
-                
-                items = items.filter({$0.subtitle != bank.bic})
-                items.insert(ListViewModel.ItemViewModel(id: id, icon: .icon(Image.ic24Bank), name: name, subtitle: bank.bic, action: action()), at: 0)
+                items.append(ListViewModel.ItemViewModel(id: country.id, icon: .placeholder, name: name, subtitle: nil, action: action()))
             }
         }
         
@@ -411,8 +453,8 @@ extension PaymentsSelectBankView.ViewModel {
 
 extension PaymentsParameterViewModelAction {
     
-    enum BankList {
-    
+    enum CountryList {
+        
         enum ContactSelector {
             
             struct Show: Action {
@@ -427,20 +469,19 @@ extension PaymentsParameterViewModelAction {
 
 //MARK: - Action
 
-struct PaymentsSelectBankViewModelAction {
+struct PaymentsSelectCountryViewModelAction {
     
-    struct DidSelectBank: Action {
+    struct DidSelectCountry: Action {
         
-        let id: PaymentsSelectBankView.ViewModel.ListViewModel.ItemViewModel.ID
+        let id: PaymentsSelectCountryView.ViewModel.ListViewModel.ItemViewModel.ID
     }
     
-    struct ShowBanksList: Action {}
+    struct ShowCountriesList: Action {}
     
 }
-
 //MARK: - View
 
-struct PaymentsSelectBankView: View {
+struct PaymentsSelectCountryView: View {
     
     @ObservedObject var viewModel: ViewModel
     
@@ -449,17 +490,18 @@ struct PaymentsSelectBankView: View {
         VStack {
             
             SelectedItemView(viewModel: viewModel.selectedItem, isExpanded: viewModel.isExpanded, isEditable: viewModel.isEditable, warning: viewModel.warning)
-                .frame(minHeight: 56)
                 .allowsHitTesting(viewModel.isEditable)
+                .padding(.horizontal, 12)
             
-            if let banksViewModel = viewModel.list {
+            if let countriesViewModel = viewModel.list {
                 
-                BanksListView(viewModel: banksViewModel)
+                CountriesListView(viewModel: countriesViewModel)
             }
         }
+        .padding(.vertical, 13)
     }
     
-    struct BanksListView: View {
+    struct CountriesListView: View {
         
         @ObservedObject var viewModel: ViewModel.ListViewModel
         
@@ -467,12 +509,19 @@ struct PaymentsSelectBankView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 
-                HStack(alignment: .top, spacing: 4) {
+                HStack(spacing: 0) {
                     
-                    ForEach(viewModel.filteredItems) { item in
+                    Color.clear
+                        .frame(width: 4)
+                    
+                    HStack(alignment: .top, spacing: 0) {
                         
-                        ItemViewHorizontal(viewModel: item)
-                            .frame(width: 70)
+                        ForEach(viewModel.filteredItems) { item in
+                            
+                            ItemViewHorizontal(viewModel: item)
+                                .frame(width: 64)
+                                .padding(.trailing, 8)
+                        }
                     }
                 }
             }
@@ -480,7 +529,7 @@ struct PaymentsSelectBankView: View {
         
         struct ItemViewHorizontal: View {
             
-            let viewModel: PaymentsSelectBankView.ViewModel.ListViewModel.ItemViewModel
+            let viewModel: PaymentsSelectCountryView.ViewModel.ListViewModel.ItemViewModel
             
             var body: some View {
                 
@@ -523,15 +572,37 @@ struct PaymentsSelectBankView: View {
             var body: some View {
                 
                 switch viewModel {
-                case .image(let image):
-                    image
-                        .resizable()
-                        .renderingMode(.original)
-                    
                 case .icon(let icon):
+                    
+                    ZStack {
+                     
+                        Circle()
+                            .fill(Color.white)
+                            .frame(width: 40, height: 40)
+                        
+                        icon
+                            .resizable()
+                            .frame(width: 40, height: 40)
+                            .cornerRadius(20)
+                    }
+                    
+                case .overlay(let icon):
+                   
+                    ZStack {
+                     
+                        Circle()
+                            .fill(Color.white)
+                            .frame(width: 40, height: 40)
+                        
+                        icon
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                    }
+                    
+                case .placeholder:
                     Circle()
                         .fill(Color.mainColorsGrayLightest)
-                        .overlay(icon.resizable().renderingMode(.template).frame(width: 24, height: 24))
+                        .frame(width: 24, height: 24)
                 }
             }
         }
@@ -539,16 +610,16 @@ struct PaymentsSelectBankView: View {
     
     struct SelectedItemView: View {
         
-        @ObservedObject var viewModel: PaymentsSelectBankView.ViewModel.SelectedItemViewModel
+        @ObservedObject var viewModel: PaymentsSelectCountryView.ViewModel.SelectedItemViewModel
         let isExpanded: Bool
         let isEditable: Bool
         let warning: String?
-
+        
         var body: some View {
             
             if isEditable == true {
                 
-                HStack(spacing: 16) {
+                HStack(spacing: 12) {
                     
                     IconView(viewModel: viewModel.icon)
                         .frame(width: 32, height: 32)
@@ -558,9 +629,8 @@ struct PaymentsSelectBankView: View {
                         if let title = viewModel.title {
                             
                             Text(title)
-                                .font(.textBodySR12160())
+                                .font(.textBodyMR14180())
                                 .foregroundColor(.textPlaceholder)
-                                .padding(.bottom, 4)
                             
                         } else {
                             
@@ -569,48 +639,40 @@ struct PaymentsSelectBankView: View {
                         
                         HStack {
                             
-                            TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 14), textColor: .textSecondary)
-                                .font(.textBodyMM14200())
+                            TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16), textColor: .textSecondary)
+                                .font(.textH4M16240())
                                 .foregroundColor(.textSecondary)
                             
-                            Spacer()
-                            
-                            withAnimation {
-                                
-                                Image.ic24ChevronRight
-                                    .renderingMode(.template)
-                                    .resizable()
-                                    .frame(width: 24, height: 24)
-                                    .foregroundColor(.mainColorsGray)
-                                    .rotationEffect(isExpanded == true ? .degrees(0) : .degrees(+90))
-                                    .onTapGesture {
-                                        viewModel.action()
-                                    }
-                            }
                         }
                         
                         if let warning = warning {
                             
                             VStack(alignment: .leading, spacing: 8) {
-                 
+                                
                                 Divider()
                                     .frame(height: 1)
                                     .background(Color.systemColorError)
                                 
                                 Text(warning)
-                                    .font(.textBodySR12160())
+                                    .font(.textBodyMR14180())
                                     .foregroundColor(.systemColorError)
                                 
                             }.padding(.top, 12)
                             
-                        } else {
-                            
-                            Divider()
-                                .frame(height: 1)
-                                .background(Color.bordersDivider)
-                                .opacity(isEditable ? 1.0 : 0.2)
-                                .padding(.top, 12)
                         }
+                    }
+                    
+                    withAnimation {
+                        
+                        Image.ic24ChevronDown
+                            .renderingMode(.template)
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(.mainColorsGray)
+                            .rotationEffect(isExpanded == true ? .degrees(0) : .degrees(-180))
+                            .onTapGesture {
+                                viewModel.action()
+                            }
                     }
                 }
                 
@@ -621,12 +683,12 @@ struct PaymentsSelectBankView: View {
                     IconView(viewModel: viewModel.icon)
                         .frame(width: 32, height: 32)
                     
-                    VStack(alignment: .leading, spacing: 0) {
+                    VStack(alignment: .leading, spacing: 4) {
                         
                         if let title = viewModel.title {
                             
                             Text(title)
-                                .font(.textBodySR12160())
+                                .font(.textBodyMR14180())
                                 .foregroundColor(.textPlaceholder)
                                 .padding(.bottom, 4)
                             
@@ -638,7 +700,7 @@ struct PaymentsSelectBankView: View {
                         HStack {
                             
                             if let text = viewModel.textField.text {
-                            
+                                
                                 Text(text)
                                     .font(.textBodyMM14200())
                                     .foregroundColor(.textSecondary)
@@ -646,12 +708,6 @@ struct PaymentsSelectBankView: View {
                             
                             Spacer()
                         }
-                        
-                        Divider()
-                            .frame(height: 1)
-                            .background(Color.bordersDivider)
-                            .opacity(0.2)
-                            .padding(.top, 12)
                     }
                 }
             }
@@ -659,11 +715,11 @@ struct PaymentsSelectBankView: View {
     }
 }
 
-extension PaymentsSelectBankView.SelectedItemView {
+extension PaymentsSelectCountryView.SelectedItemView {
     
     struct IconView: View {
         
-        let viewModel: PaymentsSelectBankView.ViewModel.SelectedItemViewModel.IconViewModel
+        let viewModel: PaymentsSelectCountryView.ViewModel.SelectedItemViewModel.IconViewModel
         
         var body: some View {
             
@@ -674,13 +730,13 @@ extension PaymentsSelectBankView.SelectedItemView {
                     image
                         .resizable()
                         .renderingMode(.original)
+                        .cornerRadius(20)
                     
                 case .placeholder:
-                    Image.ic24FileHash
-                        .resizable()
-                        .renderingMode(.template)
+                    
+                    Circle()
                         .foregroundColor(.mainColorsGray)
-                        .frame(width: 24, height: 24)
+                        .frame(width: 32, height: 32)
                         .padding(.leading, 4)
                     
                 }
@@ -691,48 +747,48 @@ extension PaymentsSelectBankView.SelectedItemView {
 
 //MARK: - Preview
 
-struct PaymentsSelectBankView_Previews: PreviewProvider {
+struct PaymentsSelectCountryView_Previews: PreviewProvider {
     
     static var previews: some View {
         
         Group {
             
-            PaymentsSelectBankView(viewModel: .sample)
+            PaymentsSelectCountryView(viewModel: .sample)
                 .previewLayout(.fixed(width: 375, height: 200))
                 .previewDisplayName("Parameter Complete State")
             
-            PaymentsSelectBankView(viewModel: .sampleError)
+            PaymentsSelectCountryView(viewModel: .sampleError)
                 .previewLayout(.fixed(width: 375, height: 200))
                 .previewDisplayName("Parameter Complete State")
             
             //MARK: Views
-            PaymentsSelectBankView.SelectedItemView(viewModel: .selectedViewModelSample, isExpanded: false, isEditable: false, warning: nil)
+            PaymentsSelectCountryView.SelectedItemView(viewModel: .selectedViewModelSample, isExpanded: false, isEditable: false, warning: nil)
                 .previewLayout(.fixed(width: 375, height: 100))
                 .previewDisplayName("Parameter Selected View")
             
-            PaymentsSelectBankView.BanksListView(viewModel: .itemsViewModelSample)
+            PaymentsSelectCountryView.CountriesListView(viewModel: .itemsViewModelSample)
                 .previewLayout(.fixed(width: 375, height: 100))
-                .previewDisplayName("Parameter Banks List")
+                .previewDisplayName("Parameter Countries List")
         }
     }
 }
 
 //MARK: - Preview Content
 
-extension PaymentsSelectBankView.ViewModel {
+extension PaymentsSelectCountryView.ViewModel {
     
-    static let sample = PaymentsSelectBankView.ViewModel(.emptyMock, selectedItem: .selectedViewModelSample, list: .itemsViewModelSample)
+    static let sample = PaymentsSelectCountryView.ViewModel(.emptyMock, selectedItem: .selectedViewModelSample, list: .itemsViewModelSample)
     
-    static let sampleError = PaymentsSelectBankView.ViewModel(.emptyMock, selectedItem: .selectedViewModelSample, list: .itemsViewModelSample, warning: "Неверный БИК банка получателя")
+    static let sampleError = PaymentsSelectCountryView.ViewModel(.emptyMock, selectedItem: .selectedViewModelSample, list: .itemsViewModelSample, warning: "Неверный БИК банка получателя")
 }
 
-extension PaymentsSelectBankView.ViewModel.ListViewModel {
+extension PaymentsSelectCountryView.ViewModel.ListViewModel {
     
-    static let itemsViewModelSample = PaymentsSelectBankView.ViewModel.ListViewModel(items: [.init(id: "", icon: .image(Image.ic64ForaColor), name: "Фора-банк", subtitle: "0445283290", action: {_ in })], filteredItems: [])
+    static let itemsViewModelSample = PaymentsSelectCountryView.ViewModel.ListViewModel(items: [.init(id: "", icon: .icon(Image.ic64ForaColor), name: "Фора-банк", subtitle: "0445283290", action: {_ in })], filteredItems: [])
 }
 
-extension PaymentsSelectBankView.ViewModel.SelectedItemViewModel {
+extension PaymentsSelectCountryView.ViewModel.SelectedItemViewModel {
     
-    static let selectedViewModelSample = PaymentsSelectBankView.ViewModel.SelectedItemViewModel(.emptyMock, icon: .placeholder, textField: .init(text: nil, placeholder: "Бик банка получателя", style: .number, limit: 10, regExp: nil), title: "", action: {})
+    static let selectedViewModelSample = PaymentsSelectCountryView.ViewModel.SelectedItemViewModel(.emptyMock, icon: .placeholder, textField: .init(text: nil, placeholder: "Бик банка получателя", style: .number, limit: 10, regExp: nil), title: "", action: {})
 }
 

@@ -20,9 +20,9 @@ class LoggerAgent: LoggerAgentProtocol {
     private let sessionLogger = Logger(subsystem: subsystem, category: LoggerAgentCategory.session.rawValue)
     private let paymentsLogger = Logger(subsystem: subsystem, category: LoggerAgentCategory.payments.rawValue)
     
-    func log(level: LoggerAgentLevel = .default, category: LoggerAgentCategory, message: String, file: String = #file, line: Int = #line) {
+    func log(level: LoggerAgentLevel = .default, category: LoggerAgentCategory, message: String, file: StaticString = #file, line: UInt = #line) {
         
-        let logMessage = "\(extractFileName(from: file)): \(message), #:\(line)"
+        let logMessage = "\(message) - \(extractFileName(from: file)):\(line)"
         let logger = logger(for: category)
         
         switch level {
@@ -46,8 +46,11 @@ class LoggerAgent: LoggerAgentProtocol {
         }
     }
     
-    private func extractFileName(from path: String) -> String {
-        path.components(separatedBy: "/").last?.components(separatedBy: ".").first ?? ""
+    private func extractFileName(from path: StaticString) -> String {
+        
+        String(describing: path)
+            .components(separatedBy: "/")
+            .last ?? "(file not parsed)"
     }
 }
 

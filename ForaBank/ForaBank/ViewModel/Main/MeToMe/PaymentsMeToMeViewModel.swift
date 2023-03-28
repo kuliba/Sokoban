@@ -44,6 +44,13 @@ class PaymentsMeToMeViewModel: ObservableObject {
         self.state = state
         self.bottomSheet = bottomSheet
         self.sheet = sheet
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsMeToMeViewModel initialized")
+    }
+    
+    deinit {
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsMeToMeViewModel deinitialized")
     }
     
     convenience init?(_ model: Model, mode: Mode) {

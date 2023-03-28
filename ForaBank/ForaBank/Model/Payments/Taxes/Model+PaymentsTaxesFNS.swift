@@ -25,15 +25,22 @@ extension Model {
             let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
             
             // header
-            let headerParameter = Payments.ParameterHeader(title: "ФНС", icon: .name("ic24Sbp"))
+            let anywayGroup = dictionaryAnywayOperatorGroup(for: Payments.Category.taxes.rawValue)
+            
+            let operatorsCodes = Payments.Category.taxes.services.compactMap{ $0.operators.first?.rawValue }
+            let anywayOperators = anywayGroup?.operators.filter{ operatorsCodes.contains($0.code)}
+            let taxesOperator = anywayOperators?.first(where: {$0.code == Payments.Operator.fns.rawValue})
+            
+            let headerParameter = Payments.ParameterHeader(title: "ФНС", icon: .image(taxesOperator?.logotypeList.first?.iconData ?? .empty))
             
             // operator
             let operatorParameterValue = Payments.Operator.fns.rawValue
-            let operatorParameter = Payments.ParameterSelectSwitch(
+            let operatorParameter = Payments.ParameterSelectDropDownList(
                 .init(id: operatorParameterId, value: operatorParameterValue),
+                title: "Перевести",
                 options: [
-                    .init(id: Payments.Operator.fns.rawValue, name: Payments.Operator.fns.name),
-                    .init(id: Payments.Operator.fnsUin.rawValue, name: Payments.Operator.fnsUin.name)
+                    .init(id: Payments.Operator.fns.rawValue, name: Payments.Operator.fns.name, icon: .init(named: "ic24Emblem")),
+                    .init(id: Payments.Operator.fnsUin.rawValue, name: Payments.Operator.fnsUin.name, icon: .init(named: "ic24FileHash"))
                 ], placement: .top)
             
             return .init(parameters: [productParameter, headerParameter, operatorParameter], front: .init(visible: [headerParameter.id, operatorParameterId], isCompleted: true), back: .init(stage: .local, required: [operatorParameterId], processed: [.init(id: operatorParameterId, value: operatorParameterValue)]))
@@ -54,36 +61,41 @@ extension Model {
                 let categoryParameter = Payments.ParameterSelect(
                     Payments.Parameter(id: categoryParameterId, value: nil),
                     title: "Категория платежа",
+                    placeholder: "Начните ввод для поиска",
                     options: fnsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample)})
                 
                 let divisionParameterId = "a3_divisionSelect_2_1"
                 guard let anywayOperator = dictionaryAnywayOperator(for: operatorParameterValue),
                       let divisionAnywayParameter = anywayOperator.parameterList.first(where: { $0.id == divisionParameterId }),
-                      let divisionAnywayParameterOptions = divisionAnywayParameter.options,
+                      let divisionAnywayParameterOptions = divisionAnywayParameter.options(style: .general),
                       let divisionAnywayParameterValue = divisionAnywayParameter.value else {
                     
                     throw Payments.Error.unableCreateRepresentable(divisionParameterId)
                 }
                 
                 // division
-                let divisionParameter = Payments.ParameterSelectSimple(
-                    Payments.Parameter(id: divisionParameterId, value: divisionAnywayParameterValue),
-                    icon: divisionAnywayParameter.iconData ?? .parameterSample,
+                let divisionParameter = Payments.ParameterSelect(
+                    .init(id: divisionParameterId, value: divisionAnywayParameterValue),
+                    icon: divisionAnywayParameter.iconData,
                     title: divisionAnywayParameter.title,
-                    selectionTitle: "Выберете услугу",
-                    options: divisionAnywayParameterOptions)
+                    placeholder: "Начните ввод для поиска",
+                    options: divisionAnywayParameterOptions.map({ .init(id: $0.id, name: $0.name, icon: nil)}))
                 
                 return .init(parameters: [categoryParameter, divisionParameter], front: .init(visible: [categoryParameterId, divisionParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [categoryParameterId, divisionParameterId], processed: nil))
                 
             case .fnsUin:
                 let numberParameterId = "a3_BillNumber_1_1"
                 
-                //TODO: min length validation
+                let numberParameterValidator = Payments.Validation.RulesSystem(rules: [
+                    Payments.Validation.LengthLimitsRule(lengthLimits: [20, 25], actions: [.post: .warning("Должен состоять из 20 или 25 цифр")])
+                ])
+                
                 let numberParameter = Payments.ParameterInput(
                     Payments.Parameter(id: numberParameterId, value: nil),
                     icon: .parameterDocument,
                     title: "УИН",
-                    validator: .anyValue)
+                    validator: numberParameterValidator,
+                    inputType: .number)
                 
                 return .init(parameters: [numberParameter], front: .init(visible: [numberParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [numberParameterId], processed: nil))
                 

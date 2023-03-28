@@ -38,8 +38,14 @@ extension PaymentsPopUpSelectView {
             
             self.init(title: title, description: description, items: [], selected: selected, action: action)
             
-            self.items = options.map { ItemViewModel(id: $0.id, name: $0.name, subtitle: $0.subtitle, isSelected: false, action: {[weak self] itemId in
-                self?.selected = itemId
+            
+            self.items = options.map { ItemViewModel(id: $0.id, name: $0.name, subtitle: $0.subtitle, isSelected: false, icon: .circle($0.id), action: {[weak self] itemId in
+                
+                if let option = options.first(where: {$0.id == itemId}) {
+                    
+                    
+                    self?.selected = option.id
+                }
             }) }
             
             self.bind()
@@ -74,16 +80,24 @@ extension PaymentsPopUpSelectView {
             let id: Option.ID
             let name: String
             let subtitle: String?
+            let icon: IconViewModel
             let action: (Option.ID?) -> Void
             @Published var isSelected: Bool
             
-            init(id: String, name: String, subtitle: String? = nil, isSelected: Bool, action: @escaping (String?) -> Void) {
+            init(id: String, name: String, subtitle: String? = nil, isSelected: Bool, icon: IconViewModel, action: @escaping (String?) -> Void) {
                 
                 self.id = id
                 self.name = name
                 self.subtitle = subtitle
                 self.isSelected = isSelected
+                self.icon = icon
                 self.action = action
+            }
+            
+            enum IconViewModel {
+                
+                case circle(String)
+                case selector
             }
         }
     }
@@ -154,50 +168,78 @@ struct PaymentsPopUpSelectView: View {
                 
                 HStack(alignment: .top, spacing: 24) {
                     
-                    if viewModel.isSelected == true {
-                        
-                        Image("Payments Icon Circle Selected")
-                            .frame(width: 24, height: 24)
-                        
-                    } else {
-                        
-                        Image("Payments Icon Circle Empty")
-                            .frame(width: 24, height: 24)
+                    IconView(viewModel: viewModel)
+
+                    VStack {
+                        Spacer()
+                        Text(viewModel.name)
+                            .foregroundColor(.textSecondary)
+                            .font(.textBodyMR14200())
+                            .frame(alignment: .center)
+                        Spacer()
                     }
-                    
-                    Text(viewModel.name)
-                        .foregroundColor(.textSecondary)
-                        .font(.textBodyMR14200())
-                        .padding(.top, 3)
                     
                     Spacer()
                 }
                 
                 if let subtitle = viewModel.subtitle {
-                    
+
                     HStack(spacing: 24) {
-                        
+
                         Color.clear
                             .frame(width: 24, height: 24)
-                        
+
                         Text(subtitle)
                             .foregroundColor(.textPlaceholder)
                             .font(.textBodySM12160())
                             .multilineTextAlignment(.leading)
-                        
+
                         Spacer()
                     }
                 }
                 
-                Divider()
-                    .frame(height: 1)
-                    .foregroundColor(Color.bordersDivider)
-                    .padding(.leading, 44)
             }
+            .frame(height: 40, alignment: .center)
             .onTapGesture {
                 
                 viewModel.action(viewModel.id)
             }
+        }
+    }
+    
+    struct IconView: View {
+        
+        let viewModel: PaymentsPopUpSelectView.ViewModel.ItemViewModel
+        
+        var body: some View {
+        
+            switch viewModel.icon {
+            case let .circle(symbol):
+                
+                ZStack {
+                    
+                    Circle()
+                        .frame(width: 40, height: 40, alignment: .center)
+                        .foregroundColor(.mainColorsBlack)
+                    
+                    Text(symbol)
+                        .foregroundColor(.mainColorsWhite)
+                        .frame(alignment: .center)
+                }
+                
+            case .selector:
+                if viewModel.isSelected == true {
+                    
+                    Image("Payments Icon Circle Selected")
+                        .frame(width: 24, height: 24)
+                    
+                } else {
+                    
+                    Image("Payments Icon Circle Empty")
+                        .frame(width: 24, height: 24)
+                }
+            }
+            
         }
     }
 }
@@ -220,9 +262,9 @@ extension PaymentsPopUpSelectView_Previews {
     static let sample = PaymentsPopUpSelectView.ViewModel(
         title: "Выберите значение",
         description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ",
-        items: [.init(id: "0", name: "В возрасте от 14 лет", isSelected: true, action: {_ in }),
-                .init(id: "1", name: "В возрасте до 14 лет", isSelected: false, action: {_ in }),
-                .init(id: "2", name: "В возрасте до 14 лет (новый образец)", isSelected: false, action: {_ in }),
-                .init(id: "3", name: "Содержащего электронный носитель информации (паспорта нового поколения)", isSelected: false, action: {_ in }),
-                .init(id: "4", name: "За внесение изменений в паспорт", subtitle: "12329823", isSelected: false, action: {_ in })], selected: "0", action: { _ in })
+        items: [.init(id: "0", name: "В возрасте от 14 лет", isSelected: true, icon: .selector, action: {_ in }),
+                .init(id: "1", name: "В возрасте до 14 лет", isSelected: false, icon: .selector, action: {_ in }),
+                .init(id: "2", name: "В возрасте до 14 лет (новый образец)", isSelected: false, icon: .selector, action: {_ in }),
+                .init(id: "3", name: "Содержащего электронный носитель информации (паспорта нового поколения)", isSelected: false, icon: .selector, action: {_ in }),
+                .init(id: "4", name: "За внесение изменений в паспорт", subtitle: "12329823", isSelected: false, icon: .selector, action: {_ in })], selected: "0", action: { _ in })
 }

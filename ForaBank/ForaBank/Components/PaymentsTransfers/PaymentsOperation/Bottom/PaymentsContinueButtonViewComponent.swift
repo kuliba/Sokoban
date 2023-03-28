@@ -21,6 +21,11 @@ extension PaymentsContinueButtonView {
             super.init(source: source)
         }
         
+        convenience init(continueParameter: Payments.ParameterContinue) {
+            
+            self.init(title: continueParameter.title, source: continueParameter)
+        }
+        
         func update(isContinueEnabled: Bool) {
             
             if isContinueEnabled == true {
@@ -70,6 +75,13 @@ struct PaymentsContinueViewComponent_Previews: PreviewProvider {
     static var previews: some View {
         
         PaymentsContinueButtonView(viewModel: .sample)
+            .previewLayout(.fixed(width: 375, height: 100))
+        
+        PaymentsContinueButtonView(viewModel: .sampleInactive)
+            .previewLayout(.fixed(width: 375, height: 100))
+        
+        PaymentsContinueButtonView(viewModel: .sampleParam)
+            .previewLayout(.fixed(width: 375, height: 100))
     }
 }
 
@@ -80,5 +92,13 @@ extension PaymentsContinueButtonView.ViewModel {
     static let sample = PaymentsContinueButtonView.ViewModel(title: "Продолжить", button: .init(title: "Продолжить", style: .red, action: {}))
     
     static let sampleInactive = PaymentsContinueButtonView.ViewModel(title: "Продолжить", button: .init(title: "Продолжить", style: .inactive, action: {}))
+    
+    static let sampleParam: PaymentsContinueButtonView.ViewModel = {
+        
+        let vm = PaymentsContinueButtonView.ViewModel (continueParameter: .init(title: "Продолжить"))
+        vm.update(isContinueEnabled: true)
+        
+        return vm
+    }()
 }
 

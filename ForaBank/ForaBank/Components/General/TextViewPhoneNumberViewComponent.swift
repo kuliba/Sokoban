@@ -9,12 +9,13 @@ import Foundation
 import SwiftUI
 import Combine
 
-extension TextFieldPhoneNumberView {
+extension TextViewPhoneNumberView {
     
     class ViewModel: ObservableObject {
         
         @Published var text: String?
         @Published var state: State
+        let isEditing: CurrentValueSubject<Bool, Never>
 
         var toolbar: ToolbarViewModel?
         var dismissKeyboard: () -> Void
@@ -27,11 +28,14 @@ extension TextFieldPhoneNumberView {
         
         let phoneNumberFormatter: PhoneNumberFormaterProtocol
         
-        init(style: Style = .general, text: String? = nil, placeHolder: PlaceHolder, state: State = .idle, toolbar: ToolbarViewModel? = nil, filterSymbols: [Character]? = nil, firstDigitReplaceList: [Replace]? = nil, phoneNumberFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater()) {
+        var hasValue: Bool { (text != "" && text != nil) ? true : false }
+
+        init(style: Style = .general, text: String? = nil, placeHolder: PlaceHolder, isEditing: Bool = false, state: State = .idle, toolbar: ToolbarViewModel? = nil, filterSymbols: [Character]? = nil, firstDigitReplaceList: [Replace]? = nil, phoneNumberFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater()) {
             
             self.style = style
             self.text = text
             self.placeHolder = placeHolder
+            self.isEditing = .init(isEditing)
             self.state = state
             self.toolbar = toolbar
             self.filterSymbols = filterSymbols
@@ -103,6 +107,7 @@ extension TextFieldPhoneNumberView {
             case payments
             case order
             case banks
+            case abroad
         }
         
         enum PlaceHolder {
@@ -119,7 +124,7 @@ extension TextFieldPhoneNumberView {
                 switch self {
                 case .contacts: return "Номер телефона или имя"
                 case .banks: return "Введите название банка"
-                case .countries: return "Введите название страны"
+                case .countries: return "Поиск"
                 case .phone: return "Мобильный телефон"
                 case .smsCode: return "Введите код из СМС"
                 case let .text(text): return text
@@ -129,7 +134,7 @@ extension TextFieldPhoneNumberView {
     }
 }
 
-extension TextFieldPhoneNumberView.ViewModel {
+extension TextViewPhoneNumberView.ViewModel {
     
     struct Replace {
         
@@ -138,118 +143,152 @@ extension TextFieldPhoneNumberView.ViewModel {
     }
 }
 
-struct TextFieldPhoneNumberView: UIViewRepresentable {
+struct TextViewPhoneNumberView: UIViewRepresentable {
     
-    @ObservedObject var viewModel: TextFieldPhoneNumberView.ViewModel
+    @ObservedObject var viewModel: TextViewPhoneNumberView.ViewModel
     
-    private let textField = UITextField()
+    var font: UIFont = .systemFont(ofSize: 19, weight: .regular)
+    var backgroundColor: Color = .clear
+    var textColor: Color = .black
+    var tintColor: Color = .black
     
-    func makeUIView(context: Context) -> UITextField {
+    func makeUIView(context: Context) -> UITextView {
         
-        textField.delegate = context.coordinator
-        textField.returnKeyType = .done
-        textField.autocorrectionType = .no
-        textField.shouldHideToolbarPlaceholder = false
-        textField.spellCheckingType = .no
-        textField.placeholder = viewModel.placeHolder.title
+        let textView = WrappedTextView()
+        textView.font = font
+        textView.backgroundColor = backgroundColor.uiColor()
+        textView.textColor = .lightGray
+        textView.tintColor = tintColor.uiColor()
+        textView.text = viewModel.placeHolder.title
+        textView.delegate = context.coordinator
+        textView.isScrollEnabled = false
+        textView.textContainer.lineFragmentPadding = 0
+        textView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        textView.setContentHuggingPriority(.defaultHigh, for: .vertical)
         
         switch viewModel.style {
-        case .general:
-            textField.keyboardType = .default
+        case .general, .banks, .abroad:
+            textView.keyboardType = .default
             
         case .payments:
-            textField.keyboardType = .phonePad
-            textField.font = .init(name: "Inter-Medium", size: 14.0)
+            textView.keyboardType = .phonePad
+            textView.font = .init(name: "Inter-Medium", size: 14.0)
         
         case .order:
-            textField.keyboardType = .decimalPad
-            textField.font = .init(name: "Inter", size: 16)
-            
-        case .banks:
-            textField.keyboardType = .default
+            textView.keyboardType = .decimalPad
+            textView.font = .init(name: "Inter", size: 16)
         }
         
-        viewModel.dismissKeyboard = { textField.resignFirstResponder() }
+        viewModel.dismissKeyboard = { textView.resignFirstResponder() }
         
         if let toolbarViewModel = viewModel.toolbar {
             
-            textField.inputAccessoryView = makeToolbar(toolbarViewModel: toolbarViewModel, context: context)
+            textView.inputAccessoryView = makeToolbar(toolbarViewModel: toolbarViewModel, context: context)
         }
         
-        return textField
+        return textView
     }
     
-    func updateUIView(_ uiView: UITextField, context: Context) {
+    func updateUIView(_ uiView: UITextView, context: Context) {
+
+        if viewModel.hasValue {
+            
+            uiView.textColor = textColor.uiColor()
+            uiView.text = viewModel.text
+        }
         
-        uiView.text = viewModel.text
+        uiView.autocapitalizationType = .none
+        uiView.autocorrectionType = .no
     }
     
     func makeCoordinator() -> Coordinator {
         
-        return Coordinator(viewModel: viewModel)
+        Coordinator(viewModel: viewModel, backgroundColor: backgroundColor, textColor: textColor, tintColor: tintColor)
     }
     
-    class Coordinator: NSObject, UITextFieldDelegate {
+    class Coordinator: NSObject, UITextViewDelegate {
         
         let viewModel: ViewModel
+        let backgroundColor: Color
+        let textColor: Color
+        let tintColor: Color
         
-        init(viewModel: ViewModel) {
+        init(viewModel: ViewModel, backgroundColor: Color, textColor: Color, tintColor: Color) {
             
             self.viewModel = viewModel
+            self.backgroundColor = backgroundColor
+            self.textColor = textColor
+            self.tintColor = tintColor
+            super.init()
         }
         
-        func textFieldDidBeginEditing(_ textField: UITextField) {
+        func textViewDidBeginEditing(_ textView: UITextView) {
+
+            if viewModel.hasValue == false {
             
-            textField.placeholder = nil
-            viewModel.state = state(for: viewModel.text)
-        }
-        
-        func textFieldDidEndEditing(_ textField: UITextField) {
-            
-            guard let text = textField.text else {
-                return
+                textView.text = ""
             }
             
-            switch text.isEmpty {
-            case true:
-                textField.placeholder = viewModel.placeHolder.title
-            case false:
-                textField.text = viewModel.text
+            textView.textColor = textColor.uiColor()
+            viewModel.state = state(for: viewModel.text)
+            viewModel.isEditing.value = true
+
+        }
+        
+        func textViewDidEndEditing(_ textView: UITextView) {
+
+            if viewModel.hasValue == false {
+            
+                textView.text = viewModel.placeHolder.title
+                textView.textColor = .lightGray
             }
             
             viewModel.state = .idle
+            viewModel.isEditing.value = false
         }
         
-        func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
             switch viewModel.style {
             case .order:
-                let result = TextFieldPhoneNumberView.updateMasked(value: textField.text, inRange: range, update: string, firstDigitReplace: viewModel.firstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
+                let result = TextViewPhoneNumberView.updateMasked(value: textView.text, inRange: range, update: text, firstDigitReplace: viewModel.firstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
                 
-                let isValidate = isOrderValidate(textField, result: result)
+                let isValidate = isOrderValidate(textView, result: result)
                 
                 switch isValidate {
                 case true: break
                 case false: return isValidate
                 }
                 
-                textField.text = result
+                textView.text = result
                 viewModel.text = result
             
             case .banks:
-                let result = TextFieldRegularView.updateMasked(value: textField.text, inRange: range, update: string, limit: nil)
+                let result = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: nil)
                 
-                textField.text = result
+                textView.text = result
+                viewModel.text = result
+                
+            case .abroad:
+                let result = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: nil)?.filter({$0.isLetter})
+                    
+                textView.text = result
+                viewModel.text = result
+            
+            case .payments:
+                let result = TextViewPhoneNumberView.updateMasked(value: textView.text, inRange: range, update: text, firstDigitReplace: viewModel.firstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
+                
+                textView.text = result
                 viewModel.text = result
                 
             default:
-                let result = TextFieldPhoneNumberView.updateMasked(value: textField.text, inRange: range, update: string, firstDigitReplace: viewModel.firstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
+                let result = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: nil)
                 
-                textField.text = result
+                textView.text = result
                 viewModel.text = result
             }
 
-            if textField.isFirstResponder {
+            if textView.isFirstResponder {
                 
                 viewModel.state = state(for: viewModel.text)
                 
@@ -269,7 +308,7 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
             viewModel.toolbar?.closeButton?.action()
         }
         
-        func state(for text: String?) -> TextFieldPhoneNumberView.ViewModel.State {
+        func state(for text: String?) -> TextViewPhoneNumberView.ViewModel.State {
             
             if viewModel.text != nil {
                 
@@ -281,18 +320,18 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
             }
         }
         
-        private func isOrderValidate(_ textField: UITextField, result: String?) -> Bool {
+        private func isOrderValidate(_ textView: UITextView, result: String?) -> Bool {
             
             if let text = result, viewModel.phoneNumberFormatter.isValid(text) {
                 
-                textField.text = result
+                textView.text = result
                 viewModel.text = result
                 
                 return false
                 
             } else {
                 
-                if let text = textField.text, let result = result {
+                if let text = textView.text, let result = result {
                     
                     let expectedCharacters = "0123456789"
                     
@@ -309,7 +348,7 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
         }
     }
     
-    static func updateMasked(value: String?, inRange: NSRange, update: String, firstDigitReplace: [TextFieldPhoneNumberView.ViewModel.Replace]?, phoneFormatter: PhoneNumberFormaterProtocol, filterSymbols: [Character]?) -> String? {
+    static func updateMasked(value: String?, inRange: NSRange, update: String, firstDigitReplace: [TextViewPhoneNumberView.ViewModel.Replace]?, phoneFormatter: PhoneNumberFormaterProtocol, filterSymbols: [Character]?) -> String? {
         
         if let value = value {
             
@@ -335,7 +374,7 @@ struct TextFieldPhoneNumberView: UIViewRepresentable {
             }
             
             guard filteredValue.isNumeric || phoneFormatter.isValid(update) else {
-                return updatedValue.isEmpty ? nil : updatedValue
+                return updatedValue.isEmpty ? nil : value
             }
             
             var phone = updatedValue.digits

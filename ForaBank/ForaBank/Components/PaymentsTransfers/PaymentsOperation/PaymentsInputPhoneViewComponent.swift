@@ -16,7 +16,7 @@ extension PaymentsInputPhoneView {
         
         let icon: Image
         let description: String
-        let textField: TextFieldPhoneNumberView.ViewModel
+        let textView: TextViewPhoneNumberView.ViewModel
         @Published var title: String?
         @Published var actionButton: ActionButtonViewModel?
         
@@ -26,7 +26,7 @@ extension PaymentsInputPhoneView {
         var parameterInput: Payments.ParameterInput? { source as? Payments.ParameterInput }
         override var isValid: Bool {
             
-            guard let phone = textField.text else {
+            guard let phone = textView.text else {
                 return false
             }
             
@@ -37,7 +37,7 @@ extension PaymentsInputPhoneView {
                 
             } else {
                 
-                return textField.phoneNumberFormatter.isValid(phone.digits)
+                return textView.phoneNumberFormatter.isValid(phone.digits)
             }
             
 #else
@@ -49,7 +49,7 @@ extension PaymentsInputPhoneView {
             
             self.icon = icon
             self.description = description
-            self.textField = .init(style: .payments, text: phone, placeHolder: .text(description), filterSymbols: [Character("-"), Character("("), Character(")"), Character("+")], firstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")], phoneNumberFormatter: PhoneNumberKitFormater())
+            self.textView = .init(style: .payments, text: phone, placeHolder: .text(description), filterSymbols: [Character("-"), Character("("), Character(")"), Character("+")], firstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")], phoneNumberFormatter: PhoneNumberKitFormater())
             self.title = title
             self.actionButton = actionButton
             self.model = model
@@ -62,14 +62,14 @@ extension PaymentsInputPhoneView {
             let description = parameterInput.title
             let phone = parameterInput.parameter.value
 
-            self.init(description: description, phone: phone, actionButton: nil, model: model, source: parameterInput)
+            self.init(description: parameterInput.placeholder ?? description, phone: phone, title: description, model: model, source: parameterInput)
             
             if let phone = phone {
 
 #if DEBUG
                 if phone.digits != "70115110217" {
                     
-                    textField.text = textField.phoneNumberFormatter.partialFormatter("+\(phone.digits)")
+                    textView.text = textView.phoneNumberFormatter.partialFormatter("+\(phone.digits)")
                 }
 
 #else
@@ -85,17 +85,17 @@ extension PaymentsInputPhoneView {
                 self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Show(viewModel: contactViewModel))
             })
             
-            textField.toolbar = .init(doneButton: .init(isEnabled: true,
-                                                        action: { [weak self] in self?.textField.dismissKeyboard() }),
+            textView.toolbar = .init(doneButton: .init(isEnabled: true,
+                                                        action: { [weak self] in self?.textView.dismissKeyboard() }),
                                       closeButton: .init(isEnabled: true,
-                                                         action: { [weak self] in self?.textField.dismissKeyboard() }))
+                                                         action: { [weak self] in self?.textView.dismissKeyboard() }))
             
             bind()
         }
 
         private func bind() {
             
-            textField.$text
+            textView.$text
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] phone in
                     
@@ -104,6 +104,27 @@ extension PaymentsInputPhoneView {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         
                         title = phone != nil ? description : nil
+                    }
+
+                }.store(in: &bindings)
+            
+            textView.isEditing
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isEditing in
+
+                    if isEditing || textView.hasValue {
+
+                        withAnimation {
+
+                            title = description
+                        }
+
+                    } else {
+
+                        withAnimation {
+
+                            title = nil
+                        }
                     }
 
                 }.store(in: &bindings)
@@ -117,7 +138,7 @@ extension PaymentsInputPhoneView {
                     
                     switch action {
                     case let payload as ContactsViewModelAction.ContactPhoneSelected:
-                        self?.textField.text = payload.phone
+                        self?.textView.text = payload.phone
                         self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Close())
     
                     default:
@@ -166,64 +187,62 @@ struct PaymentsInputPhoneView: View {
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 0) {
+        HStack(spacing: 16) {
             
-            if let title = viewModel.title {
-                
-                Text(title)
-                    .font(.textBodySR12160())
-                    .foregroundColor(.textPlaceholder)
-                    .padding(.bottom, 4)
-                    .padding(.leading, 48)
-                    .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .opacity))
-                
-            }
+            viewModel.icon
+                .resizable()
+                .renderingMode(.template)
+                .foregroundColor(.mainColorsGray)
+                .frame(width: 24, height: 24)
             
-            HStack(spacing: 20) {
+            VStack(alignment: .leading, spacing: 4) {
                 
-                viewModel.icon
-                    .resizable()
-                    .renderingMode(.template)
-                    .foregroundColor(.mainColorsGray)
-                    .frame(width: 24, height: 24)
-                    .padding(.leading, 4)
-                
-                if viewModel.isEditable == true {
+                if let title = viewModel.title {
                     
-                    TextFieldPhoneNumberView(viewModel: viewModel.textField)
-                        .foregroundColor(.textSecondary)
+                    Text(title)
                         .font(.textBodyMM14200())
-                        .frame(height: 24)
+                        .foregroundColor(.textPlaceholder)
+                        .padding(.bottom, 4)
+                        .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .opacity))
                     
-                } else {
-                    
-                    Text(viewModel.textField.text ?? "")
-                        .foregroundColor(.textSecondary)
-                        .font(.textBodyMM14200())
                 }
                 
-                Spacer()
-                
-                if let actionButton = viewModel.actionButton, viewModel.isEditable == true {
-                 
-                    Button(action: actionButton.action) {
+                HStack(spacing: 20) {
+                    
+                    if viewModel.isEditable == true {
                         
-                        actionButton.icon
-                            .resizable()
-                            .renderingMode(.template)
-                            .foregroundColor(.mainColorsGray)
-                            .frame(width: 24, height: 24)
+                        TextViewPhoneNumberView(viewModel: viewModel.textView)
+                            .foregroundColor(.textSecondary)
+                            .font(.textBodyMM14200())
+                            .frame(height: 24)
+                        
+                    } else {
+                        
+                        Text(viewModel.textView.text ?? "")
+                            .foregroundColor(.textSecondary)
+                            .font(.textBodyMM14200())
                     }
+                    
+                    Spacer()
                 }
             }
             
-            Divider()
-                .frame(height: 1)
-                .background(Color.bordersDivider)
-                .opacity(viewModel.isEditable ? 1.0 : 0.2)
-                .padding(.top, 12)
-                .padding(.leading, 48)
+            if let actionButton = viewModel.actionButton, viewModel.isEditable == true {
+                
+                Button(action: actionButton.action) {
+                    
+                    actionButton.icon
+                        .resizable()
+                        .renderingMode(.template)
+                        .foregroundColor(.mainColorsGray)
+                        .frame(width: 24, height: 24)
+                }
+            }
         }
+        .frame(height: 72)
+        .padding(.horizontal, 13)
+        .background(Color.mainColorsGrayLightest)
+        .cornerRadius(12)
     }
 }
 
