@@ -447,7 +447,7 @@ extension ServerCommands {
             struct Payload: Encodable {
                 
                 let check: Bool?
-                let amount: Double?
+                let amount: Decimal?
                 let currencyAmount: String?
                 let payer: Payer?
                 let comment: String?
