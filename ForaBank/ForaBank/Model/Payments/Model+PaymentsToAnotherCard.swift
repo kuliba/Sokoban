@@ -131,6 +131,7 @@ extension Model {
     func paymentsProcessRemoteStepToAnotherCard(operation: Payments.Operation, response: TransferResponseData) async throws -> Payments.Operation.Step {
 
         var parameters = [PaymentsParameterRepresentable]()
+        let group = Payments.Parameter.Group(id: UUID().uuidString, type: .info)
         
         if let amountValue = response.debitAmount,
               let amountFormatted = paymentsAmountFormatted(amount: amountValue, parameters: operation.parameters) {
@@ -139,7 +140,7 @@ extension Model {
             let amountParameter = Payments.ParameterInfo(
                 .init(id: amountParameterId, value: amountFormatted),
                 icon: ImageData(named: "ic24Coins") ?? .parameterDocument,
-                title: "Сумма перевода", placement: .feed)
+                title: "Сумма перевода", placement: .feed, group: group)
 
             parameters.append(amountParameter)
         }
@@ -151,7 +152,7 @@ extension Model {
             let feeParameter = Payments.ParameterInfo(
                 .init(id: feeParameterId, value: feeAmountFormatted),
                 icon: .init(named: "ic24PercentCommission") ?? .parameterDocument,
-                title: "Комиссия", placement: .feed)
+                title: "Комиссия", placement: .feed, group: group)
             
             parameters.append(feeParameter)
         }
