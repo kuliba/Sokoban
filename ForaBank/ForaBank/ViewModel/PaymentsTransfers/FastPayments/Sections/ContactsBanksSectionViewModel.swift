@@ -57,7 +57,7 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
                     return
                 }
                 
-                self.items.value = await Self.reduceBanksFullInfo(bankList: banks.filter({$0.memberId != nil}), preffered: model.prefferedBanksList.value, action: { [weak self]  bank in
+                self.items.value = await Self.reduceBanksFullInfo(bankList: banks, preffered: model.prefferedBanksList.value, action: { [weak self]  bank in
                     
                     {
                         if let memberId = bank.memberId {
