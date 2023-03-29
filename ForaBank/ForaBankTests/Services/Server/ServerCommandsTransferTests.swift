@@ -359,7 +359,7 @@ class ServerCommandsTransferTests: XCTestCase {
         let url = bundle.url(forResource: "CreateInterestDepositTransferResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let expected = ServerCommands.TransferController.CreateInterestDepositTransfer.Response(statusCode: .ok, errorMessage: "string", data: .init(needMake: true, needOTP: true, amount: 100, creditAmount: 100, fee: 100, currencyAmount: "100.0", currencyPayer: "RUB", currencyPayee: "RUB", currencyRate: 86.7, debitAmount: 100, payeeName: "Иван Иванович И.", paymentOperationDetailId: 1, documentStatus: .complete))
+        let expected = ServerCommands.TransferController.CreateInterestDepositTransfer.Response(statusCode: .ok, errorMessage: "string", data: .init(needMake: true, needOTP: true, amount: 100.02, creditAmount: 100.02, fee: 100, currencyAmount: "100.02", currencyPayer: "RUB", currencyPayee: "RUB", currencyRate: 86.7, debitAmount: 100, payeeName: "Иван Иванович И.", paymentOperationDetailId: 1, documentStatus: .complete))
         
         // when
         let result = try decoder.decode(ServerCommands.TransferController.CreateInterestDepositTransfer.Response.self, from: json)
