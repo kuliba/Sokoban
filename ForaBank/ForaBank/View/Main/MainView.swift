@@ -84,9 +84,6 @@ struct MainView: View {
             .coordinateSpace(name: "scroll")
             .zIndex(0)
             
-            RefreshingIndicatorView(viewModel: viewModel.refreshingIndicator)
-                .zIndex(1)
-                
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
                 if let link = viewModel.link  {
@@ -326,7 +323,6 @@ struct MainView_Previews: PreviewProvider {
 extension MainViewModel {
     
     static let sample = MainViewModel(
-        refreshingIndicator: .init(isActive: true),
         navButtonsRight: [.init(icon: .ic24Search, action: {}),
                           .init(icon: .ic24Bell, action: {})],
         sections: [MainSectionProductsView.ViewModel.sample,
@@ -335,10 +331,9 @@ extension MainViewModel {
                    MainSectionCurrencyMetallView.ViewModel.sample,
                    MainSectionOpenProductView.ViewModel.sample])
     
-    static let sampleProducts = MainViewModel(refreshingIndicator: .init(isActive: false),navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample])
+    static let sampleProducts = MainViewModel(navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample])
     
     static let sampleOldCurrency = MainViewModel(
-                                    refreshingIndicator: .init(isActive: false),
                                     navButtonsRight: [.init(icon: .ic24Search, action: {}),
                                                       .init(icon: .ic24Bell, action: {})],
                                     sections: [MainSectionProductsView.ViewModel(.productsMock),

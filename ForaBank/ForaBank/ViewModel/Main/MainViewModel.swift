@@ -14,7 +14,6 @@ class MainViewModel: ObservableObject, Resetable {
     let action: PassthroughSubject<Action, Never> = .init()
     
     lazy var userAccountButton: UserAccountButtonViewModel = .init(logo: .ic20ForaNy, name: "", avatar: nil, action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())})
-    let refreshingIndicator: RefreshingIndicatorView.ViewModel
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
     @Published var sections: [MainSectionViewModel]
     @Published var productProfile: ProductProfileViewModel?
@@ -31,9 +30,8 @@ class MainViewModel: ObservableObject, Resetable {
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(refreshingIndicator: RefreshingIndicatorView.ViewModel, navButtonsRight: [NavigationBarButtonViewModel], sections: [MainSectionViewModel], model: Model = .emptyMock) {
+    init(navButtonsRight: [NavigationBarButtonViewModel], sections: [MainSectionViewModel], model: Model = .emptyMock) {
         
-        self.refreshingIndicator = refreshingIndicator
         self.navButtonsRight = navButtonsRight
         self.sections = sections
         self.model = model
@@ -41,7 +39,6 @@ class MainViewModel: ObservableObject, Resetable {
     
     init(_ model: Model) {
         
-        self.refreshingIndicator = .init(isActive: false)
         self.navButtonsRight = []
         self.sections = [MainSectionProductsView.ViewModel(model),
                          MainSectionFastOperationView.ViewModel(),
@@ -184,17 +181,6 @@ class MainViewModel: ObservableObject, Resetable {
                         return
                     }
                 }
-            }.store(in: &bindings)
-        
-        model.productsUpdating
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] productsUpdating in
-                
-                withAnimation {
-                    
-                    refreshingIndicator.isActive = productsUpdating.isEmpty ? false : true
-                }
-                
             }.store(in: &bindings)
         
         model.clientInfo
