@@ -1017,6 +1017,7 @@ private extension ProductProfileViewModel {
                 switch action {
                 case let payload as CloseAccountSpinnerAction.Response.Success:
                     bind(payload.viewModel)
+                    self.success = payload.viewModel
                     
                 case let payload as CloseAccountSpinnerAction.Response.Failed:
                     makeAlert(payload.message)
