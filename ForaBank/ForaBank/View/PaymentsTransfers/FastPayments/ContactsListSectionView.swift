@@ -23,7 +23,7 @@ struct ContactsListSectionView: View {
             
             ScrollView(.vertical) {
                 
-                VStack(spacing: 24) {
+                LazyVGrid(columns: [.init()]) {
                     
                     ForEach(viewModel.visible) { contact in
                         
@@ -38,6 +38,7 @@ struct ContactsListSectionView: View {
                             EmptyView()
                         }
                     }
+                    .padding(.bottom, 16)
                 }
                 .padding(.bottom, 10)
                 .padding(.horizontal, 20)
