@@ -562,7 +562,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case _ as PaymentsSuccessAction.Button.Close:
-                    
+                    model.action.send(ModelAction.Products.Update.ForProductType(productType: .deposit))
+
                     self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
                     self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
                     
