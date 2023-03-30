@@ -80,8 +80,6 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         case let .c2bSubscriptionData(c2bSubscribtion):
             
             self.init(model, title: c2bSubscribtion.title, warningTitle: nil, amount: nil, iconType: .init(with: c2bSubscribtion.operationStatus), service: nil, options: nil, logo: nil, repeatButton: nil, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [], company: .init(with: c2bSubscribtion, model: model), link: .init(with: c2bSubscribtion), bottomIcon: .ic72Sbp)
-            
-            actionButton = .init(title: "На главный", style: .red, action: closeAction)
 
         case let .mobileConnectionData(mobileConnectionData):
             
@@ -120,6 +118,8 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             
             self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentSuccess.operationDetailId)))
         }
+        
+        actionButton = .init(title: "На главный", style: .red, action: closeAction)
     }
     
     convenience init?(_ model: Model, mode: Mode = .normal, transferData: TransferResponseData) {
@@ -131,6 +131,8 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         let amount = Self.amountFormatted(model, amount: transferData.debitAmount ?? 0, currencyCode: transferData.currencyPayer?.description)
         
         self.init(model, documentStatus: documentStatus, mode: mode, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [])
+        
+        actionButton = .init(title: "На главный", style: .red, action: closeAction)
         
         bind(mode, paymentOperationDetailId: transferData.paymentOperationDetailId, documentStatus: documentStatus)
         
@@ -147,6 +149,8 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         let amount = Self.amountFormatted(model, amount: debitAmount, currencyCode: transferData.currencyPayer?.description)
         
         self.init(model, documentStatus: documentStatus, mode: mode, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [])
+        
+        actionButton = .init(title: "На главный", style: .red, action: closeAction)
         
         bind(mode, paymentOperationDetailId: transferData.paymentOperationDetailId, documentStatus: documentStatus)
         bind(mode, paymentOperationDetailId: transferData.paymentOperationDetailId, amount: debitAmount, productIdFrom: productIdFrom, productIdTo: productIdTo, documentStatus: documentStatus)
@@ -181,6 +185,8 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentOperationDetailId)))
             }
         }
+        
+        actionButton = .init(title: "На главный", style: .red, action: closeAction)
     }
     
     convenience init(_ model: Model, documentStatus: TransferResponseBaseData.DocumentStatus, mode: Mode, amount: String?, actionButton: ButtonSimpleView.ViewModel, optionButtons: [PaymentsSuccessOptionButtonViewModel]) {
@@ -311,7 +317,6 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
     
     private func updateButtons(_ mode: Mode, documentStatus: TransferResponseBaseData.DocumentStatus, paymentOperationDetailId: Int, operationDetail: OperationDetailData? = nil) {
         
-        actionButton = .init(title: "На главный", style: .red, action: closeAction)
         optionButtons = makeOptionButtons(mode, documentStatus: documentStatus, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail)
     }
 }
