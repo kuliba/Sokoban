@@ -275,7 +275,7 @@ struct PaymentsCodeView: View {
                     .frame(width: 24, height: 24)
                     .padding(.top, 12)
                 
-                VStack(spacing: 0) {
+                VStack {
                     
                     if let title = viewModel.title {
                         
@@ -293,6 +293,11 @@ struct PaymentsCodeView: View {
                             .onTapGesture {
                                 viewModel.editingState = .idle
                             }
+                            .padding(.bottom, 8)
+                            .foregroundColor(.textSecondary)
+                            .font(.textBodyMM14200())
+                            .textFieldStyle(DefaultTextFieldStyle())
+                            .keyboardType(.numberPad)
                     }
                     
                     if let resendState = viewModel.resendState {

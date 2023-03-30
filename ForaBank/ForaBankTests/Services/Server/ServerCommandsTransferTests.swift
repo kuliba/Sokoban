@@ -37,7 +37,7 @@ class ServerCommandsTransferTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "ChangeOutgoingResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.TransferController.ChangeOutgoing.Response(statusCode: .ok, errorMessage: "string", data: EmptyData())
+        let expected = ServerCommands.TransferController.ChangeOutgoing.Response(statusCode: .ok, errorMessage: "string", data: .init(documentStatus: .complete, paymentOperationDetailId: 1))
         
         // when
         let result = try decoder.decode(ServerCommands.TransferController.ChangeOutgoing.Response.self, from: json)
@@ -342,7 +342,7 @@ class ServerCommandsTransferTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "ReturnOutgoingResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.TransferController.ReturnOutgoing.Response(statusCode: .ok, errorMessage: "string", data: EmptyData())
+        let expected = ServerCommands.TransferController.ReturnOutgoing.Response(statusCode: .ok, errorMessage: "string", data: .init(documentStatus: .complete, paymentOperationDetailId: 1))
         
         // when
         let result = try decoder.decode(ServerCommands.TransferController.ReturnOutgoing.Response.self, from: json)

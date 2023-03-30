@@ -122,6 +122,9 @@ extension Model {
         case .requisites: return .requisites
         case .c2bSubscribe: return .c2b
         case .direct: return .abroad
+        case .return: return .return
+        case .change: return .change
+            
         default:
             throw Payments.Error.unsupported
         }
@@ -186,9 +189,6 @@ extension Model {
             
         case .toAnotherCard:
             return try await paymentsProcessOperationResetVisibleToAnotherCard(operation)
-            
-        case .mobileConnection:
-            return try await paymentsProcessOperationResetVisibleToMobileConnection(operation)
 
         default:
             return nil
@@ -231,6 +231,12 @@ extension Model {
 
         case .mobileConnection:
             return try await paymentsProcessLocalStepMobileConnection(operation, for: stepIndex)
+            
+        case .change:
+            return try await paymentsStepChangePayment(operation, for: stepIndex)
+
+        case .return:
+            return try await paymentsStepReturnPayment(operation, for: stepIndex)
         }
     }
     
@@ -300,7 +306,7 @@ extension Model {
                 
                 let visible = try paymentsTransferAnywayStepVisible(operation, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
                 let stepStage = try paymentsTransferAnywayStepStage(operation, response: anywayResponse)
-                let restricted: [Payments.Parameter.ID] = [Payments.Parameter.Identifier.countrybSurName.rawValue]
+                let restricted: [Payments.Parameter.ID] = ["bSurName"]
                 let required = try paymentsTransferAnywayStepRequired(operation, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters, restrictedParameters: restricted)
                 
                 return Payments.Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, required: required, processed: nil))
@@ -440,7 +446,7 @@ extension Model {
             
         case .toAnotherCard:
             return try await paymentsTransferToAnotherProcess(parameters: operation.parameters, process: process)
-            
+               
         case .mobileConnection:
             return try await paymentsTransferMobileConnectionProcess(parameters: operation.parameters, process: process)
         
@@ -503,6 +509,12 @@ extension Model {
         case .c2b:
             return try await paymentsC2BComplete(operation: operation)
             
+        case .return:
+            return try await paymentsReturnAbroad(operation: operation)
+            
+        case .change:
+            return try await paymentsChangeAbroad(operation: operation)
+
         default:
             throw Payments.Error.unsupported
         }

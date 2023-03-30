@@ -1,5 +1,8 @@
 {
-  "data": {},
-  "errorMessage": "string",
-  "statusCode": 0
+    "data": {
+        "paymentOperationDetailId": 1,
+        "documentStatus": "COMPLETE"
+    },
+    "errorMessage": "string",
+    "statusCode": 0
 }

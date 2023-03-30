@@ -22,6 +22,8 @@ extension Payments.Service {
         case .c2b: return [.c2b]
         case .toAnotherCard: return [.toAnotherCard]  
         case .mobileConnection: return [.mobileConnection]
+        case .return: return [.return]
+        case .change: return [.change]
         }
     }
     
@@ -48,6 +50,8 @@ extension Payments.Service {
         case .c2b: return .c2b
         case .toAnotherCard: return .toAnotherCard
         case .mobileConnection: return .mobileConnection
+        case .return: return .return
+        case .change: return .change
         }
     }
 }

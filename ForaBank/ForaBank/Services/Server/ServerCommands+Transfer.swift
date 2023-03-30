@@ -42,7 +42,7 @@ extension ServerCommands {
         struct ChangeOutgoing: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/transfer/changeOutgoing"
+            let endpoint = "/rest/transfer/changeOutgoing_V2"
             let method: ServerCommandMethod = .post
             let payload: Payload?
             
@@ -58,7 +58,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: EmptyData?
+                let data: TransferResponseBaseData?
             }
             
             internal init(token: String, payload: Payload) {
@@ -410,7 +410,7 @@ extension ServerCommands {
         struct ReturnOutgoing: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/transfer/returnOutgoing"
+            let endpoint = "/rest/transfer/returnOutgoing_V2"
             let method: ServerCommandMethod = .post
             let payload: Payload?
             
@@ -424,7 +424,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: EmptyData?
+                let data: TransferResponseBaseData?
             }
             
             internal init(token: String, payload: Payload) {

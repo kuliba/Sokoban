@@ -80,10 +80,24 @@ struct PaymentsSuccessView: View {
                 }
                 
                 if let logoIconViewModel = viewModel.logo {
+                    
                     LogoIconView(viewModel: logoIconViewModel)
                 }
                 
                 Spacer()
+            }
+            
+            if let additionalButtons = viewModel.additioinalButtons {
+                
+                HStack(spacing: 0) {
+                    
+                    ForEach(additionalButtons, id: \.id) { button in
+                        
+                        ButtonSimpleView(viewModel: .init(title: button.title, style: .gray, action: button.action))
+                            .frame(height: 48)
+                            .padding(.horizontal, 20)
+                    }
+                }
             }
             
             Group {
@@ -123,6 +137,16 @@ struct PaymentsSuccessView: View {
                     
                 }.padding(.bottom, bottomPadding)
             }
+            
+            Color.clear
+                .fullScreenCover(item: $viewModel.fullScreenSheet, content: { item in
+                    
+                    switch item.type {
+                    case let .abroad(viewModel):
+                        PaymentsView(viewModel: viewModel)
+                            .navigationBarBackButtonHidden(true)
+                    }
+                })
         }
         .background(Color.mainColorsWhite)
         .sheet(item: $viewModel.sheet) { sheet in
@@ -135,6 +159,9 @@ struct PaymentsSuccessView: View {
                 OperationDetailInfoView(viewModel: detailViewModel)
             }
         }
+        .alert(item: $viewModel.alert, content: { alertViewModel in
+            Alert(with: alertViewModel)
+        })
     }
 }
 
@@ -257,9 +284,12 @@ extension PaymentsSuccessView {
                     .resizable()
                     .frame(width: 40, height: 40)
                 
-                Text(viewModel.name)
-                    .font(.textBodyMM14200())
-                    .foregroundColor(.textSecondary)
+                if let name = viewModel.name {
+                    
+                    Text(name)
+                        .font(.textBodyMM14200())
+                        .foregroundColor(.textSecondary)
+                }
             }
         }
     }

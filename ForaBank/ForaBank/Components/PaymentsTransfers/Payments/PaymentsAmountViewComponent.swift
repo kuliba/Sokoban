@@ -49,7 +49,7 @@ extension PaymentsAmountView {
         
         convenience init(with parameterAmount: Payments.ParameterAmount, model: Model) {
             
-            self.init(title: parameterAmount.title, textField: .init(parameterAmount.amount, currencySymbol: parameterAmount.currencySymbol), transferButton: .inactive(title: parameterAmount.transferButtonTitle), actionTitle: parameterAmount.transferButtonTitle, source: parameterAmount)
+            self.init(title: parameterAmount.title, textField: .init(parameterAmount.amount, currencySymbol: parameterAmount.currencySymbol),transferButton: .inactive(title: parameterAmount.transferButtonTitle), actionTitle: parameterAmount.transferButtonTitle, source: parameterAmount)
             
             if let infoData = parameterAmount.info {
                 
