@@ -102,6 +102,11 @@ extension Payments.Parameter {
         case countryCurrencyFilter              = "countryCurrencyFilter"
         case countrybSurName                    = "bSurName"
         
+        case countryReturnNumber                = "countryReturnNumber"
+        case countryReturnAmount                = "countryReturnAmount"
+        case countryReturnName                  = "countryReturnName"
+        case countryOperationId                 = "countryOperationId"
+        
         case c2bQrcId                         = "qrcId"
         
         case mobileConnectionPhone = "MobileConnectionPhone"

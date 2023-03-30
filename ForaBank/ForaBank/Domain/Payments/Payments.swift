@@ -20,7 +20,7 @@ enum Payments {
         var services: [Service] {
             
             switch self {
-            case .general: return [.requisites, .c2b, .toAnotherCard, .mobileConnection]
+            case .general: return [.requisites, .c2b, .toAnotherCard, .mobileConnection, .return, .change]
             case .fast: return [.sfp, .abroad]
             case .taxes: return [.fns, .fms, .fssp]
             }
@@ -60,23 +60,27 @@ enum Payments {
         case c2b
         case toAnotherCard
         case mobileConnection
+        case `return`
+        case change
     }
     
     enum Operator : String {
         
-        case sfp         = "iFora||TransferC2CSTEP"
-        case direct      = "iFora||MIG"
-        case directCard  = "iFora||MIG||card"
-        case contact     = "iFora||Addressless"
-        case contactCash = "iFora||Addressing||cash"
-        case fssp        = "iFora||5429"
-        case fms         = "iFora||6887"
-        case fns         = "iFora||6273"
-        case fnsUin         = "iFora||7069"
-        case requisites  = "requisites"
+        case sfp               = "iFora||TransferC2CSTEP"
+        case direct            = "iFora||MIG"
+        case directCard        = "iFora||MIG||card"
+        case contact           = "iFora||Addressless"
+        case contactCash       = "iFora||Addressing||cash"
+        case fssp              = "iFora||5429"
+        case fms               = "iFora||6887"
+        case fns               = "iFora||6273"
+        case fnsUin            = "iFora||7069"
+        case requisites        = "requisites"
         case c2b               = "c2b"
         case toAnotherCard     = "toAnotherCard"
         case mobileConnection  = "mobileConnection"
+        case `return`          = "return"
+        case change            = "change"
     }
 }
 
@@ -182,6 +186,10 @@ extension Payments.Operation {
         
         case direct(phone: String?, countryId: CountryData.ID)
         
+        case `return`(operationId: String, transferNumber: String, amount: String)
+        
+        case change(operationId: String, transferNumber: String, name: String)
+        
         case requisites(qrCode: QRCode)
         
         case c2bSubscribe(URL)
@@ -196,6 +204,8 @@ extension Payments.Operation {
             case .qr: return "qr"
             case let .sfp(phone: phone, bankId: bankId): return "sfp: \(phone), bankId: \(bankId)"
             case let .direct(phone: phone, countryId: countryId): return "direct: \(phone ?? "nil"), countryId: \(countryId)"
+            case let .return(operationId: operationId, transferNumber: number, amount: amount): return "operationId: \(operationId), transferNumber: \(number), amount: \(amount)"
+            case let .change(operationId: operationId, transferNumber: number, name: name): return "operationId: \(operationId), transferNumber: \(number), name: \(name)"
             case let .mock(mock): return "mock service: \(mock.service.rawValue)"
             case let .requisites(qrCode): return "qrCode: \(qrCode)"
             case let .c2bSubscribe(url): return "c2b subscribe url: \(url.absoluteURL)"
@@ -284,6 +294,8 @@ extension Payments.Operation {
         case c2b
         case toAnotherCard
         case mobileConnection
+        case `return`
+        case change
     }
     
     enum Action: Equatable {
@@ -350,6 +362,7 @@ extension Payments {
             
             case c2bSubscriptionData(C2BSubscriptionData)
             case mobileConnectionData(MobileConnectionData)
+            case abroadPayments(TransferResponseBaseData)
         }
     }
 }
