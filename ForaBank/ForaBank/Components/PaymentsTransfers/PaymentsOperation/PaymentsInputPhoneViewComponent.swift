@@ -187,62 +187,81 @@ struct PaymentsInputPhoneView: View {
     
     var body: some View {
         
-        HStack(spacing: 16) {
+        HStack(spacing: 12) {
             
-            viewModel.icon
-                .resizable()
-                .renderingMode(.template)
-                .foregroundColor(.mainColorsGray)
+            leadingIcon
                 .frame(width: 24, height: 24)
             
-            VStack(alignment: .leading, spacing: 4) {
-                
-                if let title = viewModel.title {
-                    
-                    Text(title)
-                        .font(.textBodyMM14200())
-                        .foregroundColor(.textPlaceholder)
-                        .padding(.bottom, 4)
-                        .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .opacity))
-                    
-                }
-                
-                HStack(spacing: 20) {
-                    
-                    if viewModel.isEditable == true {
-                        
-                        TextViewPhoneNumberView(viewModel: viewModel.textView)
-                            .foregroundColor(.textSecondary)
-                            .font(.textBodyMM14200())
-                            .frame(height: 24)
-                        
-                    } else {
-                        
-                        Text(viewModel.textView.text ?? "")
-                            .foregroundColor(.textSecondary)
-                            .font(.textBodyMM14200())
-                    }
-                    
-                    Spacer()
-                }
-            }
+            centerView
+                .padding(.leading, 4)
             
-            if let actionButton = viewModel.actionButton, viewModel.isEditable == true {
-                
-                Button(action: actionButton.action) {
-                    
-                    actionButton.icon
-                        .resizable()
-                        .renderingMode(.template)
-                        .foregroundColor(.mainColorsGray)
-                        .frame(width: 24, height: 24)
-                }
-            }
+            trailingButton
         }
         .frame(height: 72)
-        .padding(.horizontal, 13)
+        .padding(.horizontal, 16)
         .background(Color.mainColorsGrayLightest)
         .cornerRadius(12)
+    }
+    
+    private var leadingIcon: some View {
+        
+        viewModel.icon
+            .resizable()
+            .renderingMode(.template)
+            .foregroundColor(.mainColorsGray)
+    }
+    
+    private var centerView: some View {
+        
+        VStack(alignment: .leading, spacing: 4) {
+            
+            if let title = viewModel.title {
+                
+                Text(title)
+                    .font(.textBodyMM14200())
+                    .foregroundColor(.textPlaceholder)
+                    .padding(.bottom, 4)
+                    .transition(
+                        .asymmetric(
+                            insertion: .move(edge: .bottom),
+                            removal: .opacity
+                        )
+                    )
+            }
+            
+            HStack(spacing: 20) {
+                
+                if viewModel.isEditable == true {
+                    
+                    TextViewPhoneNumberView(viewModel: viewModel.textView)
+                        .frame(height: 24)
+                    
+                } else {
+                    
+                    Text(viewModel.textView.text ?? "")
+                }
+            }
+            .foregroundColor(.textSecondary)
+            .font(.textH4M16240())
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    @ViewBuilder
+    private var trailingButton: some View {
+
+        if let actionButton = viewModel.actionButton,
+            viewModel.isEditable {
+            
+            Button(action: actionButton.action) {
+                
+                actionButton.icon
+                    .resizable()
+                    .renderingMode(.template)
+                    .foregroundColor(.mainColorsGray)
+                    .frame(width: 24, height: 24)
+            }
+        }
     }
 }
 
@@ -254,11 +273,21 @@ struct PaymentsInputPhoneView_Previews: PreviewProvider {
         
         Group {
             
-            PaymentsInputPhoneView(viewModel: .samplePhone)
+            previewGroup()
                 .previewLayout(.fixed(width: 375, height: 80))
             
+            VStack(spacing: 32, content: previewGroup)
+                .previewLayout(.sizeThatFits)
+        }
+    }
+    
+    static func previewGroup() -> some View {
+        
+        Group {
+            
+            PaymentsInputPhoneView(viewModel: .samplePhone)
+            
             PaymentsInputPhoneView(viewModel: .samplePhoneParam)
-                .previewLayout(.fixed(width: 375, height: 80))
         }
     }
 }
