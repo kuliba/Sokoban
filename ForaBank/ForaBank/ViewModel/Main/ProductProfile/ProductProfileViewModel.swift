@@ -970,11 +970,19 @@ private extension ProductProfileViewModel {
                 switch action {
                 case let payload as PaymentsMeToMeAction.Response.Success:
                     
-                    if let viewModel = viewModel,
-                       let productIdFrom = viewModel.swapViewModel.productIdFrom,
-                       let productIdTo = viewModel.swapViewModel.productIdTo {
-                            model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
-                            model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
+                    if let viewModel = viewModel {
+                        switch viewModel.mode {
+                        case .transferAndCloseDeposit, .closeDeposit:
+                            model.action.send(ModelAction.Products.Update.Total.All())
+                            
+                        default:
+                            if let productIdFrom = viewModel.swapViewModel.productIdFrom,
+                               let productIdTo = viewModel.swapViewModel.productIdTo {
+                                
+                                model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
+                                model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
+                            }
+                        }
                     }
                     
                     self.bind(payload.viewModel)
