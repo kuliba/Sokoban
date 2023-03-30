@@ -172,7 +172,7 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
             
         case .payments:
             textView.keyboardType = .phonePad
-            textView.font = .init(name: "Inter-Medium", size: 14.0)
+            textView.font = .init(name: "Inter-Medium", size: 16.0)
         
         case .order:
             textView.keyboardType = .decimalPad
