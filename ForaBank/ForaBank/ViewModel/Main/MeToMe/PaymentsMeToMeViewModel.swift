@@ -272,25 +272,25 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     sheet = .init(type: .placesMap(placesViewModel))
                     
                 case _ as PaymentsMeToMeAction.Response.Success:
-                    
+                    if let productIdFrom = swapViewModel.productIdFrom,
+                       let productIdTo = swapViewModel.productIdTo {
+                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
+                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
+                        
                         switch mode {
                         case .transferAndCloseDeposit, .closeDeposit, .demandDeposit:
-                            model.action.send(ModelAction.Products.Update.ForProductType(productType: .deposit))
+                            break
                         default:
-                            if let productIdFrom = swapViewModel.productIdFrom,
-                               let productIdTo = swapViewModel.productIdTo {
-                                if let productFrom = model.product(productId: productIdFrom) as? ProductDepositData, paymentsAmount.textField.value != productFrom.balanceValue {
+                            if let productFrom = model.product(productId: productIdFrom) as? ProductDepositData, paymentsAmount.textField.value != productFrom.balanceValue {
+                                model.action.send(ModelAction.Products.Update.ForProductType(productType: .deposit))
+                            }
+                            else {
+                                if let productTo = model.product(productId: productIdTo), productTo is ProductDepositData {
                                     model.action.send(ModelAction.Products.Update.ForProductType(productType: .deposit))
                                 }
-                                else {
-                                    model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
-                                    if let productTo = model.product(productId: productIdTo), productTo is ProductDepositData {
-                                        model.action.send(ModelAction.Products.Update.ForProductType(productType: .deposit))
-                                    }
-                                }
-                                model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
                             }
                         }
+                    }
                     
                 case _ as PaymentsMeToMeAction.Button.Transfer.Tap:
                     
