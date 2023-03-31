@@ -62,6 +62,12 @@ extension ProductCarouselView {
             self.model = model
             
             LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductCarouselView.ViewModel initialized")
+            
+            $selector
+                .sink {
+                    debugPrint($0)
+                }
+                .store(in: &bindings)
         }
         
         deinit {
@@ -178,47 +184,20 @@ extension ProductCarouselView {
                         bind(groups)
                     
                         // create product type selector
-                        let options = groups.map {
-                            Option(id: $0.id, name: $0.productType.pluralName)
+                        let selectedOptionID = selector?.selected
+                        let productTypes = products.keys.sorted(by: \.order)
+                        
+                        withAnimation {
+                            
+                            self.selector = Self.makeSelector(
+                                productTypes: productTypes,
+                                style: self.style.optionsSelectorStyle
+                            )
+                            self.selector?.select(selectedOptionID)
                         }
                         
-                        if let firstOptionID = options.first?.id {
+                        bind(selector)
                         
-                            if let selector = selector {
-                            
-                                let isSelectedValid = options.map(\.id).contains(selector.selected)
-                                let selected = isSelectedValid ? selector.selected : firstOptionID
-                            
-                                withAnimation {
-                                
-                                    selector.update(
-                                        options: options,
-                                        selected: selected
-                                    )
-                                }
-                            
-                            } else {
-                            
-                                withAnimation {
-                                
-                                    selector = .init(
-                                        options: options,
-                                        selected: firstOptionID,
-                                        style: style.optionsSelectorStyle,
-                                        mode: .action
-                                    )
-                                }
-                            
-                                bind(selector)
-                            }
-                        
-                        } else {
-                        
-                            withAnimation {
-                            
-                                selector = nil
-                            }
-                        }
                     } //if visibility empty
                     
                 }.store(in: &bindings)
@@ -417,6 +396,29 @@ private extension Model {
     }
 }
 
+private extension OptionSelectorView.ViewModel {
+    
+    func select(_ optionID: Option.ID?) {
+        
+        guard let optionID = optionID,
+              isSelectable(optionID)
+        else {
+            
+            if let firstID = options.map(\.id).first {
+                selected = firstID
+            }
+            return
+        }
+        
+        selected = optionID
+    }
+    
+    private func isSelectable(_ option: Option.ID) -> Bool {
+        
+        options.map(\.id).contains(option)
+    }
+}
+
 // MARK: - Style
 
 extension ProductCarouselView.ViewModel {
@@ -563,6 +565,27 @@ extension ProductCarouselView.ViewModel {
         else { return nil }
         
         let options = availableProductTypes.map {
+            Option(id: $0.rawValue, name: $0.pluralName)
+        }
+        
+        return .init(
+            options: options,
+            selected: firstType.rawValue,
+            style: style,
+            mode: .action
+        )
+    }
+
+    static func makeSelector(
+        productTypes: [ProductType],
+        style: OptionSelectorView.ViewModel.Style
+    ) -> OptionSelectorView.ViewModel? {
+        
+        guard let firstType = productTypes.first,
+              productTypes.count > 1
+        else { return nil }
+        
+        let options = productTypes.map {
             Option(id: $0.rawValue, name: $0.pluralName)
         }
         
@@ -800,6 +823,8 @@ struct ProdCarouselView_Previews: PreviewProvider {
                 .previewDisplayName("sampleProducts")
             ProductCarouselView(viewModel: .sampleProductsSmall)
                 .previewDisplayName("sampleProductsSmall")
+            ProductCarouselView(viewModel: .oneProductSmall)
+                .previewDisplayName("oneProductSmall")
         }
         .previewLayout(.sizeThatFits)
     }
@@ -883,6 +908,12 @@ extension ProductCarouselView.ViewModel {
         mode: .main,
         style: .small
     )
+    
+    static let oneProductSmall = ProductCarouselView.ViewModel(
+        mode: .filtered(.generalFrom),
+        style: .small,
+        model: .productsMock
+)
 }
 
 extension ButtonNewProduct.ViewModel {
