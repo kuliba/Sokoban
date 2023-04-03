@@ -180,7 +180,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
                   
             else { return nil }
             
-            if product.visibility {
+            if product.isVisible {
                 
                 return ActionButtonViewModel(type: .remove, action: { [weak self] in self?.action.send(MyProductsSectionItemAction.SideButtonTapped.Remove())})
                 
