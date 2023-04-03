@@ -1,5 +1,8 @@
 {
-    "data": [{
+    "data": {
+        "serial": "e3efwef43rwee4r4",
+        "templateList":
+    [{
         "groupName": "Переводы СБП",
         "name": "Иванов Иван Иванович",
         "parameterList": [{
@@ -24,7 +27,7 @@
         "sort": 1,
         "svgImage": "string",
         "type": "SFP"
-    }],
+    }]},
     "errorMessage": "string",
     "statusCode": 0
 }

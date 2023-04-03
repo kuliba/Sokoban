@@ -48,7 +48,7 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
     func testGetPaymentTemplateList_Payload_Encoding() throws {
 
         // given
-        let command = ServerCommands.PaymentTemplateController.GetPaymentTemplateList(token: "")
+        let command = ServerCommands.PaymentTemplateController.GetPaymentTemplateList(token: "", serial: nil)
         
         // then
         XCTAssertNil(command.payload)
@@ -63,7 +63,7 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
         let payer = TransferData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
         let transfer = TransferGeneralData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
         let paymentTemplate = PaymentTemplateData(groupName: "Переводы СБП", name: "Иванов Иван Иванович", parameterList: [transfer], paymentTemplateId: 1, productTemplate: .init(currency: "RUB", customName: "Новая карта", id: 1, numberMask: "4444 **** **** 1234", paymentSystemImage: .init(description: "string"), smallDesign: .init(description: "string"), type: .card), sort: 1, svgImage: SVGImageData(description: "string"), type: .sfp)
-        let expected = ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response(statusCode: .ok, errorMessage: "string", data: [paymentTemplate])
+        let expected = ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response(statusCode: .ok, errorMessage: "string", data: ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response.PaymentTemplateListData.init(templateList: [paymentTemplate], serial: "e3efwef43rwee4r4"))
         
         // when
         let result = try decoder.decode(ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response.self, from: json)
@@ -80,7 +80,7 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
         let payer = TransferData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
         let transfer = TransferGeneralData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
         let paymentTemplate = PaymentTemplateData(groupName: "Переводы СБП", name: "Иванов Иван Иванович", parameterList: [transfer], paymentTemplateId: 1, productTemplate: nil, sort: 1, svgImage: SVGImageData(description: "string"), type: .sfp)
-        let expected = ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response(statusCode: .ok, errorMessage: "string", data: [paymentTemplate])
+        let expected = ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response(statusCode: .ok, errorMessage: "string", data:  ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response.PaymentTemplateListData(templateList: [paymentTemplate], serial: "e3efwef43rwee4r4"))
         
         // when
         let result = try decoder.decode(ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response.self, from: json)
@@ -99,7 +99,7 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
         let result = try decoder.decode(ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response.self, from: json)
         
         // then
-        XCTAssert(result.data?.first?.parameterList.first is TransferAnywayData)
+        XCTAssert(result.data?.templateList.first?.parameterList.first is TransferAnywayData)
     }
     
     //MARK: - SavePaymentTemplate
