@@ -36,7 +36,10 @@ extension Model {
     }
     
     var isAllProductsHidden: Bool {
-        products.value.values.flatMap {$0}.filter {$0.visibility}.isEmpty
+        products.value.values
+            .flatMap { $0 }
+            .filter { $0.isVisible }
+            .isEmpty
     }
     
     var productsTypes: [ProductType] {
@@ -646,9 +649,10 @@ extension Model {
                 self.productsVisibilityUpdating.value.remove(product.id)
                     
                 // update products
-                let updatedProducts = Self.reduce(productsData: self.products.value,
-                                                          productId: payload.productId,
-                                                          visibility: payload.visibility)
+                let updatedProducts = Self.reduce(
+                    productsData: self.products.value,
+                    productId: payload.productId,
+                    isVisible: payload.visibility)
                 self.products.value = updatedProducts
                     
                 do { // update cache
@@ -1311,11 +1315,11 @@ extension Model {
         }
     }
     
-    static func reduce(productsData: ProductsData, productId: ProductData.ID, visibility: Bool ) -> ProductsData {
+    static func reduce(productsData: ProductsData, productId: ProductData.ID, isVisible: Bool) -> ProductsData {
         
         let product = productsData.values.flatMap({ $0 }).first(where: { $0.id == productId })
         
-        product?.update(visibility: visibility)
+        product?.update(isVisible: isVisible)
         
         return productsData
     }

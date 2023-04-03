@@ -118,7 +118,7 @@ extension ProductCarouselView {
                     
                     for productType in filteredProductTypes {
                         
-                        if let productsForType = productsUpdate[productType]?.filter({ $0.visibility }),
+                        if let productsForType = productsUpdate[productType]?.filter({ $0.isVisible }),
                            productsForType.count > 0 {
                             
                             var productsViewModelsUpdated = [ProductView.ViewModel]()

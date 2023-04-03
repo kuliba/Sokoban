@@ -75,7 +75,7 @@ extension XCTestCase {
             number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil,
             currency: "RUB",
             // any - i.e., not important:
-            mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: 1, branchId: nil, allowCredit: true, allowDebit: true, extraLargeDesign: anySVGImageData(), largeDesign: anySVGImageData(), mediumDesign: anySVGImageData(), smallDesign: anySVGImageData(), fontDesignColor: anyColorData(), background: [], order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: ""
+            mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: 1, branchId: nil, allowCredit: true, allowDebit: true, extraLargeDesign: anySVGImageData(), largeDesign: anySVGImageData(), mediumDesign: anySVGImageData(), smallDesign: anySVGImageData(), fontDesignColor: anyColorData(), background: [], order: 0, isVisible: true, smallDesignMd5hash: "", smallBackgroundDesignHash: ""
         )
     }
     

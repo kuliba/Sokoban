@@ -15,7 +15,7 @@ class ProductData: Identifiable, Codable {
     let productType: ProductType
     
     private(set) var order: Int
-    private(set) var visibility: Bool
+    private(set) var isVisible: Bool
     
     let number: String? // 4444555566661122
     let numberMasked: String? //4444-XXXX-XXXX-1122
@@ -50,7 +50,7 @@ class ProductData: Identifiable, Codable {
     let smallDesignMd5hash: String
     let smallBackgroundDesignHash: String
     
-    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
+    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], order: Int, isVisible: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
         
         self.id = id
         self.productType = productType
@@ -76,7 +76,7 @@ class ProductData: Identifiable, Codable {
         self.fontDesignColor = fontDesignColor
         self.background = background
         self.order = order
-        self.visibility = visibility
+        self.isVisible = isVisible
         self.smallDesignMd5hash = smallDesignMd5hash
         self.smallBackgroundDesignHash = smallBackgroundDesignHash
     }
@@ -122,7 +122,7 @@ class ProductData: Identifiable, Codable {
         fontDesignColor = try container.decode(ColorData.self, forKey: .fontDesignColor)
         background = try container.decode([ColorData].self, forKey: .background)
         order = try container.decode(Int.self, forKey: .order)
-        visibility = try container.decode(Bool.self, forKey: .visibility)
+        isVisible = try container.decode(Bool.self, forKey: .visibility)
         smallDesignMd5hash = try container.decode(String.self, forKey: .smallDesignMd5hash)
         smallBackgroundDesignHash = try container.decode(String.self, forKey: .smallBackgroundDesignHash)
     }
@@ -155,7 +155,7 @@ class ProductData: Identifiable, Codable {
         try container.encode(smallDesign, forKey: .smallDesign)
         try container.encode(fontDesignColor, forKey: .fontDesignColor)
         try container.encode(background, forKey: .background)
-        try container.encode(visibility, forKey: .visibility)
+        try container.encode(isVisible, forKey: .visibility)
         try container.encode(order, forKey: .order)
         try container.encode(smallDesignMd5hash, forKey: .smallDesignMd5hash)
         try container.encode(smallBackgroundDesignHash, forKey: .smallBackgroundDesignHash)
@@ -171,9 +171,9 @@ extension ProductData {
         self.balanceRub = params.balanceRub
     }
     
-    func update(visibility: Bool) {
+    func update(isVisible: Bool) {
         
-        self.visibility = visibility
+        self.isVisible = isVisible
     }
     
     func update(order: Int) {
@@ -246,7 +246,7 @@ extension ProductData {
                 // only active card product can be blocked
                 if cardProduct.isBlocked {
                     
-                    if visibility == true {
+                    if isVisible {
                         
                         return [.active, .blocked, .visible]
                         
@@ -257,7 +257,7 @@ extension ProductData {
                     
                 } else {
                     
-                    if visibility == true {
+                    if isVisible {
                         
                         return [.active, .visible]
                         
@@ -269,7 +269,7 @@ extension ProductData {
 
             } else {
                 
-                if visibility == true {
+                if isVisible {
                     
                     return [.active, .visible]
                     
@@ -281,7 +281,7 @@ extension ProductData {
             
         } else {
             
-            if visibility == true {
+            if isVisible {
                 
                 return [.active, .visible]
                 
@@ -320,7 +320,7 @@ extension ProductData: Equatable {
         lhs.smallDesign == rhs.smallDesign &&
         lhs.fontDesignColor == rhs.fontDesignColor &&
         lhs.background == rhs.background &&
-        lhs.visibility == rhs.visibility &&
+        lhs.isVisible == rhs.isVisible &&
         lhs.order == rhs.order
     }
 }
