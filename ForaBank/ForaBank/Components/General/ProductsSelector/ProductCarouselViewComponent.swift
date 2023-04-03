@@ -462,8 +462,8 @@ private extension ProductCarouselView.ViewModel.Style {
     var stackSpacing: CGFloat {
         
         switch self {
-        case .regular: return 16
-        case .small: return 0
+        case .regular: return 13
+        case .small: return 13
         }
     }
     
