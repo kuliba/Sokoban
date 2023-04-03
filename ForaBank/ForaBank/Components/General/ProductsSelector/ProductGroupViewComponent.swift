@@ -308,7 +308,7 @@ extension ProductGroupView.ViewModel.Dimensions {
             product:       .init(width: 112, height: 72),
             productShadow: .init(width:  62, height: 64),
             new:           .init(width: 112, height: 72),
-            button:        .init(width:  48, height: 72),
+            button:        .init(width:  40, height: 72),
             separator:     .init(width:   1, height: 72)
         )
     )
@@ -474,7 +474,7 @@ extension ProductGroupView {
             ZStack {
                 
                 RoundedRectangle(cornerRadius: 12)
-                    .foregroundColor(.mainColorsGrayLightest)
+                    .foregroundColor(.bordersDivider)
                 
                 switch viewModel.content {
                 case .title(let title):
