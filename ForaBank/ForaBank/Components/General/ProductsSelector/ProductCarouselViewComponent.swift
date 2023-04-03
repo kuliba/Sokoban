@@ -62,12 +62,6 @@ extension ProductCarouselView {
             self.model = model
             
             LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductCarouselView.ViewModel initialized")
-            
-            $selector
-                .sink {
-                    debugPrint($0)
-                }
-                .store(in: &bindings)
         }
         
         deinit {
