@@ -30,4 +30,19 @@ extension ProductSelectorView.ViewModel {
         context: .init(
             title: "Счет списания",
             direction: .from, style: .regular, filter: .generalFrom))
+    
+    static func sampleRegularCollapsed(
+        _ productViewModel: ProductViewModel
+    ) -> ProductSelectorView.ViewModel {
+        
+        .init(
+            .emptyMock,
+            content: .product(productViewModel),
+            productCarouselViewModel: nil,
+            context: .init(
+                title: "Счет списания",
+                direction: .from, style: .regular, filter: .generalFrom
+            )
+        )
+    }
 }

@@ -458,8 +458,8 @@ private extension ProductCarouselView.ViewModel.Style {
     var stackSpacing: CGFloat {
         
         switch self {
+        case .small:   return 13
         case .regular: return 13
-        case .small: return 13
         }
     }
     
@@ -492,6 +492,14 @@ private extension ProductCarouselView.ViewModel.Style {
         switch self {
         case .regular: return 24
         case .small: return nil
+        }
+    }
+    
+    var horizontalPadding: CGFloat {
+        
+        switch self {
+        case .regular: return 20
+        case .small: return 12
         }
     }
     
@@ -625,7 +633,10 @@ struct ProductCarouselView: View {
                 OptionSelectorView(viewModel: $0)
                     .frame(height: selectorFrameHeight)
                     .accessibilityIdentifier("optionProductTypeSelection")
-                    .padding(.leading, 20)
+                    .padding(
+                        .leading,
+                        viewModel.style.horizontalPadding
+                    )
             }
             
             ScrollView(.horizontal, showsIndicators: false) {
@@ -660,7 +671,7 @@ struct ProductCarouselView: View {
                     .onReceive(viewModel.action, perform: scrollFor)
                     .onReceive(proxy.offset, perform: onOffsetChange)
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, viewModel.style.horizontalPadding)
                 .introspectScrollView(customize: { scrollView in
 
                     self.scrollView = scrollView
