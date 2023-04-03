@@ -41,13 +41,14 @@ enum ServerCommands {
         }
         
         /*
-         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentTemplateController/getPaymentTemplateListUsingGET
+         https://pl.forabank.ru/dbo/api/v3/swagger-ui/index.html#/PaymentTemplateController/getPaymentTemplateList
          */
         struct GetPaymentTemplateList: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/getPaymentTemplateList"
+            let endpoint = "/rest/v2/getPaymentTemplateList"
             let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
             
             struct Payload: Encodable {}
             
@@ -55,13 +56,31 @@ enum ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: [PaymentTemplateData]?
+                let data: PaymentTemplateListData?
+                
+                struct PaymentTemplateListData: Decodable, Equatable {
+                    
+                    let templateList: [PaymentTemplateData]
+                    let serial: String
+                }
             }
             
-            internal init(token: String) {
+            init(token: String, serial: String?) {
                 
                 self.token = token
+                
+                if let serial {
+                    
+                    var parameters = [ServerCommandParameter]()
+                    parameters.append(.init(name: "serial", value: serial))
+                    self.parameters = parameters
+                    
+                } else {
+                    
+                    self.parameters = nil
+                }
             }
+            
         }
         
         /*

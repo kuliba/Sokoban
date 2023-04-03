@@ -69,6 +69,7 @@ class Model {
     
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
+    let paymentTemplatesUpdating: CurrentValueSubject<Bool, Never>
     let productTemplates: CurrentValueSubject<[ProductTemplateData], Never>
     //TODO: move to settings agent
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
@@ -178,6 +179,7 @@ class Model {
         self.images = .init([:])
         self.deposits = .init([])
         self.paymentTemplates = .init([])
+        self.paymentTemplatesUpdating = .init(false)
         self.paymentTemplatesViewSettings = .init(.initial)
         self.latestPayments = .init([])
         self.latestPaymentsUpdating = .init(false)
@@ -315,7 +317,6 @@ class Model {
                     action.send(ModelAction.Account.ProductList.Request())
                     action.send(ModelAction.AppVersion.Request())
                     action.send(ModelAction.Settings.GetUserSettings())
-                    action.send(ModelAction.ProductTemplate.List.Request())
                     
                     if let deepLinkType = deepLinkType {
                         

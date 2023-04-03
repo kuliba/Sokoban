@@ -50,7 +50,8 @@ struct TemplatesListView: View {
                                         
                                         switch itemViewModel.kind {
                                         case .regular:
-                                            TemplateItemView(viewModel: itemViewModel, style: $viewModel.style)
+                                            TemplateItemView(viewModel: itemViewModel,
+                                                             style: $viewModel.style)
 
                                         case .add:
                                             AddNewItemView(viewModel: itemViewModel, style: $viewModel.style)
@@ -77,13 +78,13 @@ struct TemplatesListView: View {
                                 .padding(.horizontal, 20)
                                 .padding(.top, 24)
                             }
-                        }
+                        } //ScrollView
                         
                         if let deletePannelViewModel = viewModel.deletePannel {
                             
                             DeletePannelView(viewModel: deletePannelViewModel)
                         }
-                    }
+                    } //VStack
                     
                     if let contextMenuViewModel = viewModel.contextMenu {
                         
