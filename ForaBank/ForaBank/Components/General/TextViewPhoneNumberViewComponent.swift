@@ -348,10 +348,17 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
         }
     }
     
-    static func updateMasked(value: String?, inRange: NSRange, update: String, firstDigitReplace: [TextViewPhoneNumberView.ViewModel.Replace]?, phoneFormatter: PhoneNumberFormaterProtocol, filterSymbols: [Character]?) -> String? {
+#warning("Hardcoded phoneMaxLength in `limit` parameter default value. Need to replace with data from the backend.")
+    static func updateMasked(value: String?, inRange: NSRange, update: String, firstDigitReplace: [TextViewPhoneNumberView.ViewModel.Replace]?, phoneFormatter: PhoneNumberFormaterProtocol, filterSymbols: [Character]?, limit: Int? = 18) -> String? {
         
         if let value = value {
             
+            let didAddToValidPhone = phoneFormatter.isValid(value) && inRange.length == 0
+            
+            guard !didAddToValidPhone else {
+                return value
+            }
+                    
             var updatedValue = value
             let rangeStart = value.index(value.startIndex, offsetBy: inRange.lowerBound)
             let rangeEnd = value.index(value.startIndex, offsetBy: inRange.upperBound)
@@ -389,8 +396,10 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
                     }
                 }
             }
-
-            let phoneFormatted = phoneFormatter.partialFormatter("+\(phone)")
+            
+            let limit = limit ?? phone.count
+            let limitedPhone = String(phone.prefix(limit))
+            let phoneFormatted = phoneFormatter.partialFormatter("+\(limitedPhone)")
             return phoneFormatted
             
         } else {
