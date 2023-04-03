@@ -63,7 +63,7 @@ extension PaymentsProductView {
             super.update(source: source)
             
             guard let source = source as? Payments.ParameterProduct,
-                  let product = model.allProducts.first(where: {$0.id.description == source.parameter.value})  else {
+                  let product = model.firstProduct(with: source.filter) else {
                 return
             }
             

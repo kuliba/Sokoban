@@ -292,14 +292,14 @@ extension OperationDetailView {
                     logo.resizable().frame(width: 32, height: 32)
                 }
                 
+                OperationDetailView.AmountView(viewModel: viewModel.amount)
+                    .padding(.top, 32)
+                
                 if let payee = viewModel.payee {
                     
                     OperationDetailView.PayeeView(viewModel: payee)
                         .padding(.top, 8)
                 }
-                
-                OperationDetailView.AmountView(viewModel: viewModel.amount)
-                    .padding(.top, 32)
                 
                 if let fee = viewModel.fee {
                     

@@ -827,7 +827,7 @@ struct PaymentsSelectBankView: View {
                         
                         HStack {
                             
-                            TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16), textColor: .textSecondary)
+                            TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16))
                                 .font(.textH4M16240())
                                 .foregroundColor(.textSecondary)
                             

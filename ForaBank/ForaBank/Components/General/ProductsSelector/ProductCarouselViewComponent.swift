@@ -111,41 +111,34 @@ extension ProductCarouselView {
                 .sink { [unowned self] productsUpdate in
                     
                     // all existing products view models list
-                    let currentProductsViewModels = products.value.values.flatMap{ $0 }
+                    let currentProductsViewModels = products.value.values.flatMap { $0 }
                     
-                    var productsUpdated = [ProductType: [ProductView.ViewModel]]()
-                    let filteredProductTypes = mode.filteredProductsTypes(for: productsUpdate)
-                    
-                    for productType in filteredProductTypes {
-                        
-                        if let productsForType = productsUpdate[productType]?.filter({ $0.isVisible }),
-                           productsForType.count > 0 {
+                    let updatedProducts: [ProductType: [ProductView.ViewModel]] = mode
+                        .filtered(products: productsUpdate)
+                        .mapValues {
                             
-                            var productsViewModelsUpdated = [ProductView.ViewModel]()
-                            for product in productsForType {
+                            $0.map { product in
                                 
                                 // check if we already have view model for product data
                                 if let currentProductViewModel = currentProductsViewModels.first(where: { $0.id == product.id }) {
                                     
                                     // just update existing view model with product data
                                     currentProductViewModel.update(with: product, model: model)
-                                    productsViewModelsUpdated.append(currentProductViewModel)
+                                    
+                                    return currentProductViewModel
                                     
                                 } else {
                                     
                                     // create new product view model
                                     let productViewModel = ProductView.ViewModel(with: product, size: style.productAppearanceSize, style: .main, model: model)
                                     bind(productViewModel)
-                                    productsViewModelsUpdated.append(productViewModel)
+                                    
+                                    return productViewModel
                                 }
                             }
-                            
-                            productsUpdated[productType] = productsViewModelsUpdated
                         }
-                    }
                     
-                    self.products.value = productsUpdated
-                    
+                    self.products.send(updatedProducts)
                 }
                 .store(in: &bindings)
             
@@ -444,11 +437,32 @@ private extension ProductCarouselView.ViewModel.Mode {
         
         switch self {
         case .main:
-            let uniqueTypes = Set(products.map(\.productType))
+            let visibleProducts = products.filter { $0.isVisible }
+            let uniqueTypes = Set(visibleProducts.map(\.productType))
             return uniqueTypes.sorted(by: \.order)
 
         case let .filtered(filter):
             return filter.filterredProductsTypes(products)
+        }
+    }
+    
+    func filtered(
+        products: ProductsData
+    ) -> ProductsData {
+        
+        products.mapValues(filtered)
+    }
+    
+    private func filtered(
+        products: [ProductData]
+    ) -> [ProductData] {
+        
+        switch self {
+        case .main:
+            return products.filter { $0.isVisible }
+            
+        case let .filtered(filter):
+            return filter.filterredProducts(products)
         }
     }
 }

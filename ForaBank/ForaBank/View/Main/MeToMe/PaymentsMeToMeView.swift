@@ -75,6 +75,7 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
                     items: [.sample2, .sampleMe2MeCollapsed],
                     divider: .sample),
                 paymentsAmount: .init(
+                    .emptyMock,
                     title: "Сумма перевода",
                     textField: .init(150, currencySymbol: "₽"),
                     transferButton: .active(title: "Перевести", action: {}),
@@ -88,6 +89,7 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
                     items: [.sampleMe2MeCollapsed, .sample2],
                     divider: .sample),
                 paymentsAmount: .init(
+                    .emptyMock,
                     title: "Сумма перевода",
                     textField: .init(150, currencySymbol: "₽"),
                     transferButton: .active(title: "Перевести", action: {}),
@@ -101,6 +103,7 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
                     items: [.sampleMe2MeCollapsed, .sample3],
                     divider: .sample),
                 paymentsAmount: .init(
+                    .emptyMock,
                     title: "Сумма перевода",
                     textField: .init(0, currencySymbol: "₽"),
                     transferButton: .active(title: "Перевести", action: {}),

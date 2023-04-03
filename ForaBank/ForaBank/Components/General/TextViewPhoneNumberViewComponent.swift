@@ -264,13 +264,13 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
                 viewModel.text = result
             
             case .banks:
-                let result = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: nil)
+                let result = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: nil, style: .default)
                 
                 textView.text = result
                 viewModel.text = result
                 
             case .abroad:
-                let result = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: nil)?.filter({$0.isLetter})
+                let result = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: nil, style: .default)?.filter({$0.isLetter})
                     
                 textView.text = result
                 viewModel.text = result
@@ -282,7 +282,7 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
                 viewModel.text = result
                 
             default:
-                let result = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: nil)
+                let result = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: nil, style: .default)
                 
                 textView.text = result
                 viewModel.text = result
@@ -381,7 +381,7 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
             }
             
             guard filteredValue.isNumeric || phoneFormatter.isValid(update) else {
-                return updatedValue.isEmpty ? nil : value
+                return filteredValue.isEmpty ? nil : value
             }
             
             var phone = updatedValue.digits

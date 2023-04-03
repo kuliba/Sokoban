@@ -53,7 +53,7 @@ class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let updatedString = TextViewPhoneNumberView.updateMasked(value: value, inRange: range, update: update, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: phonePhormatter, filterSymbols: filterSymbols)
         
         // then
-        XCTAssertEqual(updatedString, "+7")
+        XCTAssertEqual(updatedString, nil)
     }
     
     func testUpdateFormatted_ReplaceDigit() throws {

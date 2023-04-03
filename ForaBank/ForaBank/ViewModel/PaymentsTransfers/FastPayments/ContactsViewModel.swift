@@ -207,7 +207,13 @@ class ContactsViewModel: ObservableObject {
                             self.action.send(ContactsViewModelAction.PaymentRequested(source: payload.source))
 
                         case .select:
-                            self.action.send(ContactsViewModelAction.PaymentRequested(source: payload.source))
+                            switch payload.source {
+                            case let .direct(phone: _, countryId: countryId):
+                                self.action.send(ContactsViewModelAction.CountrySelected(countryId: countryId))
+                                
+                            default:
+                                self.action.send(ContactsViewModelAction.PaymentRequested(source: payload.source))
+                            }
                         }
                         
                     case _ as ContactsSectionViewModelAction.Collapsable.HideCountries:
