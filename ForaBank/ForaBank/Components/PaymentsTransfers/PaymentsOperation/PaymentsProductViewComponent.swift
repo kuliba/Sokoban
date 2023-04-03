@@ -84,7 +84,6 @@ struct PaymentsProductView: View {
     var body: some View {
         
         ProductSelectorView(viewModel: viewModel.selector)
-            .padding(.vertical, 13)
     }
 }
 
@@ -96,11 +95,20 @@ struct PaymentsCardView_Previews: PreviewProvider {
         
         Group {
             
-            PaymentsProductView(viewModel: .sample)
-                .previewLayout(.fixed(width: 375, height: 200))
+            previewGroup()
             
+            VStack(content: previewGroup)
+                .previewDisplayName("Xcode 14")
+        }
+        .previewLayout(.sizeThatFits)
+    }
+    
+    static func previewGroup() -> some View {
+        
+        Group {
+            
+            PaymentsProductView(viewModel: .sample)            
             PaymentsProductView(viewModel: .sampleExpanded)
-                .previewLayout(.fixed(width: 375, height: 300))
         }
     }
 }

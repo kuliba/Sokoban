@@ -348,32 +348,43 @@ struct ProductSelectorView: View {
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 12) {
-
-            Group {
-                
-                switch viewModel.content {
-                case let .product(productViewModel):
-                    SelectedProductView(viewModel: productViewModel)
-                        .onTapGesture {
-                            if productViewModel.isUserInteractionEnabled == true {
-                                viewModel.action.send(ProductSelectorAction.Product.Tap(id: viewModel.id))
-                            }
-                        }
-                    
-                case let .placeholder(placeholderViewModel):
-                    ProductPlaceholderView(viewModel: placeholderViewModel)
-                        .onTapGesture {
-                            viewModel.action.send(ProductSelectorAction.Product.Tap(id: viewModel.id))
-                        }
-                }
-            }
-            .padding(.horizontal, 20)
+        VStack(alignment: .leading, spacing: 13) {
+            
+            Group(content: content)
+                .padding(.leading, 12)
+                .padding(.trailing, 16)
             
             viewModel.productCarouselViewModel
                 .map(ProductCarouselView.init(viewModel:))
                 .animation(nil)
         }
+        .padding(.top, 13)
+        .padding(.bottom, bottomPadding)
+    }
+    
+    @ViewBuilder
+    private func content() -> some View {
+        
+        switch viewModel.content {
+        case let .product(productViewModel):
+            SelectedProductView(viewModel: productViewModel)
+                .onTapGesture {
+                    if productViewModel.isUserInteractionEnabled == true {
+                        viewModel.action.send(ProductSelectorAction.Product.Tap(id: viewModel.id))
+                    }
+                }
+            
+        case let .placeholder(placeholderViewModel):
+            ProductPlaceholderView(viewModel: placeholderViewModel)
+                .onTapGesture {
+                    viewModel.action.send(ProductSelectorAction.Product.Tap(id: viewModel.id))
+                }
+        }
+    }
+    
+    private var bottomPadding: CGFloat {
+        
+        viewModel.productCarouselViewModel == nil ? 13 : 5
     }
 }
 
@@ -387,98 +398,116 @@ extension ProductSelectorView {
 
         var body: some View {
             
-            VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 12) {
                 
-                switch viewModel.style {
-                case .regular:
-                    Text(viewModel.title)
-                        .font(.textBodyMR14180())
-                        .foregroundColor(.textPlaceholder)
-                        .padding(.leading, 48)
-                        .padding(.bottom, 4)
+                cardIconView
+                    .frame(width: 32, height: 22)
+                
+                VStack(alignment: .leading, spacing: 0) {
                     
-                case .me2me:
-                    Text(viewModel.title)
-                        .font(.textBodySR12160())
-                        .foregroundColor(.mainColorsBlack)
-                        .padding(.bottom, 12)
-                }
-
-                HStack(alignment: .top, spacing: 16) {
+                    titleView
                     
-                    if let cardIcon = viewModel.cardIcon {
+                    HStack(spacing: 8) {
                         
-                        cardIcon
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 32, height: 22)
-             
-                    } else {
+                        paymentIconView
+                            .frame(width: 24, height: 24)
                         
-                        RoundedRectangle(cornerRadius: 3)
-                            .foregroundColor(.mainColorsGrayLightest)
-                            .frame(width: 32, height: 22)
-                    }
-                    
-                    VStack(alignment: .leading, spacing: 2) {
-                        
-                        HStack(alignment: .center, spacing: 10) {
-                            
-                            if let paymentIcon = viewModel.paymentIcon {
-                                
-                                paymentIcon
-                                    .resizable()
-                                    .frame(width: 24, height: 24)
-                            }
+                        HStack(spacing: 0) {
                             
                             Text(viewModel.name)
-                                .font(.textBodyMM14200())
-                                .foregroundColor(.textSecondary)
+                                .lineLimit(1)
                             
-                            Spacer()
+                            Spacer(minLength: 8)
                             
                             Text(viewModel.balance)
-                                .font(.textBodyMM14200())
-                                .foregroundColor(.textSecondary)
-                            
-                            if viewModel.isUserInteractionEnabled == true {
-                                
-                                Image.ic24ChevronDown
-                                    .renderingMode(.template)
-                                    .resizable()
-                                    .frame(width: 24, height: 24)
-                                    .foregroundColor(.mainColorsGray)
-                                    .rotationEffect(viewModel.isCollapsed == false ? .degrees(0) : .degrees(-90))
-                            }
+                                .layoutPriority(1)
                         }
+                        .font(.textH4M16240())
+                        .foregroundColor(.textSecondary)
                         
-                        HStack {
-                            
-                            if let numberCard = viewModel.numberCard {
-                                
-                                Circle()
-                                    .frame(width: 3, height: 3)
-                                    .foregroundColor(.mainColorsGray)
-                                
-                                Text(numberCard)
-                                    .font(.textBodySR12160())
-                                    .foregroundColor(.mainColorsGray)
-                                
-                                Circle()
-                                    .frame(width: 3, height: 3)
-                                    .foregroundColor(.mainColorsGray)
-                            }
-                            
-                            if let description = viewModel.description {
-                                
-                                Text(description)
-                                    .font(.textBodySR12160())
-                                    .foregroundColor(.mainColorsGray)
-                            }
-                        }
+                        chevron
+                            .frame(width: 24, height: 24)
                     }
+                    
+                    productDetailView
                 }
             }
+        }
+        
+        @ViewBuilder
+        private var titleView: some View {
+            
+            Text(viewModel.title)
+                .font(.textBodyMR14180())
+                .foregroundColor(.textPlaceholder)
+        }
+        
+        @ViewBuilder
+        private var cardIconView: some View {
+            
+            if let cardIcon = viewModel.cardIcon {
+                
+                cardIcon
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                
+            } else {
+                
+                RoundedRectangle(cornerRadius: 3)
+                    .foregroundColor(.mainColorsGrayLightest)
+            }
+        }
+        
+        @ViewBuilder
+        private var paymentIconView: some View {
+            
+            if let paymentIcon = viewModel.paymentIcon {
+                
+                paymentIcon
+                    .resizable()
+            }
+        }
+        
+        @ViewBuilder
+        private var chevron: some View {
+            
+            if viewModel.isUserInteractionEnabled {
+                
+                Image.ic24ChevronDown
+                    .renderingMode(.template)
+                    .resizable()
+                    .foregroundColor(.mainColorsGray)
+                    .rotationEffect(.degrees(!viewModel.isCollapsed ? 0 : -90))
+            }
+        }
+        
+        private var productDetailView: some View {
+            
+            HStack(spacing: 8) {
+                
+                if let numberCard = viewModel.numberCard {
+                    
+                    circle
+                    
+                    Text(numberCard)
+                }
+                
+                if let description = viewModel.description {
+                    
+                    circle
+                    
+                    Text(description)
+                }
+            }
+            .font(.textBodyMR14180())
+            .foregroundColor(.mainColorsGray)
+        }
+        
+        private var circle: some View {
+            
+            Circle()
+                .frame(width: 3, height: 3)
+                .foregroundColor(.mainColorsGray)
         }
     }
     
@@ -525,6 +554,11 @@ struct ProductSelectorView_Previews: PreviewProvider {
         Group {
 
             ProductSelectorView(viewModel: .sampleRegularCollapsed)
+            ProductSelectorView(
+                viewModel: .sampleRegularCollapsed(
+                    .sampleRegularLong
+                )
+            )
             ProductSelectorView(viewModel: .sampleMe2MeCollapsed)
             ProductSelectorView(viewModel: .sample2)
             ProductSelectorView(viewModel: .sample3)
@@ -582,4 +616,16 @@ extension ProductSelectorView.ViewModel.ProductViewModel {
         numberCard: "2953",
         description: "Все включено",
         style: .regular)
+    
+    static let sampleRegularLong: ProductViewModel = .init(
+        id: 10002585801,
+        title: "Счет списания",
+        cardIcon: .init("Platinum Card"),
+        paymentIcon: .init("Platinum Logo"),
+        name: "Platinum Super Extra Dry",
+        balance: "2,71 млн ₽",
+        numberCard: "2953",
+        description: "Все включено",
+        style: .regular
+    )
 }
