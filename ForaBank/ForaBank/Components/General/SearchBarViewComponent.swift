@@ -86,6 +86,7 @@ extension SearchBarView {
                     case .selected:
                         self.state = .selected(.init(type: .title("Отмена"), action: { [weak self] in
                             
+                            self?.action.send(SearchBarViewModelAction.ClearTextField())
                             self?.action.send(SearchBarViewModelAction.DismissKeyboard())
                         }))
                         
@@ -99,6 +100,7 @@ extension SearchBarView {
                                 
                             }), .init(type: .title("Отмена"), action: { [weak self] in
                                 
+                                self?.action.send(SearchBarViewModelAction.ClearTextField())
                                 self?.action.send(SearchBarViewModelAction.DismissKeyboard())
                             }))
                             

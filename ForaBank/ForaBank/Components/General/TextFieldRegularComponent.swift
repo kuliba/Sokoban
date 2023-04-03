@@ -20,13 +20,15 @@ extension TextFieldRegularView {
         let isEditing: CurrentValueSubject<Bool, Never>
        
         let style: Style
-        let placeholder: String?
+        let placeholder: String
         let limit: Int?
         let toolbar: ToolbarViewModel?
         
+        var textColor: Color
+        
         var hasValue: Bool { (text != "" && text != nil) ? true : false }
         
-        init(text: String?, isEnabled: Bool, isEditing: Bool, placeholder: String?, toolbar: ToolbarViewModel?, limit: Int?, style: Style = .default, regExp: String? = nil) {
+        init(text: String?, isEnabled: Bool, isEditing: Bool, placeholder: String, toolbar: ToolbarViewModel?, limit: Int?, style: Style = .default, regExp: String? = nil, textColor: Color) {
             
             self.style = style
             self.text = text
@@ -35,11 +37,12 @@ extension TextFieldRegularView {
             self.placeholder = placeholder
             self.limit = limit
             self.toolbar = toolbar
+            self.textColor = textColor
         }
         
-        convenience init(text: String?, placeholder: String?, style: Style, limit: Int?, regExp: String? = nil, isEnabled: Bool = true) {
+        convenience init(text: String?, placeholder: String, style: Style, limit: Int?, regExp: String? = nil, isEnabled: Bool = true, textColor: Color = .textSecondary) {
             
-            self.init(text: text, isEnabled: isEnabled, isEditing: false, placeholder: placeholder, toolbar: .init(doneButton: .init(isEnabled: true, action: {  UIApplication.shared.endEditing() })), limit: limit, style: style, regExp: regExp)
+            self.init(text: text, isEnabled: isEnabled, isEditing: false, placeholder: placeholder, toolbar: .init(doneButton: .init(isEnabled: true, action: {  UIApplication.shared.endEditing() })), limit: limit, style: style, regExp: regExp, textColor: textColor)
         }
     }
 }
@@ -88,7 +91,6 @@ struct TextFieldRegularView: UIViewRepresentable {
     //TODO: wrapper Font -> UIFont required
     var font: UIFont = .systemFont(ofSize: 19, weight: .regular)
     var backgroundColor: Color = .clear
-    var textColor: Color = .black
     var tintColor: Color = .black
     
     func makeUIView(context: Context) -> UITextView {
@@ -105,6 +107,9 @@ struct TextFieldRegularView: UIViewRepresentable {
         textView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         textView.setContentHuggingPriority(.defaultHigh, for: .vertical)
     
+        textView.autocapitalizationType = .none
+        textView.autocorrectionType = .no
+        
         switch viewModel.style {
         case .default:
             textView.keyboardType = .default
@@ -125,19 +130,16 @@ struct TextFieldRegularView: UIViewRepresentable {
 
         if viewModel.hasValue {
             
-            uiView.textColor = textColor.uiColor()
+            uiView.textColor = viewModel.textColor.uiColor()
             uiView.text = viewModel.text
         }
-        
-        uiView.autocapitalizationType = .none
-        uiView.autocorrectionType = .no
         
         uiView.isUserInteractionEnabled = viewModel.isEnabled
     }
     
     func makeCoordinator() -> Coordinator {
         
-        Coordinator(viewModel: viewModel, backgroundColor: backgroundColor, textColor: textColor, tintColor: tintColor)
+        Coordinator(viewModel: viewModel, backgroundColor: backgroundColor, textColor: viewModel.textColor, tintColor: tintColor)
     }
     
     class Coordinator: NSObject, UITextViewDelegate {
@@ -188,14 +190,14 @@ struct TextFieldRegularView: UIViewRepresentable {
         
         func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
              
-            textView.text = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: viewModel.limit)
+            textView.text = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: viewModel.limit, style: viewModel.style)
             viewModel.text = textView.text
             
             return false
         }
     }
        
-    static func updateMasked(value: String?, inRange: NSRange, update: String, limit: Int?) -> String? {
+    static func updateMasked(value: String?, inRange: NSRange, update: String, limit: Int?, style: ViewModel.Style) -> String? {
         
         if let value = value {
             
@@ -205,14 +207,28 @@ struct TextFieldRegularView: UIViewRepresentable {
             let rangeEnd = value.index(value.startIndex, offsetBy: inRange.upperBound)
             updatedValue.replaceSubrange(rangeStart..<rangeEnd, with: update)
             
-            // check limit
-            if let limit = limit, limit > 0 {
+            switch style {
+            case .number:
+                // check limit
+                if let limit = limit, limit > 0 {
+                    
+                    return String(updatedValue.prefix(limit)).filter({$0.isNumber})
+                    
+                } else {
+                    
+                    return updatedValue.filter({$0.isNumber})
+                }
                 
-                return String(updatedValue.prefix(limit))
-                
-            } else {
-                
-                return updatedValue
+            default:
+                // check limit
+                if let limit = limit, limit > 0 {
+                    
+                    return String(updatedValue.prefix(limit))
+                    
+                } else {
+                    
+                    return updatedValue
+                }
             }
             
         } else {

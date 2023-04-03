@@ -466,7 +466,7 @@ extension PaymentsNameView {
                 
                 HStack(spacing: 0) {
   
-                    TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 14), textColor: .textSecondary)
+                    TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 14))
                         .frame(minWidth: 24)
                         .font(.textBodyMM14200())
                     

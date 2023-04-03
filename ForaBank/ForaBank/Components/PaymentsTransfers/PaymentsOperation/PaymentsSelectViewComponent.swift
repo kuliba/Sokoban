@@ -26,11 +26,9 @@ extension PaymentsSelectView {
             if let content = content, options == nil  {
                 return .default(content)
                 
-            } else if  let _ = content, options != nil {
+            } else {
                 return .placeholder
                 
-            } else {
-                return .selected
             }
         }
         
@@ -74,34 +72,60 @@ extension PaymentsSelectView {
         private func bind() {
             
             action
-                .compactMap { $0 as? PaymentsParameterViewModelAction.Select.ShowOption}
+                .compactMap { $0 as? PaymentsParameterViewModelAction.Select.ShowOption }
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] action in
                     
-                    if let options = parameterSelect?.options, self.options == nil {
+                    guard let options = parameterSelect?.options else {
+                        return
+                    }
+                    
+                    if self.options == nil {
+                        
+                        let updatedOptions = Self.reduce(content: self.textField.text, options: options, icon: .circle) { [weak self] itemId in
+                            
+                            self?.action.send(PaymentsParameterViewModelAction.Select.DidSelected(itemId: itemId))
+                        }
                         
                         withAnimation {
                             
-                            self.textField = .init(text: nil, placeholder: content == nil ? placeholder : content, style: .default, limit: nil)
-                            bindTextField(textField: self.textField)
+                            self.textField.textColor = .textPlaceholder
+                            self.options = updatedOptions
+                        }
+                        
+                    } else {
+                        
+                        if let content = content {
                             
-                            self.options = Self.reduce(options: options, icon: .circle) { itemId in
+                            withAnimation {
                                 
-                                self.action.send(PaymentsParameterViewModelAction.Select.DidSelected(itemId: itemId))
+                                textField.text = content
+                            }
+                            
+                        } else {
+                            
+                            withAnimation {
+                                
+                                textField.text = parameterSelect?.placeholder
                             }
                         }
-                    } else {
+                        
+                        if let option = options.first(where: { $0.name == self.textField.text }) {
+                            
+                            self.content = option.name
+                        }
                         
                         withAnimation {
                             
                             self.options = nil
+                            self.textField.textColor = .textSecondary
                         }
                     }
                     
                 }.store(in: &bindings)
             
             action
-                .compactMap { $0 as? PaymentsParameterViewModelAction.Select.DidSelected}
+                .compactMap { $0 as? PaymentsParameterViewModelAction.Select.DidSelected }
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] payload in
                     
@@ -110,8 +134,6 @@ extension PaymentsSelectView {
                     guard let item = options?.first(where: { $0.id == payload.itemId }) else {
                         return
                     }
-                    
-                    options?.first(where: { $0.id == payload.itemId })?.isSelected = true
                     
                     withAnimation {
                         
@@ -153,18 +175,39 @@ extension PaymentsSelectView {
                     
                     if let text = text, text != "" {
                         
-                        self.options = Self.reduce(options: options, icon: .circle, filter: text, action: { itemId in
+                        self.options = Self.reduce(content: self.textField.text, options: options, icon: .circle, filter: text, action: { itemId in
                             
                             self.action.send(PaymentsParameterViewModelAction.Select.DidSelected(itemId: itemId))
                         })
                         
                     } else {
                         
-                        self.options = Self.reduce(options: options, icon: .circle) { itemId in
+                        self.options = Self.reduce(content: self.textField.text, options: options, icon: .circle) { itemId in
                             
                             self.action.send(PaymentsParameterViewModelAction.Select.DidSelected(itemId: itemId))
                         }
                     }
+                }.store(in: &bindings)
+            
+            textField.isEditing
+                .dropFirst()
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isEditing in
+                    
+                    guard let options = parameterSelect?.options, isEditing == true else {
+                        return
+                    }
+                    
+                    let reduceOptions = Self.reduce(content: self.textField.placeholder, options: options, icon: .circle, filter: nil, action: { itemId in
+                        
+                        self.action.send(PaymentsParameterViewModelAction.Select.DidSelected(itemId: itemId))
+                    })
+                    
+                    withAnimation {
+                        
+                        self.options = reduceOptions
+                    }
+                    
                 }.store(in: &bindings)
         }
     }
@@ -182,10 +225,9 @@ extension PaymentsSelectView.ViewModel {
         let subname: String?
         let timeWork: String?
         let currencies: [Currency]?
-        @Published var isSelected: Bool
         let action: (String) -> Void
         
-        init(id: String, icon: IconViewModel, name: String, subname: String? = nil, timeWork: String?, currencies: [Currency]?, isSelected: Bool, action: @escaping (String) -> Void) {
+        init(id: String, icon: IconViewModel, name: String, subname: String? = nil, timeWork: String?, currencies: [Currency]?, action: @escaping (String) -> Void) {
             
             self.id = id
             self.icon = icon
@@ -193,7 +235,6 @@ extension PaymentsSelectView.ViewModel {
             self.subname = subname
             self.timeWork = timeWork
             self.currencies = currencies
-            self.isSelected = isSelected
             self.action = action
         }
         
@@ -201,7 +242,7 @@ extension PaymentsSelectView.ViewModel {
             
             if let iconImage = option.icon?.image {
                 
-                self.init(id: option.id, icon: .image(iconImage), name: option.name, subname: option.subname, timeWork: option.timeWork, currencies: nil, isSelected: false, action: action)
+                self.init(id: option.id, icon: .image(iconImage), name: option.name, subname: option.subname, timeWork: option.timeWork, currencies: nil, action: action)
                 
             } else {
                 
@@ -213,11 +254,11 @@ extension PaymentsSelectView.ViewModel {
                         curr.append(Currency.init(icon: .ic12Coins, currency: currency))
                     }
                     
-                    self.init(id: option.id, icon: .circle, name: option.name, subname: option.subname, timeWork: option.timeWork, currencies: curr, isSelected: false, action: action)
+                    self.init(id: option.id, icon: .circle, name: option.name, subname: option.subname, timeWork: option.timeWork, currencies: curr, action: action)
                     
                 } else {
                     
-                    self.init(id: option.id, icon: .circle, name: option.name, subname: option.subname, timeWork: option.timeWork, currencies: nil, isSelected: false, action: action)
+                    self.init(id: option.id, icon: .circle, name: option.name, subname: option.subname, timeWork: option.timeWork, currencies: nil, action: action)
                 }
             }
         }
@@ -234,7 +275,6 @@ extension PaymentsSelectView.ViewModel {
         
         case `default`(String)
         case placeholder
-        case selected
     }
     
     enum IconViewModel {
@@ -248,7 +288,7 @@ extension PaymentsSelectView.ViewModel {
 
 extension PaymentsSelectView.ViewModel {
     
-    static func reduce(options: [Payments.ParameterSelect.Option], icon: IconViewModel, filter: String? = nil, action: @escaping (String) -> Void) -> [ItemViewModel] {
+    static func reduce(content: String?, options: [Payments.ParameterSelect.Option], icon: IconViewModel, filter: String? = nil, action: @escaping (String) -> Void) -> [ItemViewModel] {
         
         var filterOptions: [ItemViewModel] = []
         
@@ -323,13 +363,8 @@ struct PaymentsSelectView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
                     case .placeholder:
-                        TextFieldRegularView(viewModel: viewModel.textField, font: UIFont.systemFont(ofSize: 16), backgroundColor: Color.clear, textColor: .textSecondary, tintColor: .textSecondary)
+                        TextFieldRegularView(viewModel: viewModel.textField, font: UIFont.systemFont(ofSize: 16), backgroundColor: Color.clear, tintColor: .textSecondary)
                             .padding(.top, -5)
-                        
-                    case .selected:
-                        TextFieldRegularView(viewModel: viewModel.textField, font: UIFont.systemFont(ofSize: 16), backgroundColor: Color.clear, textColor: .textSecondary, tintColor: .textSecondary)
-                            .padding(.top, -5)
-                        
                     }
                 }
                 
@@ -357,7 +392,7 @@ struct PaymentsSelectView: View {
                             
                             ForEach(options) { item in
                                 
-                                ItemView(viewModel: item)
+                                ItemView(viewModel: item, isSelected: item.name == viewModel.content)
                             }
                         }
                     }
@@ -372,7 +407,8 @@ struct PaymentsSelectView: View {
     struct ItemView: View {
         
         let viewModel: PaymentsSelectView.ViewModel.ItemViewModel
-        
+        let isSelected: Bool
+
         var body: some View {
             
             Button {
@@ -390,7 +426,7 @@ struct PaymentsSelectView: View {
                             switch viewModel.icon {
                             case .circle:
                                 
-                                if viewModel.isSelected {
+                                if isSelected {
                                     
                                     Image("Payments Icon Circle Selected")
                                         .frame(width: 24, height: 24)
@@ -532,7 +568,7 @@ extension PaymentsSelectView.ViewModel {
         
         let icon = ImageData(with: UIImage(named: "Payments List Sample")!)!
         
-        var viewModel = PaymentsSelectView.ViewModel(icon: .ic24File, title: "Тип услуги", placeholder: "Начните ввод для поиска", content: "Транспортный налог", textField: .init(text: nil, placeholder: "Начните ввод для поиска", style: .default, limit: nil), options: [ItemViewModel.init(id: "1", icon: .circle, name: "Имущественный налог", timeWork: nil, currencies: nil, isSelected: false, action: {_ in })], model: .emptyMock, expandAction: {})
+        var viewModel = PaymentsSelectView.ViewModel(icon: .ic24File, title: "Тип услуги", placeholder: "Начните ввод для поиска", content: "Транспортный налог", textField: .init(text: nil, placeholder: "Начните ввод для поиска", style: .default, limit: nil), options: [ItemViewModel.init(id: "1", icon: .circle, name: "Имущественный налог", timeWork: nil, currencies: nil, action: {_ in })], model: .emptyMock, expandAction: {})
         
         return viewModel
     }()

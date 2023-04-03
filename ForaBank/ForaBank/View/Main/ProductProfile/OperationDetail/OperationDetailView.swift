@@ -22,7 +22,17 @@ struct OperationDetailView: View {
                 HeaderView(viewModel: viewModel.header)
                 OperationView(viewModel: viewModel.operation)
                     .padding(.top, 24)
-            
+
+                // template, document, details buttons
+                HStack(spacing: 52) {
+                    
+                    ForEach(viewModel.featureButtons) { buttonViewModel in
+                        
+                        FeatureButtonView(viewModel: buttonViewModel)
+                    }
+                }
+                .padding(.top, 28)
+                
                 // change, return buttons
                 if let actionButtons = viewModel.actionButtons {
                     
@@ -40,16 +50,6 @@ struct OperationDetailView: View {
                         
                     }.padding(.top, 28)
                 }
-
-                // template, document, details buttons
-                HStack(spacing: 52) {
-                    
-                    ForEach(viewModel.featureButtons) { buttonViewModel in
-                        
-                        FeatureButtonView(viewModel: buttonViewModel)
-                    }
-                }
-                .padding(.top, 28)
             }
             
             if viewModel.isLoading {

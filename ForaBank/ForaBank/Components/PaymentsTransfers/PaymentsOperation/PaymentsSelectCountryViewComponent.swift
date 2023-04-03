@@ -123,65 +123,43 @@ extension PaymentsSelectCountryView.ViewModel {
         
         selectedItem.textField.$text
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] content in
+            .sink { [unowned self] text in
                 
-                let countryId = model.countriesListWithSevice.value.first(where: {$0.name.capitalized == content?.capitalized})
-                update(value: countryId?.code)
-                
-                guard let content = content else {
-                    return
-                }
-                
-                if let list = self.list {
+                if let country = model.countriesListWithSevice.value.first(where: {$0.name.lowercased() == text?.lowercased()}) {
                     
-                    let options: [ListViewModel.ItemViewModel] = list.items.filter({ item in
+                    update(value: country.code)
+                    
+                    if let imageData = model.images.value.first(where: {$0.key == country.md5hash}),
+                       let image = imageData.value.image {
                         
-                        guard let subtitle = item.subtitle else {
-                            return false
+                        withAnimation {
+                            
+                            self.selectedItem.icon = .image(image)
                         }
                         
-                        if subtitle.contained(in: [content]) {
-                            return true
-                        }
+                    } else {
                         
-                        return false
-                    })
+                        withAnimation {
+                            
+                            self.selectedItem.icon = .placeholder
+                        }
+                    }
+                    
+                } else {
+                    
+                    update(value: nil)
                     
                     withAnimation {
                         
-                        self.list?.filteredItems = options
-                    }
-                    
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        
-                        self.selectedItem.title = value.current != nil || selectedItem.textField.isEditing.value == true ? parameterSelect?.title : nil
+                        self.selectedItem.icon = .placeholder
                     }
                 }
                 
-                guard let content = selectedItem.textField.text else {
-                    return
-                }
-                
-                let countries = model.countriesListWithSevice.value
-                
-                
-                //                if let countries = countries.first(where: {$0.name == content}),
-                //                   let image = countries.svgImage.image {
-                //
-                //                    self.selectedItem.icon = .image(image)
-                //                    self.selectedItem.title = parameterSelect?.title
-                //
-                //                } else {
-                
-//                self.selectedItem.icon = .placeholder
-                self.selectedItem.title = parameterSelect?.title
-                //                }
+                list?.updateFilteredItems(with: text)
                 
             }.store(in: &bindings)
         
-        
         selectedItem.textField.isEditing
-            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] isEditing in
                 
@@ -329,19 +307,9 @@ extension PaymentsSelectCountryView.ViewModel {
             .sink { [weak self] action in
                 
                 switch action {
-                case let payload as ContactsViewModelAction.BankSelected:
-                    guard let banks = self?.model.dictionaryFullBankInfoList() else {
-                        return
-                    }
-                    
-                    let bank = banks.first(where: {$0.memberId == payload.bankId})
-                    
-                    withAnimation {
-                        
-                        self?.selectedItem.textField.text = bank?.bic
-                        self?.list = nil
-                        self?.action.send(PaymentsParameterViewModelAction.BankList.ContactSelector.Close())
-                    }
+                case let payload as ContactsViewModelAction.CountrySelected:
+                    self?.action.send(PaymentsSelectCountryViewModelAction.DidSelectCountry(id: payload.countryId.description))
+                    self?.action.send(PaymentsParameterViewModelAction.BankList.ContactSelector.Close())
                     
                 default:
                     break
@@ -412,6 +380,33 @@ extension PaymentsSelectCountryView.ViewModel {
                 case icon(Image)
                 case overlay(Image)
                 case placeholder
+            }
+        }
+        
+        func updateFilteredItems(with value: String?) {
+            
+            if let value = value, value != "" {
+                
+                let updateItems = items.filter({ item in
+                    
+                    if item.name.contained(in: [value]) {
+                        return true
+                    }
+                    
+                    return false
+                })
+                
+                withAnimation {
+                    
+                    filteredItems = updateItems
+                }
+                
+            } else {
+                
+                withAnimation {
+                    
+                    filteredItems = items
+                }
             }
         }
     }
@@ -639,7 +634,7 @@ struct PaymentsSelectCountryView: View {
                         
                         HStack {
                             
-                            TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16), textColor: .textSecondary)
+                            TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16))
                                 .font(.textH4M16240())
                                 .foregroundColor(.textSecondary)
                             

@@ -15,7 +15,6 @@ extension PaymentsInputPhoneView {
     class ViewModel: PaymentsParameterViewModel, ObservableObject {
         
         let icon: Image
-        let description: String
         let textView: TextViewPhoneNumberView.ViewModel
         @Published var title: String?
         @Published var actionButton: ActionButtonViewModel?
@@ -23,7 +22,7 @@ extension PaymentsInputPhoneView {
         private let model: Model
         private static let iconPlaceholder = Image.ic24File
         
-        var parameterInput: Payments.ParameterInput? { source as? Payments.ParameterInput }
+        var parameterInput: Payments.ParameterInputPhone? { source as? Payments.ParameterInputPhone }
         override var isValid: Bool {
             
             guard let phone = textView.text else {
@@ -45,11 +44,12 @@ extension PaymentsInputPhoneView {
 #endif
         }
         
-        init(icon: Image = .ic24Smartphone, description: String, phone: String?, title: String? = nil, actionButton: ActionButtonViewModel? = nil, model: Model = .emptyMock, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
+        var titleValue: String? { parameterInput?.title }
+
+        init(icon: Image = .ic24Smartphone, textView: TextViewPhoneNumberView.ViewModel, phone: String?, title: String? = nil, actionButton: ActionButtonViewModel? = nil, model: Model = .emptyMock, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.icon = icon
-            self.description = description
-            self.textView = .init(style: .payments, text: phone, placeHolder: .text(description), filterSymbols: [Character("-"), Character("("), Character(")"), Character("+")], firstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")], phoneNumberFormatter: PhoneNumberKitFormater())
+            self.textView = textView
             self.title = title
             self.actionButton = actionButton
             self.model = model
@@ -59,10 +59,13 @@ extension PaymentsInputPhoneView {
         
         convenience init(with parameterInput: Payments.ParameterInputPhone, model: Model) {
             
-            let description = parameterInput.title
+            let title = parameterInput.title
             let phone = parameterInput.parameter.value
-
-            self.init(description: parameterInput.placeholder ?? description, phone: phone, title: description, model: model, source: parameterInput)
+            let placeholder = parameterInput.placeholder ?? parameterInput.title
+            
+            let textView = TextViewPhoneNumberView.ViewModel(style: .payments, text: phone, placeHolder: .text(placeholder), filterSymbols: [Character("-"), Character("("), Character(")"), Character("+")], firstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")], phoneNumberFormatter: PhoneNumberKitFormater())
+            
+            self.init(textView: textView, phone: phone, title: title, model: model, source: parameterInput)
             
             if let phone = phone {
 
@@ -99,24 +102,19 @@ extension PaymentsInputPhoneView {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] phone in
                     
-                    value = value.updated(with: phone)
-                    
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        
-                        title = phone != nil ? description : nil
-                    }
+                    update(value: phone)
 
                 }.store(in: &bindings)
             
             textView.isEditing
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] isEditing in
-
+                                        
                     if isEditing || textView.hasValue {
 
                         withAnimation {
 
-                            title = description
+                            title = titleValue
                         }
 
                     } else {
@@ -296,7 +294,7 @@ struct PaymentsInputPhoneView_Previews: PreviewProvider {
 
 extension PaymentsInputPhoneView.ViewModel {
     
-    static let samplePhone = PaymentsInputPhoneView.ViewModel(description: "Номер телефона получателя", phone: "+7 925 555-5555", title: "Номер телефона получателя", actionButton: .init(action: {}))
+    static let samplePhone = PaymentsInputPhoneView.ViewModel(textView: .init(.phone), phone: "+7 925 555-5555", title: "Номер телефона получателя", actionButton: .init(action: {}))
     
     static let samplePhoneParam = PaymentsInputPhoneView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "79255145555"), title: "Номер телефона получателя"), model: .emptyMock)
 }

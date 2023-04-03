@@ -249,7 +249,7 @@ struct PaymentsInputView: View {
                         
                         if viewModel.isEditable == true {
                             
-                            TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16), textColor: .textSecondary)
+                            TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16))
                                 .frame(minWidth: 24)
                             
                         } else {

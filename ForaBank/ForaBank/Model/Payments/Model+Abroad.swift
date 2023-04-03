@@ -216,21 +216,28 @@ extension Model {
             }
             
             guard let filterCurriencies = parameters.first(where: { $0.id == Payments.Parameter.Identifier.countryCurrencyFilter.rawValue }) else {
-                return productParameter
+                
+                var filter: ProductData.Filter = .init(rules: [])
+                filter.rules.append(ProductData.Filter.DebitRule())
+                filter.rules.append(ProductData.Filter.CurrencyRule(Set([.rub, .usd])))
+                return productParameter.updated(filter: filter)
             }
 
             var currincies: [Currency] = []
 
             if let currienciesString = filterCurriencies.value?.components(separatedBy: " ") {
-            
+                
                 for currincy in currienciesString {
                     
-                     let currency = Currency.init(description: currincy)
+                    if currincy != "" {
+                        
+                        let currency = Currency.init(description: currincy)
                         currincies.append(currency)
-
+                    }
                 }
             }
-            var filter: ProductData.Filter = ProductData.Filter.meToMeFrom
+            var filter: ProductData.Filter = .init(rules: [])
+            filter.rules.append(ProductData.Filter.DebitRule())
             filter.rules.append(ProductData.Filter.CurrencyRule(Set(currincies)))
             
             return productParameter.updated(filter: filter)
@@ -389,14 +396,14 @@ extension Model {
                     .init(id: parameterData.id, value: parameterData.value),
                     icon: parameterData.iconData ?? .parameterDocument,
                     title: parameterData.title,
-                    validator: .baseName, group: .init(id: "fio", type: .contact))
+                    validator: parameterData.validator, group: .init(id: "fio", type: .contact))
                 
             case "bLastName":
                 return Payments.ParameterInput(
                     .init(id: parameterData.id, value: parameterData.value),
                     icon: nil,
                     title: parameterData.title,
-                    validator: .baseName, group: .init(id: "fio", type: .contact))
+                    validator: parameterData.validator, group: .init(id: "fio", type: .contact))
                 
             case Payments.Parameter.Identifier.countrybSurName.rawValue:
                 return Payments.ParameterInput(
