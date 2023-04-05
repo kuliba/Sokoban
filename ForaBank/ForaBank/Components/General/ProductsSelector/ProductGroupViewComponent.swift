@@ -297,7 +297,7 @@ extension ProductGroupView.ViewModel.Dimensions {
             productShadow: .init(width: 120, height: 104),
             new:           .init(width: 112, height: 104),
             button:        .init(width:  48, height: 104),
-            separator:     .init(width:   1, height: 104)
+            separator:     .init(width:   1, height: 48)
         )
     )
     static let small: Self = .init(
@@ -309,7 +309,7 @@ extension ProductGroupView.ViewModel.Dimensions {
             productShadow: .init(width:  62, height: 64),
             new:           .init(width: 112, height: 72),
             button:        .init(width:  40, height: 72),
-            separator:     .init(width:   1, height: 72)
+            separator:     .init(width:   1, height: 48)
         )
     )
 }
@@ -385,8 +385,10 @@ struct ProductGroupView: View {
             if viewModel.isSeparator {
                 
                 Capsule(style: .continuous)
-                    .foregroundColor(.mainColorsGrayLightest)
+                    .foregroundColor(.bordersDivider)
                     .frame(viewModel.dimensions, for: \.separator)
+                    // wrap in another frame to centre align
+                    .frame(height: viewModel.dimensions.sizes.product.height)
             }
         }
         .frame(
