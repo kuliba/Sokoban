@@ -60,11 +60,7 @@ extension ServerCommands {
                             let paymentData = try items.decode(PaymentGeneralData.self)
                             data.append(paymentData)
                             
-                        case .country:
-                            let paymentData = try items.decode(PaymentCountryData.self)
-                            data.append(paymentData)
-                            
-                        case .internet, .mobile, .service, .transport, .taxAndStateService:
+                        case .internet, .mobile, .service, .transport, .taxAndStateService, .outside:
                             let paymentData = try items.decode(PaymentServiceData.self)
                             data.append(paymentData)
                             
@@ -76,18 +72,19 @@ extension ServerCommands {
                 }
             }
             
-            init(token: String, isPhonePayments: Bool, isCountriesPayments: Bool, isServicePayments: Bool, isMobilePayments: Bool, isInternetPayments: Bool, isTransportPayments: Bool, isTaxAndStateServicePayments: Bool) {
+            init(token: String, isPhonePayments: Bool, isServicePayments: Bool, isMobilePayments: Bool, isInternetPayments: Bool, isTransportPayments: Bool, isTaxAndStateServicePayments: Bool, isOutsidePayments: Bool) {
                 
                 self.token = token
                 var parameters = [ServerCommandParameter]()
                 
-                parameters.append(.init(name: "isPhonePayments", value: isPhonePayments ? "true" : "false"))
-                parameters.append(.init(name: "isCountriesPayments", value: isCountriesPayments ? "true" : "false"))
-                parameters.append(.init(name: "isServicePayments", value: isServicePayments ? "true" : "false"))
-                parameters.append(.init(name: "isMobilePayments", value: isMobilePayments ? "true" : "false"))
-                parameters.append(.init(name: "isInternetPayments", value: isInternetPayments ? "true" : "false"))
-                parameters.append(.init(name: "isTransportPayments", value: isTransportPayments ? "true" : "false"))
-                parameters.append(.init(name: "isTaxAndStateServicePayments", value: isTaxAndStateServicePayments ? "true" : "false"))
+                parameters.append(.init(name: "isPhonePayments", value: isPhonePayments.asString))
+                parameters.append(.init(name: "isServicePayments", value: isServicePayments.asString))
+                parameters.append(.init(name: "isMobilePayments", value: isMobilePayments.asString))
+                parameters.append(.init(name: "isInternetPayments", value: isInternetPayments.asString))
+                parameters.append(.init(name: "isTransportPayments", value: isTransportPayments.asString))
+                parameters.append(.init(name: "isTaxAndStateServicePayments", value: isTaxAndStateServicePayments.asString))
+                parameters.append(.init(name: "isOutsidePayments", value: isOutsidePayments.asString))
+                
                 self.parameters = parameters
             }
         }

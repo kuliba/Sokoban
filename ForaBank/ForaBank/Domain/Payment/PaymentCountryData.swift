@@ -7,6 +7,7 @@
 
 import Foundation
 
+@available(*, deprecated, message: "PaymentCountryData no longer used")
 class PaymentCountryData: LatestPaymentData {
 
 	let countryCode: String

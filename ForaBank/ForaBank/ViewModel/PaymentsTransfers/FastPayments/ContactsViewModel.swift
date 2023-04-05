@@ -342,7 +342,7 @@ extension ContactsViewModel {
             result.append(ContactsCountriesSectionViewModel(model, mode: .fastPayment))
 
         case .abroad:
-            result.append(ContactsLatestPaymentsSectionViewModel(model: model, including: [.country]))
+            result.append(ContactsLatestPaymentsSectionViewModel(model: model, including: [.outside]))
             result.append(ContactsCountriesSectionViewModel(model, mode: .select))
 
         case let .select(select):

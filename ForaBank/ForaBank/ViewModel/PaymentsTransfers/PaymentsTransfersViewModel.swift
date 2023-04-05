@@ -979,12 +979,16 @@ extension PaymentsTransfersViewModel {
                 }
             }
             
-        case (.country, let paymentData as PaymentCountryData):
+        case (.outside, let paymentData as PaymentServiceData):
             Task {
                 
                 do {
                     
-                    let paymentsViewModel = try await PaymentsViewModel(source: .direct(phone: paymentData.phoneNumber, countryId: paymentData.countryCode), model: model) { [weak self] in
+                    guard let countryId = paymentData.additionalList.first(where: { $0.isTrnPickupPoint } )?.fieldValue else {
+                        return
+                    }
+                    
+                    let paymentsViewModel = try await PaymentsViewModel(source: .direct(phone: paymentData.lastPaymentName, countryId: countryId), model: model) { [weak self] in
                         
                         self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                         
@@ -1006,7 +1010,7 @@ extension PaymentsTransfersViewModel {
                         self.alert = .init(title: "Error", message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения.", primary: .init(type: .cancel, title: "Ok", action: {}))
                     }
                     
-                    LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for Abroad source with phone: \(paymentData.phoneNumber) and countryId: \(paymentData.countryCode)  with error: \(error.localizedDescription)")
+                    LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for Abroad source with phone: \(paymentData.lastPaymentName) with error: \(error.localizedDescription)")
                 }
             }
             
