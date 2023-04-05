@@ -13,130 +13,152 @@ struct PaymentsSuccessView: View {
     
     var body: some View {
         
-        VStack(alignment: .center, spacing: 24) {
+        ZStack {
             
-            Group {
+            VStack(alignment: .center, spacing: 24) {
                 
-                Spacer()
-                
-                StateIconView(viewModel: viewModel.iconType)
-            }
-            
-            Group {
-                
-                if let warningTitle = viewModel.warningTitle {
+                Group {
                     
-                    Text(warningTitle)
-                        .font(.textH4M16240())
-                        .foregroundColor(.systemColorError)
-                        .padding(.horizontal, 20)
+                    Spacer()
+                    
+                    StateIconView(viewModel: viewModel.iconType)
                 }
                 
-                if let title = viewModel.title {
+                Group {
                     
-                    Text(title)
-                        .font(.textH3SB18240())
-                        .foregroundColor(.mainColorsBlack)
-                        .multilineTextAlignment(.center)
-                        .frame(width: 250)
-                }
-                
-                if let company = viewModel.company {
-                    
-                    CompanyView(viewModel: company)
-                }
-                
-                if let link = viewModel.link {
-                    
-                    LinkView(viewModel: link)
-                }
-                
-                if let service = viewModel.service {
-                    ServiceView(viewModel: service)
-                }
-                
-                if let amount = viewModel.amount {
-                    
-                    Text(amount)
-                        .font(.textH1SB24322())
-                        .foregroundColor(.mainColorsBlack)
-                        .padding(.horizontal, 20)
-                }
-                
-                if let options = viewModel.options {
-                    
-                    HStack {
+                    if let warningTitle = viewModel.warningTitle {
                         
-                        VStack(alignment: .leading,spacing: 24) {
+                        Text(warningTitle)
+                            .font(.textH4M16240())
+                            .foregroundColor(.systemColorError)
+                            .padding(.horizontal, 20)
+                    }
+                    
+                    if let title = viewModel.title {
+                        
+                        Text(title)
+                            .font(.textH3SB18240())
+                            .foregroundColor(.mainColorsBlack)
+                            .multilineTextAlignment(.center)
+                            .frame(width: 250)
+                    }
+                    
+                    if let company = viewModel.company {
+                        
+                        CompanyView(viewModel: company)
+                    }
+                    
+                    if let link = viewModel.link {
+                        
+                        LinkView(viewModel: link)
+                    }
+                    
+                    if let service = viewModel.service {
+                        ServiceView(viewModel: service)
+                    }
+                    
+                    if let amount = viewModel.amount {
+                        
+                        Text(amount)
+                            .font(.textH1SB24322())
+                            .foregroundColor(.mainColorsBlack)
+                            .padding(.horizontal, 20)
+                    }
+                    
+                    if let options = viewModel.options {
+                        
+                        HStack {
                             
-                            ForEach(options) { viewModel in
-                                OptionView(viewModel: viewModel)
+                            VStack(alignment: .leading,spacing: 24) {
+                                
+                                ForEach(options) { viewModel in
+                                    OptionView(viewModel: viewModel)
+                                }
+                            }
+                            
+                            Spacer()
+                            
+                        }.padding(.horizontal, 20)
+                    }
+                    
+                    if let logoIconViewModel = viewModel.logo {
+                        
+                        LogoIconView(viewModel: logoIconViewModel)
+                    }
+                    
+                    if let numberViewModel  =  viewModel.transferNumber {
+                        
+                        TransferNumber(viewModel: numberViewModel)
+                    }
+                    
+                    Spacer()
+                }
+                
+                if let additionalButtons = viewModel.additioinalButtons {
+                    
+                    HStack(spacing: 0) {
+                        
+                        ForEach(additionalButtons, id: \.id) { button in
+                            
+                            ButtonSimpleView(viewModel: .init(title: button.title, style: .gray, action: button.action))
+                                .frame(height: 48)
+                                .padding(.horizontal, 20)
+                        }
+                    }
+                }
+                
+                Group {
+                    
+                    HStack(spacing: 52) {
+                        
+                        ForEach(viewModel.optionButtons) { buttonViewModel in
+                            
+                            switch buttonViewModel {
+                            case let optionButtonViewModel as PaymentsSuccessOptionButtonView.ViewModel:
+                                PaymentsSuccessOptionButtonView(viewModel: optionButtonViewModel)
+                                
+                            default:
+                                EmptyView()
                             }
                         }
-                        
-                        Spacer()
-                        
-                    }.padding(.horizontal, 20)
-                }
-                
-                if let logoIconViewModel = viewModel.logo {
+                    }.padding(.bottom, 20)
                     
-                    LogoIconView(viewModel: logoIconViewModel)
-                }
-                
-                Spacer()
-            }
-            
-            if let additionalButtons = viewModel.additioinalButtons {
-                
-                HStack(spacing: 0) {
-                    
-                    ForEach(additionalButtons, id: \.id) { button in
+                    if let repeatButton = viewModel.repeatButton {
                         
-                        ButtonSimpleView(viewModel: .init(title: button.title, style: .gray, action: button.action))
+                        ButtonSimpleView(viewModel: repeatButton)
                             .frame(height: 48)
                             .padding(.horizontal, 20)
                     }
-                }
-            }
-            
-            Group {
-                
-                HStack(spacing: 52) {
                     
-                    ForEach(viewModel.optionButtons) { buttonViewModel in
+                    VStack(spacing: 20) {
                         
-                        switch buttonViewModel {
-                        case let optionButtonViewModel as PaymentsSuccessOptionButtonView.ViewModel:
-                            PaymentsSuccessOptionButtonView(viewModel: optionButtonViewModel)
+                        ButtonSimpleView(viewModel: viewModel.actionButton)
+                            .frame(height: 48)
+                            .padding(.horizontal, 20)
+                        
+                        if let bottomIcon = viewModel.bottomIcon {
                             
-                        default:
-                            EmptyView()
+                            bottomIcon
+                                .renderingMode(.original)
                         }
-                    }
-                }.padding(.bottom, 20)
-                
-                if let repeatButton = viewModel.repeatButton {
-                    
-                    ButtonSimpleView(viewModel: repeatButton)
-                        .frame(height: 48)
-                        .padding(.horizontal, 20)
-                }
-                
-                VStack(spacing: 20) {
-                    
-                    ButtonSimpleView(viewModel: viewModel.actionButton)
-                        .frame(height: 48)
-                        .padding(.horizontal, 20)
-                    
-                    if let bottomIcon = viewModel.bottomIcon {
                         
-                        bottomIcon
-                            .renderingMode(.original)
-                    }
-                    
-                }.padding(.bottom, bottomPadding)
+                    }.padding(.bottom, bottomPadding)
+                }
             }
+            .background(Color.mainColorsWhite)
+            .sheet(item: $viewModel.sheet) { sheet in
+                
+                switch sheet.type {
+                case let .printForm(printViewModel):
+                    PrintFormView(viewModel: printViewModel)
+                    
+                case let .detailInfo(detailViewModel):
+                    OperationDetailInfoView(viewModel: detailViewModel)
+                }
+            }
+            .alert(item: $viewModel.alert, content: { alertViewModel in
+                Alert(with: alertViewModel)
+            })
             
             Color.clear.frame(maxHeight: 0)
                 .fullScreenCover(item: $viewModel.fullScreenSheet, content: { item in
@@ -148,20 +170,6 @@ struct PaymentsSuccessView: View {
                     }
                 })
         }
-        .background(Color.mainColorsWhite)
-        .sheet(item: $viewModel.sheet) { sheet in
-
-            switch sheet.type {
-            case let .printForm(printViewModel):
-                PrintFormView(viewModel: printViewModel)
-
-            case let .detailInfo(detailViewModel):
-                OperationDetailInfoView(viewModel: detailViewModel)
-            }
-        }
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
     }
 }
 
@@ -247,6 +255,38 @@ extension PaymentsSuccessView {
                     .font(.textH3SB18240())
                     .foregroundColor(.mainColorsBlack)
             }
+        }
+    }
+    
+    //MARK: - TransferNumber
+    
+    struct TransferNumber: View {
+        
+        let viewModel: PaymentsSuccessViewModel.TransferNumber
+        
+        var body: some View {
+            
+            HStack {
+                
+                Text(viewModel.title)
+                    .font(.system(size: 16, weight: .regular))
+                    .foregroundColor(Color.black)
+                    .padding(.leading, 6)
+                
+                
+                Button {
+                    
+                    viewModel.action()
+                    
+                } label: {
+                    
+                    Image("Operation Details Copy Button Icon")
+                    
+                }.padding(6)
+            }
+            .padding(8)
+            .background(Color(hex: "F6F6F7"))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
         }
     }
     

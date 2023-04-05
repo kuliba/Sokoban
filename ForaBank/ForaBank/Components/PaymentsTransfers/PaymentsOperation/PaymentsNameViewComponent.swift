@@ -27,13 +27,27 @@ extension PaymentsNameView {
         
         override var isValid: Bool {
             
-            guard let parameterName = parameterName else {
-                return false
+            if parameterName?.value != nil {
+                
+                if self.value.isChanged  {
+
+                    return true
+
+                } else {
+                    
+                    return false
+                }
+                
+            } else {
+             
+                guard let parameterName = parameterName else {
+                    return false
+                }
+                
+                return parameterName.lastName.validator.isValid(value: person.lastName.textField.text) &&
+                parameterName.firstName.validator.isValid(value: person.firstName.textField.text) &&
+                parameterName.middleName.validator.isValid(value: person.middleName.textField.text)
             }
-            
-            return parameterName.lastName.validator.isValid(value: person.lastName.textField.text) &&
-            parameterName.firstName.validator.isValid(value: person.firstName.textField.text) &&
-            parameterName.middleName.validator.isValid(value: person.middleName.textField.text)
         }
         
         private var parameterName: Payments.ParameterName? { source as? Payments.ParameterName }

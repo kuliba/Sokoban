@@ -73,12 +73,12 @@ struct OperationDetailView: View {
         .fullScreenCoverLegacy(viewModel: $viewModel.fullScreenSheet) { item in
             
             switch item.type {
-            case let .changeReturn(changeReturnViewModel):
+            case let .payments(viewModel):
                 NavigationView {
-                    ChangeReturnView(viewModel: changeReturnViewModel)
+                    
+                    PaymentsView(viewModel: viewModel)
                         .navigationBarTitle("", displayMode: .inline)
                         .navigationBarBackButtonHidden(true)
-                        .edgesIgnoringSafeArea(.all)
                 }
             }
         }

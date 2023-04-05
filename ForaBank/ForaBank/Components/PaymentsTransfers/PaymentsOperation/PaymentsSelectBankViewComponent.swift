@@ -30,8 +30,13 @@ extension PaymentsSelectBankView {
                return model.bankList.value.contains(where: {$0.memberNameRus == selectedItem.textField.text})
                 
             case .abroad:
-                return model.bankList.value.contains(where: {$0.memberNameRus == selectedItem.textField.text})
+                guard let options = parameterSelect?.options,
+                      options.contains(where: {$0.name == selectedItem.textField.text}) else {
+                    return false
+                }
                 
+                return true
+                            
             default:
                 return model.dictionaryFullBankInfoList()?.contains(where: {$0.bic == selectedItem.textField.text}) == true && parameterSelect?.validator.isValid(value: value.current) ?? false
             }
@@ -367,14 +372,19 @@ extension PaymentsSelectBankView.ViewModel {
                               let bank = banks.first(where: {$0.id == payload.id}) else{
                             return
                         }
-                        
+
+                        withAnimation {
+                            
+                            self.selectedItem.id = bank.id
+                            self.selectedItem.textField.text = bank.name
+                            self.selectedItem.title = parameterSelect?.title
+                        }
+
                         switch bank.icon {
                         case .image(let image):
                             withAnimation {
                                 
-                                self.selectedItem.title = parameterSelect?.title
                                 self.selectedItem.icon = .image(image)
-                                self.selectedItem.textField.text = bank.name
                             }
                         
                         default: break
@@ -490,6 +500,7 @@ extension PaymentsSelectBankView.ViewModel {
     
     class SelectedItemViewModel: ObservableObject {
 
+        var id: String?
         var textField: TextFieldRegularView.ViewModel
         @Published var icon: IconViewModel
         @Published var title: String?
@@ -498,9 +509,10 @@ extension PaymentsSelectBankView.ViewModel {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(_ model: Model, icon: IconViewModel, textField: TextFieldRegularView.ViewModel, title: String? = nil, collapseAction: @escaping () -> Void) {
+        init(_ model: Model, id: String? = nil, icon: IconViewModel, textField: TextFieldRegularView.ViewModel, title: String? = nil, collapseAction: @escaping () -> Void) {
             
             self.model = model
+            self.id = id
             self.icon = icon
             self.textField = textField
             self.title = title

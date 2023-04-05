@@ -198,7 +198,15 @@ class ContactsViewModel: ObservableObject {
                         case let .fastPayments(phase):
                             switch phase {
                             case .banksAndCountries(phone: _):
-                                self.action.send(ContactsViewModelAction.PaymentRequested(source: payload.source))
+                                
+                                if case let .direct(phone: _, countryId: countryId) = payload.source {
+
+                                    self.action.send(ContactsViewModelAction.PaymentRequested(source: .direct(phone: self.searchBar.phone, countryId: countryId)))
+
+                                } else {
+                                    
+                                    self.action.send(ContactsViewModelAction.PaymentRequested(source: payload.source))
+                                }
                                 
                             default:
                                 break
