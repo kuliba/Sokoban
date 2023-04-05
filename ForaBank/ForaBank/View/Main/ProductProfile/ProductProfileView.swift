@@ -136,6 +136,15 @@ struct ProductProfileView: View {
                 }
                 .frame(width: .infinity, height: .infinity, alignment: .center)
             }
+            
+            Color.clear.frame(maxHeight: 0)
+                .fullScreenCover(item: $viewModel.success) { successViewModel in
+
+                    PaymentsSuccessView(viewModel: successViewModel)
+
+                }.transaction { transaction in
+                    transaction.disablesAnimations = false
+                }
         }
         .navigationBarTitle("", displayMode: .inline)
         .navigationBar(with: viewModel.navigationBar)

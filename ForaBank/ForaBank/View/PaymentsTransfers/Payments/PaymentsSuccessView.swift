@@ -138,7 +138,7 @@ struct PaymentsSuccessView: View {
                 }.padding(.bottom, bottomPadding)
             }
             
-            Color.clear
+            Color.clear.frame(maxHeight: 0)
                 .fullScreenCover(item: $viewModel.fullScreenSheet, content: { item in
                     
                     switch item.type {
