@@ -49,12 +49,12 @@ extension LatestPaymentData {
     enum Kind: String, Codable, Unknownable {
         
         case phone
-        case country
         case service
         case mobile
         case internet
         case transport
         case taxAndStateService
+        case outside
         case unknown
     }
 }

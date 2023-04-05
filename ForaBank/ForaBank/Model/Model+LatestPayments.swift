@@ -57,12 +57,12 @@ extension Model {
                         .PaymentOperationDetailContoller
                         .GetAllLatestPayments(token: token,
                                               isPhonePayments: true,
-                                              isCountriesPayments: true,
                                               isServicePayments: true,
                                               isMobilePayments: true,
                                               isInternetPayments: true,
                                               isTransportPayments: true,
-                                              isTaxAndStateServicePayments: true)
+                                              isTaxAndStateServicePayments: true,
+                                              isOutsidePayments: true)
     
         serverAgent.executeCommand(command: command) { result in
            

@@ -240,30 +240,24 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             ?? (paymentData.phoneNumber.isEmpty
                 ? data.type.defaultName : phoneFormatter.format(phoneNumberRu))
             
-        case (.country, let paymentData as PaymentCountryData):
+        case (.outside, let paymentData as PaymentServiceData):
             
-            if let phoneNumber = paymentData.phoneNumber,
-               !phoneNumber.isEmpty {
+            let firstLogo = model.dictionaryAnywayOperator(for: paymentData.puref)?.logotypeList.first
+            let image = firstLogo?.svgImage?.image ?? data.type.defaultIcon
+            self.avatar = .icon(image, .iconGray)
+            
+            self.description = paymentData.lastPaymentName ?? ""
+            
+            if let countryId = paymentData.additionalList.first(where: { $0.isTrnPickupPoint } )?.fieldValue,
+               let country = model.countriesList.value.first(where: { $0.id == countryId } ),
+               let image = country.svgImage?.image {
                 
-                let phoneNumberInt = "+" + phoneNumber
-                let phoneFormatter = PhoneNumberKitFormater()
-                
-                self.avatar = avatar(for: phoneNumberInt)
-                ?? (!paymentData.shortName.isEmpty
-                    ? .text(String(paymentData.shortName.first!).uppercased())
-                    : .icon(data.type.defaultIcon, .iconGray))
-                self.description = fullName(for: phoneNumberInt)
-                ?? (paymentData.shortName.isEmpty
-                    ? phoneFormatter.format(phoneNumberInt) : paymentData.shortName)
+                self.topIcon = image
             } else {
-                self.avatar = !paymentData.shortName.isEmpty
-                ? .text(String(paymentData.shortName.first!).uppercased())
-                : .icon(data.type.defaultIcon, .iconGray)
-                self.description = paymentData.shortName.isEmpty
-                ? paymentData.type.defaultName : paymentData.shortName
+                
+                self.topIcon = nil
             }
-            self.topIcon = model.dictionaryCountry(for: paymentData.countryCode)?.svgImage?.image
-            
+                
         case (.service, let paymentData as PaymentServiceData):
             
             if let image = model.dictionaryAnywayOperator(for: paymentData.puref)?

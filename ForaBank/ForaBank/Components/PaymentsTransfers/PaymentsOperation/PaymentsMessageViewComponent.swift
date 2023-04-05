@@ -38,7 +38,7 @@ extension PaymentsMessageView {
                 .receive(on: DispatchQueue.main)
                 .sink {[unowned self] value in
                     
-                    update(value: value == true ? "true" : "false")
+                    update(value: value.asString)
                     
                 }.store(in: &bindings)
         }

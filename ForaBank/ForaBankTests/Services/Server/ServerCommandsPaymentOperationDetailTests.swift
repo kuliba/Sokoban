@@ -25,24 +25,24 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                         .PaymentOperationDetailContoller
                         .GetAllLatestPayments(token: "",
                                               isPhonePayments: false,
-                                              isCountriesPayments: true,
                                               isServicePayments: true,
-                                              isMobilePayments: false,
-                                              isInternetPayments: true,
-                                              isTransportPayments: false,
-                                              isTaxAndStateServicePayments: true)
+                                              isMobilePayments: true,
+                                              isInternetPayments: false,
+                                              isTransportPayments: true,
+                                              isTaxAndStateServicePayments: false,
+                                              isOutsidePayments: true)
         
         // then
         XCTAssertNotNil(command.parameters)
         XCTAssertEqual(command.parameters?.count, 7)
         
         XCTAssertEqual(command.parameters?[0].name, "isPhonePayments")
-        XCTAssertEqual(command.parameters?[1].name, "isCountriesPayments")
-        XCTAssertEqual(command.parameters?[2].name, "isServicePayments")
-        XCTAssertEqual(command.parameters?[3].name, "isMobilePayments")
-        XCTAssertEqual(command.parameters?[4].name, "isInternetPayments")
-        XCTAssertEqual(command.parameters?[5].name, "isTransportPayments")
-        XCTAssertEqual(command.parameters?[6].name, "isTaxAndStateServicePayments")
+        XCTAssertEqual(command.parameters?[1].name, "isServicePayments")
+        XCTAssertEqual(command.parameters?[2].name, "isMobilePayments")
+        XCTAssertEqual(command.parameters?[3].name, "isInternetPayments")
+        XCTAssertEqual(command.parameters?[4].name, "isTransportPayments")
+        XCTAssertEqual(command.parameters?[5].name, "isTaxAndStateServicePayments")
+        XCTAssertEqual(command.parameters?[6].name, "isOutsidePayments")
         
         XCTAssertEqual(command.parameters?[0].value, "false")
         XCTAssertEqual(command.parameters?[1].value, "true")
@@ -102,7 +102,8 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       date: date,
                                       paymentDate: "21.12.2021 11:04:26",
                                       puref: "iFora||4285",
-                                      type: .internet)
+                                      type: .internet,
+                                      lastPaymentName: nil)
         
         let expected = ServerCommands.PaymentOperationDetailContoller
                         .GetLatestInternetPayments.Response(statusCode: .ok,
@@ -136,7 +137,8 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       date: date,
                                       paymentDate: "21.12.2021 11:04:26",
                                       puref: "iFora||4285",
-                                      type: .mobile)
+                                      type: .mobile,
+                                      lastPaymentName: nil)
         
         let expected = ServerCommands
                         .PaymentOperationDetailContoller
@@ -249,7 +251,8 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       date: date,
                                       paymentDate: "21.12.2021 11:04:26",
                                       puref: "iFora||4285",
-                                      type: .service)
+                                      type: .service,
+                                      lastPaymentName: nil)
         
         let expected = ServerCommands
                         .PaymentOperationDetailContoller
@@ -284,7 +287,8 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       date: date,
                                       paymentDate: "21.12.2021 11:04:26",
                                       puref: "iFora||4285",
-                                      type: .transport)
+                                      type: .transport,
+                                      lastPaymentName: nil)
         
         let expected = ServerCommands
                         .PaymentOperationDetailContoller
@@ -541,7 +545,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       puref: "iFora||TransferArmBBClientP",
                                       shortName: "Иванов И.",
                                       surName: "Иванов",
-                                      type: .country)
+                                      type: .outside)
         
         let expected = ServerCommands
                         .PaymentOperationDetailContoller
@@ -576,7 +580,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       puref: "iFora||TransferArmBBClientP",
                                       shortName: "Иванов И.",
                                       surName: nil,
-                                      type: .country)
+                                      type: .outside)
         
         let expected = ServerCommands
                         .PaymentOperationDetailContoller

@@ -124,7 +124,7 @@ extension LatestPaymentData.Kind {
     var defaultName: String {
         
         switch self {
-        case .country: return "За рубеж"
+        case .outside: return "За рубеж"
         case .phone: return "По телефону"
         case .service: return "Услуги ЖКХ"
         case .mobile: return "Услуги связи"
@@ -138,7 +138,7 @@ extension LatestPaymentData.Kind {
     var defaultIcon: Image {
         
         switch self {
-        case .country: return .ic24Globe
+        case .outside: return .ic24Globe
         case .phone: return .ic24Smartphone
         case .service: return .ic24Zkx
         case .mobile: return .ic24Smartphone
