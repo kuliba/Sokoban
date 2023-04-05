@@ -79,16 +79,23 @@ extension Model {
         }
         
         let bicParameterId = Payments.Parameter.Identifier.requisitsBankBic.rawValue
-        guard let bicParameterValue = parameters.first(where: { $0.id == bicParameterId })?.value  else {
+        guard let bicParameterValue = parameters.first(where: { $0.id == bicParameterId })?.value else {
             throw Payments.Error.missingParameter(bicParameterId)
+        }
+        
+        let kppParameterId = Payments.Parameter.Identifier.requisitsKpp.rawValue
+        guard let kppParameterValue = parameters.first(where: { $0.id == kppParameterId })?.value else {
+            throw Payments.Error.missingParameter(kppParameterId)
         }
         
         let innParameterId = Payments.Parameter.Identifier.requisitsInn.rawValue
         if let innParameterValue = parameters.first(where: { $0.id == innParameterId })?.value {
             
-            return .init(inn: innParameterValue, kpp: nil, accountId: nil, accountNumber: accountParameterValue, bankBIC: bicParameterValue, cardId: nil, cardNumber: nil, compilerStatus: nil, date: nil, name: nameParameterValue, tax: nil)
+            return .init(inn: innParameterValue, kpp: kppParameterValue, accountId: nil, accountNumber: accountParameterValue, bankBIC: bicParameterValue, cardId: nil, cardNumber: nil, compilerStatus: nil, date: nil, name: nameParameterValue, tax: nil)
+            
+        } else {
+            
+            return .init(inn: nil, kpp: kppParameterValue, accountId: nil, accountNumber: accountParameterValue, bankBIC: bicParameterValue, cardId: nil, cardNumber: nil, compilerStatus: nil, date: nil, name: nameParameterValue, tax: nil)
         }
-        
-        return .init(inn: nil, kpp: nil, accountId: nil, accountNumber: accountParameterValue, bankBIC: bicParameterValue, cardId: nil, cardNumber: nil, compilerStatus: nil, date: nil, name: nameParameterValue, tax: nil)
     }
 }

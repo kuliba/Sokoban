@@ -332,6 +332,7 @@ extension OperatorGroupData.OperatorData {
     }
 }
 
+//TODO: move this extension into Array+Extensions.swift and use this properties and methods in all payments code
 extension Array where Element == PaymentsParameterRepresentable {
 
     var parameterAmount: Payments.ParameterAmount? {

@@ -223,8 +223,14 @@ extension Model {
                     parameters.append(kppParameter)
                     
                     //MARK: Company Name Parameter
-                    let companyNameParameter = Payments.ParameterInput(.init(id: companyNameParameterId, value: options.first?.name), icon: nil, title: "Наименование получателя", validator: companyNameValidator, limitator: .init(limit: 160))
+                    let companyNameValue = options.first?.name
+                    let companyNameParameter = Payments.ParameterInput(.init(id: companyNameParameterId, value: companyNameValue), icon: nil, title: "Наименование получателя", validator: companyNameValidator, limitator: .init(limit: 160))
                     parameters.append(companyNameParameter)
+                    
+                    // helper required to support update company name with kpp parameter selector change and manual user name update
+                    let companyNameParameterHelperId = Payments.Parameter.Identifier.requisitsCompanyNameHelper.rawValue
+                    let companyNameParameterHelper = Payments.ParameterHidden(id: companyNameParameterHelperId, value: companyNameValue)
+                    parameters.append(companyNameParameterHelper)
                 }
                 
             } else {
@@ -356,23 +362,30 @@ extension Model {
             
         case Payments.Parameter.Identifier.requisitsMessage.rawValue:
             
-            let messageId = Payments.Parameter.Identifier.requisitsMessage.rawValue
-            guard let message = parameters.first(where: {$0.id == messageId}) as? Payments.ParameterInput else {
+            guard let messageParameter = try? parameters.parameter(forIdentifier: .requisitsMessage, as: Payments.ParameterInput.self),
+                  let checkBoxParameter = try? parameters.parameter(forIdentifier: .requisitsCheckBox, as: Payments.ParameterCheck.self) else {
                 return nil
             }
             
-            let checkBoxId = Payments.Parameter.Identifier.requisitsCheckBox.rawValue
-            let checkBox = parameters.first(where: {$0.id == checkBoxId})
-            
-            guard let checkBox = checkBox as? Payments.ParameterCheck, checkBox.value == true, let imageData = UIImage(named: "ic24Info")?.pngData() else {
-                return message.updated(hint: nil)
+            // this logic drops unnecessary message parameter updates to fix lag durring fast message typing
+            switch (checkBoxParameter.value, messageParameter.hint) {
+            case (true, nil):
+                // checkbox is enabled and hint is empty
+                // create a hint
+                return messageParameter.updated(hint: .init(title: "Назначение платежа", subtitle: "Заполняется в соответствии\nс требованиями поставщика услуг", icon: .init(named: "ic24Info") ?? .iconPlaceholder, hints: [.init(title: "Рекомендуемый формат:", description: "ЕЛС;период оплаты///назначение платежа, № и дата счета, адрес. Показания. НДС (есть/нет)."), .init(title: "Пример:", description: "ЛСИ1105-12;09.2022///оплата по счету 10 от 30.09.22, потребление э/э, показания 52364, адрес. В т.ч. НДС. л/с1631245;10.2022///платеж за кап ремонт, адрес. Без НДС.")]))
+                
+            case (false, .some):
+                // checkbox is disabled and hint is NOT empty
+                // remove the hint
+                return messageParameter.updated(hint: nil)
+                
+            default:
+                return nil
             }
-            
-            return message.updated(hint: .init(title: "Назначение платежа", subtitle: "Заполняется в соответствии\nс требованиями поставщика услуг", icon: imageData, hints: [.init(title: "Рекомендуемый формат:", description: "ЕЛС;период оплаты///назначение платежа, № и дата счета, адрес. Показания. НДС (есть/нет)."), .init(title: "Пример:", description: "ЛСИ1105-12;09.2022///оплата по счету 10 от 30.09.22, потребление э/э, показания 52364, адрес. В т.ч. НДС. л/с1631245;10.2022///платеж за кап ремонт, адрес. Без НДС.")]))
             
         case Payments.Parameter.Identifier.header.rawValue:
             let codeParameterId = Payments.Parameter.Identifier.code.rawValue
-            let parametersIds = parameters.map{ $0.id }
+            let parametersIds = parameters.map(\.id)
             guard parametersIds.contains(codeParameterId) else {
                 return nil
             }
@@ -387,13 +400,43 @@ extension Model {
             return kppParameterUpdated
             
         case Payments.Parameter.Identifier.requisitsCompanyName.rawValue:
-            guard let parameterKpp = parameters.first(where: {$0.id == Payments.Parameter.Identifier.requisitsKpp.rawValue}) as? Payments.ParameterSelect,
-                  let companyName = parameterKpp.options.first(where: { $0.id == parameterKpp.value })?.name,
-                  let parameterCompanyName = parameters.first(where: { $0.id == Payments.Parameter.Identifier.requisitsCompanyName.rawValue }) as? Payments.ParameterInput else {
+            
+            // case when we have multiple kpps in selector
+            // parameter KPP must be a ParameterSelect type
+            // parameter company name helper also must be for this case
+            
+            guard let parameterKpp = try? parameters.parameter(forIdentifier: .requisitsKpp, as: Payments.ParameterSelect.self),
+                  let parameterCompanyNameHelper = try? parameters.parameter(forIdentifier: .requisitsCompanyNameHelper),
+                  let companyName = parameterKpp.options.first(where: { $0.id == parameterKpp.value })?.name else {
                 return nil
             }
             
+            // check if value in helper Not equal to value in KPP selector
+            // this means that KPP selector value changed
+            guard parameterCompanyNameHelper.value != companyName else {
+                return nil
+            }
+            
+            guard let parameterCompanyName = try? parameters.parameter(forIdentifier: .requisitsCompanyName) else {
+                return nil
+            }
+            
+            // KPP selector value changed so we have to update the company name parameter value
             return parameterCompanyName.updated(value: companyName)
+            
+        case Payments.Parameter.Identifier.requisitsCompanyNameHelper.rawValue:
+            guard let parameterKpp = try? parameters.parameter(forIdentifier: .requisitsKpp, as: Payments.ParameterSelect.self),
+                  let parameterCompanyNameHelper = try? parameters.parameter(forIdentifier: .requisitsCompanyNameHelper),
+                  let companyName = parameterKpp.options.first(where: { $0.id == parameterKpp.value })?.name else {
+                return nil
+            }
+            
+            guard parameterCompanyNameHelper.value != companyName else {
+                return nil
+            }
+            
+            // store updated KPP value in parameter company name helper
+            return parameterCompanyNameHelper.updated(value: companyName)
             
         default:
             return nil

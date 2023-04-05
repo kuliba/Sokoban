@@ -79,6 +79,7 @@ extension Payments.Parameter {
         case requisitsInn                     = "requisitsInn"
         case requisitsKpp                     = "requisitsKpp"
         case requisitsCompanyName             = "requisitsCompanyName"
+        case requisitsCompanyNameHelper       = "requisitsCompanyName_Helper"
         case requisitsCheckBox                = "requisitsCheckBox"
         case requisitsType                    = "requisitsType"
         
@@ -526,7 +527,7 @@ extension Payments {
             
             let title: String
             let subtitle: String
-            let icon: Data
+            let icon: ImageData
             let hints: [Content]
             
             struct Content {
