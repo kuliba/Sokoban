@@ -228,111 +228,111 @@ struct PaymentsCodeView: View {
     
     @ObservedObject var viewModel: ViewModel
     
-    var titleColor: Color {
-        
-        switch viewModel.editingState {
-        case .editing, .error: return .textRed
-        default: return .textPlaceholder
-        }
-    }
-
-    var dividerColor: Color {
-        
-        switch viewModel.editingState {
-        case .idle: return .bordersDivider
-        case .editing: return .mainColorsBlack
-        case .error: return .textRed
-        }
-    }
-    
-    var dividerOpacity: CGFloat {
-        
-        switch viewModel.editingState {
-        case .idle: return 0.2
-        case .editing, .error: return 1.0
-        }
-    }
-    
-    var errorLabel: String? {
-        
-        guard case .error(let errorMessage) = viewModel.editingState else {
-            return nil
-        }
-        
-        return errorMessage
-    }
-    
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 8) {
+        hStack
+            .padding(.horizontal, 16)
+            .padding(.vertical, 13)
+    }
+    
+    var hStack: some View {
+        
+        HStack(alignment: .top, spacing: 16) {
             
-            HStack(alignment: .top, spacing: 20) {
+            icon
+                .frame(width: 24, height: 24)
+                .padding(.top, 12)
+            
+            VStack(alignment: .leading, spacing: 4) {
                 
-                viewModel.icon
-                    .resizable()
-                    .renderingMode(.template)
-                    .foregroundColor(.mainColorsGray)
-                    .frame(width: 24, height: 24)
-                    .padding(.top, 12)
-                
-                VStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    title
                     
-                    if let title = viewModel.title {
+                    textField
+                        .frame(maxWidth: .infinity)
+                        .overlay(resendStateView)
+                }
+                .frame(minHeight: 44)
+                
+                errorLabel
+            }
+        }
+    }
+    
+    private var icon: some View {
+        
+        viewModel.icon
+            .resizable()
+            .renderingMode(.template)
+            .foregroundColor(.mainColorsGray)
+    }
+    
+    @ViewBuilder
+    private var title: some View {
+        
+        if let title = viewModel.title {
+            
+            Text(title)
+                .font(.textBodyMR14180())
+                .foregroundColor(Color.textPlaceholder)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .transition(
+                    .asymmetric(
+                        insertion: .move(edge: .bottom),
+                        removal: .opacity
+                    )
+                )
+        }
+    }
+    
+    private var textField: some View {
+        
+        TextFieldRegularView(viewModel: viewModel.textField, font: .textH4M16240())
+            .onTapGesture {
+                viewModel.editingState = .idle
+            }
+            .foregroundColor(.textSecondary)
+            .textFieldStyle(DefaultTextFieldStyle())
+            .frame(height: 24)
+            .keyboardType(.numberPad)
+    }
+    
+    @ViewBuilder
+    private var resendStateView: some View {
+        
+        if let resendState = viewModel.resendState {
+            
+            Group {
+                switch resendState {
+                case let .button(button):
+                    Button(action: button.action) {
                         
-                        Text(title)
+                        Text(button.title)
+                            .foregroundColor(Color.textSecondary)
                             .font(.textBodyMR14180())
-                            .foregroundColor(Color.textPlaceholder)
-                            .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .opacity))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(Color.white)
+                            .cornerRadius(90)
+                            .frame(height: 24)
                     }
                     
-                    VStack(spacing: 0) {
-                        
-                        TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 14))
-                            .onTapGesture {
-                                viewModel.editingState = .idle
-                            }
-                            .padding(.bottom, 8)
-                            .foregroundColor(.textSecondary)
-                            .font(.textBodyMM14200())
-                            .textFieldStyle(DefaultTextFieldStyle())
-                            .keyboardType(.numberPad)
-                    }
-                    
-                    if let resendState = viewModel.resendState {
-                        
-                        switch resendState {
-                        case .button(let button):
-                            Button(action: button.action) {
-                                
-                                Text(button.title)
-                                    .font(.buttonExtraSmallR12140())
-                                    .foregroundColor(Color.textSecondary)
-                                    .padding(.horizontal, 8)
-                                    .padding(.top, 3)
-                                    .background(Color.white)
-                                    .cornerRadius(90)
-                                    .frame(height: 24)
-                                    .cornerRadius(90)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                            
-                        case .timer(let timerViewModel):
-                            PaymentsCodeView.TimerView(viewModel: timerViewModel)
-                        }
-                    }
-                    
-                    if let errorLabel = errorLabel {
-                        
-                        Text(errorLabel)
-                            .font(.textBodySR12160())
-                            .foregroundColor(Color.textPlaceholder)
-                    }
+                case let .timer(timerViewModel):
+                    PaymentsCodeView.TimerView(viewModel: timerViewModel)
                 }
             }
-            .padding(.vertical, 13)
-            .padding(.horizontal, 16)
+            .frame(maxWidth: .infinity, alignment: .trailing)
+        }
+    }
+    
+    @ViewBuilder
+    private var errorLabel: some View {
+        
+        if case let .error(errorMessage) = viewModel.editingState {
+            
+            Text(errorMessage)
+                .foregroundColor(.systemColorError)
+                .font(.textBodySR12160())
         }
     }
 }
@@ -346,14 +346,8 @@ extension PaymentsCodeView {
         var body: some View {
             
             Text(viewModel.value)
-                .font(.buttonExtraSmallR12140())
-                .padding(.horizontal, 8)
-                .padding(.vertical, 5)
-                .background(Color.white)
-                .cornerRadius(90)
                 .foregroundColor(Color.textRed)
-                .frame(maxWidth: .infinity, alignment: .leading)
-
+                .font(.textBodySR12160())
         }
     }
 }
@@ -362,17 +356,45 @@ struct PaymentCodeView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PaymentsGroupView(viewModel: .init(items: [PaymentsCodeView.ViewModel.sample]))
-            .previewLayout(.fixed(width: 375, height: 120))
+        Group {
+            
+            previewGroup()
+            
+            VStack(content: previewGroup)
+                .previewDisplayName("Xcode 14")
+        }
+        .previewLayout(.sizeThatFits)
+    }
+    
+    private static func previewGroup() -> some View {
         
-        PaymentsGroupView(viewModel: .init(items: [PaymentsCodeView.ViewModel.sampleCorrect]))
-            .previewLayout(.fixed(width: 375, height: 140))
+        Group {
+            
+            Group {
+                
+                PaymentsCodeView(viewModel: .sample)
+                PaymentsCodeView(viewModel: .sampleCorrect)
+                PaymentsCodeView(viewModel: .sampleError)
+                PaymentsCodeView(viewModel: .sampleButton)
+            }
+            .background(Color.mainColorsGrayLightest)
+            .frame(width: 375)
+            .border(.pink)
+            
+            paymentsGroupView(item: .sample,        height: 120)
+            paymentsGroupView(item: .sampleCorrect, height: 140)
+            paymentsGroupView(item: .sampleError,   height: 180)
+            paymentsGroupView(item: .sampleButton,  height: 140)
+        }
+    }
+
+    private static func paymentsGroupView(
+        item: PaymentsCodeView.ViewModel,
+        height: CGFloat
+    ) -> some View {
         
-        PaymentsGroupView(viewModel: .init(items: [PaymentsCodeView.ViewModel.sampleError]))
-            .previewLayout(.fixed(width: 375, height: 180))
-        
-        PaymentsGroupView(viewModel: .init(items: [PaymentsCodeView.ViewModel.sampleButton]))
-            .previewLayout(.fixed(width: 375, height: 140))
+        PaymentsGroupView(viewModel: .init(items: [item]))
+            .previewLayout(.fixed(width: 375, height: height))
     }
 }
 
