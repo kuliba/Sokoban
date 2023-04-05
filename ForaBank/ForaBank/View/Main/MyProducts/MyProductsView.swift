@@ -68,7 +68,7 @@ struct MyProductsView: View {
                                 .foregroundColor(viewModel.editModeState == .active
                                                  ? .mainColorsGray : .mainColorsBlack)
                                 .frame(maxWidth: .infinity, minHeight: 48)
-                                .background(Color.barsTabbar)
+                                .background(Color.barsBars)
                                 .cornerRadius(12)
                         }
                         .disabled(viewModel.editModeState == .active)
