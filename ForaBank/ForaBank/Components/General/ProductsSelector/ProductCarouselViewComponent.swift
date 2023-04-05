@@ -450,7 +450,9 @@ private extension ProductCarouselView.ViewModel.Mode {
         products: ProductsData
     ) -> ProductsData {
         
-        products.mapValues(filtered)
+        products
+            .mapValues(filtered)
+            .filter { !$0.value.isEmpty }
     }
     
     private func filtered(
