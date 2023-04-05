@@ -18,7 +18,7 @@ extension Model {
             }
             
             switch source {
-            case let .return(operationId: operationId, transferNumber: number, amount: amount):
+            case let .return(operationId: operationId, transferNumber: number, amount: amount, productId: productId):
              
                 // header
                 let headerParameter = Payments.ParameterHeader(title: "Возврат перевода", subtitle: "Денежные переводы CONTACT", icon: .name("Operation Type Contact Icon"))
@@ -31,7 +31,7 @@ extension Model {
                 
                 let operationId = Payments.ParameterHidden(id: Payments.Parameter.Identifier.countryOperationId.rawValue, value: operationId)
 
-                let product = Payments.ParameterProduct(value: self.firstProduct(with: .generalTo)?.id.description, filter: .generalTo, isEditable: false)
+                let product = Payments.ParameterProduct(value: productId, filter: .generalTo, isEditable: false)
                 
                 return .init(parameters: [headerParameter, numberPaymentParameter, amountParameter, operationId, product], front: .init(visible: [headerParameter.id, numberPaymentParameter.id, amountParameter.id, operationId.id, product.id], isCompleted: false), back: .init(stage: .remote(.complete), required: [numberPaymentParameter.id, amountParameter.id, operationId.id], processed: nil))
                 

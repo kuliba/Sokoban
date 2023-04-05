@@ -18,7 +18,7 @@ extension Model {
                 throw Payments.Error.missingSource(operation.service)
             }
             
-            guard case .direct(phone: _, countryId: let country) = source else {
+            guard case let .direct(phone: phone, countryId: country) = source else {
                 
                 throw Payments.Error.missingSource(operation.service)
             }
@@ -56,7 +56,7 @@ extension Model {
             
             // product
             let productParameterId = Payments.Parameter.Identifier.product.rawValue
-            let filter = ProductData.Filter.meToMeFrom
+            let filter = ProductData.Filter.generalTo
             guard let product = firstProduct(with: filter) else {
                 throw Payments.Error.unableCreateRepresentable(productParameterId)
             }
@@ -211,7 +211,7 @@ extension Model {
             return countryDeliveryCurrency.updated(value: amount.deliveryCurrency?.selectedCurrency.description)
             
         case Payments.Parameter.Identifier.product.rawValue:
-            guard let productParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterProduct else {
+            guard var productParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterProduct else {
                 return nil
             }
             
@@ -240,7 +240,16 @@ extension Model {
             filter.rules.append(ProductData.Filter.DebitRule())
             filter.rules.append(ProductData.Filter.CurrencyRule(Set(currincies)))
             
-            return productParameter.updated(filter: filter)
+            if let product = self.firstProduct(with: filter),
+               let productParameter = productParameter.updated(value: product.id.description) as? Payments.ParameterProduct {
+
+                return productParameter.updated(filter: filter)
+
+            } else {
+                
+                return productParameter.updated(filter: filter)
+            }
+            
             
         case Payments.Parameter.Identifier.header.rawValue:
             
@@ -396,14 +405,14 @@ extension Model {
                     .init(id: parameterData.id, value: parameterData.value),
                     icon: parameterData.iconData ?? .parameterDocument,
                     title: parameterData.title,
-                    validator: parameterData.validator, group: .init(id: "fio", type: .contact))
+                    validator: .baseName, group: .init(id: "fio", type: .contact))
                 
             case "bLastName":
                 return Payments.ParameterInput(
                     .init(id: parameterData.id, value: parameterData.value),
                     icon: nil,
                     title: parameterData.title,
-                    validator: parameterData.validator, group: .init(id: "fio", type: .contact))
+                    validator: .baseName, group: .init(id: "fio", type: .contact))
                 
             case Payments.Parameter.Identifier.countrybSurName.rawValue:
                 return Payments.ParameterInput(
@@ -414,8 +423,14 @@ extension Model {
                 
             case Payments.Parameter.Identifier.countryPhone.rawValue, "bPhone":
                 let phoneId = Payments.Parameter.Identifier.countryPhone.rawValue
-                let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: nil), title: "Телефона получателя", placeholder: parameterData.subTitle)
-                return phoneParameter
+                if case let .direct(phone: phone, countryId: _) = operation.source {
+                    
+                    let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: phone), title: parameterData.title, placeholder: parameterData.subTitle)
+                    return phoneParameter
+                } else {
+                    let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: nil), title: parameterData.title, placeholder: parameterData.subTitle)
+                    return phoneParameter
+                }
                 
             case Payments.Parameter.Identifier.countryCitySearch.rawValue:
                 guard let token = token else {
@@ -587,6 +602,21 @@ extension Model {
             
             return .init(parameters: parameters, front: .init(visible: parameters.map({ $0.id }), isCompleted: false), back: .init(stage: .remote(.next), required: [], processed: nil))
         }
+    }
+    
+    func paymentsProcessAbroadComplete(code: String, operation: Payments.Operation) async throws -> Payments.Success {
+        
+        let response = try await paymentsTransferComplete(
+            code: code
+        )
+        
+        let success = try Payments.Success(
+            with: response,
+            operation: operation,
+            serviceData: .abroadPayments(response)
+        )
+        
+        return success
     }
     
     func paymentsProcessOperationResetVisibleCountry(_ operation: Payments.Operation) async throws -> [Payments.Parameter.ID]? {

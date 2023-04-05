@@ -15,20 +15,22 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
     @Published var optionButtons: [PaymentsSuccessOptionButtonViewModel]
     @Published var repeatButton: ButtonSimpleView.ViewModel?
     @Published var actionButton: ButtonSimpleView.ViewModel
+    @Published var additioinalButtons: [AdditionalButton]?
     @Published var sheet: Sheet?
     @Published var isLinkActive: Bool = false
     @Published var fullScreenSheet: FullScreenSheet?
-    @Published var additioinalButtons: [AdditionalButton]?
     @Published var alert: Alert.ViewModel?
+    
+    var amount: String?
+    var transferNumber: TransferNumber?
+    var logo: LogoIconViewModel?
 
     let id = UUID()
     let title: String?
     let warningTitle: String?
-    let amount: String?
     let iconType: IconTypeViewModel
     let service: ServiceViewModel?
     let options: [OptionViewModel]?
-    let logo: LogoIconViewModel?
     let company: Company?
     let link: Link?
     let bottomIcon: Image?
@@ -44,7 +46,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         self?.action.send(PaymentsSuccessAction.Button.Close())
     }
     
-    init(_ model: Model, title: String? = nil, warningTitle: String? = nil, amount: String? = nil, iconType: IconTypeViewModel, additioinalButtons: [AdditionalButton]? = nil, service: ServiceViewModel? = nil, options: [OptionViewModel]? = nil, logo: LogoIconViewModel? = nil, repeatButton: ButtonSimpleView.ViewModel? = nil, actionButton: ButtonSimpleView.ViewModel, optionButtons: [PaymentsSuccessOptionButtonViewModel], company: Company? = nil, link: Link? = nil, bottomIcon: Image? = nil) {
+    init(_ model: Model, title: String? = nil, warningTitle: String? = nil, amount: String? = nil, iconType: IconTypeViewModel, additioinalButtons: [AdditionalButton]? = nil, service: ServiceViewModel? = nil, options: [OptionViewModel]? = nil, logo: LogoIconViewModel? = nil, transferNumber: TransferNumber? = nil, repeatButton: ButtonSimpleView.ViewModel? = nil, actionButton: ButtonSimpleView.ViewModel, optionButtons: [PaymentsSuccessOptionButtonViewModel], company: Company? = nil, link: Link? = nil, bottomIcon: Image? = nil) {
         
         self.model = model
         self.title = title
@@ -55,6 +57,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         self.service = service
         self.options = options
         self.logo = logo
+        self.transferNumber = transferNumber
         self.repeatButton = repeatButton
         self.actionButton = actionButton
         self.optionButtons = optionButtons
@@ -88,16 +91,8 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
 
         case let .mobileConnectionData(mobileConnectionData):
             
-            let (title, iconType): (String, IconTypeViewModel) = {
-                switch paymentSuccess.status {
-                case .complete:
-                    return ("Успешный перевод", .success)
-                case .inProgress:
-                    return ("Операция в обработке!", .accepted)
-                case .rejected, .unknown:
-                    return ("Операция неуспешна!", .error)
-                }
-            }()
+            let (title, iconType) = Self.iconType(status: paymentSuccess.status)
+
             let product = model.allProducts.first(where: { $0.id == paymentSuccess.productId })
             let amount = model.amountFormatted(
                 amount: paymentSuccess.amount,
@@ -124,12 +119,15 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentSuccess.operationDetailId)))
             
         case let .abroadPayments(transferData):
+            
+            let (title, iconType) = Self.iconType(status: paymentSuccess.status)
+            
             self.init(
                 model,
-                title: "Перевод в обработке",
+                title: title,
                 amount: nil,
-                iconType: .accepted,
-                logo: .init(title: "", image: Image("Operation Type Contact Icon")),
+                iconType: iconType,
+                logo: nil,
                 actionButton: .init(
                     title: "На главный",
                     style: .red,
@@ -138,6 +136,8 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 optionButtons: []
             )
                         
+            bind(.normal, paymentOperationDetailId: paymentSuccess.operationDetailId, documentStatus: paymentSuccess.status)
+
             self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(transferData.paymentOperationDetailId)))
             
         }
@@ -261,29 +261,47 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                             
                         default:
                             
-                            if detailData.printFormType == .addressing_cash ||
-                               detailData.printFormType == .contactAddressless ||
-                               detailData.printFormType == .addressless,
-                               let number = detailData.transferReference {
+                            switch detailData.transferEnum {
+                            case .direct:
+                                self.logo = .init(title: "", image: Image("MigAvatar"))
                                 
-                                var additioinalButtons: [AdditionalButton] = []
+                            case .contactAddressing, .contactAddressless, .contactAddressingCash:
+                                self.logo = .init(title: "", image: Image("Operation Type Contact Icon"))
                                 
-                                if let name = detailData.payeeFullName {
+                                if let number = detailData.transferReference {
                                     
-                                    additioinalButtons.append(.init(title: "Изменить", action: { [weak self] in
+                                    if let amount = detailData.payeeAmount {
                                         
-                                        self?.action.send(PaymentsSuccessAction.Payment(source: .change(operationId: detailData.paymentOperationDetailId.description,transferNumber: number, name: name)))
-                                    }))
+                                        self.amount = model.amountFormatted(amount: amount, currencyCode: detailData.currencyAmount, style: .fraction)
+                                    }
+                                    
+                                    self.transferNumber = .init(title: number, action: {
+                                        
+                                        UIPasteboard.general.string = number
+                                    })
+                                    
+                                    var additioinalButtons: [AdditionalButton] = []
+                                    
+                                    if let name = detailData.payeeFullName {
+                                        
+                                        additioinalButtons.append(.init(title: "Изменить", action: { [weak self] in
+                                            
+                                            self?.action.send(PaymentsSuccessAction.Payment(source: .change(operationId: detailData.paymentOperationDetailId.description,transferNumber: number, name: name)))
+                                        }))
+                                    }
+                                    
+                                    let amountValue = detailData.payerAmount - detailData.payerFee
+                                    if let amount = model.amountFormatted(amount: amountValue, currencyCode: detailData.payerCurrency, style: .fraction) {
+                                        additioinalButtons.append(.init(title: "Вернуть", action: { [weak self] in
+                                            
+                                            self?.action.send(PaymentsSuccessAction.Payment(source: .return(operationId: detailData.paymentOperationDetailId.description, transferNumber: number, amount: amount, productId: detailData.payerCardId?.description ?? detailData.payerAccountId.description)))
+                                        }))
+                                    }
+                                    
+                                    self.additioinalButtons = additioinalButtons
                                 }
                                 
-                                if let amount = model.amountFormatted(amount: detailData.payerAmount, currencyCode: detailData.payerCurrency, style: .fraction) {
-                                    additioinalButtons.append(.init(title: "Вернуть", action: { [weak self] in
-                                        
-                                        self?.action.send(PaymentsSuccessAction.Payment(source: .return(operationId: detailData.paymentOperationDetailId.description, transferNumber: number, amount: amount)))
-                                    }))
-                                }
-                                
-                                self.additioinalButtons = additioinalButtons
+                            default: break
                             }
                             
                             handleDetailResponse(mode, payload: payload, documentStatus: documentStatus)
@@ -403,6 +421,12 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
 }
 
 extension PaymentsSuccessViewModel {
+    
+    struct TransferNumber {
+        
+        let title: String
+        let action: () -> Void
+    }
     
     struct FullScreenSheet: Identifiable, Equatable {
         
@@ -651,6 +675,18 @@ extension PaymentsSuccessViewModel {
             case .meToMe, .makePaymentToDeposite: return "Операция неуспешна!"
             case .closeAccountEmpty: return "Отказ"
             }
+        }
+    }
+    
+    static func iconType(status: TransferResponseBaseData.DocumentStatus) -> (String, IconTypeViewModel) {
+        
+        switch status {
+        case .complete:
+            return ("Успешный перевод", .success)
+        case .inProgress:
+            return ("Операция в обработке!", .accepted)
+        case .rejected, .unknown:
+            return ("Операция неуспешна!", .error)
         }
     }
     

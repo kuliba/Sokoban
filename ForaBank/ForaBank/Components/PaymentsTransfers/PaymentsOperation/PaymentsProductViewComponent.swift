@@ -62,14 +62,25 @@ extension PaymentsProductView {
         override func update(source: PaymentsParameterRepresentable) {
             super.update(source: source)
             
-            guard let source = source as? Payments.ParameterProduct,
-                  let product = model.firstProduct(with: source.filter) else {
+            guard let source = source as? Payments.ParameterProduct else {
                 return
             }
             
-            let viewModel = ProductSelectorView.ViewModel.ProductViewModel(model, productData: product, context: .init(title: source.title, direction: .from, style: .regular, isUserInteractionEnabled: self.isEditable, filter: source.filter))
+            if let value = source.value,
+               let IntValue = Int(value),
+               let product = model.product(productId: IntValue) {
+                
+                let viewModel = ProductSelectorView.ViewModel.ProductViewModel(model, productData: product, context: .init(title: source.title, direction: .from, style: .regular, isUserInteractionEnabled: self.isEditable, filter: source.filter))
+                
+                self.selector.content = .product(viewModel)
+                
+            } else if let product = model.firstProduct(with: source.filter) {
+                
+                let viewModel = ProductSelectorView.ViewModel.ProductViewModel(model, productData: product, context: .init(title: source.title, direction: .from, style: .regular, isUserInteractionEnabled: self.isEditable, filter: source.filter))
+                
+                self.selector.content = .product(viewModel)
+            }
             
-            self.selector.content = .product(viewModel)
             self.selector.context.value.filter = source.filter
         }
     }

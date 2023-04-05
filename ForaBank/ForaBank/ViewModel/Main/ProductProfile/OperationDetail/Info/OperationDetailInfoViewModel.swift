@@ -1125,19 +1125,27 @@ extension OperationDetailInfoViewModel {
     
     private func makeBankViewModel(operation: OperationDetailData) -> BankCellViewModel? {
          
-        guard let bankName = operation.payeeBankName, let memberId = operation.memberId else {
+        guard let bankName = operation.payeeBankName,
+              let memberId = operation.memberId else {
+            
             return nil
         }
         
-        let bank = model.bankList.value.first(where: {$0.memberId == memberId})
         let title = "Банк получателя"
         
-        guard let md5hash = bank?.md5hash, let icon = model.images.value[md5hash]?.image else {
+        if let md5hash = model.bankList.value.first(where: {$0.memberId == "EVOCA"})?.md5hash,
+           let icon = model.images.value[md5hash]?.image {
+
+            return BankCellViewModel(title: title, icon: icon, name: bankName)
+
+        } else if let icon = model.dictionaryBankList.first(where: {$0.memberId == memberId})?.svgImage.image {
+            
+            return BankCellViewModel(title: title, icon: icon, name: bankName)
+
+        } else {
             
             return BankCellViewModel(title: title, icon: Image("BankIcon"), name: bankName)
         }
-        
-        return BankCellViewModel(title: title, icon: icon, name: bankName)
     }
 }
 

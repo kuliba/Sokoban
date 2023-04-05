@@ -487,7 +487,13 @@ extension Model {
                 code: codeValue,
                 operation: operation
             )
-            
+    
+        case .abroad:
+            return try await paymentsProcessAbroadComplete(
+                code: codeValue,
+                operation: operation
+            )
+    
         default:
             let response = try await paymentsTransferComplete(code: codeValue)
             let success = try Payments.Success(with: response, operation: operation)

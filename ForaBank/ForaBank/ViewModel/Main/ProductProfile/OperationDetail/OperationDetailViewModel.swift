@@ -138,8 +138,27 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                     }
                     
                 case let payload as OperationDetailViewModelAction.ShowChangeReturn:
-                    fullScreenSheet = .init(type: .changeReturn(payload.viewModel))
                     
+                    Task {
+                        
+                        do {
+                            
+                            let paymentsViewModel = try await PaymentsViewModel(source: payload.source, model: model) { [weak self] in
+                                
+                                self?.action.send(OperationDetailViewModelAction.CloseFullScreenSheet())
+                            }
+                            
+                            await MainActor.run {
+                                
+                                self.fullScreenSheet = .init(type: .payments(paymentsViewModel))
+                            }
+                            
+                        } catch {
+                            
+                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for Change/Return abroad source with with error: \(error.localizedDescription)")
+                        }
+                    }
+
                 case _ as OperationDetailViewModelAction.CloseSheet:
                     if #available(iOS 14.5, *) {
                         sheet = nil
@@ -227,7 +246,7 @@ enum OperationDetailViewModelAction {
     
     struct ShowChangeReturn: Action {
      
-        let viewModel: ChangeReturnViewModel
+        let source: Payments.Operation.Source
     }
     
     struct CopyNumber: Action {
@@ -329,47 +348,30 @@ private extension OperationDetailViewModel {
     func actionButtons(with operationDetail: OperationDetailData, statement: ProductStatementData, product: ProductData, dismissAction: @escaping () -> Void) -> [ActionButtonViewModel] {
         
         var actionButtons = [ActionButtonViewModel]()
+
+        let operationId = statement.operationId
         
+        if let name = statement.merchantNameRus,
+           let transferNumber = operationDetail.transferReference {
+         
+            let changeButton = ActionButtonViewModel(name: "Изменить",
+                                                     action: { [weak self] in
+                self?.action.send(OperationDetailViewModelAction.ShowChangeReturn(source: .change(operationId: operationId, transferNumber: transferNumber, name: name)))
+            })
+            
+            actionButtons.append(changeButton)
+        }
+
         let amountFormatted = model.amountFormatted(amount: operationDetail.amount, currencyCode: operationDetail.currencyAmount, style: .normal) ?? String(operationDetail.amount)
-        
-        let paymentSystemImage = statement.md5hash
-        
-        let changeViewModel = ChangeReturnViewModel(
-            amount: amountFormatted,
-            name: operationDetail.payeeFirstName ?? "",
-            surname: operationDetail.payeeSurName ?? "",
-            secondName: operationDetail.payeeMiddleName ?? "",
-            paymentOperationDetailId: operationDetail.paymentOperationDetailId,
-            transferReference: operationDetail.transferReference ?? "",
-            product: product,
-            paymantSystemIcon: paymentSystemImage,
-            type: .changePay,
-            operatorsViewModel: .init(mode: .general, closeAction: dismissAction))
 
-        let changeButton = ActionButtonViewModel(name: "Изменить",
-                                                 action: { [weak self] in
-            self?.action.send(OperationDetailViewModelAction.ShowChangeReturn(viewModel: changeViewModel))
-        })
-        actionButtons.append(changeButton)
-        
-        
-        let returnViewModel = ChangeReturnViewModel(
-            amount: amountFormatted,
-            name: operationDetail.payeeFirstName ?? "",
-            surname: operationDetail.payeeSurName ?? "",
-            secondName: operationDetail.payeeMiddleName ?? "",
-            paymentOperationDetailId: operationDetail.paymentOperationDetailId,
-            transferReference: operationDetail.transferReference ?? "",
-            product: product,
-            paymantSystemIcon: paymentSystemImage,
-            type: .returnPay,
-            operatorsViewModel: .init(mode: .general, closeAction: dismissAction))
-
-        let returnButton = ActionButtonViewModel(name: "Вернуть",
-                                                 action: { [weak self] in
-            self?.action.send(OperationDetailViewModelAction.ShowChangeReturn(viewModel: returnViewModel))
-        })
-        actionButtons.append(returnButton)
+        if let transferNumber = operationDetail.transferReference {
+            let returnButton = ActionButtonViewModel(name: "Вернуть",
+                                                     action: { [weak self] in
+                self?.action.send(OperationDetailViewModelAction.ShowChangeReturn(source: .return(operationId: operationId, transferNumber: transferNumber, amount: amountFormatted, productId: product.id.description)))
+            })
+            
+            actionButtons.append(returnButton)
+        }
         
         return actionButtons
     }
@@ -533,7 +535,7 @@ extension OperationDetailViewModel {
         
         enum Kind {
             
-            case changeReturn(ChangeReturnViewModel)
+            case payments(PaymentsViewModel)
         }
         
         static func == (lhs: OperationDetailViewModel.FullScreenSheet, rhs: OperationDetailViewModel.FullScreenSheet) -> Bool {

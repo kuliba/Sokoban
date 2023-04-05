@@ -616,21 +616,23 @@ extension Payments {
         let parameter: Parameter
         let icon: ImageData
         let title: String
+        let lineLimit: Int?
         let placement: Payments.Parameter.Placement
         let group: Payments.Parameter.Group?
         
-        init(_ parameter: Parameter, icon: ImageData, title: String, placement: Payments.Parameter.Placement = .feed, group: Payments.Parameter.Group? = nil) {
+        init(_ parameter: Parameter, icon: ImageData, title: String, lineLimit: Int? = nil, placement: Payments.Parameter.Placement = .feed, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
             self.icon = icon
             self.title = title
+            self.lineLimit = lineLimit
             self.placement = placement
             self.group = group
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterInfo(.init(id: parameter.id, value: value), icon: icon, title: title, placement: placement, group: group)
+            ParameterInfo(.init(id: parameter.id, value: value), icon: icon, title: title, lineLimit: lineLimit, placement: placement, group: group)
         }
     }
     

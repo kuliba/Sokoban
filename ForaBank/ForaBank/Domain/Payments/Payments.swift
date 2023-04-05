@@ -186,7 +186,7 @@ extension Payments.Operation {
         
         case direct(phone: String?, countryId: CountryData.ID)
         
-        case `return`(operationId: String, transferNumber: String, amount: String)
+        case `return`(operationId: String, transferNumber: String, amount: String, productId: String)
         
         case change(operationId: String, transferNumber: String, name: String)
         
@@ -204,7 +204,7 @@ extension Payments.Operation {
             case .qr: return "qr"
             case let .sfp(phone: phone, bankId: bankId): return "sfp: \(phone), bankId: \(bankId)"
             case let .direct(phone: phone, countryId: countryId): return "direct: \(phone ?? "nil"), countryId: \(countryId)"
-            case let .return(operationId: operationId, transferNumber: number, amount: amount): return "operationId: \(operationId), transferNumber: \(number), amount: \(amount)"
+            case let .return(operationId: operationId, transferNumber: number, amount: amount, productId: productId): return "operationId: \(operationId), transferNumber: \(number), amount: \(amount), productId: \(productId)"
             case let .change(operationId: operationId, transferNumber: number, name: name): return "operationId: \(operationId), transferNumber: \(number), name: \(name)"
             case let .mock(mock): return "mock service: \(mock.service.rawValue)"
             case let .requisites(qrCode): return "qrCode: \(qrCode)"

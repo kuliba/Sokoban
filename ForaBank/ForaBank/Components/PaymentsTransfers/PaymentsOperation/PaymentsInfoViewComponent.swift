@@ -17,16 +17,18 @@ extension PaymentsInfoView {
         let title: String
         let content: String
         let iconStyle: IconStyle
+        let lineLimit: Int?
         
         //TODO: real placeholder required
         private static let iconPlaceholder = Image("Payments Icon Placeholder")
 
-        init(icon: Image, title: String, content: String, iconStyle: IconStyle, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
+        init(icon: Image, title: String, content: String, iconStyle: IconStyle, lineLimit: Int? = nil, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.icon = icon
             self.title = title
             self.content = content
             self.iconStyle = iconStyle
+            self.lineLimit = lineLimit
             super.init(source: source)
         }
         
@@ -36,6 +38,7 @@ extension PaymentsInfoView {
             self.title = parameterInfo.title
             self.content = parameterInfo.parameter.value ?? ""
             self.iconStyle = .init(with: parameterInfo.icon)
+            self.lineLimit = parameterInfo.lineLimit
             super.init(source: parameterInfo)
         }
         
@@ -112,6 +115,7 @@ struct PaymentsInfoView: View {
                         
                         Text(viewModel.content)
                             .font(.textBodyMR14200())
+                            .lineLimit(viewModel.lineLimit)
                             .foregroundColor(.textSecondary)
                     }
                     
@@ -136,6 +140,7 @@ struct PaymentsInfoView: View {
                         
                         Text(viewModel.content)
                             .font(.textBodyMM14200())
+                            .lineLimit(viewModel.lineLimit)
                             .foregroundColor(.textSecondary)
                     }
                     
@@ -187,7 +192,7 @@ struct PaymentsInfoView_Previews: PreviewProvider {
 
 extension PaymentsInfoView.ViewModel {
     
-    static let sample = PaymentsInfoView.ViewModel(icon: Image("Payments List Sample"), title: "Основание", content: "Налог на имущество физических лиц, взимаемый по ставкам, применяемым к объектам налогообложения, расположенным в границах внутригородских муниципальных образований городов федерального значения (сумма платеж...)", iconStyle: .large)
+    static let sample = PaymentsInfoView.ViewModel(icon: Image("Payments List Sample"), title: "Основание", content: "Налог на имущество физических лиц, взимаемый по ставкам, применяемым к объектам налогообложения, расположенным в границах внутригородских муниципальных образований городов федерального значения (сумма платеж...)", iconStyle: .large, lineLimit: 1)
     
     static let sampleParameter = PaymentsInfoView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "УФК по г. Москве (ИФНС России №26 по г. Москве)"), icon: .parameterLocation, title: "Получатель платежа"))
     
