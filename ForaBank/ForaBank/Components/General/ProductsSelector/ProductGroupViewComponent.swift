@@ -293,7 +293,7 @@ extension ProductGroupView.ViewModel.Dimensions {
         frameHeight: 127,
         bottomPadding: 0,
         sizes: .init(
-            product:       .init(width: 170, height: 104),
+            product:       .init(width: 164, height: 104),
             productShadow: .init(width: 120, height: 104),
             new:           .init(width: 112, height: 104),
             button:        .init(width:  48, height: 104),
