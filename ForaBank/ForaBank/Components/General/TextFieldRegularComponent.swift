@@ -129,7 +129,7 @@ struct TextFieldRegularView: UIViewRepresentable {
     func updateUIView(_ uiView: UITextView, context: Context) {
 
         if viewModel.hasValue {
-            
+
             uiView.textColor = viewModel.textColor.uiColor()
             uiView.text = viewModel.text
         }
@@ -192,7 +192,7 @@ struct TextFieldRegularView: UIViewRepresentable {
              
             textView.text = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: viewModel.limit, style: viewModel.style)
             viewModel.text = textView.text
-            
+
             return false
         }
     }

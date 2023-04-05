@@ -34,15 +34,17 @@ struct HintViewModel {
     }
     
     init(hintData: Payments.ParameterInput.Hint) {
-        
-        if let image = UIImage(data: hintData.icon) {
-            
-            self.header = .init(icon: Image.init(uiImage: image), title: hintData.title, subtitle: hintData.subtitle)
-        } else {
-            
-            self.header = .init(icon: .ic24Info, title: hintData.title, subtitle: hintData.subtitle)
-        }
-        
-        self.content = hintData.hints.map({ContentViewModel.init(title: $0.title, description: $0.description)})
+
+        self.header = .init(icon: hintData.icon.image ?? .ic24Info, title: hintData.title, subtitle: hintData.subtitle)
+        self.content = hintData.hints.map(ContentViewModel.init(content:))
     }
 }
+
+private extension HintViewModel.ContentViewModel {
+    
+    init(content: Payments.ParameterInput.Hint.Content) {
+        
+        self.init(title: content.title, description: content.description)
+    }
+}
+
