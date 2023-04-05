@@ -515,7 +515,7 @@ struct NavigationBarView_Previews: PreviewProvider {
             NavigationBarView.ViewModel.ButtonItemViewModel(icon: .ic24Share, action: { }),
             NavigationBarView.ViewModel.ButtonMarkedItemViewModel(icon: .ic24BarInOrder, markedDot: .init(isBlinking: true), action: { })
         ],
-        background:  .barsTabbar                  //Optional
+        background:  .barsBars                  //Optional
         //foreground: .textWhite                  //Optional
     )
     

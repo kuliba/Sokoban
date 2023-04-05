@@ -53,7 +53,7 @@ extension MyProductsSectionItemView {
             
             ZStack(alignment: .center) {
                 
-                Color.barsTabbar
+                Color.barsBars
                 
                 HStack(alignment: .center ,spacing: 16) {
                     
@@ -95,7 +95,7 @@ extension MyProductsSectionItemView {
             }
             .frame(height: 72)
             .padding(.leading, editMode == .active ? viewModel.orderModePadding : 12)
-            .background(Color.barsTabbar)
+            .background(Color.barsBars)
             .onTapGesture {
                 viewModel.action.send(MyProductsSectionItemAction.ItemTapped())
             }
@@ -144,7 +144,7 @@ extension MyProductsSectionItemView {
             
             ZStack {
                 
-                Color.barsTabbar
+                Color.barsBars
                 
                 HStack(alignment: .center ,spacing: 16) {
                 
@@ -169,7 +169,7 @@ extension MyProductsSectionItemView {
             }
             .frame(height: 72)
             .padding(.leading, editMode == .active ? 0 : 12)
-            .background(Color.barsTabbar)
+            .background(Color.barsBars)
         }
     }
     

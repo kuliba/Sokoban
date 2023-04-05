@@ -52,14 +52,14 @@
       </BuildableProductRunnable>
       <AdditionalOptions>
          <AdditionalOption
+            isEnabled = "YES"
             key = "MallocStackLogging"
-            value = ""
-            isEnabled = "YES">
+            value = "">
          </AdditionalOption>
          <AdditionalOption
+            isEnabled = "YES"
             key = "PrefersMallocStackLoggingLite"
-            value = ""
-            isEnabled = "YES">
+            value = "">
          </AdditionalOption>
       </AdditionalOptions>
    </LaunchAction>

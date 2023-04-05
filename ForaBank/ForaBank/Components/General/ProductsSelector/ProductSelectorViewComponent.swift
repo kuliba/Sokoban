@@ -471,14 +471,14 @@ extension ProductSelectorView {
         @ViewBuilder
         private var chevron: some View {
             
-            if viewModel.isUserInteractionEnabled {
-                
-                Image.ic24ChevronDown
-                    .renderingMode(.template)
-                    .resizable()
-                    .foregroundColor(.mainColorsGray)
-                    .rotationEffect(.degrees(!viewModel.isCollapsed ? 0 : -90))
-            }
+            let foregroundColor: Color = viewModel.isUserInteractionEnabled ? .mainColorsGray : .blurGray20
+            let degrees: Double = viewModel.isUserInteractionEnabled && viewModel.isCollapsed ? -90 : 0
+            
+            Image.ic24ChevronDown
+                .renderingMode(.template)
+                .resizable()
+                .foregroundColor(foregroundColor)
+                .rotationEffect(.degrees(degrees))
         }
         
         private var productDetailView: some View {
