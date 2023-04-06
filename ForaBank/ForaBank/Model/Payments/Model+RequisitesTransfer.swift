@@ -64,38 +64,19 @@ extension Model {
     
     func paymentsTransfersRequisitsPayeeExternal(_ parameters: [PaymentsParameterRepresentable]) throws -> TransferGeneralData.PayeeExternal {
         
-        let accountParameterId = Payments.Parameter.Identifier.requisitsAccountNumber.rawValue
-        guard let accountParameterValue = parameters.first(where: { $0.id == accountParameterId })?.value else {
-            
-            throw Payments.Error.missingParameter(accountParameterId)
+        let accountParameterValue = try parameters.value(forIdentifier: .requisitsAccountNumber)
+        
+        let nameParameterValue = try? parameters.value(forIdentifier: .requisitsName)
+        let companyNameParameterValue = try? parameters.value(forIdentifier: .requisitsCompanyName)
+ 
+        guard let payeeName = nameParameterValue ?? companyNameParameterValue else {
+            throw Payments.Error.missingParameter(Payments.Parameter.Identifier.requisitsName.rawValue)
         }
         
-        let nameParameterId = Payments.Parameter.Identifier.requisitsName.rawValue
-        let companyNameParameterId = Payments.Parameter.Identifier.requisitsCompanyName.rawValue
+        let bicParameterValue = try parameters.value(forIdentifier: .requisitsBankBic)
+        let kppParameterValue = try? parameters.value(forIdentifier: .requisitsKpp)
+        let innParameterValue = try? parameters.value(forIdentifier: .requisitsInn)
         
-        guard let nameParameterValue = parameters.first(where: { $0.id == nameParameterId })?.value ?? parameters.first(where: { $0.id == companyNameParameterId })?.value else {
-            
-            throw Payments.Error.missingParameter(nameParameterId)
-        }
-        
-        let bicParameterId = Payments.Parameter.Identifier.requisitsBankBic.rawValue
-        guard let bicParameterValue = parameters.first(where: { $0.id == bicParameterId })?.value else {
-            throw Payments.Error.missingParameter(bicParameterId)
-        }
-        
-        let kppParameterId = Payments.Parameter.Identifier.requisitsKpp.rawValue
-        guard let kppParameterValue = parameters.first(where: { $0.id == kppParameterId })?.value else {
-            throw Payments.Error.missingParameter(kppParameterId)
-        }
-        
-        let innParameterId = Payments.Parameter.Identifier.requisitsInn.rawValue
-        if let innParameterValue = parameters.first(where: { $0.id == innParameterId })?.value {
-            
-            return .init(inn: innParameterValue, kpp: kppParameterValue, accountId: nil, accountNumber: accountParameterValue, bankBIC: bicParameterValue, cardId: nil, cardNumber: nil, compilerStatus: nil, date: nil, name: nameParameterValue, tax: nil)
-            
-        } else {
-            
-            return .init(inn: nil, kpp: kppParameterValue, accountId: nil, accountNumber: accountParameterValue, bankBIC: bicParameterValue, cardId: nil, cardNumber: nil, compilerStatus: nil, date: nil, name: nameParameterValue, tax: nil)
-        }
+        return .init(inn: innParameterValue, kpp: kppParameterValue, accountId: nil, accountNumber: accountParameterValue, bankBIC: bicParameterValue, cardId: nil, cardNumber: nil, compilerStatus: nil, date: nil, name: payeeName, tax: nil)
     }
 }
