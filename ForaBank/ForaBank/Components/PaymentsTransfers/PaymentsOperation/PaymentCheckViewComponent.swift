@@ -21,7 +21,19 @@ extension PaymentsCheckView {
         let mode: Mode
         let abroadFamiliarizedTitle = "ознакомлен"
         
-        override var isValid: Bool { isChecked }
+        var parameterCheck: Payments.ParameterCheck? { source as? Payments.ParameterCheck }
+        
+        override var isValid: Bool {
+            
+            guard let parameterCheck = parameterCheck else {
+                return true
+            }
+            
+            switch parameterCheck.mode {
+            case .abroad: return isChecked
+            default: return true
+            }
+        }
         
         init(_ isChecked: Bool, title: String, link: LinkViewModel?, style: Style, mode: Mode = .normal, source: PaymentsParameterRepresentable = Payments.ParameterMock()) {
             
