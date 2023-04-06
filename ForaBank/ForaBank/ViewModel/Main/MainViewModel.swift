@@ -304,11 +304,6 @@ class MainViewModel: ObservableObject, Resetable {
                                         let paymentsViewModel = try await PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
                                             
                                             self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                            
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
-                                                
-                                                self?.openCountries()
-                                            }
                                         }
                                         
                                         await MainActor.run {

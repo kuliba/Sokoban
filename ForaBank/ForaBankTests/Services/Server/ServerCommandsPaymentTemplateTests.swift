@@ -55,12 +55,36 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
     }
     
     //TODO: - Complete data tests
+    func testGetPaymentTemplateList_ServerResponse_Decoding() throws {
+
+        // given
+        let url = bundle.url(forResource: "PaymentsTemplateListGenericResponse", withExtension: "json")!
+        let json = try Data(contentsOf: url)
+        let payer = TransferData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: 10000184511, cardNumber: nil, phoneNumber: nil)
+        
+        let parameter1 = TransferAnywayData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, additional: [.init(fieldid: 1, fieldname: "trnPickupPoint", fieldvalue: "AM")], puref: "iFora||MIG")
+        
+        let parameter2 = TransferAnywayData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, additional: [.init(fieldid: 1, fieldname: "trnPickupPoint", fieldvalue: "AM"), .init(fieldid: 2, fieldname: "DIRECT_BANKS", fieldvalue: "iFora||TransferEvocaClient12")], puref: "iFora||MIG")
+        
+        let parameter3 = TransferAnywayData(amount: 100.05, check: false, comment: nil, currencyAmount: "RUB", payer: payer, additional: [.init(fieldid: 1, fieldname: "trnPickupPoint", fieldvalue: "AM"), .init(fieldid: 2, fieldname: "DIRECT_BANKS", fieldvalue: "iFora||TransferEvocaClient12"), .init(fieldid: 3, fieldname: "RECP", fieldvalue: "+37496127188"), .init(fieldid: 4, fieldname: "##CURR", fieldvalue: "RUB")], puref: "iFora||MIG")
+        
+        let paymentTemplate = PaymentTemplateData.init(groupName: "Перевод МИГ", name: "Перевод между счетами", parameterList: [parameter1, parameter2, parameter3], paymentTemplateId: 2513, productTemplate: nil, sort: 4, svgImage: .init(description: "image"), type: .newDirect)
+        
+        let expected = ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response(statusCode: .ok, errorMessage: nil, data: [paymentTemplate])
+        
+        // when
+        let result = try decoder.decode(ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
     func testGetPaymentTemplateList_Response_Decoding() throws {
 
         // given
         let url = bundle.url(forResource: "GetPaymentTemplateListResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let payer = TransferData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
+        let payer = TransferData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: 10000184511, cardNumber: nil, phoneNumber: nil)
         let transfer = TransferGeneralData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
         let paymentTemplate = PaymentTemplateData(groupName: "Переводы СБП", name: "Иванов Иван Иванович", parameterList: [transfer], paymentTemplateId: 1, productTemplate: .init(currency: "RUB", customName: "Новая карта", id: 1, numberMask: "4444 **** **** 1234", paymentSystemImage: .init(description: "string"), smallDesign: .init(description: "string"), type: .card), sort: 1, svgImage: SVGImageData(description: "string"), type: .sfp)
         let expected = ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response(statusCode: .ok, errorMessage: "string", data: [paymentTemplate])

@@ -325,6 +325,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     let templateButton: PaymentsSuccessOptionButtonView.ViewModel = .init(icon: .ic24Star, title: "Шаблон") { [weak self] in
                         
                         guard let self = self else { return }
+                        //TODO: create switch for template name
                         self.model.action.send(ModelAction.PaymentTemplate.Save.Requested(name: "Перевод между счетами", paymentOperationDetailId: paymentOperationDetailId))
                     }
                     

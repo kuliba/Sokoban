@@ -8,7 +8,7 @@
             "check": false,
             "payeeInternal": null,
             "comment": null,
-            "payer": {},
+            "payer": {"cardId": 10000184511},
             "payeeExternal": null
         }],
         "paymentTemplateId": 1,
