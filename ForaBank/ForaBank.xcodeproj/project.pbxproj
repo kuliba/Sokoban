@@ -1306,6 +1306,7 @@
 		C1F799A529D3ED030048346B /* Model+PaymentsReturn.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F799A429D3ED030048346B /* Model+PaymentsReturn.swift */; };
 		C1F799A729D3EDB00048346B /* Model+PaymentsChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F799A629D3EDB00048346B /* Model+PaymentsChange.swift */; };
 		C1F8314F29DD997700D2C40E /* Bool+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F8314E29DD997700D2C40E /* Bool+Extension.swift */; };
+		C1F8315129DF0D6900D2C40E /* PaymentsTemplateListGenericResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = C1F8315029DF0D6900D2C40E /* PaymentsTemplateListGenericResponse.json */; };
 		C1F8F5FE294A50B800FE5703 /* HintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F8F5FD294A50B800FE5703 /* HintView.swift */; };
 		C1F8F601294A53B600FE5703 /* HintViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F8F600294A53B600FE5703 /* HintViewModel.swift */; };
 		DD9B05FBC9842381D93B344A /* Font+Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70B9838CDF23BDFFAC34257 /* Font+Assets.swift */; };
@@ -2931,6 +2932,7 @@
 		C1F799A429D3ED030048346B /* Model+PaymentsReturn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsReturn.swift"; sourceTree = "<group>"; };
 		C1F799A629D3EDB00048346B /* Model+PaymentsChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsChange.swift"; sourceTree = "<group>"; };
 		C1F8314E29DD997700D2C40E /* Bool+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bool+Extension.swift"; sourceTree = "<group>"; };
+		C1F8315029DF0D6900D2C40E /* PaymentsTemplateListGenericResponse.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PaymentsTemplateListGenericResponse.json; sourceTree = "<group>"; };
 		C1F8F5FD294A50B800FE5703 /* HintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintView.swift; sourceTree = "<group>"; };
 		C1F8F600294A53B600FE5703 /* HintViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintViewModel.swift; sourceTree = "<group>"; };
 		C70B9838CDF23BDFFAC34257 /* Font+Assets.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; fileEncoding = 4; path = "Font+Assets.swift"; sourceTree = "<group>"; };
@@ -6473,6 +6475,7 @@
 				77D0386629882CBA00FBE5AB /* GetScenarioQRDataGeneric.json */,
 				77D0386F298848C800FBE5AB /* ConfirmC2BSubscriptionGeneric.json */,
 				77D03871298848FB00FBE5AB /* DeniedC2BSubscriptionGeneric.json */,
+				C1F8315029DF0D6900D2C40E /* PaymentsTemplateListGenericResponse.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -8726,6 +8729,7 @@
 				68E7653327970261005860FE /* SetDeviceSettingsResponseGeneric.json in Resources */,
 				5AF3D73A27A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json in Resources */,
 				689ECA832848DB5B0098664F /* CreateInterestDepositTransferResponseGeneric.json in Resources */,
+				C1F8315129DF0D6900D2C40E /* PaymentsTemplateListGenericResponse.json in Resources */,
 				77E1804127AC34450006ACC9 /* UninstallPushDeviceResponseGeneric.json in Resources */,
 				5A5ABFBA27ABCDC700D548AA /* GetDepositStatement.json in Resources */,
 				77EC58D72771F6C10054D75C /* SavePaymentTemplateResponseGeneric.json in Resources */,
@@ -10253,7 +10257,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 59;
 				CURRENT_PROJECT_VERSION = 58;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -10329,7 +10332,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 59;
 				CURRENT_PROJECT_VERSION = 58;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -10359,7 +10361,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 59;
 				CURRENT_PROJECT_VERSION = 58;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -10389,7 +10390,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 59;
 				CURRENT_PROJECT_VERSION = 58;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -10547,7 +10547,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 59;
 				CURRENT_PROJECT_VERSION = 58;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -10583,7 +10582,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 59;
 				CURRENT_PROJECT_VERSION = 58;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;

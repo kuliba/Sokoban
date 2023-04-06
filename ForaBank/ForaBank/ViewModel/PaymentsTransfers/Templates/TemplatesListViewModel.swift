@@ -159,12 +159,12 @@ private extension TemplatesListViewModel {
                             self?.action.send(TemplatesListViewModelAction.CloseAction())
                         }))
 
-                    case .direct:
+                    case .direct, .newDirect:
                         let operatorsViewModel = OperatorsViewModel(mode: .template(temp), closeAction: {  [weak self] in
                             self?.action.send(TemplatesListViewModelAction.CloseAction()) })
                         link = .direct(CountryPaymentView.ViewModel(operatorsViewModel: operatorsViewModel))
                         
-                    case .contactAdressless:
+                    case .contactAdressless, .contactCash, .contactAddressing,.contactAddressless:
                         let operatorsViewModel = OperatorsViewModel(mode: .template(temp), closeAction: {  [weak self] in
                             self?.action.send(TemplatesListViewModelAction.CloseAction()) }, requisitsViewAction: {})
                         link = .contactAdressless(CountryPaymentView.ViewModel(operatorsViewModel: operatorsViewModel))

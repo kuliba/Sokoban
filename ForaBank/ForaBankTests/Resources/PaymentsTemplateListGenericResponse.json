@@ -1,0 +1,78 @@
+{
+    "statusCode":0,
+    "data":[{
+        "paymentTemplateId": 2513,
+        "name": "Перевод между счетами",
+        "groupName": "Перевод МИГ",
+        "type": "NEW_DIRECT",
+        "svgImage": "image",
+        "sort": 4,
+        "parameterList":[{
+            
+            "check": false,
+            "currencyAmount": "RUB",
+            "payer": {
+                
+                "cardId":10000184511
+            },
+            
+            "puref": "iFora||MIG",
+            "additional":[ {
+                
+                "fieldname": "trnPickupPoint",
+                "fieldid": 1,
+                "fieldvalue": "AM" }]
+        }, {
+            "check": false,
+            "currencyAmount": "RUB",
+            "payer": {
+                
+                "cardId": 10000184511
+            },
+            
+            "puref": "iFora||MIG",
+            "additional":[
+                {
+                    
+                    "fieldname": "trnPickupPoint",
+                    "fieldid": 1,
+                    "fieldvalue": "AM"},
+                
+                {
+                    "fieldname": "DIRECT_BANKS",
+                    "fieldid": 2,
+                    "fieldvalue": "iFora||TransferEvocaClient12"
+                }]
+            
+        }, {
+            "check": false,
+            "amount": 100.05,
+            "currencyAmount": "RUB",
+            "payer": {
+                
+                "cardId": 10000184511
+            },
+            
+            "puref": "iFora||MIG",
+            "additional":[ {
+                
+                "fieldname": "trnPickupPoint",
+                "fieldid": 1,
+                "fieldvalue": "AM"
+            },{
+                "fieldname": "DIRECT_BANKS",
+                "fieldid": 2,
+                "fieldvalue": "iFora||TransferEvocaClient12"
+            },{
+                "fieldname":"RECP",
+                "fieldid":3,
+                "fieldvalue":"+37496127188"
+                
+            },{
+                "fieldname":"##CURR",
+                "fieldid":4,
+                "fieldvalue":"RUB"
+                
+            }
+            ]}]
+    }]}

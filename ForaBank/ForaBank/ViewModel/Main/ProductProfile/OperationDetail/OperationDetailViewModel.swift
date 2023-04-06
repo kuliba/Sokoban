@@ -27,7 +27,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
     private let animationDuration: Double = 0.5
     private var paymentTemplateId: Int?
     
-    init(id: ProductStatementData.ID, header: HeaderViewModel, operation: OperationViewModel, actionButtons: [ActionButtonViewModel]?, featureButtons: [FeatureButtonViewModel], isLoading: Bool, model: Model = .emptyMock) {
+    init(id: ProductStatementData.ID, header: HeaderViewModel, operation: OperationViewModel, actionButtons: [ActionButtonViewModel]? = nil, featureButtons: [FeatureButtonViewModel], isLoading: Bool, model: Model = .emptyMock) {
         
         self.id = id
         self.header = header
@@ -45,35 +45,34 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "OperationDetailViewModel deinitilazed")
     }
     
-    init?(productStatement: ProductStatementData, product: ProductData, model: Model) {
+    convenience init?(productStatement: ProductStatementData, product: ProductData, model: Model) {
         
         guard productStatement.paymentDetailType != .notFinance else {
             return nil
         }
         
-        self.id = productStatement.id
-        self.header = .init(statement: productStatement, model: model)
-        self.operation = .init(productStatement: productStatement, model: model)
-        self.actionButtons = nil
-        self.featureButtons = []
-        self.isLoading = false
-        self.model = model
+        let header = HeaderViewModel(statement: productStatement, model: model)
+        let operation = OperationViewModel(productStatement: productStatement, model: model)
         
+        self.init(id: productStatement.id, header: header, operation: operation, featureButtons: [], isLoading: false, model: model)
+        bind()
+
         if let infoFeatureButtonViewModel = infoFeatureButtonViewModel(with: productStatement, product: product) {
             
             self.featureButtons = [infoFeatureButtonViewModel]
         }
-        
-        bind()
         
         if let documentId = productStatement.documentId {
             
             model.action.send(ModelAction.Operation.Detail.Request(type: .documentId(documentId)))
             
             withAnimation {
+                
                 self.isLoading = true
             }
         }
+        
+        self.model.action.send(ModelAction.Products.Update.Fast.All())
     }
     
     private func bind() {
