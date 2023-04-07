@@ -27,26 +27,27 @@ extension PaymentsNameView {
         
         override var isValid: Bool {
             
-            if parameterName?.value != nil {
+            guard let parameterName = parameterName else {
+                return false
+            }
+            
+            switch parameterName.mode {
+            case .regular:
+                return parameterName.lastName.validator.isValid(value: person.lastName.textField.text) &&
+                        parameterName.firstName.validator.isValid(value: person.firstName.textField.text) &&
+                        parameterName.middleName.validator.isValid(value: person.middleName.textField.text)
                 
-                if self.value.isChanged  {
-
-                    return true
-
+            case .abroad:
+                if value.isChanged  {
+                    
+                    return parameterName.lastName.validator.isValid(value: person.lastName.textField.text) &&
+                            parameterName.firstName.validator.isValid(value: person.firstName.textField.text) &&
+                            parameterName.middleName.validator.isValid(value: person.middleName.textField.text)
+                    
                 } else {
                     
                     return false
                 }
-                
-            } else {
-             
-                guard let parameterName = parameterName else {
-                    return false
-                }
-                
-                return parameterName.lastName.validator.isValid(value: person.lastName.textField.text) &&
-                parameterName.firstName.validator.isValid(value: person.firstName.textField.text) &&
-                parameterName.middleName.validator.isValid(value: person.middleName.textField.text)
             }
         }
         
