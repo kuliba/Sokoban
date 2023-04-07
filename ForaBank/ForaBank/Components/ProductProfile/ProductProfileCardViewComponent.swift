@@ -410,32 +410,16 @@ struct ProductProfileCardView: View {
                             .foregroundColor(.mainColorsBlackMedium)
                             .opacity(0.3)
                             .blur(radius: 10)
-                            .frame(width: shadowWidth(for: product), height: 165)
+                            .frame(width: 268 - 20, height: 165)
                         
                         ProductView(viewModel: product)
-                            .frame(width: productWidth(for: product), height: 160)
+                            .frame(width: 268, height: 160)
                         
                     }.tag(product.id)
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .frame(height: 210)
-        }
-    }
-    
-    func productWidth(for product: ProductView.ViewModel) -> CGFloat {
-        
-        switch product.productType {
-        case .deposit: return 228
-        default: return 268
-        }
-    }
-    
-    func shadowWidth(for product: ProductView.ViewModel) -> CGFloat {
-        
-        switch product.productType {
-        case .deposit: return 228 - 20
-        default: return 268 - 20
         }
     }
 }
