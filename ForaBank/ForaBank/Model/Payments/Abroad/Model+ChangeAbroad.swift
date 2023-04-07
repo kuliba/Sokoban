@@ -31,7 +31,7 @@ extension Model {
                 let middleName = Payments.ParameterName.name(with: name, index: 2)
                 let lastName = Payments.ParameterName.name(with: name, index: 0)
 
-                let nameParameter = Payments.ParameterName(.init(id: Payments.Parameter.Identifier.countryReturnName.rawValue, value: name), title: "ФИО получателя", lastName: .init(title: "Фамилия получателя*", value: lastName, validator: .init(rules: []), limitator: .init(limit: 200)), firstName: .init(title: "Имя получателя*", value: firstName, validator: .init(rules: []), limitator: .init(limit: 200)), middleName: .init(title: "Отчество получателя (если есть)", value: middleName, validator: .init(rules: []), limitator: .init(limit: 200)), isEditable: true, group: nil)
+                let nameParameter = Payments.ParameterName(.init(id: Payments.Parameter.Identifier.countryReturnName.rawValue, value: name), title: "ФИО получателя", lastName: .init(title: "Фамилия получателя*", value: lastName, validator: .init(rules: []), limitator: .init(limit: 200)), firstName: .init(title: "Имя получателя*", value: firstName, validator: .init(rules: []), limitator: .init(limit: 200)), middleName: .init(title: "Отчество получателя (если есть)", value: middleName, validator: .init(rules: []), limitator: .init(limit: 200)), isEditable: true, mode: .abroad, group: nil)
                 
                 let operationId = Payments.ParameterHidden(id: Payments.Parameter.Identifier.countryOperationId.rawValue, value: opetationId)
                 

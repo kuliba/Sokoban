@@ -645,9 +645,10 @@ extension Payments {
         let firstName: Name
         let middleName: Name
         let isEditable: Bool
+        let mode: Mode
         let group: Payments.Parameter.Group?
         
-        init(_ parameter: Parameter, title: String, lastName: Name, firstName: Name, middleName: Name, isEditable: Bool = true, group: Payments.Parameter.Group? = nil) {
+        init(_ parameter: Parameter, title: String, lastName: Name, firstName: Name, middleName: Name, isEditable: Bool = true, mode: Mode = .regular, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
             self.title = title
@@ -655,16 +656,17 @@ extension Payments {
             self.firstName = firstName
             self.middleName = middleName
             self.isEditable = isEditable
+            self.mode = mode
             self.group = group
         }
         
-        init(id: Parameter.ID, value: String?, title: String, editable: Bool = true, group: Payments.Parameter.Group? = nil) {
+        init(id: Parameter.ID, value: String?, title: String, editable: Bool = true, mode: Mode = .regular, group: Payments.Parameter.Group? = nil) {
             
             self.init(.init(id: id, value: value), title: title,
                       lastName: .init(title: "Фамилия", value: Self.name(with: value, index: 0), validator: .baseName, limitator: .init(limit: 158)),
                       firstName: .init(title: "Имя", value: Self.name(with: value, index: 1), validator: .baseName, limitator: .init(limit: 158)),
                       middleName: .init(title: "Отчество (если есть)", value: Self.name(with: value, index: 2), validator: .anyValue, limitator: .init(limit: 158)),
-                      isEditable: editable, group: group)
+                      isEditable: editable, mode: mode, group: group)
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
@@ -673,7 +675,13 @@ extension Payments {
                           lastName: .init(title: lastName.title, value: Self.name(with: value, index: 0), validator: .baseName, limitator: .init(limit: 158)),
                           firstName: .init(title: firstName.title, value: Self.name(with: value, index: 1), validator: .baseName, limitator: .init(limit: 158)),
                           middleName: .init(title: middleName.title, value: Self.name(with: value, index: 2), validator: .anyValue, limitator: .init(limit: 158)),
-                          isEditable: isEditable, group: group)
+                          isEditable: isEditable, mode: mode, group: group)
+        }
+        
+        enum Mode {
+            
+            case regular
+            case abroad
         }
         
         static func name(with value: String?, index: Int) -> String? {

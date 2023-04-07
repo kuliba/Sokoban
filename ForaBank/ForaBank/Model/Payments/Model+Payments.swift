@@ -717,7 +717,7 @@ extension Model {
         switch nextAction {
         case .rollback:
             switch updated {
-            case Payments.Parameter.Identifier.operator.rawValue, Payments.Parameter.Identifier.amount.rawValue:
+            case Payments.Parameter.Identifier.amount.rawValue:
                 return false
                 
             default:
