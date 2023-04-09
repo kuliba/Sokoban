@@ -15,8 +15,10 @@ extension TextFieldRegularView {
     
     class ViewModel: ObservableObject {
         
-        @Published var text: String?
-        @Published var isEnabled: Bool
+        @Published private(set) var text: String?
+        @Published private(set) var isEnabled: Bool
+        
+        private let changeText = PassthroughSubject<String?, Never>()
         let isEditing: CurrentValueSubject<Bool, Never>
        
         let style: Style
@@ -26,7 +28,7 @@ extension TextFieldRegularView {
         
         var textColor: Color
         
-        var hasValue: Bool { (text != "" && text != nil) ? true : false }
+        var hasValue: Bool { text != "" && text != nil }
         
         init(text: String?, isEnabled: Bool, isEditing: Bool, placeholder: String, toolbar: ToolbarViewModel?, limit: Int?, style: Style = .default, regExp: String? = nil, textColor: Color) {
             
@@ -38,11 +40,23 @@ extension TextFieldRegularView {
             self.limit = limit
             self.toolbar = toolbar
             self.textColor = textColor
+            
+            changeText
+                .removeDuplicates()
+                .receive(on: DispatchQueue.main)
+                .assign(to: &$text)
         }
         
         convenience init(text: String?, placeholder: String, style: Style, limit: Int?, regExp: String? = nil, isEnabled: Bool = true, textColor: Color = .textSecondary) {
             
-            self.init(text: text, isEnabled: isEnabled, isEditing: false, placeholder: placeholder, toolbar: .init(doneButton: .init(isEnabled: true, action: {  UIApplication.shared.endEditing() })), limit: limit, style: style, regExp: regExp, textColor: textColor)
+            let toolbar = ToolbarViewModel(doneButton: .init(isEnabled: true, action: {  UIApplication.shared.endEditing() }))
+            
+            self.init(text: text, isEnabled: isEnabled, isEditing: false, placeholder: placeholder, toolbar: toolbar, limit: limit, style: style, regExp: regExp, textColor: textColor)
+        }
+        
+        func setText(to text: String?) {
+            
+            self.changeText.send(text)
         }
     }
 }
@@ -55,6 +69,17 @@ extension TextFieldRegularView.ViewModel {
         
         case `default`
         case number
+    }
+}
+
+private extension TextFieldRegularView.ViewModel.Style {
+    
+    var keyboardType: UIKeyboardType {
+        
+        switch self {
+        case .default: return .default
+        case .number:  return .numberPad
+        }
     }
 }
 
@@ -110,13 +135,7 @@ struct TextFieldRegularView: UIViewRepresentable {
         textView.autocapitalizationType = .none
         textView.autocorrectionType = .no
         
-        switch viewModel.style {
-        case .default:
-            textView.keyboardType = .default
-            
-        case .number:
-            textView.keyboardType = .numberPad
-        }
+        textView.keyboardType = viewModel.style.keyboardType
         
         if let toolbarViewModel = viewModel.toolbar {
             
@@ -190,8 +209,8 @@ struct TextFieldRegularView: UIViewRepresentable {
         
         func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
              
-            textView.text = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: viewModel.limit, style: viewModel.style)
-            viewModel.text = textView.text
+            let masked = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: viewModel.limit, style: viewModel.style)
+            viewModel.setText(to: masked)
 
             return false
         }

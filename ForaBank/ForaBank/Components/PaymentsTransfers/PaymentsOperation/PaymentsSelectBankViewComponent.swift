@@ -376,7 +376,7 @@ extension PaymentsSelectBankView.ViewModel {
                         withAnimation {
                             
                             self.selectedItem.id = bank.id
-                            self.selectedItem.textField.text = bank.name
+                            self.selectedItem.textField.setText(to: bank.name)
                             self.selectedItem.title = parameterSelect?.title
                         }
 
@@ -412,7 +412,7 @@ extension PaymentsSelectBankView.ViewModel {
                             withAnimation {
                                 
                                 self.selectedItem.icon = .image(image)
-                                self.selectedItem.textField.text = bic
+                                self.selectedItem.textField.setText(to: bic)
                                 self.selectedItem.title = parameterSelect?.title
                                 self.list = nil
                             }
@@ -443,7 +443,7 @@ extension PaymentsSelectBankView.ViewModel {
                                 
                                 self.selectedItem.title = parameterSelect?.title
                                 self.selectedItem.icon = .image(image)
-                                self.selectedItem.textField.text = bank.name
+                                self.selectedItem.textField.setText(to: bank.name)
                             }
                             
                         default: break
@@ -476,7 +476,7 @@ extension PaymentsSelectBankView.ViewModel {
                     }
                     
                     let bank = banks.first(where: {$0.memberId == payload.bankId})
-                    self?.selectedItem.textField.text = bank?.bic
+                    self?.selectedItem.textField.setText(to: bank?.bic)
                     self?.list = nil
                     self?.action.send(PaymentsParameterViewModelAction.BankList.ContactSelector.Close())
                     

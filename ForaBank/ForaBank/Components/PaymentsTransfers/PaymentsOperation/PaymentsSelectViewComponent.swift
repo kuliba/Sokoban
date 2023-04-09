@@ -97,17 +97,10 @@ extension PaymentsSelectView {
                         
                         if let content = content {
                             
-                            withAnimation {
-                                
-                                textField.text = content
-                            }
-                            
+                            textField.setText(to: content)
                         } else {
                             
-                            withAnimation {
-                                
-                                textField.text = parameterSelect?.placeholder
-                            }
+                            textField.setText(to: parameterSelect?.placeholder)
                         }
                         
                         if let option = options.first(where: { $0.name == self.textField.text }) {
@@ -139,7 +132,7 @@ extension PaymentsSelectView {
                         
                         self.content = parameterSelect?.title
                         
-                        self.textField.text = item.name
+                        self.textField.setText(to: item.name)
                         
                         if parameterSelect?.icon == nil {
                             

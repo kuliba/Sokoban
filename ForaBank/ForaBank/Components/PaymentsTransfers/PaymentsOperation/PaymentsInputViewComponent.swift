@@ -72,7 +72,7 @@ extension PaymentsInputView {
         override func update(source: PaymentsParameterRepresentable) {
             super.update(source: source)
             
-            textField.text = source.value
+            textField.setText(to: source.value)
             
             withAnimation {
                 
@@ -177,8 +177,8 @@ extension PaymentsInputView.ViewModel {
     }
 }
 
+// MARK: - Parameter Actions
 
-//MARK: - Parameter Actions
 extension PaymentsParameterViewModelAction {
     
     enum Hint {
@@ -192,7 +192,8 @@ extension PaymentsParameterViewModelAction {
     }
 }
 
-//MARK: - Sub View Model
+// MARK: - Sub View Model
+
 extension PaymentsInputView.ViewModel {
     
     struct ButtonViewModel {
@@ -208,7 +209,7 @@ extension PaymentsInputView.ViewModel {
     }
 }
 
-//MARK: - View
+// MARK: - View
 
 struct PaymentsInputView: View {
     
@@ -216,112 +217,126 @@ struct PaymentsInputView: View {
     
     var body: some View {
         
-        VStack(spacing: 8) {
+        HStack(alignment: .top, spacing: 0) {
             
-            HStack(spacing: 16) {
-                
-                if let icon = viewModel.icon {
-                    
-                    icon
-                        .resizable()
-                        .renderingMode(.template)
-                        .foregroundColor(.mainColorsGray)
-                        .frame(width: 24, height: 24)
-                    
-                } else {
-                    
-                    Color.clear
-                        .frame(width: 24, height: 24)
-                        .padding(.leading, 4)
-                }
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    
-                    if let title = viewModel.title {
-                        
-                        Text(title)
-                            .font(.textBodyMR14180())
-                            .foregroundColor(.textPlaceholder)
-                            .transition(.asymmetric(insertion: .move(edge: .bottom).combined(with: .opacity), removal: .opacity))
-                    }
-                    
-                    HStack(spacing: 20) {
-                        
-                        if viewModel.isEditable == true {
-                            
-                            TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16))
-                                .frame(minWidth: 24)
-                            
-                        } else {
-                            
-                            Text(viewModel.value.current ?? "")
-                                .foregroundColor(.textSecondary)
-                                .font(.textBodyMM14200())
-                        }
-                        
-                        Spacer()
-                        
-                    }
-                }
-                
-                if viewModel.isEditable, let additionalButton = viewModel.additionalButton {
-                    
-                    Button(action: additionalButton.action) {
-                        
-                        additionalButton.icon
-                            .foregroundColor(.mainColorsGray)
-                    }
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 13)
+            iconView
+                .frame(width: 24, height: 24)
+                .frame(width: 56, height: 48)
             
-            VStack(spacing: 4) {
-             
-                if let info = viewModel.info {
-                    
-                    HStack {
-                        
-                        Color.clear
-                            .frame(width: 24, height: 0)
-                            .padding(.leading, 4)
-                        
-                        Text(info)
-                            .font(.textBodySR12160())
-                            .foregroundColor(.textPlaceholder)
-                        
-                        Spacer()
-                    }
-
-                }
+            vStack
+                .padding(.trailing, 16)
+        }
+        .padding(.vertical, 13)
+    }
+    
+    private var vStack: some View {
+        
+        VStack(alignment: .leading, spacing: 4) {
+            
+            titleView
+            
+            textFiled
+            
+            additionalButton
+            
+            infoView
+            
+            warningView
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    @ViewBuilder
+    private var iconView: some View {
+        
+        if let icon = viewModel.icon {
+            
+            icon
+                .resizable()
+                .renderingMode(.template)
+                .foregroundColor(.mainColorsGray)
+            
+        } else {
+            
+            Color.clear
+                .padding(.leading, 4)
+        }
+    }
+    
+    @ViewBuilder
+    private var titleView: some View {
+        
+        if let title = viewModel.title {
+            
+            Text(title)
+                .font(.textBodyMR14180())
+                .foregroundColor(.textPlaceholder)
+                .transition(
+                    .asymmetric(
+                        insertion: .move(edge: .bottom).combined(with: .opacity),
+                        removal: .opacity
+                    )
+                )
+        }
+    }
+    
+    @ViewBuilder
+    private var textFiled: some View {
+        
+        if viewModel.isEditable == true {
+            
+            TextFieldRegularView(
+                viewModel: viewModel.textField,
+                font: .systemFont(ofSize: 16)
+            )
+            .frame(minWidth: 24)
+            
+        } else {
+            
+            Text(viewModel.value.current ?? "")
+                .foregroundColor(.textSecondary)
+                .font(.textBodyMM14200())
+        }
+    }
+    
+    @ViewBuilder
+    private var additionalButton: some View {
+        
+        if viewModel.isEditable,
+           let additionalButton = viewModel.additionalButton {
+            
+            Button(action: additionalButton.action) {
                 
-                        
-                        
-                if let warning = viewModel.warning {
-                    
-                    HStack {
-                        
-                        //TODO: chacnge to padding
-                        Color.clear
-                            .frame(width: 24, height: 0)
-                            .padding(.leading, 4)
-                        
-                        Text(warning)
-                            .font(.textBodySR12160())
-                            .foregroundColor(.systemColorError)
-                        
-                        Spacer()
-                    }
-
-                }
+                additionalButton.icon
+                    .foregroundColor(.mainColorsGray)
             }
         }
-        .padding(.horizontal, 13)
-        .padding(.vertical, 13)
+    }
+    
+    @ViewBuilder
+    private var infoView: some View {
+        
+        if let info = viewModel.info {
+            
+            Text(info)
+                .font(.textBodySR12160())
+                .foregroundColor(.textPlaceholder)
+        }
+    }
+    
+    @ViewBuilder
+    private var warningView: some View {
+        
+        if let warning = viewModel.warning {
+            
+            Text(warning)
+                .font(.textBodySR12160())
+                .foregroundColor(.systemColorError)
+        }
     }
 }
 
-//MARK: - Preview
+// MARK: - Preview
 
 struct PaymentsInputView_Previews: PreviewProvider {
     
@@ -329,38 +344,94 @@ struct PaymentsInputView_Previews: PreviewProvider {
         
         Group {
             
-            PaymentsInputView(viewModel: .sampleEmpty)
-                .previewLayout(.fixed(width: 375, height: 120))
+            previewGroup()
             
-            PaymentsInputView(viewModel: .sampleValue)
-                .previewLayout(.fixed(width: 375, height: 100))
-            
-            PaymentsInputView(viewModel: .sampleValueNotEditable)
-                .previewLayout(.fixed(width: 375, height: 100))
-            
-            PaymentsInputView(viewModel: .samplePhone)
-                .previewLayout(.fixed(width: 375, height: 100))
-            
-            PaymentsInputView(viewModel: .sampleError)
-                .previewLayout(.fixed(width: 375, height: 120))
+            VStack(content: previewGroup)
+                .previewDisplayName("Xcode 14")
+                .previewLayout(.sizeThatFits)
         }
+    }
+    
+    private static func previewGroup() -> some View {
+        
+        Group {
+            
+            paymentsInputView(.sample(value: nil))
+            paymentsInputView(.sample())
+            paymentsInputView(.sample(isEditable: false))
+            
+            paymentsInputView(.sample(value: "+9 925 555-5555", icon: .ic24Smartphone, title: "Номер телефона получателя", isEditable: false))
+            paymentsInputView(.sample(value: "123", validator: .minLengthFive))
+            PaymentsInputView(viewModel: .sampleError)
+
+            paymentsInputView(.sample(value: "123", validator: .minLengthFive))
+            paymentsInputView(.sample(value: "123", validator: .minLengthFive, isEditable: false))
+            paymentsInputView(.sample(value: "123", validator: .minLengthFive))
+            paymentsInputView(.sample(value: "123", validator: .minLengthFive, isEditable: false))
+        }
+    }
+    
+    private static func paymentsInputView(
+        _ parameterInput: Payments.ParameterInput
+    ) -> some View {
+        
+        PaymentsInputView(viewModel: .init(with: parameterInput, model: .emptyMock))
     }
 }
 
-//MARK: - Preview Content
+// MARK: - Preview Content
 
 extension PaymentsInputView.ViewModel {
     
-    static let sampleEmpty = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .anyValue, limitator: .init(limit: 9)), model: .emptyMock)
-    
-    static let sampleValue = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .anyValue, limitator: nil), model: .emptyMock)
-    
-    static let sampleValueNotEditable = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .anyValue, limitator: nil, isEditable: false), model: .emptyMock)
-    
-    static let samplePhone = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "+9 925 555-5555"), icon: .init(named: "ic24Smartphone")!, title: "Номер телефона получателя", validator: .anyValue, limitator: nil, isEditable: false), model: .emptyMock)
-    
-    static let sampleWarning = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "123"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(rules: [Payments.Validation.MinLengthRule(minLenght: 5, actions: [.post: .warning("Минимальная длинна 5 символов")])]), limitator: nil), model: .emptyMock)
-    
-    static let sampleError = PaymentsInputView.ViewModel(icon: .init(uiImage: UIImage(named: "Payments Input Sample")!), description: "description", content: "123", info: "info", warning: "warning", textField: .init(text: "123", placeholder: "ИНН подразделения", style: .number, limit: nil), additionalButton: nil, model: .emptyMock)
+    static let sampleError = PaymentsInputView.ViewModel(icon: .paymentsInputSample, description: "description", content: "123", info: "info", warning: "Минимальная длинна 5 символов", textField: .preview, additionalButton: nil, model: .emptyMock)
 }
 
+private extension Payments.ParameterInput {
+    
+    static func sample(
+        value: String? = "0016196314",
+        icon: ImageData = .paymentsInputSample,
+        title: String = "ИНН подразделения",
+        validator: Payments.Validation.RulesSystem = .anyValue,
+        limit: Int? = nil,
+        isEditable: Bool = true
+    ) -> Self {
+        
+        .init(
+            .init(id: UUID().uuidString, value: value),
+            icon: icon,
+            title: title,
+            validator: validator,
+            limitator: limit.map { .init(limit: $0) },
+            isEditable: isEditable
+        )
+    }
+}
+
+private extension TextFieldRegularView.ViewModel {
+    
+    static let preview: TextFieldRegularView.ViewModel = .init(text: "123", placeholder: "ИНН подразделения", style: .number, limit: nil)
+}
+
+private extension Payments.Validation.RulesSystem {
+    
+    static let minLengthFive: Self = .init(
+        rules: [
+            Payments.Validation.MinLengthRule(
+                minLenght: 5,
+                actions: [.post: .warning("Минимальная длинна 5 символов")]
+            )
+        ]
+    )
+}
+
+private extension ImageData {
+ 
+    static let ic24Smartphone: Self = .init(named: "ic24Smartphone")!
+    static let paymentsInputSample: Self = .init(with: UIImage(named: "Payments Input Sample")!)!
+}
+
+private extension Image {
+    
+    static let paymentsInputSample: Self = .init(uiImage: UIImage(named: "Payments Input Sample")!)
+}

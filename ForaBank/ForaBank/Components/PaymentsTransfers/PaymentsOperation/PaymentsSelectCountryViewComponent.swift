@@ -270,7 +270,7 @@ extension PaymentsSelectCountryView.ViewModel {
                         withAnimation {
                             
                             self.selectedItem.icon = .image(image)
-                            self.selectedItem.textField.text = country.name.capitalized
+                            self.selectedItem.textField.setText(to: country.name.capitalized)
                             self.list = nil
 
                         }
@@ -280,7 +280,7 @@ extension PaymentsSelectCountryView.ViewModel {
                         withAnimation {
                          
                             self.selectedItem.icon = .placeholder
-                            self.selectedItem.textField.text = country.name.capitalized
+                            self.selectedItem.textField.setText(to: country.name.capitalized)
                             self.list = nil
                         }
                     }
