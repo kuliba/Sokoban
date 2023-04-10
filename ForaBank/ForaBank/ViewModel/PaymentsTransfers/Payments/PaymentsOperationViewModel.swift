@@ -446,7 +446,7 @@ extension PaymentsOperationViewModel {
 
           if let group = group as? PaymentsContactGroupViewModel {
                     
-             group.isCollapsed = true
+             group.setCollapsed()
           }
         }
     }
