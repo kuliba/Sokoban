@@ -367,6 +367,9 @@ extension PaymentsOperationTests {
         XCTAssertEqual(result.steps[1].back.stage, stepTwo.back.stage)
         XCTAssertEqual(result.steps[1].back.required, stepTwo.back.required)
         XCTAssertNil(result.steps[1].back.processed)
+        
+        // visible
+        XCTAssertEqual(result.visible, ["one", "two"])
     }
     
     func testRollback_First_Step_Unchanged() throws {
@@ -404,6 +407,9 @@ extension PaymentsOperationTests {
         XCTAssertEqual(result.steps[1].back.stage, stepTwo.back.stage)
         XCTAssertEqual(result.steps[1].back.required, stepTwo.back.required)
         XCTAssertNil(result.steps[1].back.processed)
+        
+        // visible
+        XCTAssertEqual(result.visible, ["one", "two"])
     }
     
     func testRollback_Step_Index_Incorrect() throws {
