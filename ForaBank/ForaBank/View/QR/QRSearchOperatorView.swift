@@ -36,12 +36,9 @@ struct QRSearchOperatorView: View {
                         
                     case .noEmpty:
                         
-                        if let filteredOperators = viewModel.filteredOperators {
+                        ForEach(viewModel.filteredOperators) { singleOperator in
                             
-                            ForEach(filteredOperators) { singleOperator in
-                                
-                                QRSearchOperatorComponent(viewModel: singleOperator)
-                            }
+                            QRSearchOperatorComponent(viewModel: singleOperator)
                         }
                         
                         EmptySearchView(viewModel: viewModel)
