@@ -39,10 +39,7 @@ struct PaymentsContactGroupView: View {
                     
                     PaymentsInfoView(viewModel: viewModel.collapsedItem, isCompact: false)
                         .frame(minHeight: 72)
-                        .onTapGesture {
-                            
-                            viewModel.toggleCollapsed()
-                        }
+                        .onTapGesture(perform: viewModel.toggleCollapsed)
                     
                     chevronButtonView
                         .padding(.trailing, 4)

@@ -410,7 +410,7 @@ extension Payments {
             ParameterSelectDropDownList(.init(id: parameter.id, value: value), title: title, options: options, isEditable: isEditable, placement: placement, group: group)
         }
         
-        struct Option: Identifiable {
+        struct Option: Identifiable, Equatable {
             
             let id: String
             let name: String
