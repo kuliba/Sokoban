@@ -15,30 +15,21 @@ struct PaymentsContactGroupView: View {
         
         VStack(spacing: 0) {
             
-            if viewModel.isCollapsed == false {
+            if !viewModel.isCollapsed {
                 
                 ForEach(viewModel.items) { itemViewModel in
-
-                    if itemViewModel.id == viewModel.items.first?.id {
-                        
-                        HStack {
-                            
-                            itemView(for: itemViewModel)
-                                .frame(minHeight: 72)
-                            
-                            ChevronButtonView(isDown: $viewModel.isCollapsed) {
-                                
-                                withAnimation {
-                                    viewModel.isCollapsed.toggle()
-                                }
-                                
-                            }.padding(.trailing, 4)
-                        }
-
-                    } else {
+                    
+                    HStack {
                         
                         itemView(for: itemViewModel)
                             .frame(minHeight: 72)
+                        
+                        if hasChevron(itemViewModel) {
+                            
+                            chevronButtonView
+                                .padding(.trailing, 4)
+                                .animation(.default, value: viewModel.isCollapsed)
+                        }
                     }
                 }
                 
@@ -50,19 +41,13 @@ struct PaymentsContactGroupView: View {
                         .frame(minHeight: 72)
                         .onTapGesture {
                             
-                            withAnimation {
-                                viewModel.isCollapsed.toggle()
-                            }
+                            viewModel.toggleCollapsed()
                         }
                     
-                    ChevronButtonView(isDown: $viewModel.isCollapsed) {
-                        
-                        withAnimation {
-                            viewModel.isCollapsed.toggle()
-                        }
-                        
-                    }.padding(.trailing, 4)
+                    chevronButtonView
+                        .padding(.trailing, 4)
                 }
+                .animation(.default, value: viewModel.isCollapsed)
             }
         }
         .background(RoundedRectangle(cornerRadius: 12).foregroundColor(.mainColorsGrayLightest))
@@ -71,6 +56,21 @@ struct PaymentsContactGroupView: View {
 }
 
 extension PaymentsContactGroupView {
+    
+    private func hasChevron(
+        _ itemViewModel: PaymentsParameterViewModel
+    ) -> Bool {
+        
+        itemViewModel.id == viewModel.items.first?.id
+    }
+    
+    private var chevronButtonView: some View {
+        
+        ChevronButtonView(
+            isDown: viewModel.isCollapsed,
+            action: viewModel.toggleCollapsed
+        )
+    }
     
     @ViewBuilder
     func itemView(for viewModel: PaymentsParameterViewModel) -> some View {
@@ -86,7 +86,7 @@ extension PaymentsContactGroupView {
     
     struct ChevronButtonView: View {
         
-        @Binding var isDown: Bool
+        let isDown: Bool
         let action: () -> Void
         
         var body: some View {
@@ -96,8 +96,8 @@ extension PaymentsContactGroupView {
                 Image.ic24ChevronDown
                     .foregroundColor(.iconGray)
                     .rotationEffect(.degrees(isDown ? 0 : 180))
-                
-            }.frame(width: 44, height: 44)
+                    .frame(width: 44, height: 44)
+            }
         }
     }
 }
@@ -106,11 +106,26 @@ struct PaymentsContactGroupView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PaymentsContactGroupView(viewModel: .sampleExpanded)
-            .previewLayout(.fixed(width: 375, height: 270))
+        Group {
+            
+            previewsGroup()
+            
+            VStack(content: previewsGroup)
+                .previewDisplayName("Xcode 14")
+        }
+        .previewLayout(.sizeThatFits)
+    }
+    
+    private static func previewsGroup() -> some View {
         
-        PaymentsContactGroupView(viewModel: .sampleCollapsed)
-            .previewLayout(.fixed(width: 375, height: 100))
+        Group {
+            
+            PaymentsContactGroupView(viewModel: .sampleExpanded)
+                .previewLayout(.fixed(width: 375, height: 270))
+            
+            PaymentsContactGroupView(viewModel: .sampleCollapsed)
+                .previewLayout(.fixed(width: 375, height: 100))
+        }
     }
 }
 

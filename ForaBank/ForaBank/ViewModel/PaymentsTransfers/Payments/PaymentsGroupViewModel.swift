@@ -48,7 +48,8 @@ final class PaymentsSpoilerGroupViewModel: PaymentsGroupViewModel, ObservableObj
 
 final class PaymentsContactGroupViewModel: PaymentsGroupViewModel, ObservableObject {
     
-    @Published var isCollapsed: Bool
+    @Published private(set) var isCollapsed: Bool
+    
     var collapsedItem: PaymentsInfoView.ViewModel {
        
         let content = items.compactMap({ $0.value.current }).joined(separator: " ")
@@ -70,6 +71,16 @@ final class PaymentsContactGroupViewModel: PaymentsGroupViewModel, ObservableObj
             
             self.init(items: items, isCollapsed: false)
         }
+    }
+    
+    func toggleCollapsed() {
+        
+        self.isCollapsed.toggle()
+    }
+    
+    func setCollapsed() {
+        
+        self.isCollapsed = true
     }
 }
 
