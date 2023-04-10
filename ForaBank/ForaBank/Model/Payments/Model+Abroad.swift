@@ -142,6 +142,10 @@ extension Model {
                 }
             }
             
+            guard service.options != options else {
+                return nil
+            }
+            
             let dropDownListParameter = Payments.ParameterSelectDropDownList.init(.init(id: service.id, value: options.first?.id), title: "Перевести", options: options)
             
             return dropDownListParameter
