@@ -107,7 +107,7 @@ extension PaymentsCodeView {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] text in
                     
-                    value = value.updated(with: text)
+                    update(value: text)
                     
                 }.store(in: &bindings)
             
