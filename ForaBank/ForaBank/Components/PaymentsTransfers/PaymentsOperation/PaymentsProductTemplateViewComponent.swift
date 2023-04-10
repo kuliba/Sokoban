@@ -623,7 +623,13 @@ struct PaymentsProductTemplateView: View {
         switch viewModel.contentState {
         case let .productTemplate(productTemplateViewModel):
             
-            ProductTemplateView(viewModel: productTemplateViewModel, isEditable: $viewModel.isEditable)
+            ProductTemplateView(
+                viewModel: productTemplateViewModel,
+                isEditable: .init(
+                    get: { viewModel.isEditable },
+                    set: { viewModel.updateEditable(update: .value($0)) }
+                )
+            )
                 .padding(.horizontal, 12)
                 .padding(.vertical, 22)
                 .onTapGesture {
