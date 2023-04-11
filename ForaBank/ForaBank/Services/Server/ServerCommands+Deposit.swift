@@ -17,7 +17,7 @@ extension ServerCommands {
         struct GetDepositInfo: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/getDepositInfo"
+            let endpoint = "/rest/getDepositInfo_V2"
             let method: ServerCommandMethod = .post
             let payload: Payload?
             
