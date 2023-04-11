@@ -195,24 +195,11 @@ class InfoProductViewModel: ObservableObject {
                             list.append(.init(title: "Сумма первоначального размещения", subtitle: initialAmount))
                         }
                         list.append(.init(title: "Дата открытия", subtitle: dateFormatter.string(from: data.dateOpen)))
-                        
-                        if let dateEnd = data.dateEnd {
-                            
-                            list.append(.init(title: "Дата закрытия", subtitle: dateFormatter.string(from: dateEnd)))
-                        }
-                        
-                        if let termDay = data.termDay {
-                            
-                            list.append(.init(title: "Срок вклада", subtitle: termDay))
-                        }
-                        
+                        list.append(.init(title: "Дата закрытия", subtitle: dateFormatter.string(from: data.dateEnd)))
+                        list.append(.init(title: "Срок вклада", subtitle: data.termDay))
                         list.append(.init(title: "Ставка по вкладу", subtitle: "\(data.interestRate)%"))
-
-                        if let dateNext = data.dateNext {
-
-                            list.append(.init(title: "Дата следующего начисления процентов", subtitle: dateFormatter.string(from: dateNext)))
-
-                        }
+                        list.append(.init(title: "Дата следующего начисления процентов", subtitle: dateFormatter.string(from: data.dateNext)))
+                        
                         if let sumPayInt = model.amountFormatted(amount: data.sumPayInt, currencyCode: product.currency, style: .clipped) {
                             
                             list.append(.init(title: "Сумма выплаченных процентов всего", subtitle: sumPayInt))

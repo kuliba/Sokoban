@@ -1,18 +1,19 @@
 {
+  "statusCode": 0,
+  "errorMessage": "string",
   "data": {
-    "balance": 1000,
-    "dateEnd": 10000184511,
-    "dateNext": 10000184511,
-    "dateOpen": 10000184511,
     "id": 10000184511,
     "initialAmount": 1000,
+    "termDay": "540",
     "interestRate": 10000184511,
-    "sumAccInt": 1000,
+    "sumPayInt": 1000,
     "sumCredit": 1000,
     "sumDebit": 1000,
-    "sumPayInt": 1000,
-    "termDay": "540"
-  },
-  "errorMessage": "string",
-  "statusCode": 0
+    "sumAccInt": 1000,
+    "balance": 1000,
+    "sumPayPrc": 1000,
+    "dateOpen": "2022-01-20T11:52:41.707Z",
+    "dateEnd": "2022-01-20T11:52:41.707Z",
+    "dateNext": "2022-01-20T11:52:41.707Z"
+  }
 }
