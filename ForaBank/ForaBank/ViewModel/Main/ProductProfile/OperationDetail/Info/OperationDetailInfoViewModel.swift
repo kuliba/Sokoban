@@ -810,7 +810,7 @@ extension OperationDetailInfoViewModel {
             productId: payerProductId,
             productNumber: payerProductNumber)
         
-        let balanceViewModel = makePropertyViewModel(
+        let amountViewModel = makePropertyViewModel(
             productId: payerProductId,
             operation: operation,
             iconType: .balance)
@@ -853,6 +853,7 @@ extension OperationDetailInfoViewModel {
         let payeeBankViewModel = makeBankViewModel(
             operation: operation)
         
+        
         switch operation.transferEnum {
         
         case .sfp:
@@ -861,7 +862,7 @@ extension OperationDetailInfoViewModel {
                 payeeNumberPhone,
                 payeeNameViewModel,
                 payeeBankViewModel,
-                balanceViewModel,
+                amountViewModel,
                 commissionViewModel,
                 payerViewModel,
                 purposeViewModel,
@@ -874,7 +875,7 @@ extension OperationDetailInfoViewModel {
             return [
                 payeeViewModel,
                 payerViewModel,
-                balanceViewModel,
+                amountViewModel,
                 commissionViewModel,
                 purposeViewModel,
                 dateViewModel,
@@ -884,7 +885,7 @@ extension OperationDetailInfoViewModel {
             
             return [
                 payerViewModel,
-                balanceViewModel,
+                amountViewModel,
                 commissionViewModel,
                 payeeViewModel,
                 dateViewModel].compactMap {$0}
@@ -895,7 +896,7 @@ extension OperationDetailInfoViewModel {
                 payeeNumberPhone,
                 payeeNameViewModel,
                 payeeBankViewModel,
-                balanceViewModel,
+                amountViewModel,
                 commissionViewModel,
                 payerViewModel,
                 purposeViewModel,
@@ -967,7 +968,7 @@ extension OperationDetailInfoViewModel {
                    countryViewModel,
                    payeeBankViewModel,
                    commissionViewModel,
-                   balanceViewModel,
+                   amountViewModel,
                    methodViewModel,
                    payerViewModel,
                    purposeViewModel,
@@ -980,7 +981,7 @@ extension OperationDetailInfoViewModel {
                    payeeNumberPhone,
                    payeeNameViewModel,
                    payeeBankViewModel,
-                   balanceViewModel,
+                   amountViewModel,
                    commissionViewModel,
                    payerViewModel,
                    purposeViewModel,
@@ -988,23 +989,53 @@ extension OperationDetailInfoViewModel {
                ].compactMap {$0}
            }
             
-        case .contactAddressless:
-            return [
-                payeeNumberPhone,
-                payeeNameViewModel,
-                payeeBankViewModel,
-                balanceViewModel,
-                commissionViewModel,
-                payerViewModel,
-                purposeViewModel,
-                dateViewModel
-            ].compactMap {$0}
+        case .external:
+            switch operation.externalTransferType {
+            case .entity:
+                return [
+                    payeeNameViewModel,
+                    payeeViewModel,
+                    payeeBankViewModel,
+                    amountViewModel,
+                    commissionViewModel,
+                    payerViewModel,
+                    purposeViewModel,
+                    dateViewModel].compactMap { $0 }
+
+            default:
+                var cells = [DefaultCellViewModel?]()
+                cells.append(contentsOf: [
+                    payeeNameViewModel,
+                    payeeViewModel
+                ])
+                
+                if let payeeINN = operation.payeeINN {
+                    
+                    cells.append(PropertyCellViewModel(title: "ИНН получателя", iconType: .nil, value: payeeINN))
+                }
+                
+                if let payeeKPP = operation.payeeKPP {
+                    
+                    cells.append(PropertyCellViewModel(title: "КПП получателя", iconType: .nil, value: payeeKPP))
+                }
+
+                cells.append(contentsOf: [
+                    payeeBankViewModel,
+                    amountViewModel,
+                    commissionViewModel,
+                    payerViewModel,
+                    purposeViewModel,
+                    dateViewModel
+                ])
+                
+                return cells.compactMap { $0 }
+            }
             
         default:
             
             return [
                 payerViewModel,
-                balanceViewModel,
+                amountViewModel,
                 commissionViewModel,
                 payeeViewModel,
                 dateViewModel].compactMap {$0}
