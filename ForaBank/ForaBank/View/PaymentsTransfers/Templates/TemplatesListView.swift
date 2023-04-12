@@ -10,6 +10,7 @@ import SwiftUI
 struct TemplatesListView: View {
     
     @ObservedObject var viewModel: TemplatesListViewModel
+    @State var searchText: String = ""
     
     @available(iOS 14.0, *)
     var columns: [GridItem] {
@@ -45,6 +46,7 @@ struct TemplatesListView: View {
 
                         ScrollView {
                             if #available(iOS 14, *) {
+                                
                                 LazyVGrid(columns: columns, spacing: 16) {
                                     ForEach(viewModel.items) { itemViewModel in
                                         
@@ -61,7 +63,7 @@ struct TemplatesListView: View {
                                 .padding(.horizontal, 20)
                                 .padding(.top, 24)
                                 
-                            } else {
+                            } else { //iOS <14
                                 
                                 VStack(spacing: 12) {
                                     ForEach(viewModel.items) { itemViewModel in
@@ -79,6 +81,7 @@ struct TemplatesListView: View {
                                 .padding(.top, 24)
                             }
                         } //ScrollView
+                        
                         
                         if let deletePannelViewModel = viewModel.deletePannel {
                             
@@ -170,25 +173,45 @@ struct TemplatesListView: View {
         .transition(.identity)
         .navigationBarTitle(Text(viewModel.title), displayMode: .inline)
         .navigationBarBackButtonHidden(true)
-        .navigationBarItems(
-            leading: Button(action: viewModel.navButtonBack.action, label: {
-                viewModel.navButtonBack.icon
-                    .renderingMode(.template)
-                    .foregroundColor(.iconBlack)
-            }),
-            trailing:
-                HStack {
-                    ForEach(viewModel.navButtonsRight) { element in
-                        Button {
-                            element.action()
-                        } label: {
-                            element.icon
-                                .renderingMode(.template)
-                                .foregroundColor(Color.init(hex: "1C1C1C"))
-                        }
-                    }
-                }
-    )
+        
+//        .navigationBarItems(
+//            leading:
+//
+//
+//
+//                    Button(action: viewModel.navButtonBack.action, label: {
+//                        viewModel.navButtonBack.icon
+//                            .renderingMode(.template)
+//                            .foregroundColor(.iconBlack)
+//                    })
+//
+//
+//
+//             ,
+//            trailing:
+//                HStack {
+//                    ForEach(viewModel.navButtonsRight) { element in
+//                        Button {
+//                            element.action()
+//                        } label: {
+//                            element.icon
+//                                .renderingMode(.template)
+//                                .foregroundColor(Color.init(hex: "1C1C1C"))
+//                        }
+//                    }
+//                }
+//    )
+        .toolbar {
+
+            TemplatesListToolbar(state: viewModel.navBarState,
+                                 searchText: $searchText)
+        }
+ 
+
+        .onChange(of: searchText, perform: { newValue in
+            print("mdy \(newValue)")
+        })
+
         .bottomSheet(item: $viewModel.sheet, content: { sheet in
             
             switch sheet.type {
@@ -207,6 +230,68 @@ struct TemplatesListView: View {
 //MARK: - Views
 
 extension TemplatesListView {
+    
+    struct TemplatesListToolbar: ToolbarContent {
+        
+        let state: TemplatesListViewModel.NavBarState
+        @Binding var searchText: String
+
+        var body: some ToolbarContent {
+               
+                ToolbarItem(placement: .navigationBarLeading) {
+
+                    if case .regular(let viewModel) = state {
+                        
+                        HStack {
+                            Button(action: {},
+                                   label: {
+                                viewModel.backButton.icon
+                                    .renderingMode(.template)
+                                    .foregroundColor(.iconBlack)
+                            })
+                            Spacer()
+                            Text("d")
+                            Menu {
+                                
+                                Button(action: {}) {
+                                    Label("Create a file", systemImage: "doc")
+                                }
+                                
+                                Button(action: {}) {
+                                    Label("Create a folder", systemImage: "folder")
+                                }
+                                
+                                Button(action: {}) {
+                                    Label("Remove old files", systemImage: "trash")
+                                        .foregroundColor(.red)
+                                }
+                            }
+                        label: {
+                            Label("Add", systemImage: "plus")
+                        }
+                        }
+                        
+                    }
+                }
+                
+                ToolbarItem(placement: .principal) {
+                    
+                    if case .search(let viewModel) = state {
+                        
+                        HStack {
+                            Image(systemName: "sun.min.fill")
+                            
+                            TextField("Имя шаблона", text: $searchText)
+                            
+                            Button(action: {}, label: { Image.ic24Close })
+                            Button("Отмена", action: {} )
+                        }
+                    }
+                }
+            
+
+        }
+    }
     
     struct OnboardingView: View {
         
@@ -1028,6 +1113,23 @@ struct TemplatesListView_Previews: PreviewProvider {
             }
             
             TemplatesListView.OnboardingView(viewModel: .sample)
+        }
+    }
+}
+
+struct ToolbarFindView: View {
+    
+    @State var searchString: String = ""
+    
+    var body: some View {
+       
+        HStack {
+            Image(systemName: "sun.min.fill")
+            
+            TextField("Имя шаблона", text: $searchString)
+            
+            
+            Text("Title").font(.headline)
         }
     }
 }

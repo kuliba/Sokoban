@@ -18,6 +18,10 @@ class TemplatesListViewModel: ObservableObject {
     @Published var title: String
     let navButtonBack: NavigationBarButtonViewModel
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
+    
+    @Published var navBarState: NavBarState
+    
+    
     @Published var categorySelector: OptionSelectorView.ViewModel?
     @Published var items: [ItemViewModel]
     @Published var onboarding: OnboardingViewModel?
@@ -38,8 +42,10 @@ class TemplatesListViewModel: ObservableObject {
         self.state = .normal
         self.style = model.paymentTemplatesViewSettings.value.style
         self.title = "Шаблоны"
+        self.navBarState = .regular(.init(backButton: .init(icon: .ic24ChevronLeft, action: dismissAction)))
         self.navButtonBack = .init(icon: .ic24ChevronLeft, action: dismissAction)
         self.navButtonsRight = []
+       
         self.items = []
         self.model = model
         self.model.action.send(ModelAction.PaymentTemplate.List.Requested())
@@ -47,12 +53,13 @@ class TemplatesListViewModel: ObservableObject {
         bind()
     }
     
-    internal init(state: State, style: Style, title: String, navButtonBack: NavigationBarButtonViewModel, navButtonsRight: [NavigationBarButtonViewModel], categorySelector: OptionSelectorView.ViewModel, items: [ItemViewModel], contextMenu: ContextMenuViewModel?, deletePannel: DeletePannelViewModel?, model: Model) {
+    internal init(state: State, style: Style, title: String, navBarState: NavBarState, navButtonBack: NavigationBarButtonViewModel, navButtonsRight: [NavigationBarButtonViewModel], categorySelector: OptionSelectorView.ViewModel, items: [ItemViewModel], contextMenu: ContextMenuViewModel?, deletePannel: DeletePannelViewModel?, model: Model) {
         
         self.state = state
         self.style = style
         self.title = title
         self.navButtonBack = navButtonBack
+        self.navBarState = navBarState
         self.navButtonsRight = navButtonsRight
         self.categorySelector = categorySelector
         self.items = items
@@ -344,6 +351,29 @@ private extension TemplatesListViewModel {
             }.store(in: &bindings)
     }
 }
+
+//MARK: - ViewModels
+
+extension TemplatesListViewModel {
+    
+    enum NavBarState {
+        case regular(RegularNavBarViewModel)
+        case search(SearchNavBarViewModel)
+    }
+    
+    class RegularNavBarViewModel {
+        let backButton: NavigationBarButtonViewModel
+        
+        init(backButton: NavigationBarButtonViewModel) {
+            self.backButton = backButton
+        }
+    }
+    
+    class SearchNavBarViewModel {
+        
+    }
+}
+
 
 //MARK: - Settings
 

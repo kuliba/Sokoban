@@ -15,6 +15,7 @@ extension TemplatesListViewModel {
             state: .normal,
             style: .list,
             title: "Шаблоны",
+            navBarState: .regular(.init(backButton: .init(icon: .ic24ChevronLeft, action: {}))),
             navButtonBack: .init(icon: .ic24ChevronLeft, action: {}),
             navButtonsRight: [
                 .init(icon: Image("searchBarIcon"), action: {
@@ -76,6 +77,7 @@ extension TemplatesListViewModel {
             state: .normal,
             style: .tiles,
             title: "Шаблоны",
+            navBarState: .regular(.init(backButton: .init(icon: .ic24ChevronLeft, action: {}))),
             navButtonBack: .init(icon: .ic24ChevronLeft, action: {}),
             navButtonsRight: [
                 .init(icon: Image("more-horizontal"), action: {
@@ -131,6 +133,7 @@ extension TemplatesListViewModel {
             state: .select,
             style: .tiles,
             title: "Выбрать объекты",
+            navBarState: .regular(.init(backButton: .init(icon: .ic24ChevronLeft, action: {}))),
             navButtonBack: .init(icon: .ic24ChevronLeft, action: {}),
             navButtonsRight: [
                 .init(icon: Image("Operation Details Close Button Icon"), action: {
