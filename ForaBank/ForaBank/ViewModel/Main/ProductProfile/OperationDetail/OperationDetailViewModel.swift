@@ -111,9 +111,8 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         
                         self.update(with: statement, product: product, operationDetail: details)
                         
-                    default:
-                        break
-               
+                    case let .failure(error):
+                        LoggerAgent.shared.log(level: .error, category: .ui, message: "ModelAction.Operation.Detail.Response action error: \(error)")
                     }
                     
                 default: break
