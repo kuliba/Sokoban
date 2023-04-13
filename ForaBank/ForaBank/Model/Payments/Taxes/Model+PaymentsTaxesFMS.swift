@@ -43,7 +43,7 @@ extension Model {
                 Payments.Parameter(id: "a3_dutyCategory_1_1", value: nil),
                 title: "Категория платежа",
                 placeholder: "Начните ввод для поиска",
-                options: fmsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) })
+                options: fmsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: .image(ImageData(with: $0.svgImage) ?? .parameterSample)) })
             
             return .init(parameters: [operatorParameter, headerParameter, productParameter, categoryParameter], front: .init(visible: [headerParameter.id, categoryParameter.id], isCompleted: false), back: .init(stage: .remote(.start), required: [categoryParameter.id], processed: nil))
             

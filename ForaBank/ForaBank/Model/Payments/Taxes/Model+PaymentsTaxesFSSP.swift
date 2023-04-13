@@ -63,7 +63,7 @@ extension Model {
                     Payments.Parameter(id: "a3_docName_1_2", value: nil),
                     title: "Тип документа",
                     placeholder: "Начните ввод для поиска",
-                    options: fsspDocumentList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) })
+                    options: fsspDocumentList.map{ .init(id: $0.value, name: $0.text, icon: .image(ImageData(with: $0.svgImage) ?? .parameterSample)) })
                 
                 return .init(parameters: [documentParameter], front: .init(visible: [documentParameter.id], isCompleted: false), back: .init(stage: .remote(.start), required: [documentParameter.id], processed: nil))
                 

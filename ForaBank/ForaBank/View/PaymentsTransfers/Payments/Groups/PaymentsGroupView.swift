@@ -269,7 +269,7 @@ extension PaymentsGroupViewModel {
     
     static let sampleSingleMessage = PaymentsGroupViewModel(items: [PaymentsMessageView.ViewModel.sample])
     
-    static let sampleSingleSelect = PaymentsGroupViewModel(items: [PaymentsSelectView.ViewModel.sample])
+    static let sampleSingleSelect = PaymentsGroupViewModel(items: [PaymentsSelectView.ViewModel.selectedParameter])
     
     static let sampleSingleSelectBank = PaymentsGroupViewModel(items: [PaymentsSelectBankView.ViewModel.sample])
     

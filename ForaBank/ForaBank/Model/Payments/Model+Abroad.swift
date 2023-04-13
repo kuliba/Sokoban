@@ -446,8 +446,8 @@ extension Model {
                     let command = ServerCommands.DictionaryController.GetDictionaryAnywayOperators(token: token, code: dataDictionary, codeParent: dataDictionaryРarent)
                     let result = try await serverAgent.executeCommand(command: command)
                     
-                    guard let list = result.list.first?.dictionaryList.map({Payments.ParameterSelect.Option(id: $0.id, name: $0.name, icon: nil)}) else { return nil }
-                    return Payments.ParameterSelect(.init(id: parameterData.id, value: nil), icon: .parameterLocation, title: parameterData.title, placeholder: "Начните ввод для поиска", options: list, group: .init(id: "top", type: .regular))
+                    guard let list = result.list.first?.dictionaryList.map({Payments.ParameterSelect.Option(id: $0.id, name: $0.name)}) else { return nil }
+                    return Payments.ParameterSelect(.init(id: parameterData.id, value: nil), icon: .name("ic24MapPin"), title: parameterData.title, placeholder: "Начните ввод для поиска", options: list, group: .init(id: "top", type: .regular))
                     
                 } else {
                     
@@ -464,8 +464,8 @@ extension Model {
                     let command = ServerCommands.DictionaryController.GetDictionaryAnywayOperators(token: token, code: dataDictionary, codeParent: dataDictionaryРarent)
                     let result = try await serverAgent.executeCommand(command: command)
                     
-                    guard let list = result.list.first?.dictionaryList.map({Payments.ParameterSelect.Option(id: $0.id, name: $0.name, subname: $0.subname, timeWork: $0.timeWork, currency: $0.codeValut, icon: nil)}) else { return nil }
-                    return Payments.ParameterSelect(.init(id: parameterData.id, value: parameterData.value), icon: .init(named: "ic24Bank"), title: parameterData.title, placeholder: "Начните ввод для поиска", options: list, group: .init(id: "top", type: .regular))
+                    guard let list = result.list.first?.dictionaryList.map({Payments.ParameterSelect.Option(id: $0.id, name: $0.name, subname: $0.subname, timeWork: $0.timeWork, currenciesData: $0.codeValut)}) else { return nil }
+                    return Payments.ParameterSelect(.init(id: parameterData.id, value: parameterData.value), icon: .name("ic24Bank"), title: parameterData.title, placeholder: "Начните ввод для поиска", options: list, group: .init(id: "top", type: .regular))
                     
                 } else {
                     
