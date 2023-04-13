@@ -201,7 +201,7 @@ extension Payments {
     struct ParameterSelect: PaymentsParameterRepresentable {
         
         let parameter: Parameter
-        let icon: ImageData?
+        let icon: Icon?
         let title: String
         let placeholder: String
         let options: [Option]
@@ -209,7 +209,7 @@ extension Payments {
         let description: String?
         let group: Payments.Parameter.Group?
         
-        init(_ parameter: Parameter, icon: ImageData? = nil, title: String, placeholder: String, options: [Option], isEditable: Bool = true, description: String? = nil, group: Payments.Parameter.Group? = nil) {
+        init(_ parameter: Parameter, icon: Icon? = nil, title: String, placeholder: String, options: [Option], isEditable: Bool = true, description: String? = nil, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
             self.icon = icon
@@ -226,23 +226,41 @@ extension Payments {
             ParameterSelect(.init(id: parameter.id, value: value), icon: icon, title: title, placeholder: placeholder, options: options, isEditable: isEditable, description: description, group: group)
         }
         
+        enum Icon {
+            
+            case image(ImageData)
+            case name(String)
+        }
+        
         struct Option: Identifiable {
             
             let id: String
             let name: String
             let subname: String?
             let timeWork: String?
-            let currency: String?
-            let icon: ImageData?
+            let currencies: [String]?
+            let icon: Icon
             
-            init(id: String, name: String, subname: String? = nil, timeWork: String? = nil, currency: String? = nil, icon: ImageData?) {
+            init(id: String, name: String, subname: String? = nil, timeWork: String? = nil, currencies: [String]? = nil, icon: Icon = .circle) {
                 
                 self.id = id
                 self.name = name
                 self.subname = subname
                 self.timeWork = timeWork
-                self.currency = currency
+                self.currencies = currencies
                 self.icon = icon
+            }
+            
+            init(id: String, name: String, subname: String? = nil, timeWork: String? = nil, currenciesData: String?, icon: Icon = .circle) {
+                
+                let currencies = currenciesData?.components(separatedBy: ";").dropLast().map { $0 }
+                self.init(id: id, name: name, subname: subname, timeWork: timeWork, currencies: currencies, icon: icon)
+            }
+            
+            enum Icon {
+                
+                case image(ImageData)
+                case circle
             }
         }
     }

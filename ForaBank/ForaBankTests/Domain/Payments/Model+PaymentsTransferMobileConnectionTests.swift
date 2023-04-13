@@ -21,7 +21,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         let payload: [DaDataPhoneData] = [.iFora4285]
         
         XCTAssertThrowsError(
-            try parameters.makeTransferPayload(for: payload, currency: "RUB", operatorID: { $0 })
+            try parameters.makeTransferPayload(for: payload, currencies: "RUB", operatorID: { $0 })
         ) {  error in
             XCTAssertEqual(error as? MCError, .init("Expected ParameterAmount."))
         }
@@ -33,7 +33,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         let payload: [DaDataPhoneData] = [.iFora4285]
         
         XCTAssertThrowsError(
-            try parameters.makeTransferPayload(for: payload, currency: "RUB", operatorID: { $0 })
+            try parameters.makeTransferPayload(for: payload, currencies: "RUB", operatorID: { $0 })
         ) {  error in
             XCTAssertEqual(error as? MCError, .init("Expected ParameterProduct."))
         }
@@ -45,7 +45,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         let payload: [DaDataPhoneData] = [.iFora4285]
         
         XCTAssertThrowsError(
-            try parameters.makeTransferPayload(for: payload, currency: "RUB", operatorID: { $0 })
+            try parameters.makeTransferPayload(for: payload, currencies: "RUB", operatorID: { $0 })
         ) {  error in
             XCTAssertEqual(error as? MCError, .init("Expected ParameterAmount."))
         }
@@ -59,7 +59,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         let payload: [DaDataPhoneData] = []
         
         XCTAssertThrowsError(
-            try parameters.makeTransferPayload(for: payload, currency: "RUB", operatorID: { $0 })
+            try parameters.makeTransferPayload(for: payload, currencies: "RUB", operatorID: { $0 })
         ) {  error in
             XCTAssertEqual(error as? MCError, .init("Payload expected to be non empty."))
         }
@@ -73,7 +73,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         let payload: [DaDataPhoneData] = [.iFora4285]
         
         XCTAssertThrowsError(
-            try parameters.makeTransferPayload(for: payload, currency: "RUB", operatorID: { _ in nil })
+            try parameters.makeTransferPayload(for: payload, currencies: "RUB", operatorID: { _ in nil })
         ) {  error in
             XCTAssertEqual(error as? MCError, .init("Expected to have operator in operator dictionary."))
         }
@@ -86,7 +86,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         ]
         let payload: [DaDataPhoneData] = [.iFora4285]
         
-        let transferPayload = try parameters.makeTransferPayload(for: payload, currency: "RUB", operatorID: { $0 })
+        let transferPayload = try parameters.makeTransferPayload(for: payload, currencies: "RUB", operatorID: { $0 })
         
         XCTAssertEqual(transferPayload.amount, 99.0)
         XCTAssertEqual(transferPayload.check, false)
@@ -111,7 +111,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         ]
         let payload: [DaDataPhoneData] = [.iFora4286]
         
-        let transferPayload = try parameters.makeTransferPayload(for: payload, currency: "RUB", operatorID: { $0 })
+        let transferPayload = try parameters.makeTransferPayload(for: payload, currencies: "RUB", operatorID: { $0 })
         
         XCTAssertEqual(transferPayload.amount, 99.0)
         XCTAssertEqual(transferPayload.check, false)

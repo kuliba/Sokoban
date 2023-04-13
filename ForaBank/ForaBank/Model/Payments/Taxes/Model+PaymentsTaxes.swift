@@ -18,10 +18,10 @@ extension Model {
             }
             return Payments.ParameterSelect(
                 .init(id: parameterData.id, value: parameterData.value),
-                icon: parameterData.iconData ?? .parameterSample,
+                icon: .image(parameterData.iconData ?? .parameterSample),
                 title: parameterData.title,
                 placeholder: "Начните ввод для поиска",
-                options: options.map({ .init(id: $0.id, name: $0.name, icon: nil)}))
+                options: options.map({ .init(id: $0.id, name: $0.name)}))
             
         case "a3_INN_4_1", "a3_docValue_4_2":
             let validator = Payments.Validation.RulesSystem(rules: [
@@ -60,10 +60,10 @@ extension Model {
             }
             return Payments.ParameterSelect(
                 Payments.Parameter(id: parameterData.id, value: parameterData.value),
-                icon: parameterData.iconData ?? .parameterSample,
+                icon: .image(parameterData.iconData ?? .parameterSample),
                 title: parameterData.title,
                 placeholder: "Начните ввод для поиска",
-                options: options.map({.init(id: $0.id, name: $0.name, icon: nil)}))
+                options: options.map({.init(id: $0.id, name: $0.name)}))
             
         case "a3_BillNumber_1_1":
             let validator = Payments.Validation.RulesSystem(rules: [

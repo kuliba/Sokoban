@@ -62,7 +62,7 @@ extension Model {
                     Payments.Parameter(id: categoryParameterId, value: nil),
                     title: "Категория платежа",
                     placeholder: "Начните ввод для поиска",
-                    options: fnsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample)})
+                    options: fnsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: .image(ImageData(with: $0.svgImage) ?? .parameterSample))})
                 
                 let divisionParameterId = "a3_divisionSelect_2_1"
                 guard let anywayOperator = dictionaryAnywayOperator(for: operatorParameterValue),
@@ -76,10 +76,10 @@ extension Model {
                 // division
                 let divisionParameter = Payments.ParameterSelect(
                     .init(id: divisionParameterId, value: divisionAnywayParameterValue),
-                    icon: divisionAnywayParameter.iconData,
+                    icon: .image(divisionAnywayParameter.iconData ?? .iconPlaceholder),
                     title: divisionAnywayParameter.title,
                     placeholder: "Начните ввод для поиска",
-                    options: divisionAnywayParameterOptions.map({ .init(id: $0.id, name: $0.name, icon: nil)}))
+                    options: divisionAnywayParameterOptions.map({ .init(id: $0.id, name: $0.name)}))
                 
                 return .init(parameters: [categoryParameter, divisionParameter], front: .init(visible: [categoryParameterId, divisionParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [categoryParameterId, divisionParameterId], processed: nil))
                 

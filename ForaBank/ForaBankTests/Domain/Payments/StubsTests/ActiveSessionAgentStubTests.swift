@@ -14,14 +14,14 @@ final class ActiveSessionAgentStubTests: XCTestCase {
     func test_init() {
         
         let sut = ActiveSessionAgentStub()
-        let state: SessionState = sut.sessionState.value
+        let state_: SessionState = sut.sessionState.value
         
-        switch state {
+        switch state_ {
         case .active:
             break
             
         default:
-            XCTFail("Expected active state, got \(state) instead.")
+            XCTFail("Expected active state, got \(state_) instead.")
         }
     }
 }

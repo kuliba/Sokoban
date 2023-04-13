@@ -173,7 +173,7 @@ extension PaymentsOperationViewModel {
         
         let topItems = [PaymentSelectDropDownView.ViewModel.sample]
         
-        let contentItems = [PaymentsSelectView.ViewModel.sample, PaymentsInfoView.ViewModel.sample,  PaymentsProductView.ViewModel.sample]
+        let contentItems = [PaymentsSelectView.ViewModel.selectedParameter, PaymentsInfoView.ViewModel.sample,  PaymentsProductView.ViewModel.sample]
         
         let bottomItems = [PaymentsContinueButtonView.ViewModel.sampleParam]
         
@@ -189,7 +189,7 @@ extension PaymentsOperationViewModel {
         
         let topItems = [PaymentSelectDropDownView.ViewModel.sample]
         
-        let contentItems = [PaymentsSelectView.ViewModel.sample, PaymentsInfoView.ViewModel.sample,  PaymentsProductView.ViewModel.sample]
+        let contentItems = [PaymentsSelectView.ViewModel.selectedParameter, PaymentsInfoView.ViewModel.sample,  PaymentsProductView.ViewModel.sample]
         
         let bottomItems = [PaymentsAmountView.ViewModel.amountParameter]
         
