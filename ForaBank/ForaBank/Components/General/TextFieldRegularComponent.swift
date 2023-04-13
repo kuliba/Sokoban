@@ -47,9 +47,20 @@ extension TextFieldRegularView {
                 .assign(to: &$text)
         }
         
-        convenience init(text: String?, placeholder: String, style: Style, limit: Int?, regExp: String? = nil, isEnabled: Bool = true, textColor: Color = .textSecondary) {
+        convenience init(text: String?, placeholder: String, style: Style, limit: Int?, regExp: String? = nil, isEnabled: Bool = true, textColor: Color = .textSecondary, needCloseButton: Bool = false) {
             
-            let toolbar = ToolbarViewModel(doneButton: .init(isEnabled: true, action: {  UIApplication.shared.endEditing() }))
+            let closeButton: ToolbarViewModel.ButtonViewModel = .init(
+                isEnabled: true,
+                action: {  UIApplication.shared.endEditing() }
+            )
+            
+            let toolbar = ToolbarViewModel(
+                doneButton: .init(
+                    isEnabled: true,
+                    action: {  UIApplication.shared.endEditing() }
+                ),
+                closeButton: needCloseButton ? closeButton : nil
+            )
             
             self.init(text: text, isEnabled: isEnabled, isEditing: false, placeholder: placeholder, toolbar: toolbar, limit: limit, style: style, regExp: regExp, textColor: textColor)
         }

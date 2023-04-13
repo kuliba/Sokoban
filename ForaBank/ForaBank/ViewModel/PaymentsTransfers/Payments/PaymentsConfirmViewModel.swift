@@ -92,7 +92,7 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
                         return
                     }
                     
-                    codeItem.action.send(PaymentsParameterViewModelAction.Code.EnterredCodeIncorrect())
+                    codeItem.action.send(PaymentsParameterViewModelAction.Code.IncorrectCodeEntered())
                     
                 case _ as PaymentsOperationViewModelAction.Spinner.Show:
                     withAnimation {

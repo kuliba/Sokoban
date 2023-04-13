@@ -36,7 +36,7 @@ extension PaymentsCodeView {
             
             self.icon = parameterCode.icon.image ?? Image.ic24SmsCode
             self.description = parameterCode.title
-            self.textField = .init(text: parameterCode.parameter.value ?? "", placeholder: parameterCode.title, style: .number, limit: parameterCode.limit)
+            self.textField = .init(text: parameterCode.parameter.value ?? "", placeholder: parameterCode.title, style: .number, limit: parameterCode.limit, needCloseButton: true)
             self.editingState = .idle
             self.resendState = nil
             
@@ -52,56 +52,75 @@ extension PaymentsCodeView {
         
         private func bind() {
             
+            typealias CodeAction = PaymentsParameterViewModelAction.Code
+            
             action
+                .compactMap { $0 as? CodeAction.ResendDelayIsOver }
                 .receive(on: DispatchQueue.main)
-                .sink {[unowned self] action in
+                .sink { [unowned self] _ in
                     
-                    switch action {
-                    case _ as PaymentsParameterViewModelAction.Code.ResendDelayIsOver:
-                        withAnimation {
-                            
-                            resendState = .button(.init(action: { [weak self] in
+                    withAnimation {
+                        
+                        resendState = .button(.init(
+                            action: { [weak self] in
                                 
                                 self?.action.send(PaymentsParameterViewModelAction.Code.ResendButtonDidTapped())
-                            }))
-                        }
-                        
-                    case _ as PaymentsParameterViewModelAction.Code.ResendButtonDidTapped:
-                        guard let parameterInput = parameterCode else {
-                            return
-                        }
-
-                        withAnimation {
-                            
-                            resendState = .timer(.init(delay: parameterInput.timerDelay, completeAction: { [weak self] in
-                                
-                                self?.action.send(PaymentsParameterViewModelAction.Code.ResendDelayIsOver())
-                            }))
-                        }
-                        
-                    case _ as PaymentsParameterViewModelAction.Code.EnterredCodeIncorrect:
-                        guard let parameterInput = parameterCode else {
-                            return
-                        }
-                        
-                        withAnimation {
-                            
-                            editingState = .error(parameterInput.errorMessage)
-                        }
-                        
-                    case _ as PaymentsParameterViewModelAction.Code.ResendCodeDisabled:
-                        withAnimation {
-                            
-                            resendState = nil
-                        }
-                        
-
-                    default:
-                        break
+                            }
+                        ))
+                    }
+                }
+                .store(in: &bindings)
+            
+            action
+                .compactMap { $0 as? CodeAction.ResendButtonDidTapped }
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] _ in
+                    
+                    guard let parameterInput = parameterCode else {
+                        return
                     }
                     
-                }.store(in: &bindings)
-            
+                    withAnimation {
+                        
+                        resendState = .timer(.init(
+                            delay: parameterInput.timerDelay,
+                            completeAction: { [weak self] in
+                                
+                                self?.action.send(PaymentsParameterViewModelAction.Code.ResendDelayIsOver())
+                            }
+                        ))
+                    }
+                }
+                .store(in: &bindings)
+
+            action
+                .compactMap { $0 as? CodeAction.IncorrectCodeEntered }
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] _ in
+                    
+                    guard let parameterInput = parameterCode else {
+                        return
+                    }
+                    
+                    withAnimation {
+                        
+                        editingState = .error(parameterInput.errorMessage)
+                    }
+                }
+                .store(in: &bindings)
+
+            action
+                .compactMap { $0 as? CodeAction.ResendCodeDisabled }
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] _ in
+                    
+                    withAnimation {
+                        
+                        resendState = nil
+                    }
+                }
+                .store(in: &bindings)
+
             textField.$text
                 .dropFirst()
                 .receive(on: DispatchQueue.main)
@@ -144,7 +163,7 @@ extension PaymentsCodeView {
 
 extension PaymentsCodeView.ViewModel {
     
-    enum EditingState {
+    enum EditingState: Equatable {
         
         case idle
         case editing
@@ -218,7 +237,7 @@ extension PaymentsParameterViewModelAction {
         struct ResendDelayIsOver: Action {}
         struct ResendButtonDidTapped: Action {}
         struct ResendCodeDisabled: Action {}
-        struct EnterredCodeIncorrect: Action {}
+        struct IncorrectCodeEntered: Action {}
     }
 }
 
