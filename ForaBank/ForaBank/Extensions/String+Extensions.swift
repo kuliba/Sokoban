@@ -164,6 +164,37 @@ extension String {
     }
     
     var digits: String { components(separatedBy: CharacterSet.decimalDigits.inverted).joined() }
+    
+    func restricted(
+        withLimit limit: Int?,
+        forStyle style: TextFieldRegularView.ViewModel.Style
+    ) -> String {
+        
+        let filtered: String = {
+            switch style {
+            case .number:  return filter(\.isNumber)
+            case .default: return self
+            }
+        }()
+        
+        let limit = limit ?? count
+        return String(filtered.prefix(limit))
+    }
+    
+    func replacing(inRange: NSRange, with replacementText: String) -> String {
+        
+        guard inRange.lowerBound >= 0,
+              let rangeStart = index(startIndex, offsetBy: inRange.lowerBound, limitedBy: endIndex),
+              let rangeEnd = index(startIndex, offsetBy: inRange.upperBound, limitedBy: endIndex)
+        else {
+            return replacementText
+        }
+        
+        var updatedValue = self
+        updatedValue.replaceSubrange(rangeStart..<rangeEnd, with: replacementText)
+        
+        return updatedValue
+    }
 }
 
 enum StringHelperError: Error {
