@@ -385,11 +385,11 @@ extension PaymentsSelectCountryView.ViewModel {
         
         func updateFilteredItems(with value: String?) {
             
-            if let value = value, value != "" {
+            if let value = value?.lowercased(), value != "" {
                 
                 let updateItems = items.filter({ item in
                     
-                    if item.name.contained(in: [value]) {
+                    if item.name.lowercased().contained(in: [value]) {
                         return true
                     }
                     

@@ -17,7 +17,7 @@ extension Model {
             throw Payments.Error.notAuthorized
         }
         
-        let puref = try paymentsTransferAnywayPuref(parameters)
+        let puref = try paymentsTransferAnywayAbroadPuref(parameters)
         let payer = try paymentsTransferAnywayPayer(parameters)
         let amount = try paymentsTransferAnywayAmount(parameters)
         let currency = try paymentsTransferCurrencyAbroad(parameters)
@@ -201,5 +201,17 @@ extension Model {
             
             return product.currency
         }
+    }
+    
+    func paymentsTransferAnywayAbroadPuref(_ parameters: [PaymentsParameterRepresentable]) throws -> String {
+        
+        let operatorParameterId = Payments.Parameter.Identifier.countryDropDownList.rawValue
+        
+        guard let operatorParameterValue = parameters.first(where: { $0.parameter.id ==  operatorParameterId})?.value else {
+            
+            throw Payments.Error.missingParameter(operatorParameterId)
+        }
+        
+        return operatorParameterValue
     }
 }
