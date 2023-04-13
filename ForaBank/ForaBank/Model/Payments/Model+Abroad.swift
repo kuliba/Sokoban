@@ -359,34 +359,34 @@ extension Model {
                 var list: [Payments.ParameterSelectBank.Option] = []
                 
                 guard let imagesIds = result.list.first?.dictionaryList.compactMap({$0.md5hash}) else { return nil }
-                
+           
                 let commandImages = ServerCommands.DictionaryController.GetSvgImageList(token: token, payload: .init(md5HashList: imagesIds))
                 let images = try await serverAgent.executeCommand(command: commandImages)
-                
+
                 if let items = result.list.first?.dictionaryList {
-                    
+
                     for item in items {
-                        
-                        let image = images.svgImageList.first(where: {$0.md5hash == item.md5hash})
-                        
-                        if let imageData = image?.svgImage, let svgData = ImageData.init(with: imageData) {
-                            
-                            list.append(Payments.ParameterSelectBank.Option.init(id: item.id, name: item.name, subtitle: nil, icon: svgData))
+
+                        let image = images.svgImageList.first(where: { $0.md5hash == item.md5hash } )
+
+                        if let imageData = image?.svgImage {
+
+                            list.append(Payments.ParameterSelectBank.Option(id: item.id, name: item.name, subtitle: nil, icon: imageData, searchValue: item.name))
                         } else {
-                            
-                            list.append(Payments.ParameterSelectBank.Option.init(id: item.id, name: item.name, subtitle: nil, icon: .iconPlaceholder))
+
+                            list.append(Payments.ParameterSelectBank.Option(id: item.id, name: item.name, subtitle: nil, icon: nil, searchValue: item.name))
                         }
                     }
                 }
-                
+
                 let bankId = Payments.Parameter.Identifier.countryBank.rawValue
-                if let parameter = operation.parameters.first(where: {$0.id == "DIRECT_BANKS"}), let icon = list.first(where: {$0.name == parameter.value})?.icon {
-                    
-                    return Payments.ParameterSelectBank(.init(id: bankId, value: parameter.value), icon: icon, title: "Банк получателя", options: list, validator: .anyValue, limitator: nil, transferType: .abroad)
-                    
+                if let parameter = operation.parameters.first(where: { $0.id == "DIRECT_BANKS" } ) {
+
+                    return Payments.ParameterSelectBank(.init(id: bankId, value: parameter.value), icon: .iconPlaceholder, title: "Банк получателя", options: list, placeholder: "Начните ввод для поиска", validator: .anyValue, limitator: nil, transferType: .abroad, keyboardType: .number)
+
                 } else {
-                    
-                    return Payments.ParameterSelectBank(.init(id: bankId, value: nil), icon: .iconPlaceholder, title: "Банк получателя", options: list, validator: .anyValue, limitator: nil, transferType: .abroad)
+
+                    return Payments.ParameterSelectBank(.init(id: bankId, value: nil), icon: .iconPlaceholder, title: "Банк получателя", options: list, placeholder: "Начните ввод для поиска", validator: .anyValue, limitator: nil, transferType: .abroad, keyboardType: .number)
                 }
                 
             default:

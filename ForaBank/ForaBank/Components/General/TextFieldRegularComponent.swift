@@ -98,6 +98,16 @@ extension TextFieldRegularView.ViewModel {
         
         case `default`
         case number
+        
+        init(keyboardType: Payments.ParameterSelectBank.KeyboardType) {
+            
+            switch keyboardType {
+            case .normal:
+                self = .default
+            case .number:
+                self = .number
+            }
+        }
     }
 }
 

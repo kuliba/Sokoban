@@ -39,7 +39,15 @@ extension Model {
                 
                 return .init(rules: rules)
             }()
-            let bicBankParameter = Payments.ParameterSelectBank(.init(id: bicBankId, value: nil), icon: defaultInputIcon, title: "БИК банка получателя", options: [], validator: bicValidator, limitator: .init(limit: 9), transferType: .requisites)
+            
+            guard let banks = self.dictionaryFullBankInfoList() else {
+                throw Payments.Error.missingParameter(Payments.Parameter.Identifier.requisitsBankBic.rawValue)
+            }
+            
+            var options = banks.map({Payments.ParameterSelectBank.Option(id: $0.bic, name: $0.rusName ?? $0.fullName, subtitle: $0.bic, icon: $0.svgImage, type: .regular, searchValue: $0.bic)})
+            options.insert(.init(id: "", name: "См. все", subtitle: nil, icon: nil, type: .selectAll, searchValue: ""), at: 0)
+
+            let bicBankParameter = Payments.ParameterSelectBank(.init(id: bicBankId, value: nil), icon: defaultInputIcon, title: "БИК банка получателя", options: options, placeholder: "Начните ввод для поиска", validator: bicValidator, limitator: .init(limit: 9), transferType: .requisites, keyboardType: .number)
             
             //MARK: Account Number Parameter
             let accountNumberValidator: Payments.Validation.RulesSystem = {

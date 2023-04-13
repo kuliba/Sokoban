@@ -253,36 +253,55 @@ extension Payments {
         let icon: ImageData
         let title: String
         let options: [Option]
+        let placeholder: String
         let validator: Payments.Validation.RulesSystem
         let limitator: Payments.Limitation?
         let transferType: Payments.Operation.TransferType
+        let keyboardType: KeyboardType
         let isEditable: Bool
         let group: Payments.Parameter.Group?
 
-        init(_ parameter: Parameter, icon: ImageData, title: String, options: [Option], validator: Payments.Validation.RulesSystem, limitator: Payments.Limitation?, transferType: Payments.Operation.TransferType, isEditable: Bool = true, group: Payments.Parameter.Group? = nil) {
+        init(_ parameter: Parameter, icon: ImageData, title: String, options: [Option], placeholder: String, validator: Payments.Validation.RulesSystem, limitator: Payments.Limitation?, transferType: Payments.Operation.TransferType, keyboardType: KeyboardType, isEditable: Bool = true, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
             self.icon = icon
             self.title = title
+            self.options = options
+            self.placeholder = placeholder
             self.validator = validator
             self.limitator = limitator
-            self.options = options
             self.transferType = transferType
+            self.keyboardType = keyboardType
             self.isEditable = isEditable
             self.group = group
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterSelectBank(.init(id: parameter.id, value: value), icon: icon, title: title, options: options, validator: validator, limitator: limitator, transferType: transferType, isEditable: isEditable, group: group)
+            ParameterSelectBank(.init(id: parameter.id, value: value), icon: icon, title: title, options: options, placeholder: placeholder, validator: validator, limitator: limitator, transferType: transferType, keyboardType: keyboardType, isEditable: isEditable, group: group)
         }
         
         struct Option: Identifiable {
-            
+    
             let id: String
             let name: String
             let subtitle: String?
-            let icon: ImageData
+            let icon: SVGImageData?
+            var type: Kind = .regular
+            
+            let searchValue: String
+  
+            enum Kind {
+                
+                case regular
+                case selectAll
+            }
+        }
+        
+        enum KeyboardType {
+            
+            case normal
+            case number
         }
     }
     
