@@ -62,7 +62,7 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
                     {
                         if let memberId = bank.memberId {
                             
-                            self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bankId: memberId))
+                            self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bankId: bank.bic))
                         }
                     }
                 })
