@@ -16,6 +16,7 @@ extension TextFieldRegularView {
     class ViewModel: ObservableObject {
         
         @Published private(set) var text: String?
+        @Published private(set) var cursorPosition: Int?
         @Published private(set) var isEnabled: Bool
         
         private let changeText = PassthroughSubject<String?, Never>()
@@ -30,7 +31,7 @@ extension TextFieldRegularView {
         
         var hasValue: Bool { text != "" && text != nil }
         
-        init(text: String?, isEnabled: Bool, isEditing: Bool, placeholder: String, toolbar: ToolbarViewModel?, limit: Int?, style: Style = .default, regExp: String? = nil, textColor: Color) {
+        init(text: String?, cursorPosition: Int? = nil, isEnabled: Bool, isEditing: Bool, placeholder: String, toolbar: ToolbarViewModel?, limit: Int?, style: Style = .default, regExp: String? = nil, textColor: Color) {
             
             self.style = style
             self.text = text
@@ -57,6 +58,23 @@ extension TextFieldRegularView {
         func setText(to text: String?) {
             
             self.changeText.send(text)
+        }
+    }
+}
+
+extension TextFieldRegularView.ViewModel {
+    
+    func shouldChangeTextIn(range: NSRange, replacementText: String) {
+        
+        let replaced = text?.replacing(inRange: range, with: replacementText)
+        let cursorPosition = range.location + replacementText.count
+        let masked = TextFieldRegularView.updateMasked(value: text, inRange: range, update: replacementText, limit: limit, style: style)
+        
+        setText(to: masked)
+        
+        // TODO: find a way to set cursor position for masked strings
+        if replaced == masked {
+            self.cursorPosition = cursorPosition
         }
     }
 }
@@ -145,15 +163,16 @@ struct TextFieldRegularView: UIViewRepresentable {
         return textView
     }
     
-    func updateUIView(_ uiView: UITextView, context: Context) {
+    func updateUIView(_ textView: UITextView, context: Context) {
 
         if viewModel.hasValue {
 
-            uiView.textColor = viewModel.textColor.uiColor()
-            uiView.text = viewModel.text
+            textView.textColor = viewModel.textColor.uiColor()
+            textView.text = viewModel.text
+            textView.setCursorPosition(to: viewModel.cursorPosition)
         }
         
-        uiView.isUserInteractionEnabled = viewModel.isEnabled
+        textView.isUserInteractionEnabled = viewModel.isEnabled
     }
     
     func makeCoordinator() -> Coordinator {
@@ -209,51 +228,21 @@ struct TextFieldRegularView: UIViewRepresentable {
         
         func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
              
-            let masked = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: viewModel.limit, style: viewModel.style)
-            viewModel.setText(to: masked)
+            viewModel.shouldChangeTextIn(range: range, replacementText: text)
 
             return false
         }
     }
        
-    static func updateMasked(value: String?, inRange: NSRange, update: String, limit: Int?, style: ViewModel.Style) -> String? {
+    static func updateMasked(value: String?, inRange range: NSRange, update: String, limit: Int?, style: ViewModel.Style) -> String {
         
-        if let value = value {
-            
-            // replace value characters with filterred update characters in given range
-            var updatedValue = value
-            let rangeStart = value.index(value.startIndex, offsetBy: inRange.lowerBound)
-            let rangeEnd = value.index(value.startIndex, offsetBy: inRange.upperBound)
-            updatedValue.replaceSubrange(rangeStart..<rangeEnd, with: update)
-            
-            switch style {
-            case .number:
-                // check limit
-                if let limit = limit, limit > 0 {
-                    
-                    return String(updatedValue.prefix(limit)).filter({$0.isNumber})
-                    
-                } else {
-                    
-                    return updatedValue.filter({$0.isNumber})
-                }
-                
-            default:
-                // check limit
-                if let limit = limit, limit > 0 {
-                    
-                    return String(updatedValue.prefix(limit))
-                    
-                } else {
-                    
-                    return updatedValue
-                }
-            }
-            
-        } else {
-            
-            return update
+        guard let value = value else {
+            return update.restricted(withLimit: limit, forStyle: style)
         }
+        
+        return value
+            .replacing(inRange: range, with: update)
+            .restricted(withLimit: limit, forStyle: style)
     }
     
     private func makeToolbar(coordinator: Coordinator, toolbarViewModel: ToolbarViewModel) -> UIToolbar {
@@ -286,3 +275,18 @@ struct TextFieldRegularView: UIViewRepresentable {
     }
 }
 
+private extension UITextView {
+    
+    func setCursorPosition(to newPosition: Int?) {
+        
+        guard let newPosition = newPosition,
+              // only if there is a currently selected range
+              self.selectedTextRange != nil,
+              // and only if the new position is valid
+              let newPosition = self.position(from: self.beginningOfDocument, offset: newPosition)
+        else { return }
+        
+        // set the new position
+        self.selectedTextRange = self.textRange(from: newPosition, to: newPosition)
+    }
+}

@@ -270,7 +270,7 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
                 viewModel.text = result
                 
             case .abroad:
-                let result = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: nil, style: .default)?.filter({$0.isLetter})
+                let result = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: nil, style: .default).filter(\.isLetter)
                     
                 textView.text = result
                 viewModel.text = result
