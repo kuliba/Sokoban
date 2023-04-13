@@ -215,7 +215,7 @@ extension Model {
             return countryDeliveryCurrency.updated(value: amount.deliveryCurrency?.selectedCurrency.description)
             
         case Payments.Parameter.Identifier.product.rawValue:
-            guard var productParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterProduct else {
+            guard let productParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterProduct else {
                 return nil
             }
             
@@ -243,6 +243,31 @@ extension Model {
             var filter: ProductData.Filter = .init(rules: [])
             filter.rules.append(ProductData.Filter.DebitRule())
             filter.rules.append(ProductData.Filter.CurrencyRule(Set(currincies)))
+            
+            
+            var productCurriencies: Set<Currency> = .init()
+            
+            for rule in productParameter.filter.rules {
+            
+                if let rule = rule as? ProductData.Filter.CurrencyRule {
+                    
+                    productCurriencies = rule.allowed
+                }
+            }
+            
+            var filteredCurriencies: Set<Currency> = .init()
+            
+            for rule in filter.rules {
+            
+                if let rule = rule as? ProductData.Filter.CurrencyRule {
+                    
+                    filteredCurriencies = rule.allowed
+                }
+            }
+            
+            guard productCurriencies != filteredCurriencies else {
+                return nil
+            }
             
             if let product = self.firstProduct(with: filter),
                let productParameter = productParameter.updated(value: product.id.description) as? Payments.ParameterProduct {
