@@ -23,145 +23,138 @@ struct TemplatesListView: View {
     
     var body: some View {
         
-        Group {
+        ZStack {
             
-            if let onboardingViewModel = viewModel.onboarding {
+            Group {
                 
-                OnboardingView(viewModel: onboardingViewModel)
-                
-            } else {
-                
-                ZStack {
+                if let onboardingViewModel = viewModel.onboarding {
                     
-                    VStack {
+                    OnboardingView(viewModel: onboardingViewModel)
+                    
+                } else {
+                    
+                    ZStack {
                         
-                        if let categorySelectorViewModel = viewModel.categorySelector {
+                        VStack {
                             
-                            OptionSelectorView(viewModel: categorySelectorViewModel)
-                                .frame(height: 32)
-                                .padding(.top, 16)
-                                .padding(.horizontal, 20)
-                        }
-
-                        ScrollView {
-                            if #available(iOS 14, *) {
-                                LazyVGrid(columns: columns, spacing: 16) {
-                                    ForEach(viewModel.items) { itemViewModel in
-                                        
-                                        switch itemViewModel.kind {
-                                        case .regular:
-                                            TemplateItemView(viewModel: itemViewModel, style: $viewModel.style)
-
-                                        case .add:
-                                            AddNewItemView(viewModel: itemViewModel, style: $viewModel.style)
+                            if let categorySelectorViewModel = viewModel.categorySelector {
+                                
+                                OptionSelectorView(viewModel: categorySelectorViewModel)
+                                    .frame(height: 32)
+                                    .padding(.top, 16)
+                                    .padding(.horizontal, 20)
+                            }
+                            
+                            ScrollView {
+                                if #available(iOS 14, *) {
+                                    LazyVGrid(columns: columns, spacing: 16) {
+                                        ForEach(viewModel.items) { itemViewModel in
+                                            
+                                            switch itemViewModel.kind {
+                                            case .regular:
+                                                TemplateItemView(viewModel: itemViewModel, style: $viewModel.style)
+                                                
+                                            case .add:
+                                                AddNewItemView(viewModel: itemViewModel, style: $viewModel.style)
+                                            }
                                         }
                                     }
-                                }
-                                .padding(.horizontal, 20)
-                                .padding(.top, 24)
-                                
-                            } else {
-                                
-                                VStack(spacing: 12) {
-                                    ForEach(viewModel.items) { itemViewModel in
-                                       
-                                        switch itemViewModel.kind {
-                                        case .regular:
-                                            TemplateItemViewLegacy(viewModel: itemViewModel, style: $viewModel.style)
-
-                                        case .add:
-                                            AddNewItemViewLegacy(viewModel: itemViewModel, style: $viewModel.style)
+                                    .padding(.horizontal, 20)
+                                    .padding(.top, 24)
+                                    
+                                } else {
+                                    
+                                    VStack(spacing: 12) {
+                                        ForEach(viewModel.items) { itemViewModel in
+                                            
+                                            switch itemViewModel.kind {
+                                            case .regular:
+                                                TemplateItemViewLegacy(viewModel: itemViewModel, style: $viewModel.style)
+                                                
+                                            case .add:
+                                                AddNewItemViewLegacy(viewModel: itemViewModel, style: $viewModel.style)
+                                            }
                                         }
                                     }
+                                    .padding(.horizontal, 20)
+                                    .padding(.top, 24)
                                 }
-                                .padding(.horizontal, 20)
-                                .padding(.top, 24)
+                            }
+                            
+                            if let deletePannelViewModel = viewModel.deletePannel {
+                                
+                                DeletePannelView(viewModel: deletePannelViewModel)
                             }
                         }
                         
-                        if let deletePannelViewModel = viewModel.deletePannel {
+                        if let contextMenuViewModel = viewModel.contextMenu {
                             
-                            DeletePannelView(viewModel: deletePannelViewModel)
-                        }
-                    }
-                    
-                    if let contextMenuViewModel = viewModel.contextMenu {
-                        
-                        ZStack(alignment: .topTrailing) {
-                            
-                            Color.init(white: 1.0, opacity: 0.01)
-                                .onTapGesture {
-                                    
-                                    viewModel.closeContextMenu()
-                                }
-                            
-                            ContextMenuView(viewModel: contextMenuViewModel)
-                                .frame(width: 260)
+                            ZStack(alignment: .topTrailing) {
+                                
+                                Color.init(white: 1.0, opacity: 0.01)
+                                    .onTapGesture {
+                                        
+                                        viewModel.closeContextMenu()
+                                    }
+                                
+                                ContextMenuView(viewModel: contextMenuViewModel)
+                                    .frame(width: 260)
+                            }
                         }
                     }
                 }
-            }
-            
-            NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
-                if let link = viewModel.link  {
+                NavigationLink("", isActive: $viewModel.isLinkActive) {
                     
-                    switch link {
-                    case .byPhone(let paymentPhoneView):
-                        PaymentPhoneView(viewModel: paymentPhoneView)
-                            .navigationBarBackButtonHidden(true)
-                            .edgesIgnoringSafeArea(.all)
-
-                    case .sfp(let paymentPhoneView):
-                        PaymentPhoneView(viewModel: paymentPhoneView)
-                            .edgesIgnoringSafeArea(.all)
-                            .navigationBarBackButtonHidden(true)
-
-                    case .direct(let paymentTemplateData):
-                        CountryPaymentView(viewModel: paymentTemplateData)
-                            .edgesIgnoringSafeArea(.bottom)
-                            .navigationBarBackButtonHidden(true)
-
-                    case .contactAdressless(let paymentTemplateData):
-                        CountryPaymentView(viewModel: paymentTemplateData)
-                            .edgesIgnoringSafeArea(.bottom)
-                            .navigationBarBackButtonHidden(true)
-
-                    case .housingAndCommunalService(let internetTVDetailsViewModel):
-                        InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
-                            .edgesIgnoringSafeArea(.bottom)
-                            .navigationBarBackButtonHidden(true)
-
-                    case .mobile(let mobileViewModel):
-                        MobilePayView(viewModel: mobileViewModel)
-                            .edgesIgnoringSafeArea(.bottom)
-                            .navigationBarBackButtonHidden(true)
-
-                    case .internet(let internetTVDetailsViewModel):
-                        InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
-                            .edgesIgnoringSafeArea(.bottom)
-                            .navigationBarBackButtonHidden(true)
-
-                    case .transport(let avtodorDetailsViewModel):
-                        OperatorsView(viewModel: avtodorDetailsViewModel)
-                            .edgesIgnoringSafeArea(.bottom)
-                            .navigationBarBackButtonHidden(true)
-
-                    case .externalEntity(let transferByRequisitesView):
-                        TransferByRequisitesView(viewModel: transferByRequisitesView)
-                            .navigationBarBackButtonHidden(true)
-                            .edgesIgnoringSafeArea(.bottom)
-
-                    case .externalIndividual(let transferByRequisitesView):
-                        TransferByRequisitesView(viewModel: transferByRequisitesView)
-                            .navigationBarBackButtonHidden(true)
-                            .edgesIgnoringSafeArea(.bottom)
+                    if let link = viewModel.link  {
                         
-                    case .betweenTheir(let meToMeViewModel):
-                        MeToMeView(viewModel: meToMeViewModel)
-                            .navigationBarBackButtonHidden(true)
-                            .navigationBarHidden(false)
-                            .edgesIgnoringSafeArea(.bottom)
+                        switch link {
+                        case .byPhone(let paymentPhoneView):
+                            PaymentPhoneView(viewModel: paymentPhoneView)
+                                .edgesIgnoringSafeArea(.bottom)
+                            
+                        case .sfp(let paymentPhoneView):
+                            PaymentPhoneView(viewModel: paymentPhoneView)
+                                .edgesIgnoringSafeArea(.all)
+                                .navigationBarHidden(true)
+                                .navigationBarBackButtonHidden(true)
+                            
+                        case .direct(let paymentTemplateData):
+                            CountryPaymentView(viewModel: paymentTemplateData)
+                                .edgesIgnoringSafeArea(.bottom)
+                            
+                        case .contactAdressless(let paymentTemplateData):
+                            CountryPaymentView(viewModel: paymentTemplateData)
+                                .edgesIgnoringSafeArea(.bottom)
+                            
+                        case .housingAndCommunalService(let internetTVDetailsViewModel):
+                            InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
+                                .edgesIgnoringSafeArea(.bottom)
+                            
+                        case .mobile(let mobileViewModel):
+                            MobilePayView(viewModel: mobileViewModel)
+                                .edgesIgnoringSafeArea(.bottom)
+                            
+                        case .internet(let internetTVDetailsViewModel):
+                            InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
+                                .edgesIgnoringSafeArea(.bottom)
+                            
+                        case .transport(let avtodorDetailsViewModel):
+                            OperatorsView(viewModel: avtodorDetailsViewModel)
+                                .edgesIgnoringSafeArea(.bottom)
+                            
+                        case .externalEntity(let transferByRequisitesView):
+                            TransferByRequisitesView(viewModel: transferByRequisitesView)
+                                .edgesIgnoringSafeArea(.bottom)
+                            
+                        case .externalIndividual(let transferByRequisitesView):
+                            TransferByRequisitesView(viewModel: transferByRequisitesView)
+                                .edgesIgnoringSafeArea(.bottom)
+                            
+                        case .betweenTheir(let meToMeViewModel):
+                            MeToMeView(viewModel: meToMeViewModel)
+                                .edgesIgnoringSafeArea(.bottom)
+                        }
                     }
                 }
             }
