@@ -223,7 +223,6 @@ struct CountryPaymentView: UIViewControllerRepresentable {
         context.coordinator.parentObserver = vc.observe(\.parent, changeHandler: { vc, _ in
             
             vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
-            vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
             vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
             vc.parent?.navigationController?.navigationBar.isHidden = false
         })

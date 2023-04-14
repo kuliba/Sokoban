@@ -33,7 +33,6 @@ struct InternetTVDetailsView: UIViewControllerRepresentable {
             
             vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
             vc.parent?.navigationItem.title = vc.navigationItem.title
-            vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
             vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
         })
         

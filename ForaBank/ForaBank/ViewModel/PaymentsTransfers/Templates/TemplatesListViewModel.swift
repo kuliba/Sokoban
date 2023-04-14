@@ -192,11 +192,13 @@ private extension TemplatesListViewModel {
                         }, paymentTemplate: temp))
 
                     case .externalEntity:
-                        link = .externalEntity(.init(type: .template(temp), closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        link = .externalEntity(.init(type: .template(temp), closeAction: {[weak self] in
+                            self?.action.send(TemplatesListViewModelAction.CloseAction())
                         }))
 
                     case .externalIndividual:
-                        link = .externalIndividual(.init(type: .template(temp), closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        link = .externalIndividual(.init(type: .template(temp), closeAction: {[weak self] in
+                            self?.action.send(TemplatesListViewModelAction.CloseAction())
                         }))
 
                     default:

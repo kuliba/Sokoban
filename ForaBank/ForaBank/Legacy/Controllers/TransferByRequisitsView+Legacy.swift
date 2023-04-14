@@ -18,7 +18,6 @@ struct TransferByRequisitesView: UIViewControllerRepresentable {
         
         context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
             vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
-            vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
             vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
         })
         
