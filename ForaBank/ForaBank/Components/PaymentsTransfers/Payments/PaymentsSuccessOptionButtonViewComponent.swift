@@ -43,6 +43,7 @@ struct PaymentsSuccessOptionButtonView: View {
                 .font(.textBodySM12160())
                 .foregroundColor(.textSecondary)
                 .frame(height: 24)
+                .accessibilityIdentifier("SuccessPageOptionBtnTitle")
         }
     }
 }

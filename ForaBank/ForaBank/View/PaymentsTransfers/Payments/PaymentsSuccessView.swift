@@ -22,6 +22,7 @@ struct PaymentsSuccessView: View {
                     Spacer()
                     
                     StateIconView(viewModel: viewModel.iconType)
+                        .accessibilityIdentifier("SuccessPageIcon")
                 }
                 
                 Group {
@@ -41,6 +42,7 @@ struct PaymentsSuccessView: View {
                             .foregroundColor(.mainColorsBlack)
                             .multilineTextAlignment(.center)
                             .frame(width: 250)
+                            .accessibilityIdentifier("SuccessPageTitle")
                     }
                     
                     if let company = viewModel.company {
@@ -63,6 +65,7 @@ struct PaymentsSuccessView: View {
                             .font(.textH1SB24322())
                             .foregroundColor(.mainColorsBlack)
                             .padding(.horizontal, 20)
+                            .accessibilityIdentifier("SuccessPageAmount")
                     }
                     
                     if let options = viewModel.options {

@@ -732,6 +732,7 @@ extension ProductView {
                             .resizable()
                             .frame(width: paymentSystemIconSize.width, height: paymentSystemIconSize.height)
                             .foregroundColor(appearance.textColor)
+                            .accessibilityIdentifier("productPaymentSystemIcon")
                     }
                 )
                 
