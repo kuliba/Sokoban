@@ -18,6 +18,28 @@ enum TemplatesListViewModelAction {
         let itemId: TemplatesListViewModel.ItemViewModel.ID
     }
     
+    struct Search: Action {
+        
+        let text: String
+    }
+    
+    enum RegularNavBar {
+        
+        struct SearchNavBarPresent: Action {}
+        
+        struct RegularNavBarPresent: Action {}
+    }
+    
+    enum MenuList {
+        
+        struct ItemTapped: Action {}
+    }
+    
+    enum SearchNavBarAction {
+        
+        struct Close: Action {}
+    }
+    
     enum Delete {
     
         // Delete selection mode actions

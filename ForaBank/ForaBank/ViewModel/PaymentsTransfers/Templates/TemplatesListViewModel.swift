@@ -15,9 +15,9 @@ class TemplatesListViewModel: ObservableObject {
     
     @Published var state: State
     @Published var style: Style
-    @Published var title: String
-    let navButtonBack: NavigationBarButtonViewModel
-    @Published var navButtonsRight: [NavigationBarButtonViewModel]
+    //@Published var title: String
+    //let navButtonBack: NavigationBarButtonViewModel
+    //@Published var navButtonsRight: [NavigationBarButtonViewModel]
     
     @Published var navBarState: NavBarState
     
@@ -36,37 +36,58 @@ class TemplatesListViewModel: ObservableObject {
     private let selectedItemsIds: CurrentValueSubject<Set<ItemViewModel.ID>, Never> = .init([])
     private let itemsRaw: CurrentValueSubject<[ItemViewModel], Never> = .init([])
     private let categoryIndexAll = "TemplatesListViewModelCategoryAll"
+    private let dismissAction: () -> Void
     
-    init(_ model: Model, dismissAction: @escaping () -> Void) {
+    convenience init(_ model: Model, dismissAction: @escaping () -> Void) {
         
-        self.state = .normal
-        self.style = model.paymentTemplatesViewSettings.value.style
-        self.title = "Шаблоны"
-        self.navBarState = .regular(.init(backButton: .init(icon: .ic24ChevronLeft, action: dismissAction)))
-        self.navButtonBack = .init(icon: .ic24ChevronLeft, action: dismissAction)
-        self.navButtonsRight = []
-       
-        self.items = []
-        self.model = model
+        
+        self.init(state: .normal,
+                  style: model.paymentTemplatesViewSettings.value.style,
+                  navBarState: .regular(.init(backButton: .init(icon: .ic24ChevronLeft, action: dismissAction),
+                                              menuList: [],
+                                              searchButton: .init( icon: .ic24Search, action: {}) )),
+                  categorySelector: nil,
+                  items: [],
+                  contextMenu: nil,
+                  deletePannel: nil,
+                  dismissAction: dismissAction,
+                  model: model)
+        
+        navBarState.regular?.menuList = self.getMenuListViewModel()
+        navBarState.regular?.searchButton = .init(icon: .ic24Search, action: {
+            self.action.send(TemplatesListViewModelAction.RegularNavBar.SearchNavBarPresent())
+        })
+        
         self.model.action.send(ModelAction.PaymentTemplate.List.Requested())
         
         bind()
     }
     
-    internal init(state: State, style: Style, title: String, navBarState: NavBarState, navButtonBack: NavigationBarButtonViewModel, navButtonsRight: [NavigationBarButtonViewModel], categorySelector: OptionSelectorView.ViewModel, items: [ItemViewModel], contextMenu: ContextMenuViewModel?, deletePannel: DeletePannelViewModel?, model: Model) {
+    internal init(state: State, style: Style,
+                  navBarState: NavBarState,
+                  categorySelector: OptionSelectorView.ViewModel?,
+                  items: [ItemViewModel],
+                  contextMenu: ContextMenuViewModel?,
+                  deletePannel: DeletePannelViewModel?,
+                  dismissAction: @escaping () -> Void = {},
+                  model: Model) {
         
         self.state = state
         self.style = style
-        self.title = title
-        self.navButtonBack = navButtonBack
+        //self.title = title
+       // self.navButtonBack = navButtonBack
         self.navBarState = navBarState
-        self.navButtonsRight = navButtonsRight
+        //self.navButtonsRight = navButtonsRight
         self.categorySelector = categorySelector
         self.items = items
         self.contextMenu = contextMenu
         self.deletePannel = deletePannel
+        self.dismissAction = dismissAction
         self.model = model
     }
+    
+    
+    
     
     func closeContextMenu() {
         
@@ -95,7 +116,7 @@ private extension TemplatesListViewModel {
                         itemsRaw.value = templates.compactMap{ itemViewModel(with: $0) }
                         categorySelector = categorySelectorViewModel(with: templates)
                         bindCategorySelector()
-                        navButtonsRight = [menuButtonViewModel()]
+                        //navButtonsRight = [menuButtonViewModel()]
                         onboarding = nil
                         
                     } else {
@@ -103,7 +124,7 @@ private extension TemplatesListViewModel {
                         state = .onboarding
                         itemsRaw.value = []
                         categorySelector = nil
-                        navButtonsRight = []
+                       // navButtonsRight = []
                         onboarding = onboardingViewModel()
                     }
                 }
@@ -209,7 +230,12 @@ private extension TemplatesListViewModel {
                     default:
                         break
                     }
-                                        
+                
+                case let payload as TemplatesListViewModelAction.Search:
+                    
+                    self.items = searchedItems(self.items, payload.text)
+                    updateAddNewTemplateItem()
+                    
                 case _ as TemplatesListViewModelAction.ToggleStyle:
                     
                     withAnimation {
@@ -224,13 +250,32 @@ private extension TemplatesListViewModel {
                         case .tiles: style = .list
                         }
                     }
+                    self.navBarState.regular?.menuList = getMenuListViewModel()
+                    
+                case _ as TemplatesListViewModelAction.RegularNavBar.SearchNavBarPresent:
+                    
+                    let searchNavBarViewModel = SearchNavBarViewModel()
+                    self.navBarState = .search(searchNavBarViewModel)
+                    bind(searchNavBarViewModel)
+                    
+                case _ as TemplatesListViewModelAction.RegularNavBar.RegularNavBarPresent:
+                    
+                    let regularNavBarViewModel: RegularNavBarViewModel =
+                    
+                        .init(backButton: .init(icon: .ic24ChevronLeft, action: self.dismissAction),
+                              menuList: self.getMenuListViewModel(),
+                              searchButton: .init(icon: .ic24Search, action: {
+                            self.action.send(TemplatesListViewModelAction.RegularNavBar.SearchNavBarPresent()) }))
+                                
+                    self.navBarState = .regular(regularNavBarViewModel)
+                    //bind(regularNavBarViewModel)
                     
                 case _ as TemplatesListViewModelAction.Delete.Selection.Enter:
                     
                     withAnimation {
                         
                         state = .select
-                        navButtonsRight = [cancelDeleteModeButtonViewModel()]
+                        //navButtonsRight = [cancelDeleteModeButtonViewModel()]
                         selectedItemsIds.value = []
                         deletePannel = deletePannelViewModel(selectedCount: 0)
                         
@@ -249,7 +294,7 @@ private extension TemplatesListViewModel {
                     withAnimation {
                         
                         state = .normal
-                        navButtonsRight = [menuButtonViewModel()]
+                        //navButtonsRight = [menuButtonViewModel()]
                         selectedItemsIds.value = []
                         deletePannel = nil
                         
@@ -346,9 +391,54 @@ private extension TemplatesListViewModel {
             .sink{ [unowned self]  selectedCategoryIndex in
                 
                 items = sortedItems(filterredItems(itemsRaw.value, selectedCategoryIndex))
+               
+                if case .search(let viewModel) = navBarState,
+                   !viewModel.searchText.isEmpty {
+                    
+                    print("mdy: выбор селектора  Идет поиск \(viewModel.searchText) ")
+                    self.items = searchedItems(self.items, viewModel.searchText)
+                    if items.isEmpty {
+                        print("mdy: 0 итемс после выбоа селектор")
+                        viewModel.searchText = ""
+                    }
+                }
                 updateAddNewTemplateItem()
                 
             }.store(in: &bindings)
+    }
+    
+    func bind(_ viewModel: SearchNavBarViewModel) {
+            
+        viewModel.action
+            .compactMap { $0 as? TemplatesListViewModelAction.SearchNavBarAction.Close }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] _ in
+                
+                self.action.send(TemplatesListViewModelAction.RegularNavBar.RegularNavBarPresent())
+            }
+            .store(in: &bindings)
+        
+        viewModel.$searchText
+            .receive(on: DispatchQueue.main)
+            .sink{ [unowned self] searchText in
+                
+                print("mdy: изменился текст на \(searchText)")
+                self.action.send(TemplatesListViewModelAction.Search(text: searchText))
+                
+            }.store(in: &bindings)
+        
+//        self.$items
+//            .receive(on: DispatchQueue.main)
+//            .sink{ [unowned self]  items in
+//                
+//                guard !viewModel.searchText.isEmpty else { return }
+//                
+//                if items.isEmpty {
+//                    print("mdy: items 0  \(viewModel.searchText)")
+//                    viewModel.searchText = String(viewModel.searchText.prefix(viewModel.searchText.count - 1))
+//                    
+//                
+//            }.store(in: &bindings)
     }
 }
 
@@ -359,18 +449,74 @@ extension TemplatesListViewModel {
     enum NavBarState {
         case regular(RegularNavBarViewModel)
         case search(SearchNavBarViewModel)
-    }
-    
-    class RegularNavBarViewModel {
-        let backButton: NavigationBarButtonViewModel
         
-        init(backButton: NavigationBarButtonViewModel) {
-            self.backButton = backButton
+        var regular: RegularNavBarViewModel? {
+            
+            if case .regular(let wrapped) = self {
+                return wrapped
+            } else {
+                return nil
+            }
         }
     }
     
-    class SearchNavBarViewModel {
+    class RegularNavBarViewModel: ObservableObject {
         
+        let backButton: NavigationBarButtonViewModel
+        let menuImage: Image
+        @Published var title: String
+        @Published var menuList: [MenuItemViewModel]
+        @Published var searchButton: NavigationBarButtonViewModel
+        
+        init(backButton: NavigationBarButtonViewModel,
+             title: String = "Шаблоны",
+             menuList: [MenuItemViewModel],
+             menuImage: Image = .ic24MoreVertical,
+             searchButton: NavigationBarButtonViewModel) {
+            
+            self.backButton = backButton
+            self.title = title
+            self.menuList = menuList
+            self.menuImage = menuImage
+            self.searchButton = searchButton
+        }
+    }
+    
+    class SearchNavBarViewModel: ObservableObject {
+        
+        let action: PassthroughSubject<Action, Never> = .init()
+        
+        let trailIcon: Image
+        var clearButton: NavigationBarButtonViewModel? {
+            searchText.isEmpty ? nil : .init(icon: .ic24Close,
+                                             action: { self.searchText = "" } )
+        }
+        
+        lazy var closeButton: NavigationBarButtonViewModel = {
+            
+            .init(title: "Отмена", icon: Image("")) {
+                self.action.send(TemplatesListViewModelAction.SearchNavBarAction.Close())
+            }
+        }()
+        
+        
+        @Published var searchText: String
+        
+        init(trailIcon: Image = .ic24Search, searchText: String = "") {
+            self.trailIcon = trailIcon
+            self.searchText = searchText
+
+        }
+        
+        
+    }
+    
+    struct MenuItemViewModel: Identifiable {
+        let id = UUID()
+        let icon: Image
+        let textImage: String
+        let title: String
+        let action: () -> Void
     }
 }
 
@@ -532,6 +678,25 @@ private extension TemplatesListViewModel {
         }
     }
     
+    func searchedItems(_ items: [ItemViewModel], _ searchText: String) -> [ItemViewModel] {
+        
+        var tempItems = itemsRaw.value
+        
+        if let selectedCategoryIndex = categorySelector?.selected {
+            
+            tempItems = sortedItems(filterredItems(itemsRaw.value, selectedCategoryIndex))
+        }
+        
+        if searchText.isEmpty {
+            
+            return tempItems
+            
+        } else {
+            
+            return tempItems.filter{ $0.title.contains(searchText) }
+        }
+    }
+    
     func sortedItems(_ items: [ItemViewModel]) -> [ItemViewModel] {
         
         return items.sorted(by: { $0.sortOrder < $1.sortOrder })
@@ -542,28 +707,28 @@ private extension TemplatesListViewModel {
 
 private extension TemplatesListViewModel {
     
-    func menuButtonViewModel() -> NavigationBarButtonViewModel {
-        
-        NavigationBarButtonViewModel(icon: Image("more-horizontal")) { [weak self] in
-            
-            guard let self = self else {
-                return
-            }
-            
-            if self.contextMenu == nil {
-                
-                self.contextMenu = self.contextMenuViewModel()
-                
-            } else {
-                
-                self.contextMenu = nil
-            }
-        }
-    }
+//    func menuButtonViewModel() -> NavigationBarButtonViewModel {
+//        
+//        NavigationBarButtonViewModel(icon: Image("more-horizontal")) { [weak self] in
+//            
+//            guard let self = self else {
+//                return
+//            }
+//            
+//            if self.contextMenu == nil {
+//                
+//                self.contextMenu = self.contextMenuViewModel()
+//                
+//            } else {
+//                
+//                self.contextMenu = nil
+//            }
+//        }
+//    }
     
     func cancelDeleteModeButtonViewModel() -> NavigationBarButtonViewModel {
         
-        NavigationBarButtonViewModel(icon: Image("Templates Nav Icon Cancel"), action: {[weak self] in self?.action.send(TemplatesListViewModelAction.Delete.Selection.Exit()) })
+        NavigationBarButtonViewModel(title: "", icon: Image("Templates Nav Icon Cancel"), action: {[weak self] in self?.action.send(TemplatesListViewModelAction.Delete.Selection.Exit()) })
     }
 }
 
@@ -594,42 +759,42 @@ private extension TemplatesListViewModel {
         return categoriesIds.contains(categoryId)
     }
     
-    func contextMenuViewModel() -> ContextMenuViewModel {
+    func getMenuListViewModel() -> [MenuItemViewModel] {
         
-        var menuItems = [ContextMenuViewModel.MenuItemViewModel]()
+        var menuItems = [MenuItemViewModel]()
         
         //TODO: implement sorting first
-        /*
-        let orderMenuItem = ContextMenuViewModel.MenuItemViewModel(icon: Image("bar-in-order"), title: "Последовательность") { [weak self] in
+        
+        let orderMenuItem = MenuItemViewModel(icon: Image("bar-in-order"), textImage: "bar-in-order", title: "Последовательность") { [weak self] in
             //TODO: action required
             self?.closeContextMenu()
         }
         menuItems.append(orderMenuItem)
-         */
+         
         
         switch style {
         case .list:
-            let styleMenuItem = ContextMenuViewModel.MenuItemViewModel(icon: Image("grid"), title: "Вид (Плитка)") { [weak self] in
+            let styleMenuItem = MenuItemViewModel(icon: Image("grid"), textImage: "grid", title: "Вид (Плитка)") { [weak self] in
                 self?.action.send(TemplatesListViewModelAction.ToggleStyle())
-                self?.closeContextMenu()
+                //self?.closeContextMenu()
             }
             menuItems.append(styleMenuItem)
             
         case .tiles:
-            let styleMenuItem = ContextMenuViewModel.MenuItemViewModel(icon: Image("Templates Menu Icon List"), title: "Вид (Список)") { [weak self] in
+            let styleMenuItem = MenuItemViewModel(icon: Image("Templates Menu Icon List"), textImage: "Templates Menu Icon List", title: "Вид (Список)") { [weak self] in
                 self?.action.send(TemplatesListViewModelAction.ToggleStyle())
-                self?.closeContextMenu()
+                //self?.closeContextMenu()
             }
             menuItems.append(styleMenuItem)
         }
         
-        let deleteMenuItem = ContextMenuViewModel.MenuItemViewModel(icon: Image("trash_empty"), title: "Удалить") { [weak self] in
+        let deleteMenuItem = MenuItemViewModel(icon: Image("trash_empty"), textImage: "trash_empty", title: "Удалить") { [weak self] in
             self?.action.send(TemplatesListViewModelAction.Delete.Selection.Enter())
             self?.closeContextMenu()
         }
         menuItems.append(deleteMenuItem)
         
-        return ContextMenuViewModel(items: menuItems)
+        return menuItems
     }
     
     func deletePannelViewModel(selectedCount: Int) -> DeletePannelViewModel {
@@ -674,11 +839,11 @@ private extension TemplatesListViewModel {
     func updateTitle() {
         
         switch state {
-        case .onboarding, .normal:
-            title = "Шаблоны"
+        case .onboarding, .normal: break
+            //title = "Шаблоны"
             
-        case .select:
-            title = "Выбрать объекты"
+        case .select: break
+            //title = "Выбрать объекты"
         }
     }
 }
@@ -688,8 +853,15 @@ private extension TemplatesListViewModel {
 struct NavigationBarButtonViewModel: Identifiable {
     
     let id: String = UUID().uuidString
+    let title: String
     let icon: Image
     let action: () -> Void
+    
+    init(title: String = "", icon: Image = Image(""), action: @escaping () -> Void) {
+        self.title = title
+        self.icon = icon
+        self.action = action
+    }
 }
 
 //MARK: - Internal Components
@@ -756,7 +928,11 @@ extension TemplatesListViewModel {
 
 extension TemplatesListViewModel {
     
-    class ItemViewModel: Identifiable, ObservableObject {
+    class ItemViewModel: Identifiable, Equatable, ObservableObject {
+        static func == (lhs: TemplatesListViewModel.ItemViewModel, rhs: TemplatesListViewModel.ItemViewModel) -> Bool {
+            lhs.id == rhs.id
+        }
+        
 
         let id: Int
         let sortOrder: Int

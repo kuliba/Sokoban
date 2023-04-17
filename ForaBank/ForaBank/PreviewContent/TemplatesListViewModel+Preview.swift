@@ -14,17 +14,18 @@ extension TemplatesListViewModel {
         var viewModel = TemplatesListViewModel(
             state: .normal,
             style: .list,
-            title: "Шаблоны",
-            navBarState: .regular(.init(backButton: .init(icon: .ic24ChevronLeft, action: {}))),
-            navButtonBack: .init(icon: .ic24ChevronLeft, action: {}),
-            navButtonsRight: [
-                .init(icon: Image("searchBarIcon"), action: {
-                    //TODO: set action
-                }),
-                .init(icon: Image("more-horizontal"), action: {
-                    //TODO: set action
-                })
-            ],
+            navBarState: .regular(.init(backButton: .init(icon: .ic24ChevronLeft, action: {}),
+                                        menuList: TemplatesListViewModel.menuListSample,
+                                        searchButton: .init(icon: .ic24Search, action: {}))),
+            
+//            navButtonsRight: [
+//                .init(icon: Image("searchBarIcon"), action: {
+//                    //TODO: set action
+//                }),
+//                .init(icon: Image("more-horizontal"), action: {
+//                    //TODO: set action
+//                })
+//            ],
             categorySelector: .init(options: [
                 .init(id: "all", name: "Все" ),
                 .init(id: "add", name: "Пополнение"),
@@ -76,17 +77,17 @@ extension TemplatesListViewModel {
         var viewModel = TemplatesListViewModel(
             state: .normal,
             style: .tiles,
-            title: "Шаблоны",
-            navBarState: .regular(.init(backButton: .init(icon: .ic24ChevronLeft, action: {}))),
-            navButtonBack: .init(icon: .ic24ChevronLeft, action: {}),
-            navButtonsRight: [
-                .init(icon: Image("more-horizontal"), action: {
-                    //TODO: set action
-                }),
-                .init(icon: Image("searchBarIcon"), action: {
-                    //TODO: set action
-                })
-            ],
+            navBarState: .regular(.init(backButton: .init(icon: .ic24ChevronLeft, action: {}),
+                                        menuList: TemplatesListViewModel.menuListSample,
+                                        searchButton: .init(icon: .ic24Search, action: {}))),
+//            navButtonsRight: [
+//                .init(icon: Image("more-horizontal"), action: {
+//                    //TODO: set action
+//                }),
+//                .init(icon: Image("searchBarIcon"), action: {
+//                    //TODO: set action
+//                })
+//            ],
             categorySelector: .init(options: [
                 .init(id: "all", name: "Все" ),
                 .init(id: "add", name: "Пополнение"),
@@ -132,14 +133,14 @@ extension TemplatesListViewModel {
         var viewModel = TemplatesListViewModel(
             state: .select,
             style: .tiles,
-            title: "Выбрать объекты",
-            navBarState: .regular(.init(backButton: .init(icon: .ic24ChevronLeft, action: {}))),
-            navButtonBack: .init(icon: .ic24ChevronLeft, action: {}),
-            navButtonsRight: [
-                .init(icon: Image("Operation Details Close Button Icon"), action: {
-                    //TODO: set action
-                })
-            ],
+            navBarState: .regular(.init(backButton: .init(icon: .ic24ChevronLeft, action: {}),
+                                        menuList: TemplatesListViewModel.menuListSample,
+                                        searchButton: .init(icon: .ic24Search, action: {}))),
+//            navButtonsRight: [
+//                .init(icon: Image("Operation Details Close Button Icon"), action: {
+//                    //TODO: set action
+//                })
+//            ],
             categorySelector: .init(options: [
                 .init(id: "all", name: "Все" ),
                 .init(id: "add", name: "Пополнение"),
@@ -198,4 +199,28 @@ extension TemplatesListViewModel.OnboardingViewModel {
                                      title: "Нет шаблонов", message: "Вы можете создать шаблон из любой успешной операции в разделе История",
                                      button: .init(title: "Перейти в историю",
                                                    action: { }))
+}
+
+extension TemplatesListViewModel {
+    static let menuListSample: [TemplatesListViewModel.MenuItemViewModel] = {
+        
+        .init(
+            [
+                .init(icon: Image("bar-in-order"), textImage: "bar-in-order",
+                      title: "Последовательность",
+                      action: {
+                          
+                      }),
+                .init(icon: Image("grid"), textImage: "grid",
+                      title: "Вид (Плитка)",
+                      action: {
+                          
+                      }),
+                .init(icon: .ic24Trash, textImage: "ic24Trash", //"trash_empty",
+                      title: "Удалить",
+                      action: {
+                          
+                      })
+            ])
+    }()
 }

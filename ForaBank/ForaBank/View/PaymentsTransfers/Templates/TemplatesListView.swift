@@ -171,46 +171,42 @@ struct TemplatesListView: View {
             }
         }
         .transition(.identity)
-        .navigationBarTitle(Text(viewModel.title), displayMode: .inline)
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
-        
-//        .navigationBarItems(
-//            leading:
-//
-//
-//
-//                    Button(action: viewModel.navButtonBack.action, label: {
-//                        viewModel.navButtonBack.icon
-//                            .renderingMode(.template)
-//                            .foregroundColor(.iconBlack)
-//                    })
-//
-//
-//
-//             ,
-//            trailing:
-//                HStack {
-//                    ForEach(viewModel.navButtonsRight) { element in
-//                        Button {
-//                            element.action()
-//                        } label: {
-//                            element.icon
-//                                .renderingMode(.template)
-//                                .foregroundColor(Color.init(hex: "1C1C1C"))
-//                        }
-//                    }
-//                }
-//    )
         .toolbar {
 
-            TemplatesListToolbar(state: viewModel.navBarState,
-                                 searchText: $searchText)
+            ToolbarItem(placement: .principal) {
+                    
+                switch viewModel.navBarState {
+                case let .regular(regViewModel):
+                        
+                    RegularNavBarView(viewModel: regViewModel)
+                        
+                case let .search(searchViewModel):
+                        
+                    SearchNavBarView(viewModel: searchViewModel)
+                }
+            }
         }
- 
 
-        .onChange(of: searchText, perform: { newValue in
-            print("mdy \(newValue)")
-        })
+//        .onChange(of: searchText, perform: { newValue in
+//
+//            viewModel.action.send(TemplatesListViewModelAction.Search(text: newValue))
+//
+//        })
+        
+//        .onChange(of: viewModel.items, perform: { newValue in
+//            guard !searchText.isEmpty else { return }
+//            
+//            if newValue.isEmpty {
+//                
+//                    searchText = String(searchText.prefix(searchText.count - 1))
+//                
+//                print("mdy 0")
+//            } else {
+//                viewModel.action.send(TemplatesListViewModelAction.Search(text: searchText))
+//            }
+//        })
 
         .bottomSheet(item: $viewModel.sheet, content: { sheet in
             
@@ -231,65 +227,61 @@ struct TemplatesListView: View {
 
 extension TemplatesListView {
     
-    struct TemplatesListToolbar: ToolbarContent {
+    struct SearchNavBarView: View {
         
-        let state: TemplatesListViewModel.NavBarState
-        @Binding var searchText: String
-
-        var body: some ToolbarContent {
-               
-                ToolbarItem(placement: .navigationBarLeading) {
-
-                    if case .regular(let viewModel) = state {
-                        
-                        HStack {
-                            Button(action: {},
-                                   label: {
-                                viewModel.backButton.icon
-                                    .renderingMode(.template)
-                                    .foregroundColor(.iconBlack)
-                            })
-                            Spacer()
-                            Text("d")
-                            Menu {
-                                
-                                Button(action: {}) {
-                                    Label("Create a file", systemImage: "doc")
-                                }
-                                
-                                Button(action: {}) {
-                                    Label("Create a folder", systemImage: "folder")
-                                }
-                                
-                                Button(action: {}) {
-                                    Label("Remove old files", systemImage: "trash")
-                                        .foregroundColor(.red)
-                                }
-                            }
-                        label: {
-                            Label("Add", systemImage: "plus")
-                        }
-                        }
-                        
-                    }
+        @ObservedObject var viewModel: TemplatesListViewModel.SearchNavBarViewModel
+        
+        var body: some View {
+            
+            HStack {
+                
+                viewModel.trailIcon
+                
+                TextField("Имя шаблона", text: $viewModel.searchText)
+                
+                if let clearButton = viewModel.clearButton {
+                    
+                    Button(action: clearButton.action, label: { clearButton.icon} )
                 }
                 
-                ToolbarItem(placement: .principal) {
+                Button(viewModel.closeButton.title, action: viewModel.closeButton.action)
+            }
+        }
+    }
+    
+    struct RegularNavBarView: View {
+        
+        @ObservedObject var viewModel: TemplatesListViewModel.RegularNavBarViewModel
+        
+        var body: some View {
+            
+            HStack {
+                
+                Button(action: viewModel.backButton.action,
+                       label: { viewModel.backButton.icon })
+                
+                Spacer()
+                
+                Button(action: viewModel.searchButton.action,
+                       label: { viewModel.searchButton.icon })
+                
+                Menu {
                     
-                    if case .search(let viewModel) = state {
+                    ForEach(viewModel.menuList) { item in
                         
-                        HStack {
-                            Image(systemName: "sun.min.fill")
-                            
-                            TextField("Имя шаблона", text: $searchText)
-                            
-                            Button(action: {}, label: { Image.ic24Close })
-                            Button("Отмена", action: {} )
+                        Button(action: item.action) {
+                            Label(item.title, image: item.textImage)
                         }
                     }
-                }
-            
-
+                } label: { viewModel.menuImage }
+            }
+            .foregroundColor(.textSecondary)
+            .overlay13 {
+                
+                Text(viewModel.title)
+                    .font(.textH3M18240())
+                    .frame(maxWidth: .infinity)
+            }
         }
     }
     
@@ -1117,19 +1109,5 @@ struct TemplatesListView_Previews: PreviewProvider {
     }
 }
 
-struct ToolbarFindView: View {
-    
-    @State var searchString: String = ""
-    
-    var body: some View {
-       
-        HStack {
-            Image(systemName: "sun.min.fill")
-            
-            TextField("Имя шаблона", text: $searchString)
-            
-            
-            Text("Title").font(.headline)
-        }
-    }
-}
+
+
