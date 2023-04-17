@@ -35,6 +35,7 @@ struct OperationDetailInfoView: View {
                 Text(viewModel.title)
                     .foregroundColor(.textSecondary)
                     .font(.textH4SB16240())
+                    .accessibilityIdentifier("OperationDetailInfoPageTitle")
                 
                 Spacer()
                 
@@ -99,16 +100,19 @@ extension OperationDetailInfoView {
                 
                 viewModel.iconType?.icon
                     .frame(width: 32, height: 24, alignment: .bottom)
+                    .accessibilityIdentifier("OperationDetailInfoItemIcon")
                 
                 VStack(alignment: .leading, spacing: 4) {
                     
                     Text(viewModel.title)
                         .foregroundColor(.textPlaceholder)
                         .font(.textBodySR12160())
+                        .accessibilityIdentifier("OperationDetailInfoItemTitle")
 
                     Text(viewModel.value)
                         .font(.textBodyMM14200())
                         .foregroundColor(.textSecondary)
+                        .accessibilityIdentifier("OperationDetailInfoItemData")
 
                     Color.bordersDivaiderDisabled
                         .frame(height: 1)
@@ -144,16 +148,19 @@ extension OperationDetailInfoView {
                     .resizable()
                     .frame(width: 32, height: 32, alignment: .bottom)
                     .foregroundColor(.mainColorsGrayLightest)
+                    .accessibilityIdentifier("OperationDetailInfoBankItemIcon")
                 
                 VStack(alignment: .leading, spacing: 4) {
                     
                     Text(viewModel.title)
                         .foregroundColor(.textPlaceholder)
                         .font(.textBodySR12160())
+                        .accessibilityIdentifier("OperationDetailInfoBankItemTitle")
                     
                     Text(viewModel.name)
                         .foregroundColor(.textSecondary)
                         .font(.textBodyMM14200())
+                        .accessibilityIdentifier("OperationDetailInfoBankItemData")
                     
                     Color.bordersDivaiderDisabled
                         .frame(height: 1)
@@ -173,6 +180,7 @@ extension OperationDetailInfoView {
                 
                 viewModel.icon
                     .frame(width: 32, height: 22, alignment: .center)
+                    .accessibilityIdentifier("OperationDetailInfoProductItemIcon")
                 
                 HStack{
                     
@@ -181,19 +189,23 @@ extension OperationDetailInfoView {
                         Text(viewModel.title)
                             .foregroundColor(.textPlaceholder)
                             .font(.textBodySR12160())
+                            .accessibilityIdentifier("OperationDetailInfoProductItemTitle")
                         
                         HStack{
                             
                             viewModel.iconPaymentService?
                                 .frame(width: 24, height: 24, alignment: .center)
+                                .accessibilityIdentifier("OperationDetailInfoProductItemPaymentSystemIcon")
                             
                             Text(viewModel.name)
                                 .foregroundColor(.textSecondary)
                                 .font(.textBodyMM14200())
+                                .accessibilityIdentifier("OperationDetailInfoProductItemProductName")
                         }
                         Text(viewModel.description)
                             .foregroundColor(.textPlaceholder)
                             .font(.textBodySR12160())
+                            .accessibilityIdentifier("OperationDetailInfoProductItemDescription")
                     }
                     
                     Spacer()
@@ -201,6 +213,7 @@ extension OperationDetailInfoView {
                     Text(viewModel.balance)
                         .font(.textBodyMM14200())
                         .foregroundColor(.textSecondary)
+                        .accessibilityIdentifier("OperationDetailInfoProductItemBalance")
                 }
                 
             }

@@ -357,6 +357,7 @@ struct ProductSelectorView: View {
             viewModel.productCarouselViewModel
                 .map(ProductCarouselView.init(viewModel:))
                 .animation(nil)
+                .accessibilityIdentifier("ProductSelectorCarousel")
         }
         .padding(.top, 13)
         .padding(.bottom, bottomPadding)
@@ -416,11 +417,13 @@ extension ProductSelectorView {
                             
                             Text(viewModel.name)
                                 .lineLimit(1)
+                                .accessibilityIdentifier("ProductSelectorProductName")
                             
                             Spacer(minLength: 8)
                             
                             Text(viewModel.balance)
                                 .layoutPriority(1)
+                                .accessibilityIdentifier("ProductSelectorProductBalance")
                         }
                         .font(.textH4M16240())
                         .foregroundColor(.textSecondary)
@@ -450,6 +453,7 @@ extension ProductSelectorView {
                 cardIcon
                     .resizable()
                     .aspectRatio(contentMode: .fill)
+                    .accessibilityIdentifier("ProductSelectorProductIcon")
                 
             } else {
                 
@@ -465,6 +469,7 @@ extension ProductSelectorView {
                 
                 paymentIcon
                     .resizable()
+                    .accessibilityIdentifier("ProductSelectorPaymentSystemIcon")
             }
         }
         
@@ -490,6 +495,7 @@ extension ProductSelectorView {
                     circle
                     
                     Text(numberCard)
+                        .accessibilityIdentifier("ProductSelectorProductNumber")
                 }
                 
                 if let description = viewModel.description {
@@ -497,6 +503,7 @@ extension ProductSelectorView {
                     circle
                     
                     Text(description)
+                        .accessibilityIdentifier("ProductSelectorProductDescription")
                 }
             }
             .font(.textBodyMR14180())

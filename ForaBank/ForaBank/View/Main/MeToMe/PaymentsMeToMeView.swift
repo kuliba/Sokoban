@@ -23,6 +23,7 @@ struct PaymentsMeToMeView: View {
                     .font(.textH3SB18240())
                     .foregroundColor(.mainColorsBlack)
                     .padding(.horizontal, 20)
+                    .accessibilityIdentifier("BtwTheirTitle")
                 
                 VStack {
                     
