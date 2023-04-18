@@ -1203,6 +1203,7 @@
 		77FC5E1B2940F8E0006784F4 /* QRMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FC5E1A2940F8E0006784F4 /* QRMappingTests.swift */; };
 		77FC5E2229422633006784F4 /* Payments+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FC5E2129422633006784F4 /* Payments+Validation.swift */; };
 		77FC5E2429423DCC006784F4 /* PaymentsValidationRulesSystemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FC5E2329423DCC006784F4 /* PaymentsValidationRulesSystemTests.swift */; };
+		77FE6F2329ED65F400CE65EA /* PaymentsSelectDropDownComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE6F2229ED65F400CE65EA /* PaymentsSelectDropDownComponentTests.swift */; };
 		77FF66CD27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF66CC27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift */; };
 		77FF670327B446D7009FEA09 /* AsyncAwaitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF670227B446D7009FEA09 /* AsyncAwaitTests.swift */; };
 		77FF670527B4B07B009FEA09 /* Payments+Parameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF670427B4B07B009FEA09 /* Payments+Parameter.swift */; };
@@ -2845,6 +2846,7 @@
 		77FC5E1A2940F8E0006784F4 /* QRMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRMappingTests.swift; sourceTree = "<group>"; };
 		77FC5E2129422633006784F4 /* Payments+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Payments+Validation.swift"; sourceTree = "<group>"; };
 		77FC5E2329423DCC006784F4 /* PaymentsValidationRulesSystemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsValidationRulesSystemTests.swift; sourceTree = "<group>"; };
+		77FE6F2229ED65F400CE65EA /* PaymentsSelectDropDownComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectDropDownComponentTests.swift; sourceTree = "<group>"; };
 		77FF66CC27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTaxesFMS.swift"; sourceTree = "<group>"; };
 		77FF670227B446D7009FEA09 /* AsyncAwaitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncAwaitTests.swift; sourceTree = "<group>"; };
 		77FF670427B4B07B009FEA09 /* Payments+Parameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Payments+Parameter.swift"; sourceTree = "<group>"; };
@@ -4226,6 +4228,7 @@
 		2AB5FEA429E6815B0055BE57 /* PaymentsOperation */ = {
 			isa = PBXGroup;
 			children = (
+				77FE6F2229ED65F400CE65EA /* PaymentsSelectDropDownComponentTests.swift */,
 				7758DFD129EB1DE200060761 /* PaymentsSelectViewComponentTests.swift */,
 				2A4B62F129E6AE1200788F56 /* PaymentsCodeViewComponentTests */,
 				2AB5FEA729E6833E0055BE57 /* UIImage+TestHelpers.swift */,
@@ -10132,6 +10135,7 @@
 				6820923027A97A1D003DCAFD /* ServerCommandsFastPaymentTests.swift in Sources */,
 				682092A827AC0692003DCAFD /* ServerCommandsPersonTests.swift in Sources */,
 				77289F6429AE4B8E004DC3D0 /* ParameterDataTests.swift in Sources */,
+				77FE6F2329ED65F400CE65EA /* PaymentsSelectDropDownComponentTests.swift in Sources */,
 				77E1805E27AC8CE60006ACC9 /* TestingSceneDelegate.swift in Sources */,
 				77E1805C27AC8CAE0006ACC9 /* TestingAppDelegate.swift in Sources */,
 				77EC58C127712E570054D75C /* TransferMe2MeTests.swift in Sources */,

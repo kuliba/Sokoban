@@ -451,7 +451,13 @@ extension Payments {
             
             let id: String
             let name: String
-            let icon: ImageData?
+            let icon: Icon?
+            
+            enum Icon: Equatable {
+                
+                case image(ImageData)
+                case name(String)
+            }
         }
     }
     

@@ -39,7 +39,16 @@ extension Model {
                     
                     if let option = operatorsList?.filter({$0.code == service.code.rawValue}).first {
                         
-                        options.append(.init(id: option.code, name: option.name, icon: option.logotypeList.first?.iconData))
+                        let icon: Payments.ParameterSelectDropDownList.Option.Icon? = {
+                            
+                            guard let imageData = option.logotypeList.first?.iconData else {
+                                return nil
+                            }
+                            
+                            return .image(imageData)
+                        }()
+                        
+                        options.append(.init(id: option.code, name: option.name, icon: icon))
                     }
                 }
             }
@@ -137,7 +146,16 @@ extension Model {
                     
                     if let option = operatorsList?.filter({$0.code == service.code.rawValue}).first {
                         
-                        options.append(.init(id: option.code, name: option.name, icon: option.logotypeList.first?.iconData))
+                        let icon: Payments.ParameterSelectDropDownList.Option.Icon? = {
+                            
+                            guard let imageData = option.logotypeList.first?.iconData else {
+                                return nil
+                            }
+                            
+                            return .image(imageData)
+                        }()
+                        
+                        options.append(.init(id: option.code, name: option.name, icon: icon))
                     }
                 }
             }

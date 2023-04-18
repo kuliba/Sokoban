@@ -39,8 +39,8 @@ extension Model {
                 .init(id: operatorParameterId, value: operatorParameterValue),
                 title: "Перевести",
                 options: [
-                    .init(id: Payments.Operator.fns.rawValue, name: Payments.Operator.fns.name, icon: .init(named: "ic24Emblem")),
-                    .init(id: Payments.Operator.fnsUin.rawValue, name: Payments.Operator.fnsUin.name, icon: .init(named: "ic24FileHash"))
+                    .init(id: Payments.Operator.fns.rawValue, name: Payments.Operator.fns.name, icon: .name("ic24Emblem")),
+                    .init(id: Payments.Operator.fnsUin.rawValue, name: Payments.Operator.fnsUin.name, icon: .name("ic24FileHash"))
                 ], placement: .top)
             
             return .init(parameters: [productParameter, headerParameter, operatorParameter], front: .init(visible: [headerParameter.id, operatorParameterId], isCompleted: true), back: .init(stage: .local, required: [operatorParameterId], processed: [.init(id: operatorParameterId, value: operatorParameterValue)]))

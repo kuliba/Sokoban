@@ -7,24 +7,17 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 extension PaymentSelectDropDownView {
     
     class ViewModel: PaymentsParameterViewModel, ObservableObject {
         
-        @Published private(set) var selectedOption: SelectedOptionViewModel
-        @Published private(set) var options: [OptionViewModel]?
-        
-        var hasOptions: Bool { options != nil }
-        
-        var parameterDropDownList: Payments.ParameterSelectDropDownList? {
-            source as? Payments.ParameterSelectDropDownList
-        }
-        
-        init(selectedOption: SelectedOptionViewModel, options: [OptionViewModel]?, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
+        @Published private(set) var state: State
+
+        private init(state: State, source: PaymentsParameterRepresentable) {
             
-            self.selectedOption = selectedOption
-            self.options = options
+            self.state = state
             super.init(source: source)
         }
         
@@ -33,225 +26,329 @@ extension PaymentSelectDropDownView {
             guard let selectedOption = SelectedOptionViewModel(with: parameterSelect)
             else { return nil }
             
-            self.init(
-                selectedOption: selectedOption,
-                options: nil,
-                source: parameterSelect
-            )
-            
-            if parameterSelect.isActive {
-                
-                self.selectedOption.button = .init(
-                    action: { [weak self] in
-                        
-                        self?.action.send(PaymentSelectDropDownView.ViewModel.ShowOptions())
-                    },
-                    mode: .active
-                )
-            }
+            self.init(state: .selected(selectedOption), source: parameterSelect)
             
             bind()
         }
-        
-        func isSelected(_ item: OptionViewModel) -> Bool {
-            
-            item.option.id == selectedOption.option.id
-        }
-        
-        struct Option: Identifiable {
-            
-            let id: String
-            let icon: Image?
-            let title: String
-        }
-        
-        struct OptionViewModel: Identifiable {
-            
-            let option: Option
-            let title: String
-            let action: (OptionViewModel.ID) -> Void
-            
-            var id: String { option.id }
-            var icon: Image? { option.icon }
-        }
-        
-        struct SelectedOptionViewModel {
-            
-            let option: Option
-            let title: String
-            
-            var button: ButtonViewModel
-
-            var icon: Image? { option.icon }
-            var selectTitle: String { option.title }
-            
-            struct ButtonViewModel {
-                
-                let action: () -> Void
-                let mode: Mode
-                
-                enum Mode {
-                    
-                    case active
-                    case inactive
-                }
-            }
-        }
     }
 }
 
-private extension PaymentSelectDropDownView.ViewModel.Option {
-    
-    init(with option: Payments.ParameterSelectDropDownList.Option) {
+//MARK: - Calculated Properties
+
+extension PaymentSelectDropDownView.ViewModel {
+ 
+    var parameterDropDownList: Payments.ParameterSelectDropDownList? {
         
-        self.init(id: option.id, icon: option.icon?.image, title: option.name)
+        source as? Payments.ParameterSelectDropDownList
     }
 }
 
-private extension PaymentSelectDropDownView.ViewModel.SelectedOptionViewModel {
-    
-    init?(with parameterSelect: Payments.ParameterSelectDropDownList) {
-        
-        guard let defaultOption = parameterSelect.options.first(where: { $0.id == parameterSelect.value })
-        else { return nil }
-        
-        self.init(
-            option: .init(with: defaultOption),
-            title: parameterSelect.title,
-            button: .init(
-                action: {},
-                mode: parameterSelect.options.mode
-            )
-        )
-    }
-}
-
-private extension Array where Element == Payments.ParameterSelectDropDownList.Option {
-    
-    typealias Mode = PaymentSelectDropDownView.ViewModel.SelectedOptionViewModel.ButtonViewModel.Mode
-    
-    var mode: Mode {
-        
-        count > 1 ? .active : .inactive
-    }
-}
-
-private extension Payments.ParameterSelectDropDownList {
-    
-    var isActive: Bool {
-        
-        options.mode == .active
-    }
-}
+//MARK: - Bindings
 
 extension PaymentSelectDropDownView.ViewModel {
     
     private func bind() {
         
         action
-            .compactMap { $0 as? PaymentSelectDropDownView.ViewModel.ShowOptions }
+            .compactMap { $0 as? PaymentsParameterViewModelAction.DropDown.Toggle }
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
                 
+                guard let parameterDropDownList,
+                      let selectedOption = parameterDropDownList.options.first(where: { $0.id == value.current }) else {
+                    return
+                }
+                
                 withAnimation {
                     
-                    self.options = toggledOptions()
+                    switch state {
+                    case .selected:
+                        state = .list(.init(with: parameterDropDownList, and: selectedOption))
+                        
+                    case .list:
+                        state = .selected(.init(with: parameterDropDownList, and: selectedOption))
+                    }
                 }
-            }
-            .store(in: &bindings)
+                
+            }.store(in: &bindings)
         
         action
-            .compactMap { $0 as? PaymentSelectDropDownView.ViewModel.DidSelectOption }
+            .compactMap { $0 as? PaymentsParameterViewModelAction.DropDown.DidSelectOption }
             .map(\.id)
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] id in
                 
-                guard let parameter = parameterDropDownList,
-                      let selectedOption = PaymentSelectDropDownView.ViewModel.SelectedOptionViewModel(with: parameter)
-                else { return }
+                guard let parameterDropDownList,
+                      let selectedOption = parameterDropDownList.options.first(where: { $0.id == id }) else {
+                    return
+                }
                 
                 self.update(value: id)
                 
                 withAnimation {
                     
-                    self.selectedOption = selectedOption
-                    
-                    self.options = nil
+                    state = .selected(.init(with: parameterDropDownList, and: selectedOption))
                 }
-            }
-            .store(in: &bindings)
+                
+            }.store(in: &bindings)
+    }
+}
+
+//MARK: - Types
+
+extension PaymentSelectDropDownView.ViewModel {
+    
+    enum State: Equatable {
+        
+        case selected(SelectedOptionViewModel)
+        case list(OptionsListViewModel)
     }
     
-    private func toggledOptions() -> [OptionViewModel]? {
+    struct SelectedOptionViewModel: Equatable {
         
-        if self.options != nil {
+        let title: String
+        let name: String
+        let icon: IconViewModel
+    }
+    
+    struct OptionsListViewModel: Equatable {
+        
+        let title: String
+        let name: String
+        let icon: IconViewModel
+        let options: [OptionViewModel]
+        let selected: OptionViewModel.ID
+    }
+    
+    struct OptionViewModel: Identifiable, Equatable {
+        
+        let id: String
+        let name: String
+        let icon: IconViewModel
+    }
+    
+    enum IconViewModel: Equatable {
+        
+        case image(Image)
+        case placeholder
+    }
+}
+
+//MARK: - Convenience Inits
+
+private extension PaymentSelectDropDownView.ViewModel.SelectedOptionViewModel {
+    
+    init?(with parameterDropDownList: Payments.ParameterSelectDropDownList) {
+        
+        guard let defaultOption = parameterDropDownList.options.first(where: { $0.id == parameterDropDownList.value })
+        else { return nil }
+        
+        self.init(with: parameterDropDownList, and: defaultOption)
+    }
+    
+    init(with parameterSelect: Payments.ParameterSelectDropDownList, and option: Payments.ParameterSelectDropDownList.Option) {
+        
+        self.init(
+            title: parameterSelect.title,
+            name: option.name,
+            icon: .init(with: option.icon)
+        )
+    }
+}
+
+private extension PaymentSelectDropDownView.ViewModel.OptionsListViewModel {
+    
+    init(with parameterSelect: Payments.ParameterSelectDropDownList, and option: Payments.ParameterSelectDropDownList.Option) {
+        
+        self.init(
+            title: parameterSelect.title,
+            name: option.name,
+            icon: .init(with: option.icon),
+            options: parameterSelect.options.map({ .init(id: $0.id, name: $0.name, icon: .init(with: $0.icon))}),
+            selected: option.id
+        )
+    }
+}
+
+private extension PaymentSelectDropDownView.ViewModel.IconViewModel {
+    
+    init(with optionIcon: Payments.ParameterSelectDropDownList.Option.Icon?) {
+        
+        switch optionIcon {
+        case let .image(imageData):
+            switch imageData.image {
+            case let .some(image):
+                self = .image(image)
+            case .none:
+                self = .placeholder
+            }
             
-            return nil
+        case let .name(imageName):
+            self = .image(Image(imageName))
             
-        } else {
-            
-            return parameterDropDownList?
-                .options
-                .map {
-                    .init(
-                        option: .init(with: $0),
-                        title: $0.name,
-                        action: { [weak self] id in
-                            
-                            self?.action.send(PaymentSelectDropDownView.ViewModel.DidSelectOption(id: id))
-                        }
-                    )
-                }
+        case .none:
+            self = .placeholder
         }
     }
 }
 
-extension PaymentSelectDropDownView.ViewModel {
+//MARK: - Actions
+
+extension PaymentsParameterViewModelAction {
     
-    struct ShowOptions: Action {}
-    
-    struct DidSelectOption: Action {
+    enum DropDown {
         
-        let id: PaymentSelectDropDownView.ViewModel.OptionViewModel.ID
+        struct Toggle: Action {}
+        
+        struct DidSelectOption: Action {
+            
+            let id: PaymentSelectDropDownView.ViewModel.OptionViewModel.ID
+        }
     }
 }
+
+//MARK: - View
 
 struct PaymentSelectDropDownView: View {
     
     @ObservedObject var viewModel: ViewModel
+    @Namespace var namespace
     
     var body: some View {
         
-        VStack(spacing: 4) {
-            
-            SelectedOptionView(
-                selectedOption: viewModel.selectedOption,
-                hasOptions: viewModel.hasOptions
-            )
-            .contentShape(Rectangle())
-            .onTapGesture(perform: viewModel.selectedOption.button.action)
-            
-            if let options = viewModel.options {
-                
-                VStack(alignment: .leading, spacing: 4) {
+        VStack(spacing: 0) {
+           
+            switch viewModel.state {
+            case let .selected(selectedOptionViewModel):
+                SelectedOptionView(viewModel: selectedOptionViewModel, namespace: namespace) {
                     
-                    ForEach(options) { item in
-                        
-                        OptionView(viewModel: item, isSelected: viewModel.isSelected(item))
-                            .contentShape(Rectangle())
-                    }
+                    viewModel.action.send(PaymentsParameterViewModelAction.DropDown.Toggle())
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                
+            case let .list(optionsListViewModel):
+                OptionsListView(viewModel: optionsListViewModel, namespace: namespace) {
+                    
+                    viewModel.action.send(PaymentsParameterViewModelAction.DropDown.Toggle())
+                    
+                } select: { selectedOptionId in
+                    
+                    viewModel.action.send(PaymentsParameterViewModelAction.DropDown.DidSelectOption(id: selectedOptionId))
+                }
             }
         }
+        .animation(.easeInOut, value: viewModel.state)
         .padding(.horizontal, 16)
         .padding(.vertical, 13)
+    }
+    
+    //MARK: - Internal Views
+    
+    struct SelectedOptionView: View {
+        
+        let viewModel: PaymentSelectDropDownView.ViewModel.SelectedOptionViewModel
+        let namespace: Namespace.ID
+        let tapAction: () -> Void
+
+        var body: some View {
+            
+            HStack(spacing: 16) {
+                
+                IconView(viewModel: viewModel.icon)
+                    .frame(width: 24, height: 24)
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    
+                    Text(viewModel.title)
+                        .font(.textBodyMR14180())
+                        .foregroundColor(.textPlaceholder)
+                    
+                    Text(viewModel.name)
+                        .font(.textH4M16240())
+                        .foregroundColor(.textWhite)
+                }
+                
+                Spacer()
+                
+                Image.ic24ChevronDown
+                    .renderingMode(.template)
+                    .resizable()
+                    .foregroundColor(.iconGray)
+                    .frame(width: 24, height: 24)
+                
+            }
+            .matchedGeometryEffect(id: MatchedID.selectedOption, in: namespace)
+            .frame(minHeight: 46)
+            .contentShape(Rectangle())
+            .onTapGesture { tapAction() }
+        }
+    }
+    
+    struct OptionsListView: View {
+        
+        let viewModel: PaymentSelectDropDownView.ViewModel.OptionsListViewModel
+        let namespace: Namespace.ID
+        let toggle: () -> Void
+        let select: (PaymentSelectDropDownView.ViewModel.OptionViewModel.ID) -> Void
+        
+        var body: some View {
+            
+            VStack(spacing: 4) {
+                
+                HStack(spacing: 16) {
+                    
+                    IconView(viewModel: viewModel.icon, iconColor: .blurGray20)
+                        .frame(width: 24, height: 24)
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        
+                        Text(viewModel.title)
+                            .font(.textBodyMR14180())
+                            .foregroundColor(.textPlaceholder)
+                        
+                        Text(viewModel.name)
+                            .font(.textH4M16240())
+                            .foregroundColor(.textPrimary)
+                    }
+                    
+                    Spacer()
+                    
+                    Image.ic24ChevronUp
+                        .renderingMode(.template)
+                        .resizable()
+                        .foregroundColor(.iconGray)
+                        .frame(width: 24, height: 24)
+                }
+                .matchedGeometryEffect(id: MatchedID.selectedOption, in: namespace)
+                .frame(minHeight: 46)
+                .contentShape(Rectangle())
+                .onTapGesture { toggle() }
+                
+                ForEach(viewModel.options) { optionViewModel in
+                    
+                    OptionView(viewModel: optionViewModel, isSelected: optionViewModel.id == viewModel.selected) {
+                        
+                        select(optionViewModel.id)
+                    }
+                    .frame(minHeight: 46)
+                    
+                    if optionViewModel.id != viewModel.options.last?.id {
+                        
+                        Rectangle()
+                            .frame(height: 1)
+                            .foregroundColor(.mainColorsGray)
+                            .opacity(0.2)
+                            .padding(.leading, 40)
+                    }
+                }
+            }
+        }
     }
     
     struct OptionView: View {
         
         let viewModel: ViewModel.OptionViewModel
         let isSelected: Bool
+        let selectAction: () -> Void
         
         var body: some View {
             
@@ -259,124 +356,65 @@ struct PaymentSelectDropDownView: View {
                 
                 HStack(spacing: 16) {
                     
-                    iconView
+                    IconView(viewModel: viewModel.icon)
                         .frame(width: 24, height: 24)
                     
-                    Text(viewModel.title)
+                    Text(viewModel.name)
                         .foregroundColor(.textWhite)
                         .font(.textH4M16240())
                     
                     Spacer()
                     
-                    Image(radioIconName)
-                        .renderingMode(.template)
-                        .foregroundColor(radioIconColor)
-                        .frame(width: 24, height: 24)
+                    RadioIconView(isSelected: isSelected)
                 }
-                
-                Divider()
-                    .overlay(
-                        Color.mainColorsGray.opacity(0.2)
-                            .frame(height: 1)
-                    )
-                    .padding (.leading, 40)
             }
             .contentShape(Rectangle())
-            .onTapGesture {
-                
-                viewModel.action(viewModel.id)
-            }
-            .frame(height: 46, alignment: .bottom)
+            .onTapGesture { selectAction() }
         }
+    }
+    
+    struct IconView: View {
         
-        @ViewBuilder
-        private var iconView: some View {
+        let viewModel: PaymentSelectDropDownView.ViewModel.IconViewModel
+        var iconColor: Color = .iconGray
+        
+        var body: some View {
             
-            if let icon = viewModel.icon {
+            Group {
                 
-                icon
-                    .resizable()
-                    .foregroundColor(.iconGray)
-                
-            } else {
-                
-                Color.clear
+                switch viewModel {
+                case let .image(image):
+                    image
+                        .resizable()
+                        .renderingMode(.template)
+                        .foregroundColor(iconColor)
+                    
+                case .placeholder:
+                    Color.clear
+                }
             }
+        }
+    }
+    
+    struct RadioIconView: View {
+        
+        let isSelected: Bool
+        
+        var body: some View {
+            
+            Image(radioIconName)
+                .renderingMode(.template)
+                .foregroundColor(radioIconColor)
         }
         
         //TODO: load placeholder icon from StyleGuide
         private var radioIconName: String { isSelected ? "Payments Icon Circle Selected" : "Payments Icon Circle Empty" }
-        
         private var radioIconColor: Color { isSelected ? .buttonPrimary : .mainColorsGray }
     }
     
-    struct SelectedOptionView: View {
-        
-        let selectedOption: PaymentSelectDropDownView.ViewModel.SelectedOptionViewModel
-        let hasOptions: Bool
-        
-        var body: some View {
+    enum MatchedID: Hashable {
             
-            HStack(spacing: 16) {
-                
-                iconView
-                    .frame(width: 32, height: 32)
-                                
-                VStack(spacing: 8) {
-                    
-                    Text(selectedOption.title)
-                        .font(.textBodyMR14180())
-                        .foregroundColor(.textPlaceholder)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    Text(selectedOption.selectTitle)
-                        .font(.textH4M16240())
-                        .foregroundColor(hasOptions ? .textPrimary : .textWhite)
-                        .frame(alignment: .leading)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                
-                Spacer()
-                
-                Button(action: selectedOption.button.action, label: chevronButtonLabel)
-                    .allowsHitTesting(isActive)
-            }
-        }
-        
-        @ViewBuilder
-        private var iconView: some View {
-            
-            if let icon = selectedOption.icon {
-                
-                icon
-                    .resizable()
-                    .renderingMode(.template)
-                    .foregroundColor(.iconGray)
-                    .frame(width: 24, height: 24)
-                    .opacity(hasOptions ? 0.2 : 1)
-                
-            } else {
-                
-                Color.clear
-            }
-        }
-        
-        private var isActive: Bool { selectedOption.button.mode == .active }
-        
-        @ViewBuilder
-        private func chevronButtonLabel() -> some View {
-            
-            let rotation: Angle = isActive
-            ? .degrees(hasOptions ? -90 : 90)
-            : .degrees(90)
-            let opacity = isActive ? 1 : 0.2
-            
-            Image.ic24ChevronRight
-                .foregroundColor(.iconGray)
-                .rotationEffect(rotation)
-                .opacity(opacity)
-                .frame(width: 24, height: 24)
-        }
+        case selectedOption
     }
 }
 
@@ -389,24 +427,8 @@ struct PaymentSelectDropDownView_Previews: PreviewProvider {
         
         Group {
             
-            previewGroup()
-            
-            VStack(content: previewGroup)
-                .previewDisplayName("Xcode 14")
+            PaymentsGroupView(viewModel: PaymentSelectDropDownView.ViewModel.selectedGroup)
         }
-        .previewLayout(.sizeThatFits)
-    }
-    
-    private static func previewGroup() -> some View {
-        
-        Group {
-            
-            PaymentSelectDropDownView(viewModel: .sample)
-            
-            PaymentSelectDropDownView(viewModel: .sampleMultiple)
-        }
-        .padding()
-        .background(Color.mainColorsBlack)
     }
 }
 
@@ -414,56 +436,18 @@ struct PaymentSelectDropDownView_Previews: PreviewProvider {
 
 extension PaymentSelectDropDownView.ViewModel {
     
+    static let selectedGroup = PaymentsGroupViewModel(items: [
+        
+        PaymentSelectDropDownView.ViewModel.sample
+    ])
+    
     static let sample = PaymentSelectDropDownView.ViewModel(
-        selectedOption: .preview(button: .preview(icon: .ic16ChevronRight, mode: .inactive)),
-        options: nil
-    )
-    
-    static let sampleMultiple = PaymentSelectDropDownView.ViewModel(
-        selectedOption: .preview(button: .preview(icon: .ic24ChevronRight, mode: .active)),
-        options: .preview
-    )
-}
-
-private extension PaymentSelectDropDownView.ViewModel.SelectedOptionViewModel {
-    
-    static func preview(
-        button: PaymentSelectDropDownView.ViewModel.SelectedOptionViewModel.ButtonViewModel
-    ) -> PaymentSelectDropDownView.ViewModel.SelectedOptionViewModel {
-        
-        .init(
-            option: .init(
-                id: "1",
-                icon: .ic24Phone,
-                title: "По номеру телефона"
-            ),
-            title: "Перевести",
-            button: button
-        )
-    }
-}
-
-private extension PaymentSelectDropDownView.ViewModel.SelectedOptionViewModel.ButtonViewModel {
-    
-    static func preview(
-        icon: Image,
-        mode: Mode
-    ) -> PaymentSelectDropDownView.ViewModel.SelectedOptionViewModel.ButtonViewModel {
-        
-        .init(action: {}, mode: mode)
-    }
-}
-
-private extension Array where Element == PaymentSelectDropDownView.ViewModel.OptionViewModel {
-    
-    static let preview: Self = [
-        .init(option: .byName, title: "По ФИО", action: {_ in }),
-        .init(option: .byPhone, title: "По номеру телефона", action: {_ in })
-    ]
-}
-
-private extension PaymentSelectDropDownView.ViewModel.Option {
-    
-    static let byName: Self = .init(id: "1", icon: nil, title: "По ФИО")
-    static let byPhone: Self = .init(id: "2", icon: .ic24Phone, title: "По номеру телефона")
+        with: .init(
+            .init(id: "some_parameter_id",
+                  value: "0"),
+            title: "Тип оплаты",
+            options: [
+                .init(id: "0", name: "По номеру телефона", icon: .name("ic24Phone")),
+                .init(id: "1", name: "По реквизитам", icon: nil)
+            ]))!
 }
