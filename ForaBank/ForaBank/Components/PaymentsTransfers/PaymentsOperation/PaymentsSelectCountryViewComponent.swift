@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import TextFieldRegularComponent
 
 //MARK: - ViewModel
 
@@ -37,7 +38,7 @@ extension PaymentsSelectCountryView {
         
         convenience init(with parameterSelect: Payments.ParameterSelectCountry, model: Model) throws {
             
-            let selectedItem = SelectedItemViewModel(model, icon: .placeholder, textField: .init(text: nil, placeholder: parameterSelect.title, style: .default, limit: nil, regExp: nil), action: {})
+            let selectedItem = SelectedItemViewModel(model, icon: .placeholder, textField: .init(text: nil, placeholder: parameterSelect.title, keyboardType: .default, limit: nil), action: {})
             
             self.init(model, selectedItem: selectedItem, list: nil, source: parameterSelect)
             
@@ -45,7 +46,7 @@ extension PaymentsSelectCountryView {
                 
                 let image = model.images.value.filter({$0.key == country.md5hash})
                 
-                self.selectedItem = SelectedItemViewModel(model, icon: .image(image.values.first?.image ?? .ic12ArrowDown), textField: .init(text: country.name.capitalized, placeholder: parameterSelect.title, style: .default, limit: nil, regExp: nil), action: { [weak self] in
+                self.selectedItem = SelectedItemViewModel(model, icon: .image(image.values.first?.image ?? .ic12ArrowDown), textField: .init(text: country.name.capitalized, placeholder: parameterSelect.title, keyboardType: .default, limit: nil), action: { [weak self] in
                     self?.action.send(PaymentsSelectCountryViewModelAction.ShowCountriesList())
                 })
             }
@@ -159,7 +160,7 @@ extension PaymentsSelectCountryView.ViewModel {
                 
             }.store(in: &bindings)
         
-        selectedItem.textField.isEditing
+        selectedItem.textField.$isEditing
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] isEditing in
                 
@@ -634,7 +635,7 @@ struct PaymentsSelectCountryView: View {
                         
                         HStack {
                             
-                            TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16))
+                            TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16), textColor: .textSecondary)
                                 .font(.textH4M16240())
                                 .foregroundColor(.textSecondary)
                             
@@ -784,6 +785,6 @@ extension PaymentsSelectCountryView.ViewModel.ListViewModel {
 
 extension PaymentsSelectCountryView.ViewModel.SelectedItemViewModel {
     
-    static let selectedViewModelSample = PaymentsSelectCountryView.ViewModel.SelectedItemViewModel(.emptyMock, icon: .placeholder, textField: .init(text: nil, placeholder: "Бик банка получателя", style: .number, limit: 10, regExp: nil), title: "", action: {})
+    static let selectedViewModelSample = PaymentsSelectCountryView.ViewModel.SelectedItemViewModel(.emptyMock, icon: .placeholder, textField: .init(text: nil, placeholder: "Бик банка получателя", keyboardType: .number, limit: 10), title: "", action: {})
 }
 

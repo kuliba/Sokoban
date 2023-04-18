@@ -6,6 +6,7 @@
 //
 
 @testable import ForaBank
+@testable import TextFieldRegularComponent
 import XCTest
 
 final class PaymentsCodeViewComponentTests: XCTestCase {
@@ -27,14 +28,10 @@ final class PaymentsCodeViewComponentTests: XCTestCase {
         // textField
         XCTAssertNotNil(sut.textField)
         XCTAssertEqual(sut.textField.text, "123456")
-        XCTAssertEqual(sut.textField.placeholder, "OTP Title")
-        XCTAssertEqual(sut.textField.isEditing.value, false)
-        XCTAssertEqual(sut.textField.isEnabled, true)
-        XCTAssertEqual(sut.textField.style, .number)
-        XCTAssertNil(sut.textField.limit)
-        XCTAssert(try XCTUnwrap(sut.textField.toolbar?.doneButton.isEnabled))
-        XCTAssertNotNil(sut.textField.toolbar?.closeButton)
-        XCTAssertEqual(sut.textField.textColor, .textSecondary)
+        XCTAssertEqual(sut.textField.isEditing, false)
+        XCTAssertEqual(sut.textField.keyboardType, .number)
+        XCTAssert(try XCTUnwrap(sut.textField.toolbar.doneButton.isEnabled))
+        XCTAssertNotNil(sut.textField.toolbar.closeButton)
     }
     
     func test_shouldSetResendStateToButton_onResendDelayIsOverAction() {

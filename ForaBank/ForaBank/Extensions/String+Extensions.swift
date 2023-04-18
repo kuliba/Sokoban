@@ -167,13 +167,13 @@ extension String {
     
     func restricted(
         withLimit limit: Int?,
-        forStyle style: TextFieldRegularView.ViewModel.Style
+        forStyle style: StringFilteringStyle
     ) -> String {
         
         let filtered: String = {
             switch style {
-            case .number:  return filter(\.isNumber)
             case .default: return self
+            case .number:  return filter(\.isNumber)
             }
         }()
         
@@ -181,23 +181,51 @@ extension String {
         return String(filtered.prefix(limit))
     }
     
-    func replacing(inRange: NSRange, with replacementText: String) -> String {
+    func shouldChangeTextIn(
+        range: NSRange,
+        with replacementText: String
+    ) -> String {
         
-        guard inRange.lowerBound >= 0,
-              let rangeStart = index(startIndex, offsetBy: inRange.lowerBound, limitedBy: endIndex),
-              let rangeEnd = index(startIndex, offsetBy: inRange.upperBound, limitedBy: endIndex)
+        guard
+            range.location + range.length >= 0,
+            let rangeStart = index(startIndex, offsetBy: range.lowerBound, limitedBy: endIndex),
+            let rangeEnd = index(startIndex, offsetBy: range.upperBound, limitedBy: endIndex)
         else {
             return replacementText
         }
         
-        var updatedValue = self
-        updatedValue.replaceSubrange(rangeStart..<rangeEnd, with: replacementText)
+        var copy = self
+        copy.replaceSubrange(rangeStart..<rangeEnd, with: replacementText)
         
-        return updatedValue
+        return copy
     }
 }
 
 enum StringHelperError: Error {
     
     case unableCreateDataFromString
+}
+
+enum StringFilteringStyle {
+    
+    case `default`, number
+}
+
+extension Optional where Wrapped == String {
+    
+    func updateMasked(
+        inRange range: NSRange,
+        update: String,
+        limit: Int?,
+        style: StringFilteringStyle
+    ) -> String {
+        
+        guard let value = self else {
+            return update.restricted(withLimit: limit, forStyle: style)
+        }
+        
+        return value
+            .shouldChangeTextIn(range: range, with: update)
+            .restricted(withLimit: limit, forStyle: style)
+    }
 }

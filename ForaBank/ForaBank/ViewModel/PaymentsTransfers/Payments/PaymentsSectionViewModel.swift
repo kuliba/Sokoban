@@ -248,7 +248,7 @@ extension PaymentsSectionViewModel {
             return PaymentsInfoView.ViewModel(with: parameterInfo)
             
         case let parameterInput as Payments.ParameterInput:
-            return PaymentsInputView.ViewModel(with: parameterInput, model: model)
+            return PaymentsInputView.ViewModel(with: parameterInput)
             
         case let parameterInputPhone as Payments.ParameterInputPhone:
             return PaymentsInputPhoneView.ViewModel(with: parameterInputPhone, model: model)

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import TextFieldRegularComponent
 
 //MARK: - ViewModel
 
@@ -88,7 +89,7 @@ extension PaymentsNameView {
                     
                 }.store(in: &bindings)
             
-            person.lastName.textField.isEditing
+            person.lastName.textField.$isEditing
                 .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] isEditing in
@@ -136,7 +137,7 @@ extension PaymentsNameView {
                     
                 }.store(in: &bindings)
             
-            person.firstName.textField.isEditing
+            person.firstName.textField.$isEditing
                 .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] isEditing in
@@ -184,7 +185,7 @@ extension PaymentsNameView {
                     
                 }.store(in: &bindings)
             
-            person.middleName.textField.isEditing
+            person.middleName.textField.$isEditing
                 .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] isEditing in
@@ -291,7 +292,7 @@ extension PaymentsNameView.ViewModel {
         convenience init(name: Payments.ParameterName.Name) {
       
             let title = name.value != nil ? name.title : nil
-            let textField = TextFieldRegularView.ViewModel(text: name.value, placeholder: name.title, style: .default, limit: name.limitator.limit, isEnabled: true)
+            let textField = TextFieldRegularView.ViewModel(text: name.value, placeholder: name.title, keyboardType: .default, limit: name.limitator.limit)
             
             self.init(title: title, textField: textField)
         }
@@ -481,7 +482,7 @@ extension PaymentsNameView {
                 
                 HStack(spacing: 0) {
   
-                    TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 14))
+                    TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 14), textColor: .textSecondary)
                         .frame(minWidth: 24)
                         .font(.textBodyMM14200())
                     
