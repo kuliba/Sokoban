@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import TextFieldRegularComponent
 
 //MARK: - ViewModel
 
@@ -220,7 +221,7 @@ extension PaymentsSelectView.ViewModel {
                 
                 self.init(icon: .init(with: selectedOption, and: parameterSelect.icon),
                           title: parameterSelect.title,
-                          textField: .init(text: nil, placeholder: selectedOption.name, style: .default, limit: nil),
+                          textField: .init(text: nil, placeholder: selectedOption.name, keyboardType: .default, limit: nil),
                           filterred: optionsViewModels,
                           options: optionsViewModels,
                           selected: selectedOption.id)
@@ -229,7 +230,7 @@ extension PaymentsSelectView.ViewModel {
                 self.init(
                     icon: .init(with: parameterSelect.icon),
                     title: parameterSelect.title,
-                    textField: .init(text: nil, placeholder: parameterSelect.placeholder, style: .default, limit: nil),
+                    textField: .init(text: nil, placeholder: parameterSelect.placeholder, keyboardType: .default, limit: nil),
                     filterred: optionsViewModels,
                     options: optionsViewModels,
                     selected: nil)
@@ -455,7 +456,7 @@ extension PaymentsSelectView {
                             .font(.textBodyMR14180())
                             .matchedGeometryEffect(id: "title", in: namespace)
                         
-                        TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16), backgroundColor: Color.clear, tintColor: .textSecondary)
+                        TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16), backgroundColor: Color.clear, tintColor: .textSecondary, textColor: .textSecondary)
                     }
                     
                     Spacer()

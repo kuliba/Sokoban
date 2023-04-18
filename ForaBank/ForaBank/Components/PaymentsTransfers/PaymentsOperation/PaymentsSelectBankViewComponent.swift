@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import TextFieldRegularComponent
 
 //MARK: - ViewModel
 
@@ -92,7 +93,7 @@ extension PaymentsSelectBankView.ViewModel {
             .CombineLatest(
                 $item
                     .compactMap(\.textField)
-                    .flatMap( { $0.isEditing } )
+                    .flatMap( { $0.$isEditing } )
                     .compactMap({ $0 }),
                 $item
                     .compactMap(\.textField)
@@ -158,7 +159,7 @@ extension PaymentsSelectBankView.ViewModel {
                     return
                 }
                 
-                let state = Item.State.editing(from: item.state, placeholder: parameterSelectBank.placeholder, style: .init(keyboardType: parameterSelectBank.keyboardType), limit: nil)
+                let state = Item.State.editing(from: item.state, placeholder: parameterSelectBank.placeholder, keyboardType: .init(parameterSelectBank.keyboardType), limit: nil)
                 
                 withAnimation {
                     
@@ -251,6 +252,17 @@ extension PaymentsSelectBankView.ViewModel {
     }
 }
 
+private extension TextFieldRegularView.ViewModel.KeyboardType {
+    
+    init(_ keyboardType: Payments.ParameterSelectBank.KeyboardType) {
+        
+        switch keyboardType {
+        case .normal: self = .default
+        case .number: self = .number
+        }
+    }
+}
+
 extension PaymentsSelectBankView.ViewModel {
     
     struct Item {
@@ -326,17 +338,17 @@ extension PaymentsSelectBankView.ViewModel.Item {
         case editing(TextFieldRegularView.ViewModel)
         case selected(PaymentsSelectBankView.ViewModel.SelectedItemViewModel)
         
-        static func editing(from state: State, placeholder: String, style: TextFieldRegularView.ViewModel.Style, limit: Int?) -> State {
+        static func editing(from state: State, placeholder: String, keyboardType: TextFieldRegularView.ViewModel.KeyboardType, limit: Int?) -> State {
             
             switch state {
             case .`default`:
-                return .editing(.init(text: nil, placeholder: placeholder, style: style, limit: limit))
+                return .editing(.init(text: nil, placeholder: placeholder, keyboardType: keyboardType, limit: limit))
                 
             case .editing:
                 return state
                 
             case .selected:
-                return .editing(.init(text: nil, placeholder: placeholder, style: style, limit: limit))
+                return .editing(.init(text: nil, placeholder: placeholder, keyboardType: keyboardType, limit: limit))
             }
         }
     }
@@ -537,7 +549,7 @@ struct PaymentsSelectBankView: View {
                             Spacer()
                         }
                         
-                        TextFieldRegularView(viewModel: textField, font: .systemFont(ofSize: 16, weight: .medium))
+                        TextFieldRegularView(viewModel: textField, font: .systemFont(ofSize: 16, weight: .medium), textColor: .textSecondary)
                             .frame(height: 24)
                     }
                     
@@ -817,13 +829,13 @@ extension PaymentsSelectBankView.ViewModel {
     
     
     //Focus State
-    static let sampleFocus = PaymentsSelectBankView.ViewModel(title: "Банк получателя", item: .init(icon: .ic24Bank, placeholder: "Выберите банк", state: .editing(.init(text: nil, placeholder: "Выберите банк", style: .number, limit: nil))), banksList: .init(itemsList: []))
+    static let sampleFocus = PaymentsSelectBankView.ViewModel(title: "Банк получателя", item: .init(icon: .ic24Bank, placeholder: "Выберите банк", state: .editing(.init(text: nil, placeholder: "Выберите банк", keyboardType: .number, limit: nil))), banksList: .init(itemsList: []))
     
     //Selected State
     static let sampleSelected = PaymentsSelectBankView.ViewModel(title: "Банк получателя", item: .init(icon: .ic24Bank, placeholder: "Выберите банк", state: .selected(.selectedItem)), banksList: .init(itemsList: []))
     
     //With Items
-    static let sampleItems = PaymentsSelectBankView.ViewModel(title: "Банк получателя", item: .init(icon: .ic24Bank, placeholder: "Выберите банк", state: .editing(.init(text: nil, placeholder: "Выберите банк", style: .number, limit: nil))), banksList: .init(itemsList: itemsListSample))
+    static let sampleItems = PaymentsSelectBankView.ViewModel(title: "Банк получателя", item: .init(icon: .ic24Bank, placeholder: "Выберите банк", state: .editing(.init(text: nil, placeholder: "Выберите банк", keyboardType: .number, limit: nil))), banksList: .init(itemsList: itemsListSample))
     
     static let itemsListSample: [PaymentsSelectBankView.ViewModel.BanksList.ItemViewModel] = [.init(id: UUID().description, searchValue: "searchValue", icon: .icon(.ic24MoreHorizontal), name: "См. все", subtitle: nil, type: .selectAll ), .init(id: UUID().description, searchValue: "searchValue", icon: .image(.init("ID Bank")), name: "ID Bank", subtitle: nil, type: .regular )]
 }

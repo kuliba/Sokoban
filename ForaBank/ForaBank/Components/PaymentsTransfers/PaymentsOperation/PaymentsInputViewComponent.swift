@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import TextFieldRegularComponent
 
 //MARK: - ViewModel
 
@@ -23,26 +24,24 @@ extension PaymentsInputView {
         @Published var warning: String?
         @Published var info: String?
         
-        private let model: Model
         private static let iconPlaceholder = Image.ic24File
         
         var parameterInput: Payments.ParameterInput? { source as? Payments.ParameterInput }
         override var isValid: Bool { parameterInput?.validator.isValid(value: value.current) ?? false }
         
-        init(icon: Image?, description: String, content: String, info: String? = nil, warning: String? = nil, textField: TextFieldRegularView.ViewModel, additionalButton: ButtonViewModel? = nil, model: Model = .emptyMock, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
+        init(icon: Image?, description: String, content: String, info: String? = nil, warning: String? = nil, textField: TextFieldRegularView.ViewModel, additionalButton: ButtonViewModel? = nil, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.icon = icon
             self.description = description
             self.info = info
             self.warning = warning
             self.additionalButton = additionalButton
-            self.model = model
             self.textField = textField
             
             super.init(source: source)
         }
         
-        convenience init(with parameterInput: Payments.ParameterInput, model: Model) {
+        convenience init(with parameterInput: Payments.ParameterInput) {
             
             let icon = parameterInput.icon?.image
             let description = parameterInput.title
@@ -51,19 +50,19 @@ extension PaymentsInputView {
             var textField: TextFieldRegularView.ViewModel
             switch parameterInput.inputType {
             case .default:
-                textField = .init(text: content, placeholder: description, style: .default, limit: parameterInput.limitator?.limit)
+                textField = .init(text: content, placeholder: description, keyboardType: .default, limit: parameterInput.limitator?.limit)
 
             case .number:
-                textField = .init(text: content, placeholder: description, style: .number, limit: parameterInput.limitator?.limit)
+                textField = .init(text: content, placeholder: description, keyboardType: .number, limit: parameterInput.limitator?.limit)
             }
             
             if parameterInput.hint != nil {
                 
-                self.init(icon: icon, description: description, content: content, textField: textField, additionalButton: .init(icon: Image.ic24Info, action: {}), model: model, source: parameterInput)
+                self.init(icon: icon, description: description, content: content, textField: textField, additionalButton: .init(icon: Image.ic24Info, action: {}), source: parameterInput)
                 
             } else {
                 
-                self.init(icon: icon, description: description, content: content, textField: textField, model: model, source: parameterInput)
+                self.init(icon: icon, description: description, content: content, textField: textField, source: parameterInput)
             }
             
             bind()
@@ -71,8 +70,6 @@ extension PaymentsInputView {
         
         override func update(source: PaymentsParameterRepresentable) {
             super.update(source: source)
-            
-            textField.setText(to: source.value)
             
             withAnimation {
                 
@@ -119,61 +116,54 @@ extension PaymentsInputView.ViewModel {
     
     private func bind() {
         
-        textField.$text
+        textField.$state
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] content in
+            .sink { [unowned self] state in
                 
-                if content == "" {
-                    
-                    update(value: nil)
-                    
-                } else {
-                    
-                    update(value: content)
+                update(value: state.text)
+
+                withAnimation {
+                    updateTitle(isEditing: state.isEditing)
+                    updateWarning(isEditing: state.isEditing)
                 }
-                
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    
-                    title = value.current != nil || textField.isEditing.value == true ? description : nil
-                }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
+    }
+    
+    private func updateTitle(isEditing: Bool) {
         
-        textField.isEditing
-            .dropFirst()
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] isEditing in
+        if isEditing {
+            
+            title = description
+            
+        } else {
+            
+            title = value.current == nil ? nil : description
+            
+        }
+    }
+    
+    private func updateWarning(isEditing: Bool) {
+        
+        if isEditing {
+            
+            warning = nil
+            
+        } else {
+            
+            if let parameterInput = parameterInput,
+               let action = parameterInput.validator.action(with: value.current, for: .post),
+               case let .warning(message) = action {
                 
-                if isEditing == true {
-                    
-                    withAnimation(.easeIn(duration: 0.2)) {
-                        
-                        self.title = description
-                        self.warning = nil
-                    }
-                    
-                } else {
-                    
-                    self.title = value.current == nil ? nil : description
-                    
-                    if let parameterInput = parameterInput,
-                       let action = parameterInput.validator.action(with: value.current, for: .post),
-                       case .warning(let message) = action {
-                        
-                        withAnimation {
-                            self.warning = message
-                        }
-                        
-                    } else {
-                        
-                        withAnimation {
-                            self.warning = nil
-                        }
-                        
-                    }
-                }
+                warning = message
                 
-            }.store(in: &bindings)
+            } else {
+                
+                warning = nil
+                
+            }
+        }
     }
 }
 
@@ -287,7 +277,8 @@ struct PaymentsInputView: View {
             
             TextFieldRegularView(
                 viewModel: viewModel.textField,
-                font: .systemFont(ofSize: 16)
+                font: .systemFont(ofSize: 16),
+                textColor: .textSecondary
             )
             .frame(minWidth: 24)
             
@@ -375,7 +366,7 @@ struct PaymentsInputView_Previews: PreviewProvider {
         _ parameterInput: Payments.ParameterInput
     ) -> some View {
         
-        PaymentsInputView(viewModel: .init(with: parameterInput, model: .emptyMock))
+        PaymentsInputView(viewModel: .init(with: parameterInput))
     }
 }
 
@@ -383,7 +374,7 @@ struct PaymentsInputView_Previews: PreviewProvider {
 
 extension PaymentsInputView.ViewModel {
     
-    static let sampleError = PaymentsInputView.ViewModel(icon: .paymentsInputSample, description: "description", content: "123", info: "info", warning: "Минимальная длинна 5 символов", textField: .preview, additionalButton: nil, model: .emptyMock)
+    static let sampleError = PaymentsInputView.ViewModel(icon: .paymentsInputSample, description: "description", content: "123", info: "info", warning: "Минимальная длинна 5 символов", textField: .preview, additionalButton: nil)
 }
 
 private extension Payments.ParameterInput {
@@ -410,7 +401,7 @@ private extension Payments.ParameterInput {
 
 private extension TextFieldRegularView.ViewModel {
     
-    static let preview: TextFieldRegularView.ViewModel = .init(text: "123", placeholder: "ИНН подразделения", style: .number, limit: nil)
+    static let preview: TextFieldRegularView.ViewModel = .init(text: "123", placeholder: "ИНН подразделения", keyboardType: .number, limit: nil)
 }
 
 private extension Payments.Validation.RulesSystem {

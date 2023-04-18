@@ -36,7 +36,7 @@ platform :ios do
       ENV["XCODE_SCHEME"] = ENV["XCODE_SCHEME_RELEASE"]
       ENV["BUILD_CONFIG"] = "Release"
     else
-      ENV["XCODE_SCHEME"] = ENV["XCODE_SCHEME_BETA"]
+      ENV["XCODE_SCHEME"] = "CI"
       ENV["BUILD_CONFIG"] = "Debug"
     end
 

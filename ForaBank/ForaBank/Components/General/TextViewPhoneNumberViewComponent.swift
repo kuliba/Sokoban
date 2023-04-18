@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import UIKitHelpers
 
 extension TextViewPhoneNumberView {
     
@@ -264,13 +265,13 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
                 viewModel.text = result
             
             case .banks:
-                let result = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: nil, style: .default)
+                let result = textView.text.updateMasked(inRange: range, update: text, limit: nil, style: .default)
                 
                 textView.text = result
                 viewModel.text = result
                 
             case .abroad:
-                let result = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: nil, style: .default).filter(\.isLetter)
+                let result = textView.text.updateMasked(inRange: range, update: text, limit: nil, style: .default).filter(\.isLetter)
                     
                 textView.text = result
                 viewModel.text = result
@@ -282,7 +283,7 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
                 viewModel.text = result
                 
             default:
-                let result = TextFieldRegularView.updateMasked(value: textView.text, inRange: range, update: text, limit: nil, style: .default)
+                let result = textView.text.updateMasked(inRange: range, update: text, limit: nil, style: .default)
                 
                 textView.text = result
                 viewModel.text = result

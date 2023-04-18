@@ -132,17 +132,17 @@ extension PaymentsContactGroupViewModel {
     
     static let sampleExpanded = PaymentsContactGroupViewModel(
         items: [
-            PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов"), icon: .init(named: "ic24User"), title: "Фамилия получателя*", validator: .init(rules: [])), model: .emptyMock),
-            PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иван"), title: "Имя получателя*", validator: .init(rules: [])), model: .emptyMock),
-            PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), title: "Отчество (если есть)", validator: .init(rules: [])), model: .emptyMock)
+            PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов"), icon: .init(named: "ic24User"), title: "Фамилия получателя*", validator: .init(rules: []))),
+            PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иван"), title: "Имя получателя*", validator: .init(rules: []))),
+            PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), title: "Отчество (если есть)", validator: .init(rules: [])))
         ],
         isCollapsed: false)
     
     static let sampleCollapsed = PaymentsContactGroupViewModel(
         items: [
-            PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов"), icon: .init(named: "ic24User"), title: "Фамилия получателя*", validator: .init(rules: [])), model: .emptyMock),
-            PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иван"), title: "Имя получателя*", validator: .init(rules: [])), model: .emptyMock),
-            PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванович"), title: "Отчество (если есть)", validator: .init(rules: [])), model: .emptyMock)
+            PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов"), icon: .init(named: "ic24User"), title: "Фамилия получателя*", validator: .init(rules: []))),
+            PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иван"), title: "Имя получателя*", validator: .init(rules: []))),
+            PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванович"), title: "Отчество (если есть)", validator: .init(rules: [])))
         ],
         isCollapsed: true)
 }

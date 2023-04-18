@@ -96,8 +96,6 @@ final class StringRestrictedTests: XCTestCase {
         let limit = Int?.none
         let restricted = makeSUT(string, limit: limit, style: .number)
         
-        let expected = "12345678"
-        
         XCTAssertEqual("12345678", restricted)
         XCTAssertNil(limit)
     }
@@ -144,7 +142,7 @@ final class StringRestrictedTests: XCTestCase {
     private func makeSUT(
         _ string: String,
         limit: Int? = nil,
-        style: TextFieldRegularView.ViewModel.Style
+        style: StringFilteringStyle
     ) -> String {
         
         return string.restricted(withLimit: limit, forStyle: style)

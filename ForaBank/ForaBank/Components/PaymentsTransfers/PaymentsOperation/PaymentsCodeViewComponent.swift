@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import TextFieldRegularComponent
 
 extension PaymentsCodeView {
     
@@ -36,7 +37,7 @@ extension PaymentsCodeView {
             
             self.icon = parameterCode.icon.image ?? Image.ic24SmsCode
             self.description = parameterCode.title
-            self.textField = .init(text: parameterCode.parameter.value ?? "", placeholder: parameterCode.title, style: .number, limit: parameterCode.limit, needCloseButton: true)
+            self.textField = .init(text: parameterCode.parameter.value ?? "", placeholder: parameterCode.title, keyboardType: .number, limit: parameterCode.limit, needCloseButton: true)
             self.editingState = .idle
             self.resendState = nil
             
@@ -130,7 +131,7 @@ extension PaymentsCodeView {
                     
                 }.store(in: &bindings)
             
-            textField.isEditing
+            textField.$isEditing
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] isEditing in
                     
@@ -306,7 +307,7 @@ struct PaymentsCodeView: View {
     
     private var textField: some View {
         
-        TextFieldRegularView(viewModel: viewModel.textField, font: .textH4M16240())
+        TextFieldRegularView(viewModel: viewModel.textField, font: .textH4M16240(), textColor: .textSecondary)
             .onTapGesture {
                 viewModel.editingState = .idle
             }
@@ -421,11 +422,11 @@ struct PaymentCodeView_Previews: PreviewProvider {
 
 extension PaymentsCodeView.ViewModel {
     
-    static let sample = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: nil, textField: .init(text: nil, placeholder: "Введите код из смс", style: .number, limit: 6), editingState: .idle, resendState: .timer(.init(delay: 5, completeAction: {})))
+    static let sample = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: nil, textField: .init(text: nil, placeholder: "Введите код из смс", keyboardType: .number, limit: 6), editingState: .idle, resendState: .timer(.init(delay: 5, completeAction: {})))
     
-    static let sampleCorrect = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: "Введите код из смс", textField: .init(text: nil, placeholder: "Введите код из смс", style: .number, limit: 6), editingState: .editing, resendState: .timer(.init(delay: 60, completeAction: {})))
+    static let sampleCorrect = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: "Введите код из смс", textField: .init(text: nil, placeholder: "Введите код из смс", keyboardType: .number, limit: 6), editingState: .editing, resendState: .timer(.init(delay: 60, completeAction: {})))
     
-    static let sampleError = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: "Введите код из смс", textField: .init(text: nil, placeholder: "Введите код из смс", style: .number, limit: 6), editingState: .error("Код введен неправильно"), resendState: .timer(.init(delay: 60, completeAction: {})))
+    static let sampleError = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: "Введите код из смс", textField: .init(text: nil, placeholder: "Введите код из смс", keyboardType: .number, limit: 6), editingState: .error("Код введен неправильно"), resendState: .timer(.init(delay: 60, completeAction: {})))
     
-    static let sampleButton = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: "Введите код из смс", textField: .init(text: nil, placeholder: "Введите код из смс", style: .number, limit: 6), editingState: .idle, resendState: .button(.init()))
+    static let sampleButton = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: "Введите код из смс", textField: .init(text: nil, placeholder: "Введите код из смс", keyboardType: .number, limit: 6), editingState: .idle, resendState: .button(.init()))
 }

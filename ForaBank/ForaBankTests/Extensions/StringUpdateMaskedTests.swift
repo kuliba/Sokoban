@@ -1,14 +1,16 @@
 //
-//  TextFieldRegularComponentTests.swift
+//  StringUpdateMaskedTests.swift
 //  ForaBankTests
 //
-//  Created by Igor Malyarov on 10.04.2023.
+//  Created by Igor Malyarov on 15.04.2023.
 //
 
 @testable import ForaBank
 import XCTest
 
-final class TextFieldRegularComponentTests: XCTestCase {
+final class StringUpdateMaskedTests: XCTestCase {
+    
+    // MARK: - updateMasked
     
     func test_updateMasked_shouldReturnUpdate_onNilValue() throws {
         
@@ -61,6 +63,28 @@ final class TextFieldRegularComponentTests: XCTestCase {
         XCTAssertEqual(updatedMasked, "ABC")
     }
     
+    func test_updateMasked_should________onLastSymbolDelete() throws {
+        
+        let value = "a"
+        let (location, length) = (1, 1)
+        let update = ""
+        
+        let updatedMasked = makeSUT(value: value, location: location, length: length, update: update)
+        
+        XCTAssertEqual(updatedMasked, "")
+    }
+    
+    func test_updateMasked_should_________onLastSymbolDelete() throws {
+        
+        let value = "a"
+        let (location, length) = (0, 1)
+        let update = ""
+        
+        let updatedMasked = makeSUT(value: value, location: location, length: length, update: update)
+        
+        XCTAssertEqual(updatedMasked, "")
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
@@ -69,11 +93,11 @@ final class TextFieldRegularComponentTests: XCTestCase {
         length: Int = 0,
         update: String,
         limit: Int? = nil,
-        style: TextFieldRegularView.ViewModel.Style = .default
+        style: StringFilteringStyle = .default
     ) -> String {
         
         let range: NSRange = .init(location: location, length: length)
         
-        return TextFieldRegularView.updateMasked(value: value, inRange: range, update: update, limit: limit, style: style)
+        return value.updateMasked(inRange: range, update: update, limit: limit, style: style)
     }
 }
