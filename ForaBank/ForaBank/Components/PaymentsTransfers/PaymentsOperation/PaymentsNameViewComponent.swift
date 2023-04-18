@@ -424,7 +424,7 @@ extension PaymentsNameView {
             VStack(alignment: .leading, spacing: 0) {
                 
                 Text(viewModel.title)
-                    .font(.textBodySR12160())
+                    .font(.textBodyMR14180())
                     .foregroundColor(.textPlaceholder)
                     .padding(.bottom, 4)
                     .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .opacity))
@@ -473,7 +473,7 @@ extension PaymentsNameView {
                 if let title = viewModel.title {
                     
                     Text(title)
-                        .font(.textBodySR12160())
+                        .font(.textBodyMR14180())
                         .foregroundColor(.textPlaceholder)
                         .padding(.bottom, 4)
                         .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .opacity))
