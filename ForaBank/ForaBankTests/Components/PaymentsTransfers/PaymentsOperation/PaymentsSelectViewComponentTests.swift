@@ -47,8 +47,13 @@ final class PaymentsSelectViewComponentTests: XCTestCase {
             return
         }
         XCTAssertEqual(optionsListViewModel.title, "Тип оплаты")
-        XCTAssertNil(optionsListViewModel.textField.text)
-        XCTAssertEqual(optionsListViewModel.textField.placeholder, "Выберете тип")
+        
+        guard case let .placeholder(placeholderText) = optionsListViewModel.textField.state else {
+            XCTFail("textfield state must be a placeholder")
+            return
+        }
+        XCTAssertEqual(placeholderText, "Выберете тип")
+        
         XCTAssertEqual(optionsListViewModel.filterred, listOptions)
         XCTAssertNil(optionsListViewModel.selected)
     }
@@ -107,8 +112,13 @@ final class PaymentsSelectViewComponentTests: XCTestCase {
             return
         }
         XCTAssertEqual(optionsListViewModel.title, "Тип оплаты")
-        XCTAssertNil(optionsListViewModel.textField.text)
-        XCTAssertEqual(optionsListViewModel.textField.placeholder, "Оплата наличными")
+        
+        guard case let .placeholder(placeholderText) = optionsListViewModel.textField.state else {
+            XCTFail("textfield state must be a placeholder")
+            return
+        }
+        XCTAssertEqual(placeholderText, "Оплата наличными")
+        
         XCTAssertEqual(optionsListViewModel.filterred, listOptions)
         XCTAssertEqual(optionsListViewModel.selected, "0")
     }
