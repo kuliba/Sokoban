@@ -968,6 +968,7 @@
 		7758754927996D510080115D /* LocalAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754827996D510080115D /* LocalAgentProtocol.swift */; };
 		7758754D27996DCB0080115D /* LocalAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754C27996DCB0080115D /* LocalAgent.swift */; };
 		7758754F27996E610080115D /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754E27996E610080115D /* FileManager+Extensions.swift */; };
+		7758DFD229EB1DE200060761 /* PaymentsSelectViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758DFD129EB1DE200060761 /* PaymentsSelectViewComponentTests.swift */; };
 		775F2B99286B6ECE000C33E1 /* HideTabBarModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775F2B98286B6ECE000C33E1 /* HideTabBarModifier.swift */; };
 		7763A690279DAFD10064B037 /* EncryptionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7763A68F279DAFD10064B037 /* EncryptionProtocols.swift */; };
 		7763A692279DB1CB0064B037 /* CSRFAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7763A691279DB1CB0064B037 /* CSRFAgentProtocol.swift */; };
@@ -2610,6 +2611,7 @@
 		7758754827996D510080115D /* LocalAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentProtocol.swift; sourceTree = "<group>"; };
 		7758754C27996DCB0080115D /* LocalAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgent.swift; sourceTree = "<group>"; };
 		7758754E27996E610080115D /* FileManager+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Extensions.swift"; sourceTree = "<group>"; };
+		7758DFD129EB1DE200060761 /* PaymentsSelectViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectViewComponentTests.swift; sourceTree = "<group>"; };
 		775F2B98286B6ECE000C33E1 /* HideTabBarModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideTabBarModifier.swift; sourceTree = "<group>"; };
 		7763A68F279DAFD10064B037 /* EncryptionProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionProtocols.swift; sourceTree = "<group>"; };
 		7763A691279DB1CB0064B037 /* CSRFAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgentProtocol.swift; sourceTree = "<group>"; };
@@ -4220,6 +4222,7 @@
 		2AB5FEA429E6815B0055BE57 /* PaymentsOperation */ = {
 			isa = PBXGroup;
 			children = (
+				7758DFD129EB1DE200060761 /* PaymentsSelectViewComponentTests.swift */,
 				2A4B62F129E6AE1200788F56 /* PaymentsCodeViewComponentTests */,
 				2AB5FEA729E6833E0055BE57 /* UIImage+TestHelpers.swift */,
 			);
@@ -10146,6 +10149,7 @@
 				77E289A228592A8E0048141B /* CalendarExtensionsTests.swift in Sources */,
 				77CCEA6628EF034000C62215 /* PaymentsStepTests.swift in Sources */,
 				684533752798532300104A8B /* CsrfDataTests.swift in Sources */,
+				7758DFD229EB1DE200060761 /* PaymentsSelectViewComponentTests.swift in Sources */,
 				0BCFBE032817F77D003F2F36 /* ModelNotificationsTests.swift in Sources */,
 				77EC58BB27712AF50054D75C /* TransferAnywayTests.swift in Sources */,
 				77EC58CB277133C40054D75C /* PaymentTemplateTests.swift in Sources */,
