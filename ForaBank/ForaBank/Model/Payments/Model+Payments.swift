@@ -88,6 +88,22 @@ extension Model {
                     throw Payments.Operation.Error.failedLoadServicesForCategory(category)
                 }
                 
+                //TODO: remove this when fssp payment will be implemented
+                //code to remove start
+                let services: [Payments.Service] = [.fns, .fms]
+                
+                let operatorsCodes = services.compactMap{ $0.operators.first?.rawValue }
+                let anywayOperators = anywayGroup.operators.filter{ operatorsCodes.contains($0.code)}
+                let options = services.compactMap { paymentsParameterRepresentableSelectServiceOption(for: $0, with: anywayOperators)}
+                
+                let selectServiceParameter = Payments.ParameterSelectService(category: category, options: options)
+                
+                LoggerAgent.shared.log(level: .debug, category: .payments, message: "Select service parameter created with options: \(options.map({ $0.service })))")
+                
+                return .select(selectServiceParameter)
+                //code to remove end
+                
+                /*
                 let operatorsCodes = category.services.compactMap{ $0.operators.first?.rawValue }
                 let anywayOperators = anywayGroup.operators.filter{ operatorsCodes.contains($0.code)}
                 let options = category.services.compactMap { paymentsParameterRepresentableSelectServiceOption(for: $0, with: anywayOperators)}
@@ -97,6 +113,7 @@ extension Model {
                 LoggerAgent.shared.log(level: .debug, category: .payments, message: "Select service parameter created with options: \(options.map({ $0.service })))")
                 
                 return .select(selectServiceParameter)
+                 */
                 
             } else {
                 
