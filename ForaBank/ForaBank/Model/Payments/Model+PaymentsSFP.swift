@@ -27,11 +27,9 @@ extension Model {
             // bank
             let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
             
-            var options = self.bankList.value.map( { Payments.ParameterSelectBank.Option(id: $0.id, name: $0.memberNameRus, subtitle: nil, icon: $0.svgImage, type: .regular, searchValue: $0.memberNameRus)} )
-    
-            options.insert(.init(id: "", name: "См. все", subtitle: nil, icon: nil, type: .selectAll, searchValue: ""), at: 0)
-            
-            let bankParameter = Payments.ParameterSelectBank(.init(id: bankParameterId, value: nil), icon: .iconPlaceholder, title: "Банк получателя", options: options, placeholder: "Начните ввод для поиска", validator: .anyValue, limitator: nil, transferType: .sfp, keyboardType: .normal)
+            let options = self.bankList.value.map( { Payments.ParameterSelectBank.Option(id: $0.id, name: $0.memberNameRus, subtitle: nil, icon: .init(with: $0.svgImage), searchValue: $0.memberNameRus)} )
+
+            let bankParameter = Payments.ParameterSelectBank(.init(id: bankParameterId, value: nil), icon: .iconPlaceholder, title: "Банк получателя", options: options, placeholder: "Начните ввод для поиска", selectAll: .init(type: .banks), keyboardType: .normal)
             
             // product
             let productParameterId = Payments.Parameter.Identifier.product.rawValue

@@ -57,6 +57,7 @@ class Model {
     let countriesListWithSevice: CurrentValueSubject<[CountryWithServiceData], Never>
     let paymentSystemList: CurrentValueSubject<[PaymentSystemData], Never>
     let bankList: CurrentValueSubject<[BankData], Never>
+    let bankListFullInfo: CurrentValueSubject<[BankFullInfoData], Never>
     let prefferedBanksList: CurrentValueSubject<[String], Never>
     let currencyWalletList: CurrentValueSubject<[CurrencyWalletData], Never>
     let centralBankRates: CurrentValueSubject<[CentralBankRatesData], Never>
@@ -171,6 +172,7 @@ class Model {
         self.currencyWalletList = .init([])
         self.centralBankRates = .init([])
         self.bankList = .init([])
+        self.bankListFullInfo = .init([])
         self.prefferedBanksList = .init([])
         self.countriesList = .init([])
         self.countriesListWithSevice = .init([])
@@ -1041,6 +1043,7 @@ private extension Model {
             self.catalogProducts.value = catalogProducts
         }
         
+        //FIXME: why this code is commented? Remove if not recquired
         /*
         if let catalogBanner = localAgent.load(type: [BannerCatalogListData].self) {
             
@@ -1061,6 +1064,11 @@ private extension Model {
         if let bankList = localAgent.load(type: [BankData].self) {
             
             self.bankList.value = bankList
+        }
+        
+        if let bankListFullInfo = localAgent.load(type: [BankFullInfoData].self) {
+            
+            self.bankListFullInfo.value = bankListFullInfo
         }
         
         if let countriesList = localAgent.load(type: [CountryData].self) {

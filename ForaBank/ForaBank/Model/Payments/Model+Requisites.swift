@@ -28,26 +28,11 @@ extension Model {
             // header
             let headerParameter = Payments.ParameterHeader(title: "Перевести", subtitle: "Человеку или организации", icon: nil, rightButton: [.init(icon: ImageData(named: "ic24BarcodeScanner2") ?? .iconPlaceholder, action: .scanQrCode)])
             
-            //MARK: Bic Bank Parameter
-            let bicValidator: Payments.Validation.RulesSystem = {
-                
-                var rules = [Payments.Validation.Rule]()
-                
-                rules.append(Payments.Validation.LengthLimitsRule(lengthLimits: [9], actions: [.post: .warning("Должен состоять из 9 цифр.")]))
+            //MARK: Bic Bank Parameter            
+            let banks = self.dictionaryFullBankInfoPrefferedFirstList()
+            let options = banks.map({Payments.ParameterSelectBank.Option(id: $0.bic, name: $0.rusName ?? $0.fullName, subtitle: $0.bic, icon: .init(with: $0.svgImage), searchValue: $0.bic)})
 
-                rules.append(Payments.Validation.RegExpRule(regExp: "^[0-9]\\d*$", actions: [.post: .warning("Введено некорректное значение")]))
-                
-                return .init(rules: rules)
-            }()
-            
-            guard let banks = self.dictionaryFullBankInfoList() else {
-                throw Payments.Error.missingParameter(Payments.Parameter.Identifier.requisitsBankBic.rawValue)
-            }
-            
-            var options = banks.map({Payments.ParameterSelectBank.Option(id: $0.bic, name: $0.rusName ?? $0.fullName, subtitle: $0.bic, icon: $0.svgImage, type: .regular, searchValue: $0.bic)})
-            options.insert(.init(id: "", name: "См. все", subtitle: nil, icon: nil, type: .selectAll, searchValue: ""), at: 0)
-
-            let bicBankParameter = Payments.ParameterSelectBank(.init(id: bicBankId, value: nil), icon: defaultInputIcon, title: "БИК банка получателя", options: options, placeholder: "Начните ввод для поиска", validator: bicValidator, limitator: .init(limit: 9), transferType: .requisites, keyboardType: .number)
+            let bicBankParameter = Payments.ParameterSelectBank(.init(id: bicBankId, value: nil), icon: defaultInputIcon, title: "БИК банка получателя", options: options, placeholder: "Начните ввод для поиска", selectAll: .init(type: .banksFullInfo), keyboardType: .number)
             
             //MARK: Account Number Parameter
             let accountNumberValidator: Payments.Validation.RulesSystem = {

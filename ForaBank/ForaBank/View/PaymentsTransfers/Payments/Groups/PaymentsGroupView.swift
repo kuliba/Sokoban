@@ -271,7 +271,7 @@ extension PaymentsGroupViewModel {
     
     static let sampleSingleSelect = PaymentsGroupViewModel(items: [PaymentsSelectView.ViewModel.selectedParameter])
     
-    static let sampleSingleSelectBank = PaymentsGroupViewModel(items: [PaymentsSelectBankView.ViewModel.sample])
+    static let sampleSingleSelectBank = PaymentsGroupViewModel(items: [PaymentsSelectBankView.ViewModel.sampleParameter])
     
     static let sampleSingleSelectCountry = PaymentsGroupViewModel(items: [PaymentsSelectCountryView.ViewModel.sample])
     
@@ -296,7 +296,7 @@ extension PaymentsGroupViewModel {
     static let sampleSingleAmount = PaymentsGroupViewModel(items: [PaymentsAmountView.ViewModel.amountParameter])
     
     static let sampleGroup = PaymentsGroupViewModel(items: [
-        PaymentsSelectBankView.ViewModel.sample,
+        PaymentsSelectBankView.ViewModel.sampleParameter,
         PaymentsSelectCountryView.ViewModel.sample,
         PaymentSelectDropDownView.ViewModel.sample,
         PaymentsInputView.ViewModel.sampleValue,

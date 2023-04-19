@@ -73,7 +73,7 @@ struct RequestMeToMeModel {
         let allBanks = Model.shared.dictionaryFullBankInfoList()
         var bankForReturn: BankFullInfoList?
         
-        allBanks?.forEach({ bank in
+        allBanks.forEach({ bank in
             
             let bank = bank.fullBankInfoList
             

@@ -207,7 +207,7 @@ class MeToMeSearchBanksViewController: UIViewController {
         
         self.dismissActivity()
                 
-        guard let data = Model.shared.dictionaryFullBankInfoList() else { return }
+        let data = Model.shared.dictionaryFullBankInfoList()
         var filterBank: [BankFullInfoList] = []
         data.forEach({ bank in
             let fullBankInfoItem = bank.fullBankInfoList

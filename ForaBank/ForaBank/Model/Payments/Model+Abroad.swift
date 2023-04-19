@@ -389,6 +389,7 @@ extension Model {
                     return nil
                 }
                 
+                //FIXME: do we really need server request here? this is dictionary
                 let command = ServerCommands.DictionaryController.GetDictionaryAnywayOperators(token: token, code: "BANK_MIG", codeParent: "AM")
                 let result = try await serverAgent.executeCommand(command: command)
                 
@@ -403,26 +404,28 @@ extension Model {
 
                     for item in items {
 
-                        let image = images.svgImageList.first(where: { $0.md5hash == item.md5hash } )
-
-                        if let imageData = image?.svgImage {
-
-                            list.append(Payments.ParameterSelectBank.Option(id: item.id, name: item.name, subtitle: nil, icon: imageData, searchValue: item.name))
-                        } else {
-
-                            list.append(Payments.ParameterSelectBank.Option(id: item.id, name: item.name, subtitle: nil, icon: nil, searchValue: item.name))
-                        }
+                        
+                        let icon: ImageData? = {
+                            
+                            guard let svgImage = images.svgImageList.first(where: { $0.md5hash == item.md5hash } )?.svgImage else {
+                                return nil
+                            }
+                            
+                            return .init(with: svgImage)
+                        }()
+                        
+                        list.append(Payments.ParameterSelectBank.Option(id: item.id, name: item.name, subtitle: nil, icon: icon, searchValue: item.name))
                     }
                 }
 
                 let bankId = Payments.Parameter.Identifier.countryBank.rawValue
                 if let parameter = operation.parameters.first(where: { $0.id == "DIRECT_BANKS" } ) {
 
-                    return Payments.ParameterSelectBank(.init(id: bankId, value: parameter.value), icon: .iconPlaceholder, title: "Банк получателя", options: list, placeholder: "Начните ввод для поиска", validator: .anyValue, limitator: nil, transferType: .abroad, keyboardType: .number)
+                    return Payments.ParameterSelectBank(.init(id: bankId, value: parameter.value), icon: .iconPlaceholder, title: "Банк получателя", options: list, placeholder: "Начните ввод для поиска", selectAll: .init(type: .banksFullInfo), keyboardType: .normal)
 
                 } else {
 
-                    return Payments.ParameterSelectBank(.init(id: bankId, value: nil), icon: .iconPlaceholder, title: "Банк получателя", options: list, placeholder: "Начните ввод для поиска", validator: .anyValue, limitator: nil, transferType: .abroad, keyboardType: .number)
+                    return Payments.ParameterSelectBank(.init(id: bankId, value: nil), icon: .iconPlaceholder, title: "Банк получателя", options: list, placeholder: "Начните ввод для поиска", selectAll: .init(type: .banksFullInfo), keyboardType: .normal)
                 }
                 
             default:

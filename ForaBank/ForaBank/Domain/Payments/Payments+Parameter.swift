@@ -274,23 +274,19 @@ extension Payments {
         let title: String
         let options: [Option]
         let placeholder: String
-        let validator: Payments.Validation.RulesSystem
-        let limitator: Payments.Limitation?
-        let transferType: Payments.Operation.TransferType
+        let selectAll: SelectAllOption?
         let keyboardType: KeyboardType
         let isEditable: Bool
         let group: Payments.Parameter.Group?
 
-        init(_ parameter: Parameter, icon: ImageData, title: String, options: [Option], placeholder: String, validator: Payments.Validation.RulesSystem, limitator: Payments.Limitation?, transferType: Payments.Operation.TransferType, keyboardType: KeyboardType, isEditable: Bool = true, group: Payments.Parameter.Group? = nil) {
+        init(_ parameter: Parameter, icon: ImageData, title: String, options: [Option], placeholder: String, selectAll: SelectAllOption?, keyboardType: KeyboardType, isEditable: Bool = true, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
             self.icon = icon
             self.title = title
             self.options = options
             self.placeholder = placeholder
-            self.validator = validator
-            self.limitator = limitator
-            self.transferType = transferType
+            self.selectAll = selectAll
             self.keyboardType = keyboardType
             self.isEditable = isEditable
             self.group = group
@@ -298,30 +294,36 @@ extension Payments {
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterSelectBank(.init(id: parameter.id, value: value), icon: icon, title: title, options: options, placeholder: placeholder, validator: validator, limitator: limitator, transferType: transferType, keyboardType: keyboardType, isEditable: isEditable, group: group)
+            ParameterSelectBank(.init(id: parameter.id, value: value), icon: icon, title: title, options: options, placeholder: placeholder, selectAll: selectAll, keyboardType: keyboardType, isEditable: isEditable, group: group)
         }
         
-        struct Option: Identifiable {
+        struct Option: Identifiable, Equatable {
     
             let id: String
             let name: String
             let subtitle: String?
-            let icon: SVGImageData?
-            var type: Kind = .regular
+            let icon: ImageData?
             
             let searchValue: String
-  
-            enum Kind {
-                
-                case regular
-                case selectAll
-            }
         }
         
         enum KeyboardType {
             
             case normal
             case number
+        }
+        
+        struct SelectAllOption {
+            
+            var iconName: String = "ic24MoreHorizontal"
+            var title: String = "Cмотреть все"
+            let type: Kind
+            
+            enum Kind {
+                
+                case banks
+                case banksFullInfo
+            }
         }
     }
     

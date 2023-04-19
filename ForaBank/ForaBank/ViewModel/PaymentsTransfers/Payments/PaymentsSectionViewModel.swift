@@ -93,10 +93,10 @@ class PaymentsSectionViewModel {
                         self.action.send(PaymentsSectionViewModelAction.Hint.Close())
                         
                     //MARK: Bank List Component
-                    case let payload as PaymentsParameterViewModelAction.BankList.ContactSelector.Show:
+                    case let payload as PaymentsParameterViewModelAction.SelectBank.ContactSelector.Show:
                         self.action.send(PaymentsSectionViewModelAction.BankSelector.Show(viewModel: payload.viewModel))
                         
-                    case _ as PaymentsParameterViewModelAction.BankList.ContactSelector.Close:
+                    case _ as PaymentsParameterViewModelAction.SelectBank.ContactSelector.Close:
                         self.action.send(PaymentsSectionViewModelAction.ContactSelector.Close())
 
                         //MARK: Bottom
@@ -226,6 +226,7 @@ extension PaymentsSectionViewModel {
         return result
     }
     
+    //TODO: change optional return into throwable 
     static func reduce(parameter: PaymentsParameterRepresentable, model: Model) -> PaymentsParameterViewModel? {
         
         switch parameter {
