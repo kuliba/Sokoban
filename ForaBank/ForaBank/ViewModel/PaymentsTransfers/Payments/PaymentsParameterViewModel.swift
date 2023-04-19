@@ -124,3 +124,18 @@ protocol PaymentsParameterViewModelWarnable {
     
     func update(warning: String)
 }
+
+//MARK: Helpers
+
+extension PaymentsParameterViewModel {
+    
+    var isHidden: Bool {
+        
+        return (source as? Payments.ParameterHidden) != nil
+    }
+    
+    var isNotHidden: Bool {
+        
+        return !isHidden
+    }
+}

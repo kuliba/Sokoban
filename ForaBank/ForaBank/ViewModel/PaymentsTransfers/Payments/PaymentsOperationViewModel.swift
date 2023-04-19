@@ -352,12 +352,14 @@ extension PaymentsOperationViewModel {
     }
     
     static func reduceFeedGroups(sections: [PaymentsSectionViewModel]) -> [PaymentsGroupViewModel] {
-
+        
         guard let feedSection = sections.first(where: { $0.placement == .feed }) else {
             return []
         }
         
-        return feedSection.groups
+        let groups = feedSection.groups.filter { $0.items.allSatisfy(\.isNotHidden) }
+        
+        return groups
     }
     
     static func reduceBottomGroups(sections: [PaymentsSectionViewModel]) -> [PaymentsGroupViewModel]? {
