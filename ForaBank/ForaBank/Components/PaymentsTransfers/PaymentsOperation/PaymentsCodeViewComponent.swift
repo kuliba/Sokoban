@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import CombineSchedulers
 import TextFieldRegularComponent
 
 extension PaymentsCodeView {
@@ -19,31 +20,41 @@ extension PaymentsCodeView {
         @Published var title: String?
         @Published var editingState: EditingState
         @Published var resendState: ResendState?
+        
+        private let scheduler: AnySchedulerOf<DispatchQueue>
 
         var parameterCode: Payments.ParameterCode? { source as? Payments.ParameterCode }
         override var isValid: Bool { parameterCode?.validator.isValid(value: textField.text ?? "") ?? false }
 
-        init(icon: Image, description: String, title: String?, textField: TextFieldRegularView.ViewModel, editingState: EditingState, resendState: PaymentsCodeView.ViewModel.ResendState?, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
+        init(icon: Image, description: String, title: String?, textField: TextFieldRegularView.ViewModel, editingState: EditingState, resendState: PaymentsCodeView.ViewModel.ResendState?, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString), scheduler: AnySchedulerOf<DispatchQueue> = .main) {
             self.icon = icon
             self.description = description
             self.title = title
             self.editingState = editingState
             self.resendState = resendState
             self.textField = textField
+            self.scheduler = scheduler
             super.init(source: source)
         }
         
-        init(with parameterCode: Payments.ParameterCode) {
+        init(
+            with parameterCode: Payments.ParameterCode,
+            scheduler: AnySchedulerOf<DispatchQueue> = .main
+        ) {
             
             self.icon = parameterCode.icon.image ?? Image.ic24SmsCode
             self.description = parameterCode.title
-            self.textField = .init(text: parameterCode.parameter.value ?? "", placeholder: parameterCode.title, keyboardType: .number, limit: parameterCode.limit, needCloseButton: true)
+            self.textField = .init(text: parameterCode.parameter.value ?? "", placeholder: parameterCode.title, keyboardType: .number, limit: parameterCode.limit, needCloseButton: true, scheduler: scheduler)
             self.editingState = .idle
             self.resendState = nil
+            self.scheduler = scheduler
             
             super.init(source: parameterCode)
             
-            self.resendState = .timer(.init(delay: parameterCode.timerDelay, completeAction: { [weak self] in
+            self.resendState = .timer(.init(
+                delay: parameterCode.timerDelay,
+                scheduler: scheduler,
+                completeAction: { [weak self] in
                 
                 self?.action.send(PaymentsParameterViewModelAction.Code.ResendDelayIsOver())
             }))
@@ -57,7 +68,7 @@ extension PaymentsCodeView {
             
             action
                 .compactMap { $0 as? CodeAction.ResendDelayIsOver }
-                .receive(on: DispatchQueue.main)
+                .receive(on: scheduler)
                 .sink { [unowned self] _ in
                     
                     withAnimation {
@@ -74,7 +85,7 @@ extension PaymentsCodeView {
             
             action
                 .compactMap { $0 as? CodeAction.ResendButtonDidTapped }
-                .receive(on: DispatchQueue.main)
+                .receive(on: scheduler)
                 .sink { [unowned self] _ in
                     
                     guard let parameterInput = parameterCode else {
@@ -85,6 +96,7 @@ extension PaymentsCodeView {
                         
                         resendState = .timer(.init(
                             delay: parameterInput.timerDelay,
+                            scheduler: scheduler,
                             completeAction: { [weak self] in
                                 
                                 self?.action.send(PaymentsParameterViewModelAction.Code.ResendDelayIsOver())
@@ -96,7 +108,7 @@ extension PaymentsCodeView {
 
             action
                 .compactMap { $0 as? CodeAction.IncorrectCodeEntered }
-                .receive(on: DispatchQueue.main)
+                .receive(on: scheduler)
                 .sink { [unowned self] _ in
                     
                     guard let parameterInput = parameterCode else {
@@ -112,7 +124,7 @@ extension PaymentsCodeView {
 
             action
                 .compactMap { $0 as? CodeAction.ResendCodeDisabled }
-                .receive(on: DispatchQueue.main)
+                .receive(on: scheduler)
                 .sink { [unowned self] _ in
                     
                     withAnimation {
@@ -122,42 +134,43 @@ extension PaymentsCodeView {
                 }
                 .store(in: &bindings)
 
-            textField.$text
+            textField.$state
                 .dropFirst()
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] text in
+                .receive(on: scheduler)
+                .sink { [unowned self] state in
                     
-                    update(value: text)
+                    update(value: state.text)
                     
-                }.store(in: &bindings)
-            
-            textField.$isEditing
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] isEditing in
-                    
-                    if isEditing || textField.hasValue {
+                    withAnimation {
                         
-                        withAnimation {
-
-                            title = description
-                        }
-                        
-                    } else {
-                        
-                        withAnimation {
-
-                            title = nil
-                        }
+                        updateTitle(with: state)
                     }
-                    
-                }.store(in: &bindings)
+                }
+                .store(in: &bindings)
+        }
+        
+        private func updateTitle(
+            with state: TextFieldRegularView.ViewModel.State
+        ) {
+            
+            title = state.isEditing || state.hasValue ? description : nil
         }
         
         override func updateValidationWarnings() {
             
             //TODO: implement validation warning
         }
+                
+        func setOTP(to text: String) {
+            
+            textField.setText(to: text)
+        }
     }
+}
+
+extension TextFieldRegularView.ViewModel.State {
+    
+    var hasValue: Bool { text != "" && text != nil }
 }
 
 //MARK: - Types
@@ -198,13 +211,20 @@ extension PaymentsCodeView.ViewModel {
         private let startTime = Date().timeIntervalSinceReferenceDate
         private var formatter: DateComponentsFormatter
         
+        private let scheduler: AnySchedulerOf<DispatchQueue>
         private var bindings = Set<AnyCancellable>()
         
-        init(delay: TimeInterval, formatter: DateComponentsFormatter = .formatTime, completeAction: @escaping () -> Void) {
+        init(
+            delay: TimeInterval,
+            formatter: DateComponentsFormatter = .formatTime,
+            scheduler: AnySchedulerOf<DispatchQueue> = .main,
+            completeAction: @escaping () -> Void
+        ) {
             
             self.formatter = formatter
             self.delay = delay
             self.value = formatter.string(from: delay) ?? "0 :\(delay)"
+            self.scheduler = scheduler
             self.completeAction = completeAction
             
             bind()
@@ -213,7 +233,7 @@ extension PaymentsCodeView.ViewModel {
         func bind() {
             
             timer
-                .receive(on: DispatchQueue.main)
+                .receive(on: scheduler)
                 .sink { [unowned self] time in
                     
                     let delta = time.timeIntervalSinceReferenceDate - startTime

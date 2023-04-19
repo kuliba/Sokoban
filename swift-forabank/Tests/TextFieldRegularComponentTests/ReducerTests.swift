@@ -186,7 +186,19 @@ final class ReducerTests: XCTestCase {
         )
     }
     
-    func test_reduce_withTransformLimitingLength_shouldNotChangeStateInPlaceholder_onSetTextTo() {
+    func test_reduce_withTransformLimitingLength_shouldNotChangeStateInPlaceholder_onSetTextToNil() {
+        
+        let reducer = makeReducer(limit: 2)
+        
+        assertReduce(
+            state: .placeholder("Placeholder"),
+            with: .setTextTo(nil),
+            reducer: reducer,
+            returns: .placeholder("Placeholder")
+        )
+    }
+    
+    func test_reduce_withTransformLimitingLength_shouldChangeStateToNoFocusFromPlaceholder_onSetTextTo() {
         
         let reducer = makeReducer(limit: 2)
         
@@ -194,7 +206,7 @@ final class ReducerTests: XCTestCase {
             state: .placeholder("Placeholder"),
             with: .setTextTo("ABC"),
             reducer: reducer,
-            returns: .placeholder("Placeholder")
+            returns: .noFocus("ABC")
         )
     }
     
