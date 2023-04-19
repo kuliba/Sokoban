@@ -117,6 +117,7 @@ extension PaymentsInputView.ViewModel {
     private func bind() {
         
         textField.$state
+            .dropFirst()
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] state in
