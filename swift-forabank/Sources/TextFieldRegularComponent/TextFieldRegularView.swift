@@ -104,7 +104,7 @@ public struct TextFieldRegularView: UIViewRepresentable {
             
         case let .noFocus(text):
             textView.text = text
-            textView.textColor = .lightGray
+            textView.textColor = .init(config.textColor)
             
         case let .placeholder(placeholderText):
             textView.text = placeholderText
