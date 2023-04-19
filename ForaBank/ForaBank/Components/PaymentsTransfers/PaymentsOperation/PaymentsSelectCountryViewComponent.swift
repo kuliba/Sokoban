@@ -310,7 +310,8 @@ extension PaymentsSelectCountryView.ViewModel {
                 switch action {
                 case let payload as ContactsViewModelAction.CountrySelected:
                     self?.action.send(PaymentsSelectCountryViewModelAction.DidSelectCountry(id: payload.countryId.description))
-                    self?.action.send(PaymentsParameterViewModelAction.BankList.ContactSelector.Close())
+                    //FIXME: action for country select required
+                    self?.action.send(PaymentsParameterViewModelAction.SelectBank.ContactSelector.Close())
                     
                 default:
                     break

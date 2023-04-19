@@ -429,6 +429,7 @@ extension Payments {
         case missingSource(Service)
         
         case action(Action)
+        case ui(UI)
 
         case notAuthorized
         case unsupported
@@ -437,6 +438,12 @@ extension Payments {
             
             case warning(parameterId: Payments.Parameter.ID, message: String)
             case alert(title: String, message: String)
+        }
+        
+        enum UI {
+            
+            case selectBankMissingOptions(Payments.Parameter.ID)
+            case selectBankIncorrectOptionSelected(Payments.Parameter.ID)
         }
         
         var errorDescription: String? {
@@ -473,6 +480,15 @@ extension Payments {
                     
                 case let .alert(title: title, message: message):
                     return "Alert action with title: \(title), message: \(message)"
+                }
+                
+            case let .ui(ui):
+                switch ui {
+                case let .selectBankMissingOptions(parameterId):
+                    return "Paymetns.ParameterSelectBank with id: \(parameterId) missing required options"
+                    
+                case let .selectBankIncorrectOptionSelected(parameterId):
+                    return "Paymetns.ParameterSelectBank with id: \(parameterId) selected option missed in the options list"
                 }
 
             case .notAuthorized:

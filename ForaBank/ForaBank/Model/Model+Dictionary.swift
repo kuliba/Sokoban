@@ -451,7 +451,7 @@ extension Model {
     
     func dictionaryBanks() -> [BankData]? {
         
-        return localAgent.load(type: [BankData].self)
+        bankList.value
     }
     
     func dictionaryBank(for memberId: String) -> BankData? {
@@ -462,15 +462,29 @@ extension Model {
      
     // FullBankInfoList
     
-    func dictionaryFullBankInfoList() -> [BankFullInfoData]? {
+    func dictionaryFullBankInfoList() -> [BankFullInfoData] {
         
-        localAgent.load(type: [BankFullInfoData].self)
+        bankListFullInfo.value
     }
     
     func dictionaryFullBankInfoBank(for bic: String) -> BankFullInfoData? {
         
-        guard let banksList = dictionaryFullBankInfoList() else { return nil }
+        let banksList = dictionaryFullBankInfoList()
         return banksList.first(where: { $0.bic == bic })
+    }
+    
+    func dictionaryFullBankInfoPrefferedFirstList() -> [BankFullInfoData] {
+        
+        let banksList = bankListFullInfo.value
+        
+        let prefferedBanks = prefferedBanksList.value.compactMap { bankId in banksList.first(where: { $0.memberId == bankId }) }
+
+        //TODO: not sure if we need here two sorts. Test it first.
+        let otherBanks = banksList.filter { !prefferedBanks.contains($0) }
+            .sorted(by: { $0.displayName.lowercased() < $1.displayName.lowercased() })
+            .sorted(by: { $0.displayName.localizedCaseInsensitiveCompare($1.displayName) == .orderedAscending })
+        
+        return prefferedBanks + otherBanks
     }
     
     // Region
@@ -698,7 +712,8 @@ extension Model {
         }
     }
     
-    // Banks
+    //MARK: - Banks
+    
     func handleDictionaryBanks(_ serial: String?) {
         
         guard let token = token else {
@@ -750,6 +765,8 @@ extension Model {
             }
         }
     }
+    
+    //MARK: - Preffered Banks
     
     func handleDictionaryPrefferedBanks(_ serial: String?) {
         
@@ -1295,6 +1312,8 @@ extension Model {
                     guard data.bankFullInfoList.count > 0 else {
                         return
                     }
+                    
+                    self.bankListFullInfo.value = data.bankFullInfoList
                     
                     do {
                         

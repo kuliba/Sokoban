@@ -14,144 +14,61 @@ import TextFieldRegularComponent
 extension PaymentsSelectBankView {
     
     class ViewModel: PaymentsParameterViewModel, ObservableObject {
-        
-        let title: String
-        @Published var item: Item
-        @Published var warning: String?
-        let banksList: BanksList
-        
-        var isExpanded: Bool { banksList.filteredItems == nil }
-        
+
+        @Published var state: State
+
         private let model: Model
         fileprivate static let defaultIcon: Image = .ic24Bank
-        
-        private var parameterSelectBank: Payments.ParameterSelectBank? { source as? Payments.ParameterSelectBank }
-        
-        override var isValid: Bool {
+
+        init(state: PaymentsSelectBankView.ViewModel.State, source: PaymentsParameterRepresentable, model: Model) {
             
-            switch item.state {
-            case .selected: return true
-            default: return false
-            }
-        }
-        
-        init(title: String, item: PaymentsSelectBankView.ViewModel.Item, banksList: BanksList, warning: String? = nil, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString), model: Model = .emptyMock) {
-            
-            self.title = title
-            self.item = item
-            self.banksList = banksList
-            self.warning = warning
+            self.state = state
             self.model = model
             super.init(source: source)
         }
-        
+    
         convenience init(with parameterSelect: Payments.ParameterSelectBank, model: Model) throws {
             
-            let options = parameterSelect.options.map( { BanksList.ItemViewModel(id: $0.id, searchValue: $0.searchValue, icon: $0.type == .regular ? .image($0.icon?.image ?? Self.defaultIcon) : .icon(Image.ic24MoreHorizontal), name: $0.name, subtitle: $0.subtitle, type: .init(type: $0.type)) } )
+            guard parameterSelect.options.isEmpty == false else {
+                throw Payments.Error.ui(.selectBankMissingOptions(parameterSelect.id))
+            }
             
-            self.init(title: parameterSelect.title, item: .init(icon: Self.defaultIcon, placeholder: parameterSelect.placeholder, state: .`default`), banksList: .init(itemsList: options), source: parameterSelect, model: model)
+            if let selectedOptionId = parameterSelect.value,
+               parameterSelect.options.map(\.id).contains(selectedOptionId) == false {
+                throw Payments.Error.ui(.selectBankIncorrectOptionSelected(parameterSelect.id))
+            }
+            
+            self.init(
+                state: .collapsed(
+                    .init(
+                        value: parameterSelect.value,
+                        parameter: parameterSelect,
+                        defaultIcon: Self.defaultIcon)),
+                source: parameterSelect,
+                model: model)
             
             bind()
-            
-            if let value = parameterSelect.value {
-                
-                self.action.send(PaymentsParameterViewModelAction.BankList.DidSelectBank(id: value))
-            }
         }
         
-        override func updateValidationWarnings() {
-            
-            switch item.state {
-            case let .editing(textField):
-                guard let parameterSelect = parameterSelectBank,
-                      let action = parameterSelect.validator.action(with: textField.text, for: .post),
-                      case .warning(let message) = action else {
-                    
-                    return
-                }
-                
-                withAnimation {
-                    
-                    self.warning = message
-                }
-                
-            default:
-                break
-                
-            }
-        }
+        override var isValid: Bool { value.current != nil }
     }
+}
+
+//MARK: - Computed properties
+
+extension PaymentsSelectBankView.ViewModel {
+    
+    private var parameterSelectBank: Payments.ParameterSelectBank? { source as? Payments.ParameterSelectBank }
 }
 
 //MARK: Bindings
 
 extension PaymentsSelectBankView.ViewModel {
     
-    var itemEditing: AnyPublisher<(Bool, String), Never> {
-        
-        Publishers
-            .CombineLatest(
-                $item
-                    .compactMap(\.textField)
-                    .flatMap( { $0.$isEditing } )
-                    .compactMap({ $0 }),
-                $item
-                    .compactMap(\.textField)
-                    .flatMap( { $0.$text } )
-                    .compactMap({ $0 })
-            )
-            .map( { ($0.0, $0.1) } )
-            .eraseToAnyPublisher()
-    }
-    
     private func bind() {
         
-        itemEditing
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self]  isEditing, text in
-                
-                switch text {
-                case "":
-                    
-                    banksList.applyFilter(listState: .empty)
-                    
-                default:
-                    
-                    guard let parameterSelectBank = parameterSelectBank,
-                          let items = self.banksList.filteredItems else {
-                        return
-                    }
-                    
-                    if let foundItem = Self.itemFound(items: items, filter: text) {
-                        
-                        update(value: foundItem.id)
-                        
-                        let icon: Image = {
-                            switch foundItem.icon {
-                            case let .icon(icon): return icon
-                            case let .image(image): return image
-                            }
-                        }()
-                        
-                        withAnimation {
-                            
-                            item = .init(icon: icon, placeholder: parameterSelectBank.placeholder, state: .selected(.init(id: foundItem.id, title: parameterSelectBank.title, icon: .image(icon), name: foundItem.name)))
-                        }
-                        
-                        banksList.applyFilter(listState: .empty)
-                        
-                    } else {
-                        
-                        banksList.applyFilter(listState: .search(text))
-                    }
-                }
-                
-                self.objectWillChange.send()
-                
-            }.store(in: &bindings)
-        
         action
-            .compactMap( { $0 as? PaymentsParameterViewModelAction.BankList.DidTapped } )
+            .compactMap( { $0 as? PaymentsParameterViewModelAction.SelectBank.List.Toggle } )
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
                 
@@ -159,309 +76,344 @@ extension PaymentsSelectBankView.ViewModel {
                     return
                 }
                 
-                let state = Item.State.editing(from: item.state, placeholder: parameterSelectBank.placeholder, keyboardType: .init(parameterSelectBank.keyboardType), limit: nil)
-                
-                withAnimation {
+                switch state {
+                case .collapsed:
+                    withAnimation {
+                        state = .expanded(ExpandedViewModel(with: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
+                    }
                     
-                    item = .init(icon: item.icon, placeholder: item.placeholder, state: state)
+                case .expanded:
+                    withAnimation {
+                        state = .collapsed(CollapsedViewModel(value: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
+                    }
+                }
+              
+            }.store(in: &bindings)
+        
+        
+        action
+            .compactMap( { $0 as? PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped } )
+            .map(\.id)
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] bankItemId in
+                
+                update(value: bankItemId)
+                
+                guard let parameterSelectBank = parameterSelectBank else {
+                    return
                 }
                 
-                banksList.applyFilter(listState: .full)
+                withAnimation {
+                    state = .collapsed(CollapsedViewModel(value: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
+                }
                 
             }.store(in: &bindings)
         
+        
         action
-            .compactMap( { $0 as? PaymentsParameterViewModelAction.BankList.BankListArrow.DidTapped } )
+            .compactMap({ $0 as? PaymentsParameterViewModelAction.SelectBank.List.SelectAllTapped })
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
                 
-                if banksList.filteredItems == nil {
-                    
-                    banksList.applyFilter(listState: .full)
-                    
-                } else {
-                    
-                    banksList.applyFilter(listState: .empty)
-                }
-            }
-            .store(in: &bindings)
-        
-        action
-            .compactMap( { $0 as? PaymentsParameterViewModelAction.BankList.DidSelectBank } )
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] payload in
-                
-                guard let parameterSelectBank = parameterSelectBank,
-                let items = banksList.filteredItems else {
+                guard let parameterSelectBank = self.parameterSelectBank,
+                      let selectAllOption = parameterSelectBank.selectAll else {
                     return
                 }
-                
-                if let selectedItem = items.first(where: {$0.id == payload.id}) {
+
+                //TODO: move ContactsViewModel initialization to PaymentsOperationViewModel.
+                let contactsViewModel: ContactsViewModel = {
                     
-                    update(value: selectedItem.id)
-                    
-                    let icon: Image = {
-                        switch selectedItem.icon {
-                        case let .icon(icon): return icon
-                        case let .image(image): return image
-                        }
-                    }()
-                    
-                    withAnimation {
-                        
-                        item = .init(icon: icon, placeholder: parameterSelectBank.placeholder, state: .selected(.init(id: selectedItem.id, title: parameterSelectBank.title, icon: selectedItem.icon, name: selectedItem.searchValue)))
+                    switch selectAllOption.type {
+                    case .banks: return .init(model, mode: .select(.banks))
+                    case .banksFullInfo: return .init(model, mode: .select(.banksFullInfo))
                     }
                     
-                    banksList.applyFilter(listState: .empty)
-                }
+                }()
+                
+                bind(contactsViewModel: contactsViewModel)
+                action.send(PaymentsParameterViewModelAction.SelectBank.ContactSelector.Show(viewModel: contactsViewModel))
                 
             }.store(in: &bindings)
-    }
-    
-    func bind(contactsViewModel: ContactsViewModel, placeholder: String) {
-        
-        contactsViewModel.action
-            .compactMap({$0 as? ContactsViewModelAction.BankSelected})
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] bank in
-                
-                guard let parameterSelectBank = self.parameterSelectBank,
-                      let item = parameterSelectBank.options.first(where: { $0.id == bank.bankId } ) else {
-                    return
-                }
-                
-                self.action.send(PaymentsParameterViewModelAction.BankList.ContactSelector.Close())
-                
-                withAnimation {
-                    
-                    let selectedItem: SelectedItemViewModel = .init(id: item.id, title: parameterSelectBank.title, icon: .image(item.icon?.image ?? Self.defaultIcon), name: item.searchValue)
-                    self.item = .init(icon: item.icon?.image ?? .ic24Bank, placeholder: placeholder, state: .selected(selectedItem))
-                }
-                
-                banksList.applyFilter(listState: .empty)
-                
-            }.store(in: &bindings)
-    }
-    
-    func update(warning: String) {
-        
-        withAnimation {
-            
-            self.warning = warning
-        }
-    }
-}
-
-private extension TextFieldRegularView.ViewModel.KeyboardType {
-    
-    init(_ keyboardType: Payments.ParameterSelectBank.KeyboardType) {
-        
-        switch keyboardType {
-        case .normal: self = .default
-        case .number: self = .number
-        }
     }
 }
 
 extension PaymentsSelectBankView.ViewModel {
     
-    struct Item {
-        
-        let icon: Image
-        let placeholder: String
-        let state: State
-        
-        var textField: TextFieldRegularView.ViewModel? {
+    private func bind(contactsViewModel: ContactsViewModel) {
             
-            guard case let .editing(textField) = state else {
-                return nil
-            }
-            
-            return textField
-        }
-    }
-    
-    struct SelectedItemViewModel {
-        
-        let id: String
-        let title: String
-        let icon: IconViewModel
-        let name: String
-    }
-    
-    class BanksList: ObservableObject {
-        
-        @Published private(set) var filteredItems: [ItemViewModel]?
-        private let itemsList: [ItemViewModel]
-        
-        let emptyListTitle = "Не удалось найти банк"
-        
-        init(itemsList: [ItemViewModel]) {
-            
-            self.itemsList = itemsList
-        }
-        
-        func applyFilter(listState: ListState) {
-            
-            switch listState {
-            case .empty:
-                withAnimation {
+            contactsViewModel.action
+                .compactMap({$0 as? ContactsViewModelAction.BankSelected })
+                .map(\.bankId)
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] bankId in
                     
-                    filteredItems = nil
-                }
-                
-            case let .search(filter):
-                withAnimation {
+                    guard let self = self else { return }
                     
-                    self.filteredItems = itemsList.filter {
-                        
-                        $0.searchValue.lowercased().contained(in: [filter.lowercased()])
+                    guard let parameterSelectBank = self.parameterSelectBank,
+                          let option = parameterSelectBank.options.first(where: { $0.id == bankId } ) else {
+                        return
                     }
-                }
-                
-                
-            case .full:
-                withAnimation {
                     
-                    filteredItems = itemsList
-                }
-            }
+                    update(value: option.id)
+                    
+                    withAnimation {
+                        self.state = .collapsed(.init(value: self.value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
+                    }
+                    
+                    self.action.send(PaymentsParameterViewModelAction.SelectBank.ContactSelector.Close())
+   
+                }.store(in: &bindings)
         }
-    }
+
 }
 
-extension PaymentsSelectBankView.ViewModel.Item {
+//MARK: - Types
+
+extension PaymentsSelectBankView.ViewModel {
     
     enum State {
         
-        case `default`
-        case editing(TextFieldRegularView.ViewModel)
-        case selected(PaymentsSelectBankView.ViewModel.SelectedItemViewModel)
+        case collapsed(CollapsedViewModel)
+        case expanded(ExpandedViewModel)
+    }
+    
+    struct CollapsedViewModel {
+
+        let icon: IconViewModel
+        let title: TitleViewModel
         
-        static func editing(from state: State, placeholder: String, keyboardType: TextFieldRegularView.ViewModel.KeyboardType, limit: Int?) -> State {
+        enum TitleViewModel: Equatable {
             
-            switch state {
-            case .`default`:
-                return .editing(.init(text: nil, placeholder: placeholder, keyboardType: keyboardType, limit: limit))
-                
-            case .editing:
-                return state
-                
-            case .selected:
-                return .editing(.init(text: nil, placeholder: placeholder, keyboardType: keyboardType, limit: limit))
-            }
+            case selected(title: String, name: String)
+            case empty(title: String)
         }
     }
-}
-
-extension PaymentsSelectBankView.ViewModel.BanksList {
     
-    struct ItemViewModel: Identifiable {
+    class ExpandedViewModel: ObservableObject {
+
+        @Published var icon: IconViewModel
+        let title: String
+        let textField: TextFieldRegularView.ViewModel
+        @Published var list: ListState
+        
+        private let selectAll: SelectAllItemViewModel?
+        private let banksList: [BankItemViewModel]
+        
+        var bindings = Set<AnyCancellable>()
+        
+        init(icon: IconViewModel, title: String, textField: TextFieldRegularView.ViewModel, list: ListState, selectAll: SelectAllItemViewModel?, banksList: [BankItemViewModel]) {
+            
+            self.icon = icon
+            self.title = title
+            self.textField = textField
+            self.list = list
+            self.selectAll = selectAll
+            self.banksList = banksList
+        }
+        
+        enum ListState: Equatable {
+            
+            case filterred(selectAll: SelectAllItemViewModel?, banks: [BankItemViewModel])
+            case empty(EmptyListViewModel)
+        }
+    }
+        
+    struct SelectAllItemViewModel: Equatable {
+        
+        let icon: Image
+        let name: String
+    }
+        
+    struct BankItemViewModel: Identifiable, Equatable {
         
         let id: String
-        let searchValue: String
-        let icon:  PaymentsSelectBankView.ViewModel.IconViewModel
+        let icon: IconViewModel
         let name: String
         let subtitle: String?
-        let type: Kind
-        let lineLimit: Int = 1
         
-        enum Kind {
-            
-            case regular
-            case selectAll
-            
-            init(type: Payments.ParameterSelectBank.Option.Kind) {
-                
-                switch type {
-                    
-                case .regular:
-                    self = .regular
-                    
-                case .selectAll:
-                    self = .selectAll
-                }
-            }
-        }
+        let searchValue: String
     }
     
-    enum ListState {
+    struct EmptyListViewModel: Equatable {
         
-        case full
-        case search(String)
-        case empty
+        var icon: Image = .ic24Search
+        var title: String = "Не удалось найти банк"
     }
-}
-
-extension PaymentsSelectBankView.ViewModel {
     
-    enum IconViewModel {
+    enum IconViewModel: Equatable {
         
         case icon(Image)
         case image(Image)
     }
 }
 
-//MARK: - Reducers
+//MARK: - Convenience inits
 
-extension PaymentsSelectBankView.ViewModel {
+extension PaymentsSelectBankView.ViewModel.CollapsedViewModel {
     
-    static func itemFound(items: [BanksList.ItemViewModel], filter: String) -> BanksList.ItemViewModel? {
+    init(value: Payments.Parameter.Value, parameter: Payments.ParameterSelectBank, defaultIcon: Image) {
         
-        let filter = filter.lowercased()
-        let filtered = items.filter { $0.searchValue.lowercased().contained(in: [filter]) }
-        
-        if let item = filtered.first,
-           filter == item.searchValue.lowercased() {
+        if let option = parameter.options.first(where: { $0.id == value }) {
             
-            return item
+            //TODO: more elegant solution required
+            if let subtitle = option.subtitle {
+                
+                // bank BIC
+                self.init(icon: .init(with: option, defaultIcon: defaultIcon), title: .selected(title: parameter.title, name: subtitle))
+                
+            } else {
+                
+                // bank name
+                self.init(icon: .init(with: option, defaultIcon: defaultIcon), title: .selected(title: parameter.title, name: option.name))
+            }
             
         } else {
             
+            self.init(icon: .icon(defaultIcon), title: .empty(title: parameter.title))
+        }
+    }
+}
+
+extension PaymentsSelectBankView.ViewModel.ExpandedViewModel {
+    
+    convenience init(with value: Payments.Parameter.Value, parameter: Payments.ParameterSelectBank, defaultIcon: Image) {
+        
+        let icon: PaymentsSelectBankView.ViewModel.IconViewModel = {
+           
+            guard let option = parameter.options.first(where: { $0.id == value }) else {
+                return .icon(defaultIcon)
+            }
+            
+            return .init(with: option, defaultIcon: defaultIcon)
+        }()
+        
+        let placeholder: String = {
+            
+            guard let option = parameter.options.first(where: { $0.id == value }) else {
+                return parameter.placeholder
+            }
+            
+            //TODO: more elegant solution required
+            if let subtitle = option.subtitle {
+                
+                // bank bic
+                return subtitle
+                
+            } else {
+                
+                // bank name
+                return option.name
+            }
+            
+        }()
+        
+        let banksList = parameter.options.map { option in
+        
+            return PaymentsSelectBankView.ViewModel.BankItemViewModel(
+                id: option.id,
+                icon: .init(with: option, defaultIcon: defaultIcon),
+                name: option.name,
+                subtitle: option.subtitle,
+                searchValue: option.searchValue)
+        }
+        
+        let selectAllOption = PaymentsSelectBankView.ViewModel.SelectAllItemViewModel(parameter: parameter)
+        
+        self.init(icon: icon,
+                  title: parameter.title,
+                  textField: .init(placeholder: placeholder,
+                                   keyboardType: parameter.keyboardType.keyboardStyle),
+                  list: .filterred(selectAll: selectAllOption, banks: banksList),
+                  selectAll: selectAllOption,
+                  banksList: banksList)
+        
+        bind()
+    }
+    
+    private func bind() {
+        
+        textField.$state
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] state in
+                
+                switch state {
+                case let .focus(text: text, cursorPosition: _):
+                    update(with: text)
+                    
+                case let .noFocus(text):
+                    update(with: text)
+                    
+                case .placeholder:
+                    update(with: "")
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    func update(with searchText: String) {
+        
+        switch searchText {
+        case "":
+            withAnimation {
+                list = .filterred(selectAll: selectAll, banks: banksList)
+            }
+            
+        default:
+            
+            let filterredBanks = banksList.filter {
+                $0.searchValue.lowercased().contained(in: [searchText.lowercased()])
+            }
+            
+            if filterredBanks.isEmpty {
+                
+                withAnimation {
+                    list = .empty(.init())
+                }
+                
+            } else {
+                
+                withAnimation {
+                    list = .filterred(selectAll: selectAll, banks: filterredBanks)
+                }
+            }
+        }
+    }
+}
+
+extension PaymentsSelectBankView.ViewModel.SelectAllItemViewModel {
+ 
+    init?(parameter: Payments.ParameterSelectBank) {
+        
+        guard let selectAllOption = parameter.selectAll else {
             return nil
         }
-    }
-    
-    static func itemFoundById(items: [BanksList.ItemViewModel], id: String) -> BanksList.ItemViewModel? {
         
-        items.first(where: { $0.id == id } )
+        self.init(icon: Image(selectAllOption.iconName), name: selectAllOption.title)
     }
+}
+
+extension Payments.ParameterSelectBank.KeyboardType {
     
-    func itemTapped(id: BanksList.ItemViewModel.ID, type: BanksList.ItemViewModel.Kind) {
+    var keyboardStyle: TextFieldRegularView.ViewModel.KeyboardType {
         
-        switch type {
-            
-        case .regular:
-            self.action.send(PaymentsParameterViewModelAction.BankList.DidSelectBank(id: id))
-            
-        case .selectAll:
-            
-            guard let parameterSelectBank = self.parameterSelectBank else {
-                return
-            }
-            
-            switch parameterSelectBank.transferType {
-            case .abroad:
-                
-                bindContactViewModel(contactViewModel: .init(model, mode: .select(.banksFullInfo)), placeholder: parameterSelectBank.placeholder)
-                
-            case .sfp:
-                
-                bindContactViewModel(contactViewModel: .init(model, mode: .select(.banks)), placeholder: parameterSelectBank.placeholder)
-                
-            case .requisites:
-                
-                bindContactViewModel(contactViewModel: .init(model, mode: .select(.banksFullInfo)), placeholder: parameterSelectBank.placeholder)
-                
-            default: break
-            }
+        switch self {
+        case .normal: return .default
+        case .number: return .number
         }
     }
+}
+
+extension PaymentsSelectBankView.ViewModel.IconViewModel {
     
-    func bindContactViewModel(contactViewModel: ContactsViewModel, placeholder: String) {
+    init(with option: Payments.ParameterSelectBank.Option, defaultIcon: Image) {
         
-        bind(contactsViewModel: contactViewModel, placeholder: placeholder)
-        self.action.send(PaymentsParameterViewModelAction.BankList.ContactSelector.Show(viewModel: contactViewModel))
+        switch option.icon?.image {
+        case let .some(image):
+            self = .image(image)
+            
+        case .none:
+            self = .icon(defaultIcon)
+        }
     }
 }
 
@@ -471,25 +423,17 @@ extension PaymentsParameterViewModelAction {
     
     enum SelectBank {
         
-        struct ItemDidSelected: Action {
+        enum List {
             
-            let id: PaymentsSelectBankView.ViewModel.BanksList.ItemViewModel.ID
-        }
-    }
-    
-    enum BankList {
-        
-        enum BankListArrow {
+            struct Toggle: Action {}
             
-            struct DidTapped: Action {}
-        }
-        
-        struct DidSelectBank: Action {
+            struct SelectAllTapped: Action {}
             
-            let id: PaymentsSelectBankView.ViewModel.BanksList.ItemViewModel.ID
+            struct BankItemTapped: Action {
+                
+                let id: PaymentsSelectBankView.ViewModel.BankItemViewModel.ID
+            }
         }
-        
-        struct DidTapped: Action {}
         
         enum ContactSelector {
             
@@ -508,79 +452,94 @@ extension PaymentsParameterViewModelAction {
 struct PaymentsSelectBankView: View {
     
     @ObservedObject var viewModel: ViewModel
+    @Namespace var namespace
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 0) {
             
-            switch viewModel.item.state {
-            case .`default`:
-                HStack(spacing: 16) {
-                    
-                    defaultIcon()
-                    
-                    Text(viewModel.title)
-                        .foregroundColor(.textPlaceholder)
-                        .font(.textBodyMR14180())
-                    
-                    Spacer()
-                    
-                    chevronButton()
+            switch viewModel.state {
+            case let .collapsed(collapsedViewModel):
+                CollapsedStateView(viewModel: collapsedViewModel, namespace: namespace) {
+                    viewModel.action.send(PaymentsParameterViewModelAction.SelectBank.List.Toggle())
                 }
-                .frame(height: 72)
-                .padding(.horizontal, 16)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 13)
                 
-            case let .editing(textField):
-                HStack(spacing: 16) {
+            case let .expanded(expandedViewModel):
+                ExpandedView(viewModel: expandedViewModel, namespace: namespace) {
                     
-                    Image.ic24Bank
-                        .resizable()
-                        .foregroundColor(.iconGray)
-                        .frame(width: 24, height: 24)
+                    viewModel.action.send(PaymentsParameterViewModelAction.SelectBank.List.Toggle())
                     
-                    VStack(spacing: 4) {
-                        
-                        HStack {
-                            
-                            Text(viewModel.title)
-                                .foregroundColor(.textPlaceholder)
-                                .font(.textBodyMR14180())
-                            
-                            Spacer()
-                        }
-                        
-                        TextFieldRegularView(viewModel: textField, font: .systemFont(ofSize: 16, weight: .medium), textColor: .textSecondary)
-                            .frame(height: 24)
-                    }
+                } selectAll: {
                     
+                    viewModel.action.send(PaymentsParameterViewModelAction.SelectBank.List.SelectAllTapped())
+                    
+                } selected: { bankItemId in
+                    
+                    viewModel.action.send(PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped(id: bankItemId))
                 }
-                .frame(height: 72)
-                .padding(.horizontal, 16)
-                
-                BanksListView(viewModel: viewModel)
-                    .padding(.bottom, 13)
-                
-            case let .selected(selectedItem):
-                SelectedBankView(viewModel: selectedItem, isExpanded: viewModel.isExpanded, isEditable: viewModel.isEditable, warning: viewModel.warning)
-                    .padding(.horizontal, 12)
-                    .frame(minHeight: 56)
-                    .allowsHitTesting(viewModel.isEditable)
             }
-        }
-        .background(Color.mainColorsGrayLightest)
-        .cornerRadius(12)
-        .onTapGesture {
-            
-            viewModel.action.send(PaymentsParameterViewModelAction.BankList.DidTapped())
         }
     }
     
-    struct SelectedBankView: View {
+    struct CollapsedStateView: View {
         
-        let viewModel: PaymentsSelectBankView.ViewModel.SelectedItemViewModel
-        let isExpanded: Bool
-        let isEditable: Bool
-        let warning: String?
+        let viewModel: PaymentsSelectBankView.ViewModel.CollapsedViewModel
+        let namespace: Namespace.ID
+        let toggle: () -> Void
+        
+        var body: some View {
+            
+            HStack(spacing: 12) {
+                
+                IconView(viewModel: viewModel.icon)
+                    .frame(width: 32, height: 32)
+                
+                titleView()
+                
+                Spacer()
+                
+                Image.ic24ChevronDown
+                    .renderingMode(.template)
+                    .foregroundColor(.iconGray)
+            }
+            .matchedGeometryEffect(id: MatchedID.selected, in: namespace)
+            .contentShape(Rectangle())
+            .onTapGesture { toggle() }
+        }
+        
+        @ViewBuilder
+        func titleView() -> some View {
+            
+            switch viewModel.title {
+            case let .selected(title: title, name: name):
+                VStack(alignment: .leading, spacing: 4) {
+                    
+                    Text(title)
+                        .font(.textBodyMR14180())
+                        .foregroundColor(.textPlaceholder)
+                    
+                    Text(name)
+                        .font(.textH4M16240())
+                        .foregroundColor(.textSecondary)
+                }
+            
+            case let .empty(title: title):
+                Text(title)
+                    .font(.textH4M16240())
+                    .foregroundColor(.textPlaceholder)
+            }
+        }
+    }
+    
+    struct ExpandedView: View {
+        
+        @ObservedObject var viewModel: PaymentsSelectBankView.ViewModel.ExpandedViewModel
+        let namespace: Namespace.ID
+        let toggle: () -> Void
+        let selectAll: () -> Void
+        let selected: (PaymentsSelectBankView.ViewModel.BankItemViewModel.ID) -> Void
         
         var body: some View {
             
@@ -591,174 +550,145 @@ struct PaymentsSelectBankView: View {
                     IconView(viewModel: viewModel.icon)
                         .frame(width: 32, height: 32)
                     
-                    VStack(spacing: 2) {
+                    VStack(alignment: .leading, spacing: 0) {
                         
-                        HStack {
-                            
-                            Text(viewModel.title)
-                                .font(.textBodyMR14180())
-                                .foregroundColor(.textPlaceholder)
-                                .padding(.bottom, 4)
-                            
-                            Spacer()
-                            
-                            Image.ic24ChevronRight
-                                .foregroundColor(.iconGray)
-                                .rotationEffect(isExpanded ? .degrees(90) : .degrees(isExpanded ? -90 : 90))
-                                .opacity(isEditable ? 1 : 0.2)
-                                .frame(width: 16, height: 16)
-                        }
+                        Text(viewModel.title)
+                            .font(.textBodyMR14180())
+                            .foregroundColor(.textPlaceholder)
                         
-                        HStack {
-                            
-                            Text(viewModel.name)
-                                .font(.textH4M16240())
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
+                        TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16, weight: .medium), textColor: .textSecondary)
+                            .frame(height: 24)
+                    }
+  
+                    Spacer()
+                    
+                    Button(action: toggle) {
+                        
+                        Image.ic24ChevronUp
+                            .renderingMode(.template)
+                            .foregroundColor(.iconGray)
                     }
                 }
-                .frame(height: 72)
+                .matchedGeometryEffect(id: MatchedID.selected, in: namespace)
+                .padding(.horizontal, 12)
+                .padding(.top, 13)
                 
-                if let warning = warning {
-                    
-                    VStack {
-                        
-                        Text(warning)
-                            .font(.textBodySR12160())
-                            .foregroundColor(.systemColorError)
+                switch viewModel.list {
+                case let .filterred(selectAll: selectAllItemViewModel, banks: banks):
+                   
+                    ScrollView(.horizontal, showsIndicators: false) {
+
+                        LazyHStack(alignment: .top, spacing: 8) {
+                            
+                            if let selectAllItemViewModel {
+                                
+                                SelectAllItemView(viewModel: selectAllItemViewModel, tapped: selectAll)
+                                    .padding(.bottom, 8)
+                            }
+                            
+                            ForEach(banks) { bankItemViewModel in
+                                
+                                BankItemView(viewModel: bankItemViewModel) {
+                                    
+                                    selected(bankItemViewModel.id)
+                                }
+                                .frame(width: 64)
+                            }
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.bottom, 13)
                     }
+                    
+                case let .empty(emptyListViewModel):
+                    EmptyListView(viewModel: emptyListViewModel)
+                        .padding(.horizontal, 12)
+                        .padding(.bottom, 13)
                 }
             }
         }
     }
     
-    struct BanksListView: View {
+    struct BankItemView: View {
         
-        @ObservedObject var viewModel: ViewModel
+        let viewModel: PaymentsSelectBankView.ViewModel.BankItemViewModel
+        let tapped: () -> Void
         
         var body: some View {
             
-            if let items = viewModel.banksList.filteredItems,
-               !items.isEmpty {
+            VStack(spacing: 0) {
                 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    
-                    HStack(alignment: .top, spacing: 0) {
-                        
-                        ForEach(items) { item in
-                            
-                            BankItem(viewModel: item, action: {
-                                
-                                viewModel.itemTapped(id: item.id, type: item.type)
-                            })
-                            .frame(width: 64)
-                            .padding(.leading, 8)
-                        }
-                    }
-                }
+                IconView(viewModel: viewModel.icon)
+                    .frame(width: 40, height: 40)
+                    .padding(.bottom, 8)
                 
-            } else {
+                Text(viewModel.name)
+                    .font(.textBodyXSR11140())
+                    .foregroundColor(.textSecondary)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(1)
                 
-                VStack(spacing: 8) {
+                if let subtitle = viewModel.subtitle {
                     
-                    Color.bordersDivider
-                        .cornerRadius(20)
-                        .frame(width: 40, height: 40)
-                        .overlay(Image.ic24Search.resizable().renderingMode(.template).foregroundColor(Color.iconGray).frame(width: 24, height: 24))
-                    
-                    Text(viewModel.banksList.emptyListTitle)
+                    Text(subtitle)
+                        .font(.textBodyXSR11140())
                         .foregroundColor(.textPlaceholder)
-                        .font(.textBodySR12160())
+                        .multilineTextAlignment(.center)
+                        .lineLimit(1)
                 }
             }
+            .contentShape(Rectangle())
+            .onTapGesture { tapped() }
         }
+    }
+    
+    struct SelectAllItemView: View {
         
-        struct BankItem: View {
-            
-            let viewModel: PaymentsSelectBankView.ViewModel.BanksList.ItemViewModel
-            let action: () -> Void
-            
-            var body: some View {
-                
-                Button {
-                    
-                    action()
-                    
-                } label: {
-                    
-                    VStack(spacing: 8) {
-                        
-                        IconView(viewModel: viewModel.icon)
-                            .frame(width: 40, height: 40)
-                        
-                        Text(viewModel.name)
-                            .font(.textBodyXSR11140())
-                            .foregroundColor(.textSecondary)
-                            .multilineTextAlignment(.center)
-                            .lineLimit(viewModel.lineLimit)
-                        
-                        if let subtitle = viewModel.subtitle {
-                            
-                            Text(subtitle)
-                                .font(.textBodyXSR11140())
-                                .foregroundColor(.textPlaceholder)
-                                .lineLimit(1)
-                                .multilineTextAlignment(.center)
-                            
-                        }
-                    }
-                    
-                }.buttonStyle(PushButtonStyle())
-            }
-        }
+        let viewModel: PaymentsSelectBankView.ViewModel.SelectAllItemViewModel
+        let tapped: () -> Void
         
-        struct IconView: View {
+        var body: some View {
             
-            let viewModel: ViewModel.IconViewModel
-            
-            var body: some View {
+            VStack(spacing: 8) {
                 
-                switch viewModel {
-                case .image(let image):
-                    image
+                Group {
+                    
+                    viewModel.icon
                         .resizable()
-                        .renderingMode(.original)
+                        .renderingMode(.template)
+                        .foregroundColor(.iconGray)
+                        .frame(width: 24, height: 24)
+                        .background(Circle().foregroundColor(.white).frame(width: 40, height: 40))
                     
-                case .icon(let icon):
-                    Circle()
-                        .fill(Color.white)
-                        .overlay(icon.resizable().renderingMode(.template).frame(width: 24, height: 24))
-                }
+                }.frame(width: 40, height: 40)
+                
+                Text(viewModel.name)
+                    .font(.textBodyXSR11140())
+                    .foregroundColor(.textSecondary)
             }
+            .contentShape(Rectangle())
+            .onTapGesture { tapped() }
         }
     }
     
-    //MARK: View Builder's
-    
-    @ViewBuilder
-    private func chevronButton() -> some View {
+    struct EmptyListView: View {
         
-        let rotation: Angle = viewModel.isExpanded ? .degrees(90) : .degrees(viewModel.isExpanded ? -90 : 90)
-        let opacity = viewModel.isEditable ? 1 : 0.2
+        let viewModel: PaymentsSelectBankView.ViewModel.EmptyListViewModel
         
-        Image.ic24ChevronRight
-            .foregroundColor(.iconGray)
-            .rotationEffect(rotation)
-            .opacity(opacity)
-            .frame(width: 16, height: 16)
+        var body: some View {
+            
+            VStack(spacing: 8) {
+                
+                Color.bordersDivider
+                    .cornerRadius(20)
+                    .frame(width: 40, height: 40)
+                    .overlay(viewModel.icon.resizable().renderingMode(.template).foregroundColor(Color.iconGray).frame(width: 24, height: 24))
+                
+                Text(viewModel.title)
+                    .foregroundColor(.textPlaceholder)
+                    .font(.textBodySR12160())
+            }
+        }
     }
-    
-    @ViewBuilder
-    private func defaultIcon() -> some View {
-        
-        viewModel.item.icon
-            .resizable()
-            .foregroundColor(.iconGray)
-            .frame(width: 24, height: 24)
-    }
-}
-
-extension PaymentsSelectBankView.SelectedBankView {
     
     struct IconView: View {
         
@@ -772,7 +702,6 @@ extension PaymentsSelectBankView.SelectedBankView {
                 case .image(let image):
                     image
                         .resizable()
-                        .frame(width: 32, height: 32)
                     
                 case .icon(let image):
                     image
@@ -780,10 +709,14 @@ extension PaymentsSelectBankView.SelectedBankView {
                         .renderingMode(.template)
                         .foregroundColor(.iconGray)
                         .frame(width: 24, height: 24)
-                    
                 }
             }
         }
+    }
+    
+    enum MatchedID: Hashable {
+        
+        case selected
     }
 }
 
@@ -795,27 +728,7 @@ struct PaymentsSelectBankView_Previews: PreviewProvider {
         
         Group {
             
-            //MARK: Views
-            
-            PaymentsSelectBankView(viewModel: .sample)
-                .previewLayout(.fixed(width: 375, height: 200))
-                .previewDisplayName("Select Bank Components Empty State")
-                .padding(20)
-            
-            PaymentsSelectBankView(viewModel: .sampleFocus)
-                .previewLayout(.fixed(width: 375, height: 200))
-                .previewDisplayName("Select Bank Components Focus State")
-                .padding(20)
-            
-            PaymentsSelectBankView(viewModel: .sampleSelected)
-                .previewLayout(.fixed(width: 375, height: 200))
-                .previewDisplayName("Select Bank Components Selected State")
-                .padding(20)
-            
-            PaymentsSelectBankView(viewModel: .sampleItems)
-                .previewLayout(.fixed(width: 375, height: 200))
-                .previewDisplayName("Select Bank Components With Items")
-                .padding(20)
+            PaymentsGroupView(viewModel: PaymentsSelectBankView.ViewModel.selectedGroup)
         }
     }
 }
@@ -824,23 +737,23 @@ struct PaymentsSelectBankView_Previews: PreviewProvider {
 
 extension PaymentsSelectBankView.ViewModel {
     
-    //Empty State
-    static let sample = PaymentsSelectBankView.ViewModel(title: "Банк получателя", item: .init(icon: .ic24Bank, placeholder: "Выберите банк", state: .`default`), banksList: .init(itemsList: []))
-    
-    
-    //Focus State
-    static let sampleFocus = PaymentsSelectBankView.ViewModel(title: "Банк получателя", item: .init(icon: .ic24Bank, placeholder: "Выберите банк", state: .editing(.init(text: nil, placeholder: "Выберите банк", keyboardType: .number, limit: nil))), banksList: .init(itemsList: []))
-    
-    //Selected State
-    static let sampleSelected = PaymentsSelectBankView.ViewModel(title: "Банк получателя", item: .init(icon: .ic24Bank, placeholder: "Выберите банк", state: .selected(.selectedItem)), banksList: .init(itemsList: []))
-    
-    //With Items
-    static let sampleItems = PaymentsSelectBankView.ViewModel(title: "Банк получателя", item: .init(icon: .ic24Bank, placeholder: "Выберите банк", state: .editing(.init(text: nil, placeholder: "Выберите банк", keyboardType: .number, limit: nil))), banksList: .init(itemsList: itemsListSample))
-    
-    static let itemsListSample: [PaymentsSelectBankView.ViewModel.BanksList.ItemViewModel] = [.init(id: UUID().description, searchValue: "searchValue", icon: .icon(.ic24MoreHorizontal), name: "См. все", subtitle: nil, type: .selectAll ), .init(id: UUID().description, searchValue: "searchValue", icon: .image(.init("ID Bank")), name: "ID Bank", subtitle: nil, type: .regular )]
+    static let selectedGroup = PaymentsGroupViewModel(items: [ PaymentsSelectBankView.ViewModel.sampleParameter ])
 }
 
-extension PaymentsSelectBankView.ViewModel.SelectedItemViewModel {
+extension PaymentsSelectBankView.ViewModel {
     
-    static let selectedItem = PaymentsSelectBankView.ViewModel.SelectedItemViewModel(id: UUID().description, title: "Выберите банк получателя", icon: .image(.init("ID Bank")), name: "ID Bank")
+    static let sampleParameter = try! PaymentsSelectBankView.ViewModel(
+        with: .init(
+            .init(id: "bank_param_id", value: nil),
+            icon: .init(named: "ic24Bank")!,
+            title: "Банк получателя",
+            options: [
+                .init(id: "0", name: "Сбербанк", subtitle: "04456789", icon: nil, searchValue: "сбербанк"),
+                .init(id: "1", name: "Альфабанк", subtitle: "04478998", icon: nil, searchValue: "альфабанк"),
+            ],
+            placeholder: "Выберите банк",
+            selectAll: .init(type: .banks),
+            keyboardType: .normal),
+        model: .emptyMock)
+    
 }

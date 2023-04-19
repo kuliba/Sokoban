@@ -646,17 +646,16 @@ final class OperationDetailInfoViewModel: Identifiable {
             
         case .c2b:
             logo = Image("sbp-logo")
-            let allBanks = Model.shared.dictionaryFullBankInfoList()
-            let foundBank = allBanks?.filter({ $0.bic == statement.fastPayment?.foreignBankBIC })
-            var imageBank: Image? = nil
-            if foundBank != nil && foundBank?.count ?? 0 > 0 {
-                _ = foundBank?.first?.rusName ?? ""
-                let bankIconSvg = foundBank?.first?.svgImage
-                if let image = bankIconSvg?.uiImage{
-                    
-                    imageBank = Image.init(uiImage: image)
+            
+            let bankImage: Image? = {
+                
+                guard let bank = model.dictionaryFullBankInfoList().first(where: { $0.bic == statement.fastPayment?.foreignBankBIC }),
+                      let uiImage = bank.svgImage.uiImage else {
+                    return nil
                 }
-            }
+                
+                return .init(uiImage: uiImage)
+            }()
             
             if let formattedAmount = model.amountFormatted(amount: statement.amount, currencyCode: currency, style: .fraction) {
                 
@@ -707,11 +706,11 @@ final class OperationDetailInfoViewModel: Identifiable {
             cells.append(BankCellViewModel(title: payeerLabel, icon: Image("hash"), name: statement.fastPayment?.foreignName ?? ""))
             if let bankName = statement.fastPayment?.foreignBankName, statement.operationType == .debit {
                 
-                cells.append(BankCellViewModel(title: "Банк получателя", icon:  imageBank ?? Image("BankIcon"), name: bankName))
+                cells.append(BankCellViewModel(title: "Банк получателя", icon:  bankImage ?? Image("BankIcon"), name: bankName))
                 
             } else if let bankName = statement.fastPayment?.foreignBankName {
                 
-                cells.append(BankCellViewModel(title: "Банк отправителя", icon: imageBank ?? Image("BankIcon"), name: bankName))
+                cells.append(BankCellViewModel(title: "Банк отправителя", icon: bankImage ?? Image("BankIcon"), name: bankName))
             }
             
             if let comment = statement.fastPayment?.documentComment {

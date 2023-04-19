@@ -180,7 +180,7 @@ extension PaymentsOperationViewModel {
         return PaymentsOperationViewModel(
             navigationBar: .init(title: "Налоги и услуги"),
             top: [PaymentsGroupViewModel(items: topItems)],
-            feed: [PaymentsGroupViewModel(items: contentItems)],
+            feed: [PaymentsGroupViewModel(items: [PaymentsSelectBankView.ViewModel.sampleParameter]), PaymentsGroupViewModel(items: contentItems)],
             bottom: [PaymentsGroupViewModel(items: bottomItems)],
             closeAction: {})
     }()
