@@ -199,7 +199,7 @@ class ContactsViewModel: ObservableObject {
                             switch phase {
                             case .banksAndCountries(phone: _):
                                 
-                                if case let .direct(phone: _, countryId: countryId) = payload.source {
+                                if case let .direct(phone: _, countryId: countryId, serviceData: _) = payload.source {
 
                                     self.action.send(ContactsViewModelAction.PaymentRequested(source: .direct(phone: self.searchBar.phone, countryId: countryId)))
 
@@ -216,7 +216,7 @@ class ContactsViewModel: ObservableObject {
 
                         case .select:
                             switch payload.source {
-                            case let .direct(phone: _, countryId: countryId):
+                            case let .direct(phone: _, countryId: countryId, serviceData: _):
                                 self.action.send(ContactsViewModelAction.CountrySelected(countryId: countryId))
                                 
                             default:

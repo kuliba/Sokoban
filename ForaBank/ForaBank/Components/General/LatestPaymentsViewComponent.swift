@@ -17,7 +17,7 @@ extension LatestPaymentsView {
         @Published var items: [ItemViewModel]
         let isBaseButtons: Bool
         let filter: Filter?
-
+        
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
@@ -87,31 +87,30 @@ extension LatestPaymentsView {
                     
                 }.store(in: &bindings)
         }
-
+        
         static func itemsReduce(model: Model, latest: [LatestPaymentData], isUpdating: Bool, action: (LatestPaymentData.ID) -> () -> Void) -> [ItemViewModel] {
-            
-            var updatedItems = [ItemViewModel]()
             
             let latestPaymentsItems = latest.map { item in
                 
                 ItemViewModel.latestPayment(.init(data: item, model: model, action: action(item.id)))
             }
-
+            
+            let updatedItems: [ItemViewModel]
+            
             if isUpdating {
                 
                 if latest.isEmpty {
                     
-                    updatedItems.append(contentsOf: Array(repeating: .placeholder(.init()), count: 4))
+                    updatedItems = Array(repeating: .placeholder(.init()), count: 4)
                     
                 } else {
                     
-                    updatedItems.append(.placeholder(.init()))
-                    updatedItems.append(contentsOf:  latestPaymentsItems)
+                    updatedItems = [.placeholder(.init())] + latestPaymentsItems
                 }
                 
             } else {
                 
-                updatedItems.append(contentsOf: latestPaymentsItems)
+                updatedItems = latestPaymentsItems
             }
             
             return updatedItems
@@ -196,102 +195,38 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
     
     init(data: LatestPaymentData, model: Model, action: @escaping () -> Void) {
         
-        func fullName(for phoneNumber: String?) -> String? {
-            
-            guard case .available = model.contactsPermissionStatus,
-                  let phoneNumber = phoneNumber,
-                  let contact = model.contact(for: phoneNumber)
-            else { return nil }
-            
-            return contact.fullName
-        }
-        
-        func avatar(for phoneNumber: String?) -> Self.Avatar? {
-            
-            guard case .available = model.contactsPermissionStatus,
-                  let phoneNumber = phoneNumber,
-                  let contact = model.contact(for: phoneNumber)
-            else { return nil }
-            
-            if let avatar = contact.avatar,
-               let avatarImg = Image(data: avatar.data) {
-                
-                return .image(avatarImg)
-                
-            } else if let initials = contact.initials {
-                
-                return .text(initials)
-                
-            } else {
-                
-                return nil
-            }
-        }
+        let icon: Avatar = .icon(data.type.defaultIcon, .iconGray)
+        let name = data.type.defaultName
         
         switch (data.type, data) {
         case (.phone, let paymentData as PaymentGeneralData):
             
-            let phoneNumberRu = "+7" + paymentData.phoneNumber
+            let phoneNumberRu = paymentData.phoneNumberRu
             let phoneFormatter = PhoneNumberKitFormater()
             
-            self.avatar = avatar(for: phoneNumberRu) ?? .icon(data.type.defaultIcon, .iconGray)
+            self.avatar = model.avatar(for: phoneNumberRu) ?? icon
             self.topIcon = model.dictionaryBank(for: paymentData.bankId)?.svgImage.image
-            self.description = fullName(for: phoneNumberRu)
+            self.description = model.fullName(for: phoneNumberRu)
             ?? (paymentData.phoneNumber.isEmpty
-                ? data.type.defaultName : phoneFormatter.format(phoneNumberRu))
+                ? name : phoneFormatter.format(phoneNumberRu))
             
         case (.outside, let paymentData as PaymentServiceData):
             
-            let firstLogo = model.dictionaryAnywayOperator(for: paymentData.puref)?.logotypeList.first
-            let image = firstLogo?.svgImage?.image ?? data.type.defaultIcon
-            self.avatar = .icon(image, .iconGray)
+            let outsideData = Self.reduceAdditional(model: model, additionalList: paymentData.additionalList)
             
-            self.description = paymentData.lastPaymentName ?? ""
+            self.avatar = outsideData.avatar ?? icon
+            self.description = outsideData.description ?? name
+            self.topIcon = outsideData.topIcon
             
-            if let countryId = paymentData.additionalList.first(where: { $0.isTrnPickupPoint } )?.fieldValue,
-               let country = model.countriesList.value.first(where: { $0.id == countryId } ),
-               let image = country.svgImage?.image {
-                
-                self.topIcon = image
-            } else {
-                
-                self.topIcon = nil
-            }
-                
-        case (.service, let paymentData as PaymentServiceData):
+        case (.internet, let paymentData as PaymentServiceData),
+            (.transport, let paymentData as PaymentServiceData),
+            (.service, let paymentData as PaymentServiceData),
+            (.taxAndStateService, let paymentData as PaymentServiceData):
             
-            if let image = model.dictionaryAnywayOperator(for: paymentData.puref)?
-                .logotypeList.first?.svgImage?.image {
-                self.avatar = .image(image)
-            } else {
-                self.avatar = .icon(data.type.defaultIcon, .iconGray)
-            }
-            self.description = model.dictionaryAnywayOperator(for: paymentData.puref)?.name
-            ?? data.type.defaultName
-            self.topIcon = nil
+            let operatorData = Self.reduceAnywayOperator(anywayOperators: model.dictionaryAnywayOperators(), puref: paymentData.puref)
             
-        case (.transport, let paymentData as PaymentServiceData):
-            
-            if let image = model.dictionaryAnywayOperator(for: paymentData.puref)?
-                .logotypeList.first?.svgImage?.image {
-                self.avatar = .image(image)
-            } else {
-                self.avatar = .icon(data.type.defaultIcon, .iconGray)
-            }
-            self.description = model.dictionaryAnywayOperator(for: paymentData.puref)?.name
-            ?? data.type.defaultName
-            self.topIcon = nil
-            
-        case (.internet, let paymentData as PaymentServiceData):
-            
-            if let image = model.dictionaryAnywayOperator(for: paymentData.puref)?
-                .logotypeList.first?.svgImage?.image {
-                self.avatar = .image(image)
-            } else {
-                self.avatar = .icon(data.type.defaultIcon, .iconGray)
-            }
-            self.description = model.dictionaryAnywayOperator(for: paymentData.puref)?.name
-            ?? data.type.defaultName
+            self.avatar = operatorData.avatar ?? icon
+            self.description = operatorData.description ?? name
             self.topIcon = nil
             
         case (.mobile, let paymentData as PaymentServiceData):
@@ -302,38 +237,129 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
                 let phoneNumberRu = "+7" + phoneNumber
                 let phoneFormatter = PhoneNumberKitFormater()
                 
-                self.avatar = avatar(for: phoneNumberRu) ?? .icon(data.type.defaultIcon, .iconGray)
-                self.description = fullName(for: phoneNumberRu) ?? phoneFormatter.format(phoneNumberRu)
+                self.avatar = model.avatar(for: phoneNumberRu) ?? icon
+                self.description = model.fullName(for: phoneNumberRu) ?? phoneFormatter.format(phoneNumberRu)
+                
             } else {
-                self.avatar = .icon(data.type.defaultIcon, .iconGray)
-                self.description = data.type.defaultName
+                
+                self.avatar = icon
+                self.description = name
             }
+            
             self.topIcon = model.dictionaryAnywayOperator(for: paymentData.puref)?
                 .logotypeList.first?.svgImage?.image
             
-            
-        case (.taxAndStateService, let paymentData as PaymentServiceData):
-            
-            if let image = model.dictionaryAnywayOperator(for: paymentData.puref)?
-                .logotypeList.first?.svgImage?.image {
-                self.avatar = .image(image)
-            } else {
-                self.avatar = .icon(data.type.defaultIcon, .iconGray)
-            }
-            self.description = model.dictionaryAnywayOperator(for: paymentData.puref)?.name
-            ?? data.type.defaultName
-            self.topIcon = nil
-            
         default: //error matching, init default
-            self.avatar = .icon(data.type.defaultIcon, .iconGray)
+            self.avatar = icon
+            self.description = name
             self.topIcon = nil
-            self.description = data.type.defaultName
+            
         }
         
         self.action = action
         self.id = data.id
     }
+}
+
+//MARK: Model Helpers
+
+extension Model {
     
+    func fullName(for phoneNumber: String) -> String? {
+        
+        guard case .available = self.contactsPermissionStatus,
+              let contact = self.contact(for: phoneNumber)
+        else { return nil }
+        
+        return contact.fullName
+    }
+    
+    typealias Avatar = LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar
+    
+    func avatar(for phoneNumber: String) -> Avatar? {
+        
+        guard case .available = self.contactsPermissionStatus,
+              let contact = self.contact(for: phoneNumber)
+        else { return nil }
+        
+        if let avatar = contact.avatar,
+           let avatarImg = Image(data: avatar.data) {
+            
+            return .image(avatarImg)
+            
+        } else if let initials = contact.initials {
+            
+            return .text(initials)
+            
+        } else {
+            
+            return nil
+        }
+    }
+}
+
+//MARK: LatestPaymentButtonVM reducer's
+
+extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
+    
+    static func reduceAnywayOperator(anywayOperators: [OperatorGroupData.OperatorData]?, puref: String) -> (avatar: Avatar?, description: String?) {
+        
+        guard let anywayOperators = anywayOperators,
+              let anyOperator = anywayOperators.first(where: { $0.code == puref } ) else {
+            
+            return (nil, nil)
+        }
+        
+        let description = anyOperator.name
+        if let avatar = anyOperator.logotypeList.first?.svgImage?.image {
+            
+            return (.image(avatar), description)
+            
+        } else {
+            
+            return (nil, description)
+        }
+    }
+    
+    static func reduceAdditional(model: Model, additionalList: [PaymentServiceData.AdditionalListData]) -> (avatar: Avatar?, description: String?, topIcon: Image?) {
+        
+        let topIcon = Self.topIconOutside(model: model, additionalList: additionalList)
+        
+        if let phone = additionalList.first(where: { $0.isPhone })?.fieldValue {
+            
+            return (model.avatar(for: phone), model.fullName(for: phone), topIcon)
+            
+        } else if let firstName = additionalList.first(where: { $0.isName } )?.fieldValue,
+                  let lastName = additionalList.first(where: { $0.isLastName } )?.fieldValue {
+            
+            let name = Self.firstLetter(name: firstName, lastName: lastName)
+            return (nil, name, topIcon)
+        }
+        
+        return (nil, nil, nil)
+    }
+    
+    static func topIconOutside(model: Model, additionalList: [PaymentServiceData.AdditionalListData]) -> Image? {
+        
+        guard let countryId = additionalList.first(where: { $0.isTrnPickupPoint } )?.fieldValue,
+              let country = model.countriesList.value.first(where: { $0.id == countryId } ),
+              let image = country.svgImage?.image else {
+            
+            return nil
+        }
+        
+        return image
+    }
+    
+    static func firstLetter(name: String, lastName: String) -> String {
+        
+        let letters = [name, lastName]
+            .compactMap { $0?.replacingOccurrences(of: " ", with: "").first }
+            .map{ $0.uppercased() }
+            .reduce("", +)
+        
+        return letters
+    }
 }
 
 //MARK: - Action PTSectionLatestPaymentsViewAction

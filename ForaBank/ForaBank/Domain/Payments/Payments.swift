@@ -184,8 +184,8 @@ extension Payments.Operation {
         
         case sfp(phone: String, bankId: BankData.ID)
         
-        case direct(phone: String?, countryId: CountryData.ID)
-        
+        case direct(phone: String? = nil, countryId: CountryData.ID, serviceData: PaymentServiceData? = nil)
+                
         case `return`(operationId: String, transferNumber: String, amount: String, productId: String)
         
         case change(operationId: String, transferNumber: String, name: String)
@@ -203,7 +203,7 @@ extension Payments.Operation {
             case let .latestPayment(latestPaymentId): return "latest payment: \(latestPaymentId)"
             case .qr: return "qr"
             case let .sfp(phone: phone, bankId: bankId): return "sfp: \(phone), bankId: \(bankId)"
-            case let .direct(phone: phone, countryId: countryId): return "direct: \(phone ?? "nil"), countryId: \(countryId)"
+            case let .direct(phone: phone, countryId: countryId, serviceData: serviceData): return "direct: \(phone ?? "nil"), countryId: \(countryId), lastPaymentName: \(String(describing: serviceData?.lastPaymentName))"
             case let .return(operationId: operationId, transferNumber: number, amount: amount, productId: productId): return "operationId: \(operationId), transferNumber: \(number), amount: \(amount), productId: \(productId)"
             case let .change(operationId: operationId, transferNumber: number, name: name): return "operationId: \(operationId), transferNumber: \(number), name: \(name)"
             case let .mock(mock): return "mock service: \(mock.service.rawValue)"

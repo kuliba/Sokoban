@@ -161,6 +161,38 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 }
             }.store(in: &bindings)
         
+        action
+            .compactMap({ $0 as? PaymentsTransfersViewModelAction.Show.Alert})
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] in
+                
+                self.alert = .init(title: $0.title, message: $0.message, primary: .init(type: .default, title: "Ок", action: {}))
+                
+            }.store(in: &bindings)
+        
+        action
+            .compactMap({ $0 as? PaymentsTransfersViewModelAction.Show.Payment})
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] in
+                
+                self.link = .payments($0.viewModel)
+                
+            }.store(in: &bindings)
+        
+        action
+            .compactMap({ $0 as? DelayWrappedAction })
+            .flatMap({
+                
+                Just($0.action)
+                    .delay(for: .milliseconds($0.delayMS), scheduler: DispatchQueue.main)
+
+            })
+            .sink(receiveValue: { [weak self] in
+                
+                self?.action.send($0)
+                
+            }).store(in: &bindings)
+        
         model.clientInfo
             .combineLatest(model.clientPhoto, model.clientName)
             .receive(on: DispatchQueue.main)
@@ -492,7 +524,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             .sink { [unowned self] action in
             
                 switch action {
-                
                 case _ as PaymentsViewModelAction.ScanQrCode:
                     
                     self.link = nil
@@ -503,6 +534,31 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                     self.bind(qrScannerModel)
                     fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
+                    
+                case let payload as PaymentsViewModelAction.ContactAbroad:
+                    
+                    //TODO: remove concurrency Task after PaymentsViewModel sync
+                    Task {
+                        
+                        do {
+                            
+                            let paymentsViewModel = try await PaymentsViewModel(source: payload.source, model: model) { [weak self] in
+                                
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }
+                            
+                            self.action.send(DelayWrappedAction(delayMS: 700, action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel)))
+                            
+                        } catch {
+                            
+                            let title = "Error"
+                            let message = "Unable create PaymentsViewModel for source: \(payload.source) with error: \(error.localizedDescription)"
+                            
+                            self.action.send(DelayWrappedAction(delayMS: 300, action: PaymentsTransfersViewModelAction.Show.Alert(title: title, message: message)))
+                            
+                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for source: \(payload.source) with error: \(error.localizedDescription)")
+                        }
+                    }
                     
                 default: break
                 }
@@ -626,6 +682,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                     
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                                         
+                                        self.bind(paymentsViewModel)
                                         self.link = .init(.payments(paymentsViewModel))
                                     }
                                 }
@@ -671,7 +728,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             await MainActor.run {
                                 
                                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                    
+
+                                    self.bind(paymentsViewModel)
                                     self.link = .init(.payments(paymentsViewModel))
                                 }
                             }
@@ -988,7 +1046,7 @@ extension PaymentsTransfersViewModel {
                         return
                     }
                     
-                    let paymentsViewModel = try await PaymentsViewModel(source: .direct(phone: paymentData.lastPaymentName, countryId: countryId), model: model) { [weak self] in
+                    let paymentsViewModel = try await PaymentsViewModel(source: .direct(phone: paymentData.lastPaymentName, countryId: countryId, serviceData: paymentData), model: model) { [weak self] in
                         
                         self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                         
@@ -1000,6 +1058,7 @@ extension PaymentsTransfersViewModel {
                     
                     await MainActor.run {
                         
+                        self.bind(paymentsViewModel)
                         self.link = .init(.payments(paymentsViewModel))
                     }
                     
@@ -1197,6 +1256,17 @@ enum PaymentsTransfersViewModelAction {
     struct OpenQr: Action {}
     
     enum Show {
+        
+        struct Alert: Action {
+            
+            let title: String
+            let message: String
+        }
+        
+        struct Payment: Action {
+        
+            let viewModel: PaymentsViewModel
+        }
         
         struct Requisites: Action {
             

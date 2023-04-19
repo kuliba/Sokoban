@@ -31,7 +31,8 @@ extension Model {
                                               Payments.Parameter.Identifier.`operator`.rawValue,
                                               Payments.Parameter.Identifier.service.rawValue,
                                               Payments.Parameter.Identifier.category.rawValue,
-                                              Payments.Parameter.Identifier.countryDropDownList.rawValue]
+                                              Payments.Parameter.Identifier.countryDropDownList.rawValue,
+                                              Payments.Parameter.Identifier.countryCurrencyFilter.rawValue]
         
         let additional = try paymentsTransferAnywayAbroadAdditional(parameters, restrictedParameters: restrictedParameters)
         
@@ -59,7 +60,7 @@ extension Model {
         for (index, parameter) in parameters.enumerated() {
                 
             switch parameter.id {
-            case Payments.Parameter.Identifier.countrybSurName.rawValue:
+            case Payments.Parameter.Identifier.countryFamilyName.rawValue:
                 if let value = parameter.value {
                     
                     additional.append(.init(fieldid: index + 1, fieldname: parameter.id, fieldvalue: value))

@@ -306,7 +306,7 @@ extension Model {
                 
                 let visible = try paymentsTransferAnywayStepVisible(operation, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
                 let stepStage = try paymentsTransferAnywayStepStage(operation, response: anywayResponse)
-                let restricted: [Payments.Parameter.ID] = ["bSurName"]
+                let restricted: [Payments.Parameter.ID] = ["bSurName", "bIDnumber"]
                 let required = try paymentsTransferAnywayStepRequired(operation, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters, restrictedParameters: restricted)
                 
                 return Payments.Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, required: required, processed: nil))
@@ -354,8 +354,8 @@ extension Model {
         case let .requisites(qrCode: qrCode):
             return paymentsProcessSourceReducerRequisites(qrCode: qrCode, parameterId: parameterId)
         
-        case let .direct(phone: phone, countryId: country):
-            return paymentsProcessSourceReducerCountry(countryId: country, phone: phone, parameterId: parameterId)
+        case let .direct(phone: phone, countryId: country, serviceData: serviceData):
+            return paymentsProcessSourceReducerCountry(countryId: country, phone: phone, serviceData: serviceData, parameterId: parameterId)
 
         default:
             return nil
