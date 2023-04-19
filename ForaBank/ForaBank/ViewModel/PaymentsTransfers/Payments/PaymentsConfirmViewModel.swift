@@ -172,7 +172,7 @@ extension PaymentsConfirmViewModel {
             return
         }
         
-        codeParameter.textField.setText(to: code)
+        codeParameter.setOTP(to: code)
     }
     
     func updateEditable(for groups: [PaymentsGroupViewModel]) {

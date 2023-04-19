@@ -14,14 +14,14 @@ final class PaymentsInputViewComponentTests: XCTestCase {
     func test_init_shouldSetValues_onEmpty() {
         
         let sut = makeSUT(initialValue: "")
-        let valueCurrentSpy = ValueSpy(sut.$value.map(\.current))
+        let currentValueSpy = ValueSpy(sut.$value.map(\.current))
         let titleSpy = ValueSpy(sut.$title)
         let warningSpy = ValueSpy(sut.$warning)
         let isEditingSpy = ValueSpy(sut.textField.$isEditing)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertEqual(valueCurrentSpy.values, ["", nil])
+        XCTAssertEqual(currentValueSpy.values, ["", nil])
         XCTAssertEqual(titleSpy.values, [nil, nil])
         XCTAssertEqual(warningSpy.values, [nil, "value lenght 3 or 5"])
         XCTAssertEqual(isEditingSpy.values, [false, false])
@@ -30,14 +30,14 @@ final class PaymentsInputViewComponentTests: XCTestCase {
     func test_init_shouldSetValues_onNonEmpty() {
         
         let sut = makeSUT(initialValue: "abcde")
-        let valueCurrentSpy = ValueSpy(sut.$value.map(\.current))
+        let currentValueSpy = ValueSpy(sut.$value.map(\.current))
         let titleSpy = ValueSpy(sut.$title)
         let warningSpy = ValueSpy(sut.$warning)
         let isEditingSpy = ValueSpy(sut.textField.$isEditing)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertEqual(valueCurrentSpy.values, [
+        XCTAssertEqual(currentValueSpy.values, [
             "abcde", "abcde"
         ])
         XCTAssertEqual(titleSpy.values, [
@@ -54,7 +54,7 @@ final class PaymentsInputViewComponentTests: XCTestCase {
     func test_shouldChangeValues_onTextViewDidBeginEditing() {
         
         let sut = makeSUT(initialValue: "abcde")
-        let valueCurrentSpy = ValueSpy(sut.$value.map(\.current))
+        let currentValueSpy = ValueSpy(sut.$value.map(\.current))
         let titleSpy = ValueSpy(sut.$title)
         let warningSpy = ValueSpy(sut.$warning)
         let isEditingSpy = ValueSpy(sut.textField.$isEditing)
@@ -63,7 +63,7 @@ final class PaymentsInputViewComponentTests: XCTestCase {
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertEqual(valueCurrentSpy.values, [
+        XCTAssertEqual(currentValueSpy.values, [
             "abcde", "abcde", "abcde"
         ])
         XCTAssertEqual(titleSpy.values, [
@@ -80,23 +80,23 @@ final class PaymentsInputViewComponentTests: XCTestCase {
     func test_value_shouldChangeToValue_onNonEmptyTextFiledInput() {
         
         let sut = makeSUT(initialValue: "abcde")
-        let valueCurrentSpy = ValueSpy(sut.$value.map(\.current))
+        let currentValueSpy = ValueSpy(sut.$value.map(\.current))
         
-        XCTAssertEqual(valueCurrentSpy.values, ["abcde"])
+        XCTAssertEqual(currentValueSpy.values, ["abcde"])
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-        XCTAssertEqual(valueCurrentSpy.values, [
+        XCTAssertEqual(currentValueSpy.values, [
             "abcde", "abcde"
         ])
 
         sut.textField.setText(to: "ABC")
         
-        XCTAssertEqual(valueCurrentSpy.values, [
+        XCTAssertEqual(currentValueSpy.values, [
             "abcde", "abcde"
         ])
 
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-        XCTAssertEqual(valueCurrentSpy.values, [
+        XCTAssertEqual(currentValueSpy.values, [
             "abcde", "abcde", "ABC"
         ])
     }
@@ -136,23 +136,23 @@ final class PaymentsInputViewComponentTests: XCTestCase {
     func test_value_shouldChangeToNil_onEmptyTextFiledInput() {
         
         let sut = makeSUT(initialValue: "abcde")
-        let valueCurrentSpy = ValueSpy(sut.$value.map(\.current))
+        let currentValueSpy = ValueSpy(sut.$value.map(\.current))
         
-        XCTAssertEqual(valueCurrentSpy.values, ["abcde"])
+        XCTAssertEqual(currentValueSpy.values, ["abcde"])
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-        XCTAssertEqual(valueCurrentSpy.values, [
+        XCTAssertEqual(currentValueSpy.values, [
             "abcde", "abcde"
         ])
 
         sut.textField.setText(to: "")
         
-        XCTAssertEqual(valueCurrentSpy.values, [
+        XCTAssertEqual(currentValueSpy.values, [
             "abcde", "abcde"
         ])
 
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-        XCTAssertEqual(valueCurrentSpy.values, [
+        XCTAssertEqual(currentValueSpy.values, [
             "abcde", "abcde", ""
         ])
     }

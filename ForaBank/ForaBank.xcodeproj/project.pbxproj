@@ -314,6 +314,7 @@
 		2A01BAFB29A8E52B0021833F /* ActiveSessionAgentStubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01BAFA29A8E52B0021833F /* ActiveSessionAgentStubTests.swift */; };
 		2A01BAFF29A8F3AA0021833F /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01BAFE29A8F3AA0021833F /* String+Extension.swift */; };
 		2A01BB0329A8F5930021833F /* ServerAgentStubHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01BB0229A8F5930021833F /* ServerAgentStubHelpersTests.swift */; };
+		2A12674829EFE53200461884 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2A12674729EFE53200461884 /* CombineSchedulers */; };
 		2A18BB2929E598E000BB460D /* StringReplacingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A18BB2829E598E000BB460D /* StringReplacingTests.swift */; };
 		2A18BB2D29E59CB900BB460D /* StringRestrictedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A18BB2C29E59CB900BB460D /* StringRestrictedTests.swift */; };
 		2A1E395229E95889007AF429 /* TextFieldRegularComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A1E395129E95889007AF429 /* TextFieldRegularComponent */; };
@@ -3268,6 +3269,7 @@
 				6833E0B027322878004C070F /* SkeletonView in Frameworks */,
 				EDC8BA3426A5AA0E00EDB401 /* SDWebImagePDFCoder in Frameworks */,
 				2A1E395229E95889007AF429 /* TextFieldRegularComponent in Frameworks */,
+				2A12674829EFE53200461884 /* CombineSchedulers in Frameworks */,
 				ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */,
 				0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */,
 				0B67728E277CCD7500DCCECD /* PhoneNumberKit-Static in Frameworks */,
@@ -8461,6 +8463,7 @@
 				ED0AF884286B24DF00F86B68 /* AnyImageKit */,
 				2A1E395129E95889007AF429 /* TextFieldRegularComponent */,
 				2AB766BF29EA89AB00501DD2 /* UIKitHelpers */,
+				2A12674729EFE53200461884 /* CombineSchedulers */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -8477,6 +8480,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				2A12674A29EFE56200461884 /* PBXTargetDependency */,
 				EDB14395265FDA430028EF5A /* PBXTargetDependency */,
 			);
 			name = ForaBankTests;
@@ -8556,6 +8560,7 @@
 				7769F5C927D8CAD100F80607 /* XCRemoteSwiftPackageReference "ScrollViewProxy" */,
 				ED374CEA2863C5CC00A97219 /* XCRemoteSwiftPackageReference "Presentation" */,
 				ED0AF883286B24DF00F86B68 /* XCRemoteSwiftPackageReference "AnyImageKit" */,
+				2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */,
 			);
 			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
 			projectDirPath = "";
@@ -10231,6 +10236,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		2A12674A29EFE56200461884 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 2A12674929EFE56200461884 /* CombineSchedulers */;
+		};
 		A51568322821B927000D4455 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A515682B2821B927000D4455 /* ForaPushServiceExtension */;
@@ -10821,7 +10830,7 @@
 			repositoryURL = "https://github.com/marmelroy/PhoneNumberKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 3.3.3;
+				minimumVersion = 3.5.8;
 			};
 		};
 		0B7A18A92681CED70007CC75 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */ = {
@@ -10838,6 +10847,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 10.14.0;
+			};
+		};
+		2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/combine-schedulers.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.1;
 			};
 		};
 		6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
@@ -10979,6 +10996,15 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa" */;
 			productName = RealmSwift;
+		};
+		2A12674729EFE53200461884 /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
+			productName = CombineSchedulers;
+		};
+		2A12674929EFE56200461884 /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CombineSchedulers;
 		};
 		2A1E395129E95889007AF429 /* TextFieldRegularComponent */ = {
 			isa = XCSwiftPackageProductDependency;
