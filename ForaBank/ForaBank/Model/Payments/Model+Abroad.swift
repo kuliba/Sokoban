@@ -18,7 +18,7 @@ extension Model {
                 throw Payments.Error.missingSource(operation.service)
             }
             
-            guard case let .direct(phone: phone, countryId: country) = source else {
+            guard case let .direct(_, countryId: country, _) = source else {
                 
                 throw Payments.Error.missingSource(operation.service)
             }
@@ -94,20 +94,27 @@ extension Model {
     
     //MARK: - Source Reducer
     // update parameter value with source
-    func paymentsProcessSourceReducerCountry(countryId: CountryData.ID, phone: String?, bankId: BankData.ID? = nil, parameterId: Payments.Parameter.ID) -> Payments.Parameter.Value? {
+    func paymentsProcessSourceReducerCountry(countryId: CountryData.ID, phone: String?, bankId: BankData.ID? = nil, serviceData: PaymentServiceData?, parameterId: Payments.Parameter.ID) -> Payments.Parameter.Value? {
         
-        switch parameterId {
-        case Payments.Parameter.Identifier.countrySelect.rawValue:
-            return countryId
+        if let serviceData = serviceData {
             
-        case Payments.Parameter.Identifier.countryPhone.rawValue:
-            return phone
+            return serviceData.additionalList.first(where: { $0.fieldName == parameterId } ).map(\.fieldName)
             
-        case Payments.Parameter.Identifier.countryBank.rawValue:
-            return bankId
+        } else {
             
-        default:
-            return nil
+            switch parameterId {
+            case Payments.Parameter.Identifier.countrySelect.rawValue:
+                return countryId
+                
+            case Payments.Parameter.Identifier.countryPhone.rawValue:
+                return phone
+                
+            case Payments.Parameter.Identifier.countryBank.rawValue:
+                return bankId
+                
+            default:
+                return nil
+            }
         }
     }
     
@@ -238,11 +245,7 @@ extension Model {
             }
             
             guard let filterCurriencies = parameters.first(where: { $0.id == Payments.Parameter.Identifier.countryCurrencyFilter.rawValue }) else {
-                
-                var filter: ProductData.Filter = .init(rules: [])
-                filter.rules.append(ProductData.Filter.DebitRule())
-                filter.rules.append(ProductData.Filter.CurrencyRule(Set([.rub, .usd])))
-                return productParameter.updated(filter: filter)
+                return  nil
             }
 
             var currincies: [Currency] = []
@@ -258,30 +261,20 @@ extension Model {
                     }
                 }
             }
-            var filter: ProductData.Filter = .init(rules: [])
-            filter.rules.append(ProductData.Filter.DebitRule())
-            filter.rules.append(ProductData.Filter.CurrencyRule(Set(currincies)))
             
+            let filter: ProductData.Filter = .init(rules: [
+                ProductData.Filter.DebitRule(),
+                ProductData.Filter.RestrictedDepositRule(),
+                ProductData.Filter.CurrencyRule(Set(currincies)),
+            ])
             
-            var productCurriencies: Set<Currency> = .init()
+            let productCurriencies = productParameter.filter.rules
+                .currencyRules
+                .first?.allowed ?? []
             
-            for rule in productParameter.filter.rules {
-            
-                if let rule = rule as? ProductData.Filter.CurrencyRule {
-                    
-                    productCurriencies = rule.allowed
-                }
-            }
-            
-            var filteredCurriencies: Set<Currency> = .init()
-            
-            for rule in filter.rules {
-            
-                if let rule = rule as? ProductData.Filter.CurrencyRule {
-                    
-                    filteredCurriencies = rule.allowed
-                }
-            }
+            let filteredCurriencies = filter.rules
+                .currencyRules
+                .first?.allowed ?? []
             
             guard productCurriencies != filteredCurriencies else {
                 return nil
@@ -447,21 +440,21 @@ extension Model {
             
         case .input:
             switch parameterData.id {
-            case "bName":
+            case Payments.Parameter.Identifier.countryGivenName.rawValue:
                 return Payments.ParameterInput(
                     .init(id: parameterData.id, value: parameterData.value),
                     icon: parameterData.iconData ?? .parameterDocument,
                     title: parameterData.title,
                     validator: .baseName, group: .init(id: "fio", type: .contact))
                 
-            case "bLastName":
+            case Payments.Parameter.Identifier.countryMiddleName.rawValue:
                 return Payments.ParameterInput(
                     .init(id: parameterData.id, value: parameterData.value),
                     icon: nil,
                     title: parameterData.title,
                     validator: .baseName, group: .init(id: "fio", type: .contact))
                 
-            case Payments.Parameter.Identifier.countrybSurName.rawValue:
+            case Payments.Parameter.Identifier.countryFamilyName.rawValue:
                 return Payments.ParameterInput(
                     .init(id: parameterData.id, value: parameterData.value),
                     icon: nil,
@@ -470,7 +463,7 @@ extension Model {
                 
             case Payments.Parameter.Identifier.countryPhone.rawValue, "bPhone":
                 let phoneId = Payments.Parameter.Identifier.countryPhone.rawValue
-                if case let .direct(phone: phone, countryId: _) = operation.source {
+                if case let .direct(phone: phone, countryId: _, serviceData: _) = operation.source {
                     
                     let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: phone), title: parameterData.title, placeholder: parameterData.subTitle)
                     return phoneParameter
@@ -599,7 +592,7 @@ extension Model {
            let value = oferta.fieldValue,
            let url = URL(string: value) {
         
-            let countryOferta = Payments.Parameter.Identifier.countryOferta.rawValue
+            let countryOferta = Payments.Parameter.Identifier.countryOffer.rawValue
             parameters.append(Payments.ParameterCheck(.init(id: countryOferta, value: "true"), title: "С договором", link: .init(title: "оферты", url: url), style: .c2bSubscribtion, mode: .abroad))
         }
         
@@ -669,8 +662,8 @@ extension Model {
     func paymentsProcessOperationResetVisibleCountry(_ operation: Payments.Operation) async throws -> [Payments.Parameter.ID]? {
         
         let restrictedIds = [Payments.Parameter.Identifier.countryId.rawValue,
-                             Payments.Parameter.Identifier.countryCityId.rawValue,
-                             Payments.Parameter.Identifier.trnPickupPointId.rawValue]
+                             Payments.Parameter.Identifier.countryCity.rawValue,
+                             Payments.Parameter.Identifier.trnPickupPoint.rawValue]
         
         // check if current step stage is confirm
         guard case .remote(let remote) = operation.steps.last?.back.stage,
@@ -697,7 +690,7 @@ extension Model {
                         Payments.Parameter.Identifier.fee.rawValue,
                         Payments.Parameter.Identifier.sfpAmount.rawValue,
                         Payments.Parameter.Identifier.code.rawValue,
-                        Payments.Parameter.Identifier.countryOferta.rawValue]
+                        Payments.Parameter.Identifier.countryOffer.rawValue]
             case .direct:
                 
                 return [Payments.Parameter.Identifier.header.rawValue,

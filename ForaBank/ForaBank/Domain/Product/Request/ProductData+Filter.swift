@@ -233,6 +233,14 @@ extension ProductData.Filter {
 
 extension ProductData.Filter {
     
+    struct RestrictedDepositRule: ProductDataFilterRule {
+        
+        func result(_ productData: ProductData) -> Bool? {
+                    
+          return productData as? ProductDepositData == nil
+        }
+    }
+    
     struct DemandDepositRule: ProductDataFilterRule {
         
         func result(_ productData: ProductData) -> Bool? {

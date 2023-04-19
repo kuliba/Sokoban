@@ -196,6 +196,12 @@ class PaymentsViewModel: ObservableObject {
                         spinner = nil
                     }
                     
+                case _ as PaymentsViewModelAction.CloseSuccessView:
+                    withAnimation {
+                        
+                        self.successViewModel = nil
+                    }
+                    
                 case let payload as PaymentsViewModelAction.Alert:
                     alert = .init(title: payload.title, message: payload.message, primary: .init(type: .default, title: "Ok", action: {}))
                     
@@ -218,6 +224,10 @@ class PaymentsViewModel: ObservableObject {
                 switch action {
                 case _ as PaymentsSuccessAction.Button.Close:
                     self.action.send(PaymentsViewModelAction.Dismiss())
+                    
+                case let payload as PaymentsSuccessAction.Payment:
+                    self.action.send(PaymentsViewModelAction.ContactAbroad(source: payload.source))
+                    self.action.send(PaymentsViewModelAction.CloseSuccessView())
                     
                 default:
                     break
@@ -305,7 +315,14 @@ enum PaymentsViewModelAction {
         let message: String
     }
     
+    struct CloseSuccessView: Action {}
+    
     struct ScanQrCode: Action {}
+    
+    struct ContactAbroad: Action {
+        
+        let source: Payments.Operation.Source
+    }
 }
 
 extension PaymentsViewModel {

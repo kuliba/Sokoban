@@ -784,21 +784,7 @@ class MainViewModel: ObservableObject, Resetable {
                     
                     self.action.send(MainViewModelAction.Close.Sheet())
                     
-                    switch payload.source {
-                    case let .direct(phone: phone, countryId: countryId):
-                        //TODO: setup source bankId
-                        break
-//                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [self] in
-//
-//                            guard let country = self.model.countriesList.value.first(where: { $0.id == countryId }),
-//                                  let bank = self.model.bankList.value.first(where: { $0.id == bankId }), let phone = phone else {
-//                                return
-//                            }
-//                            self.link = .init(.country(.init(phone: phone, country: country, bank: bank, operatorsViewModel: .init(mode: .general, closeAction: { [weak self] in
-//                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-//                            }, requisitsViewAction: {}))))
-//                        }
-                        
+                    switch payload.source { 
                     case let .latestPayment(latestPaymentId):
                         guard let latestPayment = model.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData else {
                             return
@@ -1045,6 +1031,8 @@ enum MainViewModelAction {
         }
         
         struct OpenDeposit: Action {}
+        
+        struct ContactPayment: Action {}
         
         struct Requisites: Action {
             

@@ -69,4 +69,19 @@ extension PaymentServiceData.AdditionalListData {
         
         fieldName == "trnPickupPoint"
     }
+    
+    var isPhone: Bool {
+        
+        fieldName == Payments.Parameter.Identifier.countryPhone.rawValue
+    }
+    
+    var isName: Bool {
+        
+        fieldName == Payments.Parameter.Identifier.countryGivenName.rawValue
+    }
+    
+    var isLastName: Bool {
+ 
+        fieldName == Payments.Parameter.Identifier.countryMiddleName.rawValue
+    }
 }

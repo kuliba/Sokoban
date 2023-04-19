@@ -346,38 +346,6 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     
                     self.sheet = .init(type: .detailInfo(payload.viewModel))
                     
-                case let payload as PaymentsSuccessAction.Payment:
-                    Task {
-                        
-                        do {
-                            
-                            let paymentsViewModel = try await PaymentsViewModel(source: payload.source, model: model) { [weak self] in
-                                    
-                                self?.fullScreenSheet = nil
-                            }
-                            
-                            await MainActor.run {
-                                
-                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                    
-                                    self.fullScreenSheet = .init(type: .abroad(paymentsViewModel))
-                                }
-                            }
-                            
-                        } catch {
-                            
-                            await MainActor.run {
-                                
-                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-
-                                    self.alert = .init(title: "Error", message: "Unable create PaymentsViewModel for source: \(payload.source) with error: \(error.localizedDescription)", primary: .init(type: .cancel, title: "Ok", action: {}))
-                                }
-                            }
-                            
-                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for source: \(payload.source) with error: \(error.localizedDescription)")
-                        }
-                    }
-                    
                 default:
                     break
                 }
