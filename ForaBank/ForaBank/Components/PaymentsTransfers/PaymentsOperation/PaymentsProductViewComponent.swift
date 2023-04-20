@@ -66,15 +66,7 @@ extension PaymentsProductView {
                 return
             }
             
-            if let value = source.value,
-               let IntValue = Int(value),
-               let product = model.product(productId: IntValue) {
-                
-                let viewModel = ProductSelectorView.ViewModel.ProductViewModel(model, productData: product, context: .init(title: source.title, direction: .from, style: .regular, isUserInteractionEnabled: self.isEditable, filter: source.filter))
-                
-                self.selector.content = .product(viewModel)
-                
-            } else if let product = model.firstProduct(with: source.filter) {
+            if let product = model.firstProduct(with: source.filter) {
                 
                 let viewModel = ProductSelectorView.ViewModel.ProductViewModel(model, productData: product, context: .init(title: source.title, direction: .from, style: .regular, isUserInteractionEnabled: self.isEditable, filter: source.filter))
                 

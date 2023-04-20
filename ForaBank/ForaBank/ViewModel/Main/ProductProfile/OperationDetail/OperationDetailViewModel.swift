@@ -349,7 +349,7 @@ private extension OperationDetailViewModel {
 
         let operationId = statement.operationId
         
-        if let name = statement.merchantNameRus,
+        if let name = operationDetail.payeeFullName,
            let transferNumber = operationDetail.transferReference {
          
             let changeButton = ActionButtonViewModel(name: "Изменить",
@@ -363,9 +363,10 @@ private extension OperationDetailViewModel {
         let amountFormatted = model.amountFormatted(amount: operationDetail.amount, currencyCode: operationDetail.currencyAmount, style: .normal) ?? String(operationDetail.amount)
 
         if let transferNumber = operationDetail.transferReference {
+            
             let returnButton = ActionButtonViewModel(name: "Вернуть",
                                                      action: { [weak self] in
-                self?.action.send(OperationDetailViewModelAction.ShowChangeReturn(source: .return(operationId: operationId, transferNumber: transferNumber, amount: amountFormatted, productId: product.id.description)))
+                self?.action.send(OperationDetailViewModelAction.ShowChangeReturn(source: .return(operationId: operationDetail.paymentOperationDetailId, transferNumber: transferNumber, amount: amountFormatted, productId: product.id.description)))
             })
             
             actionButtons.append(returnButton)

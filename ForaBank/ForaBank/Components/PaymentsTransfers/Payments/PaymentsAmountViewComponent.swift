@@ -173,6 +173,39 @@ extension PaymentsAmountView {
             textField.update(parameterAmount.amount, currencySymbol: currency?.currencySymbol ?? parameterAmount.currencySymbol)
             actionTitle = parameterAmount.transferButtonTitle
             
+            if let deliveryCurrencyParams = parameterAmount.deliveryCurrency,
+               let currency = model.currencyList.value.first(where: {$0.code == deliveryCurrencyParams.selectedCurrency.description}),
+               let symbol = currency.currencySymbol {
+                
+                self.deliveryCurrency = .init(currency: symbol, action: { [weak self] in
+                    
+                    var items: [Option] = []
+                    if let currencyList = deliveryCurrencyParams.currenciesList {
+                     
+                        for currency in currencyList {
+                         
+                            let currency = self?.model.currencyList.value.first(where: {$0.code == currency.description})
+                            items.append(.init(id: currency?.currencySymbol ?? "", name: currency?.name ?? ""))
+                        }
+                    }
+                    
+                    self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Show(viewModel: .init(title: "Выберите валюту выдачи", description: nil, options: items, action: { [weak self] currency in
+                        
+                        if let currency = self?.model.currencyList.value.first(where: {$0.currencySymbol == currency.description}),
+                           let symbol = currency.currencySymbol {
+                            
+                            self?.deliveryCurrency?.currency = symbol
+                            
+                            if let source = self?.source as? Payments.ParameterAmount {
+                                
+                                self?.update(source: parameterAmount.updated(value: source.value, selectedCurrency: Currency(description: currency.code)))
+                            }
+                            self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close())
+                        }
+                    })))
+                })
+            }
+            
             if let infoData = parameterAmount.info {
                 
                 info = .init(parameterInfo: infoData, action: { _ in

@@ -158,7 +158,7 @@ extension Model {
                 
                 var rules = [Payments.Validation.Rule]()
                 
-                rules.append(Payments.Validation.LengthLimitsRule.init(lengthLimits: [9], actions: [.post: .warning("Должен состоять из 9 цифр.")]))
+                rules.append(Payments.Validation.LengthLimitsRule(lengthLimits: [9], actions: [.post: .warning("Должен состоять из 9 цифр.")]))
                 
                 rules.append(Payments.Validation.RegExpRule(regExp: "^[0-9]\\d*$", actions: [.post: .warning("Введено некорректное значение")]))
                 

@@ -826,6 +826,11 @@ extension Payments {
             ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: selectedCurrency, currenciesList: deliveryCurrency?.currenciesList), transferButtonTitle: transferButtonTitle, validator: validator, info: info, isEditable: isEditable, group: group)
         }
         
+        func updated(value: Parameter.Value, deliveryCurrency: DeliveryCurrency) -> PaymentsParameterRepresentable {
+            
+            ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, deliveryCurrency: deliveryCurrency, transferButtonTitle: transferButtonTitle, validator: validator, info: info, isEditable: isEditable, group: group)
+        }
+        
         struct DeliveryCurrency {
             
             let selectedCurrency: Currency
@@ -1191,6 +1196,14 @@ extension Payments {
             ParameterMock(id: parameter.id, value: value, group: group)
         }
     }
+}
+
+extension Payments.ParameterSelect.Option {
+
+  init(with option: Option) {
+    
+    self.init(id: option.id, name: option.name, subname: option.subtitle)
+  }
 }
 
 extension Payments.Validation.RulesSystem {

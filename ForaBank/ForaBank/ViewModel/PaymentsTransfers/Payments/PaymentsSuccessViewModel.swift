@@ -118,7 +118,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             
             self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentSuccess.operationDetailId)))
             
-        case let .abroadPayments(transferData):
+        case let .abroadData(transferData):
             
             let (title, iconType) = Self.iconType(status: paymentSuccess.status)
             
@@ -139,7 +139,28 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             bind(.normal, paymentOperationDetailId: paymentSuccess.operationDetailId, documentStatus: paymentSuccess.status)
 
             self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(transferData.paymentOperationDetailId)))
+        
+        case let .returnAbroadData(transferData: transferData, title: title):
+            let (_, iconType) = Self.iconType(status: paymentSuccess.status)
             
+            self.init(
+                model,
+                title: title,
+                amount: nil,
+                iconType: iconType,
+                logo: nil,
+                actionButton: .init(
+                    title: "На главный",
+                    style: .red,
+                    action: {}
+                ),
+                optionButtons: []
+            )
+                        
+            bind(.normal, paymentOperationDetailId: paymentSuccess.operationDetailId, documentStatus: paymentSuccess.status)
+
+            self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(transferData.paymentOperationDetailId)))
+        
         }
         
         actionButton = .init(title: "На главный", style: .red, action: closeAction)
@@ -262,8 +283,12 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                         default:
                             
                             switch detailData.transferEnum {
-                            case .direct:
-                                self.logo = .init(title: "", image: Image("MigAvatar"))
+                            case .changeOutgoing, .returnOutgoing, .direct:
+                                let image = detailData.transferEnum == .direct ? Image("MigAvatar") : Image("Operation Type Contact Icon")
+                                self.logo = .init(title: "", image: image)
+                                let amount = detailData.payerAmount
+                                    
+                                self.amount = model.amountFormatted(amount: amount, currencyCode: detailData.currencyAmount, style: .fraction)
                                 
                             case .contactAddressing, .contactAddressless, .contactAddressingCash:
                                 self.logo = .init(title: "", image: Image("Operation Type Contact Icon"))
@@ -294,7 +319,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                                     if let amount = model.amountFormatted(amount: amountValue, currencyCode: detailData.payerCurrency, style: .fraction) {
                                         additioinalButtons.append(.init(title: "Вернуть", action: { [weak self] in
                                             
-                                            self?.action.send(PaymentsSuccessAction.Payment(source: .return(operationId: detailData.paymentOperationDetailId.description, transferNumber: number, amount: amount, productId: detailData.payerCardId?.description ?? detailData.payerAccountId.description)))
+                                            self?.action.send(PaymentsSuccessAction.Payment(source: .return(operationId: detailData.paymentOperationDetailId, transferNumber: number, amount: amount, productId: detailData.payerCardId?.description ?? detailData.payerAccountId.description)))
                                         }))
                                     }
                                     
