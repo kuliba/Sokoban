@@ -421,11 +421,11 @@ extension Model {
                 let bankId = Payments.Parameter.Identifier.countryBank.rawValue
                 if let parameter = operation.parameters.first(where: { $0.id == "DIRECT_BANKS" } ) {
 
-                    return Payments.ParameterSelectBank(.init(id: bankId, value: parameter.value), icon: .iconPlaceholder, title: "Банк получателя", options: list, placeholder: "Начните ввод для поиска", selectAll: .init(type: .banksFullInfo), keyboardType: .normal)
+                    return Payments.ParameterSelectBank(.init(id: bankId, value: parameter.value), icon: .iconPlaceholder, title: "Банк получателя", options: list, placeholder: "Начните ввод для поиска", keyboardType: .normal)
 
                 } else {
 
-                    return Payments.ParameterSelectBank(.init(id: bankId, value: nil), icon: .iconPlaceholder, title: "Банк получателя", options: list, placeholder: "Начните ввод для поиска", selectAll: .init(type: .banksFullInfo), keyboardType: .normal)
+                    return Payments.ParameterSelectBank(.init(id: bankId, value: nil), icon: .iconPlaceholder, title: "Банк получателя", options: list, placeholder: "Начните ввод для поиска", keyboardType: .normal)
                 }
                 
             default:
