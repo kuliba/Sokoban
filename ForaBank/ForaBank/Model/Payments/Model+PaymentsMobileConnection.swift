@@ -173,7 +173,7 @@ extension Model {
 
 extension Model {
     
-    func paymentsProcessOperationResetVisibleToMobileConnection(
+    func paymentsProcessOperationResetVisibleMobileConnection(
         _ operation: Payments.Operation
     ) async throws -> [Payments.Parameter.ID]? {
         
