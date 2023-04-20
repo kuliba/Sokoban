@@ -14,7 +14,7 @@ struct DepositInfoDataItem: Equatable, Codable {
 
     let id: Int
     let initialAmount: Double
-    let termDay: String
+    let termDay: String?
     let interestRate: Double
     let sumPayInt: Double
     let sumCredit: Double?
@@ -23,6 +23,6 @@ struct DepositInfoDataItem: Equatable, Codable {
     let balance: Double
     let sumPayPrc: Double?
     let dateOpen: Date
-    let dateEnd: Date
-    let dateNext: Date
+    let dateEnd: Date?
+    let dateNext: Date?
 }
