@@ -206,6 +206,9 @@ extension Model {
             
         case .toAnotherCard:
             return try await paymentsProcessOperationResetVisibleToAnotherCard(operation)
+            
+        case .mobileConnection:
+            return try await paymentsProcessOperationResetVisibleMobileConnection(operation)
 
         default:
             return nil
