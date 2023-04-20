@@ -138,9 +138,8 @@ struct ProductProfileView: View {
             }
             
             Color.clear.frame(maxHeight: 0)
-                .fullScreenCover(item: $viewModel.success) { successViewModel in
-
-                    PaymentsSuccessView(viewModel: successViewModel)
+                .fullScreenCover(item: $viewModel.successZeroAccount) { successViewModel in
+                    PaymentsSuccessView(viewModel: successViewModel.viewModel)
 
                 }.transaction { transaction in
                     transaction.disablesAnimations = false
