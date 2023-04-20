@@ -669,89 +669,68 @@ extension PaymentsSuccessViewModel {
     
     private func makeOptionButtons(_ mode: Mode, documentStatus: TransferResponseBaseData.DocumentStatus, paymentOperationDetailId: Int, operationDetail: OperationDetailData? = nil) -> [PaymentsSuccessOptionButtonViewModel] {
         
+        let templateButton = optionButton(mode, type: .template, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail)
+        let documentButton = optionButton(mode, type: .document, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail)
+        let detailButton =   optionButton(mode, type: .details,  paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail)
+        
+        let buttons: [PaymentsSuccessOptionButtonView.ViewModel?]
+        
         switch documentStatus {
         case .complete:
             
-            switch mode {
-            case .normal, .meToMe:
+            switch operationDetail?.transferEnum {
+            case .some(.contactAddressing), .some(.contactAddressless), .some(.contactAddressingCash), .some(.direct):
+                buttons = [documentButton, detailButton]
                 
-                guard let templateButton = optionButton(mode, type: .template, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail),
-                      let documentButton = optionButton(mode, type: .document, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail),
-                      let detailButton = optionButton(mode, type: .details, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail) else {
-                    return []
+            default:
+                
+                switch mode {
+                case .normal, .meToMe:
+                    buttons = [templateButton, documentButton, detailButton]
+                    
+                case .makePaymentToDeposite:
+                    buttons = [documentButton, detailButton]
+                    
+                case .closeDeposit, .closeAccount:
+                    buttons = [documentButton, detailButton]
+                    
+                case .closeAccountEmpty:
+                    buttons = [documentButton]
                 }
-                
-                return [templateButton,
-                        documentButton,
-                        detailButton]
-            case .makePaymentToDeposite:
-                
-                guard let documentButton = optionButton(mode, type: .document, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail),
-                      let detailButton = optionButton(mode, type: .details, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail) else {
-                    return []
-                }
-                
-                return [documentButton,
-                        detailButton]
-
-            case .closeDeposit, .closeAccount:
-                
-                guard let documentButton = optionButton(mode, type: .document, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail),
-                      let detailButton = optionButton(mode, type: .details, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail) else {
-                    return []
-                }
-                
-                return [documentButton,
-                        detailButton]
-                
-            case .closeAccountEmpty:
-                
-                guard let documentButton = optionButton(mode, type: .document, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail) else {
-                    return []
-                }
-                
-                return [documentButton]
             }
             
         case .inProgress:
             
-            switch mode {
-            case .closeAccount, .closeAccountEmpty:
-                return .init()
+            switch operationDetail?.transferEnum {
+            case .some(.contactAddressing), .some(.contactAddressless), .some(.contactAddressingCash), .some(.direct):
+                buttons = [documentButton, detailButton]
                 
-            case .meToMe, .normal:
+            default:
                 
-                guard let templateButton = optionButton(mode, type: .template, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail),
-                      let detailButton = optionButton(mode, type: .details, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail) else {
+                switch mode {
+                case .closeAccount, .closeAccountEmpty:
                     return []
+                    
+                case .meToMe, .normal:
+                    buttons = [templateButton, detailButton]
+                    
+                case .makePaymentToDeposite, .closeDeposit:
+                    buttons = [detailButton]
                 }
-                
-                return [templateButton,
-                        detailButton]
-            case .makePaymentToDeposite, .closeDeposit:
-                guard let detailButton = optionButton(mode, type: .details, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail) else {
-                    return []
-                }
-                
-                return [detailButton]
             }
-            
             
         case .rejected, .unknown:
             
             switch mode {
             case .normal, .closeAccount, .closeAccountEmpty:
-                return .init()
+                return []
                 
             case .meToMe, .makePaymentToDeposite, .closeDeposit:
-                
-                guard let detailButton = optionButton(mode, type: .details, paymentOperationDetailId: paymentOperationDetailId, operationDetail: operationDetail) else {
-                    return []
-                }
-                
-                return [detailButton]
+                buttons = [detailButton]
             }
         }
+        
+        return buttons.compactMap { $0 }
     }
     
     private func optionButton(_ mode: Mode, type: OptionButtonType, paymentOperationDetailId: Int = 0, operationDetail: OperationDetailData? = nil) -> PaymentsSuccessOptionButtonView.ViewModel? {
