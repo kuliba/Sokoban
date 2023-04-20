@@ -12,12 +12,27 @@ class TransferAnywayData: TransferData {
     let additional: [Additional]
     let puref: String?
     
-    internal init(amount: Double?, check: Bool, comment: String?, currencyAmount: String, payer: Payer, additional: [Additional], puref: String?) {
+    init(amount: Decimal?, check: Bool, comment: String?, currencyAmount: String, payer: Payer, additional: [Additional], puref: String?) {
         
         self.additional = additional
         self.puref = puref
 
         super.init(amount: amount, check: check, comment: comment, currencyAmount: currencyAmount, payer: payer)
+    }
+    
+    //TODO: remove after a switch to a Decimal in the related code in the project
+    convenience init(amount: Double?, check: Bool, comment: String?, currencyAmount: String, payer: Payer, additional: [Additional], puref: String?) {
+        
+        let amountDecimal: Decimal? = {
+            
+            guard let amount else {
+                return nil
+            }
+            
+            return Decimal(amount).roundedFinance()
+        }()
+        
+        self.init(amount: amountDecimal, check: check, comment: comment, currencyAmount: currencyAmount, payer: payer, additional: additional, puref: puref)
     }
     
     //MARK: Codable

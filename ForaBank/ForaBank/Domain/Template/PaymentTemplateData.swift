@@ -129,9 +129,8 @@ extension PaymentTemplateData {
             return nil
         }
         
-        return transfer.amount
+        return transfer.amountDouble
     }
-    
 }
 
 //MARK: - Convenience SPF Properties

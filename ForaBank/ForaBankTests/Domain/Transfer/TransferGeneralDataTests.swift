@@ -1,5 +1,5 @@
 //
-//  TransferTests.swift
+//  TransferGeneralDataTests.swift
 //  ForaBankTests
 //
 //  Created by Max Gribov on 20.12.2021.
@@ -8,11 +8,11 @@
 import XCTest
 @testable import ForaBank
 
-class TransferTests: XCTestCase {
+class TransferGeneralDataTests: XCTestCase {
 
-    let bundle = Bundle(for: TransferTests.self)
-    let decoder = JSONDecoder()
-    let encoder = JSONEncoder()
+    let bundle = Bundle(for: TransferGeneralDataTests.self)
+    let decoder = JSONDecoder.serverDate
+    let encoder = JSONEncoder.serverDate
 
     func testDecoding_Generic() throws {
      
@@ -49,7 +49,8 @@ class TransferTests: XCTestCase {
         
         // given
         let payer = TransferData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
-        let transfer = TransferGeneralData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
+        let amount: Double? = nil
+        let transfer = TransferGeneralData(amount: amount, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
         
         // when
         let result = try encoder.encode(transfer)
@@ -63,5 +64,39 @@ class TransferTests: XCTestCase {
                                 .replacingOccurrences(of: " ", with: "")
         
         XCTAssertEqual(resultString, jsonString)
+    }
+    
+    func test_amountRoundedFinance() throws {
+        
+        // given
+        let sut = makeSut(amount: 10.04)
+        let expectedResult = "{\"amount\":10.04,\"currencyAmount\":\"\",\"check\":false,\"payeeInternal\":null,\"comment\":null,\"payer\":{},\"payeeExternal\":null}"
+        
+        // when
+        let sutEncoded = try encoder.encode(sut)
+        let result = String(data: sutEncoded, encoding: .utf8)
+        
+        // then
+        XCTAssertEqual(result, expectedResult)
+    }
+}
+
+private extension TransferGeneralDataTests {
+    
+    func makeSut(amount: Double?) -> TransferGeneralData {
+        
+        .init(
+            amount: amount,
+            check: false,
+            comment: nil,
+            currencyAmount: "", payer: .init(
+                inn: nil,
+                accountId: nil,
+                accountNumber: nil,
+                cardId: nil,
+                cardNumber: nil,
+                phoneNumber: nil),
+            payeeExternal: nil,
+            payeeInternal: nil)
     }
 }

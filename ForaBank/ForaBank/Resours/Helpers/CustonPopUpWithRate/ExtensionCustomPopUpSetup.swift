@@ -45,23 +45,20 @@ extension CustomPopUpWithRateView {
     func interestPayment(amount: Double) {
         
         let payer = cardFromField.model
-
         let payeeInternal = cardToField.model
-        
-        let amountToDecimal: Decimal = Decimal(amount)
         
         if let depositId = payer?.depositID {
             
             switch cardToField.model?.productType {
             case "CARD":
              
-                Model.shared.action.send(ModelAction.Transfers.CreateInterestDepositTransfer.Request(payload: .init(check: false, amount: amountToDecimal, currencyAmount: payer?.currency, payer: .init(cardId: nil, cardNumber: nil, accountId: payer?.accountID, accountNumber: nil, phoneNumber: nil, inn: nil), comment: nil, payeeInternal: .init(accountId: nil, accountNumber: nil, cardId: payeeInternal?.cardID, cardNumber: nil, phoneNumber: nil, productCustomName: nil), payeeExternal: nil, depositId: depositId)))
+                Model.shared.action.send(ModelAction.Transfers.CreateInterestDepositTransfer.Request(payload: .init(check: false, amount: amount, currencyAmount: payer?.currency, payer: .init(cardId: nil, cardNumber: nil, accountId: payer?.accountID, accountNumber: nil, phoneNumber: nil, inn: nil), comment: nil, payeeInternal: .init(accountId: nil, accountNumber: nil, cardId: payeeInternal?.cardID, cardNumber: nil, phoneNumber: nil, productCustomName: nil), payeeExternal: nil, depositId: depositId)))
                 
             case "ACCOUNT":
-                Model.shared.action.send(ModelAction.Transfers.CreateInterestDepositTransfer.Request(payload: .init(check: false, amount: amountToDecimal, currencyAmount: payer?.currency, payer: .init(cardId: nil, cardNumber: nil, accountId: payer?.accountID, accountNumber: nil, phoneNumber: nil, inn: nil), comment: nil, payeeInternal: .init(accountId: payeeInternal?.id, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil, productCustomName: nil), payeeExternal: nil, depositId: depositId)))
+                Model.shared.action.send(ModelAction.Transfers.CreateInterestDepositTransfer.Request(payload: .init(check: false, amount: amount, currencyAmount: payer?.currency, payer: .init(cardId: nil, cardNumber: nil, accountId: payer?.accountID, accountNumber: nil, phoneNumber: nil, inn: nil), comment: nil, payeeInternal: .init(accountId: payeeInternal?.id, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil, productCustomName: nil), payeeExternal: nil, depositId: depositId)))
                 
             default:
-                Model.shared.action.send(ModelAction.Transfers.CreateInterestDepositTransfer.Request(payload: .init(check: false, amount: amountToDecimal, currencyAmount: payer?.currency, payer: .init(cardId: nil, cardNumber: nil, accountId: payer?.accountID, accountNumber: nil, phoneNumber: nil, inn: nil), comment: nil, payeeInternal: .init(accountId: payeeInternal?.id, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil, productCustomName: nil), payeeExternal: nil, depositId: depositId)))
+                Model.shared.action.send(ModelAction.Transfers.CreateInterestDepositTransfer.Request(payload: .init(check: false, amount: amount, currencyAmount: payer?.currency, payer: .init(cardId: nil, cardNumber: nil, accountId: payer?.accountID, accountNumber: nil, phoneNumber: nil, inn: nil), comment: nil, payeeInternal: .init(accountId: payeeInternal?.id, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil, productCustomName: nil), payeeExternal: nil, depositId: depositId)))
             }
         }
     }

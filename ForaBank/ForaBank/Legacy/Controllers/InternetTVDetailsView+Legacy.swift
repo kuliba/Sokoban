@@ -91,7 +91,7 @@ struct InternetTVDetailsViewModel {
                 self.latestOpsDO = InternetLatestOpsDO(
                     mainImage: image ?? UIImage(),
                     name: foundedOperator.name?.capitalizingFirstLetter() ?? "",
-                    amount: String(Int(parameterList.amount ?? 0)),
+                    amount: parameterList.amountString,
                     op: foundedOperator,
                     additionalList: additionalList)
             }

@@ -459,7 +459,7 @@ private extension TemplatesListViewModel {
                 var currencyAmount: String?
                 
                 template.parameterList.forEach { parameter in
-                    if let paramAmount = parameter.amount {
+                    if let paramAmount = parameter.amountDouble {
                         amount = paramAmount
                     }
                     currencyAmount = parameter.currencyAmount

@@ -1,5 +1,5 @@
 //
-//  TransferMe2MeTests.swift
+//  TransferMe2MeDataTests.swift
 //  ForaBankTests
 //
 //  Created by Max Gribov on 21.12.2021.
@@ -8,11 +8,11 @@
 import XCTest
 @testable import ForaBank
 
-class TransferMe2MeTests: XCTestCase {
+class TransferMe2MeDataTests: XCTestCase {
 
-    let bundle = Bundle(for: TransferMe2MeTests.self)
-    let decoder = JSONDecoder()
-    let encoder = JSONEncoder()
+    let bundle = Bundle(for: TransferMe2MeDataTests.self)
+    let decoder = JSONDecoder.serverDate
+    let encoder = JSONEncoder.serverDate
 
     func testDecoding_Generic() throws {
      
@@ -36,7 +36,8 @@ class TransferMe2MeTests: XCTestCase {
         
         // given
         let payer = TransferData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
-        let transfer = TransferMe2MeData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, bankId: "12345678")
+        let amount: Double? = nil
+        let transfer = TransferMe2MeData(amount: amount, check: false, comment: nil, currencyAmount: "RUB", payer: payer, bankId: "12345678")
         
         // when
         let result = try encoder.encode(transfer)
@@ -50,5 +51,39 @@ class TransferMe2MeTests: XCTestCase {
                                 .replacingOccurrences(of: " ", with: "")
         
         XCTAssertEqual(resultString, jsonString)
+    }
+    
+    func test_amountRoundedFinance() throws {
+        
+        // given
+        let sut = makeSut(amount: 10.04)
+        let expectedResult = "{\"amount\":10.04,\"check\":false,\"bankId\":\"\",\"comment\":null,\"currencyAmount\":\"\",\"payer\":{}}"
+        
+        // when
+        let sutEncoded = try encoder.encode(sut)
+        let result = String(data: sutEncoded, encoding: .utf8)
+        
+        // then
+        XCTAssertEqual(result, expectedResult)
+    }
+}
+
+private extension TransferMe2MeDataTests {
+    
+    func makeSut(amount: Double?) -> TransferMe2MeData {
+        
+        .init(
+            amount: amount,
+            check: false,
+            comment: nil,
+            currencyAmount: "",
+            payer: .init(
+                inn: nil,
+                accountId: nil,
+                accountNumber: nil,
+                cardId: nil,
+                cardNumber: nil,
+                phoneNumber: nil),
+            bankId: "")
     }
 }
