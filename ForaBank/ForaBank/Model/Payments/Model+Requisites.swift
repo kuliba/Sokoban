@@ -209,10 +209,10 @@ extension Model {
                             return nil
                         }
                         
-                        return .init(id: kpp, name: company.name)
+                        return .init(id: kpp, name: kpp, subname: company.name)
                     }
                     
-                    let kppParameter = Payments.ParameterSelect(.init(id: kppParameterId, value: options.first?.id), title: "КПП получателя", placeholder: "Начните ввод для поиска", options: options, description: "Выберите из \(options.count)")
+                    let kppParameter = Payments.ParameterSelect(.init(id: kppParameterId, value: options.first?.id), icon: .name("ic24FileHash"), title: "КПП получателя", placeholder: "Начните ввод для поиска", options: options, description: "Выберите из \(options.count)")
                     parameters.append(kppParameter)
                     
                     //MARK: Company Name Parameter
@@ -383,14 +383,6 @@ extension Model {
                 return nil
             }
             return Payments.ParameterHeader(title: "Подтвердите реквизиты")
-        
-        case Payments.Parameter.Identifier.requisitsKpp.rawValue:
-            guard let parameterKpp = parameters.first(where: {$0.id == Payments.Parameter.Identifier.requisitsKpp.rawValue}) as? Payments.ParameterInput else {
-                return nil
-            }
-            
-            let kppParameterUpdated = parameterKpp.updated(icon: ImageData(named: "ic24FileHash") ?? .parameterSample)
-            return kppParameterUpdated
             
         case Payments.Parameter.Identifier.requisitsCompanyName.rawValue:
             
