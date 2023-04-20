@@ -29,13 +29,13 @@ extension PaymentsSelectBankView {
     
         convenience init(with parameterSelect: Payments.ParameterSelectBank, model: Model) throws {
             
-            guard parameterSelect.options.isEmpty == false else {
-                throw Payments.Error.ui(.selectBankMissingOptions(parameterSelect.id))
+            guard !parameterSelect.options.isEmpty else {
+                throw Payments.Error.ui(.sourceParameterMissingOptions(parameterSelect.id))
             }
             
             if let selectedOptionId = parameterSelect.value,
-               parameterSelect.options.map(\.id).contains(selectedOptionId) == false {
-                throw Payments.Error.ui(.selectBankIncorrectOptionSelected(parameterSelect.id))
+               !parameterSelect.options.map(\.id).contains(selectedOptionId) {
+                throw Payments.Error.ui(.sourceParameterSelectedOptionInvalid(parameterSelect.id))
             }
             
             self.init(

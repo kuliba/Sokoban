@@ -21,10 +21,15 @@ extension PaymentSelectDropDownView {
             super.init(source: source)
         }
         
-        convenience init?(with parameterSelect: Payments.ParameterSelectDropDownList) {
+        convenience init(with parameterSelect: Payments.ParameterSelectDropDownList) throws {
             
-            guard let selectedOption = SelectedOptionViewModel(with: parameterSelect)
-            else { return nil }
+            guard !parameterSelect.options.isEmpty else {
+                throw Payments.Error.ui(.sourceParameterMissingOptions(parameterSelect.id))
+            }
+            
+            guard let selectedOption = SelectedOptionViewModel(with: parameterSelect) else {
+                throw Payments.Error.ui(.sourceParameterSelectedOptionInvalid(parameterSelect.id))
+            }
             
             self.init(state: .selected(selectedOption), source: parameterSelect)
             
@@ -41,6 +46,15 @@ extension PaymentSelectDropDownView.ViewModel {
         
         source as? Payments.ParameterSelectDropDownList
     }
+    
+    var isExpandable: Bool {
+        
+        guard let parameterDropDownList else {
+            return false
+        }
+        
+        return parameterDropDownList.options.count > 1
+    }
 }
 
 //MARK: - Bindings
@@ -54,7 +68,8 @@ extension PaymentSelectDropDownView.ViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
                 
-                guard let parameterDropDownList,
+                guard isExpandable,
+                      let parameterDropDownList,
                       let selectedOption = parameterDropDownList.options.first(where: { $0.id == value.current }) else {
                     return
                 }
@@ -220,9 +235,12 @@ struct PaymentSelectDropDownView: View {
            
             switch viewModel.state {
             case let .selected(selectedOptionViewModel):
-                SelectedOptionView(viewModel: selectedOptionViewModel, namespace: namespace) {
+                SelectedOptionView(viewModel: selectedOptionViewModel, isChevronEnabled: viewModel.isExpandable, namespace: namespace) {
                     
-                    viewModel.action.send(PaymentsParameterViewModelAction.DropDown.Toggle())
+                    if viewModel.isExpandable {
+                        
+                        viewModel.action.send(PaymentsParameterViewModelAction.DropDown.Toggle())
+                    }
                 }
                 
             case let .list(optionsListViewModel):
@@ -246,6 +264,7 @@ struct PaymentSelectDropDownView: View {
     struct SelectedOptionView: View {
         
         let viewModel: PaymentSelectDropDownView.ViewModel.SelectedOptionViewModel
+        let isChevronEnabled: Bool
         let namespace: Namespace.ID
         let tapAction: () -> Void
 
@@ -269,12 +288,14 @@ struct PaymentSelectDropDownView: View {
                 
                 Spacer()
                 
-                Image.ic24ChevronDown
-                    .renderingMode(.template)
-                    .resizable()
-                    .foregroundColor(.iconGray)
-                    .frame(width: 24, height: 24)
-                
+                if isChevronEnabled {
+                    
+                    Image.ic24ChevronDown
+                        .renderingMode(.template)
+                        .resizable()
+                        .foregroundColor(.iconGray)
+                        .frame(width: 24, height: 24)
+                }
             }
             .matchedGeometryEffect(id: MatchedID.selectedOption, in: namespace)
             .frame(minHeight: 46)
@@ -441,7 +462,7 @@ extension PaymentSelectDropDownView.ViewModel {
         PaymentSelectDropDownView.ViewModel.sample
     ])
     
-    static let sample = PaymentSelectDropDownView.ViewModel(
+    static let sample = try! PaymentSelectDropDownView.ViewModel(
         with: .init(
             .init(id: "some_parameter_id",
                   value: "0"),
@@ -449,5 +470,5 @@ extension PaymentSelectDropDownView.ViewModel {
             options: [
                 .init(id: "0", name: "По номеру телефона", icon: .name("ic24Phone")),
                 .init(id: "1", name: "По реквизитам", icon: nil)
-            ]))!
+            ]))
 }
