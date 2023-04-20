@@ -279,7 +279,7 @@ extension Payments {
         let isEditable: Bool
         let group: Payments.Parameter.Group?
 
-        init(_ parameter: Parameter, icon: ImageData, title: String, options: [Option], placeholder: String, selectAll: SelectAllOption?, keyboardType: KeyboardType, isEditable: Bool = true, group: Payments.Parameter.Group? = nil) {
+        init(_ parameter: Parameter, icon: ImageData, title: String, options: [Option], placeholder: String, selectAll: SelectAllOption? = nil, keyboardType: KeyboardType, isEditable: Bool = true, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
             self.icon = icon
