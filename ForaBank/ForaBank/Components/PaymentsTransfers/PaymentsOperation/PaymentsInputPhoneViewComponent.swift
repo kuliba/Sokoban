@@ -72,7 +72,7 @@ extension PaymentsInputPhoneView {
 #if DEBUG
                 if phone.digits != "70115110217" {
                     
-                    textView.text = textView.phoneNumberFormatter.partialFormatter("+\(phone.digits)")
+                    textView.setText(to: textView.phoneNumberFormatter.partialFormatter("+\(phone.digits)"))
                 }
 
 #else
@@ -136,7 +136,7 @@ extension PaymentsInputPhoneView {
                     
                     switch action {
                     case let payload as ContactsViewModelAction.ContactPhoneSelected:
-                        self?.textView.text = payload.phone
+                        self?.textView.setText(to: payload.phone)
                         self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Close())
     
                     default:
