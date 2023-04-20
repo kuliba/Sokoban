@@ -29,7 +29,7 @@ extension Model {
                 //amount
                 let amountParameter = Payments.ParameterInfo(.init(id: Payments.Parameter.Identifier.countryReturnAmount.rawValue, value: amount), icon: .empty, title: "Сумма возврата", placement: .feed, group: .init(id: "info", type: .info))
                 
-                let operationId = Payments.ParameterHidden(id: Payments.Parameter.Identifier.countryOperationId.rawValue, value: operationId)
+                let operationId = Payments.ParameterHidden(id: Payments.Parameter.Identifier.countryOperationId.rawValue, value: operationId.description)
 
                 let product = Payments.ParameterProduct(value: productId, filter: .generalTo, isEditable: false)
                 

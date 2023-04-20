@@ -570,19 +570,22 @@ extension Model {
         switch parameterData.view {
         case .select:
             guard let options = parameterData.options(style: .general) else {
-                return Payments.ParameterSelectSimple(
-                    .init(id: parameterData.id, value: parameterData.value),
-                    icon: parameterData.iconData ?? .parameterSample,
-                    title: parameterData.title,
-                    selectionTitle: "Выберете категорию",
-                    options: [])
+                return Payments.ParameterSelect(.init(id: parameterData.id,
+                                                      value: parameterData.value),
+                                                icon: .image(parameterData.iconData ?? .iconPlaceholder),
+                                                title: parameterData.title,
+                                                placeholder: "Выберете категорию",
+                                                options: [])
             }
-            return Payments.ParameterSelectSimple(
-                .init(id: parameterData.id, value: parameterData.value),
-                icon: parameterData.iconData ?? .parameterSample,
-                title: parameterData.title,
-                selectionTitle: "Выберете категорию",
-                options: options)
+            
+            let selectOptions = options.map({ Payments.ParameterSelect.Option(id: $0.id, name: $0.name, subname: $0.subtitle) })
+            
+            return Payments.ParameterSelect(.init(id: parameterData.id,
+                                                  value: parameterData.value),
+                                            icon: .image(parameterData.iconData ?? .iconPlaceholder),
+                                            title: parameterData.title,
+                                            placeholder: "Выберете категорию",
+                                            options: selectOptions)
             
         case .selectSwitch:
             guard let value = parameterData.value else {

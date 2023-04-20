@@ -52,7 +52,7 @@ extension Model {
                     }
                 }
             }
-                        
+            
             guard let defaultService = options.first?.id,
                   let operatorParameterValue: Payments.Operator = .init(rawValue: defaultService) else {
                 throw Payments.Error.missingValueForParameter(Payments.Parameter.Identifier.operator.rawValue)
@@ -75,8 +75,8 @@ extension Model {
                 
                 let option = countryWithService?.servicesList.first(where: {$0.isDefault == true})?.code.rawValue
                 
-                let dropDownListParameter = Payments.ParameterSelectDropDownList.init(.init(id: dropDownListId, value: option), title: "Перевести", options: options)
-
+                let dropDownListParameter = Payments.ParameterSelectDropDownList(.init(id: dropDownListId, value: option), title: "Перевести", options: options)
+                
                 return .init(parameters: [operatorParameter, headerParameter, dropDownListParameter, countryParameter, productParameter], front: .init(visible: [headerParameter.id, dropDownListId, countryId], isCompleted: true), back: .init(stage: .remote(.start), required: [dropDownListId, countryId], processed: nil))
                 
             } else {
@@ -98,7 +98,7 @@ extension Model {
         
         if let serviceData = serviceData {
             
-            return serviceData.additionalList.first(where: { $0.fieldName == parameterId } ).map(\.fieldName)
+            return serviceData.additionalList.first(where: { $0.fieldName == parameterId } ).map(\.fieldValue)
             
         } else {
             
@@ -120,29 +120,29 @@ extension Model {
     
     // update depependend parameters
     func paymentsProcessDependencyReducerAbroad(parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
-
+        
         switch parameterId {
         case Payments.Parameter.Identifier.operator.rawValue:
             let dropDownListId = Payments.Parameter.Identifier.countryDropDownList.rawValue
             
             guard let service = parameters.first(where: { $0.id == dropDownListId}) as? Payments.ParameterSelectDropDownList,
                   let value = service.value?.description else {
-                      return nil
-                  }
+                return nil
+            }
             
             return Payments.ParameterOperator(operatorType: .init(rawValue: value) ?? .direct) //FIXME: fix unwrap
-          
-        case Payments.Parameter.Identifier.countryDropDownList.rawValue:
             
+        case Payments.Parameter.Identifier.countryDropDownList.rawValue:
             guard let service = parameters.first(where: { $0.id == parameterId}) as? Payments.ParameterSelectDropDownList else {
                 return nil
             }
             
-            guard let country = parameters.first(where: { $0.id == Payments.Parameter.Identifier.countrySelect.rawValue }) as? Payments.ParameterSelectCountry else {
+            guard let country = parameters.first(where: { $0.id == Payments.Parameter.Identifier.countrySelect.rawValue }) as? Payments.ParameterSelectCountry,
+                  let countryValue = country.parameter.value else {
                 return nil
             }
             
-            let countryWithService = self.countriesListWithSevice.value.first(where: {($0.code == country.value || $0.contactCode == country.value)})
+            let countryWithService = self.countriesListWithSevice.value.first { $0.code == countryValue || $0.contactCode == countryValue }
             let operatorsList = self.dictionaryAnywayOperators()
             
             var options: [Payments.ParameterSelectDropDownList.Option] = []
@@ -220,19 +220,44 @@ extension Model {
                 currencySymbol = symbol
             }
             
+            guard let productParameter = parameters.first(where: { $0.id == Payments.Parameter.Identifier.product.rawValue}) as? Payments.ParameterProduct,
+                  let filterCurriencies = parameters.first(where: { $0.id == Payments.Parameter.Identifier.countryCurrencyFilter.rawValue }) else {
+                return  nil
+            }
+            
+            if let splittedCurrency = filterCurriencies.value?.components(separatedBy: ";"),
+               splittedCurrency.count > 1 {
+                
+                guard let productId = productParameter.productId else {
+                    return nil
+                }
+                
+                let deliveryCurrency = self.reduceDeliveryCurrency(productId: productId, splittedCurrency: splittedCurrency)
+                let selectedCurrency = deliveryCurrency.contains(where: { $0.description == amountParameter.deliveryCurrency?.selectedCurrency.description }) ? amountParameter.deliveryCurrency?.selectedCurrency : deliveryCurrency.first
+                
+                let updatedAmountParameter = amountParameter.updated(value: amountParameter.value, deliveryCurrency: .init(selectedCurrency: selectedCurrency ?? .rub, currenciesList: deliveryCurrency))
+                
+                guard let amountParameter = updatedAmountParameter as? Payments.ParameterAmount else {
+                    
+                    return nil
+                }
+                
+                return amountParameter.update(currencySymbol: currencySymbol, maxAmount: maxAmount)
+            }
+            
             let updatedAmountParameter = amountParameter.update(currencySymbol: currencySymbol, maxAmount: maxAmount)
-         
+            
             return updatedAmountParameter
-        
+            
         case Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue:
             guard let countryDeliveryCurrency = parameters.first(where: {$0.id == Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue}) as? Payments.ParameterHidden else {
                 return nil
             }
-
+            
             guard let amount = parameters.first(where: { $0.id == Payments.Parameter.Identifier.amount.rawValue }) as? Payments.ParameterAmount else {
                 return nil
             }
-
+            
             guard countryDeliveryCurrency.value != amount.deliveryCurrency?.selectedCurrency.description else {
                 return nil
             }
@@ -247,25 +272,13 @@ extension Model {
             guard let filterCurriencies = parameters.first(where: { $0.id == Payments.Parameter.Identifier.countryCurrencyFilter.rawValue }) else {
                 return  nil
             }
-
-            var currincies: [Currency] = []
-
-            if let currienciesString = filterCurriencies.value?.components(separatedBy: " ") {
-                
-                for currincy in currienciesString {
-                    
-                    if currincy != "" {
-                        
-                        let currency = Currency.init(description: currincy)
-                        currincies.append(currency)
-                    }
-                }
-            }
+            
+            let filterCurrencies = self.reduceFilterCurrencies(filterCurrencies: filterCurriencies.value)
             
             let filter: ProductData.Filter = .init(rules: [
                 ProductData.Filter.DebitRule(),
                 ProductData.Filter.RestrictedDepositRule(),
-                ProductData.Filter.CurrencyRule(Set(currincies)),
+                ProductData.Filter.CurrencyRule(Set(filterCurrencies)),
             ])
             
             let productCurriencies = productParameter.filter.rules
@@ -280,16 +293,7 @@ extension Model {
                 return nil
             }
             
-            if let product = self.firstProduct(with: filter),
-               let productParameter = productParameter.updated(value: product.id.description) as? Payments.ParameterProduct {
-
-                return productParameter.updated(filter: filter)
-
-            } else {
-                
-                return productParameter.updated(filter: filter)
-            }
-            
+            return productParameter.updated(filter: filter)
             
         case Payments.Parameter.Identifier.header.rawValue:
             
@@ -345,7 +349,7 @@ extension Model {
             }
             
             return Payments.ParameterHeader(title: "Переводы за рубеж", subtitle: "Денежные переводы МИГ", icon: .name("MigAvatar"), style: .large)
-
+            
             
         default:
             return nil
@@ -396,12 +400,12 @@ extension Model {
                 var list: [Payments.ParameterSelectBank.Option] = []
                 
                 guard let imagesIds = result.list.first?.dictionaryList.compactMap({$0.md5hash}) else { return nil }
-           
+                
                 let commandImages = ServerCommands.DictionaryController.GetSvgImageList(token: token, payload: .init(md5HashList: imagesIds))
                 let images = try await serverAgent.executeCommand(command: commandImages)
-
+                
                 if let items = result.list.first?.dictionaryList {
-
+                    
                     for item in items {
 
                         
@@ -417,7 +421,7 @@ extension Model {
                         list.append(Payments.ParameterSelectBank.Option(id: item.id, name: item.name, subtitle: nil, icon: icon, searchValue: item.name))
                     }
                 }
-
+                
                 let bankId = Payments.Parameter.Identifier.countryBank.rawValue
                 if let parameter = operation.parameters.first(where: { $0.id == "DIRECT_BANKS" } ) {
 
@@ -433,12 +437,15 @@ extension Model {
                     return nil
                 }
                 
-                return Payments.ParameterSelectSimple(
-                    .init(id: parameterData.id, value: parameterData.value),
-                    icon: parameterData.iconData ?? .parameterSample,
-                    title: parameterData.title,
-                    selectionTitle: "Выберете категорию",
-                    options: options)
+                let selectOptions = options
+                    .compactMap{ $0 }
+                    .map(Payments.ParameterSelect.Option.init)
+                
+                return Payments.ParameterSelect(.init(id: parameterData.id,
+                                                      value: parameterData.value),
+                                                title: "Выберете категорию",
+                                                placeholder: "Начните ввод для поиска",
+                                                options: selectOptions)
             }
             
         case .input:
@@ -532,8 +539,6 @@ extension Model {
     func paymentsProcessRemoteStepAbroad(operation: Payments.Operation, response: TransferResponseData) async throws -> Payments.Operation.Step {
         
         var parameters = [PaymentsParameterRepresentable]()
-        
-        if let customerName = response.payeeName {
             
             let countrySwitch = Payments.Parameter.Identifier.countryDropDownList.rawValue
             if let bankParameter = operation.parameters.first(where: { $0.id == countrySwitch }),
@@ -542,31 +547,65 @@ extension Model {
                 
                 switch options {
                 case .direct:
-                    let countryTransferNumberId = Payments.Parameter.Identifier.countryPayee.rawValue
-                    let countryTransferNumber = Payments.ParameterInfo(
-                        .init(id: countryTransferNumberId, value: customerName),
-                        icon: .init(named: "ic24User") ?? .parameterDocument,
-                        title: "Получатель", placement: .feed, group: .init(id: "confirm", type: .info))
+                    if let customerName = response.payeeName {
+                        
+                        let countryTransferNumberId = Payments.Parameter.Identifier.countryPayee.rawValue
+                        let countryTransferNumber = Payments.ParameterInfo(
+                            .init(id: countryTransferNumberId, value: customerName),
+                            icon: .init(named: "ic24User") ?? .parameterDocument,
+                            title: "Получатель", placement: .feed, group: .init(id: "confirm", type: .info))
+                        
+                        parameters.append(countryTransferNumber)
+                        
+                    }
                     
-                    parameters.append(countryTransferNumber)
+                    if let amountValue = response.amount,
+                       let currencyPayer = response.currencyPayer {
+                        
+                        let amount = self.amountFormatted(amount: amountValue, currencyCode: currencyPayer.description, style: .normal)
+                        
+                        let amountParameterId = Payments.Parameter.Identifier.countryCurrencyAmount.rawValue
+                        let amountParameter = Payments.ParameterInfo(
+                            .init(id: amountParameterId, value: amount),
+                            icon: ImageData(named: "ic24Coins") ?? .parameterDocument,
+                            title: "Сумма перевода", placement: .feed, group: .init(id: "confirm", type: .info))
+                        
+                        parameters.append(amountParameter)
+                    }
                     
                 default:
-                    let countryTransferNumberId = Payments.Parameter.Identifier.countryPayee.rawValue
-                    let countryTransferNumber = Payments.ParameterInfo(
-                        .init(id: countryTransferNumberId, value: customerName),
-                        icon: .init(named: "ic24User") ?? .parameterDocument,
-                        title: "Получатель", placement: .feed)
+                    if let customerName = response.payeeName {
+                        
+                        let countryTransferNumberId = Payments.Parameter.Identifier.countryPayee.rawValue
+                        let countryTransferNumber = Payments.ParameterInfo(
+                            .init(id: countryTransferNumberId, value: customerName),
+                            icon: .init(named: "ic24User") ?? .parameterDocument,
+                            title: "Получатель", placement: .feed)
+                        
+                        parameters.append(countryTransferNumber)
+                    }
                     
-                    parameters.append(countryTransferNumber)
+                    if let amountValue = response.creditAmount,
+                       let currencyPayee = response.currencyPayee {
+                        
+                        let amount = self.amountFormatted(amount: amountValue, currencyCode: currencyPayee.description, style: .normal)
+                        
+                        let amountParameterId = Payments.Parameter.Identifier.countryCurrencyAmount.rawValue
+                        let amountParameter = Payments.ParameterInfo(
+                            .init(id: amountParameterId, value: amount),
+                            icon: ImageData(named: "ic24Coins") ?? .parameterDocument,
+                            title: "Сумма перевода", placement: .feed, group: .init(id: "confirm", type: .info))
+                        
+                        parameters.append(amountParameter)
+                    }
                 }
             }
-        }
         
         if let payeeAmount = response.creditAmount,
            let currency = response.currencyPayee {
             
             let amount = self.amountFormatted(amount: payeeAmount, currencyCode: currency.description, style: .normal)
-
+            
             let countryTransferNumberId = Payments.Parameter.Identifier.countryPayeeAmount.rawValue
             let countryTransferNumber = Payments.ParameterInfo(
                 .init(id: countryTransferNumberId, value: amount),
@@ -576,25 +615,11 @@ extension Model {
             parameters.append(countryTransferNumber)
         }
         
-        if let amountValue = response.amount,
-           let currencyPayee = response.currencyPayee {
-            
-            let amount = self.amountFormatted(amount: amountValue, currencyCode: currencyPayee.description, style: .normal)
-            
-            let amountParameterId = Payments.Parameter.Identifier.countryCurrencyAmount.rawValue
-            let amountParameter = Payments.ParameterInfo(
-                .init(id: amountParameterId, value: amount),
-                icon: ImageData(named: "ic24Coins") ?? .parameterDocument,
-                title: "Сумма перевода", placement: .feed, group: .init(id: "confirm", type: .info))
-            
-            parameters.append(amountParameter)
-        }
-        
         if let response = response as? TransferAnywayResponseData,
            let oferta = response.additionalList.first(where: {$0.fieldName == "oferta"}),
            let value = oferta.fieldValue,
            let url = URL(string: value) {
-        
+            
             let countryOferta = Payments.Parameter.Identifier.countryOffer.rawValue
             parameters.append(Payments.ParameterCheck(.init(id: countryOferta, value: "true"), title: "С договором", link: .init(title: "оферты", url: url), style: .c2bSubscribtion, mode: .abroad))
         }
@@ -656,7 +681,7 @@ extension Model {
         let success = try Payments.Success(
             with: response,
             operation: operation,
-            serviceData: .abroadPayments(response)
+            serviceData: .abroadData(response)
         )
         
         return success
@@ -669,18 +694,19 @@ extension Model {
                              Payments.Parameter.Identifier.trnPickupPoint.rawValue]
         
         // check if current step stage is confirm
-        guard case .remote(let remote) = operation.steps.last?.back.stage,
-              remote == .confirm else {
+        guard operation.isConfirmCurrentStage else {
             
-            let parameters = operation.visible.filter({!restrictedIds.contains($0)})
-            return parameters
+            let parameters = operation.steps.map( \.front.visible ).flatMap({ $0 })
+            
+            let restrictedParameters = parameters.filter({ !restrictedIds.contains($0) })
+            return restrictedParameters
         }
         
         let countrySwitch = Payments.Parameter.Identifier.countryDropDownList.rawValue
         if let bankParameter = operation.parameters.first(where: { $0.id == countrySwitch }),
            let value = bankParameter.value,
            let options = Payments.Operator.init(rawValue: value) {
-                
+            
             switch options {
             case .contact, .contactCash:
                 
@@ -720,7 +746,7 @@ extension Model {
                         Payments.Parameter.Identifier.code.rawValue]
             }
         }
-                    
+        
         return [Payments.Parameter.Identifier.header.rawValue,
                 Payments.Parameter.Identifier.countrySelect.rawValue,
                 Payments.Parameter.Identifier.countryPayee.rawValue,
@@ -730,5 +756,78 @@ extension Model {
                 Payments.Parameter.Identifier.fee.rawValue,
                 Payments.Parameter.Identifier.sfpAmount.rawValue,
                 Payments.Parameter.Identifier.code.rawValue]
+    }
+}
+
+extension Model {
+    
+    func reduceDeliveryCurrency(productId: ProductData.ID, splittedCurrency: [String]) -> [Currency] {
+        
+        var clearCurrency = splittedCurrency
+        clearCurrency.remove(at: 0)
+        
+        var deliveryCurrency: [Payments.ParameterAmount.DeliveryCurrency] = []
+        
+        for currency in clearCurrency {
+            
+            if let currency = self.deliveryCurrencyMapping(dataType: currency) {
+                
+                deliveryCurrency.append(currency)
+            }
+        }
+        
+        guard let product = self.product(productId: productId),
+              let currencies = deliveryCurrency.first(where: { $0.selectedCurrency.description == product.currency.description })?.currenciesList else {
+            return []
+        }
+        
+        return currencies
+    }
+    
+    func reduceFilterCurrencies(filterCurrencies: String?) -> [Currency] {
+        
+        var deliveryCurrencyProduct: [Payments.ParameterAmount.DeliveryCurrency]? = []
+        
+        if var splittedCurrency = filterCurrencies?.components(separatedBy: ";") {
+            
+            splittedCurrency.remove(at: 0)
+            
+            for currency in splittedCurrency {
+                
+                if let currency = self.deliveryCurrencyMapping(dataType: currency) {
+                    
+                    deliveryCurrencyProduct?.append(currency)
+                }
+            }
+            
+            if let filterCurrency = deliveryCurrencyProduct?.compactMap({ $0.selectedCurrency }) {
+                
+                return filterCurrency
+            } else {
+                
+                return []
+            }
+            
+        } else {
+            
+            return []
+        }
+    }
+    
+    func deliveryCurrencyMapping(dataType: String) -> Payments.ParameterAmount.DeliveryCurrency? {
+        
+        let splitCurrency = dataType.components(separatedBy: "=")
+        
+        let currincies = splitCurrency[1].components(separatedBy: ",").map({ Currency(description: $0.description)})
+        
+        if let firstCurriency = splitCurrency.first {
+            
+            let selectedCurrency = Currency(description: firstCurriency)
+            return Payments.ParameterAmount.DeliveryCurrency(selectedCurrency: selectedCurrency, currenciesList: currincies)
+            
+        } else {
+            
+            return nil
+        }
     }
 }

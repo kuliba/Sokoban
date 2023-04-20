@@ -23,8 +23,7 @@ extension Model {
         let currency = try paymentsTransferCurrencyAbroad(parameters)
         let comment = try paymentsTransferAnywayComment(parameters)
         
-        let restrictedParameters: [String] = [Payments.Parameter.Identifier.amount.rawValue,
-                                              Payments.Parameter.Identifier.code.rawValue,
+        let restrictedParameters: [String] = [Payments.Parameter.Identifier.code.rawValue,
                                               Payments.Parameter.Identifier.product.rawValue,
                                               Payments.Parameter.Identifier.`continue`.rawValue,
                                               Payments.Parameter.Identifier.header.rawValue,
@@ -60,6 +59,19 @@ extension Model {
         for (index, parameter) in parameters.enumerated() {
                 
             switch parameter.id {
+            case Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue:
+                guard let amount = parameters.first(where: { $0.id == Payments.Parameter.Identifier.amount.rawValue }),
+                      let amount = amount as? Payments.ParameterAmount else {
+                    continue
+                }
+                
+                let currencies = self.currencyList.value.filter({ $0.currencySymbol == amount.currencySymbol })
+                
+                if let currency = amount.deliveryCurrency?.currenciesList?.first(where: { $0.description.contained(in: currencies.map(\.code)) }) {
+                    
+                    additional.append(.init(fieldid: index + 1, fieldname: parameter.id, fieldvalue: currency.description))
+                }
+                                    
             case Payments.Parameter.Identifier.countryFamilyName.rawValue:
                 if let value = parameter.value {
                     
@@ -69,6 +81,9 @@ extension Model {
                     additional.append(.init(fieldid: index + 1, fieldname: parameter.id, fieldvalue: ""))
                 }
 
+            case Payments.Parameter.Identifier.amount.rawValue:
+                continue
+                
             default:
                 guard let parameterValue = parameter.value  else {
                     continue
@@ -130,23 +145,9 @@ extension Model {
                 throw Payments.Error.missingParameter(productParameterId)
             }
 
-            if let dataSplitted = response.parameterListForNextStep.first(where: {$0.id == Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue})?.dataType?.description.split(separator: ";") {
-
-                var currencies: String = ""
-
-                for chunk in dataSplitted {
-
-                    let chunkSplitted = chunk.split(separator: "=")
-
-                    guard chunkSplitted.count >= 1, chunkSplitted[0] != "" else {
-                        continue
-                    }
-
-                    let name = String(chunkSplitted[0])
-                    currencies += "\(name) "
-                }
+            if let dataSplitted = response.parameterListForNextStep.first(where: {$0.id == Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue}) {
                 
-                result.append(Payments.ParameterHidden.init(id: Payments.Parameter.Identifier.countryCurrencyFilter.rawValue, value: currencies))
+                result.append(Payments.ParameterHidden(id: Payments.Parameter.Identifier.countryCurrencyFilter.rawValue, value: dataSplitted.dataType))
             }
                         
             if let currencies = response.parameterListForNextStep.first(where: {$0.id == Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue}) {
@@ -186,19 +187,30 @@ extension Model {
     
     func paymentsTransferCurrencyAbroad(_ parameters: [PaymentsParameterRepresentable]) throws -> String {
         
-        if let currencyDelivery = parameters.first(where: {$0.id == Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue}),
-           let currency = currencyDelivery.value{
+        let productParameterId = Payments.Parameter.Identifier.product.rawValue
+        guard let productParameter = parameters.first(where: { $0.parameter.id ==  productParameterId}) as? Payments.ParameterProduct,
+              let productId = productParameter.productId,
+              let product = product(productId: productId) else {
             
-            return currency
-        } else {
+            throw Payments.Error.missingParameter(productParameterId)
+        }
+        
+        if let amount = parameters.first(where: { $0.id == Payments.Parameter.Identifier.amount.rawValue }),
+           let amount = amount as? Payments.ParameterAmount {
             
-            let productParameterId = Payments.Parameter.Identifier.product.rawValue
-            guard let productParameter = parameters.first(where: { $0.parameter.id ==  productParameterId}) as? Payments.ParameterProduct,
-                  let productId = productParameter.productId,
-                  let product = product(productId: productId) else {
+            let currencies = self.currencyList.value.filter({ $0.currencySymbol == amount.currencySymbol })
+            
+            if let currency = amount.deliveryCurrency?.currenciesList?.first(where: {$0.description.contained(in: currencies.map(\.code))}) {
                 
-                throw Payments.Error.missingParameter(productParameterId)
+                return currency.description
+                
+            } else {
+                
+                return product.currency
+                
             }
+            
+        } else {
             
             return product.currency
         }

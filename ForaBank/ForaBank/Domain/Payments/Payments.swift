@@ -186,7 +186,7 @@ extension Payments.Operation {
         
         case direct(phone: String? = nil, countryId: CountryData.ID, serviceData: PaymentServiceData? = nil)
                 
-        case `return`(operationId: String, transferNumber: String, amount: String, productId: String)
+        case `return`(operationId: Int, transferNumber: String, amount: String, productId: String)
         
         case change(operationId: String, transferNumber: String, name: String)
         
@@ -362,7 +362,8 @@ extension Payments {
             
             case c2bSubscriptionData(C2BSubscriptionData)
             case mobileConnectionData(MobileConnectionData)
-            case abroadPayments(TransferResponseBaseData)
+            case abroadData(TransferResponseBaseData)
+            case returnAbroadData(transferData: TransferResponseBaseData, title: String)
         }
     }
 }
