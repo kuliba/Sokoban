@@ -62,14 +62,9 @@ final class PaymentsSelectViewComponentTests: XCTestCase {
         
         // given
         let sut = makeSut(selectedOptionId: nil)
-
-        guard case let .list(optionsListViewModel) = sut.state else {
-            XCTFail("state must be in list case")
-            return
-        }
         
         // when
-        optionsListViewModel.action.send(PaymentsParameterViewModelAction.Select.OptionsList.OptionSelected(optionId: "0"))
+        sut.action.send(PaymentsParameterViewModelAction.Select.OptionsList.OptionSelected(optionId: "0"))
         _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
         
         // then
@@ -121,6 +116,62 @@ final class PaymentsSelectViewComponentTests: XCTestCase {
         
         XCTAssertEqual(optionsListViewModel.filterred, listOptions)
         XCTAssertEqual(optionsListViewModel.selected, "0")
+    }
+    
+    func test_collapsed_EditingDisabled() throws {
+        
+        // given
+        let sut = makeSut(selectedOptionId: "0")
+        sut.updateEditable(update: .value(false))
+        
+        // when
+        sut.action.send(PaymentsParameterViewModelAction.Select.ToggleList())
+        _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
+        
+        // then
+        XCTAssertEqual(sut.value.current, "0")
+        XCTAssertTrue(sut.isValid)
+        XCTAssertFalse(sut.isEditable)
+        
+        guard case let .selected(selectedOptionViewModel) = sut.state else {
+            XCTFail("state must be in selected case")
+            return
+        }
+        
+        guard case .image24(_) = selectedOptionViewModel.icon else {
+            XCTFail("icon must be .image24")
+            return
+        }
+        XCTAssertEqual(selectedOptionViewModel.title, "Тип оплаты")
+        XCTAssertEqual(selectedOptionViewModel.name, "Оплата наличными")
+    }
+    
+    func test_expanded_EditingDisabled() throws {
+        
+        // given
+        let sut = makeSut(selectedOptionId: "0")
+        sut.action.send(PaymentsParameterViewModelAction.Select.ToggleList())
+        
+        // when
+        sut.updateEditable(update: .value(false))
+        _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
+        
+        // then
+        XCTAssertEqual(sut.value.current, "0")
+        XCTAssertTrue(sut.isValid)
+        XCTAssertFalse(sut.isEditable)
+        
+        guard case let .selected(selectedOptionViewModel) = sut.state else {
+            XCTFail("state must be in selected case")
+            return
+        }
+        
+        guard case .image24(_) = selectedOptionViewModel.icon else {
+            XCTFail("icon must be .image24")
+            return
+        }
+        XCTAssertEqual(selectedOptionViewModel.title, "Тип оплаты")
+        XCTAssertEqual(selectedOptionViewModel.name, "Оплата наличными")
     }
 }
 
