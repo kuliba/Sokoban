@@ -258,7 +258,7 @@ extension PaymentsSectionViewModel {
             return PaymentsNameView.ViewModel(with: paremeterName)
             
         case let parameterDropDownList as Payments.ParameterSelectDropDownList:
-            return PaymentSelectDropDownView.ViewModel(with: parameterDropDownList)
+            return try? PaymentSelectDropDownView.ViewModel(with: parameterDropDownList)
 
         case let parameterSelectSimple as Payments.ParameterSelectSimple:
             return PaymentsSelectSimpleView.ViewModel(with: parameterSelectSimple, model: model)

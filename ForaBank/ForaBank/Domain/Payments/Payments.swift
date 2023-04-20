@@ -442,8 +442,8 @@ extension Payments {
         
         enum UI {
             
-            case selectBankMissingOptions(Payments.Parameter.ID)
-            case selectBankIncorrectOptionSelected(Payments.Parameter.ID)
+            case sourceParameterMissingOptions(Payments.Parameter.ID)
+            case sourceParameterSelectedOptionInvalid(Payments.Parameter.ID)
         }
         
         var errorDescription: String? {
@@ -484,11 +484,11 @@ extension Payments {
                 
             case let .ui(ui):
                 switch ui {
-                case let .selectBankMissingOptions(parameterId):
-                    return "Paymetns.ParameterSelectBank with id: \(parameterId) missing required options"
+                case let .sourceParameterMissingOptions(parameterId):
+                    return "source parameter with id: \(parameterId) missing required options"
                     
-                case let .selectBankIncorrectOptionSelected(parameterId):
-                    return "Paymetns.ParameterSelectBank with id: \(parameterId) selected option missed in the options list"
+                case let .sourceParameterSelectedOptionInvalid(parameterId):
+                    return "source parameter with id: \(parameterId) selected option missed in the options list"
                 }
 
             case .notAuthorized:
