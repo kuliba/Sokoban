@@ -107,7 +107,7 @@ private extension ServerAgentStub {
     ) -> AnywayTransferResponse {
         
         guard let puref = anywayTransfer.payload?.puref,
-              let amount = anywayTransfer.payload?.amount,
+              let amount = anywayTransfer.payload?.amountDouble,
               let phoneNumber = anywayTransfer.payload?.phoneNumber,
               let response = essenceStub[.init(puref: puref, phoneNumber: phoneNumber, amount: amount)]
         else {

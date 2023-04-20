@@ -61,10 +61,10 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
         let url = bundle.url(forResource: "PaymentsTemplateListGenericResponse", withExtension: "json")!
         let json = try Data(contentsOf: url)
         let payer = TransferData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: 10000184511, cardNumber: nil, phoneNumber: nil)
+        let amount: Double?  = nil
+        let parameter1 = TransferAnywayData(amount: amount, check: false, comment: nil, currencyAmount: "RUB", payer: payer, additional: [.init(fieldid: 1, fieldname: "trnPickupPoint", fieldvalue: "AM")], puref: "iFora||MIG")
         
-        let parameter1 = TransferAnywayData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, additional: [.init(fieldid: 1, fieldname: "trnPickupPoint", fieldvalue: "AM")], puref: "iFora||MIG")
-        
-        let parameter2 = TransferAnywayData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, additional: [.init(fieldid: 1, fieldname: "trnPickupPoint", fieldvalue: "AM"), .init(fieldid: 2, fieldname: "DIRECT_BANKS", fieldvalue: "iFora||TransferEvocaClient12")], puref: "iFora||MIG")
+        let parameter2 = TransferAnywayData(amount: amount, check: false, comment: nil, currencyAmount: "RUB", payer: payer, additional: [.init(fieldid: 1, fieldname: "trnPickupPoint", fieldvalue: "AM"), .init(fieldid: 2, fieldname: "DIRECT_BANKS", fieldvalue: "iFora||TransferEvocaClient12")], puref: "iFora||MIG")
         
         let parameter3 = TransferAnywayData(amount: 100.05, check: false, comment: nil, currencyAmount: "RUB", payer: payer, additional: [.init(fieldid: 1, fieldname: "trnPickupPoint", fieldvalue: "AM"), .init(fieldid: 2, fieldname: "DIRECT_BANKS", fieldvalue: "iFora||TransferEvocaClient12"), .init(fieldid: 3, fieldname: "RECP", fieldvalue: "+37496127188"), .init(fieldid: 4, fieldname: "##CURR", fieldvalue: "RUB")], puref: "iFora||MIG")
         
@@ -85,7 +85,8 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
         let url = bundle.url(forResource: "GetPaymentTemplateListResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
         let payer = TransferData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: 10000184511, cardNumber: nil, phoneNumber: nil)
-        let transfer = TransferGeneralData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
+        let amount: Double? = nil
+        let transfer = TransferGeneralData(amount: amount, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
         let paymentTemplate = PaymentTemplateData(groupName: "Переводы СБП", name: "Иванов Иван Иванович", parameterList: [transfer], paymentTemplateId: 1, productTemplate: .init(currency: "RUB", customName: "Новая карта", id: 1, numberMask: "4444 **** **** 1234", paymentSystemImage: .init(description: "string"), smallDesign: .init(description: "string"), type: .card), sort: 1, svgImage: SVGImageData(description: "string"), type: .sfp)
         let expected = ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response(statusCode: .ok, errorMessage: "string", data: [paymentTemplate])
         
@@ -102,7 +103,8 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
         let url = bundle.url(forResource: "GetPaymentTemplateListResponseMin", withExtension: "json")!
         let json = try Data(contentsOf: url)
         let payer = TransferData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
-        let transfer = TransferGeneralData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
+        let amount: Double? = nil
+        let transfer = TransferGeneralData(amount: amount, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
         let paymentTemplate = PaymentTemplateData(groupName: "Переводы СБП", name: "Иванов Иван Иванович", parameterList: [transfer], paymentTemplateId: 1, productTemplate: nil, sort: 1, svgImage: SVGImageData(description: "string"), type: .sfp)
         let expected = ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response(statusCode: .ok, errorMessage: "string", data: [paymentTemplate])
         
@@ -192,7 +194,8 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
 
         // given
         let payer = TransferData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
-        let transfer = TransferGeneralData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
+        let amount: Double? = nil
+        let transfer = TransferGeneralData(amount: amount, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
         let command = ServerCommands.PaymentTemplateController.UpdatePaymentTemplate(token: "", payload: .init(name: "test", parameterList: [transfer], paymentTemplateId: 1))
         let expected = "{\"name\":\"test\",\"paymentTemplateId\":1,\"parameterList\":[{\"amount\":null,\"currencyAmount\":\"RUB\",\"check\":false,\"payeeInternal\":null,\"comment\":null,\"payer\":{},\"payeeExternal\":null}]}"
         

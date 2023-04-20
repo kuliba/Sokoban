@@ -470,6 +470,31 @@ extension ServerCommands {
                         case inn = "INN"
                     }
                 }
+                
+                init(check: Bool? = nil, amount: Decimal? = nil, currencyAmount: String? = nil, payer: ServerCommands.TransferController.CreateInterestDepositTransfer.Payload.Payer? = nil, comment: String? = nil, payeeInternal: TransferGeneralData.PayeeInternal? = nil, payeeExternal: TransferGeneralData.PayeeExternal? = nil, depositId: Int) {
+                    self.check = check
+                    self.amount = amount
+                    self.currencyAmount = currencyAmount
+                    self.payer = payer
+                    self.comment = comment
+                    self.payeeInternal = payeeInternal
+                    self.payeeExternal = payeeExternal
+                    self.depositId = depositId
+                }
+                
+                init(check: Bool? = nil, amount: Double? = nil, currencyAmount: String? = nil, payer: ServerCommands.TransferController.CreateInterestDepositTransfer.Payload.Payer? = nil, comment: String? = nil, payeeInternal: TransferGeneralData.PayeeInternal? = nil, payeeExternal: TransferGeneralData.PayeeExternal? = nil, depositId: Int) {
+                    
+                    let amountDecimal: Decimal? = {
+                        
+                        guard let amount else {
+                            return nil
+                        }
+                        
+                        return Decimal(amount).roundedFinance()
+                    }()
+                    
+                    self.init(check: check, amount: amountDecimal, currencyAmount: currencyAmount, payer: payer, comment: comment, payeeInternal: payeeInternal, payeeExternal: payeeExternal, depositId: depositId)
+                }
             }
             
             struct Response: ServerResponse {

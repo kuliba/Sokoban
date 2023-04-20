@@ -9,13 +9,13 @@ import Foundation
 
 class TransferData: Codable {
 
-    let amount: Double?
+    let amount: Decimal?
     let check: Bool
     let comment: String?
     let currencyAmount: String
     let payer: Payer
     
-    internal init(amount: Double?, check: Bool, comment: String?, currencyAmount: String, payer: Payer) {
+    init(amount: Decimal?, check: Bool, comment: String?, currencyAmount: String, payer: Payer) {
         
         self.amount = amount
         self.check = check
@@ -23,7 +23,7 @@ class TransferData: Codable {
         self.currencyAmount = currencyAmount
         self.payer = payer
     }
-    
+        
     //MARK: Codable
     
     private enum CodingKeys : String, CodingKey {
@@ -33,7 +33,7 @@ class TransferData: Codable {
     required init(from decoder: Decoder) throws {
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        amount = try container.decodeIfPresent(Double.self, forKey: .amount)
+        amount = try container.decodeIfPresent(Decimal.self, forKey: .amount)
         check = try container.decode(Bool.self, forKey: .check)
         comment = try container.decodeIfPresent(String.self, forKey: .comment)
         currencyAmount = try container.decode(String.self, forKey: .currencyAmount)
@@ -81,21 +81,6 @@ extension TransferData: Equatable {
     }
 }
 
-/*
-extension TransferData {
-    
-    enum Step {
-        
-        case initial
-        case next
-        case check
-        
-        var isNewPayment: Bool { self == .initial }
-        var isCheck: Bool { self == .check }
-    }
-}
- */
-
 extension TransferData: CustomDebugStringConvertible {
     
     @objc
@@ -134,3 +119,27 @@ extension TransferData.Payer {
         }
     }
 }
+
+
+extension TransferData {
+    
+    //TODO: remove after full refactoring. Currently used in legacy code.
+    var amountString: String {
+       
+        guard let amountValue = amount else {
+            return "0"
+        }
+        
+        return amountValue.description
+    }
+    
+    var amountDouble: Double? {
+        
+        guard let amountValue = amount else {
+            return nil
+        }
+        
+        return Double(truncating: amountValue as NSNumber)
+    }
+}
+
