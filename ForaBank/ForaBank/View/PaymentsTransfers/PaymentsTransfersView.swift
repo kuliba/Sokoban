@@ -74,37 +74,31 @@ struct PaymentsTransfersView: View {
                     case .internetOperators(let model):
                         OperatorsView(viewModel: model)
                             .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
                     case .serviceOperators(let model):
                         OperatorsView(viewModel: model)
                             .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
                     case .transportOperators(let model):
                         OperatorsView(viewModel: model)
                             .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
                     case .transport(let viewModel):
                         OperatorsView(viewModel: viewModel)
                             .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
                     case .internet(let viewModel):
                         OperatorsView(viewModel: viewModel)
                             .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
                     case .service(let viewModel):
                         OperatorsView(viewModel: viewModel)
                             .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
                     case .template(let templateListViewModel):
