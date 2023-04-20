@@ -31,6 +31,8 @@ class ProductProfileViewModel: ObservableObject {
     @Published var spinner: SpinnerView.ViewModel?
     
     @Published var success: PaymentsSuccessViewModel?
+    @Published var successZeroAccount: ZeroAccount?
+
     @Published var closeAccountSpinner: CloseAccountSpinnerView.ViewModel?
 
     var rootActions: RootViewModel.RootActions?
@@ -201,6 +203,7 @@ private extension ProductProfileViewModel {
                     sheet = nil
                     
                 case _ as ProductProfileViewModelAction.Close.Success:
+                    successZeroAccount = nil
                     success = nil
                     
                 case _ as ProductProfileViewModelAction.Close.AccountSpinner:
@@ -1017,6 +1020,7 @@ private extension ProductProfileViewModel {
                 
                 switch action {
                 case let payload as CloseAccountSpinnerAction.Response.Success:
+                    self.successZeroAccount = ZeroAccount(viewModel: payload.viewModel)
                     bind(payload.viewModel)
                     self.success = payload.viewModel
                     
@@ -1347,6 +1351,13 @@ extension ProductProfileViewModel {
         enum Kind {
             case successMeToMe(PaymentsSuccessViewModel)
         }
+    }
+    
+    struct ZeroAccount: Identifiable {
+        
+        let id = UUID()
+        let viewModel: PaymentsSuccessViewModel
+    
     }
 }
 
