@@ -63,7 +63,7 @@ extension SearchBarView {
                         self.textField.dismissKeyboard()
                         
                     case _ as SearchBarViewModelAction.ClearTextField:
-                        self.textField.text = nil
+                        self.textField.setText(to: nil)
                         
                     case _ as SearchBarViewModelAction.Idle:
                         self.state = .idle

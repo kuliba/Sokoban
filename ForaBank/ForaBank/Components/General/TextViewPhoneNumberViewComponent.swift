@@ -14,7 +14,7 @@ extension TextViewPhoneNumberView {
     
     class ViewModel: ObservableObject {
         
-        @Published var text: String?
+        @Published private(set) var text: String?
         @Published var state: State
         let isEditing: CurrentValueSubject<Bool, Never>
 
@@ -93,6 +93,17 @@ extension TextViewPhoneNumberView {
             }
             
             return false
+        }
+        
+        
+        func setText(to text: String?) {
+            
+            DispatchQueue.main.async {
+                
+                self.text = text
+            }
+
+            self.isEditing.send(true)
         }
         
         enum State {
@@ -262,31 +273,31 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
                 }
                 
                 textView.text = result
-                viewModel.text = result
+                viewModel.setText(to: result)
             
             case .banks:
                 let result = textView.text.updateMasked(inRange: range, update: text, limit: nil, style: .default)
                 
                 textView.text = result
-                viewModel.text = result
+                viewModel.setText(to: result)
                 
             case .abroad:
                 let result = textView.text.updateMasked(inRange: range, update: text, limit: nil, style: .default).filter(\.isLetter)
                     
                 textView.text = result
-                viewModel.text = result
+                viewModel.setText(to: result)
             
             case .payments:
                 let result = TextViewPhoneNumberView.updateMasked(value: textView.text, inRange: range, update: text, firstDigitReplace: viewModel.firstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
                 
                 textView.text = result
-                viewModel.text = result
+                viewModel.setText(to: result)
                 
             default:
                 let result = textView.text.updateMasked(inRange: range, update: text, limit: nil, style: .default)
                 
                 textView.text = result
-                viewModel.text = result
+                viewModel.setText(to: result)
             }
 
             if textView.isFirstResponder {
@@ -326,7 +337,7 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
             if let text = result, viewModel.phoneNumberFormatter.isValid(text) {
                 
                 textView.text = result
-                viewModel.text = result
+                viewModel.setText(to: result)
                 
                 return false
                 

@@ -167,7 +167,7 @@ class ContactsViewModel: ObservableObject {
                         switch mode {
                         case .fastPayments:
                             let formattedPhone = searchBar.textField.phoneNumberFormatter.partialFormatter("+\(payload.phone)")
-                            self.searchBar.textField.text = formattedPhone
+                            self.searchBar.textField.setText(to: formattedPhone)
                         
                         case .abroad:
                             break
