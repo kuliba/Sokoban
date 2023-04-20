@@ -115,7 +115,6 @@ struct MainView: View {
                     case .serviceOperators(let viewModel):
                         OperatorsView(viewModel: viewModel)
                             .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
                     case .failedView(let failedViewModel):
