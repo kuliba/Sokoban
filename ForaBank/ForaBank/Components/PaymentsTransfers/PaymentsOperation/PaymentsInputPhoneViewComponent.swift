@@ -76,7 +76,7 @@ extension PaymentsInputPhoneView {
                 }
 
 #else
-                textView.text = textView.phoneNumberFormatter.partialFormatter("+\(phone.digits)")
+                textView.setText(to: textView.phoneNumberFormatter.partialFormatter("+\(phone.digits)"))
 #endif
                 
             }
