@@ -158,6 +158,53 @@ final class PaymentsSelectBankViewComponentTests: XCTestCase {
         XCTAssertEqual(banksList[1].subtitle, "0447788")
         XCTAssertEqual(banksList[1].searchValue, "0447788")
     }
+    
+    func test_selected_toggleList_EditingDisabled() throws {
+
+        // given
+        let sut = try makeSut(selectedOptionId: "0")
+        sut.updateEditable(update: .value(false))
+        
+        // when
+        sut.action.send(PaymentsParameterViewModelAction.SelectBank.List.Toggle())
+        _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
+        
+        // then
+        XCTAssertEqual(sut.value.current, "0")
+        XCTAssertTrue(sut.isValid)
+        XCTAssertFalse(sut.isEditable)
+        
+        guard case let .collapsed(collapsedViewModel) = sut.state else {
+            XCTFail("state must be in collapsed state")
+            return
+        }
+        
+        XCTAssertEqual(collapsedViewModel.title, .selected(title: "Банк получателя", name: "0445566"))
+    }
+    
+    func test_expanded_toggleList_EditingDisabled() throws {
+
+        // given
+        let sut = try makeSut(selectedOptionId: "0")
+        // expand
+        sut.action.send(PaymentsParameterViewModelAction.SelectBank.List.Toggle())
+
+        // when
+        sut.updateEditable(update: .value(false))
+        _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
+        
+        // then
+        XCTAssertEqual(sut.value.current, "0")
+        XCTAssertTrue(sut.isValid)
+        XCTAssertFalse(sut.isEditable)
+        
+        guard case let .collapsed(collapsedViewModel) = sut.state else {
+            XCTFail("state must be in collapsed state")
+            return
+        }
+        
+        XCTAssertEqual(collapsedViewModel.title, .selected(title: "Банк получателя", name: "0445566"))
+    }
 }
 
 private extension PaymentsSelectBankViewComponentTests {

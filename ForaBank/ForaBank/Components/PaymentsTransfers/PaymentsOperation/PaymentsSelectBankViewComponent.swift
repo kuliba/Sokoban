@@ -67,8 +67,13 @@ extension PaymentsSelectBankView.ViewModel {
     
     private func bind() {
         
-        action
-            .compactMap( { $0 as? PaymentsParameterViewModelAction.SelectBank.List.Toggle } )
+        Publishers
+            .CombineLatest(
+                action.compactMap( { $0 as? PaymentsParameterViewModelAction.SelectBank.List.Toggle } ),
+                $isEditable.removeDuplicates()
+            )
+            .map(\.1)
+            .filter({ $0 })
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
                 
@@ -87,9 +92,8 @@ extension PaymentsSelectBankView.ViewModel {
                         state = .collapsed(CollapsedViewModel(value: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
                     }
                 }
-              
+                
             }.store(in: &bindings)
-        
         
         action
             .compactMap( { $0 as? PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped } )
@@ -133,6 +137,23 @@ extension PaymentsSelectBankView.ViewModel {
                 bind(contactsViewModel: contactsViewModel)
                 action.send(PaymentsParameterViewModelAction.SelectBank.ContactSelector.Show(viewModel: contactsViewModel))
                 
+            }.store(in: &bindings)
+        
+        $isEditable
+            .dropFirst()
+            .removeDuplicates()
+            .filter({ !$0 })
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] _ in
+                
+                guard let parameterSelectBank = parameterSelectBank else {
+                    return
+                }
+  
+                withAnimation {
+                    state = .collapsed(CollapsedViewModel(value: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
+                }
+              
             }.store(in: &bindings)
     }
 }
@@ -460,8 +481,12 @@ struct PaymentsSelectBankView: View {
             
             switch viewModel.state {
             case let .collapsed(collapsedViewModel):
-                CollapsedStateView(viewModel: collapsedViewModel, namespace: namespace) {
-                    viewModel.action.send(PaymentsParameterViewModelAction.SelectBank.List.Toggle())
+                CollapsedStateView(viewModel: collapsedViewModel, isChevronEnabled: viewModel.isEditable, namespace: namespace) {
+                    
+                    if viewModel.isEditable {
+                        
+                        viewModel.action.send(PaymentsParameterViewModelAction.SelectBank.List.Toggle())
+                    }
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 13)
@@ -486,6 +511,7 @@ struct PaymentsSelectBankView: View {
     struct CollapsedStateView: View {
         
         let viewModel: PaymentsSelectBankView.ViewModel.CollapsedViewModel
+        let isChevronEnabled: Bool
         let namespace: Namespace.ID
         let toggle: () -> Void
         
@@ -500,9 +526,12 @@ struct PaymentsSelectBankView: View {
                 
                 Spacer()
                 
-                Image.ic24ChevronDown
-                    .renderingMode(.template)
-                    .foregroundColor(.iconGray)
+                if isChevronEnabled {
+                    
+                    Image.ic24ChevronDown
+                        .renderingMode(.template)
+                        .foregroundColor(.iconGray)
+                }
             }
             .matchedGeometryEffect(id: MatchedID.selected, in: namespace)
             .contentShape(Rectangle())
@@ -729,6 +758,7 @@ struct PaymentsSelectBankView_Previews: PreviewProvider {
         Group {
             
             PaymentsGroupView(viewModel: PaymentsSelectBankView.ViewModel.selectedGroup)
+            PaymentsGroupView(viewModel: PaymentsSelectBankView.ViewModel.selectedGroupNotEditable)
         }
     }
 }
@@ -738,6 +768,8 @@ struct PaymentsSelectBankView_Previews: PreviewProvider {
 extension PaymentsSelectBankView.ViewModel {
     
     static let selectedGroup = PaymentsGroupViewModel(items: [ PaymentsSelectBankView.ViewModel.sampleParameter ])
+    
+    static let selectedGroupNotEditable = PaymentsGroupViewModel(items: [ PaymentsSelectBankView.ViewModel.sampleParameterNotEditable ])
 }
 
 extension PaymentsSelectBankView.ViewModel {
@@ -756,4 +788,23 @@ extension PaymentsSelectBankView.ViewModel {
             keyboardType: .normal),
         model: .emptyMock)
     
+    static let sampleParameterNotEditable: PaymentsSelectBankView.ViewModel = {
+        
+        let parameter = try! PaymentsSelectBankView.ViewModel(
+            with: .init(
+                .init(id: "bank_param_id", value: nil),
+                icon: .init(named: "ic24Bank")!,
+                title: "Банк получателя",
+                options: [
+                    .init(id: "0", name: "Сбербанк", subtitle: "04456789", icon: nil, searchValue: "сбербанк"),
+                    .init(id: "1", name: "Альфабанк", subtitle: "04478998", icon: nil, searchValue: "альфабанк"),
+                ],
+                placeholder: "Выберите банк",
+                selectAll: .init(type: .banks),
+                keyboardType: .normal),
+            model: .emptyMock)
+        parameter.updateEditable(update: .value(false))
+        
+        return parameter
+    }()
 }
