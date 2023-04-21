@@ -371,6 +371,10 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     
                     self.sheet = .init(type: .detailInfo(payload.viewModel))
                     
+                case _ as PaymentsSuccessAction.Button.Close:
+                    
+                    model.action.send(ModelAction.Products.Update.Total.All())
+
                 default:
                     break
                 }
