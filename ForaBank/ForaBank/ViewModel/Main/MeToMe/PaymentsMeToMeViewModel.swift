@@ -328,8 +328,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 makeAlert(.emptyData(message: "Счет списания совпадает со счетом зачисления. Выберите другой продукт"))
                                 
                             } else {
-                                if paymentsAmount.textField.value == productFrom.balanceValue{
-                                    // проверка разрешения закрытия
+                                if (productFrom is ProductDepositData), paymentsAmount.textField.value == productFrom.balanceValue {
+                                    // проверка разрешения закрытия вкладов
                                     self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
                                 }
                                 else {
