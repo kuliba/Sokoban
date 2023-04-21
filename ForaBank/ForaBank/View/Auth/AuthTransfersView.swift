@@ -81,7 +81,9 @@ struct AuthTransfersView: View {
                     
                     switch link {
                     case let .products(productsViewModel):
-                        AuthProductsView(viewModel: productsViewModel)
+                        NavigationView {
+                            AuthProductsView(viewModel: productsViewModel)
+                        }
                     }
                 }
             }
