@@ -759,9 +759,49 @@ final class OperationDetailInfoViewModel: Identifiable {
             }
             
             cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: dateString))
+            
+        case .taxes:
 
+            if let image = model.images.value[statement.md5hash]?.image, let payeeFullName = operation?.payeeFullName {
+                
+                cells.append(BankCellViewModel(title: "Наименование получателя", icon: image, name: payeeFullName))
+            }
+                        
+            if let payeeINN = operation?.payeeINN {
+                
+                cells.append(PropertyCellViewModel(title: "ИНН получателя", iconType: .nil, value: payeeINN))
+            }
+                        
+            if let formattedAmount = model.amountFormatted(amount: statement.amount, currencyCode: currency, style: .clipped) {
+                
+                let amount = statement.operationType == .credit ? "+ \(formattedAmount)" : formattedAmount
+                cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: amount))
+            }
+            
+            if let fee = operation?.payerFee, let comissionCell = Self.commissionCell(with: model, fee: fee, currency: currency) {
+                
+                cells.append(comissionCell)
+            }
+
+            if let payerProductId = [operation?.payerCardId, operation?.payerAccountId].compactMap({$0}).first {
+                
+                for i in model.products.value {
+                    
+                    if let productInfo = i.value.first(where: { $0.id == payerProductId }) {
+                        
+                        if let description = productInfo.number?.suffix(4),
+                           let balance = productInfo.balance,
+                           let balanceFormatted = model.amountFormatted(amount: balance, currencyCode: productInfo.currency, style: .clipped), let icon = productInfo.smallDesign.image,
+                           let additional = productInfo.additionalField {
+                            
+                            cells.append(ProductCellViewModel(title: "Счет списания", icon: icon, name: productInfo.mainField, iconPaymentService: nil, balance: balanceFormatted, description: "· \(description) · \(additional)"))
+                        }
+                    }
+                }
+            }
+            cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: dateString))
+            
         default:
-            //FIXME: implement taxes
             break
         }
         
