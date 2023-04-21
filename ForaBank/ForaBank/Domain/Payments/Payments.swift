@@ -229,6 +229,7 @@ extension Payments.Operation {
             let isCompleted: Bool
         }
         
+        //TODO: implement `optional` list, for cases when we send parameter only if it has value
         struct Back: Equatable {
             
             let stage: Stage
