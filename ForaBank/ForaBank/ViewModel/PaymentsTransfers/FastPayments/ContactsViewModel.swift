@@ -315,7 +315,7 @@ extension ContactsViewModel {
         
         switch mode {
         case .fastPayments:
-            return .init(textFieldPhoneNumberView: .init(.contacts))
+            return .init(textFieldPhoneNumberView: .init(placeHolder: .contacts, style: .payments))
         
         case .abroad:
             return .init(textFieldPhoneNumberView: .init(style: .abroad, placeHolder: .countries), state: .idle, icon: .ic24Search)
@@ -323,7 +323,7 @@ extension ContactsViewModel {
         case let .select(select):
             switch select {
             case .contacts:
-                return .init(textFieldPhoneNumberView: .init(.contacts))
+                return .init(textFieldPhoneNumberView: .init(placeHolder: .contacts, style: .payments))
                 
             case .banks:
                 return .init(textFieldPhoneNumberView: .init(.banks))

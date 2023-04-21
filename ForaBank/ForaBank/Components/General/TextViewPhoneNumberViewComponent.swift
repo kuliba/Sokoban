@@ -51,7 +51,7 @@ extension TextViewPhoneNumberView {
             case .contacts:
                 let filterSymbols = [Character("-"), Character("("), Character(")"), Character("+")]
                 
-                self.init(placeHolder: placeHolder, filterSymbols: filterSymbols, firstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")], phoneNumberFormatter: PhoneNumberKitFormater())
+                self.init(placeHolder: placeHolder, filterSymbols: filterSymbols, firstDigitReplaceList: .typical, phoneNumberFormatter: PhoneNumberKitFormater())
                 
             default:
                 self.init(placeHolder: placeHolder)
@@ -61,13 +61,13 @@ extension TextViewPhoneNumberView {
                                  closeButton: .init(isEnabled: true, action: { [weak self] in self?.dismissKeyboard() }))
         }
         
-        convenience init(style: Style, placeHolder: PlaceHolder) {
+        convenience init(placeHolder: PlaceHolder, style: Style) {
             
             switch placeHolder {
-            case .phone:
+            case .phone, .contacts:
                 
                 let symbols: [Character] = ["-", "(", ")", "+"]
-                let replaceList: [Replace] = [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")]
+                let replaceList: [Replace] = .typical
                 
                 self.init(style: style, placeHolder: placeHolder, filterSymbols: symbols, firstDigitReplaceList: replaceList)
             
@@ -153,6 +153,18 @@ extension TextViewPhoneNumberView.ViewModel {
         let from: Character
         let to: String
     }
+}
+
+private extension Array where Element == TextViewPhoneNumberView.ViewModel.Replace {
+    
+    static let typical: Self = [.eightToSeven, .nineToPlusSeven, .armenian]
+}
+
+private extension TextViewPhoneNumberView.ViewModel.Replace {
+    
+    static let eightToSeven: Self = .init(from: "8", to: "7")
+    static let nineToPlusSeven: Self = .init(from: "9", to: "+7 9")
+    static let armenian: Self = .init(from: "3", to: "+374")
 }
 
 struct TextViewPhoneNumberView: UIViewRepresentable {
@@ -398,7 +410,9 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
             
             var phone = updatedValue.digits
             
-            if let firstDigitReplace = firstDigitReplace {
+            if let firstDigitReplace = firstDigitReplace,
+               updatedValue.count == 1,
+               !update.isEmpty {
                 
                 for replace in firstDigitReplace {
                     

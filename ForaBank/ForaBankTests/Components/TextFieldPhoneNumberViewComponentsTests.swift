@@ -81,7 +81,7 @@ class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let updatedString = TextViewPhoneNumberView.updateMasked(value: value, inRange: range, update: update, firstDigitReplace: phoneNumberFirstDigitReplaceList, phoneFormatter: phonePhormatter, filterSymbols: filterSymbols)
         
         // then
-        XCTAssertEqual(updatedString, "+7 925 279-86-13")
+        XCTAssertEqual(updatedString, "+89252798613")
     }
     
     func testUpdateFormatted_TextEntered() throws {
