@@ -272,14 +272,29 @@ extension Model {
               remote == .confirm else {
             return nil
         }
+        
+        if operation.parameters.first(where: { $0.id == Payments.Parameter.Identifier.sfpMessage.rawValue })?.value != nil {
+            
+            return [Payments.Parameter.Identifier.header.rawValue,
+                    Payments.Parameter.Identifier.sfpPhone.rawValue,
+                    Payments.Parameter.Identifier.sftRecipient.rawValue,
+                    Payments.Parameter.Identifier.sfpBank.rawValue,
+                    Payments.Parameter.Identifier.sfpAmount.rawValue,
+                    Payments.Parameter.Identifier.sfpMessage.rawValue,
+                    Payments.Parameter.Identifier.fee.rawValue,
+                    Payments.Parameter.Identifier.code.rawValue]
+            
+        } else {
 
-        return [Payments.Parameter.Identifier.header.rawValue,
-                Payments.Parameter.Identifier.sfpPhone.rawValue,
-                Payments.Parameter.Identifier.sftRecipient.rawValue,
-                Payments.Parameter.Identifier.sfpBank.rawValue,
-                Payments.Parameter.Identifier.sfpAmount.rawValue,
-                Payments.Parameter.Identifier.fee.rawValue,
-                Payments.Parameter.Identifier.code.rawValue]
+            return [Payments.Parameter.Identifier.header.rawValue,
+                    Payments.Parameter.Identifier.sfpPhone.rawValue,
+                    Payments.Parameter.Identifier.sftRecipient.rawValue,
+                    Payments.Parameter.Identifier.sfpBank.rawValue,
+                    Payments.Parameter.Identifier.sfpAmount.rawValue,
+                    Payments.Parameter.Identifier.fee.rawValue,
+                    Payments.Parameter.Identifier.code.rawValue]
+        }
+
     }
     
     // debug mock
