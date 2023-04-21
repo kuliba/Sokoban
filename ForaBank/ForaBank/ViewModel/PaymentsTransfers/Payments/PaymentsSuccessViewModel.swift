@@ -281,10 +281,16 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                             self.action.send(PaymentsSuccessAction.OptionButton.Details.Tap(viewModel: viewModel))
                             
                         default:
-                            
                             switch detailData.transferEnum {
-                            case .changeOutgoing, .returnOutgoing, .direct:
-                                let image = detailData.transferEnum == .direct ? Image("MigAvatar") : Image("Operation Type Contact Icon")
+                            case .direct:
+                                let image = Image("MigAvatar")
+                                self.logo = .init(title: "", image: image)
+                                let amount = detailData.amount
+                                    
+                                self.amount = model.amountFormatted(amount: amount, currencyCode: detailData.currencyAmount, style: .fraction)
+                                
+                            case .changeOutgoing, .returnOutgoing:
+                                let image = Image("Operation Type Contact Icon")
                                 self.logo = .init(title: "", image: image)
                                 let amount = detailData.payerAmount
                                     

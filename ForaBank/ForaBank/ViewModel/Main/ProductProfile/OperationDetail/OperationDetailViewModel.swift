@@ -360,7 +360,7 @@ private extension OperationDetailViewModel {
             actionButtons.append(changeButton)
         }
 
-        let amountFormatted = model.amountFormatted(amount: operationDetail.amount, currencyCode: operationDetail.currencyAmount, style: .normal) ?? String(operationDetail.amount)
+        let amountFormatted = model.amountFormatted(amount: operationDetail.amount, currencyCode: operationDetail.payerCurrency, style: .normal) ?? String(operationDetail.amount)
 
         if let transferNumber = operationDetail.transferReference {
             

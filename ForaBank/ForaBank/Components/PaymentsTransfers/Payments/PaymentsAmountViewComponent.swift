@@ -189,20 +189,23 @@ extension PaymentsAmountView {
                         }
                     }
                     
-                    self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Show(viewModel: .init(title: "Выберите валюту выдачи", description: nil, options: items, action: { [weak self] currency in
-                        
-                        if let currency = self?.model.currencyList.value.first(where: {$0.currencySymbol == currency.description}),
-                           let symbol = currency.currencySymbol {
+                    if items.count > 1 {
+                     
+                        self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Show(viewModel: .init(title: "Выберите валюту выдачи", description: nil, options: items, action: { [weak self] currency in
                             
-                            self?.deliveryCurrency?.currency = symbol
-                            
-                            if let source = self?.source as? Payments.ParameterAmount {
+                            if let currency = self?.model.currencyList.value.first(where: {$0.currencySymbol == currency.description}),
+                               let symbol = currency.currencySymbol {
                                 
-                                self?.update(source: parameterAmount.updated(value: source.value, selectedCurrency: Currency(description: currency.code)))
+                                self?.deliveryCurrency?.currency = symbol
+                                
+                                if let source = self?.source as? Payments.ParameterAmount {
+                                    
+                                    self?.update(source: parameterAmount.updated(value: source.value, selectedCurrency: Currency(description: currency.code)))
+                                }
+                                self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close())
                             }
-                            self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close())
-                        }
-                    })))
+                        })))
+                    }
                 })
             }
             

@@ -731,10 +731,10 @@ extension PaymentsSelectCountryView.SelectedItemView {
                     
                 case .placeholder:
                     
-                    Circle()
-                        .foregroundColor(.mainColorsGray)
-                        .frame(width: 32, height: 32)
-                        .padding(.leading, 4)
+                    Image.ic24Globe
+                        .resizable()
+                        .foregroundColor(.iconGray)
+                        .frame(width: 24, height: 24)
                     
                 }
             }

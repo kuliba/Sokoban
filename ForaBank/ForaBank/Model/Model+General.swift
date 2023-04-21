@@ -65,12 +65,17 @@ extension Model {
             
             switch result {
             case .success(let data):
-                self.images.value[payload.endpoint] = ImageData(data: data)
+                
                 action.send(ModelAction.General.DownloadImage.Response(endpoint: payload.endpoint, result: .success(data)))
+                
+                if let images = localAgent.load(type: [String: ImageData].self) {
+                    
+                    self.images.value = self.dictionaryImagesReduce(images: images, updateItems: [(payload.endpoint, ImageData(data: data))])
+                }
                 
                 do {
                     
-                    try self.localAgent.store(images.value, serial: nil)
+                    try self.localAgent.store(self.images.value, serial: nil)
                     
                 } catch {
                     

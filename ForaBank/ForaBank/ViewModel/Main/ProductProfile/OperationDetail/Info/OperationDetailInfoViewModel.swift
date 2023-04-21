@@ -244,9 +244,10 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Страна", iconType: .geo, value: countryName))
             }
             
-            if let amountCell = Self.amountCell(with: model, amount: statement.amount, currency: currency) {
+            if let amount = operation?.amount,
+               let foremattedAmount = self.model.amountFormatted(amount: amount, currencyCode: operation?.currencyAmount, style: .normal) {
                 
-                cells.append(amountCell)
+                cells.append(PropertyCellViewModel.init(title: "Сумма перевода", iconType: .balance, value: foremattedAmount))
             }
             
             if let fee = operation?.payerFee, let comissionCell = Self.commissionCell(with: model, fee: fee, currency: currency) {
@@ -959,12 +960,16 @@ extension OperationDetailInfoViewModel {
                 payeeNumberPhone,
                 payeeNameViewModel,
                 payeeBankViewModel,
-                amountViewModel,
                 commissionViewModel,
                 payerViewModel,
                 purposeViewModel,
                 dateViewModel
             ]
+            
+            if let formattedAmount = self.model.amountFormatted(amount: operation.amount, currencyCode: operation.currencyAmount, style: .normal) {
+                
+                directCells.insert((PropertyCellViewModel.init(title: "Сумма перевода", iconType: .balance, value: formattedAmount)), at: 3)
+            }
             
             if let payeeAmount = operation.payeeAmount,
                let payeeCurrency = operation.payeeCurrency,

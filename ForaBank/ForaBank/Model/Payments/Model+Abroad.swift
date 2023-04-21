@@ -279,6 +279,9 @@ extension Model {
                 ProductData.Filter.DebitRule(),
                 ProductData.Filter.RestrictedDepositRule(),
                 ProductData.Filter.CurrencyRule(Set(filterCurrencies)),
+                ProductData.Filter.CardActiveRule(),
+                ProductData.Filter.CardAdditionalNotOwnedRetrictedRule(),
+                ProductData.Filter.AccountActiveRule()
             ])
             
             let productCurriencies = productParameter.filter.rules
