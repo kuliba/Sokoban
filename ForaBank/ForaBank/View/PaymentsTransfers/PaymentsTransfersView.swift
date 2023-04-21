@@ -53,7 +53,6 @@ struct PaymentsTransfersView: View {
                     case .mobile(let model):
                         MobilePayView(viewModel: model)
                             .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
                     case let .country(countryData):
