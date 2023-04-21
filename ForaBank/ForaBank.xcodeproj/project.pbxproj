@@ -4245,9 +4245,9 @@
 				77FE6F2229ED65F400CE65EA /* PaymentsSelectDropDownComponentTests.swift */,
 				7758DFD129EB1DE200060761 /* PaymentsSelectViewComponentTests.swift */,
 				77A900F529EFBB060089379F /* PaymentsSelectBankViewComponentTests.swift */,
+				2A85DEAE29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift */,
 				2A4B62F129E6AE1200788F56 /* PaymentsCodeViewComponentTests */,
 				2AB5FEA729E6833E0055BE57 /* UIImage+TestHelpers.swift */,
-				2A85DEAE29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift */,
 			);
 			path = PaymentsOperation;
 			sourceTree = "<group>";

@@ -136,6 +136,15 @@ final class ReducerTests: XCTestCase {
         )
     }
     
+    func test_reduce_shouldChangeStateToPlaceholderFromNoFocus_onSetTextTo_emptyText() {
+        
+        assertReduce(
+            state: .noFocus("123456"),
+            with: .setTextTo(""),
+            returns: .placeholder("Placeholder")
+        )
+    }
+    
     func test_reduce_withTransformLimitingLength_shouldChangeStateToPlaceholderFromFocus_onSetTextTo_nilText() {
         
         let reducer = makeReducer(limit: 3)
