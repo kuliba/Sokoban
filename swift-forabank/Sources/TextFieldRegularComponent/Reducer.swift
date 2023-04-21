@@ -66,8 +66,11 @@ extension TextFieldRegularView.ViewModel.Reducer {
         case (.noFocus, .setTextTo(.none)):
             state = .placeholder(placeholderText)
             
+        case (.noFocus, .setTextTo(.some(""))):
+          state = .placeholder(placeholderText)
+
         case let (.noFocus, .setTextTo(.some(text))):
-            state = .noFocus(transform(text))
+           state = .noFocus(transform(text))
             
         case (.focus, .setTextTo(.none)):
             state = .placeholder(placeholderText)
