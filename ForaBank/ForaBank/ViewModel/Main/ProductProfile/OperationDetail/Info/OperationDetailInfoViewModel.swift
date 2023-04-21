@@ -364,17 +364,41 @@ final class OperationDetailInfoViewModel: Identifiable {
             cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: dateString))
             
         case .insideOther:
+
+            if let payeeProductId = [operation?.payeeCardId, operation?.payeeAccountId].compactMap({$0}).first {
+                
+                for i in model.products.value {
+                    
+                    if let productInfo = i.value.first(where: { $0.id == payeeProductId }) {
+                        
+                        if let description = productInfo.number?.suffix(4),
+                           let balance = productInfo.balance,
+                           let balanceFormatted = model.amountFormatted(amount: balance, currencyCode: productInfo.currency, style: .clipped), let icon = productInfo.smallDesign.image,
+                           let additional = productInfo.additionalField {
+                            
+                            cells.append(ProductCellViewModel(title: "Счет пополнения", icon: icon, name: productInfo.mainField, iconPaymentService: nil, balance: balanceFormatted, description: "· \(description) · \(additional)"))
+                        }
+                    }
+                }
+            }
             
+                        
             if let image = model.images.value[statement.md5hash]?.image {
                 
                 cells.append(BankCellViewModel(title: "Наименование операции", icon: image, name: statement.merchant))
             }
             
             cells.append(PropertyCellViewModel(title: "Категория операции", iconType: .nil, value: statement.groupName))
-
+            
             if let amountCell = Self.amountCell(with: model, amount: statement.amount, currency: currency) {
                 
                 cells.append(amountCell)
+            }
+
+            
+            if let fee = operation?.payerFee, let comissionCell = Self.commissionCell(with: model, fee: fee, currency: currency) {
+                
+                cells.append(comissionCell)
             }
 
             cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: dateString))
