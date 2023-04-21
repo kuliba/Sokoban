@@ -75,13 +75,13 @@ extension PaymentServiceData.AdditionalListData {
         fieldName == Payments.Parameter.Identifier.countryPhone.rawValue
     }
     
-    var isName: Bool {
+    var isGivenName: Bool {
         
         fieldName == Payments.Parameter.Identifier.countryGivenName.rawValue
     }
     
-    var isLastName: Bool {
+    var isFamilyName: Bool {
  
-        fieldName == Payments.Parameter.Identifier.countryMiddleName.rawValue
+        fieldName == Payments.Parameter.Identifier.countryFamilyName.rawValue
     }
 }

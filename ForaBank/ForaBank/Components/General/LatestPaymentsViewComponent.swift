@@ -202,13 +202,11 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
         case (.phone, let paymentData as PaymentGeneralData):
             
             let phoneNumberRu = paymentData.phoneNumberRu
-            let phoneFormatter = PhoneNumberKitFormater()
             
             self.avatar = model.avatar(for: phoneNumberRu) ?? icon
             self.topIcon = model.dictionaryBank(for: paymentData.bankId)?.svgImage.image
             self.description = model.fullName(for: phoneNumberRu)
-            ?? (paymentData.phoneNumber.isEmpty
-                ? name : phoneFormatter.format(phoneNumberRu))
+            
             
         case (.outside, let paymentData as PaymentServiceData):
             
@@ -238,7 +236,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
                 let phoneFormatter = PhoneNumberKitFormater()
                 
                 self.avatar = model.avatar(for: phoneNumberRu) ?? icon
-                self.description = model.fullName(for: phoneNumberRu) ?? phoneFormatter.format(phoneNumberRu)
+                self.description = model.fullName(for: phoneNumberRu)
                 
             } else {
                 
@@ -265,13 +263,19 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
 
 extension Model {
     
-    func fullName(for phoneNumber: String) -> String? {
+    func fullName(for phoneNumber: String) -> String {
+
+        let phoneFormatter = PhoneNumberKitFormater()
         
-        guard case .available = self.contactsPermissionStatus,
-              let contact = self.contact(for: phoneNumber)
-        else { return nil }
-        
-        return contact.fullName
+        if case .available = self.contactsPermissionStatus,
+           let contact = self.contact(for: phoneNumber) {
+            
+            return contact.fullName ?? phoneFormatter.partialFormatter(phoneNumber)
+
+        } else {
+            
+            return phoneFormatter.partialFormatter(phoneNumber)
+        }
     }
     
     typealias Avatar = LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar
@@ -329,10 +333,10 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             
             return (model.avatar(for: phone), model.fullName(for: phone), topIcon)
             
-        } else if let firstName = additionalList.first(where: { $0.isName } )?.fieldValue,
-                  let lastName = additionalList.first(where: { $0.isLastName } )?.fieldValue {
+        } else if let givenName = additionalList.first(where: { $0.isGivenName } )?.fieldValue,
+                  let familyName = additionalList.first(where: { $0.isFamilyName } )?.fieldValue {
             
-            let name = Self.firstLetter(name: firstName, lastName: lastName)
+            let name = "\(givenName) \(familyName)"
             return (nil, name, topIcon)
         }
         
