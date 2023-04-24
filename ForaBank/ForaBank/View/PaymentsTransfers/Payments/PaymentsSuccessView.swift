@@ -89,25 +89,12 @@ struct PaymentsSuccessView: View {
                         LogoIconView(viewModel: logoIconViewModel)
                     }
                     
-                    if let numberViewModel  =  viewModel.transferNumber {
+                    if let numberViewModel = viewModel.transferNumber {
                         
                         TransferNumber(viewModel: numberViewModel)
                     }
                     
                     Spacer()
-                }
-                
-                if let additionalButtons = viewModel.additioinalButtons {
-                    
-                    HStack(spacing: 0) {
-                        
-                        ForEach(additionalButtons, id: \.id) { button in
-                            
-                            ButtonSimpleView(viewModel: .init(title: button.title, style: .gray, action: button.action))
-                                .frame(height: 48)
-                                .padding(.horizontal, 20)
-                        }
-                    }
                 }
                 
                 Group {
@@ -126,26 +113,42 @@ struct PaymentsSuccessView: View {
                         }
                     }.padding(.bottom, 20)
                     
-                    if let repeatButton = viewModel.repeatButton {
+                    VStack(spacing: 8) {
                         
-                        ButtonSimpleView(viewModel: repeatButton)
-                            .frame(height: 48)
-                            .padding(.horizontal, 20)
-                    }
-                    
-                    VStack(spacing: 20) {
-                        
-                        ButtonSimpleView(viewModel: viewModel.actionButton)
-                            .frame(height: 48)
-                            .padding(.horizontal, 20)
-                        
-                        if let bottomIcon = viewModel.bottomIcon {
+                        if let additionalButtons = viewModel.additioinalButtons {
                             
-                            bottomIcon
-                                .renderingMode(.original)
+                            HStack(spacing: 8) {
+                                
+                                ForEach(additionalButtons, id: \.id) { button in
+                                    
+                                    ButtonSimpleView(viewModel: .init(title: button.title, style: .gray, action: button.action))
+                                        .frame(height: 48)
+                                }
+                            }
+                            .padding(.horizontal, 20)
                         }
                         
-                    }.padding(.bottom, bottomPadding)
+                        if let repeatButton = viewModel.repeatButton {
+                            
+                            ButtonSimpleView(viewModel: repeatButton)
+                                .frame(height: 48)
+                                .padding(.horizontal, 20)
+                        }
+                        
+                        VStack(spacing: 20) {
+                            
+                            ButtonSimpleView(viewModel: viewModel.actionButton)
+                                .frame(height: 48)
+                                .padding(.horizontal, 20)
+                            
+                            if let bottomIcon = viewModel.bottomIcon {
+                                
+                                bottomIcon
+                                    .renderingMode(.original)
+                            }
+                            
+                        }.padding(.bottom, bottomPadding)
+                    }
                 }
             }
             .background(Color.mainColorsWhite)
@@ -276,16 +279,29 @@ extension PaymentsSuccessView {
                     .foregroundColor(Color.black)
                     .padding(.leading, 6)
                 
-                
-                Button {
+                switch viewModel.state {
+                case let .copy(action: action):
+                    Button {
+                        
+                        action()
+                        
+                    } label: {
+                        
+                        Image.ic24Copy
+                            .resizable()
+                            .foregroundColor(.iconGray)
+                            .frame(width: 24, height: 24)
+                        
+                    }.padding(6)
                     
-                    viewModel.action()
+                case .check:
                     
-                } label: {
-                    
-                    Image("Operation Details Copy Button Icon")
-                    
-                }.padding(6)
+                    Image.ic24Check
+                        .resizable()
+                        .foregroundColor(.iconGray)
+                        .frame(width: 24, height: 24)
+                        .padding(6)
+                }
             }
             .padding(8)
             .background(Color(hex: "F6F6F7"))

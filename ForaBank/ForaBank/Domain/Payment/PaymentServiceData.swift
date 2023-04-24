@@ -63,6 +63,20 @@ extension PaymentServiceData {
     }
 }
 
+extension [PaymentServiceData.AdditionalListData] {
+    
+    var fullName: String? {
+
+      guard
+        let givenName = self.first(where: { $0.isGivenName } )?.fieldValue,
+        let middleName = self.first(where: { $0.isMiddleName } )?.fieldValue,
+        let familyName = self.first(where: { $0.isFamilyName } )?.fieldValue
+      else { return nil }
+
+        return [givenName, middleName, familyName].joined(separator: " ")
+    }
+}
+
 extension PaymentServiceData.AdditionalListData {
     
     var isTrnPickupPoint: Bool {
@@ -78,6 +92,11 @@ extension PaymentServiceData.AdditionalListData {
     var isGivenName: Bool {
         
         fieldName == Payments.Parameter.Identifier.countryGivenName.rawValue
+    }
+    
+    var isMiddleName: Bool {
+        
+        fieldName == Payments.Parameter.Identifier.countryMiddleName.rawValue
     }
     
     var isFamilyName: Bool {
