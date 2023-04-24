@@ -131,31 +131,77 @@ class MainViewModel: ObservableObject, Resetable {
 
                     bind(qrScannerModel)
                     fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
-                
-                case let payload as MainViewModelAction.Show.Requisites:
-                    self.fullScreenSheet = nil
-                    
-                    Task.detached(priority: .high) { [self] in
-                        
-                        do {
-                            
-                            let operationViewModel = try await PaymentsViewModel(source: .requisites(qrCode: payload.qrCode), model: model, closeAction: {})
-                            bind(operationViewModel)
-                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                                
-                                self.link = .payments(operationViewModel)
-                            }
-                        } catch {
-                            
-                            self.link = nil
-                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for transfer by requisites category with error: \(error.localizedDescription) ")
-                        }
-                    }
+                                    
                 default:
                     break
                 }
                 
             }.store(in: &bindings)
+
+        action
+            .compactMap({ $0 as? MainViewModelAction.Show.Requisites })
+            .map(\.qrCode)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [unowned self] qrCode in
+                
+                action.send(MainViewModelAction.Close.FullScreenSheet())
+                let paymentsViewModel = PaymentsViewModel(source: .requisites(qrCode: qrCode), model: model, closeAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link() )})
+                bind(paymentsViewModel)
+                
+                action.send(DelayWrappedAction(
+                    delayMS: 700,
+                    action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+                )
+                
+            }).store(in: &bindings)
+        
+        action
+            .compactMap({ $0 as? MainViewModelAction.Show.Payments })
+            .map(\.paymentsViewModel)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [unowned self] paymentsViewModel in
+                
+                link = .payments(paymentsViewModel)
+                
+            }).store(in: &bindings)
+        
+        action
+            .compactMap({ $0 as? MainViewModelAction.Show.Contacts })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [unowned self] _ in
+                
+                let contactsViewModel = ContactsViewModel(model, mode: .fastPayments(.contacts))
+                bind(contactsViewModel)
+                
+                sheet = .init(type: .byPhone(contactsViewModel))
+               
+            }).store(in: &bindings)
+        
+        action
+            .compactMap({ $0 as? MainViewModelAction.Show.Countries })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [unowned self] _ in
+                
+                let contactsViewModel = ContactsViewModel(model, mode: .abroad)
+                bind(contactsViewModel)
+                
+                sheet = .init(type: .byPhone(contactsViewModel))
+               
+            }).store(in: &bindings)
+        
+        action
+            .compactMap({ $0 as? DelayWrappedAction })
+            .flatMap({
+                
+                Just($0.action)
+                    .delay(for: .milliseconds($0.delayMS), scheduler: DispatchQueue.main)
+
+            })
+            .sink(receiveValue: { [weak self] in
+                
+                self?.action.send($0)
+                
+            }).store(in: &bindings)
         
         model.products
             .receive(on: DispatchQueue.main)
@@ -255,7 +301,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 link = .templates(templatesListviewModel)
                                 
                             case .byPhone:
-                                openContacts()
+                                self.action.send(MainViewModelAction.Show.Contacts())
          
                             case .byQr:
                                 
@@ -296,65 +342,32 @@ class MainViewModel: ObservableObject, Resetable {
                                 }))
                                 
                             case let payload as BannerActionMigTransfer:
-                                
-                                Task {
+                                let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
                                     
-                                    do {
-                                        
-                                        let paymentsViewModel = try await PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
-                                            
-                                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                        }
-                                        
-                                        await MainActor.run {
-
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                                
-                                                self.link = .init(.payments(paymentsViewModel))
-                                            }
-                                        }
-                                        
-                                    } catch {
-                                        
-                                        await MainActor.run {
-                                            
-                                            self.alert = .init(title: "Error", message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения.", primary: .init(type: .cancel, title: "Ok", action: {}))
-                                        }
-                                    }
+                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                                 }
+                                bind(paymentsViewModel)
+                                
+                                self.action.send(MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+
                                 
                             case let payload as BannerActionContactTransfer:
-                                
-                                Task {
+                                let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
                                     
-                                    do {
-                                        
-                                        let paymentsViewModel = try await PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
-                                            
-                                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                            
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
-                                                
-                                                self?.openCountries()
-                                            }
-                                        }
-                                        
-                                        await MainActor.run {
-
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                                
-                                                self.link = .init(.payments(paymentsViewModel))
-                                            }
-                                        }
-                                        
-                                    } catch {
-                                        
-                                        await MainActor.run {
-                                            
-                                            self.alert = .init(title: "Error", message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения.", primary: .init(type: .cancel, title: "Ok", action: {}))
-                                        }
-                                    }
+                                    guard let self else { return }
+                                    
+                                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                    self.action.send(DelayWrappedAction(
+                                        delayMS: 300,
+                                        action: MainViewModelAction.Show.Countries())
+                                    )
                                 }
+                                bind(paymentsViewModel)
+                                
+                                self.action.send(DelayWrappedAction(
+                                    delayMS: 300,
+                                    action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+                                )
                                 
                             default: break
                             }
@@ -548,31 +561,17 @@ class MainViewModel: ObservableObject, Resetable {
                         }
                         
                     case .c2bSubscribeURL(let url):
-
                         self.action.send(MainViewModelAction.Close.FullScreenSheet())
-                        Task.detached(priority: .high) { [self] in
-                            
-                            do {
-                                
-                                let operationViewModel = try await PaymentsViewModel(source: .c2bSubscribe(url), model: model, closeAction: {})
-                                bind(operationViewModel)
-                                
-                                await MainActor.run {
-                                    
-                                    self.link = .payments(operationViewModel)
-                                }
-                                
-                            } catch {
-                                
-                                await MainActor.run {
-                                    
-                                    self.alert = .init(title: "Ошибка привязки счета", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
-                                }
-                                
-                                LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for c2b subscribtion with error: \(error.localizedDescription) ")
-                            }
-                        }
+                        let paymentsViewModel = PaymentsViewModel(source: .c2bSubscribe(url), model: model, closeAction: { [weak self] in
+                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                        })
+                        bind(paymentsViewModel)
                         
+                        self.action.send(DelayWrappedAction(
+                            delayMS: 700,
+                            action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+                        )
+
                     case .url(_):
                         
                         self.action.send(MainViewModelAction.Close.FullScreenSheet())
@@ -587,31 +586,18 @@ class MainViewModel: ObservableObject, Resetable {
                                 
                             }, requisitsAction: { [weak self] in
                                 
-                                self?.fullScreenSheet = nil
-                                Task.detached(priority: .high) { [self] in
-                                    
-                                    do {
-                                        guard let model = self?.model else {
-                                            return
-                                        }
-                                        
-                                        let paymentsViewModel = try await PaymentsViewModel(model, service: .requisites, closeAction: { [weak self] in
-                                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                        })
-                                        
-                                        self?.bind(paymentsViewModel)
-                                        await MainActor.run {
-                                            
-                                            self?.link = .init(.payments(paymentsViewModel))
-                                        }
-                                        
-                                    } catch {
-                                        
-                                        //TODO: show alert?
-                                        LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for transfer by requisites category with error: \(error.localizedDescription) ")
-                                    }
-                                }
-
+                                guard let self else { return }
+                                
+                                self.action.send(MainViewModelAction.Close.FullScreenSheet())
+                                let paymentsViewModel = PaymentsViewModel(model, service: .requisites, closeAction: { [weak self] in
+                                    self?.action.send(MainViewModelAction.Close.Link())
+                                })
+                                self.bind(paymentsViewModel)
+                                
+                                self.action.send(DelayWrappedAction(
+                                    delayMS: 700,
+                                    action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+                                )
                             })
                             self.link = .failedView(failedView)
                         }
@@ -630,30 +616,18 @@ class MainViewModel: ObservableObject, Resetable {
                                 
                             }, requisitsAction: { [weak self] in
                                 
-                                self?.fullScreenSheet = nil
-                                Task.detached(priority: .high) { [self] in
-                                    
-                                    do {
-                                        guard let model = self?.model else {
-                                            return
-                                        }
-                                        
-                                        let paymentsViewModel = try await PaymentsViewModel(model, service: .requisites, closeAction: { [weak self] in
-                                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                        })
-                                        self?.bind(paymentsViewModel)
-                                        await MainActor.run {
-                                            
-                                            self?.link = .init(.payments(paymentsViewModel))
-                                        }
-                                        
-                                    } catch {
-                                        
-                                        //TODO: show alert?
-                                        LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for transfer by requisites category with error: \(error.localizedDescription) ")
-                                    }
-                                }
-
+                                guard let self else { return }
+                                
+                                self.action.send(MainViewModelAction.Close.FullScreenSheet())
+                                let paymentsViewModel = PaymentsViewModel(model, service: .requisites, closeAction: { [weak self] in
+                                    self?.action.send(MainViewModelAction.Close.Link())
+                                })
+                                self.bind(paymentsViewModel)
+                                
+                                self.action.send(DelayWrappedAction(
+                                    delayMS: 700,
+                                    action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+                                )
                             })
                             self.link = .failedView(failedView)
                         }
@@ -716,7 +690,6 @@ class MainViewModel: ObservableObject, Resetable {
                 
             }.store(in: &bindings)
     }
-    
 
     private func bind(_ myProductsViewModel: MyProductsViewModel) {
         
@@ -776,95 +749,48 @@ class MainViewModel: ObservableObject, Resetable {
     private func bind(_ viewModel: ContactsViewModel) {
         
         viewModel.action
+            .compactMap({ $0 as? ContactsViewModelAction.PaymentRequested })
+            .map(\.source)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [unowned self] payloadSource in
                 
-                switch action {
-                case let payload as ContactsViewModelAction.PaymentRequested:
+                self.action.send(MainViewModelAction.Close.Sheet())
+                
+                let source: Payments.Operation.Source? = {
                     
-                    self.action.send(MainViewModelAction.Close.Sheet())
-                    
-                    switch payload.source { 
+                    //TODO: move all this logic to payments with source side
+                    switch payloadSource {
                     case let .latestPayment(latestPaymentId):
                         guard let latestPayment = model.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData else {
-                            return
+                            return nil
                         }
+                        return .sfp(phone: latestPayment.phoneNumber, bankId: latestPayment.bankId)
                         
-                        Task {
-                            
-                            do {
-                                
-                                let paymentsViewModel = try await PaymentsViewModel(source: .sfp(phone: latestPayment.phoneNumber, bankId: latestPayment.bankId), model: model) { [weak self] in
-                                    
-                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                    
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
-                                        
-                                        self?.openContacts()
-                                    }
-                                }
-                                
-                                await MainActor.run {
-
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                        
-                                        self.link = .init(.payments(paymentsViewModel))
-                                    }
-                                }
-                                
-                            } catch {
-                                
-                                await MainActor.run {
-                                    
-                                    self.alert = .init(title: "Error", message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения.", primary: .init(type: .cancel, title: "Ok", action: {}))
-                                }
-                                
-                                LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for SFP source with phone: \(latestPayment.phoneNumber) and bankId: \(latestPayment.bankId)  with error: \(error.localizedDescription)")
-                            }
-                        }
 
                     default:
-                        
-                        Task {
-                            
-                            do {
-                                
-                                let paymentsViewModel = try await PaymentsViewModel(source: payload.source, model: model) { [weak self] in
-                                    
-                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                    
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
-                                        
-                                        self?.openContacts()
-                                    }
-                                }
-                                
-                                await MainActor.run {
-
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                        
-                                        self.link = .init(.payments(paymentsViewModel))
-                                    }
-                                }
-                                
-                            } catch {
-                                
-                                await MainActor.run {
-                                    
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                        
-                                        self.alert = .init(title: "Error", message: "Unable create PaymentsViewModel for source: \(payload.source) with error: \(error.localizedDescription)", primary: .init(type: .cancel, title: "Ok", action: {}))
-                                    }
-                                }
-                                
-                                LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for source: \(payload.source) with error: \(error.localizedDescription)")
-                            }
-                        }
+                        return payloadSource
                     }
                     
-                default:
-                    break
+                }()
+                
+                guard let source else { return }
+                
+                let paymentsViewModel = PaymentsViewModel(source: source, model: model) { [weak self] in
+                    
+                    guard let self else { return }
+                    
+                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                    self.action.send(DelayWrappedAction(
+                        delayMS: 300,
+                        action: MainViewModelAction.Show.Contacts())
+                    )
                 }
+                bind(paymentsViewModel)
+                
+                self.action.send(DelayWrappedAction(
+                    delayMS: 300,
+                    action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+                )
                 
             }.store(in: &bindings)
     }
@@ -891,20 +817,6 @@ class MainViewModel: ObservableObject, Resetable {
     private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
         
         [.init(icon: .ic24Bell, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Messages())})]
-    }
-    
-    private func openContacts() {
-        
-        let contactsViewModel = ContactsViewModel(model, mode: .fastPayments(.contacts))
-        sheet = .init(type: .byPhone(contactsViewModel))
-        bind(contactsViewModel)
-    }
-    
-    private func openCountries() {
-        
-        let contactsViewModel = ContactsViewModel(model, mode: .abroad)
-        sheet = .init(type: .byPhone(contactsViewModel))
-        bind(contactsViewModel)
     }
 }
 
@@ -997,6 +909,8 @@ extension MainViewModel {
     }
 }
 
+//MARK: - Action
+
 enum MainViewModelAction {
     
     enum ButtonTapped {
@@ -1038,7 +952,15 @@ enum MainViewModelAction {
             
             let qrCode: QRCode
         }
+        
+        struct Payments: Action {
+            
+            let paymentsViewModel: PaymentsViewModel
+        }
+        
+        struct Contacts: Action {}
+        
+        struct Countries: Action {}
     }
-    
 }
 

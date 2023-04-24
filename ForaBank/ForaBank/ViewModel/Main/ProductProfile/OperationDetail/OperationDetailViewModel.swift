@@ -136,26 +136,11 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                     }
                     
                 case let payload as OperationDetailViewModelAction.ShowChangeReturn:
-                    
-                    Task {
+                    let paymentsViewModel = PaymentsViewModel(source: payload.source, model: model) { [weak self] in
                         
-                        do {
-                            
-                            let paymentsViewModel = try await PaymentsViewModel(source: payload.source, model: model) { [weak self] in
-                                
-                                self?.action.send(OperationDetailViewModelAction.CloseFullScreenSheet())
-                            }
-                            
-                            await MainActor.run {
-                                
-                                self.fullScreenSheet = .init(type: .payments(paymentsViewModel))
-                            }
-                            
-                        } catch {
-                            
-                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for Change/Return abroad source with with error: \(error.localizedDescription)")
-                        }
+                        self?.action.send(OperationDetailViewModelAction.CloseFullScreenSheet())
                     }
+                    self.fullScreenSheet = .init(type: .payments(paymentsViewModel))
 
                 case _ as OperationDetailViewModelAction.CloseSheet:
                     if #available(iOS 14.5, *) {

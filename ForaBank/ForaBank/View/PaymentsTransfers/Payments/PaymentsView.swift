@@ -16,6 +16,11 @@ struct PaymentsView: View {
         ZStack {
             
             switch viewModel.content {
+            case .loading:
+                //TODO: load image from StyleGuide
+                SpinnerRefreshView(icon: Image("Logo Fora Bank"))
+                    .zIndex(0)
+                
             case let .service(serviceViewModel):
                 PaymentsServiceView(viewModel: serviceViewModel)
                     .zIndex(0)
@@ -34,12 +39,14 @@ struct PaymentsView: View {
             }
             
             Color.clear
+                .zIndex(2)
                 .fullScreenCover(item: $viewModel.successViewModel, content: { successViewModel in
                     
                     PaymentsSuccessView(viewModel: successViewModel)
                 })
             
             Color.clear
+                .zIndex(3)
                 .alert(item: $viewModel.alert, content: { alertViewModel in
                     
                     Alert(with: alertViewModel)
@@ -63,5 +70,5 @@ struct PaymentsView_Previews: PreviewProvider {
 
 extension PaymentsViewModel {
     
-    static let sample = PaymentsViewModel(content: .service(.init(header: .init(title: "test"), content: [], link: nil, model: .emptyMock)), category: .general, model: .emptyMock, closeAction: {})
+    static let sample = PaymentsViewModel(content: .service(.init(header: .init(title: "test"), content: [], link: nil, model: .emptyMock)), model: .emptyMock, closeAction: {})
 }

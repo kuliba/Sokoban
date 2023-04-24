@@ -28,24 +28,19 @@ struct SpinnerRefreshView: View {
 
     var body: some View {
 
-        ZStack {
-
-            icon
-                .renderingMode(.original)
-                .resizable()
-                .frame(
-                    width: iconSize.width,
-                    height: iconSize.height)
-        }
-        .rotation3DEffect(
-            .degrees(degrees), axis: (x: 0, y: 1, z: 0), anchor: .center, perspective: 0.1)
-        .onAppear {
-            
-            withAnimation {
-                degrees += 180
+        icon
+            .renderingMode(.original)
+            .resizable()
+            .frame(width: iconSize.width, height: iconSize.height)
+            .rotation3DEffect(
+                .degrees(degrees), axis: (x: 0, y: 1, z: 0), anchor: .center, perspective: 0.1)
+            .animation(.easeInOut(duration: duration).repeatForever(), value: degrees)
+            .onAppear {
+                
+                withAnimation {
+                    degrees += 180
+                }
             }
-        }
-        .animation(.easeInOut(duration: duration).repeatForever(), value: degrees)
     }
 }
 
