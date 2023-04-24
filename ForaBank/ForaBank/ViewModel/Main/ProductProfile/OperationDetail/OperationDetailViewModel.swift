@@ -190,6 +190,18 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         var featureButtonsUpdated = [FeatureButtonViewModel]()
         
         switch productStatement.paymentDetailType {
+        case .direct:
+            // TODO: revert after templates fix
+            // if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
+            //     featureButtonsUpdated.append(templateButtonViewModel)
+            // }
+            if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
+                featureButtonsUpdated.append(documentButtonViewModel)
+            }
+            if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
+                featureButtonsUpdated.append(infoButtonViewModel)
+            }
+            
         case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .insideDeposit, .insideOther, .taxes:
             if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
                 featureButtonsUpdated.append(templateButtonViewModel)
@@ -200,6 +212,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
             if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
                 featureButtonsUpdated.append(infoButtonViewModel)
             }
+            
         case .contactAddressless:
             // TODO: revert after templates fix
             // if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
