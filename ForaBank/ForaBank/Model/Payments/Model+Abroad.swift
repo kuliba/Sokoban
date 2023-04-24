@@ -222,7 +222,7 @@ extension Model {
             
             guard let productParameter = parameters.first(where: { $0.id == Payments.Parameter.Identifier.product.rawValue}) as? Payments.ParameterProduct,
                   let filterCurriencies = parameters.first(where: { $0.id == Payments.Parameter.Identifier.countryCurrencyFilter.rawValue }) else {
-                return  nil
+                return amountParameter.update(currencySymbol: currencySymbol, maxAmount: maxAmount)
             }
             
             if let splittedCurrency = filterCurriencies.value?.components(separatedBy: ";"),
