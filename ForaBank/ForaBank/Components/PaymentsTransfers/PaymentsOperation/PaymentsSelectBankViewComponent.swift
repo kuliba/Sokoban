@@ -488,7 +488,8 @@ struct PaymentsSelectBankView: View {
                         viewModel.action.send(PaymentsParameterViewModelAction.SelectBank.List.Toggle())
                     }
                 }
-                .padding(.horizontal, 12)
+                .padding(.leading, 12)
+                .padding(.trailing, 16)
                 .padding(.vertical, 13)
                 
             case let .expanded(expandedViewModel):

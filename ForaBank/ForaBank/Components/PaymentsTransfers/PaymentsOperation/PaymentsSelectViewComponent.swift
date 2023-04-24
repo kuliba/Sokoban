@@ -424,7 +424,7 @@ struct PaymentsSelectView: View {
                 }
             }
         }
-        .padding(.horizontal, 12)
+        .padding(.horizontal, 16)
         .padding(.vertical, 13)
     }
 }

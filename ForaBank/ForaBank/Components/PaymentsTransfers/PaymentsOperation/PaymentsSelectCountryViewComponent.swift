@@ -488,7 +488,8 @@ struct PaymentsSelectCountryView: View {
             
             SelectedItemView(viewModel: viewModel.selectedItem, isExpanded: viewModel.isExpanded, isEditable: viewModel.isEditable, warning: viewModel.warning)
                 .allowsHitTesting(viewModel.isEditable)
-                .padding(.horizontal, 12)
+                .padding(.leading, 12)
+                .padding(.trailing, 16)
             
             if let countriesViewModel = viewModel.list {
                 
@@ -621,17 +622,19 @@ struct PaymentsSelectCountryView: View {
                     IconView(viewModel: viewModel.icon)
                         .frame(width: 32, height: 32)
                     
-                    VStack(alignment: .leading, spacing: 0) {
+                    VStack(alignment: .leading, spacing: 4) {
                         
                         if let title = viewModel.title {
                             
                             Text(title)
                                 .font(.textBodyMR14180())
                                 .foregroundColor(.textPlaceholder)
+                                .frame(height: 18)
                             
                         } else {
                             
                             EmptyView()
+                                .frame(height: 18)
                         }
                         
                         HStack {
@@ -639,6 +642,7 @@ struct PaymentsSelectCountryView: View {
                             TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16), textColor: .textSecondary)
                                 .font(.textH4M16240())
                                 .foregroundColor(.textSecondary)
+                                .frame(height: 24)
                             
                         }
                         
