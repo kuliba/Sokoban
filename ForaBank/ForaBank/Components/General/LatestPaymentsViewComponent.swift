@@ -333,11 +333,9 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             
             return (model.avatar(for: phone), model.fullName(for: phone), topIcon)
             
-        } else if let givenName = additionalList.first(where: { $0.isGivenName } )?.fieldValue,
-                  let familyName = additionalList.first(where: { $0.isFamilyName } )?.fieldValue {
+        } else if let fullName = additionalList.fullName {
             
-            let name = "\(givenName) \(familyName)"
-            return (nil, name, topIcon)
+            return (nil, fullName, topIcon)
         }
         
         return (nil, nil, nil)

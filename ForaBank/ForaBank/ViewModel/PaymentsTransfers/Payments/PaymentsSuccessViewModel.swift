@@ -20,9 +20,9 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
     @Published var isLinkActive: Bool = false
     @Published var fullScreenSheet: FullScreenSheet?
     @Published var alert: Alert.ViewModel?
-    
+    @Published var transferNumber: TransferNumber?
+
     var amount: String?
-    var transferNumber: TransferNumber?
     var logo: LogoIconViewModel?
 
     let id = UUID()
@@ -306,10 +306,10 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                                         self.amount = model.amountFormatted(amount: amount, currencyCode: detailData.currencyAmount, style: .fraction)
                                     }
                                     
-                                    self.transferNumber = .init(title: number, action: {
+                                    self.transferNumber = .init(title: number, state: .copy(action: { [weak self] in
                                         
-                                        UIPasteboard.general.string = number
-                                    })
+                                        self?.action.send(PaymentsSuccessAction.TransferNumber.Copy(number: number))
+                                    }))
                                     
                                     var additioinalButtons: [AdditionalButton] = []
                                     
@@ -367,6 +367,51 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 }
                 
             }.store(in: &bindings)
+        
+        action
+            .compactMap({ $0 as? DelayWrappedAction })
+            .flatMap({
+                
+                Just($0.action)
+                    .delay(for: .milliseconds($0.delayMS), scheduler: DispatchQueue.main)
+
+            })
+            .sink(receiveValue: { [weak self] in
+                
+                self?.action.send($0)
+                
+            }).store(in: &bindings)
+        
+        action
+            .compactMap({ $0 as? PaymentsSuccessAction.TransferNumber.Copy })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [unowned self] payload in
+                
+                UIPasteboard.general.string = payload.number
+                
+                withAnimation {
+                    
+                    self.transferNumber = .init(title: payload.number, state: .check)
+                }
+
+                self.action.send(DelayWrappedAction(delayMS: 2000, action: PaymentsSuccessAction.TransferNumber.Check(number: payload.number)))
+                
+            }).store(in: &bindings)
+        
+        action
+            .compactMap({ $0 as? PaymentsSuccessAction.TransferNumber.Check })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [unowned self] payload in
+                
+                withAnimation {
+                    
+                    self.transferNumber = .init(title: payload.number, state: .copy(action: { [weak self] in
+                        
+                        self?.action.send(PaymentsSuccessAction.TransferNumber.Copy(number: payload.number))
+                    }))
+                }
+                
+            }).store(in: &bindings)
         
         action
             .receive(on: DispatchQueue.main)
@@ -429,7 +474,13 @@ extension PaymentsSuccessViewModel {
     struct TransferNumber {
         
         let title: String
-        let action: () -> Void
+        let state: State
+        
+        enum State {
+            
+            case copy(action: () -> Void)
+            case check
+        }
     }
     
     struct FullScreenSheet: Identifiable, Equatable {
@@ -899,6 +950,19 @@ enum PaymentsSuccessAction {
                 
                 let viewModel: OperationDetailInfoViewModel
             }
+        }
+    }
+    
+    enum TransferNumber {
+     
+        struct Copy: Action {
+            
+            let number: String
+        }
+        
+        struct Check: Action {
+            
+            let number: String
         }
     }
 }
