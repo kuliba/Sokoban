@@ -155,7 +155,7 @@ extension TextViewPhoneNumberView.ViewModel {
     }
 }
 
-private extension Array where Element == TextViewPhoneNumberView.ViewModel.Replace {
+extension Array where Element == TextViewPhoneNumberView.ViewModel.Replace {
     
     static let typical: Self = [.eightToSeven, .nineToPlusSeven, .armenian]
 }
@@ -410,19 +410,14 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
             
             var phone = updatedValue.digits
             
-            if let firstDigitReplace = firstDigitReplace,
-               updatedValue.count == 1,
-               !update.isEmpty {
+            for replace in firstDigitReplace ?? [] {
                 
-                for replace in firstDigitReplace {
+                if phone == String(replace.from) {
                     
-                    if phone.digits.first == replace.from {
-                        
-                        phone.replaceSubrange(...phone.startIndex, with: replace.to)
-                    }
+                    phone.replaceSubrange(...phone.startIndex, with: replace.to)
                 }
             }
-            
+
             let limit = limit ?? phone.count
             let limitedPhone = String(phone.prefix(limit))
             let phoneFormatted = phoneFormatter.partialFormatter("+\(limitedPhone)")

@@ -63,7 +63,7 @@ extension PaymentsInputPhoneView {
             let phone = parameterInput.parameter.value
             let placeholder = parameterInput.placeholder ?? parameterInput.title
             
-            let textView = TextViewPhoneNumberView.ViewModel(style: .payments, text: phone, placeHolder: .text(placeholder), filterSymbols: [Character("-"), Character("("), Character(")"), Character("+")], firstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")], phoneNumberFormatter: PhoneNumberKitFormater())
+            let textView = TextViewPhoneNumberView.ViewModel(style: .payments, text: phone, placeHolder: .text(placeholder), filterSymbols: ["-", "(", ")", "+"], firstDigitReplaceList: .typical, phoneNumberFormatter: PhoneNumberKitFormater())
             
             self.init(textView: textView, phone: phone, title: title, model: model, source: parameterInput)
             
