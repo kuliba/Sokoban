@@ -323,7 +323,7 @@ private extension OperationDetailViewModel {
     func templateName(with productStatement: ProductStatementData, operationDetail: OperationDetailData) -> String? {
         
         switch productStatement.paymentDetailType {
-        case .betweenTheir, .insideBank, .housingAndCommunalService, .internet, .direct, .sfp, .contactAddressless:
+        case .betweenTheir, .insideBank, .housingAndCommunalService, .internet, .direct, .sfp, .contactAddressless, .taxes:
             return productStatement.merchant
             
         case .mobile :
