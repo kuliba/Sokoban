@@ -244,14 +244,14 @@ class CustomPopUpWithRateView: UIViewController {
                         vc.confurmVCModel = viewModel
                         vc.confurmVCModel?.type = .card2card
                         vc.printFormType = "closeDeposit"
-                        
+                        vc.modalPresentationStyle = .fullScreen
                         self.present(vc, animated: true, completion: nil)
                         
                     case .failure(let error):
+                        self.dismissActivity()
                         self.showAlert(with: "Ошибка", and: error)
                     }
                 default:
-                    self.dismissActivity()
                     break
                 }
                 
