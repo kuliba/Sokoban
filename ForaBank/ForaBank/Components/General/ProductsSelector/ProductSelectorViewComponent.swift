@@ -477,7 +477,7 @@ extension ProductSelectorView {
         private var chevron: some View {
             
             let foregroundColor: Color = viewModel.isUserInteractionEnabled ? .mainColorsGray : .blurGray20
-            let degrees: Double = viewModel.isUserInteractionEnabled && viewModel.isCollapsed ? -90 : 0
+            let degrees: Double = viewModel.isUserInteractionEnabled && viewModel.isCollapsed ? 0 : -180
             
             Image.ic24ChevronDown
                 .renderingMode(.template)
