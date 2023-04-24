@@ -201,9 +201,10 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                 featureButtonsUpdated.append(infoButtonViewModel)
             }
         case .contactAddressless:
-            if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
-                featureButtonsUpdated.append(templateButtonViewModel)
-            }
+            // TODO: revert after templates fix
+            // if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
+            //     featureButtonsUpdated.append(templateButtonViewModel)
+            // }
             if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
                 featureButtonsUpdated.append(documentButtonViewModel)
             }
