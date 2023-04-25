@@ -179,7 +179,7 @@ extension OperationDetailViewModel {
                     operationViewModel = operationViewModel.updated(with: payeeViewModel)
                 }
                 
-                if let feeViewModel = OperationDetailViewModel.FeeViewModel(with: operation, currencyCode: currencyCode)  {
+                if let feeViewModel = OperationDetailViewModel.FeeViewModel(with: operation, currencyCode: operation.payerCurrency)  {
                     operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
                 
