@@ -88,6 +88,8 @@ extension PaymentsInputView {
         override func update(source: PaymentsParameterRepresentable) {
             super.update(source: source)
             
+            textField.setText(to: source.value)
+            
             withAnimation {
                 
                 if let hint = parameterInput?.hint  {

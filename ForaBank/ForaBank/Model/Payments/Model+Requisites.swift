@@ -216,7 +216,7 @@ extension Model {
                     parameters.append(kppParameter)
                     
                     //MARK: Company Name Parameter
-                    let companyNameValue = options.first?.name
+                    let companyNameValue = options.first?.subname
                     let companyNameParameter = Payments.ParameterInput(.init(id: companyNameParameterId, value: companyNameValue), icon: nil, title: "Наименование получателя", validator: companyNameValidator, limitator: .init(limit: 160))
                     parameters.append(companyNameParameter)
                     
@@ -392,7 +392,7 @@ extension Model {
             
             guard let parameterKpp = try? parameters.parameter(forIdentifier: .requisitsKpp, as: Payments.ParameterSelect.self),
                   let parameterCompanyNameHelper = try? parameters.parameter(forIdentifier: .requisitsCompanyNameHelper),
-                  let companyName = parameterKpp.options.first(where: { $0.id == parameterKpp.value })?.name else {
+                  let companyName = parameterKpp.options.first(where: { $0.id == parameterKpp.value })?.subname else {
                 return nil
             }
             
@@ -412,7 +412,7 @@ extension Model {
         case Payments.Parameter.Identifier.requisitsCompanyNameHelper.rawValue:
             guard let parameterKpp = try? parameters.parameter(forIdentifier: .requisitsKpp, as: Payments.ParameterSelect.self),
                   let parameterCompanyNameHelper = try? parameters.parameter(forIdentifier: .requisitsCompanyNameHelper),
-                  let companyName = parameterKpp.options.first(where: { $0.id == parameterKpp.value })?.name else {
+                  let companyName = parameterKpp.options.first(where: { $0.id == parameterKpp.value })?.subname else {
                 return nil
             }
             
