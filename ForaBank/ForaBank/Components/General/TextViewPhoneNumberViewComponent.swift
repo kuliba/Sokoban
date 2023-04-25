@@ -51,7 +51,7 @@ extension TextViewPhoneNumberView {
             case .contacts:
                 let filterSymbols = [Character("-"), Character("("), Character(")"), Character("+")]
                 
-                self.init(placeHolder: placeHolder, filterSymbols: filterSymbols, firstDigitReplaceList: .typical, phoneNumberFormatter: PhoneNumberKitFormater())
+                self.init(placeHolder: placeHolder, filterSymbols: filterSymbols, firstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")], phoneNumberFormatter: PhoneNumberKitFormater())
                 
             default:
                 self.init(placeHolder: placeHolder)
@@ -61,13 +61,13 @@ extension TextViewPhoneNumberView {
                                  closeButton: .init(isEnabled: true, action: { [weak self] in self?.dismissKeyboard() }))
         }
         
-        convenience init(placeHolder: PlaceHolder, style: Style) {
+        convenience init(style: Style, placeHolder: PlaceHolder) {
             
             switch placeHolder {
-            case .phone, .contacts:
+            case .phone:
                 
                 let symbols: [Character] = ["-", "(", ")", "+"]
-                let replaceList: [Replace] = .typical
+                let replaceList: [Replace] = [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")]
                 
                 self.init(style: style, placeHolder: placeHolder, filterSymbols: symbols, firstDigitReplaceList: replaceList)
             
@@ -153,18 +153,6 @@ extension TextViewPhoneNumberView.ViewModel {
         let from: Character
         let to: String
     }
-}
-
-extension Array where Element == TextViewPhoneNumberView.ViewModel.Replace {
-    
-    static let typical: Self = [.eightToSeven, .nineToPlusSeven, .armenian]
-}
-
-private extension TextViewPhoneNumberView.ViewModel.Replace {
-    
-    static let eightToSeven: Self = .init(from: "8", to: "7")
-    static let nineToPlusSeven: Self = .init(from: "9", to: "+7 9")
-    static let armenian: Self = .init(from: "3", to: "+374")
 }
 
 struct TextViewPhoneNumberView: UIViewRepresentable {
@@ -410,14 +398,17 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
             
             var phone = updatedValue.digits
             
-            for replace in firstDigitReplace ?? [] {
+            if let firstDigitReplace = firstDigitReplace {
                 
-                if phone == String(replace.from) {
+                for replace in firstDigitReplace {
                     
-                    phone.replaceSubrange(...phone.startIndex, with: replace.to)
+                    if phone.digits.first == replace.from {
+                        
+                        phone.replaceSubrange(...phone.startIndex, with: replace.to)
+                    }
                 }
             }
-
+            
             let limit = limit ?? phone.count
             let limitedPhone = String(phone.prefix(limit))
             let phoneFormatted = phoneFormatter.partialFormatter("+\(limitedPhone)")
