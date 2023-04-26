@@ -84,11 +84,7 @@ extension PaymentsAmountView {
                            let symbol = currency.currencySymbol {
                             
                             self?.deliveryCurrency?.currency = symbol
-                            
-                            if let source = self?.source as? Payments.ParameterAmount {
-                                
-                                self?.update(source: parameterAmount.updated(value: source.value, selectedCurrency: Currency(description: currency.code)))
-                            }
+                            self?.bind()
                             self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close())
                         }
                     })))
@@ -140,18 +136,6 @@ extension PaymentsAmountView {
                 self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
             }
         }
-
-        func bind(textField: TextFieldFormatableView.ViewModel) {
-            
-            textField.$text
-                .dropFirst()
-                .receive(on: DispatchQueue.main)
-                .sink {[unowned self] _ in
-                    
-                    update(value: String(textField.value))
-                    
-                }.store(in: &bindings)
-        }
         
         override var isValid: Bool {
             
@@ -197,11 +181,7 @@ extension PaymentsAmountView {
                                let symbol = currency.currencySymbol {
                                 
                                 self?.deliveryCurrency?.currency = symbol
-                                
-                                if let source = self?.source as? Payments.ParameterAmount {
-                                    
-                                    self?.update(source: parameterAmount.updated(value: source.value, selectedCurrency: Currency(description: currency.code)))
-                                }
+                                self?.bind()
                                 self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close())
                             }
                         })))
@@ -217,6 +197,53 @@ extension PaymentsAmountView {
                     return {}
                 })
             }
+        }
+        
+        func bind() {
+            
+            deliveryCurrency?.$currency
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] currency in
+                    
+                    guard let source = self.source as? Payments.ParameterAmount,
+                          source.currencySymbol != self.deliveryCurrency?.currency else {
+                        return
+                    }
+                    
+                    guard let currencyList = source.deliveryCurrency?.currenciesList?.compactMap({ $0.description }) else {
+                        return
+                    }
+                    
+                    let filteredCurrency = self.model.currencyList.value.filter { currency in
+                        
+                        currencyList.contains(currency.code)
+                    }
+                    
+                    if let currency = filteredCurrency.first(where: { $0.currencySymbol == currency.description }),
+                       let currencySymbol = currency.currencySymbol {
+                        
+                        textField.update(source.amount, currencySymbol: currencySymbol)
+                        if let selectCurrencyUpdated = source.updated(value: source.amount.description, selectedCurrency: .init(description: currency.code)) as? Payments.ParameterAmount {
+                            
+                            update(source: selectCurrencyUpdated.updated(currencySymbol: currencySymbol))
+                        }
+                        
+                        update(value: nil)
+                    }
+                    
+                }.store(in: &bindings)
+        }
+        
+        func bind(textField: TextFieldFormatableView.ViewModel) {
+            
+            textField.$text
+                .dropFirst()
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] _ in
+                    
+                    update(value: String(textField.value))
+                    
+                }.store(in: &bindings)
         }
         
         func update(isContinueEnabled: Bool) {
@@ -270,10 +297,16 @@ extension PaymentsAmountView.ViewModel {
         }
     }
     
-    struct DeliveryCurrencyViewModel {
+    class DeliveryCurrencyViewModel: ObservableObject {
         
-        var currency: String
+        @Published var currency: String
         let action: () -> Void
+        
+        init(currency: String, action: @escaping () -> Void) {
+            
+            self.currency = currency
+            self.action = action
+        }
     }
     
     struct CurrencySwitchViewModel {
@@ -468,7 +501,7 @@ struct PaymentsAmountView: View {
     
     struct DeliveryCurrency: View {
         
-        let viewModel: PaymentsAmountView.ViewModel.DeliveryCurrencyViewModel
+        @ObservedObject var viewModel: PaymentsAmountView.ViewModel.DeliveryCurrencyViewModel
         
         var body: some View {
             

@@ -816,6 +816,11 @@ extension Payments {
             ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, deliveryCurrency: deliveryCurrency, transferButtonTitle: transferButtonTitle, validator: .init(minAmount: 0.01, maxAmount: maxAmount), info: info, isEditable: isEditable, group: group)
         }
         
+        func updated(currencySymbol: String) -> Payments.ParameterAmount {
+            
+            ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, deliveryCurrency: deliveryCurrency, transferButtonTitle: transferButtonTitle, validator: validator, info: info, isEditable: isEditable, group: group)
+        }
+        
         func updated(info: Info) -> PaymentsParameterRepresentable {
             
             ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, deliveryCurrency: deliveryCurrency, transferButtonTitle: transferButtonTitle, validator: validator, info: info, isEditable: isEditable, group: group)
