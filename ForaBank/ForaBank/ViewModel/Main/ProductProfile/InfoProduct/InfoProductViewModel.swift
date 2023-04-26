@@ -150,7 +150,7 @@ class InfoProductViewModel: ObservableObject {
                     
                     if let expireDate = payload.productCardData.expireDate {
                         
-                        additionalList.append(.init(title: "Карта дейстует до", subtitle: expireDate))
+                        additionalList.append(.init(title: "Карта действует до", subtitle: expireDate))
                     }
                     
                     withAnimation {
@@ -281,7 +281,7 @@ class InfoProductViewModel: ObservableObject {
         
         if let expireDate = productCardData.expireDate {
             
-            additionalList.append(.init(title: "Карта дейстует до", subtitle: expireDate))
+            additionalList.append(.init(title: "Карта действует до", subtitle: expireDate))
         }
         
         return additionalList

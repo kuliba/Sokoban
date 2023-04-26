@@ -143,5 +143,5 @@ extension InfoProductViewModel {
     
     static let listCard: [InfoProductViewModel.ItemViewModel] = [.init(title: "Получатель", subtitle: "Константин Войцехов"), .init(title: "Номер счета", subtitle: "408178810888 005001137"), .init(title: "БИК", subtitle: "044525341"), .init(title: "Кореспондентский счет", subtitle: "301018103000000000341"), .init(title: "ИНН", subtitle: "7704113772"), .init(title: "КПП", subtitle: "770401001")]
     
-    static let additionalList: [InfoProductViewModel.ItemViewModel] = [.init(title: "Держатель карты", subtitle: "KONSTANTIN VOYZEKHOV"), .init(title: "Номер карты", subtitle: "4897 43** **** 7654"), .init(title: "Карта дейстует до", subtitle: "12/23")]
+    static let additionalList: [InfoProductViewModel.ItemViewModel] = [.init(title: "Держатель карты", subtitle: "KONSTANTIN VOYZEKHOV"), .init(title: "Номер карты", subtitle: "4897 43** **** 7654"), .init(title: "Карта действует до", subtitle: "12/23")]
 }
