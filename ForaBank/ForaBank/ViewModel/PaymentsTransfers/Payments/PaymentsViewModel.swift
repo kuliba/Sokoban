@@ -178,15 +178,15 @@ class PaymentsViewModel: ObservableObject {
                                         
                                     } else {
                                         
-                                        self.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: error.localizedDescription))
+                                        self.action.send(PaymentsViewModelAction.CriticalAlert(title: "Ошибка", message: error.localizedDescription))
                                     }
                                     
                                 case let .alert(title: title, message: message):
-                                    self.action.send(PaymentsViewModelAction.Alert(title: title, message: message))
+                                    self.action.send(PaymentsViewModelAction.CriticalAlert(title: title, message: message))
                                 }
                                 
                             default:
-                                self.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: error.localizedDescription))
+                                self.action.send(PaymentsViewModelAction.CriticalAlert(title: "Ошибка", message: error.localizedDescription))
                             }
                         case let serverError as ServerAgentError:
                             switch serverError {
@@ -205,19 +205,19 @@ class PaymentsViewModel: ObservableObject {
                                     
                                 } else if message.contains("Вы исчерпали") {
                                     
-                                    self.action.send(PaymentsViewModelAction.AlertThenDismiss(message: message))
+                                    self.action.send(PaymentsViewModelAction.CriticalAlert(title: "Ошибка", message: message))
                                     
                                 } else {
                                     
-                                    self.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: message))
+                                    self.action.send(PaymentsViewModelAction.CriticalAlert(title: "Ошибка", message: message))
                                 }
 
                             default:
-                                self.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: error.localizedDescription))
+                                self.action.send(PaymentsViewModelAction.CriticalAlert(title: "Ошибка", message: error.localizedDescription))
                             }
                             
                         default:
-                            self.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: error.localizedDescription))
+                            self.action.send(PaymentsViewModelAction.CriticalAlert(title: "Ошибка", message: error.localizedDescription))
                         }
                         
                     default:
@@ -256,12 +256,6 @@ class PaymentsViewModel: ObservableObject {
                         
                         self.successViewModel = nil
                     }
-                    
-                case let payload as PaymentsViewModelAction.Alert:
-                    alert = .init(title: payload.title, message: payload.message, primary: .init(type: .default, title: "Ok", action: {}))
-                    
-                case let payload as PaymentsViewModelAction.AlertThenDismiss:
-                    alert = .init(title: "Ошибка", message: payload.message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}))
  
                 default:
                     break
@@ -353,7 +347,7 @@ extension PaymentsViewModel {
                      spinner:
                 .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show()) },
                       hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide()) }),
-                     alert: { [weak self] message in self?.action.send(PaymentsViewModelAction.Alert(title: "Ошибка", message: message)) })
+                     alert: { [weak self] message in self?.action.send(PaymentsViewModelAction.CriticalAlert(title: "Ошибка", message: message)) })
     }
 }
 
@@ -369,20 +363,9 @@ enum PaymentsViewModelAction {
         struct Hide: Action {}
     }
     
-    struct Alert: Action {
-        
-        let title: String
-        let message: String
-    }
-    
     struct CriticalAlert: Action {
         
         let title: String
-        let message: String
-    }
-    
-    struct AlertThenDismiss: Action {
-        
         let message: String
     }
     
