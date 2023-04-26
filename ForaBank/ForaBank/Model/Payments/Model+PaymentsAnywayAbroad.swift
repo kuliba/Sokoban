@@ -164,8 +164,13 @@ extension Model {
                     }
                 }
                 
-                var filter = ProductData.Filter.generalTo
-                filter.rules.append(ProductData.Filter.CurrencyRule(Set(currencyArr)))
+                let filter = ProductData.Filter(
+                    rules: [ProductData.Filter.DebitRule(),
+                            ProductData.Filter.ProductTypeRule([.card, .account]),
+                            ProductData.Filter.CurrencyRule(Set(currencyArr)),
+                            ProductData.Filter.CardActiveRule(),
+                            ProductData.Filter.CardAdditionalNotOwnedRetrictedRule(),
+                            ProductData.Filter.AccountActiveRule()])
                 
                 if let product = firstProduct(with: filter),
                    let first = currencyArr.first {
