@@ -154,7 +154,7 @@ extension Model {
                 
                 let currencies = currencies.options(style: .currency)?.compactMap({$0.id}).joined(separator: "-")
                 let currency = currencies?.components(separatedBy: "-")
-
+                
                 var currencyArr: [Currency] = []
                 if let currency = currency {
                     
@@ -164,10 +164,19 @@ extension Model {
                     }
                 }
                 
-                if let first = currencyArr.first {
+                var filter = ProductData.Filter.generalTo
+                filter.rules.append(ProductData.Filter.CurrencyRule(Set(currencyArr)))
+                
+                if let product = firstProduct(with: filter),
+                   let first = currencyArr.first {
                     
                     let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма перевода", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: first, currenciesList: currencyArr), transferButtonTitle: "Продолжить", validator: .init(minAmount: 10, maxAmount: product.balance))
                     result.append(amountParameter)
+                    
+                } else {
+                    
+                    let message = "К сожалению, мы не смогли найти счета или карты в валюте \(currencyArr.first?.description ?? ""), которая требуется для данных параметров перевода"
+                    throw Payments.Error.action(.alert(title: "Ошибка", message: message))
                 }
                 
             } else {
