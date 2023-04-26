@@ -191,28 +191,22 @@ extension Model {
             }
             
         case Payments.Parameter.Identifier.amount.rawValue:
-            guard parameters.first(where: {$0.id == Payments.Parameter.Identifier.code.rawValue}) == nil else {
-                return nil
-            }
-            
-            guard let amountParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterAmount else {
+            guard !parameters.contains(where: { $0.id == Payments.Parameter.Identifier.code.rawValue }),
+                let amountParameter = try? parameters.parameter(forIdentifier: .amount, as: Payments.ParameterAmount.self),
+                  let productParameter = try? parameters.parameter(forIdentifier: .product, as: Payments.ParameterProduct.self),
+                  let productId = productParameter.productId else {
                 return nil
             }
             
             var currencySymbol = amountParameter.currencySymbol
             var maxAmount = amountParameter.validator.maxAmount
             
-            let productParameterId = Payments.Parameter.Identifier.product.rawValue
-            if let productParameter = parameters.first(where: { $0.id == productParameterId}) as? Payments.ParameterProduct,
-               let productId = productParameter.productId,
-               let product = product(productId: productId),
-               let productCurrencySymbol = dictionaryCurrencySymbol(for: product.currency) {
+            if let product = product(productId: productId) {
                 
-                currencySymbol = productCurrencySymbol
                 maxAmount = product.balance
             }
             
-            if let countryDeliveryCurrency = parameters.first(where: { $0.id ==  Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue}),
+            if let countryDeliveryCurrency = try? parameters.parameter(forIdentifier: .countryDeliveryCurrency),
                let currencyValue = countryDeliveryCurrency.value,
                let currency = self.currencyList.value.first(where: {$0.code == currencyValue}),
                let symbol = currency.currencySymbol {
@@ -220,29 +214,20 @@ extension Model {
                 currencySymbol = symbol
             }
             
-            guard let productParameter = parameters.first(where: { $0.id == Payments.Parameter.Identifier.product.rawValue}) as? Payments.ParameterProduct,
-                  let filterCurriencies = parameters.first(where: { $0.id == Payments.Parameter.Identifier.countryCurrencyFilter.rawValue }) else {
-                return amountParameter.update(currencySymbol: currencySymbol, maxAmount: maxAmount)
-            }
-            
-            if let splittedCurrency = filterCurriencies.value?.components(separatedBy: ";"),
+            if let filterCurriencies = try? parameters.parameter(forIdentifier: .countryCurrencyFilter),
+               let splittedCurrency = filterCurriencies.value?.components(separatedBy: ";"),
                splittedCurrency.count > 1 {
                 
-                guard let productId = productParameter.productId else {
-                    return nil
-                }
+                let currenciesList = self.reduceDeliveryCurrency(productId: productId, splittedCurrency: splittedCurrency)
+                let selectedCurrency = currenciesList.contains(where: { $0.description == amountParameter.deliveryCurrency?.selectedCurrency.description }) ? amountParameter.deliveryCurrency?.selectedCurrency : currenciesList.first
                 
-                let deliveryCurrency = self.reduceDeliveryCurrency(productId: productId, splittedCurrency: splittedCurrency)
-                let selectedCurrency = deliveryCurrency.contains(where: { $0.description == amountParameter.deliveryCurrency?.selectedCurrency.description }) ? amountParameter.deliveryCurrency?.selectedCurrency : deliveryCurrency.first
-                
-                let updatedAmountParameter = amountParameter.updated(value: amountParameter.value, deliveryCurrency: .init(selectedCurrency: selectedCurrency ?? .rub, currenciesList: deliveryCurrency))
+                let updatedAmountParameter = amountParameter.updated(value: amountParameter.value, deliveryCurrency: .init(selectedCurrency: selectedCurrency ?? .rub, currenciesList: currenciesList))
                 
                 guard let amountParameter = updatedAmountParameter as? Payments.ParameterAmount else {
-                    
                     return nil
                 }
-                
-                return amountParameter.update(currencySymbol: currencySymbol, maxAmount: maxAmount)
+
+                return amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount)
             }
             
             let updatedAmountParameter = amountParameter.update(currencySymbol: currencySymbol, maxAmount: maxAmount)
@@ -250,14 +235,12 @@ extension Model {
             return updatedAmountParameter
             
         case Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue:
-            guard let countryDeliveryCurrency = parameters.first(where: {$0.id == Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue}) as? Payments.ParameterHidden else {
+            
+            guard let countryDeliveryCurrency = try? parameters.parameter(forIdentifier: .countryDeliveryCurrency),
+                  let amount = try? parameters.parameter(forIdentifier: .amount, as: Payments.ParameterAmount.self) else {
                 return nil
             }
-            
-            guard let amount = parameters.first(where: { $0.id == Payments.Parameter.Identifier.amount.rawValue }) as? Payments.ParameterAmount else {
-                return nil
-            }
-            
+
             guard countryDeliveryCurrency.value != amount.deliveryCurrency?.selectedCurrency.description else {
                 return nil
             }

@@ -63,6 +63,7 @@ struct PaymentsTransfersView: View {
                         
                     case let .payments(paymentsViewModel):
                         PaymentsView(viewModel: paymentsViewModel)
+                            .navigationBarHidden(true)
                         
                     case let .phone(phoneData):
                         PaymentPhoneView(viewModel: phoneData)
