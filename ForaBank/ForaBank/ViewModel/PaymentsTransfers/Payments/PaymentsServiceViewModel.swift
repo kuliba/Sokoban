@@ -12,7 +12,7 @@ class PaymentsServiceViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
-    let header: HeaderViewModel
+    @Published var navigationBar: NavigationBarView.ViewModel
     @Published var content: [PaymentsParameterViewModel]
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
@@ -21,18 +21,18 @@ class PaymentsServiceViewModel: ObservableObject {
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(header: HeaderViewModel, content: [PaymentsParameterViewModel], link: Link?, model: Model) {
+    init(navigationBar: NavigationBarView.ViewModel, content: [PaymentsParameterViewModel], link: Link?, model: Model) {
         
-        self.header = header
+        self.navigationBar = navigationBar
         self.content = content
         self.link = link
         self.model = model
     }
     
-    convenience init(category: Payments.Category, parameters: [PaymentsParameterRepresentable], model: Model) {
+    convenience init(category: Payments.Category, parameters: [PaymentsParameterRepresentable], model: Model, closeAction: @escaping () -> Void) {
         
-        let header = HeaderViewModel(title: category.name)
-        self.init(header: header, content: [], link: nil, model: model)
+        let navigationBar = NavigationBarView.ViewModel(title: category.name, leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(action: closeAction)])
+        self.init(navigationBar: navigationBar, content: [], link: nil, model: model)
         
         content = Self.reduce(parameters: parameters, action: { [weak self] in
             
@@ -174,11 +174,6 @@ extension PaymentsServiceViewModel {
 //MARK: - Types
 
 extension PaymentsServiceViewModel {
-    
-    struct HeaderViewModel {
-        
-        let title: String
-    }
     
     enum Link {
         

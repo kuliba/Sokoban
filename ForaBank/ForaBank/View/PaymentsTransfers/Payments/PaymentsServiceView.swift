@@ -43,7 +43,7 @@ struct PaymentsServiceView: View {
             .padding(.horizontal, 20)
             .padding(.top, 20)
         }
-        .navigationBarTitle(Text(viewModel.header.title), displayMode: .inline)
+        .navigationBar(with: viewModel.navigationBar)
     }
 }
 
