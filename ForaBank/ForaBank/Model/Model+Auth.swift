@@ -434,6 +434,16 @@ internal extension Model {
     
     func handleAuthVerificationCodeConfirmRequest(payload: ModelAction.Auth.VerificationCode.Confirm.Request) {
         
+        @Sendable func message(message: String?, count: Int?) -> String {
+            
+            if let message = message, let count = count {
+                return "\(message)\nОсталось попыток: \(count)"
+            } else {
+                return "Введен некорректный код. Попробуйте еще раз."
+            }
+        }
+        
+        
         LoggerAgent.shared.log(category: .model, message: "handleAuthVerificationCodeConfirmRequest")
         
         Task {
@@ -456,8 +466,8 @@ internal extension Model {
                             self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.correct)
                             
                         case .serverError:
-                            let message = response.errorMessage ?? "Введен некорректный код. Попробуйте еще раз."
-                            LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.VerificationCode.Confirm.Response, incorrect")
+                            let message = message(message: response.errorMessage, count: response.data?.verifyOTPCount)
+                            LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.VerificationCode.Confirm.Response, incorrect, \(message)")
                             self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.incorrect(message: message))
                             
                         case .userNotAuthorized:
@@ -1038,7 +1048,11 @@ extension Model {
                         
                         do {
                             
+#if MOCK
+                            let csrfAgent = try MockCSRFAgent<MockEncryptionAgent>(MockKeysProvider(), data.cert, data.pk)
+#else
                             let csrfAgent = try CSRFAgent<AESEncryptionAgent>(ECKeysProvider(), data.cert, data.pk)
+#endif
                             let token = data.token
                             
                             let keyExchangeCommand = ServerCommands.UtilityController.KeyExchange(token: token, payload: .init(data: csrfAgent.publicKeyData, token: token, type: ""))
@@ -1209,11 +1223,9 @@ extension Model {
     }
     
     func authPushFcmToken() async throws -> String {
-        
-        guard let fcmToken = Messaging.messaging().fcmToken else {
+        guard let fcmToken = self.fcmToken.value else {
            throw ModelAuthError.fcmTokenObtainFailed
         }
-        
         return fcmToken
     }
     

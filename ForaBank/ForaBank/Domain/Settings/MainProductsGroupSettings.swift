@@ -9,16 +9,20 @@ import Foundation
 
 struct MainProductsGroupSettings {
     
-    /// Minimum amount of products that should be visible any time
-    let minVisibleProductsAmount: Int
+    /// Maximum amount of cards allowed to get free card
+    let maxAllowedCardsForNewProduct: Int
     
-    
-    /// Maximum amount of card that requered new product button
-    let maxCardsAmountRequeredNewProduct: Int
+    func isFreeCardAllowed(for products: ProductsData) -> Bool {
+        
+        guard let cardsCount = products[.card]?.count else {
+            return true
+        }
+        
+        return cardsCount <= maxAllowedCardsForNewProduct
+    }
 }
 
 extension MainProductsGroupSettings {
     
-    static let base = MainProductsGroupSettings(minVisibleProductsAmount: 3,
-                                                maxCardsAmountRequeredNewProduct: 1)
+    static let base: Self = .init(maxAllowedCardsForNewProduct: 1)
 }

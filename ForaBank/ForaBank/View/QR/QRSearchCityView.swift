@@ -36,27 +36,24 @@ struct QRSearchCityView: View {
                     
                     VStack(alignment: .leading) {
                         
-                        
+                        //TODO: refactoring required
                         if viewModel.filteredCity.isEmpty == false {
                             
-                            if let filteredOperators = viewModel.filteredCity {
+                            ForEach(viewModel.filteredCity, id: \.self) { city in
                                 
-                                ForEach(filteredOperators, id: \.self) { city in
+                                Button {
                                     
-                                    Button {
+                                    viewModel.action(city)
+                                } label: {
+                                    
+                                    Text(city)
+                                        .multilineTextAlignment(.leading)
+                                        .font(Font.textH4M16240())
+                                        .foregroundColor(Color.iconBlack)
                                         
-                                        viewModel.action(city)
-                                    } label: {
-                                        
-                                        Text(city)
-                                            .multilineTextAlignment(.leading)
-                                            .font(Font.textH4M16240())
-                                            .foregroundColor(Color.iconBlack)
-                                            
-                                        Spacer()
-                                    }
-                                    .frame(height: 56)
+                                    Spacer()
                                 }
+                                .frame(height: 56)
                             }
                             
                         } else {

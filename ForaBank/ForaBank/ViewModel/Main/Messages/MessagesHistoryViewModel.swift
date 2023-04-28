@@ -80,6 +80,9 @@ class MessagesHistoryViewModel: ObservableObject {
                     state = .updating
                     model.action.send(ModelAction.Notification.Fetch.Next.Request())
                     
+                case _ as MessagesHistoryViewModelAction.ViewDidAppear:
+                    model.action.send(ModelAction.Notification.Transition.ClearBadges())
+
                 default:
                     break
                 }
@@ -162,6 +165,9 @@ enum MessagesHistoryViewModelAction {
     struct ItemTapped: Action {
         let item: MessagesHistoryDetailViewModel
     }
+    
+    struct ViewDidAppear: Action {}
+
 }
 
 extension MessagesHistoryViewModel {

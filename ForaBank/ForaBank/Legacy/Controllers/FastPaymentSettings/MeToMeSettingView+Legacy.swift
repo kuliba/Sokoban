@@ -22,6 +22,7 @@ struct MeToMeSettingView: UIViewControllerRepresentable {
             vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
             vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
             vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
+            vc.parent?.navigationItem.leftItemsSupplementBackButton = false
         })
         
         return controller

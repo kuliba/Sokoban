@@ -179,7 +179,7 @@ extension OperationDetailViewModel {
                     operationViewModel = operationViewModel.updated(with: payeeViewModel)
                 }
                 
-                if let feeViewModel = OperationDetailViewModel.FeeViewModel(with: operation, currencyCode: currencyCode)  {
+                if let feeViewModel = OperationDetailViewModel.FeeViewModel(with: operation, currencyCode: operation.payerCurrency)  {
                     operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
                 
@@ -292,14 +292,14 @@ extension OperationDetailView {
                     logo.resizable().frame(width: 32, height: 32)
                 }
                 
+                OperationDetailView.AmountView(viewModel: viewModel.amount)
+                    .padding(.top, 32)
+                
                 if let payee = viewModel.payee {
                     
                     OperationDetailView.PayeeView(viewModel: payee)
                         .padding(.top, 8)
                 }
-                
-                OperationDetailView.AmountView(viewModel: viewModel.amount)
-                    .padding(.top, 32)
                 
                 if let fee = viewModel.fee {
                     

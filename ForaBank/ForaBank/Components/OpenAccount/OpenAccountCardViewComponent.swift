@@ -10,39 +10,39 @@ import SwiftUI
 // MARK: - ViewModel
 
 extension OpenAccountCardView {
-
+    
     class ViewModel: ObservableObject {
-
-        @Published var numberCard: String
-        @Published var icon: Image?
         
-        let balance: Double
-        let currrentAccountTitle: String
-        let currencyBalance: String
-        let currencySymbol: String
-
-        var numberCardLast: String {
+        let accountTitle: String
+        let balance: String
+        @Published private(set) var numberCardLast: String?
+        @Published var backgroudImage: Image?
+        
+        init(numberCardLast: String?, backgroudImage: Image?, accountTitle: String, balance: String) {
             
-            if numberCard.isEmpty == false {
-                return "\(numberCard.suffix(4))"
-            } else {
-                return ""
-            }
-        }
-
-        init(balance: Double = 0,
-             numberCard: String = "",
-             currrentAccountTitle: String = "Текущий счет",
-             currencySymbol: String,
-             icon: Image?) {
-
+            self.numberCardLast = numberCardLast
+            self.backgroudImage = backgroudImage
+            self.accountTitle = accountTitle
             self.balance = balance
-            self.numberCard = numberCard
-            self.currrentAccountTitle = currrentAccountTitle
-            self.currencySymbol = currencySymbol
-            self.icon = icon
-
-            currencyBalance = "\(balance.currencyDepositFormatter(symbol: currencySymbol))"
+        }
+        
+        convenience init(balance: Double = 0,
+                         numberCard: String? = nil,
+                         accountTitle: String = "Текущий счет",
+                         currencySymbol: String,
+                         backgroudImage: Image?) {
+            
+            let balance = "\(balance.currencyDepositFormatter(symbol: currencySymbol))"
+            self.init(numberCardLast: nil, backgroudImage: backgroudImage, accountTitle: accountTitle, balance: balance)
+            update(with: numberCard)
+        }
+        
+        func update(with numberCard: String?) {
+            
+            guard let numberCard = numberCard else {
+                numberCardLast = nil
+                return }
+            numberCardLast = String(numberCard.suffix(4))
         }
     }
 }
@@ -56,10 +56,10 @@ struct OpenAccountCardView: View {
     var body: some View {
 
         ZStack {
-
-            if let icon = viewModel.icon {
+            
+            if let backgroudImage = viewModel.backgroudImage {
                 
-                icon
+                backgroudImage
                     .resizable()
                     .frame(width: 112, height: 72)
                 
@@ -73,22 +73,31 @@ struct OpenAccountCardView: View {
             HStack {
 
                 VStack(alignment: .leading, spacing: 5) {
-
-                    HStack(spacing: 3) {
-
-                        Text(viewModel.numberCardLast)
-                            .font(.textBodyXSR11140())
-                            .foregroundColor(.mainColorsWhite)
+                    
+                    if let numberCard = viewModel.numberCardLast {
+                        HStack(spacing: 3) {
+                            
+                            Circle()
+                                .foregroundColor(.mainColorsWhite)
+                                .frame(width: 2, height: 2)
+                            
+                            Text(numberCard)
+                                .font(.textBodyXSR11140())
+                                .foregroundColor(.mainColorsWhite)
+                        }.padding(.leading, 29)
+                    } else {
                         
-                    }.padding(.leading, 29)
-
+                        Color.clear
+                            .frame(height: 11)
+                    }
+                    
                     VStack(alignment: .leading, spacing: 3) {
-
-                        Text(viewModel.currrentAccountTitle)
+                        
+                        Text(viewModel.accountTitle)
                             .font(.textBodyXSR11140())
                             .foregroundColor(.mainColorsGrayMedium)
-
-                        Text(viewModel.currencyBalance)
+                        
+                        Text(viewModel.balance)
                             .font(.textBodyXSSB11140())
                             .foregroundColor(.mainColorsWhite)
 
@@ -106,8 +115,10 @@ struct OpenAccountCardView: View {
 //MARK: - Preview Content
 
 extension OpenAccountCardView.ViewModel {
-
-    static let sample: OpenAccountCardView.ViewModel = .init(balance: 100, numberCard: "4444555566664345", currencySymbol: "$", icon: .init("Card RUB"))
+    
+    static let sample: OpenAccountCardView.ViewModel = .init(balance: 100, numberCard: "4444555566664345", currencySymbol: "$", backgroudImage: .init("Card RUB"))
+    
+    static let sample_1: OpenAccountCardView.ViewModel = .init(balance: 100, currencySymbol: "₽", backgroudImage: .init("Card RUB"))
 }
 
 // MARK: - Previews
@@ -116,8 +127,15 @@ struct OpenAccountCardViewComponent_Previews: PreviewProvider {
 
     static var previews: some View {
 
-        OpenAccountCardView(viewModel: .sample)
-            .previewLayout(.sizeThatFits)
-            .padding(8)
+        Group {
+
+            OpenAccountCardView(viewModel: .sample)
+                .previewLayout(.sizeThatFits)
+                .padding(8)
+            
+            OpenAccountCardView(viewModel: .sample_1)
+                .previewLayout(.sizeThatFits)
+                .padding(8)
+        }
     }
 }

@@ -25,6 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             FirebaseApp.configure(options: firebaseOptions)
         }
 
+        Messaging.messaging().delegate = self
+        
         // remote notifications
         UNUserNotificationCenter.current().delegate = self
         application.registerForRemoteNotifications()
@@ -55,14 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
     
-    private var googleServiceInfoFileName: String {
-        
-        #if DEBUG
-        "GoogleService-Info-test"
-        #else
-        "GoogleService-Info"
-        #endif
-    }
+    private var googleServiceInfoFileName: String = Config.googleServiceInfoFileName
 }
 
 //MARK: - Push Notifications
@@ -79,7 +74,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             options: authOptions,
             completionHandler: {_, _ in })
         
-        UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -116,4 +110,12 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
     }
 }
 
+//MARK: - Firebase Cloud Messaging
 
+extension AppDelegate : MessagingDelegate {
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        model.fcmToken.send(fcmToken)
+      // TODO: If necessary send token to application server.
+      // Note: This callback is fired at each app startup and whenever a new token is generated.
+    }
+}

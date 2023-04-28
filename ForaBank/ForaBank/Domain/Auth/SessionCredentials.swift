@@ -7,10 +7,16 @@
 
 import Foundation
 
+//TODO: refactor csrfAgent to any CSRFAgentProtocol in Xcode 14+
 struct SessionCredentials {
     
     let token: String
+#if MOCK
+    let csrfAgent: MockCSRFAgent<MockEncryptionAgent>
+#else
     let csrfAgent: CSRFAgent<AESEncryptionAgent>
+#endif
+    
 }
 
 enum CSRFError: LocalizedError {

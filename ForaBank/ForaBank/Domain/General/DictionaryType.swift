@@ -12,6 +12,7 @@ enum DictionaryType: CaseIterable  {
     case anywayOperators
     case banks
     case countries
+    case countriesWithService
     case currencyList
     case currencyWalletList
     case fmsList
@@ -34,4 +35,5 @@ enum DictionaryType: CaseIterable  {
     case jsonAbroad
     case qrMapping
     case prefferedBanks
+    case clientInform
 }

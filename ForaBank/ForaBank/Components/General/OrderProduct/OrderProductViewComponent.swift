@@ -410,7 +410,7 @@ extension OrderProductView.ViewModel {
 
 extension OrderProductView.ViewModel {
     
-    class PhoneNumberViewModel: TextFieldPhoneNumberView.ViewModel {
+    class PhoneNumberViewModel: TextViewPhoneNumberView.ViewModel {
         
         @Published var isUserInteractionEnabled: Bool = true
         @Published var isError: Bool = false
@@ -707,7 +707,7 @@ extension OrderProductView {
                                 .foregroundColor(.mainColorsGray)
                         }
                         
-                        TextFieldPhoneNumberView(viewModel: viewModel)
+                        TextViewPhoneNumberView(viewModel: viewModel)
                         
                         Spacer()
                     }
@@ -803,6 +803,7 @@ extension OrderProductView {
             HStack(alignment: .top, spacing: 16) {
                 
                 CheckBoxView(viewModel: viewModel.checkBox)
+                    .accessibilityIdentifier("CheckBox")
                 
                 VStack(alignment: .leading, spacing: 3) {
                     

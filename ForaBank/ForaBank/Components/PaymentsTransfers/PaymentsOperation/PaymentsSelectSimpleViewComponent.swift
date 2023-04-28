@@ -16,7 +16,7 @@ extension PaymentsSelectSimpleView {
                 
         let icon: Image
         let title: String
-        
+
         @Published var content: String
         @Published var description: String?
         //FIXME: remove, use value
@@ -24,32 +24,80 @@ extension PaymentsSelectSimpleView {
         
         override var isValid: Bool { value.current != nil }
         
+        let model: Model
         //TODO: real placeholder required
         private static let iconPlaceholder = Image("Payments Icon Placeholder")
         
-        init(icon: Image, title: String, content: String, description: String?, selectedOptionId: Option.ID? = nil, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
+        init(icon: Image, title: String, content: String, description: String?, selectedOptionId: Option.ID? = nil, model: Model, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.icon = icon
             self.title = title
             self.content = content
             self.description = description
             self.selectedOptionId = selectedOptionId
+            self.model = model
             super.init(source: source)
         }
         
-        init(with parameterSelect: Payments.ParameterSelectSimple) {
+        init(with parameterSelect: Payments.ParameterSelectSimple, model: Model) {
             
             self.icon = parameterSelect.icon.image ?? Self.iconPlaceholder
             self.title = parameterSelect.title
             self.content = parameterSelect.selectionTitle
             self.description = parameterSelect.description
             self.selectedOptionId = parameterSelect.parameter.value
+            self.model = model
             super.init(source: parameterSelect)
             
             bind()
+            
+            /*
+            self.popUpViewModel = PaymentsPopUpSelectView.ViewModel(title: title, description: description, options: parameterSelect.options, selected: value.current) { [weak self] optionId in
+                
+                self?.update(value: optionId)
+                self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close())
+            }
+             */
         }
         
         func bind() {
+            
+            model.action
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] action in
+                    
+                    switch action {
+                    case let payload as ModelAction.Dictionary.AnywayOperator.Response:
+                        switch payload.result {
+                        case let .success(anywayOperators):
+                            //FIXME: fix to real select
+                            guard let source = self.source as? Payments.ParameterSelectSimple, source.options.isEmpty == true else {
+                                return
+                            }
+                            
+                            let operators = anywayOperators.map({PaymentsPopUpSelectView.ViewModel.ItemViewModel.init(id: $0.id, name: $0.name, isSelected: false, icon: .selector, action: { option in
+                                
+                                self.selectedOptionId = option
+                                self.update(value: option)
+                                
+                            })})
+                            
+                            let popUpViewModel = PaymentsPopUpSelectView.ViewModel(title: "Выберите город", description: nil, items: operators, selected: nil, action: { [weak self] item in
+
+                                self?.selectedOptionId = item
+                            })
+                            
+                            self.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Show(viewModel: popUpViewModel))
+                            
+                        case let .failure(error):
+                            print(error)
+                            //TODO: send action to present error
+                        }
+                    default:
+                        break
+                    }
+                }
+                .store(in: &bindings)
             
             action
                 .receive(on: DispatchQueue.main)
@@ -57,9 +105,17 @@ extension PaymentsSelectSimpleView {
                     
                     switch action {
                     case _ as PaymentsParameterViewModelAction.SelectSimple.DidTapped:
-                        guard let popUpViewModel = popUpViewModel else {
+                        
+                        guard let source = self.source as? Payments.ParameterSelectSimple else {
                             return
                         }
+                    
+                        let popUpViewModel = PaymentsPopUpSelectView.ViewModel(title: title, description: description, options: source.options, selected: value.current) { [weak self] optionId in
+                            
+                            self?.update(value: optionId)
+                            self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close())
+                        }
+                        
                         self.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Show(viewModel: popUpViewModel))
                         
                     default:
@@ -94,19 +150,6 @@ extension PaymentsSelectSimpleView {
                     }
                 }
                 .store(in: &bindings)
-        }
-        
-        var popUpViewModel: PaymentsPopUpSelectView.ViewModel? {
-            
-            guard let parameterSelect = source as? Payments.ParameterSelectSimple else {
-                return nil
-            }
-
-            return PaymentsPopUpSelectView.ViewModel(title: title, description: description, options: parameterSelect.options, selected: value.current) { [weak self] optionId in
-                
-                self?.update(value: optionId)
-                self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close())
-            }
         }
     }
 }
@@ -181,10 +224,6 @@ struct PaymentsSelectSimpleView: View {
                         .padding(.top, 8)
                 }
             }
-            .onTapGesture {
-                
-                viewModel.action.send(PaymentsParameterViewModelAction.SelectSimple.DidTapped())
-            }
             
         } else {
             
@@ -246,11 +285,11 @@ struct PaymentsSelectSimpleView_Previews: PreviewProvider {
 
 extension PaymentsSelectSimpleView.ViewModel {
     
-    static let sample = try! PaymentsSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: nil, options: []))
+    static let sample = try! PaymentsSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: nil, options: []), model: .emptyMock)
     
     
-    static let sampleSelected = try! PaymentsSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0"), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ", options: [.init(id: "0", name: "В возрасте до 14 лет (новый образец) В возрасте до 14 лет (новый образец) В возрасте до 14 лет (новый образец)")]))
+    static let sampleSelected = try! PaymentsSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0"), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ", options: [.init(id: "0", name: "В возрасте до 14 лет (новый образец) В возрасте до 14 лет (новый образец) В возрасте до 14 лет (новый образец)")]), model: .emptyMock)
     
-    static let sampleSelectedNotEditable = try! PaymentsSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0"), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ", options: [.init(id: "0", name: "В возрасте до 14 лет (новый образец)")], isEditable: false))
+    static let sampleSelectedNotEditable = try! PaymentsSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0"), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ", options: [.init(id: "0", name: "В возрасте до 14 лет (новый образец)")], isEditable: false), model: .emptyMock)
 }
 

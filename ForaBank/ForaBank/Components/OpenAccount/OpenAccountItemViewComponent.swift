@@ -222,7 +222,7 @@ extension OpenAccountItemView.ViewModel {
         ratesLinkURL: nil,
         currencyCode: 810,
         header: .init(title: "", detailTitle: ""),
-        card: .init(currencySymbol: "₽", icon: .init("RUB")),
+        card: .init(currencySymbol: "₽", backgroudImage: .init("RUB")),
         options: .init(),
         isAccountOpen: false
     )

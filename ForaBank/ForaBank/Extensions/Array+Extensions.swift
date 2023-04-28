@@ -52,4 +52,21 @@ extension Array where Element: Hashable {
     }
 }
 
+extension Array where Element == ProductDataFilterRule {
+    
+    var currencyRules: [ProductData.Filter.CurrencyRule] {
+        
+        compactMap { $0 as? ProductData.Filter.CurrencyRule }
+    }
+    
+    var debitRules: [ProductData.Filter.DebitRule] {
+        
+        compactMap { $0 as? ProductData.Filter.DebitRule }
+    }
+
+    var restrictedDepositRules: [ProductData.Filter.DebitRule] {
+        
+        compactMap { $0 as? ProductData.Filter.DebitRule }
+    }
+}
 

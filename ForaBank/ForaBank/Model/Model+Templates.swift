@@ -11,6 +11,33 @@ import Foundation
 
 extension ModelAction {
     
+    enum ProductTemplate {
+        
+        enum List {
+            
+            struct Request: Action {}
+            
+            struct Response: Action {
+                
+                let result: Result<[ProductTemplateData], ModelError>
+            }
+        }
+        
+        enum Delete {
+            
+            struct Request: Action {
+                
+                let productTemplateId: Int
+            }
+            
+            enum Response: Action {
+                
+                case complete
+                case failed(ModelError)
+            }
+        }
+    }
+    
     enum PaymentTemplate {
         
         enum Save {
@@ -78,13 +105,108 @@ extension ModelAction {
                 let error: Error
             }
         }
+    }
+}
+
+//MARK: - Helpers
+
+extension Model {
     
+    func productTemplate(for templateId: String) -> ProductTemplateData? {
+        
+        guard let templateId = Int(templateId),
+              let data = self.productTemplates.value.first(where: { $0.id == templateId })
+        else { return nil }
+        
+        return data
     }
 }
 
 //MARK: - Handlers
 
 extension Model {
+    
+//product Templates
+    
+    func handleProductTemplatesListRequest() {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        let command = ServerCommands.ProductTemplateController.GetProductTemplateList(token: token)
+        serverAgent.executeCommand(command: command) { [unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    if let templates = response.data {
+                        
+                        // update model data
+                        self.productTemplates.value = templates
+                       
+                        do {
+                            
+                            // cache tempates data
+                            try self.localAgent.store(templates, serial: nil)
+                            
+                        } catch {
+                            
+                            self.handleServerCommandCachingError(error: error, command: command)
+                        }
+                        
+                        self.action.send(ModelAction.ProductTemplate.List.Response(result: .success(templates)))
+                        
+                    } else {
+                        
+                        self.action.send(ModelAction.ProductTemplate.List.Response(result: .failure(.emptyData(message: response.errorMessage))))
+                        self.handleServerCommandEmptyData(command: command)
+                    }
+
+                default:
+                    self.action.send(ModelAction.ProductTemplate.List.Response(result: .failure(.statusError(status: response.statusCode, message: response.errorMessage))))
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+    
+                }
+                
+            case .failure(let error):
+                self.action.send(ModelAction.ProductTemplate.List.Response(result: .failure(.serverCommandError(error: error.localizedDescription))))
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    func handleProductTemplateDeleteRequest(_ payload: ModelAction.ProductTemplate.Delete.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.ProductTemplateController.DeleteProductTemplate
+                        .init(token: token, productId: payload.productTemplateId)
+        serverAgent.executeCommand(command: command) { result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    self.action.send(ModelAction.ProductTemplate.Delete.Response.complete)
+                    
+                default:
+                    self.action.send(ModelAction.ProductTemplate.Delete.Response.failed(.statusError(status: response.statusCode, message: response.errorMessage)))
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+            case .failure(let error):
+                self.action.send(ModelAction.ProductTemplate.Delete.Response.failed(.serverCommandError(error: error.localizedDescription)))
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+
+    
+//paymentTemplates
     
     func handleTemplatesListRequest() {
         

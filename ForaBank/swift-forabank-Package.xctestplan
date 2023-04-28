@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "8B63068F-F74D-4E1A-832E-08FCA9F07270",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TextFieldRegularComponentTests",
+        "name" : "TextFieldRegularComponentTests"
+      }
+    }
+  ],
+  "version" : 1
+}

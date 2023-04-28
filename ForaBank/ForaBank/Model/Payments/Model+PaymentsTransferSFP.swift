@@ -42,7 +42,7 @@ extension Model {
             let amount = try paymentsTransferSFPAmount(parameters)
             let currency = try paymentsTransferSFPCurrency(parameters)
             let comment = try paymentsTransferSFPComment(parameters)
-            let additional = try paymentsTransferSFPAdditional(process)
+            let additional = try paymentsTransferSFPAdditional(process, allParameters: parameters)
             
             let command = ServerCommands.TransferController.CreateSFPTransfer(token: token, payload: .init(amount: amount, check: true, comment: comment, currencyAmount: currency, payer: payer, additional: additional, puref: puref))
             
@@ -97,7 +97,7 @@ extension Model {
         try paymentsTransferComment(parameters)
     }
     
-    func paymentsTransferSFPAdditional(_ parameters: [Payments.Parameter]) throws -> [TransferAnywayData.Additional] {
+    func paymentsTransferSFPAdditional(_ parameters: [Payments.Parameter], allParameters: [PaymentsParameterRepresentable]) throws -> [TransferAnywayData.Additional] {
         
         var additional = [TransferAnywayData.Additional]()
         for (index, parameter) in parameters.enumerated() {
@@ -114,6 +114,12 @@ extension Model {
             default:
                 additional.append(.init(fieldid: index + 1, fieldname: parameter.id, fieldvalue: parameterValue))
             }
+        }
+        
+        let messageParameterId = Payments.Parameter.Identifier.sfpMessage.rawValue
+        if let messageParameterValue = allParameters.first(where: { $0.id == messageParameterId })?.value {
+            
+            additional.append(.init(fieldid: additional.count + 1, fieldname: messageParameterId, fieldvalue: messageParameterValue))
         }
         
         return additional
@@ -138,10 +144,10 @@ extension Model {
     func paymentsTransferSFPStepParameters(_ operation: Payments.Operation, response: TransferAnywayResponseData) throws -> [PaymentsParameterRepresentable] {
         
         var result = [PaymentsParameterRepresentable]()
-        
+        let spoilerGroup = Payments.Parameter.Group(id: UUID().uuidString, type: .spoiler)
         for additionalData in response.additionalList {
             
-            guard let parameter = try paymentsParameterRepresentable(operation, adittionalData: additionalData) else {
+            guard let parameter = try paymentsParameterRepresentable(operation, adittionalData: additionalData, group: spoilerGroup) else {
                 continue
             }
             

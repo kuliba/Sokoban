@@ -13,7 +13,7 @@ import Shimmer
 
 extension ProductProfileDetailView {
     
-    class ViewModel: ObservableObject {
+    final class ViewModel: ObservableObject {
 
         let action: PassthroughSubject<Action, Never> = .init()
         
@@ -28,7 +28,7 @@ extension ProductProfileDetailView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        internal init(info: InfoViewModel, mainBlock: MainBlockViewModel, footer: FooterViewModel?, isCollapsed: Bool, isUpdating: Bool = false, productId: ProductData.ID = 0, model: Model = .emptyMock) {
+        init(info: InfoViewModel, mainBlock: MainBlockViewModel, footer: FooterViewModel?, isCollapsed: Bool, isUpdating: Bool = false, productId: ProductData.ID, model: Model = .emptyMock) {
             
             self.info = info
             self.mainBlock = mainBlock
@@ -38,38 +38,42 @@ extension ProductProfileDetailView {
             self.productId = productId
             self.model = model
             
-            bind()
+            LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileDetailView.ViewModel initialized")
         }
         
-        init?(productCard: ProductCardData, model: Model) {
+        deinit {
+            
+            LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileDetailView.ViewModel deinitialized")
+        }
+        
+        convenience init?(productCard: ProductCardData, model: Model) {
             
             guard let loanData = productCard.loanBaseParam,
                   let configuration = Configuration(productCard: productCard, loanData: loanData) else {
                 return nil
             }
             
-            self.info = .init(configuration: configuration)
-            self.mainBlock = .init(configuration: configuration, loanData: loanData, model: model, action: {})
-            self.footer = .init(configuration: configuration, loanData: loanData, model: model)
-            self.isCollapsed = configuration == .notActivated ? true : false
-            self.isUpdating = false
-            self.productId = productCard.id
-            self.model = model
+            let info = InfoViewModel(configuration: configuration)
+            let mainBlock = MainBlockViewModel(configuration: configuration, loanData: loanData, model: model, action: {})
+            let footer = FooterViewModel(configuration: configuration, loanData: loanData, model: model)
+            let isCollapsed = configuration == .notActivated ? true : false
+    
+            self.init(info: info, mainBlock: mainBlock, footer: footer, isCollapsed: isCollapsed, isUpdating: false, productId: productCard.id, model: model)
             
             bind()
+            bind(footer)
         }
         
-        init(productLoan: ProductLoanData, loanData: PersonsCreditData, model: Model) {
+        convenience init(productLoan: ProductLoanData, loanData: PersonsCreditData, model: Model) {
             
-            self.info = .init(loanData: loanData, loanType: productLoan.loanType)
-            self.mainBlock = .init(productLoan: productLoan, loanData: loanData, model: model, action: {})
-            self.footer = .init(productLoan: productLoan, loanData: loanData, model: model)
-            self.isCollapsed = false
-            self.isUpdating = false
-            self.productId = productLoan.id
-            self.model = model
+            let info = InfoViewModel(loanData: loanData, loanType: productLoan.loanType)
+            let mainBlock = MainBlockViewModel(productLoan: productLoan, loanData: loanData, model: model, action: {})
+            let footer = FooterViewModel(productLoan: productLoan, loanData: loanData, model: model)
+
+            self.init(info: info, mainBlock: mainBlock, footer: footer, isCollapsed: false, isUpdating: false, productId: productLoan.id, model: model)
             
             bind()
+            bind(footer)
         }
         
         func update(productCard: ProductCardData, model: Model) {
@@ -89,6 +93,7 @@ extension ProductProfileDetailView {
             info = .init(loanData: loanData, loanType: productLoan.loanType)
             mainBlock = .init(productLoan: productLoan, loanData: loanData, model: model, action: {})
             footer = .init(productLoan: productLoan, loanData: loanData, model: model)
+            bind(footer)
         }
 
         private func bind() {
@@ -150,6 +155,27 @@ extension ProductProfileDetailView {
                     withAnimation {
                         
                         header.isCollapsed = isCollapsed
+                    }
+                    
+                }.store(in: &bindings)
+        }
+        
+        private func bind(_ footerViewModel: FooterViewModel?) {
+            
+            guard let footerViewModel = footerViewModel else {
+                return
+            }
+            
+            footerViewModel.action
+                .receive(on: DispatchQueue.main)
+                .sink{ [unowned self] action in
+                    
+                    switch action {
+                    case let payload as ProductProfileDetailFooterAction.MakePayment:
+                        self.action.send(ProductProfileDetailViewModelAction.MakePayment(settlementAccountId: payload.settlementAccountId, amount: payload.amount))
+                        
+                    default:
+                        break
                     }
                     
                 }.store(in: &bindings)
@@ -262,6 +288,12 @@ extension ProductProfileDetailView.ViewModel {
 enum ProductProfileDetailViewModelAction {
 
     struct ToggleCollapsed: Action {}
+    
+    struct MakePayment: Action {
+        
+        let settlementAccountId: Int
+        let amount: Double
+    }
 }
 
 //MARK: - View
@@ -361,9 +393,9 @@ struct ProductProfileDetailView_Previews: PreviewProvider {
 
 extension ProductProfileDetailView.ViewModel {
     
-    static let sampleCollapsed = ProductProfileDetailView.ViewModel(info: .sampleProgress, mainBlock: .sampleCreditCard, footer: .sample, isCollapsed: true)
+    static let sampleCollapsed = ProductProfileDetailView.ViewModel(info: .sampleProgress, mainBlock: .sampleCreditCard, footer: .sample, isCollapsed: true, productId: 0)
     
-    static let sample = ProductProfileDetailView.ViewModel(info: .sampleProgress, mainBlock: .sampleCreditCard, footer: .sample, isCollapsed: false)
+    static let sample = ProductProfileDetailView.ViewModel(info: .sampleProgress, mainBlock: .sampleCreditCard, footer: .sample, isCollapsed: false, productId: 0)
     
-    static let sampleMessage = ProductProfileDetailView.ViewModel(info: .sampleMessage, mainBlock: .sampleCredit, footer: nil, isCollapsed: false)
+    static let sampleMessage = ProductProfileDetailView.ViewModel(info: .sampleMessage, mainBlock: .sampleCredit, footer: nil, isCollapsed: false, productId: 0)
 }

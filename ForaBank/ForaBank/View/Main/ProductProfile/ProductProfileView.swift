@@ -136,6 +136,14 @@ struct ProductProfileView: View {
                 }
                 .frame(width: .infinity, height: .infinity, alignment: .center)
             }
+            
+            Color.clear.frame(maxHeight: 0)
+                .fullScreenCover(item: $viewModel.successZeroAccount) { successViewModel in
+                    PaymentsSuccessView(viewModel: successViewModel.viewModel)
+
+                }.transaction { transaction in
+                    transaction.disablesAnimations = false
+                }
         }
         .navigationBarTitle("", displayMode: .inline)
         .navigationBar(with: viewModel.navigationBar)
@@ -156,13 +164,6 @@ struct ProductProfileView: View {
                 PlacesView(viewModel: placesViewModel)
             }
         })
-        .fullScreenCover(item: $viewModel.fullCoverSpinner) { fullCoverSpinner in
-
-            switch fullCoverSpinner.type {
-            case let .successMeToMe(successMeToMeViewModel):
-                PaymentsSuccessView(viewModel: successMeToMeViewModel)
-            }
-        }
         .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
             
             switch sheet.type {
@@ -175,37 +176,21 @@ struct ProductProfileView: View {
                     .padding(.top, 26)
                     .padding(.bottom, 72)
                 
-            case let .meToMe(meToMeViewModel):
+            case let .meToMeLegacy(meToMeViewModel):
                 MeToMeView(viewModel: meToMeViewModel)
                     .edgesIgnoringSafeArea(.bottom)
                     .frame(height: 474)
                 
-            case let .closeAccount(viewModel):
-                
+            case let .meToMe(viewModel):
                 PaymentsMeToMeView(viewModel: viewModel)
-                    .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+                    .fullScreenCover(item: $viewModel.success) { successViewModel in
 
-                        switch fullCover.type {
-                        case let .successMeToMe(successMeToMeViewModel):
-                            PaymentsSuccessView(viewModel: successMeToMeViewModel)
-                        }
-                        
+                        PaymentsSuccessView(viewModel: successViewModel)
+
                     }.transaction { transaction in
                         transaction.disablesAnimations = false
                     }
-            case let .closeDeposit(viewModel):
-                PaymentsMeToMeView(viewModel: viewModel)
-                    .fullScreenCover(item: $viewModel.fullCover) { fullCover in
-
-                        switch fullCover.type {
-                        case let .successMeToMe(successMeToMeViewModel):
-                            PaymentsSuccessView(viewModel: successMeToMeViewModel)
-                        }
-                        
-                    }.transaction { transaction in
-                        transaction.disablesAnimations = false
-                    }
-                
+                                
             case let .printForm(printFormViewModel):
                 PrintFormView(viewModel: printFormViewModel)
                 

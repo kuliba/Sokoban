@@ -66,19 +66,9 @@ enum MainSectionViewModelAction {
             let productId: ProductData.ID
         }
         
-        struct ScrollToGroup: Action {
-            
-            let groupId: MainSectionProductsGroupView.ViewModel.ID
-        }
-        
-        struct ScrollToFirstGroup: Action {}
+        struct ResetScroll: Action {}
         
         struct MoreButtonTapped: Action {}
-        
-        struct HorizontalOffsetDidChanged: Action {
-            
-            let offset: CGFloat
-        }
     }
     
     enum OpenProduct {

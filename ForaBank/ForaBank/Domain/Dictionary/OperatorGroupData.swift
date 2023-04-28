@@ -40,6 +40,15 @@ extension OperatorGroupData {
         let contentType: String?
         let name: String?
         let svgImage: SVGImageData?
+        
+        var iconData: ImageData? {
+            
+            guard let svgImage = svgImage else {
+                return nil
+            }
+            
+            return ImageData(with: svgImage)
+        }
     }
 }
 

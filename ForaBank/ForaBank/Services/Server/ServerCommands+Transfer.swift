@@ -42,7 +42,7 @@ extension ServerCommands {
         struct ChangeOutgoing: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/transfer/changeOutgoing"
+            let endpoint = "/rest/transfer/changeOutgoing_V2"
             let method: ServerCommandMethod = .post
             let payload: Payload?
             
@@ -58,7 +58,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: EmptyData?
+                let data: TransferResponseBaseData?
             }
             
             internal init(token: String, payload: Payload) {
@@ -93,7 +93,7 @@ extension ServerCommands {
                 struct CheckCardResponseData: Codable, Equatable {
                     
                     let check: Bool
-                    let payeeCurrency: String
+                    let payeeCurrency: String?
                 }
             }
             
@@ -410,7 +410,7 @@ extension ServerCommands {
         struct ReturnOutgoing: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/transfer/returnOutgoing"
+            let endpoint = "/rest/transfer/returnOutgoing_V2"
             let method: ServerCommandMethod = .post
             let payload: Payload?
             
@@ -424,7 +424,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: EmptyData?
+                let data: TransferResponseBaseData?
             }
             
             internal init(token: String, payload: Payload) {
@@ -443,11 +443,12 @@ extension ServerCommands {
             let endpoint = "/rest/transfer/createInterestDepositTransfer"
             let method: ServerCommandMethod = .post
             let payload: Payload?
+            let timeout: TimeInterval? = 120
             
             struct Payload: Encodable {
                 
                 let check: Bool?
-                let amount: Double?
+                let amount: Decimal?
                 let currencyAmount: String?
                 let payer: Payer?
                 let comment: String?
@@ -468,6 +469,31 @@ extension ServerCommands {
                         case cardId, cardNumber, accountId, accountNumber, phoneNumber
                         case inn = "INN"
                     }
+                }
+                
+                init(check: Bool? = nil, amount: Decimal? = nil, currencyAmount: String? = nil, payer: ServerCommands.TransferController.CreateInterestDepositTransfer.Payload.Payer? = nil, comment: String? = nil, payeeInternal: TransferGeneralData.PayeeInternal? = nil, payeeExternal: TransferGeneralData.PayeeExternal? = nil, depositId: Int) {
+                    self.check = check
+                    self.amount = amount
+                    self.currencyAmount = currencyAmount
+                    self.payer = payer
+                    self.comment = comment
+                    self.payeeInternal = payeeInternal
+                    self.payeeExternal = payeeExternal
+                    self.depositId = depositId
+                }
+                
+                init(check: Bool? = nil, amount: Double? = nil, currencyAmount: String? = nil, payer: ServerCommands.TransferController.CreateInterestDepositTransfer.Payload.Payer? = nil, comment: String? = nil, payeeInternal: TransferGeneralData.PayeeInternal? = nil, payeeExternal: TransferGeneralData.PayeeExternal? = nil, depositId: Int) {
+                    
+                    let amountDecimal: Decimal? = {
+                        
+                        guard let amount else {
+                            return nil
+                        }
+                        
+                        return Decimal(amount).roundedFinance()
+                    }()
+                    
+                    self.init(check: check, amount: amountDecimal, currencyAmount: currencyAmount, payer: payer, comment: comment, payeeInternal: payeeInternal, payeeExternal: payeeExternal, depositId: depositId)
                 }
             }
             

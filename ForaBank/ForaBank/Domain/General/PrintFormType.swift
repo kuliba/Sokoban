@@ -11,6 +11,9 @@ enum PrintFormType: String, Codable, Unknownable {
     
     case sbp
     case direct
+    case newDirect
+    case addressless
+    case addressing_cash
     case `internal`
     case external
     case mobile

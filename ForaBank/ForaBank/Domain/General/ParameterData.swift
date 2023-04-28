@@ -24,6 +24,13 @@ struct ParameterData: Codable, Equatable, Identifiable {
     let subTitle: String?
     let title: String
     let type: String
+    let inputFieldType: String?
+    let dataDictionary: String?
+    let dataDictionaryРarent: String?
+    let group: String?
+    let subGroup: String?
+    let inputMask: String?
+    let phoneBook: Bool?
     let svgImage: SVGImageData?
     let viewType: ViewType
     
@@ -50,35 +57,64 @@ extension ParameterData {
         }
     }
     
-    //"=,inn_oktmo=ИНН и ОКТМО подразделения,number=Номер подразделения"
-    var options: [Option]? {
+    enum OptionsStyle {
         
+        //"=,inn_oktmo=ИНН и ОКТМО подразделения,number=Номер подразделения"
+        case general
+        
+        //"=;RUB=USD,EUR; USD=RUB,EUR"
+        case currency
+    }
+    
+    func options(style: OptionsStyle) -> [Option]? {
+
         guard let data = dataType else {
             return nil
         }
-        
+
         var options = [Option]()
-        let dataSplitted = data.split(separator: ",")
-        
-        for chunk in dataSplitted {
-            
-            let chunkSplitted = chunk.split(separator: "=")
-            
-            guard chunkSplitted.count == 2, chunkSplitted[0] != "", chunkSplitted[1] != "" else {
-                continue
+
+        switch style {
+        case .general:
+
+            let dataSplitted = data.split(separator: ",")
+
+            for chunk in dataSplitted {
+
+                let chunkSplitted = chunk.split(separator: "=")
+
+                guard chunkSplitted.count == 2, chunkSplitted[0] != "", chunkSplitted[1] != "" else {
+                    continue
+                }
+
+                let id = String(chunkSplitted[0])
+                let name = String(chunkSplitted[1])
+                let option = Option(id: id, name: name)
+
+                options.append(option)
             }
-            
-            let id = String(chunkSplitted[0])
-            let name = String(chunkSplitted[1])
-            let option = Option(id: id, name: name)
-            
-            options.append(option)
+
+        case .currency:
+            let dataSplitted = data.split(separator: ";")
+
+            for chunk in dataSplitted {
+
+                let chunkSplitted = chunk.split(separator: "=")
+
+                guard chunkSplitted.count == 2, chunkSplitted[0] != "", chunkSplitted[1] != "" else {
+                    continue
+                }
+
+                let name = String(chunkSplitted[1])
+
+                options = name.split(separator: ",").map({Option(id: $0.description, name: $0.description)})
+            }
         }
-        
+
         guard options.isEmpty == false else {
             return nil
         }
-        
+
         return options
     }
     

@@ -14,7 +14,14 @@ struct CountryData: Codable, Equatable, Hashable, Identifiable {
     let contactCode: String?
     let md5hash: String?
     let name: String
-    let paymentSystemIdList: [String]
+    let paymentSystemIdList: [PaymentSystem]
     let sendCurr: String
     let svgImage: SVGImageData?
+    
+    enum PaymentSystem: String, Codable, Unknownable {
+    
+        case direct = "DIRECT"
+        case contact = "CONTACT"
+        case unknown
+    }
 }

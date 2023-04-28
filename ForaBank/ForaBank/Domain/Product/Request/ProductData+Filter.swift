@@ -46,13 +46,6 @@ extension ProductData {
             return sortedTypes
         }
         
-        func filterredProductsOwner(_ products: [ProductData], ownerId: Int?) -> [ProductData]? {
-            
-            let filterredProducts = filterredProducts(products)
-            let products = filterredProducts.compactMap{$0}.filter({ $0.ownerId == ownerId })
-            return products
-        }
-        
         mutating func remove<T: ProductDataFilterRule>(ruleType: T.Type) {
 
             rules = rules.filter({ type(of: $0) != ruleType })
@@ -236,6 +229,30 @@ extension ProductData.Filter {
     }
 }
 
+//MARK: - Deposit Rules
+
+extension ProductData.Filter {
+    
+    struct RestrictedDepositRule: ProductDataFilterRule {
+        
+        func result(_ productData: ProductData) -> Bool? {
+                    
+          return productData as? ProductDepositData == nil
+        }
+    }
+    
+    struct DemandDepositRule: ProductDataFilterRule {
+        
+        func result(_ productData: ProductData) -> Bool? {
+            
+            guard let productDeposit = productData as? ProductDepositData else {
+                return nil
+            }
+            
+            return productDeposit.isDemandDepositProduct
+        }
+    }
+}
 //MARK: - Presets
 
 extension ProductData.Filter  {
@@ -258,6 +275,23 @@ extension ProductData.Filter  {
                 CardAdditionalNotOwnedRetrictedRule(),
                 AccountActiveRule()])
     
+    //MARK: Currency Wallet
+    
+    static let currencyWalletFrom = ProductData.Filter(
+        rules: [DebitRule(),
+                ProductTypeRule([.card, .account, .deposit]),
+                CardActiveRule(),
+                CardAdditionalNotOwnedRetrictedRule(),
+                AccountActiveRule(),
+                DemandDepositRule()])
+    
+    static let currencyWalletTo = ProductData.Filter(
+        rules: [CreditRule(),
+                ProductTypeRule([.card, .account, .deposit]),
+                CardActiveRule(),
+                CardAdditionalNotOwnedRetrictedRule(),
+                AccountActiveRule(),
+                DemandDepositRule()])
     
     //MARK: Me2Me Payment Filter
     
@@ -301,7 +335,7 @@ extension ProductData.Filter  {
     // ProductRestrictedRule([productFrom.id])
     static let closeDepositTo = ProductData.Filter(
         rules: [CreditRule(),
-                ProductTypeRule([.card, .account]),
+                ProductTypeRule([.card, .account, .deposit]),
                 CardActiveRule(),
                 CardAdditionalNotOwnedRetrictedRule(),
                 AccountActiveRule()])

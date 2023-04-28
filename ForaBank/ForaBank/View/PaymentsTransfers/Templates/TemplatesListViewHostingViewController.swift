@@ -121,7 +121,7 @@ private extension TemplatesListViewHostingViewController {
         let realm = try? Realm()
         
         if let parameterList = template.parameterList.first as? TransferAnywayData {
-            amount = String(Int(parameterList.amount ?? 0))
+            amount = parameterList.amountString
             let operators = realm?.objects(GKHOperatorsModel.self)
             
             if let foundedOperator = operators?.first(where: { $0.puref == parameterList.puref }) {

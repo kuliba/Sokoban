@@ -14,8 +14,8 @@ class PaymentsParameterViewModel: Identifiable {
     
     let id: String
     
-    @Published var value: Value
-    @Published var isEditable: Bool
+    @Published private(set) var value: Value
+    @Published private(set) var isEditable: Bool
     
     var isValid: Bool { true }
     var isFullContent: Bool { false }
@@ -123,4 +123,19 @@ protocol PaymentsParameterViewModelContinuable {
 protocol PaymentsParameterViewModelWarnable {
     
     func update(warning: String)
+}
+
+//MARK: Helpers
+
+extension PaymentsParameterViewModel {
+    
+    var isHidden: Bool {
+        
+        return (source as? Payments.ParameterHidden) != nil
+    }
+    
+    var isNotHidden: Bool {
+        
+        return !isHidden
+    }
 }

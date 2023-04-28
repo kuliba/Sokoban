@@ -23,10 +23,13 @@ struct PaymentsMeToMeView: View {
                     .font(.textH3SB18240())
                     .foregroundColor(.mainColorsBlack)
                     .padding(.horizontal, 20)
+                    .accessibilityIdentifier("BtwTheirTitle")
                 
                 VStack {
                     
                     ProductsSwapView(viewModel: viewModel.swapViewModel)
+                        .padding(.vertical, 20)
+                    
                     PaymentsAmountView(viewModel: viewModel.paymentsAmount)
                 }
             }
@@ -38,6 +41,12 @@ struct PaymentsMeToMeView: View {
                     .padding(.top, -29)
             }
         }
+        .sheet(item: $viewModel.sheet, content: { sheet in
+            switch sheet.type {
+            case let .placesMap(placesViewModel):
+                PlacesView(viewModel: placesViewModel)
+            }
+        })
         .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
 
             switch bottomSheet.type {
@@ -59,18 +68,34 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
     static var previews: some View {
 
         Group {
-
+            
+            PaymentsMeToMeView(viewModel: .init(
+                .emptyMock,
+                swapViewModel: .init(
+                    model: .emptyMock,
+                    items: [.sample2, .sampleMe2MeCollapsed],
+                    divider: .sample),
+                paymentsAmount: .init(
+                    .emptyMock,
+                    title: "Сумма перевода",
+                    textField: .init(150, currencySymbol: "₽"),
+                    transferButton: .active(title: "Перевести", action: {}),
+                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими")
+            )
+            
             PaymentsMeToMeView(viewModel: .init(
                 .emptyMock,
                 swapViewModel: .init(
                     model: .emptyMock,
                     items: [.sampleMe2MeCollapsed, .sample2],
                     divider: .sample),
-                paymentsAmount: .init(title: "Сумма перевода",
-                                      textField: .init(150, currencySymbol: "₽"),
-                                      transferButton: .active(title: "Перевести", action: {}),
-                                      info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими"))
-            
+                paymentsAmount: .init(
+                    .emptyMock,
+                    title: "Сумма перевода",
+                    textField: .init(150, currencySymbol: "₽"),
+                    transferButton: .active(title: "Перевести", action: {}),
+                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими")
+            )
             
             PaymentsMeToMeView(viewModel: .init(
                 .emptyMock,
@@ -78,10 +103,13 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
                     model: .emptyMock,
                     items: [.sampleMe2MeCollapsed, .sample3],
                     divider: .sample),
-                paymentsAmount: .init(title: "Сумма перевода",
-                                      textField: .init(0, currencySymbol: "₽"),
-                                      transferButton: .active(title: "Перевести", action: {}),
-                                      info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими"))
+                paymentsAmount: .init(
+                    .emptyMock,
+                    title: "Сумма перевода",
+                    textField: .init(0, currencySymbol: "₽"),
+                    transferButton: .active(title: "Перевести", action: {}),
+                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими")
+            )
         }
         .previewLayout(.sizeThatFits)
         .padding(.top)

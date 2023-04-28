@@ -33,7 +33,6 @@ struct MeToMeView: UIViewControllerRepresentable {
             
             context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
                 vc.parent?.navigationItem.title = vc.navigationItem.title
-                vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
                 vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
             })
            

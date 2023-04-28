@@ -7,7 +7,7 @@
       "paymentDate": "21.12.2021 11:04:26",
       "puref": "iFora||TransferArmBBClientP",
       "shortName": "Иванов И.",
-      "type": "country"
+      "type": "outside"
     }
   ],
   "errorMessage": "string",

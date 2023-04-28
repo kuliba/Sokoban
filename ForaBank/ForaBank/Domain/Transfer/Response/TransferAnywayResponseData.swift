@@ -13,14 +13,16 @@ class TransferAnywayResponseData: TransferResponseData {
     let finalStep: Bool
     let infoMessage: String?
     let needSum: Bool
+    let printFormType: String?
     let parameterListForNextStep: [ParameterData]
     
-    internal init(amount: Double?, creditAmount: Double?, currencyAmount: Currency?, currencyPayee: Currency?, currencyPayer: Currency?, currencyRate: Double?, debitAmount: Double?,  fee: Double?, needMake: Bool?, needOTP: Bool?, payeeName: String?, documentStatus: DocumentStatus?, paymentOperationDetailId: Int, additionalList: [AdditionalData], finalStep: Bool, infoMessage: String?, needSum: Bool, parameterListForNextStep: [ParameterData]) {
+    internal init(amount: Double?, creditAmount: Double?, currencyAmount: Currency?, currencyPayee: Currency?, currencyPayer: Currency?, currencyRate: Double?, debitAmount: Double?, fee: Double?, needMake: Bool?, needOTP: Bool?, payeeName: String?, documentStatus: DocumentStatus?, paymentOperationDetailId: Int, additionalList: [AdditionalData], finalStep: Bool, infoMessage: String?, needSum: Bool, printFormType: String?, parameterListForNextStep: [ParameterData]) {
         
         self.additionalList = additionalList
         self.finalStep = finalStep
         self.infoMessage = infoMessage
         self.needSum = needSum
+        self.printFormType = printFormType
         self.parameterListForNextStep = parameterListForNextStep
         
         super.init(amount: amount, creditAmount: creditAmount, currencyAmount: currencyAmount, currencyPayee: currencyPayee, currencyPayer: currencyPayer, currencyRate: currencyRate, debitAmount: debitAmount, fee: fee, needMake: needMake, needOTP: needOTP, payeeName: payeeName, documentStatus: documentStatus, paymentOperationDetailId: paymentOperationDetailId)
@@ -29,7 +31,7 @@ class TransferAnywayResponseData: TransferResponseData {
     //MARK: Codable
     
     private enum CodingKeys : String, CodingKey {
-        case additionalList, finalStep, infoMessage, needSum, parameterListForNextStep
+        case additionalList, finalStep, infoMessage, needSum, printFormType, parameterListForNextStep
     }
     
     required init(from decoder: Decoder) throws {
@@ -38,6 +40,7 @@ class TransferAnywayResponseData: TransferResponseData {
         additionalList = try container.decode([AdditionalData].self, forKey: .additionalList)
         finalStep = try container.decode(Bool.self, forKey: .finalStep)
         infoMessage = try container.decodeIfPresent(String.self, forKey: .infoMessage)
+        printFormType = try container.decodeIfPresent(String.self, forKey: .printFormType)
         needSum = try container.decode(Bool.self, forKey: .needSum)
         parameterListForNextStep = try container.decode([ParameterData].self, forKey: .parameterListForNextStep)
         
@@ -51,6 +54,7 @@ class TransferAnywayResponseData: TransferResponseData {
         try container.encode(finalStep, forKey: .finalStep)
         try container.encodeIfPresent(infoMessage, forKey: .infoMessage)
         try container.encode(needSum, forKey: .needSum)
+        try container.encode(printFormType, forKey: .printFormType)
         try container.encode(parameterListForNextStep, forKey: .parameterListForNextStep)
         
         try super.encode(to: encoder)
@@ -64,9 +68,11 @@ extension TransferAnywayResponseData {
     struct AdditionalData: Codable, Equatable {
         
         let fieldName: String
-        let fieldTitle: String
+        let fieldTitle: String?
         let fieldValue: String?
         let svgImage: SVGImageData?
+        let typeIdParameterList: String?
+        let recycle: Bool?
         
         var iconData: ImageData? {
             

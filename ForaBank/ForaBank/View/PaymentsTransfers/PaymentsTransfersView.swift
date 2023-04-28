@@ -53,14 +53,6 @@ struct PaymentsTransfersView: View {
                     case .mobile(let model):
                         MobilePayView(viewModel: model)
                             .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                    case .chooseCountry(let model):
-                        ChooseCountryView(viewModel: model)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
-                            .navigationBarHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
                     case let .country(countryData):
@@ -71,9 +63,7 @@ struct PaymentsTransfersView: View {
                         
                     case let .payments(paymentsViewModel):
                         PaymentsView(viewModel: paymentsViewModel)
-                        
-                    case let .transferByRequisites(transferByRequisitesViewModel):
-                        PaymentsView(viewModel: transferByRequisitesViewModel)
+                            .navigationBarHidden(true)
                         
                     case let .phone(phoneData):
                         PaymentPhoneView(viewModel: phoneData)
@@ -84,37 +74,31 @@ struct PaymentsTransfersView: View {
                     case .internetOperators(let model):
                         OperatorsView(viewModel: model)
                             .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
                     case .serviceOperators(let model):
                         OperatorsView(viewModel: model)
                             .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
                     case .transportOperators(let model):
                         OperatorsView(viewModel: model)
                             .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
                     case .transport(let viewModel):
                         OperatorsView(viewModel: viewModel)
                             .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
                     case .internet(let viewModel):
                         OperatorsView(viewModel: viewModel)
                             .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
                     case .service(let viewModel):
                         OperatorsView(viewModel: viewModel)
                             .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
                     case .template(let templateListViewModel):
@@ -169,6 +153,9 @@ struct PaymentsTransfersView: View {
                         
                     case .fastPayment(let viewModel):
                         ContactsView(viewModel: viewModel)
+                        
+                    case .country(let viewModel):
+                        ContactsView(viewModel: viewModel)
                     }
                 })
             
@@ -220,13 +207,6 @@ struct PaymentsTransfersView: View {
                     }.transaction { transaction in
                         transaction.disablesAnimations = false
                     }
-                
-            case .anotherCard(let model):
-                AnotherCardView(viewModel: model)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .navigationBarTitle("", displayMode: .inline)
-                    .frame(height: 494)
-                
             }
         }
         .alert(item: $viewModel.alert, content: { alertViewModel in

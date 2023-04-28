@@ -7,6 +7,8 @@
 
 import SwiftUI
 import Combine
+import CombineSchedulers
+import TextFieldRegularComponent
 
 extension PaymentsCodeView {
     
@@ -14,35 +16,45 @@ extension PaymentsCodeView {
         
         let icon: Image
         let description: String
-        @Published var content: String
+        let textField: TextFieldRegularView.ViewModel
         @Published var title: String?
         @Published var editingState: EditingState
         @Published var resendState: ResendState?
+        
+        private let scheduler: AnySchedulerOf<DispatchQueue>
 
         var parameterCode: Payments.ParameterCode? { source as? Payments.ParameterCode }
-        override var isValid: Bool { return parameterCode?.validator.isValid(value: content) ?? false }
+        override var isValid: Bool { parameterCode?.validator.isValid(value: textField.text ?? "") ?? false }
 
-        init(icon: Image, description: String, content: String, title: String?, editingState: EditingState, resendState: PaymentsCodeView.ViewModel.ResendState?, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
+        init(icon: Image, description: String, title: String?, textField: TextFieldRegularView.ViewModel, editingState: EditingState, resendState: PaymentsCodeView.ViewModel.ResendState?, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString), scheduler: AnySchedulerOf<DispatchQueue> = .main) {
             self.icon = icon
             self.description = description
-            self.content = content
             self.title = title
             self.editingState = editingState
             self.resendState = resendState
+            self.textField = textField
+            self.scheduler = scheduler
             super.init(source: source)
         }
         
-        init(with parameterCode: Payments.ParameterCode) {
+        init(
+            with parameterCode: Payments.ParameterCode,
+            scheduler: AnySchedulerOf<DispatchQueue> = .main
+        ) {
             
-            self.icon = parameterCode.icon.image ?? Image.ic24MessageSquare
-            self.content = parameterCode.parameter.value ?? ""
+            self.icon = parameterCode.icon.image ?? Image.ic24SmsCode
             self.description = parameterCode.title
+            self.textField = .init(text: parameterCode.parameter.value ?? "", placeholder: parameterCode.title, keyboardType: .number, limit: parameterCode.limit, needCloseButton: true, scheduler: scheduler)
             self.editingState = .idle
             self.resendState = nil
+            self.scheduler = scheduler
             
             super.init(source: parameterCode)
             
-            self.resendState = .timer(.init(delay: parameterCode.timerDelay, completeAction: { [weak self] in
+            self.resendState = .timer(.init(
+                delay: parameterCode.timerDelay,
+                scheduler: scheduler,
+                completeAction: { [weak self] in
                 
                 self?.action.send(PaymentsParameterViewModelAction.Code.ResendDelayIsOver())
             }))
@@ -52,95 +64,120 @@ extension PaymentsCodeView {
         
         private func bind() {
             
+            typealias CodeAction = PaymentsParameterViewModelAction.Code
+            
             action
-                .receive(on: DispatchQueue.main)
-                .sink {[unowned self] action in
+                .compactMap { $0 as? CodeAction.ResendDelayIsOver }
+                .receive(on: scheduler)
+                .sink { [unowned self] _ in
                     
-                    switch action {
-                    case _ as PaymentsParameterViewModelAction.Code.ResendDelayIsOver:
-                        withAnimation {
-                            
-                            resendState = .button(.init(action: { [weak self] in
+                    withAnimation {
+                        
+                        resendState = .button(.init(
+                            action: { [weak self] in
                                 
                                 self?.action.send(PaymentsParameterViewModelAction.Code.ResendButtonDidTapped())
-                            }))
-                        }
+                            }
+                        ))
+                    }
+                }
+                .store(in: &bindings)
+            
+            action
+                .compactMap { $0 as? CodeAction.ResendButtonDidTapped }
+                .receive(on: scheduler)
+                .sink { [unowned self] _ in
+                    
+                    guard let parameterInput = parameterCode else {
+                        return
+                    }
+                    
+                    withAnimation {
                         
-                    case _ as PaymentsParameterViewModelAction.Code.ResendButtonDidTapped:
-                        guard let parameterInput = parameterCode else {
-                            return
-                        }
-
-                        withAnimation {
-                            
-                            resendState = .timer(.init(delay: parameterInput.timerDelay, completeAction: { [weak self] in
+                        resendState = .timer(.init(
+                            delay: parameterInput.timerDelay,
+                            scheduler: scheduler,
+                            completeAction: { [weak self] in
                                 
                                 self?.action.send(PaymentsParameterViewModelAction.Code.ResendDelayIsOver())
-                            }))
-                        }
-                        
-                    case _ as PaymentsParameterViewModelAction.Code.EnterredCodeIncorrect:
-                        guard let parameterInput = parameterCode else {
-                            return
-                        }
-                        
-                        withAnimation {
-                            
-                            editingState = .error(parameterInput.errorMessage)
-                        }
-                        
-                    case _ as PaymentsParameterViewModelAction.Code.ResendCodeDisabled:
-                        withAnimation {
-                            
-                            resendState = nil
-                        }
-                        
+                            }
+                        ))
+                    }
+                }
+                .store(in: &bindings)
 
-                    default:
-                        break
+            action
+                .compactMap { $0 as? CodeAction.IncorrectCodeEntered }
+                .receive(on: scheduler)
+                .sink { [unowned self] _ in
+                    
+                    guard let parameterInput = parameterCode else {
+                        return
                     }
                     
-                }.store(in: &bindings)
-            
-            $content
+                    withAnimation {
+                        
+                        editingState = .error(parameterInput.errorMessage)
+                    }
+                }
+                .store(in: &bindings)
+
+            action
+                .compactMap { $0 as? CodeAction.ResendCodeDisabled }
+                .receive(on: scheduler)
+                .sink { [unowned self] _ in
+                    
+                    withAnimation {
+                        
+                        resendState = nil
+                    }
+                }
+                .store(in: &bindings)
+
+            textField.$state
                 .dropFirst()
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] content in
+                .receive(on: scheduler)
+                .sink { [unowned self] state in
                     
-                    value = value.updated(with: content)
+                    update(value: state.text)
                     
-                    withAnimation(.easeInOut(duration: 0.2)) {
+                    withAnimation {
                         
-                        title = content.count > 0 ? description : nil
+                        updateTitle(with: state)
                     }
-                    
-                    switch editingState {
-                    case .idle, .error:
-                        
-                        withAnimation {
-                            
-                            editingState = .editing
-                        }
-                        
-                    default:
-                        break
-                    }
-                    
-                }.store(in: &bindings)
+                }
+                .store(in: &bindings)
+        }
+        
+        private func updateTitle(
+            with state: TextFieldRegularView.ViewModel.State
+        ) {
+            
+            title = state.isEditing || state.hasValue ? description : nil
         }
         
         override func updateValidationWarnings() {
             
             //TODO: implement validation warning
         }
+                
+        func setOTP(to text: String) {
+            
+            textField.setText(to: text)
+        }
     }
+}
+
+extension TextFieldRegularView.ViewModel.State {
+    
+    var hasValue: Bool { text != "" && text != nil }
 }
 
 //MARK: - Types
 
 extension PaymentsCodeView.ViewModel {
     
-    enum EditingState {
+    enum EditingState: Equatable {
         
         case idle
         case editing
@@ -174,13 +211,20 @@ extension PaymentsCodeView.ViewModel {
         private let startTime = Date().timeIntervalSinceReferenceDate
         private var formatter: DateComponentsFormatter
         
+        private let scheduler: AnySchedulerOf<DispatchQueue>
         private var bindings = Set<AnyCancellable>()
         
-        init(delay: TimeInterval, formatter: DateComponentsFormatter = .formatTime, completeAction: @escaping () -> Void) {
+        init(
+            delay: TimeInterval,
+            formatter: DateComponentsFormatter = .formatTime,
+            scheduler: AnySchedulerOf<DispatchQueue> = .main,
+            completeAction: @escaping () -> Void
+        ) {
             
             self.formatter = formatter
             self.delay = delay
             self.value = formatter.string(from: delay) ?? "0 :\(delay)"
+            self.scheduler = scheduler
             self.completeAction = completeAction
             
             bind()
@@ -189,7 +233,7 @@ extension PaymentsCodeView.ViewModel {
         func bind() {
             
             timer
-                .receive(on: DispatchQueue.main)
+                .receive(on: scheduler)
                 .sink { [unowned self] time in
                     
                     let delta = time.timeIntervalSinceReferenceDate - startTime
@@ -214,7 +258,7 @@ extension PaymentsParameterViewModelAction {
         struct ResendDelayIsOver: Action {}
         struct ResendButtonDidTapped: Action {}
         struct ResendCodeDisabled: Action {}
-        struct EnterredCodeIncorrect: Action {}
+        struct IncorrectCodeEntered: Action {}
     }
 }
 
@@ -224,119 +268,111 @@ struct PaymentsCodeView: View {
     
     @ObservedObject var viewModel: ViewModel
     
-    var titleColor: Color {
-        
-        switch viewModel.editingState {
-        case .editing, .error: return .textRed
-        default: return .textPlaceholder
-        }
-    }
-
-    var dividerColor: Color {
-        
-        switch viewModel.editingState {
-        case .idle: return .bordersDivider
-        case .editing: return .mainColorsBlack
-        case .error: return .textRed
-        }
-    }
-    
-    var dividerOpacity: CGFloat {
-        
-        switch viewModel.editingState {
-        case .idle: return 0.2
-        case .editing, .error: return 1.0
-        }
-    }
-    
-    var errorLabel: String? {
-        
-        guard case .error(let errorMessage) = viewModel.editingState else {
-            return nil
-        }
-        
-        return errorMessage
-    }
-    
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 0) {
+        hStack
+            .padding(.horizontal, 16)
+            .padding(.vertical, 13)
+    }
+    
+    var hStack: some View {
+        
+        HStack(alignment: .top, spacing: 16) {
             
-            HStack {
-                
-                if let title = viewModel.title {
-                    
-                    Text(title)
-                        .font(.textBodySR12160())
-                        .foregroundColor(titleColor)
-                        .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .opacity))
-                }
-                
-                Spacer()
-                
-                if let resendState = viewModel.resendState {
-                    
-                    switch resendState {
-                    case .button(let button):
-                        Button(action: button.action) {
-                            
-                            Text(button.title)
-                                .font(.buttonExtraSmallR12140())
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 2)
-                                .foregroundColor(Color.textSecondary)
-                                .frame(height: 24)
-                                .background(Color.buttonSecondary)
-                                .cornerRadius(90)
-                        }
-                        
-                    case .timer(let timerViewModel):
-                        PaymentsCodeView.TimerView(viewModel: timerViewModel)
-                    }
-                }
-            }
-            .frame(height: 24)
-            .padding(.leading, 48)
-            
-            HStack(spacing: 20) {
-                
-                viewModel.icon
-                    .resizable()
-                    .renderingMode(.template)
-                    .foregroundColor(.mainColorsGray)
-                    .frame(width: 24, height: 24)
-                    .padding(.leading, 4)
-                
-                VStack(spacing: 0) {
-                    
-                    TextField(viewModel.description, text: $viewModel.content) { _ in } onCommit: {
-                        
-                        withAnimation {
-                            viewModel.editingState = .idle
-                        }
-                    }
-                    .foregroundColor(.textSecondary)
-                    .font(.textBodyMM14200())
-                    .textFieldStyle(DefaultTextFieldStyle())
-                    .keyboardType(.numberPad)
-                }
-            }
-            
-            Divider()
-                .frame(height: 1)
-                .background(dividerColor)
-                .opacity(dividerOpacity)
+            icon
+                .frame(width: 24, height: 24)
                 .padding(.top, 12)
-                .padding(.leading, 48)
             
-            if let errorLabel = errorLabel {
+            VStack(alignment: .leading, spacing: 4) {
                 
-                Text(errorLabel)
-                    .font(.textBodySR12160())
-                    .foregroundColor(Color.textRed)
-                    .padding(.top, 8)
-                    .padding(.leading, 48)
+                VStack(alignment: .leading, spacing: 4) {
+                    title
+                    
+                    textField
+                        .frame(maxWidth: .infinity)
+                        .overlay(resendStateView)
+                }
+                .frame(minHeight: 44)
+                
+                errorLabel
             }
+        }
+    }
+    
+    private var icon: some View {
+        
+        viewModel.icon
+            .resizable()
+            .renderingMode(.template)
+            .foregroundColor(.mainColorsGray)
+    }
+    
+    @ViewBuilder
+    private var title: some View {
+        
+        if let title = viewModel.title {
+            
+            Text(title)
+                .font(.textBodyMR14180())
+                .foregroundColor(Color.textPlaceholder)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .transition(
+                    .asymmetric(
+                        insertion: .move(edge: .bottom),
+                        removal: .opacity
+                    )
+                )
+        }
+    }
+    
+    private var textField: some View {
+        
+        TextFieldRegularView(viewModel: viewModel.textField, font: .textH4M16240(), textColor: .textSecondary)
+            .onTapGesture {
+                viewModel.editingState = .idle
+            }
+            .foregroundColor(.textSecondary)
+            .textFieldStyle(DefaultTextFieldStyle())
+            .frame(height: 24)
+            .keyboardType(.numberPad)
+    }
+    
+    @ViewBuilder
+    private var resendStateView: some View {
+        
+        if let resendState = viewModel.resendState {
+            
+            Group {
+                switch resendState {
+                case let .button(button):
+                    Button(action: button.action) {
+                        
+                        Text(button.title)
+                            .foregroundColor(Color.textSecondary)
+                            .font(.textBodyMR14180())
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(Color.white)
+                            .cornerRadius(90)
+                            .frame(height: 24)
+                    }
+                    
+                case let .timer(timerViewModel):
+                    PaymentsCodeView.TimerView(viewModel: timerViewModel)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .trailing)
+        }
+    }
+    
+    @ViewBuilder
+    private var errorLabel: some View {
+        
+        if case let .error(errorMessage) = viewModel.editingState {
+            
+            Text(errorMessage)
+                .foregroundColor(.systemColorError)
+                .font(.textBodySR12160())
         }
     }
 }
@@ -350,8 +386,8 @@ extension PaymentsCodeView {
         var body: some View {
             
             Text(viewModel.value)
-                .font(.buttonExtraSmallR12140())
                 .foregroundColor(Color.textRed)
+                .font(.textBodySR12160())
         }
     }
 }
@@ -360,21 +396,45 @@ struct PaymentCodeView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PaymentsCodeView(viewModel: .sample)
-            .padding(.horizontal, 20)
-            .previewLayout(.fixed(width: 375, height: 120))
+        Group {
+            
+            previewGroup()
+            
+            VStack(content: previewGroup)
+                .previewDisplayName("Xcode 14")
+        }
+        .previewLayout(.sizeThatFits)
+    }
+    
+    private static func previewGroup() -> some View {
         
-        PaymentsCodeView(viewModel: .sampleCorrect)
-            .padding(.horizontal, 20)
-            .previewLayout(.fixed(width: 375, height: 120))
+        Group {
+            
+            Group {
+                
+                PaymentsCodeView(viewModel: .sample)
+                PaymentsCodeView(viewModel: .sampleCorrect)
+                PaymentsCodeView(viewModel: .sampleError)
+                PaymentsCodeView(viewModel: .sampleButton)
+            }
+            .background(Color.mainColorsGrayLightest)
+            .frame(width: 375)
+            .border(.pink)
+            
+            paymentsGroupView(item: .sample,        height: 120)
+            paymentsGroupView(item: .sampleCorrect, height: 140)
+            paymentsGroupView(item: .sampleError,   height: 180)
+            paymentsGroupView(item: .sampleButton,  height: 140)
+        }
+    }
+
+    private static func paymentsGroupView(
+        item: PaymentsCodeView.ViewModel,
+        height: CGFloat
+    ) -> some View {
         
-        PaymentsCodeView(viewModel: .sampleError)
-            .padding(.horizontal, 20)
-            .previewLayout(.fixed(width: 375, height: 120))
-        
-        PaymentsCodeView(viewModel: .sampleButton)
-            .padding(.horizontal, 20)
-            .previewLayout(.fixed(width: 375, height: 120))
+        PaymentsGroupView(viewModel: .init(items: [item]))
+            .previewLayout(.fixed(width: 375, height: height))
     }
 }
 
@@ -382,11 +442,11 @@ struct PaymentCodeView_Previews: PreviewProvider {
 
 extension PaymentsCodeView.ViewModel {
     
-    static let sample = PaymentsCodeView.ViewModel(icon: .ic24MessageSquare, description: "Введите код из смс", content: "", title: nil, editingState: .idle, resendState: .timer(.init(delay: 5, completeAction: {})))
+    static let sample = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: nil, textField: .init(text: nil, placeholder: "Введите код из смс", keyboardType: .number, limit: 6), editingState: .idle, resendState: .timer(.init(delay: 5, completeAction: {})))
     
-    static let sampleCorrect = PaymentsCodeView.ViewModel(icon: .ic24MessageSquare, description: "Введите код из смс", content: "12345", title: "Введите код из смс", editingState: .editing, resendState: .timer(.init(delay: 60, completeAction: {})))
+    static let sampleCorrect = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: "Введите код из смс", textField: .init(text: nil, placeholder: "Введите код из смс", keyboardType: .number, limit: 6), editingState: .editing, resendState: .timer(.init(delay: 60, completeAction: {})))
     
-    static let sampleError = PaymentsCodeView.ViewModel(icon: .ic24MessageSquare, description: "Введите код из смс", content: "12345", title: "Введите код из смс", editingState: .error("Код введен неправильно"), resendState: .timer(.init(delay: 60, completeAction: {})))
+    static let sampleError = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: "Введите код из смс", textField: .init(text: nil, placeholder: "Введите код из смс", keyboardType: .number, limit: 6), editingState: .error("Код введен неправильно"), resendState: .timer(.init(delay: 60, completeAction: {})))
     
-    static let sampleButton = PaymentsCodeView.ViewModel(icon: .ic24MessageSquare, description: "Введите код из смс", content: "12345", title: "Введите код из смс", editingState: .idle, resendState: .button(.init()))
+    static let sampleButton = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: "Введите код из смс", textField: .init(text: nil, placeholder: "Введите код из смс", keyboardType: .number, limit: 6), editingState: .idle, resendState: .button(.init()))
 }

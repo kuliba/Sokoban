@@ -28,18 +28,11 @@ extension Model {
             // header
             let headerParameter = Payments.ParameterHeader(title: "Перевести", subtitle: "Человеку или организации", icon: nil, rightButton: [.init(icon: ImageData(named: "ic24BarcodeScanner2") ?? .iconPlaceholder, action: .scanQrCode)])
             
-            //MARK: Bic Bank Parameter
-            let bicValidator: Payments.Validation.RulesSystem = {
-                
-                var rules = [Payments.Validation.Rule]()
-                
-                rules.append(Payments.Validation.LengthLimitsRule(lengthLimits: [9], actions: [.post: .warning("Должен состоять из 9 цифр.")]))
+            //MARK: Bic Bank Parameter            
+            let banks = self.dictionaryFullBankInfoPrefferedFirstList()
+            let options = banks.map({Payments.ParameterSelectBank.Option(id: $0.bic, name: $0.rusName ?? $0.fullName, subtitle: $0.bic, icon: .init(with: $0.svgImage), searchValue: $0.bic)})
 
-                rules.append(Payments.Validation.RegExpRule(regExp: "^[0-9]\\d*$", actions: [.post: .warning("Введено некорректное значение")]))
-                
-                return .init(rules: rules)
-            }()
-            let bicBankParameter = Payments.ParameterSelectBank(.init(id: bicBankId, value: nil), icon: defaultInputIcon, title: "БИК банка получателя", options: [], validator: bicValidator, limitator: .init(limit: 9))
+            let bicBankParameter = Payments.ParameterSelectBank(.init(id: bicBankId, value: nil), icon: defaultInputIcon, title: "БИК банка получателя", options: options, placeholder: "Начните ввод для поиска", selectAll: .init(type: .banksFullInfo), keyboardType: .number)
             
             //MARK: Account Number Parameter
             let accountNumberValidator: Payments.Validation.RulesSystem = {
@@ -121,7 +114,7 @@ extension Model {
                 let productParameterId = Payments.Parameter.Identifier.product.rawValue
                 let filter = ProductData.Filter.generalFrom
                 guard let product = firstProduct(with: filter),
-                      let currencySymbol = dictionaryCurrencySymbol(for: product.currency)else {
+                      let currencySymbol = dictionaryCurrencySymbol(for: product.currency) else {
                     throw Payments.Error.unableCreateRepresentable(productParameterId)
                 }
                 let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
@@ -165,7 +158,7 @@ extension Model {
                 
                 var rules = [Payments.Validation.Rule]()
                 
-                rules.append(Payments.Validation.LengthLimitsRule.init(lengthLimits: [9], actions: [.post: .warning("Должен состоять из 9 цифр.")]))
+                rules.append(Payments.Validation.LengthLimitsRule(lengthLimits: [9], actions: [.post: .warning("Должен состоять из 9 цифр.")]))
                 
                 rules.append(Payments.Validation.RegExpRule(regExp: "^[0-9]\\d*$", actions: [.post: .warning("Введено некорректное значение")]))
                 
@@ -216,15 +209,21 @@ extension Model {
                             return nil
                         }
                         
-                        return .init(id: kpp, name: company.name, icon: nil)
+                        return .init(id: kpp, name: kpp, subname: company.name)
                     }
                     
-                    let kppParameter = Payments.ParameterSelect(.init(id: kppParameterId, value: options.first?.id), title: "КПП получателя", options: options, type: .kpp, description: "Выберите из \(options.count)")
+                    let kppParameter = Payments.ParameterSelect(.init(id: kppParameterId, value: options.first?.id), icon: .name("ic24FileHash"), title: "КПП получателя", placeholder: "Начните ввод для поиска", options: options, description: "Выберите из \(options.count)")
                     parameters.append(kppParameter)
                     
                     //MARK: Company Name Parameter
-                    let companyNameParameter = Payments.ParameterInput(.init(id: companyNameParameterId, value: options.first?.name), icon: nil, title: "Наименование получателя", validator: companyNameValidator, limitator: .init(limit: 160))
+                    let companyNameValue = options.first?.subname
+                    let companyNameParameter = Payments.ParameterInput(.init(id: companyNameParameterId, value: companyNameValue), icon: nil, title: "Наименование получателя", validator: companyNameValidator, limitator: .init(limit: 160))
                     parameters.append(companyNameParameter)
+                    
+                    // helper required to support update company name with kpp parameter selector change and manual user name update
+                    let companyNameParameterHelperId = Payments.Parameter.Identifier.requisitsCompanyNameHelper.rawValue
+                    let companyNameParameterHelper = Payments.ParameterHidden(id: companyNameParameterHelperId, value: companyNameValue)
+                    parameters.append(companyNameParameterHelper)
                 }
                 
             } else {
@@ -247,7 +246,7 @@ extension Model {
                 
                 //MARK: CheckBox Parameter
                 let checkBoxParameterId = Payments.Parameter.Identifier.requisitsCheckBox.rawValue
-                let checkBoxParameter = Payments.ParameterCheckBox(.init(id: checkBoxParameterId, value: .init()), title: "Оплата ЖКХ")
+                let checkBoxParameter = Payments.ParameterCheck(.init(id: checkBoxParameterId, value: .init()), title: "Оплата ЖКХ")
                 parameters.append(checkBoxParameter)
             }
             
@@ -356,44 +355,73 @@ extension Model {
             
         case Payments.Parameter.Identifier.requisitsMessage.rawValue:
             
-            let messageId = Payments.Parameter.Identifier.requisitsMessage.rawValue
-            guard let message = parameters.first(where: {$0.id == messageId}) as? Payments.ParameterInput else {
+            guard let messageParameter = try? parameters.parameter(forIdentifier: .requisitsMessage, as: Payments.ParameterInput.self),
+                  let checkBoxParameter = try? parameters.parameter(forIdentifier: .requisitsCheckBox, as: Payments.ParameterCheck.self) else {
                 return nil
             }
             
-            let checkBoxId = Payments.Parameter.Identifier.requisitsCheckBox.rawValue
-            let checkBox = parameters.first(where: {$0.id == checkBoxId})
-            
-            guard let checkBox = checkBox as? Payments.ParameterCheckBox, checkBox.value == true, let imageData = UIImage(named: "ic24Info")?.pngData() else {
-                return message.updated(hint: nil)
+            // this logic drops unnecessary message parameter updates to fix lag durring fast message typing
+            switch (checkBoxParameter.value, messageParameter.hint) {
+            case (true, nil):
+                // checkbox is enabled and hint is empty
+                // create a hint
+                return messageParameter.updated(hint: .init(title: "Назначение платежа", subtitle: "Заполняется в соответствии\nс требованиями поставщика услуг", icon: .init(named: "ic24Info") ?? .iconPlaceholder, hints: [.init(title: "Рекомендуемый формат:", description: "ЕЛС;период оплаты///назначение платежа, № и дата счета, адрес. Показания. НДС (есть/нет)."), .init(title: "Пример:", description: "ЛСИ1105-12;09.2022///оплата по счету 10 от 30.09.22, потребление э/э, показания 52364, адрес. В т.ч. НДС. л/с1631245;10.2022///платеж за кап ремонт, адрес. Без НДС.")]))
+                
+            case (false, .some):
+                // checkbox is disabled and hint is NOT empty
+                // remove the hint
+                return messageParameter.updated(hint: nil)
+                
+            default:
+                return nil
             }
-            
-            return message.updated(hint: .init(title: "Назначение платежа", subtitle: "Заполняется в соответствии\nс требованиями поставщика услуг", icon: imageData, hints: [.init(title: "Рекомендуемый формат:", description: "ЕЛС;период оплаты///назначение платежа, № и дата счета, адрес. Показания. НДС (есть/нет)."), .init(title: "Пример:", description: "ЛСИ1105-12;09.2022///оплата по счету 10 от 30.09.22, потребление э/э, показания 52364, адрес. В т.ч. НДС. л/с1631245;10.2022///платеж за кап ремонт, адрес. Без НДС.")]))
             
         case Payments.Parameter.Identifier.header.rawValue:
             let codeParameterId = Payments.Parameter.Identifier.code.rawValue
-            let parametersIds = parameters.map{ $0.id }
+            let parametersIds = parameters.map(\.id)
             guard parametersIds.contains(codeParameterId) else {
                 return nil
             }
             return Payments.ParameterHeader(title: "Подтвердите реквизиты")
-        
-        case Payments.Parameter.Identifier.requisitsKpp.rawValue:
-            guard let parameterKpp = parameters.first(where: {$0.id == Payments.Parameter.Identifier.requisitsKpp.rawValue}) as? Payments.ParameterInput else {
-                return nil
-            }
-            
-            let kppParameterUpdated = parameterKpp.updated(icon: ImageData(named: "ic24FileHash") ?? .parameterSample)
-            return kppParameterUpdated
             
         case Payments.Parameter.Identifier.requisitsCompanyName.rawValue:
-            guard let parameterKpp = parameters.first(where: {$0.id == Payments.Parameter.Identifier.requisitsKpp.rawValue}) as? Payments.ParameterSelect,
-                  let companyName = parameterKpp.options.first(where: { $0.id == parameterKpp.value })?.name,
-                  let parameterCompanyName = parameters.first(where: { $0.id == Payments.Parameter.Identifier.requisitsCompanyName.rawValue }) as? Payments.ParameterInput else {
+            
+            // case when we have multiple kpps in selector
+            // parameter KPP must be a ParameterSelect type
+            // parameter company name helper also must be for this case
+            
+            guard let parameterKpp = try? parameters.parameter(forIdentifier: .requisitsKpp, as: Payments.ParameterSelect.self),
+                  let parameterCompanyNameHelper = try? parameters.parameter(forIdentifier: .requisitsCompanyNameHelper),
+                  let companyName = parameterKpp.options.first(where: { $0.id == parameterKpp.value })?.subname else {
                 return nil
             }
             
+            // check if value in helper Not equal to value in KPP selector
+            // this means that KPP selector value changed
+            guard parameterCompanyNameHelper.value != companyName else {
+                return nil
+            }
+            
+            guard let parameterCompanyName = try? parameters.parameter(forIdentifier: .requisitsCompanyName) else {
+                return nil
+            }
+            
+            // KPP selector value changed so we have to update the company name parameter value
             return parameterCompanyName.updated(value: companyName)
+            
+        case Payments.Parameter.Identifier.requisitsCompanyNameHelper.rawValue:
+            guard let parameterKpp = try? parameters.parameter(forIdentifier: .requisitsKpp, as: Payments.ParameterSelect.self),
+                  let parameterCompanyNameHelper = try? parameters.parameter(forIdentifier: .requisitsCompanyNameHelper),
+                  let companyName = parameterKpp.options.first(where: { $0.id == parameterKpp.value })?.subname else {
+                return nil
+            }
+            
+            guard parameterCompanyNameHelper.value != companyName else {
+                return nil
+            }
+            
+            // store updated KPP value in parameter company name helper
+            return parameterCompanyNameHelper.updated(value: companyName)
             
         default:
             return nil
@@ -506,7 +534,7 @@ extension Payments.ParameterAmount {
     
     func updated(currencySymbol: String, maxAmount: Double?) -> Payments.ParameterAmount {
             
-            return Payments.ParameterAmount(value: value, title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: maxAmount), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
+        return Payments.ParameterAmount(value: value, title: "Сумма перевода", currencySymbol: currencySymbol, deliveryCurrency: deliveryCurrency, validator: .init(minAmount: 0.01, maxAmount: maxAmount), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
     }
 }
 

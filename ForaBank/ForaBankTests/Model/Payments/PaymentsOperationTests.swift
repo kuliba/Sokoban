@@ -367,6 +367,9 @@ extension PaymentsOperationTests {
         XCTAssertEqual(result.steps[1].back.stage, stepTwo.back.stage)
         XCTAssertEqual(result.steps[1].back.required, stepTwo.back.required)
         XCTAssertNil(result.steps[1].back.processed)
+        
+        // visible
+        XCTAssertEqual(result.visible, ["one", "two"])
     }
     
     func testRollback_First_Step_Unchanged() throws {
@@ -404,6 +407,9 @@ extension PaymentsOperationTests {
         XCTAssertEqual(result.steps[1].back.stage, stepTwo.back.stage)
         XCTAssertEqual(result.steps[1].back.required, stepTwo.back.required)
         XCTAssertNil(result.steps[1].back.processed)
+        
+        // visible
+        XCTAssertEqual(result.visible, ["one", "two"])
     }
     
     func testRollback_Step_Index_Incorrect() throws {
@@ -486,7 +492,7 @@ extension PaymentsOperationTests {
         let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne, stepTwo, stepThree], visible: [])
         
         // when
-        let result = operation.updatedDepended(reducer: mockReducer(service:parameterId:parameters:))
+        let result = operation.updatedDepended(reducer: mockReducer(operation:parameterId:parameters:))
         
         // then
         XCTAssertEqual(result.parameters[0].value, "100")
@@ -509,7 +515,7 @@ extension PaymentsOperationTests {
         let operation = Payments.Operation(service: .fms, source: nil, steps: [stepOne, stepTwo, stepThree], visible: [])
         
         // when
-        let result = operation.updatedDepended(reducer: mockReducer(service:parameterId:parameters:))
+        let result = operation.updatedDepended(reducer: mockReducer(operation:parameterId:parameters:))
         
         // then
         XCTAssertEqual(result.parameters[0].value, "100")
@@ -517,7 +523,7 @@ extension PaymentsOperationTests {
         XCTAssertEqual(result.parameters[2].value, "100")
     }
     
-    func mockReducer(service: Payments.Service, parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
+    func mockReducer(operation: Payments.Operation, parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
         
         switch parameterId {
         case "two":

@@ -20,8 +20,8 @@ enum Payments {
         var services: [Service] {
             
             switch self {
-            case .general: return [.requisites]
-            case .fast: return [.sfp, .direct]
+            case .general: return [.requisites, .c2b, .toAnotherCard, .mobileConnection, .return, .change]
+            case .fast: return [.sfp, .abroad]
             case .taxes: return [.fns, .fms, .fssp]
             }
         }
@@ -52,22 +52,35 @@ enum Payments {
     enum Service: String {
         
         case sfp
-        case direct
+        case abroad
         case fms
         case fns
         case fssp
         case requisites
+        case c2b
+        case toAnotherCard
+        case mobileConnection
+        case `return`
+        case change
     }
     
     enum Operator : String {
         
-        case sfp        = "iFora||TransferC2CSTEP"
-        case direct     = "REQUIRED!!!!!"
-        case fssp       = "iFora||5429"
-        case fms        = "iFora||6887"
-        case fns        = "iFora||6273"
-        case fnsUin     = "iFora||7069"
-        case requisites = "requisites"
+        case sfp               = "iFora||TransferC2CSTEP"
+        case direct            = "iFora||MIG"
+        case directCard        = "iFora||MIG||card"
+        case contact           = "iFora||Addressless"
+        case contactCash       = "iFora||Addressing||cash"
+        case fssp              = "iFora||5429"
+        case fms               = "iFora||6887"
+        case fns               = "iFora||6273"
+        case fnsUin            = "iFora||7069"
+        case requisites        = "requisites"
+        case c2b               = "c2b"
+        case toAnotherCard     = "toAnotherCard"
+        case mobileConnection  = "mobileConnection"
+        case `return`          = "return"
+        case change            = "change"
     }
 }
 
@@ -93,8 +106,27 @@ extension Payments.Parameter {
         
         case top
         case feed
-        case spoiler
         case bottom
+    }
+    
+    enum Style {
+        
+        case light
+        case dark
+    }
+    
+    struct Group: Hashable {
+        
+        let id: String
+        let type: Kind
+        
+        enum Kind: Hashable {
+            
+            case regular
+            case spoiler
+            case contact
+            case info
+        }
     }
     
     enum View {
@@ -152,11 +184,15 @@ extension Payments.Operation {
         
         case sfp(phone: String, bankId: BankData.ID)
         
-        case direct(phone: String, bankId: BankData.ID, countryId: CountryData.ID)
+        case direct(phone: String? = nil, countryId: CountryData.ID, serviceData: PaymentServiceData? = nil)
+                
+        case `return`(operationId: Int, transferNumber: String, amount: String, productId: String)
         
-        case abroad(phone: String, countryId: CountryData.ID)
+        case change(operationId: String, transferNumber: String, name: String)
         
         case requisites(qrCode: QRCode)
+        
+        case c2bSubscribe(URL)
         
         case mock(Payments.Mock)
         
@@ -167,10 +203,12 @@ extension Payments.Operation {
             case let .latestPayment(latestPaymentId): return "latest payment: \(latestPaymentId)"
             case .qr: return "qr"
             case let .sfp(phone: phone, bankId: bankId): return "sfp: \(phone), bankId: \(bankId)"
-            case let .direct(phone: phone, bankId: bankId, countryId: countryId): return "direct: \(phone), bankId: \(bankId), countryId: \(countryId)"
-            case let .abroad(phone: phone, countryId: countryId): return "abroad: \(phone), countryId: \(countryId)"
+            case let .direct(phone: phone, countryId: countryId, serviceData: serviceData): return "direct: \(phone ?? "nil"), countryId: \(countryId), lastPaymentName: \(String(describing: serviceData?.lastPaymentName))"
+            case let .return(operationId: operationId, transferNumber: number, amount: amount, productId: productId): return "operationId: \(operationId), transferNumber: \(number), amount: \(amount), productId: \(productId)"
+            case let .change(operationId: operationId, transferNumber: number, name: name): return "operationId: \(operationId), transferNumber: \(number), name: \(name)"
             case let .mock(mock): return "mock service: \(mock.service.rawValue)"
             case let .requisites(qrCode): return "qrCode: \(qrCode)"
+            case let .c2bSubscribe(url): return "c2b subscribe url: \(url.absoluteURL)"
             }
         }
     }
@@ -191,6 +229,7 @@ extension Payments.Operation {
             let isCompleted: Bool
         }
         
+        //TODO: implement `optional` list, for cases when we send parameter only if it has value
         struct Back: Equatable {
             
             let stage: Stage
@@ -251,8 +290,13 @@ extension Payments.Operation {
         
         case anyway
         case sfp
-        case direct
+        case abroad
         case requisites
+        case c2b
+        case toAnotherCard
+        case mobileConnection
+        case `return`
+        case change
     }
     
     enum Action: Equatable {
@@ -278,6 +322,7 @@ extension Payments.Operation {
 
 extension Payments {
     
+    //TODO: refactor into dynamic list of parameters
     struct Success {
  
         let operationDetailId: Int
@@ -285,27 +330,41 @@ extension Payments {
         let productId: ProductData.ID
         let amount: Double
         let service: Payments.Service
+        let serviceData: ServiceData?
         
-        init(operationDetailId: Int, status: TransferResponseBaseData.DocumentStatus, productId: ProductData.ID, amount: Double, service: Payments.Service) {
+        init(operationDetailId: Int, status: TransferResponseBaseData.DocumentStatus, productId: ProductData.ID, amount: Double, service: Payments.Service, serviceData: ServiceData? = nil) {
             
             self.operationDetailId = operationDetailId
             self.status = status
             self.productId = productId
             self.amount = amount
             self.service = service
+            self.serviceData = serviceData
         }
         
-        init(with response: TransferResponseBaseData, operation: Payments.Operation) throws {
+        init(
+            with response: TransferResponseBaseData,
+            operation: Payments.Operation,
+            serviceData: ServiceData? = nil
+        ) throws {
             
             guard let status = response.documentStatus,
-            let amount = operation.amount,
-            let productId = operation.productId else {
+                  let amount = operation.amount,
+                  let productId = operation.productId else {
                 
                 //TODO: more informative error
                 throw Payments.Error.unsupported
             }
             
-            self.init(operationDetailId: response.paymentOperationDetailId, status: status, productId: productId, amount: amount, service: operation.service)
+            self.init(operationDetailId: response.paymentOperationDetailId, status: status, productId: productId, amount: amount, service: operation.service, serviceData: serviceData)
+        }
+        
+        enum ServiceData {
+            
+            case c2bSubscriptionData(C2BSubscriptionData)
+            case mobileConnectionData(MobileConnectionData)
+            case abroadData(TransferResponseBaseData)
+            case returnAbroadData(transferData: TransferResponseBaseData, title: String)
         }
     }
 }
@@ -369,8 +428,10 @@ extension Payments {
         case missingOptions(ParameterData)
         case missingValueForParameter(Payments.Parameter.ID)
         case missingValue(ParameterData)
+        case missingSource(Service)
         
         case action(Action)
+        case ui(UI)
 
         case notAuthorized
         case unsupported
@@ -379,6 +440,12 @@ extension Payments {
             
             case warning(parameterId: Payments.Parameter.ID, message: String)
             case alert(title: String, message: String)
+        }
+        
+        enum UI {
+            
+            case sourceParameterMissingOptions(Payments.Parameter.ID)
+            case sourceParameterSelectedOptionInvalid(Payments.Parameter.ID)
         }
         
         var errorDescription: String? {
@@ -416,9 +483,21 @@ extension Payments {
                 case let .alert(title: title, message: message):
                     return "Alert action with title: \(title), message: \(message)"
                 }
+                
+            case let .ui(ui):
+                switch ui {
+                case let .sourceParameterMissingOptions(parameterId):
+                    return "source parameter with id: \(parameterId) missing required options"
+                    
+                case let .sourceParameterSelectedOptionInvalid(parameterId):
+                    return "source parameter with id: \(parameterId) selected option missed in the options list"
+                }
 
             case .notAuthorized:
                 return "Not authorized request attempt"
+                
+            case let .missingSource(service):
+                return "Missing source for service: \(service)"
                 
             case .unsupported:
                 return "Unsupported"

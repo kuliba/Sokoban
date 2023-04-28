@@ -1,0 +1,37 @@
+{
+  "configurations" : [
+    {
+      "id" : "EE5AD226-BCC9-4F59-8219-CA7AE82FDC00",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:ForaBank.xcodeproj",
+      "identifier" : "EDB1437C265FDA410028EF5A",
+      "name" : "ForaBank"
+    },
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:ForaBank.xcodeproj",
+        "identifier" : "EDB14392265FDA430028EF5A",
+        "name" : "ForaBankTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "TextFieldRegularComponentTests",
+        "name" : "TextFieldRegularComponentTests"
+      }
+    }
+  ],
+  "version" : 1
+}

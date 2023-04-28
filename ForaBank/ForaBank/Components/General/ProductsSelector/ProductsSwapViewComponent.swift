@@ -49,26 +49,68 @@ extension ProductsSwapView {
             self.model = model
             self.items = items
             self.divider = divider
+            
+            LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductsSwapView.ViewModel initialized")
         }
         
-        convenience init(_ model: Model, productData: ProductData, mode: PaymentsMeToMeViewModel.Mode) {
+        deinit {
+            
+            LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductsSwapView.ViewModel deinitialized")
+        }
+        
+        convenience init?(_ model: Model, mode: PaymentsMeToMeViewModel.Mode) {
             
             switch mode {
-            case .general:
+            case .demandDeposit:
                 
-                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, style: .me2me, filter: .meToMeFrom)
-                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, style: .me2me, filter: .meToMeTo)
+                let productFromFilter = ProductData.Filter(
+                    rules: [ProductData.Filter.DebitRule(),
+                            ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
+                            ProductData.Filter.DemandDepositRule(),
+                            ProductData.Filter.CardActiveRule(),
+                            ProductData.Filter.CardAdditionalNotOwnedRetrictedRule(),
+                            ProductData.Filter.AccountActiveRule()])
+                guard let productDataFrom = model.firstProduct(with: productFromFilter) else {
+                    return nil
+                }
+
+                let productToFilter = ProductData.Filter(
+                    rules: [ProductData.Filter.CreditRule(),
+                            ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
+                            ProductData.Filter.CardActiveRule(),
+                            ProductData.Filter.CardAdditionalNotOwnedRetrictedRule(),
+                            ProductData.Filter.AccountActiveRule()])
+
+                let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, filter: productFromFilter)
+                let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, filter: productToFilter)
                 
-                let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
-                let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
+                let from = ProductSelectorView.ViewModel(model, productData: productDataFrom, context: contextFrom)
+                let to = ProductSelectorView.ViewModel(model, context: contextTo)
                 
                 self.init(model: model, items: [from, to], divider: .init())
                 
-                updateDivider()
+                setupSwapButton()
+
+            case .general:
+                
+                let productFromFilter: ProductData.Filter = .meToMeFrom
+                guard let productDataFrom = model.firstProduct(with: productFromFilter) else {
+                    return nil
+                }
+                
+                let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, filter: productFromFilter)
+                let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, filter: .meToMeTo)
+                
+                let from = ProductSelectorView.ViewModel(model, productData: productDataFrom, context: contextFrom)
+                let to = ProductSelectorView.ViewModel(model, context: contextTo)
+                
+                self.init(model: model, items: [from, to], divider: .init())
+                
+                setupSwapButton()
                 
             case let .closeAccount(productData, _):
                 
-                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, style: .me2me, isUserInteractionEnabled: false, filter: .closeAccountFrom)
+                let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, isUserInteractionEnabled: false, filter: .closeAccountFrom)
                 
                 var filterTo = ProductData.Filter.closeAccountTo
                 
@@ -80,26 +122,83 @@ extension ProductsSwapView {
                 }
             
                 filterTo.rules.append(ProductData.Filter.ProductRestrictedRule([productData.id]))
-                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, style: .me2me, filter: filterTo)
+                let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, filter: filterTo)
                 
-                let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
-                let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
+                let from = ProductSelectorView.ViewModel(model, productData: productData, context: contextFrom)
+                let to = ProductSelectorView.ViewModel(model, context: contextTo)
                 
                 self.init(model: model, items: [from, to], divider: .init())
                 
             case let .closeDeposit(productData, _):
                 
-                let contextFrom: ProductSelectorView.ViewModel.Context = .init(title: "Откуда", direction: .from, style: .me2me, isUserInteractionEnabled: false, filter: .closeDepositFrom)
+                let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, isUserInteractionEnabled: false, filter: .closeDepositFrom)
                 
                 var filterTo = ProductData.Filter.closeDepositTo
                 filterTo.rules.append(ProductData.Filter.CurrencyRule([.init(description: productData.currency)]))
                 filterTo.rules.append(ProductData.Filter.ProductRestrictedRule([productData.id]))
-                let contextTo: ProductSelectorView.ViewModel.Context = .init(title: "Куда", direction: .to, style: .me2me, filter: filterTo)
+                let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, filter: filterTo)
                 
-                let from: ProductSelectorView.ViewModel = .init(model, productData: productData, context: contextFrom)
-                let to: ProductSelectorView.ViewModel = .init(model, context: contextTo)
+                let from = ProductSelectorView.ViewModel(model, productData: productData, context: contextFrom)
+                let to = ProductSelectorView.ViewModel(model, context: contextTo)
                 
                 self.init(model: model, items: [from, to], divider: .init())
+                
+            case let .makePaymentTo(productToData, _):
+                var filterFrom = ProductData.Filter.generalFrom
+                /*
+                 temp off because of case with the single account product. Additional analytics is required.
+                 
+                filterFrom.rules.append(ProductData.Filter.ProductRestrictedRule([productToData.id]))
+                 */
+                
+                guard let productFromData = model.firstProduct(with: filterFrom) else {
+                    return nil
+                }
+                
+                let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, filter: filterFrom)
+                let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, isUserInteractionEnabled: false, filter: .init(rules: []))
+
+                let from = ProductSelectorView.ViewModel(model, productData: productFromData, context: contextFrom)
+                let to = ProductSelectorView.ViewModel(model, productData: productToData, context: contextTo)
+                
+                self.init(model: model, items: [from, to], divider: .init())
+                
+            case let .makePaymentToDeposite(productToData, _):
+                var filterFrom = ProductData.Filter(
+                    rules: [ProductData.Filter.DebitRule(),
+                            ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
+                            ProductData.Filter.CardActiveRule(),
+                            ProductData.Filter.CardAdditionalNotOwnedRetrictedRule(),
+                            ProductData.Filter.AccountActiveRule()])
+                filterFrom.rules.append(ProductData.Filter.ProductRestrictedRule([productToData.id]))
+                
+                let filterTo = ProductData.Filter(
+                    rules: [ProductData.Filter.CreditRule(),
+                            ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
+                            ProductData.Filter.CardActiveRule(),
+                            ProductData.Filter.CardAdditionalNotOwnedRetrictedRule(),
+                            ProductData.Filter.AccountActiveRule()])
+                let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, filter: filterFrom)
+                let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, isUserInteractionEnabled: true, filter: filterTo)
+
+                let from = ProductSelectorView.ViewModel(model, context: contextFrom)
+                let to = ProductSelectorView.ViewModel(model, productData: productToData, context: contextTo)
+                
+                self.init(model: model, items: [from, to], divider: .init())
+                
+            case let .transferDeposit(productData, _), let .transferAndCloseDeposit(productData, _):
+                
+                let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, isUserInteractionEnabled: false, filter: .closeDepositFrom)
+                
+                var filterTo = ProductData.Filter.closeDepositTo
+                filterTo.rules.append(ProductData.Filter.ProductRestrictedRule([productData.id]))
+                let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, filter: filterTo)
+                
+                let from = ProductSelectorView.ViewModel(model, productData: productData, context: contextFrom)
+                let to = ProductSelectorView.ViewModel(model, context: contextTo)
+                
+                self.init(model: model, items: [from, to], divider: .init())
+
             }
             
             bind()
@@ -109,46 +208,37 @@ extension ProductsSwapView {
         private func bind() {
             
             action
-                .receive(on: DispatchQueue.main)
+                .compactMap { $0 as? ProductsSwapAction.Button.Tap }
                 .throttle(for: .milliseconds(500), scheduler: DispatchQueue.main, latest: false)
-                .sink { [unowned self] action in
-                    
-                    switch action {
-                    case _ as ProductsSwapAction.Button.Tap:
-                                                
-                        withAnimation {
-                            
-                            items = items.reversed()
-                            divider.isToogleButton.toggle()
-                        }
-                        
-                        self.action.send(ProductsSwapAction.Swapped())
-                        
-                    case _ as ProductsSwapAction.Button.Reset:
-                        break
-                        
-                    default:
-                        break
-                    }
-                    
-                }.store(in: &bindings)
-            
-            $items
-                .dropFirst()
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] items in
+                .sink { [unowned self] _ in
                     
-                    guard let from = from, let to = to else {
-                        return
-                    }
-
-                    let contextFrom = to.context.value
-                    let contextTo = from.context.value
-                    
-                    from.context.value = contextFrom
-                    to.context.value = contextTo
-                    
-                }.store(in: &bindings)
+                    swapItems()
+                }
+                .store(in: &bindings)
+         }
+        
+        private func swapItems() {
+            
+            withAnimation {
+                
+                items = items.reversed()
+                
+                guard
+                    let from = from,
+                    let to = to
+                else {
+                    return
+                }
+                
+                let contextFrom = from.context.value
+                let contextTo = to.context.value
+                
+                self.from?.context.value = contextTo
+                self.to?.context.value = contextFrom
+                
+                divider.isToogleButton.toggle()
+            }
         }
         
         func bind(items: [ProductSelectorView.ViewModel]) {
@@ -156,40 +246,40 @@ extension ProductsSwapView {
             for item in items {
                 
                 item.action
+                    .compactMap { $0 as? ProductSelectorAction.Selected }
                     .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] action in
+                    .sink { [unowned self] payload in
                         
-                        switch action {
-                        case let payload as ProductSelectorAction.Selected:
-                            
-                            if let from = from, item.id == from.id {
-                                self.action.send(ProductsSwapAction.Selected.From(productId: payload.id))
-                            } else {
-                                self.action.send(ProductsSwapAction.Selected.To(productId: payload.id))
-                            }
-                            
-                        case let payload as ProductSelectorAction.Product.Tap:
-                            
-                            guard let from = from, let to = to else {
-                                return
-                            }
-                            
-                            switch from.id == payload.id {
-                            case true: to.collapseList()
-                            case false: from.collapseList()
-                            }
-                            
-                            UIApplication.shared.hideKeyboardIfNeeds()
-
-                        default:
-                            break
+                        if let from = from, item.id == from.id {
+                            self.action.send(ProductsSwapAction.Selected.From(productId: payload.id))
+                        } else {
+                            self.action.send(ProductsSwapAction.Selected.To(productId: payload.id))
                         }
-
-                    }.store(in: &bindings)
+                    }
+                    .store(in: &bindings)
+                
+                item.action
+                    .compactMap { $0 as? ProductSelectorAction.Product.Tap }
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] payload in
+                        
+                        guard let from = from, let to = to else {
+                            return
+                        }
+                        
+                        if from.id == payload.id {
+                            to.collapseList()
+                        } else {
+                            from.collapseList()
+                        }
+                        
+                        UIApplication.shared.hideKeyboardIfNeeds()
+                    }
+                    .store(in: &bindings)
             }
         }
         
-        private func updateDivider() {
+        private func setupSwapButton() {
             
             divider.swapButton = .init() { [weak self] in
                 
@@ -256,6 +346,8 @@ extension ProductsSwapView.ViewModel {
         @Published var isUserInteractionEnabled: Bool
         @Published var icon: Image
         @Published var state: State
+        @Published var isSwapButtonEnabled: Bool
+
 
         let action: () -> Void
         
@@ -271,13 +363,13 @@ extension ProductsSwapView.ViewModel {
             case reset
         }
         
-        init(isSwap: Bool = false, isUserInteractionEnabled: Bool = true, icon: Image = .ic32Swap, action: @escaping () -> Void) {
+        init(isSwap: Bool = false, isUserInteractionEnabled: Bool = true, icon: Image = .ic32Swap, isSwapButtonEnabled: Bool = true, action: @escaping () -> Void) {
             
             self.isSwap = isSwap
             self.isUserInteractionEnabled = isUserInteractionEnabled
             self.icon = icon
             self.action = action
-            
+            self.isSwapButtonEnabled = isSwapButtonEnabled
             state = .normal
             
             bind()
@@ -318,20 +410,19 @@ struct ProductsSwapView: View {
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 8) {
             
             ForEach(viewModel.items) { item in
                 ProductSelectorView(viewModel: item)
-                    .padding(.vertical, 4)
+                    .padding(.top, 4)
                 
                 if let from = viewModel.from, item.id == from.id {
                     DividerView(viewModel: viewModel.divider)
-                        .padding(.vertical, 8)
+                        .padding(.horizontal, 20)
                 }
             }
         }
-        .fixedSize(horizontal: false, vertical: true)
-        .padding(20)
+        .fixedSize(horizontal: false, vertical: true)        
     }
 }
 
@@ -386,16 +477,17 @@ extension ProductsSwapView {
                     .frame(width: 32, height: 32)
                     .rotationEffect(viewModel.rotationAngle)
             }
-            .buttonStyle(ProductsSwapView.SwapButtonStyle())
-            .disabled(viewModel.isUserInteractionEnabled == false)
+            .buttonStyle(ProductsSwapView.SwapButtonStyle(isSwapButtonEnabled: viewModel.isSwapButtonEnabled))
+            .disabled(!viewModel.isSwapButtonEnabled || !viewModel.isUserInteractionEnabled)
         }
     }
     
     struct SwapButtonStyle: ButtonStyle {
+        let isSwapButtonEnabled: Bool
         
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
-                .foregroundColor(.mainColorsGray)
+                .foregroundColor(isSwapButtonEnabled ? .mainColorsGray : .buttonPrimaryDisabled)
         }
     }
 }
@@ -443,9 +535,31 @@ struct ProductsSwapViewComponent_Previews: PreviewProvider {
         
         Group {
             
-            ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sampleMe2MeCollapsed, .sample2], divider: .sample))
-            ProductsSwapView(viewModel: .init(model: .emptyMock, items: [.sampleMe2MeCollapsed, .sample3], divider: .sample))
+            previewGroup()
+                .previewLayout(.sizeThatFits)
             
-        }.previewLayout(.sizeThatFits)
+            VStack(content: previewGroup)
+                .previewLayout(.sizeThatFits)
+        }
+    }
+    
+    static func previewGroup() -> some View {
+        
+        Group {
+            
+            productsSwapView([.sample2, .sampleMe2MeCollapsed])
+            productsSwapView([.sampleMe2MeCollapsed, .sample2])
+            productsSwapView([.sampleMe2MeCollapsed, .sample3])
+            productsSwapView([.sample3, .sampleMe2MeCollapsed])
+        }
+    }
+    
+    private static func productsSwapView(
+        _ items: [ProductSelectorView.ViewModel]
+    ) -> ProductsSwapView {
+        
+        ProductsSwapView(
+            viewModel: .init(model: .emptyMock, items: items, divider: .sample)
+        )
     }
 }

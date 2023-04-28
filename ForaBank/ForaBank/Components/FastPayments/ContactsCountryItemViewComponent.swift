@@ -25,6 +25,14 @@ extension ContactsCountryItemView {
             self.name = name
             self.action = action
         }
+        
+        init(id: CountryData.ID, icon: ImageData?, name: String, action: @escaping () -> Void) {
+            
+            self.id = id
+            self.icon = icon?.image
+            self.name = name
+            self.action = action
+        }
     }
 }
 

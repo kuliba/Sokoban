@@ -171,10 +171,7 @@ class MyProductsViewModel: ObservableObject {
         model.products
             .combineLatest(model.productsOpening)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] data in
-                
-                let products = data.0
-                let productsOpening = data.1
+            .sink { [unowned self] products, productsOpening in
                 
                 let updatedSections = Self.updateViewModel(with: products,
                                                       sections: self.sections,
@@ -235,7 +232,7 @@ class MyProductsViewModel: ObservableObject {
                         guard let productProfileViewModel = ProductProfileViewModel
                             .init(model,
                                   product: product,
-                                  rootView: "\(type(of: self))")
+                                  rootView: "\(type(of: self))", dismissAction: {[weak self] in self?.link = nil })
                         else { return }
                         
                         productProfileViewModel.rootActions = rootActions

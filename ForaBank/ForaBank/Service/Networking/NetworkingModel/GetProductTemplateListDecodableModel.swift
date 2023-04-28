@@ -76,8 +76,8 @@ struct GetProductTemplateDatum: Codable {
         self.customName = productTemplateData.customName
         self.currency = productTemplateData.currency
         self.type = productTemplateData.type.rawValue
-        self.smallDesign = productTemplateData.smallDesign
-        self.paymentSystemImage = productTemplateData.paymentSystemImage
+        self.smallDesign = nil //productTemplateData.smallDesign
+        self.paymentSystemImage = nil //productTemplateData.paymentSystemImage
     }
     
     let id: Int?

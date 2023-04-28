@@ -27,7 +27,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
     private let animationDuration: Double = 0.5
     private var paymentTemplateId: Int?
     
-    init(id: ProductStatementData.ID, header: HeaderViewModel, operation: OperationViewModel, actionButtons: [ActionButtonViewModel]?, featureButtons: [FeatureButtonViewModel], isLoading: Bool, model: Model = .emptyMock) {
+    init(id: ProductStatementData.ID, header: HeaderViewModel, operation: OperationViewModel, actionButtons: [ActionButtonViewModel]? = nil, featureButtons: [FeatureButtonViewModel], isLoading: Bool, model: Model = .emptyMock) {
         
         self.id = id
         self.header = header
@@ -36,37 +36,43 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         self.featureButtons = featureButtons
         self.isLoading = isLoading
         self.model = model
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "OperationDetailViewModel initilazed")
     }
     
-    init?(productStatement: ProductStatementData, product: ProductData, model: Model) {
+    deinit {
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "OperationDetailViewModel deinitilazed")
+    }
+    
+    convenience init?(productStatement: ProductStatementData, product: ProductData, model: Model) {
         
         guard productStatement.paymentDetailType != .notFinance else {
             return nil
         }
         
-        self.id = productStatement.id
-        self.header = .init(statement: productStatement, model: model)
-        self.operation = .init(productStatement: productStatement, model: model)
-        self.actionButtons = nil
-        self.featureButtons = []
-        self.isLoading = false
-        self.model = model
+        let header = HeaderViewModel(statement: productStatement, model: model)
+        let operation = OperationViewModel(productStatement: productStatement, model: model)
         
+        self.init(id: productStatement.id, header: header, operation: operation, featureButtons: [], isLoading: false, model: model)
+        bind()
+
         if let infoFeatureButtonViewModel = infoFeatureButtonViewModel(with: productStatement, product: product) {
             
             self.featureButtons = [infoFeatureButtonViewModel]
         }
-        
-        bind()
         
         if let documentId = productStatement.documentId {
             
             model.action.send(ModelAction.Operation.Detail.Request(type: .documentId(documentId)))
             
             withAnimation {
+                
                 self.isLoading = true
             }
         }
+        
+        self.model.action.send(ModelAction.Products.Update.Fast.All())
     }
     
     private func bind() {
@@ -105,9 +111,8 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         
                         self.update(with: statement, product: product, operationDetail: details)
                         
-                    default:
-                        break
-               
+                    case let .failure(error):
+                        LoggerAgent.shared.log(level: .error, category: .ui, message: "ModelAction.Operation.Detail.Response action error: \(error)")
                     }
                     
                 default: break
@@ -131,8 +136,12 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                     }
                     
                 case let payload as OperationDetailViewModelAction.ShowChangeReturn:
-                    fullScreenSheet = .init(type: .changeReturn(payload.viewModel))
-                    
+                    let paymentsViewModel = PaymentsViewModel(source: payload.source, model: model) { [weak self] in
+                        
+                        self?.action.send(OperationDetailViewModelAction.CloseFullScreenSheet())
+                    }
+                    self.fullScreenSheet = .init(type: .payments(paymentsViewModel))
+
                 case _ as OperationDetailViewModelAction.CloseSheet:
                     if #available(iOS 14.5, *) {
                         sheet = nil
@@ -166,7 +175,19 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         var featureButtonsUpdated = [FeatureButtonViewModel]()
         
         switch productStatement.paymentDetailType {
-        case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .insideDeposit, .insideOther:
+        case .direct:
+            // TODO: revert after templates fix
+            // if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
+            //     featureButtonsUpdated.append(templateButtonViewModel)
+            // }
+            if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
+                featureButtonsUpdated.append(documentButtonViewModel)
+            }
+            if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
+                featureButtonsUpdated.append(infoButtonViewModel)
+            }
+            
+        case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .insideDeposit, .insideOther, .taxes:
             if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
                 featureButtonsUpdated.append(templateButtonViewModel)
             }
@@ -176,10 +197,12 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
             if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
                 featureButtonsUpdated.append(infoButtonViewModel)
             }
+            
         case .contactAddressless:
-            if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
-                featureButtonsUpdated.append(templateButtonViewModel)
-            }
+            // TODO: revert after templates fix
+            // if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
+            //     featureButtonsUpdated.append(templateButtonViewModel)
+            // }
             if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
                 featureButtonsUpdated.append(documentButtonViewModel)
             }
@@ -220,7 +243,7 @@ enum OperationDetailViewModelAction {
     
     struct ShowChangeReturn: Action {
      
-        let viewModel: ChangeReturnViewModel
+        let source: Payments.Operation.Source
     }
     
     struct CopyNumber: Action {
@@ -299,7 +322,7 @@ private extension OperationDetailViewModel {
     func templateName(with productStatement: ProductStatementData, operationDetail: OperationDetailData) -> String? {
         
         switch productStatement.paymentDetailType {
-        case .betweenTheir, .insideBank, .housingAndCommunalService, .internet, .direct, .sfp, .contactAddressless:
+        case .betweenTheir, .insideBank, .housingAndCommunalService, .internet, .direct, .sfp, .contactAddressless, .taxes:
             return productStatement.merchant
             
         case .mobile :
@@ -322,47 +345,31 @@ private extension OperationDetailViewModel {
     func actionButtons(with operationDetail: OperationDetailData, statement: ProductStatementData, product: ProductData, dismissAction: @escaping () -> Void) -> [ActionButtonViewModel] {
         
         var actionButtons = [ActionButtonViewModel]()
-        
-        let amountFormatted = model.amountFormatted(amount: operationDetail.amount, currencyCode: operationDetail.currencyAmount, style: .normal) ?? String(operationDetail.amount)
-        
-        let paymentSystemImage = statement.md5hash
-        
-        let changeViewModel = ChangeReturnViewModel(
-            amount: amountFormatted,
-            name: operationDetail.payeeFirstName ?? "",
-            surname: operationDetail.payeeSurName ?? "",
-            secondName: operationDetail.payeeMiddleName ?? "",
-            paymentOperationDetailId: operationDetail.paymentOperationDetailId,
-            transferReference: operationDetail.transferReference ?? "",
-            product: product,
-            paymantSystemIcon: paymentSystemImage,
-            type: .changePay,
-            operatorsViewModel: .init(mode: .general, closeAction: dismissAction))
 
-        let changeButton = ActionButtonViewModel(name: "Изменить",
-                                                 action: { [weak self] in
-            self?.action.send(OperationDetailViewModelAction.ShowChangeReturn(viewModel: changeViewModel))
-        })
-        actionButtons.append(changeButton)
+        let operationId = statement.operationId
         
-        
-        let returnViewModel = ChangeReturnViewModel(
-            amount: amountFormatted,
-            name: operationDetail.payeeFirstName ?? "",
-            surname: operationDetail.payeeSurName ?? "",
-            secondName: operationDetail.payeeMiddleName ?? "",
-            paymentOperationDetailId: operationDetail.paymentOperationDetailId,
-            transferReference: operationDetail.transferReference ?? "",
-            product: product,
-            paymantSystemIcon: paymentSystemImage,
-            type: .returnPay,
-            operatorsViewModel: .init(mode: .general, closeAction: dismissAction))
+        if let name = operationDetail.payeeFullName,
+           let transferNumber = operationDetail.transferReference {
+         
+            let changeButton = ActionButtonViewModel(name: "Изменить",
+                                                     action: { [weak self] in
+                self?.action.send(OperationDetailViewModelAction.ShowChangeReturn(source: .change(operationId: operationId, transferNumber: transferNumber, name: name)))
+            })
+            
+            actionButtons.append(changeButton)
+        }
 
-        let returnButton = ActionButtonViewModel(name: "Вернуть",
-                                                 action: { [weak self] in
-            self?.action.send(OperationDetailViewModelAction.ShowChangeReturn(viewModel: returnViewModel))
-        })
-        actionButtons.append(returnButton)
+        let amountFormatted = model.amountFormatted(amount: operationDetail.amount, currencyCode: operationDetail.payerCurrency, style: .normal) ?? String(operationDetail.amount)
+
+        if let transferNumber = operationDetail.transferReference {
+            
+            let returnButton = ActionButtonViewModel(name: "Вернуть",
+                                                     action: { [weak self] in
+                self?.action.send(OperationDetailViewModelAction.ShowChangeReturn(source: .return(operationId: operationDetail.paymentOperationDetailId, transferNumber: transferNumber, amount: amountFormatted, productId: product.id.description)))
+            })
+            
+            actionButtons.append(returnButton)
+        }
         
         return actionButtons
     }
@@ -526,7 +533,7 @@ extension OperationDetailViewModel {
         
         enum Kind {
             
-            case changeReturn(ChangeReturnViewModel)
+            case payments(PaymentsViewModel)
         }
         
         static func == (lhs: OperationDetailViewModel.FullScreenSheet, rhs: OperationDetailViewModel.FullScreenSheet) -> Bool {

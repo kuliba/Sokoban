@@ -381,6 +381,14 @@ extension CurrencyWalletSelectorViewModel {
                 
                 self.init(productId: productId, cardIcon: product.smallDesign.image, paymentSystemIcon: nil, name: product.displayName, balance: balance, numberCard: numberCard, description: nil)
                 
+            case let product as ProductDepositData:
+                
+                let numberCard = product.displayNumber ?? "XXXX"
+                let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
+                
+                self.init(productId: productId, cardIcon: product.smallDesign.image, paymentSystemIcon: nil, name: product.displayName, balance: balance, numberCard: numberCard, description: nil)
+
+                
             default:
                 
                 // TODO: Implementation required

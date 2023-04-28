@@ -114,6 +114,15 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.Hide")
                     action.send(RootViewModelAction.Cover.Hide())
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(600)) { [unowned self] in
+                        
+                        guard let clientInformData = self.model.clientInform.value.data?.authorized,
+                              let clientInformViewModel = ClientInformViewModel(model: self.model, itemsData: clientInformData)
+                        else { return }
+                        
+                        self.mainViewModel.bottomSheet = .init(type: .clientInform(clientInformViewModel))
+                    }
                 }
             }
     }
@@ -188,6 +197,9 @@ class RootViewModel: ObservableObject, Resetable {
                             self?.action.send(RootViewModelAction.CloseLink())
                         }))
                         model.action.send(ModelAction.DeepLink.Clear())
+                        
+                    case let .c2bSubscriprion(url):
+                        break
 
                     case let .sbpPay(tokenIntent):
                         self.model.action.send(ModelAction.SbpPay.Register.Request(tokenIntent: tokenIntent))

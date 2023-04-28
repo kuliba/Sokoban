@@ -13,7 +13,7 @@ figma:
 common:
   colors:
     # RegExp pattern for color name validation before exporting
-    nameValidateRegexp: '^[a-zA-Z_ -]+$' # RegExp pattern for: background, background_primary, widget_primary_background
+    nameValidateRegexp: '^[a-zA-Z0-9_ -]+$' # RegExp pattern for: background, background_primary, widget_primary_background
   icons:
     # Name of the Figma's frame where icons components are located
     figmaFrameName: Icons

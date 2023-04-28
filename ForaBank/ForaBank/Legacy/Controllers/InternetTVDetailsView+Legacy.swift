@@ -27,13 +27,15 @@ struct InternetTVDetailsView: UIViewControllerRepresentable {
             vc.latestOperation = viewModel.latestOpsDO
             vc.viewModel.closeAction = viewModel.closeAction
         }
+        
         vc.modalPresentationStyle = .fullScreen
         context.coordinator.parentObserver = vc.observe(\.parent, changeHandler: { vc, _ in
             
             vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
-            vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
+            vc.parent?.navigationItem.title = vc.navigationItem.title
             vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
         })
+        
         return vc
     }
     
@@ -89,7 +91,7 @@ struct InternetTVDetailsViewModel {
                 self.latestOpsDO = InternetLatestOpsDO(
                     mainImage: image ?? UIImage(),
                     name: foundedOperator.name?.capitalizingFirstLetter() ?? "",
-                    amount: String(Int(parameterList.amount ?? 0)),
+                    amount: parameterList.amountString,
                     op: foundedOperator,
                     additionalList: additionalList)
             }

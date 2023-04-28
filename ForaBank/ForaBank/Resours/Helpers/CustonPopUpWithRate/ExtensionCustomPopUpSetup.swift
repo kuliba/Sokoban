@@ -45,7 +45,6 @@ extension CustomPopUpWithRateView {
     func interestPayment(amount: Double) {
         
         let payer = cardFromField.model
-
         let payeeInternal = cardToField.model
         
         if let depositId = payer?.depositID {

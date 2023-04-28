@@ -53,7 +53,7 @@ extension MyProductsSectionItemView {
             
             ZStack(alignment: .center) {
                 
-                Color.barsTabbar
+                Color.barsBars
                 
                 HStack(alignment: .center ,spacing: 16) {
                     
@@ -65,13 +65,15 @@ extension MyProductsSectionItemView {
                             
                             if let paymentSystemIcon = viewModel.paymentSystemIcon {
                                 paymentSystemIcon.renderingMode(.original)
+                                    .accessibilityIdentifier("MyProductsProductPaymentSistemIcon")
                             }
                             
                             Text(viewModel.name).lineLimit(1)
+                                .accessibilityIdentifier("MyProductsProductName")
                             
                             Spacer()
                             
-                            Text(viewModel.balance)
+                            Text(viewModel.balance).accessibilityIdentifier("MyProductsProductBalance")
                 
                         }
                         .font(.textH4M16240())
@@ -85,6 +87,7 @@ extension MyProductsSectionItemView {
                                 Circle().frame(width: 3)
                                 
                                 Text(description).font(.textBodyMR14180())
+                                    .accessibilityIdentifier("MyProductsProductDescription")
                             }
                             .foregroundColor(.mainColorsGray)
                             
@@ -95,7 +98,7 @@ extension MyProductsSectionItemView {
             }
             .frame(height: 72)
             .padding(.leading, editMode == .active ? viewModel.orderModePadding : 12)
-            .background(Color.barsTabbar)
+            .background(Color.barsBars)
             .onTapGesture {
                 viewModel.action.send(MyProductsSectionItemAction.ItemTapped())
             }
@@ -116,6 +119,7 @@ extension MyProductsSectionItemView {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 32)
+                        .accessibilityIdentifier("MyProductsProductIcon")
                     
                 case let .color(baseColor):
                     RoundedRectangle(cornerRadius: 3)
@@ -131,6 +135,7 @@ extension MyProductsSectionItemView {
                         .scaledToFit()
                         .foregroundColor(overlay.imageColor)
                         .frame(width: 32, height: 12)
+                        .accessibilityIdentifier("MyProductsProductIconStateImage")
                 }
             }
             .shimmering(active: viewModel.isUpdating, bounce: true)
@@ -144,7 +149,7 @@ extension MyProductsSectionItemView {
             
             ZStack {
                 
-                Color.barsTabbar
+                Color.barsBars
                 
                 HStack(alignment: .center ,spacing: 16) {
                 
@@ -169,7 +174,7 @@ extension MyProductsSectionItemView {
             }
             .frame(height: 72)
             .padding(.leading, editMode == .active ? 0 : 12)
-            .background(Color.barsTabbar)
+            .background(Color.barsBars)
         }
     }
     

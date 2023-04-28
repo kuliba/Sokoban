@@ -12,12 +12,27 @@ class TransferGeneralData: TransferData {
     let payeeExternal: PayeeExternal?
     let payeeInternal: PayeeInternal?
     
-    internal init(amount: Double?, check: Bool, comment: String?, currencyAmount: String, payer: Payer, payeeExternal: PayeeExternal?, payeeInternal: PayeeInternal?) {
+    init(amount: Decimal?, check: Bool, comment: String?, currencyAmount: String, payer: Payer, payeeExternal: PayeeExternal?, payeeInternal: PayeeInternal?) {
         
         self.payeeExternal = payeeExternal
         self.payeeInternal = payeeInternal
         
         super.init(amount: amount, check: check, comment: comment, currencyAmount: currencyAmount, payer: payer)
+    }
+    
+    //TODO: remove after a switch to a Decimal in the related code in the project
+    convenience init(amount: Double?, check: Bool, comment: String?, currencyAmount: String, payer: Payer, payeeExternal: PayeeExternal?, payeeInternal: PayeeInternal?) {
+        
+        let amountDecimal: Decimal? = {
+            
+            guard let amount else {
+                return nil
+            }
+            
+            return Decimal(amount).roundedFinance()
+        }()
+        
+        self.init(amount: amountDecimal, check: check, comment: comment, currencyAmount: currencyAmount, payer: payer, payeeExternal: payeeExternal, payeeInternal: payeeInternal)
     }
     
     //MARK: Codable

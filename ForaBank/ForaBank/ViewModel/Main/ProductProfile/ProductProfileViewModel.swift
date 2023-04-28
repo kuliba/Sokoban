@@ -19,18 +19,21 @@ class ProductProfileViewModel: ObservableObject {
     @Published var buttons: ProductProfileButtonsView.ViewModel
     @Published var detail: ProductProfileDetailView.ViewModel?
     @Published var history: ProductProfileHistoryView.ViewModel?
-    @Published var closeAccountSpinner: CloseAccountSpinnerView.ViewModel?
-    @Published var alert: Alert.ViewModel?
     @Published var operationDetail: OperationDetailViewModel?
     @Published var accentColor: Color
+    
     @Published var bottomSheet: BottomSheet?
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
     @Published var sheet: Sheet?
-    @Published var fullCover: FullCover?
-    @Published var fullCoverSpinner: FullCoverSpinner?
+    @Published var alert: Alert.ViewModel?
     @Published var textFieldAlert: AlertTextFieldView.ViewModel?
     @Published var spinner: SpinnerView.ViewModel?
+    
+    @Published var success: PaymentsSuccessViewModel?
+    @Published var successZeroAccount: ZeroAccount?
+
+    @Published var closeAccountSpinner: CloseAccountSpinnerView.ViewModel?
 
     var rootActions: RootViewModel.RootActions?
     var rootView: String
@@ -48,12 +51,10 @@ class ProductProfileViewModel: ObservableObject {
          buttons: ProductProfileButtonsView.ViewModel,
          detail: ProductProfileDetailView.ViewModel?,
          history: ProductProfileHistoryView.ViewModel?,
-         alert: Alert.ViewModel? = nil,
          operationDetail: OperationDetailViewModel? = nil,
          accentColor: Color = .purple,
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
-         spinner: SpinnerView.ViewModel? = nil,
          rootView: String) {
         
         self.navigationBar = navigationBar
@@ -61,28 +62,32 @@ class ProductProfileViewModel: ObservableObject {
         self.buttons = buttons
         self.detail = detail
         self.history = history
-        self.alert = alert
         self.operationDetail = operationDetail
         self.accentColor = accentColor
         self.historyPool = historyPool
         self.model = model
         self.rootView = rootView
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel initialized")
     }
     
-    init?(_ model: Model, product: ProductData, rootView: String) {
+    deinit {
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel deinitialized")
+    }
+    
+    convenience init?(_ model: Model, product: ProductData, rootView: String, dismissAction: @escaping () -> Void) {
         
         guard let productViewModel = ProductProfileCardView.ViewModel(model, productData: product) else {
             return nil
         }
         
         // status bar
-        self.navigationBar = .init(product: product, dismissAction: {})
-        self.product = productViewModel
-        self.buttons = .init(with: product, depositInfo: model.depositsInfo.value[product.id])
-        self.accentColor = Self.accentColor(with: product)
-        self.historyPool = [:]
-        self.model = model
-        self.rootView = rootView
+        let navigationBar = NavigationBarView.ViewModel(product: product, dismissAction: dismissAction)
+        let buttons = ProductProfileButtonsView.ViewModel(with: product, depositInfo: model.depositsInfo.value[product.id])
+        let accentColor = Self.accentColor(with: product)
+        
+        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, rootView: rootView)
         
         // detail view model
         self.detail = makeDetailViewModel(with: product)
@@ -93,10 +98,16 @@ class ProductProfileViewModel: ObservableObject {
         self.historyPool[product.id] = historyViewModel
         bind(product: productViewModel)
         bind(history: historyViewModel)
+        bind(detail: detail)
         bind(buttons: buttons)
 
         bind()
     }
+}
+
+//MARK: - Bindings
+
+private extension ProductProfileViewModel {
     
     func bind() {
         
@@ -128,7 +139,7 @@ class ProductProfileViewModel: ObservableObject {
                     alert = .init(title: "Активировать карту?", message: "После активации карта будет готова к использованию", primary: .init(type: .default, title: "Отмена", action: { [weak self] in
                         self?.alert = nil
                     }), secondary: .init(type: .default, title: "Ok", action: { [weak self] in
-                        //TODO: implemetation required 
+                        //TODO: implemetation required
                         self?.alert = nil
                     }))
                     
@@ -153,17 +164,17 @@ class ProductProfileViewModel: ObservableObject {
                         return
                     }
                     sheet = .init(type: .placesMap(placesViewModel))
-                
+                    
                 case let payload as ProductProfileViewModelAction.Product.UpdateCustomName:
                     textFieldAlert = customNameAlert(for: payload.productType, alertTitle: payload.alertTitle)
                     
                 case let payload as ProductProfileViewModelAction.Product.CloseAccount:
-
+                    
                     let from = payload.productFrom
                     let balance = payload.productFrom.balanceValue
                     
                     if balance == 0 {
-
+                        
                         closeAccountSpinner = .init(model, productData: from)
                         
                         if let closeAccountSpinner = closeAccountSpinner {
@@ -177,16 +188,12 @@ class ProductProfileViewModel: ObservableObject {
                         
                     } else {
                         
-                        let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .closeAccount(from, balance))
-                        
-                        guard let viewModel = viewModel else {
+                        guard let viewModel = PaymentsMeToMeViewModel(model, mode: .closeAccount(from, balance)) else {
                             return
                         }
                         
-                        let swapViewModel = viewModel.swapViewModel
-                        bind(viewModel, swapViewModel: swapViewModel)
-                        
-                        bottomSheet = .init(type: .closeAccount(viewModel))
+                        bind(viewModel)
+                        bottomSheet = .init(type: .meToMe(viewModel))
                     }
                     
                 case _ as ProductProfileViewModelAction.Close.Link:
@@ -195,11 +202,9 @@ class ProductProfileViewModel: ObservableObject {
                 case _ as ProductProfileViewModelAction.Close.Sheet:
                     sheet = nil
                     
-                case _ as ProductProfileViewModelAction.Close.FullCover:
-                    fullCover = nil
-                    
-                case _ as ProductProfileViewModelAction.Close.FullCoverSpinner:
-                    fullCoverSpinner = nil
+                case _ as ProductProfileViewModelAction.Close.Success:
+                    successZeroAccount = nil
+                    success = nil
                     
                 case _ as ProductProfileViewModelAction.Close.AccountSpinner:
                     closeAccountSpinner = nil
@@ -212,13 +217,13 @@ class ProductProfileViewModel: ObservableObject {
                     withAnimation {
                         NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
                     }
-                
+                    
                 case _ as ProductProfileViewModelAction.Close.Alert:
                     alert = nil
                     
                 case _ as ProductProfileViewModelAction.Close.TextFieldAlert:
                     textFieldAlert = nil
-                
+                    
                 case _ as ProductProfileViewModelAction.Show.MeToMeExternal:
                     if let productData = productData as? ProductLoanData, let loanAccount = self.model.products.value[.account]?.first(where: {$0.number == productData.settlementAccount}) {
                         
@@ -239,11 +244,11 @@ class ProductProfileViewModel: ObservableObject {
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
-
+                
                 switch action {
-
+                    
                 case let payload as ModelAction.Products.UpdateCustomName.Response:
-
+                    
                     switch payload {
                     case .complete(productId: let productId, name: let name):
                         guard let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == productId }) else {
@@ -255,13 +260,13 @@ class ProductProfileViewModel: ObservableObject {
                             navigationBar.updateName(with: name)
                             accentColor = Self.accentColor(with: product)
                         }
-
+                        
                     case .failed(message: let message):
                         alert = .init(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in
                             self?.alert = nil
                         }))
                     }
-
+                    
                 case let payload as ModelAction.Card.Block.Response:
                     switch payload {
                     case .success:
@@ -282,9 +287,9 @@ class ProductProfileViewModel: ObservableObject {
                             self.sheet = .init(type: .printForm(printFormViewModel))
                             
                         } else {
-                                
-                                self.alert = errorDepositConditionAlert(data: data)
-
+                            
+                            self.alert = errorDepositConditionAlert(data: data)
+                            
                         }
                         
                     case .failure(let error):
@@ -311,28 +316,52 @@ class ProductProfileViewModel: ObservableObject {
                     default:
                         break
                     }
-
+                    
                 case let payload as ModelAction.Settings.ApplicationSettings.Response:
                     
                     switch payload.result {
                         
                     case .success(let settings):
-                        if settings.allowCloseDeposit, let product = productData as? ProductDepositData, let openDate = product.openDate, let number = product.number  {
+                        if settings.allowCloseDeposit, let product = productData as? ProductDepositData, let openDate = product.openDate, let number = product.number {
                             
-                            let dateFormatter = DateFormatter.historyFullDateFormatter
-                            let bottomString = "Подробнее в договоре \"Условия срочного банковского вклада \n№\(number)\nот \(dateFormatter.string(from: openDate))\""
-                            let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
-                                                                 message: "Срок вашего вклада еще не истек.\n\nПри досрочном закрытии вклада возможна потеря или перерасчет начисленных процентов.\n\n\(bottomString)",
-                                                                 primary: .init(type: .default, title: "Отмена", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}),
-                                                                 secondary: .init(type: .default, title: "Продолжить", action: { [weak self] in
-                                if let id = self?.product.activeProductId {
+                            if product.isDemandDepositProduct {
+                                let displayNumber = product.displayNumber ?? number
+                                let topString = "Вы действительно хотите закрыть вклад №*\(displayNumber)?\n\n"
+                                let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                     message: "\(topString)При закрытии будет предложено перевести остаток денежных средств на другой счет/карту. Вклад будет закрыт после совершения перевода.",
+                                                                     primary: .init(type: .default, title: "Отмена", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}),
+                                                                     secondary: .init(type: .default, title: "Закрыть", action: { [weak self] in
+                                    guard let self = self,
+                                          let depositProduct = self.model.product(productId: self.product.activeProductId) as? ProductDepositData else {
+                                        return
+                                    }
                                     
-                                    self?.model.action.send(ModelAction.Deposits.BeforeClosing.Request(depositId: id, operDate: Date()))
-                                    self?.spinner = .init()
-                                }
-                            }))
-                            self.alert = .init(alertViewModel)
-                            
+                                    guard let viewModel = PaymentsMeToMeViewModel(self.model, mode: .transferAndCloseDeposit(depositProduct, depositProduct.balanceValue)) else {
+                                        return
+                                    }
+                                    
+                                    self.bind(viewModel)
+                                    
+                                    self.bottomSheet = .init(type: .meToMe(viewModel))
+                                }))
+                                self.alert = .init(alertViewModel)
+                            }
+                            else{
+                                
+                                let dateFormatter = DateFormatter.historyFullDateFormatter
+                                let bottomString = "Подробнее в договоре \"Условия срочного банковского вклада \n№\(number)\nот \(dateFormatter.string(from: openDate))\""
+                                let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                     message: "Срок вашего вклада еще не истек.\n\nПри досрочном закрытии вклада возможна потеря или перерасчет начисленных процентов.\n\n\(bottomString)",
+                                                                     primary: .init(type: .default, title: "Отмена", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}),
+                                                                     secondary: .init(type: .default, title: "Продолжить", action: { [weak self] in
+                                    if let id = self?.product.activeProductId {
+                                        
+                                        self?.model.action.send(ModelAction.Deposits.BeforeClosing.Request(depositId: id, operDate: Date()))
+                                        self?.spinner = .init()
+                                    }
+                                }))
+                                self.alert = .init(alertViewModel)
+                            }
                         } else {
                             
                             let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
@@ -356,21 +385,17 @@ class ProductProfileViewModel: ObservableObject {
                     
                     switch payload {
                     case .success(data: let amount):
-                        guard let depositProduct = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) as? ProductDepositData else {
+                        guard let depositProduct = self.model.product(productId: self.product.activeProductId) as? ProductDepositData else {
                             return
                         }
                         
-                        let viewModel: PaymentsMeToMeViewModel? = .init(model, mode: .closeDeposit(depositProduct, amount))
-                        
-                        guard let viewModel = viewModel else {
+                        guard let viewModel = PaymentsMeToMeViewModel(model, mode: .closeDeposit(depositProduct, amount)) else {
                             return
                         }
                         
-                        let swapViewModel = viewModel.swapViewModel
-                        bind(viewModel, swapViewModel: swapViewModel)
+                        bind(viewModel)
+                        bottomSheet = .init(type: .meToMe(viewModel))
                         
-                        bottomSheet = .init(type: .closeDeposit(viewModel))
-                    
                     case .failure(message: let errorMessage):
                         self.alert = .init(title: "Ошибка", message: errorMessage, primary: .init(type: .default, title: "Ок", action: {}))
                         
@@ -383,7 +408,7 @@ class ProductProfileViewModel: ObservableObject {
         model.products
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] product in
-
+                
                 guard let productData = productData else {
                     return
                 }
@@ -393,15 +418,15 @@ class ProductProfileViewModel: ObservableObject {
                 }
                 
                 bind(buttons: buttons)
-
+                
             }.store(in: &bindings)
-
+        
         model.loans
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] loans in
                 
                 guard product.productType == .loan else {
-                   return
+                    return
                 }
                 
                 if let productLoan = model.products.value[.loan]?.first(where: { $0.id == product.activeProductId }) as? ProductLoanData,
@@ -416,6 +441,7 @@ class ProductProfileViewModel: ObservableObject {
                         } else {
                             
                             detail = .init(productLoan: productLoan, loanData: loanData, model: model)
+                            bind(detail: detail)
                         }
                     }
                     
@@ -425,7 +451,7 @@ class ProductProfileViewModel: ObservableObject {
                         detail = nil
                     }
                 }
- 
+                
             }.store(in: &bindings)
         
         product.$activeProductId
@@ -459,6 +485,8 @@ class ProductProfileViewModel: ObservableObject {
                     detail = makeDetailViewModel(with: product)
                 }
                 
+                bind(detail: detail)
+                
                 // history update
                 if let historyViewModel = historyPool[activeProductId] {
                     
@@ -469,7 +497,7 @@ class ProductProfileViewModel: ObservableObject {
                 } else {
                     
                     let historyViewModel = makeHistoryViewModel(productType: product.productType, productId: activeProductId, model: model)
-
+                    
                     withAnimation {
                         history = historyViewModel
                     }
@@ -500,7 +528,7 @@ class ProductProfileViewModel: ObservableObject {
             }.store(in: &bindings)
     }
     
-    private func bind(product: ProductProfileCardView.ViewModel) {
+    func bind(product: ProductProfileCardView.ViewModel) {
         
         product.action
             .receive(on: DispatchQueue.main)
@@ -530,39 +558,63 @@ class ProductProfileViewModel: ObservableObject {
     }
     
     func bind(history: ProductProfileHistoryView.ViewModel?) {
-           
+        
         guard let history = history else {
             return
         }
-           history.action
-               .receive(on: DispatchQueue.main)
-               .sink { [weak self] action in
-                   
-                   guard let self = self else { return }
-                   
-                   switch action {
-                   case let payload as ProductProfileHistoryViewModelAction.DidTapped.Detail:
-                       guard let storage = self.model.statements.value[self.product.activeProductId],
-                             let statementData = storage.statements.first(where: { $0.id == payload.statementId }),
-                             let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }),
-                             let operationDetailViewModel = OperationDetailViewModel(productStatement: statementData, product: productData, model: self.model) else {
-                           
-                           return
-                       }
-                       
-                       self.bottomSheet = .init(type: .operationDetail(operationDetailViewModel))
-                       
-                       if #unavailable(iOS 14.5) {
+        history.action
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] action in
+                
+                guard let self = self else { return }
+                
+                switch action {
+                case let payload as ProductProfileHistoryViewModelAction.DidTapped.Detail:
+                    guard let storage = self.model.statements.value[self.product.activeProductId],
+                          let statementData = storage.statements.first(where: { $0.id == payload.statementId }),
+                          let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }),
+                          let operationDetailViewModel = OperationDetailViewModel(productStatement: statementData, product: productData, model: self.model) else {
+                        
+                        return
+                    }
+                    
+                    self.bottomSheet = .init(type: .operationDetail(operationDetailViewModel))
+                    
+                    if #unavailable(iOS 14.5) {
+                        
+                        self.bind(operationDetailViewModel)
+                    }
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    func bind(detail: ProductProfileDetailView.ViewModel?) {
+        
+        detail?.action
+            .receive(on: DispatchQueue.main)
+            .sink{[unowned self] action in
+                
+                switch action {
+                case let payload as ProductProfileDetailViewModelAction.MakePayment:
+                    
+                    guard let product = model.product(productId: payload.settlementAccountId),
+                          let meToMeViewModel = PaymentsMeToMeViewModel(model, mode: .makePaymentTo(product, payload.amount)) else {
+                        return
+                    }
+                    
+                    bind(meToMeViewModel)
+                    bottomSheet = .init(type: .meToMe(meToMeViewModel))
 
-                           self.bind(operationDetailViewModel)
-                       }
-                       
-                   default:
-                       break
-                   }
-                   
-               }.store(in: &bindings)
-       }
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
     
     func bind(_ operationDetailViewModel: OperationDetailViewModel) {
         
@@ -574,17 +626,17 @@ class ProductProfileViewModel: ObservableObject {
                 case let payload as OperationDetailViewModelAction.ShowInfo:
                     self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-
+                        
                         self.bottomSheet = .init(type: .info(payload.viewModel))
                     }
-                
+                    
                 case let payload as OperationDetailViewModelAction.ShowDocument:
                     self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                         
                         self.bottomSheet = .init(type: .printForm(payload.viewModel))
                     }
-                
+                    
                 case _ as OperationDetailViewModelAction.CloseSheet:
                     bottomSheet = nil
                     
@@ -608,15 +660,17 @@ class ProductProfileViewModel: ObservableObject {
                     case .topLeft:
                         let allowCreditValue = self.productData?.allowCredit == false
                         let productType = self.productData?.productType.order == 2
-
+                        
                         if !(allowCreditValue && productType ) {
                             
-                        let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttonsTypes: [.refillFromOtherBank, .refillFromOtherProduct], productType: product.productType)
-                        self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
+                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttonsTypes: [.refillFromOtherBank, .refillFromOtherProduct], productType: product.productType)
+                            self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
+                            
                         } else {
-                            let alertView = Alert.ViewModel(title: "",
-                                                                 message: "Вклад не предусматривает возможности пополнения. Подробнее в информации по вкладу в деталях",
-                                                                 primary: .init(type: .default, title: "ОК", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}))
+                            
+                            let alertView = Alert.ViewModel(title: "Невозможно пополнить",
+                                                            message: "Вклад не предусматривает возможности пополнения.\nПодробнее в информации по вкладу в деталях",
+                                                            primary: .init(type: .default, title: "ОК", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}))
                             self.alert = .init(alertView)
                         }
                         
@@ -635,32 +689,36 @@ class ProductProfileViewModel: ObservableObject {
                             
                             switch transferType {
                             case .remains:
-                                guard let balance = depositProduct.balance else {
+                                // перевести
+
+                                guard let viewModel = PaymentsMeToMeViewModel(self.model, mode: .transferDeposit(depositProduct, 0)) else {
                                     return
                                 }
-                                let meToMeViewModel = MeToMeViewModel(type: .transferDepositRemains(depositProduct, balance), closeAction: {})
-                                self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
-
+                                
+                                self.bind(viewModel)
+                                
+                                self.bottomSheet = .init(type: .meToMe(viewModel))
+                                
                             case let .interest(amount):
                                 let meToMeViewModel = MeToMeViewModel(type: .transferDepositInterest(depositProduct, amount), closeAction: {})
-                                self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
+                                self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
                             }
-   
+                            
                         default:
                             break
                         }
                         
-                       
+                        
                     case .bottomLeft:
                         switch product.productType {
                         case .deposit:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .info, .contract], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
-                    
+                            
                         case .account:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .statementOpenAccount(false), .tariffsByAccount, .termsOfService], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
-
+                            
                         default:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
@@ -679,7 +737,7 @@ class ProductProfileViewModel: ObservableObject {
                             if productCard.isBlocked {
                                 
                                 self.action.send(ProductProfileViewModelAction.Product.Unblock(productId: productCard.id))
-
+                                
                             } else {
                                 
                                 self.action.send(ProductProfileViewModelAction.Product.Block(productId: productCard.id))
@@ -729,7 +787,7 @@ class ProductProfileViewModel: ObservableObject {
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                         }
                     }
-
+                    
                 default:
                     break
                 }
@@ -770,10 +828,22 @@ class ProductProfileViewModel: ObservableObject {
                             if let productData = productData as? ProductLoanData, let loanAccount = self.model.products.value[.account]?.first(where: {$0.number == productData.settlementAccount}) {
                                 
                                 let meToMeViewModel = MeToMeViewModel(type: .refill(loanAccount), closeAction: {})
-                                self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
-                            } else {
+                                self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
+                            }
+                                //только вклады
+                            else if let productData = productData as? ProductDepositData, productData.isDemandDepositProduct{
+                                                                
+                                guard let viewModel = PaymentsMeToMeViewModel(self.model, mode: .makePaymentToDeposite(productData, 0)) else {
+                                    return
+                                }
+                                
+                                self.bind(viewModel)
+                                
+                                self.bottomSheet = .init(type: .meToMe(viewModel))
+                            }
+                            else {
                                 let meToMeViewModel = MeToMeViewModel(type: .refill(productData), closeAction: {})
-                                self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
+                                self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
                             }
                             
                         case .refillFromOtherBank:
@@ -785,7 +855,7 @@ class ProductProfileViewModel: ObservableObject {
                         case .contract:
                             
                             let printFormViewModel = PrintFormView.ViewModel(type: .contract(productId: productData.id), model: self.model, dismissAction: { [weak self]  in
-                               
+                                
                                 self?.action.send(ProductProfileViewModelAction.Close.BottomSheet())
                                 self?.action.send(ProductProfileViewModelAction.Close.Sheet())
                                 
@@ -801,7 +871,7 @@ class ProductProfileViewModel: ObservableObject {
                             })
                             
                             self.sheet = .init(type: .printForm(printFormViewModel))
-                        
+                            
                         case .closeDeposit:
                             
                             guard let product = productData as? ProductDepositData else {
@@ -811,40 +881,28 @@ class ProductProfileViewModel: ObservableObject {
                             self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
                             self.action.send(ProductProfileViewModelAction.Close.Sheet())
                             
-                            switch product.depositType {
-                            case .birjevoy:
-                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
-                                    
-                                    let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
-                                                                         message: "Операции по вкладу «Биржевой» вы можете осуществить в вашем личном кабинете на финансовой платформе «Финуслуги» ПАО «Московская Биржа ММВБ-РТС»",
-                                                                         primary: .init(type: .default, title: "Отмена", action: {}),
-                                                                         secondary: .init(type: .default, title: "Перейти", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                            if product.isDemandDepositProduct {
+                                self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
+                            }
+                            else{
+                                switch product.depositType {
+                                case .birjevoy:
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
                                         
-                                        if let depositCloseBirjevoyURL = self?.model.depositCloseBirjevoyURL {
+                                        let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                             message: "Операции по вкладу «Биржевой» вы можете осуществить в вашем личном кабинете на финансовой платформе «Финуслуги» ПАО «Московская Биржа ММВБ-РТС»",
+                                                                             primary: .init(type: .default, title: "Отмена", action: {}),
+                                                                             secondary: .init(type: .default, title: "Перейти", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())
                                             
-                                            self?.openLinkURL(depositCloseBirjevoyURL)
-                                        }
-                                    }))
-                                    
-                                    self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
-                                }
-                            case .multi:
-                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
-                                    
-                                    let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
-                                                                         message: "Срок вашего вклада еще не истек. Для досрочного закрытия обратитесь в ближайший офис",
-                                                                         primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in
-                                        self?.action.send(ProductProfileViewModelAction.Close.Alert())
-                                        self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())
-                                    }),
-                                                                         secondary: .init(type: .default, title: "Ок", action: {}))
-                                    
-                                    self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
-                                }
-                                
-                            default:
-                                if let currency = self.model.dictionaryCurrency(for: "RUB"),
-                                   product.currency != currency.code {
+                                            if let depositCloseBirjevoyURL = self?.model.depositCloseBirjevoyURL {
+                                                
+                                                self?.openLinkURL(depositCloseBirjevoyURL)
+                                            }
+                                        }))
+                                        
+                                        self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
+                                    }
+                                case .multi:
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
                                         
                                         let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
@@ -857,12 +915,29 @@ class ProductProfileViewModel: ObservableObject {
                                         
                                         self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
                                     }
-                                } else {
                                     
-                                    self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
+                                default:
+                                    if let currency = self.model.dictionaryCurrency(for: "RUB"),
+                                       product.currency != currency.code {
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
+                                            
+                                            let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                                 message: "Срок вашего вклада еще не истек. Для досрочного закрытия обратитесь в ближайший офис",
+                                                                                 primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in
+                                                self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                                                self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())
+                                            }),
+                                                                                 secondary: .init(type: .default, title: "Ок", action: {}))
+                                            
+                                            self.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
+                                        }
+                                    } else {
+                                        
+                                        self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
+                                    }
                                 }
                             }
-                                                    
+                            
                         case .statementOpenAccount:
                             break
                             
@@ -889,24 +964,24 @@ class ProductProfileViewModel: ObservableObject {
     }
     
     /// Сlosing account with balance
-    private func bind(_ viewModel: PaymentsMeToMeViewModel, swapViewModel: ProductsSwapView.ViewModel) {
+    func bind(_ viewModel: PaymentsMeToMeViewModel) {
         
         viewModel.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [unowned self, weak viewModel] action in
                 
                 switch action {
                 case let payload as PaymentsMeToMeAction.Response.Success:
                     
-                    if let productIdFrom = swapViewModel.productIdFrom,
-                       let productIdTo = swapViewModel.productIdTo {
-                        
-                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
-                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
+                    if let viewModel = viewModel,
+                       let productIdFrom = viewModel.swapViewModel.productIdFrom,
+                       let productIdTo = viewModel.swapViewModel.productIdTo {
+                            model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
+                            model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
                     }
                     
                     self.bind(payload.viewModel)
-                    self.fullCover = .init(type: .successMeToMe(payload.viewModel))
+                    self.success = payload.viewModel
                     
                 case _ as PaymentsMeToMeAction.Response.Failed:
                     
@@ -920,7 +995,7 @@ class ProductProfileViewModel: ObservableObject {
                     }
                     
                     bottomSheet.isUserInteractionEnabled.value = payload.isUserInteractionEnabled
-    
+                    
                 default:
                     break
                 }
@@ -929,7 +1004,7 @@ class ProductProfileViewModel: ObservableObject {
     }
     
     /// Сlosing account without balance
-    private func bind(_ viewModel: CloseAccountSpinnerView.ViewModel) {
+    func bind(_ viewModel: CloseAccountSpinnerView.ViewModel) {
         
         viewModel.action
             .receive(on: DispatchQueue.main)
@@ -937,13 +1012,13 @@ class ProductProfileViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as CloseAccountSpinnerAction.Response.Success:
-
+                    self.successZeroAccount = ZeroAccount(viewModel: payload.viewModel)
                     bind(payload.viewModel)
-                    fullCoverSpinner = .init(type: .successMeToMe(payload.viewModel))
-
+                    self.success = payload.viewModel
+                    
                 case let payload as CloseAccountSpinnerAction.Response.Failed:
                     makeAlert(payload.message)
-    
+                    
                 default:
                     break
                 }
@@ -954,7 +1029,7 @@ class ProductProfileViewModel: ObservableObject {
     }
     
     /// Сlosing success screen
-    private func bind(_ viewModel: PaymentsSuccessViewModel) {
+    func bind(_ viewModel: PaymentsSuccessViewModel) {
         
         viewModel.action
             .receive(on: DispatchQueue.main)
@@ -962,34 +1037,31 @@ class ProductProfileViewModel: ObservableObject {
                 
                 switch action {
                 case _ as PaymentsSuccessAction.Button.Close:
-                    
-                    if fullCover == nil {
-                        
-                        self.action.send(ProductProfileViewModelAction.Close.FullCoverSpinner())
-                        
-                    } else {
-                        
-                        self.action.send(ProductProfileViewModelAction.Close.FullCover())
-                    }
-                    
+                    model.action.send(ModelAction.Products.Update.Total.All())
+                    self.action.send(ProductProfileViewModelAction.Close.Success())
                     self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
                     self.rootActions?.switchTab(.main)
-
+                    
                 case _ as PaymentsSuccessAction.Button.Repeat:
                     
-                    self.action.send(ProductProfileViewModelAction.Close.FullCover())
+                    self.action.send(ProductProfileViewModelAction.Close.Success())
                     self.rootActions?.switchTab(.payments)
-
+                    
                 default:
                     break
                 }
                 
                 model.action.send(ModelAction.Products.Update.ForProductType(productType: .account))
-                
+
             }.store(in: &bindings)
     }
+}
+
+//MARK: - Reducers
+
+private extension ProductProfileViewModel {
     
-    private func makeAlert(_ message: String) {
+    func makeAlert(_ message: String) {
         
         let alertViewModel = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "ОК") { [weak self] in
             self?.action.send(ProductProfileViewModelAction.Close.Alert())
@@ -1152,24 +1224,20 @@ class ProductProfileViewModel: ObservableObject {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }
+    
 }
 
 fileprivate extension NavigationBarView.ViewModel {
     
     convenience init(product: ProductData, dismissAction: @escaping () -> Void, rightButtons: [ButtonItemViewModel] = []) {
         self.init(
-            title: Self.title(with: product),
+            title: ProductView.ViewModel.name(product: product, style: .profile),
             subtitle: Self.subtitle(with: product),
             leftItems: [BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)],
             rightItems: rightButtons,
             background: Self.accentColor(with: product),
             foreground: Self.textColor(with: product),
             backgroundDimm: .init(color: Color(hex: "1с1с1с"), opacity: 0.3))
-    }
-    
-    static func title(with productData: ProductData) -> String {
-        
-        return productData.displayName
     }
     
     static func subtitle(with productData: ProductData) -> String {
@@ -1206,7 +1274,7 @@ fileprivate extension NavigationBarView.ViewModel {
     
     func update(with product: ProductData) {
         
-        self.title = Self.title(with: product)
+        self.title = ProductView.ViewModel.name(product: product, style: .profile)
         self.subtitle = Self.subtitle(with: product)
         self.foreground = Self.textColor(with: product)
         self.background = Self.accentColor(with: product)
@@ -1230,7 +1298,7 @@ extension ProductProfileViewModel {
         
         var keyboardOfssetMultiplier: CGFloat {
             switch type {
-            case .meToMe: return 0
+            case .meToMeLegacy: return 0
             default: return 0.6
             }
         }
@@ -1239,9 +1307,8 @@ extension ProductProfileViewModel {
             
             case operationDetail(OperationDetailViewModel)
             case optionsPannel(ProductProfileOptionsPannelView.ViewModel)
-            case meToMe(MeToMeViewModel)
-            case closeAccount(PaymentsMeToMeViewModel)
-            case closeDeposit(PaymentsMeToMeViewModel)
+            case meToMe(PaymentsMeToMeViewModel)
+            case meToMeLegacy(MeToMeViewModel)
             case printForm(PrintFormView.ViewModel)
             case placesMap(PlacesViewModel)
             case info(OperationDetailInfoViewModel)
@@ -1278,14 +1345,11 @@ extension ProductProfileViewModel {
         }
     }
     
-    struct FullCoverSpinner: Identifiable {
+    struct ZeroAccount: Identifiable {
         
         let id = UUID()
-        let type: Kind
-        
-        enum Kind {
-            case successMeToMe(PaymentsSuccessViewModel)
-        }
+        let viewModel: PaymentsSuccessViewModel
+    
     }
 }
 
@@ -1347,8 +1411,7 @@ enum ProductProfileViewModelAction {
         struct SelfView: Action {}
         struct Link: Action {}
         struct Sheet: Action {}
-        struct FullCover: Action {}
-        struct FullCoverSpinner: Action {}
+        struct Success: Action {}
         struct AccountSpinner: Action {}
         struct BottomSheet: Action {}
         struct DismissAll: Action {}

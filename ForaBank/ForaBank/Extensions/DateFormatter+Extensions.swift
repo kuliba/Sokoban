@@ -105,10 +105,10 @@ extension DateFormatter {
         return formatter
     }()
     
-    static let productPeriod: DateFormatter = {
+    static let loanProductPeriod: DateFormatter = {
         
         let formatter = DateFormatter()
-        formatter.dateFormat = "d/MM"
+        formatter.dateFormat = "MM/YY"
         formatter.locale = Locale(identifier: "ru_RU")
         
         return formatter

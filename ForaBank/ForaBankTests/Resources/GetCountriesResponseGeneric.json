@@ -7,7 +7,7 @@
         "md5hash": "string",
         "name": "АРМЕНИЯ",
         "paymentSystemIdList": [
-          "string"
+          "DIRECT"
         ],
         "sendCurr": "EUR;USD;RUR;",
         "svgImage": "string"

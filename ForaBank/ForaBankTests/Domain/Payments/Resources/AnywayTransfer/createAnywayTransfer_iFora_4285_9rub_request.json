@@ -1,0 +1,16 @@
+{
+    "additional": [
+        {
+            "fieldid": 1,
+            "fieldname": "a3_NUMBER_1_2",
+            "fieldvalue": "9039999999"
+        }
+    ],
+    "amount": 9.0,
+    "check": false,
+    "currencyAmount": "RUB",
+    "payer": {
+        "cardId": 10000184510
+    },
+    "puref": "iFora||4285"
+}

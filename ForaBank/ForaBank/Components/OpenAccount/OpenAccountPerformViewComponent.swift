@@ -122,14 +122,8 @@ extension OpenAccountPerformView {
                             item.header.isAccountOpened = true
                             item.header.title = openAccountTitle
 
-                            let accountNumber = data.accountNumber
-
-                            guard accountNumber.isEmpty == false else {
-                                return
-                            }
-
-                            item.card.numberCard = accountNumber
-
+                            item.card.update(with: data.accountNumber)
+                            
                         case let .failed(error: error):
                             
                             let rawValue = model.accountRawResponse(error: error)
@@ -208,7 +202,7 @@ extension OpenAccountPerformView {
                     case _ as OpenAccountPerformAction.ResetData:
 
                         item.header.isAccountOpened = false
-                        item.card.numberCard = ""
+                        item.card.update(with: nil)
                         confirmCode = ""
 
                     default:

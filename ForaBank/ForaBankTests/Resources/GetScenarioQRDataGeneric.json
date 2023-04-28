@@ -1,0 +1,38 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "scenario": "C2B_SUBSCRIPTION",
+        "qrcId": "AS10006QJQ2789N79JVP19G0KEK4LSGU",
+        "parameters": [{
+                "id": "brandName",
+                "type": "SUBSCRIBER",
+                "icon": "12123344",
+                "value": "Кофейня у Артема",
+                "subscriptionPurpose": "Привязка счета для платежей в пользу АО \"Кофеек\", регулярность раз в месяц, сумма 100 рублей"
+            },
+            {
+                "id": "debit_account",
+                "value": null,
+                "type": "PRODUCT_SELECT",
+                "title": "Счет списания",
+                "filter": {
+                    "productTypes": ["CARD", "ACCOUNT"],
+                    "currencies": ["RUB"],
+                    "additional": false
+                }
+            },
+            {
+                "id": "terms_check",
+                "value": true,
+                "type": "CHECK",
+                "link": {
+                    "title": "Включить переводы через СБП,",
+                    "subtitle": "принять условия обслуживания",
+                    "url": "https://www.forabank.ru/dkbo/dkbo.pdf"
+                }
+            }
+        ],
+        "required": ["debit_account"]
+    }
+}

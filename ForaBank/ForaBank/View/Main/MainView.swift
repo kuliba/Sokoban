@@ -18,29 +18,35 @@ struct MainView: View {
             
             ScrollView(showsIndicators: false) {
                 
-                VStack(spacing: 32) {
+                VStack(spacing: 0) {
                     
                     ForEach(viewModel.sections) { section in
                         
                         switch section {
                         case let productsSectionViewModel as MainSectionProductsView.ViewModel:
                             MainSectionProductsView(viewModel: productsSectionViewModel)
+                                .padding(.bottom, 19)
                             
                         case let fastOperationViewModel as MainSectionFastOperationView.ViewModel:
                             MainSectionFastOperationView(viewModel: fastOperationViewModel)
+                                .padding(.bottom, 32)
                             
                         case let promoViewModel  as MainSectionPromoView.ViewModel:
                             MainSectionPromoView(viewModel: promoViewModel)
                                 .padding(.horizontal, 20)
-                            
+                                .padding(.bottom, 32)
+
                         case let currencyViewModel as MainSectionCurrencyView.ViewModel:
                             MainSectionCurrencyView(viewModel: currencyViewModel)
+                                .padding(.bottom, 32)
                             
                         case let currencyMetallViewModel as MainSectionCurrencyMetallView.ViewModel:
                             MainSectionCurrencyMetallView(viewModel: currencyMetallViewModel)
+                                .padding(.bottom, 32)
                             
                         case let openProductViewModel as MainSectionOpenProductView.ViewModel:
                             MainSectionOpenProductView(viewModel: openProductViewModel)
+                                .padding(.bottom, 32)
                             
                         case let atmViewModel as MainSectionAtmView.ViewModel:
                             MainSectionAtmView(viewModel: atmViewModel)
@@ -68,9 +74,6 @@ struct MainView: View {
             .coordinateSpace(name: "scroll")
             .zIndex(0)
             
-            RefreshingIndicatorView(viewModel: viewModel.refreshingIndicator)
-                .zIndex(1)
-                
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
                 if let link = viewModel.link  {
@@ -112,7 +115,6 @@ struct MainView: View {
                     case .serviceOperators(let viewModel):
                         OperatorsView(viewModel: viewModel)
                             .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
                     case .failedView(let failedViewModel):
@@ -179,6 +181,9 @@ struct MainView: View {
             switch bottomSheet.type {
             case let .openAccount(openAccountViewModel):
                 OpenAccountView(viewModel: openAccountViewModel)
+            
+            case let .clientInform(clientInformViewModel):
+                ClientInformView(viewModel: clientInformViewModel)
             }
         }
         .alert(item: $viewModel.alert, content: { alertViewModel in
@@ -292,17 +297,21 @@ struct MainView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        NavigationView {
-            
+        Group {
             MainView(viewModel: .sample)
+            
+            NavigationView {
+                
+                MainView(viewModel: .sample)
+            }
         }
+        .previewLayout(.sizeThatFits)
     }
 }
 
 extension MainViewModel {
     
     static let sample = MainViewModel(
-        refreshingIndicator: .init(isActive: true),
         navButtonsRight: [.init(icon: .ic24Search, action: {}),
                           .init(icon: .ic24Bell, action: {})],
         sections: [MainSectionProductsView.ViewModel.sample,
@@ -311,10 +320,9 @@ extension MainViewModel {
                    MainSectionCurrencyMetallView.ViewModel.sample,
                    MainSectionOpenProductView.ViewModel.sample])
     
-    static let sampleProducts = MainViewModel(refreshingIndicator: .init(isActive: false),navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample])
+    static let sampleProducts = MainViewModel(navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample])
     
     static let sampleOldCurrency = MainViewModel(
-                                    refreshingIndicator: .init(isActive: false),
                                     navButtonsRight: [.init(icon: .ic24Search, action: {}),
                                                       .init(icon: .ic24Bell, action: {})],
                                     sections: [MainSectionProductsView.ViewModel(.productsMock),

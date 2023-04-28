@@ -159,12 +159,12 @@ private extension TemplatesListViewModel {
                             self?.action.send(TemplatesListViewModelAction.CloseAction())
                         }))
 
-                    case .direct:
+                    case .direct, .newDirect:
                         let operatorsViewModel = OperatorsViewModel(mode: .template(temp), closeAction: {  [weak self] in
                             self?.action.send(TemplatesListViewModelAction.CloseAction()) })
                         link = .direct(CountryPaymentView.ViewModel(operatorsViewModel: operatorsViewModel))
                         
-                    case .contactAdressless:
+                    case .contactAdressless, .contactCash, .contactAddressing,.contactAddressless:
                         let operatorsViewModel = OperatorsViewModel(mode: .template(temp), closeAction: {  [weak self] in
                             self?.action.send(TemplatesListViewModelAction.CloseAction()) }, requisitsViewAction: {})
                         link = .contactAdressless(CountryPaymentView.ViewModel(operatorsViewModel: operatorsViewModel))
@@ -192,11 +192,13 @@ private extension TemplatesListViewModel {
                         }, paymentTemplate: temp))
 
                     case .externalEntity:
-                        link = .externalEntity(.init(type: .template(temp), closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        link = .externalEntity(.init(type: .template(temp), closeAction: {[weak self] in
+                            self?.action.send(TemplatesListViewModelAction.CloseAction())
                         }))
 
                     case .externalIndividual:
-                        link = .externalIndividual(.init(type: .template(temp), closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        link = .externalIndividual(.init(type: .template(temp), closeAction: {[weak self] in
+                            self?.action.send(TemplatesListViewModelAction.CloseAction())
                         }))
 
                     default:
@@ -457,7 +459,7 @@ private extension TemplatesListViewModel {
                 var currencyAmount: String?
                 
                 template.parameterList.forEach { parameter in
-                    if let paramAmount = parameter.amount {
+                    if let paramAmount = parameter.amountDouble {
                         amount = paramAmount
                     }
                     currencyAmount = parameter.currencyAmount

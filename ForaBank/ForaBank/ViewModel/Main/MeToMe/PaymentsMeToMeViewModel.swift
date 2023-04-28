@@ -17,7 +17,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
     @Published var state: State
     @Published var alert: Alert.ViewModel?
     @Published var bottomSheet: BottomSheet?
-    
+    @Published var sheet: Sheet?
+
     let swapViewModel: ProductsSwapView.ViewModel
     let paymentsAmount: PaymentsAmountView.ViewModel
         
@@ -33,7 +34,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
         case loading
     }
 
-    init(_ model: Model, swapViewModel: ProductsSwapView.ViewModel, paymentsAmount: PaymentsAmountView.ViewModel, title: String, mode: Mode = .general, state: State = .normal, bottomSheet: BottomSheet? = nil) {
+    init(_ model: Model, swapViewModel: ProductsSwapView.ViewModel, paymentsAmount: PaymentsAmountView.ViewModel, title: String, mode: Mode = .general, state: State = .normal, bottomSheet: BottomSheet? = nil, sheet: Sheet? = nil) {
         
         self.model = model
         self.swapViewModel = swapViewModel
@@ -42,31 +43,86 @@ class PaymentsMeToMeViewModel: ObservableObject {
         self.mode = mode
         self.state = state
         self.bottomSheet = bottomSheet
+        self.sheet = sheet
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsMeToMeViewModel initialized")
+    }
+    
+    deinit {
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsMeToMeViewModel deinitialized")
     }
     
     convenience init?(_ model: Model, mode: Mode) {
         
-        guard let productData = Self.reduce(model, products: model.allProducts) else {
+        guard let swapViewModel = ProductsSwapView.ViewModel(model, mode: mode) else {
             return nil
         }
         
-        let swapViewModel: ProductsSwapView.ViewModel = .init(model, productData: productData, mode: mode)
-        let amountViewModel: PaymentsAmountView.ViewModel = .init(productData: productData, mode: mode, model: model)
+        let amountViewModel = PaymentsAmountView.ViewModel(mode: mode, model: model)
         
         self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, title: "Между своими", mode: mode, state: .normal)
         
         bind()
     }
-    
+        
     private func bind() {
         
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
-
+                
                 switch action {
+                    
+                case let payload as ModelAction.Settings.ApplicationSettings.Response:
+                    
+                    switch payload.result {
+                        
+                    case .success(let settings):
+                        if settings.allowCloseDeposit, let productIdFrom = swapViewModel.productIdFrom, let productFrom = model.product(productId: productIdFrom) as? ProductDepositData, productFrom.isDemandDeposit  {
+
+                            let currencySymbol = model.dictionaryCurrencySymbol(for: productFrom.currency) ?? productFrom.currency
+
+                            let alertViewModel = Alert.ViewModel(title: "Внимание",
+                                                                 message: "Вклад будет закрыт автоматически.\nНеснижаемый остаток равен 1 \(currencySymbol).\nПроверьте сумму перевода.",
+                                                                 primary: .init(type: .cancel, title: "Отмена", action: {}),
+                                                                 secondary: .init(type: .default, title: "Перевести", action: {[weak self] in
+                                guard let self = self, let productIdTo = self.swapViewModel.productIdTo, let productTo = self.model.product(productId: productIdTo) else {
+                                    return
+                                }
+
+                                do {
+                                    try self.model.sendCloseDepositRequest(productFrom: productFrom, productTo: productTo)
+                                    self.state = .loading
+                                } catch {
+                                    LoggerAgent.shared.log(level: .error, category: .model, message: "Unable send close deposit request")
+                                }
+                                
+                            }))
+                            self.alert = .init(alertViewModel)
+                            
+                        } else {
+                            
+                            let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
+                                                                 message: "Срок вашего вклада еще не истек. Для досрочного закрытия обратитесь в ближайший офис",
+                                                                 primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in self?.action.send(PaymentsMeToMeAction.Show.PlacesMap())}),
+                                                                 secondary: .init(type: .default, title: "ОК", action: {}))
+                            self.alert = .init(alertViewModel)
+                        }
+                        
+                    case .failure(let error):
+                        let alertViewModel = Alert.ViewModel(title: "Ошибка",
+                                                             message: error.localizedDescription,
+                                                             primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in self?.action.send(PaymentsMeToMeAction.Show.PlacesMap())}),
+                                                             secondary: .init(type: .default, title: "ОК", action: {}))
+                        self.alert = .init(alertViewModel)
+                        
+                    }
+
                 case let payload as ModelAction.Payment.MeToMe.CreateTransfer.Response:
                     
+                    state = .normal
+
                     switch payload.result {
                     case let .success(response):
 
@@ -74,22 +130,23 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         if response.needMake == true {
 
                             model.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Request(transferResponse: response))
+                            state = .loading
 
                         } else {
                             
                             // For ruble transfers
                             if response.needOTP == false {
-                                
+                                let modeForSuccessView = modeForSuccessView(productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo)
                                 switch response.documentStatus {
                                 case .complete:
                                     
-                                    if let successViewModel = PaymentsSuccessViewModel(model, mode: .meToMe, transferData: response) {
+                                    if let successViewModel = PaymentsSuccessViewModel(model, mode: modeForSuccessView, transferData: response) {
                                         self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                                     }
 
                                 default:
 
-                                    if let successViewModel = PaymentsSuccessViewModel(model, mode: .meToMe, productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo, transferData: response) {
+                                    if let successViewModel = PaymentsSuccessViewModel(model, mode: modeForSuccessView, productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo, transferData: response) {
                                         self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                                     }
                                 }
@@ -99,21 +156,22 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 self.action.send(PaymentsMeToMeAction.Response.Failed())
                             }
                             
-                            state = .normal
                         }
                         
                     case let .failure(error):
                         
-                        state = .normal
                         makeAlert(error)
                     }
                     
                 case let payload as ModelAction.Payment.MeToMe.MakeTransfer.Response:
                     
+                    state = .normal
+
                     switch payload.result {
                     case let .success(transferData):
-                        
-                        if let successViewModel = PaymentsSuccessViewModel(model, mode: .meToMe, transferData: transferData) {
+                        let modeForSuccessView = modeForSuccessView(productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo)
+
+                        if let successViewModel = PaymentsSuccessViewModel(model, mode: modeForSuccessView, transferData: transferData) {
                             self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                         }
 
@@ -121,10 +179,11 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         makeAlert(error)
                     }
                     
-                    state = .normal
 
                 case let payload as ModelAction.Account.Close.Response:
                     
+                    state = .normal
+
                     switch payload {
                     case let .success(data: transferData):
 
@@ -147,9 +206,11 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         makeInformer(closeAccount: false)
                     }
                     
-                    state = .normal
                     
                 case let payload as ModelAction.Deposits.Close.Response:
+                    
+                    state = .normal
+
                     switch payload {
                     case let .success(data: transferData):
 
@@ -160,7 +221,21 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                             }
+                        case let .transferDeposit(productData, _), let .transferAndCloseDeposit(productData, _):
                             
+                            if let successViewModel = PaymentsSuccessViewModel(model, mode: .closeDeposit, currency: .init(description: productData.currency), balance: productData.balanceValue, transferData: transferData) {
+                                
+                                self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+                            }
+                        case .demandDeposit:
+                            if let productIdFrom = swapViewModel.productIdFrom,
+                               let productData = model.product(productId: productIdFrom) {
+                                
+                                if let successViewModel = PaymentsSuccessViewModel(model, mode: .closeDeposit, currency: .init(description: productData.currency), balance: productData.balanceValue, transferData: transferData) {
+                                    
+                                    self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+                                }
+                            }
                         default:
                             break
                         }
@@ -170,7 +245,6 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         makeAlert(ModelError.serverCommandError(error: message))
                     }
                     
-                    state = .normal
                     
                 default:
                     break
@@ -191,31 +265,84 @@ class PaymentsMeToMeViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
+                case _ as PaymentsMeToMeAction.Show.PlacesMap:
+                    guard let placesViewModel = PlacesViewModel(model) else {
+                        return
+                    }
+                    sheet = .init(type: .placesMap(placesViewModel))
+                    
+                case _ as PaymentsMeToMeAction.Response.Success:
+                    if let productIdFrom = swapViewModel.productIdFrom,
+                       let productIdTo = swapViewModel.productIdTo {
+                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
+                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
+                        
+                        switch mode {
+                        case .transferAndCloseDeposit, .closeDeposit, .demandDeposit:
+                            break
+                        default:
+                            if let productFrom = model.product(productId: productIdFrom) as? ProductDepositData, paymentsAmount.textField.value != productFrom.balanceValue {
+                                model.action.send(ModelAction.Products.Update.ForProductType(productType: .deposit))
+                            }
+                            else {
+                                if let productTo = model.product(productId: productIdTo), productTo is ProductDepositData {
+                                    model.action.send(ModelAction.Products.Update.ForProductType(productType: .deposit))
+                                }
+                            }
+                        }
+                    }
+                    
                 case _ as PaymentsMeToMeAction.Button.Transfer.Tap:
                     
                     switch mode {
-                    case .general:
+                    case .general, .makePaymentTo, .makePaymentToDeposite:
                         
-                        let productsId = Self.productsId(model, swapViewModel: swapViewModel)
-                        
-                        if let productsId = productsId, let product = model.product(productId: productsId.from) {
+                        if let productIdFrom = swapViewModel.productIdFrom,
+                           let productIdTo = swapViewModel.productIdTo,
+                           let productFrom = model.product(productId: productIdFrom) {
                             
-                            if productsId.from == productsId.to {
+                            if productIdFrom == productIdTo {
                                 
                                 makeAlert(.emptyData(message: "Счет списания совпадает со счетом зачисления. Выберите другой продукт"))
                                 
                             } else {
                                 
-                                state = .loading
-                                
                                 model.action.send(ModelAction.Payment.MeToMe.CreateTransfer.Request(
                                     amount: paymentsAmount.textField.value,
-                                    currency: product.currency,
-                                    productFrom: productsId.from,
-                                    productTo: productsId.to))
+                                    currency: productFrom.currency,
+                                    productFrom: productIdFrom,
+                                    productTo: productIdTo))
+                                
+                                state = .loading
                             }
                         }
+
+                    case .transferDeposit, .demandDeposit:
                         
+                        if let productIdFrom = swapViewModel.productIdFrom,
+                           let productIdTo = swapViewModel.productIdTo,
+                           let productFrom = model.product(productId: productIdFrom) {
+                            
+                            if productIdFrom == productIdTo {
+                                
+                                makeAlert(.emptyData(message: "Счет списания совпадает со счетом зачисления. Выберите другой продукт"))
+                                
+                            } else {
+                                if (productFrom is ProductDepositData), paymentsAmount.textField.value == productFrom.balanceValue {
+                                    // проверка разрешения закрытия вкладов
+                                    self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
+                                }
+                                else {
+                                    model.action.send(ModelAction.Payment.MeToMe.CreateTransfer.Request(
+                                    amount: paymentsAmount.textField.value,
+                                    currency: productFrom.currency,
+                                    productFrom: productIdFrom,
+                                    productTo: productIdTo))
+                                
+                                    state = .loading
+                                }
+                            }
+                        }
                     case let .closeAccount(productFrom, _):
                         
                         guard let to = swapViewModel.to,
@@ -233,17 +360,15 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             switch productTo.productType {
                             case .card:
                                 
-                                state = .loading
-                                
                                 guard let productFrom = productFrom as? ProductAccountData else {
                                     return
                                 }
                                 
                                 model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.name, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: productTo.id)))
                                 
-                            case .account:
-                                
                                 state = .loading
+                                
+                            case .account:
                                 
                                 guard let productFrom = productFrom as? ProductAccountData else {
                                     return
@@ -251,48 +376,29 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 
                                 model.action.send(ModelAction.Account.Close.Request(payload: .init(id: productFrom.id, name: productFrom.name, startDate: nil, endDate: nil, statementFormat: nil, accountId: productTo.id, cardId: nil)))
                                 
+                                state = .loading
+                                
                             default:
                                 break
                             }
                         }
                         
-                    case let .closeDeposit(productFrom, _):
-                        
+                    case let .closeDeposit(productFrom, _), let .transferAndCloseDeposit(productFrom, _):
                         guard let to = swapViewModel.to,
                               let productViewModel = to.productViewModel,
-                              let productTo = model.product(productId: productViewModel.id) else {
+                              let productTo = model.product(productId: productViewModel.id),
+                              let productFrom = productFrom as? ProductDepositData else {
                             return
                         }
-                        
-                        switch productTo.productType {
-                            
-                        case .card:
-
+                        do {
+                            try model.sendCloseDepositRequest(productFrom: productFrom, productTo: productTo)
                             state = .loading
-
-                            guard let productFrom = productFrom as? ProductDepositData, let productTo = productTo as? ProductCardData else {
-                                return
-                            }
-                             
-                            self.model.action.send(ModelAction.Deposits.Close.Request(payload: .init(id: productFrom.depositId, name: productFrom.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: productTo.cardId)))
-                            
-                        case .account:
-
-                            state = .loading
-
-                            guard let productFrom = productFrom as? ProductDepositData else {
-                                return
-                            }
-                                
-                            self.model.action.send(ModelAction.Deposits.Close.Request(payload: .init(id: productFrom.depositId, name: productFrom.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: productTo.id, cardId: nil)))
-                            
-                        default:
-                            break
+                        }
+                        catch {
+                            LoggerAgent.shared.log(level: .error, category: .model, message: "Unable send close deposit request")
                         }
                     }
                     
-                    self.action.send(PaymentsMeToMeAction.InteractionEnabled(isUserInteractionEnabled: false))
-
                 case _ as PaymentsMeToMeAction.Button.Info.Tap:
                     
                     switch mode {
@@ -320,6 +426,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         return
                     }
                     
+                    let productFrom = model.product(productId: productIdFrom)
+                    updateProductSwitch(swapViewModel: swapViewModel, productFrom: productFrom, isSwapButtonEnabled: mode.isUserInterractionEnabled)
                     updateAmountSwitch(from: productIdFrom)
                     updateTextField(productIdFrom, textField: paymentsAmount.textField)
                     updateInfoButton(model.rates.value)
@@ -327,6 +435,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     
                 case let payload as ProductsSwapAction.Selected.From:
                     
+                    let productFrom = model.product(productId: payload.productId)
+                    updateProductSwitch(swapViewModel: swapViewModel, productFrom: productFrom, isSwapButtonEnabled: mode.isUserInterractionEnabled)
                     updateAmountSwitch(from: payload.productId)
                     updateTextField(payload.productId, textField: paymentsAmount.textField)
                     updateInfoButton(model.rates.value)
@@ -334,6 +444,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     
                 case let payload as ProductsSwapAction.Selected.To:
                     
+                    let productTo = model.product(productId: payload.productId)
+                    updateProductSwitch(swapViewModel: swapViewModel, productTo: productTo, isSwapButtonEnabled: mode.isUserInterractionEnabled)
                     updateAmountSwitch(to: payload.productId)
                     updateInfoButton(model.rates.value)
                     updateTransferButton(.normal)
@@ -367,7 +479,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 
             }.store(in: &bindings)
     }
-    
+        
     private func makeInformer(closeAccount: Bool) {
         
         if let productIdFrom = swapViewModel.productIdFrom,
@@ -407,19 +519,60 @@ class PaymentsMeToMeViewModel: ObservableObject {
         self.action.send(PaymentsMeToMeAction.InteractionEnabled(isUserInteractionEnabled: value))
     }
     
+    private func modeForSuccessView (productIdFrom: ProductData.ID?, productIdTo: ProductData.ID?) -> PaymentsSuccessViewModel.Mode{
+        if let productIdFrom = productIdFrom,
+           let _ = model.product(productId: productIdFrom) as? ProductDepositData {
+            return .makePaymentToDeposite
+        }
+        else if let productIdTo = productIdTo,
+                let _ = model.product(productId: productIdTo) as? ProductDepositData {
+                 return .makePaymentToDeposite
+             }
+        return .meToMe
+    }
+    
+    private func isSwapEnabled(isSwapButtonEnabled: Bool, productFrom: ProductData?, productTo: ProductData?) -> Bool {
+        if productFrom is ProductDepositData || productTo is ProductDepositData {
+            return false
+        }
+        return isSwapButtonEnabled
+    }
+    
+    private func updateProductSwitch(model: ProductsSwapView.ViewModel, productFrom: ProductData?, productTo: ProductData?, isSwapButtonEnabled: Bool) {
+        model.divider.swapButton?.isSwapButtonEnabled = isSwapEnabled(isSwapButtonEnabled: isSwapButtonEnabled, productFrom: productFrom, productTo: productTo)
+    }
+    
+    private func updateProductSwitch(swapViewModel: ProductsSwapView.ViewModel, productFrom: ProductData?, isSwapButtonEnabled: Bool){
+        if let productIdTo = swapViewModel.productIdTo,
+           let productTo = model.product(productId: productIdTo){
+            updateProductSwitch(model: swapViewModel, productFrom: productFrom, productTo: productTo, isSwapButtonEnabled: isSwapButtonEnabled)
+        }
+        else {
+            updateProductSwitch(model: swapViewModel, productFrom: productFrom, productTo: nil, isSwapButtonEnabled: isSwapButtonEnabled)
+        }
+    }
+    
+    private func updateProductSwitch(swapViewModel: ProductsSwapView.ViewModel, productTo: ProductData?, isSwapButtonEnabled: Bool){
+        if let productIdFrom = swapViewModel.productIdFrom,
+           let productFrom = model.product(productId: productIdFrom){
+            updateProductSwitch(model: swapViewModel, productFrom: productFrom, productTo: productTo, isSwapButtonEnabled: isSwapButtonEnabled)
+        }
+        else {
+            updateProductSwitch(model: swapViewModel, productFrom: nil, productTo: productTo, isSwapButtonEnabled: isSwapButtonEnabled)
+        }
+    }
+    
     private func updateAmountSwitch(from: ProductData.ID, to: ProductData.ID) {
         
         guard let products = Self.products(model, from: from, to: to) else {
+            
+            paymentsAmount.currencySwitch = nil
             return
         }
 
         let currencyData = model.currencyList.value
-        
-        let fromItem = currencyData.first(where: { $0.code == products.from.currency })
-        let toItem = currencyData.first(where: { $0.code == products.to.currency })
-        
-        guard let fromItem = fromItem,
-              let toItem = toItem,
+        guard let fromItem = currencyData.first(where: { $0.code == products.from.currency }),
+              let toItem = currencyData.first(where: { $0.code == products.to.currency }),
               let fromCurrencySymbol = fromItem.currencySymbol,
               let toCurrencySymbol = toItem.currencySymbol else {
             return
@@ -431,40 +584,53 @@ class PaymentsMeToMeViewModel: ObservableObject {
             
         } else {
             
-            var isUserInteractionEnabled: Bool
-            
             switch mode {
-            case .general: isUserInteractionEnabled = true
-            case .closeAccount: isUserInteractionEnabled = false
-            case .closeDeposit: isUserInteractionEnabled = false
-            }
-            
-            paymentsAmount.currencySwitch = .init(from: fromCurrencySymbol, to: toCurrencySymbol, icon: .init("Payments Refresh CW"), isUserInteractionEnabled: isUserInteractionEnabled) { [weak self] in
-                self?.swapViewModel.action.send(ProductsSwapAction.Button.Tap())
+            case .demandDeposit:
+                let isSwapEnabled = isSwapEnabled(isSwapButtonEnabled: mode.isUserInterractionEnabled, productFrom: products.from, productTo: products.to)
+
+                paymentsAmount.currencySwitch = .init(from: fromCurrencySymbol, to: toCurrencySymbol, icon: .init("Payments Refresh CW"), isUserInteractionEnabled: isSwapEnabled) { [weak self] in
+                    self?.swapViewModel.action.send(ProductsSwapAction.Button.Tap())
+                }
+
+            case .transferDeposit, .makePaymentToDeposite, .transferAndCloseDeposit:
+                paymentsAmount.currencySwitch = .init(from: fromCurrencySymbol, to: toCurrencySymbol, icon: .init("Payments Refresh CW"), isUserInteractionEnabled: false) { [weak self] in
+                    self?.swapViewModel.action.send(ProductsSwapAction.Button.Tap())
+                }
+            default:
+                paymentsAmount.currencySwitch = .init(from: fromCurrencySymbol, to: toCurrencySymbol, icon: .init("Payments Refresh CW"), isUserInteractionEnabled: mode.isUserInterractionEnabled) { [weak self] in
+                    self?.swapViewModel.action.send(ProductsSwapAction.Button.Tap())
+                }
             }
         }
     }
 
     private func updateTransferButton(_ state: State) {
         
-        if swapViewModel.productIdTo == nil {
-            return
-        }
-        
-        switch state {
-        case .normal:
+        if swapViewModel.productIdTo != nil, swapViewModel.productIdFrom != nil {
             
-            let value = paymentsAmount.textField.value
-            
-            let transferButton = PaymentsAmountView.ViewModel.makeTransferButton(value) { [weak self] in
-                self?.action.send(PaymentsMeToMeAction.Button.Transfer.Tap())
+            switch state {
+            case .normal:
+                
+                let value = paymentsAmount.textField.value
+                
+                if value > 0 {
+                    paymentsAmount.transferButton = .active(title: "Перевести", action: { [weak self] in
+                        self?.action.send(PaymentsMeToMeAction.Button.Transfer.Tap())
+                    })
+                    
+                } else {
+                    
+                    paymentsAmount.transferButton = .inactive(title: "Перевести")
+                }
+                
+            case .loading:
+                
+                paymentsAmount.transferButton = .loading(icon: .init("Logo Fora Bank"), iconSize: .init(width: 40, height: 40))
             }
+        }
+        else {
+            paymentsAmount.transferButton = .inactive(title: "Перевести")
             
-            paymentsAmount.transferButton = transferButton
-            
-        case .loading:
-            
-            paymentsAmount.transferButton = .loading(icon: .init("Logo Fora Bank"), iconSize: .init(width: 40, height: 40))
         }
     }
 
@@ -544,7 +710,10 @@ class PaymentsMeToMeViewModel: ObservableObject {
             return
         }
         
-        if currencyFrom == Currency.rub {
+        if currencyFrom == Currency.rub && currencyTo == Currency.rub {
+            paymentsAmount.info = nil
+            
+        } else if currencyFrom == Currency.rub {
             
             if let rateDataTo = rateDataTo {
                 
@@ -659,41 +828,6 @@ class PaymentsMeToMeViewModel: ObservableObject {
 
 extension PaymentsMeToMeViewModel {
     
-    static func reduce(_ model: Model, products: [ProductData]) -> ProductData? {
-        
-        let filterredProducts = ProductData.Filter.generalFrom.filterredProductsOwner(products, ownerId: model.clientInfo.value?.id)
-        
-        return filterredProducts?.first
-    }
-    
-    static func productsId(_ model: Model, swapViewModel: ProductsSwapView.ViewModel) -> (from: ProductData.ID, to: ProductData.ID)? {
-        
-        var productsId: (from: ProductData.ID, to: ProductData.ID) = (0, 0)
-        
-        if let from = swapViewModel.from, let to = swapViewModel.to {
-            
-            switch from.content {
-            case let .product(productViewModel):
-                
-                productsId.from = productViewModel.id
-                
-            case .placeholder:
-                return nil
-            }
-            
-            switch to.content {
-            case let .product(productViewModel):
-                
-                productsId.to = productViewModel.id
-                
-            case .placeholder:
-                return nil
-            }
-        }
-        
-        return productsId
-    }
-    
     static func products(_ model: Model, from: ProductData.ID, to: ProductData.ID) -> (from: ProductData, to: ProductData)? {
         
         let from = model.product(productId: from)
@@ -738,6 +872,16 @@ enum PaymentsMeToMeAction {
         
         let isUserInteractionEnabled: Bool
     }
+    
+    enum Close {
+        struct BottomSheet: Action {}
+        struct Sheet: Action {}
+    }
+    
+    enum Show {
+        struct PlacesMap: Action {}
+    }
+    
 }
 
 // MARK: - Mode
@@ -749,6 +893,23 @@ extension PaymentsMeToMeViewModel {
         case general
         case closeAccount(ProductData, Double)
         case closeDeposit(ProductData, Double)
+        case makePaymentTo(ProductData, Double)
+        case makePaymentToDeposite(ProductData, Double)
+        case transferDeposit(ProductData, Double)
+        case transferAndCloseDeposit(ProductData, Double)
+        case demandDeposit
+
+
+        var isUserInterractionEnabled: Bool {
+            
+            switch self {
+            case .closeAccount, .closeDeposit:
+                return false
+                
+            default:
+                return true
+            }
+        }
     }
     
     struct BottomSheet: BottomSheetCustomizable {
@@ -759,6 +920,17 @@ extension PaymentsMeToMeViewModel {
         enum BottomSheetType {
 
             case info(InfoView.ViewModel)
+        }
+    }
+    
+    struct Sheet: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            
+            case placesMap(PlacesViewModel)
         }
     }
 }

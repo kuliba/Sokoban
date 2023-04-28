@@ -7,70 +7,88 @@
 
 import SwiftUI
 import Combine
+import TextFieldRegularComponent
 
 //MARK: - ViewModel
 
 extension PaymentsInputView {
     
     class ViewModel: PaymentsParameterViewModel, PaymentsParameterViewModelWarnable, ObservableObject {
-        
+
         let icon: Image?
-        let description: String
-        let textField: TextFieldRegularView.ViewModel
-        
         @Published var title: String?
+        let textField: TextFieldRegularView.ViewModel
         @Published var additionalButton: ButtonViewModel?
         @Published var warning: String?
+        @Published var info: String?
         
-        private let model: Model
         private static let iconPlaceholder = Image.ic24File
         
         var parameterInput: Payments.ParameterInput? { source as? Payments.ParameterInput }
-        override var isValid: Bool { parameterInput?.validator.isValid(value: value.current) ?? false }
-        
-        init(icon: Image?, description: String, content: String, warning: String? = nil, textField: TextFieldRegularView.ViewModel, additionalButton: ButtonViewModel? = nil, model: Model, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
+
+        init(icon: Image? = nil, title: String? = nil, textField: TextFieldRegularView.ViewModel, additionalButton: ButtonViewModel? = nil, warning: String? = nil, info: String? = nil, source: PaymentsParameterRepresentable) {
             
             self.icon = icon
-            self.description = description
-            self.warning = warning
-            self.additionalButton = additionalButton
-            self.model = model
+            self.title = title
             self.textField = textField
-            
+            self.additionalButton = additionalButton
+            self.warning = warning
+            self.info = info
             super.init(source: source)
         }
         
-        convenience init(with parameterInput: Payments.ParameterInput, model: Model) {
+        convenience init(with parameterInput: Payments.ParameterInput) {
             
-            let icon = parameterInput.icon?.image
-            let description = parameterInput.title
-            let content = parameterInput.parameter.value ?? ""
+            let textField = TextFieldRegularView.ViewModel(text: parameterInput.parameter.value, placeholder: parameterInput.title, keyboardType: parameterInput.inputType.keyboardType, limit: parameterInput.limitator?.limit)
             
-            var textField: TextFieldRegularView.ViewModel
-            switch parameterInput.inputType {
-            case .default:
-                textField = .init(text: content, placeholder: description, style: .default, limit: parameterInput.limitator?.limit)
-
-            case .number:
-                textField = .init(text: content, placeholder: description, style: .number, limit: parameterInput.limitator?.limit)
-            }
-            
-            if parameterInput.hint != nil {
+            let additionalButton: ButtonViewModel? = {
                 
-                self.init(icon: icon, description: description, content: content, textField: textField, additionalButton: .init(icon: Image.ic24Info, action: {}), model: model, source: parameterInput)
-                
-            } else {
-                
-                self.init(icon: icon, description: description, content: content, textField: textField, model: model, source: parameterInput)
-            }
+                switch parameterInput.info {
+                case .some:
+                    return .init(icon: Image.ic24Info, action: {})
+                    
+                case .none:
+                    return nil
+                }
+            }()
             
+            let title: String? = {
+               
+                switch parameterInput.value {
+                case .some(""), .none:
+                    return nil
+                    
+                case .some:
+                    return parameterInput.title
+                }
+            }()
+            
+            self.init(icon: parameterInput.icon?.image, title: title, textField: textField, additionalButton: additionalButton, source: parameterInput)
+            
+            // this update requiered for cases where intial value == ""
+            update(value: parameterInput.value)
             bind()
+        }
+        
+        //MARK: - Overrides
+        
+        override var isValid: Bool { parameterInput?.validator.isValid(value: value.current) ?? false }
+        
+        override func update(value: String?) {
+            
+            switch value {
+            case .some(""), .none:
+                super.update(value: nil)
+                
+            case .some:
+                super.update(value: value)
+            }
         }
         
         override func update(source: PaymentsParameterRepresentable) {
             super.update(source: source)
             
-            textField.text = source.value
+            textField.setText(to: source.value)
             
             withAnimation {
                 
@@ -117,66 +135,57 @@ extension PaymentsInputView.ViewModel {
     
     private func bind() {
         
-        textField.$text
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] content in
-                
-                if content == "" {
-                    
-                    update(value: nil)
-                    
-                } else {
-                    
-                    update(value: content)
-                }
-                
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    
-                    title = value.current != nil || textField.isEditing.value == true ? description : nil
-                }
-                
-            }.store(in: &bindings)
-        
-        textField.isEditing
+        textField.$state
             .dropFirst()
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] isEditing in
+            .sink { [unowned self] state in
                 
-                if isEditing == true {
-                    
-                    withAnimation(.easeIn(duration: 0.2)) {
-                        
-                        self.title = description
-                        self.warning = nil
-                    }
-                    
-                } else {
-                    
-                    self.title = value.current == nil ? nil : description
-                    
-                    if let parameterInput = parameterInput,
-                       let action = parameterInput.validator.action(with: value.current, for: .post),
-                       case .warning(let message) = action {
-                        
-                        withAnimation {
-                            self.warning = message
-                        }
-                        
-                    } else {
-                        
-                        withAnimation {
-                            self.warning = nil
-                        }
-                        
-                    }
+                update(value: state.text)
+
+                withAnimation {
+                    updateTitle(textFieldState: state)
+                    updateWarning(isEditing: state.isEditing)
                 }
+            }
+            .store(in: &bindings)
+    }
+    
+    private func updateTitle(textFieldState: TextFieldRegularView.ViewModel.State) {
+
+        switch textFieldState {
+        case .placeholder:
+            title = nil
+            
+        default:
+            title = parameterInput?.title
+        }
+    }
+    
+    private func updateWarning(isEditing: Bool) {
+        
+        if isEditing {
+            
+            warning = nil
+            
+        } else {
+            
+            if let parameterInput = parameterInput,
+               let action = parameterInput.validator.action(with: value.current, for: .post),
+               case let .warning(message) = action {
                 
-            }.store(in: &bindings)
+                warning = message
+                
+            } else {
+                
+                warning = nil
+            }
+        }
     }
 }
 
+// MARK: - Parameter Actions
 
-//MARK: - Parameter Actions
 extension PaymentsParameterViewModelAction {
     
     enum Hint {
@@ -190,7 +199,8 @@ extension PaymentsParameterViewModelAction {
     }
 }
 
-//MARK: - Sub View Model
+// MARK: - Sub View Model
+
 extension PaymentsInputView.ViewModel {
     
     struct ButtonViewModel {
@@ -206,7 +216,20 @@ extension PaymentsInputView.ViewModel {
     }
 }
 
-//MARK: - View
+//MARK: - Private extensions
+
+extension Payments.ParameterInput.InputType {
+    
+    var keyboardType: TextFieldRegularView.ViewModel.KeyboardType {
+        
+        switch self {
+        case .default: return .default
+        case .number: return .number
+        }
+    }
+}
+
+// MARK: - View
 
 struct PaymentsInputView: View {
     
@@ -214,89 +237,145 @@ struct PaymentsInputView: View {
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 0) {
+        HStack(alignment: .top, spacing: 16) {
+
+            iconView
+                .frame(width: 24, height: 24)
+                .padding(.top, iconTopPadding)
+
+            content
+                .padding(.trailing, 16)
             
-            if let title = viewModel.title {
-                
-                Text(title)
-                    .font(.textBodySR12160())
-                    .foregroundColor(.textPlaceholder)
-                    .padding(.bottom, 4)
-                    .padding(.leading, 48)
-                    .transition(.asymmetric(insertion: .move(edge: .bottom).combined(with: .opacity), removal: .opacity))
-            }
+            Spacer()
+
+            additionalButton
+                .frame(width: 24, height: 24)
+                .padding(.top, iconTopPadding)
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 13)
+        .padding(.bottom, 7)
+    }
+    
+    private var iconTopPadding: CGFloat {
+        
+        switch viewModel.title {
+        case .some: return 11
+        case .none: return 5
+        }
+    }
+    
+    private var content: some View {
+        
+        VStack(alignment: .leading, spacing: 4) {
             
-            HStack(spacing: 20) {
+            VStack(alignment: .leading, spacing: 0) {
                 
-                if let icon = viewModel.icon {
-                    
-                    icon
-                        .resizable()
-                        .renderingMode(.template)
-                        .foregroundColor(.mainColorsGray)
-                        .frame(width: 24, height: 24)
-                        .padding(.leading, 4)
-                } else {
-                    
-                    Color.clear
-                        .frame(width: 24, height: 24)
-                        .padding(.leading, 4)
-                }
+                titleView
                 
-                if viewModel.isEditable == true {
-                    
-                    TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 14), textColor: .textSecondary)
-                        .frame(minWidth: 24)
-                    
-                } else {
-                    
-                    Text(viewModel.value.current ?? "")
-                        .foregroundColor(.textSecondary)
-                        .font(.textBodyMM14200())
-                }
-                
-                Spacer()
-                
-                if viewModel.isEditable, let additionalButton = viewModel.additionalButton {
-                    
-                    Button(action: additionalButton.action) {
-                        
-                        additionalButton.icon
-                            .foregroundColor(.mainColorsGray)
-                    }
-                }
+                textFiled
             }
+
+            infoView
+                .padding(.bottom, 8)
             
-            if let warning = viewModel.warning {
+            warningView
+                .padding(.bottom, 8)
+        }
+    }
+    
+    @ViewBuilder
+    private var iconView: some View {
+        
+        if let icon = viewModel.icon {
+            
+            icon
+                .resizable()
+                .renderingMode(.template)
+                .foregroundColor(.mainColorsGray)
+            
+        } else {
+            
+            Color.clear
+        }
+    }
+    
+    @ViewBuilder
+    private var titleView: some View {
+        
+        if let title = viewModel.title {
+            
+            Text(title)
+                .font(.textBodyMR14180())
+                .foregroundColor(.textPlaceholder)
+                .transition(
+                    .asymmetric(
+                        insertion: .move(edge: .bottom).combined(with: .opacity),
+                        removal: .opacity
+                    )
+                )
+        }
+    }
+    
+    @ViewBuilder
+    private var textFiled: some View {
+        
+        if viewModel.isEditable == true {
+            
+            TextFieldRegularView(
+                viewModel: viewModel.textField,
+                font: .systemFont(ofSize: 16),
+                textColor: .textSecondary
+            )
+            
+        } else {
+            
+            Text(viewModel.value.current ?? "")
+                .font(.textH4M16240())
+                .foregroundColor(.textSecondary)
+                .padding(.vertical, 7)
+        }
+    }
+    
+    @ViewBuilder
+    private var additionalButton: some View {
+        
+        if viewModel.isEditable,
+           let additionalButton = viewModel.additionalButton {
+            
+            Button(action: additionalButton.action) {
                 
-                VStack(alignment: .leading, spacing: 8) {
-                    
-                    Divider()
-                        .frame(height: 1)
-                        .background(Color.systemColorError)
-                        .padding(.leading, 48)
-                    
-                    Text(warning)
-                        .font(.textBodySR12160())
-                        .foregroundColor(.systemColorError)
-                        .padding(.leading, 48)
-                    
-                }.padding(.top, 12)
-                
-            } else {
-                
-                Divider()
-                    .frame(height: 1)
-                    .background(Color.bordersDivider)
-                    .opacity(viewModel.isEditable ? 1.0 : 0.2)
-                    .padding(.top, 12)
-                    .padding(.leading, 48)
+                additionalButton.icon
+                    .renderingMode(.template)
+                    .foregroundColor(.mainColorsGray)
             }
+        }
+    }
+    
+    @ViewBuilder
+    private var infoView: some View {
+        
+        if let info = viewModel.info {
+            
+            Text(info)
+                .font(.textBodySR12160())
+                .foregroundColor(.textPlaceholder)
+        }
+    }
+    
+    @ViewBuilder
+    private var warningView: some View {
+        
+        if let warning = viewModel.warning {
+            
+            Text(warning)
+                .font(.textBodySR12160())
+                .foregroundColor(.systemColorError)
         }
     }
 }
 
-//MARK: - Preview
+// MARK: - Preview
 
 struct PaymentsInputView_Previews: PreviewProvider {
     
@@ -304,36 +383,101 @@ struct PaymentsInputView_Previews: PreviewProvider {
         
         Group {
             
-            PaymentsInputView(viewModel: .sampleEmpty)
-                .previewLayout(.fixed(width: 375, height: 80))
+            PaymentsGroupView(viewModel: .init(items: [PaymentsInputView.ViewModel.sampleEmptyValue]))
+                .previewDisplayName("Empty Value")
             
-            PaymentsInputView(viewModel: .sampleValue)
-                .previewLayout(.fixed(width: 375, height: 80))
+            PaymentsGroupView(viewModel: .init(items: [PaymentsInputView.ViewModel.sample]))
+                .previewDisplayName("Value")
             
-            PaymentsInputView(viewModel: .sampleValueNotEditable)
-                .previewLayout(.fixed(width: 375, height: 80))
+            PaymentsGroupView(viewModel: .init(items: [PaymentsInputView.ViewModel.sampleLongValue]))
+                .previewDisplayName("Long Value")
             
-            PaymentsInputView(viewModel: .samplePhone)
-                .previewLayout(.fixed(width: 375, height: 80))
-            
-            PaymentsInputView(viewModel: .sampleWarning)
-                .previewLayout(.fixed(width: 375, height: 100))
+            PaymentsGroupView(viewModel: .init(items: [PaymentsInputView.ViewModel.sampleNotEditable]))
+                .previewDisplayName("Not Editable")
+       
+            previewGroup()
         }
+    }
+    
+    private static func previewGroup() -> some View {
+        
+        Group {
+
+            PaymentsInputView(viewModel: .sampleError)
+
+            paymentsInputView(.sample(value: "123", validator: .minLengthFive))
+            paymentsInputView(.sample(value: "123", validator: .minLengthFive, isEditable: false))
+        }
+    }
+    
+    private static func paymentsInputView(
+        _ parameterInput: Payments.ParameterInput
+    ) -> some View {
+        
+        PaymentsInputView(viewModel: .init(with: parameterInput))
     }
 }
 
-//MARK: - Preview Content
+// MARK: - Preview Content
 
 extension PaymentsInputView.ViewModel {
     
-    static let sampleEmpty = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .anyValue, limitator: .init(limit: 9)), model: .emptyMock)
+    static let sampleEmptyValue = PaymentsInputView.ViewModel(with: .sample(value: nil))
+    static let sample = PaymentsInputView.ViewModel(with: .sample(info: ""))
+    static let sampleLongValue = PaymentsInputView.ViewModel(with: .sample(value: "Длинное, очень длинное значение для проверки того как отрабатывает лейаут", info: ""))
+    static let sampleNotEditable = PaymentsInputView.ViewModel(with: .sample(isEditable: false))
     
-    static let sampleValue = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .anyValue, limitator: nil), model: .emptyMock)
-    
-    static let sampleValueNotEditable = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .anyValue, limitator: nil, isEditable: false), model: .emptyMock)
-    
-    static let samplePhone = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "+9 925 555-5555"), icon: .init(named: "ic24Smartphone")!, title: "Номер телефона получателя", validator: .anyValue, limitator: nil, isEditable: false), model: .emptyMock)
-    
-    static let sampleWarning = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "123"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(rules: [Payments.Validation.MinLengthRule(minLenght: 5, actions: [.post: .warning("Минимальная длинна 5 символов")])]), limitator: nil), model: .emptyMock)
+    static let sampleError = PaymentsInputView.ViewModel(icon: .paymentsInputSample, title: "description", textField: .preview, additionalButton: .init(icon: .ic24Info, action: {}), warning: "Минимальная длинна 5 символов", info: "info", source: Payments.ParameterMock())
 }
 
+private extension Payments.ParameterInput {
+    
+    static func sample(
+        value: String? = "0016196314",
+        icon: ImageData = .paymentsInputSample,
+        title: String = "ИНН подразделения",
+        info: String? = nil,
+        validator: Payments.Validation.RulesSystem = .anyValue,
+        limit: Int? = nil,
+        isEditable: Bool = true
+    ) -> Self {
+        
+        .init(
+            .init(id: UUID().uuidString, value: value),
+            icon: icon,
+            title: title,
+            info: info,
+            validator: validator,
+            limitator: limit.map { .init(limit: $0) },
+            isEditable: isEditable
+        )
+    }
+}
+
+private extension TextFieldRegularView.ViewModel {
+    
+    static let preview: TextFieldRegularView.ViewModel = .init(text: "123", placeholder: "ИНН подразделения", keyboardType: .number, limit: nil)
+}
+
+private extension Payments.Validation.RulesSystem {
+    
+    static let minLengthFive: Self = .init(
+        rules: [
+            Payments.Validation.MinLengthRule(
+                minLenght: 5,
+                actions: [.post: .warning("Минимальная длинна 5 символов")]
+            )
+        ]
+    )
+}
+
+private extension ImageData {
+ 
+    static let ic24Smartphone: Self = .init(named: "ic24Smartphone")!
+    static let paymentsInputSample: Self = .init(with: UIImage(named: "Payments Input Sample")!)!
+}
+
+private extension Image {
+    
+    static let paymentsInputSample: Self = .init(uiImage: UIImage(named: "Payments Input Sample")!)
+}

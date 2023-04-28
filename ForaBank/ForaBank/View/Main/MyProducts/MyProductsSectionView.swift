@@ -23,7 +23,7 @@ struct MyProductsSectionView: View {
                     .font(.textH3SB18240())
                     .foregroundColor(.textSecondary)
 
-                Color.barsTabbar
+                Color.barsBars
 
                 Image.ic24ChevronDown
                     .rotationEffect(viewModel.isCollapsed ? .degrees(0) : .degrees(-180))
@@ -66,14 +66,14 @@ struct MyProductsSectionView: View {
                                 
                             } //swipe
                             .frame(height: 72, alignment: .leading)
-                            .listRowBackground(Color.barsTabbar)
+                            .listRowBackground(Color.barsBars)
                         
                     } else { //iOS 14
                         
                         MyProductsSectionItemView(viewModel: itemVM, editMode: $editMode)
                             .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                             .frame(height: 72, alignment: .bottomLeading)
-                            .listRowBackground(Color.barsTabbar)
+                            .listRowBackground(Color.barsBars)
                             .modifier(SwipeSidesModifier(leftAction: {
                                 
                                 itemVM.action.send(MyProductsSectionItemAction.Swiped(
@@ -92,11 +92,11 @@ struct MyProductsSectionView: View {
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                                 .listRowSeparator(separatorVisibility(item: item), edges: .bottom)
                                 .listRowSeparatorTint(.mainColorsGrayMedium.opacity(0.6))
-                                .listRowBackground(Color.barsTabbar)
+                                .listRowBackground(Color.barsBars)
                         } else {
                             MyProductsSectionItemView.PlaceholderItemView(editMode: $editMode)
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                .listRowBackground(Color.barsTabbar)
+                                .listRowBackground(Color.barsBars)
                         }
                     } //switch
                     } //for
@@ -114,7 +114,7 @@ struct MyProductsSectionView: View {
                 .opacity(viewModel.isCollapsed ? 0 : 1)
                 
         } //VStack section
-        .background(Color.barsTabbar)
+        .background(Color.barsBars)
         .cornerRadius(12)
         .padding(.horizontal, 16)
 

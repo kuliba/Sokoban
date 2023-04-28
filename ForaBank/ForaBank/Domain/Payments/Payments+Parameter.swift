@@ -16,11 +16,17 @@ protocol PaymentsParameterRepresentable {
     
     var parameter: Payments.Parameter { get }
     
-    /// the paramreter can be edited
+    /// is paramreter can be edited
     var isEditable: Bool { get }
     
-    /// presentation type of the parameter
+    /// placement of the parameter in the view
     var placement: Payments.Parameter.Placement { get }
+    
+    /// style of parameter in UI
+    var style: Payments.Parameter.Style { get }
+    
+    /// the group that the parameter belongs to (optional)
+    var group: Payments.Parameter.Group? { get }
     
     func updated(value: Payments.Parameter.Value) -> PaymentsParameterRepresentable
 }
@@ -32,6 +38,8 @@ extension PaymentsParameterRepresentable {
     
     var isEditable: Bool { false }
     var placement: Payments.Parameter.Placement { .feed }
+    var style: Payments.Parameter.Style { .light }
+    var group: Payments.Parameter.Group? { nil }
     
     func updated(value: Payments.Parameter.Value) -> PaymentsParameterRepresentable { self }
 }
@@ -50,7 +58,11 @@ extension Payments.Parameter {
         case amount         = "ru.forabank.sense.amount"
         case code           = "ru.forabank.sense.code"
         case fee            = "ru.forabank.sense.fee"
+        case `continue`     = "ru.forabank.sense.continue"
         case mock           = "ru.forabank.sense.mock"
+        case subscribe      = "ru.forabank.sense.subscribe"
+        case productTemplate = "ru.forabank.sense.productTemplate"
+        case productTemplateName = "ru.forabank.sense.productTemplateName"
         
         case sfpPhone       = "RecipientID"
         case sfpBank        = "BankRecipientID"
@@ -67,8 +79,42 @@ extension Payments.Parameter {
         case requisitsInn                     = "requisitsInn"
         case requisitsKpp                     = "requisitsKpp"
         case requisitsCompanyName             = "requisitsCompanyName"
+        case requisitsCompanyNameHelper       = "requisitsCompanyName_Helper"
         case requisitsCheckBox                = "requisitsCheckBox"
         case requisitsType                    = "requisitsType"
+        
+        case countryPhone                   = "RECP"
+        case countryBank                    = "DIRECT_BANKS"
+        case countrySelect                  = "trnPickupPoint"
+        case countryDropDownList            = "countryDropDownList"
+        case countryCurrencyAmount          = "countryCurrencyAmount"
+        case countryPayeeAmount             = "countryPayeeAmount"
+        case countryTransferNumber          = "countryTransferNumber"
+        case countryPayee                   = "countryPayee"
+        case countryDeliveryCurrency        = "CURR"
+        case countryDeliveryCurrencyDirect  = "##CURR"
+        case countryCheckBox                = "countryCheckBox"
+        case countryOffer                   = "countryOferta"
+        case countryCitySearch              = "search#3#"
+        case countryBankSearch              = "search#5#"
+        case countryId                      = "bCountryId"
+        case countryCity                    = "bCityId"
+        case trnPickupPoint                 = "trnPickupPointId"
+        case countryCurrencyFilter          = "countryCurrencyFilter"
+        case countryFamilyName              = "bSurName"
+        case countryGivenName               = "bName"
+        case countryMiddleName              = "bLastName"
+        
+        case countryReturnNumber                = "countryReturnNumber"
+        case countryReturnAmount                = "countryReturnAmount"
+        case countryReturnName                  = "countryReturnName"
+        case countryOperationId                 = "countryOperationId"
+        
+        case c2bQrcId                         = "qrcId"
+        
+        case mobileConnectionPhone = "MobileConnectionPhone"
+        case mobileConnectionAmount = "MobileConnectionAmount"
+        case mobileConnectionOperatorLogo = "MobileConnectionOperatorLogo"
     }
     
     static let emptyMock = Payments.Parameter(id: Identifier.mock.rawValue, value: nil)
@@ -124,6 +170,18 @@ extension Payments {
         }
     }
     
+    struct ParameterContinue: PaymentsParameterRepresentable {
+        
+        let parameter: Parameter
+        let title: String
+        
+        init(title: String) {
+            
+            self.parameter = Parameter(id: Payments.Parameter.Identifier.continue.rawValue, value: nil)
+            self.title = title
+        }
+    }
+    
     struct ParameterRequisitesType: PaymentsParameterRepresentable {
         
         let parameter: Parameter
@@ -145,40 +203,67 @@ extension Payments {
     struct ParameterSelect: PaymentsParameterRepresentable {
         
         let parameter: Parameter
+        let icon: Icon?
         let title: String
+        let placeholder: String
         let options: [Option]
         let isEditable: Bool
-        let type: Kind
         let description: String?
+        let group: Payments.Parameter.Group?
         
-        init(_ parameter: Parameter, title: String, options: [Option], isEditable: Bool = true, type: Kind = .general, description: String? = nil) {
+        init(_ parameter: Parameter, icon: Icon? = nil, title: String, placeholder: String, options: [Option], isEditable: Bool = true, description: String? = nil, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
+            self.icon = icon
             self.title = title
+            self.placeholder = placeholder
             self.options = options
             self.isEditable = isEditable
-            self.type = type
             self.description = description
-        }
-        
-        enum Kind {
-            
-            case general
-            case banks
-            case countries
-            case kpp
+            self.group = group
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterSelect(.init(id: parameter.id, value: value), title: title, options: options, isEditable: isEditable, type: type, description: description)
+            ParameterSelect(.init(id: parameter.id, value: value), icon: icon, title: title, placeholder: placeholder, options: options, isEditable: isEditable, description: description, group: group)
+        }
+        
+        enum Icon {
+            
+            case image(ImageData)
+            case name(String)
         }
         
         struct Option: Identifiable {
             
             let id: String
             let name: String
-            let icon: ImageData?
+            let subname: String?
+            let timeWork: String?
+            let currencies: [String]?
+            let icon: Icon
+            
+            init(id: String, name: String, subname: String? = nil, timeWork: String? = nil, currencies: [String]? = nil, icon: Icon = .circle) {
+                
+                self.id = id
+                self.name = name
+                self.subname = subname
+                self.timeWork = timeWork
+                self.currencies = currencies
+                self.icon = icon
+            }
+            
+            init(id: String, name: String, subname: String? = nil, timeWork: String? = nil, currenciesData: String?, icon: Icon = .circle) {
+                
+                let currencies = currenciesData?.components(separatedBy: ";").dropLast().map { $0 }
+                self.init(id: id, name: name, subname: subname, timeWork: timeWork, currencies: currencies, icon: icon)
+            }
+            
+            enum Icon {
+                
+                case image(ImageData)
+                case circle
+            }
         }
     }
     
@@ -188,11 +273,72 @@ extension Payments {
         let icon: ImageData
         let title: String
         let options: [Option]
+        let placeholder: String
+        let selectAll: SelectAllOption?
+        let keyboardType: KeyboardType
         let isEditable: Bool
+        let group: Payments.Parameter.Group?
+
+        init(_ parameter: Parameter, icon: ImageData, title: String, options: [Option], placeholder: String, selectAll: SelectAllOption? = nil, keyboardType: KeyboardType, isEditable: Bool = true, group: Payments.Parameter.Group? = nil) {
+            
+            self.parameter = parameter
+            self.icon = icon
+            self.title = title
+            self.options = options
+            self.placeholder = placeholder
+            self.selectAll = selectAll
+            self.keyboardType = keyboardType
+            self.isEditable = isEditable
+            self.group = group
+        }
+        
+        func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
+            
+            ParameterSelectBank(.init(id: parameter.id, value: value), icon: icon, title: title, options: options, placeholder: placeholder, selectAll: selectAll, keyboardType: keyboardType, isEditable: isEditable, group: group)
+        }
+        
+        struct Option: Identifiable, Equatable {
+    
+            let id: String
+            let name: String
+            let subtitle: String?
+            let icon: ImageData?
+            
+            let searchValue: String
+        }
+        
+        enum KeyboardType {
+            
+            case normal
+            case number
+        }
+        
+        struct SelectAllOption {
+            
+            var iconName: String = "ic24MoreHorizontal"
+            var title: String = "Cмотреть все"
+            let type: Kind
+            
+            enum Kind {
+                
+                case banks
+                case banksFullInfo
+            }
+        }
+    }
+    
+    struct ParameterSelectCountry: PaymentsParameterRepresentable {
+        
+        let parameter: Parameter
+        let icon: ImageData
+        let title: String
+        let options: [Option]
         let validator: Payments.Validation.RulesSystem
         let limitator: Payments.Limitation?
+        let isEditable: Bool
+        let group: Payments.Parameter.Group?
 
-        init(_ parameter: Parameter, icon: ImageData, title: String, options: [Option], validator: Payments.Validation.RulesSystem, limitator: Payments.Limitation?, isEditable: Bool = true) {
+        init(_ parameter: Parameter, icon: ImageData, title: String, options: [Option], validator: Payments.Validation.RulesSystem, limitator: Payments.Limitation?, isEditable: Bool = true, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
             self.icon = icon
@@ -201,11 +347,12 @@ extension Payments {
             self.limitator = limitator
             self.options = options
             self.isEditable = isEditable
+            self.group = group
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterSelectBank(.init(id: parameter.id, value: value), icon: icon, title: title, options: options, validator: validator, limitator: limitator, isEditable: isEditable)
+            ParameterSelectCountry(.init(id: parameter.id, value: value), icon: icon, title: title, options: options, validator: validator, limitator: limitator, isEditable: isEditable, group: group)
         }
         
         struct Option: Identifiable {
@@ -217,6 +364,8 @@ extension Payments {
         }
     }
     
+    //TODO: replace with ParameterSelect
+    @available(*, deprecated, message: "Use ParameterSelect instead")
     struct ParameterSelectSimple: PaymentsParameterRepresentable {
         
         let parameter: Parameter
@@ -226,8 +375,9 @@ extension Payments {
         let description: String?
         let options: [Option]
         let isEditable: Bool
+        let group: Payments.Parameter.Group?
         
-        init(_ parameter: Parameter, icon: ImageData, title: String, selectionTitle: String, description: String? = nil, options: [Option], isEditable: Bool = true) {
+        init(_ parameter: Parameter, icon: ImageData, title: String, selectionTitle: String, description: String? = nil, options: [Option], isEditable: Bool = true, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
             self.icon = icon
@@ -236,32 +386,37 @@ extension Payments {
             self.description = description
             self.options = options
             self.isEditable = isEditable
+            self.group = group
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterSelectSimple(.init(id: parameter.id, value: value), icon: icon, title: title, selectionTitle: selectionTitle, description: description, options: options, isEditable: isEditable)
+            ParameterSelectSimple(.init(id: parameter.id, value: value), icon: icon, title: title, selectionTitle: selectionTitle, description: description, options: options, isEditable: isEditable, group: group)
         }
     }
     
+    //TODO: replace with ParameterSelectDropDownList
+    @available(*, deprecated, message: "Use ParameterSelectDropDownList instead")
     struct ParameterSelectSwitch: PaymentsParameterRepresentable {
         
         let parameter: Parameter
         let options: [Option]
         let isEditable: Bool
         let placement: Payments.Parameter.Placement
+        let group: Payments.Parameter.Group?
         
-        init(_ parameter: Parameter, options: [Option], isEditable: Bool = true, placement: Payments.Parameter.Placement = .feed) {
+        init(_ parameter: Parameter, options: [Option], isEditable: Bool = true, placement: Payments.Parameter.Placement = .feed, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
             self.options = options
             self.isEditable = isEditable
             self.placement = placement
+            self.group = group
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterSelectSwitch(.init(id: parameter.id, value: value), options: options, isEditable: isEditable, placement: placement)
+            ParameterSelectSwitch(.init(id: parameter.id, value: value), options: options, isEditable: isEditable, placement: placement, group: group)
         }
         
         struct Option: Identifiable {
@@ -271,27 +426,88 @@ extension Payments {
         }
     }
     
-    struct ParameterCheckBox: PaymentsParameterRepresentable {
+    struct ParameterSelectDropDownList: PaymentsParameterRepresentable {
         
         let parameter: Parameter
         let title: String
-        var value: Bool {
-                        
-            guard parameter.value == "true" else {
-                return true
-            }
-            
-            return false
-        }
+        let options: [Option]
+        let isEditable: Bool
+        let placement: Payments.Parameter.Placement
+        let group: Payments.Parameter.Group?
+        let style: Payments.Parameter.Style = .dark
         
-        internal init(_ parameter: Payments.Parameter, title: String) {
+        init(_ parameter: Parameter, title: String, options: [Option], isEditable: Bool = true, placement: Payments.Parameter.Placement = .feed, group: Payments.Parameter.Group? = nil) {
+            
             self.parameter = parameter
             self.title = title
+            self.options = options
+            self.isEditable = isEditable
+            self.placement = placement
+            self.group = group
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterCheckBox(.init(id: parameter.id, value: value), title: title)
+            ParameterSelectDropDownList(.init(id: parameter.id, value: value), title: title, options: options, isEditable: isEditable, placement: placement, group: group)
+        }
+        
+        struct Option: Identifiable, Equatable {
+            
+            let id: String
+            let name: String
+            let icon: Icon?
+            
+            enum Icon: Equatable {
+                
+                case image(ImageData)
+                case name(String)
+            }
+        }
+    }
+    
+    struct ParameterCheck: PaymentsParameterRepresentable {
+        
+        let parameter: Parameter
+        let title: String
+        let link: Link?
+        let style: Style
+        let mode: Mode
+        let group: Payments.Parameter.Group?
+        var value: Bool {
+                        
+            return parameter.value == "true" ? true : false
+        }
+        
+        init(_ parameter: Payments.Parameter, title: String, link: Link? = nil, style: Style = .regular, mode: Mode = .normal, group: Payments.Parameter.Group? = nil) {
+            self.parameter = parameter
+            self.title = title
+            self.link = link
+            self.style = style
+            self.mode = mode
+            self.group = group
+        }
+        
+        func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
+            
+            ParameterCheck(.init(id: parameter.id, value: value), title: title, link: link, style: style, mode: mode, group: group)
+        }
+        
+        struct Link {
+            
+            let title: String
+            let url: URL
+        }
+        
+        enum Style {
+            
+            case regular
+            case c2bSubscribtion
+        }
+        
+        enum Mode {
+            
+            case normal
+            case abroad
         }
     }
     
@@ -301,43 +517,52 @@ extension Payments {
         let icon: ImageData?
         let title: String
         let hint: Hint?
+        let info: String?
         let validator: Payments.Validation.RulesSystem
         let limitator: Payments.Limitation?
         let isEditable: Bool
-        let inputType: InputType
         let placement: Payments.Parameter.Placement
+        let inputType: InputType
+        let group: Payments.Parameter.Group?
  
-        init(_ parameter: Parameter, icon: ImageData? = nil, title: String, hint: Hint? = nil, validator: Payments.Validation.RulesSystem, limitator: Payments.Limitation? = nil, isEditable: Bool = true, placement: Payments.Parameter.Placement = .feed, inputType: InputType = .default) {
+        init(_ parameter: Parameter, icon: ImageData? = nil, title: String, hint: Hint? = nil, info: String? = nil, validator: Payments.Validation.RulesSystem, limitator: Payments.Limitation? = nil, isEditable: Bool = true, placement: Payments.Parameter.Placement = .feed, inputType: InputType = .default, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
             self.icon = icon
             self.title = title
             self.hint = hint
+            self.info = info
             self.validator = validator
             self.limitator = limitator
             self.isEditable = isEditable
             self.placement = placement
             self.inputType = inputType
+            self.group = group
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterInput(.init(id: parameter.id, value: value), icon: icon, title: title, hint: hint, validator: validator, limitator: limitator, isEditable: isEditable, placement: placement, inputType: inputType)
+            ParameterInput(.init(id: parameter.id, value: value), icon: icon, title: title, hint: hint, info: info, validator: validator, limitator: limitator, isEditable: isEditable, placement: placement, inputType: inputType, group: group)
         }
         
         func updated(hint: Hint?) -> PaymentsParameterRepresentable {
             
-            ParameterInput(parameter, icon: icon, title: title, hint: hint, validator: validator, limitator: limitator, isEditable: isEditable, placement: placement, inputType: inputType)
+            ParameterInput(parameter, icon: icon, title: title, hint: hint, info: info, validator: validator, limitator: limitator, isEditable: isEditable, placement: placement, inputType: inputType, group: group)
         }
         
         func updated(icon: ImageData) -> PaymentsParameterRepresentable {
             
-            ParameterInput(parameter, icon: icon, title: title, hint: hint, validator: validator, limitator: limitator, isEditable: isEditable, placement: placement, inputType: inputType)
+            ParameterInput(parameter, icon: icon, title: title, hint: hint, info: info, validator: validator, limitator: limitator, isEditable: isEditable, placement: placement, inputType: inputType, group: group)
         }
         
         func updated(isEditable: Bool) -> PaymentsParameterRepresentable {
             
-            ParameterInput(parameter, icon: icon, title: title, hint: hint, validator: validator, limitator: limitator, isEditable: isEditable, placement: placement)
+            ParameterInput(parameter, icon: icon, title: title, hint: hint, info: info, validator: validator, limitator: limitator, isEditable: isEditable, placement: placement, inputType: inputType, group: group)
+        }
+        
+        func updated(validator: Payments.Validation.RulesSystem, inputType: InputType) -> PaymentsParameterRepresentable {
+            
+            ParameterInput(parameter, icon: icon, title: title, hint: hint, info: info, validator: validator, limitator: limitator, isEditable: isEditable, placement: placement, inputType: inputType, group: group)
         }
         
         enum InputType {
@@ -349,7 +574,7 @@ extension Payments {
             
             let title: String
             let subtitle: String
-            let icon: Data
+            let icon: ImageData
             let hints: [Content]
             
             struct Content {
@@ -364,20 +589,27 @@ extension Payments {
         
         let parameter: Parameter
         let title: String
+        let placeholder: String?
         let isEditable: Bool
         let placement: Payments.Parameter.Placement
+        let group: Payments.Parameter.Group?
  
-        init(_ parameter: Parameter, title: String, isEditable: Bool = true, placement: Payments.Parameter.Placement = .feed) {
+        init(_ parameter: Parameter, title: String, placeholder: String? = nil,  isEditable: Bool = true, placement: Payments.Parameter.Placement = .feed, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
             self.title = title
+            self.placeholder = placeholder
             self.isEditable = isEditable
             self.placement = placement
+            self.group = group
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterInputPhone(.init(id: parameter.id, value: value), title: title, isEditable: isEditable, placement: placement)
+            //FIXME: remove it from here
+            let value = value?.replacingOccurrences(of: " ", with: "")
+            
+            return ParameterInputPhone(.init(id: parameter.id, value: value), title: title, placeholder: placeholder, isEditable: isEditable, placement: placement, group: group)
         }
     }
     
@@ -386,25 +618,29 @@ extension Payments {
         let parameter: Parameter
         let icon: ImageData
         let title: String
+        let limit: Int?
         let timerDelay: TimeInterval
         let errorMessage: String
         let validator: Validator
         let placement: Payments.Parameter.Placement
+        let group: Payments.Parameter.Group?
         
-        init(value: Parameter.Value, icon: ImageData, title: String, timerDelay: TimeInterval, errorMessage: String, validator: Validator, placement: Payments.Parameter.Placement = .feed) {
+        init(value: Parameter.Value, icon: ImageData, title: String, limit: Int? = nil, timerDelay: TimeInterval, errorMessage: String, validator: Validator, placement: Payments.Parameter.Placement = .feed, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = .init(id: Payments.Parameter.Identifier.code.rawValue, value: value)
             self.icon = icon
             self.title = title
+            self.limit = limit
             self.timerDelay = timerDelay
             self.errorMessage = errorMessage
             self.validator = validator
             self.placement = placement
+            self.group = group
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterCode(value: value, icon: icon, title: title, timerDelay: timerDelay, errorMessage: errorMessage, validator: validator, placement: placement)
+            ParameterCode(value: value, icon: icon, title: title, limit: limit, timerDelay: timerDelay, errorMessage: errorMessage, validator: validator, placement: placement, group: group)
         }
         
         struct Validator: ValidatorProtocol {
@@ -416,9 +652,9 @@ extension Payments {
         
         static let regular: ParameterCode = {
             
-            let icon = ImageData(named: "ic24MessageSquare") ?? .parameterSample
+            let icon = ImageData(named: "ic24SmsCode") ?? .parameterSample
             
-            return ParameterCode(value: nil, icon: icon, title: "Введите код из СМС", timerDelay: 60, errorMessage: "Код введен неправильно", validator: .init(length: 6), placement: .feed)
+            return ParameterCode(value: nil, icon: icon, title: "Введите код из СМС", limit: 6, timerDelay: 60, errorMessage: "Код введен неправильно", validator: .init(length: 6), placement: .feed)
             
         }()
     }
@@ -428,19 +664,23 @@ extension Payments {
         let parameter: Parameter
         let icon: ImageData
         let title: String
+        let lineLimit: Int?
         let placement: Payments.Parameter.Placement
+        let group: Payments.Parameter.Group?
         
-        init(_ parameter: Parameter, icon: ImageData, title: String, placement: Payments.Parameter.Placement = .feed) {
+        init(_ parameter: Parameter, icon: ImageData, title: String, lineLimit: Int? = nil, placement: Payments.Parameter.Placement = .feed, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
             self.icon = icon
             self.title = title
+            self.lineLimit = lineLimit
             self.placement = placement
+            self.group = group
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterInfo(.init(id: parameter.id, value: value), icon: icon, title: title, placement: placement)
+            ParameterInfo(.init(id: parameter.id, value: value), icon: icon, title: title, lineLimit: lineLimit, placement: placement, group: group)
         }
     }
     
@@ -452,8 +692,10 @@ extension Payments {
         let firstName: Name
         let middleName: Name
         let isEditable: Bool
+        let mode: Mode
+        let group: Payments.Parameter.Group?
         
-        init(_ parameter: Parameter, title: String, lastName: Name, firstName: Name, middleName: Name, isEditable: Bool = true) {
+        init(_ parameter: Parameter, title: String, lastName: Name, firstName: Name, middleName: Name, isEditable: Bool = true, mode: Mode = .regular, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
             self.title = title
@@ -461,15 +703,17 @@ extension Payments {
             self.firstName = firstName
             self.middleName = middleName
             self.isEditable = isEditable
+            self.mode = mode
+            self.group = group
         }
         
-        init(id: Parameter.ID, value: String?, title: String, editable: Bool = true) {
+        init(id: Parameter.ID, value: String?, title: String, editable: Bool = true, mode: Mode = .regular, group: Payments.Parameter.Group? = nil) {
             
             self.init(.init(id: id, value: value), title: title,
                       lastName: .init(title: "Фамилия", value: Self.name(with: value, index: 0), validator: .baseName, limitator: .init(limit: 158)),
                       firstName: .init(title: "Имя", value: Self.name(with: value, index: 1), validator: .baseName, limitator: .init(limit: 158)),
                       middleName: .init(title: "Отчество (если есть)", value: Self.name(with: value, index: 2), validator: .anyValue, limitator: .init(limit: 158)),
-                      isEditable: editable)
+                      isEditable: editable, mode: mode, group: group)
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
@@ -478,7 +722,13 @@ extension Payments {
                           lastName: .init(title: lastName.title, value: Self.name(with: value, index: 0), validator: .baseName, limitator: .init(limit: 158)),
                           firstName: .init(title: firstName.title, value: Self.name(with: value, index: 1), validator: .baseName, limitator: .init(limit: 158)),
                           middleName: .init(title: middleName.title, value: Self.name(with: value, index: 2), validator: .anyValue, limitator: .init(limit: 158)),
-                          isEditable: isEditable)
+                          isEditable: isEditable, mode: mode, group: group)
+        }
+        
+        enum Mode {
+            
+            case regular
+            case abroad
         }
         
         static func name(with value: String?, index: Int) -> String? {
@@ -526,11 +776,13 @@ extension Payments {
         let parameter: Parameter
         let title: String
         let currencySymbol: String
+        let deliveryCurrency: DeliveryCurrency?
         let transferButtonTitle: String
         let validator: Validator
         let info: Info?
         let isEditable: Bool
         let placement: Payments.Parameter.Placement = .bottom
+        let group: Payments.Parameter.Group?
         
         var amount: Double {
  
@@ -541,27 +793,56 @@ extension Payments {
             return amount
         }
 
-        init(value: Parameter.Value, title: String, currencySymbol: String, transferButtonTitle: String = "Перевести", validator: Validator, info: Info? = nil, isEditable: Bool = true) {
+        init(value: Parameter.Value, title: String, currencySymbol: String, deliveryCurrency: DeliveryCurrency? = nil, transferButtonTitle: String = "Перевести", validator: Validator, info: Info? = nil, isEditable: Bool = true, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = .init(id: Payments.Parameter.Identifier.amount.rawValue, value: value)
             self.title = title
             self.currencySymbol = currencySymbol
+            self.deliveryCurrency = deliveryCurrency
             self.transferButtonTitle = transferButtonTitle
             self.validator = validator
             self.info = info
             self.isEditable = isEditable
+            self.group = group
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, transferButtonTitle: transferButtonTitle, validator: validator, info: info, isEditable: isEditable)
+            ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, deliveryCurrency: deliveryCurrency, transferButtonTitle: transferButtonTitle, validator: validator, info: info, isEditable: isEditable, group: group)
+        }
+        
+        func update(currencySymbol: String, maxAmount: Double?) -> PaymentsParameterRepresentable {
+            
+            ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, deliveryCurrency: deliveryCurrency, transferButtonTitle: transferButtonTitle, validator: .init(minAmount: 0.01, maxAmount: maxAmount), info: info, isEditable: isEditable, group: group)
+        }
+        
+        func updated(currencySymbol: String) -> Payments.ParameterAmount {
+            
+            ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, deliveryCurrency: deliveryCurrency, transferButtonTitle: transferButtonTitle, validator: validator, info: info, isEditable: isEditable, group: group)
         }
         
         func updated(info: Info) -> PaymentsParameterRepresentable {
             
-            ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, transferButtonTitle: transferButtonTitle, validator: validator, info: info, isEditable: isEditable)
+            ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, deliveryCurrency: deliveryCurrency, transferButtonTitle: transferButtonTitle, validator: validator, info: info, isEditable: isEditable, group: group)
         }
         
+        func updated(value: Parameter.Value, selectedCurrency: Currency) -> PaymentsParameterRepresentable {
+            
+            ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: selectedCurrency, currenciesList: deliveryCurrency?.currenciesList), transferButtonTitle: transferButtonTitle, validator: validator, info: info, isEditable: isEditable, group: group)
+        }
+        
+        func updated(value: Parameter.Value, deliveryCurrency: DeliveryCurrency) -> PaymentsParameterRepresentable {
+            
+            ParameterAmount(value: value, title: title, currencySymbol: currencySymbol, deliveryCurrency: deliveryCurrency, transferButtonTitle: transferButtonTitle, validator: validator, info: info, isEditable: isEditable, group: group)
+        }
+        
+        struct DeliveryCurrency {
+            
+            let selectedCurrency: Currency
+            let currenciesList: [Currency]?
+        }
+        
+        //TODO: change to payments validation rule system
         struct Validator: ValidatorProtocol, Equatable {
             
             let minAmount: Double
@@ -607,6 +888,7 @@ extension Payments {
         let title: String
         let filter: ProductData.Filter
         let isEditable: Bool
+        let group: Payments.Parameter.Group?
         var productId: ProductData.ID? {
             
             guard let value = value else {
@@ -616,18 +898,104 @@ extension Payments {
             return ProductData.ID(value)
         }
         
-        init(value: Parameter.Value, title: String = "Счет списания", filter: ProductData.Filter, isEditable: Bool) {
+        init(value: Parameter.Value, title: String = "Счет списания", filter: ProductData.Filter, isEditable: Bool, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = .init(id: Payments.Parameter.Identifier.product.rawValue, value: value)
             self.title = title
             self.filter = filter
             self.isEditable = isEditable
+            self.group = group
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterProduct(value: value, title: title, filter: filter, isEditable: isEditable)
+            ParameterProduct(value: value, title: title, filter: filter, isEditable: isEditable, group: group)
         }
+        
+        func updated(filter: ProductData.Filter) -> PaymentsParameterRepresentable {
+        
+            ParameterProduct(value: value, title: title, filter: filter, isEditable: isEditable, group: group)
+        }
+    }
+    
+    struct ParameterProductTemplate: PaymentsParameterRepresentable {
+        
+        let parameter: Parameter
+        let title: String
+        let placeholder: String
+        let validator: Payments.Validation.RulesSystem
+        let mask: StringValueMask
+        let group: Payments.Parameter.Group?
+        let masked: CardMaskData
+        let isEditable: Bool
+        
+        var parameterValue: ParametrValue? {
+            
+            .init(stringValue: parameter.value)
+        }
+        
+        init(value: ParametrValue?,
+             title: String = "Куда",
+             placeholder: String = "Номер карты",
+             validator: Payments.Validation.RulesSystem,
+             mask: StringValueMask = .card,
+             group: Payments.Parameter.Group? = nil,
+             masked: CardMaskData = .init(),
+             isEditable: Bool) {
+            
+            self.parameter = .init(id: Payments.Parameter.Identifier.productTemplate.rawValue, value: value?.stringValue)
+            self.placeholder = placeholder
+            self.title = title
+            self.validator = validator
+            self.mask = mask
+            self.group = group
+            self.masked = masked
+            self.isEditable = isEditable
+        }
+        
+        struct CardMaskData {
+            let symbol: String = "*"
+            let range: [Int] = [5, 6, 7, 8, 10, 11, 12, 13]
+        }
+        
+        enum ParametrValue {
+            case cardNumber(String)
+            case templateId(String)
+            
+            var stringValue: String {
+                
+                switch self {
+                case let .cardNumber(cardNumber): return "C:\(cardNumber)"
+                case let .templateId(templateId): return "T:\(templateId)"
+                }
+            }
+            
+            init?(stringValue: String?) {
+               
+                guard let stringValue = stringValue,
+                      let prefix = stringValue.components(separatedBy: ":").first,
+                      let cleanValue = stringValue.components(separatedBy: ":").last
+                else { return nil }
+
+                switch prefix {
+                case "C": self = .cardNumber(cleanValue)
+                case "T": self = .templateId(cleanValue)
+            
+                default: return nil
+                }
+            }
+        }
+        
+        func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
+            
+            ParameterProductTemplate(value: .init(stringValue: value), title: title, placeholder: placeholder, validator: validator, mask: mask, group: group, isEditable: isEditable)
+        }
+        
+        func updated(isEditable: Bool) -> PaymentsParameterRepresentable {
+            
+            ParameterProductTemplate(value: .init(stringValue: value), title: title, placeholder: placeholder, validator: validator, mask: mask, group: group, isEditable: isEditable)
+        }
+        
     }
     
     struct ParameterHeader: PaymentsParameterRepresentable {
@@ -635,17 +1003,19 @@ extension Payments {
         let parameter: Parameter
         let title: String
         let subtitle: String?
+        let style: Style
         let icon: Icon?
         let rightButton: [RightButton]
         //TODO: implement case .header
         let placement: Payments.Parameter.Placement = .top
 
-        init(title: String, subtitle: String? = nil, icon: Icon? = nil, rightButton: [RightButton] = []) {
+        init(title: String, subtitle: String? = nil, icon: Icon? = nil, style: Style = .normal, rightButton: [RightButton] = []) {
             
             self.parameter = Parameter(id: Payments.Parameter.Identifier.header.rawValue, value: Payments.Parameter.Identifier.header.rawValue)
             self.title = title
             self.subtitle = subtitle
             self.icon = icon
+            self.style = style
             self.rightButton = rightButton
         }
         
@@ -666,9 +1036,15 @@ extension Payments {
             case name(String)
         }
         
+        enum Style {
+            
+            case normal //24pt
+            case large //32pt
+        }
+        
         func updated(title: String, subtitle: String?, rightButton: [RightButton]) -> PaymentsParameterRepresentable {
             
-            ParameterHeader(title: title, subtitle: subtitle, icon: icon, rightButton: rightButton)
+            ParameterHeader(title: title, subtitle: subtitle, icon: icon, style: style, rightButton: rightButton)
         }
     }
     
@@ -677,6 +1053,7 @@ extension Payments {
         let parameter: Parameter
         let message: String
         let placement: Payments.Parameter.Placement
+        let group: Payments.Parameter.Group?
         
         var isViewed: Bool {
             
@@ -687,16 +1064,122 @@ extension Payments {
             return value == "true" ? true : false
         }
         
-        init(_ parameter: Parameter, message: String, placement: Payments.Parameter.Placement = .top) {
+        init(_ parameter: Parameter, message: String, placement: Payments.Parameter.Placement = .top, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
             self.message = message
             self.placement = placement
+            self.group = group
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterMessage(.init(id: parameter.id, value: value), message: message, placement: placement)
+            ParameterMessage(.init(id: parameter.id, value: value), message: message, placement: placement, group: group)
+        }
+    }
+    
+    struct ParameterSubscriber: PaymentsParameterRepresentable {
+        
+        let parameter: Parameter
+        let icon: String
+        let description: String
+        
+        init(_ parameter: Parameter, icon: String, description: String) {
+            
+            self.parameter = parameter
+            self.icon = icon
+            self.description = description
+        }
+        
+        func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
+            
+            ParameterSubscriber(.init(id: parameter.id, value: value), icon: icon, description: description)
+        }
+    }
+    
+    struct ParameterSubscribe: PaymentsParameterRepresentable {
+        
+        let parameter: Parameter
+        let buttons: [Button]
+        let icon: String
+        let placement: Payments.Parameter.Placement = .bottom
+        
+        init(id: Payments.Parameter.ID = Payments.Parameter.Identifier.subscribe.rawValue, value: Payments.Parameter.Value = nil, buttons: [Button], icon: String) {
+            
+            self.parameter = .init(id: id, value: value)
+            self.buttons = buttons
+            self.icon = icon
+        }
+        
+        func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
+            
+            ParameterSubscribe(id: parameter.id, value: value, buttons: buttons, icon: icon)
+        }
+        
+        struct Button {
+            
+            let title: String
+            let style: Style
+            let action: Action
+            let precondition: Precondition?
+
+            enum Action: String {
+                
+                case confirm
+                case deny
+            }
+            
+            enum Style {
+                
+                case primary
+                case secondary
+            }
+            
+            struct Precondition {
+                
+                let parameterId: Payments.Parameter.ID
+                let value: Payments.Parameter.Value
+            }
+        }
+    }
+    
+    struct ParameterDataValue: PaymentsParameterRepresentable {
+        
+        let parameter: Parameter
+    }
+    
+    struct ParameterHidden: PaymentsParameterRepresentable {
+        
+        let parameter: Parameter
+
+        internal init(id: Payments.Parameter.ID, value: Payments.Parameter.Value = nil) {
+            
+            self.parameter = Parameter(id: id, value: value)
+        }
+        
+        func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
+            
+            ParameterHidden(id: parameter.id, value: value)
+        }
+    }
+    
+    struct ParameterOperatorLogo: PaymentsParameterRepresentable {
+        
+        let parameter: Parameter
+        let svgImage: String
+        
+        init(_ parameter: Parameter, svgImage: String) {
+            
+            self.parameter = parameter
+            self.svgImage = svgImage
+        }
+        
+        func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
+            
+            ParameterOperatorLogo(
+                .init(id: parameter.id, value: value),
+                svgImage: svgImage
+            )
         }
     }
     
@@ -704,18 +1187,28 @@ extension Payments {
         
         let parameter: Parameter
         let placement: Payments.Parameter.Placement
+        let group: Payments.Parameter.Group?
 
-        internal init(id: Payments.Parameter.ID = Payments.Parameter.Identifier.mock.rawValue, value: Payments.Parameter.Value = nil, placement: Payments.Parameter.Placement = .feed) {
+        internal init(id: Payments.Parameter.ID = Payments.Parameter.Identifier.mock.rawValue, value: Payments.Parameter.Value = nil, placement: Payments.Parameter.Placement = .feed, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = Parameter(id: id, value: value)
             self.placement = placement
+            self.group = group
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterMock(id: parameter.id, value: value)
+            ParameterMock(id: parameter.id, value: value, group: group)
         }
     }
+}
+
+extension Payments.ParameterSelect.Option {
+
+  init(with option: Option) {
+    
+    self.init(id: option.id, name: option.name, subname: option.subtitle)
+  }
 }
 
 extension Payments.Validation.RulesSystem {

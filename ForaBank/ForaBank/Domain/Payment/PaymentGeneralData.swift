@@ -14,6 +14,10 @@ class PaymentGeneralData: LatestPaymentData {
 	let bankName: String?
 	let phoneNumber: String
 
+    var phoneNumberRu: String {
+        "+7" + "\(phoneNumber)"
+    }
+    
 	private enum CodingKeys : String, CodingKey {
 		case amount, bankId, bankName, phoneNumber
 	}

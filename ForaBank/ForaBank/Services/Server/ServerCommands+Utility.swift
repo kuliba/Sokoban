@@ -17,7 +17,7 @@ extension ServerCommands {
         struct Csrf: ServerCommand {
             
             let token: String = ""
-            let endpoint = "/csrf/"
+            let endpoint = "/csrf"
             let method: ServerCommandMethod = .get
             let cookiesProvider: Bool = true
             

@@ -10,10 +10,6 @@
 
 import SwiftUI
 
-private class BundleProvider {
-    static let bundle = Bundle(for: BundleProvider.self)
-}
-
 public extension Image {
     static var ic12ArrowDown: Image { Image(#function) }
     static var ic12ArrowUp: Image { Image(#function) }
@@ -31,7 +27,7 @@ public extension Image {
     static var ic16Ball: Image { Image(#function) }
     static var ic1612Circle: Image { Image(#function) }
     static var ic16Tariff: Image { Image(#function) }
-    static var ic16Zkx: Image { Image(#function) }
+    static var ic16ZKX: Image { Image(#function) }
     static var ic16Activity: Image { Image(#function) }
     static var ic16Airplay: Image { Image(#function) }
     static var ic16AlertCircle: Image { Image(#function) }
@@ -596,6 +592,7 @@ public extension Image {
     static var ic24Menu: Image { Image(#function) }
     static var ic24MessageCircle: Image { Image(#function) }
     static var ic24MessageSquare: Image { Image(#function) }
+    static var ic24MessageSquareNumber: Image { Image(#function) }
     static var ic24Metro: Image { Image(#function) }
     static var ic24Mic: Image { Image(#function) }
     static var ic24MicOff: Image { Image(#function) }
@@ -770,8 +767,8 @@ public extension Image {
     static var ic32Swap: Image { Image(#function) }
     static var ic32UserCheck: Image { Image(#function) }
     static var ic32UserPlus: Image { Image(#function) }
-    static var ic40TvInternet: Image { Image(#function) }
-    static var ic40ZkxServices: Image { Image(#function) }
+    static var ic40TVInternet: Image { Image(#function) }
+    static var ic40ZKXServices: Image { Image(#function) }
     static var ic40AirTickets: Image { Image(#function) }
     static var ic40Beauty: Image { Image(#function) }
     static var ic40Card: Image { Image(#function) }
@@ -824,4 +821,6 @@ public extension Image {
     static var ic64TouchId: Image { Image(#function) }
     static var ic64FaceId: Image { Image(#function) }
     static var ic64ForaColor: Image { Image(#function) }
+    static var ic64Goods: Image { Image(#function) }
+    static var ic72Sbp: Image { Image(#function) }
 }

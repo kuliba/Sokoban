@@ -27,8 +27,14 @@ class AuthLoginViewModel: ObservableObject {
     private let rootActions: RootViewModel.RootActions
     private var bindings = Set<AnyCancellable>()
 
-    lazy var card: CardViewModel = CardViewModel(scanButton: .init(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Show.Scaner()) }), textField: .init(masks: [.card, .account], regExp: "[0-9]", toolbar: .init(doneButton: .init(isEnabled: true, action: { UIApplication.shared.endEditing() }), closeButton: .init(isEnabled: true, action: { UIApplication.shared.endEditing() }))), nextButton: nil, state: .editing)
-    
+    lazy var card: CardViewModel = CardViewModel(scanButton: .init(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Show.Scaner())}),
+                                                 textField: .init(masks: [.card, .account],
+                                                                  regExp: "[0-9]",
+                                                                  toolbar: .init(doneButton: .init(isEnabled: true, action: { UIApplication.shared.endEditing()}),
+                                                                                 closeButton: .init(isEnabled: true, action: { UIApplication.shared.endEditing()}))),
+                                                 nextButton: nil,
+                                                 state: .editing)
+
     private lazy var abroadButton: ButtonAuthView.ViewModel = .init(.abroad) { [weak self] in
         self?.action.send(AuthLoginViewModelAction.Show.Transfers())
     }
@@ -57,7 +63,19 @@ class AuthLoginViewModel: ObservableObject {
     }
     
     private func bind() {
-
+        
+        model.clientInform
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] clientInformData in
+        
+                guard !self.model.clientInformStatus.isShowNotAuthorized,
+                      let message = clientInformData.data?.notAuthorized
+                else { return }
+                self.model.clientInformStatus.isShowNotAuthorized = true
+                self.action.send(AuthLoginViewModelAction.Show.AlertClientInform(message: message))
+        
+        }.store(in: &bindings)
+        
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
@@ -158,6 +176,13 @@ class AuthLoginViewModel: ObservableObject {
                         self.cardScanner = nil
                     })
                     
+                case let payload as AuthLoginViewModelAction.Show.AlertClientInform:
+                    
+                    LoggerAgent.shared.log(category: .ui, message: "AuthLoginViewModelAction.Show.AlertClientInform: \(payload.message)")
+                    
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "alert ClientInform presented")
+                    alert = .init(title: "Ошибка", message: payload.message, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
+                    
                 case _ as AuthLoginViewModelAction.Close.Link:
                     LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Close.Link")
                     link = nil
@@ -186,22 +211,19 @@ class AuthLoginViewModel: ObservableObject {
             }.store(in: &bindings)
                 
         card.$state
-            .removeDuplicates()
+            .combineLatest(model.sessionState, model.fcmToken)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] cardState in
-                
-                guard case .ready(let cardNumber) = cardState else {
-                    
+            .sink { [unowned self] cardState, sessionState, fcmToken in
+                switch (cardState, sessionState, fcmToken) {
+                case (.ready(let cardNumber), .active, .some):
+                    LoggerAgent.shared.log(category: .ui, message: "card state: .ready, session state: .active")
+                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "next button presented")
+                    card.nextButton = CardViewModel.NextButtonViewModel(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Register(cardNumber: cardNumber))})
+                default:
                     card.nextButton = nil
-                    return
                 }
-                LoggerAgent.shared.log(category: .ui, message: "card state: .ready")
-                
-                LoggerAgent.shared.log(level: .debug, category: .ui, message: "next button presented")
-                card.nextButton = CardViewModel.NextButtonViewModel(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Register(cardNumber: cardNumber))})
-                
             }.store(in: &bindings)
-        
+
         model.catalogProducts
             .combineLatest(model.transferAbroad)
             .receive(on: DispatchQueue.main)
@@ -380,6 +402,11 @@ enum AuthLoginViewModelAction {
         struct OrderProduct: Action {
             
             let productData: CatalogProductData
+        }
+        
+        struct AlertClientInform: Action {
+            
+            let message: String
         }
     }
     

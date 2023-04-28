@@ -15,18 +15,17 @@ extension PaymentsInputPhoneView {
     class ViewModel: PaymentsParameterViewModel, ObservableObject {
         
         let icon: Image
-        let description: String
-        let textField: TextFieldPhoneNumberView.ViewModel
+        let textView: TextViewPhoneNumberView.ViewModel
         @Published var title: String?
         @Published var actionButton: ActionButtonViewModel?
         
         private let model: Model
         private static let iconPlaceholder = Image.ic24File
         
-        var parameterInput: Payments.ParameterInput? { source as? Payments.ParameterInput }
+        var parameterInput: Payments.ParameterInputPhone? { source as? Payments.ParameterInputPhone }
         override var isValid: Bool {
             
-            guard let phone = textField.text else {
+            guard let phone = textView.text else {
                 return false
             }
             
@@ -37,19 +36,20 @@ extension PaymentsInputPhoneView {
                 
             } else {
                 
-                return textField.phoneNumberFormatter.isValid(phone.digits)
+                return textView.phoneNumberFormatter.isValid(phone.digits)
             }
             
 #else
-            return textField.phoneNumberFormatter.isValid(phone.digits)
+            return textView.phoneNumberFormatter.isValid(phone.digits)
 #endif
         }
         
-        init(icon: Image = .ic24Smartphone, description: String, phone: String?, title: String? = nil, actionButton: ActionButtonViewModel? = nil, model: Model = .emptyMock, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
+        var titleValue: String? { parameterInput?.title }
+
+        init(icon: Image = .ic24Smartphone, textView: TextViewPhoneNumberView.ViewModel, phone: String?, title: String? = nil, actionButton: ActionButtonViewModel? = nil, model: Model = .emptyMock, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.icon = icon
-            self.description = description
-            self.textField = .init(style: .payments, text: phone, placeHolder: .text(description), filterSymbols: [Character("-"), Character("("), Character(")"), Character("+")], firstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")], phoneNumberFormatter: PhoneNumberKitFormater())
+            self.textView = textView
             self.title = title
             self.actionButton = actionButton
             self.model = model
@@ -59,21 +59,24 @@ extension PaymentsInputPhoneView {
         
         convenience init(with parameterInput: Payments.ParameterInputPhone, model: Model) {
             
-            let description = parameterInput.title
+            let title = parameterInput.title
             let phone = parameterInput.parameter.value
-
-            self.init(description: description, phone: phone, actionButton: nil, model: model, source: parameterInput)
+            let placeholder = parameterInput.placeholder ?? parameterInput.title
+            
+            let textView = TextViewPhoneNumberView.ViewModel(style: .payments, text: phone, placeHolder: .text(placeholder), filterSymbols: [Character("-"), Character("("), Character(")"), Character("+")], firstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")], phoneNumberFormatter: PhoneNumberKitFormater())
+            
+            self.init(textView: textView, phone: phone, title: title, model: model, source: parameterInput)
             
             if let phone = phone {
 
 #if DEBUG
                 if phone.digits != "70115110217" {
                     
-                    textField.text = textField.phoneNumberFormatter.partialFormatter("+\(phone.digits)")
+                    textView.setText(to: textView.phoneNumberFormatter.partialFormatter("+\(phone.digits)"))
                 }
 
 #else
-                textField.text = textField.phoneNumberFormatter.partialFormatter("+\(phone.digits)")
+                textView.setText(to: textView.phoneNumberFormatter.partialFormatter("+\(phone.digits)"))
 #endif
                 
             }
@@ -85,25 +88,41 @@ extension PaymentsInputPhoneView {
                 self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Show(viewModel: contactViewModel))
             })
             
-            textField.toolbar = .init(doneButton: .init(isEnabled: true,
-                                                        action: { [weak self] in self?.textField.dismissKeyboard() }),
+            textView.toolbar = .init(doneButton: .init(isEnabled: true,
+                                                        action: { [weak self] in self?.textView.dismissKeyboard() }),
                                       closeButton: .init(isEnabled: true,
-                                                         action: { [weak self] in self?.textField.dismissKeyboard() }))
+                                                         action: { [weak self] in self?.textView.dismissKeyboard() }))
             
             bind()
         }
 
         private func bind() {
             
-            textField.$text
+            textView.$text
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] phone in
                     
-                    value = value.updated(with: phone)
-                    
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        
-                        title = phone != nil ? description : nil
+                    update(value: phone)
+
+                }.store(in: &bindings)
+            
+            textView.isEditing
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isEditing in
+                                        
+                    if isEditing || textView.hasValue {
+
+                        withAnimation {
+
+                            title = titleValue
+                        }
+
+                    } else {
+
+                        withAnimation {
+
+                            title = nil
+                        }
                     }
 
                 }.store(in: &bindings)
@@ -117,7 +136,7 @@ extension PaymentsInputPhoneView {
                     
                     switch action {
                     case let payload as ContactsViewModelAction.ContactPhoneSelected:
-                        self?.textField.text = payload.phone
+                        self?.textView.setText(to: payload.phone)
                         self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Close())
     
                     default:
@@ -166,63 +185,80 @@ struct PaymentsInputPhoneView: View {
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 0) {
+        HStack(spacing: 12) {
+            
+            leadingIcon
+                .frame(width: 24, height: 24)
+            
+            centerView
+                .padding(.leading, 4)
+            
+            trailingButton
+        }
+        .frame(height: 72)
+        .padding(.horizontal, 16)
+        .background(Color.mainColorsGrayLightest)
+        .cornerRadius(12)
+    }
+    
+    private var leadingIcon: some View {
+        
+        viewModel.icon
+            .resizable()
+            .renderingMode(.template)
+            .foregroundColor(.mainColorsGray)
+    }
+    
+    private var centerView: some View {
+        
+        VStack(alignment: .leading, spacing: 4) {
             
             if let title = viewModel.title {
                 
                 Text(title)
-                    .font(.textBodySR12160())
+                    .font(.textBodyMM14200())
                     .foregroundColor(.textPlaceholder)
                     .padding(.bottom, 4)
-                    .padding(.leading, 48)
-                    .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .opacity))
-                
+                    .transition(
+                        .asymmetric(
+                            insertion: .move(edge: .bottom),
+                            removal: .opacity
+                        )
+                    )
             }
             
             HStack(spacing: 20) {
                 
-                viewModel.icon
-                    .resizable()
-                    .renderingMode(.template)
-                    .foregroundColor(.mainColorsGray)
-                    .frame(width: 24, height: 24)
-                    .padding(.leading, 4)
-                
                 if viewModel.isEditable == true {
                     
-                    TextFieldPhoneNumberView(viewModel: viewModel.textField)
-                        .foregroundColor(.textSecondary)
-                        .font(.textBodyMM14200())
+                    TextViewPhoneNumberView(viewModel: viewModel.textView)
                         .frame(height: 24)
                     
                 } else {
                     
-                    Text(viewModel.textField.text ?? "")
-                        .foregroundColor(.textSecondary)
-                        .font(.textBodyMM14200())
-                }
-                
-                Spacer()
-                
-                if let actionButton = viewModel.actionButton, viewModel.isEditable == true {
-                 
-                    Button(action: actionButton.action) {
-                        
-                        actionButton.icon
-                            .resizable()
-                            .renderingMode(.template)
-                            .foregroundColor(.mainColorsGray)
-                            .frame(width: 24, height: 24)
-                    }
+                    Text(viewModel.textView.text ?? "")
                 }
             }
+            .foregroundColor(.textSecondary)
+            .font(.textH4M16240())
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    @ViewBuilder
+    private var trailingButton: some View {
+
+        if let actionButton = viewModel.actionButton,
+            viewModel.isEditable {
             
-            Divider()
-                .frame(height: 1)
-                .background(Color.bordersDivider)
-                .opacity(viewModel.isEditable ? 1.0 : 0.2)
-                .padding(.top, 12)
-                .padding(.leading, 48)
+            Button(action: actionButton.action) {
+                
+                actionButton.icon
+                    .resizable()
+                    .renderingMode(.template)
+                    .foregroundColor(.mainColorsGray)
+                    .frame(width: 24, height: 24)
+            }
         }
     }
 }
@@ -235,11 +271,21 @@ struct PaymentsInputPhoneView_Previews: PreviewProvider {
         
         Group {
             
-            PaymentsInputPhoneView(viewModel: .samplePhone)
+            previewGroup()
                 .previewLayout(.fixed(width: 375, height: 80))
             
+            VStack(spacing: 32, content: previewGroup)
+                .previewLayout(.sizeThatFits)
+        }
+    }
+    
+    static func previewGroup() -> some View {
+        
+        Group {
+            
+            PaymentsInputPhoneView(viewModel: .samplePhone)
+            
             PaymentsInputPhoneView(viewModel: .samplePhoneParam)
-                .previewLayout(.fixed(width: 375, height: 80))
         }
     }
 }
@@ -248,7 +294,7 @@ struct PaymentsInputPhoneView_Previews: PreviewProvider {
 
 extension PaymentsInputPhoneView.ViewModel {
     
-    static let samplePhone = PaymentsInputPhoneView.ViewModel(description: "Номер телефона получателя", phone: "+7 925 555-5555", title: "Номер телефона получателя", actionButton: .init(action: {}))
+    static let samplePhone = PaymentsInputPhoneView.ViewModel(textView: .init(.phone), phone: "+7 925 555-5555", title: "Номер телефона получателя", actionButton: .init(action: {}))
     
     static let samplePhoneParam = PaymentsInputPhoneView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "79255145555"), title: "Номер телефона получателя"), model: .emptyMock)
 }

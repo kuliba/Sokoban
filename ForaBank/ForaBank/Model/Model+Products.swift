@@ -18,7 +18,7 @@ typealias LoansData = [PersonsCreditData]
 
 extension Model {
     
-    var productsOpenAccountURL: URL { URL(string: "https://promo.forabank.ru/")! }
+    var productsOpenAccountURL: URL { URL(string: "https://promo2.forabank.ru/")! }
     var productsOpenLoanURL: URL { URL(string: "https://www.forabank.ru/private/credits/")! }
     var productsOpenInsuranceURL: URL { URL(string: "https://www.forabank.ru/landings/e-osago/")! }
     var productsOpenMortgageURL: URL { URL(string: "https://www.forabank.ru/private/mortgage/")! }
@@ -36,7 +36,10 @@ extension Model {
     }
     
     var isAllProductsHidden: Bool {
-        products.value.values.flatMap {$0}.filter {$0.visibility}.isEmpty
+        products.value.values
+            .flatMap { $0 }
+            .filter { $0.isVisible }
+            .isEmpty
     }
     
     var productsTypes: [ProductType] {
@@ -113,7 +116,12 @@ extension Model {
     func products(currency: Currency) -> [ProductData] {
         
         let clientId = Model.shared.clientInfo.value?.id
-        let products = products.value.values.flatMap {$0}.filter({ $0.ownerId == clientId }).filter({$0.currency == currency.description})
+        let products = products.value.values
+            .flatMap { $0 }
+            .filter {
+                $0.ownerId == clientId && $0.currency == currency.description
+            }
+        
         return products
     }
     
@@ -156,7 +164,7 @@ extension Model {
                     return false
                 }
                 
-                return product.currency == currency.description && product.isProductDeposit && product.allowProduct(currencyOperation)
+                return product.currency == currency.description && product.isDemandDepositProduct && product.allowProduct(currencyOperation)
                 
             case .loan:
                 return false
@@ -494,7 +502,7 @@ extension Model {
                     
                     // update products
                     let updatedProducts = Self.reduce(products: self.products.value, with: result.products, for: productType)
-                    self.products.value = updatedProducts
+                    self.products.send(updatedProducts)
                     
                     //md5hash -> image
                     let md5Products = result.products.reduce(Set<String>(), {
@@ -641,9 +649,10 @@ extension Model {
                 self.productsVisibilityUpdating.value.remove(product.id)
                     
                 // update products
-                let updatedProducts = Self.reduce(productsData: self.products.value,
-                                                          productId: payload.productId,
-                                                          visibility: payload.visibility)
+                let updatedProducts = Self.reduce(
+                    productsData: self.products.value,
+                    productId: payload.productId,
+                    isVisible: payload.visibility)
                 self.products.value = updatedProducts
                     
                 do { // update cache
@@ -1306,11 +1315,11 @@ extension Model {
         }
     }
     
-    static func reduce(productsData: ProductsData, productId: ProductData.ID, visibility: Bool ) -> ProductsData {
+    static func reduce(productsData: ProductsData, productId: ProductData.ID, isVisible: Bool) -> ProductsData {
         
         let product = productsData.values.flatMap({ $0 }).first(where: { $0.id == productId })
         
-        product?.update(visibility: visibility)
+        product?.update(isVisible: isVisible)
         
         return productsData
     }

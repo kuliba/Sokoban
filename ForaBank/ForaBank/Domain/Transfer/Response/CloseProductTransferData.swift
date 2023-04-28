@@ -10,7 +10,7 @@ import Foundation
 struct CloseProductTransferData: Codable, Equatable {
     
     let paymentOperationDetailId: Int?
-    let documentStatus: String
+    let documentStatus: TransferResponseData.DocumentStatus
     let accountNumber: String?
     let closeDate: Int?
     let comment: String?

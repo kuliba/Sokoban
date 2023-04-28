@@ -6,7 +6,8 @@ class InternetTVSourceView: UITableViewHeaderFooterView {
     var stackView = UIStackView(arrangedSubviews: [])
     var cardFromField = CardChooseView()
     var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
-
+    var showAllCards: (() -> Void)?
+    
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         self.setupUI()
@@ -57,6 +58,10 @@ class InternetTVSourceView: UITableViewHeaderFooterView {
             }
         }
         
+        cardListView.lastItemTap = {
+            
+            self.showAllCards?()
+        }
     }
     
     

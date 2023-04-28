@@ -14,7 +14,7 @@ class ServerCommandsDepositControllerTests: XCTestCase {
     
     let decoder = JSONDecoder.serverDate
     let encoder = JSONEncoder.serverDate
-    let formatter = DateFormatter.iso8601
+    let dateFormatter = DateFormatter.iso8601
     
     //MARK: - GetDepositInfo
     
@@ -39,23 +39,24 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "GetDepositInfo", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let dateEnd = Date.dateUTC(with: 10000184511)
-        let dateNext = Date.dateUTC(with: 10000184511)
-        let dateOpen = Date.dateUTC(with: 10000184511)
+        let dateEnd = try Date.date(from: "2022-01-20T11:52:41.707Z", formatter: dateFormatter)
+        let dateNext = try Date.date(from: "2022-01-20T11:52:41.707Z", formatter: dateFormatter)
+        let dateOpen = try Date.date(from: "2022-01-20T11:52:41.707Z", formatter: dateFormatter)
         
-        let data = DepositInfoDataItem(balance: 1000,
-                                       dateEnd: dateEnd,
-                                       dateNext: dateNext,
-                                       dateOpen: dateOpen,
-                                       id: 10000184511,
+        let data = DepositInfoDataItem(id: 10000184511,
                                        initialAmount: 1000,
+                                       termDay: "540",
                                        interestRate: 10000184511,
-                                       sumAccInt: 1000,
+                                       sumPayInt: 1000,
                                        sumCredit: 1000,
                                        sumDebit: 1000,
-                                       sumPayInt: 1000,
-                                       termDay: "540",
-                                       sumPayPrc: nil)
+                                       sumAccInt: 1000,
+                                       balance: 1000,
+                                       sumPayPrc: 1000,
+                                       dateOpen: dateOpen,
+                                       dateEnd: dateEnd,
+                                       dateNext: dateNext)
+        
         
         let expected = ServerCommands.DepositController.GetDepositInfo.Response(statusCode: .ok,
                                                                                 errorMessage: "string",
@@ -73,23 +74,23 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "GetDepositInfoMin", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let dateEnd = Date.dateUTC(with: 10000184511)
-        let dateNext = Date.dateUTC(with: 10000184511)
-        let dateOpen = Date.dateUTC(with: 10000184511)
+        let dateEnd = try Date.date(from: "2022-01-20T11:52:41.707Z", formatter: dateFormatter)
+        let dateNext = try Date.date(from: "2022-01-20T11:52:41.707Z", formatter: dateFormatter)
+        let dateOpen = try Date.date(from: "2022-01-20T11:52:41.707Z", formatter: dateFormatter)
         
-        let data = DepositInfoDataItem(balance: 1000,
-                                       dateEnd: dateEnd,
-                                       dateNext: dateNext,
-                                       dateOpen: dateOpen,
-                                       id: 10000184511,
+        let data = DepositInfoDataItem(id: 10000184511,
                                        initialAmount: 1000,
+                                       termDay: "540",
                                        interestRate: 10000184511,
-                                       sumAccInt: 1000,
+                                       sumPayInt: 1000,
                                        sumCredit: nil,
                                        sumDebit: nil,
-                                       sumPayInt: 1000,
-                                       termDay: "540",
-                                       sumPayPrc: nil)
+                                       sumAccInt: 1000,
+                                       balance: 1000,
+                                       sumPayPrc: nil,
+                                       dateOpen: dateOpen,
+                                       dateEnd: dateEnd,
+                                       dateNext: dateNext)
         
         let expected = ServerCommands.DepositController.GetDepositInfo.Response(statusCode: .ok,
                                                                                 errorMessage: "string",
@@ -107,21 +108,23 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "GetDepositInfoServerResponse", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let dateOpen = Date.dateUTC(with: 10000184511)
+        let dateEnd = try Date.date(from: "2022-01-20T11:52:41.707Z", formatter: dateFormatter)
+        let dateNext = try Date.date(from: "2022-01-20T11:52:41.707Z", formatter: dateFormatter)
+        let dateOpen = try Date.date(from: "2022-01-20T11:52:41.707Z", formatter: dateFormatter)
         
-        let data = DepositInfoDataItem(balance: 100856.4700,
-                                       dateEnd: nil,
-                                       dateNext: nil,
+        let data = DepositInfoDataItem(id: 10001765678,
+                                       initialAmount: 100831.02,
+                                       termDay: "540",
+                                       interestRate: 0.01,
+                                       sumPayInt: 856.47,
+                                       sumCredit: 0,
+                                       sumDebit: 100831.02,
+                                       sumAccInt: 0,
+                                       balance: 100856.47,
+                                       sumPayPrc: 856.47,
                                        dateOpen: dateOpen,
-                                       id: 10001765678,
-                                       initialAmount: 100831.0200,
-                                       interestRate: 0.0100,
-                                       sumAccInt: 0.0000,
-                                       sumCredit: 0.0000,
-                                       sumDebit: 100831.0200,
-                                       sumPayInt: 856.4700,
-                                       termDay: nil,
-                                       sumPayPrc: 856.4700)
+                                       dateEnd: dateEnd,
+                                       dateNext: dateNext)
         
         let expected = ServerCommands.DepositController.GetDepositInfo.Response(statusCode: .ok,
                                                                                 errorMessage: nil,
@@ -310,7 +313,7 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         
         let json = try Data(contentsOf: url)
         
-        let expected = ServerCommands.DepositController.CloseDeposit.Response(statusCode: .ok, data: .init(paymentOperationDetailId: 1, documentStatus: "COMPLETE", accountNumber: "42317810000000000001", closeDate: 1, comment: "Закрытие срочного банковского вклада по договору № 04913_224RUB0000/22  от 22/04/2022. НДС не облагается.", category: "Закрытие вклада"), errorMessage: "string")
+        let expected = ServerCommands.DepositController.CloseDeposit.Response(statusCode: .ok, data: .init(paymentOperationDetailId: 1, documentStatus: .complete, accountNumber: "42317810000000000001", closeDate: 1, comment: "Закрытие срочного банковского вклада по договору № 04913_224RUB0000/22  от 22/04/2022. НДС не облагается.", category: "Закрытие вклада"), errorMessage: "string")
         
         // when
         let result = try decoder.decode(ServerCommands.DepositController.CloseDeposit.Response.self, from: json)
@@ -329,7 +332,7 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         
         let json = try Data(contentsOf: url)
         
-        let expected = ServerCommands.DepositController.CloseDeposit.Response(statusCode: .ok, data: .init(paymentOperationDetailId: 18445, documentStatus: "COMPLETE", accountNumber: nil, closeDate: nil, comment: "Закрытие срочного банковского вклада по договору № 00080_224RUB4700/21  от 04/02/2021. НДС не облагается.", category: "Закрытие вклада"), errorMessage: nil)
+        let expected = ServerCommands.DepositController.CloseDeposit.Response(statusCode: .ok, data: .init(paymentOperationDetailId: 18445, documentStatus: .complete, accountNumber: nil, closeDate: nil, comment: "Закрытие срочного банковского вклада по договору № 00080_224RUB4700/21  от 04/02/2021. НДС не облагается.", category: "Закрытие вклада"), errorMessage: nil)
         
         // when
         let result = try decoder.decode(ServerCommands.DepositController.CloseDeposit.Response.self, from: json)
@@ -337,6 +340,26 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         // then
         XCTAssertEqual(result, expected)
     }
+    
+    func testCloseDepositUnknowStatus_Response_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "CloseDepositResponseUnknowStatusGeneric", withExtension: "json") else {
+            XCTFail("testCloseDeposit_Response_Decoding : Missing file: CloseDepositResponseUnknowStatusGeneric.json")
+            return
+        }
+        
+        let json = try Data(contentsOf: url)
+        
+        let expected = ServerCommands.DepositController.CloseDeposit.Response(statusCode: .ok, data: .init(paymentOperationDetailId: 1, documentStatus: .unknown, accountNumber: "42317810000000000001", closeDate: 1, comment: "Закрытие срочного банковского вклада по договору № 04913_224RUB0000/22  от 22/04/2022. НДС не облагается.", category: "Закрытие вклада"), errorMessage: "string")
+
+        // when
+        let result = try decoder.decode(ServerCommands.DepositController.CloseDeposit.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+
     
     func testBeforeClosing_Response_Decoding() throws {
 
@@ -355,6 +378,22 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         
         // then
         XCTAssertEqual(result, expected)
+    }
+}
+
+extension Date {
+    
+    static func date(from value: String, formatter: DateFormatter) throws -> Date {
+        
+        guard let date = formatter.date(from: value) else {
+            throw DateFormattingError.unableCreateDateFrom(value)
+        }
+        
+        return date
+    }
+    
+    enum DateFormattingError: Error {
+        case unableCreateDateFrom(String)
     }
 }
 

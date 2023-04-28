@@ -13,23 +13,13 @@ extension Payments.Operation {
     
     var nextStep: Int { steps.count }
     
-    var parameters: [PaymentsParameterRepresentable] { steps.flatMap({ $0.parameters }) }
-    var parametersIds: [Payments.Parameter.ID] { parameters.map({ $0.id })}
+    var parameters: [PaymentsParameterRepresentable] { steps.flatMap(\.parameters) }
+    var parametersIds: [Payments.Parameter.ID] { parameters.map(\.id)}
     var visibleParameters: [PaymentsParameterRepresentable] {
         
-        var result = [PaymentsParameterRepresentable]()
-        
-        // sort order from visible
-        for parameterId in visible {
-            
-            guard let parameter = parameters.first(where: { $0.id == parameterId }) else {
-                continue
-            }
-            
-            result.append(parameter)
+        visible.compactMap { parameterId in
+            parameters.first(where: { $0.id == parameterId })
         }
-        
-        return result
     }
     
     var transferType: Payments.Operation.TransferType {
@@ -64,26 +54,40 @@ extension Payments.Operation {
         stepsUpdated.append(step)
         
         // update visible parameters
-        var visibleUpdated = [Parameter.ID]()
-        for parameterId in visible {
-            
-            // check if parameter id contains in step visible
-            // if so this parameter just change it's order
-            // becasuse all step's visible parameters we will add after
-            guard step.front.visible.contains(parameterId) == false else {
-                continue
-            }
-            
-            visibleUpdated.append(parameterId)
-        }
-        
-        visibleUpdated.append(contentsOf: step.front.visible)
+        let visibleUpdated = Self.update(visible: visible, for: step)
         
         let updatedOperation = Payments.Operation(service: service, source: source, steps: stepsUpdated, visible: visibleUpdated)
         
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Operation: \(updatedOperation.shortDescription) step appended")
 
         return updatedOperation
+    }
+    
+    static func update(
+        visible: [Parameter.ID],
+        for steps: [Step]
+    ) -> [Parameter.ID] {
+        
+        var visible = visible
+        
+        steps.forEach { step in
+        
+            visible = Self.update(visible: visible, for: step)
+        }
+        
+        return visible
+    }
+    
+    static func update(
+        visible: [Parameter.ID],
+        for step: Step
+    ) -> [Parameter.ID] {
+        
+        let filtered = visible.filter {
+            !step.front.visible.contains($0)
+        }
+        
+        return filtered + step.front.visible
     }
     
     /// Resets visible parameters for operation. Only parameters represented in operation can be visible. If list is nil - operation returns unchanged. If visible list after filtration with operaton parameters contains no elemnts, operation returns unchanged.
@@ -163,8 +167,9 @@ extension Payments.Operation {
             }
         }
         
-        let updatedOperation = Payments.Operation(service: service, source: source, steps: stepsUpdated, visible: visible)
-        
+        let updatedVisible = Self.update(visible: visible, for: stepsUpdated)
+        let updatedOperation = Payments.Operation(service: service, source: source, steps: stepsUpdated, visible: updatedVisible)
+
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Operation: ROLLED BACK \(updatedOperation)")
 
         return updatedOperation
@@ -199,7 +204,7 @@ extension Payments.Operation {
     /// Updates depended parameters. For example parameter `amount` or `currency` depends on parameter `product` value
     /// - Parameter reducer: optional returns updated parameter if it depends on other
     /// - Returns: updated operation
-    func updatedDepended(reducer: (Payments.Service, Parameter.ID, [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable?) -> Payments.Operation {
+    func updatedDepended(reducer: (Payments.Operation, Parameter.ID, [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable?) -> Payments.Operation {
         
         var updatedSteps = [Payments.Operation.Step]()
         
@@ -208,7 +213,7 @@ extension Payments.Operation {
             var updatedParameters = [PaymentsParameterRepresentable]()
             for parameter in step.parameters {
                 
-                if let updatedParameter = reducer(service, parameter.id, parameters) {
+                if let updatedParameter = reducer(self, parameter.id, parameters) {
                     
                     updatedParameters.append(updatedParameter)
                     
@@ -295,6 +300,21 @@ extension Payments.Operation {
         }
         
         return productParameter.productId
+    }
+    
+    var isConfirmCurrentStage: Bool {
+        
+        guard case let .remote(remote) = currentStage else {
+            
+            return false
+        }
+        
+        return remote == .confirm
+    }
+    
+    private var currentStage: Payments.Operation.Stage? {
+        
+        steps.last?.back.stage
     }
 }
 

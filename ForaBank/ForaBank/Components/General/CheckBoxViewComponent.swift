@@ -71,6 +71,7 @@ struct CheckBoxView: View {
                 .frame(width: 18, height: 18)
             
             if viewModel.isChecked == true {
+                
                 CheckView(viewModel: viewModel)
             }
         }

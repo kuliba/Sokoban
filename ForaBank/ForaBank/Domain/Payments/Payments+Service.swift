@@ -17,8 +17,13 @@ extension Payments.Service {
         case .fms: return [.fms]
         case .fssp: return [.fssp]
         case .sfp: return [.sfp]
-        case .direct: return [.direct]
+        case .abroad: return [.direct]
         case .requisites: return [.requisites]
+        case .c2b: return [.c2b]
+        case .toAnotherCard: return [.toAnotherCard]  
+        case .mobileConnection: return [.mobileConnection]
+        case .return: return [.return]
+        case .change: return [.change]
         }
     }
     
@@ -40,8 +45,13 @@ extension Payments.Service {
         switch self {
         case .fms, .fns, .fssp : return .anyway
         case .sfp: return .sfp
-        case .direct: return .direct
+        case .abroad: return .abroad
         case .requisites: return .requisites
+        case .c2b: return .c2b
+        case .toAnotherCard: return .toAnotherCard
+        case .mobileConnection: return .mobileConnection
+        case .return: return .return
+        case .change: return .change
         }
     }
 }

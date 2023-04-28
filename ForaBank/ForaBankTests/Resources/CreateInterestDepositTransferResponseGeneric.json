@@ -4,10 +4,10 @@
   "data": {
     "needMake": true,
     "needOTP": true,
-    "amount": 100,
-    "creditAmount": 100,
+    "amount": 100.02,
+    "creditAmount": 100.02,
     "fee": 100,
-    "currencyAmount": "100.0",
+    "currencyAmount": "100.02",
     "currencyPayer": "RUB",
     "currencyPayee": "RUB",
     "currencyRate": 86.7,

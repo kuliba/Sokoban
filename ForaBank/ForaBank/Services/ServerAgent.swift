@@ -96,19 +96,15 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     completion(.failure(.emptyResponseData))
                     return
                 }
-
+                
                 do {
                     
                     let response = try decoder.decode(Command.Response.self, from: data)
                     if response.statusCode == .userNotAuthorized {
                         
                         self.action.send(ServerAgentAction.NotAuthorized())
-                        completion(.failure(.notAuthorized))
-                        
-                    } else {
-                        
-                        completion(.success(response))
                     }
+                    completion(.success(response))
 
                 } catch {
                     

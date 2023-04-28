@@ -11,6 +11,7 @@ enum DeepLinkType {
     
     case me2me(String)
     case c2b(String)
+    case c2bSubscriprion(URL)
     case sbpPay(String)
     
     init?(url: URL) {
@@ -25,6 +26,9 @@ enum DeepLinkType {
             strUrl = strUrl.replacingOccurrences(of:"amp;", with:"")
             self = .c2b(strUrl)
             
+        case let c2bSubscribeUrlString where c2bSubscribeUrlString.contains("sub.nspk.ru"):
+            self = .c2bSubscriprion(url)
+
         default:
             guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
                   let queryItems = components.queryItems,

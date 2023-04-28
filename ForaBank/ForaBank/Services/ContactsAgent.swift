@@ -64,7 +64,6 @@ class ContactsAgent: ContactsAgentProtocol {
     
     func fetchContactsList() throws -> [AddressBookContact] {
         
-        var bookContacts = [AddressBookContact]()
         var contacts = [CNContact]()
         let keys = [CNContactPhoneNumbersKey,
                     CNContactGivenNameKey,
@@ -84,24 +83,23 @@ class ContactsAgent: ContactsAgentProtocol {
             contacts.append(contact)
         }
         
-        for contact in contacts {
-
-          guard let phoneNumberData = contact.phoneNumbers.first?.value as? CNPhoneNumber,
-                let phoneNumber = phoneNumberData.value(forKey: "digits") as? String else {
-                
-                continue
-           }
-
-           let formattedPhoneNumber = phoneNumberFormatter.format(phoneNumber)
-
-           bookContacts.append(AddressBookContact(phone: formattedPhoneNumber,
-                                                               firstName: contact.givenName,
-                                                               middleName: contact.middleName,
-                                                               lastName: contact.familyName,
-                                                               avatar: avatar(for: contact)))
+        return contacts.flatMap { contact in
+            
+            contact
+                .phoneNumbers
+                .map(\.value)
+                .compactMap { $0.value(forKey: "digits") as? String }
+                .map(phoneNumberFormatter.format)
+                .map {
+                    .init(
+                        phone: $0,
+                        firstName: contact.givenName,
+                        middleName: contact.middleName,
+                        lastName: contact.familyName,
+                        avatar: avatar(for: contact)
+                    )
+                }
         }
- 
-        return bookContacts
     }
     
     private func avatar(for contact: CNContact) -> ImageData? {
@@ -110,6 +108,5 @@ class ContactsAgent: ContactsAgentProtocol {
         else { return nil }
 
         return ImageData(data: thumbnailImageData)
-
       }
 }

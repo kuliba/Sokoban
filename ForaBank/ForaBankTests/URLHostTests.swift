@@ -12,7 +12,7 @@ class URLHostTests: XCTestCase {
 
     func testGetHost() throws {
 
-        let host = URLHost().getHost()
+        let host = URLHost.getHost()
         
         #if DEBUG
         XCTAssertEqual(host, "pl.forabank.ru/dbo/api/v3")

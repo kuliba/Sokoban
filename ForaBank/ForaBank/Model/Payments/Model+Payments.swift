@@ -88,6 +88,22 @@ extension Model {
                     throw Payments.Operation.Error.failedLoadServicesForCategory(category)
                 }
                 
+                //TODO: remove this when fssp payment will be implemented
+                //code to remove start
+                let services: [Payments.Service] = [.fns, .fms]
+                
+                let operatorsCodes = services.compactMap{ $0.operators.first?.rawValue }
+                let anywayOperators = anywayGroup.operators.filter{ operatorsCodes.contains($0.code)}
+                let options = services.compactMap { paymentsParameterRepresentableSelectServiceOption(for: $0, with: anywayOperators)}
+                
+                let selectServiceParameter = Payments.ParameterSelectService(category: category, options: options)
+                
+                LoggerAgent.shared.log(level: .debug, category: .payments, message: "Select service parameter created with options: \(options.map({ $0.service })))")
+                
+                return .select(selectServiceParameter)
+                //code to remove end
+                
+                /*
                 let operatorsCodes = category.services.compactMap{ $0.operators.first?.rawValue }
                 let anywayOperators = anywayGroup.operators.filter{ operatorsCodes.contains($0.code)}
                 let options = category.services.compactMap { paymentsParameterRepresentableSelectServiceOption(for: $0, with: anywayOperators)}
@@ -97,6 +113,7 @@ extension Model {
                 LoggerAgent.shared.log(level: .debug, category: .payments, message: "Select service parameter created with options: \(options.map({ $0.service })))")
                 
                 return .select(selectServiceParameter)
+                 */
                 
             } else {
                 
@@ -117,12 +134,13 @@ extension Model {
     func paymentsService(for source: Payments.Operation.Source) async throws -> Payments.Service {
         
         switch source {
-        case let .mock(mock):
-            return mock.service
-            
+        case let .mock(mock): return mock.service
         case .sfp: return .sfp
-            
         case .requisites: return .requisites
+        case .c2bSubscribe: return .c2b
+        case .direct: return .abroad
+        case .return: return .return
+        case .change: return .change
             
         default:
             throw Payments.Error.unsupported
@@ -183,6 +201,15 @@ extension Model {
         case .requisites:
             return try await paymentsProcessOperationResetVisibleRequisits(operation)
 
+        case .abroad:
+            return try await paymentsProcessOperationResetVisibleCountry(operation)
+            
+        case .toAnotherCard:
+            return try await paymentsProcessOperationResetVisibleToAnotherCard(operation)
+            
+        case .mobileConnection:
+            return try await paymentsProcessOperationResetVisibleMobileConnection(operation)
+
         default:
             return nil
         }
@@ -212,9 +239,24 @@ extension Model {
         
         case .requisites:
             return try await paymentsStepRequisites(operation, for: stepIndex)
+            
+        case .abroad:
+            return try await paymentsStepDirect(operation, for: stepIndex)
+            
+        case .c2b:
+            return try await paymentsStepC2B(operation, for: stepIndex)
+            
+        case .toAnotherCard:
+            return try await paymentsLocalStepToAnotherCard(operation, for: stepIndex)
 
-        default:
-            throw Payments.Error.unsupported
+        case .mobileConnection:
+            return try await paymentsProcessLocalStepMobileConnection(operation, for: stepIndex)
+            
+        case .change:
+            return try await paymentsStepChangePayment(operation, for: stepIndex)
+
+        case .return:
+            return try await paymentsStepReturnPayment(operation, for: stepIndex)
         }
     }
     
@@ -228,7 +270,7 @@ extension Model {
             switch operation.transferType {
             case .anyway:
                 
-                let next = try paymentsTransferAnywayStepParameters(operation, response: anywayResponse)
+                let next = try await paymentsTransferAnywayStepParameters(operation, response: anywayResponse)
                 
                 let duplicates = next.map({ $0.parameter }).filter({ operation.parametersIds.contains($0.id) })
                 if duplicates.count > 0 {
@@ -240,10 +282,17 @@ extension Model {
                 
                 let visible = try paymentsTransferAnywayStepVisible(operation, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
                 let stepStage = try paymentsTransferAnywayStepStage(operation, response: anywayResponse)
-                let required = try paymentsTransferAnywayStepRequired(operation, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters)
+                let required = try paymentsTransferAnywayStepRequired(operation, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters, restrictedParameters: [])
                 
                 return Payments.Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, required: required, processed: nil))
                 
+            case .mobileConnection:
+                
+                return try await paymentsProcessRemoteStepMobileConnection(
+                    operation,
+                    response: anywayResponse
+                )
+
             case .sfp:
                 let next = try paymentsTransferSFPStepParameters(operation, response: anywayResponse)
                 
@@ -261,6 +310,27 @@ extension Model {
                 
                 return Payments.Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, required: required, processed: nil))
                 
+            case .abroad:
+                let next = try await paymentsTransferAbroadStepParameters(operation, response: anywayResponse)
+                
+                if anywayResponse.finalStep == true {
+                    return try await paymentsProcessRemoteStepAbroad(operation: operation, response: response)
+                }
+                let duplicates = next.map({ $0.parameter }).filter({ operation.parametersIds.contains($0.id) })
+                if duplicates.count > 0 {
+                    LoggerAgent.shared.log(level: .error, category: .payments, message: "Anyway transfer response duplicates detected end removed: \(duplicates) from operation: \(operation.shortDescription)")
+                }
+                
+                // next parameters without duplicates
+                let nextParameters = next.filter({ operation.parametersIds.contains($0.id) == false })
+                
+                let visible = try paymentsTransferAnywayStepVisible(operation, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
+                let stepStage = try paymentsTransferAnywayStepStage(operation, response: anywayResponse)
+                let restricted: [Payments.Parameter.ID] = ["bSurName", "bIDnumber"]
+                let required = try paymentsTransferAnywayStepRequired(operation, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters, restrictedParameters: restricted)
+                
+                return Payments.Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, required: required, processed: nil))
+            
             default:
                 throw Payments.Error.unsupported
             }
@@ -273,6 +343,12 @@ extension Model {
             
             case .requisites:
                 return try await paymentsProcessRemoteStepRequisits(operation: operation, response: response)
+
+            case .toAnotherCard:
+                return try await paymentsProcessRemoteStepToAnotherCard(operation: operation, response: response)
+                
+            case .abroad:
+                return try await paymentsProcessRemoteStepAbroad(operation: operation, response: response)
 
             default:
                 throw Payments.Error.unsupported
@@ -297,21 +373,36 @@ extension Model {
         
         case let .requisites(qrCode: qrCode):
             return paymentsProcessSourceReducerRequisites(qrCode: qrCode, parameterId: parameterId)
-            
+        
+        case let .direct(phone: phone, countryId: country, serviceData: serviceData):
+            return paymentsProcessSourceReducerCountry(countryId: country, phone: phone, serviceData: serviceData, parameterId: parameterId)
+
         default:
             return nil
         }
     }
     
     /// update dependend on each other parameters
-    func paymentsProcessDependencyReducer(service: Payments.Service, parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
+    func paymentsProcessDependencyReducer(operation: Payments.Operation, parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
         
-        switch service {
+        switch operation.service {
+        case .fssp:
+            return paymentsProcessDependencyReducerFSSP(service: operation.service, parameterId: parameterId, parameters: parameters)
+            
         case .sfp:
             return paymentsProcessDependencyReducerSFP(parameterId: parameterId, parameters: parameters)
         
         case .requisites:
             return paymentsProcessDependencyReducerRequisits(parameterId: parameterId, parameters: parameters)
+            
+        case .c2b:
+            return paymentsProcessDependencyReducerC2B(parameterId: parameterId, parameters: parameters)
+
+        case .abroad:
+            return paymentsProcessDependencyReducerAbroad(parameterId: parameterId, parameters: parameters) 
+            
+        case .toAnotherCard:
+            return paymentsProcessDependencyReducerToAnotherCard(parameterId: parameterId, parameters: parameters)
 
         default:
             switch parameterId {
@@ -370,6 +461,15 @@ extension Model {
         case .requisites:
             return try await paymentsTransferRequisitesProcess(parameters: operation.parameters, process: process)
             
+        case .abroad:
+            return try await paymentsTransferAnywayAbroadProcess(parameters: operation.parameters, process: process, isNewPayment: true)
+            
+        case .toAnotherCard:
+            return try await paymentsTransferToAnotherProcess(parameters: operation.parameters, process: process)
+               
+        case .mobileConnection:
+            return try await paymentsTransferMobileConnectionProcess(parameters: operation.parameters, process: process)
+        
         default:
             throw Payments.Error.unsupported
         }
@@ -383,7 +483,10 @@ extension Model {
         switch operation.transferType {
         case .anyway:
             return try await paymentsTransferAnywayProcess(parameters: operation.parameters, process: process, isNewPayment: false)
-            
+        
+        case .abroad:
+            return try await paymentsTransferAnywayAbroadProcess(parameters: operation.parameters, process: process, isNewPayment: false)
+
         default:
             throw Payments.Error.unsupported
         }
@@ -398,10 +501,25 @@ extension Model {
             throw Payments.Error.missingParameter(codeParameterId)
         }
         
-        let response = try await paymentsTransferComplete(code: codeValue)
-        let success = try Payments.Success(with: response, operation: operation)
-        
-        return success
+        switch operation.service {
+        case .mobileConnection:
+            return try await paymentsProcessRemoteMobileConnectionComplete(
+                code: codeValue,
+                operation: operation
+            )
+    
+        case .abroad:
+            return try await paymentsProcessAbroadComplete(
+                code: codeValue,
+                operation: operation
+            )
+    
+        default:
+            let response = try await paymentsTransferComplete(code: codeValue)
+            let success = try Payments.Success(with: response, operation: operation)
+            
+            return success
+        }
     }
     
     func paymentsProcessRemoteComplete(_ process: [Payments.Parameter], _ operation: Payments.Operation) async throws -> Payments.Success {
@@ -414,6 +532,15 @@ extension Model {
             let success = try Payments.Success(with: response, operation: operation)
             return success
             
+        case .c2b:
+            return try await paymentsC2BComplete(operation: operation)
+            
+        case .return:
+            return try await paymentsReturnAbroad(operation: operation)
+            
+        case .change:
+            return try await paymentsChangeAbroad(operation: operation)
+
         default:
             throw Payments.Error.unsupported
         }
@@ -424,12 +551,15 @@ extension Model {
 
 extension Model {
 
-    func paymentsParameterRepresentable(_ operation: Payments.Operation, parameterData: ParameterData) throws -> PaymentsParameterRepresentable? {
+    func paymentsParameterRepresentable(_ operation: Payments.Operation, parameterData: ParameterData) async throws -> PaymentsParameterRepresentable? {
         
         switch operation.service {
         case .fns, .fms, .fssp:
             return try paymentsParameterRepresentableTaxes(operation: operation, parameterData: parameterData)
-            
+        
+        case .abroad:
+            return try await paymentsParameterRepresentableCountries(operation: operation, parameterData: parameterData)
+
         default:
             throw Payments.Error.unsupported
         }
@@ -439,15 +569,23 @@ extension Model {
         
         switch parameterData.view {
         case .select:
-            guard let options = parameterData.options else {
-                throw Payments.Error.missingOptions(parameterData)
+            guard let options = parameterData.options(style: .general) else {
+                return Payments.ParameterSelect(.init(id: parameterData.id,
+                                                      value: parameterData.value),
+                                                icon: .image(parameterData.iconData ?? .iconPlaceholder),
+                                                title: parameterData.title,
+                                                placeholder: "Выберете категорию",
+                                                options: [])
             }
-            return Payments.ParameterSelectSimple(
-                .init(id: parameterData.id, value: parameterData.value),
-                icon: parameterData.iconData ?? .parameterSample,
-                title: parameterData.title,
-                selectionTitle: "Выберете категорию",
-                options: options)
+            
+            let selectOptions = options.map({ Payments.ParameterSelect.Option(id: $0.id, name: $0.name, subname: $0.subtitle) })
+            
+            return Payments.ParameterSelect(.init(id: parameterData.id,
+                                                  value: parameterData.value),
+                                            icon: .image(parameterData.iconData ?? .iconPlaceholder),
+                                            title: parameterData.title,
+                                            placeholder: "Выберете категорию",
+                                            options: selectOptions)
             
         case .selectSwitch:
             guard let value = parameterData.value else {
@@ -475,7 +613,7 @@ extension Model {
         }
     }
     
-    func paymentsParameterRepresentable(_ operation: Payments.Operation, adittionalData: TransferAnywayResponseData.AdditionalData) throws -> PaymentsParameterRepresentable? {
+    func paymentsParameterRepresentable(_ operation: Payments.Operation, adittionalData: TransferAnywayResponseData.AdditionalData, group: Payments.Parameter.Group) throws -> PaymentsParameterRepresentable? {
         
         switch operation.service {
         case .sfp:
@@ -485,7 +623,7 @@ extension Model {
             return Payments.ParameterInfo(
                 .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
                 icon: adittionalData.iconData ?? .parameterDocument,
-                title: adittionalData.fieldTitle, placement: .spoiler)
+                title: adittionalData.fieldTitle ?? "", group: group) //FIXME: fix "" create case for .contact, .direct
         }
     }
     
@@ -602,7 +740,7 @@ extension Model {
         switch nextAction {
         case .rollback:
             switch updated {
-            case Payments.Parameter.Identifier.operator.rawValue, Payments.Parameter.Identifier.amount.rawValue:
+            case Payments.Parameter.Identifier.amount.rawValue:
                 return false
                 
             default:

@@ -29,6 +29,7 @@ class CustomPopUpWithRateView: UIViewController {
         didSet {
             /// Обновляем модели в BottomView
             self.bottomView.models = (trasfer.0, trasfer.1)
+            self.bottomView.infoButton.isHidden = true
         }
     }
     
@@ -47,7 +48,7 @@ class CustomPopUpWithRateView: UIViewController {
     
     var reversCard = "" {
         didSet {
-            self.trasfer = (viewModel.cardFromRealm?.currency ?? "", viewModel.cardToRealm?.currency ?? "")
+            self.trasfer = (cardFrom?.currency ?? "", viewModel.cardToRealm?.currency ?? "")
         }
     }
     
@@ -184,7 +185,7 @@ class CustomPopUpWithRateView: UIViewController {
                     case .success(let data):
                         let vc = PaymentsDetailsSuccessViewController()
                         
-                        if data.documentStatus == "COMPLETE" {
+                        if data.documentStatus == .complete {
                             
                             viewModel.status = .succses
                             viewModel.summTransction = self.bottomView.amountTextField.text ?? ""
@@ -243,14 +244,14 @@ class CustomPopUpWithRateView: UIViewController {
                         vc.confurmVCModel = viewModel
                         vc.confurmVCModel?.type = .card2card
                         vc.printFormType = "closeDeposit"
-                        
+                        vc.modalPresentationStyle = .fullScreen
                         self.present(vc, animated: true, completion: nil)
                         
                     case .failure(let error):
+                        self.dismissActivity()
                         self.showAlert(with: "Ошибка", and: error)
                     }
                 default:
-                    self.dismissActivity()
                     break
                 }
                 

@@ -145,8 +145,15 @@ struct PaymentsCheckBoxView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PaymentsCheckBoxView(viewModel: .init(true, title: "Оплата ЖКХ"))
+        PaymentsCheckBoxView(viewModel: .sample)
             .previewLayout(.sizeThatFits)
             .padding()
     }
+}
+
+//MARK: - Preview Content
+
+extension PaymentsCheckBoxView.ViewModel {
+    
+    static let sample = PaymentsCheckBoxView.ViewModel(true, title: "Оплата ЖКХ")
 }

@@ -53,6 +53,7 @@ struct MyProductsMoneyView: View {
                         Spacer()
                                 
                         Text(balanceStr)
+                            .accessibilityIdentifier("AllMoneyAmount")
                                     
                         CurrencyButtonView(viewModel: viewModel.currencyButtonVM)
                     }
@@ -117,11 +118,13 @@ extension MyProductsMoneyView {
                                             ? .mainColorsGrayMedium.opacity(0.4)
                                             : .mainColorsBlack)
                         .shimmering(active: viewModel.state.isDisable, bounce: true)
+                        .accessibilityIdentifier("AllMoneyContainer")
         
                     HStack(spacing: 1) {
                         
                         Text(viewModel.currencySymbol)
                             .font(.textBodyMM14200())
+                            .accessibilityIdentifier("AllMoneyCurrency")
                             
                         Image.ic16ChevronDown
             
@@ -155,9 +158,11 @@ extension MyProductsMoneyView {
                                                 .font(.textBodyMM14200())
                                                 .frame(width: 24, height: 24)
                                                 .foregroundColor(.mainColorsWhite)
+                                                .accessibilityIdentifier("AllMoneyCurrencyLogo")
                                                 .background(Circle()
-                                                    .foregroundColor(.mainColorsBlack))
-                                
+                                                    .foregroundColor(.mainColorsBlack)
+                                                    .accessibilityIdentifier("AllMoneyCurrencyLogoBackground"))
+                                            
                                             VStack(alignment: .leading, spacing: 1) {
                                                 
                                                 HStack {
@@ -188,6 +193,7 @@ extension MyProductsMoneyView {
                     }
                     .frame(width: 240,
                            height: currencyItemsVM.count < 6 ? CGFloat(currencyItemsVM.count * 54) : 296)
+                    .accessibilityIdentifier("AllMoneyCurrencyMenu")
                     .offset(x: -100,
                             y: currencyItemsVM.count < 6 ? (CGFloat(currencyItemsVM.count * 54 / 2) + 18 ) : 166 )
                     

@@ -145,7 +145,7 @@ extension AtmData {
     var iconName: String {
         
         switch category {
-        case .atm: return "ic48PinATM"
+        case .atm: return "ic48PinAtm"
         case .terminal: return "ic48PinTerminal"
         default:
             return "ic48PinOffice"

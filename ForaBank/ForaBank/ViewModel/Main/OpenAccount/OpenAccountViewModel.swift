@@ -156,12 +156,12 @@ class OpenAccountViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] images in
                 
-                let items = self.items.filter { $0.card.icon == nil }
+                let items = self.items.filter { $0.card.backgroudImage == nil }
                 
                 for item in items {
                     
                     if let imageData = images[item.id] {
-                        item.card.icon = imageData.image
+                        item.card.backgroudImage = imageData.image
                     }
                 }
                 
@@ -252,7 +252,7 @@ extension OpenAccountViewModel {
                 ratesLinkURL: item.detailedRatesUrl,
                 currencyCode: item.currencyCode,
                 header: .init(title: item.currencyAccount, detailTitle: item.breakdownAccount),
-                card: .init(currrentAccountTitle: item.accountType, currencySymbol: currencySymbol, icon: images[item.designMd5hash]?.image),
+                card: .init(currencySymbol: currencySymbol, backgroudImage: images[item.designMd5hash]?.image),
                 options: options,
                 isAccountOpen: item.open)
         }
@@ -278,7 +278,7 @@ extension OpenAccountViewModel {
                 card: .init(
                     numberCard: "4444555566664345",
                     currencySymbol: "₽",
-                    icon: .init("RUB")),
+                    backgroudImage: .init("RUB")),
                 options: [
                     .init(title: "Открытие"),
                     .init(title: "Обслуживание")
@@ -295,7 +295,7 @@ extension OpenAccountViewModel {
                 card: .init(
                     numberCard: "4444555566664346",
                     currencySymbol: "$",
-                    icon: .init("USD")),
+                    backgroudImage: .init("USD")),
                 options: [
                     .init(title: "Открытие"),
                     .init(title: "Обслуживание")
@@ -312,7 +312,7 @@ extension OpenAccountViewModel {
                 card: .init(
                     numberCard: "4444555566664347",
                     currencySymbol: "€",
-                    icon: .init("EUR")),
+                    backgroudImage: .init("EUR")),
                 options: [
                     .init(title: "Открытие"),
                     .init(title: "Обслуживание")
@@ -329,7 +329,7 @@ extension OpenAccountViewModel {
                 card: .init(
                     numberCard: "4444555566664348",
                     currencySymbol: "£",
-                    icon: .init("GBP")),
+                    backgroudImage: .init("GBP")),
                 options: [
                     .init(title: "Открытие"),
                     .init(title: "Обслуживание")
@@ -346,7 +346,7 @@ extension OpenAccountViewModel {
                 card: .init(
                     numberCard: "4444555566664349",
                     currencySymbol: "₣",
-                    icon: .init("CHF")),
+                    backgroudImage: .init("CHF")),
                 options: [
                     .init(title: "Открытие"),
                     .init(title: "Обслуживание")

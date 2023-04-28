@@ -58,3 +58,8 @@ extension BankFullInfoData {
         }
     }
 }
+
+extension BankFullInfoData {
+    
+    var displayName: String { rusName ?? fullName }
+}

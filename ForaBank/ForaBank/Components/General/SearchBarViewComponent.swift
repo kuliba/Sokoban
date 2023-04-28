@@ -15,7 +15,7 @@ extension SearchBarView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         let icon: Image?
-        let textField: TextFieldPhoneNumberView.ViewModel
+        let textField: TextViewPhoneNumberView.ViewModel
         var text: String? { textField.text }
         var phone: String? {
             
@@ -43,7 +43,7 @@ extension SearchBarView {
         private let phoneNumberFormater = PhoneNumberKitFormater()
         private var bindings = Set<AnyCancellable>()
         
-        init(textFieldPhoneNumberView: TextFieldPhoneNumberView.ViewModel, state: State = .idle, icon: Image? = nil) {
+        init(textFieldPhoneNumberView: TextViewPhoneNumberView.ViewModel, state: State = .idle, icon: Image? = nil) {
             
             self.textField = textFieldPhoneNumberView
             self.state = state
@@ -63,7 +63,7 @@ extension SearchBarView {
                         self.textField.dismissKeyboard()
                         
                     case _ as SearchBarViewModelAction.ClearTextField:
-                        self.textField.text = nil
+                        self.textField.setText(to: nil)
                         
                     case _ as SearchBarViewModelAction.Idle:
                         self.state = .idle
@@ -86,6 +86,7 @@ extension SearchBarView {
                     case .selected:
                         self.state = .selected(.init(type: .title("Отмена"), action: { [weak self] in
                             
+                            self?.action.send(SearchBarViewModelAction.ClearTextField())
                             self?.action.send(SearchBarViewModelAction.DismissKeyboard())
                         }))
                         
@@ -99,6 +100,7 @@ extension SearchBarView {
                                 
                             }), .init(type: .title("Отмена"), action: { [weak self] in
                                 
+                                self?.action.send(SearchBarViewModelAction.ClearTextField())
                                 self?.action.send(SearchBarViewModelAction.DismissKeyboard())
                             }))
                             
@@ -166,7 +168,7 @@ struct SearchBarView: View {
                     .frame(width: 16, height: 16)
             }
             
-            TextFieldPhoneNumberView(viewModel: viewModel.textField)
+            TextViewPhoneNumberView(viewModel: viewModel.textField)
                 .frame(height: 44)
                 .cornerRadius(8)
             

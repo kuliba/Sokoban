@@ -19,7 +19,8 @@ class Model {
         sessionAgent.sessionState
             .eraseToAnyPublisher()
     }
-    
+    let fcmToken: CurrentValueSubject<String?, Never>
+
     //MARK: Pre-Auth
     let transferAbroad: CurrentValueSubject<TransferAbroadResponseData?, Never>
     
@@ -53,12 +54,15 @@ class Model {
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
     let currencyList: CurrentValueSubject<[CurrencyData], Never>
     let countriesList: CurrentValueSubject<[CountryData], Never>
+    let countriesListWithSevice: CurrentValueSubject<[CountryWithServiceData], Never>
     let paymentSystemList: CurrentValueSubject<[PaymentSystemData], Never>
     let bankList: CurrentValueSubject<[BankData], Never>
+    let bankListFullInfo: CurrentValueSubject<[BankFullInfoData], Never>
     let prefferedBanksList: CurrentValueSubject<[String], Never>
     let currencyWalletList: CurrentValueSubject<[CurrencyWalletData], Never>
     let centralBankRates: CurrentValueSubject<[CentralBankRatesData], Never>
     var images: CurrentValueSubject<[String: ImageData], Never>
+    let clientInform: CurrentValueSubject<ClientInformDataState, Never>
     
     //MARK: Deposits
     let deposits: CurrentValueSubject<[DepositProductData], Never>
@@ -66,6 +70,7 @@ class Model {
     
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
+    let productTemplates: CurrentValueSubject<[ProductTemplateData], Never>
     //TODO: move to settings agent
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
     
@@ -100,9 +105,12 @@ class Model {
     //MARK: QR
     let qrMapping: CurrentValueSubject<QRMapping?, Never>
     
+    //MARK: ClientInform show flags
+    var clientInformStatus: ClientInformStatus
+    
     //TODO: remove when all templates will be implemented
-    let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
-    let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
+    let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet, .taxes]
+    let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet, .newDirect, .contactCash, .contactAddressless, .contactAddressing, .taxAndStateService]
     
     // services
     internal let sessionAgent: SessionAgentProtocol
@@ -115,6 +123,7 @@ class Model {
     internal let contactsAgent: ContactsAgentProtocol
     internal let cameraAgent: CameraAgentProtocol
     internal let imageGalleryAgent: ImageGalleryAgentProtocol
+    internal let networkMonitorAgent: NetworkMonitorAgentProtocol
     
     // private
     private var bindings: Set<AnyCancellable>
@@ -137,10 +146,11 @@ class Model {
         return credentials
     }
     
-    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol, cameraAgent: CameraAgentProtocol, imageGalleryAgent: ImageGalleryAgentProtocol) {
+    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol, cameraAgent: CameraAgentProtocol, imageGalleryAgent: ImageGalleryAgentProtocol, networkMonitorAgent: NetworkMonitorAgentProtocol) {
         
         self.action = .init()
         self.auth = keychainAgent.isStoredString(values: [.pincode, .serverDeviceGUID]) ? .init(.signInRequired) : .init(.registerRequired)
+        self.fcmToken = .init(.none)
         self.products = .init([:])
         self.productsUpdating = .init([])
         self.accountProductsList = .init([])
@@ -162,8 +172,10 @@ class Model {
         self.currencyWalletList = .init([])
         self.centralBankRates = .init([])
         self.bankList = .init([])
+        self.bankListFullInfo = .init([])
         self.prefferedBanksList = .init([])
         self.countriesList = .init([])
+        self.countriesListWithSevice = .init([])
         self.paymentSystemList = .init([])
         self.images = .init([:])
         self.deposits = .init([])
@@ -187,6 +199,9 @@ class Model {
         self.qrMapping = .init(nil)
         self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
+        self.clientInform = .init(.notRecieved)
+        self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
+        self.productTemplates = .init([])
         
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
@@ -198,6 +213,7 @@ class Model {
         self.contactsAgent = contactsAgent
         self.cameraAgent = cameraAgent
         self.imageGalleryAgent = imageGalleryAgent
+        self.networkMonitorAgent = networkMonitorAgent
         self.bindings = []
         
         LoggerAgent.shared.log(level: .debug, category: .model, message: "initialized")
@@ -212,12 +228,7 @@ class Model {
         let sessionAgent = SessionAgent()
         
         // server agent
-#if DEBUG
-        let enviroment = ServerAgentEnvironment.test
-#else
-        let enviroment = ServerAgentEnvironment.prod
-#endif
-        
+        let enviroment = Config.serverAgentEnvironment
         let serverAgent = ServerAgent(enviroment: enviroment)
 
         // local agent
@@ -245,7 +256,10 @@ class Model {
         // imageGallery agent
         let imageGalleryAgent = ImageGalleryAgent()
         
-        return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent, cameraAgent: cameraAgent, imageGalleryAgent: imageGalleryAgent)
+        // networkMonitor agent
+        let networkMonitorAgent = NetworkMonitorAgent()
+        
+        return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent, cameraAgent: cameraAgent, imageGalleryAgent: imageGalleryAgent, networkMonitorAgent: networkMonitorAgent)
     }()
     
     //MARK: - Session Agent State
@@ -303,6 +317,7 @@ class Model {
                     action.send(ModelAction.Account.ProductList.Request())
                     action.send(ModelAction.AppVersion.Request())
                     action.send(ModelAction.Settings.GetUserSettings())
+                    action.send(ModelAction.ProductTemplate.List.Request())
                     
                     if let deepLinkType = deepLinkType {
                         
@@ -386,9 +401,9 @@ class Model {
         
         contactsAgent.status
             .receive(on: queue)
-            .sink { [unowned self] status in
+            .sink { [weak self] status in
                 
-                action.send(ModelAction.Contacts.PermissionStatus.Update(status: status))
+                self?.action.send(ModelAction.Contacts.PermissionStatus.Update(status: status))
                 
         }.store(in: &bindings)
         
@@ -617,6 +632,9 @@ class Model {
                 case _ as ModelAction.Transfers.ResendCode.Request:
                     handleTransfersResendCodeRequest()
                     
+                case let payload as ModelAction.Transfers.CheckCard.Request:
+                    handleCheckCard(payload)
+                    
                     //MARK: - CurrencyWallet
                     
                 case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Start.Request:
@@ -708,6 +726,9 @@ class Model {
                     
                 case _ as ModelAction.Notification.Transition.Clear:
                     handleNotificationTransitionClear()
+                 
+                case _ as ModelAction.Notification.Transition.ClearBadges:
+                    handleNotificationTransitionClearBadges()
                     
                     //MARK: - LatestPayments Actions
                     
@@ -718,6 +739,12 @@ class Model {
                     handleLatestPaymentsBankListRequest(payload)
                     
                     //MARK: - Templates Actions
+                    
+                case _ as ModelAction.ProductTemplate.List.Request:
+                    handleProductTemplatesListRequest()
+                    
+                case let payload as ModelAction.ProductTemplate.Delete.Request:
+                    handleProductTemplateDeleteRequest(payload)
                     
                 case _ as ModelAction.PaymentTemplate.List.Requested:
                     handleTemplatesListRequest()
@@ -732,6 +759,9 @@ class Model {
                     handleTemplatesDeleteRequest(payload)
                     
                     //MARK: - Dictionaries Actions
+                    
+                case let payload as ModelAction.Dictionary.AnywayOperator.Request:
+                    handleAnywayOperatorsCountryRequest(code: payload.code, codeParent: payload.codeParent)
                     
                 case _ as ModelAction.Dictionary.UpdateCache.All:
                     handleDictionaryUpdateAll()
@@ -749,6 +779,9 @@ class Model {
                         
                     case .countries:
                         handleDictionaryCountries(payload.serial)
+                    
+                    case .countriesWithService:
+                        handleDictionaryCountryWithService(payload.serial)
                         
                     case .currencyList:
                         handleDictionaryCurrencyList(payload.serial)
@@ -812,8 +845,12 @@ class Model {
                         
                     case .prefferedBanks:
                         handleDictionaryPrefferedBanks(payload.serial)
+                    
                     case .jsonAbroad:
                         handleJsonAbroadRequest(payload.serial)
+                        
+                    case .clientInform:
+                        handleClientInform(payload.serial)
                     }
                     
                 case let payload as ModelAction.Dictionary.DownloadImages.Request:
@@ -1006,6 +1043,7 @@ private extension Model {
             self.catalogProducts.value = catalogProducts
         }
         
+        //FIXME: why this code is commented? Remove if not recquired
         /*
         if let catalogBanner = localAgent.load(type: [BannerCatalogListData].self) {
             
@@ -1026,6 +1064,11 @@ private extension Model {
         if let bankList = localAgent.load(type: [BankData].self) {
             
             self.bankList.value = bankList
+        }
+        
+        if let bankListFullInfo = localAgent.load(type: [BankFullInfoData].self) {
+            
+            self.bankListFullInfo.value = bankListFullInfo
         }
         
         if let countriesList = localAgent.load(type: [CountryData].self) {
@@ -1077,14 +1120,19 @@ private extension Model {
     func loadCachedAuthorizedData() {
         
         self.products.value = productsCacheLoad()
-        
+
         if let paymentTemplates = localAgent.load(type: [PaymentTemplateData].self) {
             
             self.paymentTemplates.value = paymentTemplates
         }
         
+        if let productTemplates = localAgent.load(type: [ProductTemplateData].self) {
+        
+            self.productTemplates.value = productTemplates
+        }
+        
         if localAgent.serial(for: StatementsData.self) == Self.statementsSerial,
-            let statements = localAgent.load(type: StatementsData.self) {
+           let statements = localAgent.load(type: StatementsData.self) {
             
             self.statements.value = statements
         }
@@ -1308,6 +1356,7 @@ private extension Model {
         userSettings.value = []
         qrMapping.value = nil
         productsOpening.value = []
+        productTemplates.value = []
         
         LoggerAgent.shared.log(category: .model, message: "Memory data cleaned")
     }

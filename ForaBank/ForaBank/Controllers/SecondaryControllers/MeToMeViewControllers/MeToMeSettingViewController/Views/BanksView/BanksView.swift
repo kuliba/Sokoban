@@ -90,7 +90,7 @@ class BanksView: UIView {
             var banks: [String] = []
             
             consentList.forEach { bank in
-                allBanks?.forEach({ fullBank in
+                allBanks.forEach({ fullBank in
                     let fullBankItem = fullBank.fullBankInfoList
                     if fullBankItem.memberID == bank.bankId {
                         banks.append(fullBankItem.rusName ?? "")

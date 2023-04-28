@@ -38,11 +38,18 @@ public extension Color {
     static var bGIconTealLight: Color { Color(#function) }
     static var bGIconYellowLight: Color { Color(#function) }
     static var backgroundBackground: Color { Color(#function) }
-    static var barsTabbar: Color { Color(#function) }
+    static var barsBars: Color { Color(#function) }
+    static var blurBlack20: Color { Color(#function) }
+    static var blurBlack30: Color { Color(#function) }
+    static var blurBlackMedium50: Color { Color(#function) }
+    static var blurGray20: Color { Color(#function) }
+    static var blurMediumGray30: Color { Color(#function) }
+    static var blurWhite: Color { Color(#function) }
     static var bordersDivaiderDisabled: Color { Color(#function) }
     static var bordersDivider: Color { Color(#function) }
     static var buttonBlack: Color { Color(#function) }
     static var buttonBlackMedium: Color { Color(#function) }
+    static var buttonGreenBlock: Color { Color(#function) }
     static var buttonPrimary: Color { Color(#function) }
     static var buttonPrimaryDisabled: Color { Color(#function) }
     static var buttonPrimaryHover: Color { Color(#function) }
@@ -59,6 +66,8 @@ public extension Color {
     static var cardPlatinume: Color { Color(#function) }
     static var cardPlug: Color { Color(#function) }
     static var cardRIO: Color { Color(#function) }
+    static var creditConsumer: Color { Color(#function) }
+    static var creditMortgage: Color { Color(#function) }
     static var iconBlack: Color { Color(#function) }
     static var iconBlackMedium: Color { Color(#function) }
     static var iconGray: Color { Color(#function) }
@@ -77,6 +86,7 @@ public extension Color {
     static var textRed: Color { Color(#function) }
     static var textWhite: Color { Color(#function) }
     static var textDisabled: Color { Color(#function) }
+    static var textGreen: Color { Color(#function) }
     static var textPlaceholder: Color { Color(#function) }
     static var textPrimary: Color { Color(#function) }
     static var textSecondary: Color { Color(#function) }
