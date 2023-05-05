@@ -466,6 +466,7 @@ extension LatestPaymentsView {
                         Circle()
                             .fill(Color.mainColorsGrayLightest)
                             .frame(height: 56)
+                            .accessibilityIdentifier("LatestPaymentsAvatarIcon")
                         
                         switch viewModel.avatar {
                         case let .image(image):
@@ -496,6 +497,7 @@ extension LatestPaymentsView {
                                 .clipShape(Circle())
                                 .frame(width: 24, height: 24)
                                 .position(x: 64, y: 12)
+                                .accessibilityIdentifier("LatestPaymentsTopIcon")
                         }
                         
                     }
@@ -506,9 +508,12 @@ extension LatestPaymentsView {
                         .foregroundColor(.textSecondary)
                         .frame(width: 80, height: 32, alignment: .top)
                         .multilineTextAlignment(.center)
+                        .accessibilityIdentifier("LatestPaymentsName")
                 }
                 .frame(width: 80, height: 96)
             })
+            .accessibilityIdentifier("LatestPaymentsItem")
+            
         }
     }
 }
