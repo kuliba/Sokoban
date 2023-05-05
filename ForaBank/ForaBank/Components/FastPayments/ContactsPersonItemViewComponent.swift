@@ -66,10 +66,12 @@ struct ContactsPersonItemView: View {
                         Color.mainColorsGrayLightest
                             .frame(width: 40, height: 40, alignment: .center)
                             .cornerRadius(90)
+                            .accessibilityIdentifier("ContactsPhoneIconBackground")
                         
                         Text(initials)
                             .foregroundColor(.textPlaceholder)
                             .font(.textH3M18240())
+                            .accessibilityIdentifier("ContactsPhoneIconContent")
                     }
                     
                 case .placeholder:
@@ -85,10 +87,12 @@ struct ContactsPersonItemView: View {
                             .foregroundColor(Color.textSecondary)
                             .lineLimit(1)
                             .font(.textH4M16240())
+                            .accessibilityIdentifier("ContactsPhoneName")
                         
                         Text(viewModel.phone)
                             .foregroundColor(Color.textPlaceholder)
                             .font(.textBodySR12160())
+                            .accessibilityIdentifier("ContactsPhoneNumber")
                     }
                     
                 } else {
@@ -107,10 +111,12 @@ struct ContactsPersonItemView: View {
                         .resizable()
                         .renderingMode(.original)
                         .frame(width: 24, height: 24)
+                        .accessibilityIdentifier("ContactsPhoneBankIcon")
                 }
             }
             
         }
+        .accessibilityIdentifier("ContactsPhoneItem")
     }
 }
 
@@ -127,6 +133,7 @@ extension ContactsPersonItemView {
                 Color.mainColorsGrayLightest
                     .frame(width: 40, height: 40, alignment: .center)
                     .cornerRadius(90)
+                    .accessibilityIdentifier("ContactsPhonePersonIconBackground")
                 
                 Image.ic24Smartphone
                     .foregroundColor(Color.textPlaceholder)

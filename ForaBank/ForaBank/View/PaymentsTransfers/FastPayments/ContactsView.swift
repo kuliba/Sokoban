@@ -21,6 +21,7 @@ struct ContactsView: View {
                     .font(.textH3SB18240())
                 
                 SearchBarView(viewModel: viewModel.searchBar)
+                    .accessibilityIdentifier("TransferByPhoneSearchField")
                 
             }
             .padding(.horizontal, 20)
@@ -31,9 +32,11 @@ struct ContactsView: View {
                 switch section {
                 case let latestPaymentsViewModel as ContactsLatestPaymentsSectionViewModel:
                     ContactsLatestPaymentsSectionView(viewModel: latestPaymentsViewModel)
+                        .accessibilityIdentifier("TransferByPhoneLatestPaymentsSection")
                     
                 case let contactsSectionViewModel as ContactsListSectionViewModel:
                     ContactsListSectionView(viewModel: contactsSectionViewModel)
+                        .accessibilityIdentifier("TransferByPhoneContactsSection")
                     
                 case let banksPrefferedViewModel as ContactsBanksPrefferedSectionViewModel:
                     ContactsBanksPrefferedSectionView(viewModel: banksPrefferedViewModel)
