@@ -105,9 +105,10 @@ extension ParameterData {
                     continue
                 }
 
-                let name = String(chunkSplitted[1])
+                let name = String(chunkSplitted[0]).replacingOccurrences(of: " ", with: "")
 
-                options = name.split(separator: ",").map({Option(id: $0.description, name: $0.description)})
+                let option = name.split(separator: ",").map({Option(id: $0.description, name: $0.description)})
+                options += option
             }
         }
 
