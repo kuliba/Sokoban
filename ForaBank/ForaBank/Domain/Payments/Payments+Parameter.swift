@@ -83,27 +83,28 @@ extension Payments.Parameter {
         case requisitsCheckBox                = "requisitsCheckBox"
         case requisitsType                    = "requisitsType"
         
-        case countryPhone                   = "RECP"
-        case countryBank                    = "DIRECT_BANKS"
-        case countrySelect                  = "trnPickupPoint"
-        case countryDropDownList            = "countryDropDownList"
-        case countryCurrencyAmount          = "countryCurrencyAmount"
-        case countryPayeeAmount             = "countryPayeeAmount"
-        case countryTransferNumber          = "countryTransferNumber"
-        case countryPayee                   = "countryPayee"
-        case countryDeliveryCurrency        = "CURR"
-        case countryDeliveryCurrencyDirect  = "##CURR"
-        case countryCheckBox                = "countryCheckBox"
-        case countryOffer                   = "countryOferta"
-        case countryCitySearch              = "search#3#"
-        case countryBankSearch              = "search#5#"
-        case countryId                      = "bCountryId"
-        case countryCity                    = "bCityId"
-        case trnPickupPoint                 = "trnPickupPointId"
-        case countryCurrencyFilter          = "countryCurrencyFilter"
-        case countryFamilyName              = "bSurName"
-        case countryGivenName               = "bName"
-        case countryMiddleName              = "bLastName"
+        case countryPhone                    = "RECP"
+        case countrybPhone                   = "bPhone"
+        case countryBank                     = "DIRECT_BANKS"
+        case countrySelect                   = "trnPickupPoint"
+        case countryDropDownList             = "countryDropDownList"
+        case countryCurrencyAmount           = "countryCurrencyAmount"
+        case countryPayeeAmount              = "countryPayeeAmount"
+        case countryTransferNumber           = "countryTransferNumber"
+        case countryPayee                    = "countryPayee"
+        case countryDeliveryCurrency         = "CURR"
+        case countryDeliveryCurrencyDirect   = "##CURR"
+        case countryCheckBox                 = "countryCheckBox"
+        case countryOffer                    = "countryOferta"
+        case countryCitySearch               = "search#3#"
+        case countryBankSearch               = "search#5#"
+        case countryId                       = "bCountryId"
+        case countryCity                     = "bCityId"
+        case trnPickupPoint                  = "trnPickupPointId"
+        case countryCurrencyFilter           = "countryCurrencyFilter"
+        case countryFamilyName               = "bSurName"
+        case countryGivenName                = "bName"
+        case countryMiddleName               = "bLastName"
         
         case countryReturnNumber                = "countryReturnNumber"
         case countryReturnAmount                = "countryReturnAmount"
@@ -591,14 +592,16 @@ extension Payments {
         let title: String
         let placeholder: String?
         let isEditable: Bool
+        let firstDigitsReplace: [Replace]?
         let placement: Payments.Parameter.Placement
         let group: Payments.Parameter.Group?
  
-        init(_ parameter: Parameter, title: String, placeholder: String? = nil,  isEditable: Bool = true, placement: Payments.Parameter.Placement = .feed, group: Payments.Parameter.Group? = nil) {
+        init(_ parameter: Parameter, title: String, placeholder: String? = nil, firstDigitsReplace: [Replace]? = nil, isEditable: Bool = true, placement: Payments.Parameter.Placement = .feed, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
             self.title = title
             self.placeholder = placeholder
+            self.firstDigitsReplace = firstDigitsReplace
             self.isEditable = isEditable
             self.placement = placement
             self.group = group
@@ -609,7 +612,13 @@ extension Payments {
             //FIXME: remove it from here
             let value = value?.replacingOccurrences(of: " ", with: "")
             
-            return ParameterInputPhone(.init(id: parameter.id, value: value), title: title, placeholder: placeholder, isEditable: isEditable, placement: placement, group: group)
+            return ParameterInputPhone(.init(id: parameter.id, value: value), title: title, placeholder: placeholder, firstDigitsReplace: firstDigitsReplace, isEditable: isEditable, placement: placement, group: group)
+        }
+        
+        struct Replace: Equatable {
+            
+            let from: Character
+            let to: String
         }
     }
     
@@ -1221,4 +1230,16 @@ extension Payments.Validation.RulesSystem {
         
         return Payments.Validation.RulesSystem(rules: [minRule, maxRule, regExp])
     }()
+}
+
+extension [Payments.ParameterInputPhone.Replace] {
+
+    typealias Replace = Payments.ParameterInputPhone.Replace
+
+    static let russianFirstDigits = [Replace(from: "8", to: "7"),
+                                     Replace(from: "9", to: "7 9")]
+    
+    static let armenianFirstDigits = [Replace(from: "3", to: "374")]
+    
+    static let turkeyFirstDigits = [Replace(from: "9", to: "90")]
 }
