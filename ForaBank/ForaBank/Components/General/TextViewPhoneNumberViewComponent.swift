@@ -49,9 +49,8 @@ extension TextViewPhoneNumberView {
             
             switch placeHolder {
             case .contacts:
-                let filterSymbols = [Character("-"), Character("("), Character(")"), Character("+")]
                 
-                self.init(placeHolder: placeHolder, filterSymbols: filterSymbols, firstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")], phoneNumberFormatter: PhoneNumberKitFormater())
+                self.init(placeHolder: placeHolder, filterSymbols: .defaultfilterSymbols, firstDigitReplaceList: .russianFirstDigits, phoneNumberFormatter: PhoneNumberKitFormater())
                 
             default:
                 self.init(placeHolder: placeHolder)
@@ -66,10 +65,7 @@ extension TextViewPhoneNumberView {
             switch placeHolder {
             case .phone:
                 
-                let symbols: [Character] = ["-", "(", ")", "+"]
-                let replaceList: [Replace] = [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")]
-                
-                self.init(style: style, placeHolder: placeHolder, filterSymbols: symbols, firstDigitReplaceList: replaceList)
+                self.init(style: style, placeHolder: placeHolder, filterSymbols: .defaultfilterSymbols, firstDigitReplaceList: .russianFirstDigits)
             
             default:
                 self.init(style: style, placeHolder: placeHolder, state: .idle)
@@ -148,7 +144,7 @@ extension TextViewPhoneNumberView {
 
 extension TextViewPhoneNumberView.ViewModel {
     
-    struct Replace {
+    struct Replace: Equatable {
         
         let from: Character
         let to: String
@@ -398,30 +394,46 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
             
             var phone = updatedValue.digits
             
-            if let firstDigitReplace = firstDigitReplace {
-                
-                for replace in firstDigitReplace {
-                    
-                    if phone.digits.first == replace.from {
-                        
-                        phone.replaceSubrange(...phone.startIndex, with: replace.to)
-                    }
-                }
+            if let firstDigitReplace = firstDigitReplace,
+               (!update.isEmpty || inRange == NSRange(location: 0, length: 0)) {
+             
+                phone = replaceDigits(phone: updatedValue.digits, replaceDigits: firstDigitReplace)
             }
             
             let limit = limit ?? phone.count
             let limitedPhone = String(phone.prefix(limit))
             let phoneFormatted = phoneFormatter.partialFormatter("+\(limitedPhone)")
+            
             return phoneFormatted
             
         } else {
             
-            guard update.isEmpty == false else {
+            guard !update.isEmpty else {
                 return nil
             }
             
             return update
         }
+    }
+    
+    static func replaceDigits(phone: String, replaceDigits: [TextViewPhoneNumberView.ViewModel.Replace]) -> String {
+     
+        var phone = phone
+        
+        for replace in replaceDigits {
+         
+            let from = replace.from.description
+            
+            if phone.hasPrefix(from),
+               !phone.hasPrefix(replace.to) {
+                
+                phone.replaceSubrange(from.startIndex..<from.endIndex,
+                                      with: String(repeating: replace.to, count: 1))
+                
+            }
+        }
+        
+        return phone
     }
     
     private func makeToolbar(toolbarViewModel: ToolbarViewModel, context: Context) -> UIToolbar? {
@@ -465,4 +477,23 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
     }
 }
 
+//MARK: Helpers
 
+extension [Character] {
+    
+    static let defaultfilterSymbols: [Character] = ["-", "(", ")", "+"]
+    
+}
+
+extension [TextViewPhoneNumberView.ViewModel.Replace] {
+    
+    typealias Replace = TextViewPhoneNumberView.ViewModel.Replace
+    
+    static let russianFirstDigits = [Replace(from: "8", to: "7"),
+                                     Replace(from: "9", to: "7 9")]
+    
+    static let armenianFirstDigits = [Replace(from: "3", to: "374")]
+    
+    static let turkeyFirstDigits = [Replace(from: "9", to: "90")]
+    
+}
