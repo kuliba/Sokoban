@@ -9,13 +9,22 @@ import Foundation
 
 enum TemplatesListViewModelAction {
 
-    // Toggle view style (list, tiles)
     struct ToggleStyle: Action {}
     
-    // Item tapped
-    struct ItemTapped: Action {
+    enum Item {
         
-        let itemId: TemplatesListViewModel.ItemViewModel.ID
+        struct Tapped: Action {
+            let itemId: TemplatesListViewModel.ItemViewModel.ID
+        }
+        
+        struct Rename: Action {
+            let itemId: TemplatesListViewModel.ItemViewModel.ID
+        }
+        
+        struct Delete: Action {
+            let itemId: TemplatesListViewModel.ItemViewModel.ID
+        }
+        
     }
     
     struct Search: Action {
@@ -30,9 +39,17 @@ enum TemplatesListViewModelAction {
         struct RegularNavBarPresent: Action {}
     }
     
-    enum MenuList {
+    enum ReorderItems {
         
-        struct ItemTapped: Action {}
+        struct EditModeEnabled: Action {}
+        
+        struct CloseEditMode: Action {}
+        
+        struct SaveReorder: Action {}
+        
+        struct ItemMoved: Action {
+            let move: (from: IndexSet.Element, to: Int)
+        }
     }
     
     enum SearchNavBarAction {
