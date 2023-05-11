@@ -143,18 +143,51 @@ private extension TemplatesListViewModel {
                     print("mdy: Rename \(data.name)")
                     
                 case let payload as TemplatesListViewModelAction.Item.Delete:
-                    guard let data = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}),
-                          let vm = itemsRaw.value.first(where: { $0.id == payload.itemId})
+                    guard let _ = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}),
+                          let itemVM = itemsRaw.value.first(where: { $0.id == payload.itemId})
                     else { return }
                     
-                    vm.state = .deleting(.init(progress: 0, countTitle: "5", cancelButton: .init(title: "Отменить", action: {_ in })))
+                    itemVM.timer = MyTimer()
+                    guard let timer = itemVM.timer else { return }
                     
-                    print("mdy: deleteItem \(data.name)")
+                    let deletingViewModel = ItemViewModel.DeletingProgressViewModel
+                        .init(progress: 0,
+                              countTitle: "\(timer.maxCount)",
+                              cancelButton: .init(title: "Отменить",
+                                                  action: { [unowned itemVM] id in
+                                                                itemVM.timer = nil
+                                                                itemVM.state = .normal }),
+                              title: itemVM.title,
+                              style: self.style,
+                              id: itemVM.id)
+                    
+                    itemVM.state = .deleting(deletingViewModel)
+                    
+                    itemVM.timer?.timerPublish
+                        .receive(on: DispatchQueue.main)
+                        .map({ [unowned timer] output in
+                            return Int(output.timeIntervalSince(timer.startDate))
+                        })
+                        .sink { [unowned self, unowned timer] timerValue in
+                            
+                            if timerValue < timer.maxCount + 1 {
+
+                                deletingViewModel.progress = timerValue
+                                deletingViewModel.countTitle = "\(timer.maxCount - timerValue)"
+
+                            } else {
+                                
+                                model.action.send(ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: [itemVM.id]))
+                                
+                                itemVM.timer = nil
+                                itemVM.state = .normal
+                            }
+                        }
+                        .store(in: &bindings)
                     
                 case let payload as TemplatesListViewModelAction.Item.Tapped:
                     guard let data = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId})
                     else { return }
-                    print("mdy: Tap \(data.name)" )
                     
                     switch data.type {
                         
@@ -324,7 +357,7 @@ private extension TemplatesListViewModel {
 
                 case _ as TemplatesListViewModelAction.Delete.Selection.Exit:
                     
-                    withAnimation {
+                    //withAnimation {
                         
                         state = .normal
                         updateNavBar(state: .regular(nil))
@@ -335,7 +368,7 @@ private extension TemplatesListViewModel {
                             
                             item.state = .normal
                         }
-                    }
+                    //}
 
                 case let payload as TemplatesListViewModelAction.Delete.Selection.ToggleItem:
                     guard let item = itemsRaw.value.first(where: { $0.id == payload.itemId}) else {
@@ -361,20 +394,12 @@ private extension TemplatesListViewModel {
                     }
                     
                 case _ as TemplatesListViewModelAction.Delete.Selection.Accept:
-                    model.action.send(ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: Array(selectedItemsIds.value)))
+                    
                     self.action.send(TemplatesListViewModelAction.Delete.Selection.Exit())
                     
-            //Item Delete
-                case let payload as TemplatesListViewModelAction.Delete.Item:
-                    
-                    model.action.send(ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: [payload.itemId]))
-                    
-                    withAnimation {
-                        
-                        for item in itemsRaw.value {
-                            
-                            item.state = .normal
-                        }
+                    for itemId in selectedItemsIds.value {
+                      
+                        self.action.send(TemplatesListViewModelAction.Item.Delete(itemId: itemId))
                     }
                     
                 case _ as TemplatesListViewModelAction.CloseAction:
@@ -475,6 +500,27 @@ extension TemplatesListViewModel {
         enum Kind {
             
             case betweenTheir(MeToMeViewModel)
+            case renameItem(RenameTemplateItemViewModel)
+        }
+    }
+    
+    class RenameTemplateItemViewModel: ObservableObject {
+        
+        let action: PassthroughSubject<Action, Never> = .init()
+        
+        var clearButton: NavigationBarButtonViewModel? {
+            text.isEmpty ? nil : .init(icon: .ic24Close,
+                                             action: { self.text = "" } )
+        }
+        
+        @Published var text: String
+        @Published var isFocused: Bool
+        
+        init(text: String = "", isFocused: Bool = true) {
+            
+            self.text = text
+            self.isFocused = isFocused
+
         }
     }
     

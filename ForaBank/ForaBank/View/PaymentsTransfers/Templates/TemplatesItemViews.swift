@@ -32,11 +32,7 @@ extension TemplatesListView {
             case let .deleting(deletingProgressViewModel):
                             
                 TemplatesListView.DeletingProgressView
-                    .init(viewModel: deletingProgressViewModel,
-                          title: viewModel.title,
-                          subTitle: viewModel.subTitle,
-                          style: style,
-                          id: viewModel.id)
+                    .init(viewModel: deletingProgressViewModel)
                             
             case let .select(roundButtonViewModel):
                             
@@ -208,28 +204,28 @@ extension TemplatesListView {
     
     struct DeletingProgressView: View {
         
-        let viewModel: TemplatesListViewModel.ItemViewModel.DeletingProgressViewModel
-        let title: String
-        let subTitle: String
-        let style: TemplatesListViewModel.Style
-        let id: Int
+        @ObservedObject var viewModel: TemplatesListViewModel.ItemViewModel.DeletingProgressViewModel
         
         var body: some View {
             
-            switch style {
+            switch viewModel.style {
             case .list:
                 
                 HStack(spacing: 16) {
                     
-                    TemplatesListView.ItemProgressView(progress: viewModel.progress, title: viewModel.countTitle)
-                    
+                    TemplatesListView.ItemProgressView
+                        .init(viewModel: .init(progress: viewModel.progress,
+                                               title: viewModel.countTitle,
+                                               style: viewModel.style))
                     HStack {
                         
                         VStack(alignment: .leading, spacing: 4) {
                             
-                            TemplatesListView.ItemTitleView(title: title, style: style)
+                            TemplatesListView.ItemTitleView(title: viewModel.title,
+                                                            style: viewModel.style)
                             
-                            TemplatesListView.ItemSubtitleView(subtitle: subTitle, style: style)
+                            TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle,
+                                                               style: viewModel.style)
                         }
                     }
                     
@@ -237,7 +233,7 @@ extension TemplatesListView {
                     
                     TemplatesListView.ItemCancelButtonView(title: viewModel.cancelButton.title) {
                         
-                        viewModel.cancelButton.action(id)
+                        viewModel.cancelButton.action(viewModel.id)
                     }
                 }
                 .padding(16)
@@ -252,17 +248,21 @@ extension TemplatesListView {
                     
                     VStack(spacing: 8) {
                         
-                        TemplatesListView.ItemProgressView(progress: viewModel.progress,
-                                                           title: viewModel.countTitle)
+                        TemplatesListView.ItemProgressView
+                            .init(viewModel: .init(progress: viewModel.progress,
+                                                   title: viewModel.countTitle,
+                                                   style: viewModel.style))
                         .padding(.top, 16)
                         
-                        TemplatesListView.ItemTitleView(title: title, style: style)
+                        TemplatesListView.ItemTitleView(title: viewModel.title,
+                                                        style: viewModel.style)
                         
-                        TemplatesListView.ItemSubtitleView(subtitle: subTitle, style: style)
+                        TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle,
+                                                           style: viewModel.style)
                         
                         TemplatesListView.ItemCancelButtonView(title: viewModel.cancelButton.title) {
                             
-                            viewModel.cancelButton.action(id)
+                            viewModel.cancelButton.action(viewModel.id)
                         }
                         .padding(.top, 10)
                         .padding(.bottom, 16)
@@ -414,37 +414,28 @@ extension TemplatesListView {
     
     struct ItemProgressView: View {
         
-        let progress: Double
-        let title: String
-        var style: TemplatesListViewModel.Style = .list
-        
-        private var height: CGFloat {
-            
-            switch style {
-            case .list: return 40
-            case .tiles: return 56
-            }
-        }
-        
-        private var width: CGFloat {
-            
-            switch style {
-            case .list: return 40
-            case .tiles: return 56
-            }
-        }
+        @ObservedObject var viewModel: TemplatesListViewModel.ItemViewModel.ItemProgressViewModel
         
         var body: some View {
             
             ZStack {
                 
-                CircleProgressView(progress: .constant(progress), color: Color(hex: "#999999"), backgroundColor: Color(hex: "#EAEBEB"))
-                    .frame(width: width, height: height)
+                Circle()
+                    .stroke(lineWidth: 2)
+                    .foregroundColor(Color(hex: "#EAEBEB"))
                 
-                Text(title)
-                    .font(Font.custom("Inter-Medium", size: 16))
+                Circle()
+                    .trim(from: 0, to:  1 / CGFloat(viewModel.maxCount) * CGFloat(viewModel.progress))
+                    .stroke(Color.mainColorsGray,
+                            style: StrokeStyle(lineWidth: 2,
+                                               lineCap: CGLineCap.round))
+                    .rotationEffect(Angle.degrees(-90))
+                    
+                Text(viewModel.title)
+                    .font(.textH4M16240())
                     .foregroundColor(.textPlaceholder)
             }
+            .frame(width: viewModel.width, height: viewModel.height)
         }
     }
     

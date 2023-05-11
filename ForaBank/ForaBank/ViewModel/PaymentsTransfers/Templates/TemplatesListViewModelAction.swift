@@ -78,11 +78,11 @@ enum TemplatesListViewModelAction {
             struct Exit: Action {}
         }
         
-        // Delete single item
-        struct Item: Action {
-            
-            let itemId: TemplatesListViewModel.ItemViewModel.ID
-        }
+//        // Delete single item
+//        struct Item: Action {
+//            
+//            let itemId: TemplatesListViewModel.ItemViewModel.ID
+//        }
         
         // Cancel button tapped for item in deletion state
         struct CancelItemDeletion: Action {

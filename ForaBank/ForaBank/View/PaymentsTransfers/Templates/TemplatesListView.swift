@@ -266,19 +266,73 @@ struct TemplatesListView: View {
         .bottomSheet(item: $viewModel.sheet, content: { sheet in
             
             switch sheet.type {
-            case .betweenTheir(let meToMeViewModel):
+            case let .betweenTheir(meToMeViewModel):
+                
                 NavigationView {
                     MeToMeView(viewModel: meToMeViewModel)
                         .navigationBarTitle("", displayMode: .inline)
                         .navigationBarBackButtonHidden(true)
                         .edgesIgnoringSafeArea(.all)
                 }
+                
+            case let .renameItem(renameViewModel):
+                
+                RenameTemplateItemView(viewModel: renameViewModel)
             }
         })
     }
 }
     
 extension TemplatesListView {
+    
+    struct RenameTemplateItemView: View {
+        
+        @ObservedObject var viewModel: TemplatesListViewModel.RenameTemplateItemViewModel
+        
+        var body: some View {
+            
+            VStack {
+                
+                HStack {
+                    
+                    TemplatesListView.SearchTextField
+                        .init(text: $viewModel.text)
+                        .fixedSize(horizontal: false, vertical: true)
+                    
+                    if let clearButton = viewModel.clearButton {
+                        
+                        Button(action: clearButton.action, label: { clearButton.icon })
+                            .frame(width: 32)
+                        
+                    } else {
+                        
+                        Color(.clear).frame(width: 32)
+                    }
+                }
+                
+                Button(action: {}, label: {
+                    
+                    ZStack {
+                        
+                        
+                        Color.red
+                        Text("Сохранить")
+                    }
+
+                    .frame(height: 56)
+                    .padding()
+            
+                } )
+                
+                    .foregroundColor(.mainColorsWhite)
+                    .background(RoundedRectangle(cornerRadius: 12)
+                        .background(Color.red)
+                        .frame(height: 56))
+                    //.frame(minWidth: .infinity)
+            }
+            
+        }
+    }
     
     struct OnboardingView: View {
         
@@ -409,6 +463,9 @@ struct TemplatesListView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
+            
+            TemplatesListView
+                .RenameTemplateItemView(viewModel: .init() )
             
             NavigationView {
                 TemplatesListView(viewModel: .sampleComplete )

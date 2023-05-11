@@ -56,10 +56,13 @@ extension TemplatesListViewModel {
                   renameAction: {_ in} ),
             
             .init(id: 3, sortOrder: 3,
-                  state: .deleting(.init(progress: 0.76,
+                  state: .deleting(.init(progress: 3,
                                          countTitle: "3",
                                          cancelButton: .init(title: "Отменить",
-                                                             action: { _ in }))),
+                                                             action: { _ in }),
+                                         title: "Жене на Сбер",
+                                         style: .tiles,
+                                         id: 3)),
                   image: Image("Bank Logo Sample"),
                   title: "Жене на Сбер",
                   subTitle: "Удаление...",
@@ -193,10 +196,11 @@ extension TemplatesListViewModel {
     
     static let sampleDeletingProgress: TemplatesListViewModel.ItemViewModel.DeletingProgressViewModel = {
         
-        .init(progress: 0.76,
+        .init(progress: 3,
               countTitle: "3",
               cancelButton: .init(title: "Отменить",
-                                  action: { _ in }))
+                                  action: { _ in }),
+              title: "Жене на Сбер", style: .list, id: 3)
     }()
     
     static let sampleNavBarSearch: TemplatesListViewModel.NavBarState = {

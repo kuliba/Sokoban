@@ -8,8 +8,6 @@
 import SwiftUI
 import Combine
 
-//MARK: - ItemViewModel
-
 extension TemplatesListViewModel {
     
     class ItemViewModel: Identifiable, Equatable, ObservableObject {
@@ -22,6 +20,8 @@ extension TemplatesListViewModel {
         @Published var subTitle: String
         let logoImage: Image?
         let ammount: String
+        
+        var timer: MyTimer?
         
         let tapAction: (ItemViewModel.ID) -> Void
         let deleteAction: (ItemViewModel.ID) -> Void
@@ -128,11 +128,64 @@ extension TemplatesListViewModel {
             let action: (ItemViewModel.ID) -> Void
         }
         
-        struct DeletingProgressViewModel {
+        class DeletingProgressViewModel: ObservableObject {
             
-            let progress: Double
-            let countTitle: String
+            @Published var progress: Int
+            @Published var countTitle: String
             let cancelButton: CancelButtonViewModel
+            let title: String
+            let subTitle: String
+            let style: TemplatesListViewModel.Style
+            let id: Int
+            
+            init(progress: Int,
+                 countTitle: String,
+                 cancelButton: CancelButtonViewModel,
+                 title: String,
+                 subTitle: String = "Удаление...",
+                 style: TemplatesListViewModel.Style,
+                 id: Int) {
+                
+                self.progress = progress
+                self.countTitle = countTitle
+                self.cancelButton = cancelButton
+                self.title = title
+                self.subTitle = subTitle
+                self.style = style
+                self.id = id
+            }
+        }
+        
+        class ItemProgressViewModel: ObservableObject {
+            
+            @Published var progress: Int
+            @Published var title: String
+            @Published  var style: TemplatesListViewModel.Style
+            let maxCount: Int
+            
+            init(progress: Int, title: String, style: TemplatesListViewModel.Style, maxCount: Int = 5) {
+                self.progress = progress
+                self.title = title
+                self.style = style
+                self.maxCount = maxCount
+            }
+
+            var height: CGFloat {
+                
+                switch style {
+                case .list: return 40
+                case .tiles: return 56
+                }
+            }
+            
+            var width: CGFloat {
+                
+                switch style {
+                case .list: return 40
+                case .tiles: return 56
+                }
+            }
+            
         }
         
         struct CancelButtonViewModel {
@@ -200,6 +253,18 @@ extension TemplatesListViewModel {
                 self?.action.send(TemplatesListViewModelAction.Item.Rename(itemId: id)) })
             ]
 
+    }
+    
+    class MyTimer {
+        
+        let timerPublish = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+        let startDate =  Date()
+        let maxCount = 5
+
+        deinit {
+
+            timerPublish.upstream.connect().cancel()
+        }
     }
     
     func amount(for template: PaymentTemplateData) -> String? {
