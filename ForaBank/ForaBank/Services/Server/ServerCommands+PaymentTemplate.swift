@@ -71,9 +71,7 @@ enum ServerCommands {
                 
                 if let serial {
                     
-                    var parameters = [ServerCommandParameter]()
-                    parameters.append(.init(name: "serial", value: serial))
-                    self.parameters = parameters
+                    self.parameters = [.init(name: "serial", value: serial)]
                     
                 } else {
                     

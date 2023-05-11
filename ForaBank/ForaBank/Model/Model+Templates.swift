@@ -102,7 +102,7 @@ extension ModelAction {
             
             struct Failed: Action {
                 
-                let error: String?
+                let error: Error
             }
         }
     }
@@ -246,7 +246,7 @@ extension Model {
                        
                     do {
                             
-                    // cache tempates data with new serial
+                    // cache templates data with new serial
                         try self.localAgent.store(allowed, serial: data.serial)
                             
                     } catch {
@@ -261,14 +261,21 @@ extension Model {
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                     
                     self.action.send(ModelAction.PaymentTemplate.List.Failed
-                                        .init(error: response.errorMessage))
+                        .init(error: ResponseError(message: response.errorMessage)))
                 }
             case .failure(let error):
+                
                 self.action.send(ModelAction.PaymentTemplate.List.Failed
-                                    .init(error: error.localizedDescription))
+                    .init(error: ResponseError(message: error.localizedDescription)))
             }
         }
     }
+    
+    struct ResponseError: Error {
+
+        let message: String?
+    }
+
     
     func handleTemplatesSaveRequest(_ payload: ModelAction.PaymentTemplate.Save.Requested) {
         
