@@ -130,6 +130,7 @@
                 "XLDesign": "string",
                 "visibility": true,
                 "endDate_nf": true,
+                "demandDeposit": true,
                 "order": 0,
                 "smallBackgroundDesignHash": "",
                 "smallDesignMd5hash": "",

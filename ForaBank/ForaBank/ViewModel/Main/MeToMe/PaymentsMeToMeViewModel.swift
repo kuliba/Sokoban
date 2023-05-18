@@ -328,17 +328,29 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 makeAlert(.emptyData(message: "Счет списания совпадает со счетом зачисления. Выберите другой продукт"))
                                 
                             } else {
-                                if (productFrom is ProductDepositData), paymentsAmount.textField.value == productFrom.balanceValue {
-                                    // проверка разрешения закрытия вкладов
-                                    self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
-                                }
-                                else {
-                                    model.action.send(ModelAction.Payment.MeToMe.CreateTransfer.Request(
-                                    amount: paymentsAmount.textField.value,
-                                    currency: productFrom.currency,
-                                    productFrom: productIdFrom,
-                                    productTo: productIdTo))
                                 
+                                guard let depositProduct = productFrom as? ProductDepositData else {
+                                    return
+                                }
+                                
+                                if depositProduct.isDemandDeposit,
+                                   depositProduct.allowDebit,
+                                   paymentsAmount.textField.value == productFrom.balanceValue {
+                                    
+                                    // проверка разрешения закрытия вкладов
+                                    self.model.action.send(
+                                        ModelAction.Settings.ApplicationSettings.Request()
+                                    )
+                                    
+                                } else if depositProduct.allowDebit,
+                                          !depositProduct.endDateNf {
+                                    
+                                    model.action.send(ModelAction.Payment.MeToMe.CreateTransfer.Request(
+                                        amount: paymentsAmount.textField.value,
+                                        currency: productFrom.currency,
+                                        productFrom: productIdFrom,
+                                        productTo: productIdTo))
+                                    
                                     state = .loading
                                 }
                             }

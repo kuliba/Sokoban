@@ -249,7 +249,7 @@ extension ProductData.Filter {
                 return nil
             }
             
-            return productDeposit.isDemandDepositProduct
+            return productDeposit.isDemandDeposit
         }
     }
 }
