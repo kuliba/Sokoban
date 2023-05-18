@@ -21,10 +21,13 @@ extension Array where Element == CountryCodeReplace {
     ]
     
     static let armenian: Self = [
+        .init(from: "8", to: "7"),
         .init(from: "3", to: "374")
     ]
     
     static let turkey: Self = [
+        .init(from: "8", to: "7"),
+        .init(from: "3", to: "374"),
         .init(from: "9", to: "90")
     ]
 }
