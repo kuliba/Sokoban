@@ -28,7 +28,7 @@ extension Model {
             let phoneParameter = Payments.ParameterInputPhone(
                 .init(id: phoneParameterId, value: nil),
                 title: "Номер телефона",
-                firstDigitsReplace: .russianFirstDigits
+                countryCode: .russian
             )
             
             let productParameterId = Payments.Parameter.Identifier.product.rawValue
