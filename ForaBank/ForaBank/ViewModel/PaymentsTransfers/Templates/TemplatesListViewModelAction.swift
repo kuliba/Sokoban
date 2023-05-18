@@ -57,6 +57,14 @@ enum TemplatesListViewModelAction {
         struct Close: Action {}
     }
     
+    enum RenameSheetAction {
+        
+        struct SaveNewName: Action {
+            let newName: String
+            let itemId: TemplatesListViewModel.ItemViewModel.ID
+        }
+    }
+    
     enum Delete {
     
         // Delete selection mode actions

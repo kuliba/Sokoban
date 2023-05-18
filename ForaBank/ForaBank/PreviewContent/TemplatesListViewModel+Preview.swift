@@ -61,7 +61,7 @@ extension TemplatesListViewModel {
                                          cancelButton: .init(title: "Отменить",
                                                              action: { _ in }),
                                          title: "Жене на Сбер",
-                                         style: .tiles,
+                                         style: .list,
                                          id: 3)),
                   image: Image("Bank Logo Sample"),
                   title: "Жене на Сбер",
@@ -75,7 +75,7 @@ extension TemplatesListViewModel {
                       state: .normal,
                       image: Image("Templates Add New Icon"),
                       title: "Добавить шаблон",
-                      subTitle: "Из операции в разделе История",
+                      subTitle: "Из любой успешной операции в разделе «История»",
                       logoImage: nil, ammount: "",
                       tapAction: {_ in},
                       deleteAction: {_ in},
@@ -217,12 +217,12 @@ extension TemplatesListViewModel {
     
     static let sampleComplete: TemplatesListViewModel = {
         
-        .init(state: .normal,
+        .init(state: .select,
               style: .list,
               navBarState: TemplatesListViewModel.sampleNavBarRegular,
               categorySelector: TemplatesListViewModel.sampleSelector,
               items: TemplatesListViewModel.sampleItems,
-              deletePannel: nil,
+              deletePannel: TemplatesListViewModel.sampleDeletePanel,
               model: .emptyMock)
     }()
     
@@ -249,9 +249,9 @@ extension TemplatesListViewModel {
     }()
 }
 
-extension TemplatesListViewModel.OnboardingViewModel {
+extension TemplatesListViewModel.EmptyTemplateListViewModel {
     
-    static let sample: TemplatesListViewModel.OnboardingViewModel =
+    static let sample: TemplatesListViewModel.EmptyTemplateListViewModel =
         
         .init(icon: Image("Templates Onboarding Icon"),
               title: "Нет шаблонов",

@@ -15,15 +15,14 @@ class TemplatesListViewModel: ObservableObject {
     
     @Published var state: State
     @Published var style: Style
-    
     @Published var navBarState: NavBarState
     @Published var editModeState: EditMode = .inactive
     
     @Published var categorySelector: OptionSelectorView.ViewModel?
-    @Published var items: [ItemViewModel]
-    @Published var onboarding: OnboardingViewModel?
-
     @Published var deletePannel: DeletePannelViewModel?
+    
+    @Published var items: [ItemViewModel]
+
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
     @Published var sheet: Sheet?
@@ -35,22 +34,6 @@ class TemplatesListViewModel: ObservableObject {
     private let itemsRaw: CurrentValueSubject<[ItemViewModel], Never> = .init([])
     private let categoryIndexAll = "TemplatesListViewModelCategoryAll"
     let dismissAction: () -> Void
-    
-    convenience init(_ model: Model, dismissAction: @escaping () -> Void) {
-        
-        self.init(state: .normal,
-                  style: model.paymentTemplatesViewSettings.value.style,
-                  navBarState: .regular(nil),
-                  categorySelector: nil,
-                  items: [],
-                  deletePannel: nil,
-                  dismissAction: dismissAction,
-                  model: model)
-        
-        updateNavBar(state: .regular(nil))
-        self.model.action.send(ModelAction.PaymentTemplate.List.Requested())
-        bind()
-    }
     
     internal init(state: State, style: Style,
                   navBarState: NavBarState,
@@ -69,11 +52,25 @@ class TemplatesListViewModel: ObservableObject {
         self.dismissAction = dismissAction
         self.model = model
     }
-  
+    
+    convenience init(_ model: Model, dismissAction: @escaping () -> Void) {
+        
+        self.init(state: .normal,
+                  style: model.paymentTemplatesViewSettings.value.style,
+                  navBarState: .regular(nil),
+                  categorySelector: nil,
+                  items: [],
+                  deletePannel: nil,
+                  dismissAction: dismissAction,
+                  model: model)
+        
+        updateNavBar(state: .regular(nil))
+        self.model.action.send(ModelAction.PaymentTemplate.List.Requested())
+        bind()
+    }
 }
 
 //MARK: - Bindings
-
 private extension TemplatesListViewModel {
     
     func bind() {
@@ -89,10 +86,9 @@ private extension TemplatesListViewModel {
                     
                     if templates.isEmpty {
                         
-                        state = .onboarding
+                        state = .emptyList(getEmptyTemplateListViewModel())
                         itemsRaw.value = []
                         categorySelector = nil
-                        onboarding = onboardingViewModel()
                         
                     } else {
                         
@@ -100,7 +96,6 @@ private extension TemplatesListViewModel {
                         itemsRaw.value = templates.compactMap{ itemViewModel(with: $0) }
                         categorySelector = categorySelectorViewModel(with: templates)
                         bindCategorySelector()
-                        onboarding = nil
                     }
                 }
     
@@ -133,15 +128,21 @@ private extension TemplatesListViewModel {
             .sink { [unowned self] action in
                 
                 switch action {
-                    
+            
+            //Rename Item start
                 case let payload as TemplatesListViewModelAction.Item.Rename:
+                    
                     guard let data = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}),
-                          let vm = itemsRaw.value.first(where: { $0.id == payload.itemId})
+                          let _ = itemsRaw.value.first(where: { $0.id == payload.itemId})
                     else { return }
                     
+                    let renameTemplateItemViewModel = RenameTemplateItemViewModel(oldName: data.name,
+                                                                                  templateID: data.id)
+                    bind(renameTemplateItemViewModel)
                     
-                    print("mdy: Rename \(data.name)")
-                    
+                    self.sheet = .init(type: .renameItem(renameTemplateItemViewModel))
+            
+            //Personal Item Delete start
                 case let payload as TemplatesListViewModelAction.Item.Delete:
                     guard let _ = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}),
                           let itemVM = itemsRaw.value.first(where: { $0.id == payload.itemId})
@@ -298,38 +299,56 @@ private extension TemplatesListViewModel {
             
             // Enabled Reorder
                 case _ as TemplatesListViewModelAction.ReorderItems.EditModeEnabled:
-            
-                    if case .tiles = self.style { self.style = .list }
                     
-                    self.categorySelector = nil
-                    self.items = self.itemsRaw.value
-                    
-                    self.editModeState = .active
-                    self.updateNavBar(state: .reorder(nil))
+                    withAnimation {
+                        
+                        if case .tiles = self.style { self.style = .list }
+                        
+                        self.categorySelector = nil
+                        self.items = self.itemsRaw.value
+                        self.editModeState = .active
+                        self.updateNavBar(state: .reorder(nil))
+                    }
               
             //Close Reorder
                 case _ as TemplatesListViewModelAction.ReorderItems.CloseEditMode:
             
                     withAnimation {
+                        
+                        self.editModeState = .inactive
+                        self.updateNavBar(state: .regular(nil))
                         self.items = self.itemsRaw.value
+                        categorySelector = categorySelectorViewModel(with: model.paymentTemplates.value)
                     }
                     
-                    
-                    self.editModeState = .inactive
-                    self.updateNavBar(state: .regular(nil))
-                    
-                    categorySelector = categorySelectorViewModel(with: model.paymentTemplates.value)
                     bindCategorySelector()
                     self.updateAddNewTemplateItem()
-                    
+                
+            //Save Reorder
                 case _ as TemplatesListViewModelAction.ReorderItems.SaveReorder:
                     
                     self.editModeState = .inactive
                     self.updateNavBar(state: .regular(nil))
-                    //TODO: sendBackRequest
-                    categorySelector = categorySelectorViewModel(with: model.paymentTemplates.value)
+                    
+                    var sortIndex = 1
+                    let newOrders = items.reduce(into: [PaymentTemplateData.SortData]()) { payloadData, itemVM in
+                        if let data = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == itemVM.id }) {
+                            payloadData.append(.init(paymentTemplateId: data.id, sort: sortIndex))
+                            itemVM.sortOrder = sortIndex
+                            sortIndex += 1
+                        }
+                    }
+                    
+                    guard !newOrders.isEmpty else { return }
+                    
+                    model.action.send(ModelAction.PaymentTemplate.Sort.Requested(sortDataList: newOrders))
+                    
+                    withAnimation {
+                        categorySelector = categorySelectorViewModel(with: model.paymentTemplates.value)
+                    }
+                   
                     bindCategorySelector()
-                    self.updateAddNewTemplateItem()
+                    self.itemsRaw.value = self.items
               
             // Item Moved
                 case let payload as TemplatesListViewModelAction.ReorderItems.ItemMoved:
@@ -428,7 +447,7 @@ private extension TemplatesListViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] selected in
                 
-                if state == .select {
+                if case .select = self.state {
                     
                     deletePannel = deletePannelViewModel(selectedCount: selected.count)
                 }
@@ -479,6 +498,27 @@ private extension TemplatesListViewModel {
             }.store(in: &bindings)
     }
     
+    func bind(_ viewModel: RenameTemplateItemViewModel) {
+            
+        viewModel.action
+            .compactMap { $0 as? TemplatesListViewModelAction.RenameSheetAction.SaveNewName }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] payload in
+                
+                viewModel.isFocused = false
+                self.sheet = nil
+                
+                guard let item = items.first(where: { $0.id == payload.itemId}) else { return }
+                
+                item.title = payload.newName
+                self.model.action.send(ModelAction.PaymentTemplate.Update.Requested
+                                        .init(name: payload.newName,
+                                              parameterList: nil,
+                                              paymentTemplateId: payload.itemId))
+            }
+            .store(in: &bindings)
+        
+    }
 }
 
 //MARK: - Settings
@@ -507,20 +547,39 @@ extension TemplatesListViewModel {
     class RenameTemplateItemViewModel: ObservableObject {
         
         let action: PassthroughSubject<Action, Never> = .init()
-        
-        var clearButton: NavigationBarButtonViewModel? {
-            text.isEmpty ? nil : .init(icon: .ic24Close,
-                                             action: { self.text = "" } )
-        }
+        let saveButtonText = "Сохранить"
+        let textFieldLabel = "Введите название шаблона"
+        let oldName: String
+        let templateID: ItemViewModel.ID
         
         @Published var text: String
         @Published var isFocused: Bool
         
-        init(text: String = "", isFocused: Bool = true) {
+        var clearButton: NavigationBarButtonViewModel? {
+            text.isEmpty ? nil : .init(icon: .ic24Close,
+                                       action: { self.text = "" } )
+        }
+        
+        var isNameNotValid: Bool {
             
-            self.text = text
+            self.text.count < 3 || self.text == self.oldName
+        }
+        
+        var saveButtonAction: () -> Void {
+            
+            { [unowned self] in self.action.send(TemplatesListViewModelAction.RenameSheetAction.SaveNewName
+                .init(newName: self.text, itemId: self.templateID))
+            }
+        }
+        
+        init(oldName: String,
+             templateID: ItemViewModel.ID,
+             isFocused: Bool = true) {
+            
+            self.oldName = oldName
+            self.templateID = templateID
+            self.text = oldName
             self.isFocused = isFocused
-
         }
     }
     
@@ -664,12 +723,13 @@ extension TemplatesListViewModel {
                               button: .init(icon: Image("trash"), caption: "Удалить все", isEnabled: selectedCount > 0, action: {[weak self] in self?.action.send(TemplatesListViewModelAction.Delete.Selection.Accept()) }))
     }
     
-    func onboardingViewModel() -> OnboardingViewModel {
+    func getEmptyTemplateListViewModel() -> EmptyTemplateListViewModel {
         
-        OnboardingViewModel(icon: Image("Templates Onboarding Icon"),
-                            title: "Нет шаблонов", message: "Вы можете создать шаблон из любой успешной операции в разделе История",
-                            button: .init(title: "Перейти в историю",
-                                          action: { [weak self] in self?.action.send(TemplatesListViewModelAction.AddTemplate())}))
+        .init(icon: Image("Templates Onboarding Icon"),
+              title: "Нет шаблонов",
+              message: "Вы можете создать шаблон из любой успешной операции в разделе История",
+              button: .init(title: "Перейти в историю",
+                            action: { [weak self] in self?.action.send(TemplatesListViewModelAction.AddTemplate())}))
     }
 }
 
@@ -712,7 +772,7 @@ extension TemplatesListViewModel {
     
     enum State {
         
-        case onboarding
+        case emptyList(EmptyTemplateListViewModel)
         case normal
         case select
     }
@@ -751,7 +811,7 @@ extension TemplatesListViewModel {
         }
     }
     
-    struct OnboardingViewModel {
+    struct EmptyTemplateListViewModel {
         
         let icon: Image
         let title: String

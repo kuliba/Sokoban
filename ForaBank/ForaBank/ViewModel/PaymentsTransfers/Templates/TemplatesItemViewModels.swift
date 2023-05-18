@@ -13,10 +13,10 @@ extension TemplatesListViewModel {
     class ItemViewModel: Identifiable, Equatable, ObservableObject {
         
         let id: Int
-        let sortOrder: Int
+        var sortOrder: Int
         @Published var state: State
         let image: Image
-        let title: String
+        @Published var title: String
         @Published var subTitle: String
         let logoImage: Image?
         let ammount: String
@@ -233,7 +233,7 @@ extension TemplatesListViewModel {
                              state: .normal,
                              image: Image("Templates Add New Icon"),
                              title: "Добавить шаблон",
-                             subTitle: "Из операции в разделе История",
+                             subTitle: "Из любой успешной операции\nв разделе «История»",
                              logoImage: nil,
                              ammount: "",
                              tapAction: { [weak self] _ in  self?.action.send(TemplatesListViewModelAction.AddTemplate()) },
@@ -243,7 +243,7 @@ extension TemplatesListViewModel {
     }
     
     
-    func getItemMenuViewModel() -> [ItemViewModel.ItemActionViewModel]? {
+    func getItemsMenuViewModel() -> [ItemViewModel.ItemActionViewModel]? {
             
         [
             .init(icon: Image("roundTrash"), subTitle: "Удалить", action: { [weak self] id in

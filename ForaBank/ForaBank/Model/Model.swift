@@ -109,8 +109,9 @@ class Model {
     var clientInformStatus: ClientInformStatus
     
     //TODO: remove when all templates will be implemented
-    let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
-    let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
+    //let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
+    //let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] =
+    //[.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
     
     // services
     internal let sessionAgent: SessionAgentProtocol
@@ -756,6 +757,9 @@ class Model {
                     
                 case let payload as ModelAction.PaymentTemplate.Delete.Requested:
                     handleTemplatesDeleteRequest(payload)
+                
+                case let payload as ModelAction.PaymentTemplate.Sort.Requested:
+                    handleTemplatesSortRequest(payload)
                     
                     //MARK: - Dictionaries Actions
                     

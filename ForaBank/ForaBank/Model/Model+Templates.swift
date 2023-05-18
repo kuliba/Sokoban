@@ -91,6 +91,21 @@ extension ModelAction {
             }
         }
         
+        enum Sort {
+            
+            struct Requested: Action {
+                
+                let sortDataList: [PaymentTemplateData.SortData]
+            }
+            
+            struct Complete: Action {}
+            
+            struct Failed: Action {
+                
+                let error: Error
+            }
+        }
+        
         enum List {
             
             struct Requested: Action {}
@@ -239,15 +254,15 @@ extension Model {
                     else { return }
                         
                     //TODO: remove when all templates will be implemented
-                    let allowed = data.templateList.filter { self.paymentTemplatesDisplayed.contains($0.type) }
+                    //let allowed = data.templateList.filter { self.paymentTemplatesDisplayed.contains($0.type) }
                         
                     // update model data
-                    self.paymentTemplates.value = allowed
+                    self.paymentTemplates.value = data.templateList
                        
                     do {
                             
                     // cache templates data with new serial
-                        try self.localAgent.store(allowed, serial: data.serial)
+                        try self.localAgent.store(data.templateList, serial: data.serial)
                             
                     } catch {
                             
@@ -255,7 +270,7 @@ extension Model {
                     }
                     
                     self.action.send(ModelAction.PaymentTemplate.List.Complete
-                                        .init(paymentTemplates: allowed))
+                        .init(paymentTemplates: data.templateList))
 
                 default:
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
@@ -361,4 +376,36 @@ extension Model {
             }
         }
     }
+    
+    func handleTemplatesSortRequest(_ payload: ModelAction.PaymentTemplate.Sort.Requested) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        let command = ServerCommands.PaymentTemplateController.SortingPaymentTemplates
+                        .init(token: token,
+                              payload: .init(sortDataList: payload.sortDataList))
+        
+        serverAgent.executeCommand(command: command) { result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    // confirm template sorting
+                    self.action.send(ModelAction.PaymentTemplate.Sort.Complete())
+                    // request all templates from server
+                    self.action.send(ModelAction.PaymentTemplate.List.Requested())
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+            case .failure(let error):
+                self.action.send(ModelAction.PaymentTemplate.Sort.Failed(error: error))
+            }
+        }
+    }
+    
+    
 }

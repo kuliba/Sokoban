@@ -88,45 +88,50 @@ extension TemplatesListView {
 
         var body: some View {
                 
-            ZStack {
+            switch style {
+            case .list:
                 
-                Color.mainColorsGrayLightest.cornerRadius(16)
-                
-                switch style {
-                case .list:
+                HStack(spacing: 16) {
                     
-                    HStack {
-                        
-                        TemplatesListView.ItemIconView(image: viewModel.image, style: style)
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            
-                            TemplatesListView.ItemTitleView(title: viewModel.title, style: style)
-                            
-                            TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle, style: style)
-                            
-                        }
-                        
-                        Spacer()
-                    }
-                    .padding(16)
-                    .frame(height: 84)
+                    TemplatesListView.ItemIconView(image: viewModel.image, style: style)
                     
-                case .tiles:
-                    
-                    VStack(spacing: 8) {
-                            
-                        TemplatesListView.ItemIconView(image: viewModel.image, style: style)
-                            .padding(.top, 16)
-                            
+                    VStack(alignment: .leading, spacing: 4) {
+                        
                         TemplatesListView.ItemTitleView(title: viewModel.title, style: style)
-                            
+                        
                         TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle, style: style)
-                            .padding(.bottom, 34)
+                        
                     }
-                } //switch
-            }
-            .onTapGesture { viewModel.tapAction(0) }
+                    
+                    //Spacer()
+                }
+                .padding(.horizontal)
+                .frame(height: 84)
+                .onTapGesture { viewModel.tapAction(0) }
+                
+            case .tiles:
+                
+                ZStack {
+                    
+                    Color.mainColorsGrayLightest.cornerRadius(16)
+                    
+                    VStack(spacing: 0) {
+                        
+                        TemplatesListView.ItemIconView(image: viewModel.image, style: style)
+                            .padding(.vertical, 16)
+                        
+                        TemplatesListView.ItemTitleView(title: viewModel.title, style: style)
+                            .padding(.bottom, 4)
+                        
+                        TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle, style: style)
+                            .padding(.bottom, 16)
+                    }
+                }
+                .frame(height: 188)
+                .onTapGesture { viewModel.tapAction(0) }
+            } //switch
+            
+            
         }
     }
 }
@@ -159,8 +164,8 @@ extension TemplatesListView {
                         
                         HStack {
                             
-                            TemplatesListView.ItemTitleView(title: title,
-                                                            style: style)
+                            TemplatesListView.ItemTitleView(title: title, style: style)
+                            
                             Spacer()
                             
                             TemplatesListView.ItemAmountView(amount: amount)
@@ -179,24 +184,27 @@ extension TemplatesListView {
                     
                     Color.mainColorsGrayLightest.cornerRadius(16)
                     
-                    VStack(spacing: 8) {
+                    VStack(spacing: 0) {
                         
                         TemplatesListView.ItemIconView(image: image,
                                                        logoImage: logoImage,
                                                        style: style)
-                            .padding(.top, 16)
+                        .padding(.vertical, 16)
                         
                         TemplatesListView.ItemTitleView(title: title,
                                                         style: style)
+                        .padding(.bottom, 4)
+                        
                         
                         TemplatesListView.ItemSubtitleView(subtitle: subTitle,
                                                            style: style)
+                        //.padding(.bottom, 4)
                         
                         TemplatesListView.ItemAmountView(amount: amount)
-                            .padding(.top, 10)
                             .padding(.bottom, 16)
+                        
                     }
-                }
+                }//.frame(height: 188)
             } //switch style
             
         }
@@ -344,17 +352,20 @@ extension TemplatesListView {
                 Text(subtitle)
                     .font(.textBodySR12160())
                     .foregroundColor(.textPlaceholder)
-                    .lineLimit(1)
+                    .lineLimit(2)
                 
             case .tiles:
                 Text(subtitle)
                     .font(.textBodySR12160())
                     .foregroundColor(.textPlaceholder)
-                    .lineLimit(1)
+                    .lineLimit(3)
                     .truncationMode(.tail)
                     .padding(.horizontal)
                     .multilineTextAlignment(.center)
-                    .lineSpacing(4)
+                    .lineSpacing(3)
+                    .frame(height: 50, alignment: .top)
+                    //.fixedSize(horizontal: false, vertical: true)
+                    
             }
         }
     }
@@ -488,11 +499,14 @@ struct TemplatesItemView_Previews: PreviewProvider {
                         }
                     }
                 }
+                
+                TemplatesListView.AddNewItemView(viewModel: TemplatesListViewModel.sampleItems[4],
+                                                 style: .constant(.tiles))
             }
             //List Items
             List {
                 
-                ForEach(TemplatesListViewModel.sampleItems3) { item in
+                ForEach(TemplatesListViewModel.sampleItems) { item in
                     
                     TemplatesListView.TemplateItemView(viewModel: item,
                                                        style: .constant(.list),
@@ -500,10 +514,19 @@ struct TemplatesItemView_Previews: PreviewProvider {
                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                         .listRowBackground(
                             Color.mainColorsGrayLightest.cornerRadius(16)
-                                .padding(.vertical,6)
+                                .padding(.vertical, 6)
                                 .background(Color.white)
                         )
                 }
+                
+                TemplatesListView.AddNewItemView(viewModel: TemplatesListViewModel.sampleItems[4],
+                                                 style: .constant(.list))
+                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                .listRowBackground(
+                    Color.mainColorsGrayLightest.cornerRadius(16)
+                        .padding(.vertical, 6)
+                        .background(Color.white)
+                )
                 
             }
             .listStyle(.plain)
