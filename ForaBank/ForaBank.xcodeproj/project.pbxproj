@@ -993,7 +993,7 @@
 		776C846D27DF1D4300F8F7E1 /* PaymentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C846C27DF1D4300F8F7E1 /* PaymentsViewModel.swift */; };
 		776C846F27DF215F00F8F7E1 /* PaymentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C846E27DF215F00F8F7E1 /* PaymentsView.swift */; };
 		776E67B5292D0F6B00F587A7 /* ProductData+Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776E67B4292D0F6B00F587A7 /* ProductData+Filter.swift */; };
-		776E67B7292D16BD00F587A7 /* ProductFilterTets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776E67B6292D16BD00F587A7 /* ProductFilterTets.swift */; };
+		776E67B7292D16BD00F587A7 /* ProductFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776E67B6292D16BD00F587A7 /* ProductFilterTests.swift */; };
 		777167D427CE759200655D60 /* KeychainAgentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777167D327CE759200655D60 /* KeychainAgentMock.swift */; };
 		777167D627CE858500655D60 /* SettingsAgentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777167D527CE858500655D60 /* SettingsAgentMock.swift */; };
 		777167D827CE88E800655D60 /* BiometricAgentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777167D727CE88E800655D60 /* BiometricAgentMock.swift */; };
@@ -1309,6 +1309,7 @@
 		C1750D4E290FFCA500122D2B /* GetAppSettingsResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = C1750D4D290FFCA500122D2B /* GetAppSettingsResponseGeneric.json */; };
 		C1750D50290FFE7C00122D2B /* BeforeClosingResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = C1750D4F290FFE7C00122D2B /* BeforeClosingResponseGeneric.json */; };
 		C181083928E3535E002FCC3A /* Model+DeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = C181083828E3535E002FCC3A /* Model+DeepLink.swift */; };
+		C183EA512A14B494000FBCEC /* ProductDepositDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C183EA502A14B494000FBCEC /* ProductDepositDataTests.swift */; };
 		C1A2CCE328DB7348009436D6 /* DepositCloseNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A2CCE228DB7348009436D6 /* DepositCloseNotification.swift */; };
 		C1C7DAA329EF0214000DBCA1 /* DelayWrappedAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C7DAA229EF0214000DBCA1 /* DelayWrappedAction.swift */; };
 		C1CCFC3829816B8F0059212C /* ToolbarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CCFC3729816B8F0059212C /* ToolbarViewModel.swift */; };
@@ -2644,7 +2645,7 @@
 		776C846C27DF1D4300F8F7E1 /* PaymentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewModel.swift; sourceTree = "<group>"; };
 		776C846E27DF215F00F8F7E1 /* PaymentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsView.swift; sourceTree = "<group>"; };
 		776E67B4292D0F6B00F587A7 /* ProductData+Filter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductData+Filter.swift"; sourceTree = "<group>"; };
-		776E67B6292D16BD00F587A7 /* ProductFilterTets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductFilterTets.swift; sourceTree = "<group>"; };
+		776E67B6292D16BD00F587A7 /* ProductFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductFilterTests.swift; sourceTree = "<group>"; };
 		777167D327CE759200655D60 /* KeychainAgentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainAgentMock.swift; sourceTree = "<group>"; };
 		777167D527CE858500655D60 /* SettingsAgentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAgentMock.swift; sourceTree = "<group>"; };
 		777167D727CE88E800655D60 /* BiometricAgentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricAgentMock.swift; sourceTree = "<group>"; };
@@ -2951,6 +2952,7 @@
 		C1750D4D290FFCA500122D2B /* GetAppSettingsResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetAppSettingsResponseGeneric.json; sourceTree = "<group>"; };
 		C1750D4F290FFE7C00122D2B /* BeforeClosingResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BeforeClosingResponseGeneric.json; sourceTree = "<group>"; };
 		C181083828E3535E002FCC3A /* Model+DeepLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+DeepLink.swift"; sourceTree = "<group>"; };
+		C183EA502A14B494000FBCEC /* ProductDepositDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDepositDataTests.swift; sourceTree = "<group>"; };
 		C1A2CCE228DB7348009436D6 /* DepositCloseNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositCloseNotification.swift; sourceTree = "<group>"; };
 		C1C7DAA229EF0214000DBCA1 /* DelayWrappedAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayWrappedAction.swift; sourceTree = "<group>"; };
 		C1CCFC3729816B8F0059212C /* ToolbarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarViewModel.swift; sourceTree = "<group>"; };
@@ -5142,7 +5144,8 @@
 			children = (
 				68DF16D62808A741005D8D3E /* ProductModelTests.swift */,
 				50841595283CFBD50028CEB0 /* ProductModelActivateTests.swift */,
-				776E67B6292D16BD00F587A7 /* ProductFilterTets.swift */,
+				776E67B6292D16BD00F587A7 /* ProductFilterTests.swift */,
+				C183EA502A14B494000FBCEC /* ProductDepositDataTests.swift */,
 			);
 			path = Products;
 			sourceTree = "<group>";
@@ -10135,6 +10138,7 @@
 				2ACF585129AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift in Sources */,
 				68AD340527997DC000647665 /* ServerCommandsCardTests.swift in Sources */,
 				2AE9835129A2385F0001DF72 /* IsFreeCardAvailableHelperTests.swift in Sources */,
+				C183EA512A14B494000FBCEC /* ProductDepositDataTests.swift in Sources */,
 				2AEDAD5C29A640BC00017F73 /* CreateAnywayTransferHelpersTests.swift in Sources */,
 				77FC5E2429423DCC006784F4 /* PaymentsValidationRulesSystemTests.swift in Sources */,
 				68E765282796D6DF005860FE /* ServerCommandsRegistrationTests.swift in Sources */,
@@ -10175,7 +10179,7 @@
 				77BE9A39290C20D7006046B1 /* PaymentsSectionViewModelTests.swift in Sources */,
 				77C3829E27E3351B00B5246E /* TextFieldFormatableViewComponentTests.swift in Sources */,
 				77D2D9B2275AB9280097234D /* Item.swift in Sources */,
-				776E67B7292D16BD00F587A7 /* ProductFilterTets.swift in Sources */,
+				776E67B7292D16BD00F587A7 /* ProductFilterTests.swift in Sources */,
 				77E24F1B28B7BE05005899BA /* SessionAgentTests.swift in Sources */,
 				77517FF227A9949D005CFB77 /* ServerCommandsRatesTests.swift in Sources */,
 				774A82CB27BAEB6100E5A5E9 /* UserDefaultsSettingsAgentTests.swift in Sources */,
@@ -10354,7 +10358,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 14;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -10429,7 +10433,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 130;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -10441,7 +10445,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 9.2;
+				MARKETING_VERSION = 9.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -10458,7 +10462,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 130;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -10470,7 +10474,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 9.2;
+				MARKETING_VERSION = 9.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -10487,7 +10491,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 130;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -10499,7 +10503,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 9.2;
+				MARKETING_VERSION = 9.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -10644,7 +10648,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 14;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -10679,7 +10683,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;

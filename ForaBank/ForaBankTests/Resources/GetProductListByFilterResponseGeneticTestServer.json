@@ -346,6 +346,7 @@
             "visibility": true,
             "order": 0,
             "endDate_nf": true,
+            "demandDeposit": true,
             "smallBackgroundDesignHash": "",
             "smallDesignMd5hash": "",
             "detailedRatesUrl": "",
