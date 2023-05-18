@@ -1296,6 +1296,7 @@
 		C16502F32939FED600B034D0 /* PaymentsAntifraudViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16502F22939FED600B034D0 /* PaymentsAntifraudViewModel.swift */; };
 		C16502F52939FF2200B034D0 /* PaymentsAntifraudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16502F42939FF2200B034D0 /* PaymentsAntifraudView.swift */; };
 		C16502F72942199F00B034D0 /* PaymentsSelectBankViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16502F62942199F00B034D0 /* PaymentsSelectBankViewComponent.swift */; };
+		C165DDF42A160F0E003CE3DA /* CountryCodeReplace.swift in Sources */ = {isa = PBXBuildFile; fileRef = C165DDF32A160F0E003CE3DA /* CountryCodeReplace.swift */; };
 		C169920E28F486F20035CF15 /* ServerAgentEnviroment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C169920D28F486F20035CF15 /* ServerAgentEnviroment.swift */; };
 		C169920F28F487CB0035CF15 /* ServerAgentEnviroment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C169920D28F486F20035CF15 /* ServerAgentEnviroment.swift */; };
 		C16B8A4D2955F1FD00B0AD4C /* PrefferedBanksList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16B8A4C2955F1FD00B0AD4C /* PrefferedBanksList.swift */; };
@@ -2940,6 +2941,7 @@
 		C16502F22939FED600B034D0 /* PaymentsAntifraudViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsAntifraudViewModel.swift; sourceTree = "<group>"; };
 		C16502F42939FF2200B034D0 /* PaymentsAntifraudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsAntifraudView.swift; sourceTree = "<group>"; };
 		C16502F62942199F00B034D0 /* PaymentsSelectBankViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectBankViewComponent.swift; sourceTree = "<group>"; };
+		C165DDF32A160F0E003CE3DA /* CountryCodeReplace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCodeReplace.swift; sourceTree = "<group>"; };
 		C169920D28F486F20035CF15 /* ServerAgentEnviroment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentEnviroment.swift; sourceTree = "<group>"; };
 		C16B8A4C2955F1FD00B0AD4C /* PrefferedBanksList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefferedBanksList.swift; sourceTree = "<group>"; };
 		C1722C302989454B00C503E3 /* GetCountriesWithServiceResponseGenericFromServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetCountriesWithServiceResponseGenericFromServer.json; sourceTree = "<group>"; };
@@ -6234,6 +6236,7 @@
 				C169920D28F486F20035CF15 /* ServerAgentEnviroment.swift */,
 				C1DE211E2919531500ED0F8D /* AppSettings.swift */,
 				0C227A9829956C9000FDDDC6 /* ClientInformTypes.swift */,
+				C165DDF32A160F0E003CE3DA /* CountryCodeReplace.swift */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -9940,6 +9943,7 @@
 				0BB24AA626F0024B00DDA4F6 /* GetLatestPayments.swift in Sources */,
 				77D73EE22908290C00A956A3 /* Model+MeToMe.swift in Sources */,
 				774A3E41292647DD0011D952 /* PaymentsAmountViewComponent.swift in Sources */,
+				C165DDF42A160F0E003CE3DA /* CountryCodeReplace.swift in Sources */,
 				EDB1453E2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift in Sources */,
 				0BE0BDF62905D2340064549E /* QRDocumentsButtonsViewComponent.swift in Sources */,
 				50833F662874260F006E8530 /* CurrencyWalletViewModel.swift in Sources */,

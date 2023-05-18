@@ -592,16 +592,16 @@ extension Payments {
         let title: String
         let placeholder: String?
         let isEditable: Bool
-        let firstDigitsReplace: [Replace]?
+        let countryCode: [CountryCodeReplace]?
         let placement: Payments.Parameter.Placement
         let group: Payments.Parameter.Group?
  
-        init(_ parameter: Parameter, title: String, placeholder: String? = nil, firstDigitsReplace: [Replace]? = nil, isEditable: Bool = true, placement: Payments.Parameter.Placement = .feed, group: Payments.Parameter.Group? = nil) {
+        init(_ parameter: Parameter, title: String, placeholder: String? = nil, countryCode: [CountryCodeReplace]? = nil, isEditable: Bool = true, placement: Payments.Parameter.Placement = .feed, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
             self.title = title
             self.placeholder = placeholder
-            self.firstDigitsReplace = firstDigitsReplace
+            self.countryCode = countryCode
             self.isEditable = isEditable
             self.placement = placement
             self.group = group
@@ -612,13 +612,7 @@ extension Payments {
             //FIXME: remove it from here
             let value = value?.replacingOccurrences(of: " ", with: "")
             
-            return ParameterInputPhone(.init(id: parameter.id, value: value), title: title, placeholder: placeholder, firstDigitsReplace: firstDigitsReplace, isEditable: isEditable, placement: placement, group: group)
-        }
-        
-        struct Replace: Equatable {
-            
-            let from: Character
-            let to: String
+            return ParameterInputPhone(.init(id: parameter.id, value: value), title: title, placeholder: placeholder, countryCode: countryCode, isEditable: isEditable, placement: placement, group: group)
         }
     }
     
@@ -1230,16 +1224,4 @@ extension Payments.Validation.RulesSystem {
         
         return Payments.Validation.RulesSystem(rules: [minRule, maxRule, regExp])
     }()
-}
-
-extension [Payments.ParameterInputPhone.Replace] {
-
-    typealias Replace = Payments.ParameterInputPhone.Replace
-
-    static let russianFirstDigits = [Replace(from: "8", to: "7"),
-                                     Replace(from: "9", to: "7 9")]
-    
-    static let armenianFirstDigits = [Replace(from: "3", to: "374")]
-    
-    static let turkeyFirstDigits = [Replace(from: "9", to: "90")]
 }

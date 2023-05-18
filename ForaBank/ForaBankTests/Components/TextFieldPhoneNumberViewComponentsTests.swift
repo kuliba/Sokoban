@@ -10,7 +10,7 @@ import XCTest
 
 final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
     
-    func test_updateMasked_shouldEnterFirstDigit() throws {
+    func test_updateMasked_shouldEnterCountryCode() throws {
         
         //given
         let value = ""
@@ -18,13 +18,55 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
 
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, firstDigitReplace: .russianFirstDigits)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian)
         
         // then
         XCTAssertEqual(updated, "+7")
     }
     
-    func test_updateMasked_shouldEnterFirstLetter() throws {
+    func test_updateMasked_shouldNotSubstituteNonMatchingUpdateWithCountryCode_onNilValue() throws {
+        
+        //given
+        let value: String? = nil
+        let update = "7"
+        let range = NSRange(location: 0, length: 0)
+
+        // when
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian)
+        
+        // then
+        XCTAssertEqual(updated, "+7")
+    }
+    
+    func test_updateMasked_shouldSubstituteMatchingUpdateWithCountryCode_onNilValue() throws {
+        
+        //given
+        let value: String? = nil
+        let update = "8"
+        let range = NSRange(location: 0, length: 0)
+
+        // when
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian)
+        
+        // then
+        XCTAssertEqual(updated, "+7")
+    }
+    
+    func test_updateMasked_shouldSubstituteMatchingUpdateWithCountryCode_onNilValue2() throws {
+        
+        //given
+        let value: String? = nil
+        let update = "9"
+        let range = NSRange(location: 0, length: 0)
+
+        // when
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian)
+        
+        // then
+        XCTAssertEqual(updated, "+7 9")
+    }
+    
+    func test_updateMasked_shouldRemoveFirstLetter() throws {
         
         //given
         let value = ""
@@ -32,13 +74,13 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
 
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, firstDigitReplace: .russianFirstDigits)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian)
         
         // then
         XCTAssertEqual(updated, "")
     }
     
-    func test_updateMasked_shouldRemoveSymbol() throws {
+    func test_updateMasked_shouldRemoveSymbol_onDelete() throws {
         
         //given
         let value = "+7"
@@ -46,13 +88,13 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 1, length: 1)
 
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, firstDigitReplace: .russianFirstDigits)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian)
         
         // then
         XCTAssertEqual(updated, nil)
     }
     
-    func test_updateMasked_shouldSetReplaceDigit() throws {
+    func test_updateMasked_shouldSetRussianPrefix() throws {
         
         //given
         let value = ""
@@ -60,7 +102,7 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
 
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, firstDigitReplace: .russianFirstDigits)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian)
         
         // then
         XCTAssertEqual(updated, "+7")
@@ -74,13 +116,13 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 3, length: 0)
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, firstDigitReplace: .turkeyFirstDigits)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .turkey)
         
         // then
         XCTAssertEqual(updated, "+90 9")
     }
     
-    func test_updateMasked_shouldFilteredLetter() throws {
+    func test_updateMasked_shouldFilterLetter() throws {
         
         //given
         let value = "+7 925"
@@ -88,38 +130,42 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 6, length: 0)
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, firstDigitReplace: .russianFirstDigits)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian)
         
         XCTAssertEqual(updated, value)
     }
     
-    func test_updateMasked_shouldEnterDigit() throws {
+    func test_updateMasked_shouldAppendDigit() throws {
         
         //given
         let value = "+7 925"
         let update = "5"
-        let range = NSRange(location: 6, length: 0)
+        let location = 6
+        let range = NSRange(location: location, length: 0)
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, firstDigitReplace: .russianFirstDigits)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian)
         
+        XCTAssertEqual(value.count, location)
         XCTAssertEqual(updated, "+7 925-5")
     }
     
-    func test_updateMasked_shouldSetUpdateNotEmpty() throws {
+    func test_updateMasked_shouldNotAppendSpace() throws {
         
         //given
         let value = "+374"
         let update = " "
-        let range = NSRange(location: 4, length: 0)
+        let location = 4
+        let range = NSRange(location: location, length: 0)
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, firstDigitReplace: .armenianFirstDigits)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .armenian)
         
+        XCTAssertEqual(value.count, location)
         XCTAssertEqual(updated, value)
     }
     
-    func test_updateMasked_shouldSetValueNil() throws {
+    func test_updateMasked_shouldUpdateNilValue() throws {
         
         //given
         let value: String? = nil
@@ -127,12 +173,12 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, firstDigitReplace: .armenianFirstDigits)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .armenian)
         
-        XCTAssertEqual(updated, "3")
+        XCTAssertEqual(updated, "+374")
     }
     
-    func test_updateMasked_shouldSetValueNil_and_UpdateEmpty() throws {
+    func test_updateMasked_shouldNotChangeNilValue_onEmptyUpdate() throws {
         
         //given
         let value: String? = nil
@@ -140,12 +186,12 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, firstDigitReplace: .armenianFirstDigits)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .armenian)
         
         XCTAssertEqual(updated, nil)
     }
     
-    func test_updateMasked_shouldSetValueNil_updateNotEmpty() throws {
+    func test_updateMasked_shouldUpdateNilValue_onNonEmptyUpdate() throws {
         
         //given
         let value: String? = nil
@@ -153,12 +199,12 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, firstDigitReplace: .armenianFirstDigits)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .armenian)
         
-        XCTAssertEqual(updated, "7")
+        XCTAssertEqual(updated, "+7")
     }
     
-    func test_updateMasked_shouldSetNotValidLenght() throws {
+    func test_updateMasked_shouldNotInsertAtFirst_onLengthEqualToLimit() throws {
         
         //given
         let value = "+7 925 279-86-13"
@@ -166,7 +212,7 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, firstDigitReplace: .armenianFirstDigits)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .armenian)
         
         XCTAssertEqual(updated, value)
     }
@@ -179,12 +225,12 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 3, length: 1)
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, firstDigitReplace: .russianFirstDigits)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian)
         
         XCTAssertEqual(updated, "+7 8252798613")
     }
     
-    func test_updateMasked_shouldSetUpdateEmpty() throws {
+    func test_updateMasked_shouldFormatArmenianCountryCode_onEmptyUpdate() throws {
         
         //given
         let value = "+3"
@@ -192,7 +238,7 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 2, length: 0)
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, firstDigitReplace: .armenianFirstDigits)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .armenian)
         
         XCTAssertEqual(updated, "+(3")
     }
@@ -211,7 +257,35 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         XCTAssertEqual(updated, "+7 925 279-86-13")
     }
     
-    func test_updateMasked_shouldSetRange_0_0() throws {
+    func test_shouldNotCompletearmenianCountryCodes_onPartialCode() throws {
+        
+        //given
+        let value = "+37"
+        let update = "3"
+        let range = NSRange(location: 3, length: 0)
+        let limit: Int? = nil
+        
+        // when
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .armenian, limit: limit)
+        
+        XCTAssertEqual(updated, "+373")
+    }
+    
+    func test_shouldNotCompleteturkeyCountryCodes_onPartialCode() throws {
+        
+        //given
+        let value = "+9"
+        let update = "1"
+        let range = NSRange(location: 2, length: 0)
+        let limit: Int? = nil
+        
+        // when
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .turkey, limit: limit)
+        
+        XCTAssertEqual(updated, "+91")
+    }
+    
+    func test_updateMasked_shouldCompleteArmenianCountryCode() throws {
         
         //given
         let value = "+3"
@@ -219,18 +293,18 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, firstDigitReplace: .armenianFirstDigits, limit: nil)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .armenian, limit: nil)
         
         XCTAssertEqual(updated, "+374")
     }
     
-    func test_init_shouldSetReplaceToRussianFirstDigits_onContacts() throws {
+    func test_init_shouldSetReplaceTorussianCountryCodes_onContacts() throws {
         
         //given
         let viewModel = TextViewPhoneNumberView.ViewModel(.contacts)
         
         // then
-        XCTAssertEqual(viewModel.firstDigitReplaceList, .russianFirstDigits)
+        XCTAssertEqual(viewModel.countryCodeReplaces, .russian)
     }
     
     func test_init_shouldSetReplaceToFilterSymbols_onContacts() throws {
@@ -239,7 +313,7 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let viewModel = TextViewPhoneNumberView.ViewModel(.contacts)
         
         // then
-        XCTAssertEqual(viewModel.filterSymbols, .defaultfilterSymbols)
+        XCTAssertEqual(viewModel.filterSymbols, .defaultFilterSymbols)
     }
     
     func test_init_shouldSetReplaceToRussian_onGeneralPhone() throws {
@@ -248,7 +322,7 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let viewModel = TextViewPhoneNumberView.ViewModel(style: .general, placeHolder: .phone)
         
         // then
-        XCTAssertEqual(viewModel.firstDigitReplaceList, .russianFirstDigits)
+        XCTAssertEqual(viewModel.countryCodeReplaces, .russian)
     }
     
     func test_init_shouldSetReplaceToDefault_onAbroadPhone() throws {
@@ -257,10 +331,10 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let viewModel = TextViewPhoneNumberView.ViewModel(style: .abroad, placeHolder: .phone)
         
         // then
-        XCTAssertEqual(viewModel.filterSymbols, .defaultfilterSymbols)
+        XCTAssertEqual(viewModel.filterSymbols, .defaultFilterSymbols)
     }
     
-    //MARK: Test's Replace Digits
+    // MARK: Complete Country Code Tests
     
     func test_init_shouldSetReplace_RussianDigits() throws {
         
@@ -268,7 +342,7 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let value: String = "8 (925) 279 86 13"
 
         // when
-        let updated = replaceDigits(phone: value, replaceDigits: .russianFirstDigits)
+        let updated = replaceCountryCode(phone: value, replaceDigits: .russian)
         
         // then
         XCTAssertEqual(updated, "7 (925) 279 86 13")
@@ -280,7 +354,7 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let value = "90 921"
         
         // when
-        let updated = replaceDigits(phone: value, replaceDigits: .turkeyFirstDigits)
+        let updated = replaceCountryCode(phone: value, replaceDigits: .turkey)
         
         // then
         XCTAssertEqual(updated, value)
@@ -292,7 +366,7 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         let value = "91 921"
         
         // when
-        let updated = replaceDigits(phone: value, replaceDigits: .turkeyFirstDigits)
+        let updated = replaceCountryCode(phone: value, replaceDigits: .turkey)
         
         // then
         XCTAssertEqual(updated, "901 921")
@@ -300,13 +374,13 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
     
     //MARK: Helper
 
-    private func replaceDigits(phone: String, replaceDigits: [TextViewPhoneNumberView.ViewModel.Replace]) -> String {
+    private func replaceCountryCode(phone: String, replaceDigits: [CountryCodeReplace]) -> String {
         
-        TextViewPhoneNumberView.replaceDigits(phone: phone, replaceDigits: replaceDigits)
+        TextViewPhoneNumberView.replaceDigits(phone: phone, countryCodeReplaces: replaceDigits)
     }
     
-    private func updateMasked(value: String?, inRange: NSRange, update: String, firstDigitReplace: [TextViewPhoneNumberView.ViewModel.Replace]? = .russianFirstDigits, phoneFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater(), filterSymbols: [Character]? = .defaultfilterSymbols, limit: Int? = nil) -> String? {
+    private func updateMasked(value: String?, inRange: NSRange, update: String, countryCodeReplace: [CountryCodeReplace]? = .russian, phoneFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater(), filterSymbols: [Character]? = .defaultFilterSymbols, limit: Int? = nil) -> String? {
         
-        TextViewPhoneNumberView.updateMasked(value: value, inRange: inRange, update: update, firstDigitReplace: firstDigitReplace, phoneFormatter: phoneFormatter, filterSymbols: filterSymbols, limit: limit)
+        TextViewPhoneNumberView.updateMasked(value: value, inRange: inRange, update: update, countryCodeReplaces: countryCodeReplace, phoneFormatter: phoneFormatter, filterSymbols: filterSymbols, limit: limit)
     }
 }

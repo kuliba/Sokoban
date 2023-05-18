@@ -22,7 +22,7 @@ extension Model {
             
             // phone
             let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
-            let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneParameterId, value: nil), title: "Номер телефона получателя", firstDigitsReplace: .russianFirstDigits)
+            let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneParameterId, value: nil), title: "Номер телефона получателя", countryCode: .russian)
             
             // bank
             let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
