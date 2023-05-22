@@ -187,11 +187,15 @@ extension TemplatesListViewModel {
     
     static let sampleDeletePanel: TemplatesListViewModel.DeletePannelViewModel = {
         
-        .init(description: "Выбрано 1 объект",
-              button: .init(icon: Image("trash"),
-                            caption: "Удалить все",
-                            isEnabled: true,
-                            action: { }))
+        .init(description: "Выбрано 2",
+              selectAllButton: .init(icon: .ic24CheckCircle,
+                                     title: "Выбрать все",
+                                     isDisable: true,
+                                     action: {}),
+              deleteButton: .init(icon: .ic24Trash2,
+                                  title: "Удалить",
+                                  isDisable: false,
+                                  action: {}))
     }()
     
     static let sampleDeletingProgress: TemplatesListViewModel.ItemViewModel.DeletingProgressViewModel = {

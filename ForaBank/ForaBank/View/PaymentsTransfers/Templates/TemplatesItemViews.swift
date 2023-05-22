@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Shimmer
 
 extension TemplatesListView {
     
@@ -77,9 +78,34 @@ extension TemplatesListView {
     }
 }
 
-//MARK: - AddNewItemView
+
 
 extension TemplatesListView {
+    
+    struct PlaceholderItemView: View {
+        
+        @Binding var style: TemplatesListViewModel.Style
+        
+        var body: some View {
+            
+            switch style {
+            case .list:
+                
+                RoundedRectangle(cornerRadius: 12)
+                    .foregroundColor(.mainColorsGrayMedium.opacity(0.4))
+                    .frame(height: 84)
+                    .shimmering(active: true, bounce: true)
+                
+            case .tiles:
+                
+                RoundedRectangle(cornerRadius: 12)
+                    .foregroundColor(.mainColorsGrayMedium.opacity(0.4))
+                    .frame(height: 188)
+                    .shimmering(active: true, bounce: true)
+            }
+        }
+    }
+    
     
     struct AddNewItemView: View {
         
@@ -100,10 +126,7 @@ extension TemplatesListView {
                         TemplatesListView.ItemTitleView(title: viewModel.title, style: style)
                         
                         TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle, style: style)
-                        
                     }
-                    
-                    //Spacer()
                 }
                 .padding(.horizontal)
                 .frame(height: 84)
@@ -124,7 +147,7 @@ extension TemplatesListView {
                             .padding(.bottom, 4)
                         
                         TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle, style: style)
-                            .padding(.bottom, 16)
+                            .padding(.bottom, 28)
                     }
                 }
                 .frame(height: 188)
@@ -254,16 +277,17 @@ extension TemplatesListView {
                     Color.mainColorsGrayLightest
                         .cornerRadius(16)
                     
-                    VStack(spacing: 8) {
+                    VStack(spacing: 0) {
                         
                         TemplatesListView.ItemProgressView
                             .init(viewModel: .init(progress: viewModel.progress,
                                                    title: viewModel.countTitle,
                                                    style: viewModel.style))
-                        .padding(.top, 16)
+                            .padding(.vertical, 16)
                         
                         TemplatesListView.ItemTitleView(title: viewModel.title,
                                                         style: viewModel.style)
+                        .padding(.bottom, 4)
                         
                         TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle,
                                                            style: viewModel.style)
@@ -272,7 +296,7 @@ extension TemplatesListView {
                             
                             viewModel.cancelButton.action(viewModel.id)
                         }
-                        .padding(.top, 10)
+                        //.padding(.top, 10)
                         .padding(.bottom, 16)
                     }
                 }

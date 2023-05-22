@@ -116,6 +116,18 @@ struct TemplatesListView: View {
                                         .listRowSeparatorTint(.white)
                                 }
                                 //.matchedGeometryEffect(id: "item", in: namespace)
+                            case .placeholder:
+                                
+                                PlaceholderItemView(style: .constant(.list))
+                                    .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 0, trailing: 0))
+                                    .listRowBackground(
+                                        Color.mainColorsGrayLightest.cornerRadius(16)
+                                            .padding(.vertical, 6)
+                                            .background(Color.white)
+                                    )
+                                
+                            case .deleting:
+                                EmptyView() //TODO:
                             } //swich kind
                         }//ForEach
                         .onMove { indexes, destination in
@@ -162,8 +174,17 @@ struct TemplatesListView: View {
                                 case .add:
                                     
                                     AddNewItemView(viewModel: item, style: .constant(.tiles))
+                                
+                                case .placeholder:
                                     
-                                }
+                                    PlaceholderItemView(style: .constant(.tiles))
+                                    
+                                case .deleting:
+                                    
+                                    EmptyView() //TODO:
+                                } //kind swith
+                                
+                            
                             }
                         }
                         .padding(.horizontal)
@@ -403,39 +424,60 @@ extension TemplatesListView {
             
             ZStack(alignment: .bottom) {
                 
-                Color.init(hex: "#F8F8F8").opacity(0.82)
+                Color(hex: "#F8F8F8").opacity(0.82)
                     .edgesIgnoringSafeArea(.bottom)
                 
                 HStack {
                     
                     Text(viewModel.description)
-                        .font(.textBodyMM14200())
+                        .font(.textH4M16240())
+                        .padding(.leading, 20)
                     
                     Spacer()
                     
-                    Button {
-                        viewModel.button.action()
-                    } label: {
-                        VStack(spacing: 4) {
-                            viewModel.button.icon
-                                .resizable()
-                                .renderingMode(.template)
-                                .frame(width: 24, height: 24)
-                            Text(viewModel.button.caption)
-                                .font(.textBodySR12160())
-                        }
-                        .foregroundColor(.black)
-                    }
-                    .padding(.trailing, 30)
-                    .disabled(viewModel.button.isEnabled == false)
-                    .opacity(viewModel.button.isEnabled ? 1.0 : 0.5)
+                    TemplatesListView
+                        .PanelButtonView(viewModel: viewModel.selectAllButton)
+                    
+                    Spacer()
+                    
+                    TemplatesListView
+                        .PanelButtonView(viewModel: viewModel.deleteButton)
+                            .padding(.trailing, 30)
+                    
                 }
-                .background(Color.init(hex: "#F8F8F8").opacity(0.82))
-                .padding(20)
+                .background(Color(hex: "#F8F8F8").opacity(0.82))
             }
             .frame(height: 56)
         }
     }
+    
+    struct PanelButtonView: View {
+        
+        let viewModel: TemplatesListViewModel.PanelButtonViewModel
+        
+        var body: some View {
+        
+            Button { viewModel.action()
+            } label: {
+                
+                VStack(spacing: 4) {
+                    
+                    viewModel.icon
+                        .resizable()
+                        .renderingMode(.template)
+                        .frame(width: 24, height: 24)
+                    
+                    Text(viewModel.title)
+                        .font(.textBodyMR14180())
+                }
+                .foregroundColor(.black)
+            }
+            .disabled(viewModel.isDisable)
+            .opacity(viewModel.isDisable ? 0.5 : 1.0)
+        }
+    }
+
+    
     
     struct SelectItemVew: View {
         
@@ -504,6 +546,7 @@ struct TemplatesListView_Previews: PreviewProvider {
         }
     }
 }
+
 
 
 

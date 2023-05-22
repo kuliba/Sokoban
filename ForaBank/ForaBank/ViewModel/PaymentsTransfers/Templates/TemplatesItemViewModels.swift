@@ -198,6 +198,8 @@ extension TemplatesListViewModel {
             
             case regular
             case add
+            case placeholder
+            case deleting
         }
     }
 }

@@ -376,7 +376,7 @@ private extension TemplatesListViewModel {
 
                 case _ as TemplatesListViewModelAction.Delete.Selection.Exit:
                     
-                    //withAnimation {
+                    withAnimation {
                         
                         state = .normal
                         updateNavBar(state: .regular(nil))
@@ -387,12 +387,13 @@ private extension TemplatesListViewModel {
                             
                             item.state = .normal
                         }
-                    //}
+                    }
 
                 case let payload as TemplatesListViewModelAction.Delete.Selection.ToggleItem:
-                    guard let item = itemsRaw.value.first(where: { $0.id == payload.itemId}) else {
-                        return
-                    }
+                    
+                    guard let item = itemsRaw.value.first(where: { $0.id == payload.itemId})
+                    else { return }
+                    
                     let action: (ItemViewModel.ID) -> Void = {[weak self] itemId in
                         
                         self?.action.send(TemplatesListViewModelAction.Delete.Selection.ToggleItem(itemId: itemId))
@@ -409,6 +410,34 @@ private extension TemplatesListViewModel {
                             
                             selectedItemsIds.value.insert(item.id)
                             item.state = .select(.init(isSelected: true, action: action))
+                        }
+                    }
+              //SelectAll
+                case _ as TemplatesListViewModelAction.Delete.Selection.SelectAll:
+                    
+                    let action: (ItemViewModel.ID) -> Void = {[weak self] itemId in
+                        
+                        self?.action.send(TemplatesListViewModelAction.Delete.Selection.ToggleItem(itemId: itemId))
+                    }
+                    
+                    if selectedItemsIds.value.count == items.count {
+                        //deselect all
+                        for item in items {
+                            if selectedItemsIds.value.contains(item.id) {
+                                
+                                selectedItemsIds.value.remove(item.id)
+                                item.state = .select(.init(isSelected: false, action: action))
+                            }
+                        }
+                        
+                    } else {
+                        //select all
+                        for item in items {
+                            if !selectedItemsIds.value.contains(item.id) {
+                                
+                                selectedItemsIds.value.insert(item.id)
+                                item.state = .select(.init(isSelected: true, action: action))
+                            }
                         }
                     }
                     
@@ -619,22 +648,6 @@ private extension TemplatesListViewModel {
         return updatedItems
         
     }
-    
-//    func itemAddNewTemplateViewModel() -> ItemViewModel {
-//        
-//        return ItemViewModel(id: Int.max,
-//                             sortOrder: Int.max,
-//                             state: .normal,
-//                             image: Image("Templates Add New Icon"),
-//                             title: "Добавить шаблон",
-//                             subTitle: "Из операции в разделе История",
-//                             logoImage: nil,
-//                             ammount: "",
-//                             tapAction: { [weak self] _ in  self?.action.send(TemplatesListViewModelAction.AddTemplate()) },
-//                             deleteAction: { _ in },
-//                             renameAction: { _ in },
-//                             kind: .add)
-//    }
 
 }
 
@@ -669,7 +682,7 @@ private extension TemplatesListViewModel {
             
         } else {
             
-            return tempItems.filter{ $0.title.contains(searchText) }
+            return tempItems.filter{ $0.title.capitalized.contains(searchText.capitalized) }
         }
         
     }
@@ -719,8 +732,15 @@ extension TemplatesListViewModel {
     
     func deletePannelViewModel(selectedCount: Int) -> DeletePannelViewModel {
         
-        DeletePannelViewModel(description: "Выбрано \(selectedCount)",
-                              button: .init(icon: Image("trash"), caption: "Удалить все", isEnabled: selectedCount > 0, action: {[weak self] in self?.action.send(TemplatesListViewModelAction.Delete.Selection.Accept()) }))
+        .init(description: "Выбрано \(selectedCount)",
+              selectAllButton: .init(icon: .ic24CheckCircle,
+                                     title: "Выбрать все",
+                                     isDisable: false,
+                                     action: {[weak self] in self?.action.send(TemplatesListViewModelAction.Delete.Selection.SelectAll()) }),
+              deleteButton: .init(icon: .ic24Trash2,
+                                  title: "Удалить",
+                                  isDisable: selectedCount == 0,
+                                  action: {[weak self] in self?.action.send(TemplatesListViewModelAction.Delete.Selection.Accept()) }))
     }
     
     func getEmptyTemplateListViewModel() -> EmptyTemplateListViewModel {
@@ -775,6 +795,7 @@ extension TemplatesListViewModel {
         case emptyList(EmptyTemplateListViewModel)
         case normal
         case select
+        //case placeholder(DeletePannelViewModel)
     }
     
     enum Style: Codable {
@@ -794,21 +815,33 @@ extension TemplatesListViewModel {
     class DeletePannelViewModel: ObservableObject {
 
         @Published var description: String
-        let button: ButtonViewModel
+        let selectAllButton: PanelButtonViewModel
+        let deleteButton: PanelButtonViewModel
         
-        struct ButtonViewModel {
-            
-            let icon: Image
-            let caption: String
-            let isEnabled: Bool
-            let action: () -> Void
-        }
-        
-        internal init(description: String, button: ButtonViewModel) {
+        init(description: String,
+             selectAllButton: PanelButtonViewModel,
+             deleteButton: PanelButtonViewModel) {
             
             self.description = description
-            self.button = button
+            self.selectAllButton = selectAllButton
+            self.deleteButton = deleteButton
         }
+    }
+    
+    class PanelButtonViewModel {
+        
+        let icon: Image
+        let title: String
+        let isDisable: Bool
+        let action: () -> Void
+        
+        init(icon: Image, title: String, isDisable: Bool, action: @escaping () -> Void) {
+            self.icon = icon
+            self.title = title
+            self.isDisable = isDisable
+            self.action = action
+        }
+        
     }
     
     struct EmptyTemplateListViewModel {
