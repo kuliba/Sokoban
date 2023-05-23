@@ -151,10 +151,10 @@ extension ProductData.Filter {
                 return nil
             }
 
-            if let loanBaseParam = productCard.loanBaseParam {
+            if productCard.loanBaseParam != nil {
                 
-                // loan card
-                return productCard.status == .active && productCard.statusPc == .active && loanBaseParam.clientId == productCard.ownerId
+                // credit card
+                return productCard.status == .active && productCard.statusPc == .active
                 
             } else {
                
@@ -249,7 +249,7 @@ extension ProductData.Filter {
                 return nil
             }
             
-            return productDeposit.isDemandDepositProduct
+            return productDeposit.isDemandDeposit
         }
     }
 }

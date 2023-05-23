@@ -457,13 +457,30 @@ extension Model {
                     title: parameterData.title,
                     validator: parameterData.validator, group: .init(id: "fio", type: .contact))
                 
-            case Payments.Parameter.Identifier.countryPhone.rawValue, "bPhone":
+            case Payments.Parameter.Identifier.countryPhone.rawValue:
                 let phoneId = Payments.Parameter.Identifier.countryPhone.rawValue
                 if case let .direct(phone: phone, countryId: _, serviceData: _) = operation.source {
                     
-                    let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: phone), title: parameterData.title, placeholder: parameterData.subTitle)
+                    // TODO: Create Model mock for testing
+                    let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: phone), title: parameterData.title, placeholder: parameterData.subTitle, countryCode: .armenian)
                     return phoneParameter
+                    
                 } else {
+                    
+                    // TODO: Create Model mock for testing
+                    let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: nil), title: parameterData.title, placeholder: parameterData.subTitle)
+                    return phoneParameter
+                }
+                
+            case Payments.Parameter.Identifier.countrybPhone.rawValue:
+                let phoneId = Payments.Parameter.Identifier.countrybPhone.rawValue
+                if case let .direct(phone: phone, countryId: _, serviceData: _) = operation.source {
+                    
+                    let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: phone), title: parameterData.title, placeholder: parameterData.subTitle, countryCode: .turkey)
+                    return phoneParameter
+                    
+                } else {
+                    
                     let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: nil), title: parameterData.title, placeholder: parameterData.subTitle)
                     return phoneParameter
                 }
