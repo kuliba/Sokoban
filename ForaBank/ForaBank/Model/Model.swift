@@ -109,10 +109,6 @@ class Model {
     //MARK: ClientInform show flags
     var clientInformStatus: ClientInformStatus
     
-    //TODO: remove when all templates will be implemented
-    //let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
-    //let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
-    
     // services
     internal let sessionAgent: SessionAgentProtocol
     internal let serverAgent: ServerAgentProtocol

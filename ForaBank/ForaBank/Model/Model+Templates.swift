@@ -221,7 +221,7 @@ extension Model {
     }
 
     
-//paymentTemplates
+//MARK: - paymentTemplates
     
     func handleTemplatesListRequest() {
         
@@ -254,9 +254,6 @@ extension Model {
                           !data.templateList.isEmpty
                     else { return }
                         
-                    //TODO: remove when all templates will be implemented
-                    //let allowed = data.templateList.filter { self.paymentTemplatesDisplayed.contains($0.type) }
-                        
                     // update model data
                     self.paymentTemplates.value = data.templateList
                        
@@ -286,12 +283,6 @@ extension Model {
             }
         }
     }
-    
-    struct ResponseError: Error {
-
-        let message: String?
-    }
-
     
     func handleTemplatesSaveRequest(_ payload: ModelAction.PaymentTemplate.Save.Requested) {
         
@@ -366,8 +357,6 @@ extension Model {
                 case .ok:
                     // confirm templete deleted
                     self.action.send(ModelAction.PaymentTemplate.Delete.Complete())
-                    // request all templates from server
-                    self.action.send(ModelAction.PaymentTemplate.List.Requested())
                     
                 default:
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
@@ -408,5 +397,9 @@ extension Model {
         }
     }
     
+    struct ResponseError: Error {
+
+        let message: String?
+    }
     
 }

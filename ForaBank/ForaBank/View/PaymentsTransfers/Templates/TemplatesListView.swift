@@ -21,7 +21,6 @@ struct TemplatesListView: View {
         VStack {
              
             switch viewModel.state {
-                
             case .normal, .select:
                 
                 if let categorySelectorViewModel = viewModel.categorySelector {
@@ -191,7 +190,6 @@ struct TemplatesListView: View {
                 if let deletePannelViewModel = viewModel.deletePannel {
                     
                     DeletePannelView(viewModel: deletePannelViewModel)
-                        
                 }
                 
             case let .emptyList(emptyTemplateListViewModel):
@@ -360,8 +358,7 @@ extension TemplatesListView {
             }
             .frame(height: 210)
             .padding()
-            
-            
+    
         }
     }
     

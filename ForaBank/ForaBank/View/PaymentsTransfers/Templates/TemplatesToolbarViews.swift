@@ -30,7 +30,11 @@ extension TemplatesListView {
                 }
                 
                 Button(action: viewModel.searchButton.action,
-                       label: { viewModel.searchButton.icon })
+                       label: {
+                    viewModel.searchButton.icon
+                        .opacity(viewModel.isSearchButtonDisable ? 0.4 : 1.0)
+                })
+                .disabled(viewModel.isSearchButtonDisable)
                 
                 Menu {
                     
@@ -40,7 +44,12 @@ extension TemplatesListView {
                             Label(item.title, image: item.textImage)
                         }
                     }
-                } label: { viewModel.menuImage }
+                } label: {
+                    
+                    viewModel.menuImage
+                        .opacity(viewModel.isMenuDisable ? 0.4 : 1.0)
+                }
+                .disabled(viewModel.isMenuDisable)
             }
             .foregroundColor(.textSecondary)
             .overlay13 {

@@ -50,18 +50,24 @@ extension TemplatesListViewModel {
         @Published var title: String
         @Published var menuList: [MenuItemViewModel]
         @Published var searchButton: NavigationBarButtonViewModel
+        @Published var isMenuDisable: Bool
+        @Published var isSearchButtonDisable: Bool
         
         init(backButton: NavigationBarButtonViewModel,
              title: String = "Шаблоны",
              menuList: [MenuItemViewModel],
              menuImage: Image = .ic24MoreVertical,
-             searchButton: NavigationBarButtonViewModel) {
+             searchButton: NavigationBarButtonViewModel,
+             isMenuDisable: Bool = false,
+             isSearchButtonDisable: Bool = false) {
             
             self.backButton = backButton
             self.title = title
             self.menuList = menuList
             self.menuImage = menuImage
             self.searchButton = searchButton
+            self.isMenuDisable = isMenuDisable
+            self.isSearchButtonDisable = isSearchButtonDisable
         }
     }
     

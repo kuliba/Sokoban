@@ -5,7 +5,6 @@
 //  Created by Mikhail on 18.01.2022.
 //
 
-//import Foundation
 import SwiftUI
 import Combine
 
@@ -33,9 +32,7 @@ class TemplatesListViewModel: ObservableObject {
     private let selectedItemsIds: CurrentValueSubject<Set<ItemViewModel.ID>, Never> = .init([])
     private let itemsRaw: CurrentValueSubject<[ItemViewModel], Never> = .init([])
     private let categoryIndexAll = "TemplatesListViewModelCategoryAll"
-    private var deleteGroupIndex = 0
-    private var deleteGroup = [Int: Set<ItemViewModel.ID>]()
-    private var deleteGroupItemPosition = [ItemViewModel.ID: Int]()
+    
     let dismissAction: () -> Void
     
     internal init(state: State, style: Style,
@@ -127,7 +124,6 @@ private extension TemplatesListViewModel {
     
             }.store(in: &bindings)
         
-        // all templates view models storage updates
         itemsRaw
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] itemsRaw in
@@ -146,6 +142,32 @@ private extension TemplatesListViewModel {
                     updateAddNewTemplateItem()
                 }
  
+            }.store(in: &bindings)
+        
+        $items
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] items in
+                
+                switch navBarState {
+                case let .regular(viewModel):
+                    
+                    guard let viewModel else { return }
+                    
+                    if items.contains(where: { $0.kind == .deleting })
+                        || items.filter({ $0.kind == .regular }).isEmpty {
+                        
+                        viewModel.isMenuDisable = true
+                        viewModel.isSearchButtonDisable = true
+                        
+                    } else {
+                        
+                        viewModel.isMenuDisable = false
+                        viewModel.isSearchButtonDisable = false
+                    }
+                    
+                default: break
+                }
+                
             }.store(in: &bindings)
         
     // actions handlers
@@ -208,7 +230,8 @@ private extension TemplatesListViewModel {
                                 model.action.send(ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: [itemVM.id]))
                                 
                                 itemVM.timer = nil
-                                itemVM.state = .normal
+                                //itemVM.state = .normal
+                                self.itemsRaw.value.removeAll { $0.id == itemVM.id }
                             }
                         }
                         .store(in: &bindings)
@@ -286,7 +309,7 @@ private extension TemplatesListViewModel {
                     default:
                         break
                     }
-                
+            //MARK: Search
                 case let payload as TemplatesListViewModelAction.Search:
                     
                     self.items = searchedItems(itemsRaw.value, payload.text)
@@ -324,7 +347,7 @@ private extension TemplatesListViewModel {
                                 
                     self.navBarState = .regular(regularNavBarViewModel)
             
-            // Enabled Reorder
+            //MARK: Enabled Reorder
                 case _ as TemplatesListViewModelAction.ReorderItems.EditModeEnabled:
                     
                     withAnimation {
@@ -332,7 +355,7 @@ private extension TemplatesListViewModel {
                         if case .tiles = self.style { self.style = .list }
                         
                         self.categorySelector = nil
-                        self.items = self.itemsRaw.value
+                        items.removeLast()
                         self.editModeState = .active
                         self.updateNavBar(state: .reorder(nil))
                     }
@@ -381,8 +404,11 @@ private extension TemplatesListViewModel {
                 case let payload as TemplatesListViewModelAction.ReorderItems.ItemMoved:
 
                     self.items = Self.reduce(items: self.items, move: payload.move)
+                    if editModeState == .inactive {
+                        self.action.send(TemplatesListViewModelAction.ReorderItems.EditModeEnabled())
+                    }
                
-            //MultiDeleting
+            //MARK: - MultiDeleting Start
                 case _ as TemplatesListViewModelAction.Delete.Selection.Enter:
                     
                     withAnimation {
@@ -472,27 +498,17 @@ private extension TemplatesListViewModel {
             //Multi Deleting Start
                 case _ as TemplatesListViewModelAction.Delete.Selection.Accept:
                     
-                    self.deleteGroup[self.deleteGroupIndex] = self.selectedItemsIds.value
                     let deleteGroupItemsId = self.selectedItemsIds.value
-                    self.deleteGroupItemPosition = [:]
-                    
-                    selectedItemsIds.value.forEach { id in
-                        let index = self.items.firstIndex { item in item.id == id }
-                        self.deleteGroupItemPosition[id] = index
-                    }
                     
                     self.action.send(TemplatesListViewModelAction.Delete.Selection.Exit())
                     
                     let itemVM = TemplatesListViewModel.ItemViewModel
-                        .init(id: self.deleteGroupIndex,
-                              sortOrder: 0, state: .normal,
+                        .init(id: 0,
+                              sortOrder: 0,
+                              state: .normal,
                               image: Image(""),
                               title: "Выбрано \(deleteGroupItemsId.count)",
                               subTitle: "",
-                              logoImage: nil, ammount: "",
-                              tapAction: { _ in },
-                              deleteAction: { _ in },
-                              renameAction: { _ in },
                               kind: .deleting)
                     
                     itemVM.timer = MyTimer()
@@ -503,12 +519,10 @@ private extension TemplatesListViewModel {
                               countTitle: "\(timer.maxCount)",
                               cancelButton: .init(title: "Отменить",
                                                   action: { [unowned itemVM, unowned self] id in
-                            itemVM.timer = nil
-                            self.action.send(TemplatesListViewModelAction.Delete.Selection.CancelDeleting
-                                .init(deletingItemId: itemVM.id,
-                                      restoreItems: self.deleteGroupItemPosition))
-                            
-                                                                 }),
+                                    itemVM.timer = nil
+                                    self.action.send(
+                                        TemplatesListViewModelAction.Delete.Selection.CancelDeleting())
+                                    }),
                               title: itemVM.title,
                               style: self.style,
                               id: itemVM.id)
@@ -538,41 +552,36 @@ private extension TemplatesListViewModel {
 
                             } else {
                                 
-                                //model.action.send(ModelAction.PaymentTemplate.Delete.Requested
-                                //    .init(paymentTemplateIdList: Array(selectedItemsIds.value)))
+                                model.action.send(ModelAction.PaymentTemplate.Delete.Requested
+                                    .init(paymentTemplateIdList: Array(deleteGroupItemsId)))
                                 
                                 itemVM.timer = nil
-                                
-                                withAnimation {
-                                    items.removeFirst()
+                                self.itemsRaw.value.removeAll { item in
+                                    
+                                    deleteGroupItemsId.contains(item.id)
                                 }
-                                //TODO: itemsRaw
+                                
                             }
                         }
                         .store(in: &bindings)
                     
-                    self.deleteGroupIndex += 1
-//                    for itemId in selectedItemsIds.value {
-//
-//                        self.action.send(TemplatesListViewModelAction.Item.Delete(itemId: itemId))
-//                    }
             //Multi Deleting cancel
-                case let payload as TemplatesListViewModelAction.Delete.Selection.CancelDeleting:
-                    
-                    guard let index = self.items.firstIndex(where: { item in item.id == payload.deletingItemId })
-                    else { return }
+                case _ as TemplatesListViewModelAction.Delete.Selection.CancelDeleting:
                     
                     withAnimation {
-                        self.items.remove(at: index)
                         
-                        payload.restoreItems.forEach { (key: ItemViewModel.ID, value: Int) in
+                        self.updateNavBar(state: .regular(nil))
                             
-                            guard let data = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == key}),
-                                  let item = itemViewModel(with: data)
-                            else { return }
-                            
-                            self.items.insert(item, at: value)
+                        if let selectedCategoryIndex = categorySelector?.selected {
+                                
+                            self.items = sortedItems(filterredItems(self.itemsRaw.value, selectedCategoryIndex))
+                                
+                        } else {
+                                
+                            self.items = sortedItems(self.itemsRaw.value)
                         }
+                            
+                            updateAddNewTemplateItem()
                     }
                     
                 case _ as TemplatesListViewModelAction.CloseAction:

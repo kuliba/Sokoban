@@ -27,7 +27,7 @@ extension TemplatesListViewModel {
         let deleteAction: (ItemViewModel.ID) -> Void
         let renameAction: (ItemViewModel.ID) -> Void
         
-        let kind: Kind //FIXME: kind looks ugly, refactor it to subclasses
+        let kind: Kind
         
         lazy var swipeLeft: () -> Void = {
             
@@ -57,10 +57,12 @@ extension TemplatesListViewModel {
         }
         
         init(id: Int, sortOrder: Int, state: TemplatesListViewModel.ItemViewModel.State,
-            image: Image, title: String, subTitle: String, logoImage: Image?, ammount: String,
-            tapAction: @escaping (ItemViewModel.ID) -> Void,
-            deleteAction: @escaping (ItemViewModel.ID) -> Void,
-            renameAction: @escaping (ItemViewModel.ID) -> Void,
+            image: Image, title: String, subTitle: String,
+            logoImage: Image? = nil,
+            ammount: String = "",
+            tapAction: @escaping (ItemViewModel.ID) -> Void = { _ in },
+            deleteAction: @escaping (ItemViewModel.ID) -> Void = { _ in },
+            renameAction: @escaping (ItemViewModel.ID) -> Void = { _ in },
             kind: Kind = .regular) {
             
             self.id = id
