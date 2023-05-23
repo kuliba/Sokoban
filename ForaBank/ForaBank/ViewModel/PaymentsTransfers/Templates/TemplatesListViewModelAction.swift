@@ -87,6 +87,13 @@ enum TemplatesListViewModelAction {
             
             // Exit selection mode
             struct Exit: Action {}
+            
+            // cancel deleting selection
+            struct CancelDeleting: Action {
+                
+                let deletingItemId: TemplatesListViewModel.ItemViewModel.ID
+                let restoreItems: [TemplatesListViewModel.ItemViewModel.ID: Int]
+            }
         }
         
 //        // Delete single item

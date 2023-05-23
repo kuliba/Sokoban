@@ -33,6 +33,9 @@ class TemplatesListViewModel: ObservableObject {
     private let selectedItemsIds: CurrentValueSubject<Set<ItemViewModel.ID>, Never> = .init([])
     private let itemsRaw: CurrentValueSubject<[ItemViewModel], Never> = .init([])
     private let categoryIndexAll = "TemplatesListViewModelCategoryAll"
+    private var deleteGroupIndex = 0
+    private var deleteGroup = [Int: Set<ItemViewModel.ID>]()
+    private var deleteGroupItemPosition = [ItemViewModel.ID: Int]()
     let dismissAction: () -> Void
     
     internal init(state: State, style: Style,
@@ -65,8 +68,9 @@ class TemplatesListViewModel: ObservableObject {
                   model: model)
         
         updateNavBar(state: .regular(nil))
-        self.model.action.send(ModelAction.PaymentTemplate.List.Requested())
         bind()
+        
+        self.model.action.send(ModelAction.PaymentTemplate.List.Requested())
     }
 }
 
@@ -74,6 +78,28 @@ class TemplatesListViewModel: ObservableObject {
 private extension TemplatesListViewModel {
     
     func bind() {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as ModelAction.PaymentTemplate.List.Requested:
+                    
+                    guard !items.contains(where: { item in item.kind == .placeholder})
+                    else { return }
+                    self.items.insert(itemPlaceholderTemplateViewModel(), at: 0)
+                 
+                case _ as ModelAction.PaymentTemplate.List.Complete:
+                    
+                    guard items.contains(where: { item in item.kind == .placeholder})
+                    else { return }
+                
+                    self.items.removeFirst()
+                    
+                default: break
+                }
+            }.store(in: &bindings)
         
     // templates data updates from model
         model.paymentTemplates
@@ -144,6 +170,7 @@ private extension TemplatesListViewModel {
             
             //Personal Item Delete start
                 case let payload as TemplatesListViewModelAction.Item.Delete:
+                   
                     guard let _ = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}),
                           let itemVM = itemsRaw.value.first(where: { $0.id == payload.itemId})
                     else { return }
@@ -354,7 +381,8 @@ private extension TemplatesListViewModel {
                 case let payload as TemplatesListViewModelAction.ReorderItems.ItemMoved:
 
                     self.items = Self.reduce(items: self.items, move: payload.move)
-                    
+               
+            //MultiDeleting
                 case _ as TemplatesListViewModelAction.Delete.Selection.Enter:
                     
                     withAnimation {
@@ -440,14 +468,111 @@ private extension TemplatesListViewModel {
                             }
                         }
                     }
-                    
+                
+            //Multi Deleting Start
                 case _ as TemplatesListViewModelAction.Delete.Selection.Accept:
+                    
+                    self.deleteGroup[self.deleteGroupIndex] = self.selectedItemsIds.value
+                    let deleteGroupItemsId = self.selectedItemsIds.value
+                    self.deleteGroupItemPosition = [:]
+                    
+                    selectedItemsIds.value.forEach { id in
+                        let index = self.items.firstIndex { item in item.id == id }
+                        self.deleteGroupItemPosition[id] = index
+                    }
                     
                     self.action.send(TemplatesListViewModelAction.Delete.Selection.Exit())
                     
-                    for itemId in selectedItemsIds.value {
-                      
-                        self.action.send(TemplatesListViewModelAction.Item.Delete(itemId: itemId))
+                    let itemVM = TemplatesListViewModel.ItemViewModel
+                        .init(id: self.deleteGroupIndex,
+                              sortOrder: 0, state: .normal,
+                              image: Image(""),
+                              title: "Выбрано \(deleteGroupItemsId.count)",
+                              subTitle: "",
+                              logoImage: nil, ammount: "",
+                              tapAction: { _ in },
+                              deleteAction: { _ in },
+                              renameAction: { _ in },
+                              kind: .deleting)
+                    
+                    itemVM.timer = MyTimer()
+                    guard let timer = itemVM.timer else { return }
+                    
+                    let deletingViewModel = ItemViewModel.DeletingProgressViewModel
+                        .init(progress: 0,
+                              countTitle: "\(timer.maxCount)",
+                              cancelButton: .init(title: "Отменить",
+                                                  action: { [unowned itemVM, unowned self] id in
+                            itemVM.timer = nil
+                            self.action.send(TemplatesListViewModelAction.Delete.Selection.CancelDeleting
+                                .init(deletingItemId: itemVM.id,
+                                      restoreItems: self.deleteGroupItemPosition))
+                            
+                                                                 }),
+                              title: itemVM.title,
+                              style: self.style,
+                              id: itemVM.id)
+                    
+                    itemVM.state = .deleting(deletingViewModel)
+                    
+                    withAnimation {
+                        
+                        self.items.insert(itemVM, at: 0)
+                        self.items.removeAll { item in
+                            
+                            deleteGroupItemsId.contains(item.id)
+                        }
+                    }
+                    
+                    itemVM.timer?.timerPublish
+                        .receive(on: DispatchQueue.main)
+                        .map({ [unowned timer] output in
+                            return Int(output.timeIntervalSince(timer.startDate))
+                        })
+                        .sink { [unowned self, unowned timer] timerValue in
+                            
+                            if timerValue < timer.maxCount + 1 {
+
+                                deletingViewModel.progress = timerValue
+                                deletingViewModel.countTitle = "\(timer.maxCount - timerValue)"
+
+                            } else {
+                                
+                                //model.action.send(ModelAction.PaymentTemplate.Delete.Requested
+                                //    .init(paymentTemplateIdList: Array(selectedItemsIds.value)))
+                                
+                                itemVM.timer = nil
+                                
+                                withAnimation {
+                                    items.removeFirst()
+                                }
+                                //TODO: itemsRaw
+                            }
+                        }
+                        .store(in: &bindings)
+                    
+                    self.deleteGroupIndex += 1
+//                    for itemId in selectedItemsIds.value {
+//
+//                        self.action.send(TemplatesListViewModelAction.Item.Delete(itemId: itemId))
+//                    }
+            //Multi Deleting cancel
+                case let payload as TemplatesListViewModelAction.Delete.Selection.CancelDeleting:
+                    
+                    guard let index = self.items.firstIndex(where: { item in item.id == payload.deletingItemId })
+                    else { return }
+                    
+                    withAnimation {
+                        self.items.remove(at: index)
+                        
+                        payload.restoreItems.forEach { (key: ItemViewModel.ID, value: Int) in
+                            
+                            guard let data = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == key}),
+                                  let item = itemViewModel(with: data)
+                            else { return }
+                            
+                            self.items.insert(item, at: value)
+                        }
                     }
                     
                 case _ as TemplatesListViewModelAction.CloseAction:
@@ -502,6 +627,30 @@ private extension TemplatesListViewModel {
                 model.paymentTemplatesViewSettings.value = Settings(style: style)
                 
             }.store(in: &bindings)
+        
+//        model.paymentTemplatesUpdating
+//            .receive(on: DispatchQueue.main)
+//            .sink { [unowned self] isUpdating in
+//
+//                withAnimation {
+//
+//                    if isUpdating {
+//
+//                        guard !items.contains(where: { item in item.kind == .placeholder})
+//                        else { return }
+//                        self.items.insert(itemPlaceholderTemplateViewModel(), at: 0)
+//
+//                    } else {
+//
+//                        guard items.contains(where: { item in item.kind == .placeholder})
+//                        else { return }
+//
+//                        items.removeFirst()
+//
+//                    }
+//                }
+//
+//            }.store(in: &bindings)
             
     }
     

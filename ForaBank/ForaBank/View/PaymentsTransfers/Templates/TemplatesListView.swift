@@ -40,7 +40,7 @@ struct TemplatesListView: View {
                         ForEach($viewModel.items) { $item in
                             
                             switch item.kind {
-                            case .regular:
+                            case .regular, .deleting:
                                 
                                 if #available(iOS 15.0, *) {
                                     
@@ -126,8 +126,6 @@ struct TemplatesListView: View {
                                             .background(Color.white)
                                     )
                                 
-                            case .deleting:
-                                EmptyView() //TODO:
                             } //swich kind
                         }//ForEach
                         .onMove { indexes, destination in
@@ -152,7 +150,7 @@ struct TemplatesListView: View {
                             ForEach(viewModel.items) { item in
                                 
                                 switch item.kind {
-                                case .regular:
+                                case .regular, .deleting:
                                     
                                     TemplateItemView(viewModel: item,
                                                      style: .constant(.tiles),
@@ -179,9 +177,6 @@ struct TemplatesListView: View {
                                     
                                     PlaceholderItemView(style: .constant(.tiles))
                                     
-                                case .deleting:
-                                    
-                                    EmptyView() //TODO:
                                 } //kind swith
                                 
                             

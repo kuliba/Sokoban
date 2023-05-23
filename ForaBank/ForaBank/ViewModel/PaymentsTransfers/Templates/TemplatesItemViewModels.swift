@@ -244,6 +244,22 @@ extension TemplatesListViewModel {
                              kind: .add)
     }
     
+    func itemPlaceholderTemplateViewModel() -> ItemViewModel {
+        
+        return ItemViewModel(id: 0,
+                             sortOrder: 0,
+                             state: .normal,
+                             image: Image(""),
+                             title: "Placeholder",
+                             subTitle: "",
+                             logoImage: nil,
+                             ammount: "",
+                             tapAction: { _ in },
+                             deleteAction: { _ in },
+                             renameAction: { _ in },
+                             kind: .placeholder)
+    }
+    
     
     func getItemsMenuViewModel() -> [ItemViewModel.ItemActionViewModel]? {
             
