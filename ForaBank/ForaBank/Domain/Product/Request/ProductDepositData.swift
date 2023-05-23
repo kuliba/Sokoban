@@ -17,8 +17,9 @@ class ProductDepositData: ProductData {
     let minimumBalance: Double?
     let endDate: Date?
     let endDateNf: Bool
+    let isDemandDeposit: Bool
     
-    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], depositProductId: Int, depositId: Int, interestRate: Double, accountId: Int, creditMinimumAmount: Double, minimumBalance: Double, endDate: Date?, endDateNf: Bool, order: Int, visibility: Bool,
+    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], depositProductId: Int, depositId: Int, interestRate: Double, accountId: Int, creditMinimumAmount: Double, minimumBalance: Double, endDate: Date?, endDateNf: Bool, isDemandDeposit: Bool, order: Int, visibility: Bool,
          smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
         
         self.depositProductId = depositProductId
@@ -29,17 +30,18 @@ class ProductDepositData: ProductData {
         self.minimumBalance = minimumBalance
         self.endDate = endDate
         self.endDateNf = endDateNf
+        self.isDemandDeposit = isDemandDeposit
         
         super.init(id: id, productType: productType, number: number, numberMasked: numberMasked, accountNumber: accountNumber, balance: balance, balanceRub: balanceRub, currency: currency, mainField: mainField, additionalField: additionalField, customName: customName, productName: productName, openDate: openDate, ownerId: ownerId, branchId: branchId, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: extraLargeDesign, largeDesign: largeDesign, mediumDesign: mediumDesign, smallDesign: smallDesign, fontDesignColor: fontDesignColor, background: background, order: order, isVisible: visibility, smallDesignMd5hash: smallDesignMd5hash, smallBackgroundDesignHash: smallBackgroundDesignHash)
     }
     
     private enum CodingKeys : String, CodingKey {
         
+        case interestRate, creditMinimumAmount, minimumBalance, endDate
+        case isDemandDeposit = "demandDeposit"
         case depositProductId = "depositProductID"
         case depositId = "depositID"
         case accountId = "accountID"
-        case interestRate, creditMinimumAmount, minimumBalance
-        case endDate
         case endDateNf = "endDate_nf"
     }
     
@@ -51,6 +53,7 @@ class ProductDepositData: ProductData {
         accountId = try container.decode(Int.self, forKey: .accountId)
         creditMinimumAmount = try container.decodeIfPresent(Double.self, forKey: .creditMinimumAmount)
         minimumBalance = try container.decodeIfPresent(Double.self, forKey: .minimumBalance)
+        isDemandDeposit = try container.decode(Bool.self, forKey: .isDemandDeposit)
         if let endDateValue = try container.decodeIfPresent(Int.self, forKey: .endDate) {
             
             endDate = Date.dateUTC(with: endDateValue)
@@ -72,6 +75,7 @@ class ProductDepositData: ProductData {
         try container.encode(accountId, forKey: .accountId)
         try container.encodeIfPresent(creditMinimumAmount, forKey: .creditMinimumAmount)
         try container.encodeIfPresent(minimumBalance, forKey: .minimumBalance)
+        try container.encodeIfPresent(isDemandDeposit, forKey: .isDemandDeposit)
         if let endDate = endDate {
             
             try container.encode(endDate.secondsSince1970UTC, forKey: .endDate)
@@ -90,7 +94,8 @@ class ProductDepositData: ProductData {
         lhs.interestRate == rhs.interestRate &&
         lhs.accountId == rhs.accountId &&
         lhs.creditMinimumAmount == rhs.creditMinimumAmount &&
-        lhs.minimumBalance == rhs.minimumBalance
+        lhs.minimumBalance == rhs.minimumBalance &&
+        lhs.isDemandDeposit == rhs.isDemandDeposit
     }
 }
 
@@ -100,7 +105,7 @@ extension ProductDepositData {
         
     func availableTransferType(with info: DepositInfoDataItem?) -> TransferType? {
         
-        if isDemandDeposit == true {
+        if isDemandDeposit, allowDebit {
             
             return .remains
             
@@ -110,58 +115,57 @@ extension ProductDepositData {
                 
                 // Fora Hit Deposit
                 
-                if let endDate = endDate {
+                if endDateNf {
                     
-                    if endDate > Date() {
+                    if let balance = info?.balance {
                         
-                        if let interestAmount = info?.sumPayPrc {
+                        return .close(balance)
+                        
+                    } else {
+                        
+                        return .interest(0)
+                    }
+                    
+                } else {
+                    
+                    if let endDate = endDate {
+                        
+                        if endDate > Date() {
                             
-                            return .interest(interestAmount)
+                            if let interestAmount = info?.sumPayPrc {
+                                
+                                return .interest(interestAmount)
+                                
+                            } else {
+                                
+                                return .interest(0)
+                            }
                             
                         } else {
                             
-                            return .interest(0)
+                            return .remains
                         }
-  
+                        
                     } else {
                         
                         return .remains
                     }
-
-                } else {
-                    
-                    return nil
                 }
-
+                
             } else {
                 
                 // All other deposits
                 
-                guard let endDate = endDate else {
+                if endDateNf,
+                   let balance = info?.balance {
+                    
+                    return .close(balance)
+                } else {
+                   
                     return nil
                 }
-                
-                guard endDate <= Date() else {
-                    return nil
-                }
-                
-                return .remains
             }
         }
-    }
-    
-    var isDemandDeposit: Bool {
-        
-        guard let accountNumber = accountNumber else {
-            return false
-        }
-        
-        return accountNumber.hasPrefix("42301")
-    }
-    
-    var isDemandDepositProduct: Bool {
-        
-        return isDemandDeposit && depositProductId == 3194
     }
     
     var depositType: DepositType? {
@@ -171,23 +175,31 @@ extension ProductDepositData {
     
     var isCanClosedDeposit: Bool {
         
-        if let endDate = endDate, endDate <= Date() {
+        !endDateNf
+    }
+    
+    var isCanReplenish: Bool {
+        
+        if isDemandDeposit {
+        
+            return allowCredit
             
-          return false
+        } else if let endDate = endDate,
+           endDate <= Date() {
             
-        } else if endDate == nil {
+           return false
             
-            return false
         } else {
             
-           return true
+            return true
         }
     }
     
-    enum TransferType {
+    enum TransferType: Equatable {
         
         case remains
         case interest(Double)
+        case close(Double)
     }
     
     enum DepositType: Int {

@@ -40,8 +40,8 @@ class ParameterDataTests: XCTestCase {
         XCTAssertEqual(result?.count, 2)
         XCTAssertEqual(result?[0].id, "RUB")
         XCTAssertEqual(result?[0].name, "RUB")
-        XCTAssertEqual(result?[1].id, "EUR")
-        XCTAssertEqual(result?[1].name, "EUR")
+        XCTAssertEqual(result?[1].id, "USD")
+        XCTAssertEqual(result?[1].name, "USD")
         
     }
 }

@@ -80,6 +80,7 @@
       "balanceRUB": 1000123,
       "XLDesign": "string",
       "visibility": true,
+      "demandDeposit": true,
       "order": 0,
       "smallBackgroundDesignHash": "",
       "smallDesignMd5hash": ""
