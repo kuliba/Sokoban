@@ -13,84 +13,91 @@ struct RootView: View {
     
     var body: some View {
         
-        ZStack(alignment: .top) {
+        //GeometryReader { geo in
             
-            TabView(selection: $viewModel.selected) {
-                
-                NavigationView {
+            ZStack(alignment: .top) {
+                GeometryReader { geo in
                     
-                    MainView(viewModel: viewModel.mainViewModel)
-                    
-                }
-                .tabItem {
-                    
-                    tabIcon(type: .main, selected: viewModel.selected)
-                    Text(RootViewModel.TabType.main.name)
-                        .foregroundColor(.black)
-                        .accessibilityIdentifier("tabBarMainButton")
-                }
-                .tag(RootViewModel.TabType.main)
-                
-                NavigationView {
-                    
-                    PaymentsTransfersView(viewModel: viewModel.paymentsViewModel)
-                }
-                .tabItem {
-                    
-                    tabIcon(type: .payments, selected: viewModel.selected)
-                    Text(RootViewModel.TabType.payments.name)
-                        .foregroundColor(.black)
-                        .accessibilityIdentifier("tabBarTransferButton")
-                }
-                .tag(RootViewModel.TabType.payments)
-                
-                ChatView(viewModel: viewModel.chatViewModel)
-                    .tabItem {
+                    TabView(selection: $viewModel.selected) {
                         
-                        tabIcon(type: .chat, selected: viewModel.selected)
-                        Text(RootViewModel.TabType.chat.name)
-                            .foregroundColor(.black)
-                            .accessibilityIdentifier("tabBarChatButton")
+                        NavigationView {
+                            
+                            MainView(viewModel: viewModel.mainViewModel)
+                            
+                        }
+                        .tabItem {
+                            
+                            tabIcon(type: .main, selected: viewModel.selected)
+                            Text(RootViewModel.TabType.main.name)
+                                .foregroundColor(.black)
+                                .accessibilityIdentifier("tabBarMainButton")
+                        }
+                        .tag(RootViewModel.TabType.main)
+                        
+                        NavigationView {
+                            
+                            PaymentsTransfersView(viewModel: viewModel.paymentsViewModel)
+                        }
+                        .tabItem {
+                            
+                            tabIcon(type: .payments, selected: viewModel.selected)
+                            Text(RootViewModel.TabType.payments.name)
+                                .foregroundColor(.black)
+                                .accessibilityIdentifier("tabBarTransferButton")
+                        }
+                        .tag(RootViewModel.TabType.payments)
+                        
+                        ChatView(viewModel: viewModel.chatViewModel)
+                            .tabItem {
+                                
+                                tabIcon(type: .chat, selected: viewModel.selected)
+                                Text(RootViewModel.TabType.chat.name)
+                                    .foregroundColor(.black)
+                                    .accessibilityIdentifier("tabBarChatButton")
+                            }
+                            .tag(RootViewModel.TabType.chat)
+                        
+                    } //tabView
+                    .accentColor(.black)
+                    .accessibilityIdentifier("tabBar")
+                    .environment(\.mainWindowSize, geo.size)
+                    .onAppear { print("d: \(geo.size.width)")}
+                    
+                    if let link = viewModel.link  {
+                        
+                        switch link {
+                        case .messages(let messagesHistoryViewModel):
+                            MessagesHistoryView(viewModel: messagesHistoryViewModel)
+                                .zIndex(.greatestFiniteMagnitude)
+                            
+                        case .me2me(let requestMeToMeModel):
+                            MeToMeRequestView(viewModel: requestMeToMeModel)
+                                .zIndex(.greatestFiniteMagnitude)
+                            
+                        case .c2b(let viewModel):
+                            
+                            NavigationView {
+                                
+                                C2BDetailsView(viewModel: viewModel)
+                                    .navigationBarTitle("", displayMode: .inline)
+                                    .navigationBarBackButtonHidden(true)
+                                    .edgesIgnoringSafeArea(.all)
+                            }
+                            
+                        case .userAccount(let viewModel):
+                            
+                            NavigationView {
+                                
+                                UserAccountView(viewModel: viewModel)
+                            }
+                        }
                     }
-                    .tag(RootViewModel.TabType.chat)
-                
+                } //geo
             }
-            .accentColor(.black)
-            .accessibilityIdentifier("tabBar")
-            
-            if let link = viewModel.link  {
-                
-                switch link {
-                case .messages(let messagesHistoryViewModel):
-                    MessagesHistoryView(viewModel: messagesHistoryViewModel)
-                        .zIndex(.greatestFiniteMagnitude)
-
-                case .me2me(let requestMeToMeModel):
-                    MeToMeRequestView(viewModel: requestMeToMeModel)
-                        .zIndex(.greatestFiniteMagnitude)
-
-                case .c2b(let viewModel):
-                   
-                    NavigationView {
-
-                        C2BDetailsView(viewModel: viewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
-                            .edgesIgnoringSafeArea(.all)
-                    }
-
-                case .userAccount(let viewModel):
-   
-                    NavigationView {
-                          
-                          UserAccountView(viewModel: viewModel)
-                      }
-                }
-            }
-            
-        }.alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
+            .alert(item: $viewModel.alert, content: { alertViewModel in
+                Alert(with: alertViewModel)
+            })
+        
     }
 }
 
