@@ -69,5 +69,5 @@ struct PaymentsView_Previews: PreviewProvider {
 
 extension PaymentsViewModel {
     
-    static let sample = PaymentsViewModel(content: .service(.init(header: .init(title: "test"), content: [], link: nil, model: .emptyMock)), model: .emptyMock, closeAction: {})
+    static let sample = PaymentsViewModel(content: .service(.init(navigationBar: .init(title: "Test"), content: [], link: nil, model: .emptyMock)), model: .emptyMock, closeAction: {})
 }

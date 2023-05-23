@@ -103,6 +103,7 @@
                 "XLDesign": "string",
                 "visibility": true,
                 "order": 0,
+                "demandDeposit": true,
                 "smallBackgroundDesignHash": "",
                 "smallDesignMd5hash": "",
                 "detailedRatesUrl": "",

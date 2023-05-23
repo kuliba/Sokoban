@@ -62,8 +62,17 @@ extension PaymentsInputPhoneView {
             let title = parameterInput.title
             let phone = parameterInput.parameter.value
             let placeholder = parameterInput.placeholder ?? parameterInput.title
+            var countryCode: [CountryCodeReplace] = []
             
-            let textView = TextViewPhoneNumberView.ViewModel(style: .payments, text: phone, placeHolder: .text(placeholder), filterSymbols: [Character("-"), Character("("), Character(")"), Character("+")], firstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")], phoneNumberFormatter: PhoneNumberKitFormater())
+            if let countryCodes = parameterInput.countryCode {
+             
+                countryCode = countryCodes.compactMap( {
+                    
+                    CountryCodeReplace(from: $0.from, to: $0.to)
+                })
+            }
+            
+            let textView = TextViewPhoneNumberView.ViewModel(style: .payments, text: phone, placeHolder: .text(placeholder), filterSymbols: .defaultFilterSymbols, countryCodeReplaces: countryCode, phoneNumberFormatter: PhoneNumberKitFormater())
             
             self.init(textView: textView, phone: phone, title: title, model: model, source: parameterInput)
             

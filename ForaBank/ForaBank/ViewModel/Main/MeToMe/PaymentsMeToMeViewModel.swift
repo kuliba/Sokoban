@@ -79,7 +79,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     switch payload.result {
                         
                     case .success(let settings):
-                        if settings.allowCloseDeposit, let productIdFrom = swapViewModel.productIdFrom, let productFrom = model.product(productId: productIdFrom) as? ProductDepositData, productFrom.isDemandDeposit  {
+                        if settings.allowCloseDeposit, let productIdFrom = swapViewModel.productIdFrom, let productFrom = model.product(productId: productIdFrom) as? ProductDepositData, productFrom.isDemandDeposit {
 
                             let currencySymbol = model.dictionaryCurrencySymbol(for: productFrom.currency) ?? productFrom.currency
 
@@ -328,17 +328,38 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 makeAlert(.emptyData(message: "Счет списания совпадает со счетом зачисления. Выберите другой продукт"))
                                 
                             } else {
-                                if (productFrom is ProductDepositData), paymentsAmount.textField.value == productFrom.balanceValue {
-                                    // проверка разрешения закрытия вкладов
-                                    self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
-                                }
-                                else {
-                                    model.action.send(ModelAction.Payment.MeToMe.CreateTransfer.Request(
-                                    amount: paymentsAmount.textField.value,
-                                    currency: productFrom.currency,
-                                    productFrom: productIdFrom,
-                                    productTo: productIdTo))
                                 
+                                if let depositProduct = productFrom as? ProductDepositData {
+                                
+                                    if depositProduct.isDemandDeposit,
+                                       depositProduct.allowDebit,
+                                       paymentsAmount.textField.value == productFrom.balanceValue {
+                                        
+                                        // проверка разрешения закрытия вкладов
+                                        self.model.action.send(
+                                            ModelAction.Settings.ApplicationSettings.Request()
+                                        )
+                                        
+                                    } else if depositProduct.allowDebit,
+                                              !depositProduct.endDateNf {
+                                        
+                                        model.action.send(ModelAction.Payment.MeToMe.CreateTransfer.Request(
+                                            amount: paymentsAmount.textField.value,
+                                            currency: productFrom.currency,
+                                            productFrom: productIdFrom,
+                                            productTo: productIdTo))
+                                        
+                                        state = .loading
+                                    }
+                                    
+                                } else {
+                                    
+                                    model.action.send(ModelAction.Payment.MeToMe.CreateTransfer.Request(
+                                        amount: paymentsAmount.textField.value,
+                                        currency: productFrom.currency,
+                                        productFrom: productIdFrom,
+                                        productTo: productIdTo))
+                                    
                                     state = .loading
                                 }
                             }

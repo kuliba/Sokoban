@@ -1,5 +1,5 @@
 //
-//  TextFieldPhoneFormatableComponent.swift
+//  TextViewPhoneNumberViewComponent.swift
 //  ForaBank
 //
 //  Created by Дмитрий Савушкин on 24.10.2022.
@@ -25,13 +25,13 @@ extension TextViewPhoneNumberView {
         let style: Style
         let placeHolder: PlaceHolder
         let filterSymbols: [Character]?
-        let firstDigitReplaceList: [Replace]?
+        let countryCodeReplaces: [CountryCodeReplace]?
         
         let phoneNumberFormatter: PhoneNumberFormaterProtocol
         
         var hasValue: Bool { (text != "" && text != nil) ? true : false }
 
-        init(style: Style = .general, text: String? = nil, placeHolder: PlaceHolder, isEditing: Bool = false, state: State = .idle, toolbar: ToolbarViewModel? = nil, filterSymbols: [Character]? = nil, firstDigitReplaceList: [Replace]? = nil, phoneNumberFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater()) {
+        init(style: Style = .general, text: String? = nil, placeHolder: PlaceHolder, isEditing: Bool = false, state: State = .idle, toolbar: ToolbarViewModel? = nil, filterSymbols: [Character]? = nil, countryCodeReplaces: [CountryCodeReplace] = [], phoneNumberFormatter: PhoneNumberFormaterProtocol = PhoneNumberKitFormater()) {
             
             self.style = style
             self.text = text
@@ -40,7 +40,7 @@ extension TextViewPhoneNumberView {
             self.state = state
             self.toolbar = toolbar
             self.filterSymbols = filterSymbols
-            self.firstDigitReplaceList = firstDigitReplaceList
+            self.countryCodeReplaces = countryCodeReplaces
             self.phoneNumberFormatter = phoneNumberFormatter
             self.dismissKeyboard = {}
         }
@@ -49,9 +49,8 @@ extension TextViewPhoneNumberView {
             
             switch placeHolder {
             case .contacts:
-                let filterSymbols = [Character("-"), Character("("), Character(")"), Character("+")]
                 
-                self.init(placeHolder: placeHolder, filterSymbols: filterSymbols, firstDigitReplaceList: [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")], phoneNumberFormatter: PhoneNumberKitFormater())
+                    self.init(placeHolder: placeHolder, filterSymbols: .defaultFilterSymbols, countryCodeReplaces: .russian, phoneNumberFormatter: PhoneNumberKitFormater())
                 
             default:
                 self.init(placeHolder: placeHolder)
@@ -66,10 +65,7 @@ extension TextViewPhoneNumberView {
             switch placeHolder {
             case .phone:
                 
-                let symbols: [Character] = ["-", "(", ")", "+"]
-                let replaceList: [Replace] = [.init(from: "8", to: "7"), .init(from: "9", to: "+7 9")]
-                
-                self.init(style: style, placeHolder: placeHolder, filterSymbols: symbols, firstDigitReplaceList: replaceList)
+                    self.init(style: style, placeHolder: placeHolder, filterSymbols: .defaultFilterSymbols, countryCodeReplaces: .russian)
             
             default:
                 self.init(style: style, placeHolder: placeHolder, state: .idle)
@@ -95,15 +91,96 @@ extension TextViewPhoneNumberView {
             return false
         }
         
-        
         func setText(to text: String?) {
+            
+            if let text {
+
+               shouldChangeTextIn(
+                         .init(location: 0, length: self.text?.count ?? 0),
+                         replacementText: text
+                     )
+
+            } else {
+
+              DispatchQueue.main.async {
+                             
+                 self.text = nil
+              }
+            }
+         }
+
+        
+        func textViewDidBeginEditing() {
             
             DispatchQueue.main.async {
                 
-                self.text = text
+                if self.text != nil {
+                    
+                    self.state = .editing
+                    
+                } else {
+                    
+                    self.state = .selected
+                }
+                
+                self.isEditing.value = true
             }
-
+        }
+        
+        func state(for text: String?) -> TextViewPhoneNumberView.ViewModel.State {
+            
+            if text != nil {
+                
+                return .editing
+                
+            } else {
+                
+                return .selected
+            }
+        }
+        
+        func textViewDidEndEditing() {
+            
+            DispatchQueue.main.async {
+                
+                self.state = .idle
+                self.isEditing.value = false
+            }
+        }
+        
+        @discardableResult
+        func shouldChangeTextIn(
+            _ range: NSRange,
+            replacementText text: String
+        ) -> Bool {
+            
+            let updated: String?
+            
+            switch style {
+            case .order:
+                updated = TextViewPhoneNumberView.updateMasked(value: self.text, inRange: range, update: text, countryCodeReplaces: countryCodeReplaces, phoneFormatter: phoneNumberFormatter, filterSymbols: filterSymbols)
+                    
+            case .banks:
+                updated = self.text.updateMasked(inRange: range, update: text, limit: nil, style: .default)
+                
+            case .abroad:
+                updated = self.text.updateMasked(inRange: range, update: text, limit: nil, style: .default).filter(\.isLetter)
+                
+            case .payments:
+                updated = TextViewPhoneNumberView.updateMasked(value: self.text, inRange: range, update: text, countryCodeReplaces: countryCodeReplaces, phoneFormatter: phoneNumberFormatter, filterSymbols: filterSymbols)
+                
+            default:
+                updated = self.text.updateMasked(inRange: range, update: text, limit: nil, style: .default)
+            }
+            
+            DispatchQueue.main.async {
+                
+                self.text = updated
+            }
+            
             self.isEditing.send(true)
+            
+            return false
         }
         
         enum State {
@@ -122,7 +199,7 @@ extension TextViewPhoneNumberView {
             case abroad
         }
         
-        enum PlaceHolder {
+        enum PlaceHolder: Equatable {
             
             case contacts
             case banks
@@ -146,15 +223,6 @@ extension TextViewPhoneNumberView {
     }
 }
 
-extension TextViewPhoneNumberView.ViewModel {
-    
-    struct Replace {
-        
-        let from: Character
-        let to: String
-    }
-}
-
 struct TextViewPhoneNumberView: UIViewRepresentable {
     
     @ObservedObject var viewModel: TextViewPhoneNumberView.ViewModel
@@ -167,29 +235,30 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
     func makeUIView(context: Context) -> UITextView {
         
         let textView = WrappedTextView()
-        textView.font = font
+        switch viewModel.style {
+        case .payments:
+            textView.font = .init(name: "Inter-Medium", size: 16.0)
+            
+        case .order:
+            textView.font = .init(name: "Inter", size: 16)
+            
+        default:
+            textView.font = font
+        }
+        
         textView.backgroundColor = backgroundColor.uiColor()
-        textView.textColor = .lightGray
         textView.tintColor = tintColor.uiColor()
-        textView.text = viewModel.placeHolder.title
+        render(textView)
+
         textView.delegate = context.coordinator
         textView.isScrollEnabled = false
         textView.textContainer.lineFragmentPadding = 0
         textView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         textView.setContentHuggingPriority(.defaultHigh, for: .vertical)
         
-        switch viewModel.style {
-        case .general, .banks, .abroad:
-            textView.keyboardType = .default
-            
-        case .payments:
-            textView.keyboardType = .phonePad
-            textView.font = .init(name: "Inter-Medium", size: 16.0)
-        
-        case .order:
-            textView.keyboardType = .decimalPad
-            textView.font = .init(name: "Inter", size: 16)
-        }
+        textView.keyboardType = viewModel.style.keyboardType
+        textView.autocapitalizationType = .none
+        textView.autocorrectionType = .no
         
         viewModel.dismissKeyboard = { textView.resignFirstResponder() }
         
@@ -201,16 +270,31 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
         return textView
     }
     
-    func updateUIView(_ uiView: UITextView, context: Context) {
-
+    func updateUIView(_ textView: UITextView, context: Context) {
+        
+        render(textView)
+    }
+    
+    func render(_ textView: UITextView) {
+        
         if viewModel.hasValue {
             
-            uiView.textColor = textColor.uiColor()
-            uiView.text = viewModel.text
+            textView.text = viewModel.text
+            textView.textColor = textColor.uiColor()
+            
+        } else {
+            
+            if viewModel.state == .idle {
+                
+                textView.text = viewModel.placeHolder.title
+                
+            } else {
+                
+                textView.text = ""
+            }
+            
+            textView.textColor = .lightGray
         }
-        
-        uiView.autocapitalizationType = .none
-        uiView.autocorrectionType = .no
     }
     
     func makeCoordinator() -> Coordinator {
@@ -235,81 +319,18 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
         }
         
         func textViewDidBeginEditing(_ textView: UITextView) {
-
-            if viewModel.hasValue == false {
             
-                textView.text = ""
-            }
-            
-            textView.textColor = textColor.uiColor()
-            viewModel.state = state(for: viewModel.text)
-            viewModel.isEditing.value = true
-
+            viewModel.textViewDidBeginEditing()
         }
         
         func textViewDidEndEditing(_ textView: UITextView) {
-
-            if viewModel.hasValue == false {
             
-                textView.text = viewModel.placeHolder.title
-                textView.textColor = .lightGray
-            }
-            
-            viewModel.state = .idle
-            viewModel.isEditing.value = false
+            viewModel.textViewDidEndEditing()
         }
         
         func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        
-            switch viewModel.style {
-            case .order:
-                let result = TextViewPhoneNumberView.updateMasked(value: textView.text, inRange: range, update: text, firstDigitReplace: viewModel.firstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
-                
-                let isValidate = isOrderValidate(textView, result: result)
-                
-                switch isValidate {
-                case true: break
-                case false: return isValidate
-                }
-                
-                textView.text = result
-                viewModel.setText(to: result)
             
-            case .banks:
-                let result = textView.text.updateMasked(inRange: range, update: text, limit: nil, style: .default)
-                
-                textView.text = result
-                viewModel.setText(to: result)
-                
-            case .abroad:
-                let result = textView.text.updateMasked(inRange: range, update: text, limit: nil, style: .default).filter(\.isLetter)
-                    
-                textView.text = result
-                viewModel.setText(to: result)
-            
-            case .payments:
-                let result = TextViewPhoneNumberView.updateMasked(value: textView.text, inRange: range, update: text, firstDigitReplace: viewModel.firstDigitReplaceList, phoneFormatter: viewModel.phoneNumberFormatter, filterSymbols: viewModel.filterSymbols)
-                
-                textView.text = result
-                viewModel.setText(to: result)
-                
-            default:
-                let result = textView.text.updateMasked(inRange: range, update: text, limit: nil, style: .default)
-                
-                textView.text = result
-                viewModel.setText(to: result)
-            }
-
-            if textView.isFirstResponder {
-                
-                viewModel.state = state(for: viewModel.text)
-                
-            } else {
-                
-                viewModel.state = .idle
-            }
-            
-            return false
+            return viewModel.shouldChangeTextIn(range, replacementText: text)
         }
         
         @objc func handleDoneAction() {
@@ -319,38 +340,35 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
         @objc func handleCloseAction() {
             viewModel.toolbar?.closeButton?.action()
         }
+    }
+    
+#warning("Hardcoded phoneMaxLength in `limit` parameter default value. Need to replace with data from the backend.")
+    static func updateMasked(value: String?, inRange: NSRange, update: String, countryCodeReplaces: [CountryCodeReplace]?, phoneFormatter: PhoneNumberFormaterProtocol, filterSymbols: [Character]?, limit: Int? = 18) -> String? {
         
-        func state(for text: String?) -> TextViewPhoneNumberView.ViewModel.State {
-            
-            if viewModel.text != nil {
-                
-                return .editing
-                
-            } else {
-                
-                return .selected
-            }
+        let valueUnwraped = value ?? update
+        let didAddToValidPhone = phoneFormatter.isValid(valueUnwraped) && inRange.length == 0
+        
+        guard !didAddToValidPhone else {
+            return valueUnwraped
         }
         
-        private func isOrderValidate(_ textView: UITextView, result: String?) -> Bool {
+        var updatedValue = valueUnwraped
+        let rangeStart = valueUnwraped.index(valueUnwraped.startIndex, offsetBy: inRange.lowerBound)
+        let rangeEnd = valueUnwraped.index(valueUnwraped.startIndex, offsetBy: inRange.upperBound)
+        
+        if value != nil {
             
-            if let text = result, viewModel.phoneNumberFormatter.isValid(text) {
+            updatedValue.replaceSubrange(rangeStart..<rangeEnd, with: update)
+        }
+        
+        let filteredValue = updatedValue.replacingOccurrences(of: " ", with: "").filter { char in
+            
+            if let filterSymbols = filterSymbols {
                 
-                textView.text = result
-                viewModel.setText(to: result)
-                
-                return false
-                
-            } else {
-                
-                if let text = textView.text, let result = result {
+                for symbol in filterSymbols {
                     
-                    let expectedCharacters = "0123456789"
-                    
-                    let filterredText = text.filter { expectedCharacters.contains($0) }
-                    let filterredResult = result.filter { expectedCharacters.contains($0) }
-                    
-                    if filterredResult.count > filterredText.count, filterredText.count == 11 {
+                    if symbol == char {
+                        
                         return false
                     }
                 }
@@ -358,70 +376,47 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
             
             return true
         }
+        
+        guard filteredValue.isNumeric || phoneFormatter.isValid(update) else {
+            
+            return filteredValue.isEmpty ? nil : valueUnwraped
+        }
+        
+        var phone = updatedValue.digits
+        
+        if let countryCodeReplaces = countryCodeReplaces,
+           phone.count <= 1,
+           (!update.isEmpty || inRange == NSRange(location: 0, length: 0)) {
+            
+            phone = replaceDigits(phone: updatedValue.digits, countryCodeReplaces: countryCodeReplaces)
+        }
+        
+        let limit = limit ?? phone.count
+        let limitedPhone = String(phone.prefix(limit))
+        let phoneFormatted = phoneFormatter.partialFormatter("+\(limitedPhone)")
+        
+        return phoneFormatted
     }
     
-#warning("Hardcoded phoneMaxLength in `limit` parameter default value. Need to replace with data from the backend.")
-    static func updateMasked(value: String?, inRange: NSRange, update: String, firstDigitReplace: [TextViewPhoneNumberView.ViewModel.Replace]?, phoneFormatter: PhoneNumberFormaterProtocol, filterSymbols: [Character]?, limit: Int? = 18) -> String? {
+    static func replaceDigits(phone: String, countryCodeReplaces: [CountryCodeReplace]) -> String {
         
-        if let value = value {
+        var phone = phone
+        
+        for replace in countryCodeReplaces {
             
-            let didAddToValidPhone = phoneFormatter.isValid(value) && inRange.length == 0
+            let from = replace.from.description
             
-            guard !didAddToValidPhone else {
-                return value
-            }
-                    
-            var updatedValue = value
-            let rangeStart = value.index(value.startIndex, offsetBy: inRange.lowerBound)
-            let rangeEnd = value.index(value.startIndex, offsetBy: inRange.upperBound)
-            updatedValue.replaceSubrange(rangeStart..<rangeEnd, with: update)
-            
-            let filteredValue = updatedValue.replacingOccurrences(of: " ", with: "").filter { char in
+            if phone.hasPrefix(from),
+               !phone.hasPrefix(replace.to) {
                 
-                if let filterSymbols = filterSymbols {
-                    
-                    for symbol in filterSymbols {
-                        
-                        if symbol == char {
-                            
-                            return false
-                        }
-                    }
-                }
-                
-                return true
+                phone.replaceSubrange(
+                    from.startIndex..<from.endIndex,
+                    with: String(repeating: replace.to, count: 1)
+                )
             }
-            
-            guard filteredValue.isNumeric || phoneFormatter.isValid(update) else {
-                return filteredValue.isEmpty ? nil : value
-            }
-            
-            var phone = updatedValue.digits
-            
-            if let firstDigitReplace = firstDigitReplace {
-                
-                for replace in firstDigitReplace {
-                    
-                    if phone.digits.first == replace.from {
-                        
-                        phone.replaceSubrange(...phone.startIndex, with: replace.to)
-                    }
-                }
-            }
-            
-            let limit = limit ?? phone.count
-            let limitedPhone = String(phone.prefix(limit))
-            let phoneFormatted = phoneFormatter.partialFormatter("+\(limitedPhone)")
-            return phoneFormatted
-            
-        } else {
-            
-            guard update.isEmpty == false else {
-                return nil
-            }
-            
-            return update
         }
+        
+        return phone
     }
     
     private func makeToolbar(toolbarViewModel: ToolbarViewModel, context: Context) -> UIToolbar? {
@@ -465,4 +460,27 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
     }
 }
 
+//MARK: Helpers
 
+extension [Character] {
+    
+    static let defaultFilterSymbols: [Character] = ["-", "(", ")", "+"]
+    
+}
+
+extension TextViewPhoneNumberView.ViewModel.Style {
+    
+    var keyboardType: UIKeyboardType {
+        
+        switch self {
+        case .general, .banks, .abroad:
+            return .default
+            
+        case .payments:
+            return .phonePad
+        
+        case .order:
+            return .decimalPad
+        }
+    }
+}
