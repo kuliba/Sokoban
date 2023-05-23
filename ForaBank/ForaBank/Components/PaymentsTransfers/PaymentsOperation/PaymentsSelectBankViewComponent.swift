@@ -175,7 +175,7 @@ extension PaymentsSelectBankView.ViewModel {
                         return
                     }
                     
-                    update(value: option.id)
+                    self.update(value: option.id)
                     
                     withAnimation {
                         self.state = .collapsed(.init(value: self.value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
