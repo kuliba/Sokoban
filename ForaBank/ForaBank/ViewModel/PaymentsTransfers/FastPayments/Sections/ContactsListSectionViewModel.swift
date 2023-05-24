@@ -85,27 +85,8 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
         contacts
             .combineLatest(filter)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] data in
-                
-                let contacts = data.0
-                let filter = data.1
-                
-                if contacts.isEmpty == false {
-                    
-                    withAnimation {
-                        
-                        visible = Self.reduce(items: contacts, filter: filter)
-                    }
-                    
-                } else {
-                    
-                    withAnimation {
-                        
-                        visible = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .person), count: 8)
-                    }
-                }
-                
-            }.store(in: &bindings)
+            .map(Self.reduce(items:filter:))
+            .assign(to: &$visible)
         
         model.clientInfo
             .receive(on: DispatchQueue.main)
@@ -146,7 +127,12 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
 
 extension ContactsListSectionViewModel {
     
-    static func reduce(items: [ContactsItemViewModel], filter: String?) -> [ContactsItemViewModel] {
+    private static func reduce(items: [ContactsItemViewModel], filter: String?) -> [ContactsItemViewModel] {
+        
+        guard !items.isEmpty else {
+            
+            return (0..<8).map { _ in ContactsPlaceholderItemView.ViewModel(style: .person) }
+        }
         
         guard let filter = filter else {
             return items
