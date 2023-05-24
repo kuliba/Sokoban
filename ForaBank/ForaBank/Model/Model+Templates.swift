@@ -241,7 +241,7 @@ extension Model {
         
         serverAgent.executeCommand(command: command) { [unowned self] result in
             
-            sleep(8)
+            //sleep(8)
             self.paymentTemplatesUpdating.send(false)
             
             switch result {

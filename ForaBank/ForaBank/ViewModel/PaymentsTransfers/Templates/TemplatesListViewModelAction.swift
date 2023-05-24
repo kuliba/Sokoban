@@ -65,6 +65,17 @@ enum TemplatesListViewModelAction {
         }
     }
     
+    enum ProductListAction {
+        
+        enum Item {
+            
+            struct Tapped: Action {
+                let productId: String
+            }
+        }
+    }
+    
+    
     enum Delete {
     
         // Delete selection mode actions
@@ -101,6 +112,8 @@ enum TemplatesListViewModelAction {
     
     // Add new template action
     struct AddTemplate: Action {}
+    
+    struct AddTemplateTapped: Action {}
     
     // Action to present payment screen
     enum Present {

@@ -55,6 +55,15 @@ class TemplatesListViewModel: ObservableObject {
     
     convenience init(_ model: Model, dismissAction: @escaping () -> Void) {
         
+        let dataCache = model.paymentTemplates.value
+        
+        if dataCache.isEmpty {
+            
+        } else {
+            
+        
+        }
+        
         self.init(state: .normal,
                   style: model.paymentTemplatesViewSettings.value.style,
                   navBarState: .regular(nil),
@@ -65,6 +74,7 @@ class TemplatesListViewModel: ObservableObject {
                   model: model)
         
         updateNavBar(state: .regular(nil))
+        
         bind()
         
         self.model.action.send(ModelAction.PaymentTemplate.List.Requested())
@@ -76,27 +86,27 @@ private extension TemplatesListViewModel {
     
     func bind() {
         
-        model.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case _ as ModelAction.PaymentTemplate.List.Requested:
-                    
-                    guard !items.contains(where: { item in item.kind == .placeholder})
-                    else { return }
-                    self.items.insert(itemPlaceholderTemplateViewModel(), at: 0)
-                 
-                case _ as ModelAction.PaymentTemplate.List.Complete:
-                    
-                    guard items.contains(where: { item in item.kind == .placeholder})
-                    else { return }
-                
-                    self.items.removeFirst()
-                    
-                default: break
-                }
-            }.store(in: &bindings)
+//        model.action
+//            .receive(on: DispatchQueue.main)
+//            .sink { [unowned self] action in
+//
+//                switch action {
+//                case _ as ModelAction.PaymentTemplate.List.Requested:
+//
+//                    guard !items.contains(where: { item in item.kind == .placeholder})
+//                    else { return }
+//                    self.items.insert(itemPlaceholderTemplateViewModel(), at: 0)
+//
+//                case _ as ModelAction.PaymentTemplate.List.Complete:
+//
+//                    guard items.contains(where: { item in item.kind == .placeholder})
+//                    else { return }
+//
+//                    self.items.removeFirst()
+//
+//                default: break
+//                }
+//            }.store(in: &bindings)
         
     // templates data updates from model
         model.paymentTemplates
@@ -116,7 +126,7 @@ private extension TemplatesListViewModel {
                     } else {
                         
                         state = .normal
-                        itemsRaw.value = templates.compactMap{ itemViewModel(with: $0) }
+                        itemsRaw.value = templates.compactMap{ getItemViewModel(with: $0) }
                         categorySelector = categorySelectorViewModel(with: templates)
                         bindCategorySelector()
                     }
@@ -176,7 +186,20 @@ private extension TemplatesListViewModel {
             .sink { [unowned self] action in
                 
                 switch action {
-            
+                    
+            //Add Item Tapped
+                case _ as TemplatesListViewModelAction.AddTemplateTapped:
+                    
+                   let productItem = model.allProducts
+                                        .filter { $0.productType == .account }
+                                        .map { MyProductsSectionItemViewModel(productData: $0, model: model) }
+                   
+                    let productListViewModel = ProductListViewModel(items: productItem)
+                                                                                  
+                    //bind(productListViewModel)
+                    
+                    self.sheet = .init(type: .productList(productListViewModel))
+                                       
             //Rename Item start
                 case let payload as TemplatesListViewModelAction.Item.Rename:
                     
@@ -728,7 +751,21 @@ extension TemplatesListViewModel {
             
             case betweenTheir(MeToMeViewModel)
             case renameItem(RenameTemplateItemViewModel)
+            case productList(ProductListViewModel)
         }
+    }
+    
+    class ProductListViewModel: ObservableObject {
+        
+        let action: PassthroughSubject<Action, Never> = .init()
+        let title = "Выберите счет"
+        
+        @Published var items: [MyProductsSectionItemViewModel]
+        
+        init(items: [MyProductsSectionItemViewModel]) {
+            self.items = items
+        }
+        
     }
     
     class RenameTemplateItemViewModel: ObservableObject {
@@ -921,17 +958,17 @@ private extension TemplatesListViewModel {
         switch state {
         case .normal:
             
-            if self.items.isEmpty {
-                
-                self.items.append(itemAddNewTemplateViewModel())
-                
-            } else {
+//            if self.items.isEmpty {
+//
+//                self.items.append(itemAddNewTemplateViewModel())
+//
+//            } else {
                 
                 guard let lastItem = self.items.last, lastItem.kind != .add
                 else { return }
                 
                 self.items.append(itemAddNewTemplateViewModel())
-            }
+           // }
             
         default:
             guard let lastItem = items.last, lastItem.kind == .add else {

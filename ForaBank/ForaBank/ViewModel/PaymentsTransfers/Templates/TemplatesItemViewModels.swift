@@ -209,7 +209,7 @@ extension TemplatesListViewModel {
 //Reduce
 extension TemplatesListViewModel {
     
-    func itemViewModel(with data: PaymentTemplateData) -> ItemViewModel? {
+    func getItemViewModel(with data: PaymentTemplateData) -> ItemViewModel? {
         
         guard let amount = amount(for: data)
         else { return nil }
@@ -240,7 +240,7 @@ extension TemplatesListViewModel {
                              subTitle: "Из любой успешной операции\nв разделе «История»",
                              logoImage: nil,
                              ammount: "",
-                             tapAction: { [weak self] _ in  self?.action.send(TemplatesListViewModelAction.AddTemplate()) },
+                             tapAction: { [weak self] _ in  self?.action.send(TemplatesListViewModelAction.AddTemplateTapped()) },
                              deleteAction: { _ in },
                              renameAction: { _ in },
                              kind: .add)
