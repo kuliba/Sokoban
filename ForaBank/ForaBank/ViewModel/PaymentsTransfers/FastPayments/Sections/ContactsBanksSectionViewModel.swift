@@ -119,7 +119,7 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
                     
                     withAnimation {
   
-                        visible = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .bank), count: 8)
+                        visible = (0..<8).map { _ in ContactsPlaceholderItemView.ViewModel(style: .bank) }
                     }
                 }
  
