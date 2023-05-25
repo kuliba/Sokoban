@@ -31,7 +31,7 @@ extension LatestPaymentsView {
         
         convenience init(_ model: Model, isBaseButtons: Bool = true, filter: Filter? = nil) {
             
-            self.init(model, items: Array(repeating: .placeholder(.init()), count: 4), isBaseButtons: isBaseButtons, filter: filter)
+            self.init(model, items: (0..<4).map { _ in .placeholder(.init()) }, isBaseButtons: isBaseButtons, filter: filter)
             
             bind()
         }
@@ -101,7 +101,7 @@ extension LatestPaymentsView {
                 
                 if latest.isEmpty {
                     
-                    updatedItems = Array(repeating: .placeholder(.init()), count: 4)
+                    updatedItems = (0..<4).map { _ in .placeholder(.init()) }
                     
                 } else {
                     
