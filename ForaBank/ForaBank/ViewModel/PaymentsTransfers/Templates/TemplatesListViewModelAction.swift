@@ -111,7 +111,9 @@ enum TemplatesListViewModelAction {
     }
     
     // Add new template action
-    struct AddTemplate: Action {}
+    struct OpenProductProfile: Action {
+        let productId: ProductData.ID
+    }
     
     struct AddTemplateTapped: Action {}
     

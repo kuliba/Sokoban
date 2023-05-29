@@ -377,43 +377,27 @@ extension TemplatesListView {
                 Text(viewModel.title)
                     .font(.textH3SB18240())
                     .foregroundColor(.textSecondary)
-
-                List {
-                    ForEach(viewModel.items) { itemVM in
-                     
-                        if #available(iOS 15.0, *) {
-                            
-                            MyProductsSectionItemView.BaseItemView(viewModel: itemVM, editMode: .constant(.inactive))
-                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                //.listRowSeparator(separatorVisibility(item: item), edges: .bottom)
-                                .listRowSeparatorTint(.mainColorsGrayMedium.opacity(0.6))
-                                
-                                .frame(height: 72, alignment: .leading)
-                                .listRowBackground(Color.barsBars)
-                            
-                        } else { //iOS 14
-                            
-                            MyProductsSectionItemView(viewModel: itemVM, editMode: .constant(.inactive))
-                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                .frame(height: 72, alignment: .bottomLeading)
-                                .listRowBackground(Color.barsBars)
-                            
-                        } //iOS15
-                            
-                        
-                    } //for
-                        
+                    .padding(.leading)
                 
-                } //List
-                    .frame(height: 72 * CGFloat(viewModel.items.count) + 30)
-                    .listStyle(.plain)
-                    //.environment(\.editMode, $editMode)
-                    //.opacity(viewModel.isCollapsed ? 0 : 1)
+                ScrollView {
+                
+                    VStack(spacing: 16) {
+                    
+                        ForEach(viewModel.sections) { sectionVM in
+                            
+                            MyProductsSectionView(viewModel: sectionVM,
+                                                  editMode: .constant(.inactive))
+                            //.padding(.top, 16)
+                        }
+                    }
+                }
+
+
+//                    .frame(height: 72 * CGFloat(viewModel.items.count) + 30)
+//                    .listStyle(.plain)
+                   
                     
             } //VStack section
-            .background(Color.barsBars)
-            .cornerRadius(12)
-            .padding(.horizontal, 16)
     
         }
     }
@@ -570,9 +554,7 @@ struct TemplatesListView_Previews: PreviewProvider {
         Group {
             
             TemplatesListView
-                .ProductListView(viewModel: .init(items: [MyProductsSectionItemViewModel.sample7,
-                                                          MyProductsSectionItemViewModel.sample8,
-                                                          MyProductsSectionItemViewModel.sample9]))
+                .ProductListView(viewModel: .init(sections: [.sample2]))
                 .previewDisplayName("Product List View")
             
             TemplatesListView

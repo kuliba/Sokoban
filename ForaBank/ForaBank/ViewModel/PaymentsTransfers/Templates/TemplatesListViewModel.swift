@@ -190,13 +190,19 @@ private extension TemplatesListViewModel {
             //Add Item Tapped
                 case _ as TemplatesListViewModelAction.AddTemplateTapped:
                     
-                   let productItem = model.allProducts
-                                        .filter { $0.productType == .account }
-                                        .map { MyProductsSectionItemViewModel(productData: $0, model: model) }
+                    let productsFilterred = model.products.value.filter { dict in
+                        dict.key == .card || dict.key == .account
+                    }
+                    let sectionSettings = ProductsSectionsSettings(collapsed: ["CARD": false, "ACCOUNT": true] )
+                    
+                    let productSections = MyProductsViewModel.updateViewModel(with: productsFilterred,
+                                                                              sections: [],
+                                                                              productsOpening: [],
+                                                                              settingsProductsSections: sectionSettings,
+                                                                              model: model)
                    
-                    let productListViewModel = ProductListViewModel(items: productItem)
-                                                                                  
-                    //bind(productListViewModel)
+                    let productListViewModel = ProductListViewModel(sections: productSections)
+                    bind(productListViewModel.sections)
                     
                     self.sheet = .init(type: .productList(productListViewModel))
                                        
@@ -616,18 +622,6 @@ private extension TemplatesListViewModel {
                 
             }.store(in: &bindings)
         
-        // change editMode
-//        $editModeState
-//            .receive(on: DispatchQueue.main)
-//            .sink { [unowned self] editMode in
-//
-//                if editMode == .active {
-//
-//                    action.send(TemplatesListViewModelAction.ReorderItems.EditModeEnabled())
-//                }
-//
-//            }.store(in: &bindings)
-        
         // selected items updates
         selectedItemsIds
             .receive(on: DispatchQueue.main)
@@ -727,7 +721,32 @@ private extension TemplatesListViewModel {
                                               paymentTemplateId: payload.itemId))
             }
             .store(in: &bindings)
+    }
+    
+    private func bind(_ sections: [MyProductsSectionViewModel]) {
         
+        for section in sections {
+            
+            section.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self]  action in
+                    
+                    switch action {
+                    case let payload as MyProductsSectionViewModelAction.Events.ItemTapped:
+                        
+                        guard let product = model.products.value.values
+                                                .flatMap({ $0 })
+                                                .first(where: { $0.id == payload.productId })
+                        else { return }
+                        
+                        print("mdy: \(product.displayName)")
+                        self.action.send(TemplatesListViewModelAction.OpenProductProfile.init(productId: product.id))
+                        
+                    default: break
+                    }
+           
+            }.store(in: &bindings)
+        } //for
     }
 }
 
@@ -758,12 +777,12 @@ extension TemplatesListViewModel {
     class ProductListViewModel: ObservableObject {
         
         let action: PassthroughSubject<Action, Never> = .init()
-        let title = "Выберите счет"
+        let title = "Выберите продукт"
         
-        @Published var items: [MyProductsSectionItemViewModel]
+        @Published var sections: [MyProductsSectionViewModel]
         
-        init(items: [MyProductsSectionItemViewModel]) {
-            self.items = items
+        init(sections: [MyProductsSectionViewModel]) {
+            self.sections = sections
         }
         
     }
@@ -944,7 +963,7 @@ extension TemplatesListViewModel {
               title: "Нет шаблонов",
               message: "Вы можете создать шаблон из любой успешной операции в разделе История",
               button: .init(title: "Перейти в историю",
-                            action: { [weak self] in self?.action.send(TemplatesListViewModelAction.AddTemplate())}))
+                            action: { [weak self] in self?.action.send(TemplatesListViewModelAction.AddTemplateTapped())}))
     }
 }
 

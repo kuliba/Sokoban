@@ -131,6 +131,7 @@ class MyProductsViewModel: ObservableObject {
                             let updatedSections = Self.updateViewModel(with: model.products.value,
                                                                        sections: self.sections,
                                                                        productsOpening: model.productsOpening.value,
+                                                                       settingsProductsSections: model.settingsProductsSections,
                                                                        model: model)
                             withAnimation {
                                 sections = updatedSections
@@ -174,9 +175,10 @@ class MyProductsViewModel: ObservableObject {
             .sink { [unowned self] products, productsOpening in
                 
                 let updatedSections = Self.updateViewModel(with: products,
-                                                      sections: self.sections,
-                                                      productsOpening: productsOpening,
-                                                      model: model)
+                                                           sections: self.sections,
+                                                           productsOpening: productsOpening,
+                                                           settingsProductsSections: model.settingsProductsSections,
+                                                           model: model)
                 bind(updatedSections)
                 self.sections = updatedSections
                 
@@ -304,6 +306,7 @@ class MyProductsViewModel: ObservableObject {
     static func updateViewModel(with products: ProductsData,
                                 sections: [MyProductsSectionViewModel],
                                 productsOpening: Set<ProductType>,
+                                settingsProductsSections: ProductsSectionsSettings,
                                 model: Model) -> [MyProductsSectionViewModel]  {
         
         var updatedSections = [MyProductsSectionViewModel]()
@@ -323,7 +326,7 @@ class MyProductsViewModel: ObservableObject {
                 
                 guard let section = MyProductsSectionViewModel(productType: productType,
                                                                products: productsForType,
-                                                               settings: model.settingsProductsSections,
+                                                               settings: settingsProductsSections,
                                                                model: model)
                 else { continue }
                 updatedSections.append(section)
