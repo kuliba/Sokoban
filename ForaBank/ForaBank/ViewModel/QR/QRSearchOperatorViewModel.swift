@@ -13,12 +13,9 @@ class QRSearchOperatorViewModel: ObservableObject {
     let model: Model
     let navigationBar: NavigationBarView.ViewModel
     let searchBar: SearchBarView.ViewModel
-    let emptyViewTitle: String
-    let emptyViewContent: String
-    let emptyViewSubtitle: String
-    
-    var searchOperatorButton: [ButtonSimpleView.ViewModel]
-    @Published var operators: [QRSearchOperatorComponent.ViewModel]
+    let noCompanyInListViewModel: NoCompanyInListViewModel
+
+    @Published var operators: [QRSearchOperatorComponent.ViewModel] = []
     @Published var filteredOperators: [QRSearchOperatorComponent.ViewModel] = []
     @Published var sheet: Sheet?
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
@@ -32,16 +29,11 @@ class QRSearchOperatorViewModel: ObservableObject {
         self.searchBar = searchBar
         self.navigationBar = navigationBar
         self.model = model
-        self.operators = []
-        self.searchOperatorButton = []
-        self.emptyViewTitle = "Нет компании в списке?"
-        self.emptyViewContent = "Воспользуйтесь другими способами оплаты"
-        self.emptyViewSubtitle = "Сообщите нам, и мы подключим новую организацию"
-        self.searchOperatorButton = self.createButtons(addCompanyAction: addCompanyAction, requisitesAction: requisitesAction)
+        self.noCompanyInListViewModel = .init(title: NoCompanyInListViewModel.defaultTitle, content: NoCompanyInListViewModel.defaultContent, subtitle: NoCompanyInListViewModel.defaultSubtitle, addCompanyAction: addCompanyAction, requisitesAction: requisitesAction)
         
         //TODO: create convenience init 
         bind()
-        let operatorsData = model.dictionaryQRAnewayOperator().filter({$0.parameterList.count > 1})
+        let operatorsData = model.dictionaryQRAnewayOperator().filter({ !$0.parameterList.isEmpty })
         self.operators = operatorsData.map { QRSearchOperatorComponent.ViewModel(id: $0.id.description, operators: $0, action: { [weak self] id in
 
             guard let model = self?.model else {
@@ -51,13 +43,37 @@ class QRSearchOperatorViewModel: ObservableObject {
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                 
                 if let operatorData = operatorsData.filter({$0.id.description == id}).first {
-
-                    let viewModel: InternetTVDetailsViewModel = .init(model: model, operatorData: operatorData, closeAction: { [weak self] in
-
-                        self?.link = nil
-                    })
-
-                    self?.link = .operation(viewModel)
+                    
+                    if Payments.PaymentsServicesOperators.map(\.rawValue).contains(operatorData.parentCode) {
+                        
+                        //new payment
+                        Task { [weak self] in
+                            
+                            guard let self = self else { return }
+                            let puref = operatorData.code
+                            let paymentsViewModel = PaymentsViewModel(
+                                source: .servicePayment(puref: puref, additionalList: nil, amount: 0),
+                                model: model,
+                                closeAction: {
+                                    
+                                    self.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                })
+                            await MainActor.run {
+                                
+                                self.link = .payments(paymentsViewModel)
+                            }
+                        }
+                    }
+                    else {
+                        
+                        //old payment
+                        let viewModel: InternetTVDetailsViewModel = .init(model: model, operatorData: operatorData, closeAction: { [weak self] in
+                            
+                            self?.link = nil
+                        })
+                        
+                        self?.link = .operation(viewModel)
+                    }
                 }
             }
         })
@@ -68,18 +84,45 @@ class QRSearchOperatorViewModel: ObservableObject {
         
         self.init(searchBar: searchBar, navigationBar: navigationBar, model: model, addCompanyAction: addCompanyAction, requisitesAction: requisitesAction)
         
-        self.operators = operators.map {QRSearchOperatorComponent.ViewModel(id: $0.id.description, operators: $0, action: { [weak self] _ in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                
-                if let qrMapping = model.qrMapping.value {
-                 
-                    let viewModel: InternetTVDetailsViewModel  = .init(model: model, qrCode: qrCode, mapping: qrMapping)
-                    self?.link = .operation(viewModel)
-
-                }
+        guard let qrMapping = model.qrMapping.value else {
+            return
+        }
+        
+        self.operators = operators.map { operatorValue in
+            if Payments.PaymentsServicesOperators.map(\.rawValue).contains(operatorValue.parentCode) {
+                //new payment
+                return QRSearchOperatorComponent.ViewModel(id: operatorValue.id.description, operators: operatorValue, action: {[weak self]  _ in
+                    guard let self = self else { return }
+                    
+                    Task {
+                        
+                        let puref = operatorValue.code
+                        let additionalList = model.additionalList(for: operatorValue, qrCode: qrCode)
+                        let amount: Double = qrCode.rawData["sum"]?.toDouble() ?? 0
+                        let paymentsViewModel = PaymentsViewModel(
+                            source: .servicePayment(puref: puref, additionalList: additionalList, amount: amount/100),
+                            model: model,
+                            closeAction: {
+                                self.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            })
+                        await MainActor.run {
+                            
+                            self.link = .payments(paymentsViewModel)
+                        }
+                    }
+                    
+                })
             }
-        }) }
+            else {
+                //old payment
+                return QRSearchOperatorComponent.ViewModel(id: operatorValue.id.description, operators: operatorValue, action: { [weak self] _ in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                        let viewModel: InternetTVDetailsViewModel  = .init(model: model, qrCode: qrCode, mapping: qrMapping)
+                        self?.link = .operation(viewModel)
+                    }
+                })
+            }
+        }
     }
     
     func bind() {
@@ -145,7 +188,7 @@ class QRSearchOperatorViewModel: ObservableObject {
                                 return
                             }
                             
-                            let operatorsData = model.dictionaryQRAnewayOperator()
+                            let operatorsData = model.dictionaryQRAnewayOperator().filter{ !$0.parameterList.isEmpty }
                             
                             if let operatorData = operatorsData.filter({$0.id.description == id}).first {
                                 
@@ -188,20 +231,14 @@ class QRSearchOperatorViewModel: ObservableObject {
     enum Link {
         
         case operation(InternetTVDetailsViewModel)
+        case payments(PaymentsViewModel)
+        
     }
     
     enum SearchValue {
         case empty
         case noEmpty
         case noResult
-    }
-    
-    private func createButtons(addCompanyAction: @escaping () -> Void, requisitesAction: @escaping () -> Void) -> [ButtonSimpleView.ViewModel] {
-        
-        return [
-            ButtonSimpleView.ViewModel(title: "Оплатить по реквизитам", style: .gray, action: requisitesAction),
-            ButtonSimpleView.ViewModel(title: "Добавить организацию", style: .gray, action: addCompanyAction)
-        ]
     }
 }
 

@@ -19,20 +19,21 @@ extension LatestPaymentsView {
         let filter: Filter?
         
         private let model: Model
+        private let mode: Mode?
         private var bindings = Set<AnyCancellable>()
         
-        init(_ model: Model, items: [LatestPaymentsView.ViewModel.ItemViewModel], isBaseButtons: Bool, filter: Filter?) {
+        init(_ model: Model, mode: Mode? = .regular, items: [LatestPaymentsView.ViewModel.ItemViewModel], isBaseButtons: Bool, filter: Filter?) {
             
             self.model = model
+            self.mode = mode
             self.items = items
             self.isBaseButtons = isBaseButtons
             self.filter = filter
         }
         
-        convenience init(_ model: Model, isBaseButtons: Bool = true, filter: Filter? = nil) {
+        convenience init(_ model: Model, mode: Mode? = .regular, isBaseButtons: Bool = true, filter: Filter? = nil) {
             
-            self.init(model, items: (0..<4).map { _ in .placeholder(.init()) }, isBaseButtons: isBaseButtons, filter: filter)
-            
+            self.init(model, mode: mode, items: (0..<4).map { _ in .placeholder(.init()) }, isBaseButtons: isBaseButtons, filter: filter)
             bind()
         }
         
@@ -56,7 +57,7 @@ extension LatestPaymentsView {
                         }
                     }
                     
-                    var items = Self.itemsReduce(model: model, latest: latestPaymentsFiltered, isUpdating: isUpdating, action: { [weak self] itemId in
+                    var items = Self.itemsReduce(model: model, mode: mode ?? .regular, latest: latestPaymentsFiltered, isUpdating: isUpdating, action: { [weak self] itemId in
                         
                         if let item = latestPayments.first(where: {$0.id == itemId}) {
                             
@@ -88,11 +89,11 @@ extension LatestPaymentsView {
                 }.store(in: &bindings)
         }
         
-        static func itemsReduce(model: Model, latest: [LatestPaymentData], isUpdating: Bool, action: (LatestPaymentData.ID) -> () -> Void) -> [ItemViewModel] {
+        static func itemsReduce(model: Model, mode: Mode, latest: [LatestPaymentData], isUpdating: Bool, action: (LatestPaymentData.ID) -> () -> Void) -> [ItemViewModel] {
             
             let latestPaymentsItems = latest.map { item in
                 
-                ItemViewModel.latestPayment(.init(data: item, model: model, action: action(item.id)))
+                ItemViewModel.latestPayment(.init(data: item, model: model, mode: mode, action: action(item.id)))
             }
             
             let updatedItems: [ItemViewModel]
@@ -122,6 +123,7 @@ extension LatestPaymentsView {
                                                         avatar: .icon(.ic24Star, .iconBlack),
                                                         topIcon: nil,
                                                         description: "Шаблоны",
+                                                        amount: "",
                                                         action: action)
             
             return .templates(buttonViewModel)
@@ -133,6 +135,7 @@ extension LatestPaymentsView {
                                                         avatar: .icon(.ic24CurrencyExchange, .iconBlack),
                                                         topIcon: nil,
                                                         description: "Обмен валют",
+                                                        amount: "",
                                                         action: action)
             
             return .templates(buttonViewModel)
@@ -150,6 +153,12 @@ extension LatestPaymentsView.ViewModel {
         case excluding(Set<LatestPaymentData.Kind>)
     }
     
+    enum Mode {
+        
+        case regular
+        case extended
+    }
+    
     struct PlaceholderViewModel: Identifiable {
         
         let id = UUID()
@@ -161,6 +170,7 @@ extension LatestPaymentsView.ViewModel {
         let avatar: Avatar
         let topIcon: Image?
         let description: String
+        let amount: String?
         let action: () -> Void
         
         enum Avatar {
@@ -193,7 +203,25 @@ extension LatestPaymentsView.ViewModel {
 
 extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
     
-    init(data: LatestPaymentData, model: Model, action: @escaping () -> Void) {
+    init(data: LatestPaymentData, model: Model, mode: LatestPaymentsView.ViewModel.Mode? = .regular, action: @escaping () -> Void) {
+        
+        func amountValue (mode: LatestPaymentsView.ViewModel.Mode, data: LatestPaymentData) -> String? {
+            
+            switch mode {
+                
+            case .regular:
+                return nil
+                
+            case .extended:
+                switch (data.type, data) {
+                    
+                case (.internet, let paymentData as PaymentServiceData), (.service, let paymentData as PaymentServiceData):
+                    return "\(model.amountFormatted(amount: paymentData.amount, currencyCode: "RUB", style: .normal) ?? "")"
+                default:
+                    return nil
+                }
+            }
+        }
         
         let icon: Avatar = .icon(data.type.defaultIcon, .iconGray)
         let name = data.type.defaultName
@@ -215,11 +243,18 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             self.avatar = outsideData.avatar ?? icon
             self.description = outsideData.description ?? name
             self.topIcon = outsideData.topIcon
-            
-        case (.internet, let paymentData as PaymentServiceData),
-            (.transport, let paymentData as PaymentServiceData),
-            (.service, let paymentData as PaymentServiceData),
+        
+        case (.transport, let paymentData as PaymentServiceData),
             (.taxAndStateService, let paymentData as PaymentServiceData):
+            
+            let operatorData = Self.reduceAnywayOperator(anywayOperators: model.dictionaryAnywayOperators(), puref: paymentData.puref)
+            
+            self.avatar = operatorData.avatar ?? icon
+            self.description = operatorData.description ?? name
+            self.topIcon = nil
+
+        case (.internet, let paymentData as PaymentServiceData),             (.service, let paymentData as PaymentServiceData)
+:
             
             let operatorData = Self.reduceAnywayOperator(anywayOperators: model.dictionaryAnywayOperators(), puref: paymentData.puref)
             
@@ -256,6 +291,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
         
         self.action = action
         self.id = data.id
+        self.amount = amountValue(mode: mode ?? .regular, data: data)
     }
 }
 
@@ -343,7 +379,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
     
     static func topIconOutside(model: Model, additionalList: [PaymentServiceData.AdditionalListData]) -> Image? {
         
-        guard let countryId = additionalList.first(where: { $0.isTrnPickupPoint } )?.fieldValue,
+        guard let countryId = additionalList.first(where: { $0.isCountry } )?.fieldValue,
               let country = model.countriesList.value.first(where: { $0.id == countryId } ),
               let image = country.svgImage?.image else {
             
@@ -499,16 +535,37 @@ extension LatestPaymentsView {
                                 .position(x: 64, y: 12)
                                 .accessibilityIdentifier("LatestPaymentsTopIcon")
                         }
-                        
                     }
                     
-                    Text(viewModel.description)
-                        .font(.textBodySR12160())
-                        .lineLimit(2)
-                        .foregroundColor(.textSecondary)
-                        .frame(width: 80, height: 32, alignment: .top)
-                        .multilineTextAlignment(.center)
-                        .accessibilityIdentifier("LatestPaymentsName")
+                    if let amountValue = viewModel.amount,
+                       !amountValue.isEmpty {
+                        
+                        VStack(alignment: .center, spacing: 0) {
+                            
+                            Text(viewModel.description)
+                                .font(.textBodySR12160())
+                                .lineLimit(1)
+                                .foregroundColor(.textSecondary)
+                                .frame(width: 80, alignment: .top)
+                                .multilineTextAlignment(.center)
+                            
+                            Text(amountValue)
+                                .font(.textBodySR12160())
+                                .lineLimit(1)
+                                .foregroundColor(.textRed)
+                                .frame(width: 80, height: 16, alignment: .top)
+                                .multilineTextAlignment(.center)
+                        }
+                    } else {
+                        
+                        Text(viewModel.description)
+                            .font(.textBodySR12160())
+                            .lineLimit(2)
+                            .foregroundColor(.textSecondary)
+                            .frame(width: 80, height: 32, alignment: .top)
+                            .multilineTextAlignment(.center)
+                            .accessibilityIdentifier("LatestPaymentsName")
+                    }
                 }
                 .frame(width: 80, height: 96)
             })
@@ -522,6 +579,7 @@ extension LatestPaymentsView {
 
 struct LatestPaymentsViewComponent_Previews: PreviewProvider {
     static var previews: some View {
-        LatestPaymentsView(viewModel: .init(.emptyMock, items: [], isBaseButtons: true, filter: nil))
+        LatestPaymentsView(viewModel: .init(.emptyMock,
+                                            mode: .regular, items: [], isBaseButtons: true, filter: nil))
     }
 }

@@ -182,6 +182,18 @@ extension PaymentsInputView.ViewModel {
             }
         }
     }
+    
+    //TODO: add tests
+    var displayTitle: String? {
+        
+        if isEditable {
+            
+            return title
+        } else {
+            
+            return parameterInput?.title ?? ""
+        }
+    }
 }
 
 // MARK: - Parameter Actions
@@ -303,9 +315,9 @@ struct PaymentsInputView: View {
     @ViewBuilder
     private var titleView: some View {
         
-        if let title = viewModel.title {
+        viewModel.displayTitle.map {
             
-            Text(title)
+            Text($0)
                 .font(.textBodyMR14180())
                 .foregroundColor(.textPlaceholder)
                 .transition(
@@ -320,7 +332,7 @@ struct PaymentsInputView: View {
     @ViewBuilder
     private var textFiled: some View {
         
-        if viewModel.isEditable == true {
+        if viewModel.isEditable {
             
             TextFieldRegularView(
                 viewModel: viewModel.textField,
@@ -330,10 +342,13 @@ struct PaymentsInputView: View {
             
         } else {
             
-            Text(viewModel.value.current ?? "")
-                .font(.textH4M16240())
-                .foregroundColor(.textSecondary)
-                .padding(.vertical, 7)
+            viewModel.value.current.map {
+                
+                Text($0)
+                    .font(.textH4M16240())
+                    .foregroundColor(.textSecondary)
+                    .padding(.vertical, 7)
+            }
         }
     }
     

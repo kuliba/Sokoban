@@ -37,7 +37,7 @@ extension Model {
             //MARK: Account Number Parameter
             let accountNumberValidator: Payments.Validation.RulesSystem = {
                 
-                var rules = [Payments.Validation.Rule]()
+                var rules = [PaymentsValidationRulesSystemRule]()
 
                 rules.append(Payments.Validation.LengthLimitsRule(lengthLimits: [20], actions: [.post: .warning("Должен состоять из 20 цифр.")]))
 
@@ -74,7 +74,7 @@ extension Model {
             //MARK: Inn Number Parameter
             let validator: Payments.Validation.RulesSystem = {
                 
-                var rules = [Payments.Validation.Rule]()
+                var rules = [PaymentsValidationRulesSystemRule]()
                 
                 rules.append(Payments.Validation.LengthLimitsRule.init(lengthLimits: [10, 12], actions: [.post: .warning("Должен состоять из 10 или 12 цифр.")]))
 
@@ -100,7 +100,7 @@ extension Model {
                 //MARK: Message parametr validation
                 let messageValidator: Payments.Validation.RulesSystem = {
                     
-                    var rules = [Payments.Validation.Rule]()
+                    var rules = [PaymentsValidationRulesSystemRule]()
                     
                     rules.append(Payments.Validation.MaxLengthRule(maxLenght: 210, actions: [.post: .warning("Заполните поле (до 210 символов)")]))
 
@@ -156,7 +156,7 @@ extension Model {
             let kppParameterId = Payments.Parameter.Identifier.requisitsKpp.rawValue
             let kppParameterValidator: Payments.Validation.RulesSystem = {
                 
-                var rules = [Payments.Validation.Rule]()
+                var rules = [PaymentsValidationRulesSystemRule]()
                 
                 rules.append(Payments.Validation.LengthLimitsRule(lengthLimits: [9], actions: [.post: .warning("Должен состоять из 9 цифр.")]))
                 
@@ -169,7 +169,7 @@ extension Model {
             let companyNameParameterId = Payments.Parameter.Identifier.requisitsCompanyName.rawValue
             let companyNameValidator: Payments.Validation.RulesSystem = {
                 
-                var rules = [Payments.Validation.Rule]()
+                var rules = [PaymentsValidationRulesSystemRule]()
                 
                 rules.append(Payments.Validation.MinLengthRule(minLenght: 1, actions: [.post: .warning("Заполните поле (до 160 символов)")]))
                 rules.append(Payments.Validation.MaxLengthRule(maxLenght: 160, actions: [.post: .warning("Заполните поле (до 160 символов)")]))
@@ -253,7 +253,7 @@ extension Model {
             //MARK: Message Parameter
             let messageValidator: Payments.Validation.RulesSystem = {
                 
-                var rules = [Payments.Validation.Rule]()
+                var rules = [PaymentsValidationRulesSystemRule]()
                 
                 rules.append(Payments.Validation.MinLengthRule(minLenght: 25, actions: [.post: .warning("Заполните поле (от 25 до 210 символов)")]))
                 rules.append(Payments.Validation.MaxLengthRule(maxLenght: 210, actions: [.post: .warning("Заполните поле (от 25 до 210 символов)")]))

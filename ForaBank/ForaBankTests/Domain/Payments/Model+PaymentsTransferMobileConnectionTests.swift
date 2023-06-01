@@ -378,7 +378,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
             
             XCTAssertEqual(res.amount, 100)
             XCTAssertEqual(res.additionalList.map(\.fieldName), ["INCORRECT", "a3_PERSONAL_ACCOUNT_5_5"])
-            XCTAssertEqual(res.additionalList.map(\.fieldValue), ["WRONG NUMBER","1234567890"])
+            XCTAssertEqual(res.additionalList.map(\.accountNumberForPayment), ["WRONG NUMBER","1234567890"])
         } catch {
             XCTFail(error.localizedDescription)
         }
@@ -581,7 +581,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
                 .init(
                     fieldName: "a3_NUMBER_1_2",
                     fieldTitle: "Номер телефона (без +7)",
-                    fieldValue: "9138022858",
+                    accountNumberForPayment: "9138022858",
                     svgImage: nil,
                     typeIdParameterList: nil,
                     recycle: nil
@@ -589,7 +589,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
                 .init(
                     fieldName: "a3_AMOUNT_2_2",
                     fieldTitle: "Сумма, руб.:",
-                    fieldValue: "99",
+                    accountNumberForPayment: "99",
                     svgImage: nil,
                     typeIdParameterList: nil,
                     recycle: nil

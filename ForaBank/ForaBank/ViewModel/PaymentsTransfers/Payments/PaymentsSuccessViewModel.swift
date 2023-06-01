@@ -118,6 +118,35 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             
             self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentSuccess.operationDetailId)))
             
+        case let .paymentsServicesData(paymentsServicesData):
+            
+            let (title, iconType) = Self.iconType(status: paymentSuccess.status)
+
+            let product = model.allProducts.first(where: { $0.id == paymentSuccess.productId })
+            let amount = model.amountFormatted(
+                amount: paymentSuccess.amount,
+                currencyCode: product?.currency,
+                style: .normal
+            )
+            
+            self.init(
+                model,
+                title: title,
+                amount: amount,
+                iconType: iconType,
+                logo: paymentsServicesData.logo,
+                actionButton: .init(
+                    title: "На главный",
+                    style: .red,
+                    action: {}
+                ),
+                optionButtons: []
+            )
+            
+            bind(.normal, paymentOperationDetailId: paymentSuccess.operationDetailId, documentStatus: paymentSuccess.status)
+            
+            self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentSuccess.operationDetailId)))
+
         case let .abroadData(transferData):
             
             let (title, iconType) = Self.iconType(status: paymentSuccess.status)
@@ -981,6 +1010,21 @@ extension PaymentsSuccessViewModel {
 }
 
 private extension MobileConnectionData {
+    
+    var logo: PaymentsSuccessViewModel.LogoIconViewModel? {
+        
+        let svgImageData = svgImageData
+        let imageData = ImageData(with: svgImageData)
+        
+        guard let image = imageData?.image else {
+            return nil
+        }
+        
+        return .init(title: "", image: image)
+    }
+}
+
+private extension PaymentsServicesData {
     
     var logo: PaymentsSuccessViewModel.LogoIconViewModel? {
         

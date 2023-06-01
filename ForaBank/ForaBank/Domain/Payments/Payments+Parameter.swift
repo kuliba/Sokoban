@@ -116,6 +116,11 @@ extension Payments.Parameter {
         case mobileConnectionPhone = "MobileConnectionPhone"
         case mobileConnectionAmount = "MobileConnectionAmount"
         case mobileConnectionOperatorLogo = "MobileConnectionOperatorLogo"
+        
+        case paymentsServiceOperatorLogo = "paymentsServiceOperatorLogo"
+        case paymentsServiceAmount       = "paymentsServiceAmount"
+
+
     }
     
     static let emptyMock = Payments.Parameter(id: Identifier.mock.rawValue, value: nil)
@@ -169,6 +174,12 @@ extension Payments {
             
             self.parameter = Parameter(id: Payments.Parameter.Identifier.operator.rawValue, value: operatorType.rawValue)
         }
+        
+        init(operatorType: String) {
+            
+            self.parameter = Parameter(id: Payments.Parameter.Identifier.operator.rawValue, value: operatorType)
+        }
+
     }
     
     struct ParameterContinue: PaymentsParameterRepresentable {
