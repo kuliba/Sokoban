@@ -472,8 +472,9 @@ class MainViewModel: ObservableObject, Resetable {
                         
                         if let qrMapping = model.qrMapping.value {
 
-                            if let operators = model.dictionaryAnywayOperators(with: qr, mapping: qrMapping)  {
-                                
+                            if let operatorsFromQr = model.dictionaryAnywayOperators(with: qr, mapping: qrMapping)  {
+                                let validQrOperators = model.dictionaryQRAnewayOperator()
+                                let operators = operatorsFromQr.filter{ validQrOperators.contains($0) && !$0.parameterList.isEmpty }
                                 guard operators.count > 0 else {
                                 
                                     self.fullScreenSheet = nil
@@ -482,16 +483,38 @@ class MainViewModel: ObservableObject, Resetable {
                                 }
                                 
                                 if operators.count == 1 {
-                                    
                                     self.action.send(MainViewModelAction.Close.FullScreenSheet())
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) { [self] in
-                                        
-                                        let viewModel = InternetTVDetailsViewModel(model: model, qrCode: qr, mapping: qrMapping)
-                                        
-                                        self.link = .operatorView(viewModel)
+                                    if let operatorValue = operators.first, Payments.PaymentsServicesOperators.map(\.rawValue).contains(operatorValue.parentCode) {
+                                        Task { [weak self] in
+                                                guard let self = self else { return }
+                                                let puref = operatorValue.code
+                                                let additionalList = self.model.additionalList(for: operatorValue, qrCode: qr)
+                                                let amount: Double = qr.rawData["sum"]?.toDouble() ?? 0
+                                                let paymentsViewModel = PaymentsViewModel(
+                                                    source: .servicePayment(puref: puref, additionalList: additionalList, amount: amount/100),
+                                                    model: self.model,
+                                                    closeAction: {
+                                                        self.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                                        
+                                                    })
+                                                self.bind(paymentsViewModel)
+
+                                                await MainActor.run {
+                                                    self.link = .payments(paymentsViewModel)
+                                                }
+                                        }
                                     }
-                                    
-                                } else {
+                                    else {
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) { [self] in
+                                            
+                                            let viewModel = InternetTVDetailsViewModel(model: model, qrCode: qr, mapping: qrMapping)
+                                            
+                                            self.link = .operatorView(viewModel)
+                                        }
+                                        
+                                    }
+                                }
+                                else {
                                     
                                     self.action.send(MainViewModelAction.Close.FullScreenSheet())
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
@@ -879,6 +902,8 @@ extension MainViewModel {
         case openCard(AuthProductsViewModel)
         case payments(PaymentsViewModel)
         case operatorView(InternetTVDetailsViewModel)
+        case paymentsServices(PaymentsServicesViewModel)
+
     }
     
     struct BottomSheet: BottomSheetCustomizable {

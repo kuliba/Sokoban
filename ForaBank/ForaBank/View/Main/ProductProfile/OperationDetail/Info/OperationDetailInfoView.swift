@@ -69,7 +69,7 @@ struct OperationDetailInfoView: View {
                             
                         case let bankViewModel as OperationDetailInfoViewModel.BankCellViewModel:
                             BankCellView(viewModel: bankViewModel)
-                            
+
                         case let productViewModel as OperationDetailInfoViewModel.ProductCellViewModel:
                             ProductCellView(viewModel: productViewModel)
                             
@@ -98,8 +98,9 @@ extension OperationDetailInfoView {
             
             HStack(alignment: .bottom, spacing: 15) {
                 
-                viewModel.iconType?.icon
-                    .frame(width: 32, height: 24, alignment: .bottom)
+                viewModel.iconType?
+                    .resizable()
+                    .frame(width: 32, height: 32, alignment: .bottom)
                     .accessibilityIdentifier("OperationDetailInfoItemIcon")
                 
                 VStack(alignment: .leading, spacing: 4) {

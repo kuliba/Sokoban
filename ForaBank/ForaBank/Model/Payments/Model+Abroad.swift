@@ -18,11 +18,28 @@ extension Model {
                 throw Payments.Error.missingSource(operation.service)
             }
             
-            guard case let .direct(_, countryId: country, _) = source else {
-                
-                throw Payments.Error.missingSource(operation.service)
+            var country: String?
+            
+            switch source {
+                case let .latestPayment(latestPaymentId):
+                    guard let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }),
+                          let latestPayment = latestPayment as? PaymentServiceData else {
+                        throw Payments.Error.missingSource(operation.service)
+                    }
+                    
+                    country = latestPayment.additionalList.first(where: { $0.isCountry })?.fieldValue
+                    
+                case let .direct(_, countryId: countryId, _):
+                    country = countryId
+                    
+                default:
+                    throw Payments.Error.missingSource(operation.service)
             }
             
+            guard let country = country else {
+                throw Payments.Error.missingSource(operation.service)
+            }
+                
             let countryWithService = self.countriesListWithSevice.value.first(where: {($0.code == country || $0.contactCode == country)})
             let operatorsList = self.dictionaryAnywayOperators()
             

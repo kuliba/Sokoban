@@ -24,6 +24,8 @@ extension Payments.Service {
         case .mobileConnection: return [.mobileConnection]
         case .return: return [.return]
         case .change: return [.change]
+        case .internetTV: return [.internetTV]
+        case .housingAndCommunalServicesP: return [.housingAndCommunalServices]
         }
     }
     
@@ -52,6 +54,8 @@ extension Payments.Service {
         case .mobileConnection: return .mobileConnection
         case .return: return .return
         case .change: return .change
+        case .internetTV: return .internetTV
+        case .housingAndCommunalServicesP: return .housingAndCommunalServicesP
         }
     }
 }

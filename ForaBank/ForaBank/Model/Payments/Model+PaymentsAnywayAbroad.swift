@@ -234,7 +234,7 @@ extension Model {
         
         let operatorParameterId = Payments.Parameter.Identifier.countryDropDownList.rawValue
         
-        guard let operatorParameterValue = parameters.first(where: { $0.parameter.id ==  operatorParameterId})?.value else {
+        guard let operatorParameterValue = parameters.first(where: { $0.parameter.id == operatorParameterId})?.value else {
             
             throw Payments.Error.missingParameter(operatorParameterId)
         }

@@ -1,26 +1,30 @@
 //
-//  QRSearchOperatorView.swift
+//  PaymentsServicesOperatorsView.swift
 //  ForaBank
 //
-//  Created by Константин Савялов on 17.11.2022.
+//  Created by Andryusina Nataly on 06.04.2023.
 //
 
 import SwiftUI
 
-struct QRSearchOperatorView: View {
+struct PaymentsServicesOperatorsView: View {
     
-    @ObservedObject var viewModel: QRSearchOperatorViewModel
+    @ObservedObject var viewModel: PaymentsServicesViewModel
     
     var body: some View {
         
-        VStack(spacing: 20) {
+        VStack(spacing: 5) {
             
             SearchBarView(viewModel: viewModel.searchBar)
-                .padding(.horizontal, 20)
-            
+                .frame(height: 44)
+                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 15))
+
             ScrollView {
-                
-                VStack(alignment: .leading, spacing: 8) {
+                PaymentsServicesLatestPaymentsSectionView(viewModel: viewModel.latestPayments)
+                    .opacity(viewModel.filteredOperators.isEmpty ? 0 : 1)
+                    .padding(.top, 15)
+
+                VStack(alignment: .leading, spacing: 0) {
                     
                     switch viewModel.searchValue {
                         
@@ -28,26 +32,29 @@ struct QRSearchOperatorView: View {
                         
                         ForEach(viewModel.operators) { singleOperator in
                         
-                            QRSearchOperatorComponent(viewModel: singleOperator)
+                            PaymentsServicesOperatorItemView(viewModel: singleOperator)
                         }
                         
                         NoCompanyInListView(viewModel: viewModel.noCompanyInListViewModel)
-                            .padding(.top, 48)
+                            .padding(.top, 43)
                         
                     case .noEmpty:
                         
-                        ForEach(viewModel.filteredOperators) { singleOperator in
+                        if !viewModel.filteredOperators.isEmpty {
                             
-                            QRSearchOperatorComponent(viewModel: singleOperator)
+                            ForEach(viewModel.filteredOperators) { singleOperator in
+                                
+                                PaymentsServicesOperatorItemView(viewModel: singleOperator)
+                            }
                         }
                         
                         NoCompanyInListView(viewModel: viewModel.noCompanyInListViewModel)
-                            .padding(.top, 48)
+                            .padding(.top, 43)
                         
                     case .noResult:
                         
                         NoCompanyInListView(viewModel: viewModel.noCompanyInListViewModel)
-                            .padding(.top, 48)
+                            .padding(.top, 43)
                     }
                 }
             }
@@ -65,6 +72,7 @@ struct QRSearchOperatorView: View {
                 case .payments(let viewModel):
                     PaymentsView(viewModel: viewModel)
                         .navigationBarHidden(true)
+
                 }
             }
         }.opacity(0))
@@ -74,14 +82,15 @@ struct QRSearchOperatorView: View {
                 
                 switch item.sheetType {
                 case .city(let model):
-                    QRSearchCityView(viewModel: model)
+                    SearchCityView(viewModel: model)
                 }
             }
     }
 }
 
-struct QRSearchOperatorView_Previews: PreviewProvider {
+struct PaymentsServicesOperatorsView_Previews: PreviewProvider {
     static var previews: some View {
-        QRSearchOperatorView.init(viewModel: .init(searchBar: .init(textFieldPhoneNumberView: .init(.text("Введите ИНН"))), navigationBar: .init(title: "Все регионы"), model: .emptyMock, addCompanyAction: {}, requisitesAction: {}))
+        PaymentsServicesOperatorsView.init(viewModel: .init(searchBar: .init(textFieldPhoneNumberView: .init(.text("Введите ИНН"))), navigationBar: .init(title: "Все регионы"), model: .emptyMock,
+                                                      latestPayments: .sample, allOperators: [], addCompanyAction: {}, requisitesAction: {}))
     }
 }

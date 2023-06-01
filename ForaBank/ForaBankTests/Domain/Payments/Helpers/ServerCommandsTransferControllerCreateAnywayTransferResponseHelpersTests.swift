@@ -116,7 +116,7 @@ extension TransferAnywayResponseData {
                 subTitle: "Пример: 9051111111",
                 title: "Номер телефона +7",
                 type: "Input",
-                inputFieldType: nil,
+                inputFieldType: .phone,
                 dataDictionary: nil,
                 dataDictionaryРarent: nil,
                 group: nil,

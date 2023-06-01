@@ -16,11 +16,11 @@ enum Payments {
         case general = "ru.forabank.sense.payments.category.general"
         case fast  = "ru.forabank.sense.payments.category.fast"
         case taxes = "iFora||1331001"
-        
+
         var services: [Service] {
             
             switch self {
-            case .general: return [.requisites, .c2b, .toAnotherCard, .mobileConnection, .return, .change]
+            case .general: return [.requisites, .c2b, .toAnotherCard, .mobileConnection, .return, .change, .internetTV, .housingAndCommunalServicesP]
             case .fast: return [.sfp, .abroad]
             case .taxes: return [.fns, .fms, .fssp]
             }
@@ -32,6 +32,7 @@ enum Payments {
             case .fast: return "Быстрые платежи"
             case .taxes: return "Налоги и услуги"
             case .general: return ""
+
             }
         }
         
@@ -62,9 +63,12 @@ enum Payments {
         case mobileConnection
         case `return`
         case change
+        case internetTV
+        case housingAndCommunalServicesP
+
     }
     
-    enum Operator : String {
+    enum Operator: String {
         
         case sfp               = "iFora||TransferC2CSTEP"
         case direct            = "iFora||MIG"
@@ -81,6 +85,30 @@ enum Payments {
         case mobileConnection  = "mobileConnection"
         case `return`          = "return"
         case change            = "change"
+        case internetTV        = "iFora||1051001"
+        case housingAndCommunalServices = "iFora||1031001"
+    }
+    
+    static var PaymentsServicesOperators: [Operator] {
+        
+        [
+            .internetTV,
+            .housingAndCommunalServices
+        ]
+    }
+    
+    static func operatorByPaymentsType(_ paymentsType: PTSectionPaymentsView.ViewModel.PaymentsType) -> Operator? {
+        
+        switch paymentsType {
+            
+        case .service:
+              return .housingAndCommunalServices
+        case .internet:
+            return .internetTV
+            
+        default:
+            return .none
+        }
     }
 }
 
@@ -194,6 +222,8 @@ extension Payments.Operation {
         
         case c2bSubscribe(URL)
         
+        case servicePayment(puref: String, additionalList: [PaymentServiceData.AdditionalListData]?, amount: Double)
+
         case mock(Payments.Mock)
         
         var debugDescription: String {
@@ -209,6 +239,7 @@ extension Payments.Operation {
             case let .mock(mock): return "mock service: \(mock.service.rawValue)"
             case let .requisites(qrCode): return "qrCode: \(qrCode)"
             case let .c2bSubscribe(url): return "c2b subscribe url: \(url.absoluteURL)"
+            case let .servicePayment(puref: puref, additionalList: additionalList, amount: amount): return "operator code: \(puref), additionalList: \(String(describing: additionalList)), amount: \(amount)"
             }
         }
     }
@@ -297,6 +328,8 @@ extension Payments.Operation {
         case mobileConnection
         case `return`
         case change
+        case internetTV
+        case housingAndCommunalServicesP
     }
     
     enum Action: Equatable {
@@ -365,6 +398,8 @@ extension Payments {
             case mobileConnectionData(MobileConnectionData)
             case abroadData(TransferResponseBaseData)
             case returnAbroadData(transferData: TransferResponseBaseData, title: String)
+            case paymentsServicesData(PaymentsServicesData)
+
         }
     }
 }
@@ -446,6 +481,13 @@ extension Payments {
             
             case sourceParameterMissingOptions(Payments.Parameter.ID)
             case sourceParameterSelectedOptionInvalid(Payments.Parameter.ID)
+        }
+        
+        enum isSingleService: Swift.Error {
+            
+            case emptyData(message: String?)
+            case statusError(status: ServerStatusCode, message: String?)
+            case serverCommandError(error: String)
         }
         
         var errorDescription: String? {
