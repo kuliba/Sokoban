@@ -44,11 +44,11 @@ extension TemplatesListView {
                           subTitle: viewModel.subTitle,
                           amount: viewModel.ammount,
                           style: style)
-                    .overlay13 {
+                    .overlay13(alignment: .topLeading) {
                                    
                         TemplatesListView.SelectItemVew
                             .init(isSelected: roundButtonViewModel.isSelected)
-                            .offset(x: 6, y: 12)
+                            .offset(x: 8, y: 14)
                     }
                     .onTapGesture { roundButtonViewModel.action(viewModel.id) }
                             
@@ -105,7 +105,6 @@ extension TemplatesListView {
             }
         }
     }
-    
     
     struct AddNewItemView: View {
         
@@ -233,6 +232,27 @@ extension TemplatesListView {
         }
     }
     
+    struct SelectItemVew: View {
+        
+        let isSelected: Bool
+        var body: some View {
+           
+            if isSelected {
+                        
+                Image.ic16Check
+                    .background(Circle()
+                    .foregroundColor(.iconWhite)
+                    .frame(width: 24, height: 24))
+                        
+            } else {
+                        
+                Circle()
+                    .foregroundColor(.iconWhite)
+                    .frame(width: 24, height: 24)
+            }
+        }
+    }
+    
     struct DeletingProgressView: View {
         
         @ObservedObject var viewModel: TemplatesListViewModel.ItemViewModel.DeletingProgressViewModel
@@ -349,7 +369,7 @@ extension TemplatesListView {
             switch style {
             case .list:
                 Text(title)
-                    .font(Font.custom("Inter-Medium", size: 16))
+                    .font(.textBodyMM14200())
                     .foregroundColor(.textSecondary)
                     .lineLimit(1)
                 
@@ -388,8 +408,6 @@ extension TemplatesListView {
                     .multilineTextAlignment(.center)
                     .lineSpacing(3)
                     .frame(height: 50, alignment: .top)
-                    //.fixedSize(horizontal: false, vertical: true)
-                    
             }
         }
     }
@@ -401,7 +419,7 @@ extension TemplatesListView {
         var body: some View {
             
             Text(amount)
-                .font(Font.custom("Inter-Medium", size: 16))
+                .font(.textH4M16240())
                 .foregroundColor(.textSecondary)
         }
     }
@@ -430,7 +448,7 @@ extension TemplatesListView {
                         
                         VStack(spacing: 4) {
                             
-                            Image("trash_empty")
+                            Image.ic24Trash2
                                 .resizable()
                                 .renderingMode(.template)
                                 .frame(width: 24, height: 24)
@@ -457,7 +475,7 @@ extension TemplatesListView {
                 
                 Circle()
                     .stroke(lineWidth: 2)
-                    .foregroundColor(Color(hex: "#EAEBEB"))
+                    .foregroundColor(.bordersDivider)
                 
                 Circle()
                     .trim(from: 0, to:  1 / CGFloat(viewModel.maxCount) * CGFloat(viewModel.progress))

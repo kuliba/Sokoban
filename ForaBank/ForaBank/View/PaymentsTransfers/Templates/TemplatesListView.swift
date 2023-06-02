@@ -408,13 +408,13 @@ extension TemplatesListView {
                 viewModel.icon
                 
                 Text(viewModel.title)
-                    .font(Font.custom("Inter-SemiBold", size: 20))
+                    .font(.textH2SB20282())
                     .foregroundColor(.textSecondary)
                     .padding(.top, 20)
                 
                 Text(viewModel.message)
                     .multilineTextAlignment(.center)
-                    .font(Font.custom("Inter-Medium", size: 16))
+                    .font(.textH4R16240())
                     .foregroundColor(.textPlaceholder)
                     .lineSpacing(6)
                     .padding(.top, 16)
@@ -428,11 +428,11 @@ extension TemplatesListView {
                     
                     ZStack {
                         
-                        Color(hex: "#F6F6F7")
+                        Color.buttonSecondary
                             .cornerRadius(8)
                         
                         Text(viewModel.button.title)
-                            .font(Font.custom("Inter-Medium", size: 16))
+                            .font(.textH3SB18240())
                             .foregroundColor(.textSecondary)
                     }
                 }
@@ -451,7 +451,7 @@ extension TemplatesListView {
             
             ZStack(alignment: .bottom) {
                 
-                Color(hex: "#F8F8F8").opacity(0.82)
+                Color.barsBars.opacity(0.82)
                     .edgesIgnoringSafeArea(.bottom)
                 
                 HStack {
@@ -472,7 +472,7 @@ extension TemplatesListView {
                             .padding(.trailing, 30)
                     
                 }
-                .background(Color(hex: "#F8F8F8").opacity(0.82))
+                .background(Color.barsBars.opacity(0.82))
             }
             .frame(height: 56)
         }
@@ -501,38 +501,6 @@ extension TemplatesListView {
             }
             .disabled(viewModel.isDisable)
             .opacity(viewModel.isDisable ? 0.5 : 1.0)
-        }
-    }
-
-    
-    
-    struct SelectItemVew: View {
-        
-        let isSelected: Bool
-        var body: some View {
-            
-            HStack {
-                
-                VStack {
-                    
-                    if isSelected == true {
-                        
-                        ZStack {
-                            
-                            Image("Template Item Select Button Background")
-                            Image("Template Item Select Button Checkmark")
-                        }
-                        
-                    } else {
-                        
-                        Image("Template Item Select Button Background")
-                    }
-                    
-                    Spacer()
-                }
-                
-                Spacer()
-            }
         }
     }
 
