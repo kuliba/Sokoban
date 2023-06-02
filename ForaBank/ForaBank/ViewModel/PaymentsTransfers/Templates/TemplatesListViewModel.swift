@@ -195,14 +195,15 @@ private extension TemplatesListViewModel {
                     }
                     let sectionSettings = ProductsSectionsSettings(collapsed: ["CARD": false, "ACCOUNT": true] )
                     
-                    let productSections = MyProductsViewModel.updateViewModel(with: productsFilterred,
-                                                                              sections: [],
-                                                                              productsOpening: [],
-                                                                              settingsProductsSections: sectionSettings,
-                                                                              model: model)
+                    let productSections = MyProductsViewModel
+                                            .updateViewModel(with: productsFilterred,
+                                                             sections: [],
+                                                             productsOpening: [],
+                                                             settingsProductsSections: sectionSettings,
+                                                             model: model)
                    
                     let productListViewModel = ProductListViewModel(sections: productSections)
-                    bind(productListViewModel.sections)
+                    bind(productListViewModel)
                     
                     self.sheet = .init(type: .productList(productListViewModel))
                                        
@@ -723,9 +724,9 @@ private extension TemplatesListViewModel {
             .store(in: &bindings)
     }
     
-    private func bind(_ sections: [MyProductsSectionViewModel]) {
+    private func bind(_ viewModel: ProductListViewModel) {
         
-        for section in sections {
+        for section in viewModel.sections {
             
             section.action
                 .receive(on: DispatchQueue.main)
@@ -733,20 +734,27 @@ private extension TemplatesListViewModel {
                     
                     switch action {
                     case let payload as MyProductsSectionViewModelAction.Events.ItemTapped:
-                        
+                       
+                        self.sheet = nil
                         guard let product = model.products.value.values
                                                 .flatMap({ $0 })
                                                 .first(where: { $0.id == payload.productId })
                         else { return }
                         
-                        print("mdy: \(product.displayName)")
-                        self.action.send(TemplatesListViewModelAction.OpenProductProfile.init(productId: product.id))
-                        
+                        self.action.send(TemplatesListViewModelAction.OpenProductProfile
+                                            .init(productId: product.id))
                     default: break
                     }
-           
             }.store(in: &bindings)
-        } //for
+            
+            section.$isCollapsed
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned viewModel] isCollapsed in
+                    
+                    viewModel.containerHeight = viewModel.calcHeight
+                    
+            }.store(in: &bindings)
+        }
     }
 }
 
@@ -780,9 +788,27 @@ extension TemplatesListViewModel {
         let title = "Выберите продукт"
         
         @Published var sections: [MyProductsSectionViewModel]
+        @Published var containerHeight: CGFloat
         
-        init(sections: [MyProductsSectionViewModel]) {
+        var calcHeight: CGFloat {
+            
+            var height: CGFloat = 16
+            for section in sections {
+                
+                if section.isCollapsed {
+                    height += 48 + 16
+                } else {
+                    height += CGFloat(section.items.count) * 72 + 48 + 16
+                }
+            }
+            
+            return height
+        }
+        
+        init(sections: [MyProductsSectionViewModel],
+             containerHeight: CGFloat = 80) {
             self.sections = sections
+            self.containerHeight = containerHeight
         }
         
     }
@@ -907,16 +933,6 @@ private extension TemplatesListViewModel {
     }
 }
 
-//MARK: - Navigation Buttons View Models
-
-private extension TemplatesListViewModel {
-    
-    func cancelDeleteModeButtonViewModel() -> NavigationBarButtonViewModel {
-        
-        NavigationBarButtonViewModel(title: "", icon: Image("Templates Nav Icon Cancel"), action: {[weak self] in self?.action.send(TemplatesListViewModelAction.Delete.Selection.Exit()) })
-    }
-}
-
 //MARK: - Local View Models
 
 extension TemplatesListViewModel {
@@ -959,7 +975,7 @@ extension TemplatesListViewModel {
     
     func getEmptyTemplateListViewModel() -> EmptyTemplateListViewModel {
         
-        .init(icon: Image("Templates Onboarding Icon"),
+        .init(icon: Image("Templates Onboarding Icon"), //ic40Star
               title: "Нет шаблонов",
               message: "Вы можете создать шаблон из любой успешной операции в разделе История",
               button: .init(title: "Перейти в историю",

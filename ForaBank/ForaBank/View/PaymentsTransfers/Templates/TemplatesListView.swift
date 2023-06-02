@@ -387,15 +387,10 @@ extension TemplatesListView {
                             
                             MyProductsSectionView(viewModel: sectionVM,
                                                   editMode: .constant(.inactive))
-                            //.padding(.top, 16)
                         }
                     }
                 }
-
-
-//                    .frame(height: 72 * CGFloat(viewModel.items.count) + 30)
-//                    .listStyle(.plain)
-                   
+                .frame(height: viewModel.containerHeight)
                     
             } //VStack section
     
@@ -554,7 +549,7 @@ struct TemplatesListView_Previews: PreviewProvider {
         Group {
             
             TemplatesListView
-                .ProductListView(viewModel: .init(sections: [.sample2]))
+                .ProductListView(viewModel: .init(sections: [.sample2], containerHeight: 80))
                 .previewDisplayName("Product List View")
             
             TemplatesListView

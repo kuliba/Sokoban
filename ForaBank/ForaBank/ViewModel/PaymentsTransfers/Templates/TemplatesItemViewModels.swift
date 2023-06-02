@@ -10,7 +10,7 @@ import Combine
 
 extension TemplatesListViewModel {
     
-    class ItemViewModel: Identifiable, Equatable, ObservableObject {
+    class ItemViewModel: Identifiable, ObservableObject {
         
         let id: Int
         var sortOrder: Int
@@ -29,7 +29,7 @@ extension TemplatesListViewModel {
         
         let kind: Kind
         
-        lazy var swipeLeft: () -> Void = {
+        lazy var swipeLeft: () -> Void = { //TODO: -
             
             switch self.state {
             case .normal:
@@ -79,9 +79,9 @@ extension TemplatesListViewModel {
             self.kind = kind
         }
         
-        static func == (lhs: TemplatesListViewModel.ItemViewModel, rhs: TemplatesListViewModel.ItemViewModel) -> Bool {
-            lhs.id == rhs.id
-        }
+//        static func == (lhs: TemplatesListViewModel.ItemViewModel, rhs: TemplatesListViewModel.ItemViewModel) -> Bool {
+//            lhs.id == rhs.id
+//        }
         
         
         enum State {
@@ -235,7 +235,7 @@ extension TemplatesListViewModel {
         return ItemViewModel(id: Int.max,
                              sortOrder: Int.max,
                              state: .normal,
-                             image: Image("Templates Add New Icon"),
+                             image: Image("Templates Add New Icon"), //TODO: ic40Star
                              title: "Добавить шаблон",
                              subTitle: "Из любой успешной операции\nв разделе «История»",
                              logoImage: nil,

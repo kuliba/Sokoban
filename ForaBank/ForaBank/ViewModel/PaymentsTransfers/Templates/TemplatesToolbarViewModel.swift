@@ -147,8 +147,8 @@ extension TemplatesListViewModel {
         
         var menuItems = [MenuItemViewModel]()
         
-        let reorderMenuItem = MenuItemViewModel(icon: Image("bar-in-order"),
-                                                textImage: "bar-in-order",
+        let reorderMenuItem = MenuItemViewModel(icon: .ic24BarInOrder, //Image("bar-in-order"),
+                                                textImage: "ic24BarInOrder",
                                                 title: "Последовательность") { [weak self] in
             
             self?.action.send(TemplatesListViewModelAction.ReorderItems.EditModeEnabled())
@@ -158,20 +158,26 @@ extension TemplatesListViewModel {
         
         switch style {
         case .list:
-            let styleMenuItem = MenuItemViewModel(icon: Image("grid"), textImage: "grid", title: "Вид (Плитка)") { [weak self] in
+            let styleMenuItem = MenuItemViewModel(icon: .ic24Grid,//Image("grid"),
+                                                  textImage: "ic24Grid",
+                                                  title: "Вид (Плитка)") { [weak self] in
                 self?.action.send(TemplatesListViewModelAction.ToggleStyle())
                
             }
             menuItems.append(styleMenuItem)
             
         case .tiles:
-            let styleMenuItem = MenuItemViewModel(icon: Image("Templates Menu Icon List"), textImage: "Templates Menu Icon List", title: "Вид (Список)") { [weak self] in
+            let styleMenuItem = MenuItemViewModel(icon: .ic24List, //Image("Templates Menu Icon List"),
+                                                  textImage: "ic24List",
+                                                  title: "Вид (Список)") { [weak self] in
                 self?.action.send(TemplatesListViewModelAction.ToggleStyle())
             }
             menuItems.append(styleMenuItem)
         }
         
-        let deleteMenuItem = MenuItemViewModel(icon: Image("trash_empty"), textImage: "trash_empty", title: "Удалить") { [weak self] in
+        let deleteMenuItem = MenuItemViewModel(icon: .ic24Trash,//Image("trash_empty"),
+                                               textImage: "ic24Trash",
+                                               title: "Удалить") { [weak self] in
             self?.action.send(TemplatesListViewModelAction.Delete.Selection.Enter())
         }
         menuItems.append(deleteMenuItem)
