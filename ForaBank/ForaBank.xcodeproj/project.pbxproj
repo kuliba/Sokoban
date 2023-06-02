@@ -1031,6 +1031,7 @@
 		777460F92922EE2300D3FF46 /* ContactsSectionHeaderViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777460F82922EE2300D3FF46 /* ContactsSectionHeaderViewComponent.swift */; };
 		777460FB2922F07600D3FF46 /* ContactsBanksSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777460FA2922F07600D3FF46 /* ContactsBanksSectionView.swift */; };
 		777460FD2922F37C00D3FF46 /* ContactsCountriesSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777460FC2922F37C00D3FF46 /* ContactsCountriesSectionView.swift */; };
+		778426302A28B91900543FB8 /* ProductProfileDetailMainBlockViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7784262F2A28B91900543FB8 /* ProductProfileDetailMainBlockViewModelTests.swift */; };
 		7784D2A8285B73F600E81005 /* LineProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7784D2A7285B73F600E81005 /* LineProgressView.swift */; };
 		7784D2AA285B7BA300E81005 /* ProductProfileDetaiHeaderViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7784D2A9285B7BA300E81005 /* ProductProfileDetaiHeaderViewComponent.swift */; };
 		7788BE03285B849C00EAF14D /* ProductProfileDetailAmountViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7788BE02285B849C00EAF14D /* ProductProfileDetailAmountViewComponent.swift */; };
@@ -2706,6 +2707,7 @@
 		777460F82922EE2300D3FF46 /* ContactsSectionHeaderViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsSectionHeaderViewComponent.swift; sourceTree = "<group>"; };
 		777460FA2922F07600D3FF46 /* ContactsBanksSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsBanksSectionView.swift; sourceTree = "<group>"; };
 		777460FC2922F37C00D3FF46 /* ContactsCountriesSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsCountriesSectionView.swift; sourceTree = "<group>"; };
+		7784262F2A28B91900543FB8 /* ProductProfileDetailMainBlockViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileDetailMainBlockViewModelTests.swift; sourceTree = "<group>"; };
 		7784D2A7285B73F600E81005 /* LineProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineProgressView.swift; sourceTree = "<group>"; };
 		7784D2A9285B7BA300E81005 /* ProductProfileDetaiHeaderViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileDetaiHeaderViewComponent.swift; sourceTree = "<group>"; };
 		7788BE02285B849C00EAF14D /* ProductProfileDetailAmountViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileDetailAmountViewComponent.swift; sourceTree = "<group>"; };
@@ -5913,6 +5915,7 @@
 		7772978A27C3B7480099EF91 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				7784262D2A28B8D100543FB8 /* ProductProfile */,
 				2AB5FEA329E681430055BE57 /* PaymentsTransfers */,
 				2AD64855299E7EF600D70B6B /* General */,
 				7772978B27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift */,
@@ -5975,6 +5978,22 @@
 				777460F82922EE2300D3FF46 /* ContactsSectionHeaderViewComponent.swift */,
 			);
 			path = FastPayments;
+			sourceTree = "<group>";
+		};
+		7784262D2A28B8D100543FB8 /* ProductProfile */ = {
+			isa = PBXGroup;
+			children = (
+				7784262E2A28B8EA00543FB8 /* Detail */,
+			);
+			path = ProductProfile;
+			sourceTree = "<group>";
+		};
+		7784262E2A28B8EA00543FB8 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				7784262F2A28B91900543FB8 /* ProductProfileDetailMainBlockViewModelTests.swift */,
+			);
+			path = Detail;
 			sourceTree = "<group>";
 		};
 		7789794729CB6C1200ECF684 /* Helpers */ = {
@@ -10385,6 +10404,7 @@
 				2AEDAD5C29A640BC00017F73 /* CreateAnywayTransferHelpersTests.swift in Sources */,
 				77FC5E2429423DCC006784F4 /* PaymentsValidationRulesSystemTests.swift in Sources */,
 				68E765282796D6DF005860FE /* ServerCommandsRegistrationTests.swift in Sources */,
+				778426302A28B91900543FB8 /* ProductProfileDetailMainBlockViewModelTests.swift in Sources */,
 				77504C8D28C8B07C00A2F444 /* PaymentsParameterHelpersTests.swift in Sources */,
 				682092AA27AC069F003DCAFD /* ServerCommandsSuggestTests.swift in Sources */,
 				C154987029088C9E00D00670 /* TextFieldPhoneNumberViewComponentsTests.swift in Sources */,
