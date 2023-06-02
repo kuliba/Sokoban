@@ -35,7 +35,7 @@ extension TemplatesListViewModel {
             case .normal:
                 
                 withAnimation(.easeInOut(duration: 0.2)) {
-                    self.state = .delete(.init(icon: Image("trash_empty"), subTitle: "Удалить", action: self.deleteAction))
+                    self.state = .delete(.init(icon: .ic32Trash, subTitle: "Удалить", action: self.deleteAction))
                 }
                 
             default:
@@ -79,11 +79,6 @@ extension TemplatesListViewModel {
             self.kind = kind
         }
         
-//        static func == (lhs: TemplatesListViewModel.ItemViewModel, rhs: TemplatesListViewModel.ItemViewModel) -> Bool {
-//            lhs.id == rhs.id
-//        }
-        
-        
         enum State {
             
             case normal
@@ -99,21 +94,6 @@ extension TemplatesListViewModel {
                 return viewModel
             }
             
-//            var deleteButtonViewModel: ItemActionViewModel? {
-//
-//                guard case .delete(let viewModel) = self
-//                else { return nil }
-//
-//                return viewModel
-//            }
-            
-//            var deletingProgressViewModel: DeletingProgressViewModel? {
-//
-//                guard case .deleting(let viewModel) = self
-//                else { return nil }
-//
-//                return viewModel
-//            }
         }
         
         struct ToggleRoundButtonViewModel {
@@ -235,7 +215,7 @@ extension TemplatesListViewModel {
         return ItemViewModel(id: Int.max,
                              sortOrder: Int.max,
                              state: .normal,
-                             image: Image("Templates Add New Icon"), //TODO: ic40Star
+                             image: .ic40Star, //Image("Templates Add New Icon"), //TODO: ic40Star
                              title: "Добавить шаблон",
                              subTitle: "Из любой успешной операции\nв разделе «История»",
                              logoImage: nil,
@@ -266,10 +246,10 @@ extension TemplatesListViewModel {
     func getItemsMenuViewModel() -> [ItemViewModel.ItemActionViewModel]? {
             
         [
-            .init(icon: Image("roundTrash"), subTitle: "Удалить", action: { [weak self] id in
+            .init(icon: .ic32Trash, subTitle: "Удалить", action: { [weak self] id in
                 self?.action.send(TemplatesListViewModelAction.Item.Delete(itemId: id)) }),
             
-            .init(icon: Image("roundEdit-2"), subTitle: "Переименовать", action: { [weak self] id in
+                .init(icon: .ic32Edit2, subTitle: "Переименовать", action: { [weak self] id in
                 self?.action.send(TemplatesListViewModelAction.Item.Rename(itemId: id)) })
             ]
 

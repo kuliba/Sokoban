@@ -406,6 +406,10 @@ extension TemplatesListView {
             VStack(spacing: 0) {
                 
                 viewModel.icon
+                    .resizable()
+                    .renderingMode(.original)
+                    .frame(width: 64, height: 64)
+                    .background(Circle().foregroundColor(.gray))
                 
                 Text(viewModel.title)
                     .font(.textH2SB20282())
@@ -517,7 +521,7 @@ struct TemplatesListView_Previews: PreviewProvider {
         Group {
             
             TemplatesListView
-                .ProductListView(viewModel: .init(sections: [.sample2], containerHeight: 80))
+                .ProductListView(viewModel: .init(sections: [.sample2]))
                 .previewDisplayName("Product List View")
             
             TemplatesListView

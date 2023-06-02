@@ -73,7 +73,7 @@ extension TemplatesListViewModel {
             
                 .init(id: 4, sortOrder: 4,
                       state: .normal,
-                      image: Image("Templates Add New Icon"),
+                      image: .ic40Star,
                       title: "Добавить шаблон",
                       subTitle: "Из любой успешной операции в разделе «История»",
                       logoImage: nil, ammount: "",
@@ -119,7 +119,7 @@ extension TemplatesListViewModel {
             
                 .init(id: 4, sortOrder: 4,
                       state: .normal,
-                      image: Image("Templates Add New Icon"),
+                      image: .ic40Star,
                       title: "Добавить шаблон",
                       subTitle: "Из операции в разделе История",
                       logoImage: nil, ammount: "",
@@ -257,7 +257,7 @@ extension TemplatesListViewModel.EmptyTemplateListViewModel {
     
     static let sample: TemplatesListViewModel.EmptyTemplateListViewModel =
         
-        .init(icon: Image("Templates Onboarding Icon"),
+        .init(icon: .ic40Star, //Image("Templates Onboarding Icon"),
               title: "Нет шаблонов",
               message: "Вы можете создать шаблон из любой успешной операции в разделе История",
               button: .init(title: "Перейти в историю",

@@ -536,7 +536,7 @@ private extension TemplatesListViewModel {
                         .init(id: 0,
                               sortOrder: 0,
                               state: .normal,
-                              image: Image(""),
+                              image: Image(""), //TODO:
                               title: "Выбрано \(deleteGroupItemsId.count)",
                               subTitle: "",
                               kind: .deleting)
@@ -975,7 +975,7 @@ extension TemplatesListViewModel {
     
     func getEmptyTemplateListViewModel() -> EmptyTemplateListViewModel {
         
-        .init(icon: Image("Templates Onboarding Icon"), //ic40Star
+        .init(icon: .ic40Star,
               title: "Нет шаблонов",
               message: "Вы можете создать шаблон из любой успешной операции в разделе История",
               button: .init(title: "Перейти в историю",
@@ -1025,7 +1025,6 @@ extension TemplatesListViewModel {
         case emptyList(EmptyTemplateListViewModel)
         case normal
         case select
-        //case placeholder(DeletePannelViewModel)
     }
     
     enum Style: Codable {

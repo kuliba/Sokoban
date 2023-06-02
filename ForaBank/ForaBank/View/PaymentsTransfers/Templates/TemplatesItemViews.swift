@@ -316,7 +316,6 @@ extension TemplatesListView {
                             
                             viewModel.cancelButton.action(viewModel.id)
                         }
-                        //.padding(.top, 10)
                         .padding(.bottom, 16)
                     }
                 }
@@ -346,6 +345,7 @@ extension TemplatesListView {
                 
                 image
                     .resizable()
+                    .renderingMode(.original)
                     .frame(width: side, height: side)
                 
                 if let logoImage = logoImage {
