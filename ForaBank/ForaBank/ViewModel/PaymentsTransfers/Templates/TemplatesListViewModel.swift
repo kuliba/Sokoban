@@ -64,7 +64,7 @@ class TemplatesListViewModel: ObservableObject {
         
         }
         
-        self.init(state: .normal,
+        self.init(state: .placeholder,
                   style: model.paymentTemplatesViewSettings.value.style,
                   navBarState: .regular(nil),
                   categorySelector: nil,
@@ -108,30 +108,39 @@ private extension TemplatesListViewModel {
 //                }
 //            }.store(in: &bindings)
         
-    // templates data updates from model
+    
         model.paymentTemplates
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] templates in
-                
-                withAnimation {
+              
+                style = model.paymentTemplatesViewSettings.value.style
                     
-                    style = model.paymentTemplatesViewSettings.value.style
-                    
-                    if templates.isEmpty {
+                if templates.isEmpty {
+                   
+                    withAnimation {
                         
                         state = .emptyList(getEmptyTemplateListViewModel())
                         itemsRaw.value = []
                         categorySelector = nil
+                    }
                         
-                    } else {
+                } else {
                         
-                        state = .normal
-                        itemsRaw.value = templates.compactMap{ getItemViewModel(with: $0) }
-                        categorySelector = categorySelectorViewModel(with: templates)
-                        bindCategorySelector()
+                    DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
+                        let templatesVM = templates.compactMap { getItemViewModel(with: $0) }
+                            
+                        DispatchQueue.main.async { [unowned self] in
+                           
+                            withAnimation {
+                               
+                                itemsRaw.value = templatesVM
+                                categorySelector = categorySelectorViewModel(with: templates)
+                                bindCategorySelector()
+                                state = .normal
+                            }
+                        }
                     }
                 }
-    
             }.store(in: &bindings)
         
         itemsRaw
@@ -385,7 +394,7 @@ private extension TemplatesListViewModel {
                         if case .tiles = self.style { self.style = .list }
                         
                         self.categorySelector = nil
-                        items.removeLast()
+                        items = self.itemsRaw.value //.removeLast()
                         self.editModeState = .active
                         self.updateNavBar(state: .reorder(nil))
                     }
@@ -1025,6 +1034,7 @@ extension TemplatesListViewModel {
         case emptyList(EmptyTemplateListViewModel)
         case normal
         case select
+        case placeholder
     }
     
     enum Style: Codable {

@@ -11,8 +11,6 @@ import SwiftUI
 struct TemplatesListView: View {
     
     @ObservedObject var viewModel: TemplatesListViewModel
-   // @Namespace var namespace
-    //@State var isNotMoveble = false
     
     private let columns = [GridItem(.flexible(), spacing: 16), GridItem(.flexible())]
   
@@ -46,49 +44,46 @@ struct TemplatesListView: View {
                                     TemplateItemView(viewModel: item,
                                                      style: .constant(.list),
                                                      editMode: $viewModel.editModeState)
-                                    //.matchedGeometryEffect(id: "item", in: namespace)
-                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                    .listRowBackground(
-                                        Color.mainColorsGrayLightest.cornerRadius(16)
-                                            .padding(.vertical, 6)
-                                            .background(Color.white)
-                                    )
-                                    .listRowSeparatorTint(.white)
-                                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                        .listRowBackground(
+                                            Color.mainColorsGrayLightest.cornerRadius(16)
+                                                .padding(.vertical, 6)
+                                                .background(Color.white)
+                                        )
+                                        .listRowSeparatorTint(.white)
+                                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                         
-                                        if let itemsMenuViewModel =  viewModel.getItemsMenuViewModel() {
+                                            if let itemsMenuViewModel =  viewModel.getItemsMenuViewModel() {
                                             
-                                            ForEach(itemsMenuViewModel) { button in
+                                                ForEach(itemsMenuViewModel) { button in
                                                 
-                                                Button(action: { button.action(item.id) }) {
+                                                    Button(action: { button.action(item.id) }) {
                                                     
-                                                    button.icon
-                                                        .renderingMode(.original)
-                                                        .tint(.black)
+                                                        button.icon
+                                                            .renderingMode(.original)
+                                                            .tint(.black)
+                                                    }
+                                                    .tint(.white)
                                                 }
-                                                .tint(.white)
+                                            
+                                            } else {
+                                            
+                                                EmptyView()
                                             }
-                                            
-                                        } else {
-                                            
-                                            EmptyView()
-                                        }
                                         
-                                    } //swipe
-                                    
-                                    //.moveDisabled(viewModel.editModeState == .active ? false : true)
-                                    
+                                        } //swipeAction
+                             
                                 } else { //iOS 14
                                     
                                     TemplateItemView(viewModel: item,
                                                      style: .constant(.list),
                                                      editMode: $viewModel.editModeState)
-                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                    .listRowBackground(
-                                        Color.mainColorsGrayLightest.cornerRadius(16)
-                                            .padding(.vertical, 6)
-                                            .background(Color.white)
-                                    )
+                                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                        .listRowBackground(
+                                            Color.mainColorsGrayLightest.cornerRadius(16)
+                                                .padding(.vertical, 6)
+                                                .background(Color.white)
+                                        )
                                     //.frame(height: 72, alignment: .bottomLeading)
                                     //                                            .modifier(SwipeSidesModifier(leftAction: {
                                     //
@@ -195,6 +190,10 @@ struct TemplatesListView: View {
             case let .emptyList(emptyTemplateListViewModel):
                 
                 EmptyTemplateListView(viewModel: emptyTemplateListViewModel)
+                
+            case .placeholder:
+                
+                PlaceholderView(style: viewModel.style)
                 
             } //main stateSwitch
             
@@ -447,6 +446,59 @@ extension TemplatesListView {
         }
     }
     
+    struct PlaceholderView: View {
+        
+        let style: TemplatesListViewModel.Style
+        let columns = [GridItem(.flexible(), spacing: 16), GridItem(.flexible())]
+        
+        var body: some View {
+                
+            VStack(alignment: .leading, spacing: 0) {
+                   
+                HStack(spacing: 8) {
+                        
+                    ForEach(0..<3) { _ in
+                           
+                        RoundedRectangle(cornerRadius: 90)
+                            .frame(width: 100, height: 32)
+                            .shimmering(active: true, bounce: true)
+                    }
+                }
+                .padding(.bottom, 20)
+                    
+                switch style {
+                case .list:
+                    
+                    ForEach(0..<3) { _ in
+                        
+                        RoundedRectangle(cornerRadius: 12)
+                            .frame(height: 72)
+                            .padding(.bottom, 12)
+                            .shimmering(active: true, bounce: true)
+                    }
+                    
+                case .tiles:
+                    
+                    LazyVGrid(columns: columns, spacing: 16) {
+                        
+                        ForEach(0..<3) { _ in
+                            
+                            RoundedRectangle(cornerRadius: 12)
+                                .frame(height: 188)
+                                //.padding(.bottom, 12)
+                                .shimmering(active: true, bounce: true)
+                            
+                        }
+                    }
+                }
+                
+                Spacer()
+            }
+            .foregroundColor(.mainColorsGrayMedium.opacity(0.9))
+            .padding()
+        }
+    }
+    
     struct DeletePannelView: View {
         
         let viewModel: TemplatesListViewModel.DeletePannelViewModel
@@ -510,8 +562,6 @@ extension TemplatesListView {
 
 }
 
-
-
 //MARK: - Helpers
 
 struct TemplatesListView_Previews: PreviewProvider {
@@ -546,6 +596,9 @@ struct TemplatesListView_Previews: PreviewProvider {
             
             TemplatesListView.EmptyTemplateListView(viewModel: .sample)
                 .previewDisplayName("Empty State")
+            
+            TemplatesListView.PlaceholderView(style: .tiles)
+                .previewDisplayName("Placeholder")
         }
     }
 }

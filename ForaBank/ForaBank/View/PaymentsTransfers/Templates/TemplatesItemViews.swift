@@ -153,7 +153,6 @@ extension TemplatesListView {
                 .onTapGesture { viewModel.tapAction(0) }
             } //switch
             
-            
         }
     }
 }
