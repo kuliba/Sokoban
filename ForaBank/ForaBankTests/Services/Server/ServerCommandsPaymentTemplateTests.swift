@@ -70,7 +70,10 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
         
         let paymentTemplate = PaymentTemplateData.init(groupName: "Перевод МИГ", name: "Перевод между счетами", parameterList: [parameter1, parameter2, parameter3], paymentTemplateId: 2513, productTemplate: nil, sort: 4, svgImage: .init(description: "image"), type: .newDirect)
         
-        let expected = ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response(statusCode: .ok, errorMessage: nil, data: [paymentTemplate])
+        let expected = ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response
+                            .init(statusCode: .ok,
+                                  errorMessage: nil,
+                                  data: .init(templateList: [paymentTemplate], serial: ""))
         
         // when
         let result = try decoder.decode(ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response.self, from: json)

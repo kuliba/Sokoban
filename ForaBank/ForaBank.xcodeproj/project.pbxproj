@@ -307,6 +307,7 @@
 		0CC2BDAB2A0544A1000C588F /* TemplatesItemViewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC2BDAA2A0544A1000C588F /* TemplatesItemViewModels.swift */; };
 		0CC8FCA7283145E900F0E9BD /* PaymentsTransfersViewModel+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC8FCA6283145E900F0E9BD /* PaymentsTransfersViewModel+Preview.swift */; };
 		0CC8FCA928315F3500F0E9BD /* Model+LatestPayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC8FCA828315F3500F0E9BD /* Model+LatestPayments.swift */; };
+		0CCE2DE12A2D071C0016C81A /* TemplatesListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CCE2DE02A2D071C0016C81A /* TemplatesListViewModelTests.swift */; };
 		0CD7CE9728DE5AD500B52CF9 /* SwipeActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD7CE9628DE5AD500B52CF9 /* SwipeActionView.swift */; };
 		0CEA32012875D8E7005B80BA /* Model+CurrencyWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CEA32002875D8E7005B80BA /* Model+CurrencyWallet.swift */; };
 		0CEA3203287618CE005B80BA /* CreateTransterResponseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CEA3202287618CE005B80BA /* CreateTransterResponseData.swift */; };
@@ -1964,6 +1965,7 @@
 		0CC2BDAA2A0544A1000C588F /* TemplatesItemViewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesItemViewModels.swift; sourceTree = "<group>"; };
 		0CC8FCA6283145E900F0E9BD /* PaymentsTransfersViewModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsTransfersViewModel+Preview.swift"; sourceTree = "<group>"; };
 		0CC8FCA828315F3500F0E9BD /* Model+LatestPayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+LatestPayments.swift"; sourceTree = "<group>"; };
+		0CCE2DE02A2D071C0016C81A /* TemplatesListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListViewModelTests.swift; sourceTree = "<group>"; };
 		0CD7CE9628DE5AD500B52CF9 /* SwipeActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeActionView.swift; sourceTree = "<group>"; };
 		0CEA32002875D8E7005B80BA /* Model+CurrencyWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+CurrencyWallet.swift"; sourceTree = "<group>"; };
 		0CEA3202287618CE005B80BA /* CreateTransterResponseData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTransterResponseData.swift; sourceTree = "<group>"; };
@@ -4112,6 +4114,22 @@
 			path = PaymentsTransfers;
 			sourceTree = "<group>";
 		};
+		0CCE2DDE2A2D065A0016C81A /* PaymentsTransfers */ = {
+			isa = PBXGroup;
+			children = (
+				0CCE2DDF2A2D06890016C81A /* Templates */,
+			);
+			path = PaymentsTransfers;
+			sourceTree = "<group>";
+		};
+		0CCE2DDF2A2D06890016C81A /* Templates */ = {
+			isa = PBXGroup;
+			children = (
+				0CCE2DE02A2D071C0016C81A /* TemplatesListViewModelTests.swift */,
+			);
+			path = Templates;
+			sourceTree = "<group>";
+		};
 		0CCF9120281C19A800C6322F /* Chat */ = {
 			isa = PBXGroup;
 			children = (
@@ -5923,6 +5941,7 @@
 		77BE9A36290C2097006046B1 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				0CCE2DDE2A2D065A0016C81A /* PaymentsTransfers */,
 				77BE9A37290C20AC006046B1 /* Payments */,
 			);
 			path = ViewModel;
@@ -10214,6 +10233,7 @@
 				7758DFD229EB1DE200060761 /* PaymentsSelectViewComponentTests.swift in Sources */,
 				0BCFBE032817F77D003F2F36 /* ModelNotificationsTests.swift in Sources */,
 				77EC58BB27712AF50054D75C /* TransferAnywayDataTests.swift in Sources */,
+				0CCE2DE12A2D071C0016C81A /* TemplatesListViewModelTests.swift in Sources */,
 				77EC58CB277133C40054D75C /* PaymentTemplateTests.swift in Sources */,
 				0B34AF87277B24F80080F31A /* PhoneNumberKitTest.swift in Sources */,
 				2AF5E28929BB3F46004D69F3 /* ServerAgentStub.swift in Sources */,

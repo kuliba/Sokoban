@@ -12,18 +12,22 @@ extension TemplatesListViewModel {
     
     enum NavBarState {
         
-        case regular(RegularNavBarViewModel?)
-        case search(SearchNavBarViewModel?)
-        case delete(TwoButtonsNavBarViewModel?)
-        case reorder(TwoButtonsNavBarViewModel?)
+        case regular(RegularNavBarViewModel)
+        case search(SearchNavBarViewModel)
+        case delete(TwoButtonsNavBarViewModel)
+        case reorder(TwoButtonsNavBarViewModel)
         
-        var regular: RegularNavBarViewModel? {
+        var regularModel: RegularNavBarViewModel? {
             
-            if case .regular(let wrapped) = self {
-                return wrapped
+            if case .regular(let viewModel) = self {
+                return viewModel
             } else {
                 return nil
             }
+        }
+        
+        enum Events {
+            case setRegular, setSearch, setDelete, setReorder
         }
     }
     
@@ -107,30 +111,30 @@ extension TemplatesListViewModel {
         let action: () -> Void
     }
     
-    func updateNavBar(state: NavBarState) {
+    func updateNavBar(event: NavBarState.Events) {
         
-        switch state {
-        case .regular:
+        switch event {
+        case .setRegular:
             
             self.navBarState = .regular(.init(backButton: .init(icon: .ic24ChevronLeft, action: self.dismissAction),
                                               menuList: getMenuListViewModel(),
                                               searchButton: .init(icon: .ic24Search, action: {
                 self.action.send(TemplatesListViewModelAction.RegularNavBar.SearchNavBarPresent()) })))
             
-        case .search:
+        case .setSearch:
            
             let searchNavBarViewModel = SearchNavBarViewModel()
             self.navBarState = .search(searchNavBarViewModel)
             bind(searchNavBarViewModel)
             
-        case .delete:
+        case .setDelete:
             
             self.navBarState = .delete(.init(leadingButton: .init(icon: .ic24ChevronLeft, action: self.dismissAction),
                                              trailingButton: .init(icon: .ic24Close, action: {
                 self.action.send(TemplatesListViewModelAction.Delete.Selection.Exit())
             }),
                                              title: "Выбрать шаблоны"))
-        case .reorder:
+        case .setReorder:
             
             self.navBarState = .reorder(.init(leadingButton: .init(icon: .ic24Close, action: {
                 self.action.send(TemplatesListViewModelAction.ReorderItems.CloseEditMode())
@@ -147,7 +151,7 @@ extension TemplatesListViewModel {
         
         var menuItems = [MenuItemViewModel]()
         
-        let reorderMenuItem = MenuItemViewModel(icon: .ic24BarInOrder, //Image("bar-in-order"),
+        let reorderMenuItem = MenuItemViewModel(icon: .ic24BarInOrder,
                                                 textImage: "ic24BarInOrder",
                                                 title: "Последовательность") { [weak self] in
             
@@ -158,7 +162,7 @@ extension TemplatesListViewModel {
         
         switch style {
         case .list:
-            let styleMenuItem = MenuItemViewModel(icon: .ic24Grid,//Image("grid"),
+            let styleMenuItem = MenuItemViewModel(icon: .ic24Grid,
                                                   textImage: "ic24Grid",
                                                   title: "Вид (Плитка)") { [weak self] in
                 self?.action.send(TemplatesListViewModelAction.ToggleStyle())
@@ -167,7 +171,7 @@ extension TemplatesListViewModel {
             menuItems.append(styleMenuItem)
             
         case .tiles:
-            let styleMenuItem = MenuItemViewModel(icon: .ic24List, //Image("Templates Menu Icon List"),
+            let styleMenuItem = MenuItemViewModel(icon: .ic24List,
                                                   textImage: "ic24List",
                                                   title: "Вид (Список)") { [weak self] in
                 self?.action.send(TemplatesListViewModelAction.ToggleStyle())

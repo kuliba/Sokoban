@@ -54,26 +54,21 @@ class TemplatesListViewModel: ObservableObject {
     }
     
     convenience init(_ model: Model, dismissAction: @escaping () -> Void) {
-        
-        let dataCache = model.paymentTemplates.value
-        
-        if dataCache.isEmpty {
-            
-        } else {
-            
-        
-        }
-        
+  
         self.init(state: .placeholder,
                   style: model.paymentTemplatesViewSettings.value.style,
-                  navBarState: .regular(nil),
+                  navBarState: .regular(.init(backButton: .init(icon: .ic24ChevronLeft,
+                                                                action: dismissAction),
+                                              menuList: [],
+                                              searchButton: .init(icon: .ic24Search,
+                                                                  action: {} ))),
                   categorySelector: nil,
                   items: [],
                   deletePannel: nil,
                   dismissAction: dismissAction,
                   model: model)
         
-        updateNavBar(state: .regular(nil))
+        updateNavBar(event: .setRegular)
         
         bind()
         
@@ -169,8 +164,6 @@ private extension TemplatesListViewModel {
                 
                 switch navBarState {
                 case let .regular(viewModel):
-                    
-                    guard let viewModel else { return }
                     
                     if items.contains(where: { $0.kind == .deleting })
                         || items.filter({ $0.kind == .regular }).isEmpty {
@@ -369,11 +362,11 @@ private extension TemplatesListViewModel {
                         }
                     }
     
-                    updateNavBar(state: .regular(nil))
+                    updateNavBar(event: .setRegular)
                     
                 case _ as TemplatesListViewModelAction.RegularNavBar.SearchNavBarPresent:
                     
-                    updateNavBar(state: .search(nil))
+                    updateNavBar(event: .setSearch)
                     
                 case _ as TemplatesListViewModelAction.RegularNavBar.RegularNavBarPresent:
                     
@@ -396,7 +389,7 @@ private extension TemplatesListViewModel {
                         self.categorySelector = nil
                         items = self.itemsRaw.value //.removeLast()
                         self.editModeState = .active
-                        self.updateNavBar(state: .reorder(nil))
+                        self.updateNavBar(event: .setReorder)
                     }
               
             //Close Reorder
@@ -405,7 +398,7 @@ private extension TemplatesListViewModel {
                     withAnimation {
                         
                         self.editModeState = .inactive
-                        self.updateNavBar(state: .regular(nil))
+                        self.updateNavBar(event: .setRegular)
                         self.items = self.itemsRaw.value
                         categorySelector = categorySelectorViewModel(with: model.paymentTemplates.value)
                     }
@@ -417,7 +410,7 @@ private extension TemplatesListViewModel {
                 case _ as TemplatesListViewModelAction.ReorderItems.SaveReorder:
                     
                     self.editModeState = .inactive
-                    self.updateNavBar(state: .regular(nil))
+                    self.updateNavBar(event: .setRegular)
                     
                     var sortIndex = 1
                     let newOrders = items.reduce(into: [PaymentTemplateData.SortData]()) { payloadData, itemVM in
@@ -453,7 +446,7 @@ private extension TemplatesListViewModel {
                     withAnimation {
                         
                         self.state = .select
-                        updateNavBar(state: .delete(nil))
+                        updateNavBar(event: .setDelete)
                         self.selectedItemsIds.value = []
                         self.deletePannel = deletePannelViewModel(selectedCount: 0)
                         
@@ -472,7 +465,7 @@ private extension TemplatesListViewModel {
                     withAnimation {
                         
                         state = .normal
-                        updateNavBar(state: .regular(nil))
+                        updateNavBar(event: .setRegular)
                         selectedItemsIds.value = []
                         deletePannel = nil
                         
@@ -609,7 +602,7 @@ private extension TemplatesListViewModel {
                     
                     withAnimation {
                         
-                        self.updateNavBar(state: .regular(nil))
+                        self.updateNavBar(event: .setRegular)
                             
                         if let selectedCategoryIndex = categorySelector?.selected {
                                 
@@ -658,6 +651,7 @@ private extension TemplatesListViewModel {
             }.store(in: &bindings)
         
         $style
+            .receive(on: DispatchQueue.main)
             .sink { [unowned self] style in
                 
                 model.paymentTemplatesViewSettings.value = Settings(style: style)
@@ -699,7 +693,6 @@ private extension TemplatesListViewModel {
                 var tempItems = itemsRaw.value
                 
                 if case .search(let viewModel) = navBarState,
-                   let viewModel,
                    !viewModel.searchText.isEmpty {
                     
                     tempItems = searchedItems(tempItems, viewModel.searchText)
@@ -1035,6 +1028,16 @@ extension TemplatesListViewModel {
         case normal
         case select
         case placeholder
+        
+        var emptyListModel: EmptyTemplateListViewModel? {
+            
+            if case .emptyList(let viewModel) = self {
+                return viewModel
+            } else {
+                return nil
+            }
+        }
+        
     }
     
     enum Style: Codable {

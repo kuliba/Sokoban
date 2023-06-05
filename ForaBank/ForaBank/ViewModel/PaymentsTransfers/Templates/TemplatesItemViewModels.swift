@@ -215,7 +215,7 @@ extension TemplatesListViewModel {
         return ItemViewModel(id: Int.max,
                              sortOrder: Int.max,
                              state: .normal,
-                             image: .ic40Star, //Image("Templates Add New Icon"), //TODO: ic40Star
+                             image: .ic40Star,
                              title: "Добавить шаблон",
                              subTitle: "Из любой успешной операции\nв разделе «История»",
                              logoImage: nil,
