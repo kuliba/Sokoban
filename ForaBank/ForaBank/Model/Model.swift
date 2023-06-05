@@ -315,6 +315,7 @@ class Model {
                     action.send(ModelAction.Account.ProductList.Request())
                     action.send(ModelAction.AppVersion.Request())
                     action.send(ModelAction.Settings.GetUserSettings())
+                    action.send(ModelAction.ProductTemplate.List.Request())
                     
                     if let deepLinkType = deepLinkType {
                         

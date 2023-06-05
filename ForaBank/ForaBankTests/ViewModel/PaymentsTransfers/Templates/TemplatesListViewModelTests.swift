@@ -147,7 +147,7 @@ private extension Model {
 private extension PaymentTemplateData {
     
     static func makeTemplateData(
-        groupName: String = "",
+        groupName: String,
         name: String,
         parameterList: [TransferData],
         paymentTemplateId: Int,
@@ -171,7 +171,7 @@ private extension PaymentTemplateData {
         
         groupName: "group1",
         name: "firstTemplate",
-        parameterList: [.init(amount: 10.0,
+        parameterList: [.init(amount: 101.19,
                               check: true,
                               comment: nil,
                               currencyAmount: "RUB",
@@ -185,7 +185,7 @@ private extension PaymentTemplateData {
         
         groupName: "group2",
         name: "secondTemplate",
-        parameterList: [.init(amount: 10.0,
+        parameterList: [.init(amount: 10.02,
                               check: true,
                               comment: nil,
                               currencyAmount: "RUB",

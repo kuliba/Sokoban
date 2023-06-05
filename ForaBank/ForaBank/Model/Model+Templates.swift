@@ -241,7 +241,6 @@ extension Model {
         
         serverAgent.executeCommand(command: command) { [unowned self] result in
             
-            //sleep(8)
             self.paymentTemplatesUpdating.send(false)
             
             switch result {
@@ -271,13 +270,16 @@ extension Model {
                         .init(paymentTemplates: data.templateList))
 
                 default:
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command,
+                                                   serverStatusCode: response.statusCode,
+                                                   errorMessage: response.errorMessage)
                     
                     self.action.send(ModelAction.PaymentTemplate.List.Failed
                         .init(error: ResponseError(message: response.errorMessage)))
                 }
             case .failure(let error):
                 
+                self.handleServerCommandError(error: error, command: command)
                 self.action.send(ModelAction.PaymentTemplate.List.Failed
                     .init(error: ResponseError(message: error.localizedDescription)))
             }
@@ -290,7 +292,12 @@ extension Model {
             handledUnauthorizedCommandAttempt()
             return
         }
-        let command = ServerCommands.PaymentTemplateController.SavePaymentTemplate(token: token, payload: .init(name: payload.name, paymentOperationDetailId: payload.paymentOperationDetailId))
+        
+        let command = ServerCommands.PaymentTemplateController.SavePaymentTemplate
+                        .init(token: token,
+                              payload: .init(name: payload.name,
+                                             paymentOperationDetailId: payload.paymentOperationDetailId))
+        
         serverAgent.executeCommand(command: command) { result in
             
             switch result {
@@ -302,14 +309,18 @@ extension Model {
                         return
                     }
                     // confirm template saved
-                    self.action.send(ModelAction.PaymentTemplate.Save.Complete(paymentTemplateId: templateData.paymentTemplateId))
+                    self.action.send(ModelAction.PaymentTemplate.Save.Complete
+                                        .init(paymentTemplateId: templateData.paymentTemplateId))
                     // request all templates from server
                     self.action.send(ModelAction.PaymentTemplate.List.Requested())
                     
                 default:
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.action.send(ModelAction.PaymentTemplate.Save.Failed
+                                        .init(error: ResponseError(message: response.errorMessage)))
                 }
             case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
                 self.action.send(ModelAction.PaymentTemplate.Save.Failed(error: error))
             }
         }
@@ -334,9 +345,15 @@ extension Model {
                     self.action.send(ModelAction.PaymentTemplate.List.Requested())
                     
                 default:
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command,
+                                                   serverStatusCode: response.statusCode,
+                                                   errorMessage: response.errorMessage)
+                    
+                    self.action.send(ModelAction.PaymentTemplate.Update.Failed
+                                        .init(error: ResponseError(message: response.errorMessage)))
                 }
             case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
                 self.action.send(ModelAction.PaymentTemplate.Update.Failed(error: error))
             }
         }
@@ -344,24 +361,33 @@ extension Model {
     
     func handleTemplatesDeleteRequest(_ payload: ModelAction.PaymentTemplate.Delete.Requested) {
         
-        guard let token = token else {
+        guard let token = token
+        else {
             handledUnauthorizedCommandAttempt()
             return
         }
-        let command = ServerCommands.PaymentTemplateController.DeletePaymentTemplates(token: token, payload: .init(paymentTemplateIdList: payload.paymentTemplateIdList))
+        let command = ServerCommands.PaymentTemplateController.DeletePaymentTemplates
+                        .init(token: token,
+                              payload: .init(paymentTemplateIdList: payload.paymentTemplateIdList))
+        
         serverAgent.executeCommand(command: command) { result in
             
             switch result {
             case .success(let response):
                 switch response.statusCode {
                 case .ok:
-                    // confirm templete deleted
+                    
                     self.action.send(ModelAction.PaymentTemplate.Delete.Complete())
                     
                 default:
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command,
+                                                   serverStatusCode: response.statusCode,
+                                                   errorMessage: response.errorMessage)
+                    self.action.send(ModelAction.PaymentTemplate.Delete.Failed
+                                    .init(error: ResponseError(message: response.errorMessage)))
                 }
             case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
                 self.action.send(ModelAction.PaymentTemplate.Delete.Failed(error: error))
             }
         }
@@ -389,9 +415,15 @@ extension Model {
                     self.action.send(ModelAction.PaymentTemplate.List.Requested())
                     
                 default:
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command,
+                                                   serverStatusCode: response.statusCode,
+                                                   errorMessage: response.errorMessage)
+                    
+                    self.action.send(ModelAction.PaymentTemplate.Sort.Failed
+                                        .init(error: ResponseError(message: response.errorMessage)))
                 }
             case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
                 self.action.send(ModelAction.PaymentTemplate.Sort.Failed(error: error))
             }
         }

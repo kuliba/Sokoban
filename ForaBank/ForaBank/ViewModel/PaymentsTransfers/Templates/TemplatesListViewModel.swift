@@ -81,11 +81,17 @@ private extension TemplatesListViewModel {
     
     func bind() {
         
-//        model.action
-//            .receive(on: DispatchQueue.main)
-//            .sink { [unowned self] action in
-//
-//                switch action {
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+
+                switch action {
+                case _ as ModelAction.PaymentTemplate.List.Failed:
+                    
+                    model.action.send(ModelAction.Informer.Show
+                        .init(informer: .init(message: "Не удалось загрузить шаблоны",
+                                              icon: .close)))
+                                      
 //                case _ as ModelAction.PaymentTemplate.List.Requested:
 //
 //                    guard !items.contains(where: { item in item.kind == .placeholder})
@@ -98,10 +104,10 @@ private extension TemplatesListViewModel {
 //                    else { return }
 //
 //                    self.items.removeFirst()
-//
-//                default: break
-//                }
-//            }.store(in: &bindings)
+
+                default: break
+                }
+            }.store(in: &bindings)
         
     
         model.paymentTemplates
