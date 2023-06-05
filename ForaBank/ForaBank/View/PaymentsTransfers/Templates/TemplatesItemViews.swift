@@ -163,7 +163,7 @@ extension TemplatesListView {
     
     struct NormalItemView: View {
         
-        let image: Image
+        let image: Image?
         let logoImage: Image?
         let title: String
         let subTitle: String
@@ -326,7 +326,7 @@ extension TemplatesListView {
     
     struct ItemIconView: View {
         
-        let image: Image
+        let image: Image?
         var logoImage: Image? = nil
         var style: TemplatesListViewModel.Style = .list
         
@@ -342,10 +342,18 @@ extension TemplatesListView {
             
             ZStack(alignment: .topTrailing) {
                 
-                image
-                    .resizable()
-                    .renderingMode(.original)
-                    .frame(width: side, height: side)
+                if let image = image {
+                    
+                    image
+                        .resizable()
+                        .renderingMode(.original)
+                        .frame(width: side, height: side)
+                } else {
+                    
+                    Circle()
+                        .foregroundColor(.mainColorsGrayLightest)
+                        .frame(width: side, height: side)
+                }
                 
                 if let logoImage = logoImage {
                     
@@ -420,47 +428,6 @@ extension TemplatesListView {
             Text(amount)
                 .font(.textH4M16240())
                 .foregroundColor(.textSecondary)
-        }
-    }
-    
-    struct ItemBottomView: View {
-        
-        let action: () -> Void
-        
-        var body: some View {
-            
-            Group {
-               
-                // bottom view background
-                Color.black.cornerRadius(17)
-                
-                // delete button
-                HStack {
-                    
-                    Spacer()
-                    
-                    Button {
-                        
-                        action()
-                        
-                    } label: {
-                        
-                        VStack(spacing: 4) {
-                            
-                            Image.ic24Trash2
-                                .resizable()
-                                .renderingMode(.template)
-                                .frame(width: 24, height: 24)
-                            
-                            Text("Удалить")
-                                .font(.textBodySM12160())
-                        }
-                        .foregroundColor(.white)
-                    }
-                    .padding(.trailing, 35)
-                }
-                .frame(height: 72)
-            }
         }
     }
     

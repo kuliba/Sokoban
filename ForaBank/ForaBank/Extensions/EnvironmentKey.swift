@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-private struct MainWindowSizeKey: EnvironmentKey {
+private struct MainViewSizeKey: EnvironmentKey {
     static let defaultValue: CGSize = .zero
 }
 
 extension EnvironmentValues {
-    var mainWindowSize: CGSize {
-        get { self[MainWindowSizeKey.self] }
-        set { self[MainWindowSizeKey.self] = newValue }
+    var mainViewSize: CGSize {
+        get { self[MainViewSizeKey.self] }
+        set { self[MainViewSizeKey.self] = newValue }
     }
 }
 

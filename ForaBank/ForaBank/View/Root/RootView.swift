@@ -59,7 +59,7 @@ struct RootView: View {
                 } //tabView
                 .accentColor(.black)
                 .accessibilityIdentifier("tabBar")
-                .environment(\.mainWindowSize, geo.size)
+                .environment(\.mainViewSize, geo.size)
                 
                 if let link = viewModel.link  {
                     

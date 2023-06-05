@@ -14,7 +14,7 @@ extension TemplatesListView {
     struct RegularNavBarView: View {
         
         @ObservedObject var viewModel: TemplatesListViewModel.RegularNavBarViewModel
-        @Environment(\.mainWindowSize) var mainWindowSize
+        @Environment(\.mainViewSize) var mainViewSize
         
         var body: some View {
             
@@ -26,7 +26,7 @@ extension TemplatesListView {
                 if #available(iOS 15.0, *) {
                     Spacer()
                 } else {
-                    Spacer(minLength: mainWindowSize.width - 108)
+                    Spacer(minLength: mainViewSize.width - 108)
                 }
                 
                 Button(action: viewModel.searchButton.action,
@@ -65,7 +65,7 @@ extension TemplatesListView {
     struct TwoButtonsNavBarView: View {
         
         @ObservedObject var viewModel: TemplatesListViewModel.TwoButtonsNavBarViewModel
-        @Environment(\.mainWindowSize) var mainWindowSize
+        @Environment(\.mainViewSize) var mainViewSize
         
         var body: some View {
             
@@ -77,7 +77,7 @@ extension TemplatesListView {
                 if #available(iOS 15.0, *) {
                     Spacer()
                 } else {
-                    Spacer(minLength: mainWindowSize.width - 108)
+                    Spacer(minLength: mainViewSize.width - 108)
                 }
                 
                 Button(action: viewModel.trailingButton.action,
@@ -139,7 +139,7 @@ extension TemplatesListView {
     struct SearchNavBarView: View {
         
         @ObservedObject var viewModel: TemplatesListViewModel.SearchNavBarViewModel
-        @Environment(\.mainWindowSize) var mainWindowSize
+        @Environment(\.mainViewSize) var mainViewSize
         
         var body: some View {
             
@@ -150,7 +150,7 @@ extension TemplatesListView {
                 TemplatesListView.SearchTextField
                     .init(text: $viewModel.searchText)
                     .fixedSize(horizontal: false, vertical: true)
-                    .frame(width: mainWindowSize.width - 198)
+                    .frame(width: mainViewSize.width - 198)
                 
                 if let clearButton = viewModel.clearButton {
                     
@@ -179,7 +179,7 @@ struct TemplatesNavBar_Previews: PreviewProvider {
             NavigationView {
                 
                 Text("Delete State")
-                    .environment(\.mainWindowSize, CGSize(width: 414, height: 800))
+                    .environment(\.mainViewSize, CGSize(width: 414, height: 800))
                     .toolbar {
                         
                         ToolbarItem(placement: .principal) {

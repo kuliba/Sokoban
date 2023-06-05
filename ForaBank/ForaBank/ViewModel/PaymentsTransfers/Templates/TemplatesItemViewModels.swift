@@ -15,19 +15,19 @@ extension TemplatesListViewModel {
         let id: Int
         var sortOrder: Int
         @Published var state: State
-        let image: Image
+        let image: Image?
         @Published var title: String
         @Published var subTitle: String
         let logoImage: Image?
         let ammount: String
         
-        var timer: MyTimer?
+        var timer: DeletingTimer?
         
         let tapAction: (ItemViewModel.ID) -> Void
         let deleteAction: (ItemViewModel.ID) -> Void
         let renameAction: (ItemViewModel.ID) -> Void
         
-        let kind: Kind
+        let kind: Kind //TODO: refactor into inheritance
         
         lazy var swipeLeft: () -> Void = { //TODO: -
             
@@ -56,14 +56,18 @@ extension TemplatesListViewModel {
             }
         }
         
-        init(id: Int, sortOrder: Int, state: TemplatesListViewModel.ItemViewModel.State,
-            image: Image, title: String, subTitle: String,
-            logoImage: Image? = nil,
-            ammount: String = "",
-            tapAction: @escaping (ItemViewModel.ID) -> Void = { _ in },
-            deleteAction: @escaping (ItemViewModel.ID) -> Void = { _ in },
-            renameAction: @escaping (ItemViewModel.ID) -> Void = { _ in },
-            kind: Kind = .regular) {
+        init(id: Int = 0,
+             sortOrder: Int = 0,
+             state: TemplatesListViewModel.ItemViewModel.State = .normal,
+             image: Image? = nil,
+             title: String = "",
+             subTitle: String = "",
+             logoImage: Image? = nil,
+             ammount: String = "",
+             tapAction: @escaping (ItemViewModel.ID) -> Void = { _ in },
+             deleteAction: @escaping (ItemViewModel.ID) -> Void = { _ in },
+             renameAction: @escaping (ItemViewModel.ID) -> Void = { _ in },
+             kind: Kind = .regular) {
             
             self.id = id
             self.sortOrder = sortOrder
@@ -104,7 +108,7 @@ extension TemplatesListViewModel {
         
         struct ItemActionViewModel: Identifiable {
             
-            let id = UUID()
+            var id: UUID = UUID()
             let icon: Image
             let subTitle: String
             let action: (ItemViewModel.ID) -> Void
@@ -189,18 +193,17 @@ extension TemplatesListViewModel {
 //Reduce
 extension TemplatesListViewModel {
     
-    func getItemViewModel(with data: PaymentTemplateData) -> ItemViewModel? {
+    func getItemViewModel(with data: PaymentTemplateData, model: Model) -> ItemViewModel? {
         
-        guard let amount = amount(for: data)
+        guard let amount = amount(for: data,
+                                  amountFormatted: model.amountFormatted(amount:currencyCode:style:))
         else { return nil }
         
         return .init(id: data.paymentTemplateId,
                      sortOrder: data.sort,
-                     state: .normal,
-                     image: data.svgImage.image ?? Image(""),
+                     image: data.svgImage.image,
                      title: data.name,
                      subTitle: data.groupName,
-                     logoImage: nil,
                      ammount: amount,
                      tapAction: { [weak self] itemId in
                         self?.action.send(TemplatesListViewModelAction.Item.Tapped(itemId: itemId)) },
@@ -214,34 +217,12 @@ extension TemplatesListViewModel {
         
         return ItemViewModel(id: Int.max,
                              sortOrder: Int.max,
-                             state: .normal,
                              image: .ic40Star,
                              title: "Добавить шаблон",
                              subTitle: "Из любой успешной операции\nв разделе «История»",
-                             logoImage: nil,
-                             ammount: "",
                              tapAction: { [weak self] _ in  self?.action.send(TemplatesListViewModelAction.AddTemplateTapped()) },
-                             deleteAction: { _ in },
-                             renameAction: { _ in },
                              kind: .add)
     }
-    
-    func itemPlaceholderTemplateViewModel() -> ItemViewModel {
-        
-        return ItemViewModel(id: 0,
-                             sortOrder: 0,
-                             state: .normal,
-                             image: Image(""),
-                             title: "Placeholder",
-                             subTitle: "",
-                             logoImage: nil,
-                             ammount: "",
-                             tapAction: { _ in },
-                             deleteAction: { _ in },
-                             renameAction: { _ in },
-                             kind: .placeholder)
-    }
-    
     
     func getItemsMenuViewModel() -> [ItemViewModel.ItemActionViewModel]? {
             
@@ -255,60 +236,56 @@ extension TemplatesListViewModel {
 
     }
     
-    class MyTimer {
+    class DeletingTimer {
         
-        let timerPublish = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-        let startDate =  Date()
+        let timerPublisher = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+        let startDate = Date()
         let maxCount = 5
 
         deinit {
 
-            timerPublish.upstream.connect().cancel()
+            timerPublisher.upstream.connect().cancel()
         }
     }
     
-    func amount(for template: PaymentTemplateData) -> String? {
+    
+    func amount(for template: PaymentTemplateData,
+                amountFormatted: (Double, String?, Model.AmountFormatStyle) -> String?) -> String? {
         
-        if template.type == .contactAdressless ,
-           let parameterList = template.parameterList.first as? TransferAnywayData,
-           let currencyAmount = parameterList.additional.first(where: { $0.fieldname == "CURR" }),
-           let amount = template.amount {
+        switch template.type {
+        case .contactAdressless:
             
-            return amount.currencyFormatter(symbol: currencyAmount.fieldvalue)
+            guard let firstParameter = template.parameterList.first as? TransferAnywayData,
+                  let currency = firstParameter.additional.first(where: { $0.fieldname == "CURR" })?.fieldvalue,
+                  let amount = template.amount
+            else { return nil }
             
-        } else {
+            return amountFormatted(amount, currency, .normal)
+            
+        default:
             
             if template.parameterList.count > 1 {
-                var amount: Double?
-                var currencyAmount: String?
                 
-                template.parameterList.forEach { parameter in
-                    if let paramAmount = parameter.amount {
-                        //amount = Double(paramAmount)
-                        amount = NSDecimalNumber(decimal: paramAmount).doubleValue
-                    }
-                    currencyAmount = parameter.currencyAmount
-                }
+                guard let lastParameter = template.parameterList.last,
+                      let amountDecimal = lastParameter.amount
+                else { return nil }
                 
-                if let amount = amount,
-                   let currencyAmount = currencyAmount {
-                    
-                    return amount.currencyFormatter(symbol: currencyAmount)
-                    
-                } else {
-                    
-                    return nil
-                }
+                let currency = lastParameter.currencyAmount
+                let amount = NSDecimalNumber(decimal: amountDecimal).doubleValue
+                
+                return amountFormatted(amount, currency, .normal)
                 
             } else {
-                guard let transfer = template.parameterList.first,
-                      let amount = template.amount else {
-        
-                    return nil
-                }
-                return amount.currencyFormatter(symbol: transfer.currencyAmount)
+                
+                guard let firstParameter = template.parameterList.first,
+                      let amount = template.amount
+                else { return nil }
+                
+                let currency = firstParameter.currencyAmount
+                
+                return amountFormatted(amount, currency, .normal)
             }
-            
         }
     }
+  
 }

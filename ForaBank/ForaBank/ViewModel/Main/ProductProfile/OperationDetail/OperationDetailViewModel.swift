@@ -297,11 +297,6 @@ private extension OperationDetailViewModel {
     
     func templateButtonViewModel(with productStatement: ProductStatementData, operationDetail: OperationDetailData) -> FeatureButtonViewModel? {
         
-        // check if template allowed for this operation type
-//        guard model.paymentTemplatesAllowed.contains(productStatement.paymentDetailType) else {
-//            return nil
-//        }
-        
         if let paymentTemplateId = operationDetail.paymentTemplateId {
                 
                 let action = ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: [paymentTemplateId])

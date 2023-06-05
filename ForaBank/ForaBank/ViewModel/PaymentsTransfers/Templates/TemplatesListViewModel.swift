@@ -96,7 +96,7 @@ private extension TemplatesListViewModel {
 //
 //                    guard !items.contains(where: { item in item.kind == .placeholder})
 //                    else { return }
-//                    self.items.insert(itemPlaceholderTemplateViewModel(), at: 0)
+//                    self.items.insert(.init(kind: .placeholder), at: 0)
 //
 //                case _ as ModelAction.PaymentTemplate.List.Complete:
 //
@@ -128,15 +128,16 @@ private extension TemplatesListViewModel {
                 } else {
                         
                     DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
-                        let templatesVM = templates.compactMap { getItemViewModel(with: $0) }
+                        let templatesVM = templates.compactMap { getItemViewModel(with: $0, model: model) }
                             
                         DispatchQueue.main.async { [unowned self] in
                            
                             withAnimation {
                                
                                 itemsRaw.value = templatesVM
-                                categorySelector = categorySelectorViewModel(with: templates)
-                                bindCategorySelector()
+                                let newCategorySelector = getCategorySelectorViewModel(with: templates)
+                                categorySelector = newCategorySelector
+                                bindCategorySelector(newCategorySelector)
                                 state = .normal
                             }
                         }
@@ -235,7 +236,7 @@ private extension TemplatesListViewModel {
                           let itemVM = itemsRaw.value.first(where: { $0.id == payload.itemId})
                     else { return }
                     
-                    itemVM.timer = MyTimer()
+                    itemVM.timer = DeletingTimer()
                     guard let timer = itemVM.timer else { return }
                     
                     let deletingViewModel = ItemViewModel.DeletingProgressViewModel
@@ -251,7 +252,7 @@ private extension TemplatesListViewModel {
                     
                     itemVM.state = .deleting(deletingViewModel)
                     
-                    itemVM.timer?.timerPublish
+                    itemVM.timer?.timerPublisher
                         .receive(on: DispatchQueue.main)
                         .map({ [unowned timer] output in
                             return Int(output.timeIntervalSince(timer.startDate))
@@ -350,8 +351,10 @@ private extension TemplatesListViewModel {
             //MARK: Search
                 case let payload as TemplatesListViewModelAction.Search:
                     
-                    self.items = searchedItems(itemsRaw.value, payload.text)
-                    updateAddNewTemplateItem()
+                    withAnimation {
+                        self.items = searchedItems(itemsRaw.value, payload.text)
+                        updateAddNewTemplateItem()
+                    }
                     
                 case _ as TemplatesListViewModelAction.ToggleStyle:
                     
@@ -401,15 +404,16 @@ private extension TemplatesListViewModel {
             //Close Reorder
                 case _ as TemplatesListViewModelAction.ReorderItems.CloseEditMode:
             
+                    let newCategorySelector = getCategorySelectorViewModel(with: model.paymentTemplates.value)
                     withAnimation {
                         
                         self.editModeState = .inactive
                         self.updateNavBar(event: .setRegular)
                         self.items = self.itemsRaw.value
-                        categorySelector = categorySelectorViewModel(with: model.paymentTemplates.value)
+                        self.categorySelector = newCategorySelector
                     }
                     
-                    bindCategorySelector()
+                    bindCategorySelector(newCategorySelector)
                     self.updateAddNewTemplateItem()
                 
             //Save Reorder
@@ -420,6 +424,7 @@ private extension TemplatesListViewModel {
                     
                     var sortIndex = 1
                     let newOrders = items.reduce(into: [PaymentTemplateData.SortData]()) { payloadData, itemVM in
+                        
                         if let data = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == itemVM.id }) {
                             payloadData.append(.init(paymentTemplateId: data.id, sort: sortIndex))
                             itemVM.sortOrder = sortIndex
@@ -431,11 +436,13 @@ private extension TemplatesListViewModel {
                     
                     model.action.send(ModelAction.PaymentTemplate.Sort.Requested(sortDataList: newOrders))
                     
+                    let newCategorySelector = getCategorySelectorViewModel(with: model.paymentTemplates.value)
+                    
                     withAnimation {
-                        categorySelector = categorySelectorViewModel(with: model.paymentTemplates.value)
+                        categorySelector = newCategorySelector
                     }
                    
-                    bindCategorySelector()
+                    bindCategorySelector(newCategorySelector)
                     self.itemsRaw.value = self.items
               
             // Item Moved
@@ -541,15 +548,10 @@ private extension TemplatesListViewModel {
                     self.action.send(TemplatesListViewModelAction.Delete.Selection.Exit())
                     
                     let itemVM = TemplatesListViewModel.ItemViewModel
-                        .init(id: 0,
-                              sortOrder: 0,
-                              state: .normal,
-                              image: Image(""), //TODO:
-                              title: "Выбрано \(deleteGroupItemsId.count)",
-                              subTitle: "",
+                        .init(title: "Выбрано \(deleteGroupItemsId.count)",
                               kind: .deleting)
                     
-                    itemVM.timer = MyTimer()
+                    itemVM.timer = DeletingTimer()
                     guard let timer = itemVM.timer else { return }
                     
                     let deletingViewModel = ItemViewModel.DeletingProgressViewModel
@@ -576,7 +578,7 @@ private extension TemplatesListViewModel {
                         }
                     }
                     
-                    itemVM.timer?.timerPublish
+                    itemVM.timer?.timerPublisher
                         .receive(on: DispatchQueue.main)
                         .map({ [unowned timer] output in
                             return Int(output.timeIntervalSince(timer.startDate))
@@ -650,7 +652,6 @@ private extension TemplatesListViewModel {
                 
                 withAnimation {
                     
-                    //updateTitle()
                     updateAddNewTemplateItem()
                 }
                 
@@ -674,7 +675,7 @@ private extension TemplatesListViewModel {
 //
 //                        guard !items.contains(where: { item in item.kind == .placeholder})
 //                        else { return }
-//                        self.items.insert(itemPlaceholderTemplateViewModel(), at: 0)
+//                        self.items.insert(.init(kind: .placeholder), at: 0)
 //
 //                    } else {
 //
@@ -690,9 +691,9 @@ private extension TemplatesListViewModel {
             
     }
     
-    func bindCategorySelector() {
+    func bindCategorySelector(_ viewModel: OptionSelectorView.ViewModel) {
         
-        categorySelector?.$selected
+        viewModel.$selected
             .receive(on: DispatchQueue.main)
             .sink{ [unowned self]  selectedCategoryIndex in
                
@@ -945,7 +946,7 @@ private extension TemplatesListViewModel {
 
 extension TemplatesListViewModel {
     
-    func categorySelectorViewModel(with templates: [PaymentTemplateData]) -> OptionSelectorView.ViewModel {
+    func getCategorySelectorViewModel(with templates: [PaymentTemplateData]) -> OptionSelectorView.ViewModel {
         
         let groupNames = templates.map{ $0.groupName }
         let groupNamesUnique = Set(groupNames)

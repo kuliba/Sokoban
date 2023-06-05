@@ -580,7 +580,7 @@ struct TemplatesListView_Previews: PreviewProvider {
             
             NavigationView {
                 TemplatesListView(viewModel: .sampleComplete )
-                    .environment(\.mainWindowSize, CGSize(width: 414, height: 800))
+                    .environment(\.mainViewSize, CGSize(width: 414, height: 800))
                     
             }
             .previewDisplayName("TemplatesView List")
