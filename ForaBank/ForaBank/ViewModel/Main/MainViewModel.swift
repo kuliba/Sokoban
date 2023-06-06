@@ -484,7 +484,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 
                                 if operators.count == 1 {
                                     self.action.send(MainViewModelAction.Close.FullScreenSheet())
-                                    if let operatorValue = operators.first, Payments.PaymentsServicesOperators.map(\.rawValue).contains(operatorValue.parentCode) {
+                                    if let operatorValue = operators.first, Payments.paymentsServicesOperators.map(\.rawValue).contains(operatorValue.parentCode) {
                                         Task { [weak self] in
                                                 guard let self = self else { return }
                                                 let puref = operatorValue.code

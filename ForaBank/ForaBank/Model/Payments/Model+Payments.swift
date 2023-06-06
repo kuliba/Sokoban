@@ -210,8 +210,8 @@ extension Model {
             case Payments.Operator.internetTV.rawValue:
                 return .internetTV
                 
-            case Payments.Operator.housingAndCommunalServices.rawValue:
-                return .housingAndCommunalServicesP
+            case Payments.Operator.utility.rawValue:
+                return .utility
                 
             default:
                 throw Payments.Error.unsupported
@@ -228,7 +228,7 @@ extension Model {
                         return .internetTV
                         
                     case .service:
-                        return .housingAndCommunalServicesP
+                        return .utility
                         
                     case .mobile:
                         return .mobileConnection
@@ -307,7 +307,7 @@ extension Model {
         case .toAnotherCard:
             return try await paymentsProcessOperationResetVisibleToAnotherCard(operation)
             
-        case .internetTV, .housingAndCommunalServicesP:
+        case .internetTV, .utility:
             return try await paymentsProcessOperationResetVisibleToPaymentsServices(operation)
         
         case .mobileConnection:
@@ -355,7 +355,7 @@ extension Model {
         case .mobileConnection:
             return try await paymentsProcessLocalStepMobileConnection(operation, for: stepIndex)
             
-        case .internetTV, .housingAndCommunalServicesP:
+        case .internetTV, .utility:
             return try await paymentsProcessLocalStepServices(operation, for: stepIndex)
 
         case .change:
@@ -399,7 +399,7 @@ extension Model {
                     response: anywayResponse
                 )
                 
-            case .internetTV, .housingAndCommunalServicesP:
+            case .internetTV, .utility:
                 
                 let next = try await paymentsTransferPaymentsServicesStepParameters(operation, response: anywayResponse)
                 if anywayResponse.finalStep {
@@ -666,7 +666,7 @@ extension Model {
         case .abroad:
             return paymentsProcessDependencyReducerAbroad(parameterId: parameterId, parameters: parameters)
             
-        case .internetTV, .housingAndCommunalServicesP:
+        case .internetTV, .utility:
             return paymentsProcessDependencyReducerPaymentsServices(parameterId: parameterId, parameters: parameters)
             
         case .toAnotherCard:
@@ -738,7 +738,7 @@ extension Model {
         case .mobileConnection:
             return try await paymentsTransferMobileConnectionProcess(parameters: operation.parameters, process: process)
             
-        case .internetTV, .housingAndCommunalServicesP:
+        case .internetTV, .utility:
             return try await paymentsTransferPaymentsServicesProcess(parameters: operation.parameters, process: process, isNewPayment: true)
 
         default:
@@ -758,7 +758,7 @@ extension Model {
         case .abroad:
             return try await paymentsTransferAnywayAbroadProcess(parameters: operation.parameters, process: process, isNewPayment: false)
             
-        case .internetTV, .housingAndCommunalServicesP:
+        case .internetTV, .utility:
             return try await paymentsTransferPaymentsServicesProcess(parameters: operation.parameters, process: process, isNewPayment: false)
 
 
@@ -789,7 +789,7 @@ extension Model {
                 operation: operation
             )
     
-        case .internetTV, .housingAndCommunalServicesP:
+        case .internetTV, .utility:
             return try await paymentsProcessRemoteServicesComplete(
                 code: codeValue,
                 operation: operation
@@ -841,7 +841,7 @@ extension Model {
         case .abroad:
             return try await paymentsParameterRepresentableCountries(operation: operation, parameterData: parameterData)
 
-        case .housingAndCommunalServicesP:
+        case .utility:
             return try await paymentsParameterRepresentablePaymentsServices(parameterData: parameterData)
 
         default:
