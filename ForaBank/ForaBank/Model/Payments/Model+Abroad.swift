@@ -17,25 +17,36 @@ extension Model {
             guard let source = operation.source else {
                 throw Payments.Error.missingSource(operation.service)
             }
-            
+                
             var country: String?
             
             switch source {
-                case let .latestPayment(latestPaymentId):
-                    guard let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }),
-                          let latestPayment = latestPayment as? PaymentServiceData else {
-                        throw Payments.Error.missingSource(operation.service)
-                    }
+            case let .direct(countryId: countryId):
+                country = countryId.countryId.description
                     
-                    country = latestPayment.additionalList.first(where: { $0.isCountry })?.fieldValue
-                    
-                case let .direct(_, countryId: countryId, _):
-                    country = countryId
-                    
-                default:
+            case let .template(templateId):
+                        
+                let template = self.paymentTemplates.value.first(where: { $0.id == templateId })
+                
+                guard let list = template?.parameterList as? [TransferAnywayData],
+                    let additional = list.last?.additional else {
                     throw Payments.Error.missingSource(operation.service)
-            }
+                }
+                        
+                country = additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.countrySelect.rawValue })?.fieldvalue
             
+            case let .latestPayment(latestPaymentId):
+                guard let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }),
+                      let latestPayment = latestPayment as? PaymentServiceData else {
+                    throw Payments.Error.missingSource(operation.service)
+                }
+                
+                country = latestPayment.additionalList.first(where: { $0.isCountry })?.fieldValue
+                
+            default:
+                throw Payments.Error.missingSource(operation.service)
+            }
+                
             guard let country = country else {
                 throw Payments.Error.missingSource(operation.service)
             }

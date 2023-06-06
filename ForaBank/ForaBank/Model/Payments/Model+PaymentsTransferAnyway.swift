@@ -128,13 +128,13 @@ extension Model {
                 
                 if let first = currencyArr.first {
                     
-                    let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: first, currenciesList: currencyArr), validator: .init(minAmount: 10, maxAmount: product.balance))
+                    let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: first, currenciesList: currencyArr), validator: .init(minAmount: 10, maxAmount: product.balance))
                     result.append(amountParameter)
                 }
                 
             } else {
                 
-                let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 10, maxAmount: product.balance))
+                let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 10, maxAmount: product.balance))
                 result.append(amountParameter)
             }
         }

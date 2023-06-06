@@ -140,6 +140,65 @@ extension Model {
         case .direct: return .abroad
         case .return: return .return
         case .change: return .change
+        case .template(let templateId):
+                
+            guard let template = self.paymentTemplates.value.first(where: { $0.id == templateId }) else {
+                throw Payments.Error.unsupported
+            }
+
+                switch template.type {
+                case .newDirect,
+                        .direct,
+                        .contactCash,
+                        .contactAddressing,
+                        .contactAdressless,
+                        .contactAddressless:
+                        
+                    return .abroad
+                    
+                case .sfp, .byPhone:
+                    return .sfp
+                    
+                case .externalEntity, .externalIndividual:
+                    return .requisites
+                
+                case .mobile:
+                    return .mobileConnection
+                
+                case .taxAndStateService:
+                        guard let parameterList = template.parameterList as? [TransferAnywayData],
+                          let puref = parameterList.first?.puref,
+                          let `operator` = Payments.Operator(rawValue: puref) else {
+                        throw Payments.Error.unsupported
+                    }
+
+                    switch `operator` {
+                        case .fms:
+                            return .fms
+                            
+                        case .fns, .fnsUin:
+                            return .fns
+                            
+                        case .fssp:
+                            return .fssp
+                            
+                        default:
+                            throw Payments.Error.unsupported
+                    }
+        
+                case .insideBank:
+                    return .toAnotherCard
+                    
+                case .housingAndCommunalService:
+                    return .housingAndCommunalServicesP
+                    
+                case .internet:
+                    return .internetTV
+                    
+                default:
+                    throw Payments.Error.unsupported
+                }
+            
         case .servicePayment(let operatorCode, _, _):
             guard let operatorData = self.dictionaryAnywayOperator(for: operatorCode) else {
                 throw Payments.Error.missingValueForParameter(operatorCode)
@@ -183,7 +242,6 @@ extension Model {
                     default:
                         throw Payments.Error.unsupported
                 }
-                
         default:
             throw Payments.Error.unsupported
         }
@@ -447,13 +505,73 @@ extension Model {
             
         case let .sfp(phone: phone, bankId: bankId):
             return paymentsProcessSourceReducerSFP(phone: phone, bankId: bankId, parameterId: parameterId)
-        
+            
         case let .requisites(qrCode: qrCode):
             return paymentsProcessSourceReducerRequisites(qrCode: qrCode, parameterId: parameterId)
-        
+            
         case let .direct(phone: phone, countryId: country, serviceData: serviceData):
             return paymentsProcessSourceReducerCountry(countryId: country, phone: phone, serviceData: serviceData, parameterId: parameterId)
+        
+        case .template(let templateId):
+            
+            guard let template = self.paymentTemplates.value.first(where: { $0.id == templateId }) else {
+                return nil
+            }
+            
+            switch parameterId {
+                case Payments.Parameter.Identifier.amount.rawValue:
+                    return template.amount?.description ?? "0"
+                    
+                default:
+                    switch service {
+                    case .abroad, .sfp, .fms, .fns, .fssp, .housingAndCommunalServicesP, .internetTV:
+                            
+                            switch template.parameterList {
+                                case let payload as [TransferAnywayData]:
+                                    return payload.last?.additional.first(where: { $0.fieldname == parameterId })?.fieldvalue
+                                    
+                                case let payload as [TransferGeneralData]:
+                                    switch parameterId {
+                                        case Payments.Operation.Parameter.Identifier.sfpPhone.rawValue:
+                                            return template.phoneNumber
+                                            
+                                        case Payments.Operation.Parameter.Identifier.sfpBank.rawValue:
+                                            return template.foraBankId
+                                            
+                                        case Payments.Operation.Parameter.Identifier.sfpMessage.rawValue:
+                                            return payload.last?.comment
+                                            
+                                        default:
+                                            return nil
+                                    }
+                                    
+                                default:
+                                    return nil
+                            }
+                            
+                        case .requisites:
+                            return paymentsProcessSourceTemplateReducerRequisites(templateData: template,
+                                                                                  parameterId: parameterId)
+                        case .mobileConnection:
+                            guard let anywayDataList = template.parameterList as? [TransferAnywayData],
+                            let puref = anywayDataList.last?.puref else {
+                               return nil
+                            }
+                            
+                            switch parameterId {
+                                case Payments.Parameter.Identifier.mobileConnectionPhone.rawValue:
+                                    let operatorId = self.dictionaryAnywayOperator(for: puref)?.operatorID
+                                    return anywayDataList.last?.additional.first(where: { $0.fieldname == operatorId })?.fieldvalue
 
+                                default:
+                                    return nil
+                            }
+
+                        default:
+                            return nil
+                    }
+            }
+            
         case let .latestPayment(latestPaymentId):
         
                 guard let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) else {
@@ -524,7 +642,6 @@ extension Model {
                                 return nil
                         }
                 }
-                
         default:
             return nil
         }

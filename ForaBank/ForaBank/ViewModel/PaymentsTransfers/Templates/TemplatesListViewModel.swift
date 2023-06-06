@@ -24,6 +24,8 @@ class TemplatesListViewModel: ObservableObject {
     @Published var contextMenu: ContextMenuViewModel?
     @Published var deletePannel: DeletePannelViewModel?
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var bottomSheet: BottomSheet?
+    @Published var success: PaymentsSuccessViewModel?
     @Published var isLinkActive: Bool = false
     @Published var sheet: Sheet?
     
@@ -131,79 +133,27 @@ private extension TemplatesListViewModel {
                 
                 switch action {
                 case let payload as TemplatesListViewModelAction.ItemTapped:
-                    guard let temp = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}) else { return }
+                    guard let template = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId }) else { return }
                     
-                    switch temp.type {
-                        
-                    case .otherBank:
-                        //TODO: set action
-                        break
-                        
-                    case .betweenTheir:
-                        link = .betweenTheir(.init(type: .template(temp), closeAction: {[weak self] in
-                            
-                            self?.action.send(TemplatesListViewModelAction.CloseAction())
-                        }))
-                        
-                    case .insideBank:
-                        link = .betweenTheir(.init(type: .template(temp), closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
-                        }))
-                        
-                    case .byPhone:
-                        link = .byPhone(.init(insideByPhone: temp, closeAction: {[weak self] in
-                            self?.action.send(TemplatesListViewModelAction.CloseAction())
-                        }))
-                        
-                    case .sfp:
-                        link = .byPhone(.init(spf: temp, closeAction: {[weak self] in
-                            self?.action.send(TemplatesListViewModelAction.CloseAction())
-                        }))
+                        switch template.type {
+                            case .betweenTheir:
+                                guard let parameterList = template.parameterList.first as? TransferGeneralData,
+                                      let id = parameterList.payeeInternal?.cardId ?? parameterList.payeeInternal?.accountId,
+                                      let product = model.product(productId: id),
+                                      let paymentsMeToMeViewModel = PaymentsMeToMeViewModel(model, mode: .makePaymentTo(product, parameterList.amountDouble ?? 0)) else {
+                                    return
+                                }
 
-                    case .direct, .newDirect:
-                        let operatorsViewModel = OperatorsViewModel(mode: .template(temp), closeAction: {  [weak self] in
-                            self?.action.send(TemplatesListViewModelAction.CloseAction()) })
-                        link = .direct(CountryPaymentView.ViewModel(operatorsViewModel: operatorsViewModel))
-                        
-                    case .contactAdressless, .contactCash, .contactAddressing,.contactAddressless:
-                        let operatorsViewModel = OperatorsViewModel(mode: .template(temp), closeAction: {  [weak self] in
-                            self?.action.send(TemplatesListViewModelAction.CloseAction()) }, requisitsViewAction: {})
-                        link = .contactAdressless(CountryPaymentView.ViewModel(operatorsViewModel: operatorsViewModel))
-                        
-                    case .housingAndCommunalService:
-                        link = .housingAndCommunalService(.init(model: model, closeAction: {[weak self] in self?.action.send(TemplatesListViewModelAction.CloseAction())
-                        }, paymentTemplate: temp))
+                                bind(paymentsMeToMeViewModel)
+                                
+                                bottomSheet = .init(type: .meToMe(paymentsMeToMeViewModel))
 
-                    case .mobile:
-                        link = .mobile(.init(paymentTemplate: temp, closeAction: {[weak self] in
-                            
-                            self?.action.send(TemplatesListViewModelAction.CloseAction())
-                        }))
-                        
-                    case .internet:
-                        link = .internet(.init(model: model, closeAction: {[weak self] in
-                            
-                            self?.action.send(TemplatesListViewModelAction.CloseAction())
-                        }, paymentTemplate: temp))
-
-                    case .transport:
-                        link = .internet(.init(model: model, closeAction: {[weak self] in
-                            
-                            self?.action.send(TemplatesListViewModelAction.CloseAction())
-                        }, paymentTemplate: temp))
-
-                    case .externalEntity:
-                        link = .externalEntity(.init(type: .template(temp), closeAction: {[weak self] in
-                            self?.action.send(TemplatesListViewModelAction.CloseAction())
-                        }))
-
-                    case .externalIndividual:
-                        link = .externalIndividual(.init(type: .template(temp), closeAction: {[weak self] in
-                            self?.action.send(TemplatesListViewModelAction.CloseAction())
-                        }))
-
-                    default:
-                        break
-                    }
+                            default:
+                                link = .payment(.init(source: .template(template.id), model: model, closeAction: {[weak self] in
+                                    
+                                    self?.action.send(TemplatesListViewModelAction.CloseAction())
+                                }))
+                        }
                                         
                 case _ as TemplatesListViewModelAction.ToggleStyle:
                     
@@ -345,6 +295,67 @@ private extension TemplatesListViewModel {
                 
             }.store(in: &bindings)
     }
+    
+    /// Сlosing success screen
+    func bind(_ viewModel: PaymentsSuccessViewModel) {
+        
+        viewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as PaymentsSuccessAction.Button.Close:
+                    model.action.send(ModelAction.Products.Update.Fast.All())
+                    self.action.send(ProductProfileViewModelAction.Close.Success())
+                    self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
+                    self.success = nil
+                        
+                default:
+                    break
+                }
+
+            }.store(in: &bindings)
+    }
+    
+    private func bind(_ viewModel: PaymentsMeToMeViewModel) {
+        
+        viewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as PaymentsMeToMeAction.Response.Success:
+                    
+                    guard let productIdFrom = viewModel.swapViewModel.productIdFrom,
+                          let productIdTo = viewModel.swapViewModel.productIdTo else {
+                        return
+                    }
+                    
+                    model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
+                    model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
+                    self.sheet = nil
+                        
+                    bind(payload.viewModel)
+                    success = payload.viewModel
+                        
+                case _ as PaymentsMeToMeAction.Close.BottomSheet:
+                    
+                    self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+
+                case let payload as PaymentsMeToMeAction.InteractionEnabled:
+                    
+                    guard let bottomSheet = sheet else {
+                        return
+                    }
+                    
+                    bottomSheet.isUserInteractionEnabled.value = payload.isUserInteractionEnabled
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
 }
 
 //MARK: - Settings
@@ -370,19 +381,8 @@ extension TemplatesListViewModel {
     }
     
     enum Link {
-
-        case byPhone(PaymentByPhoneViewModel)
-        case sfp(PaymentByPhoneViewModel)
-        case direct(CountryPaymentView.ViewModel)
-        case contactAdressless(CountryPaymentView.ViewModel)
-        case housingAndCommunalService(InternetTVDetailsViewModel)
-        case mobile(MobilePayViewModel)
-        case internet(InternetTVDetailsViewModel)
-        case transport(OperatorsViewModel)
-        case externalEntity(TransferByRequisitesViewModel)
-        case externalIndividual(TransferByRequisitesViewModel)
-        case betweenTheir(MeToMeViewModel)
-                           
+        
+        case payment(PaymentsViewModel)
     }
 }
 
@@ -820,6 +820,43 @@ extension TemplatesListViewModel {
             
             case regular
             case add
+        }
+    }
+    
+    struct BottomSheet: BottomSheetCustomizable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        let isUserInteractionEnabled: CurrentValueSubject<Bool, Never> = .init(true)
+        
+        var keyboardOfssetMultiplier: CGFloat {
+            
+            switch type {
+                case .meToMe: return 1
+            }
+        }
+        
+        var animationSpeed: Double {
+            
+            switch type {
+                case .meToMe: return 0.4
+            }
+        }
+        
+        enum Kind {
+            
+            case meToMe(PaymentsMeToMeViewModel)
+        }
+    }
+    
+    struct FullCover: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            case successMeToMe(PaymentsSuccessViewModel)
         }
     }
 }

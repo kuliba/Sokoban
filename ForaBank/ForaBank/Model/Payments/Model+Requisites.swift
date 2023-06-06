@@ -528,6 +528,40 @@ extension Model {
             return nil
         }
     }
+    
+    func paymentsProcessSourceTemplateReducerRequisites(templateData: PaymentTemplateData?, parameterId: Payments.Parameter.ID) -> Payments.Parameter.Value? {
+        
+        guard let templateData = templateData,
+              let parameters = templateData.parameterList.first as? TransferGeneralData else {
+            return nil
+        }
+        
+        switch parameterId {
+        case Payments.Parameter.Identifier.requisitsName.rawValue:
+            return parameters.payeeExternal?.name
+                
+        case Payments.Parameter.Identifier.requisitsInn.rawValue:
+            return parameters.payeeExternal?.inn
+            
+        case Payments.Parameter.Identifier.requisitsAccountNumber.rawValue:
+            return parameters.payeeExternal?.accountNumber
+
+        case Payments.Parameter.Identifier.requisitsBankBic.rawValue:
+            return parameters.payeeExternal?.bankBIC
+
+        case Payments.Parameter.Identifier.requisitsKpp.rawValue:
+            return parameters.payeeExternal?.kpp
+        
+        case Payments.Parameter.Identifier.requisitsCompanyName.rawValue:
+            return parameters.payeeExternal?.name
+        
+        case Payments.Parameter.Identifier.requisitsMessage.rawValue:
+            return parameters.comment
+                
+        default:
+            return nil
+        }
+    }
 }
 
 extension Payments.ParameterAmount {

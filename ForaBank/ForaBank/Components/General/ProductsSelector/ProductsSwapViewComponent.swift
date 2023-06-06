@@ -162,7 +162,31 @@ extension ProductsSwapView {
                 let to = ProductSelectorView.ViewModel(model, productData: productToData, context: contextTo)
                 
                 self.init(model: model, items: [from, to], divider: .init())
-                
+                    
+            case let .templatePayment(productFrom: productFrom, productTo: productTo, amount: _):
+                let filterFrom = ProductData.Filter.generalFrom
+                    
+                let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда",
+                                                                        direction: .from,
+                                                                        style: .me2me,
+                                                                        filter: filterFrom)
+                let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда",
+                                                                      direction: .to,
+                                                                      style: .me2me,
+                                                                      isUserInteractionEnabled: false,
+                                                                      filter: .init(rules: []))
+
+                let from = ProductSelectorView.ViewModel(model,
+                                                         productData: productFrom,
+                                                         context: contextFrom)
+                let to = ProductSelectorView.ViewModel(model,
+                                                       productData: productTo,
+                                                       context: contextTo)
+                    
+                self.init(model: model,
+                          items: [from, to],
+                          divider: .init())
+                    
             case let .makePaymentToDeposite(productToData, _):
                 var filterFrom = ProductData.Filter(
                     rules: [ProductData.Filter.DebitRule(),

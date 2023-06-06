@@ -255,7 +255,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         
                         link = .currencyWallet(walletViewModel)
                         
-                        
                         //Transfers Section
                     case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
                         

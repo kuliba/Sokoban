@@ -47,7 +47,7 @@ extension Model {
             
             // amount
             let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
-            let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: product.balance))
+            let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: product.balance))
             
             return .init(parameters: [operatorParameter, headerParameter, phoneParameter, bankParameter, productParameter, messageParameter, amountParameter], front: .init(visible: [headerParameter.id, phoneParameterId, bankParameterId, productParameterId, messageParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [phoneParameterId, bankParameterId], processed: nil))
             
