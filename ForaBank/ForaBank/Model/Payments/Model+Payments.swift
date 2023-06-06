@@ -190,7 +190,7 @@ extension Model {
                     return .toAnotherCard
                     
                 case .housingAndCommunalService:
-                    return .housingAndCommunalServicesP
+                    return .utility
                     
                 case .internet:
                     return .internetTV
@@ -524,7 +524,7 @@ extension Model {
                     
                 default:
                     switch service {
-                    case .abroad, .sfp, .fms, .fns, .fssp, .housingAndCommunalServicesP, .internetTV:
+                    case .abroad, .sfp, .fms, .fns, .fssp, .utility, .internetTV:
                             
                             switch template.parameterList {
                                 case let payload as [TransferAnywayData]:
