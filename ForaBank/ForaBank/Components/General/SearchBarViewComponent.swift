@@ -7,47 +7,60 @@
 
 import SwiftUI
 import Combine
+import TextFieldComponent
+
+protocol PhoneNumberTextFieldViewModel: ObservableObject {
+    
+    var text: String? { get }
+    var textPublisher: AnyPublisher<String?, Never> { get }
+    var phoneNumberState: TextViewPhoneNumberView.ViewModel.State { get set }
+    var phoneNumberStatePublisher: AnyPublisher<TextViewPhoneNumberView.ViewModel.State, Never> { get }
+    var dismissKeyboard: () -> Void { get }
+    
+    func setText(to text: String?)
+    func startEditing()
+    func finishEditing()
+}
 
 extension SearchBarView {
     
     class ViewModel: ObservableObject {
         
-        let action: PassthroughSubject<Action, Never> = .init()
+        let action: PassthroughSubject<SearchBarViewModelAction, Never> = .init()
         
         let icon: Image?
-        let textField: TextViewPhoneNumberView.ViewModel
-        var text: String? { textField.text }
+        let textFieldModel: any PhoneNumberTextFieldViewModel
+        var text: String? { textFieldModel.text }
         var phone: String? {
-            
 #if DEBUG
-            guard let text = text else {
-                return nil
-            }
-            
-            guard phoneNumberFormater.isValid(text) || text == "+7 0115110217" else {
-                return nil
-            }
-            
-            return text
-#else
-            guard let text = text, phoneNumberFormater.isValid(text) else {
-                return nil
-            }
-            
-            return text
+            if text == "+7 0115110217" { return text }
 #endif
+            guard let text = text, validator.isValid(text) else {
+                return nil
+            }
+            
+            return text
         }
         
         @Published private(set) var state: State
         
-        private let phoneNumberFormater = PhoneNumberKitFormater()
+        private let validator: Validator
         private var bindings = Set<AnyCancellable>()
+        private let scheduler: AnySchedulerOfDispatchQueue
         
-        init(textFieldPhoneNumberView: TextViewPhoneNumberView.ViewModel, state: State = .idle, icon: Image? = nil) {
+        init(
+            textFieldModel: any PhoneNumberTextFieldViewModel,
+            validator: Validator = PhoneValidator(),
+            state: State = .idle,
+            icon: Image? = nil,
+            scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+        ) {
             
-            self.textField = textFieldPhoneNumberView
+            self.textFieldModel = textFieldModel
+            self.validator = validator
             self.state = state
             self.icon = icon
+            self.scheduler = scheduler
             
             bind()
         }
@@ -55,28 +68,25 @@ extension SearchBarView {
         private func bind() {
             
             action
-                .receive(on: DispatchQueue.main)
+                .receive(on: scheduler)
                 .sink { [unowned self] action in
                     
                     switch action {
-                    case _ as SearchBarViewModelAction.DismissKeyboard:
-                        self.textField.dismissKeyboard()
+                    case .dismissKeyboard:
+                        self.textFieldModel.dismissKeyboard()
                         
-                    case _ as SearchBarViewModelAction.ClearTextField:
-                        self.textField.setText(to: nil)
+                    case .clearTextField:
+                        self.textFieldModel.setText(to: nil)
                         
-                    case _ as SearchBarViewModelAction.Idle:
+                    case .idle:
                         self.state = .idle
-                        self.textField.dismissKeyboard()
-                        
-                    default:
-                        break
+                        self.textFieldModel.dismissKeyboard()
                     }
                     
                 }.store(in: &bindings)
             
-            textField.$state
-                .receive(on: DispatchQueue.main)
+            textFieldModel.phoneNumberStatePublisher
+                .receive(on: scheduler)
                 .sink { [unowned self] state in
                     
                     switch state {
@@ -86,8 +96,8 @@ extension SearchBarView {
                     case .selected:
                         self.state = .selected(.init(type: .title("Отмена"), action: { [weak self] in
                             
-                            self?.action.send(SearchBarViewModelAction.ClearTextField())
-                            self?.action.send(SearchBarViewModelAction.DismissKeyboard())
+                            self?.action.send(.clearTextField)
+                            self?.action.send(.dismissKeyboard)
                         }))
                         
                     case .editing:
@@ -96,12 +106,12 @@ extension SearchBarView {
                         case .idle, .selected:
                             self.state = .editing(.init(type: .icon(.ic24Close), action: { [weak self] in
                                 
-                                self?.action.send(SearchBarViewModelAction.ClearTextField())
+                                self?.action.send(.clearTextField)
                                 
                             }), .init(type: .title("Отмена"), action: { [weak self] in
                                 
-                                self?.action.send(SearchBarViewModelAction.ClearTextField())
-                                self?.action.send(SearchBarViewModelAction.DismissKeyboard())
+                                self?.action.send(.clearTextField)
+                                self?.action.send(.dismissKeyboard)
                             }))
                             
                         default:
@@ -111,6 +121,88 @@ extension SearchBarView {
                     
                 }.store(in: &bindings)
         }
+    }
+}
+
+// MARK: - SearchBarView.ViewModel factory helpers
+
+extension SearchBarView.ViewModel {
+    
+    static func banks() -> SearchBarView.ViewModel {
+        
+        searchBar(for: .select(.banks))
+    }
+    
+    static func contacts() -> SearchBarView.ViewModel {
+        
+        searchBar(for: .select(.contacts))
+    }
+    
+    static func countries() -> SearchBarView.ViewModel {
+        
+        searchBar(for: .select(.countries))
+    }
+    
+    static func generalWithText(
+        _ text: String
+    ) -> SearchBarView.ViewModel {
+        
+        let textField = TextViewPhoneNumberView.ViewModel(
+            style: .general,
+            placeHolder: .text(text)
+        )
+        
+        return .init(
+            textFieldModel: textField,
+            state: .idle,
+            icon: .ic24Search
+        )
+    }
+    
+    static func nameOrTaxCode() -> SearchBarView.ViewModel {
+        
+        return .generalWithText("Название или ИНН")
+    }
+    
+    static func searchBar(
+        for mode: ContactsViewModel.Mode
+    ) -> SearchBarView.ViewModel {
+        
+        switch mode {
+        case .fastPayments:
+            let textField = TextViewPhoneNumberView.ViewModel(.contacts)
+            return .init(textFieldModel: textField)
+            
+        case .abroad:
+            let textField = TextViewPhoneNumberView.ViewModel(style: .abroad, placeHolder: .countries)
+            return .init(textFieldModel: textField, state: .idle, icon: .ic24Search)
+            
+        case let .select(select):
+            switch select {
+            case .contacts:
+                let textField = TextViewPhoneNumberView.ViewModel(.contacts)
+                return .init(textFieldModel: textField)
+                
+            case .banks:
+                let textField = TextViewPhoneNumberView.ViewModel(.banks)
+                return .init(textFieldModel: textField)
+                
+            case .banksFullInfo:
+                let textField = TextViewPhoneNumberView.ViewModel(style: .banks, placeHolder: .banks)
+                return .init(textFieldModel: textField)
+                
+            case .countries:
+                let textField = TextViewPhoneNumberView.ViewModel(.countries)
+                return .init(textFieldModel: textField)
+            }
+        }
+    }
+    
+    static func withText(_ text: String) -> SearchBarView.ViewModel {
+        
+        let textFieldModel = TextViewPhoneNumberView.ViewModel(.text(text))
+        
+        return .init(textFieldModel: textFieldModel)
     }
 }
 
@@ -141,13 +233,11 @@ extension SearchBarView.ViewModel {
 
 //MARK: - Action
 
-struct SearchBarViewModelAction {
+enum SearchBarViewModelAction {
     
-    struct DismissKeyboard: Action {}
-    
-    struct ClearTextField: Action {}
-        
-    struct Idle: Action {}
+    case dismissKeyboard
+    case clearTextField
+    case idle
 }
 
 //MARK: - View
@@ -168,7 +258,7 @@ struct SearchBarView: View {
                     .frame(width: 16, height: 16)
             }
             
-            TextViewPhoneNumberView(viewModel: viewModel.textField)
+            TextViewPhoneNumberView(viewModel: viewModel.textFieldModel as! TextViewPhoneNumberView.ViewModel)
                 .frame(height: 44)
                 .cornerRadius(8)
             
@@ -229,18 +319,31 @@ struct SearchBarView: View {
     }
 }
 
-
-
 struct SearchBarComponent_Previews: PreviewProvider {
+    
     static var previews: some View {
         
         Group {
             
-            SearchBarView(viewModel: .init(textFieldPhoneNumberView: .init(placeHolder: .contacts)))
-                .previewLayout(.fixed(width: 375, height: 100))
+            previewsGroup()
             
-            SearchBarView(viewModel: .init(textFieldPhoneNumberView: .init(placeHolder: .banks)))
-                .previewLayout(.fixed(width: 375, height: 100))
+            VStack(content: previewsGroup)
+                .previewDisplayName("Xcode 14")
         }
+        .previewLayout(.sizeThatFits)
+    }
+    
+    static func previewsGroup() -> some View {
+        
+        Group {
+            
+            SearchBarView(viewModel: .banks())
+            SearchBarView(viewModel: .contacts())
+            SearchBarView(viewModel: .countries())
+            SearchBarView(viewModel: .generalWithText("Any text here (general)"))
+            SearchBarView(viewModel: .nameOrTaxCode())
+            SearchBarView(viewModel: .withText("Any text here"))
+        }
+        .previewLayout(.fixed(width: 375, height: 100))
     }
 }

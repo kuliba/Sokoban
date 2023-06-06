@@ -23,66 +23,88 @@ struct QRSearchCityView: View {
                     .frame(height: 30)
                 
                 Spacer()
-                
             }
             .padding(.horizontal, 20)
             
             VStack(spacing: 12) {
                 
-                SearchBarView(viewModel: viewModel.searchView)
+                SearchBarView(viewModel: viewModel.searchViewModel)
                     .padding(.horizontal, 20)
                 
-                ScrollView {
-                    
-                    VStack(alignment: .leading) {
-                        
-                        //TODO: refactoring required
-                        if viewModel.filteredCity.isEmpty == false {
-                            
-                            ForEach(viewModel.filteredCity, id: \.self) { city in
-                                
-                                Button {
-                                    
-                                    viewModel.action(city)
-                                } label: {
-                                    
-                                    Text(city)
-                                        .multilineTextAlignment(.leading)
-                                        .font(Font.textH4M16240())
-                                        .foregroundColor(Color.iconBlack)
-                                        
-                                    Spacer()
-                                }
-                                .frame(height: 56)
-                            }
-                            
-                        } else {
-                            
-                            ForEach(viewModel.city, id: \.self) { city in
-                                
-                                Button {
-                                    
-                                    viewModel.action(city)
-                                } label: {
-                                    Text(city)
-                                        .font(Font.textH4M16240())
-                                        .foregroundColor(Color.iconBlack)
-                                        
-                                    Spacer()
-                                }
-                                .frame(height: 56)
-                            }
-                        }
-                    }.padding(.horizontal, 20)
-                }
+                ScrollView(content: scrollViewContent)
             }
         }
         .padding(.top, 20)
     }
+    
+    private func scrollViewContent() -> some View {
+        
+        VStack(alignment: .leading) {
+            
+            ForEach(
+                viewModel.state.regionsToDisplay,
+                id: \.self,
+                content: regionButton
+            )
+            .animation(.default, value: viewModel.state)
+            
+        }
+        .padding(.horizontal, 20)
+    }
+    
+    private func regionButton(for region: String) -> some View {
+        
+        Button {
+            viewModel.select(region)
+        } label: {
+            regionLabel(for: region)
+            
+            Spacer()
+        }
+        .frame(height: 56)
+    }
+    
+    @ViewBuilder
+    private func regionLabel(for region: String) -> some View {
+        
+        switch viewModel.state {
+        case .all:
+            Text(region)
+                .font(Font.textH4M16240())
+                .foregroundColor(Color.iconBlack)
+            
+        case .filtered:
+            Text(region)
+                .multilineTextAlignment(.leading)
+                .font(Font.textH4M16240())
+                .foregroundColor(Color.iconBlack)
+        }
+    }
+}
+
+extension RegionsState {
+    
+    var regionsToDisplay: [Region] {
+        
+        switch self {
+        case let .all(regions):
+            return regions
+            
+        case let .filtered(filtered):
+            return filtered
+        }
+    }
 }
 
 struct QRSearchCityView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        QRSearchCityView(viewModel: .init(model: .emptyMock, searchView: .init(textFieldPhoneNumberView: .init(.text("Введите название региона"))), action: {_ in }))
+    
+        QRSearchCityView(
+            viewModel: .init(
+                regions: [],
+                searchViewModel: .withText("Введите название региона"),
+                select: { _ in })
+        )
     }
 }

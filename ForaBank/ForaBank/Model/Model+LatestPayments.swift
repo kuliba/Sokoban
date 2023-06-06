@@ -25,7 +25,7 @@ extension ModelAction {
         
         enum BanksList {
             
-            struct Request: Action {
+            struct Request: Action, Equatable {
                 
                 let phone: String
             }

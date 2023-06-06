@@ -6,27 +6,52 @@ let package = Package(
     name: "swift-forabank",
     platforms: [
         .iOS(.v14),
+        .macOS(.v11),
     ],
     products: [
-        .textFieldRegularComponent,
+        .searchBarComponent,
+        .textFieldComponent,
+        .textFieldModel,
         .uiKitHelpers,
     ],
     dependencies: [
         .combineSchedulers,
+        .customDump,
     ],
     targets: [
-        .textFieldRegularComponent,
-        .textFieldRegularComponentTests,
+        .searchBarComponent,
+        .textFieldComponent,
+        .textFieldComponentTests,
+        .textFieldDomain,
+        .textFieldDomainTests,
+        .textFieldModel,
+        .textFieldModelTests,
+        .textFieldUI,
         .uiKitHelpers,
+        .wipTests,
     ]
 )
 
 private extension Product {
     
-    static let textFieldRegularComponent = library(
-        name: .textFieldRegularComponent,
+    static let searchBarComponent = library(
+        name: .searchBarComponent,
         targets: [
-            .textFieldRegularComponent,
+            .searchBarComponent,
+        ]
+    )
+    
+    static let textFieldComponent = library(
+        name: .textFieldComponent,
+        targets: [
+            .textFieldComponent,
+        ]
+    )
+    
+    static let textFieldModel = library(
+        name: .textFieldModel,
+        targets: [
+            .textFieldModel,
         ]
     )
     
@@ -40,28 +65,105 @@ private extension Product {
 
 private extension Target {
     
-    static let textFieldRegularComponent = target(
-        name: .textFieldRegularComponent,
+    static let searchBarComponent = target(
+        name: .searchBarComponent,
+        dependencies: [
+            .textFieldComponent,
+        ]
+    )
+    
+    static let textFieldComponent = target(
+        name: .textFieldComponent,
         dependencies: [
             .combineSchedulers,
+            .textFieldDomain,
+            .textFieldModel,
+            .textFieldUI,
             .uiKitHelpers,
         ]
     )
-    static let textFieldRegularComponentTests = testTarget(
-        name: .textFieldRegularComponentTests,
+    static let textFieldComponentTests = testTarget(
+        name: .textFieldComponentTests,
+        dependencies: [
+            .customDump,
+            .textFieldComponent,
+            .textFieldDomain,
+            .textFieldUI,
+        ]
+    )
+    
+    static let textFieldDomain = target(
+        name: .textFieldDomain,
+        dependencies: []
+    )
+    static let textFieldDomainTests = testTarget(
+        name: .textFieldDomainTests,
+        dependencies: [
+            .customDump,
+            .textFieldDomain,
+        ]
+    )
+    
+    static let textFieldModel = target(
+        name: .textFieldModel,
         dependencies: [
             .combineSchedulers,
-            .textFieldRegularComponent,
+            .textFieldDomain,
+        ]
+    )
+    static let textFieldModelTests = testTarget(
+        name: .textFieldModelTests,
+        dependencies: [
+            .combineSchedulers,
+            .customDump,
+            .textFieldDomain,
+            .textFieldModel,
+        ]
+    )
+    
+    static let textFieldUI = target(
+        name: .textFieldUI,
+        dependencies: [
+            .textFieldDomain,
+            .uiKitHelpers,
+        ]
+    )
+    static let textFieldUITests = target(
+        name: .textFieldUITests,
+        dependencies: [
+            .customDump,
+            .textFieldUI,
         ]
     )
     
     static let uiKitHelpers = target(name: .uiKitHelpers)
+    
+    static let wipTests = testTarget(
+        name: .wipTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            // internal modules
+            .textFieldDomain,
+            .textFieldModel,
+        ]
+    )
 }
 
 private extension Target.Dependency {
     
-    static let textFieldRegularComponent = byName(
-        name: .textFieldRegularComponent
+    static let textFieldComponent = byName(
+        name: .textFieldComponent
+    )
+    static let textFieldDomain = byName(
+        name: .textFieldDomain
+    )
+    static let textFieldModel = byName(
+        name: .textFieldModel
+    )
+    static let textFieldUI = byName(
+        name: .textFieldUI
     )
     
     static let uiKitHelpers = byName(
@@ -71,10 +173,23 @@ private extension Target.Dependency {
 
 private extension String {
     
-    static let textFieldRegularComponent = "TextFieldRegularComponent"
-    static let textFieldRegularComponentTests = "TextFieldRegularComponentTests"
+    static let searchBarComponent = "SearchBarComponent"
+    
+    static let textFieldComponent = "TextFieldComponent"
+    static let textFieldComponentTests = "TextFieldComponentTests"
+
+    static let textFieldDomain = "TextFieldDomain"
+    static let textFieldDomainTests = "TextFieldDomainTests"
+
+    static let textFieldModel = "TextFieldModel"
+    static let textFieldModelTests = "TextFieldModelTests"
+
+    static let textFieldUI = "TextFieldUI"
+    static let textFieldUITests = "TextFieldUITests"
     
     static let uiKitHelpers = "UIKitHelpers"
+    
+    static let wipTests = "WIPTests"
 }
 
 // MARK: - Point-Free
@@ -88,6 +203,10 @@ private extension Package.Dependency {
     static let combineSchedulers = Package.Dependency.package(
         url: .pointFreeGitHub + .combine_schedulers,
         from: .init(0, 9, 1)
+    )
+    static let customDump = Package.Dependency.package(
+        url: .pointFreeGitHub + .swift_custom_dump,
+        from: .init(0, 10, 2)
     )
     static let identifiedCollections = Package.Dependency.package(
         url: .pointFreeGitHub + .swift_identified_collections,
@@ -117,6 +236,10 @@ private extension Target.Dependency {
         name: .combineSchedulers,
         package: .combine_schedulers
     )
+    static let customDump = product(
+        name: .customDump,
+        package: .swift_custom_dump
+    )
     static let identifiedCollections = product(
         name: .identifiedCollections,
         package: .swift_identified_collections
@@ -144,6 +267,9 @@ private extension String {
     
     static let combineSchedulers = "CombineSchedulers"
     static let combine_schedulers = "combine-schedulers"
+    
+    static let customDump = "CustomDump"
+    static let swift_custom_dump = "swift-custom-dump"
     
     static let identifiedCollections = "IdentifiedCollections"
     static let swift_identified_collections = "swift-identified-collections"

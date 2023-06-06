@@ -71,7 +71,7 @@ class PaymentsParameterViewModel: Identifiable {
 
 extension PaymentsParameterViewModel {
     
-    struct Value {
+    struct Value: Equatable {
  
         let id: Payments.Parameter.ID
         let last: String?

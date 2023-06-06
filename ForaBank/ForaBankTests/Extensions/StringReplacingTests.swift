@@ -346,7 +346,9 @@ final class StringReplacingTests: XCTestCase {
         string: String,
         location: Int,
         length: Int,
-        text: String
+        text: String,
+        file: StaticString = #file,
+        line: UInt = #line
     ) -> String {
         
         let range = NSRange(location: location, length: length)

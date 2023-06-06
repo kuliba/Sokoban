@@ -8,12 +8,13 @@
 import Foundation
 import Combine
 import SwiftUI
+import TextFieldComponent
 
 class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
     
     override var type: ContactsSectionViewModel.Kind { .banks }
     
-    @Published var searchBar: SearchBarView.ViewModel?
+    @Published var searchTextField: RegularFieldViewModel?
     @Published var options: OptionSelectorView.ViewModel
     @Published var visible: [ContactsItemViewModel]
     let filter: CurrentValueSubject<String?, Never>
@@ -23,41 +24,38 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
     private let items: CurrentValueSubject<[ContactsItemViewModel], Never>
     private let bankType: CurrentValueSubject<BankType?, Never>
     
-    init(_ model: Model, header: ContactsSectionHeaderView.ViewModel, isCollapsed: Bool, mode: Mode, searchBar: SearchBarView.ViewModel?, options: OptionSelectorView.ViewModel, visible: [ContactsItemViewModel], items: [ContactsItemViewModel], bankType: BankType? = nil, phone: String?, filter: String? = nil) {
+    private let searchTextFieldFactory: () -> RegularFieldViewModel
+    
+    private init(_ model: Model, header: ContactsSectionHeaderView.ViewModel, isCollapsed: Bool, mode: Mode, searchTextField: RegularFieldViewModel?, options: OptionSelectorView.ViewModel, visible: [ContactsItemViewModel], items: [ContactsItemViewModel], bankType: BankType? = nil, phone: String?, filter: String? = nil, searchTextFieldFactory: @escaping () -> RegularFieldViewModel) {
         
-        self.searchBar = searchBar
+        self.searchTextField = searchTextField
         self.options = options
         self.visible = visible
         self.items = .init(items)
         self.phone = .init(phone)
         self.filter = .init(filter)
         self.bankType = .init(bankType)
+        self.searchTextFieldFactory = searchTextFieldFactory
 
         super.init(header: header, isCollapsed: isCollapsed, mode: mode, model: model)
     }
     
-    convenience init(_ model: Model, mode: Mode, phone: String?, bankDictionary: BankDictionary) {
+    convenience init(_ model: Model, mode: Mode, phone: String?, bankDictionary: BankDictionary, searchTextFieldFactory: @escaping () -> RegularFieldViewModel) {
         
         let options = Self.createOptionViewModel()
-        self.init(model, header: .init(kind: .banks), isCollapsed: true, mode: mode, searchBar: nil, options: options, visible: [], items: [], phone: phone)
+        self.init(model, header: .init(kind: .banks), isCollapsed: true, mode: mode, searchTextField: nil, options: options, visible: [], items: [], phone: phone, searchTextFieldFactory: searchTextFieldFactory)
         
         switch bankDictionary {
         case .banks:
-            Task.detached(priority: .userInitiated) {
-                
-                self.items.value = await Self.reduce(bankList: model.bankList.value, preffered: model.prefferedBanksList.value) { [weak self]  bank in
-                    { self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bankId: bank.id)) }
-                }
+            self.items.value = Self.reduce(bankList: model.bankList.value, preffered: model.prefferedBanksList.value) { [weak self]  bank in
+                { self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bankId: bank.id)) }
             }
             
         case .banksFullInfo:
-            Task.detached(priority: .userInitiated) {
-                
-                self.items.value = Self.reduceBanksFullInfo(bankList: model.dictionaryFullBankInfoPrefferedFirstList(), action: { [weak self]  bank in
-                    {
-                        self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bankId: bank.bic))
-                    }
-                })
+            self.items.value = Self.reduceBanksFullInfo(bankList: model.dictionaryFullBankInfoPrefferedFirstList()) { [weak self]  bank in
+                {
+                    self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bankId: bank.bic))
+                }
             }
         }
     }
@@ -152,53 +150,53 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
             }.store(in: &bindings)
         
         header.action
+            .compactMap { $0 as? ContactsSectionViewModelAction.Collapsable.SearchDidTapped }
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [unowned self] _ in
                 
-                switch action {
-                case _ as ContactsSectionViewModelAction.Collapsable.SearchDidTapped:
-                    let searchBarViewModel = SearchBarView.ViewModel(textFieldPhoneNumberView: .init(.banks))
-                    bind(searchBar: searchBarViewModel)
-                    withAnimation {
-                        
-                        self.header.isCollapsed = true
-                        searchBar = searchBarViewModel
-                    }
-
-                default:
-                    break
+                let searchTextFieldViewModel = searchTextFieldFactory()
+                bind(searchTextField: searchTextFieldViewModel)
+                
+                withAnimation {
+                    
+                    self.header.isCollapsed = true
+                    self.searchTextField = searchTextFieldViewModel
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
-    func bind(searchBar: SearchBarView.ViewModel) {
+    func bind(searchTextField: RegularFieldViewModel) {
         
-        searchBar.action
+        searchTextField.$state
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [unowned self] state in
                 
-                switch action {
-                case _ as SearchBarViewModelAction.DismissKeyboard:
+                switch state {
+                case let .editing(textState):
+                    self.filter.value = textState.text
+                    
+                case let .noFocus(text):
+                    self.filter.value = text
+                    
+                case .placeholder:
                     withAnimation {
                         
-                        self.searchBar = nil
-                        filter.value = nil
+                        self.filter.value = nil
                     }
-                    
-                default:
-                    break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
+    }
+    
+    func cancelSearch() {
         
-        searchBar.textField.$text
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] text in
-                
-                filter.value = text
-                
-            }.store(in: &bindings)
+        withAnimation {
+            
+            self.searchTextField = nil
+            self.filter.value = nil
+        }
     }
 }
 
@@ -218,7 +216,7 @@ extension ContactsBanksSectionViewModel {
 
 extension ContactsBanksSectionViewModel {
     
-    static func reduce(bankList: [BankData], preffered: [String], action: @escaping (BankData) -> () -> Void) async -> [ContactsItemViewModel] {
+    static func reduce(bankList: [BankData], preffered: [String], action: @escaping (BankData) -> () -> Void) -> [ContactsItemViewModel] {
         
         let prefferedBanks = preffered.compactMap { bankId in bankList.first(where: { $0.id == bankId }) }
         let otherBanks = bankList.filter{ preffered.contains($0.id) == false }
@@ -294,3 +292,11 @@ extension ContactsSectionViewModelAction {
         }
     }
 }
+
+//MARK: - Preview Content
+
+extension ContactsBanksSectionViewModel {
+    
+    static let sample = ContactsBanksSectionViewModel(.emptyMock, header: .init(kind: .banks), isCollapsed: true, mode: .fastPayment, searchTextField: nil, options: .sample, visible: [ContactsBankItemView.ViewModel.sample, ContactsBankItemView.ViewModel.sample], items: [ContactsBankItemView.ViewModel.sample, ContactsBankItemView.ViewModel.sample], phone: nil, searchTextFieldFactory: { .bank() })
+}
+

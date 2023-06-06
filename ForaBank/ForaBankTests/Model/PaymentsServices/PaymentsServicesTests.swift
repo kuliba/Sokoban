@@ -192,7 +192,7 @@ final class PaymentsServicesTests: XCTestCase {
         } catch {}
     }
     
-    func test_localStep0_shouldThrowOnEmptyProductsutility() async throws {
+    func test_localStep0_shouldThrowOnEmptyProductsГtility() async throws {
         
         let sut = makeSUT([(.card, 0)])
         

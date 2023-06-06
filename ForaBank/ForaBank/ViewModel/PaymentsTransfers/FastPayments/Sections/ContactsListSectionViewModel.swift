@@ -134,7 +134,7 @@ extension ContactsListSectionViewModel {
             return (0..<8).map { _ in ContactsPlaceholderItemView.ViewModel(style: .person) }
         }
         
-        guard let filter = filter else {
+        guard let filter = filter, !filter.isEmpty else {
             return items
         }
         

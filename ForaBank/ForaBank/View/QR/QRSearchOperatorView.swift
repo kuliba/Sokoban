@@ -81,7 +81,17 @@ struct QRSearchOperatorView: View {
 }
 
 struct QRSearchOperatorView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        QRSearchOperatorView.init(viewModel: .init(searchBar: .init(textFieldPhoneNumberView: .init(.text("Введите ИНН"))), navigationBar: .init(title: "Все регионы"), model: .emptyMock, addCompanyAction: {}, requisitesAction: {}))
+        
+        QRSearchOperatorView(
+            viewModel: .init(
+                searchBar: .withText("Введите ИНН"),
+                navigationBar: .init(title: "Все регионы"),
+                model: .emptyMock,
+                addCompanyAction: {},
+                requisitesAction: {}
+            )
+        )
     }
 }

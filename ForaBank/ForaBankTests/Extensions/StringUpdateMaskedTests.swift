@@ -93,7 +93,9 @@ final class StringUpdateMaskedTests: XCTestCase {
         length: Int = 0,
         update: String,
         limit: Int? = nil,
-        style: StringFilteringStyle = .default
+        style: StringFilteringStyle = .default,
+        file: StaticString = #file,
+        line: UInt = #line
     ) -> String {
         
         let range: NSRange = .init(location: location, length: length)

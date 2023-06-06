@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Combine
-import TextFieldRegularComponent
+import TextFieldComponent
 
 //MARK: - ViewModel
 
@@ -19,15 +19,25 @@ extension PaymentsSelectBankView {
 
         private let model: Model
         fileprivate static let defaultIcon: Image = .ic24Bank
+        private let scheduler: AnySchedulerOfDispatchQueue
 
-        init(state: PaymentsSelectBankView.ViewModel.State, source: PaymentsParameterRepresentable, model: Model) {
-            
+        init(
+            state: PaymentsSelectBankView.ViewModel.State,
+            source: PaymentsParameterRepresentable,
+            model: Model,
+            scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+        ) {
             self.state = state
             self.model = model
+            self.scheduler = scheduler
             super.init(source: source)
         }
     
-        convenience init(with parameterSelect: Payments.ParameterSelectBank, model: Model) throws {
+        convenience init(
+            with parameterSelect: Payments.ParameterSelectBank,
+            model: Model,
+            scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+        ) throws {
             
             guard !parameterSelect.options.isEmpty else {
                 throw Payments.Error.ui(.sourceParameterMissingOptions(parameterSelect.id))
@@ -45,7 +55,9 @@ extension PaymentsSelectBankView {
                         parameter: parameterSelect,
                         defaultIcon: Self.defaultIcon)),
                 source: parameterSelect,
-                model: model)
+                model: model,
+                scheduler: scheduler
+            )
             
             bind()
         }
@@ -74,7 +86,7 @@ extension PaymentsSelectBankView.ViewModel {
             )
             .map(\.1)
             .filter({ $0 })
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] _ in
                 
                 guard let parameterSelectBank = parameterSelectBank else {
@@ -98,7 +110,7 @@ extension PaymentsSelectBankView.ViewModel {
         action
             .compactMap( { $0 as? PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped } )
             .map(\.id)
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] bankItemId in
                 
                 update(value: bankItemId)
@@ -116,7 +128,7 @@ extension PaymentsSelectBankView.ViewModel {
         
         action
             .compactMap({ $0 as? PaymentsParameterViewModelAction.SelectBank.List.SelectAllTapped })
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] _ in
                 
                 guard let parameterSelectBank = self.parameterSelectBank,
@@ -128,8 +140,10 @@ extension PaymentsSelectBankView.ViewModel {
                 let contactsViewModel: ContactsViewModel = {
                     
                     switch selectAllOption.type {
-                    case .banks: return .init(model, mode: .select(.banks))
-                    case .banksFullInfo: return .init(model, mode: .select(.banksFullInfo))
+                    case .banks:
+                        return model.makeContactsViewModel(forMode: .select(.banks))
+                    case .banksFullInfo:
+                        return model.makeContactsViewModel(forMode: .select(.banksFullInfo))
                     }
                     
                 }()
@@ -143,7 +157,7 @@ extension PaymentsSelectBankView.ViewModel {
             .dropFirst()
             .removeDuplicates()
             .filter({ !$0 })
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] _ in
                 
                 guard let parameterSelectBank = parameterSelectBank else {
@@ -165,7 +179,7 @@ extension PaymentsSelectBankView.ViewModel {
             contactsViewModel.action
                 .compactMap({$0 as? ContactsViewModelAction.BankSelected })
                 .map(\.bankId)
-                .receive(on: DispatchQueue.main)
+                .receive(on: scheduler)
                 .sink { [weak self] bankId in
                     
                     guard let self = self else { return }
@@ -175,7 +189,7 @@ extension PaymentsSelectBankView.ViewModel {
                         return
                     }
                     
-                    update(value: option.id)
+                    self.update(value: option.id)
                     
                     withAnimation {
                         self.state = .collapsed(.init(value: self.value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
@@ -211,25 +225,34 @@ extension PaymentsSelectBankView.ViewModel {
     }
     
     class ExpandedViewModel: ObservableObject {
-
-        @Published var icon: IconViewModel
+        
+        @Published private(set) var icon: IconViewModel
         let title: String
-        let textField: TextFieldRegularView.ViewModel
-        @Published var list: ListState
+        let textField: RegularFieldViewModel
+        @Published private(set) var list: ListState
         
         private let selectAll: SelectAllItemViewModel?
         private let banksList: [BankItemViewModel]
+        private let scheduler: AnySchedulerOfDispatchQueue
         
         var bindings = Set<AnyCancellable>()
         
-        init(icon: IconViewModel, title: String, textField: TextFieldRegularView.ViewModel, list: ListState, selectAll: SelectAllItemViewModel?, banksList: [BankItemViewModel]) {
-            
+        init(
+            icon: IconViewModel,
+            title: String,
+            textField: RegularFieldViewModel,
+            list: ListState,
+            selectAll: SelectAllItemViewModel?,
+            banksList: [BankItemViewModel],
+            scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+        ) {
             self.icon = icon
             self.title = title
             self.textField = textField
             self.list = list
             self.selectAll = selectAll
             self.banksList = banksList
+            self.scheduler = scheduler
         }
         
         enum ListState: Equatable {
@@ -297,10 +320,14 @@ extension PaymentsSelectBankView.ViewModel.CollapsedViewModel {
 
 extension PaymentsSelectBankView.ViewModel.ExpandedViewModel {
     
-    convenience init(with value: Payments.Parameter.Value, parameter: Payments.ParameterSelectBank, defaultIcon: Image) {
-        
+    convenience init(
+        with value: Payments.Parameter.Value,
+        parameter: Payments.ParameterSelectBank,
+        defaultIcon: Image,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    ) {
         let icon: PaymentsSelectBankView.ViewModel.IconViewModel = {
-           
+            
             guard let option = parameter.options.first(where: { $0.id == value }) else {
                 return .icon(defaultIcon)
             }
@@ -329,7 +356,7 @@ extension PaymentsSelectBankView.ViewModel.ExpandedViewModel {
         }()
         
         let banksList = parameter.options.map { option in
-        
+            
             return PaymentsSelectBankView.ViewModel.BankItemViewModel(
                 id: option.id,
                 icon: .init(with: option, defaultIcon: defaultIcon),
@@ -340,13 +367,23 @@ extension PaymentsSelectBankView.ViewModel.ExpandedViewModel {
         
         let selectAllOption = PaymentsSelectBankView.ViewModel.SelectAllItemViewModel(parameter: parameter)
         
-        self.init(icon: icon,
-                  title: parameter.title,
-                  textField: .init(placeholder: placeholder,
-                                   keyboardType: parameter.keyboardType.keyboardStyle),
-                  list: .filterred(selectAll: selectAllOption, banks: banksList),
-                  selectAll: selectAllOption,
-                  banksList: banksList)
+        let textField = TextFieldFactory.makeTextField(
+            text: nil,
+            placeholderText: placeholder,
+            keyboardType: parameter.keyboardType.keyboardStyle,
+            limit: nil,
+            scheduler: scheduler
+        )
+        
+        self.init(
+            icon: icon,
+            title: parameter.title,
+            textField: textField,
+            list: .filterred(selectAll: selectAllOption, banks: banksList),
+            selectAll: selectAllOption,
+            banksList: banksList,
+            scheduler: scheduler
+        )
         
         bind()
     }
@@ -354,49 +391,31 @@ extension PaymentsSelectBankView.ViewModel.ExpandedViewModel {
     private func bind() {
         
         textField.$state
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] state in
+            .map(\.text)
+            .receive(on: scheduler)
+            .sink { [unowned self] text in
                 
-                switch state {
-                case let .focus(text: text, cursorPosition: _):
-                    update(with: text)
+                withAnimation {
                     
-                case let .noFocus(text):
-                    update(with: text)
-                    
-                case .placeholder:
-                    update(with: "")
+                    list = update(with: text)
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
-    func update(with searchText: String) {
+    func update(with searchText: String?) -> ListState {
         
-        switch searchText {
-        case "":
-            withAnimation {
-                list = .filterred(selectAll: selectAll, banks: banksList)
-            }
+        if let searchText, !searchText.isEmpty {
             
-        default:
+            let filteredBanks = banksList.filtered(with: searchText, keyPath: \.searchValue)
             
-            let filterredBanks = banksList.filter {
-                $0.searchValue.lowercased().contained(in: [searchText.lowercased()])
-            }
+            return filteredBanks.isEmpty
+            ? .empty(.init())
+            : .filterred(selectAll: selectAll, banks: filteredBanks)
             
-            if filterredBanks.isEmpty {
-                
-                withAnimation {
-                    list = .empty(.init())
-                }
-                
-            } else {
-                
-                withAnimation {
-                    list = .filterred(selectAll: selectAll, banks: filterredBanks)
-                }
-            }
+        } else {
+            
+            return .filterred(selectAll: selectAll, banks: banksList)
         }
     }
 }
@@ -415,7 +434,7 @@ extension PaymentsSelectBankView.ViewModel.SelectAllItemViewModel {
 
 extension Payments.ParameterSelectBank.KeyboardType {
     
-    var keyboardStyle: TextFieldRegularView.ViewModel.KeyboardType {
+    var keyboardStyle: KeyboardType {
         
         switch self {
         case .normal: return .default
@@ -586,7 +605,7 @@ struct PaymentsSelectBankView: View {
                             .font(.textBodyMR14180())
                             .foregroundColor(.textPlaceholder)
                         
-                        TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16, weight: .medium), textColor: .textSecondary)
+                        RegularTextFieldView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16, weight: .medium), textColor: .textSecondary)
                             .frame(height: 24)
                     }
   

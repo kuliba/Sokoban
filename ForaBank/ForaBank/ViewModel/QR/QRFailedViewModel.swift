@@ -40,7 +40,7 @@ class QRFailedViewModel: ObservableObject {
         return [
             ButtonSimpleView.ViewModel(title: "Найти поставщика вручную", style: .gray, action: { [weak self] in
                 
-                self?.link = .failedView(.init(searchBar: .init(textFieldPhoneNumberView: .init(style: .general, placeHolder: .text("Название или ИНН")), state: .idle, icon: Image.ic24Search), navigationBar:
+                self?.link = .failedView(.init(searchBar: .nameOrTaxCode(), navigationBar:
                         .init(
                             title: "Все регионы",
                             titleButton: .init(icon: Image.ic16ChevronDown, action: {

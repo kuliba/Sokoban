@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "TextFieldRegularComponent"
-               BuildableName = "TextFieldRegularComponent"
-               BlueprintName = "TextFieldRegularComponent"
+               BlueprintIdentifier = "UIKitHelpers"
+               BuildableName = "UIKitHelpers"
+               BlueprintName = "UIKitHelpers"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,23 +28,65 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UIKitHelpers"
-               BuildableName = "UIKitHelpers"
-               BlueprintName = "UIKitHelpers"
+               BlueprintIdentifier = "SearchBarComponent"
+               BuildableName = "SearchBarComponent"
+               BlueprintName = "SearchBarComponent"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "TextFieldRegularComponentTests"
-               BuildableName = "TextFieldRegularComponentTests"
-               BlueprintName = "TextFieldRegularComponentTests"
+               BlueprintIdentifier = "TextFieldComponent"
+               BuildableName = "TextFieldComponent"
+               BlueprintName = "TextFieldComponent"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "TextFieldDomain"
+               BuildableName = "TextFieldDomain"
+               BlueprintName = "TextFieldDomain"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "TextFieldModel"
+               BuildableName = "TextFieldModel"
+               BlueprintName = "TextFieldModel"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "TextFieldUI"
+               BuildableName = "TextFieldUI"
+               BlueprintName = "TextFieldUI"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -52,8 +94,8 @@
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
-      selectedDebuggerIdentifier = ""
-      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
@@ -63,14 +105,12 @@
       </TestPlans>
       <Testables>
          <TestableReference
-            skipped = "NO"
-            parallelizable = "YES"
-            testExecutionOrdering = "random">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "TextFieldRegularComponentTests"
-               BuildableName = "TextFieldRegularComponentTests"
-               BlueprintName = "TextFieldRegularComponentTests"
+               BlueprintIdentifier = "TextFieldModelTests"
+               BuildableName = "TextFieldModelTests"
+               BlueprintName = "TextFieldModelTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
@@ -96,9 +136,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "TextFieldRegularComponent"
-            BuildableName = "TextFieldRegularComponent"
-            BlueprintName = "TextFieldRegularComponent"
+            BlueprintIdentifier = "UIKitHelpers"
+            BuildableName = "UIKitHelpers"
+            BlueprintName = "UIKitHelpers"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

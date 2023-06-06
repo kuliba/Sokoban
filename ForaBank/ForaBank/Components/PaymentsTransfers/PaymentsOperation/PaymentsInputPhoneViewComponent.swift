@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import TextFieldComponent
 
 //MARK: - ViewModel
 
@@ -15,7 +16,7 @@ extension PaymentsInputPhoneView {
     class ViewModel: PaymentsParameterViewModel, ObservableObject {
         
         let icon: Image
-        let textView: TextViewPhoneNumberView.ViewModel
+        let textView: RegularFieldViewModel
         @Published var title: String?
         @Published var actionButton: ActionButtonViewModel?
         
@@ -29,6 +30,8 @@ extension PaymentsInputPhoneView {
                 return false
             }
             
+            let validator = PhoneValidator()
+            
 #if DEBUG
             if phone.digits == "70115110217" {
                 
@@ -36,17 +39,17 @@ extension PaymentsInputPhoneView {
                 
             } else {
                 
-                return textView.phoneNumberFormatter.isValid(phone.digits)
+                return validator.isValid(phone.digits)
             }
             
 #else
-            return textView.phoneNumberFormatter.isValid(phone.digits)
+            return validator.isValid(phone.digits)
 #endif
         }
         
         var titleValue: String? { parameterInput?.title }
 
-        init(icon: Image = .ic24Smartphone, textView: TextViewPhoneNumberView.ViewModel, phone: String?, title: String? = nil, actionButton: ActionButtonViewModel? = nil, model: Model = .emptyMock, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
+        init(icon: Image = .ic24Smartphone, textView: RegularFieldViewModel, phone: String?, title: String? = nil, actionButton: ActionButtonViewModel? = nil, model: Model = .emptyMock, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString)) {
             
             self.icon = icon
             self.textView = textView
@@ -62,52 +65,44 @@ extension PaymentsInputPhoneView {
             let title = parameterInput.title
             let phone = parameterInput.parameter.value
             let placeholder = parameterInput.placeholder ?? parameterInput.title
-            var countryCode: [CountryCodeReplace] = []
+            let countryCodes: [CountryCodeReplace] = parameterInput.countryCode ?? []
             
-            if let countryCodes = parameterInput.countryCode {
-             
-                countryCode = countryCodes.compactMap( {
-                    
-                    CountryCodeReplace(from: $0.from, to: $0.to)
-                })
-            }
-            
-            let textView = TextViewPhoneNumberView.ViewModel(style: .payments, text: phone, placeHolder: .text(placeholder), filterSymbols: .defaultFilterSymbols, countryCodeReplaces: countryCode, phoneNumberFormatter: PhoneNumberKitFormater())
+            let textView = TextFieldFactory.makePhoneKitTextField(
+                initialPhoneNumber: phone,
+                placeholderText: placeholder,
+                filterSymbols: [],
+                countryCodeReplaces: countryCodes
+            )
             
             self.init(textView: textView, phone: phone, title: title, model: model, source: parameterInput)
             
+            let validator = PhoneValidator()
+            let transformer = Transformers.phoneKit
+            
             if let phone = phone {
-
 #if DEBUG
                 if phone.digits != "70115110217" {
                     
-                    textView.setText(to: textView.phoneNumberFormatter.partialFormatter("+\(phone.digits)"))
+                    textView.setText(to: "+\(phone.digits)")
                 }
-
 #else
-                textView.setText(to: textView.phoneNumberFormatter.partialFormatter("+\(phone.digits)"))
+                textView.setText(to: "+\(phone.digits)")
 #endif
-                
             }
             
             self.actionButton = .init(action: {[weak self] in
                 
-                let contactViewModel = ContactsViewModel(model, mode: .select(.contacts))
+                let contactViewModel = model.makeContactsViewModel(forMode: .select(.contacts))
                 self?.bind(contactsViewModel: contactViewModel)
                 self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Show(viewModel: contactViewModel))
             })
-            
-            textView.toolbar = .init(doneButton: .init(isEnabled: true,
-                                                        action: { [weak self] in self?.textView.dismissKeyboard() }),
-                                      closeButton: .init(isEnabled: true,
-                                                         action: { [weak self] in self?.textView.dismissKeyboard() }))
             
             bind()
         }
 
         private func bind() {
             
-            textView.$text
+            textView.textPublisher()
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] phone in
                     
@@ -115,7 +110,7 @@ extension PaymentsInputPhoneView {
 
                 }.store(in: &bindings)
             
-            textView.isEditing
+            textView.isEditing()
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] isEditing in
                                         
@@ -238,10 +233,13 @@ struct PaymentsInputPhoneView: View {
             
             HStack(spacing: 20) {
                 
-                if viewModel.isEditable == true {
+                if viewModel.isEditable {
                     
-                    TextViewPhoneNumberView(viewModel: viewModel.textView)
-                        .frame(height: 24)
+                    RegularTextFieldView(
+                        viewModel: viewModel.textView,
+                        textFieldConfig: .black16
+                    )
+                    .frame(height: 24)
                     
                 } else {
                     
@@ -303,7 +301,17 @@ struct PaymentsInputPhoneView_Previews: PreviewProvider {
 
 extension PaymentsInputPhoneView.ViewModel {
     
-    static let samplePhone = PaymentsInputPhoneView.ViewModel(textView: .init(.phone), phone: "+7 925 555-5555", title: "Номер телефона получателя", actionButton: .init(action: {}))
+    static let samplePhone = PaymentsInputPhoneView.ViewModel(
+        textView: TextFieldFactory.makePhoneKitTextField(
+            initialPhoneNumber: "+7 925 555-5555",
+            placeholderText: "Номер телефона получателя",
+            filterSymbols: [],
+            countryCodeReplaces: []
+        ),
+        phone: "+7 925 555-5555",
+        title: "Номер телефона получателя",
+        actionButton: .init(action: {})
+    )
     
     static let samplePhoneParam = PaymentsInputPhoneView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "79255145555"), title: "Номер телефона получателя"), model: .emptyMock)
 }

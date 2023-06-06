@@ -176,7 +176,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
                 
-                let contactsViewModel = ContactsViewModel(model, mode: .fastPayments(.contacts))
+                let contactsViewModel = model.makeContactsViewModel(forMode: .fastPayments(.contacts))
                 bind(contactsViewModel)
                 
                 sheet = .init(type: .fastPayment(contactsViewModel))
@@ -188,7 +188,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
                 
-                let contactsViewModel = ContactsViewModel(model, mode: .abroad)
+                let contactsViewModel = model.makeContactsViewModel(forMode: .abroad)
                 bind(contactsViewModel)
                 
                 sheet = .init(type: .country(contactsViewModel))
@@ -343,7 +343,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                     let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
                                     let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: self.model, including: [lastPaymentsKind])
 
-                                    let operatorsViewModel = PaymentsServicesViewModel(searchBar: .init(textFieldPhoneNumberView: .init(style: .general, placeHolder: .text("Наименование или ИНН")), state: .idle),
+                                    let operatorsViewModel = PaymentsServicesViewModel(searchBar: .withText("Наименование или ИНН"),
                                                                                        navigationBar: navigationBarViewModel,
                                                                                        model: self.model,
                                                                                        latestPayments: latestPayments,
@@ -669,7 +669,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                             self?.model.action.send(QRSearchOperatorViewModelAction.OpenCityView())
                                         }), leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: { [weak self] in self?.link = nil })])
                                         
-                                        let operatorsViewModel = QRSearchOperatorViewModel(searchBar: .init(textFieldPhoneNumberView: .init(style: .general, placeHolder: .text("Название или ИНН")), state: .idle, icon: Image.ic24Search),
+                                        let operatorsViewModel = QRSearchOperatorViewModel(searchBar: .nameOrTaxCode(),
                                                                                            navigationBar: navigationBarViewModel, model: self.model,
                                                                                            operators: operators, addCompanyAction: { [weak self] in
                                             
@@ -877,6 +877,7 @@ extension PaymentsTransfersViewModel {
             bottomSheet = .init(type: .exampleDetail(latestPayment.type.rawValue)) //TODO:
         }
     }
+
 }
 
 //MARK: - Types

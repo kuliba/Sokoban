@@ -38,19 +38,19 @@ class SearchCityViewModel: ObservableObject, Identifiable {
     }
     
     func bind() {
-        searchView.textField.$text
+        
+        searchView.textFieldModel.textPublisher
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] value in
                 
                 if let value = value, !value.isEmpty {
+                    
                     filteredCity.removeAll()
                     filteredCity = city.filter { $0.lowercased().contains(value.lowercased()) }
-                }
-                else {
+                } else {
                     filteredCity = city
                 }
                 
             }.store(in: &bindings)
     }
-    
 }

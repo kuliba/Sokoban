@@ -1008,7 +1008,7 @@ extension Model {
         case .fns: return paymentsMockFNS()  
         case .fms: return paymentsMockFMS()  
         case .fssp: return paymentsMockFSSP()
-        case .sfp: return paymentsMockSFP()
+        case .sfp: return Model.paymentsMockSFP()
             
         default:
             return nil

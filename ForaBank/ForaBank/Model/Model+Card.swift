@@ -54,7 +54,7 @@ extension ModelAction {
     
     enum BankClient {
         
-        struct Request: Action {
+        struct Request: Action, Equatable {
             
             let phone: String
         }

@@ -437,7 +437,7 @@ extension Payments {
 
 extension Payments {
     
-    struct Mock {
+    struct Mock: Equatable {
         
         let service: Payments.Service
         let parameters: [Payments.Parameter]

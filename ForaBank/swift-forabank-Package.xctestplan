@@ -13,10 +13,35 @@
   },
   "testTargets" : [
     {
+      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "TextFieldRegularComponentTests",
-        "name" : "TextFieldRegularComponentTests"
+        "identifier" : "WIPTests",
+        "name" : "WIPTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TextFieldModelTests",
+        "name" : "TextFieldModelTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TextFieldDomainTests",
+        "name" : "TextFieldDomainTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TextFieldComponentTests",
+        "name" : "TextFieldComponentTests"
       }
     }
   ],
