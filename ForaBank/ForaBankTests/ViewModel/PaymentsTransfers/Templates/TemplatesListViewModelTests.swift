@@ -62,7 +62,7 @@ final class TemplatesListViewModelTests: XCTestCase {
             - второй айтeм меню тайтл "Вид (Список)"
             - третий aйтeм меню тайтл "Удалить"
         - в списке айтомов три шаблона
-            - два айтома вида регуляного
+            - два айтома вида регулярного
             - последний айтом кнопка для Добавления шаблона
         - контекстое меню на айтомах регулярного вида
         - селектор фильтрации показан
@@ -108,6 +108,70 @@ final class TemplatesListViewModelTests: XCTestCase {
         
         //templateItems
         XCTAssertEqual(sut.items.map(\.kind), [.regular, .regular, .add])
+    }
+
+    /*
+     Тест инит при наличии данных шаблонов
+        - шаблонов 2 штуки
+        - загрузки данных шаблонов в текущий момент
+        - настройка показа шаблонов - Список
+ 
+     Результат
+        - нав бар тайтл “Шаблоны”
+        - кнопка search активна
+        - кнопка меню активна
+        - в меню 3 айтема
+            - первый айтем меню тайтл "Последовательность"
+            - второй айтeм меню тайтл "Вид (Список)"
+            - третий aйтeм меню тайтл "Удалить"
+     - в списке айтомов 4 шаблона
+            - в верху плейсхолдер айтема
+            - два айтома вида регулярного
+            - последний айтом кнопка для Добавления шаблона
+     - контекстое меню на айтомах регулярного вида
+     - селектор фильтрации показан
+        - три селектора фильтрации "Все", "group1", "group2"
+     */
+
+    func test_initWithTempatesDataAndLoadingData_correct() throws {
+
+        let (sut, model) = makeSut(templatesData: [.firstTemplateData, .secondTemplateData],
+                                   isLoadingData: true,
+                                   styleSetting: .tiles)
+        // wait for bindings
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        //data
+        XCTAssertEqual(model.paymentTemplates.value.count, 2)
+        XCTAssertTrue(model.paymentTemplatesUpdating.value)
+
+        //navBar
+        let navBarRegularModel = try XCTUnwrap(sut.navBarState.regularModel)
+        XCTAssertEqual(navBarRegularModel.title, "Шаблоны")
+        XCTAssertEqual(navBarRegularModel.isSearchButtonDisable, false)
+        XCTAssertEqual(navBarRegularModel.isMenuDisable, false)
+    
+        //menuItems
+        XCTAssertEqual(navBarRegularModel.menuList.count, 3)
+        XCTAssertEqual(navBarRegularModel.menuList.firstIndex { $0.title == "Последовательность" }, 0)
+        XCTAssertEqual(navBarRegularModel.menuList.firstIndex { $0.title == "Вид (Список)" }, 1)
+        XCTAssertEqual(navBarRegularModel.menuList.firstIndex { $0.title == "Удалить" }, 2)
+    
+        //selector
+        let selectorModel = try XCTUnwrap(sut.categorySelector)
+        XCTAssertEqual(selectorModel.options.count, 3)
+        XCTAssertEqual(selectorModel.options.firstIndex { $0.title == "Все" }, 0)
+        XCTAssertEqual(selectorModel.options.firstIndex { $0.title == "group1" }, 1)
+        XCTAssertEqual(selectorModel.options.firstIndex { $0.title == "group2" }, 2)
+    
+        //regular items context menu
+        let menuItemsModel = try XCTUnwrap(sut.getItemsMenuViewModel())
+        XCTAssertEqual(menuItemsModel.count, 2)
+        XCTAssertEqual(menuItemsModel.firstIndex { $0.subTitle == "Удалить" }, 0)
+        XCTAssertEqual(menuItemsModel.firstIndex { $0.subTitle == "Переименовать" }, 1)
+    
+        //templateItems
+        XCTAssertEqual(sut.items.map(\.kind), [.placeholder, .regular, .regular, .add])
     }
 }
 
@@ -175,6 +239,11 @@ private extension PaymentTemplateData {
                               check: true,
                               comment: nil,
                               currencyAmount: "RUB",
+                              payer: Self.payer),
+                        .init(amount: 102.19,
+                              check: true,
+                              comment: nil,
+                              currencyAmount: "RUB",
                               payer: Self.payer)],
         paymentTemplateId: 1,
         sort: 1,
@@ -186,6 +255,11 @@ private extension PaymentTemplateData {
         groupName: "group2",
         name: "secondTemplate",
         parameterList: [.init(amount: 10.02,
+                              check: true,
+                              comment: nil,
+                              currencyAmount: "RUB",
+                              payer: Self.payer),
+                        .init(amount: 11.02,
                               check: true,
                               comment: nil,
                               currencyAmount: "RUB",

@@ -91,20 +91,6 @@ private extension TemplatesListViewModel {
                     model.action.send(ModelAction.Informer.Show
                         .init(informer: .init(message: "Не удалось загрузить шаблоны",
                                               icon: .close)))
-                                      
-//                case _ as ModelAction.PaymentTemplate.List.Requested:
-//
-//                    guard !items.contains(where: { item in item.kind == .placeholder})
-//                    else { return }
-//                    self.items.insert(.init(kind: .placeholder), at: 0)
-//
-//                case _ as ModelAction.PaymentTemplate.List.Complete:
-//
-//                    guard items.contains(where: { item in item.kind == .placeholder})
-//                    else { return }
-//
-//                    self.items.removeFirst()
-
                 default: break
                 }
             }.store(in: &bindings)
@@ -146,8 +132,11 @@ private extension TemplatesListViewModel {
             }.store(in: &bindings)
         
         itemsRaw
+            .combineLatest(model.paymentTemplatesUpdating)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] itemsRaw in
+            .sink { [unowned self] itemsRaw, isUpdating in
+               
+                guard !itemsRaw.isEmpty else { return }
                 
                 withAnimation {
                     
@@ -158,6 +147,10 @@ private extension TemplatesListViewModel {
                     } else {
                         
                         items = sortedItems(itemsRaw)
+                    }
+                    
+                    if case .normal = state, isUpdating {
+                        self.items.insert(.init(kind: .placeholder), at: 0)
                     }
                     
                     updateAddNewTemplateItem()
@@ -664,31 +657,7 @@ private extension TemplatesListViewModel {
                 model.paymentTemplatesViewSettings.value = Settings(style: style)
                 
             }.store(in: &bindings)
-        
-//        model.paymentTemplatesUpdating
-//            .receive(on: DispatchQueue.main)
-//            .sink { [unowned self] isUpdating in
-//
-//                withAnimation {
-//
-//                    if isUpdating {
-//
-//                        guard !items.contains(where: { item in item.kind == .placeholder})
-//                        else { return }
-//                        self.items.insert(.init(kind: .placeholder), at: 0)
-//
-//                    } else {
-//
-//                        guard items.contains(where: { item in item.kind == .placeholder})
-//                        else { return }
-//
-//                        items.removeFirst()
-//
-//                    }
-//                }
-//
-//            }.store(in: &bindings)
-            
+         
     }
     
     func bindCategorySelector(_ viewModel: OptionSelectorView.ViewModel) {
