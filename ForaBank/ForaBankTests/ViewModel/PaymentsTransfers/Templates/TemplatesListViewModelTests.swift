@@ -135,9 +135,10 @@ final class TemplatesListViewModelTests: XCTestCase {
 
     func test_initWithTempatesDataAndLoadingData_correct() throws {
 
-        let (sut, model) = makeSut(templatesData: [.firstTemplateData, .secondTemplateData],
-                                   isLoadingData: true,
-                                   styleSetting: .tiles)
+        let (sut, model) = makeSut(
+                            templatesData: [.firstTemplateData, .secondTemplateData],
+                            isLoadingData: true,
+                            styleSetting: .tiles)
         // wait for bindings
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
 
@@ -173,9 +174,67 @@ final class TemplatesListViewModelTests: XCTestCase {
         //templateItems
         XCTAssertEqual(sut.items.map(\.kind), [.placeholder, .regular, .regular, .add])
     }
+    
+    /*
+     План тестирования
+     
+     1. Нет данных шаблонов
+        - шаблонов в модели нет
+        - загрузки в текущий момент шаблонов нет
+        - нажата кнопка "Перейти в историю"
+
+        Результат:
+        - навБар тайтл “Шаблоны”
+        - навБар кнопка поиска не активна
+        - навБар кнопка меню не активна
+
+        - стэйт НетШаблонов (Пустой экран)
+        - во вьюМоделе стэйта Доступна кнопка с тайтлом "Перейти в историю"
+        - открылся боттомШит с продуктами
+        
+     */
+    
+    func test_EmptyViewGoHistoryButtonTap() throws {
+    
+        let (sut, model) = makeSut(templatesData: [],
+                                   isLoadingData: false)
+       
+        let sutActionSpy = ValueSpy(sut.action)
+        
+        XCTAssertTrue(model.paymentTemplates.value.isEmpty)
+        XCTAssertFalse(model.paymentTemplatesUpdating.value)
+        
+        // wait for bindings
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        let navBarRegularModel = try XCTUnwrap(sut.navBarState.regularModel)
+        XCTAssertEqual(navBarRegularModel.title, "Шаблоны")
+        XCTAssertEqual(navBarRegularModel.isSearchButtonDisable, true)
+        XCTAssertEqual(navBarRegularModel.isMenuDisable, true)
+        
+        let stateEmptyListModel = try XCTUnwrap(sut.state.emptyListModel)
+        XCTAssertEqual(stateEmptyListModel.button.title, "Перейти в историю")
+        
+        sut.action.send(TemplatesListViewModelAction.AddTemplateTapped())
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.2)
+        
+        let sheetKind = try XCTUnwrap(sut.sheet?.type)
+        
+        var flag = false
+        switch sheetKind {
+            case let .productList(productListModel):
+                flag = true
+                XCTAssertEqual(productListModel.title, "Выберите продукт")
+            default: flag = false
+        }
+       
+        XCTAssertTrue(flag)
+    }
 }
 
 
+
+//let spy = ValueSpy(sut.$state)
 
 //MARK: Helpers
 
@@ -239,11 +298,6 @@ private extension PaymentTemplateData {
                               check: true,
                               comment: nil,
                               currencyAmount: "RUB",
-                              payer: Self.payer),
-                        .init(amount: 102.19,
-                              check: true,
-                              comment: nil,
-                              currencyAmount: "RUB",
                               payer: Self.payer)],
         paymentTemplateId: 1,
         sort: 1,
@@ -255,11 +309,6 @@ private extension PaymentTemplateData {
         groupName: "group2",
         name: "secondTemplate",
         parameterList: [.init(amount: 10.02,
-                              check: true,
-                              comment: nil,
-                              currencyAmount: "RUB",
-                              payer: Self.payer),
-                        .init(amount: 11.02,
                               check: true,
                               comment: nil,
                               currencyAmount: "RUB",

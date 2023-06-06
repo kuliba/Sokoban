@@ -120,11 +120,11 @@ private extension TemplatesListViewModel {
                            
                             withAnimation {
                                
-                                itemsRaw.value = templatesVM
-                                let newCategorySelector = getCategorySelectorViewModel(with: templates)
-                                categorySelector = newCategorySelector
+                                self.itemsRaw.value = templatesVM
+                                let newCategorySelector = getCategorySelectorModel(with: templates)
+                                self.categorySelector = newCategorySelector
                                 bindCategorySelector(newCategorySelector)
-                                state = .normal
+                                self.state = .normal
                             }
                         }
                     }
@@ -136,26 +136,18 @@ private extension TemplatesListViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] itemsRaw, isUpdating in
                
-                guard !itemsRaw.isEmpty else { return }
+                guard !itemsRaw.isEmpty,
+                      case .normal = self.state
+                else { return }
                 
                 withAnimation {
                     
-                    if let selectedCategoryIndex = categorySelector?.selected {
-                        
-                        items = sortedItems(filterredItems(itemsRaw, selectedCategoryIndex))
-                        
-                    } else {
-                        
-                        items = sortedItems(itemsRaw)
-                    }
-                    
-                    if case .normal = state, isUpdating {
-                        self.items.insert(.init(kind: .placeholder), at: 0)
-                    }
-                    
-                    updateAddNewTemplateItem()
+                    self.items = reduceItems(rawItems: itemsRaw,
+                                             isDataUpdating: isUpdating,
+                                             categorySelected: self.categorySelector?.selected,
+                                             searchText: self.navBarState.searchModel?.searchText,
+                                             isAddItemNeeded: true)
                 }
- 
             }.store(in: &bindings)
         
         $items
@@ -345,8 +337,12 @@ private extension TemplatesListViewModel {
                 case let payload as TemplatesListViewModelAction.Search:
                     
                     withAnimation {
-                        self.items = searchedItems(itemsRaw.value, payload.text)
-                        updateAddNewTemplateItem()
+                        
+                        self.items = reduceItems(rawItems: self.itemsRaw.value,
+                                                 isDataUpdating: model.paymentTemplatesUpdating.value,
+                                                 categorySelected: self.categorySelector?.selected,
+                                                 searchText: payload.text,
+                                                 isAddItemNeeded: true)
                     }
                     
                 case _ as TemplatesListViewModelAction.ToggleStyle:
@@ -389,7 +385,7 @@ private extension TemplatesListViewModel {
                         if case .tiles = self.style { self.style = .list }
                         
                         self.categorySelector = nil
-                        items = self.itemsRaw.value //.removeLast()
+                        self.items = self.itemsRaw.value
                         self.editModeState = .active
                         self.updateNavBar(event: .setReorder)
                     }
@@ -397,17 +393,15 @@ private extension TemplatesListViewModel {
             //Close Reorder
                 case _ as TemplatesListViewModelAction.ReorderItems.CloseEditMode:
             
-                    let newCategorySelector = getCategorySelectorViewModel(with: model.paymentTemplates.value)
+                    let newCategorySelector = getCategorySelectorModel(with: model.paymentTemplates.value)
+                    
                     withAnimation {
                         
                         self.editModeState = .inactive
                         self.updateNavBar(event: .setRegular)
-                        self.items = self.itemsRaw.value
                         self.categorySelector = newCategorySelector
+                        bindCategorySelector(newCategorySelector)
                     }
-                    
-                    bindCategorySelector(newCategorySelector)
-                    self.updateAddNewTemplateItem()
                 
             //Save Reorder
                 case _ as TemplatesListViewModelAction.ReorderItems.SaveReorder:
@@ -429,10 +423,10 @@ private extension TemplatesListViewModel {
                     
                     model.action.send(ModelAction.PaymentTemplate.Sort.Requested(sortDataList: newOrders))
                     
-                    let newCategorySelector = getCategorySelectorViewModel(with: model.paymentTemplates.value)
+                    let newCategorySelector = getCategorySelectorModel(with: model.paymentTemplates.value)
                     
                     withAnimation {
-                        categorySelector = newCategorySelector
+                        self.categorySelector = newCategorySelector
                     }
                    
                     bindCategorySelector(newCategorySelector)
@@ -441,12 +435,13 @@ private extension TemplatesListViewModel {
             // Item Moved
                 case let payload as TemplatesListViewModelAction.ReorderItems.ItemMoved:
 
-                    self.items = Self.reduce(items: self.items, move: payload.move)
+                    self.items = Self.reduce(rawItems: self.items, move: payload.move)
                     if editModeState == .inactive {
                         self.action.send(TemplatesListViewModelAction.ReorderItems.EditModeEnabled())
                     }
                
-            //MARK: - MultiDeleting Start
+            //MARK: - MultiDeleting
+                    
                 case _ as TemplatesListViewModelAction.Delete.Selection.Enter:
                     
                     withAnimation {
@@ -454,7 +449,13 @@ private extension TemplatesListViewModel {
                         self.state = .select
                         updateNavBar(event: .setDelete)
                         self.selectedItemsIds.value = []
-                        self.deletePannel = deletePannelViewModel(selectedCount: 0)
+                        self.deletePannel = getDeletePannelModel(selectedCount: 0)
+                        
+                        self.items = reduceItems(rawItems: self.itemsRaw.value,
+                                                 isDataUpdating: false,
+                                                 categorySelected: self.categorySelector?.selected,
+                                                 searchText: nil,
+                                                 isAddItemNeeded: false)
                         
                         for item in itemsRaw.value {
                             
@@ -465,7 +466,7 @@ private extension TemplatesListViewModel {
                             }))
                         }
                     }
-
+                //Exit in Select State
                 case _ as TemplatesListViewModelAction.Delete.Selection.Exit:
                     
                     withAnimation {
@@ -505,7 +506,7 @@ private extension TemplatesListViewModel {
                         }
                     }
               //SelectAll
-                case _ as TemplatesListViewModelAction.Delete.Selection.SelectAll:
+                case _ as TemplatesListViewModelAction.Delete.Selection.Toggle:
                     
                     let action: (ItemViewModel.ID) -> Void = {[weak self] itemId in
                         
@@ -605,16 +606,11 @@ private extension TemplatesListViewModel {
                         
                         self.updateNavBar(event: .setRegular)
                             
-                        if let selectedCategoryIndex = categorySelector?.selected {
-                                
-                            self.items = sortedItems(filterredItems(self.itemsRaw.value, selectedCategoryIndex))
-                                
-                        } else {
-                                
-                            self.items = sortedItems(self.itemsRaw.value)
-                        }
-                            
-                            updateAddNewTemplateItem()
+                        self.items = reduceItems(rawItems: self.itemsRaw.value,
+                                                 isDataUpdating: model.paymentTemplatesUpdating.value,
+                                                 categorySelected: self.categorySelector?.selected,
+                                                 searchText: nil,
+                                                 isAddItemNeeded: true)
                     }
                     
                 case _ as TemplatesListViewModelAction.CloseAction:
@@ -633,24 +629,13 @@ private extension TemplatesListViewModel {
                 
                 if case .select = self.state {
                     
-                    deletePannel = deletePannelViewModel(selectedCount: selected.count)
-                }
-                
-            }.store(in: &bindings)
-        
-        // state changes
-        $state
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] state in
-                
-                withAnimation {
-                    
-                    updateAddNewTemplateItem()
+                    deletePannel = getDeletePannelModel(selectedCount: selected.count)
                 }
                 
             }.store(in: &bindings)
         
         $style
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] style in
                 
@@ -665,19 +650,12 @@ private extension TemplatesListViewModel {
         viewModel.$selected
             .receive(on: DispatchQueue.main)
             .sink{ [unowned self]  selectedCategoryIndex in
-               
-                var tempItems = itemsRaw.value
                 
-                if case .search(let viewModel) = navBarState,
-                   !viewModel.searchText.isEmpty {
-                    
-                    tempItems = searchedItems(tempItems, viewModel.searchText)
-                }
-                
-                self.items = sortedItems(filterredItems(tempItems, selectedCategoryIndex))
-               
-                updateAddNewTemplateItem()
-                
+                self.items = reduceItems(rawItems: self.itemsRaw.value,
+                                         isDataUpdating: model.paymentTemplatesUpdating.value,
+                                         categorySelected: selectedCategoryIndex,
+                                         searchText: self.navBarState.searchModel?.searchText,
+                                         isAddItemNeeded: !self.state.isSelect)
             }.store(in: &bindings)
     }
     
@@ -809,7 +787,7 @@ extension TemplatesListViewModel {
         
         var isNameNotValid: Bool {
             
-            self.text.count < 3 || self.text == self.oldName
+            self.text.count < 1 || self.text == self.oldName
         }
         
         var saveButtonAction: () -> Void {
@@ -851,9 +829,37 @@ extension TemplatesListViewModel {
 
 private extension TemplatesListViewModel {
     
-    static func reduce(items: [ItemViewModel], move: (from: IndexSet.Element, to: Int)) -> [ItemViewModel] {
+    func reduceItems(rawItems: [ItemViewModel],
+                     isDataUpdating: Bool,
+                     categorySelected: Option.ID?,
+                     searchText: String?,
+                     isAddItemNeeded: Bool) -> [ItemViewModel] {
+            
+        var newItems = rawItems
         
-        var updatedItems = items
+        if let searchText, !searchText.isEmpty {
+            newItems = searchedItems(newItems, searchText)
+        }
+        
+        if let categorySelected {
+            newItems = sortedItems(filterredItems(newItems, categorySelected))
+        }
+            
+        if isDataUpdating {
+            newItems.insert(.init(kind: .placeholder), at: 0)
+        }
+          
+        if isAddItemNeeded {
+            newItems.append(getItemAddNewTemplateModel())
+        }
+        
+        return newItems
+        
+    }
+    
+    static func reduce(rawItems: [ItemViewModel], move: (from: IndexSet.Element, to: Int)) -> [ItemViewModel] {
+        
+        var updatedItems = rawItems
         let removed = updatedItems.remove(at: move.from)
 
         if move.from < move.to {
@@ -864,29 +870,42 @@ private extension TemplatesListViewModel {
         }
         
         return updatedItems
-        
     }
-
 }
 
-//MARK: - Filtering & Sorting
+//MARK: - Filtering & Sorting ItemsModel
 
-private extension TemplatesListViewModel {
+extension TemplatesListViewModel {
     
-    func filterredItems(_ items: [ItemViewModel], _ selectedCategoryIndex: String) -> [ItemViewModel] {
+    func sortedItems(_ rawItems: [ItemViewModel]) -> [ItemViewModel] {
+        
+        return rawItems.sorted(by: { $0.sortOrder < $1.sortOrder })
+    }
+    
+    func filterredItems(_ rawItems: [ItemViewModel], _ selectedCategoryIndex: String) -> [ItemViewModel] {
         
         if selectedCategoryIndex == categoryIndexAll {
             
-            return items
+            return rawItems
             
         } else {
             
-            return items.filter{ $0.subTitle == selectedCategoryIndex }
+            return rawItems.filter{ $0.subTitle == selectedCategoryIndex }
         }
     }
     
-    func searchedItems(_ items: [ItemViewModel], _ searchText: String) -> [ItemViewModel] {
+    func searchedItems(_ rawItems: [ItemViewModel], _ searchText: String) -> [ItemViewModel] {
         
+        if searchText.isEmpty {
+            
+            return rawItems
+            
+        } else {
+            
+            return rawItems.filter{ $0.title.capitalized.contains(searchText.capitalized) }
+        }
+       
+        /*
         var tempItems = itemsRaw.value
         
         if let selectedCategoryIndex = categorySelector?.selected {
@@ -902,20 +921,17 @@ private extension TemplatesListViewModel {
             
             return tempItems.filter{ $0.title.capitalized.contains(searchText.capitalized) }
         }
-        
+        */
     }
     
-    func sortedItems(_ items: [ItemViewModel]) -> [ItemViewModel] {
-        
-        return items.sorted(by: { $0.sortOrder < $1.sortOrder })
-    }
+    
 }
 
 //MARK: - Local View Models
 
 extension TemplatesListViewModel {
     
-    func getCategorySelectorViewModel(with templates: [PaymentTemplateData]) -> OptionSelectorView.ViewModel {
+    func getCategorySelectorModel(with templates: [PaymentTemplateData]) -> OptionSelectorView.ViewModel {
         
         let groupNames = templates.map{ $0.groupName }
         let groupNamesUnique = Set(groupNames)
@@ -938,13 +954,13 @@ extension TemplatesListViewModel {
         return categoriesIds.contains(categoryId)
     }
     
-    func deletePannelViewModel(selectedCount: Int) -> DeletePannelViewModel {
+    func getDeletePannelModel(selectedCount: Int) -> DeletePannelViewModel {
         
         .init(description: "Выбрано \(selectedCount)",
               selectAllButton: .init(icon: .ic24CheckCircle,
                                      title: "Выбрать все",
                                      isDisable: false,
-                                     action: {[weak self] in self?.action.send(TemplatesListViewModelAction.Delete.Selection.SelectAll()) }),
+                                     action: {[weak self] in self?.action.send(TemplatesListViewModelAction.Delete.Selection.Toggle()) }),
               deleteButton: .init(icon: .ic24Trash2,
                                   title: "Удалить",
                                   isDisable: selectedCount == 0,
@@ -963,12 +979,12 @@ extension TemplatesListViewModel {
 
 
 //MARK: - Updates
-
+/*
 private extension TemplatesListViewModel {
     
     func updateAddNewTemplateItem() {
         
-        switch state {
+        switch self.state {
         case .normal:
             
 //            if self.items.isEmpty {
@@ -980,7 +996,7 @@ private extension TemplatesListViewModel {
                 guard let lastItem = self.items.last, lastItem.kind != .add
                 else { return }
                 
-                self.items.append(itemAddNewTemplateViewModel())
+                self.items.append(getItemAddNewTemplateModel())
            // }
             
         default:
@@ -993,7 +1009,7 @@ private extension TemplatesListViewModel {
     }
     
 }
-
+*/
 //MARK: - Internal Components
 
 extension TemplatesListViewModel {
@@ -1011,6 +1027,15 @@ extension TemplatesListViewModel {
                 return viewModel
             } else {
                 return nil
+            }
+        }
+        
+        var isSelect: Bool {
+            
+            if case .select = self {
+                return true
+            } else {
+                return false
             }
         }
         

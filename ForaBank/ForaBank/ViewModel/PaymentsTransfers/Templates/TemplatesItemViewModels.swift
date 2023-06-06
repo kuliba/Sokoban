@@ -213,7 +213,7 @@ extension TemplatesListViewModel {
                         self?.action.send(TemplatesListViewModelAction.Item.Rename(itemId: itemId)) })
     }
     
-    func itemAddNewTemplateViewModel() -> ItemViewModel {
+    func getItemAddNewTemplateModel() -> ItemViewModel {
         
         return ItemViewModel(id: Int.max,
                              sortOrder: Int.max,
@@ -252,38 +252,45 @@ extension TemplatesListViewModel {
     func amount(for template: PaymentTemplateData,
                 amountFormatted: (Double, String?, Model.AmountFormatStyle) -> String?) -> String? {
         
-        switch template.type {
-        case .contactAdressless:
+        if template.type == .contactAdressless ,
+           let parameterList = template.parameterList.first as? TransferAnywayData,
+           let currencyAmount = parameterList.additional.first(where: { $0.fieldname == "CURR" }),
+           let amount = template.amount {
             
-            guard let firstParameter = template.parameterList.first as? TransferAnywayData,
-                  let currency = firstParameter.additional.first(where: { $0.fieldname == "CURR" })?.fieldvalue,
-                  let amount = template.amount
-            else { return nil }
+            return amountFormatted(amount, currencyAmount.fieldvalue, .normal)
+            //amount.currencyFormatter(symbol: currencyAmount.fieldvalue)
             
-            return amountFormatted(amount, currency, .normal)
-            
-        default:
+        } else {
             
             if template.parameterList.count > 1 {
+                var amount: Double?
+                var currencyAmount: String?
                 
-                guard let lastParameter = template.parameterList.last,
-                      let amountDecimal = lastParameter.amount
-                else { return nil }
+                template.parameterList.forEach { parameter in
+                    if let paramAmount = parameter.amount {
+                        amount = NSDecimalNumber(decimal: paramAmount).doubleValue
+                    }
+                    currencyAmount = parameter.currencyAmount
+                }
                 
-                let currency = lastParameter.currencyAmount
-                let amount = NSDecimalNumber(decimal: amountDecimal).doubleValue
-                
-                return amountFormatted(amount, currency, .normal)
+                if let amount = amount,
+                   let currencyAmount = currencyAmount {
+                    
+                    return amountFormatted(amount, currencyAmount, .normal)
+                    //return amount.currencyFormatter(symbol: currencyAmount)
+                    
+                } else {
+                    
+                    return nil
+                }
                 
             } else {
                 
-                guard let firstParameter = template.parameterList.first,
+                guard let transfer = template.parameterList.first,
                       let amount = template.amount
                 else { return nil }
-                
-                let currency = firstParameter.currencyAmount
-                
-                return amountFormatted(amount, currency, .normal)
+                return amount.currencyFormatter(symbol: transfer.currencyAmount)
+                //return amountFormatted(amount, transfer.currencyAmount, .normal)
             }
         }
     }

@@ -90,8 +90,8 @@ enum TemplatesListViewModelAction {
                 let itemId: TemplatesListViewModel.ItemViewModel.ID
             }
             
-            // SelectAll items
-            struct SelectAll: Action {}
+            // SelectAll/DeselectAll items
+            struct Toggle: Action {}
             
             // Delete selected items
             struct Accept: Action {}

@@ -26,6 +26,15 @@ extension TemplatesListViewModel {
             }
         }
         
+        var searchModel: SearchNavBarViewModel? {
+            
+            if case .search(let viewModel) = self {
+                return viewModel
+            } else {
+                return nil
+            }
+        }
+        
         enum Events {
             case setRegular, setSearch, setDelete, setReorder
         }
