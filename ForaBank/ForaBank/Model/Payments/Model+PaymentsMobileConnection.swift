@@ -43,7 +43,7 @@ extension Model {
             let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
             
             let amountParameter = Payments.ParameterAmount(
-                value: "0",
+                value: nil,
                 title: "Сумма перевода",
                 currencySymbol: currencySymbol,
                 transferButtonTitle: "Продолжить",

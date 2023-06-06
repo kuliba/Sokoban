@@ -103,3 +103,18 @@ extension TransferAnywayData {
         return super.debugDescription + ", puref: \(String(describing: puref))" + ", additional: " + additionsDescription
     }
 }
+
+extension Array where Element == TransferAnywayData.Additional {
+
+    typealias Identifier = Payments.Operation.Parameter.Identifier
+    
+    var sfpPhone: String? {
+     
+        self.first(where: { $0.fieldname == Identifier.sfpPhone.rawValue })?.fieldvalue
+    }
+    
+    var sfpBank: String? {
+     
+        self.first(where: { $0.fieldname == Identifier.sfpBank.rawValue })?.fieldvalue
+    }
+}

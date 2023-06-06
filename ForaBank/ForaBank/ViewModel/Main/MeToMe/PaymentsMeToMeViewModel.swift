@@ -295,7 +295,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 case _ as PaymentsMeToMeAction.Button.Transfer.Tap:
                     
                     switch mode {
-                    case .general, .makePaymentTo, .makePaymentToDeposite:
+                    case .general, .makePaymentTo, .makePaymentToDeposite, .templatePayment:
                         
                         if let productIdFrom = swapViewModel.productIdFrom,
                            let productIdTo = swapViewModel.productIdTo,
@@ -915,6 +915,9 @@ extension PaymentsMeToMeViewModel {
         case closeAccount(ProductData, Double)
         case closeDeposit(ProductData, Double)
         case makePaymentTo(ProductData, Double)
+        case templatePayment(productFrom: ProductData,
+                             productTo: ProductData,
+                             amount: Double)
         case makePaymentToDeposite(ProductData, Double)
         case transferDeposit(ProductData, Double)
         case transferAndCloseDeposit(ProductData, Double)

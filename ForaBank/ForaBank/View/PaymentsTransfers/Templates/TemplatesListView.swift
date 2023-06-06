@@ -51,11 +51,11 @@ struct TemplatesListView: View {
                                         ForEach(viewModel.items) { itemViewModel in
                                             
                                             switch itemViewModel.kind {
-                                            case .regular:
-                                                TemplateItemView(viewModel: itemViewModel, style: $viewModel.style)
-                                                
-                                            case .add:
-                                                AddNewItemView(viewModel: itemViewModel, style: $viewModel.style)
+                                                case .regular:
+                                                    TemplateItemView(viewModel: itemViewModel, style: $viewModel.style)
+                                                    
+                                                case .add:
+                                                    AddNewItemView(viewModel: itemViewModel, style: $viewModel.style)
                                             }
                                         }
                                     }
@@ -68,11 +68,11 @@ struct TemplatesListView: View {
                                         ForEach(viewModel.items) { itemViewModel in
                                             
                                             switch itemViewModel.kind {
-                                            case .regular:
-                                                TemplateItemViewLegacy(viewModel: itemViewModel, style: $viewModel.style)
-                                                
-                                            case .add:
-                                                AddNewItemViewLegacy(viewModel: itemViewModel, style: $viewModel.style)
+                                                case .regular:
+                                                    TemplateItemViewLegacy(viewModel: itemViewModel, style: $viewModel.style)
+                                                    
+                                                case .add:
+                                                    AddNewItemViewLegacy(viewModel: itemViewModel, style: $viewModel.style)
                                             }
                                         }
                                     }
@@ -109,51 +109,8 @@ struct TemplatesListView: View {
                     if let link = viewModel.link  {
                         
                         switch link {
-                        case .byPhone(let paymentPhoneView):
-                            PaymentPhoneView(viewModel: paymentPhoneView)
-                                .edgesIgnoringSafeArea(.bottom)
-                            
-                        case .sfp(let paymentPhoneView):
-                            PaymentPhoneView(viewModel: paymentPhoneView)
-                                .edgesIgnoringSafeArea(.all)
-                                .navigationBarHidden(true)
-                                .navigationBarBackButtonHidden(true)
-                            
-                        case .direct(let paymentTemplateData):
-                            CountryPaymentView(viewModel: paymentTemplateData)
-                                .edgesIgnoringSafeArea(.bottom)
-                            
-                        case .contactAdressless(let paymentTemplateData):
-                            CountryPaymentView(viewModel: paymentTemplateData)
-                                .edgesIgnoringSafeArea(.bottom)
-                            
-                        case .housingAndCommunalService(let internetTVDetailsViewModel):
-                            InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
-                                .edgesIgnoringSafeArea(.bottom)
-                            
-                        case .mobile(let mobileViewModel):
-                            MobilePayView(viewModel: mobileViewModel)
-                                .edgesIgnoringSafeArea(.bottom)
-                            
-                        case .internet(let internetTVDetailsViewModel):
-                            InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
-                                .edgesIgnoringSafeArea(.bottom)
-                            
-                        case .transport(let avtodorDetailsViewModel):
-                            OperatorsView(viewModel: avtodorDetailsViewModel)
-                                .edgesIgnoringSafeArea(.bottom)
-                            
-                        case .externalEntity(let transferByRequisitesView):
-                            TransferByRequisitesView(viewModel: transferByRequisitesView)
-                                .edgesIgnoringSafeArea(.bottom)
-                            
-                        case .externalIndividual(let transferByRequisitesView):
-                            TransferByRequisitesView(viewModel: transferByRequisitesView)
-                                .edgesIgnoringSafeArea(.bottom)
-                            
-                        case .betweenTheir(let meToMeViewModel):
-                            MeToMeView(viewModel: meToMeViewModel)
-                                .edgesIgnoringSafeArea(.bottom)
+                            case let .payment(paymentViewModel):
+                                PaymentsView(viewModel: paymentViewModel)
                         }
                     }
                 }
@@ -180,19 +137,22 @@ struct TemplatesListView: View {
                         }
                     }
                 }
-    )
-        .bottomSheet(item: $viewModel.sheet, content: { sheet in
+        )
+        .bottomSheet(item: $viewModel.bottomSheet) { sheet in
             
             switch sheet.type {
-            case .betweenTheir(let meToMeViewModel):
-                NavigationView {
-                    MeToMeView(viewModel: meToMeViewModel)
-                        .navigationBarTitle("", displayMode: .inline)
-                        .navigationBarBackButtonHidden(true)
-                        .edgesIgnoringSafeArea(.all)
-                }
+                case let .meToMe(viewModel):
+                    
+                    PaymentsMeToMeView(viewModel: viewModel)
+                        .fullScreenCover(item: $viewModel.success) { successViewModel in
+                            
+                            PaymentsSuccessView(viewModel: successViewModel)
+                            
+                        }.transaction { transaction in
+                            transaction.disablesAnimations = false
+                        }
             }
-        })
+        }
     }
 }
 

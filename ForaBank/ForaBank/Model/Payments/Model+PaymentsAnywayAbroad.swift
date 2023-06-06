@@ -175,7 +175,7 @@ extension Model {
                 if let product = firstProduct(with: filter),
                    let first = currencyArr.first {
                     
-                    let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма перевода", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: first, currenciesList: currencyArr), transferButtonTitle: "Продолжить", validator: .init(minAmount: 10, maxAmount: product.balance))
+                    let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: first, currenciesList: currencyArr), transferButtonTitle: "Продолжить", validator: .init(minAmount: 10, maxAmount: product.balance))
                     result.append(amountParameter)
                     
                 } else {
@@ -186,7 +186,7 @@ extension Model {
                 
             } else {
                 
-                let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма перевода", currencySymbol: currencySymbol, transferButtonTitle: "Продолжить", validator: .init(minAmount: 10, maxAmount: product.balance))
+                let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, transferButtonTitle: "Продолжить", validator: .init(minAmount: 10, maxAmount: product.balance))
                 result.append(amountParameter)
             }
         }

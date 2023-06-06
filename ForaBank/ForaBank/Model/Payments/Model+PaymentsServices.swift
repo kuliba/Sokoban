@@ -30,6 +30,20 @@ extension Model {
                     additionalList: dataByOperation.additionalList,
                     amount: amount,
                     isSingle: isSingle)
+            case let .template(templateId):
+                let template = self.paymentTemplates.value.first(where: { $0.id == templateId })
+                
+                guard let list = template?.parameterList as? [TransferAnywayData],
+                    let puref = list.first?.puref else {
+                    throw Payments.Error.missingSource(operation.service)
+                }
+                        
+                let isSingle = try await isSingleService(puref)
+                return try await paymentsProcessLocalStepServicesStep0(
+                    operatorCode: puref,
+                    additionalList: nil,
+                    amount: list.last?.amountDouble ?? 0,
+                    isSingle: isSingle)
                 
             case .servicePayment(let operatorCode,
                                  let additionalList,
