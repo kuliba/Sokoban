@@ -44,7 +44,7 @@ class QRSearchOperatorViewModel: ObservableObject {
                 
                 if let operatorData = operatorsData.filter({$0.id.description == id}).first {
                     
-                    if Payments.PaymentsServicesOperators.map(\.rawValue).contains(operatorData.parentCode) {
+                    if Payments.paymentsServicesOperators.map(\.rawValue).contains(operatorData.parentCode) {
                         
                         //new payment
                         Task { [weak self] in
@@ -89,7 +89,7 @@ class QRSearchOperatorViewModel: ObservableObject {
         }
         
         self.operators = operators.map { operatorValue in
-            if Payments.PaymentsServicesOperators.map(\.rawValue).contains(operatorValue.parentCode) {
+            if Payments.paymentsServicesOperators.map(\.rawValue).contains(operatorValue.parentCode) {
                 //new payment
                 return QRSearchOperatorComponent.ViewModel(id: operatorValue.id.description, operators: operatorValue, action: {[weak self]  _ in
                     guard let self = self else { return }

@@ -64,38 +64,38 @@ final class PaymentsServicesTests: XCTestCase {
     
     func test_init_servicePaymentsService() throws {
         
-        let internetTV = try XCTUnwrap(Payments.Service(rawValue: "housingAndCommunalServicesP"))
+        let internetTV = try XCTUnwrap(Payments.Service(rawValue: "utility"))
         
-        XCTAssertEqual(internetTV, .housingAndCommunalServicesP)
+        XCTAssertEqual(internetTV, .utility)
     }
     
     func test_init_servicePaymentsOperator() throws {
         
         let internetTV = try XCTUnwrap(Payments.Operator(rawValue: "iFora||1031001"))
         
-        XCTAssertEqual(internetTV, .housingAndCommunalServices)
+        XCTAssertEqual(internetTV, .utility)
     }
     
     func test_service_isGeneralPaymentsCategory() {
         
-        let category = Payments.Category.category(for: .housingAndCommunalServicesP)
+        let category = Payments.Category.category(for: .utility)
         
         XCTAssertEqual(category, .general)
-        XCTAssert(Payments.Category.general.services.contains(.housingAndCommunalServicesP))
+        XCTAssert(Payments.Category.general.services.contains(.utility))
     }
     
     func test_service_shouldHavePaymentsOperators() {
         
-        let service: Payments.Service = .housingAndCommunalServicesP
+        let service: Payments.Service = .utility
         
-        XCTAssertEqual(service.operators, [.housingAndCommunalServices])
+        XCTAssertEqual(service.operators, [.utility])
     }
     
     func test_service_shouldHavePaymentsOperationTransferType() {
         
-        let service: Payments.Service = .housingAndCommunalServicesP
+        let service: Payments.Service = .utility
         
-        XCTAssertEqual(service.transferType, .housingAndCommunalServicesP)
+        XCTAssertEqual(service.transferType, .utility)
     }
     
     func test_service_shouldThrowForNotInternetTV() async {
@@ -192,7 +192,7 @@ final class PaymentsServicesTests: XCTestCase {
         } catch {}
     }
     
-    func test_localStep0_shouldThrowOnEmptyProductsHousingAndCommunalServices() async throws {
+    func test_localStep0_shouldThrowOnEmptyProductsutility() async throws {
         
         let sut = makeSUT([(.card, 0)])
         

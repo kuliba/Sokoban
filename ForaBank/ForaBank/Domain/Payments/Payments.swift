@@ -20,7 +20,7 @@ enum Payments {
         var services: [Service] {
             
             switch self {
-            case .general: return [.requisites, .c2b, .toAnotherCard, .mobileConnection, .return, .change, .internetTV, .housingAndCommunalServicesP]
+            case .general: return [.requisites, .c2b, .toAnotherCard, .mobileConnection, .return, .change, .internetTV, .utility]
             case .fast: return [.sfp, .abroad]
             case .taxes: return [.fns, .fms, .fssp]
             }
@@ -29,8 +29,8 @@ enum Payments {
         var name: String {
             
             switch self {
-            case .fast: return "Быстрые платежи"
-            case .taxes: return "Налоги и услуги"
+            case .fast:    return "Быстрые платежи"
+            case .taxes:   return "Налоги и услуги"
             case .general: return ""
 
             }
@@ -64,7 +64,7 @@ enum Payments {
         case `return`
         case change
         case internetTV
-        case housingAndCommunalServicesP
+        case utility
 
     }
     
@@ -86,14 +86,14 @@ enum Payments {
         case `return`          = "return"
         case change            = "change"
         case internetTV        = "iFora||1051001"
-        case housingAndCommunalServices = "iFora||1031001"
+        case utility           = "iFora||1031001"
     }
     
-    static var PaymentsServicesOperators: [Operator] {
+    static var paymentsServicesOperators: [Operator] {
         
         [
             .internetTV,
-            .housingAndCommunalServices
+            .utility
         ]
     }
     
@@ -101,13 +101,9 @@ enum Payments {
         
         switch paymentsType {
             
-        case .service:
-              return .housingAndCommunalServices
-        case .internet:
-            return .internetTV
-            
-        default:
-            return .none
+        case .service:  return .utility
+        case .internet: return .internetTV
+        default:        return .none
         }
     }
 }
@@ -329,7 +325,7 @@ extension Payments.Operation {
         case `return`
         case change
         case internetTV
-        case housingAndCommunalServicesP
+        case utility
     }
     
     enum Action: Equatable {
